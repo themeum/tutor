@@ -4861,12 +4861,7 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-}
-
-body [data-testid] textarea,
-body [data-testid] {
-  font-family: 'Roboto', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
 .w-100pc {
@@ -8469,25 +8464,25 @@ body [data-testid] {
   line-height: 145%;
 }
 
-.text-btn-xlarge {
-  font-weight: 600;
+.text-btn-xlarge, .tutor-btn.tutor-btn-xl {
+  font-weight: 500;
   font-size: 18px;
   line-height: 178%;
 }
 
-.text-btn-large {
-  font-weight: 400;
+.text-btn-large, .tutor-btn.tutor-btn-lg {
+  font-weight: 500;
   font-size: 16px;
   line-height: 200%;
 }
 
-.text-btn-medium {
-  font-weight: 400;
+.text-btn-medium, .tutor-btn.tutor-btn-md {
+  font-weight: 500;
   font-size: 15px;
   line-height: 160%;
 }
 
-.text-btn-small, table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn {
+.text-btn-small, .tutor-btn.tutor-btn-sm, table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn {
   font-weight: 500;
   font-size: 13px;
   line-height: 123%;
@@ -10952,6 +10947,115 @@ select.tutor-form-select:focus {
 
 .tutor-form-select-with-icon .icon2 {
   right: 4px;
+}
+
+.tutor-btn:not(.tutor-is-outline).tutor-btn-wordpress {
+  background: #1973aa;
+  color: #ffffff;
+  border-color: #1973aa;
+}
+
+.tutor-btn:not(.tutor-is-outline).tutor-btn-primary {
+  background: #3e64de;
+  color: #ffffff;
+  border-color: #3e64de;
+}
+
+.tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  background: #e9edfb;
+  color: #3e64de;
+  border-color: #e9edfb;
+}
+
+.tutor-btn:not(.tutor-is-outline).tutor-btn-tertiary {
+  background: transparent;
+  color: #3e64de;
+  border-color: #3e64de;
+}
+
+.tutor-btn:not(.tutor-is-outline).tutor-btn-disable {
+  background: #e3e6eb;
+  color: #757c8e;
+  border-color: #e3e6eb;
+}
+
+.tutor-btn:not(.tutor-is-outline).tutor-btn-disable-outline {
+  background: transparent;
+  color: #757c8e;
+  border-color: #cdcfd5;
+}
+
+.tutor-btn:not(.tutor-btn-icon).tutor-btn-xl {
+  padding: 15px 40px;
+}
+
+.tutor-btn:not(.tutor-btn-icon).tutor-btn-lg {
+  padding: 7px 34px;
+}
+
+.tutor-btn:not(.tutor-btn-icon).tutor-btn-md {
+  padding: 7px 28px;
+}
+
+.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
+  padding: 7.5px 20px;
+}
+
+.tutor-btn {
+  border-radius: 6px;
+}
+
+.tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover).tutor-btn-wordpress:hover {
+  background: #166494;
+}
+
+.tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover).tutor-btn-secondary:hover {
+  background: #e0e6f9;
+  border-color: #e0e6f9;
+  color: #3e64de;
+}
+
+.tutor-btn.tutor-btn-loading.tutor-is-lg {
+  height: 64px;
+}
+
+.tutor-btn.tutor-btn-loading .ball {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin: 0 5.5px;
+  background-color: #fff;
+  -webkit-animation: 1.5s bounce ease infinite;
+          animation: 1.5s bounce ease infinite;
+}
+
+.tutor-btn.tutor-btn-loading .red {
+  -webkit-animation-delay: 0.25s;
+          animation-delay: 0.25s;
+}
+
+.tutor-btn.tutor-btn-loading .yellow {
+  -webkit-animation-delay: 0.5s;
+          animation-delay: 0.5s;
+}
+
+.tutor-btn.tutor-btn-loading .green {
+  -webkit-animation-delay: 0.75s;
+          animation-delay: 0.75s;
+}
+
+@-webkit-keyframes bounce {
+  50% {
+    -webkit-transform: translateY(9px);
+            transform: translateY(9px);
+  }
+}
+
+@keyframes bounce {
+  50% {
+    -webkit-transform: translateY(9px);
+            transform: translateY(9px);
+  }
 }
 
 .tutor-ui-table-responsive {
