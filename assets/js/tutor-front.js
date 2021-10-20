@@ -13,8 +13,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_dashboard_mobile_nav__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard/withdrawal */ "./assets/react/front/dashboard/withdrawal.js");
 /* harmony import */ var _dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_dashboard_withdrawal__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dashboard/settings-profile */ "./assets/react/front/dashboard/settings-profile.js");
+/* harmony import */ var _dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -44,6 +47,143 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
+/***/ "./assets/react/front/dashboard/settings-profile.js":
+/*!**********************************************************!*\
+  !*** ./assets/react/front/dashboard/settings-profile.js ***!
+  \**********************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  /**
+   * Profile Photo and Cover Photo editor
+   * 
+   * @since  v.1.7.5
+  */
+  var PhotoEditor = function PhotoEditor(photo_editor) {
+    this.dialogue_box = photo_editor.find('#tutor_photo_dialogue_box');
+
+    this.open_dialogue_box = function (name) {
+      this.dialogue_box.attr('name', name);
+      this.dialogue_box.trigger('click');
+    };
+
+    this.validate_image = function (file) {
+      return true;
+    };
+
+    this.upload_selected_image = function (name, file) {
+      if (!file || !this.validate_image(file)) {
+        return;
+      }
+
+      var nonce = tutor_get_nonce_data(true);
+      var context = this;
+      context.toggle_loader(name, true); // Prepare payload to upload
+
+      var form_data = new FormData();
+      form_data.append('action', 'tutor_user_photo_upload');
+      form_data.append('photo_type', name);
+      form_data.append('photo_file', file, file.name);
+      form_data.append(nonce.key, nonce.value);
+      $.ajax({
+        url: window._tutorobject.ajaxurl,
+        data: form_data,
+        type: 'POST',
+        processData: false,
+        contentType: false,
+        error: context.error_alert,
+        complete: function complete() {
+          context.toggle_loader(name, false);
+        }
+      });
+    };
+
+    this.accept_upload_image = function (context, e) {
+      var file = e.currentTarget.files[0] || null;
+      context.update_preview(e.currentTarget.name, file);
+      context.upload_selected_image(e.currentTarget.name, file);
+      $(e.currentTarget).val('');
+    };
+
+    this.delete_image = function (name) {
+      var context = this;
+      context.toggle_loader(name, true);
+      $.ajax({
+        url: window._tutorobject.ajaxurl,
+        data: {
+          action: 'tutor_user_photo_remove',
+          photo_type: name
+        },
+        type: 'POST',
+        error: context.error_alert,
+        complete: function complete() {
+          context.toggle_loader(name, false);
+        }
+      });
+    };
+
+    this.update_preview = function (name, file) {
+      var renderer = photo_editor.find(name == 'cover_photo' ? '#tutor_cover_area' : '#tutor_profile_area');
+
+      if (!file) {
+        renderer.css('background-image', 'url(' + renderer.data('fallback') + ')');
+        this.delete_image(name);
+        return;
+      }
+
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        renderer.css('background-image', 'url(' + e.target.result + ')');
+      };
+
+      reader.readAsDataURL(file);
+    };
+
+    this.toggle_profile_pic_action = function (show) {
+      var method = show === undefined ? 'toggleClass' : show ? 'addClass' : 'removeClass';
+      photo_editor[method]('pop-up-opened');
+    };
+
+    this.error_alert = function () {
+      alert('Something Went Wrong.');
+    };
+
+    this.toggle_loader = function (name, show) {
+      photo_editor.find('#tutor_photo_meta_area .loader-area').css('display', show ? 'block' : 'none');
+    };
+
+    this.initialize = function () {
+      var context = this;
+      this.dialogue_box.change(function (e) {
+        context.accept_upload_image(context, e);
+      });
+      photo_editor.find('#tutor_profile_area .tutor_overlay, #tutor_pp_option>div:last-child').click(function () {
+        context.toggle_profile_pic_action();
+      }); // Upload new
+
+      photo_editor.find('.tutor_cover_uploader').click(function () {
+        context.open_dialogue_box('cover_photo');
+      });
+      photo_editor.find('.tutor_pp_uploader').click(function () {
+        context.open_dialogue_box('profile_photo');
+      }); // Delete existing
+
+      photo_editor.find('.tutor_cover_deleter').click(function () {
+        context.update_preview('cover_photo', null);
+      });
+      photo_editor.find('.tutor_pp_deleter').click(function () {
+        context.update_preview('profile_photo', null);
+      });
+    };
+  };
+
+  var photo_editor = $('#tutor_profile_cover_photo_editor');
+  photo_editor.length > 0 ? new PhotoEditor(photo_editor).initialize() : 0;
+});
+
+/***/ }),
+
 /***/ "./assets/react/front/dashboard/withdrawal.js":
 /*!****************************************************!*\
   !*** ./assets/react/front/dashboard/withdrawal.js ***!
@@ -63,6 +203,71 @@ document.addEventListener('DOMContentLoaded', function () {
     var form = $that.closest('form');
     form.find('.withdraw-method-form').hide();
     form.find('.withdraw-method-form').hide().filter('[data-withdraw-form="' + $that.val() + '"]').show();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/front/pages/course-landing.js":
+/*!****************************************************!*\
+  !*** ./assets/react/front/pages/course-landing.js ***!
+  \****************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = window.wp.i18n.__;
+  /**
+   * Retake course
+   * 
+   * @since v1.9.5
+   */
+
+  $('.tutor-course-retake-button').click(function (e) {
+    e.preventDefault();
+    var button = $(this);
+    var url = button.attr('href');
+    var course_id = button.data('course_id');
+    var popup;
+    var data = {
+      title: __('Override Previous Progress', 'tutor'),
+      description: __('Before continue, please decide whether to keep progress or reset.', 'tutor'),
+      buttons: {
+        reset: {
+          title: __('Reset Data', 'tutor'),
+          "class": 'tutor-btn tutor-is-outline tutor-is-default',
+          callback: function callback() {
+            var button = popup.find('.tutor-button-secondary');
+            button.prop('disabled', true).append('<img style="margin-left: 7px" src="' + window._tutorobject.loading_icon_url + '"/>');
+            $.ajax({
+              url: window._tutorobject.ajaxurl,
+              type: 'POST',
+              data: {
+                action: 'tutor_reset_course_progress',
+                course_id: course_id
+              },
+              success: function success(response) {
+                if (response.success) {
+                  window.location.assign(response.data.redirect_to);
+                } else {
+                  alert((response.data || {}).message || __('Something went wrong', 'tutor'));
+                }
+              },
+              complete: function complete() {
+                button.prop('disabled', false).find('img').remove();
+              }
+            });
+          }
+        },
+        keep: {
+          title: __('Keep Data', 'tutor'),
+          "class": 'tutor-btn',
+          callback: function callback() {
+            window.location.assign(url);
+          }
+        }
+      }
+    };
+    popup = new window.tutor_popup($, 'icon-gear', 40).popup(data);
   });
 });
 
@@ -1820,6 +2025,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboard */ "./assets/react/front/dashboard.js");
 /* harmony import */ var _pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/instructor-list-filter */ "./assets/react/front/pages/instructor-list-filter.js");
 /* harmony import */ var _pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages/course-landing */ "./assets/react/front/pages/course-landing.js");
+/* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_pages_course_landing__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -3483,188 +3691,8 @@ jQuery(document).ready(function ($) {
     archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function () {
       window.sessionStorage.setItem('tutor_refresh_archive', 'yes');
     });
-  }
-  /**
-   * Profile Photo and Cover Photo editor
-   * 
-   * @since  v.1.7.5
-  */
+  } //warn user before leave page if quiz is running
 
-
-  var PhotoEditor = function PhotoEditor(photo_editor) {
-    this.dialogue_box = photo_editor.find('#tutor_photo_dialogue_box');
-
-    this.open_dialogue_box = function (name) {
-      this.dialogue_box.attr('name', name);
-      this.dialogue_box.trigger('click');
-    };
-
-    this.validate_image = function (file) {
-      return true;
-    };
-
-    this.upload_selected_image = function (name, file) {
-      if (!file || !this.validate_image(file)) {
-        return;
-      }
-
-      var nonce = tutor_get_nonce_data(true);
-      var context = this;
-      context.toggle_loader(name, true); // Prepare payload to upload
-
-      var form_data = new FormData();
-      form_data.append('action', 'tutor_user_photo_upload');
-      form_data.append('photo_type', name);
-      form_data.append('photo_file', file, file.name);
-      form_data.append(nonce.key, nonce.value);
-      $.ajax({
-        url: window._tutorobject.ajaxurl,
-        data: form_data,
-        type: 'POST',
-        processData: false,
-        contentType: false,
-        error: context.error_alert,
-        complete: function complete() {
-          context.toggle_loader(name, false);
-        }
-      });
-    };
-
-    this.accept_upload_image = function (context, e) {
-      var file = e.currentTarget.files[0] || null;
-      context.update_preview(e.currentTarget.name, file);
-      context.upload_selected_image(e.currentTarget.name, file);
-      $(e.currentTarget).val('');
-    };
-
-    this.delete_image = function (name) {
-      var context = this;
-      context.toggle_loader(name, true);
-      $.ajax({
-        url: window._tutorobject.ajaxurl,
-        data: {
-          action: 'tutor_user_photo_remove',
-          photo_type: name
-        },
-        type: 'POST',
-        error: context.error_alert,
-        complete: function complete() {
-          context.toggle_loader(name, false);
-        }
-      });
-    };
-
-    this.update_preview = function (name, file) {
-      var renderer = photo_editor.find(name == 'cover_photo' ? '#tutor_cover_area' : '#tutor_profile_area');
-
-      if (!file) {
-        renderer.css('background-image', 'url(' + renderer.data('fallback') + ')');
-        this.delete_image(name);
-        return;
-      }
-
-      var reader = new FileReader();
-
-      reader.onload = function (e) {
-        renderer.css('background-image', 'url(' + e.target.result + ')');
-      };
-
-      reader.readAsDataURL(file);
-    };
-
-    this.toggle_profile_pic_action = function (show) {
-      var method = show === undefined ? 'toggleClass' : show ? 'addClass' : 'removeClass';
-      photo_editor[method]('pop-up-opened');
-    };
-
-    this.error_alert = function () {
-      alert('Something Went Wrong.');
-    };
-
-    this.toggle_loader = function (name, show) {
-      photo_editor.find('#tutor_photo_meta_area .loader-area').css('display', show ? 'block' : 'none');
-    };
-
-    this.initialize = function () {
-      var context = this;
-      this.dialogue_box.change(function (e) {
-        context.accept_upload_image(context, e);
-      });
-      photo_editor.find('#tutor_profile_area .tutor_overlay, #tutor_pp_option>div:last-child').click(function () {
-        context.toggle_profile_pic_action();
-      }); // Upload new
-
-      photo_editor.find('.tutor_cover_uploader').click(function () {
-        context.open_dialogue_box('cover_photo');
-      });
-      photo_editor.find('.tutor_pp_uploader').click(function () {
-        context.open_dialogue_box('profile_photo');
-      }); // Delete existing
-
-      photo_editor.find('.tutor_cover_deleter').click(function () {
-        context.update_preview('cover_photo', null);
-      });
-      photo_editor.find('.tutor_pp_deleter').click(function () {
-        context.update_preview('profile_photo', null);
-      });
-    };
-  };
-
-  var photo_editor = $('#tutor_profile_cover_photo_editor');
-  photo_editor.length > 0 ? new PhotoEditor(photo_editor).initialize() : 0;
-  /**
-   * Retake course
-   * 
-   * @since v1.9.5
-   */
-
-  $('.tutor-course-retake-button').click(function (e) {
-    e.preventDefault();
-    var button = $(this);
-    var url = button.attr('href');
-    var course_id = button.data('course_id');
-    var popup;
-    var data = {
-      title: __('Override Previous Progress', 'tutor'),
-      description: __('Before continue, please decide whether to keep progress or reset.', 'tutor'),
-      buttons: {
-        reset: {
-          title: __('Reset Data', 'tutor'),
-          "class": 'tutor-btn tutor-is-outline tutor-is-default',
-          callback: function callback() {
-            var button = popup.find('.tutor-button-secondary');
-            button.prop('disabled', true).append('<img style="margin-left: 7px" src="' + window._tutorobject.loading_icon_url + '"/>');
-            $.ajax({
-              url: window._tutorobject.ajaxurl,
-              type: 'POST',
-              data: {
-                action: 'tutor_reset_course_progress',
-                course_id: course_id
-              },
-              success: function success(response) {
-                if (response.success) {
-                  window.location.assign(response.data.redirect_to);
-                } else {
-                  alert((response.data || {}).message || __('Something went wrong', 'tutor'));
-                }
-              },
-              complete: function complete() {
-                button.prop('disabled', false).find('img').remove();
-              }
-            });
-          }
-        },
-        keep: {
-          title: __('Keep Data', 'tutor'),
-          "class": 'tutor-btn',
-          callback: function callback() {
-            window.location.assign(url);
-          }
-        }
-      }
-    };
-    popup = new window.tutor_popup($, 'icon-gear', 40).popup(data);
-  }); //warn user before leave page if quiz is running
 
   document.body.addEventListener('click', function (event) {
     var target = event.target;

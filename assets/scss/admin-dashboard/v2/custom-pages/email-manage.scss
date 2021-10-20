@@ -37,7 +37,7 @@
 				padding: 7px 13px;
 				[class^='tutor-v2-icon'] {
 					font-size: 22px;
-					color: #757c8e;
+					color: $text-hints;
 				}
 				&:hover {
 					[class^='tutor-v2-icon'] {
@@ -86,7 +86,7 @@
 		input.tutor-form-control,
 		textarea.tutor-form-control {
 			&::placeholder {
-				color: #757c8e;
+				color: $text-hints;
 			}
 		}
 
