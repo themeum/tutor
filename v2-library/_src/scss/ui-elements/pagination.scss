@@ -90,18 +90,18 @@
 			}
 		}
 
-		li.pagination-prev {
-			&:hover {
-				color: $design-white;
-				background: $design-brand;
+		@include breakpoint-min(desktop-lg) {
+			li.pagination-prev {
+				margin-right: 25px;
+			}
+
+			li.pagination-next {
+				margin-left: 25px;
 			}
 		}
 
-		li.pagination-next {
-		}
-
 		li.pagination-number {
-			@extend .text-bold-caption;
+			@extend .text-medium-caption;
 			@extend .color-text-primary;
 			// color: #000;
 			position: relative;
@@ -130,6 +130,7 @@
 			}
 
 			&.current {
+				@extend .text-bold-caption;
 				@extend .color-text-brand;
 				&:before {
 					transform: scaleY(1);
