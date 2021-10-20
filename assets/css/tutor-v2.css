@@ -11717,8 +11717,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   display: -moz-flex;
   display: -webkit-flex;
   -webkit-box-align: center;
-      -ms-flex-align: ce
-      nter;
+      -ms-flex-align: center;
           align-items: center;
   -o-align-items: center;
   -ms-align-items: center;

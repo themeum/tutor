@@ -114,7 +114,7 @@ class Course_List {
 				'title' => __( 'Pending', 'tutor-pro' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
-			),
+			)
 		);
 		return $tabs;
 	}
@@ -155,9 +155,9 @@ class Course_List {
 		// status query.
 		$status_query = '';
 		if ( 'all' === $status ) {
-
-		} elseif ( 'mine' === $status ) {
-			$status_query = "AND course.post_author = {$user_id}";
+			$status_query = "AND course.post_status IN ('publish', 'pending', 'draft')";
+		} else if ( 'mine' === $status ) {
+			$status_query = "AND course.post_author = {$user_id} AND course.post_status IN ('publish', 'pending', 'draft')";
 		} else {
 			// if $status == published | pending | draft then user $status var.
 			$status_query = "AND course.post_status = '$status'";
