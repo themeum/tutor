@@ -4550,6 +4550,38 @@ msgstr ""
 msgid "Add New Instructor"
 msgstr ""
 
+#: views/pages/tutor-pro-addons.php:23
+msgid "Get All of Our Addons for a Single Price"
+msgstr ""
+
+#: views/pages/tutor-pro-addons.php:25
+msgid "Affordable $49/month, free 7-day trial, no credit card required"
+msgstr ""
+
+#: views/pages/tutor-pro-addons.php:28
+msgid "Effortless Easy two-minute installation for 24/7 compliance"
+msgstr ""
+
+#: views/pages/tutor-pro-addons.php:31
+msgid "Compliant Accessibility statement and certificate of performance"
+msgstr ""
+
+#: views/pages/tutor-pro-addons.php:35
+msgid "Buy Pro"
+msgstr ""
+
+#: views/pages/tutor-pro-addons.php:41, views/pages/__enable_disable_addons.php:3
+msgid "Addons List"
+msgstr ""
+
+#: views/pages/tutor-pro-addons.php:48
+msgid "Search…"
+msgstr ""
+
+#: views/pages/tutor-pro-addons.php:84
+msgid "Themeum"
+msgstr ""
+
 #: views/pages/uninstall.php:9
 msgid "Uninstall Tutor"
 msgstr ""
@@ -4648,10 +4680,6 @@ msgstr ""
 
 #: views/pages/view_attempt.php:365, templates/dashboard/quiz-attempts/quiz-reviews.php:420
 msgid "Update"
-msgstr ""
-
-#: views/pages/__enable_disable_addons.php:3
-msgid "Addons List"
 msgstr ""
 
 #: views/pages/__enable_disable_addons.php:74
