@@ -44,11 +44,69 @@ $colorUtils: (
 	'bg-gray-10' $bg-gray-10,
 	'bg-dark-10' $bg-dark-10,
 	'bg-dark-20' $bg-dark-20,
-	'bg-dark-30' $bg-dark-30
+	'bg-dark-30' $bg-dark-30,
+	// Primary
+		'primary-main' $primary-main,
+	'primary-100' $primary-100,
+	'primary-90' $primary-90,
+	'primary-80' $primary-80,
+	'primary-70' $primary-70,
+	'primary-60' $primary-60,
+	'primary-50' $primary-50,
+	'primary-40' $primary-40,
+	'primary-30' $primary-30,
+	// Black
+		'black-main' $black-main,
+	'black-100' $black-100,
+	'black-90' $black-90,
+	'black-80' $black-80,
+	'black-70' $black-70,
+	'black-60' $black-60,
+	'black-50' $black-50,
+	'black-40' $black-40,
+	'black-30' $black-30,
+	'black-20' $black-20,
+	'black-10' $black-10,
+	'black-05' $black-05,
+	// Danger
+		'danger-main' $danger-main,
+	'danger-100' $danger-100,
+	'danger-90' $danger-90,
+	'danger-80' $danger-80,
+	'danger-70' $danger-70,
+	'danger-50' $danger-50,
+	'danger-40' $danger-40,
+	'danger-30' $danger-30,
+	// Success
+		'success-main' $success-main,
+	'success-100' $success-100,
+	'success-90' $success-90,
+	'success-80' $success-80,
+	'success-70' $success-70,
+	'success-60' $success-60,
+	'success-50' $success-50,
+	'success-40' $success-40,
+	'success-30' $success-30,
+	// Warning
+		'warning-main' $warning-main,
+	'warning-100' $warning-100,
+	'warning-90' $warning-90,
+	'warning-80' $warning-80,
+	'warning-70' $warning-70,
+	'warning-60' $warning-60,
+	'warning-50' $warning-50,
+	'warning-40' $warning-40,
+	'warning-30' $warning-30
 );
 
 @each $classSuffix, $value in $colorUtils {
 	.color-#{$classSuffix} {
 		color: #{$value};
+	}
+}
+
+@each $classSuffix, $value in $colorUtils {
+	.bg-#{$classSuffix} {
+		background-color: #{$value};
 	}
 }
