@@ -181,6 +181,23 @@
                     color: var(--tutor-primary);
                 }
             }
+            .tutor-btn {
+                span {
+                    a:hover {
+                        color: #ffffff;
+                    }
+                }
+            }
+        }
+        @include breakpoint-max(tablet) {
+            flex-direction: column;
+            align-items: center;
+            .addon-pro-banner {
+                margin-right: 0;
+            }
+            .addon-jumbotron-content {
+                margin-top: 20px;
+            }
         }
     }
 }
