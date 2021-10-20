@@ -482,8 +482,9 @@
 
 .tutor-dashboard .tutor-dashboard-inline-links ul li a {
   display: block;
-  padding: 5px 10px;
+  padding: 5px 20px 5px 0;
   margin-bottom: -1px;
+  margin-right: 20px;
   line-height: 40px;
   font-style: normal;
   font-weight: normal;
@@ -2576,7 +2577,7 @@
   font-style: normal;
   font-weight: normal;
   font-size: 13px;
-  color: #757C8E;
+  color: #757c8e;
 }
 
 .tutor-dashboard #tutor-dashboard-footer-mobile > div > div > a:hover {
@@ -2906,6 +2907,261 @@
   color: #1A1B1E;
   display: inline-block;
   width: 20px;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor {
+  height: 344px;
+  position: relative;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area {
+  text-align: right;
+  padding-left: 190px;
+  margin-top: 16px;
+}
+
+@media (max-width: 492px) {
+  .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area {
+    padding-left: 120px;
+  }
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > img, .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
+  white-space: nowrap;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  color: #7A7A7A;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span > span {
+  color: black;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span.loader-area {
+  display: none;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area {
+  height: 245px;
+  background-color: #E9EDFB;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_overlay {
+  height: 70%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(0, 0, 0, 0.6)));
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader {
+  background: #3E64DE;
+  border-radius: 6px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  color: #FFFFFF;
+  position: absolute;
+  padding: 8px 20px;
+  right: 22px;
+  bottom: 22px;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader:hover {
+  background: #2f52c4;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader > span {
+  margin-left: 6px;
+}
+
+@media (max-width: 432px) {
+  .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader > span {
+    display: none;
+  }
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter {
+  position: absolute;
+  color: white;
+  background: rgba(0, 0, 0, 0.247);
+  text-align: center;
+  width: 36px;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 40px;
+  height: 36px;
+  right: 22px;
+  top: 22px;
+  cursor: pointer;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter:hover {
+  background: rgba(0, 0, 0, 0.438);
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_profile_area {
+  width: 142px;
+  height: 142px;
+  left: 35px;
+  top: 145px;
+  border-radius: 50%;
+  border: 5px solid white;
+  position: absolute;
+  overflow: hidden;
+  background-color: #E9EDFB;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 688px) {
+  .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_profile_area {
+    width: 120px;
+    height: 120px;
+    left: 31px;
+    top: 168px;
+  }
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_profile_area .tutor_overlay {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.253);
+  padding: 0;
+  height: 37px;
+  cursor: pointer;
+  color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_profile_area .tutor_overlay:hover {
+  background: rgba(0, 0, 0, 0.411);
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option {
+  position: absolute;
+  background: #353535;
+  width: 157px;
+  top: 294px;
+  left: 27px;
+  border-radius: 6px;
+  color: white;
+  z-index: 99;
+  display: none;
+}
+
+@media (max-width: 688px) {
+  .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option {
+    top: 294px;
+    left: 10px;
+  }
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option span {
+  display: block;
+  padding: 5px 10px;
+  cursor: pointer;
+  overflow: hidden;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 26px;
+  color: #FFFFFF;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option span:first-of-type {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option span:last-of-type {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option span:hover {
+  background: #6b6b6b;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option .up-arrow {
+  text-align: center;
+  height: 0;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option .up-arrow i {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  position: relative;
+  top: -17px;
+  border-bottom: 5px solid #353535;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option > *:not(:last-child) {
+  position: relative;
+  z-index: 1;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option > div:last-child {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 0;
+  z-index: 0;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor.pop-up-opened #tutor_pp_option {
+  display: block;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_dialogue_box {
+  display: none;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-assignment-review-header table td:last-child, .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-assignment-review .tutor-assignment-review-header table td:last-child a {

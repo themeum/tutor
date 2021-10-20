@@ -110,7 +110,7 @@
 		border-color: #bababa;
 
 		&::placeholder {
-			color: #757c8e;
+			color: $text-hints;
 		}
 
 		&:focus {
