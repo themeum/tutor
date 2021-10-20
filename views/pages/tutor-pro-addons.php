@@ -20,32 +20,32 @@
                             </svg>
                     </div>
                     <div class="addon-jumbotron-content">
-                        <h3 class="title tutor-mt-0">Get All of Our Addons for a Single Price</h3>
+                        <h3 class="title tutor-mt-0"><?php esc_html_e( 'Get All of Our Addons for a Single Price', 'tutor' ); ?></h3>
                         <p class="d-flex"><span class="ttr-mark-filled"></span>
-                            Affordable $49/month, free 7-day trial, no credit card required
+                        <?php esc_html_e( 'Affordable $49/month, free 7-day trial, no credit card required', 'tutor' ); ?>
                         </p>
                         <p class="d-flex"><span class="ttr-mark-filled"></span>
-                            Effortless Easy two-minute installation for 24/7 compliance
+                        <?php esc_html_e( 'Effortless Easy two-minute installation for 24/7 compliance', 'tutor' ); ?>
                         </p>
                         <p class="d-flex"><span class="icon ttr-mark-filled"></span>
-                            Compliant Accessibility statement and certificate of performance
+                        <?php esc_html_e( 'Compliant Accessibility statement and certificate of performance', 'tutor' ); ?>
                         </p>
                         <button class="tutor-btn tutor-mt-15">
                             <span class="tutor-btn-icon ttr-crown-filled"></span>
-                            <span><a class="color-text-white" href="">Buy Pro</a></span>
+                            <span><a class="color-text-white" href="<?php echo esc_url( 'https://www.themeum.com/product/tutor-lms/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists' ); ?>"><?php esc_html_e( 'Buy Pro', 'tutor' ); ?></a></span>
                         </button>
                     </div>
                 </div>
             </div>
 		</div>
-        <h3 class="title text-medium-h5 color-text-primary">Addons List</h3>
+        <h3 class="title text-medium-h5 color-text-primary"><?php esc_html_e( 'Addons List', 'tutor' ); ?></h3>
         <div class="tutor-addons-list-select-filter d-flex justify-content-end align-items-center">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
 				<span class="ttr-search-filled tutor-input-group-icon"></span>
 				<input
 					type="search"
 					class="tutor-form-control"
-					placeholder="Search…"
+					placeholder="<?php esc_attr_e( 'Search…', 'tutor' ); ?>"
 					value=''
 				/>
 			</div>
@@ -81,7 +81,7 @@
                     <div class="addon-title tutor-mt-20">
                         <h5 class="text-medium-h5 color-text-primary"><?php esc_html_e( $addon['name'] ); ?></h5>
                         <p class="text-medium-small color-text-hints tutor-mt-5">
-                            By <a href="" class="color-brand-wordpress">Themeum</a>
+                            By <a href="<?php echo esc_url( 'https://www.themeum.com' ); ?>" class="color-brand-wordpress"><?php esc_html_e( 'Themeum', 'tutor' ); ?></a>
                         </p>
                     </div>
                     <div class="addon-des text-regular-body color-text-subsued tutor-mt-20">
