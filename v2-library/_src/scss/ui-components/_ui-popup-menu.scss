@@ -96,15 +96,15 @@
 		}
 
 		// show/hide
-		transition: 200ms ease-out;
+		transition: 100ms ease-out;
 		opacity: 0;
 		visibility: hidden;
 		&.visible {
 			opacity: 1;
 			visibility: visible;
-			animation-name: fadeIn;
-			animation-duration: 300ms;
-			animation-timing-function: cubic-bezier(0.74, 0.49, 0.24, 0.96);
+			// animation-name: fadeIn;
+			// animation-duration: 100ms;
+			// animation-timing-function: cubic-bezier(0.74, 0.49, 0.24, 0.96);
 		}
 	}
 }
