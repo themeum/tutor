@@ -70,7 +70,19 @@
   background-color: var(--tutor-danger);
 }
 
+.tutor-bg-white {
+  background-color: #ffffff;
+}
+
+.tutor-bg-light {
+  background-color: #fdfdfd;
+}
+
 // text/typography
+
+.tutor-text-nowrap {
+  white-space: nowrap;
+}
 
 .tutor-text-center {
   text-align: center;

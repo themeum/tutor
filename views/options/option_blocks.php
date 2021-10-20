@@ -57,4 +57,6 @@
 		</div>
 	</div>
 
+<?php elseif ( $blocks['block_type'] == 'custom' ) : ?>
+	<?php include $blocks['template_path']; ?>
 <?php endif; ?>

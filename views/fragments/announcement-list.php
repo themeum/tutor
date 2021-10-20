@@ -153,7 +153,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
 
 <!-- Now Load The View -->
 <?php if(count($announcements)): ?>
-    <table class="tutor-ui-table tutor-ui-table-responsive tutor-bs-bg-white">
+    <table class="tutor-ui-table tutor-ui-table-responsive tutor-bg-white">
         <thead>
             <tr>
                 <th class="tutor-shrink">
@@ -183,7 +183,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                     $row_id = 'tutor-announcement-tr-' . $announcement->ID;
                 ?>
                 <tr id="<?php echo $row_id; ?>">
-                    <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-bs-text-nowrap">
+                    <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-text-nowrap">
                         <?php echo $date_format; ?>
                     </td>
                     <td data-th="<?php _e('Announcement', 'tutor'); ?>" class="column-fullwidth">
