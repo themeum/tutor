@@ -1,8 +1,8 @@
-// Media Query Mixins ( phone - 576, tablet - 768, desktop - 992, desktop-lg - 1200 )
+// Media Query Mixins ( mobile - 576, tablet - 768, desktop - 992, desktop-lg - 1200 )
 
 // @include breakpoint-min(tablet) { ... }
 @mixin breakpoint-min($size) {
-	@if $size == phone {
+	@if $size == mobile {
 		@media (min-width: 576px) {
 			@content;
 		}
@@ -27,7 +27,7 @@
 
 // @include breakpoint-max(tablet) { ... }
 @mixin breakpoint-max($size) {
-	@if $size == phone {
+	@if $size == mobile {
 		@media (max-width: 575.98px) {
 			@content;
 		}
@@ -52,7 +52,7 @@
 
 // @include breakpoint-minmax(tablet, desktop) { ... }
 @mixin breakpoint-minmax($sizemin, $sizemax) {
-	@if ($sizemin == phone and $sizemax == tablet) {
+	@if ($sizemin == mobile and $sizemax == tablet) {
 		@media (min-width: 576px) and (max-width: 767.98px) {
 			@content;
 		}
