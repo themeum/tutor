@@ -1,6 +1,7 @@
 // Mixins
+@import './prefixer';
 @import './svg-icons-dynamic';
 @import './svg-icons-static';
-@import './mixins';
+@import './grids';
 @import './spinner';
 @import './breakpoint';

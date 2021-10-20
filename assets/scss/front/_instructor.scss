@@ -1,6 +1,3 @@
-@import "../../../v2-library/_src/scss/utility/colors";
-@import "../../../v2-library/_src/scss/utility/typography";
-
 @mixin flexWithAlignJustify($align, $justify, $gap) {
   -webkit-display: flex;
   -moz-display: flex;
