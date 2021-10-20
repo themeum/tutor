@@ -1,0 +1,71 @@
+---
+name: Modal View-Announcement
+route: /mdx-css/modal-view-announcement
+menu: CSS Components
+---
+
+import { Playground } from 'docz';
+import "../../bundle/main.min.css";
+import "../../bundle/fonts/lineawesome@1.3.0/css/line-awesome.css";
+import "../docz-essential.css";
+
+
+# Modal
+
+#### Open a modal
+Use ```"data-tutor-modal-target=MODAL_ID"``` to open a modal. <br/>
+example: ```"<button data-tutor-modal-target="YOUR_MODAL_ID" className="tutor-btn">Open modal</button>"```
+
+#### Close a modal
+
+Use ```"data-tutor-modal-close=true"``` to close a modal. <br/>
+example: ```"<button data-tutor-modal-close='true' className="tutor-btn">Cancel</button>"```
+
+## Modal - View Announcement
+Use `className="tutor-modal modal-view-announcement"`
+
+<Playground>
+    <button data-tutor-modal-target="modal-view-announcement-1" className="tutor-btn">Open modal</button>
+
+    <div id="modal-view-announcement-1" className="tutor-modal modal-view-announcement">
+       <span className="tutor-modal-overlay"></span>
+        
+        <div className="tutor-modal-root">
+            <div className="tutor-modal-inner">
+                <div className="tutor-modal-header">
+                    <button data-tutor-modal-close className="tutor-modal-close color-text-hints">
+                        <span className="ttr-line-cross-line"></span>
+                    </button>
+                </div>
+                <div className="tutor-modal-body">
+                    <div className="view-announcement-icon bg-primary-40 color-brand-wordpress">
+                        <span className="ttr-speaker-filled"></span>
+                    </div>
+                    <div className="text-bold-h5 color-text-primary tutor-mt-35 pr-lg-5">Identification and comparative analysis of differentially</div>
+                    <div className="text-regular-body color-text-hints tutor-mt-20">when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </div>
+                </div>
+                <div className="tutor-modal-footer">
+                    <div className="footer-top">
+                        <div className="">
+                            <div className="text-regular-caption color-text-subsued">Course</div>
+                            <div className="text-bold-body color-text-primary tutor-mt-3">Write PHP Like a Pro: Build a PHP MVC Framework From Scratch</div>
+                        </div>
+                        <div className="">
+                            <div className="text-regular-caption color-text-subsued">Publised Date</div>
+                            <div className="text-bold-body color-text-primary tutor-mt-3">20 July, 2020, 12:47 pm</div>
+                        </div>
+                    </div>
+                    <div className="footer-bottom tutor-mt-60">
+                        <div className="footer-btns tutor-btn-group">
+                            <button className="tutor-btn tutor-is-outline tutor-is-default">Cancel</button>
+                        </div>
+                        <div className="footer-btns tutor-btn-group">
+                            <button className="tutor-btn tutor-is-outline tutor-is-default-">Delete</button>
+                            <button className="tutor-btn">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Playground>
