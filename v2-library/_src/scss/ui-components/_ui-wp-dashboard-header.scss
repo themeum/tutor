@@ -2,9 +2,6 @@
 	@include breakpoint-min(992) {
 		height: 60px;
 	}
-	@include breakpoint-max(991) {
-		margin-bottom: -3px;
-	}
 
 	background: #ffffff;
 	.filter-btns {
@@ -34,6 +31,10 @@
 				transition: transform 200ms linear;
 				transform: scaleY(0);
 				transform-origin: bottom;
+
+				@include breakpoint-max(991) {
+					bottom: calc(0% - 20px);
+				}
 			}
 
 			&.is-active {

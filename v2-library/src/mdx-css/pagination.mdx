@@ -5,23 +5,80 @@ menu: CSS Components
 ---
 
 import { Playground } from 'docz';
-import "../../bundle/main.min.css";
-import "../../bundle/fonts/lineawesome@1.3.0/css/line-awesome.css";
-import "../docz-essential.css";
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/lineawesome@1.3.0/css/line-awesome.css';
+import '../docz-essential.css';
 
 # Pagination
 
-```** Replace "className" with "class" while using with html```
+`** Replace "className" with "class" while using with html`
 
 <Playground>
-    <nav>
-        <ul className="tutor-pagination">
-            <li><span>30 items</span></li>
-            <li><a href="#"><i className="fas fa-angle-double-left"></i></a></li>
-            <li><a href="#"><i className="fas fa-angle-left"></i></a></li>
-            <li><span>3 of 10</span></li>
-            <li><a href="#"><i className="fas fa-angle-right"></i></a></li>
-            <li><a href="#"><i className="fas fa-angle-double-right"></i></a></li>
-        </ul>
-    </nav>
+	<nav className="tutor-dashboard-pagination">
+		<div classNames="tutor-pagination-hints">
+			<div className="text-regular-caption color-text-subsued">
+				Page <span className="text-medium-caption color-text-primary">3</span> of{' '}
+				<span className="text-medium-caption color-text-primary">12</span>
+			</div>
+		</div>
+		<ul className="tutor-pagination-numbers">
+			<li className="pagination-prev">
+				<a href="#">
+					<span className="ttr-angle-left-filled"></span>
+				</a>
+			</li>
+			<li className="pagination-number">
+				<a href="#">1</a>
+			</li>
+			<li className="pagination-number">
+				<a href="#">2</a>
+			</li>
+			<li className="pagination-number current">
+				<a href="#">3</a>
+			</li>
+			<li className="pagination-number">
+				<a href="#">4</a>
+			</li>
+			<li className="pagination-next">
+				<a href="#">
+					<span className="ttr-angle-right-filled"></span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+</Playground>
+
+## Pagination
+
+<Playground>
+	<nav>
+		<ul className="tutor-pagination">
+			<li>
+				<span>30 items</span>
+			</li>
+			<li>
+				<a href="#">
+					<i className="fas fa-angle-double-left"></i>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<i className="fas fa-angle-left"></i>
+				</a>
+			</li>
+			<li>
+				<span>3 of 10</span>
+			</li>
+			<li>
+				<a href="#">
+					<i className="fas fa-angle-right"></i>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<i className="fas fa-angle-double-right"></i>
+				</a>
+			</li>
+		</ul>
+	</nav>
 </Playground>

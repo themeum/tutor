@@ -12,11 +12,11 @@ import '../docz-essential.css';
 # WP Dashboard Header
 
 `** Replace "className" with "class" while using with html` <br />
-`** Add the th content to the tds as data-th="TH_CONTENT"`
+`** remove the inline-style from the header`
 
 <Playground>
-	<header class="tutor-wp-dashboard-header d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20">
-		<div class="title text-medium-h5 color-text-primary mb-lg-0 mb-3">Addons List</div>
+	<header class="tutor-wp-dashboard-header d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20" style={{border: '1px solid #f1f1f1'}}>
+		<div class="header-title text-medium-h5 color-text-primary mb-lg-0 mb-3">Addons List</div>
 		<div class="filter-btns text-regular-body color-text-subsued">
 			<button type="button" class="filter-btn" data-tab-filter-target="all">
 				All <span class="item-count">(1205)</span>
