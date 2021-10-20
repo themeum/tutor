@@ -7758,6 +7758,7 @@
   visibility: hidden;
 }
 
+/* This is a legacy directory pulled from inside the tutor as it is sort of old design library  */
 /* Common libraries. This file will be loaded in both of admin and frontend main scss file once */
 .tutor-switch {
   position: relative;
@@ -10793,13 +10794,12 @@ select.tutor-form-select:focus {
 }
 
 table.tutor-ui-table {
-  border-radius: 6px;
-  overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
   min-width: 300px;
   width: 100%;
-  overflow-x: auto;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 table.tutor-ui-table,
@@ -10855,6 +10855,14 @@ table.tutor-ui-table .v-align-middle {
 
 table.tutor-ui-table .v-align-bottom {
   vertical-align: bottom;
+}
+
+table.tutor-ui-table.tutor-no-thead tr:first-child td:first-child {
+  border-top-left-radius: 6px;
+}
+
+table.tutor-ui-table.tutor-no-thead tr:first-child td:last-child {
+  border-top-right-radius: 6px;
 }
 
 @media (min-width: 1200px) {
@@ -12214,7 +12222,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-password-strength-checker {
-  margin-top: 20px;
   position: relative;
 }
 
@@ -12473,26 +12480,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   -webkit-align-items: center;
 }
 
-<<<<<<< HEAD
-.d-grid {
-  display: grid;
-}
-
-.d-grid.grid-col-1x1 {
-  grid-template-columns: 1fr 1fr;
-}
-
-.d-grid.grid-col-1x2 {
-  grid-template-columns: 1fr 2fr;
-}
-
-.d-grid.grid-col-1x3 {
-  grid-template-columns: 1fr 3fr;
-}
-
-.d-grid.grid-col-1x4 {
-  grid-template-columns: 1fr 4fr;
-=======
 .tutor-wp-dashboard-header {
   background: #ffffff;
 }
@@ -12558,7 +12545,26 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-wp-dashboard-header .filter-btns button.filter-btn.is-active:before {
   -webkit-transform: scaleY(1);
           transform: scaleY(1);
->>>>>>> v2
+}
+
+.d-grid {
+  display: grid;
+}
+
+.d-grid.grid-col-1x1 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.d-grid.grid-col-1x2 {
+  grid-template-columns: 1fr 2fr;
+}
+
+.d-grid.grid-col-1x3 {
+  grid-template-columns: 1fr 3fr;
+}
+
+.d-grid.grid-col-1x4 {
+  grid-template-columns: 1fr 4fr;
 }
 
 /*# sourceMappingURL=tutor-v2.css.map */
