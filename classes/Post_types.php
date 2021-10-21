@@ -412,7 +412,7 @@ class Post_types{
 	 * @return void
 	 * @since v2.0.0
 	 */
-	protected function remove_course_post_menu() {
+	public function remove_course_post_menu() {
 		remove_menu_page( 'edit.php?post_type=courses' );
 	}
 }
