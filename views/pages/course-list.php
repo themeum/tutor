@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use FakerPress\Admin;
 use TUTOR\Course_List;
 use TUTOR_REPORT\Analytics;
 use TUTOR_REPORT\CourseAnalytics;
@@ -62,6 +61,7 @@ $filters = array(
 	'bulk_actions' => $courses->prepare_bulk_actions(),
 	'ajax_action'  => 'tutor_course_list_bulk_action',
 	'filters'      => true,
+	'category_filter' => true
 );
 
 
@@ -303,6 +303,7 @@ $available_status = array(
 											<span class="toggle-icon"></span>
 										</button>
 										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="popup-menu">
+										<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
 													<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
@@ -311,14 +312,7 @@ $available_status = array(
 													</span>
 												</a>
 											</li>
-											<li>
-												<a href="#">
-													<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
-													<span class="text-regular-body color-text-white">
-													<?php esc_html_e( 'Duplicate', 'tutor' ); ?>
-													</span>
-												</a>
-											</li>
+											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="#" class="tutor-admin-course-delete" data-id="<?php echo esc_attr( $post->ID ); ?>">
 													<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
@@ -327,6 +321,7 @@ $available_status = array(
 													</span>
 												</a>
 											</li>
+											<?php do_action( 'tutor_admin_after_course_list_action', $post->ID ); ?>
 										</ul>
 										</div>
 									</div>
