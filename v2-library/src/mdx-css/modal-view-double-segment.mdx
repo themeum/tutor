@@ -1,6 +1,6 @@
 ---
-name: Modal View-Announcement
-route: /mdx-css/modal-view-announcement
+name: Modal View Double-Segment
+route: /mdx-css/modal-view-double-segment
 menu: CSS Components
 ---
 
@@ -21,13 +21,13 @@ example: ```"<button data-tutor-modal-target="YOUR_MODAL_ID" className="tutor-bt
 Use ```"data-tutor-modal-close=true"``` to close a modal. <br/>
 example: ```"<button data-tutor-modal-close='true' className="tutor-btn">Cancel</button>"```
 
-## Modal - View Announcement
-Use `className="tutor-modal modal-view-announcement"`
+## Modal - View Double Segment
+Use `className="tutor-modal modal-view-double-segment"`
 
 <Playground>
-    <button data-tutor-modal-target="modal-view-announcement-1" className="tutor-btn">Open modal</button>
+    <button data-tutor-modal-target="modal-view-double-segment-1" className="tutor-btn">Open modal</button>
 
-    <div id="modal-view-announcement-1" className="tutor-modal modal-view-announcement">
+    <div id="modal-view-double-segment-1" className="tutor-modal modal-view-double-segment">
        <span className="tutor-modal-overlay"></span>
         
         <div className="tutor-modal-root">
@@ -61,9 +61,26 @@ Use `className="tutor-modal modal-view-announcement"`
                         </div>
                         <div className="footer-btns tutor-btn-group">
                             <button class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md">Delete</button>
-                            <button class="tutor-btn tutor-btn-wordpress tutor-btn-md">Edit</button>
+                            <button class="tutor-btn tutor-btn-wordpress tutor-btn-md" data-tutor-modal-target="modal-target-edit-1">Edit</button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-target-edit-1" className="tutor-modal">
+        <span className="tutor-modal-overlay"></span>
+        
+        <div className="tutor-modal-root">
+            <div className="tutor-modal-inner">
+                <div className="tutor-modal-header">
+                    <button data-tutor-modal-close className="tutor-modal-close-inside  color-text-hints">
+                        <span className="ttr-line-cross-line"></span>
+                    </button>
+                </div>
+                <div className="tutor-modal-body">
+                    <div className="text-bold-h5 color-text-primary pr-lg-5">Identification and comparative analysis of differentially</div>
+                    <div className="text-regular-body color-text-hints tutor-mt-20">when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </div>
                 </div>
             </div>
         </div>

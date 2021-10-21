@@ -1667,6 +1667,9 @@ function tutorModal() {
       console.log(modal);
 
       if (modal) {
+        document.querySelectorAll('.tutor-modal.tutor-is-active').forEach(function (item) {
+          return item.classList.remove('tutor-is-active');
+        });
         modal.classList.add('tutor-is-active');
       }
     }
