@@ -401,13 +401,15 @@
   line-height: 200%;
 }
 
-.text-btn-medium, .tutor-backend-settings-page .tutor-btn.tutor-is-sm {
+.text-btn-medium, .tutor-backend-settings-page .tutor-btn.tutor-is-sm,
+.tutor-dashboard-page .tutor-btn.tutor-is-sm {
   font-weight: 400;
   font-size: 15px;
   line-height: 160%;
 }
 
-.text-btn-small, .tutor-backend-settings-page .tutor-btn.tutor-is-xs {
+.text-btn-small, .tutor-backend-settings-page .tutor-btn.tutor-is-xs,
+.tutor-dashboard-page .tutor-btn.tutor-is-xs {
   font-weight: 500;
   font-size: 13px;
   line-height: 123%;
@@ -3667,81 +3669,96 @@ a {
           box-sizing: border-box;
 }
 
-.tutor-backend-settings-page .tutor-btn {
+.tutor-backend-settings-page .tutor-btn,
+.tutor-dashboard-page .tutor-btn {
   cursor: pointer;
   border-radius: 6px;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-sm {
+.tutor-backend-settings-page .tutor-btn.tutor-is-sm,
+.tutor-dashboard-page .tutor-btn.tutor-is-sm {
   padding: 7px 16.65px;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-xs {
+.tutor-backend-settings-page .tutor-btn.tutor-is-xs,
+.tutor-dashboard-page .tutor-btn.tutor-is-xs {
   padding: 8px 14px;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-xs .tutor-btn-icon {
+.tutor-backend-settings-page .tutor-btn.tutor-is-xs .tutor-btn-icon,
+.tutor-dashboard-page .tutor-btn.tutor-is-xs .tutor-btn-icon {
   font-size: 16px;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-outline {
+.tutor-backend-settings-page .tutor-btn.tutor-is-outline,
+.tutor-dashboard-page .tutor-btn.tutor-is-outline {
   border-color: #1973aa;
   color: #1973aa;
   background: transparent;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover,
+.tutor-dashboard-page .tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover {
   background-color: #166494;
   border-color: #166494;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-outline.tutor-is-default {
+.tutor-backend-settings-page .tutor-btn.tutor-is-outline.tutor-is-default,
+.tutor-dashboard-page .tutor-btn.tutor-is-outline.tutor-is-default {
   border-color: var(--tutor-border-color-alt);
   color: var(--tutor-text-hints);
   background: var(--tutor-white);
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-outline.tutor-is-default:not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn.tutor-is-outline.tutor-is-default:not(.tutor-no-hover):hover,
+.tutor-dashboard-page .tutor-btn.tutor-is-outline.tutor-is-default:not(.tutor-no-hover):hover {
   background: unset;
   color: #166494;
   border-color: #166494;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline) {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline),
+.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline) {
   background-color: #1973aa;
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover):hover,
+.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover):hover {
   background-color: #166494;
   border-color: #166494;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default,
+.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline).tutor-is-default {
   background-color: var(--tutor-bg-grey);
   border-color: var(--tutor-bg-grey);
   color: var(--tutor-text-primary);
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default:not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default:not(.tutor-no-hover):hover,
+.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline).tutor-is-default:not(.tutor-no-hover):hover {
   background-color: var(--tutor-bg-grey);
   color: #1973aa;
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only,
+.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only {
   background-color: transparent;
   border-color: transparent;
   color: inherit;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only:not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only:not(.tutor-no-hover):hover,
+.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only:not(.tutor-no-hover):hover {
   background-color: var(--tutor-bg-grey-light);
   color: #1973aa;
   border-color: transparent;
 }
 
-.tutor-backend-settings-page .tutor-btn .tutor-btn-icon {
+.tutor-backend-settings-page .tutor-btn .tutor-btn-icon,
+.tutor-dashboard-page .tutor-btn .tutor-btn-icon {
   font-size: 24px;
 }
 
@@ -4401,87 +4418,105 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 12px;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle span[class^='label-'] {
+.tutor-option-field-row .tutor-form-toggle span[class^="label-"],
+.tutor-dashboard-page .tutor-form-toggle span[class^="label-"] {
   font-size: 400;
   font-weight: 15px;
   line-height: 160%;
   color: #212327;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle span[class^='label-'].label-before {
+.tutor-option-field-row .tutor-form-toggle span[class^="label-"].label-before,
+.tutor-dashboard-page .tutor-form-toggle span[class^="label-"].label-before {
   margin-right: 5px;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input ~ .tutor-form-toggle-control {
+.tutor-option-field-row .tutor-form-toggle input ~ .tutor-form-toggle-control,
+.tutor-dashboard-page .tutor-form-toggle input ~ .tutor-form-toggle-control {
   background-color: #cdcfd5;
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input ~ .tutor-form-toggle-control::before {
+.tutor-option-field-row .tutor-form-toggle input ~ .tutor-form-toggle-control::before,
+.tutor-dashboard-page .tutor-form-toggle input ~ .tutor-form-toggle-control::before {
   -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
           box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
 }
 
-.tutor-backend-settings-page .tutor-form-toggle input:checked ~ .tutor-form-toggle-control {
+.tutor-option-field-row .tutor-form-toggle input:checked ~ .tutor-form-toggle-control,
+.tutor-dashboard-page .tutor-form-toggle input:checked ~ .tutor-form-toggle-control {
   background-color: #1973aa;
 }
 
-.tutor-backend-settings-page input[type='radio'] {
+.tutor-option-field-row input[type="radio"],
+.tutor-dashboard-page input[type="radio"] {
   background-size: 120%;
 }
 
-.tutor-backend-settings-page input[type='checkbox'] {
+.tutor-option-field-row input[type="checkbox"],
+.tutor-dashboard-page input[type="checkbox"] {
   background-size: 70%;
 }
 
-.tutor-backend-settings-page input[type='checkbox']:checked,
-.tutor-backend-settings-page input[type='radio']:checked {
+.tutor-option-field-row input[type="checkbox"]:checked,
+.tutor-option-field-row input[type="radio"]:checked,
+.tutor-dashboard-page input[type="checkbox"]:checked,
+.tutor-dashboard-page input[type="radio"]:checked {
   border-color: #1973aa;
   background-color: #1973aa;
 }
 
-.tutor-backend-settings-page .tutor-form-check label {
+.tutor-option-field-row .tutor-form-check label,
+.tutor-dashboard-page .tutor-form-check label {
   font-size: 15px;
   font-weight: 500;
   line-height: 1;
   text-align: left;
-  color: #41454f;
+  color: #353535;
 }
 
-.tutor-backend-settings-page .tutor-form-check label > .desc {
+.tutor-option-field-row .tutor-form-check label > .desc,
+.tutor-dashboard-page .tutor-form-check label > .desc {
   font-size: 400;
   font-weight: 13px;
   line-height: 138%;
   color: #5b616f;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc {
+.tutor-option-field-row .tutor-form-check.has-desc,
+.tutor-dashboard-page .tutor-form-check.has-desc {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc label {
+.tutor-option-field-row .tutor-form-check.has-desc label,
+.tutor-dashboard-page .tutor-form-check.has-desc label {
   font-size: 15px;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc:not(:last-child) {
+.tutor-option-field-row .tutor-form-check.has-desc:not(:last-child),
+.tutor-dashboard-page .tutor-form-check.has-desc:not(:last-child) {
   margin-bottom: 30px;
 }
 
-.tutor-backend-settings-page .tutor-form-check.has-desc .desc {
+.tutor-option-field-row .tutor-form-check.has-desc .desc,
+.tutor-dashboard-page .tutor-form-check.has-desc .desc {
   margin-top: 5px;
 }
 
-.tutor-backend-settings-page .tutor-form-check:not(.has-desc) label i {
+.tutor-option-field-row .tutor-form-check:not(.has-desc) label i,
+.tutor-dashboard-page .tutor-form-check:not(.has-desc) label i {
   font-size: 20px;
   margin-right: 3px;
 }
 
-.tutor-backend-settings-page input.tutor-form-control {
+.tutor-option-field-row input.tutor-form-control,
+.tutor-dashboard-page input.tutor-form-control {
   padding: 0 15px;
 }
 
-.tutor-backend-settings-page input.tutor-form-control[type='number'] {
+.tutor-option-field-row input.tutor-form-control[type="number"],
+.tutor-dashboard-page input.tutor-form-control[type="number"] {
   padding: 0px 5px;
   text-align: center;
   max-width: 90px;
@@ -4489,7 +4524,8 @@ li.tutor-option-nav-item h4 {
   height: 40px;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control {
+.tutor-option-field-row textarea.tutor-form-control,
+.tutor-dashboard-page textarea.tutor-form-control {
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
@@ -4500,81 +4536,99 @@ li.tutor-option-nav-item h4 {
   padding-bottom: 10px;
 }
 
-.tutor-backend-settings-page .tutor-form-radio label {
+.tutor-option-field-row .tutor-form-radio label,
+.tutor-dashboard-page .tutor-form-radio label {
   font-size: 15px;
 }
 
-.tutor-backend-settings-page .tutor-form-radio .desc {
+.tutor-option-field-row .tutor-form-radio .desc,
+.tutor-dashboard-page .tutor-form-radio .desc {
   margin-top: 5px;
 }
 
-.tutor-backend-settings-page select.tutor-form-select {
+.tutor-option-field-row select.tutor-form-select,
+.tutor-dashboard-page select.tutor-form-select {
   min-width: 137px;
   padding: 0 40px 0 20px;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only {
+.tutor-option-field-row textarea.tutor-form-control:-moz-read-only, .tutor-dashboard-page textarea.tutor-form-control:-moz-read-only {
   font-size: 400;
   font-weight: 16px;
   line-height: 162%;
   border-color: #bababa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select,
-.tutor-backend-settings-page input.tutor-form-control,
-.tutor-backend-settings-page textarea.tutor-form-control,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only {
+.tutor-option-field-row select.tutor-form-select,
+.tutor-option-field-row input.tutor-form-control,
+.tutor-option-field-row textarea.tutor-form-control,
+.tutor-option-field-row textarea.tutor-form-control:read-only,
+.tutor-dashboard-page select.tutor-form-select,
+.tutor-dashboard-page input.tutor-form-control,
+.tutor-dashboard-page textarea.tutor-form-control,
+.tutor-dashboard-page textarea.tutor-form-control:read-only {
   font-size: 400;
   font-weight: 16px;
   line-height: 162%;
   border-color: #bababa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-webkit-input-placeholder, .tutor-backend-settings-page input.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-webkit-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-webkit-input-placeholder {
+.tutor-option-field-row select.tutor-form-select::-webkit-input-placeholder, .tutor-option-field-row input.tutor-form-control::-webkit-input-placeholder, .tutor-option-field-row textarea.tutor-form-control::-webkit-input-placeholder, .tutor-option-field-row textarea.tutor-form-control:read-only::-webkit-input-placeholder, .tutor-dashboard-page select.tutor-form-select::-webkit-input-placeholder, .tutor-dashboard-page input.tutor-form-control::-webkit-input-placeholder, .tutor-dashboard-page textarea.tutor-form-control::-webkit-input-placeholder, .tutor-dashboard-page textarea.tutor-form-control:read-only::-webkit-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-moz-placeholder, .tutor-backend-settings-page input.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-moz-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-moz-placeholder {
+.tutor-option-field-row select.tutor-form-select::-moz-placeholder, .tutor-option-field-row input.tutor-form-control::-moz-placeholder, .tutor-option-field-row textarea.tutor-form-control::-moz-placeholder, .tutor-option-field-row textarea.tutor-form-control:read-only::-moz-placeholder, .tutor-dashboard-page select.tutor-form-select::-moz-placeholder, .tutor-dashboard-page input.tutor-form-control::-moz-placeholder, .tutor-dashboard-page textarea.tutor-form-control::-moz-placeholder, .tutor-dashboard-page textarea.tutor-form-control:read-only::-moz-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select:-ms-input-placeholder, .tutor-backend-settings-page input.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only:-ms-input-placeholder {
+.tutor-option-field-row select.tutor-form-select:-ms-input-placeholder, .tutor-option-field-row input.tutor-form-control:-ms-input-placeholder, .tutor-option-field-row textarea.tutor-form-control:-ms-input-placeholder, .tutor-option-field-row textarea.tutor-form-control:read-only:-ms-input-placeholder, .tutor-dashboard-page select.tutor-form-select:-ms-input-placeholder, .tutor-dashboard-page input.tutor-form-control:-ms-input-placeholder, .tutor-dashboard-page textarea.tutor-form-control:-ms-input-placeholder, .tutor-dashboard-page textarea.tutor-form-control:read-only:-ms-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::-ms-input-placeholder, .tutor-backend-settings-page input.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control::-ms-input-placeholder, .tutor-backend-settings-page textarea.tutor-form-control:read-only::-ms-input-placeholder {
+.tutor-option-field-row select.tutor-form-select::-ms-input-placeholder, .tutor-option-field-row input.tutor-form-control::-ms-input-placeholder, .tutor-option-field-row textarea.tutor-form-control::-ms-input-placeholder, .tutor-option-field-row textarea.tutor-form-control:read-only::-ms-input-placeholder, .tutor-dashboard-page select.tutor-form-select::-ms-input-placeholder, .tutor-dashboard-page input.tutor-form-control::-ms-input-placeholder, .tutor-dashboard-page textarea.tutor-form-control::-ms-input-placeholder, .tutor-dashboard-page textarea.tutor-form-control:read-only::-ms-input-placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only::placeholder {
+.tutor-option-field-row textarea.tutor-form-control:-moz-read-only::placeholder, .tutor-dashboard-page textarea.tutor-form-control:-moz-read-only::placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page select.tutor-form-select::placeholder,
-.tutor-backend-settings-page input.tutor-form-control::placeholder,
-.tutor-backend-settings-page textarea.tutor-form-control::placeholder,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only::placeholder {
+.tutor-option-field-row select.tutor-form-select::placeholder,
+.tutor-option-field-row input.tutor-form-control::placeholder,
+.tutor-option-field-row textarea.tutor-form-control::placeholder,
+.tutor-option-field-row textarea.tutor-form-control:read-only::placeholder,
+.tutor-dashboard-page select.tutor-form-select::placeholder,
+.tutor-dashboard-page input.tutor-form-control::placeholder,
+.tutor-dashboard-page textarea.tutor-form-control::placeholder,
+.tutor-dashboard-page textarea.tutor-form-control:read-only::placeholder {
   color: #757c8e;
 }
 
-.tutor-backend-settings-page textarea.tutor-form-control:-moz-read-only:focus {
+.tutor-option-field-row textarea.tutor-form-control:-moz-read-only:focus, .tutor-dashboard-page textarea.tutor-form-control:-moz-read-only:focus {
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select:focus,
-.tutor-backend-settings-page input.tutor-form-control:focus,
-.tutor-backend-settings-page textarea.tutor-form-control:focus,
-.tutor-backend-settings-page textarea.tutor-form-control:read-only:focus {
+.tutor-option-field-row select.tutor-form-select:focus,
+.tutor-option-field-row input.tutor-form-control:focus,
+.tutor-option-field-row textarea.tutor-form-control:focus,
+.tutor-option-field-row textarea.tutor-form-control:read-only:focus,
+.tutor-dashboard-page select.tutor-form-select:focus,
+.tutor-dashboard-page input.tutor-form-control:focus,
+.tutor-dashboard-page textarea.tutor-form-control:focus,
+.tutor-dashboard-page textarea.tutor-form-control:read-only:focus {
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page select.tutor-form-select,
-.tutor-backend-settings-page input.tutor-form-control {
+.tutor-option-field-row select.tutor-form-select,
+.tutor-option-field-row input.tutor-form-control,
+.tutor-dashboard-page select.tutor-form-select,
+.tutor-dashboard-page input.tutor-form-control {
   height: 40px;
   line-height: 1;
 }
 
-.tutor-backend-settings-page .tutor-form-check-input {
+.tutor-option-field-row .tutor-form-check-input,
+.tutor-dashboard-page .tutor-form-check-input {
   width: 20px;
   height: 20px;
 }
@@ -6051,8 +6105,8 @@ li.tutor-option-nav-item h4 {
   left: 50%;
   width: 20px;
   height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
+  margin-top: calc(-1 * 20px / 2);
+  margin-left: calc(-1 * 20px / 2);
   border-radius: 50%;
   border: 2px solid #eee;
   border-top-color: #1973aa;
@@ -6308,6 +6362,296 @@ li.tutor-option-nav-item h4 {
   border-bottom: 1px solid #e0e2ea;
 }
 
+#tutor-addons-list-wrapper {
+  margin-left: -20px;
+}
+
+.tutor-addons-list-header {
+  background: #ffffff;
+}
+
+@media (min-width: 992px) {
+  .tutor-addons-list-header {
+    height: 60px;
+  }
+}
+
+@media (max-width: 991px) {
+  .tutor-addons-list-header {
+    margin-bottom: -3px;
+  }
+}
+
+.tutor-addons-list-header .filter-btns {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 30px;
+}
+
+.tutor-addons-list-header .filter-btns button.filter-btn {
+  background: transparent;
+  outline: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  position: relative;
+  text-transform: capitalize;
+}
+
+.tutor-addons-list-header .filter-btns button.filter-btn > * {
+  pointer-events: none;
+}
+
+.tutor-addons-list-header .filter-btns button.filter-btn .item-count {
+  color: #5b616f;
+}
+
+.tutor-addons-list-header .filter-btns button.filter-btn:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background: #1973aa;
+  bottom: calc(0% - 17px);
+  -webkit-transition: -webkit-transform 200ms linear;
+  transition: -webkit-transform 200ms linear;
+  transition: transform 200ms linear;
+  transition: transform 200ms linear, -webkit-transform 200ms linear;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  -webkit-transform-origin: bottom;
+          transform-origin: bottom;
+}
+
+.tutor-addons-list-header .filter-btns button.filter-btn.is-active {
+  color: #1973aa;
+}
+
+.tutor-addons-list-header .filter-btns button.filter-btn.is-active:before {
+  -webkit-transform: scaleY(1);
+          transform: scaleY(1);
+}
+
+.tutor-addons-list-body {
+  background: #efefef;
+}
+
+.tutor-addons-list-select-filter {
+  gap: 15px;
+}
+
+@media (min-width: 576px) {
+  .tutor-addons-list-select-filter .filter-custom-field {
+    min-width: 450px;
+  }
+}
+
+.tutor-addons-list-select-filter .filter-custom-field select.tutor-form-select {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  width: 140px;
+}
+
+.tutor-addons-list-select-filter .filter-custom-field input.tutor-form-control {
+  border-left: none !important;
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  margin-left: -1px;
+}
+
+.tutor-addons-list-select-filter .filter-custom-field input.tutor-form-control:focus {
+  -webkit-box-shadow: -1px 0 0 0 #1973aa;
+          box-shadow: -1px 0 0 0 #1973aa;
+}
+
+.tutor-addons-list-select-filter .tutor-input-group.tutor-form-control-has-icon .tutor-input-group-icon {
+  font-size: 30px;
+  line-height: unset;
+  height: 100%;
+  width: unset;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  left: 8px;
+  color: #727889;
+}
+
+.tutor-addons-list-select-filter .tutor-input-group.tutor-form-control-has-icon input.tutor-form-control:focus {
+  -webkit-box-shadow: 0 0 0 1px #1973aa;
+          box-shadow: 0 0 0 1px #1973aa;
+  border-color: transparent !important;
+}
+
+.tutor-addons-list-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 40px;
+}
+
+@media (min-width: 1600px) {
+  .tutor-addons-list-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 390px));
+  }
+}
+
+.tutor-addons-list-items.is-less-items {
+  grid-template-columns: repeat(auto-fit, minmax(350px, 390px));
+}
+
+.tutor-addons-list-items > .tutor-addons-card {
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+  -webkit-transition: 500ms;
+  transition: 500ms;
+}
+
+.tutor-addons-list-items.is-active > .tutor-addons-card {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
+}
+
+.tutor-addons-card {
+  background: #ffffff;
+  border-radius: 6px;
+  display: grid;
+}
+
+.tutor-addons-card .card-body .addon-logo > img {
+  max-width: 100%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.tutor-addons-card .card-footer {
+  background: rgba(239, 241, 247, 0.4);
+  /* stroke/light20 */
+  border-top: 1px solid #e0e2ea;
+}
+
+.tutor-addons-card.not-subscribed .card-footer {
+  background: rgba(252, 231, 199, 0.3);
+  /* color/warning/fill/60 */
+  border-top: 1px solid #f9d093;
+}
+
+.tutor-addons-card.empty-state {
+  text-align: center;
+  grid-area: 1 / -1;
+  height: 250px;
+}
+
+.tutor-addons-card .addons-jumbotron {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.tutor-addons-card .addons-jumbotron .addon-jumbotron-content h3 {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 100%;
+}
+
+.tutor-addons-card .addons-jumbotron .addon-jumbotron-content p {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-addons-card .addons-jumbotron .addon-jumbotron-content p span {
+  margin-right: 5px;
+  font-size: 24px;
+  color: var(--tutor-primary);
+}
+
+.tutor-addons-card .addons-jumbotron .addon-jumbotron-content .tutor-btn span a:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 767.98px) {
+  .tutor-addons-card .addons-jumbotron {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .tutor-addons-card .addons-jumbotron .addon-pro-banner {
+    margin-right: 0;
+  }
+  .tutor-addons-card .addons-jumbotron .addon-jumbotron-content {
+    margin-top: 20px;
+  }
+}
+
+.tutor-addons-loading {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  grid-area: 1/-1;
+}
+
+.tutor-addons-loading::before {
+  content: '';
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin-top: calc(-1 * 30px / 2);
+  margin-left: calc(-1 * 30px / 2);
+  border-radius: 50%;
+  border: 2px solid #d2dbf5;
+  border-top-color: #1973aa;
+  -webkit-animation: spinner 0.8s linear infinite;
+          animation: spinner 0.8s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+.tutor-addons-empty {
+  background: #fff;
+  border-radius: 6px;
+  text-align: center;
+  grid-area: 1/-1;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tutor-addons-empty > * {
+  max-width: 100%;
+}
+
 .monetization-fees.is-disable .tutor-option-field-row:nth-child(2), .monetization-fees.is-disable .tutor-option-field-row:nth-child(3) {
   position: relative;
   cursor: not-allowed;
@@ -6371,8 +6715,8 @@ li.tutor-option-nav-item h4 {
   left: 50%;
   width: 20px;
   height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
+  margin-top: calc(-1 * 20px / 2);
+  margin-left: calc(-1 * 20px / 2);
   border-radius: 50%;
   border: 2px solid #e8e8e8;
   border-top-color: #1a73aa;
