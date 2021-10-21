@@ -53,6 +53,12 @@ class Course_List {
 		 * @since v2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_change_course_status', array( __CLASS__, 'tutor_change_course_status' ) );
+		/**
+		 * Handle ajax request for delete course
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'wp_ajax_tutor_course_delete', array( __CLASS__, 'tutor_course_delete' ) );
 	}
 
 	/**
@@ -223,6 +229,20 @@ class Course_List {
 		$update = self::update_course_status( $status, $id );
 		//return $update ? wp_send_json_success( $update ) : wp_send_json_error();
 		return wp_send_json( $update );
+		exit;
+	}
+
+	/**
+	 * Handle ajax request for deleting course
+	 *
+	 * @return json response
+	 * @since v2.0.0
+	 */
+	public static function tutor_course_delete() {
+		tutor_utils()->checking_nonce();
+		$id     = sanitize_text_field( $_POST['id'] );
+		$delete = self::delete_course( $id );
+		return wp_send_json( $delete );
 		exit;
 	}
 

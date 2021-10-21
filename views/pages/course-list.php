@@ -320,7 +320,7 @@ $available_status = array(
 												</a>
 											</li>
 											<li>
-												<a href="#">
+												<a href="#" class="tutor-admin-course-delete" data-id="<?php echo esc_attr( $post->ID ); ?>">
 													<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
 													<span class="text-regular-body color-text-white">
 													<?php esc_html_e( 'Delete', 'tutor' ); ?>
