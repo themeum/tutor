@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use FakerPress\Admin;
 use TUTOR\Course_List;
 use TUTOR_REPORT\Analytics;
 use TUTOR_REPORT\CourseAnalytics;
@@ -38,10 +39,14 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 /**
  * Navbar data to make nav menu
  */
-$navbar_data = array(
-	'page_title' => $courses->page_title,
-	'tabs'       => $courses->tabs_key_value( $course_id, $date, $search_filter ),
-	'active'     => $active_tab,
+$add_course_url = esc_url( admin_url( 'post-new.php?post_type=courses' ) );
+$navbar_data    = array(
+	'page_title'   => $courses->page_title,
+	'tabs'         => $courses->tabs_key_value( $course_id, $date, $search_filter ),
+	'active'       => $active_tab,
+	'add_button'   => true,
+	'button_title' => __( 'Add New', 'tutor' ),
+	'button_url'   => $add_course_url,
 );
 
 /**
@@ -286,18 +291,18 @@ $available_status = array(
 										<i class="icon1 ttr-eye-fill-filled"></i>
 										<i class="icon2 ttr-angle-down-filled"></i>
 										</div>
-										<a href="#" class="btn-outline tutor-btn">
+										<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="btn-outline tutor-btn">
 											<?php esc_html_e( 'Edit', 'tutor' ); ?>
 										</a>
 										<div class="tutor-popup-opener">
 										<button
 											type="button"
 											class="popup-btn"
-											data-tutor-popup-target="table-dashboard-course-list-<?php echo esc_attr( $post->ID); ?>"
+											data-tutor-popup-target="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>"
 										>
 											<span class="toggle-icon"></span>
 										</button>
-										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID); ?>" class="popup-menu">
+										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="popup-menu">
 											<li>
 												<a href="#">
 													<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
