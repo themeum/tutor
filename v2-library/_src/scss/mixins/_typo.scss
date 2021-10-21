@@ -1,0 +1,6 @@
+// Typography mixin
+@mixin getTypography($fWeight, $fSize, $lHeight) {
+	font-size: $fSize;
+	font-weight: $fWeight;
+	line-height: $lHeight;
+}

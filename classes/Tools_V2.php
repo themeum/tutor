@@ -379,7 +379,7 @@ class Tools_V2 {
 		$this->environment_status = array(
 			'home_url'                  => get_option('home'),
 			'site_url'                  => get_option('siteurl'),
-			'version'                   => tutor()->version,
+			'version'                   => TUTOR_VERSION,
 			'wp_version'                => get_bloginfo('version'),
 			'wp_multisite'              => is_multisite(),
 			'wp_memory_limit'           => $wp_memory_limit,

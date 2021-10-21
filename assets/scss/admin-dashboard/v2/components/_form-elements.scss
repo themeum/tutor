@@ -111,9 +111,9 @@
         @include getTypography(16px, 400, 162%);
         border-color: #bababa;
 
-        &::placeholder {
-            color: #757c8e;
-        }
+		&::placeholder {
+			color: $text-hints;
+		}
 
         &:focus {
             border-color: $brand-wordpress;

@@ -1,6 +1,5 @@
-@import '../lib/common.scss';
-@import './registration-notce.scss';
-@import './tutor-admin.scss';
-@import './v2/admin-v2-markup.scss';
-// @import "./v2/addons-list";
-@import './v2/notifications';
+@import "../../../v2-library/_src/scss/reusables.scss";
+@import "./registration-notce.scss";
+@import "./tutor-admin.scss";
+@import "./v2/admin-v2-markup.scss";
+@import "./v2/notifications";

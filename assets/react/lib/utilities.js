@@ -1,6 +1,7 @@
 window.jQuery(document).ready(function($) {
     const {__} = wp.i18n;
     
+    // Copy text
     $(document).on('click', '.tutor-copy-text', function(e) {
 
         // Prevent default action
@@ -20,5 +21,43 @@ window.jQuery(document).ready(function($) {
         $temp.remove();
 
         tutor_toast(__('Copied!', 'tutor'), text, 'success');
+    });
+
+    // Ajax action 
+    $(document).on('click', '.tutor-list-ajax-action', function() {
+        let url = $(this).data('url');
+        let type = $(this).data('type') || 'GET';
+        let prompt = $(this).data('prompt');
+        let del = $(this).data('delete_id');
+
+        console.log(prompt);
+
+        if(prompt && !window.confirm(prompt)) {
+            return;
+        }
+
+        $.ajax({
+            url, 
+            type, 
+            success: function(data) {
+                if(data.success) {
+                    if(del) {
+                        $('#'+del).fadeOut(function(){
+                            $(this).remove();
+                        });
+                    }
+                    return;
+                }
+                
+                let {message=__('Something Went Wrong!', 'tutor')} = data.data || {};
+                tutor_toast('Error!', message, 'error');
+            },
+            error: function() {
+                tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
+            },
+            complete: function() {
+
+            }
+        })
     });
 });

@@ -304,6 +304,7 @@ class WooCommerce extends Tutor_Base {
 		$product_id    = $item->get_product_id();
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
+
 		if ( $if_has_course ) {
 
 			$enable_tutor_earning = tutor_utils()->get_option( 'enable_tutor_earning' );

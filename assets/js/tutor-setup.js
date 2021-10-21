@@ -855,7 +855,8 @@ window.tutor_toast = function (title, description, type) {
 /***/ (() => {
 
 window.jQuery(document).ready(function ($) {
-  var __ = wp.i18n.__;
+  var __ = wp.i18n.__; // Copy text
+
   $(document).on('click', '.tutor-copy-text', function (e) {
     // Prevent default action
     e.stopImmediatePropagation();
@@ -869,6 +870,44 @@ window.jQuery(document).ready(function ($) {
     document.execCommand("copy");
     $temp.remove();
     tutor_toast(__('Copied!', 'tutor'), text, 'success');
+  }); // Ajax action 
+
+  $(document).on('click', '.tutor-list-ajax-action', function () {
+    var url = $(this).data('url');
+    var type = $(this).data('type') || 'GET';
+    var prompt = $(this).data('prompt');
+    var del = $(this).data('delete_id');
+    console.log(prompt);
+
+    if (prompt && !window.confirm(prompt)) {
+      return;
+    }
+
+    $.ajax({
+      url: url,
+      type: type,
+      success: function success(data) {
+        if (data.success) {
+          if (del) {
+            $('#' + del).fadeOut(function () {
+              $(this).remove();
+            });
+          }
+
+          return;
+        }
+
+        var _ref = data.data || {},
+            _ref$message = _ref.message,
+            message = _ref$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref$message;
+
+        tutor_toast('Error!', message, 'error');
+      },
+      error: function error() {
+        tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
+      },
+      complete: function complete() {}
+    });
   });
 });
 
@@ -963,6 +1002,9 @@ function tutorModal() {
       console.log(modal);
 
       if (modal) {
+        document.querySelectorAll('.tutor-modal.tutor-is-active').forEach(function (item) {
+          return item.classList.remove('tutor-is-active');
+        });
         modal.classList.add('tutor-is-active');
       }
     }
