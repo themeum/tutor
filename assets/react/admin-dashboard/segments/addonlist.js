@@ -39,19 +39,17 @@ const emptySearch = () => {
 const displayAddons = (addons) => {
     const htmlString = addons.map((addon) => {
         const { name, url, description } = addon;
-        const themeumUrl = 'https://www.themeum.com';
-        const author = 'Themeum'
         return `
             <div class="tutor-addons-card">
-                <div class="card-body tutor-px-30 tutor-py-40">
+                <div class="tooltip-wrap tutor-lock-tooltip">
+					<span class="tooltip-txt tooltip-top">Available in Pro</span>
+				</div>
+                <div class="card-body tutor-px-30 tutor-py-35">
                     <div class="addon-logo">
                         <img src="${url}" alt="${name}" /> 
                     </div>
                     <div class="addon-title tutor-mt-20">
-                        <h5 class="text-medium-h5 color-text-primary">${name}</h5>
-                        <p class="text-medium-small color-text-hints tutor-mt-5">
-                            By <a href="${themeumUrl}" class="color-brand-wordpress">${author}</a>
-                        </p>
+                        <h5 class="text-medium-h5 color-text-primary tutor-mb-4">${name}</h5>
                     </div>
                     <div class="addon-des text-regular-body color-text-subsued tutor-mt-20">
                         <p>${description}</p>

@@ -31,7 +31,11 @@
                         <?php esc_html_e( 'Compliant Accessibility statement and certificate of performance', 'tutor' ); ?>
                         </p>
                         <button class="tutor-btn tutor-mt-15">
-                            <span class="tutor-btn-icon ttr-crown-filled"></span>
+                            <span class="tutor-btn-icon">
+                                <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.2379 0.460549C10.1833 0.382886 10.0942 0.33667 9.9993 0.33667C9.90435 0.33667 9.81535 0.382886 9.76073 0.460549L5.36965 6.70411L1.0585 4.51486C0.958254 4.46395 0.83767 4.4752 0.748565 4.54377C0.659461 4.61234 0.617703 4.72602 0.641236 4.83596L2.90945 15.4328C2.93824 15.5673 3.0571 15.6634 3.19466 15.6634H16.8039C16.9415 15.6634 17.0604 15.5673 17.0892 15.4328L19.3574 4.83596C19.3809 4.72602 19.3391 4.61234 19.25 4.54377C19.1609 4.4752 19.0403 4.46395 18.9401 4.51486L14.629 6.70411L10.2379 0.460549Z" fill="white"/>
+                                </svg>
+                            </span>
                             <span><a class="color-text-white" href="<?php echo esc_url( 'https://www.themeum.com/product/tutor-lms/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists' ); ?>"><?php esc_html_e( 'Buy Pro', 'tutor' ); ?></a></span>
                         </button>
                     </div>
