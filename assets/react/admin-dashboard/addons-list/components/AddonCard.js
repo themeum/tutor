@@ -18,7 +18,7 @@ const AddonCard = ({ addon, addonId }) => {
 					<img src={addon.thumb_url} alt={addon.name} />
 				</div>
 				<div className="addon-title tutor-mt-20">
-					<h5 className="text-medium-h5 color-text-primary">{addon.name}</h5>
+					<h5 className="text-medium-h5 color-text-primary tutor-mb-4">{addon.name}</h5>
 					<p className="text-medium-small color-text-hints tutor-mt-5">
 						By{' '}
 						<a href={url} className="color-brand-wordpress">
@@ -61,7 +61,11 @@ const AddonCard = ({ addon, addonId }) => {
 					) : addon.depend_plugins ? (
 						<>
 							<p className="color-text-hints text-medium-small">Required Plugin(s)</p>
-							<p className="color-text-primary text-medium-caption tutor-mt-2">Woocommerce Subscription</p>
+							{addon.plugins_required.map((plugin, index) => {
+								return (
+									<p key={index} className="color-text-primary text-medium-caption tutor-mt-2">{plugin}</p>
+								);
+							})}
 						</>
 					) : (
 						<>

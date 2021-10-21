@@ -339,7 +339,7 @@ class Ajax{
                     ! is_ssl() ? $required[] = __( 'Please install SSL certificate properly', 'tutor' ) : 0;
             
                     foreach ( array( 'curl', 'gmp', 'mbstring', 'openssl' ) as $ext ) {
-                        ! extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong> not found' : 0;
+                        ! extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong> is required for Push Notification' : 0;
                     }
             
                     $plugins_data[$base_name]['ext_required'] = $required;

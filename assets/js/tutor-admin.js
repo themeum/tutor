@@ -70,7 +70,7 @@ var AddonCard = function AddonCard(_ref) {
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-title tutor-mt-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", {
-    className: "text-medium-h5 color-text-primary"
+    className: "text-medium-h5 color-text-primary tutor-mb-4"
   }, addon.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "text-medium-small color-text-hints tutor-mt-5"
   }, "By", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
@@ -108,9 +108,12 @@ var AddonCard = function AddonCard(_ref) {
     });
   })) : addon.depend_plugins ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "color-text-hints text-medium-small"
-  }, "Required Plugin(s)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-    className: "color-text-primary text-medium-caption tutor-mt-2"
-  }, "Woocommerce Subscription")) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
+  }, "Required Plugin(s)"), addon.plugins_required.map(function (plugin, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+      key: index,
+      className: "color-text-primary text-medium-caption tutor-mt-2"
+    }, plugin);
+  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
     className: "tutor-form-toggle"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     type: "checkbox",
@@ -697,9 +700,7 @@ var displayAddons = function displayAddons(addons) {
     var name = addon.name,
         url = addon.url,
         description = addon.description;
-    var themeumUrl = 'https://www.themeum.com';
-    var author = 'Themeum';
-    return "\n            <div class=\"tutor-addons-card\">\n                <div class=\"card-body tutor-px-30 tutor-py-40\">\n                    <div class=\"addon-logo\">\n                        <img src=\"".concat(url, "\" alt=\"").concat(name, "\" /> \n                    </div>\n                    <div class=\"addon-title tutor-mt-20\">\n                        <h5 class=\"text-medium-h5 color-text-primary\">").concat(name, "</h5>\n                        <p class=\"text-medium-small color-text-hints tutor-mt-5\">\n                            By <a href=\"").concat(themeumUrl, "\" class=\"color-brand-wordpress\">").concat(author, "</a>\n                        </p>\n                    </div>\n                    <div class=\"addon-des text-regular-body color-text-subsued tutor-mt-20\">\n                        <p>").concat(description, "</p>\n                    </div>\n                </div>\n            </div>");
+    return "\n            <div class=\"tutor-addons-card\">\n                <div class=\"tooltip-wrap tutor-lock-tooltip\">\n\t\t\t\t\t<span class=\"tooltip-txt tooltip-top\">Available in Pro</span>\n\t\t\t\t</div>\n                <div class=\"card-body tutor-px-30 tutor-py-35\">\n                    <div class=\"addon-logo\">\n                        <img src=\"".concat(url, "\" alt=\"").concat(name, "\" /> \n                    </div>\n                    <div class=\"addon-title tutor-mt-20\">\n                        <h5 class=\"text-medium-h5 color-text-primary tutor-mb-4\">").concat(name, "</h5>\n                    </div>\n                    <div class=\"addon-des text-regular-body color-text-subsued tutor-mt-20\">\n                        <p>").concat(description, "</p>\n                    </div>\n                </div>\n            </div>");
   }).join('');
 
   if (null !== addonsList) {

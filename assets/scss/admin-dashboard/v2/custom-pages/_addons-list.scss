@@ -4,6 +4,15 @@
 // .tutor-backend-settings-addons-list {
 // }
 
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 .tutor-addons-list-header {
     @include breakpoint-min(992) {
         height: 60px;
@@ -116,10 +125,8 @@
     }
 
     > .tutor-addons-card {
-        // opacity: 0;
-        // visibility: hidden;
         transform: translateY(10px);
-        transition: 500ms;
+        animation: fade 0.5s linear;
     }
 
     &.is-active > .tutor-addons-card {
@@ -132,6 +139,16 @@
     background: #ffffff;
     border-radius: 6px;
     display: grid;
+
+    .tooltip-wrap.tutor-lock-tooltip {
+        position: absolute;
+        justify-self: flex-end;
+        margin: 20px 25px;
+        width: 22px;
+        height: 24px;
+        //color: $black-20;
+        background-image: url("data:image/svg+xml,%3Csvg width='22' height='24' viewBox='0 0 22 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.33268 10.6113C3.41221 10.6113 2.66602 11.3575 2.66602 12.278V20.278C2.66602 21.1985 3.41221 21.9447 4.33268 21.9447H17.666C18.5865 21.9447 19.3327 21.1985 19.3327 20.278V12.278C19.3327 11.3575 18.5865 10.6113 17.666 10.6113H4.33268ZM0.666016 12.278C0.666016 10.253 2.30764 8.61133 4.33268 8.61133H17.666C19.6911 8.61133 21.3327 10.253 21.3327 12.278V20.278C21.3327 22.303 19.6911 23.9447 17.666 23.9447H4.33268C2.30764 23.9447 0.666016 22.303 0.666016 20.278V12.278Z' fill='%23C0C3CB'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M11 17.7143C10.8422 17.7143 10.7143 17.8422 10.7143 18C10.7143 18.1578 10.8422 18.2857 11 18.2857C11.1578 18.2857 11.2857 18.1578 11.2857 18C11.2857 17.8422 11.1578 17.7143 11 17.7143ZM9 18C9 16.8954 9.89543 16 11 16C12.1046 16 13 16.8954 13 18C13 19.1046 12.1046 20 11 20C9.89543 20 9 19.1046 9 18Z' fill='%23C0C3CB'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M10.9989 2.05566C9.83782 2.05566 8.72431 2.51689 7.90332 3.33789C7.08232 4.15888 6.62109 5.27239 6.62109 6.43345V8.8779C6.62109 9.43019 6.17338 9.8779 5.62109 9.8779C5.06881 9.8779 4.62109 9.43019 4.62109 8.8779V6.43345C4.62109 4.74196 5.29304 3.11974 6.4891 1.92368C7.68517 0.727608 9.30739 0.0556641 10.9989 0.0556641C12.6904 0.0556641 14.3126 0.727608 15.5087 1.92368C16.7047 3.11974 17.3767 4.74196 17.3767 6.43345V8.8779C17.3767 9.43019 16.929 9.8779 16.3767 9.8779C15.8244 9.8779 15.3767 9.43019 15.3767 8.8779V6.43345C15.3767 5.27239 14.9154 4.15888 14.0944 3.33789C13.2735 2.51689 12.1599 2.05566 10.9989 2.05566Z' fill='%23C0C3CB'/%3E%3C/svg%3E");
+    }
 
     .card-body {
         .addon-logo > img {
@@ -178,7 +195,7 @@
                 span {
                     margin-right: 5px;
                     font-size: 24px;
-                    color: var(--tutor-primary);
+                    color: $brand-wordpress;
                 }
             }
             .tutor-btn {
