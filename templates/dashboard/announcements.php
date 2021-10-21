@@ -127,19 +127,3 @@ $image_base = tutor()->url . '/assets/images/';
         'announcements' => is_array( $announcements ) ? $announcements : array()
     ));
 ?>
-
-<!--pagination-->
-<div class="tutor-pagination">
-    <?php
-        $big = 999999999; // need an unlikely integer
-        
-        echo paginate_links( array(
-           
-            'format'    => '?current_page=%#%',
-            'current'   => $paged,
-            'total'     => $the_query->max_num_pages
-        ) );
-      
-    ?>
-</div>
-<!--pagination end-->

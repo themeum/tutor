@@ -82,28 +82,64 @@ function tutor_announcement_modal($id, $title, $courses, $announcement=null) {
     <?php
 }
 
-function tutor_announcement_modal_details($id, $announcement, $course_title, $publish_date) {
+function tutor_announcement_modal_details($id, $update_modal_id, $announcement, $course_title, $publish_date) {
     // TODO: Update this modal with new modal variation from Saif
     ?>
-    <div class="tutor-modal modal-sticky-header-footer" id="<?php echo $id; ?>">
+    <div id="<?php echo $id; ?>" class="tutor-modal modal-view-announcement">
         <span class="tutor-modal-overlay"></span>
+
         <div class="tutor-modal-root">
             <div class="tutor-modal-inner">
                 <div class="tutor-modal-header">
-                    <h3 class="tutor-modal-title">
-                        <?php _e('Announcement Details', 'tutor'); ?>
-                    </h3>
-                    <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="las la-times"></span>
+                    <button data-tutor-modal-close class="tutor-modal-close color-text-hints">
+                        <span class="ttr-line-cross-line"></span>
                     </button>
                 </div>
-                
-                <div class="tutor-modal-body-alt modal-container">
-                    <h4>Course: <?php echo $course_title; ?></h4>
-                    <p>Publish Date: <?php echo $publish_date; ?></p>
-                    <p>Announcement Title: <?php echo $announcement->post_title; ?></p>
-                    <p>Announcement Summary: <?php echo $announcement->post_content; ?></p>
-                    <p>Announcement Summary: <?php echo $announcement->post_content; ?></p>
+                <div class="tutor-modal-body">
+                    <div class="view-announcement-icon bg-primary-40 color-brand-wordpress">
+                        <span class="ttr-speaker-filled"></span>
+                    </div>
+                    <div class="text-bold-h5 color-text-primary tutor-mt-35 pr-lg-5">
+                        <?php echo $announcement->post_title; ?>
+                    </div>
+                    <div class="text-regular-body color-text-hints tutor-mt-20">
+                        <?php echo $announcement->post_content; ?>
+                    </div>
+                </div>
+                <div class="tutor-modal-footer">
+                    <div class="footer-top">
+                        <div class="">
+                            <div class="text-regular-caption color-text-subsued">
+                                <?php _e('Course', 'tutor'); ?>
+                            </div>
+                            <div class="text-bold-body color-text-primary tutor-mt-3">
+                                <?php echo $course_title; ?>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="text-regular-caption color-text-subsued">
+                                <?php _e('Publised Date', 'tutor'); ?>
+                            </div>
+                            <div class="text-bold-body color-text-primary tutor-mt-3">
+                                <?php echo $publish_date; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-bottom tutor-mt-60">
+                        <div class="footer-btns tutor-btn-group">
+                            <button data-tutor-modal-close class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md">
+                                <?php _e('Cancel', 'tutor'); ?>
+                            </button>
+                        </div>
+                        <div class="footer-btns tutor-btn-group">
+                            <button class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md">
+                                <?php _e('Delete', 'tutor'); ?>
+                            </button>
+                            <button data-tutor-modal-close data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-md">
+                                <?php _e('Edit', 'tutor'); ?>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -147,7 +183,7 @@ function tutor_announcement_modal_delete($id, $announcment_id, $row_id) {
     <?php
 }
 
-$announcements = $data['announcements'];
+extract($data); // $announcements, $the_query, $paged
 $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
 ?>
 
@@ -221,7 +257,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                         
                         <?php 
                             tutor_announcement_modal($update_modal_id, __('Edit Announcment', 'tutor'), $courses, $announcement); 
-                            tutor_announcement_modal_details($details_modal_id, $announcement, $course->post_title, $date_format);
+                            tutor_announcement_modal_details($details_modal_id, $update_modal_id, $announcement, $course->post_title, $date_format);
                             tutor_announcement_modal_delete($delete_modal_id, $announcement->ID, $row_id);
                         ?>
                     </td>
@@ -229,6 +265,59 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?php 
+        $big = 999999999; // need an unlikely integer
+        $pages = paginate_links(array(
+            'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+            'format'    => '?current_page=%#%',
+            'current'   => $paged,
+            'total'     => $the_query->max_num_pages,
+            'type'      => 'array',
+            'previous_text' => '<span class="ttr-angle-left-filled"></span>',
+            'next_text' => '<span class="ttr-angle-right-filled"></span>'
+        ));
+        
+        if(is_array($pages)) {
+            ?>
+            <nav class="tutor-dashboard-pagination tutor-mt-30">
+                <div classNames="tutor-pagination-hints">
+                    <div class="text-regular-caption color-text-subsued">
+                        Page <span class="text-medium-caption color-text-primary"><?php echo $paged; ?></span>
+                        of <span class="text-medium-caption color-text-primary"><?php echo $the_query->max_num_pages; ?></span>
+                    </div>
+                </div>
+                <ul class="tutor-pagination-numbers">
+                    <?php 
+                    foreach ( $pages as $page ) {
+                        ?>
+                        <li class="pagination-number <?php echo $paged==$page ? 'current' : ''; ?>">
+                            <a href="#"><?php echo $page; ?></a>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                </ul>
+            </nav>
+            <?php
+        }
+    ?>
+        <!-- <ul class="tutor-pagination-numbers">
+            <li class="pagination-prev">
+                <a href="#">
+                    <span class="ttr-angle-left-filled"></span>
+                </a>
+            </li>
+            <li class="pagination-number">
+                <a href="#">1</a>
+            </li>
+            <li class="pagination-next">
+                <a href="#">
+                    <span class="ttr-angle-right-filled"></span>
+                </a>
+            </li>
+        </ul> -->
+    </nav>
 <?php else: ?>
     <span><?php _e('No Announcment', 'tutor'); ?></span>
 <?php endif; ?>

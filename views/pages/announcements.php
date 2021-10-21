@@ -99,7 +99,7 @@ $the_query = new WP_Query($args);
         </div>
     </div>
 
-    <div class="tutor-list-wrap tutor-report-course-list">
+    <div class="tutor-list-wrap tutor-report-course-list tutor-mb-30">
         <div class="tutor-list-header tutor-announcements-header">
             <div class="heading"><?php _e('Announcements', 'tutor'); ?></div>
             <button type="button" class="tutor-btn tutor-announcement-add-new" data-tutor-modal-target="tutor_announcement_new">
@@ -107,27 +107,13 @@ $the_query = new WP_Query($args);
             </button>
         </div>
     </div>
-    <br/>
     <?php 
         $announcements = $the_query->have_posts() ? $the_query->posts : array();
 
         tutor_load_template_from_custom_path(tutor()->path . '/views/fragments/announcement-list.php', array(
-            'announcements' => is_array( $announcements ) ? $announcements : array()
+            'announcements' => is_array( $announcements ) ? $announcements : array(),
+            'the_query' => $the_query,
+            'paged' => $paged
         ));
     ?>
-
-    <!--pagination-->
-    <div class="tutor-announcement-pagination">
-        <?php
-        $big = 999999999; // need an unlikely integer
-
-        echo paginate_links(array(
-            'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
-            'format'    => '?current_page=%#%',
-            'current'   => $paged,
-            'total'     => $the_query->max_num_pages
-        ));
-        ?>
-    </div>
-    <!--pagination end-->
 </div>
