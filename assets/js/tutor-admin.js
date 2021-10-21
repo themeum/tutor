@@ -1987,9 +1987,7 @@ window.onload = function () {
       }();
     }
     /**
-     * Handle ajax request show toast message on success | failure
-     *
-     * @param {*} formData including action and all form fields
+     * Delete course delete 
      */
 
   } catch (err) {
@@ -1998,39 +1996,108 @@ window.onload = function () {
     _iterator2.f();
   }
 
+  var deleteCourse = document.querySelectorAll(".tutor-admin-course-delete");
+
+  var _iterator3 = _createForOfIteratorHelper(deleteCourse),
+      _step3;
+
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var course = _step3.value;
+
+      course.onclick = /*#__PURE__*/function () {
+        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+          var id, formData, post, response;
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  if (!confirm('Do you want to delete this course?')) {
+                    _context3.next = 13;
+                    break;
+                  }
+
+                  id = e.currentTarget.dataset.id;
+                  formData = new FormData();
+                  formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                  formData.set('id', id);
+                  formData.set('action', 'tutor_course_delete');
+                  _context3.next = 8;
+                  return ajaxHandler(formData);
+
+                case 8:
+                  post = _context3.sent;
+                  _context3.next = 11;
+                  return post.json();
+
+                case 11:
+                  response = _context3.sent;
+
+                  if (response) {
+                    tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
+                    e.target.closest("tr").remove();
+                  } else {
+                    tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
+                  }
+
+                case 13:
+                case "end":
+                  return _context3.stop();
+              }
+            }
+          }, _callee3);
+        }));
+
+        return function (_x5) {
+          return _ref3.apply(this, arguments);
+        };
+      }();
+    }
+    /**
+     * Handle ajax request show toast message on success | failure
+     *
+     * @param {*} formData including action and all form fields
+     */
+
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+
   function ajaxHandler(_x3) {
     return _ajaxHandler.apply(this, arguments);
   }
 
   function _ajaxHandler() {
-    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(formData) {
+    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(formData) {
       var post;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context3.prev = 0;
-              _context3.next = 3;
+              _context4.prev = 0;
+              _context4.next = 3;
               return fetch(window._tutorobject.ajaxurl, {
                 method: "POST",
                 body: formData
               });
 
             case 3:
-              post = _context3.sent;
-              return _context3.abrupt("return", post);
+              post = _context4.sent;
+              return _context4.abrupt("return", post);
 
             case 7:
-              _context3.prev = 7;
-              _context3.t0 = _context3["catch"](0);
-              tutor_toast(__("Operation failed", "tutor"), _context3.t0, "error");
+              _context4.prev = 7;
+              _context4.t0 = _context4["catch"](0);
+              tutor_toast(__("Operation failed", "tutor"), _context4.t0, "error");
 
             case 10:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, null, [[0, 7]]);
+      }, _callee4, null, [[0, 7]]);
     }));
     return _ajaxHandler.apply(this, arguments);
   }

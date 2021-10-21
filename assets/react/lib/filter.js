@@ -143,6 +143,30 @@ window.onload = () => {
   }
 
   /**
+   * Delete course delete 
+   */
+  const deleteCourse = document.querySelectorAll(".tutor-admin-course-delete");
+  for (let course of deleteCourse ) {
+    course.onclick = async (e) => {
+      if (confirm('Do you want to delete this course?')) {
+
+        const id = e.currentTarget.dataset.id;
+        const formData = new FormData();
+        formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+        formData.set('id', id)
+        formData.set('action', 'tutor_course_delete');
+        const post = await ajaxHandler(formData);
+        const response = await post.json();
+        if (response) {
+          tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
+          e.target.closest("tr").remove();
+        } else {
+          tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
+        }
+      }
+    }
+  }
+  /**
    * Handle ajax request show toast message on success | failure
    *
    * @param {*} formData including action and all form fields
