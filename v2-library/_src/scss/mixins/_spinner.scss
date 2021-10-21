@@ -1,15 +1,15 @@
 // Loading Spinner
-@mixin spinner($lineColor, $lineBgColor) {
+@mixin spinner($lineColor: #ababab, $lineBgColor: #f1f1f1, $size: 20px) {
 	&::before {
 		content: '';
 		box-sizing: border-box;
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		width: 20px;
-		height: 20px;
-		margin-top: -10px;
-		margin-left: -10px;
+		width: #{$size};
+		height: #{$size};
+		margin-top: calc(-1 * #{$size} / 2);
+		margin-left: calc(-1 * #{$size} / 2);
 		border-radius: 50%;
 		border: 2px solid $lineBgColor;
 		border-top-color: $lineColor;
