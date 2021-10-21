@@ -59,7 +59,7 @@ class Post_types{
 			'public'                    => true,
 			'publicly_queryable'        => true,
 			'show_ui'                   => true,
-			'show_in_menu'              => 'tutor',
+			//'show_in_menu'              => 'tutor',
 			'query_var'                 => true,
 			'rewrite'                   => array( 'slug' => $courses_base_slug, 'with_front' => false ),
 			'menu_icon'                 => 'dashicons-book-alt',
