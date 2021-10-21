@@ -16,7 +16,7 @@ $field_id     = 'field_' . $field['key'];
 	<div class="tutor-option-field-input">
 		<label class="tutor-form-toggle">
 			<?php echo (isset($field['label_title']) && null !== $field['label_title']) ? "<span class='label-before'>{$field['label_title']}</span>" : null; ?>
-			<input type="hidden" name="tutor_option[<?php echo esc_attr( $field['key'] ); ?>]" value="off">
+			<input type="hidden" name="tutor_option[<?php echo esc_attr( $field['key'] ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
 			<input type="checkbox" value="on" <?php checked( $option_value, 'on' ); ?> class="tutor-form-toggle-input">
 			<span class="tutor-form-toggle-control"></span>
 		</label>
