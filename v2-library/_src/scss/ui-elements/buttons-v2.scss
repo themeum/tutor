@@ -46,9 +46,19 @@ $btn-sizes: ('xl' 15 40, 'lg' 7 34, 'md' 7 28, 'sm' 7.5 20);
 	}
 	&.tutor-btn-disable-outline {
 	}
-	&.tutor-btn-loading {
-		&.tutor-is-lg {
+	&.tutor-btn-loading:not(.tutor-btn-icon) {
+		padding-top: 5px;
+		&.tutor-btn-xl {
 			height: 64px;
+		}
+		&.tutor-btn-lg {
+			height: 48px;
+		}
+		&.tutor-btn-md {
+			height: 34px;
+		}
+		&.tutor-btn-sm {
+			height: 20px;
 		}
 		.ball {
 			width: 9px;
@@ -58,25 +68,16 @@ $btn-sizes: ('xl' 15 40, 'lg' 7 34, 'md' 7 28, 'sm' 7.5 20);
 			background-color: #fff;
 
 			animation: 1.5s bounce ease infinite;
-		}
 
-		.blue {
-			// background-color: #4285f5;
-		}
-
-		.red {
-			// background-color: #ea4436;
-			animation-delay: 0.25s;
-		}
-
-		.yellow {
-			// background-color: #fbbd06;
-			animation-delay: 0.5s;
-		}
-
-		.green {
-			// background-color: #34a952;
-			animation-delay: 0.75s;
+			&:nth-child(2) {
+				animation-delay: 0.25s;
+			}
+			&:nth-child(3) {
+				animation-delay: 0.5s;
+			}
+			&:nth-child(4) {
+				animation-delay: 0.75s;
+			}
 		}
 
 		@keyframes bounce {
