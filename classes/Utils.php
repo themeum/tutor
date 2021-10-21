@@ -6419,10 +6419,39 @@ class Utils {
 	 * Get total Enrolments
 	 * @since v.1.4.0
 	 */
-	public function get_total_enrolments( $search_term = '' ) {
+	public function get_total_enrolments( $status, $search_term = '', $course_id = '', $date = '' ) {
 		global $wpdb;
+		$status      = sanitize_text_field( $status );
+		$course_id   = sanitize_text_field( $course_id );
+		$date        = sanitize_text_field( $date );
+		$search_term = sanitize_text_field( $search_term );
 
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+		// add course id in where clause.
+		$course_query = '';
+		if ( '' !== $course_id ) {
+			$course_query = "AND course.ID = $course_id";
+		}
+
+		// add date in where clause.
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date_query = "AND DATE(enrol.post_date) = CAST('$date' AS DATE) ";
+		}
+
+		// add status in where clause.
+		if ( 'approved' === $status ) {
+			$status = 'completed';
+		} else if ( 'cancelled' === $status) {
+			$status = 'cancel';
+		} else {
+			$status = '';
+		}
+		$status_query = '';
+		if ( '' !== $status ) {
+			$status_query = "AND enrol.post_status = '$status' ";
+		}
 
 		$count = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(enrol.ID)
@@ -6432,6 +6461,9 @@ class Utils {
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
+					{$status_query}
+					{$course_query}
+					{$date_query}
 					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email LIKE %s OR course.post_title LIKE %s );
 			",
 			'tutor_enrolled',
@@ -6444,10 +6476,39 @@ class Utils {
 		return (int) $count;
 	}
 
-	public function get_enrolments( $start = 0, $limit = 10, $search_term = '' ) {
+	public function get_enrolments($status, $start = 0, $limit = 10, $search_term = '', $course_id = '', $date = '',  $order = 'DESC' ) {
 		global $wpdb;
+		$status      = sanitize_text_field( $status );
+		$course_id   = sanitize_text_field( $course_id );
+		$date        = sanitize_text_field( $date );
+		$search_term = sanitize_text_field( $search_term );
 
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+		// add course id in where clause.
+		$course_query = '';
+		if ( '' !== $course_id ) {
+			$course_query = "AND course.ID = $course_id";
+		}
+
+		// add date in where clause.
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date_query = "AND DATE(enrol.post_date) = CAST('$date' AS DATE) ";
+		}
+
+		// add status in where clause.
+		if ( 'approved' === $status ) {
+			$status = 'completed';
+		} else if ( 'cancelled' === $status) {
+			$status = 'cancel';
+		} else {
+			$status = '';
+		}
+		$status_query = '';
+		if ( '' !== $status ) {
+			$status_query = "AND enrol.post_status = '$status' ";
+		}
 
 		$enrolments = $wpdb->get_results( $wpdb->prepare(
 			"SELECT enrol.ID AS enrol_id,
@@ -6466,8 +6527,11 @@ class Utils {
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
+					{$status_query}
+					{$course_query}
+					{$date_query}
 					AND ( enrol.ID LIKE %s OR student.display_name LIKE %s OR student.user_email LIKE %s OR course.post_title LIKE %s )
-			ORDER BY enrol_id DESC
+			ORDER BY enrol_id {$order}
 			LIMIT 	%d, %d;
 			",
 			'tutor_enrolled',
