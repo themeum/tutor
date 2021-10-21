@@ -124,6 +124,8 @@ $image_base = tutor()->url . '/assets/images/';
     $announcements = $the_query->have_posts() ? $the_query->posts : array();
 
     tutor_load_template_from_custom_path(tutor()->path . '/views/fragments/announcement-list.php', array(
-        'announcements' => is_array( $announcements ) ? $announcements : array()
+        'announcements' => is_array( $announcements ) ? $announcements : array(),
+        'the_query' => $the_query,
+        'paged' => $paged
     ));
 ?>

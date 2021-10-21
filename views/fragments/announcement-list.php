@@ -192,11 +192,28 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
     <table class="tutor-ui-table tutor-ui-table-responsive tutor-bg-white">
         <thead>
             <tr>
-                <th class="tutor-shrink">
-                    <span class="text-regular-small color-text-subsued">
-                            <?php _e('Date', 'tutor'); ?>
-                    </span>
-                </th>
+                <?php if( is_admin() ) : ?>
+                    <th>
+                        <div class="tutor-form-check tutor-mb-15">
+                            <input
+                                id="tutor-bulk-checkbox-all"
+                                type="checkbox"
+                                class="tutor-form-check-input"
+                                name="tutor-bulk-checkbox-all"
+                            />
+                            <label for="tutor-bulk-checkbox-all">
+                                <?php esc_html_e( 'Date', 'tutor-pro' ); ?>
+                            </label>
+                        </div>
+                    </th>
+
+                <?php else : ?>
+                    <th class="tutor-shrink">
+                        <span class="text-regular-small color-text-subsued">
+                                <?php _e('Date', 'tutor'); ?>
+                        </span>
+                    </th>
+                <?php endif; ?>
                 <th>
                     <div class="inline-flex-center color-text-subsued">
                         <span class="text-regular-small"><?php _e('Announcements', 'tutor'); ?></span>
@@ -210,8 +227,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
             <?php foreach ($announcements as $announcement) : ?>
                 <?php
                     $course = get_post($announcement->post_parent);
-                    $dateObj = date_create($announcement->post_date);
-                    $date_format = date_format($dateObj, 'j M, Y, h:i a'); 
+                    $date_format = tutor_get_formated_date( get_option( 'date_format' ), $announcement->post_date ); 
 
                     $update_modal_id = 'tutor_announcement_' . $announcement->ID;
                     $details_modal_id = $update_modal_id . '_details';
@@ -219,9 +235,27 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                     $row_id = 'tutor-announcement-tr-' . $announcement->ID;
                 ?>
                 <tr id="<?php echo $row_id; ?>">
-                    <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-text-nowrap">
-                        <?php echo $date_format; ?>
-                    </td>
+                    <?php if ( is_admin() ) : ?>
+                        <td>
+                            <div class="tutor-form-check tutor-mb-15">
+                                <input
+                                    id="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>"
+                                    type="checkbox"
+                                    class="tutor-form-check-input tutor-bulk-checkbox"
+                                    name="tutor-bulk-checkbox-all"
+                                    value="<?php esc_attr_e( $announcement->ID ); ?>"
+                                />
+                                <label for="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>">
+                                    <?php esc_html_e( $date_format ); ?>
+                                </label>
+                            </div>
+                        </td>
+                    <?php else: ?>
+                        <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-bs-text-nowrap">
+                            <?php esc_html_e( $date_format ); ?>
+                        </td>                    
+                    <?php endif; ?>
+
                     <td data-th="<?php _e('Announcement', 'tutor'); ?>" class="column-fullwidth">
                         <div class="tutor-announcement-content">
                             <h4><?php echo esc_html($announcement->post_title); ?></h4>
@@ -230,9 +264,11 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                     </td>
                     <td data-th="<?php _e('Action', 'tutor'); ?>">
                         <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                            <button class="tutor-btn tutor-is-default tutor-is-xs tutor-mr-10"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
-                                <?php _e('Details', 'tutor'); ?>
-                            </button>
+                            <div class="inline-flex-center td-action-btns">
+                                <button class="btn-outline tutor-btn tutor-is-default tutor-is-xs tutor-mr-10 tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
+                                    <?php _e('Details', 'tutor'); ?>
+                                </button>
+                            </div>
                             
                             <div class="tutor-popup-opener">
                                 <button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
@@ -302,21 +338,6 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
             <?php
         }
     ?>
-        <!-- <ul class="tutor-pagination-numbers">
-            <li class="pagination-prev">
-                <a href="#">
-                    <span class="ttr-angle-left-filled"></span>
-                </a>
-            </li>
-            <li class="pagination-number">
-                <a href="#">1</a>
-            </li>
-            <li class="pagination-next">
-                <a href="#">
-                    <span class="ttr-angle-right-filled"></span>
-                </a>
-            </li>
-        </ul> -->
     </nav>
 <?php else: ?>
     <span><?php _e('No Announcment', 'tutor'); ?></span>
