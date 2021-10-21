@@ -11,13 +11,14 @@
 			
 			a {
 				display: block;
-				padding: 5px 10px;
+				padding: 5px 20px 5px 0;
 				margin-bottom: -1px;
+				margin-right: 20px;
 				line-height: 40px;
 				font-style: normal;
 				font-weight: normal;
 				font-size: 15px;
-				color: #212327;
+				color: $black-main;
 
 				&:hover {
 					color: var(--tutor-primary-color);
@@ -36,7 +37,7 @@
 		font-style: normal;
 		font-weight: 500;
 		font-size: 20px;
-		color: #212327;
+		color: $black-main;
 		margin-top: 30px;
 	}
 }

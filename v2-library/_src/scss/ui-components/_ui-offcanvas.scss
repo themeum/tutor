@@ -167,7 +167,7 @@
 			left: calc(-1 * var(--padding));
 			width: calc(100% + calc(2 * var(--padding)));
 			/* stroke/light30 */
-			border-bottom: 1px solid #cdcfd5;
+			border-bottom: 1px solid $stroke-light-30;
 		}
 		&-item {
 			cursor: pointer;

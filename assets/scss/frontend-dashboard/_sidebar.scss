@@ -227,23 +227,23 @@
 			}
 		}
 	}
+}
 
-	&:not(.is-sidebar-expanded) {
-		.tutor-dashboard-left-menu {
-			@media(max-width: 767px) {
-				display: none;
-			}
+&:not(.is-sidebar-expanded) {
+	.tutor-dashboard-left-menu {
+		@media(max-width: 767px) {
+			display: none;
 		}
 	}
+}
 
-	&.is-sidebar-expanded {
-		ul.tutor-dashboard-permalinks {
-			border-right: none !important;
+&.is-sidebar-expanded {
+	ul.tutor-dashboard-permalinks {
+		border-right: none !important;
 
-			li.active a{
-				border-top-left-radius: 0;
-				border-bottom-left-radius: 0;
-			}
+		li.active a{
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
 		}
 	}
 }

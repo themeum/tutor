@@ -50,15 +50,52 @@
         
         <div class="tutor-bs-row">
             <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
-                <label><?php _e('New Password', 'tutor'); ?></label>
-                <input class="tutor-form-control" type="password" name="new_password">
+                <div class="tutor-password-strength-checker">
+                    <div class="tutor-password-field">
+                        <label class="field-label tutor-form-label" for="new-password-1">
+                            <?php _e('New Password', 'tutor'); ?>
+                        </label>
+                        <div class="field-group">
+                            <input
+                                class="password-checker tutor-form-control"
+                                id="new-password-1"
+                                type="password"
+                                name="new_password"
+                                placeholder="Type Password"
+                            />
+                            <span class="show-hide-btn"></span>
+                        </div>
+                    </div>
+                    <div class="tutor-passowrd-strength-hint">
+                        <div class="indicator">
+                            <span class="weak"></span>
+                            <span class="medium"></span>
+                            <span class="strong"></span>
+                        </div>
+                        <div class="text text-regular-caption color-text-hints"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        
+
+
         <div class="tutor-bs-row">
             <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
-                <label><?php _e('Re-type New Password', 'tutor'); ?></label>
-                <input class="tutor-form-control" type="password" name="confirm_new_password">
+                <div class="tutor-password-field tutor-settings-pass-field">
+                    <label class="tutor-form-label" for="password-field-icon-1">
+                        <?php _e('Re-type New Password', 'tutor'); ?>
+                    </label>
+                    <div class="field-group tutor-input-group">
+                        <input
+                        class="tutor-form-control"
+                        id="cpassword-field-icon-1"
+                        type="password"
+                        placeholder="Type Password"
+                        name="confirm_new_password"
+                        />
+                        <span class="validation-icon valid-btn ttr-mark-filled" style="display:none"></span>
+                    </div>
+                </div>
             </div>
         </div>
         

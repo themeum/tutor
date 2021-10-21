@@ -1,5 +1,3 @@
-@import '../../lib/mixins.scss';
-
 .tutor-dashboard-cards-container {
     &>div {
 
@@ -34,14 +32,14 @@
 
                 &:nth-child(3) {
                     font-size: 15px;
-                    color: #5B616F;
+                    color: $black-60;
                 }
 
                 &:nth-child(2), &:nth-child(4) {
                     font-weight: bold;
                     font-size: 30px;
                     padding: 10px 0;
-                    color: #212327;
+                    color: $black-main;
                 }
 
                 &:nth-child(4) {
@@ -78,6 +76,6 @@
 		font-style: normal;
 		font-weight: 500;
 		font-size: 15px;
-		color: #5B616F;	
+		color: $black-60;	
 	}
 }

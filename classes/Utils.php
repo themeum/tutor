@@ -7771,4 +7771,42 @@ class Utils {
 				$durationMinutes . $texts['m'] . ' ' .
 				$durationSeconds . $texts['s'];
 	}
+
+	/**
+     * Prepare free addons data
+     */
+    public function prepare_free_addons_data() {
+        $addons = apply_filters( 'tutor_pro_addons_lists_for_display', array() );
+        $plugins_data = $addons;
+
+        if ( is_array( $addons ) && count( $addons ) ) {
+            foreach ( $addons as $base_name => $addon ) {
+
+				$addonConfig = tutor_utils()->get_addon_config( $base_name );
+
+                $addons_path = trailingslashit( tutor()->path . "assets/addons/{$base_name}" );
+                $addons_url  = trailingslashit( tutor()->url . "assets/addons/{$base_name}" );
+
+                $thumbnailURL =  tutor()->url . 'assets/images/tutor-plugin.png';
+				if ( file_exists( $addons_path . 'thumbnail.png' ) ) {
+                    $thumbnailURL = $addons_url . 'thumbnail.png';
+                } elseif ( file_exists( $addons_path . 'thumbnail.jpg' ) ) {
+                    $thumbnailURL = $addons_url.'thumbnail.jpg';
+                } elseif ( file_exists( $addons_path .'thumbnail.svg' ) ) {
+                    $thumbnailURL = $addons_url . 'thumbnail.svg';
+                }
+
+                $plugins_data[$base_name]['url'] = $thumbnailURL;
+                
+               
+            }
+        }
+
+		$prepared_addons = array();
+		foreach ( $plugins_data as $tutor_addon ) {
+			array_push( $prepared_addons, $tutor_addon );
+		}
+
+        return $prepared_addons;
+    }
 }

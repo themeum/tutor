@@ -39,6 +39,33 @@ $user = get_user_by('ID', $user_id);
 $enable_profile_completion = tutils()->get_option('enable_profile_completion');
 $is_instructor = tutor_utils()->is_instructor();
 
+// URLS
+$current_url = tutor()->current_url;
+$footer_url_1 = trailingslashit( tutor_utils()->tutor_dashboard_url( $is_instructor ? '' : 'my-courses' ) );
+$footer_url_2 = trailingslashit( tutor_utils()->tutor_dashboard_url( $is_instructor ? 'question-answer' : 'my-quiz-attempts' ) );
+
+// Footer links
+$footer_links = array(
+    array(
+        'title' => $is_instructor ? __('Dashboard', 'tutor') : __('Courses', 'tutor'),
+        'url' => $footer_url_1,
+        'is_active' => $footer_url_1==$current_url,
+        'icon_class' => 'ttr ttr-dashboard-filled'
+    ),
+    array(
+        'title' => $is_instructor ? __('Q&A', 'tutor') : __('Quiz Attempts'. 'tutor'),
+        'url' => $footer_url_2,
+        'is_active' => $footer_url_2==$current_url,
+        'icon_class' => $is_instructor ? 'ttr  ttr-question-filled' : 'ttr ttr-quiz-attempt-filled'
+    ),
+    array(
+        'title' => __('Menu', 'tutor'),
+        'url' => '#',
+        'is_active' => false,
+        'icon_class' => 'ttr ttr-menu-line tutor-dashboard-menu-toggler'
+    )
+);
+
 do_action('tutor_dashboard/before/wrap');
 ?>
 
@@ -77,9 +104,8 @@ do_action('tutor_dashboard/before/wrap');
                                     } 
                                 ?>
                             </div>
-                            <div class="tutor-bs-col-12 tutor-bs-col-md-7">
-                                <div class="tutor-dashboard-header-button">
-                                    <?php
+                            <div class="tutor-bs-col-12 tutor-bs-col-md-7 tutor-bs-d-flex tutor-bs-justify-content-end">
+                                <?php
                                     do_action( 'tutor_dashboard/before_header_button' );
                                     $instructor_status = tutor_utils()->instructor_status();
                                     $instructor_status = is_string($instructor_status) ? strtolower($instructor_status) : '';
@@ -101,7 +127,7 @@ do_action('tutor_dashboard/before/wrap');
                                         $course_type = tutor()->course_post_type;
                                         ?>
                                         <a class="tutor-btn tutor-is-outline" href="<?php echo apply_filters('frontend_course_create_url', admin_url("post-new.php?post_type=".tutor()->course_post_type)); ?>">
-                                            <i class="tutor-icon-plus-square-button"></i> <?php _e('Create Course', 'tutor'); ?>
+                                            <i class="tutor-icon-plus-square-button tutor-mr-10"></i> <?php _e('Create Course', 'tutor'); ?>
                                         </a>
                                         <?php
                                     }
@@ -116,8 +142,7 @@ do_action('tutor_dashboard/before/wrap');
                                     else if($rejected_on || $instructor_status!=='blocked'){
                                         echo $become_button;
                                     }
-                                    ?>
-                                </div>
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -223,18 +248,12 @@ do_action('tutor_dashboard/before/wrap');
     <div id="tutor-dashboard-footer-mobile">
         <div class="tutor-bs-container">
             <div class="tutor-bs-row">
-                <a class="tutor-bs-col-4 <?php ?>" href="<?php echo tutor_utils()->tutor_dashboard_url( $is_instructor ? '' : 'my-courses' ); ?>">
-                    <i class="fas fa-bars"></i>
-                    <span><?php $is_instructor ? _e('Dashboard', 'tutor') : _e('Courses', 'tutor'); ?></span>
-                </a>
-                <a class="tutor-bs-col-4" href="<?php echo tutor_utils()->tutor_dashboard_url( $is_instructor ? 'question-answer' : 'my-quiz-attempts' ); ?>">
-                    <i class="fas fa-bars"></i>
-                    <span><?php $is_instructor ? _e('Q&A', 'tutor') : _e('Quiz Attempts'. 'tutor'); ?></span>
-                </a>
-                <a class="tutor-bs-col-4 tutor-dashboard-menu-toggler" href="#">
-                    <i class="fas fa-bars"></i>
-                    <span><?php _e('Menu', 'tutor'); ?></span>
-                </a>
+                <?php foreach($footer_links as $link): ?>
+                    <a class="tutor-bs-col-4 <?php echo $link['is_active'] ? 'active'  : ''; ?>" href="<?php echo $link['url']; ?>">
+                        <i class="<?php echo $link['icon_class']; ?>"></i>
+                        <span><?php echo $link['title']; ?></span>
+                    </a>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>

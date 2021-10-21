@@ -1,12 +1,9 @@
-@import "../lib/mixins.scss";
-@import "../../../v2-library/_src/scss/utility/colors";
-
 .tutor-user-public-profile {
   &.tutor-user-public-profile-no-cp {
     .profile-name {
       padding-left: 60px;
       span {
-        color: #5b616f !important;
+        color: $black-60 !important;
         font-weight: 400;
       }
     }

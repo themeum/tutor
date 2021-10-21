@@ -1,7 +1,0 @@
-@import './mixins.scss';
-
-.tutor-flex-center {
-    @include valueWithPrefix(display, flex);
-    @include propertyWithPrefix(align-items, center);
-    @include propertyWithPrefix(justify-content, center);
-}
