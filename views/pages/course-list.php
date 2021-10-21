@@ -304,7 +304,7 @@ $available_status = array(
 										</button>
 										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="popup-menu">
 											<li>
-												<a href="#">
+												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
 													<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
 													<span class="text-regular-body color-text-white">
 														<?php esc_html_e( 'View Course', 'tutor' ); ?>
