@@ -36,20 +36,6 @@ window.onload = () => {
       window.location = urlPrams("search", search);
     }
   }
-  // document.getElementById("tutor-backend-filter-course").onchange = (e) => {
-  //   window.location = urlPrams("course-id", e.target.value);
-  // };
-  // document.getElementById("tutor-backend-filter-order").onchange = (e) => {
-  //   window.location = urlPrams("order", e.target.value);
-  // };
-  // document.getElementById("tutor-backend-filter-date").onchange = (e) => {
-  //   window.location = urlPrams("date", e.target.value);
-  // };
-  // document.getElementById("tutor-admin-search-filter-form").onsubmit = (e) => {
-  //   e.preventDefault();
-  //   const search = document.getElementById("tutor-backend-filter-search").value;
-  //   window.location = urlPrams("search", search);
-  // };
 
   /**
    * Onsubmit bulk form handle ajax request then reload page
@@ -123,6 +109,54 @@ window.onload = () => {
         }
       });
     });
+  }
+
+  /**
+   * On change status 
+   * update course status
+   */
+  const availableStatus = [ 'publish', 'pending', 'draft'];
+  const courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
+  for (let status of courseStatusUpdate) {
+    status.onchange = async (e) => {
+      const target = e.target;
+      const newStatus = availableStatus[target.selectedIndex];
+      const prevStatus = target.dataset.status;
+      if (newStatus === prevStatus) {
+        return;
+      }
+       
+      const formData = new FormData();
+      formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+      formData.set('id', target.dataset.id)
+      formData.set('status', newStatus);
+      formData.set('action', 'tutor_change_course_status');
+      const post = await ajaxHandler(formData);
+      const response = await post.json();
+      if (response) {
+        target.dataset.status = newStatus;
+        tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
+      } else {
+        tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
+      }
+    }
+  }
+
+  /**
+   * Handle ajax request show toast message on success | failure
+   *
+   * @param {*} formData including action and all form fields
+   */
+  async function ajaxHandler(formData) {
+    try {
+      const post = await fetch(window._tutorobject.ajaxurl, {
+        method: "POST",
+        body: formData,
+      });
+      return post;
+    } catch (error) {
+      tutor_toast(__("Operation failed", "tutor"), error, "error")
+    }
   }
 
 };

@@ -585,7 +585,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, views/elements/filters.php:67, views/fragments/announcement-list.php:177, views/fragments/announcement-list.php:218, templates/dashboard/assignments/submitted.php:71, templates/dashboard/assignments/submitted.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:114
+#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, views/elements/filters.php:67, views/fragments/announcement-list.php:177, views/fragments/announcement-list.php:218, views/pages/course-list.php:135, templates/dashboard/assignments/submitted.php:71, templates/dashboard/assignments/submitted.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:114
 msgid "Date"
 msgstr ""
 
@@ -2332,7 +2332,7 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:48, views/elements/filters.php:48, views/fragments/announcement-list.php:43, views/pages/course-list.php:160
+#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:48, views/elements/filters.php:48, views/fragments/announcement-list.php:43, views/pages/course-list.php:318
 msgid "No course found"
 msgstr ""
 
@@ -3226,7 +3226,7 @@ msgstr ""
 msgid "Biography"
 msgstr ""
 
-#: templates/course-filter/filters.php:9, templates/dashboard/create-course.php:210, templates/loop/course-continue.php:19, templates/loop/course-in-cart.php:20, templates/loop/course-price-edd.php:20, templates/loop/course-price-woocommerce.php:20, templates/loop/course-price-woocommerce.php:35, templates/loop/course-price.php:19, views/metabox/course-add-edd-product-metabox.php:59, views/metabox/course-add-product-metabox.php:66, templates/single/course/wc-price-html.php:23
+#: templates/course-filter/filters.php:9, templates/dashboard/create-course.php:210, templates/loop/course-continue.php:19, templates/loop/course-in-cart.php:20, templates/loop/course-price-edd.php:20, templates/loop/course-price-woocommerce.php:20, templates/loop/course-price-woocommerce.php:35, templates/loop/course-price.php:19, views/metabox/course-add-edd-product-metabox.php:59, views/metabox/course-add-product-metabox.php:66, views/pages/course-list.php:263, templates/single/course/wc-price-html.php:23
 msgid "Free"
 msgstr ""
 
@@ -4538,6 +4538,22 @@ msgstr ""
 msgid "on"
 msgstr ""
 
+#: views/pages/course-list.php:201
+msgid "Topic:"
+msgstr ""
+
+#: views/pages/course-list.php:207
+msgid "Lesson:"
+msgstr ""
+
+#: views/pages/course-list.php:213, templates/dashboard/quiz-attempts/quiz-reviews.php:95
+msgid "Quiz:"
+msgstr ""
+
+#: views/pages/course-list.php:219
+msgid "Assignment:"
+msgstr ""
+
 #: views/pages/enable_disable_addons.php:3
 msgid "Addons List"
 msgstr ""
@@ -4864,10 +4880,6 @@ msgstr ""
 
 #: templates/dashboard/question-answer/answers.php:83
 msgid "Reply"
-msgstr ""
-
-#: templates/dashboard/quiz-attempts/quiz-reviews.php:95
-msgid "Quiz:"
 msgstr ""
 
 #: templates/dashboard/quiz-attempts/quiz-reviews.php:101

@@ -47,6 +47,12 @@ class Course_List {
 		 * @since v2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_course_list_bulk_action', array( $this, 'course_list_bulk_action' ) );
+		/**
+		 * Handle ajax request for updating course status
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'wp_ajax_tutor_change_course_status', array( __CLASS__, 'tutor_change_course_status' ) );
 	}
 
 	/**
@@ -58,7 +64,7 @@ class Course_List {
 	public function prepare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
-			$this->bulk_action_published(),
+			$this->bulk_action_publish(),
 			$this->bulk_action_pending(),
 			$this->bulk_action_draft(),
 			$this->bulk_action_delete(),
@@ -84,7 +90,7 @@ class Course_List {
 		$draft     = self::count_course( 'draft', $course_id, $date, $search );
 		$pending   = self::count_course( 'pending', $course_id, $date, $search );
 
-		$tabs      = array(
+		$tabs = array(
 			array(
 				'key'   => 'all',
 				'title' => __( 'All', 'tutor-pro' ),
@@ -114,7 +120,7 @@ class Course_List {
 				'title' => __( 'Pending', 'tutor-pro' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
-			)
+			),
 		);
 		return $tabs;
 	}
@@ -156,17 +162,17 @@ class Course_List {
 		$status_query = '';
 		if ( 'all' === $status ) {
 			$status_query = "AND course.post_status IN ('publish', 'pending', 'draft')";
-		} else if ( 'mine' === $status ) {
+		} elseif ( 'mine' === $status ) {
 			$status_query = "AND course.post_author = {$user_id} AND course.post_status IN ('publish', 'pending', 'draft')";
 		} else {
 			// if $status == published | pending | draft then user $status var.
 			$status_query = "AND course.post_status = '$status'";
 		}
-
-		$count = $wpdb->get_var(
+		$post_table = $wpdb->posts;
+		$count      = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*)
-					FROM 	{$wpdb->posts} AS course
+					FROM 	{$post_table} AS course
 					WHERE 	course.post_type = %s
                             {$status_query}
 							{$date_query}
@@ -190,34 +196,80 @@ class Course_List {
 		// check nonce.
 		tutor_utils()->checking_nonce();
 		$action   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
-		$update   = self::delete_announcements( $action, $bulk_ids );
-		return true === $update ? wp_send_json_success() : wp_send_json_error();
+		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
+
+		if ( '' === $action || '' === $bulk_ids ) {
+			return wp_send_json_error();
+		} elseif ( 'delete' === $action ) {
+			$delete_courses = self::delete_course( $bulk_ids );
+			return $delete_courses ? wp_send_json_success() : wp_send_json_error();
+		} else {
+			$update_status = self::update_course_status( $action, $bulk_ids );
+			return $update_status ? wp_send_json_success() : wp_send_json_error();
+		}
+		exit;
+	}
+
+	/**
+	 * Handle ajax request for updating course status
+	 *
+	 * @return json response
+	 * @since v2.0.0
+	 */
+	public static function tutor_change_course_status() {
+		tutor_utils()->checking_nonce();
+		$status = sanitize_text_field( $_POST['status'] );
+		$id     = sanitize_text_field( $_POST['id'] );
+		$update = self::update_course_status( $status, $id );
+		//return $update ? wp_send_json_success( $update ) : wp_send_json_error();
+		return wp_send_json( $update );
 		exit;
 	}
 
 	/**
 	 * Execute bulk action for enrollments ex: complete | cancel
 	 *
-	 * @param string $action hold action.
 	 * @param string $bulk_ids ids that need to update.
 	 * @return bool
 	 * @since v2.0.0
 	 */
-	public static function delete_announcements( $action, $bulk_ids ): bool {
+	public static function delete_course( $bulk_ids ): bool {
 		global $wpdb;
 		$post_table = $wpdb->posts;
-		if ( 'delete' === $action ) {
-			$delete = $wpdb->query(
-				$wpdb->prepare(
-					" DELETE FROM {$post_table}
-                    WHERE ID IN ($bulk_ids)
-                "
-				)
-			);
-			return false === $delete ? false : true;
-		}
-		return false;
+		$bulk_ids   = sanitize_text_field( $bulk_ids );
+		$delete     = $wpdb->query(
+			$wpdb->prepare(
+				" DELETE FROM {$post_table}
+				WHERE ID IN ($bulk_ids)
+			"
+			)
+		);
+		return false === $delete ? false : true;
+	}
+
+	/**
+	 * Update course status
+	 *
+	 * @param string $status for updating course status.
+	 * @param string $bulk_ids comma separated ids.
+	 * @return bool
+	 * @since v2.0.0
+	 */
+	public static function update_course_status( string $status, $bulk_ids ): bool {
+		global $wpdb;
+		$post_table = $wpdb->posts;
+		$status     = sanitize_text_field( $status );
+		$bulk_ids   = sanitize_text_field( $bulk_ids );
+		$update     = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$post_table} 
+				SET post_status = %s
+				WHERE ID IN ($bulk_ids)
+			",
+				$status
+			)
+		);
+		return $update ? true : false;
 	}
 
 }

@@ -108,6 +108,12 @@ if ( '' !== $search_filter ) {
 }
 $the_query = new WP_Query( $args );
 
+$available_status = array(
+	'publish' => __( 'Publish', 'tutor' ),
+	'pending' => __( 'Pending', 'tutor' ),
+	'draft'   => __( 'Draft', 'tutor' ),
+);
+
 ?>
 <div class="tutor-admin-page-wrapper">
 	<?php
@@ -270,42 +276,51 @@ $the_query = new WP_Query( $args );
 								<td data-th="Actions">
 									<div class="inline-flex-center td-action-btns">
 										<div class="tutor-form-select-with-icon select-default- select-primary select-success- select-danger- select-warning-">
-										<select title="Please select a color">
-											<option value="Red">Red</option>
-											<option value="Blue">Blue</option>
-											<option value="Blue">Yellow</option>
+										<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-admin-course-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>">
+										<?php foreach ( $available_status as $key => $value ) : ?>
+											<option value="publish" <?php selected( $key, $post->post_status, 'selected' ); ?>>
+												<?php echo esc_html( $value ); ?>
+											</option>
+										<?php endforeach; ?>	
 										</select>
 										<i class="icon1 ttr-eye-fill-filled"></i>
 										<i class="icon2 ttr-angle-down-filled"></i>
 										</div>
 										<a href="#" class="btn-outline tutor-btn">
-										Edit
+											<?php esc_html_e( 'Edit', 'tutor' ); ?>
 										</a>
-									
 										<div class="tutor-popup-opener">
 										<button
 											type="button"
 											class="popup-btn"
-											data-tutor-popup-target="table-dashboard-course-list-1"
+											data-tutor-popup-target="table-dashboard-course-list-<?php echo esc_attr( $post->ID); ?>"
 										>
 											<span class="toggle-icon"></span>
 										</button>
-										<ul id="table-dashboard-course-list-1" class="popup-menu">
+										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID); ?>" class="popup-menu">
 											<li>
-											<a href="#">
-												<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
-												<span class="text-regular-body color-text-white">
-												Download
-												</span>
-											</a>
+												<a href="#">
+													<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+													<span class="text-regular-body color-text-white">
+														<?php esc_html_e( 'View Course', 'tutor' ); ?>
+													</span>
+												</a>
 											</li>
 											<li>
-											<a href="#">
-												<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
-												<span class="text-regular-body color-text-white">
-												Delete
-												</span>
-											</a>
+												<a href="#">
+													<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+													<span class="text-regular-body color-text-white">
+													<?php esc_html_e( 'Duplicate', 'tutor' ); ?>
+													</span>
+												</a>
+											</li>
+											<li>
+												<a href="#">
+													<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+													<span class="text-regular-body color-text-white">
+													<?php esc_html_e( 'Delete', 'tutor' ); ?>
+													</span>
+												</a>
 											</li>
 										</ul>
 										</div>
@@ -315,7 +330,9 @@ $the_query = new WP_Query( $args );
 						<?php endforeach; ?>
 					<?php else : ?>
 						<tr>
-							<?php esc_html_e( 'No course found', 'tutor' ); ?>
+							<td colspan="100%">
+								<?php esc_html_e( 'No course found', 'tutor' ); ?>
+							</td>
 						</tr>
 					<?php endif; ?>
 				</tbody>
