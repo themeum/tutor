@@ -30,25 +30,50 @@
 					$date      = isset( $_GET['date'] ) ?  esc_html__( $_GET['date'] ) : '';
 					$search    = isset( $_GET['search'] ) ?  esc_html__( $_GET['search'] ) : '';
 				?>
-				<div class="tutor-form-group">
-					<label for="tutor-backend-filter-course">
-						<?php esc_html_e( 'Course', 'tutor' ); ?>
-					</label>
-					<select type="text" id="tutor-backend-filter-course" name="tutor-backend-filter-course">
-					<?php if ( $courses ) : ?>
-						<option value="">
-							<?php esc_html_e( 'All Courses', 'tutor' ); ?>
-						</option>
-						<?php foreach ( $courses as $course ) : ?>
-						<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
-							<?php echo $course->post_title; ?>
-						</option>
-					<?php endforeach; ?>
-				<?php else : ?>
-					<option value=""><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
+				<?php if ( isset( $data['course_filter'] ) && true === $data['course_filter'] ) : ?>
+					<div class="tutor-form-group">
+						<label for="tutor-backend-filter-course">
+							<?php esc_html_e( 'Course', 'tutor' ); ?>
+						</label>
+						<select type="text" id="tutor-backend-filter-course" name="tutor-backend-filter-course">
+						<?php if ( $courses ) : ?>
+							<option value="">
+								<?php esc_html_e( 'All Courses', 'tutor' ); ?>
+							</option>
+							<?php foreach ( $courses as $course ) : ?>
+							<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
+								<?php echo $course->post_title; ?>
+							</option>
+						<?php endforeach; ?>
+					<?php else : ?>
+						<option value=""><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
+					<?php endif; ?>
+						</select>
+					</div>
 				<?php endif; ?>
-					</select>
-				</div>
+
+				<?php if ( isset( $data['category_filter'] ) && true === $data['category_filter'] ) : ?>
+					<div class="tutor-form-group">
+						<label for="tutor-backend-filter-course">
+							<?php esc_html_e( 'Category', 'tutor' ); ?>
+						</label>
+						<select type="text" id="tutor-backend-filter-course" name="tutor-backend-filter-course">
+						<?php if ( $courses ) : ?>
+							<option value="">
+								<?php esc_html_e( 'All Category', 'tutor' ); ?>
+							</option>
+							<?php foreach ( $courses as $course ) : ?>
+							<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
+								<?php echo esc_html( $course->post_title ); ?>
+							</option>
+						<?php endforeach; ?>
+					<?php else : ?>
+						<option value=""><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
+					<?php endif; ?>
+						</select>
+					</div>
+				<?php endif; ?>
+
 				<div class="tutor-form-group">
 					<label for="tutor-backend-filter-order">
 						<?php esc_html_e( 'Sort By', 'tutor' ); ?>
