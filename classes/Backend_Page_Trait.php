@@ -56,10 +56,10 @@ trait Backend_Page_Trait {
 	 * @return array
 	 * @since v2.0.0
 	 */
-	public function bulk_action_published(): array {
+	public function bulk_action_publish(): array {
 		return array(
-			'value'  => 'published',
-			'option' => __( 'Published', 'tutor-pro' ),
+			'value'  => 'publish',
+			'option' => __( 'Publish', 'tutor-pro' ),
 		);
 	}
 

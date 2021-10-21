@@ -1084,21 +1084,7 @@ window.onload = function () {
       var search = document.getElementById("tutor-backend-filter-search").value;
       window.location = urlPrams("search", search);
     };
-  } // document.getElementById("tutor-backend-filter-course").onchange = (e) => {
-  //   window.location = urlPrams("course-id", e.target.value);
-  // };
-  // document.getElementById("tutor-backend-filter-order").onchange = (e) => {
-  //   window.location = urlPrams("order", e.target.value);
-  // };
-  // document.getElementById("tutor-backend-filter-date").onchange = (e) => {
-  //   window.location = urlPrams("date", e.target.value);
-  // };
-  // document.getElementById("tutor-admin-search-filter-form").onsubmit = (e) => {
-  //   e.preventDefault();
-  //   const search = document.getElementById("tutor-backend-filter-search").value;
-  //   window.location = urlPrams("search", search);
-  // };
-
+  }
   /**
    * Onsubmit bulk form handle ajax request then reload page
    */
@@ -1217,6 +1203,125 @@ window.onload = function () {
         }
       });
     });
+  }
+  /**
+   * On change status 
+   * update course status
+   */
+
+
+  var availableStatus = ['publish', 'pending', 'draft'];
+  var courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
+
+  var _iterator2 = _createForOfIteratorHelper(courseStatusUpdate),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var status = _step2.value;
+
+      status.onchange = /*#__PURE__*/function () {
+        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+          var target, newStatus, prevStatus, formData, post, response;
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  target = e.target;
+                  newStatus = availableStatus[target.selectedIndex];
+                  prevStatus = target.dataset.status;
+
+                  if (!(newStatus === prevStatus)) {
+                    _context2.next = 5;
+                    break;
+                  }
+
+                  return _context2.abrupt("return");
+
+                case 5:
+                  formData = new FormData();
+                  formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                  formData.set('id', target.dataset.id);
+                  formData.set('status', newStatus);
+                  formData.set('action', 'tutor_change_course_status');
+                  _context2.next = 12;
+                  return ajaxHandler(formData);
+
+                case 12:
+                  post = _context2.sent;
+                  _context2.next = 15;
+                  return post.json();
+
+                case 15:
+                  response = _context2.sent;
+
+                  if (response) {
+                    target.dataset.status = newStatus;
+                    tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
+                  } else {
+                    tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
+                  }
+
+                case 17:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2);
+        }));
+
+        return function (_x4) {
+          return _ref2.apply(this, arguments);
+        };
+      }();
+    }
+    /**
+     * Handle ajax request show toast message on success | failure
+     *
+     * @param {*} formData including action and all form fields
+     */
+
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+
+  function ajaxHandler(_x3) {
+    return _ajaxHandler.apply(this, arguments);
+  }
+
+  function _ajaxHandler() {
+    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(formData) {
+      var post;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              _context3.next = 3;
+              return fetch(window._tutorobject.ajaxurl, {
+                method: "POST",
+                body: formData
+              });
+
+            case 3:
+              post = _context3.sent;
+              return _context3.abrupt("return", post);
+
+            case 7:
+              _context3.prev = 7;
+              _context3.t0 = _context3["catch"](0);
+              tutor_toast(__("Operation failed", "tutor"), _context3.t0, "error");
+
+            case 10:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 7]]);
+    }));
+    return _ajaxHandler.apply(this, arguments);
   }
 };
 
