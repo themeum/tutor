@@ -1732,6 +1732,208 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./assets/react/lib/filter.js":
+/*!************************************!*\
+  !*** ./assets/react/lib/filter.js ***!
+  \************************************/
+/***/ (() => {
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+/**
+ * On click add filter value on the url
+ * and refresh page
+ *
+ * Handle bulk action
+ *
+ * @package Filter / sorting
+ * @since v2.0.0
+ */
+var _wp$i18n = wp.i18n,
+    __ = _wp$i18n.__,
+    _x = _wp$i18n._x,
+    _n = _wp$i18n._n,
+    _nx = _wp$i18n._nx;
+
+window.onload = function () {
+  var filterCourse = document.getElementById("tutor-backend-filter-course");
+
+  if (filterCourse) {
+    filterCourse.onchange = function (e) {
+      window.location = urlPrams("course-id", e.target.value);
+    };
+  }
+
+  var filterOrder = document.getElementById("tutor-backend-filter-order");
+
+  if (filterOrder) {
+    filterOrder.onchange = function (e) {
+      window.location = urlPrams("order", e.target.value);
+    };
+  }
+
+  var filterDate = document.getElementById("tutor-backend-filter-date");
+
+  if (filterDate) {
+    filterDate.onchange = function (e) {
+      window.location = urlPrams("date", e.target.value);
+    };
+  }
+
+  var filterSearch = document.getElementById("tutor-admin-search-filter-form");
+
+  if (filterSearch) {
+    filterSearch.onsubmit = function (e) {
+      e.preventDefault();
+      var search = document.getElementById("tutor-backend-filter-search").value;
+      window.location = urlPrams("search", search);
+    };
+  } // document.getElementById("tutor-backend-filter-course").onchange = (e) => {
+  //   window.location = urlPrams("course-id", e.target.value);
+  // };
+  // document.getElementById("tutor-backend-filter-order").onchange = (e) => {
+  //   window.location = urlPrams("order", e.target.value);
+  // };
+  // document.getElementById("tutor-backend-filter-date").onchange = (e) => {
+  //   window.location = urlPrams("date", e.target.value);
+  // };
+  // document.getElementById("tutor-admin-search-filter-form").onsubmit = (e) => {
+  //   e.preventDefault();
+  //   const search = document.getElementById("tutor-backend-filter-search").value;
+  //   window.location = urlPrams("search", search);
+  // };
+
+  /**
+   * Onsubmit bulk form handle ajax request then reload page
+   */
+
+
+  var bulkForm = document.getElementById("tutor-admin-bulk-action-form");
+
+  if (bulkForm) {
+    bulkForm.onsubmit = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+        var formData, bulkIds, bulkFields, _iterator, _step, field, post;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(bulkForm);
+                bulkIds = [];
+                bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+                _iterator = _createForOfIteratorHelper(bulkFields);
+
+                try {
+                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                    field = _step.value;
+
+                    if (field.checked) {
+                      bulkIds.push(field.value);
+                    }
+                  }
+                } catch (err) {
+                  _iterator.e(err);
+                } finally {
+                  _iterator.f();
+                }
+
+                formData.set("bulk-ids", bulkIds);
+                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                _context.prev = 8;
+                _context.next = 11;
+                return fetch(window._tutorobject.ajaxurl, {
+                  method: "POST",
+                  body: formData
+                });
+
+              case 11:
+                post = _context.sent;
+
+                if (post.ok) {
+                  location.reload();
+                }
+
+                _context.next = 18;
+                break;
+
+              case 15:
+                _context.prev = 15;
+                _context.t0 = _context["catch"](8);
+                alert(_context.t0);
+
+              case 18:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[8, 15]]);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+  }
+  /**
+   * onclick bulk action button show confirm popup
+   * on click confirm button submit bulk form
+   */
+
+
+  var bulkActionButton = document.getElementById("tutor-confirm-bulk-action");
+
+  if (bulkActionButton) {
+    bulkActionButton.onclick = function () {
+      var input = document.createElement("input");
+      input.type = "submit";
+      bulkForm.appendChild(input);
+      input.click();
+      input.remove();
+    };
+  }
+
+  function urlPrams(type, val) {
+    var url = new URL(window.location.href);
+    var params = url.searchParams;
+    params.set(type, val);
+    params.set("paged", 1);
+    return url;
+  }
+  /**
+   * Select all bulk checkboxes
+   *
+   * @since v2.0.0
+   */
+
+
+  var selectAll = document.querySelector("#tutor-bulk-checkbox-all");
+
+  if (selectAll) {
+    selectAll.addEventListener("click", function () {
+      var checkboxes = document.querySelectorAll(".tutor-bulk-checkbox");
+      checkboxes.forEach(function (item) {
+        if (selectAll.checked) {
+          item.checked = true;
+        } else {
+          item.checked = false;
+        }
+      });
+    });
+  }
+};
+
+/***/ }),
+
 /***/ "./assets/react/lib/media-chooser.js":
 /*!*******************************************!*\
   !*** ./assets/react/lib/media-chooser.js ***!
@@ -2567,7 +2769,8 @@ window.tutor_toast = function (title, description, type) {
 /***/ (() => {
 
 window.jQuery(document).ready(function ($) {
-  var __ = wp.i18n.__;
+  var __ = wp.i18n.__; // Copy text
+
   $(document).on('click', '.tutor-copy-text', function (e) {
     // Prevent default action
     e.stopImmediatePropagation();
@@ -2581,6 +2784,44 @@ window.jQuery(document).ready(function ($) {
     document.execCommand("copy");
     $temp.remove();
     tutor_toast(__('Copied!', 'tutor'), text, 'success');
+  }); // Ajax action 
+
+  $(document).on('click', '.tutor-list-ajax-action', function () {
+    var url = $(this).data('url');
+    var type = $(this).data('type') || 'GET';
+    var prompt = $(this).data('prompt');
+    var del = $(this).data('delete_id');
+    console.log(prompt);
+
+    if (prompt && !window.confirm(prompt)) {
+      return;
+    }
+
+    $.ajax({
+      url: url,
+      type: type,
+      success: function success(data) {
+        if (data.success) {
+          if (del) {
+            $('#' + del).fadeOut(function () {
+              $(this).remove();
+            });
+          }
+
+          return;
+        }
+
+        var _ref = data.data || {},
+            _ref$message = _ref.message,
+            message = _ref$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref$message;
+
+        tutor_toast('Error!', message, 'error');
+      },
+      error: function error() {
+        tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
+      },
+      complete: function complete() {}
+    });
   });
 });
 
@@ -2778,6 +3019,9 @@ function tutorModal() {
       console.log(modal);
 
       if (modal) {
+        document.querySelectorAll('.tutor-modal.tutor-is-active').forEach(function (item) {
+          return item.classList.remove('tutor-is-active');
+        });
         modal.classList.add('tutor-is-active');
       }
     }
@@ -31704,9 +31948,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _lib_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/filter */ "./assets/react/lib/filter.js");
+/* harmony import */ var _lib_filter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_lib_filter__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_7__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 

@@ -55,6 +55,22 @@ final class Tutor{
 	private $edd;
 
 	/**
+	 * Announcement
+	 *
+	 * @var $announcements
+	 * @since v2.0.0
+	 */
+	private $announcements;
+
+	/**
+	 * Course List
+	 *
+	 * @var $course_list
+	 * @since v2.0.0
+	 */
+	private $course_list;
+
+	/**
 	 * @return null|Tutor
 	 *
 	 * Run the TUTOR
@@ -142,6 +158,14 @@ final class Tutor{
 		//Integrations
 		$this->woocommerce = new WooCommerce();
 		$this->edd = new TutorEDD();
+
+		/**
+		 * Init obj
+		 *
+		 * @since v2.0.0
+		 */
+		$this->announcements = new Announcements();
+		$this->course_list   = new Course_list();
 
 		/**
 		 * Run Method
