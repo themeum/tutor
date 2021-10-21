@@ -82,10 +82,10 @@ function tutor_announcement_modal($id, $title, $courses, $announcement=null) {
     <?php
 }
 
-function tutor_announcement_modal_details($id, $update_modal_id, $announcement, $course_title, $publish_date) {
+function tutor_announcement_modal_details($id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $publish_date) {
     // TODO: Update this modal with new modal variation from Saif
     ?>
-    <div id="<?php echo $id; ?>" class="tutor-modal modal-view-announcement">
+    <div id="<?php echo $id; ?>" class="tutor-modal modal-view-double-segment">
         <span class="tutor-modal-overlay"></span>
 
         <div class="tutor-modal-root">
@@ -132,10 +132,10 @@ function tutor_announcement_modal_details($id, $update_modal_id, $announcement, 
                             </button>
                         </div>
                         <div class="footer-btns tutor-btn-group">
-                            <button class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md">
+                            <button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md">
                                 <?php _e('Delete', 'tutor'); ?>
                             </button>
-                            <button data-tutor-modal-close data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-md">
+                            <button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-md">
                                 <?php _e('Edit', 'tutor'); ?>
                             </button>
                         </div>
@@ -257,7 +257,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                         
                         <?php 
                             tutor_announcement_modal($update_modal_id, __('Edit Announcment', 'tutor'), $courses, $announcement); 
-                            tutor_announcement_modal_details($details_modal_id, $update_modal_id, $announcement, $course->post_title, $date_format);
+                            tutor_announcement_modal_details($details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course->post_title, $date_format);
                             tutor_announcement_modal_delete($delete_modal_id, $announcement->ID, $row_id);
                         ?>
                     </td>
