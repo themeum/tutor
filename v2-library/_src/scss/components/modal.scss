@@ -32,7 +32,22 @@
 		border: none;
 	}
 
-	&:not(.modal-sticky-header-footer):not(.modal-view-announcement) {
+	.tutor-modal-header {
+		position: relative;
+		.tutor-modal-close-inside {
+			background: transparent;
+			border: none;
+			outline: none;
+			display: flex;
+			font-size: 35px;
+			margin-left: auto;
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+	}
+
+	&:not(.modal-sticky-header-footer):not(.modal-view-double-segment) {
 		.tutor-modal-close {
 			position: fixed;
 			right: 30px;
@@ -72,7 +87,7 @@
 	}
 
 	// View Announcement modal
-	&.modal-view-announcement {
+	&.modal-view-double-segment {
 		.tutor-modal-header {
 			display: flex;
 			align-items: center;
