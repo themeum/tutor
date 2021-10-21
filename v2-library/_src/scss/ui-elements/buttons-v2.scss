@@ -1,0 +1,102 @@
+// Button Utilities
+$variations: (
+	'wordpress' $brand-wordpress $text-white $brand-wordpress,
+	'primary' $primary-main $text-white $primary-main,
+	'secondary' $primary-40 $primary-main $primary-40,
+	'tertiary' transparent $primary-main $primary-main,
+	'disable' $black-08 $text-hints $black-08,
+	'disable-outline' transparent $text-hints $stroke-light-30
+);
+
+@each $suffix, $bgColor, $txtColor, $border, $hover in $variations {
+	.tutor-btn:not(.tutor-is-outline).tutor-btn-#{$suffix} {
+		background: #{$bgColor};
+		color: #{$txtColor};
+		border-color: #{$border};
+	}
+}
+
+$btn-sizes: ('xl' 15 40, 'lg' 7 34, 'md' 7 28, 'sm' 7.5 20);
+@each $suffix, $px, $py in $btn-sizes {
+	.tutor-btn:not(.tutor-btn-icon).tutor-btn-#{$suffix} {
+		padding: #{$px}px #{$py}px;
+	}
+}
+
+.tutor-btn {
+	// font-family: 'SF Pro Display', sans-serif;
+	border-radius: 6px;
+	&:not(.tutor-is-outline):not(.tutor-no-hover) {
+		&.tutor-btn-wordpress:hover {
+			background: $brand-wordpress-hover;
+		}
+		&.tutor-btn-secondary:hover {
+			background: darken($primary-40, 2);
+			border-color: darken($primary-40, 2);
+			color: $primary-main;
+		}
+	}
+	&.tutor-btn-primary {
+	}
+	&.tutor-btn-secondary {
+	}
+	&.tutor-btn-tertiary {
+	}
+	&.tutor-btn-disable {
+	}
+	&.tutor-btn-disable-outline {
+	}
+	&.tutor-btn-loading {
+		&.tutor-is-lg {
+			height: 64px;
+		}
+		.ball {
+			width: 9px;
+			height: 9px;
+			border-radius: 50%;
+			margin: 0 5.5px;
+			background-color: #fff;
+
+			animation: 1.5s bounce ease infinite;
+		}
+
+		.blue {
+			// background-color: #4285f5;
+		}
+
+		.red {
+			// background-color: #ea4436;
+			animation-delay: 0.25s;
+		}
+
+		.yellow {
+			// background-color: #fbbd06;
+			animation-delay: 0.5s;
+		}
+
+		.green {
+			// background-color: #34a952;
+			animation-delay: 0.75s;
+		}
+
+		@keyframes bounce {
+			50% {
+				transform: translateY(9px);
+			}
+		}
+	}
+
+	// Button Sizes and Typography
+	&.tutor-btn-xl {
+		@extend .text-btn-xlarge;
+	}
+	&.tutor-btn-lg {
+		@extend .text-btn-large;
+	}
+	&.tutor-btn-md {
+		@extend .text-btn-medium;
+	}
+	&.tutor-btn-sm {
+		@extend .text-btn-small;
+	}
+}
