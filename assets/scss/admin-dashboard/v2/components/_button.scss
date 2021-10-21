@@ -1,75 +1,76 @@
 // Buttons Override
-.tutor-backend-settings-page {
-	.tutor-btn {
-		cursor: pointer;
-		border-radius: 6px;
-		&.tutor-is-sm {
-			@extend .text-btn-medium;
-			padding: 7px 16.65px;
-		}
-		&.tutor-is-xs {
-			@extend .text-btn-small;
-			padding: 8px 14px;
-			.tutor-btn-icon {
-				font-size: 16px;
-			}
-		}
+.tutor-backend-settings-page,
+.tutor-dashboard-page {
+    .tutor-btn {
+        cursor: pointer;
+        border-radius: 6px;
+        &.tutor-is-sm {
+            @extend .text-btn-medium;
+            padding: 7px 16.65px;
+        }
+        &.tutor-is-xs {
+            @extend .text-btn-small;
+            padding: 8px 14px;
+            .tutor-btn-icon {
+                font-size: 16px;
+            }
+        }
 
-		// Outlined button
-		&.tutor-is-outline {
-			border-color: $brand-wordpress;
-			color: $brand-wordpress;
-			background: transparent;
-			&:not(.tutor-no-hover):hover {
-				background-color: $brand-wordpress-hover;
-				border-color: $brand-wordpress-hover;
-			}
-			&.tutor-is-default {
-				border-color: var(--tutor-border-color-alt);
-				color: var(--tutor-text-hints);
-				background: var(--tutor-white);
-				&:not(.tutor-no-hover):hover {
-					background: unset;
-					color: $brand-wordpress-hover;
-					border-color: $brand-wordpress-hover;
-				}
-			}
-		}
+        // Outlined button
+        &.tutor-is-outline {
+            border-color: $brand-wordpress;
+            color: $brand-wordpress;
+            background: transparent;
+            &:not(.tutor-no-hover):hover {
+                background-color: $brand-wordpress-hover;
+                border-color: $brand-wordpress-hover;
+            }
+            &.tutor-is-default {
+                border-color: var(--tutor-border-color-alt);
+                color: var(--tutor-text-hints);
+                background: var(--tutor-white);
+                &:not(.tutor-no-hover):hover {
+                    background: unset;
+                    color: $brand-wordpress-hover;
+                    border-color: $brand-wordpress-hover;
+                }
+            }
+        }
 
-		// Filled/Default button
-		&:not(.tutor-is-outline) {
-			background-color: $brand-wordpress;
-			border-color: $brand-wordpress;
-			&:not(.tutor-no-hover):hover {
-				background-color: $brand-wordpress-hover;
-				border-color: $brand-wordpress-hover;
-			}
+        // Filled/Default button
+        &:not(.tutor-is-outline) {
+            background-color: $brand-wordpress;
+            border-color: $brand-wordpress;
+            &:not(.tutor-no-hover):hover {
+                background-color: $brand-wordpress-hover;
+                border-color: $brand-wordpress-hover;
+            }
 
-			&.tutor-is-default {
-				background-color: var(--tutor-bg-grey);
-				border-color: var(--tutor-bg-grey);
-				color: var(--tutor-text-primary);
+            &.tutor-is-default {
+                background-color: var(--tutor-bg-grey);
+                border-color: var(--tutor-bg-grey);
+                color: var(--tutor-text-primary);
 
-				&:not(.tutor-no-hover):hover {
-					background-color: var(--tutor-bg-grey);
-					color: $brand-wordpress;
-					border-color: $brand-wordpress;
-				}
+                &:not(.tutor-no-hover):hover {
+                    background-color: var(--tutor-bg-grey);
+                    color: $brand-wordpress;
+                    border-color: $brand-wordpress;
+                }
 
-				&.is-text-only {
-					background-color: transparent;
-					border-color: transparent;
-					color: inherit;
-					&:not(.tutor-no-hover):hover {
-						background-color: var(--tutor-bg-grey-light);
-						color: $brand-wordpress;
-						border-color: transparent;
-					}
-				}
-			}
-		}
-		.tutor-btn-icon {
-			font-size: 24px;
-		}
-	}
+                &.is-text-only {
+                    background-color: transparent;
+                    border-color: transparent;
+                    color: inherit;
+                    &:not(.tutor-no-hover):hover {
+                        background-color: var(--tutor-bg-grey-light);
+                        color: $brand-wordpress;
+                        border-color: transparent;
+                    }
+                }
+            }
+        }
+        .tutor-btn-icon {
+            font-size: 24px;
+        }
+    }
 }

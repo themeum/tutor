@@ -17,8 +17,13 @@ function tutorModal() {
 				? e.target.getAttribute(attr)
 				: e.target.closest(`[${attr}]`).getAttribute(attr);
 			const modal = document.getElementById(id);
-			console.log(modal)
+
+			console.log(modal);
+
 			if (modal) {
+				document
+					.querySelectorAll('.tutor-modal.tutor-is-active')
+					.forEach((item) => item.classList.remove('tutor-is-active'));
 				modal.classList.add('tutor-is-active');
 			}
 		}

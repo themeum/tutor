@@ -102,28 +102,16 @@ $filters = array(
 	
 	<div class="tutor-admin-page-content-wrapper">
 	<?php
-		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
+		$announcements = $the_query->have_posts() ? $the_query->posts : array();
 		$announcement_template = esc_url( tutor()->path . '/views/fragments/announcement-list.php' );
 		tutor_load_template_from_custom_path(
 			$announcement_template,
 			array(
 				'announcements' => is_array( $announcements ) ? $announcements : array(),
+                'the_query' => $the_query,
+                'paged' => $paged
 			)
 		);
-		?>
-	</div>
-	<div class="tutor-admin-page-pagination-wrapper">
-		<?php
-			/**
-			 * Prepare pagination data & load template
-			 */
-			$pagination_data     = array(
-				'total_items' => $the_query->found_posts,
-				'per_page'    => $per_page,
-				'paged'       => $paged,
-			);
-			$pagination_template = esc_url( tutor()->path . 'views/elements/pagination.php', $pagination_data );
-			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			?>
+    ?>
 	</div>
 </div>

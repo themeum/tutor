@@ -1,3 +1,5 @@
+@import '../../../v2-library/_src/scss/reusables.scss';
+
 .tutor-dashboard {
 
     // Libraries to use in all frontend dashboard pages
@@ -18,7 +20,7 @@
             font-style: normal;
             font-weight: 500;
             font-size: 24px;
-            color: #212327;
+            color: $black-main;
             margin: 0 0 20px 0;
         }
         

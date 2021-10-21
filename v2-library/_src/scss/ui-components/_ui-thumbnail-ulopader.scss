@@ -12,8 +12,8 @@
 
 	.thumbnail-preview {
 		--width: 235px;
-		background: #eff1f7;
-		border: 2px solid #eff1f7;
+		background: $black-05;
+		border: 2px solid $black-05;
 		border-radius: 3px;
 		position: relative;
 		margin-right: 28px;
@@ -36,7 +36,7 @@
 				content: '';
 				position: absolute;
 				inset: 0;
-				background: #eff1f7;
+				background: $black-05;
 				display: flex;
 				align-items: center;
 				justify-content: center;

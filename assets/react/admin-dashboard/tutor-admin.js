@@ -2,6 +2,8 @@ import "../lib/common";
 import "./segments/image-preview";
 import "./segments/options";
 import "./segments/import-export";
+import "./segments/addonlist";
+import "./addons-list/addons-list-main";
 import "../lib/filter";
 
 import '../modules/announcement';
@@ -196,27 +198,27 @@ jQuery(document).ready(function($) {
       .hide();
   });
 
-  $(document).on("change", ".tutor_addons_list_item", function(e) {
-    var $that = $(this);
+  // $(document).on("change", ".tutor-form-toggle-input", function(e) {
+  //   var $that = $(this);
 
-    var isEnable = $that.prop("checked") ? 1 : 0;
-    var addonFieldName = $that.attr("name");
+  //   var isEnable = $that.prop("checked") ? 1 : 0;
+  //   var addonFieldName = $that.attr("name");
 
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: {
-        isEnable: isEnable,
-        addonFieldName: addonFieldName,
-        action: "addon_enable_disable",
-      },
-      success: function(data) {
-        if (data.success) {
-          //Success
-        }
-      },
-    });
-  });
+  //   $.ajax({
+  //     url: window._tutorobject.ajaxurl,
+  //     type: "POST",
+  //     data: {
+  //       isEnable: isEnable,
+  //       addonFieldName: addonFieldName,
+  //       action: "addon_enable_disable",
+  //     },
+  //     success: function(data) {
+  //       if (data.success) {
+  //         //Success
+  //       }
+  //     },
+  //   });
+  // });
 
   /**
    * Add instructor
