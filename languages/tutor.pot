@@ -3934,7 +3934,7 @@ msgstr ""
 msgid "Yes, Delete This"
 msgstr ""
 
-#: views/fragments/announcement-list.php:358
+#: views/fragments/announcement-list.php:343
 msgid "No Announcment"
 msgstr ""
 
