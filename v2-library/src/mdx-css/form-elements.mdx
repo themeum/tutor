@@ -69,10 +69,59 @@ import "../docz-essential.css";
     </div>
 </Playground>
 
+
+## Select with Button
+
+<Playground>
+    <div className="tutor-form-select-with-btn">
+        <select title="Please select a color" className="tutor-form-select tutor-form-control-sm">
+            <option value="Default" selected>Default</option>
+            <option value="Red">Red</option>
+            <option value="Blue">Blue</option>
+            <option value="Yellow">Yellow</option>
+        </select>
+        <button className="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-md">Button</button>
+    </div>
+</Playground>
+
 ## Default Select
 
 <Playground>
-    <select class="tutor-form-select">
+    <div className="tutor-mb-15">
+        <select class="tutor-form-select">
+            <option selected="">Choose an option</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+    </div>
+    <div className="tutor-mb-15">
+        <label className="tutor-form-label">Select with Label</label>
+        <select class="tutor-form-select">
+            <option selected="">Choose an option</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+    </div>
+</Playground>
+
+### *Select Sizes*
+
+<Playground>
+    <select class="tutor-form-select tutor-form-control-lg tutor-mb-15">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    <select class="tutor-form-select tutor-mb-15">
+        <option selected="">Choose an option</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+    </select>
+    <select class="tutor-form-select tutor-form-control-sm tutor-mb-15">
         <option selected="">Choose an option</option>
         <option value="1">One</option>
         <option value="2">Two</option>
@@ -109,28 +158,6 @@ import "../docz-essential.css";
     </select>
 </Playground>
 
-### *Select Size*
-<Playground>
-    <select class="tutor-form-select tutor-form-control-lg tutor-mb-15">
-        <option selected="">Choose an option</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-    </select>
-    <select class="tutor-form-select tutor-mb-15">
-        <option selected="">Choose an option</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-    </select>
-    <select class="tutor-form-select tutor-form-control-sm tutor-mb-15">
-        <option selected="">Choose an option</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-    </select>
-</Playground>
-
 ## Checkbox
 
 <Playground>
@@ -143,7 +170,6 @@ import "../docz-essential.css";
     <div>
         <input type="checkbox" class="tutor-form-check-input tutor-form-check-circle" />
     </div>
-
 </Playground>
 
 ### *With label*
