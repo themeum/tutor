@@ -251,7 +251,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                             </div>
                         </td>
                     <?php else: ?>
-                        <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-bs-text-nowrap">
+                        <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-text-nowrap">
                             <?php esc_html_e( $date_format ); ?>
                         </td>                    
                     <?php endif; ?>
