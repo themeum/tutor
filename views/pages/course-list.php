@@ -136,8 +136,8 @@ $available_status = array(
 	/**
 	 * Load Templates with data.
 	 */
-	$navbar_template  = esc_url( tutor()->path . 'views/elements/navbar.php' );
-	$filters_template = esc_url( tutor()->path . 'views/elements/filters.php' );
+	$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
@@ -362,7 +362,7 @@ $available_status = array(
 			'per_page'    => $limit,
 			'paged'       => $paged_filter,
 		);
-		$pagination_template = esc_url( tutor()->path . 'views/elements/pagination.php', $pagination_data );
+		$pagination_template = tutor()->path . 'views/elements/pagination.php';
 		tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
 		?>
 	</div>
