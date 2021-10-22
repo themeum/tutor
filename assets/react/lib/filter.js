@@ -141,6 +141,11 @@ window.onload = () => {
       const response = await post.json();
       if (response) {
         target.dataset.status = newStatus;
+        let putStatus = '';
+        newStatus === 'publish' ? putStatus = 'select-success' : newStatus === 'pending' ? putStatus = 'select-warning' : 'select-default'; 
+        if (!target.closest(".tutor-form-select-with-icon").classList.contains(putStatus)) {
+          target.closest(".tutor-form-select-with-icon").classList.add(putStatus);
+        }
         tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
       } else {
         tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");

@@ -137,8 +137,8 @@ $available_status = array(
 	/**
 	 * Load Templates with data.
 	 */
-	$navbar_template  = esc_url( tutor()->path . 'views/elements/navbar.php' );
-	$filters_template = esc_url( tutor()->path . 'views/elements/filters.php' );
+	$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
 
@@ -290,12 +290,14 @@ $available_status = array(
 										} else {
 											echo wp_kses_post( wc_price( $price ) );
 										}
+										// Alert class for course status.
+										$status = ( 'publish' === $post->post_status  ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
 										?>
 									</div>
 								</td>
 								<td data-th="Actions">
 									<div class="inline-flex-center td-action-btns">
-										<div class="tutor-form-select-with-icon select-default- select-primary select-success- select-danger- select-warning-">
+										<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 										<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-admin-course-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>">
 										<?php foreach ( $available_status as $key => $value ) : ?>
 											<option value="publish" <?php selected( $key, $post->post_status, 'selected' ); ?>>
@@ -364,7 +366,7 @@ $available_status = array(
 			'per_page'    => $limit,
 			'paged'       => $paged_filter,
 		);
-		$pagination_template = esc_url( tutor()->path . 'views/elements/pagination.php', $pagination_data );
+		$pagination_template = tutor()->path . 'views/elements/pagination.php';
 		tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
 		?>
 	</div>
