@@ -10922,6 +10922,32 @@ input.tutor-form-control[readonly]:focus::placeholder, textarea.tutor-form-contr
   color: var(--tutor-disabled-color);
 }
 
+input.tutor-form-control:disabled, textarea.tutor-form-control:disabled {
+  background: #e3e5eb;
+  border-color: #e3e5eb;
+  cursor: not-allowed;
+}
+
+input.tutor-form-control:disabled::-webkit-input-placeholder, textarea.tutor-form-control:disabled::-webkit-input-placeholder {
+  color: #7A7A7A;
+}
+
+input.tutor-form-control:disabled::-moz-placeholder, textarea.tutor-form-control:disabled::-moz-placeholder {
+  color: #7A7A7A;
+}
+
+input.tutor-form-control:disabled:-ms-input-placeholder, textarea.tutor-form-control:disabled:-ms-input-placeholder {
+  color: #7A7A7A;
+}
+
+input.tutor-form-control:disabled::-ms-input-placeholder, textarea.tutor-form-control:disabled::-ms-input-placeholder {
+  color: #7A7A7A;
+}
+
+input.tutor-form-control:disabled::placeholder, textarea.tutor-form-control:disabled::placeholder {
+  color: #7A7A7A;
+}
+
 textarea.tutor-form-control {
   padding: 20px;
   min-height: 180px;
@@ -11245,12 +11271,6 @@ select.tutor-form-select:focus {
   display: -ms-flexbox;
   display: flex;
   gap: 20px;
-}
-
-.tutor-form-select-with-btn select.tutor-form-select {
-  min-width: -webkit-min-content;
-  min-width: -moz-min-content;
-  min-width: min-content;
 }
 
 .tutor-badge, .tutor-badge-square {
@@ -13649,6 +13669,37 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-wp-dashboard-header .filter-btns button.filter-btn.is-active:before {
   -webkit-transform: scaleY(1);
           transform: scaleY(1);
+}
+
+.tutor-wp-dashboard-filter {
+  gap: 30px;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.tutor-wp-dashboard-filter-items {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 30px;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .tutor-wp-dashboard-filter-items select.tutor-form-select {
+    width: 227px;
+    max-width: 227px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .tutor-wp-dashboard-filter-items {
+    width: 100%;
+  }
+  .tutor-wp-dashboard-filter-items > div {
+    width: 100%;
+  }
 }
 
 .d-grid {

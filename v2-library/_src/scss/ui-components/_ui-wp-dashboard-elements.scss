@@ -46,3 +46,28 @@
 		}
 	}
 }
+
+.tutor-wp-dashboard-filter {
+	gap: 30px;
+	flex-wrap: wrap;
+}
+.tutor-wp-dashboard-filter-items {
+	// width: 100%;
+	display: flex;
+	gap: 30px;
+	flex-wrap: wrap;
+
+	@include breakpoint-min(tablet) {
+		select.tutor-form-select {
+			width: 227px;
+			max-width: 227px;
+		}
+	}
+
+	@include breakpoint-max(tablet) {
+		width: 100%;
+		> div {
+			width: 100%;
+		}
+	}
+}

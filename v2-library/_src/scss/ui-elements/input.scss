@@ -77,6 +77,15 @@ input.tutor-form-control {
 			color: var(--tutor-disabled-color);
 		}
 	}
+
+	&:disabled {
+		background: $bg-gray-20;
+		border-color: $bg-gray-20;
+		cursor: not-allowed;
+		&::placeholder {
+			color: $text-hints;
+		}
+	}
 }
 
 textarea.tutor-form-control {

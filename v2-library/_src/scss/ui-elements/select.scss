@@ -12,6 +12,7 @@ $height-sm: 40px;
 select.tutor-form-select {
 	@extend .d-block;
 	width: 100%;
+	// min-width: -webkit-fill-available;
 	font-size: 16px;
 	font-weight: 400;
 	background-color: #fff;
@@ -68,6 +69,5 @@ select.tutor-form-select {
 	display: flex;
 	gap: 20px;
 	select.tutor-form-select {
-		min-width: min-content;
 	}
 }
