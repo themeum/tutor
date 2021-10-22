@@ -2708,7 +2708,7 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
-#: classes/Utils.php:2451, templates/dashboard/dashboard.php:39, templates/dashboard/enrolled-courses.php:9
+#: classes/Utils.php:2451, templates/dashboard/dashboard.php:40, templates/dashboard/enrolled-courses.php:9
 msgid "Enrolled Courses"
 msgstr ""
 
@@ -3402,43 +3402,43 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:47, templates/dashboard/enrolled-courses.php:17, templates/dashboard/enrolled-courses/active-courses.php:16, templates/dashboard/enrolled-courses/completed-courses.php:16
+#: templates/dashboard/dashboard.php:50, templates/dashboard/enrolled-courses.php:17, templates/dashboard/enrolled-courses/active-courses.php:16, templates/dashboard/enrolled-courses/completed-courses.php:16
 msgid "Active Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:55, templates/dashboard/enrolled-courses.php:19, templates/dashboard/enrolled-courses/active-courses.php:18, templates/dashboard/enrolled-courses/completed-courses.php:18
+#: templates/dashboard/dashboard.php:60, templates/dashboard/enrolled-courses.php:19, templates/dashboard/enrolled-courses/active-courses.php:18, templates/dashboard/enrolled-courses/completed-courses.php:18
 msgid "Completed Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:67
+#: templates/dashboard/dashboard.php:74
 msgid "Total Students"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:75
+#: templates/dashboard/dashboard.php:84
 msgid "Total Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:83
+#: templates/dashboard/dashboard.php:94
 msgid "Total Earnings"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:105
+#: templates/dashboard/dashboard.php:116
 msgid "Popular Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:107
+#: templates/dashboard/dashboard.php:118
 msgid "View All"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:116, templates/dashboard/dashboard.php:143
+#: templates/dashboard/dashboard.php:127, templates/dashboard/dashboard.php:154
 msgid "Course Name"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:121, templates/dashboard/dashboard.php:150
+#: templates/dashboard/dashboard.php:132, templates/dashboard/dashboard.php:161
 msgid "Enrolled"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:127, templates/dashboard/dashboard.php:156
+#: templates/dashboard/dashboard.php:138, templates/dashboard/dashboard.php:166
 msgid "Rating"
 msgstr ""
 
@@ -3934,7 +3934,7 @@ msgstr ""
 msgid "Yes, Delete This"
 msgstr ""
 
-#: views/fragments/announcement-list.php:358
+#: views/fragments/announcement-list.php:343
 msgid "No Announcment"
 msgstr ""
 
