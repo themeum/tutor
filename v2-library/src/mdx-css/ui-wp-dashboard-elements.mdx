@@ -1,0 +1,93 @@
+---
+name: WP Dashboard Elements
+route: /mdx-css/ui-wp-dashboard-elements
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css';
+import '../docz-essential.css';
+
+# WP Dashboard Elements
+
+`** Replace "className" with "class" while using with html` <br />
+
+## WP Dashboard Header
+
+`** remove the inline-style from the header`
+
+<Playground>
+	<header class="tutor-wp-dashboard-header d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20" style={{border: '1px solid #f1f1f1'}}>
+		<div class="header-title text-medium-h5 color-text-primary mb-lg-0 mb-3">Addons List</div>
+		<div class="filter-btns text-regular-body color-text-subsued">
+			<button type="button" class="filter-btn" data-tab-filter-target="all">
+				All <span class="item-count">(1205)</span>
+			</button>
+			<button type="button" class="filter-btn" data-tab-filter-target="active">
+				Active<span class="item-count">(10) </span>
+			</button>
+			<button type="button" class="filter-btn is-active" data-tab-filter-target="deactive">
+				Deactive <span class="item-count">(12)</span>
+			</button>
+		</div>
+	</header>
+</Playground>
+
+## WP Dashboard Filter 
+
+<Playground>
+	<div class="tutor-wp-dashboard-filter d-flex align-items-end justify-content-between" style={{}}>
+		<div class="tutor-wp-dashboard-filter-items">
+			<div className="tutor-form-select-with-btn">
+				<select
+					title="Please select a color"
+					className="tutor-form-select tutor-form-control-sm"
+				>
+					<option value="Default" selected>
+					Default
+					</option>
+					<option value="Red">Red</option>
+					<option value="Blue">Blue</option>
+					<option value="Yellow">Yellow</option>
+				</select>
+				<button className="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-md">
+					Button
+				</button>
+			</div>
+		</div>
+		<div class="tutor-wp-dashboard-filter-items">
+			<div className="">
+				<label className="tutor-form-label">Category</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+					<option value="1" selected>One</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</div>
+			<div className="">
+				<label className="tutor-form-label">Short By</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+					<option value="1" selected>One</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</div>
+			<div className="">
+				<label className="tutor-form-label">Date</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+					<option value="1" selected>One</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</div>
+			<div class="">
+				<label className="tutor-form-label">Search</label>
+				<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
+					<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+					<input type="search" class="tutor-form-control" placeholder="Search ..."/>
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>
