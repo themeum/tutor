@@ -476,6 +476,6 @@ class Admin {
 	 * @since v2.0.0
 	 */
 	public function tutor_course_list() {
-		include esc_url( tutor()->path . 'views/pages/course-list.php' );
+		include tutor()->path . 'views/pages/course-list.php';
 	}
 }

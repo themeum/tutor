@@ -74,8 +74,8 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$filters_template = esc_url( tutor()->path . 'views/elements/filters.php' );
-		$navbar_template  = esc_url( tutor()->path . 'views/elements/navbar.php' );
+		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
@@ -104,7 +104,7 @@ $filters = array(
 	<div class="tutor-admin-page-content-wrapper">
 	<?php
 		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
-		$announcement_template = esc_url( tutor()->path . '/views/fragments/announcement-list.php' );
+		$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';
 		tutor_load_template_from_custom_path(
 			$announcement_template,
 			array(
