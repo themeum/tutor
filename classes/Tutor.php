@@ -65,10 +65,10 @@ final class Tutor{
 	/**
 	 * Course List
 	 *
-	 * @var $course_list
+	 * @var $course_List
 	 * @since v2.0.0
 	 */
-	private $course_list;
+	private $course_List;
 
 	/**
 	 * @return null|Tutor
@@ -165,7 +165,7 @@ final class Tutor{
 		 * @since v2.0.0
 		 */
 		$this->announcements = new Announcements();
-		$this->course_list   = new Course_list();
+		$this->course_List   = new Course_List();
 
 		/**
 		 * Run Method
