@@ -53,16 +53,16 @@ class Admin {
 		$enable_course_marketplace = (bool) tutils()->get_option('enable_course_marketplace');
 
 		add_menu_page(
-			__('Tutor LMS', 'tutor') . $pro_text,
-			__('Tutor LMS', 'tutor') . $pro_text,
+			__( 'Tutor LMS', 'tutor' ) . $pro_text,
+			__( 'Tutor LMS', 'tutor' ) . $pro_text,
 			'manage_tutor_instructor',
 			'tutor',
-			null,
+			array( $this, 'tutor_course_list' ),
 			'data:image/svg+xml;base64,' . base64_encode('<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1139"><defs/><path fill-rule="evenodd" clip-rule="evenodd" d="M341.652 622.4c-23.412 0-43.222-19.8-43.222-43.2v-99c0-23.4 19.81-43.2 43.222-43.2 23.412 0 43.222 19.8 43.222 43.2v99c0 23.4-18.009 43.2-43.222 43.2 1.801 0 1.801 0 0 0zM655.01 622.4c-23.412 0-43.222-18-43.222-43.2v-99c0-23.4 19.81-43.2 43.222-43.2 23.412 0 43.222 19.8 43.222 43.2v99c0 25.2-19.81 43.2-43.222 43.2z" fill="#9DA2A8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M255.204 406.4c18.009-37.8 54.028-63 95.449-63 61.231 1.8 108.055 52.2 106.254 113.4v203.4c3.602 21.6 23.412 37.8 45.023 34.2 18.009-1.8 32.416-16.2 34.217-34.2V455c-1.801-61.2 46.824-111.6 106.254-113.4 39.621 0 75.639 21.6 93.648 59.4 68.435 133.2 14.407 295.2-117.06 363.6C487.523 833 325.44 779 258.806 647.6c-39.62-75.6-39.62-165.6-3.602-241.2zM426.291 140h151.277v59.4c-25.212-5.4-52.226-9-77.439-9-25.213 0-50.426 3.6-75.639 7.2l1.801-57.6zm414.211 388.8c0-122.4-66.634-235.8-172.888-295.2V140h64.833c25.213 0 45.023-19.8 45.023-45s-21.611-45-45.023-45H271.413C246.2 51.8 226.39 71.6 226.39 96.8c0 25.2 19.81 45 45.023 45h66.633v91.8c-163.883 90-230.517 298.8-135.068 459 3.602 5.4-3.602-5.4 0 0C338.046 930.2 687.424 948.2 802.683 950c10.805 0 19.81-3.6 27.014-10.8 7.203-7.2 10.805-18 10.805-27V528.8z" fill="#9DA2A8"/></svg>'),
 			2
 		);
 		// @since v2.0.0
-		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor', 'tutor_courses', array( $this, 'tutor_course_list') );
+		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor', 'tutor', array( $this, 'tutor_course_list' ) );
 
 		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null);
 
