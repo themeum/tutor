@@ -286,12 +286,14 @@ $available_status = array(
 										} else {
 											echo wp_kses_post( wc_price( $price ) );
 										}
+										// Alert class for course status.
+										$status = ( 'publish' === $post->post_status  ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
 										?>
 									</div>
 								</td>
 								<td data-th="Actions">
 									<div class="inline-flex-center td-action-btns">
-										<div class="tutor-form-select-with-icon select-default- select-primary select-success- select-danger- select-warning-">
+										<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 										<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-admin-course-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>">
 										<?php foreach ( $available_status as $key => $value ) : ?>
 											<option value="publish" <?php selected( $key, $post->post_status, 'selected' ); ?>>
