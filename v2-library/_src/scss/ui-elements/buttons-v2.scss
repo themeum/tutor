@@ -1,6 +1,7 @@
 // Button Utilities
 $variations: (
 	'wordpress' $brand-wordpress $text-white $brand-wordpress,
+	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
 	'primary' $primary-main $text-white $primary-main,
 	'secondary' $primary-40 $primary-main $primary-40,
 	'tertiary' transparent $primary-main $primary-main,
@@ -8,7 +9,7 @@ $variations: (
 	'disable-outline' transparent $text-hints $stroke-light-30
 );
 
-@each $suffix, $bgColor, $txtColor, $border, $hover in $variations {
+@each $suffix, $bgColor, $txtColor, $border in $variations {
 	.tutor-btn:not(.tutor-is-outline).tutor-btn-#{$suffix} {
 		background: #{$bgColor};
 		color: #{$txtColor};
