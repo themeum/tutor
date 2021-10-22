@@ -144,11 +144,12 @@ class Course_List {
 	 * @since v2.0.0
 	 */
 	protected static function count_course( string $status, $category_slug = '', $course_id = '', $date = '', $search_term = '' ): int {
-		$user_id     = get_current_user_id();
-		$status      = sanitize_text_field( $status );
-		$course_id   = sanitize_text_field( $course_id );
-		$date        = sanitize_text_field( $date );
-		$search_term = sanitize_text_field( $search_term );
+		$user_id       = get_current_user_id();
+		$status        = sanitize_text_field( $status );
+		$course_id     = sanitize_text_field( $course_id );
+		$date          = sanitize_text_field( $date );
+		$search_term   = sanitize_text_field( $search_term );
+		$category_slug = sanitize_text_field( $category_slug );
 
 		$args = array(
 			'post_type' => tutor()->course_post_type,
@@ -205,7 +206,7 @@ class Course_List {
 
 		$the_query = new \WP_Query( $args );
 
-		return $the_query->found_posts;
+		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : 0;
 
 	}
 
