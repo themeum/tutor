@@ -46,20 +46,28 @@ select.tutor-form-select {
 
 	// icon colors
 	&.tutor-select-icon-primary {
-		background-image: url(svgArrow($primary));
+		background-image: url(svgArrow($color-brand));
 	}
 	&.tutor-select-icon-success {
-		background-image: url(svgArrow($success));
+		background-image: url(svgArrow($color-success));
 	}
 	&.tutor-select-icon-warning {
-		background-image: url(svgArrow($warning));
+		background-image: url(svgArrow($color-warning));
 	}
 	&.tutor-select-icon-danger {
-		background-image: url(svgArrow($danger));
+		background-image: url(svgArrow($color-error));
 	}
 
 	&:focus {
 		border-color: var(--tutor-primary);
 		box-shadow: unset;
+	}
+}
+
+.tutor-form-select-with-btn {
+	display: flex;
+	gap: 20px;
+	select.tutor-form-select {
+		min-width: min-content;
 	}
 }
