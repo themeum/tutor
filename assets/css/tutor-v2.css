@@ -4842,11 +4842,11 @@
   color: #f44337;
 }
 
-.color-text-primary, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number {
+.color-text-primary, select.tutor-form-select, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number {
   color: #212327;
 }
 
-.color-text-title {
+.color-text-title, .tutor-wp-dashboard-filter-items .tutor-form-label {
   color: #41454f;
 }
 
@@ -5642,13 +5642,13 @@
   line-height: 140%;
 }
 
-.text-medium-body {
+.text-medium-body, select.tutor-form-select {
   font-weight: 500;
   font-size: 16px;
   line-height: 162%;
 }
 
-.text-medium-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number {
+.text-medium-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number, .tutor-wp-dashboard-filter-items .tutor-form-label {
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;
@@ -5726,25 +5726,25 @@
   line-height: 145%;
 }
 
-.text-btn-xlarge, .tutor-btn.tutor-btn-xl {
+.text-btn-xlarge, .tutor-btn.tutor-btn-xl, .tutor-btn.tutor-btn-icon.tutor-btn-xl {
   font-weight: 500;
   font-size: 18px;
   line-height: 178%;
 }
 
-.text-btn-large, .tutor-btn.tutor-btn-lg {
+.text-btn-large, .tutor-btn.tutor-btn-lg, .tutor-btn.tutor-btn-icon.tutor-btn-lg {
   font-weight: 500;
   font-size: 16px;
   line-height: 200%;
 }
 
-.text-btn-medium, .tutor-btn.tutor-btn-md {
+.text-btn-medium, .tutor-btn.tutor-btn-md, .tutor-btn.tutor-btn-icon.tutor-btn-md {
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;
 }
 
-.text-btn-small, .tutor-btn.tutor-btn-sm, table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn {
+.text-btn-small, .tutor-btn.tutor-btn-sm, .tutor-btn.tutor-btn-icon.tutor-btn-sm, table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn {
   font-weight: 500;
   font-size: 13px;
   line-height: 123%;
@@ -6677,7 +6677,7 @@
   margin: 10px;
 }
 
-.tutor-mb-10 {
+.tutor-mb-10, .tutor-wp-dashboard-filter-items .tutor-form-label {
   margin-bottom: 10px;
 }
 
@@ -11214,8 +11214,6 @@ input.tutor-form-check-input[type='radio']:checked {
 
 select.tutor-form-select {
   width: 100%;
-  font-size: 16px;
-  font-weight: 400;
   background-color: #fff;
   background-repeat: no-repeat;
   border: 1px solid #ced4da;
@@ -11819,19 +11817,99 @@ select.tutor-form-select:focus {
 }
 
 .tutor-btn:not(.tutor-btn-icon).tutor-btn-xl {
-  padding: 15px 40px;
+  padding: 15px 79px;
 }
 
 .tutor-btn:not(.tutor-btn-icon).tutor-btn-lg {
-  padding: 7px 34px;
+  padding: 7px 55px;
 }
 
 .tutor-btn:not(.tutor-btn-icon).tutor-btn-md {
-  padding: 7px 28px;
+  padding: 7px 38px;
 }
 
 .tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
-  padding: 7.5px 20px;
+  padding: 7px 28px;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-xl {
+  padding: 15px 61px;
+  gap: 4px;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-xl .btn-icon {
+  font-size: 31px;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-lg {
+  padding: 7px 43px;
+  gap: 2px;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-lg .btn-icon {
+  font-size: 25px;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-md {
+  padding: 7px 25px;
+  gap: 4px;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-md .btn-icon {
+  font-size: 23px;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-sm {
+  padding: 6px 20px;
+  gap: 2px;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-sm .btn-icon {
+  font-size: 18px;
+}
+
+.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-xl,
+.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-xl {
+  padding: 15px 20px;
+  min-width: 213px;
+}
+
+.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-xl .btn-icon,
+.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-xl .btn-icon {
+  font-size: 31px;
+}
+
+.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-lg,
+.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-lg {
+  padding: 7px 16px;
+  min-width: 160px;
+}
+
+.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-lg .btn-icon,
+.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-lg .btn-icon {
+  font-size: 25px;
+}
+
+.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-md,
+.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-md {
+  padding: 7px 14px;
+  min-width: 121px;
+}
+
+.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-md .btn-icon,
+.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-md .btn-icon {
+  font-size: 23px;
+}
+
+.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-sm,
+.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-sm {
+  padding: 6px 13px;
+  min-width: 99px;
+}
+
+.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-sm .btn-icon,
+.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-sm .btn-icon {
+  font-size: 18px;
 }
 
 .tutor-btn {
@@ -11905,6 +11983,16 @@ select.tutor-form-select:focus {
     -webkit-transform: translateY(9px);
             transform: translateY(9px);
   }
+}
+
+.tutor-btn.tutor-btn-icon > span {
+  padding-left: 0 !important;
+}
+
+.tutor-btn.tutor-btn-icon.tutor-btn-icon-left, .tutor-btn.tutor-btn-icon.tutor-btn-icon-right {
+  -webkit-box-pack: justify !important;
+      -ms-flex-pack: justify !important;
+          justify-content: space-between !important;
 }
 
 .tutor-ui-table-responsive {
@@ -13606,6 +13694,14 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-wp-dashboard-header {
   background: #ffffff;
+}
+
+.tutor-wp-dashboard-header .header-title-wrap {
+  gap: 10px;
+}
+
+.tutor-wp-dashboard-header .header-title {
+  gap: 10px;
 }
 
 @media (min-width: 992px) {

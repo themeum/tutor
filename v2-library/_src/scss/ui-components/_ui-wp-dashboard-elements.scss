@@ -1,4 +1,11 @@
 .tutor-wp-dashboard-header {
+	.header-title-wrap {
+		gap: 10px;
+	}
+	.header-title {
+		gap: 10px;
+	}
+
 	@include breakpoint-min(992) {
 		height: 60px;
 	}
@@ -56,6 +63,12 @@
 	display: flex;
 	gap: 30px;
 	flex-wrap: wrap;
+
+	.tutor-form-label {
+		@extend .text-medium-caption;
+		@extend .color-text-title;
+		@extend .tutor-mb-10;
+	}
 
 	@include breakpoint-min(tablet) {
 		select.tutor-form-select {

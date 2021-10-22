@@ -18,8 +18,17 @@ import '../docz-essential.css';
 `** remove the inline-style from the header`
 
 <Playground>
-	<header class="tutor-wp-dashboard-header d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20" style={{border: '1px solid #f1f1f1'}}>
-		<div class="header-title text-medium-h5 color-text-primary mb-lg-0 mb-3">Addons List</div>
+	<header class="tutor-wp-dashboard-header d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20" style={{border: '1px solid #fdfcfc'}}>
+		<div class="header-title-wrap d-flex align-items-center mb-lg-0 mb-3">
+			<div className="d-flex align-items-end header-title">
+				<span className="text-medium-h5 color-text-primary">Addons List</span>
+				<span className="text-regular-caption color-text-primary">/ Habijabi</span>
+			</div>
+			<button className="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+				<span className="btn-icon ttr-plus-bold-filled"></span>
+				<span>Add New</span>
+			</button>
+		</div>
 		<div class="filter-btns text-regular-body color-text-subsued">
 			<button type="button" class="filter-btn" data-tab-filter-target="all">
 				All <span class="item-count">(1205)</span>
@@ -75,11 +84,9 @@ import '../docz-essential.css';
 			</div>
 			<div className="">
 				<label className="tutor-form-label">Date</label>
-				<select class="tutor-form-select tutor-form-control-sm">
-					<option value="1" selected>One</option>
-					<option value="2">Two</option>
-					<option value="3">Three</option>
-				</select>
+				<div class="tutor-input-group tutor-form-control-sm">
+					<input type="date" class="tutor-form-control" placeholder="dd/mm/yyyy"/>
+				</div>
 			</div>
 			<div class="">
 				<label className="tutor-form-label">Search</label>

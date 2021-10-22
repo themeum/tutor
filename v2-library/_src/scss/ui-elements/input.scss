@@ -88,6 +88,16 @@ input.tutor-form-control {
 	}
 }
 
+input.tutor-form-control {
+	// &[type='date'] {
+	// 	@include svg-calender-line;
+	// }
+
+	// &[type='date' i]::-webkit-calendar-picker-indicator {
+	// 	@include svg-calender-line;
+	// }
+}
+
 textarea.tutor-form-control {
 	@extend input.tutor-form-control;
 	padding: 20px;
