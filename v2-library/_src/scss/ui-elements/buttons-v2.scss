@@ -9,6 +9,7 @@ $variations: (
 	'disable-outline' transparent $text-hints $stroke-light-30
 );
 
+// BTN .tutor-btn-primary/secondary/tertiary
 @each $suffix, $bgColor, $txtColor, $border in $variations {
 	.tutor-btn:not(.tutor-is-outline).tutor-btn-#{$suffix} {
 		background: #{$bgColor};
@@ -17,10 +18,36 @@ $variations: (
 	}
 }
 
-$btn-sizes: ('xl' 15 40, 'lg' 7 34, 'md' 7 28, 'sm' 7.5 20);
+// SIZES .tutor-btn-xl/lg/md/sm
+$btn-sizes: ('xl' 15 79, 'lg' 7 55, 'md' 7 38, 'sm' 7 28);
 @each $suffix, $px, $py in $btn-sizes {
 	.tutor-btn:not(.tutor-btn-icon).tutor-btn-#{$suffix} {
 		padding: #{$px}px #{$py}px;
+	}
+}
+
+// ICON BTN .tutor-btn-xl/lg/md/sm + .tutor-btn-icon
+$icon-btn-sizes: ('xl' 15 61 31 4, 'lg' 7 43 25 2, 'md' 7 25 23 4, 'sm' 6 20 18 2);
+@each $suffix, $px, $py, $icon, $gap in $icon-btn-sizes {
+	.tutor-btn.tutor-btn-icon.tutor-btn-#{$suffix} {
+		padding: #{$px}px #{$py}px;
+		gap: #{$gap}px;
+		.btn-icon {
+			font-size: #{$icon}px;
+		}
+	}
+}
+
+// ICON BTN LEFT/RIGHT .tutor-btn-xl/lg/md/sm + .tutor-btn-icon-left/right
+$icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 'sm' 6 13 18 99);
+@each $suffix, $px, $py, $icon, $gap in $icon-btn-left-right {
+	.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-#{$suffix},
+	.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-#{$suffix} {
+		padding: #{$px}px #{$py}px;
+		min-width: #{$gap}px;
+		.btn-icon {
+			font-size: #{$icon}px;
+		}
 	}
 }
 
@@ -100,5 +127,30 @@ $btn-sizes: ('xl' 15 40, 'lg' 7 34, 'md' 7 28, 'sm' 7.5 20);
 	}
 	&.tutor-btn-sm {
 		@extend .text-btn-small;
+	}
+
+	// Button with icon
+	&.tutor-btn-icon {
+		// gap: 5px;
+		> span {
+			padding-left: 0 !important;
+		}
+		&.tutor-btn-xl {
+			@extend .text-btn-xlarge;
+		}
+		&.tutor-btn-lg {
+			@extend .text-btn-large;
+		}
+		&.tutor-btn-md {
+			@extend .text-btn-medium;
+		}
+		&.tutor-btn-sm {
+			@extend .text-btn-small;
+		}
+
+		&.tutor-btn-icon-left,
+		&.tutor-btn-icon-right {
+			justify-content: space-between !important;
+		}
 	}
 }
