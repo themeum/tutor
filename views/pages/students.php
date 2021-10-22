@@ -9,10 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use TUTOR_ENROLLMENTS\Enrollments_List;
-$enrollments = new Enrollments_List();
+use TUTOR\Students_List;
+$students = new Students_List();
 
-var_dump( $enrollments);
 
 /**
  * Short able params
@@ -34,17 +33,19 @@ $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$enrollments_list = tutor_utils()->get_enrolments( $active_tab, $offset, $per_page, $search, $course_id, $date, $order );
+$students_list = tutor_utils()->get_enrolments( $active_tab, $offset, $per_page, $search, $course_id, $date, $order );
 $total            = tutor_utils()->get_total_enrolments( $active_tab, $search, $course_id, $date );
 
 /**
  * Navbar data to make nav menu
  */
 $navbar_data = array(
-	'page_title' => $enrollments->page_title,
-	'tabs'       => $enrollments->tabs_key_value( $course_id, $date, $search ),
+	'page_title' => $students->page_title,
+	'tabs'       => $students->tabs_key_value( $course_id, $date, $search ),
 	'active'     => $active_tab,
 );
+
+//var_dump($navbar_data);
 
 /**
  * Bulk action & filters
@@ -55,8 +56,8 @@ $navbar_data = array(
 // 'search_filter' => true,
 // );
 $filters = array(
-	'bulk_action'   => $enrollments->bulk_action,
-	'bulk_actions'  => $enrollments->prpare_bulk_actions(),
+	'bulk_action'   => $students->bulk_action,
+	'bulk_actions'  => $students->prpare_bulk_actions(),
 	'ajax_action'   => 'tutor_enrollment_bulk_action',
 	'filters'       => true,
 	'course_filter' => true,
@@ -68,10 +69,11 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = esc_url( tutor()->path . 'views/elements/navbar.php' );
-		$filters_template = esc_url( tutor()->path . 'views/elements/filters.php' );
+		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+		$filters_template = tutor()->path . 'views/elements/filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
+		
 	?>
 
 	<div class="tutor-admin-page-content-wrapper">
@@ -88,23 +90,23 @@ $filters = array(
 									name="tutor-bulk-checkbox-all"
 								/>
 								<label for="tutor-bulk-checkbox-all">
-									<?php esc_html_e( 'Date', 'tutor-pro' ); ?>
+									<?php esc_html_e( 'Name', 'tutor-pro' ); ?>
 								</label>
 							</div>
 						</th>
 						<th>
-							<?php esc_html_e( 'Course', 'tutor-pro' ); ?>
+							<?php esc_html_e( 'Email', 'tutor-pro' ); ?>
 						</th>
 						<th>
-							<?php esc_html_e( 'Name', 'tutor-pro' ); ?>
+							<?php esc_html_e( 'Registration Date', 'tutor-pro' ); ?>
 						</th>
 						<th>
-							<?php esc_html_e( 'Status', 'tutor-pro' ); ?>
+							<?php esc_html_e( 'Course Taken', 'tutor-pro' ); ?>
 						</th>
 					</tr>
 				</thead>
 				<tbody class="tutor-text-500">
-					<?php foreach ( $enrollments_list as $list ) : ?>
+					<?php foreach ( $students_list as $list ) : ?>
 						<tr>
 							<td>
 								<div class="tutor-form-check tutor-mb-15">
@@ -116,7 +118,7 @@ $filters = array(
 										value="<?php esc_attr_e( $list->enrol_id ); ?>"
 									/>
 									<label for="tutor-admin-list-<?php esc_attr_e( $list->enrol_id ); ?>">
-										<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $list->enrol_date ) ); ?>
+										<?php echo esc_html( $list->user_nicename ); ?>
 									</label>
 								</div>
 							</td>
@@ -125,10 +127,10 @@ $filters = array(
 							</td>
 							<td>
 								<p>
-									<?php echo esc_html( $list->user_nicename ); ?>
+								<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $list->enrol_date ) ); ?>
 								</p>
 								<p>
-									<?php echo esc_html( $list->user_email ); ?>
+									
 								</p>
 							</td>
 							<td>
