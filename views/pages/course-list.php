@@ -22,6 +22,7 @@ $course_id     = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['cours
 $order_filter  = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
 $date          = isset( $_GET['date'] ) ? sanitize_text_field( $_GET['date'] ) : '';
 $search_filter = isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';
+$category_slug = isset( $_GET['category'] ) ? sanitize_text_field( $_GET['category'] ) : '';
 
 /**
  * Determine active tab
@@ -41,7 +42,7 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 $add_course_url = esc_url( admin_url( 'post-new.php?post_type=courses' ) );
 $navbar_data    = array(
 	'page_title'   => $courses->page_title,
-	'tabs'         => $courses->tabs_key_value( $course_id, $date, $search_filter ),
+	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
 	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
@@ -57,11 +58,11 @@ $navbar_data    = array(
 // 'search_filter' => true,
 // );
 $filters = array(
-	'bulk_action'  => $courses->bulk_action,
-	'bulk_actions' => $courses->prepare_bulk_actions(),
-	'ajax_action'  => 'tutor_course_list_bulk_action',
-	'filters'      => true,
-	'category_filter' => true
+	'bulk_action'     => $courses->bulk_action,
+	'bulk_actions'    => $courses->prepare_bulk_actions(),
+	'ajax_action'     => 'tutor_course_list_bulk_action',
+	'filters'         => true,
+	'category_filter' => true,
 );
 
 
@@ -107,10 +108,20 @@ if ( 'mine' === $active_tab ) {
 	$args['author'] = get_current_user_id();
 }
 // Search filter.
-
 if ( '' !== $search_filter ) {
 	$args['s'] = $search_filter;
 }
+// Category filter.
+if ( '' !== $category_slug ) {
+	$args['tax_query'] = array(
+		array(
+			'taxonomy' => 'course-category',
+			'field'    => 'slug',
+			'terms'    => $category_slug,
+		),
+	);
+}
+
 $the_query = new WP_Query( $args );
 
 $available_status = array(

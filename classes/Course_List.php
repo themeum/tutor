@@ -136,60 +136,77 @@ class Course_List {
 	 * Count all | min | published | pending | draft
 	 *
 	 * @param string $status | required.
+	 * @param string $category_slug course category | optional.
 	 * @param string $course_id selected course id | optional.
 	 * @param string $date selected date | optional.
 	 * @param string $search_term search by user name or email | optional.
 	 * @return int
 	 * @since v2.0.0
 	 */
-	protected static function count_course( string $status, $course_id = '', $date = '', $search_term = '' ): int {
-		global $wpdb;
+	protected static function count_course( string $status, $category_slug = '', $course_id = '', $date = '', $search_term = '' ): int {
 		$user_id     = get_current_user_id();
 		$status      = sanitize_text_field( $status );
 		$course_id   = sanitize_text_field( $course_id );
 		$date        = sanitize_text_field( $date );
 		$search_term = sanitize_text_field( $search_term );
 
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
-
-		// add course id in where clause.
-		$course_query = '';
-		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = $course_id";
-		}
-
-		// add date in where clause.
-		$date_query = '';
-		if ( '' !== $date ) {
-			$date_query = "AND DATE(course.post_date) = CAST('$date' AS DATE) ";
-		}
-
-		// status query.
-		$status_query = '';
-		if ( 'all' === $status ) {
-			$status_query = "AND course.post_status IN ('publish', 'pending', 'draft')";
-		} elseif ( 'mine' === $status ) {
-			$status_query = "AND course.post_author = {$user_id} AND course.post_status IN ('publish', 'pending', 'draft')";
-		} else {
-			// if $status == published | pending | draft then user $status var.
-			$status_query = "AND course.post_status = '$status'";
-		}
-		$post_table = $wpdb->posts;
-		$count      = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(*)
-					FROM 	{$post_table} AS course
-					WHERE 	course.post_type = %s
-                            {$status_query}
-							{$date_query}
-							{$course_query}
-							AND ( course.post_title LIKE %s )
-					",
-				tutor()->course_post_type,
-				$search_term
-			)
+		$args = array(
+			'post_type' => tutor()->course_post_type,
 		);
-		return $count ? $count : 0;
+
+		if ( 'all' === $status || 'mine' === $status ) {
+			$args['post_status'] = array( 'publish', 'pending', 'draft' );
+		} else {
+			$status              = $status === 'published' ? 'publish' : $status;
+			$args['post_status'] = array( $status );
+		}
+
+		// Author query.
+		if ( 'mine' === $status ) {
+			$args['author'] = $user_id;
+		}
+
+		$date_filter = sanitize_text_field( $date );
+
+		$year  = date( 'Y', strtotime( $date_filter ) );
+		$month = date( 'm', strtotime( $date_filter ) );
+		$day   = date( 'd', strtotime( $date_filter ) );
+
+		// Add date query.
+		if ( '' !== $date_filter ) {
+			$args['date_query'] = array(
+				array(
+					'year'  => $year,
+					'month' => $month,
+					'day'   => $day,
+				),
+			);
+		}
+
+		if ( '' !== $course_id ) {
+			$args['p'] = $course_id;
+		}
+
+		// Search filter.
+		if ( '' !== $search_term ) {
+			$args['s'] = $search_term;
+		}
+
+		// Category filter.
+		if ( '' !== $category_slug ) {
+			$args['tax_query'] = array(
+				array(
+					'taxonomy' => 'course-category',
+					'field'    => 'slug',
+					'terms'    => $category_slug,
+				),
+			);
+		}
+
+		$the_query = new \WP_Query( $args );
+
+		return $the_query->found_posts;
+
 	}
 
 	/**
@@ -227,7 +244,7 @@ class Course_List {
 		$status = sanitize_text_field( $_POST['status'] );
 		$id     = sanitize_text_field( $_POST['id'] );
 		$update = self::update_course_status( $status, $id );
-		//return $update ? wp_send_json_success( $update ) : wp_send_json_error();
+		// return $update ? wp_send_json_success( $update ) : wp_send_json_error();
 		return wp_send_json( $update );
 		exit;
 	}

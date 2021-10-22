@@ -16,6 +16,12 @@ window.onload = () => {
       window.location = urlPrams("course-id", e.target.value);
     }
   }
+  const filterCategory = document.getElementById("tutor-backend-filter-category");
+  if (filterCategory) {
+    filterCategory.onchange = (e) => {
+      window.location = urlPrams("category", e.target.value);
+    }
+  }
   const filterOrder = document.getElementById("tutor-backend-filter-order");
   if (filterOrder) {
     filterOrder.onchange = (e) => {
