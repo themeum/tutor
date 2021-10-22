@@ -1771,6 +1771,14 @@ window.onload = function () {
     };
   }
 
+  var filterCategory = document.getElementById("tutor-backend-filter-category");
+
+  if (filterCategory) {
+    filterCategory.onchange = function (e) {
+      window.location = urlPrams("category", e.target.value);
+    };
+  }
+
   var filterOrder = document.getElementById("tutor-backend-filter-order");
 
   if (filterOrder) {
