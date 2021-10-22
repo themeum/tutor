@@ -80,7 +80,7 @@ table.tutor-ui-table {
 	min-width: 300px;
 	width: 100%;
 	border-radius: $radius;
-	overflow: hidden;
+	// overflow: hidden;
 
 	&.tutor-no-thead {
 		tr:first-child {
