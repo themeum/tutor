@@ -1024,7 +1024,9 @@ body {
   margin-bottom: 45px;
 }
 
-.tutor-full-width-course-top h4, .tutor-full-width-course-top h5, .tutor-full-width-course-top h6 {
+.tutor-full-width-course-top h4,
+.tutor-full-width-course-top h5,
+.tutor-full-width-course-top h6 {
   color: #000;
   font-weight: 500;
 }
