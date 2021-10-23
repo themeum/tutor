@@ -34,7 +34,7 @@
         <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
             <p>
                 <span class="tutor-round-icon">
-                    <i class="ttr ttr-book-open-filled"></i>
+                    <i class="ttr-book-open-filled"></i>
                 </span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($enrolled_course_count); ?></span>
                 <span><?php _e('Enrolled Courses', 'tutor'); ?></span>
@@ -44,7 +44,7 @@
         <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
             <p>
                 <span class="tutor-round-icon">
-                    <i class="ttr ttr-college-graduation-filled"></i>
+                    <i class="ttr-college-graduation-filled"></i>
                 </span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($active_course_count); ?></span>
                 <span><?php _e('Active Courses', 'tutor'); ?></span>
@@ -54,7 +54,7 @@
         <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
             <p>
                 <span class="tutor-round-icon">
-                    <i class="ttr ttr-award-filled"></i>
+                    <i class="ttr-award-filled"></i>
                 </span>
                 <span class="tutor-dashboard-info-val"><?php echo esc_html($completed_course_count); ?></span>
                 <span><?php _e('Completed Courses', 'tutor'); ?></span>
@@ -68,7 +68,7 @@
             <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
                 <p>
                     <span class="tutor-round-icon">
-                        <i class="ttr ttr-user-graduate-filled"></i>
+                        <i class="ttr-user-graduate-filled"></i>
                     </span>
                     <span class="tutor-dashboard-info-val"><?php echo esc_html($total_students); ?></span>
                     <span><?php _e('Total Students', 'tutor'); ?></span>
@@ -78,7 +78,7 @@
             <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
                 <p>
                     <span class="tutor-round-icon">
-                        <i class="ttr ttr-box-open-filled"></i>
+                        <i class="ttr-box-open-filled"></i>
                     </span>
                     <span class="tutor-dashboard-info-val"><?php echo esc_html(count($my_courses)); ?></span>
                     <span><?php _e('Total Courses', 'tutor'); ?></span>
@@ -88,7 +88,7 @@
             <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
                 <p>
                     <span class="tutor-round-icon">
-                        <i class="ttr ttr-coins-filled"></i>
+                        <i class="ttr-coins-filled"></i>
                     </span>
                     <span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price($earning_sum->instructor_amount); ?></span>
                     <span><?php _e('Total Earnings', 'tutor'); ?></span>

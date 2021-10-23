@@ -2299,14 +2299,6 @@ ul.tutor-required-fields {
   cursor: pointer;
 }
 
-@media (max-width: 546px) {
-  .tutor-write-review-box .tutor-star-rating-group {
-    font-size: 26px;
-    display: block;
-    text-align: center;
-  }
-}
-
 .tutor-queston-and-answer-wrap {
   margin: 20px 0;
 }
