@@ -95,7 +95,7 @@ if(!$assignment_submitted_id){
                                         </div>
                                         <div>
                                             <a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
-                                                <span class="ttr ttr-download-line"></span>
+                                                <span class="ttr-download-line"></span>
                                             </a>
                                         </div>
                                     </div>

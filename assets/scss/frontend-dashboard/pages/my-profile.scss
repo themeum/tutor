@@ -13,10 +13,16 @@
 			}
 
 			&:last-child{
-				font-style: normal;
-				font-weight: 500;
-				font-size: 16px;
-				color: $black-main;
+				p {
+					font-style: normal;
+					font-weight: normal;
+					font-size: 16px;
+					color: $black-main;
+
+					strong {
+						font-weight: 500;
+					}
+				}
 			}
 		}
 
