@@ -14,7 +14,8 @@
 	.filter-btns {
 		display: flex;
 		gap: 30px;
-		button.filter-btn {
+		.filter-btn {
+			text-decoration: none;
 			background: transparent;
 			outline: none;
 			border: none;
@@ -71,7 +72,8 @@
 	}
 
 	@include breakpoint-min(tablet) {
-		select.tutor-form-select {
+		select.tutor-form-select,
+		.tutor-input-group {
 			width: 227px;
 			max-width: 227px;
 		}
@@ -82,5 +84,12 @@
 		> div {
 			width: 100%;
 		}
+	}
+
+	select.tutor-form-select:focus,
+	input.tutor-form-control:focus,
+	textarea.tutor-form-control:focus {
+		border-color: $brand-wordpress;
+		box-shadow: unset;
 	}
 }
