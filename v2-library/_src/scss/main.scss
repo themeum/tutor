@@ -1,5 +1,5 @@
 // Global styles, pulled from _global.scss
-// We can't put it in the tutor css since it might override theme styles. 
+// We can't put it in the tutor css since it might override theme styles.
 // It's for only docz
 * {
 	margin: 0;
@@ -8,11 +8,12 @@
 }
 
 body {
-	font-family: 'Roboto', sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue',
+		sans-serif;
 	// docz
 	[data-testid] textarea,
 	[data-testid] {
-		font-family: 'Roboto', sans-serif;
+		// font-family: 'Roboto', sans-serif;
 	}
 }
 

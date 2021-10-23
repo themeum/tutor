@@ -51,3 +51,11 @@ code {
 [data-testid='main-container'] {
 	max-width: 1788px !important;
 }
+
+body {
+	font-family: -apple-system, 'SF Pro Display', sans-serif;
+}
+
+.css-1ouyflx {
+	font-family: unset !important;
+}

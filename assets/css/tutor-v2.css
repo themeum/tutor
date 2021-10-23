@@ -12018,6 +12018,16 @@ select.tutor-form-select:focus {
   color: #3e64de;
 }
 
+.tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover).tutor-btn-secondary:hover {
+  background: #e0e6f9;
+  border-color: #e0e6f9;
+  color: #3e64de;
+}
+
+.tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover).tutor-btn-wordpress-outline:hover {
+  background: #1973aa;
+}
+
 .tutor-btn.tutor-btn-loading:not(.tutor-btn-icon) {
   padding-top: 5px;
 }
@@ -12471,6 +12481,10 @@ table.tutor-ui-table .td-progress .progress-text {
   }
 }
 
+table.tutor-ui-table.table-dashboard-assignments-list .td-action-btns {
+  gap: 20px;
+}
+
 table.tutor-ui-table select.tutor-form-select {
   min-width: -webkit-max-content;
   min-width: -moz-max-content;
@@ -12495,8 +12509,8 @@ table.tutor-ui-table .td-checkbox input[type='checkbox'] {
 
 table.tutor-ui-table.tutor-ui-table-responsive {
   /*
-		Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
-		*/
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
 }
 
 @media only screen and (max-width: 1199px), (min-device-width: 1200px) and (max-device-width: 1200px) {
