@@ -88,7 +88,7 @@ class Students_List extends \Tutor_List_Table {
 		// add date in where clause.
 		$date_query = '';
 		if ( '' !== $date ) {
-			$date_query = "AND DATE(enrol.user_registered) = CAST('$date' AS DATE) ";
+			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE) ";
 		}
 
 		$count = $wpdb->get_var(
