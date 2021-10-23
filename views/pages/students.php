@@ -16,7 +16,7 @@ $students = new Students_List();
 /**
  * Short able params
  */
-$user_id = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
+$user_id = isset( $_GET['ID'] ) ? $_GET['ID'] : '';
 $order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date      = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
 $search    = isset( $_GET['search'] ) ? $_GET['search'] : '';
@@ -35,8 +35,6 @@ $offset   = ( $per_page * $paged ) - $per_page;
 
 $students_list = tutor_utils()->get_students( $current_page * $per_page, $per_page, $search_term );
 $total            = tutor_utils()->get_total_students( $search_term );
-
-var_dump($students_list);
 
 /**
  * Navbar data to make nav menu
@@ -71,84 +69,98 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		//$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+		$navbar_template  = tutor()->path . 'views/elements/student-navbar.php';
 		$filters_template = tutor()->path . 'views/elements/filters.php';
-		//tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
+		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 		
 	?>
 
-	<div class="tutor-admin-page-content-wrapper">
-		<div class="tutor-table-responsive">
-			<table class="tutor-table">
-				<thead class="tutor-text-sm tutor-text-400">
-					<tr>
-						<th>
-							<div class="tutor-form-check tutor-mb-15">
-								<input
-									id="tutor-bulk-checkbox-all"
-									type="checkbox"
-									class="tutor-form-check-input tutor-form-check-square"
-									name="tutor-bulk-checkbox-all"
-								/>
-								<label for="tutor-bulk-checkbox-all">
-									<?php esc_html_e( 'Students', 'tutor-pro' ); ?>
-								</label>
-							</div>
-						</th>
-						<th>
-							<?php esc_html_e( 'Email', 'tutor-pro' ); ?>
-						</th>
-						<th>
-							<?php esc_html_e( 'Registration Date', 'tutor-pro' ); ?>
-						</th>
-						<th>
-							<?php esc_html_e( 'Course Taken', 'tutor-pro' ); ?>
-						</th>
-						<th>
-							
-						</th>
-					</tr>
-				</thead>
-				<tbody class="tutor-text-500">
-					<?php foreach ( $students_list as $list ) : ?>
-						<tr>
-							<td>
-								<div class="tutor-form-check tutor-mb-15">
-									<input
-										id="tutor-admin-list-<?php esc_attr_e( $list->user_id ); ?>"
-										type="checkbox"
-										class="tutor-form-check-input tutor-form-check-square tutor-bulk-checkbox"
-										name="tutor-bulk-checkbox-all"
-										value="<?php esc_attr_e( $list->user_id ); ?>"
-									/>
-									<label for="tutor-admin-list-<?php esc_attr_e( $list->user_id ); ?>">
-										<?php echo esc_html( $list->display_name ); ?>
-									</label>
-								</div>
-							</td>
-							<td>
-								<?php echo esc_html( $list->user_email ); ?>
-							</td>
-							<td>
-								<p>
-								<?php echo esc_html( $list->user_registered ); ?>
-								</p>
-							</td>
-							<td>
-								<?php echo $students->column_default( $list, 'course_taken' );//echo esc_html( $list->course_taken ); ?>
-							</td>
-							<td>
-								<span>
-								<?php echo esc_html( $list->status ); ?>
-								</span>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-				</tbody>
-			</table>
+	
+
+	<div class="tutor-ui-table-responsive tutor-mt-30 tutor-mr-20">
+		<table class="tutor-ui-table table-students">
+			<thead>
+			<tr>
+				<th>
+				<div class="inline-flex-center color-text-subsued">
+				<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input tutor-form-check-square" name="tutor-bulk-checkbox-all">
+					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor-pro' ); ?></span>
+					<span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+				</div>
+				</th>
+				<th>
+				<div class="inline-flex-center color-text-subsued">
+					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor-pro' ); ?></span>
+					<span class="tutor-v2-icon-test icon-order-down-filled"></span>
+				</div>
+				</th>
+				<th>
+				<div class="inline-flex-center color-text-subsued">
+					<span class="text-regular-small"><?php esc_html_e( 'Registration Date', 'tutor-pro' ); ?></span>
+					<span class="tutor-v2-icon-test icon-order-down-filled"></span>
+				</div>
+				</th>
+				<th>
+				<div class="inline-flex-center color-text-subsued">
+					<span class="text-regular-small"><?php esc_html_e( 'Course Taken', 'tutor-pro' ); ?></span>
+					<span class="tutor-v2-icon-test icon-order-down-filled"></span>
+				</div>
+				</th>
+				<th class="tutor-shrink"></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php foreach ( $students_list as $list ) : ?>
+			<tr>
+				<td data-th="Student">
+				<div class="td-avatar">
+				<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-form-check-square tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
+					<?php
+						$avatar_url  = get_avatar_url( $list->ID );
+					?>
+					<img
+					src="<?php echo $avatar_url; ?>"
+					alt="student avatar"
+					/>
+					
+					<div>
+					<p class="color-text-primary text-medium-body">
+					<?php echo esc_html( $list->display_name ); ?>
+					</p>
+					</div>
+				</div>
+				</td>
+				<td data-th="Registration Date">
+				<span class="color-text-primary text-regular-caption">
+				<?php echo esc_html( $list->user_email ); ?>
+				</span>
+				</td>
+				</td>
+				<td data-th="Registration Date">
+				<span class="color-text-primary text-regular-caption">
+				<?php echo esc_html( $list->user_registered ); ?>
+				</span>
+				</td>
+				<td data-th="Course Taklen">
+				<span class="color-text-primary text-medium-caption"><?php echo $students->column_default( $list, 'course_taken' ); ?></span>
+				</td>
+				<td data-th="URL">
+				<div class="inline-flex-center td-action-btns">
+					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php'));
+						
+					?>
+					<a href="<?php echo $edit_link; ?>" 
+					class="btn-outline tutor-btn">
+					<?php esc_html_e( 'Details', 'tutor-pro' ); ?>
+					</a>
+				</div>
+				</td>
+			</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
 		</div>
-	</div>
 	<div class="tutor-admin-page-pagination-wrapper">
 		<?php
 			/**
