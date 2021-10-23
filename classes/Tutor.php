@@ -165,7 +165,7 @@ final class Tutor{
 		 * @since v2.0.0
 		 */
 		$this->announcements = new Announcements();
-		$this->course_list   = new Course_list();
+		$this->course_list   = new Course_List();
 
 		/**
 		 * Run Method

@@ -3433,39 +3433,6 @@ jQuery(document).ready(function ($) {
     $(this).next('div').slideToggle();
   });
   /**
-   * Open Tutor Modal to edit review
-   * @since v.1.4.0
-   */
-
-  $(document).on('click', '.open-tutor-edit-review-modal', function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var review_id = $that.attr('data-review-id');
-    var nonce_key = _tutorobject.nonce_key;
-    var json_data = {
-      review_id: review_id,
-      action: 'tutor_load_edit_review_modal'
-    };
-    json_data[nonce_key] = _tutorobject[nonce_key];
-    $.ajax({
-      url: _tutorobject.ajaxurl,
-      type: 'POST',
-      data: json_data,
-      beforeSend: function beforeSend() {
-        $that.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        if (typeof data.data !== 'undefined') {
-          $('.tutor-edit-review-modal-wrap .modal-container').html(data.data.output);
-          $('.tutor-edit-review-modal-wrap').attr('data-review-id', review_id).addClass('show');
-        }
-      },
-      complete: function complete() {
-        $that.removeClass('tutor-updating-message');
-      }
-    });
-  });
-  /**
    * Update the rating
    * @since v.1.4.0
    */
