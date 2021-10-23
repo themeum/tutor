@@ -43,7 +43,7 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
         <?php
 			if ($reviews->count){
 				?>
-                <table class="tutor-ui-table table-reviews">
+                <table class="tutor-ui-table tutor-ui-table-responsive table-reviews">
                     <thead>
                         <tr>
                             <th>
@@ -75,9 +75,9 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                                 <td data-th="<?php _e('Student', 'tutor'); ?>" class="column-fullwidth">
                                     <div class="td-avatar">
                                         <img src="<?php echo $avatar_url; ?>" alt="student avatar"/>
-                                        <p class="text-medium-body color-text-primary">
+                                        <span class="text-medium-body color-text-primary">
                                             <?php echo $student_name; ?>
-                                        </p>
+                                        </span>
                                     </div>
                                 </td>
                                 <td data-th="<?php _e('Date', 'tutor'); ?>">
@@ -90,10 +90,10 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                                         <div class="td-tutor-rating text-regular-body color-text-subsued">
                                             <?php tutor_utils()->star_rating_generator($review->rating); ?>
                                         </div>
-                                        <p class="review-text color-text-subsued">
-                                            <?php echo wpautop(stripslashes($review->comment_content)); ?>
+                                        <p class="review-text color-text-subsued tutor-mb-0">
+                                            <?php echo htmlspecialchars($review->comment_content); ?>
                                         </p>
-                                        <p class="course-name text-medium-small color-text-title">
+                                        <p class="course-name text-medium-small color-text-title tutor-mb-0">
                                             <strong><?php _e('Course', 'tutor'); ?>:</strong>&nbsp;
                                             <a href="<?php echo get_the_permalink($review->comment_post_ID); ?>">
                                                 <?php echo get_the_title($review->comment_post_ID); ?>

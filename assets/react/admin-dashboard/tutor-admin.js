@@ -4,9 +4,10 @@ import "./segments/options";
 import "./segments/import-export";
 import "./segments/addonlist";
 import "./addons-list/addons-list-main";
-import "../lib/filter";
+import "./segments/filter";
 
-import '../modules/announcement';
+import "../modules/announcement";
+import "../modules/instructor-review";
 
 jQuery(document).ready(function($) {
   "use strict";

@@ -143,75 +143,11 @@ jQuery(document).ready(function ($) {
         toggle_star_($(this));
     });
 
-    $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
-        var rating = $(this).attr('data-rating-value');
-        $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
-        
-        toggle_star_($(this));
-    });
-
-    $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function(){
-        var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
-        var rating = parseInt(value);
-        
-        var selected = $(this).find('[data-rating-value="'+rating+'"]');
-        (rating && selected && selected.length>0) ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
-    });
-
-    $(document).on('click', '.tutor_submit_review_btn', function (e) {
-        e.preventDefault();
-        var $that = $(this);
-        var rating = $that.closest('form').find('input[name="tutor_rating_gen_input"]').val();
-        var review = $that.closest('form').find('textarea[name="review"]').val();
-        review = review.trim();
-
-        var course_id = $('input[name="tutor_course_id"]').val();
-        var data = { course_id: course_id, rating: rating, review: review, action: 'tutor_place_rating' };
-
-        if(!rating || rating==0 || !review) {
-            alert(__('Rating and review required', 'tutor'));
-            return;
-        }
-
-        if (review) {
-            $.ajax({
-                url: _tutorobject.ajaxurl,
-                type: 'POST',
-                data: data,
-                beforeSend: function () {
-                    $that.addClass('updating-icon');
-                },
-                success: function (data) {
-                    var review_id = data.data.review_id;
-                    var review = data.data.review;
-                    $('.tutor-review-' + review_id + ' .review-content').html(review);
-                    
-                    // Show thank you
-                    new window.tutor_popup($, 'icon-rating', 40).popup({
-                        title: __('Thank You for Rating This Course!', 'tutor'),
-                        description : __('Your rating will now be visible in the course page', 'tutor'),
-                    });
-
-                    setTimeout(function(){
-                        location.reload();
-                    }, 3000);
-                }
-            });
-        }
-    }).on('click', '.tutor_cancel_review_btn', function() {
-        // Hide the pop up review form on cancel click
-        $(this).closest('form').hide();
-    });
-
-    $(document).on('click', '.write-course-review-link-btn', function (e) {
-        e.preventDefault();
-        $(this).siblings('.tutor-write-review-form').slideToggle();
-    });
-
     $(document).on('click', '.tutor-ask-question-btn', function (e) {
         e.preventDefault();
         $('.tutor-add-question-wrap').slideToggle();
     });
+    
     $(document).on('click', '.tutor_question_cancel', function (e) {
         e.preventDefault();
         $('.tutor-add-question-wrap').toggle();
@@ -1334,45 +1270,6 @@ jQuery(document).ready(function ($) {
             $(this).find('i').removeClass('tutor-icon-down').addClass('tutor-icon-up');
         }
         $(this).next('div').slideToggle();
-    });
-
-    /**
-     * Update the rating
-     * @since v.1.4.0
-     */
-    $(document).on('submit', '#tutor_update_review_form', function (e) {
-        e.preventDefault();
-
-        var $that = $(this);
-        var review_id = $that.closest('.tutor-edit-review-modal-wrap ').attr('data-review-id');
-
-        var nonce_key = _tutorobject.nonce_key;
-
-        var rating = $that.find('input[name="tutor_rating_gen_input"]').val();
-        var review = $that.find('textarea[name="review"]').val();
-        review = review.trim();
-
-        var json_data = { review_id: review_id, rating: rating, review: review, action: 'tutor_update_review_modal' };
-        json_data[nonce_key] = _tutorobject[nonce_key];
-
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: json_data,
-            beforeSend: function () {
-                $that.find('button[type="submit"]').addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success) {
-                    //Close the modal
-                    $('.tutor-edit-review-modal-wrap').removeClass('show');
-                    location.reload(true);
-                }
-            },
-            complete: function () {
-                $that.find('button[type="submit"]').removeClass('tutor-updating-message');
-            }
-        });
     });
 
     /**
