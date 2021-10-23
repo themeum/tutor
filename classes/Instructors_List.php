@@ -8,10 +8,12 @@ if (! class_exists('Tutor_List_Table')){
 	include_once tutor()->path.'classes/Tutor_List_Table.php';
 }
 
+use TUTOR\Backend_Page_Trait;
+
 class Instructors_List extends \Tutor_List_Table {
 
 	const INSTRUCTOR_LIST_PAGE = 'tutor-instructors';
-
+	/*
 	function __construct(){
 		global $status, $page;
 
@@ -23,6 +25,192 @@ class Instructors_List extends \Tutor_List_Table {
 		) );
 
 		//$this->process_bulk_action();
+	}*/
+
+
+
+	/**
+	 * Trait for utilities
+	 *
+	 * @var $page_title
+	 */
+
+	use Backend_Page_Trait;
+	/**
+	 * Page Title
+	 *
+	 * @var $page_title
+	 */
+	public $page_title;
+
+	/**
+	 * Bulk Action
+	 *
+	 * @var $bulk_action
+	 */
+	public $bulk_action = true;
+
+	/**
+	 * Handle dependencies
+	 */
+	public function __construct() {
+		$this->page_title = __( 'Instructor', 'tutor' );
+		/**
+		 * Handle bulk action
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'wp_ajax_tutor_instructor_bulk_action', array( $this, 'instructor_bulk_action' ) );
+	}
+
+	/**
+	 * Available tabs that will visible on the right side of page navbar
+	 *
+	 * @param string $user_id selected instructor id | optional.
+	 * @param string $date selected date | optional.
+	 * @param string $search search by user name or email | optional.
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function tabs_key_value( $instructor_id, $date, $search ): array {
+		$url       = get_pagenum_link();
+		$approve  = self::get_instructor_number( 'approved', $instructor_id, $date, $search );
+		$pending = self::get_instructor_number( 'pending', $instructor_id, $date, $search );
+		$blocked = self::get_instructor_number( 'blocked', $instructor_id, $date, $search );
+		$tabs      = array(
+			array(
+				'key'   => 'all',
+				'title' => __( 'All', 'tutor-pro' ),
+				'value' => $approve + $pending + $blocked,
+				'url'   => $url . '&data=all',
+			),
+			array(
+				'key'   => 'approved',
+				'title' => __( 'Approve', 'tutor-pro' ),
+				'value' => $approve,
+				'url'   => $url . '&data=approved',
+			),
+			array(
+				'key'   => 'pending',
+				'title' => __( 'Pending', 'tutor-pro' ),
+				'value' => $pending,
+				'url'   => $url . '&data=pending',
+			),
+			array(
+				'key'   => 'blocked',
+				'title' => __( 'Block', 'tutor-pro' ),
+				'value' => $blocked,
+				'url'   => $url . '&data=blocked',
+			),
+		);
+		return $tabs;
+	}
+
+	/**
+	 * Prepare bulk actions that will show on dropdown options
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function prpare_bulk_actions(): array {
+		$actions = array(
+			$this->bulk_action_default(),
+			$this->bulk_action_delete(),
+		);
+		return $actions;
+	}
+
+	/**
+	 * Count enrolled number by status & filters
+	 * Count all enrollment | approved | cancelled
+	 *
+	 * @param string $status | required.
+	 * @param string $user_id selected user id | optional.
+	 * @param string $date selected date | optional.
+	 * @param string $search_term search by user name or email | optional.
+	 * @return int
+	 * @since v2.0.0
+	 */
+	protected static function get_instructor_number( $status = '', $user_id = '', $date = '', $search_term = ''  ): int {
+		global $wpdb;
+		$status      = sanitize_text_field( $status );
+		$user_id   = sanitize_text_field( $user_id );
+		$date        = sanitize_text_field( $date );
+		$search_term = sanitize_text_field( $search_term );
+
+		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+		// add course id in where clause.
+		$instructor_query = '';
+		if ( '' !== $user_id ) {
+			$instructor_query = "AND instructor.ID = $user_id";
+		}
+
+		// add date in where clause.
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE) ";
+		}
+
+		$count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT user.*, user_meta.meta_value AS instructor_from_date
+					FROM 	{$wpdb->users} user
+					INNER JOIN {$wpdb->usermeta} user_meta
+							ON ( user.ID = user_meta.user_id )
+					INNER JOIN {$wpdb->usermeta} inst_status
+							ON ( user.ID = inst_status.user_id )
+							WHERE 	user_meta.meta_key = %s
+					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+					",
+				'_is_tutor_instructor',
+				$status,
+				$search_term,
+				$search_term,
+				$search_term,
+				$search_term
+			)
+		);
+		return $count ? $count : 0;
+	}
+
+	/**
+	 * Handle bulk action for instructor delete
+	 *
+	 * @return string JSON response.
+	 * @since v2.0.0
+	 */
+	public function instructor_bulk_action() {
+		// check nonce.
+		tutor_utils()->checking_nonce();
+		$status   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
+		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
+		$update   = self::update_instructors( $status, $bulk_ids );
+		return true === $update ? wp_send_json_success() : wp_send_json_error();
+		exit;
+	}
+
+	/**
+	 * Execute bulk action for enrollments ex: complete | cancel
+	 *
+	 * @param string $status hold status for updating.
+	 * @param string $enrollment_ids ids that need to update.
+	 * @return bool
+	 * @since v2.0.0
+	 */
+	public static function update_instructors( $status, $enrollment_ids ): bool {
+		global $wpdb;
+		$instructor_table = $wpdb->user_meta;
+		$update     = $wpdb->query(
+			$wpdb->prepare(
+				" UPDATE {$instructor_table}
+				SET inst_status = %s 
+				WHERE ID IN ($users_ids)
+			",
+				$status
+			)
+		);
+		return false === $update ? false : true;
 	}
 
 	function column_default($item, $column_name){
@@ -130,12 +318,6 @@ class Instructors_List extends \Tutor_List_Table {
 		return $sortable_columns;
 	}
 
-	function get_bulk_actions() {
-		$actions = array(
-			'delete'    => 'Delete'
-		);
-		return $actions;
-	}
 
 	function process_bulk_action() {
 		if( 'approve' === $this->current_action() ) {
