@@ -64,9 +64,29 @@
 			align-items: center;
 		}
 
+		p {
+			font-style: normal;
+			font-weight: normal;
+			font-size: 16px;
+			color: $text-hints;
+		}
+
 		.tutor-given-review-action {
 			&>span {
-				
+				font-style: normal;
+				font-weight: normal;
+				font-size: 16px;
+				color: $black-60;
+				cursor: pointer;
+
+				&:first-child{
+					margin-right: 15px;
+				}
+
+				i{
+					font-size: 22px;
+					vertical-align: middle;
+				}
 			}
 		}
 	}

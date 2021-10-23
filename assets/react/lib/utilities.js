@@ -25,20 +25,22 @@ window.jQuery(document).ready(function($) {
 
     // Ajax action 
     $(document).on('click', '.tutor-list-ajax-action', function() {
-        let url = $(this).data('url');
-        let type = $(this).data('type') || 'GET';
+        let $that = $(this);
         let prompt = $(this).data('prompt');
-        let del = $(this).data('delete_id');
-
-        console.log(prompt);
-
+        let del = $(this).data('delete_element_id');
+        var data = $(this).data('request_data') || {};
+        
         if(prompt && !window.confirm(prompt)) {
             return;
         }
 
         $.ajax({
-            url, 
-            type, 
+            url: _tutorobject.ajaxurl, 
+            type: 'POST', 
+            data: data,
+            beforeSend: function () {
+                $that.addClass('updating-icon');
+            },
             success: function(data) {
                 if(data.success) {
                     if(del) {
@@ -56,7 +58,7 @@ window.jQuery(document).ready(function($) {
                 tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
             },
             complete: function() {
-
+                $that.removeClass('updating-icon');
             }
         })
     });

@@ -3383,6 +3383,30 @@
           align-items: center;
 }
 
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-single-review .individual-dashboard-review-body p {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  color: #757c8e;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-single-review .individual-dashboard-review-body .tutor-given-review-action > span {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  color: #5b616f;
+  cursor: pointer;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-single-review .individual-dashboard-review-body .tutor-given-review-action > span:first-child {
+  margin-right: 15px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-dashboard-single-review .individual-dashboard-review-body .tutor-given-review-action > span i {
+  font-size: 22px;
+  vertical-align: middle;
+}
+
 .tutor-dashboard .tutor-dashboard-content .tutor-edit-review-modal-wrap .modal-close-wrap a.modal-close-btn {
   color: #222222;
   background: none;
