@@ -63,7 +63,16 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 			border-color: darken($primary-40, 2);
 			color: $primary-main;
 		}
+		&.tutor-btn-secondary:hover {
+			background: darken($primary-40, 2);
+			border-color: darken($primary-40, 2);
+			color: $primary-main;
+		}
+		&.tutor-btn-wordpress-outline:hover {
+			background: $brand-wordpress;
+		}
 	}
+
 	&.tutor-btn-primary {
 	}
 	&.tutor-btn-secondary {
