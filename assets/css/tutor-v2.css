@@ -7079,6 +7079,68 @@
   margin-bottom: 25px;
 }
 
+.tutor-p-28,
+.tutor-padding-28 {
+  padding: 28px;
+}
+
+.tutor-pb-28 {
+  padding-bottom: 28px;
+}
+
+.tutor-pt-28 {
+  padding-top: 28px;
+}
+
+.tutor-pr-28 {
+  padding-right: 28px;
+}
+
+.tutor-pl-28 {
+  padding-left: 28px;
+}
+
+.tutor-px-28 {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+.tutor-py-28 {
+  padding-top: 28px;
+  padding-bottom: 28px;
+}
+
+.tutor-m-28,
+.tutor-margin-28 {
+  margin: 28px;
+}
+
+.tutor-mb-28 {
+  margin-bottom: 28px;
+}
+
+.tutor-mt-28 {
+  margin-top: 28px;
+}
+
+.tutor-mr-28 {
+  margin-right: 28px;
+}
+
+.tutor-ml-28 {
+  margin-left: 28px;
+}
+
+.tutor-mx-28 {
+  margin-left: 28px;
+  margin-right: 28px;
+}
+
+.tutor-my-28 {
+  margin-top: 28px;
+  margin-bottom: 28px;
+}
+
 .tutor-p-30,
 .tutor-padding-30 {
   padding: 30px;
@@ -7975,7 +8037,7 @@
 .clearfix::after {
   display: block;
   clear: both;
-  content: "";
+  content: '';
 }
 
 .fixed-top {
@@ -8485,6 +8547,18 @@
 
 .invisible {
   visibility: hidden;
+}
+
+.flex-center {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 /* This is a legacy directory pulled from inside the tutor as it is sort of old design library  */
@@ -11391,7 +11465,8 @@ select.tutor-form-select:focus {
   margin-right: 3px;
 }
 
-.tutor-ratings .tutor-rating-stars span, .tutor-ratings .tutor-rating-stars i {
+.tutor-ratings .tutor-rating-stars span,
+.tutor-ratings .tutor-rating-stars i {
   font-size: 22px;
 }
 
@@ -11406,12 +11481,14 @@ select.tutor-form-select:focus {
   font-weight: 400;
 }
 
-.tutor-ratings.tutor-is-xs .tutor-rating-stars span, .tutor-ratings.tutor-is-xs .tutor-rating-stars i {
+.tutor-ratings.tutor-is-xs .tutor-rating-stars span,
+.tutor-ratings.tutor-is-xs .tutor-rating-stars i {
   font-size: 14px;
   margin-right: 2px;
 }
 
-.tutor-ratings.tutor-is-sm .tutor-rating-stars span, .tutor-ratings.tutor-is-sm .tutor-rating-stars i {
+.tutor-ratings.tutor-is-sm .tutor-rating-stars span,
+.tutor-ratings.tutor-is-sm .tutor-rating-stars i {
   font-size: 18px;
 }
 
@@ -11419,11 +11496,22 @@ select.tutor-form-select:focus {
   font-weight: 400;
 }
 
-.tutor-ratings.tutor-is-lg .tutor-rating-stars span, .tutor-ratings.tutor-is-lg .tutor-rating-stars i {
+.tutor-ratings.tutor-is-lg .tutor-rating-stars span,
+.tutor-ratings.tutor-is-lg .tutor-rating-stars i {
   font-size: 25px;
 }
 
 .tutor-ratings.tutor-is-lg .tutor-rating-text {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.tutor-ratings.tutor-is-xl .tutor-rating-stars span,
+.tutor-ratings.tutor-is-xl .tutor-rating-stars i {
+  font-size: 28px;
+}
+
+.tutor-ratings.tutor-is-xl .tutor-rating-text {
   font-size: 24px;
   font-weight: 400;
 }
@@ -12105,6 +12193,9 @@ table.tutor-ui-table.tutor-no-thead tr:first-child td:last-child {
   table.tutor-ui-table tr:last-child td {
     border-bottom: 1px solid #cdcfd5;
   }
+  table.tutor-ui-table tr:nth-child(odd) td {
+    background-color: #fff;
+  }
   table.tutor-ui-table tr:nth-child(even) td {
     background-color: rgba(239, 241, 247, 0.3);
   }
@@ -12297,6 +12388,10 @@ table.tutor-ui-table .td-action-btns .btn-delete:hover {
 
 table.tutor-ui-table .td-action-btns .tutor-form-select-with-icon {
   margin-right: 10px;
+}
+
+table.tutor-ui-table .td-action-btns .tutor-btn.tutor-btn-sm {
+  padding: 7px 11px;
 }
 
 table.tutor-ui-table .td-feedback .review-text {
@@ -13721,7 +13816,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   gap: 30px;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn {
+.tutor-wp-dashboard-header .filter-btns .filter-btn {
+  text-decoration: none;
   background: transparent;
   outline: none;
   border: none;
@@ -13731,15 +13827,15 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   text-transform: capitalize;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn > * {
+.tutor-wp-dashboard-header .filter-btns .filter-btn > * {
   pointer-events: none;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn .item-count {
+.tutor-wp-dashboard-header .filter-btns .filter-btn .item-count {
   color: #5b616f;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn:before {
+.tutor-wp-dashboard-header .filter-btns .filter-btn:before {
   content: '';
   position: absolute;
   width: 100%;
@@ -13757,16 +13853,16 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (max-width: 991px) {
-  .tutor-wp-dashboard-header .filter-btns button.filter-btn:before {
+  .tutor-wp-dashboard-header .filter-btns .filter-btn:before {
     bottom: calc(0% - 20px);
   }
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn.is-active {
+.tutor-wp-dashboard-header .filter-btns .filter-btn.is-active {
   color: #1973aa;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn.is-active:before {
+.tutor-wp-dashboard-header .filter-btns .filter-btn.is-active:before {
   -webkit-transform: scaleY(1);
           transform: scaleY(1);
 }
@@ -13787,7 +13883,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (min-width: 768px) {
-  .tutor-wp-dashboard-filter-items select.tutor-form-select {
+  .tutor-wp-dashboard-filter-items select.tutor-form-select,
+  .tutor-wp-dashboard-filter-items .tutor-input-group {
     width: 227px;
     max-width: 227px;
   }
@@ -13800,6 +13897,36 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   .tutor-wp-dashboard-filter-items > div {
     width: 100%;
   }
+}
+
+.tutor-wp-dashboard-filter-items select.tutor-form-select:focus,
+.tutor-wp-dashboard-filter-items input.tutor-form-control:focus,
+.tutor-wp-dashboard-filter-items textarea.tutor-form-control:focus,
+.tutor-wp-dashboard-filter-items textarea.tutor-form-control:focus {
+  border-color: #1973aa;
+  -webkit-box-shadow: unset;
+          box-shadow: unset;
+}
+
+.tutor-course-details-header a {
+  text-decoration: none;
+}
+
+.tutor-course-details-action-btns {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 30px;
+}
+
+.tutor-course-details-action-btns > a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 2px;
 }
 
 .d-grid {

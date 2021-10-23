@@ -120,6 +120,9 @@ table.tutor-ui-table {
 			&:last-child td {
 				border-bottom: 1px solid $stroke-light-30;
 			}
+			&:nth-child(odd) td {
+				background-color: #fff;
+			}
 			&:nth-child(even) td {
 				background-color: rgba(239, 241, 247, 0.3);
 			}
@@ -337,8 +340,19 @@ table.tutor-ui-table {
 				background: #f4f6f9;
 			}
 		}
+
 		.tutor-form-select-with-icon {
 			margin-right: 10px;
+		}
+
+		.tutor-btn {
+			&.tutor-btn-sm {
+				padding: 7px 11px;
+			}
+			&.tutor-btn-tertiary {
+			}
+			&.tutor-is-outline {
+			}
 		}
 	}
 
