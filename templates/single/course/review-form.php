@@ -2,6 +2,8 @@
 /**
  * @package TutorLMS/Templates
  * @version 1.4.3
+ * 
+ * To be loaded in single course page at the bottom
  */
 
 $isLoggedIn = is_user_logged_in();

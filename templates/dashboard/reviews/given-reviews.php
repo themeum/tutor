@@ -9,6 +9,8 @@
  *
  * @package TutorLMS/Templates
  * @version 1.4.3
+ * 
+ * To be loaded for given review list in frontend dashboard
  */
 
 $reviews = tutor_utils()->get_reviews_by_user(0, 0, 150, true);
