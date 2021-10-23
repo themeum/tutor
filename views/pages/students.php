@@ -16,15 +16,10 @@ $students = new Students_List();
 /**
  * Short able params
  */
-$user_id = isset( $_GET['ID'] ) ? $_GET['ID'] : '';
+$ID = isset( $_GET['ID'] ) ? $_GET['ID'] : '';
 $order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date      = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
 $search    = isset( $_GET['search'] ) ? $_GET['search'] : '';
-
-/**
- * Determine active tab
- */
-$active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET['data'] ) : 'all';
 
 /**
  * Pagination data
@@ -41,8 +36,6 @@ $total            = tutor_utils()->get_total_students( $search_term );
  */
 $navbar_data = array(
 	'page_title' => $students->page_title,
-	'tabs'       => $students->tabs_key_value( $user_id, $date, $search ),
-	'active'     => $active_tab,
 );
 
 //var_dump($navbar_data);
