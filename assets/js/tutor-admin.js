@@ -1941,7 +1941,7 @@ window.onload = function () {
 
       status.onchange = /*#__PURE__*/function () {
         var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-          var target, newStatus, prevStatus, formData, post, response;
+          var target, newStatus, prevStatus, formData, post, response, putStatus;
           return regeneratorRuntime.wrap(function _callee2$(_context2) {
             while (1) {
               switch (_context2.prev = _context2.next) {
@@ -1976,6 +1976,13 @@ window.onload = function () {
 
                   if (response) {
                     target.dataset.status = newStatus;
+                    putStatus = '';
+                    newStatus === 'publish' ? putStatus = 'select-success' : newStatus === 'pending' ? putStatus = 'select-warning' : 'select-default';
+
+                    if (!target.closest(".tutor-form-select-with-icon").classList.contains(putStatus)) {
+                      target.closest(".tutor-form-select-with-icon").classList.add(putStatus);
+                    }
+
                     tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
                   } else {
                     tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");

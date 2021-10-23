@@ -24,10 +24,10 @@ $rating = $isLoggedIn ? tutor_utils()->get_course_rating_by_user() : '';
 			?>
             <form method="post">
                 <input type="hidden" name="tutor_course_id" value="<?php echo get_the_ID(); ?>">
-                <div class="tutor-write-review-box tutor-star-rating-container">
+                <div class="tutor-star-rating-container">
                     <div class="tutor-form-group">
 						<?php
-						tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($rating->rating));
+							tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($rating->rating));
 						?>
                     </div>
                     <div class="tutor-form-group">
@@ -39,11 +39,11 @@ $rating = $isLoggedIn ? tutor_utils()->get_course_rating_by_user() : '';
                 </div>
             </form>
 			<?php
-		}else{
+		} else {
 			ob_start();
 			tutor_load_template( 'single.course.login' );
-			$output = apply_filters( 'tutor_course/global/login', ob_get_clean());
-			echo $output;
+			
+			echo apply_filters( 'tutor_course/global/login', ob_get_clean());
 		}
 		?>
     </div>

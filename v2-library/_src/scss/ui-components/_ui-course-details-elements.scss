@@ -1,0 +1,19 @@
+.tutor-course-details-elements {
+}
+
+.tutor-course-details-header {
+	a {
+		text-decoration: none;
+	}
+}
+
+.tutor-course-details-action-btns {
+	display: flex;
+	gap: 30px;
+
+	> a {
+		display: flex;
+		align-items: center;
+		gap: 2px;
+	}
+}
