@@ -1,8 +1,8 @@
 <?php
 /**
- * Enrollment List Template.
+ * Student List Template.
  *
- * @package Enrollment List
+ * @package Student List
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
