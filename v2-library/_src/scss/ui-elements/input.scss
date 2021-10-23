@@ -77,6 +77,25 @@ input.tutor-form-control {
 			color: var(--tutor-disabled-color);
 		}
 	}
+
+	&:disabled {
+		background: $bg-gray-20;
+		border-color: $bg-gray-20;
+		cursor: not-allowed;
+		&::placeholder {
+			color: $text-hints;
+		}
+	}
+}
+
+input.tutor-form-control {
+	// &[type='date'] {
+	// 	@include svg-calender-line;
+	// }
+
+	// &[type='date' i]::-webkit-calendar-picker-indicator {
+	// 	@include svg-calender-line;
+	// }
 }
 
 textarea.tutor-form-control {
