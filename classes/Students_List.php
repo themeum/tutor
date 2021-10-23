@@ -204,6 +204,7 @@ class Students_List extends \Tutor_List_Table {
 	function get_columns() {
 		$columns = array(
 			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
+			'get_avatar_url'		=> __('Photo', 'tutor'),
 			'display_name'      => __('Name', 'tutor'),
 			'user_email'        => __('E-Mail', 'tutor'),
 			'user_registered'        => __('Registration Date', 'tutor'),

@@ -2693,7 +2693,8 @@ span.withdraw-method-label {
   color: var(--tutor-primary-color);
 }
 
-.tutor-quiz-attempt-info-row .attempt-view-bottom, .tutor-quiz-attempt-info-row .attempt-view-top {
+.tutor-quiz-attempt-info-row .attempt-view-bottom,
+.tutor-quiz-attempt-info-row .attempt-view-top {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2702,7 +2703,8 @@ span.withdraw-method-label {
   justify-content: space-between;
 }
 
-.tutor-quiz-attempt-info-row .attempt-view-bottom .attempt-info-col, .tutor-quiz-attempt-info-row .attempt-view-top .attempt-info-col {
+.tutor-quiz-attempt-info-row .attempt-view-bottom .attempt-info-col,
+.tutor-quiz-attempt-info-row .attempt-view-top .attempt-info-col {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -2771,7 +2773,8 @@ span.withdraw-method-label {
   background: var(--tutor-success-button-color);
 }
 
-.tutor-quiz-attempt-info-row .attempt-info-content h4, .tutor-quiz-attempt-info-row .attempt-info-content h5 {
+.tutor-quiz-attempt-info-row .attempt-info-content h4,
+.tutor-quiz-attempt-info-row .attempt-info-content h5 {
   font-size: 14px;
   line-height: 25px;
   margin: 0;
@@ -2779,7 +2782,8 @@ span.withdraw-method-label {
   font-weight: 400;
 }
 
-.tutor-quiz-attempt-info-row .attempt-info-content h4, .tutor-quiz-attempt-info-row .attempt-info-content h4 a {
+.tutor-quiz-attempt-info-row .attempt-info-content h4,
+.tutor-quiz-attempt-info-row .attempt-info-content h4 a {
   font-weight: 700;
   color: var(--tutor-text-color);
   margin-top: 7px;
@@ -2832,7 +2836,8 @@ span.withdraw-method-label {
   background-color: #fff;
 }
 
-.quiz-attempt-answers-wrap table th, .quiz-attempt-answers-wrap table td {
+.quiz-attempt-answers-wrap table th,
+.quiz-attempt-answers-wrap table td {
   padding: 17px 20px !important;
   border-top: 1px solid #eaeaea;
   border-bottom: 1px solid #eaeaea;
@@ -2840,7 +2845,8 @@ span.withdraw-method-label {
   text-align: left;
 }
 
-.quiz-attempt-answers-wrap table th p, .quiz-attempt-answers-wrap table td p {
+.quiz-attempt-answers-wrap table th p,
+.quiz-attempt-answers-wrap table td p {
   margin: 0;
 }
 
@@ -2873,7 +2879,8 @@ span.withdraw-method-label {
   margin-right: 17px;
 }
 
-.quiz-attempt-answers-wrap table .quiz-incorrect-answer-text i, .quiz-attempt-answers-wrap table .quiz-correct-answer-text i {
+.quiz-attempt-answers-wrap table .quiz-incorrect-answer-text i,
+.quiz-attempt-answers-wrap table .quiz-correct-answer-text i {
   font-size: 12px;
   height: 20px;
   width: 20px;
@@ -4077,8 +4084,8 @@ table.tutor-table p {
 }
 
 @media (max-width: 991px) {
-  .report-course-list-wrap .tutor-list-table th:nth-child(n + 7),
-  .report-course-list-wrap .tutor-list-table td:nth-child(n + 7) {
+  .report-course-list-wrap .tutor-list-table th:nth-child(n+7),
+  .report-course-list-wrap .tutor-list-table td:nth-child(n+7) {
     display: none;
   }
 }

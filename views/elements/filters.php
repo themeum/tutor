@@ -1,5 +1,5 @@
 <?php if ( isset( $data ) ) : ?>
-	<div class="tutor-admin-page-filters" style="display: flex; justify-content: space-between;">
+	<div class="tutor-admin-page-filters tutor-mr-20" style="display: flex; justify-content: space-between;">
 		<?php if ( $data['bulk_action'] ) : ?>
 			<div class="tutor-admin-bulk-action-wrapper">
 				<form action="" method="post" id="tutor-admin-bulk-action-form">
@@ -12,7 +12,7 @@
 								</option>
 							<?php endforeach; ?>
 						</select>
-						<button type="button" id="tutor-admin-bulk-action-btn" class="tutor-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
+						<button type="button" id="tutor-admin-bulk-action-btn" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" data-tutor-modal-target="tutor-bulk-confirm-popup">
 							<?php esc_html_e( 'Apply', 'tutor' ); ?>
 						</button>
 					</div>
