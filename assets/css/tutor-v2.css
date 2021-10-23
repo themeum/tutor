@@ -7971,7 +7971,7 @@
 .clearfix::after {
   display: block;
   clear: both;
-  content: "";
+  content: '';
 }
 
 .fixed-top {
@@ -8481,6 +8481,18 @@
 
 .invisible {
   visibility: hidden;
+}
+
+.flex-center {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 /* This is a legacy directory pulled from inside the tutor as it is sort of old design library  */
@@ -13717,7 +13729,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   gap: 30px;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn {
+.tutor-wp-dashboard-header .filter-btns .filter-btn {
+  text-decoration: none;
   background: transparent;
   outline: none;
   border: none;
@@ -13727,15 +13740,15 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   text-transform: capitalize;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn > * {
+.tutor-wp-dashboard-header .filter-btns .filter-btn > * {
   pointer-events: none;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn .item-count {
+.tutor-wp-dashboard-header .filter-btns .filter-btn .item-count {
   color: #5b616f;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn:before {
+.tutor-wp-dashboard-header .filter-btns .filter-btn:before {
   content: '';
   position: absolute;
   width: 100%;
@@ -13753,16 +13766,16 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (max-width: 991px) {
-  .tutor-wp-dashboard-header .filter-btns button.filter-btn:before {
+  .tutor-wp-dashboard-header .filter-btns .filter-btn:before {
     bottom: calc(0% - 20px);
   }
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn.is-active {
+.tutor-wp-dashboard-header .filter-btns .filter-btn.is-active {
   color: #1973aa;
 }
 
-.tutor-wp-dashboard-header .filter-btns button.filter-btn.is-active:before {
+.tutor-wp-dashboard-header .filter-btns .filter-btn.is-active:before {
   -webkit-transform: scaleY(1);
           transform: scaleY(1);
 }
@@ -13783,7 +13796,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (min-width: 768px) {
-  .tutor-wp-dashboard-filter-items select.tutor-form-select {
+  .tutor-wp-dashboard-filter-items select.tutor-form-select,
+  .tutor-wp-dashboard-filter-items .tutor-input-group {
     width: 227px;
     max-width: 227px;
   }
@@ -13796,6 +13810,15 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   .tutor-wp-dashboard-filter-items > div {
     width: 100%;
   }
+}
+
+.tutor-wp-dashboard-filter-items select.tutor-form-select:focus,
+.tutor-wp-dashboard-filter-items input.tutor-form-control:focus,
+.tutor-wp-dashboard-filter-items textarea.tutor-form-control:focus,
+.tutor-wp-dashboard-filter-items textarea.tutor-form-control:focus {
+  border-color: #1973aa;
+  -webkit-box-shadow: unset;
+          box-shadow: unset;
 }
 
 .d-grid {
