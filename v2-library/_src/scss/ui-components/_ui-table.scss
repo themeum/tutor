@@ -433,6 +433,12 @@ table.tutor-ui-table {
 		}
 	}
 
+	&.table-dashboard-assignments-list {
+		.td-action-btns {
+			gap: 20px;
+		}
+	}
+
 	// Form elements
 	select.tutor-form-select {
 		min-width: max-content;
@@ -456,106 +462,104 @@ table.tutor-ui-table {
 } // end Table th/td Content Styles
 
 // Table Responsive Styles
-table.tutor-ui-table {
-	&.tutor-ui-table-responsive {
-		/*
-		Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
-		*/
-		@media only screen and (max-width: 1199px), (min-device-width: 1200px) and (max-device-width: 1200px) {
-			/* Force table to not be like tables anymore */
-			table,
-			thead,
-			tbody,
-			th,
-			td,
-			tr {
-				display: block;
+table.tutor-ui-table.tutor-ui-table-responsive {
+	/*
+	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
+	*/
+	@media only screen and (max-width: 1199px), (min-device-width: 1200px) and (max-device-width: 1200px) {
+		/* Force table to not be like tables anymore */
+		table,
+		thead,
+		tbody,
+		th,
+		td,
+		tr {
+			display: block;
+		}
+
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+
+		tr {
+			&:not(:last-child) {
+				margin-bottom: 22px;
 			}
-
-			/* Hide table headers (but not display: none;, for accessibility) */
-			thead tr {
-				position: absolute;
-				top: -9999px;
-				left: -9999px;
-			}
-
-			tr {
-				&:not(:last-child) {
-					margin-bottom: 22px;
-				}
-				td {
-					word-break: break-word;
-					&:last-child {
-						border-bottom: 1px solid $stroke-light-30;
-						border-bottom-left-radius: 6px;
-						border-bottom-right-radius: 6px;
-					}
-					&:first-child {
-						border-top-left-radius: 6px;
-						border-top-right-radius: 6px;
-					}
-
-					&:nth-child(odd) {
-						background: rgb(255, 255, 255);
-					}
-
-					&:nth-child(even) {
-						background: rgba(239, 241, 247, 0.3);
-					}
-				}
-			}
-
 			td {
-				/* Behave  like a "row" */
-				border: none;
-				border-radius: 0;
-				position: relative;
-				padding: 10px;
-
-				width: unset;
-				text-align: left;
-
-				border-top: 1px solid $stroke-light-30;
-				border-left: 1px solid $stroke-light-30;
-				border-right: 1px solid $stroke-light-30;
-
-				display: flex;
-
-				&.column-fullwidth {
-					padding: 15px 20px;
+				word-break: break-word;
+				&:last-child {
+					border-bottom: 1px solid $stroke-light-30;
+					border-bottom-left-radius: 6px;
+					border-bottom-right-radius: 6px;
+				}
+				&:first-child {
+					border-top-left-radius: 6px;
+					border-top-right-radius: 6px;
 				}
 
-				&:not(.column-fullwidth) {
-					padding-left: 40%;
+				&:nth-child(odd) {
+					background: rgb(255, 255, 255);
+				}
 
-					&:before {
-						/* Now like a table header */
-						position: absolute;
-						/* Top/left values mimic padding */
-						top: 0;
-						left: 0;
-						width: 35%;
-						padding-left: 20px;
-						padding-right: 10px;
-						white-space: nowrap;
-
-						/* Label the data You could also use a data-* attribute and content for this. That way "bloats" the HTML,this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow. */
-
-						content: attr(data-th);
-						height: 100%;
-						display: flex;
-						align-items: center;
-
-						font-weight: 400;
-						font-size: 13px;
-						line-height: 138%;
-						color: $text-subsued;
-					}
+				&:nth-child(even) {
+					background: rgba(239, 241, 247, 0.3);
 				}
 			}
 		}
-	} // end Table Responsive Styles
-}
+
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			border-radius: 0;
+			position: relative;
+			padding: 10px;
+
+			width: unset;
+			text-align: left;
+
+			border-top: 1px solid $stroke-light-30;
+			border-left: 1px solid $stroke-light-30;
+			border-right: 1px solid $stroke-light-30;
+
+			display: flex;
+
+			&.column-fullwidth {
+				padding: 15px 20px;
+			}
+
+			&:not(.column-fullwidth) {
+				padding-left: 40%;
+
+				&:before {
+					/* Now like a table header */
+					position: absolute;
+					/* Top/left values mimic padding */
+					top: 0;
+					left: 0;
+					width: 35%;
+					padding-left: 20px;
+					padding-right: 10px;
+					white-space: nowrap;
+
+					/* Label the data You could also use a data-* attribute and content for this. That way "bloats" the HTML,this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow. */
+
+					content: attr(data-th);
+					height: 100%;
+					display: flex;
+					align-items: center;
+
+					font-weight: 400;
+					font-size: 13px;
+					line-height: 138%;
+					color: $text-subsued;
+				}
+			}
+		}
+	}
+} // end Table Responsive Styles
 
 table.tutor-ui-table-no-border {
 	&,
