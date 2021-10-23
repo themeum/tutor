@@ -22,6 +22,7 @@ $course_id     = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['cours
 $order_filter  = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
 $date          = isset( $_GET['date'] ) ? sanitize_text_field( $_GET['date'] ) : '';
 $search_filter = isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';
+$category_slug = isset( $_GET['category'] ) ? sanitize_text_field( $_GET['category'] ) : '';
 
 /**
  * Determine active tab
@@ -38,10 +39,14 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 /**
  * Navbar data to make nav menu
  */
-$navbar_data = array(
-	'page_title' => $courses->page_title,
-	'tabs'       => $courses->tabs_key_value( $course_id, $date, $search_filter ),
-	'active'     => $active_tab,
+$add_course_url = esc_url( admin_url( 'post-new.php?post_type=courses' ) );
+$navbar_data    = array(
+	'page_title'   => $courses->page_title,
+	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
+	'active'       => $active_tab,
+	'add_button'   => true,
+	'button_title' => __( 'Add New', 'tutor' ),
+	'button_url'   => $add_course_url,
 );
 
 /**
@@ -53,10 +58,11 @@ $navbar_data = array(
 // 'search_filter' => true,
 // );
 $filters = array(
-	'bulk_action'  => $courses->bulk_action,
-	'bulk_actions' => $courses->prepare_bulk_actions(),
-	'ajax_action'  => 'tutor_course_list_bulk_action',
-	'filters'      => true,
+	'bulk_action'     => $courses->bulk_action,
+	'bulk_actions'    => $courses->prepare_bulk_actions(),
+	'ajax_action'     => 'tutor_course_list_bulk_action',
+	'filters'         => true,
+	'category_filter' => true,
 );
 
 
@@ -102,11 +108,27 @@ if ( 'mine' === $active_tab ) {
 	$args['author'] = get_current_user_id();
 }
 // Search filter.
-
 if ( '' !== $search_filter ) {
 	$args['s'] = $search_filter;
 }
+// Category filter.
+if ( '' !== $category_slug ) {
+	$args['tax_query'] = array(
+		array(
+			'taxonomy' => 'course-category',
+			'field'    => 'slug',
+			'terms'    => $category_slug,
+		),
+	);
+}
+
 $the_query = new WP_Query( $args );
+
+$available_status = array(
+	'publish' => __( 'Publish', 'tutor' ),
+	'pending' => __( 'Pending', 'tutor' ),
+	'draft'   => __( 'Draft', 'tutor' ),
+);
 
 ?>
 <div class="tutor-admin-page-wrapper">
@@ -114,8 +136,8 @@ $the_query = new WP_Query( $args );
 	/**
 	 * Load Templates with data.
 	 */
-	$navbar_template  = esc_url( tutor()->path . 'views/elements/navbar.php' );
-	$filters_template = esc_url( tutor()->path . 'views/elements/filters.php' );
+	$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
@@ -264,49 +286,55 @@ $the_query = new WP_Query( $args );
 										} else {
 											echo wp_kses_post( wc_price( $price ) );
 										}
+										// Alert class for course status.
+										$status = ( 'publish' === $post->post_status  ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
 										?>
 									</div>
 								</td>
 								<td data-th="Actions">
 									<div class="inline-flex-center td-action-btns">
-										<div class="tutor-form-select-with-icon select-default- select-primary select-success- select-danger- select-warning-">
-										<select title="Please select a color">
-											<option value="Red">Red</option>
-											<option value="Blue">Blue</option>
-											<option value="Blue">Yellow</option>
+										<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
+										<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-admin-course-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>">
+										<?php foreach ( $available_status as $key => $value ) : ?>
+											<option value="publish" <?php selected( $key, $post->post_status, 'selected' ); ?>>
+												<?php echo esc_html( $value ); ?>
+											</option>
+										<?php endforeach; ?>	
 										</select>
 										<i class="icon1 ttr-eye-fill-filled"></i>
 										<i class="icon2 ttr-angle-down-filled"></i>
 										</div>
-										<a href="#" class="btn-outline tutor-btn">
-										Edit
+										<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="btn-outline tutor-btn">
+											<?php esc_html_e( 'Edit', 'tutor' ); ?>
 										</a>
-									
 										<div class="tutor-popup-opener">
 										<button
 											type="button"
 											class="popup-btn"
-											data-tutor-popup-target="table-dashboard-course-list-1"
+											data-tutor-popup-target="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>"
 										>
 											<span class="toggle-icon"></span>
 										</button>
-										<ul id="table-dashboard-course-list-1" class="popup-menu">
+										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="popup-menu">
+										<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 											<li>
-											<a href="#">
-												<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
-												<span class="text-regular-body color-text-white">
-												Download
-												</span>
-											</a>
+												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
+													<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+													<span class="text-regular-body color-text-white">
+														<?php esc_html_e( 'View Course', 'tutor' ); ?>
+													</span>
+												</a>
 											</li>
+											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
-											<a href="#">
-												<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
-												<span class="text-regular-body color-text-white">
-												Delete
-												</span>
-											</a>
+												<a href="#" class="tutor-admin-course-delete" data-id="<?php echo esc_attr( $post->ID ); ?>">
+													<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+													<span class="text-regular-body color-text-white">
+													<?php esc_html_e( 'Delete', 'tutor' ); ?>
+													</span>
+												</a>
 											</li>
+											<?php do_action( 'tutor_admin_after_course_list_action', $post->ID ); ?>
 										</ul>
 										</div>
 									</div>
@@ -315,7 +343,9 @@ $the_query = new WP_Query( $args );
 						<?php endforeach; ?>
 					<?php else : ?>
 						<tr>
-							<?php esc_html_e( 'No course found', 'tutor' ); ?>
+							<td colspan="100%">
+								<?php esc_html_e( 'No course found', 'tutor' ); ?>
+							</td>
 						</tr>
 					<?php endif; ?>
 				</tbody>
@@ -332,7 +362,7 @@ $the_query = new WP_Query( $args );
 			'per_page'    => $limit,
 			'paged'       => $paged_filter,
 		);
-		$pagination_template = esc_url( tutor()->path . 'views/elements/pagination.php', $pagination_data );
+		$pagination_template = tutor()->path . 'views/elements/pagination.php';
 		tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
 		?>
 	</div>

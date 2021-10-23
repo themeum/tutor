@@ -29,7 +29,14 @@ class Post_types{
 		/**
 		 * Since 1.4.0
 		 */
-		add_action( 'init', array($this, 'register_tutor_enrolled_post_types') );
+		add_action( 'init', array( $this, 'register_tutor_enrolled_post_types' ) );
+
+		/**
+		 * Remove tutor course post type from admin menu
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'admin_menu', array( $this, 'remove_course_post_menu' ) );
 	}
 	
 	public function register_course_post_types() {
@@ -58,8 +65,8 @@ class Post_types{
 			'description'               => __( 'Description.', 'tutor' ),
 			'public'                    => true,
 			'publicly_queryable'        => true,
-			'show_ui'                   => true,
-			'show_in_menu'              => 'tutor',
+			//'show_ui'                   => true,
+			//'show_in_menu'              => 'tutor',
 			'query_var'                 => true,
 			'rewrite'                   => array( 'slug' => $courses_base_slug, 'with_front' => false ),
 			'menu_icon'                 => 'dashicons-book-alt',
@@ -399,4 +406,13 @@ class Post_types{
 		register_post_type( 'tutor_enrolled', $args );
 	}
 
+	/**
+	 * Remove course post menu
+	 *
+	 * @return void
+	 * @since v2.0.0
+	 */
+	public function remove_course_post_menu() {
+		remove_menu_page( 'edit.php?post_type=courses' );
+	}
 }
