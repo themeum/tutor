@@ -1,6 +1,6 @@
 <?php if (isset($data)): ?>
 <!-- Filter Wrap -->
-<div class="tutor-wp-dashboard-filter d-flex align-items-end justify-content-between tutor-mr-15" style="display: flex; justify-content: space-between;">
+<div class="tutor-wp-dashboard-filter d-flex align-items-end justify-content-between tutor-mr-20" style="display: flex; justify-content: space-between;">
 	
 	<!-- Bulk Action -->
 	<?php if ($data['bulk_action']): ?>
