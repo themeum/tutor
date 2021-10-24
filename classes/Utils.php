@@ -2691,7 +2691,7 @@ class Utils {
 			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
 
-		$cat_ids = array_filter($cat_ids, function($id) {
+		$cat_ids = array_filter( $cat_ids = array() , function($id) {
 			return is_numeric($id);
 		});
 
@@ -4905,7 +4905,7 @@ class Utils {
 	 */
 	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null ) {
 		global $wpdb;
-
+		
 		$course_ids = array_map( function( $id ) {
 			return "'" . esc_sql( $id ) . "'";
 		}, $course_ids );

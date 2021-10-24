@@ -6,15 +6,17 @@
  */
 
 if ( isset( $data ) && count( $data ) ) : ?>
-<header class="tutor-wp-dashboard-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20 tutor-mb-22" style="margin-left:-20px">
-  <div class="header-title text-medium-h5 color-text-primary">
+<header
+  class="tutor-wp-dashboard-header d-flex justify-content-between align-items-center tutor-px-30 tutor-py-20 tutor-mb-22 tutor-mr-20"
+  style="border: 1px solid #f1f1f1">
+  <div class="header-title text-medium-h5 color-text-primary mb-lg-0 mb-3">
 		<span class="text-primary-h5">
 			<?php echo esc_html( $data['page_title'] ); ?>
 		</span>
 		<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 			<a class="tutor-pl-10" href="<?php echo esc_url( $data['button_url'] ); ?>">
-				<button class='tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-btn-sm'>
-				<span class="btn-icon ttr-plus-filled"></span>
+				<button class="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+					<span class="btn-icon ttr-plus-bold-filled"></span>
 					<span><?php echo esc_html( $data['button_title'] ); ?></span>
 				</button>
 			</a>

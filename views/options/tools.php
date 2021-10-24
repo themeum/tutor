@@ -56,18 +56,6 @@
 		<!-- end /.tutor-option-tab-pages -->
 		</div>
 	</div>
-	<div class="tutor-notification tutor-is-success">
-		<div class="tutor-notification-icon">
-			<i class="fas fa-check"></i>
-		</div>
-		<div class="tutor-notification-content">
-			<h5>Successful</h5>
-			<p>Your file was uploaded</p>
-		</div>
-		<button class="tutor-notification-close">
-			<i class="fas fa-times"></i>
-		</button>
-	</div>
 </section>
 
 <style>

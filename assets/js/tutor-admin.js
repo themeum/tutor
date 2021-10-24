@@ -1791,6 +1791,7 @@ var angleRight = tutorIconsV2.angleRight,
     warning = tutorIconsV2.warning;
 document.addEventListener("DOMContentLoaded", function () {
   var $ = window.jQuery;
+  var __ = wp.i18n.__;
   var image_uploader = document.querySelectorAll(".image_upload_button"); // let image_input = document.getElementById("image_url_field");
 
   var _loop = function _loop(i) {
@@ -1867,11 +1868,21 @@ document.addEventListener("DOMContentLoaded", function () {
       type: "POST",
       data: data,
       beforeSend: function beforeSend() {},
-      success: function success(data) {
-        $(".tutor-notification").addClass("show");
-        setTimeout(function () {
-          $(".tutor-notification").removeClass("show");
-        }, 4000);
+      success: function success(resp) {
+        var _ref = resp || {},
+            _ref$data = _ref.data,
+            data = _ref$data === void 0 ? {} : _ref$data,
+            success = _ref.success;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
+
+        if (success) {
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
+          return;
+        }
+
+        tutor_toast('Error!', message, 'tutor');
       },
       complete: function complete() {}
     });
@@ -32308,26 +32319,6 @@ jQuery(document).ready(function ($) {
   $(".tutor-form-toggle-input").on("change", function (e) {
     var toggleInput = $(this).siblings("input");
     $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
-  });
-  $("#tutor-option-form").submit(function (e) {
-    e.preventDefault();
-    var $form = $(this);
-    var data = $form.serializeObject();
-    console.log(data);
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: data,
-      beforeSend: function beforeSend() {
-        $form.find(".button").addClass("tutor-updating-message");
-      },
-      success: function success(data) {
-        data.success ? tutor_toast(__("Saved", "tutor"), $form.data("toast_success_message"), "success") : tutor_toast(__("Request Error", "tutor"), __("Could not save", "tutor"), "error");
-      },
-      complete: function complete() {
-        $form.find(".button").removeClass("tutor-updating-message");
-      }
-    });
   });
   /**
    * End Withdraw nav tabs
