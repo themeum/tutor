@@ -1,36 +1,73 @@
 .tutor-course-listing {
 	display: grid;
-	&-item {
-		/* bg/white */
-
-		background: $bg-white;
-		/* stroke/light30 */
-
-		border: 1px solid $stroke-light-30;
-		border-radius: 6px;
-		overflow: hidden;
-		img {
-			max-width: 100%;
-		}
-	}
-	.list-item-author.tutor-avatar {
-		width: 34px;
-		height: 34px;
-		border-radius: 50%;
-	}
 	&-grid-3 {
 		grid-template-columns: repeat(3, 1fr);
-		&-item {
+		.tutor-course-listing-item {
 			max-width: 350px;
 		}
 	}
 	&-grid-4 {
-		&-item {
-			max-width: 255px;
+		.tutor-course-listing-item {
+			// max-width: 255px;
 		}
 	}
 	&-grid-2 {
 	}
 	&-grid-3 {
+	}
+}
+
+.tutor-course-listing-item {
+	/* bg/white */
+	background: $bg-white;
+	/* stroke/light30 */
+	border: 1px solid $stroke-light-30;
+	border-radius: 6px;
+	overflow: hidden;
+	img {
+		max-width: 100%;
+	}
+	.list-item-meta {
+		gap: 10px;
+		@include breakpoint-min(desktop-lg) {
+			gap: 36px;
+		}
+		.meta-icon {
+			font-size: 28px;
+		}
+	}
+	//    /* stroke/light20 */ background: #E0E2EA;
+
+	&-head {
+	}
+	&-body {
+		.list-item-author {
+			gap: 10px;
+		}
+		.tutor-avatar {
+			width: 34px;
+			height: 34px;
+			border-radius: 50%;
+		}
+	}
+	&-footer {
+		.list-item-price-with-booking {
+			.list-item-booking {
+				gap: 8px;
+			}
+
+			.list-item-booking > * {
+				display: flex;
+			}
+		}
+
+		&.has-border {
+			border-top: 1px solid $stroke-light-20;
+		}
+		.list-item-price {
+			gap: 10px;
+		}
+		.list-item-button {
+		}
 	}
 }
