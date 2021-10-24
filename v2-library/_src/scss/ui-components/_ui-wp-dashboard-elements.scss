@@ -57,13 +57,13 @@
 
 .tutor-wp-dashboard-filter {
 	gap: 30px;
-	flex-wrap: wrap;
+	// flex-wrap: wrap;
 }
 .tutor-wp-dashboard-filter-items {
 	// width: 100%;
-	display: flex;
+	// display: flex;
 	gap: 30px;
-	flex-wrap: wrap;
+	// flex-wrap: wrap;
 
 	.tutor-form-label {
 		@extend .text-medium-caption;
@@ -71,18 +71,25 @@
 		@extend .tutor-mb-10;
 	}
 
-	@include breakpoint-min(tablet) {
+	select.tutor-form-select,
+	.tutor-input-group {
+		width: 180px;
+		max-width: 180px;
+	}
+
+	@include breakpoint-min(992) {
 		select.tutor-form-select,
 		.tutor-input-group {
-			width: 227px;
+			width: 150px;
 			max-width: 227px;
 		}
 	}
 
-	@include breakpoint-max(tablet) {
-		width: 100%;
-		> div {
-			width: 100%;
+	@include breakpoint-min(1400) {
+		select.tutor-form-select,
+		.tutor-input-group {
+			width: 227px;
+			max-width: 227px;
 		}
 	}
 
