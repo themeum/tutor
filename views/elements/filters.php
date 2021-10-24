@@ -1,10 +1,7 @@
 <?php if ( isset( $data ) ) : ?>
-	<div
-  class="tutor-wp-dashboard-filter d-flex align-items-end justify-content-between tutor-mr-15"
-  style="display: flex; justify-content: space-between;"
->
+<div class="tutor-wp-dashboard-filter tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap tutor-bs-align-items-end tutor-bs-justify-content-between tutor-pr-20">
 <?php if ( $data['bulk_action'] ) : ?>
-  <div class="tutor-wp-dashboard-filter-items">
+  <div class="tutor-wp-dashboard-filter-items tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap">
   <form action="" method="post" id="tutor-admin-bulk-action-form">
 					<input type="hidden" name="action" value="<?php esc_html_e( $data['ajax_action'] ); ?>">
     <div class="tutor-form-select-with-btn">
@@ -18,7 +15,7 @@
 								</option>
 							<?php endforeach; ?>
       </select>
-      <button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-md" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
+      <button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
 	  <?php esc_html_e( 'Apply', 'tutor' ); ?>
       </button>
     </div>
@@ -36,7 +33,7 @@
 				$categories = get_terms( $terms_arg );
 			?>
 
-			<div class="tutor-wp-dashboard-filter-items">
+			<div class="tutor-wp-dashboard-filter-items tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap">
 				<?php 
 					$course_id = isset( $_GET['course-id'] ) ? esc_html__( $_GET['course-id'] ) : '';
 					$order     = isset( $_GET['order'] ) ?  esc_html__( $_GET['order'] ) : '';
@@ -107,7 +104,7 @@
 					<input
 					type="date"
 					class="tutor-form-control"
-					placeholder="dd/mm/yyyy"
+					placeholder="<?php esc_attr_e( get_option( 'date_format' ) ); ?>"
 					/>
 				</div>
 				</div>
