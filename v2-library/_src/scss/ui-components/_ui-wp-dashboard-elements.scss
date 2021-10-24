@@ -1,0 +1,102 @@
+.tutor-wp-dashboard-header {
+	.header-title-wrap {
+		gap: 10px;
+	}
+	.header-title {
+		gap: 10px;
+	}
+
+	@include breakpoint-min(992) {
+		height: 60px;
+	}
+
+	background: #ffffff;
+	.filter-btns {
+		display: flex;
+		gap: 30px;
+		.filter-btn {
+			text-decoration: none;
+			background: transparent;
+			outline: none;
+			border: none;
+			font: inherit;
+			color: inherit;
+			position: relative;
+			text-transform: capitalize;
+			> * {
+				pointer-events: none;
+			}
+			.item-count {
+				color: $text-subsued;
+			}
+			&:before {
+				content: '';
+				position: absolute;
+				width: 100%;
+				height: 3px;
+				background: $brand-wordpress;
+				bottom: calc(0% - 17px);
+				transition: transform 200ms linear;
+				transform: scaleY(0);
+				transform-origin: bottom;
+
+				@include breakpoint-max(991) {
+					bottom: calc(0% - 20px);
+				}
+			}
+
+			&.is-active {
+				color: $brand-wordpress;
+				&:before {
+					transform: scaleY(1);
+				}
+			}
+		}
+	}
+}
+
+.tutor-wp-dashboard-filter {
+	gap: 30px;
+	// flex-wrap: wrap;
+}
+.tutor-wp-dashboard-filter-items {
+	// width: 100%;
+	// display: flex;
+	gap: 30px;
+	// flex-wrap: wrap;
+
+	.tutor-form-label {
+		@extend .text-medium-caption;
+		@extend .color-text-title;
+		@extend .tutor-mb-10;
+	}
+
+	select.tutor-form-select,
+	.tutor-input-group {
+		width: 180px;
+		max-width: 180px;
+	}
+
+	@include breakpoint-min(992) {
+		select.tutor-form-select,
+		.tutor-input-group {
+			width: 150px;
+			max-width: 227px;
+		}
+	}
+
+	@include breakpoint-min(1400) {
+		select.tutor-form-select,
+		.tutor-input-group {
+			width: 180px;
+			max-width: 180px;
+		}
+	}
+
+	select.tutor-form-select:focus,
+	input.tutor-form-control:focus,
+	textarea.tutor-form-control:focus {
+		border-color: $brand-wordpress;
+		box-shadow: unset;
+	}
+}

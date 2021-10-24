@@ -3345,32 +3345,39 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = 150, $get_object = false ) {
+	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = 150, $get_object = false, $course_id=null ) {
 		$user_id = $this->get_user_id( $user_id );
 		global $wpdb;
 
+		$course_filter = '';
+		if($course_id) {
+			$course_ids = is_array($course_id) ? $course_id : array($course_id);
+			$course_ids = implode(',', $course_ids);
+			$course_filter = " AND _comment.comment_post_ID IN ($course_ids)";
+		}
+		
 		$reviews = $wpdb->get_results( $wpdb->prepare(
-			"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_author,
-					{$wpdb->comments}.comment_author_email,
-					{$wpdb->comments}.comment_date,
-					{$wpdb->comments}.comment_content,
-					{$wpdb->comments}.user_id,
-					{$wpdb->commentmeta}.meta_value as rating,
+			"SELECT _comment.comment_ID,
+					_comment.comment_post_ID,
+					_comment.comment_author,
+					_comment.comment_author_email,
+					_comment.comment_date,
+					_comment.comment_content,
+					_comment.user_id,
+					_meta.meta_value as rating,
 					{$wpdb->users}.display_name
 
-			FROM 	{$wpdb->comments}
-					INNER JOIN {$wpdb->commentmeta}
-							ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+			FROM 	{$wpdb->comments} _comment
+					INNER JOIN {$wpdb->commentmeta} _meta
+							ON _comment.comment_ID = _meta.comment_id
 					INNER  JOIN {$wpdb->users}
-							ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE 	{$wpdb->comments}.user_id = %d
-					AND comment_type = %s
-					AND meta_key = %s
-			ORDER BY comment_ID DESC
-			LIMIT %d, %d;
-			",
+							ON _comment.user_id = {$wpdb->users}.ID
+			WHERE 	_comment.user_id = %d
+					AND _comment.comment_type = %s
+					AND _meta.meta_key = %s
+					{$course_filter}
+			ORDER BY _comment.comment_ID DESC
+			LIMIT %d, %d;",
 			$user_id,
 			'tutor_course_rating',
 			'tutor_rating',
@@ -3380,6 +3387,7 @@ class Utils {
 
 
 		if($get_object) {
+			// Prepare other data for multiple reviews case
 			$count = (int)$wpdb->get_var( $wpdb->prepare(
 				"SELECT COUNT({$wpdb->comments}.comment_ID)
 				FROM 	{$wpdb->comments}
@@ -3399,6 +3407,11 @@ class Utils {
 				'count' => $count,
 				'results' => $reviews
 			);
+		}
+
+		// Return single review for single course
+		if($course_id && !is_array($course_id)) {
+			return count($reviews) ? $reviews[0] : null;
 		}
 
 		return $reviews;
@@ -7311,6 +7324,19 @@ class Utils {
 			$is_listed = in_array( $user_id, $instructor_ids );
 
 			return $is_listed;
+		}
+
+		global $wpdb;
+		switch($content) {
+			case 'review' :
+				// just check if own review. Instructor privilege already checked in the earlier blocks
+				$id = $wpdb->get_var($wpdb->prepare(
+					"SELECT comment_ID 
+					FROM {$wpdb->comments} WHERE user_id %d",
+					$user_id
+				));
+
+				return $id ? true : false;
 		}
 
 		return false;

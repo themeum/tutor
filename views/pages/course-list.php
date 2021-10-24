@@ -4,10 +4,11 @@
  *
  * @package Course List
  */
-
+/*
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+*/
 
 use TUTOR\Course_List;
 use TUTOR_REPORT\Analytics;
@@ -140,6 +141,9 @@ $available_status = array(
 	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
+
+	
+
 	?>
 
 	<div class="tutor-admin-page-content-wrapper">

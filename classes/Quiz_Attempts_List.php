@@ -43,7 +43,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		//@since 1.9.5 instead of showing time ago showing original date time 
 		if ($item->attempt_ended_at){
 			$ended_ago_time = human_time_diff(strtotime($item->attempt_ended_at), tutor_time()).__(' ago', 'tutor');
-			$attempt_started_at = date_format(date_create($item->attempt_started_at), 'd M, Y, h:i a');
+			$attempt_started_at = date( get_option( 'date_format'), strtotime($item->attempt_started_at) );
 			$quiz_title .= "<span>{$attempt_started_at}</span>";
 		}
 
