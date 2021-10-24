@@ -2764,6 +2764,7 @@ msgstr ""
 msgid "Retrieve Password"
 msgstr ""
 
+#: classes/Utils.php:2593, templates/dashboard/dashboard.php:27, templates/dashboard/my-quiz-attempts.php:95, views/pages/course-list.php:130, templates/dashboard/my-quiz-attempts/attempts-details.php:380
 #: classes/Utils.php:2593, templates/dashboard/dashboard.php:27, templates/dashboard/my-quiz-attempts.php:94, views/pages/course-list.php:130, templates/dashboard/my-quiz-attempts/attempts-details.php:380
 msgid "Pending"
 msgstr ""
