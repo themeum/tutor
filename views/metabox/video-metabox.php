@@ -102,7 +102,7 @@ $supported_sources = array_keys($supported_sources);
             </div>
 
             <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' : 'none'; ?>;">
-                <input class="tutor-form-control" type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('YouTube Video URL', 'tutor'); ?>" data-youtube_api_key="<?php echo tutils()->get_option('lesson_video_duration_youtube_api_key', ''); ?>">
+                <input class="tutor-form-control" type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('YouTube Video URL', 'tutor'); ?>" data-youtube_api_key="<?php echo tutor_utils()->get_option('lesson_video_duration_youtube_api_key', ''); ?>">
             </div>
 
             <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">

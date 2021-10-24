@@ -13,7 +13,7 @@
 		<div class="title"><?php _e( 'Tools', 'tutor' ); ?></div>
 		<div class="search-field">
 			<div class="tutor-input-group tutor-form-control-has-icon">
-				<span class="tutor-input-group-icon tutor-v2-icon-test icon-search-filled"></span>
+				<span class="tutor-input-group-icon ttr-search-filled"></span>
 				<input type="search" autocomplete="off" class="tutor-form-control" placeholder="<?php _e( 'Search', 'tutor' ); ?>" />
 			</div>
 		</div>

@@ -2,7 +2,7 @@
 	<h2>Import/Export</h2>
 </div>
 <div class="tutor-backend-alert alert-warning">
-	<span class="alert-icon tutor-v2-icon-test icon-warning-filled"></span>
+	<span class="alert-icon ttr-warning-filled"></span>
 	<span class="alert-content">Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.</span>
 </div>
 
@@ -13,7 +13,7 @@
 		<div class="tutor-option-field-row tutor-bs-d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
-					<span class="icon tutor-v2-icon-test icon-upload-icon-line"></span>
+					<span class="ttr-upload-icon-line"></span>
 					<div class="title">Drag &amp; Drop your JSON File here </div>
 					<div class="subtitle"><span>File Format:</span> .json <br> Or</div>
 					<label for="drag-drop-input" class="tutor-btn tutor-is-sm">
@@ -71,13 +71,13 @@
 							<ul class="popup-menu">
 								<li>
 									<a class="export_single_settings" data-id="<?php echo $key; ?>">
-										<span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
+										<span class="ttr-msg-archive-filled"></span>
 										<span>Download</span>
 									</a>
 								</li>
 								<li>
 									<a class="delete_single_settings" data-id="<?php echo $key; ?>">
-										<span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
+										<span class="ttr-delete-fill-filled"></span>
 										<span>Delete</span>
 									</a>
 								</li>

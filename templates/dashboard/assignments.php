@@ -24,7 +24,7 @@ $date_filter        = isset($_GET['date']) ?  $_GET['date'] : '';
 
 $current_user       = get_current_user_id();
 $assignments        = tutor_utils()->get_assignments_by_instructor(null,  compact('course_id', 'order_filter', 'date_filter', 'per_page', 'offset'));
-$courses            = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
+$courses            = (current_user_can('administrator')) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
 
 ?>
 

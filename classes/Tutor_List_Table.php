@@ -352,7 +352,7 @@ class Tutor_List_Table {
 	 * @param $selected | optional
 	 */
 	public function course_dropdown($selected = ''){
-		$courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
+		$courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
 		$markup = '
 			<div class="alignright">
 				<label>'.__('Course', 'tutor-pro').'</label>
@@ -1253,7 +1253,7 @@ class Tutor_List_Table {
 					<div>
 						<?php
 						//get courses
-						$courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
+						$courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
 						?>
 
 						<select class="tutor-report-category tutor-announcement-course-sorting">

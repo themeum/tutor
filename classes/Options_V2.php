@@ -84,7 +84,7 @@ class Options_V2 {
 	 * @return array
 	 */
 	public function tutor_option_search() {
-		 tutils()->checking_nonce();
+		 tutor_utils()->checking_nonce();
 
 		// !current_user_can('manage_options') ? wp_send_json_error() : 0;
 		// $keyword = strtolower( $_POST['keyword'] );
@@ -193,7 +193,7 @@ class Options_V2 {
 
 			$update_option = array_merge( $get_option_data, $import_data );
 
-			$update_option = tutils()->sanitize_recursively( $update_option );
+			$update_option = tutor_utils()->sanitize_recursively( $update_option );
 
 			// $update_option = array();
 			if ( ! empty( $update_option ) ) {
@@ -227,15 +227,15 @@ class Options_V2 {
 	 * @return JSON
 	 */
 	public function tutor_option_save() {
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
 
 		do_action( 'tutor_option_save_before' );
 
-		$option = (array) tutils()->array_get( 'tutor_option', $_POST, array() );
+		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
 
-		$option = tutils()->sanitize_recursively( $option );
+		$option = tutor_utils()->sanitize_recursively( $option );
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
@@ -271,11 +271,11 @@ class Options_V2 {
 	 * @return JSON
 	 */
 	public function tutor_option_default_save() {
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
 
-		$default_options = tutils()->sanitize_recursively( $this->tutor_default_settings() );
+		$default_options = tutor_utils()->sanitize_recursively( $this->tutor_default_settings() );
 
 		update_option( 'tutor_option', $default_options );
 

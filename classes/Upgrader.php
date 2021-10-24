@@ -62,7 +62,7 @@ class Upgrader {
 
 
 	public function in_plugin_update_message( $args, $response ){
-		$upgrade_notice = strip_tags(tutils()->array_get('upgrade_notice', $response));
+		$upgrade_notice = strip_tags(tutor_utils()->array_get('upgrade_notice', $response));
 		if ($upgrade_notice){
 			$upgrade_notice = "<span class='version'><code>v.{$response->new_version}</code></span> <br />".$upgrade_notice;
 

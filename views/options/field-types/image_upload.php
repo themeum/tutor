@@ -16,7 +16,7 @@
                 </p>
                 <label for="builder-logo-upload" class="tutor-btn tutor-is-sm">
                     <input type="file" name="builder-logo-upload" id="builder-logo-upload" accept=".jpg, .jpeg, .png, .svg">
-                    <span class="tutor-btn-icon tutor-v2-icon-test icon-image-filled"></span>
+                    <span class="tutor-btn-icon ttr-image-filled"></span>
                     <span>Upload Image</span>
                 </label>
             </div>

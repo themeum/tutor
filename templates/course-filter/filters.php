@@ -67,7 +67,7 @@
             }
 
             
-            $is_membership = get_tutor_option('monetize_by')=='pmpro' && tutils()->has_pmpro();
+            $is_membership = get_tutor_option('monetize_by')=='pmpro' && tutor_utils()->has_pmpro();
             if(!$is_membership && in_array('price_type', $supported_filters)){
                 ?>
                 <div>

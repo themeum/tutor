@@ -6,7 +6,7 @@
         <div class="radio-thumbnail has-title public-profile fields-wrapper">
             <?php if (!empty($field['group_options'])) : ?>
                 <?php foreach ($field['group_options'] as $optionKey => $option) :
-                    $option_value = $this->get($field['key'], tutils()->array_get('default', $field));
+                    $option_value = $this->get($field['key'], tutor_utils()->array_get('default', $field));
                 ?>
                     <label for="profile-<?php echo $optionKey ?>">
                         <input type="radio" name="tutor_option[<?php echo $field['key']; ?>]" id="profile-<?php echo $optionKey ?>" <?php checked($option_value,  $optionKey) ?> value="<?php echo $optionKey ?>">

@@ -13,6 +13,6 @@
         </label>
         <button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs">Edit</button>
         <!-- <span class="delete-btn" style="width: 18px; height: 20px"></span> -->
-        <span class="delete-btn tutor-v2-icon-test icon-delete-stroke-filled"></span>
+        <span class="delete-btn ttr-delete-stroke-filled"></span>
     </div>
 </div>

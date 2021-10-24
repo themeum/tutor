@@ -12,7 +12,7 @@
  */
 
 $per_page = 20;
-$current_page = max( 1, tutils()->array_get('current_page', $_GET) );
+$current_page = max( 1, tutor_utils()->array_get('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 ?>
 

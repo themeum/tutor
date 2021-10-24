@@ -79,7 +79,7 @@ class Dashboard {
 	 */
 	public function profile_completion_notification() {
         $output = '';
-        $enable_profile_completion = tutils()->get_option('enable_profile_completion');
+        $enable_profile_completion = tutor_utils()->get_option('enable_profile_completion');
         if ($enable_profile_completion) {
             ob_start();
             tutor_load_template('dashboard.notifications.profile-completion');

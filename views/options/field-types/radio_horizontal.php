@@ -10,7 +10,7 @@
             $i = 1;
             if (!empty($field['options'])) :
                 foreach ($field['options'] as $optionKey => $option) :
-                    $option_value = $this->get($field['key'], tutils()->array_get('default', $field));
+                    $option_value = $this->get($field['key'], tutor_utils()->array_get('default', $field));
             ?>
                     <label for="items-per-row-<?php echo $optionKey ?>" class="items-per-row-label">
                         <input type="radio" name="tutor_option[<?php echo $field['key']; ?>]" id="items-per-row-<?php echo $optionKey ?>" <?php checked($option_value,  $optionKey) ?> value="<?php echo $optionKey ?>" />

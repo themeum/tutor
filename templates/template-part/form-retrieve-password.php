@@ -11,8 +11,8 @@ do_action( 'tutor_before_reset_password_form' ); ?>
 <form method="post" class="tutor-reset-password-form tutor-ResetPassword lost_reset_password">
 	<?php tutor_nonce_field(); ?>
 	<input type="hidden" name="tutor_action" value="tutor_process_reset_password">
-	<input type="hidden" name="reset_key" value="<?php echo tutils()->array_get('reset_key', $_GET); ?>" />
-	<input type="hidden" name="user_id" value="<?php echo tutils()->array_get('user_id', $_GET); ?>" />
+	<input type="hidden" name="reset_key" value="<?php echo tutor_utils()->array_get('reset_key', $_GET); ?>" />
+	<input type="hidden" name="user_id" value="<?php echo tutor_utils()->array_get('user_id', $_GET); ?>" />
 
 	<p>
 		<?php echo apply_filters( 'tutor_reset_password_message', esc_html__( 'Enter Password and Confirm Password to reset your password', 'tutor' )

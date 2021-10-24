@@ -50,7 +50,7 @@ class Admin {
 			$pro_text = ' ' . __('Pro', 'tutor');
 		}
 
-		$enable_course_marketplace = (bool) tutils()->get_option('enable_course_marketplace');
+		$enable_course_marketplace = (bool) tutor_utils()->get_option('enable_course_marketplace');
 
 		add_menu_page(
 			__( 'Tutor LMS', 'tutor' ) . $pro_text,
@@ -145,7 +145,7 @@ class Admin {
 	}
 
 	public function tutor_tools() {
-		$tutor_admin_tools_page = tutils()->array_get('tutor_admin_tools_page', $_GET);
+		$tutor_admin_tools_page = tutor_utils()->array_get('tutor_admin_tools_page', $_GET);
 		if ($tutor_admin_tools_page) {
 			include apply_filters('tutor_admin_tools_page', tutor()->path . "views/pages/{$tutor_admin_tools_page}.php", $tutor_admin_tools_page);
 		} else {
@@ -155,7 +155,7 @@ class Admin {
 			));
 
 			$current_page = 'tutor_pages';
-			$requested_page = sanitize_text_field(tutils()->array_get('sub_page', $_GET));
+			$requested_page = sanitize_text_field(tutor_utils()->array_get('sub_page', $_GET));
 			if ($requested_page) {
 				$current_page = $requested_page;
 			}

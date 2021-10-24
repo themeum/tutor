@@ -86,25 +86,25 @@ $filters = array(
 				<div class="inline-flex-center color-text-subsued">
 				<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input tutor-form-check-square" name="tutor-bulk-checkbox-all">
 					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor-pro' ); ?></span>
-					<span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+					<span class="ttr-ordering-a-to-z-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor-pro' ); ?></span>
-					<span class="tutor-v2-icon-test icon-order-down-filled"></span>
+					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Total Course', 'tutor-pro' ); ?></span>
-					<span class="tutor-v2-icon-test icon-order-down-filled"></span>
+					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor-pro' ); ?></span>
-					<span class="tutor-v2-icon-test icon-order-down-filled"></span>
+					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
 				<th class="tutor-shrink"></th>

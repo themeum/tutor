@@ -195,7 +195,7 @@ class Assets {
 			if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){
 				$single_quiz_options = (array) tutor_utils()->get_quiz_option($post->ID);
 				$saved_quiz_options = array(
-					'quiz_when_time_expires' => tutils()->get_option('quiz_when_time_expires'),
+					'quiz_when_time_expires' => tutor_utils()->get_option('quiz_when_time_expires'),
 				);
 
 				$quiz_options = array_merge($single_quiz_options, $saved_quiz_options);

@@ -331,7 +331,7 @@ if(is_array($answers) && count($answers) > 0) {
                                             foreach ($original_saved_answers as $key => $original_saved_answer){
                                                 $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
                                                 $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
-                                                if(tutils()->count($provided_answer_order)){
+                                                if(tutor_utils()->count($provided_answer_order)){
                                                     foreach ($provided_answer_order as $provided_answer_order);
                                                     echo stripslashes($original_saved_answer->answer_title)  .' - '. stripslashes($provided_answer_order->answer_two_gap_match).'<br />';
                                                 }

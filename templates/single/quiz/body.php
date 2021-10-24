@@ -133,7 +133,7 @@ $quiz_answers = array();
 
 							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, $rand_choice);
 							$show_question_mark = (bool) tutor_utils()->avalue_dot('show_question_mark', $question_settings);
-							$answer_required = (bool) tutils()->array_get('answer_required', $question_settings);
+							$answer_required = (bool) tutor_utils()->array_get('answer_required', $question_settings);
 
 							echo '<h4 class="question-text">';
 							if ( ! $hide_question_number_overview){

@@ -17,7 +17,7 @@ class TutorEDD extends Tutor_Base {
 		//Add Tutor Option
 		add_filter('tutor_monetization_options', array($this, 'tutor_monetization_options'));
 
-		$monetize_by = tutils()->get_option('monetize_by');
+		$monetize_by = tutor_utils()->get_option('monetize_by');
 
 		if ($monetize_by !== 'edd') {
 			return;
@@ -46,7 +46,7 @@ class TutorEDD extends Tutor_Base {
 	 * @since v.1.3.5
 	 */
 	public function tutor_monetization_options($arr) {
-		$has_edd = tutils()->has_edd();
+		$has_edd = tutor_utils()->has_edd();
 		if ($has_edd) {
 			$arr['edd'] = __('Easy Digital Downloads', 'tutor');
 		}

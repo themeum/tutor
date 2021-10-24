@@ -45,13 +45,13 @@
                             <ul class="popup-menu" id="<?php echo $id_target; ?>">
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="icon tutor-v2-icon-test icon-edit-filled color-design-white"></span>
+                                        <span class="ttr-edit-filled color-design-white"></span>
                                         <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+                                        <span class="ttr-delete-fill-filled color-design-white"></span>
                                         <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>
@@ -67,7 +67,7 @@
 
     <div class="tutor-quiz-builder-form-row">
         <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-is-outline tutor-is-sm">
-            <i class="tutor-icon-add-line"></i>
+            <i class="tutor-icon-add-line tutor-mr-10"></i>
             <?php _e('Add Question', 'tutor'); ?>
         </a>
     </div>
@@ -111,7 +111,7 @@
                 <?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>
             </p>
 
-            <label class="tutor-radio-select tutor-mb-10 w-100pc">
+            <label class="tutor-radio-select tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Default', 'tutor'); ?></span>
@@ -119,7 +119,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-mb-10 w-100pc">
+            <label class="tutor-radio-select tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
@@ -127,7 +127,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-mb-10 w-100pc">
+            <label class="tutor-radio-select tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Reveal Mode', 'tutor'); ?></span>
@@ -209,11 +209,11 @@
                 <h4><?php _e('Questions Order', 'tutor'); ?></h4>
 
                 <select name="quiz_option[questions_order]">
-                    <option value="rand" <?php selected('rand', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
-                    <option value="sorting" <?php selected('sorting', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Sorting', 'tutor'); ?> </option>
+                    <option value="rand" <?php selected('rand', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
+                    <option value="sorting" <?php selected('sorting', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Sorting', 'tutor'); ?> </option>
 
-                    <option value="asc" <?php selected('asc', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Ascending', 'tutor'); ?> </option>
-                    <option value="desc" <?php selected('desc', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Descending', 'tutor'); ?> </option>
+                    <option value="asc" <?php selected('asc', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Ascending', 'tutor'); ?> </option>
+                    <option value="desc" <?php selected('desc', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Descending', 'tutor'); ?> </option>
                 </select>
             </div>
 

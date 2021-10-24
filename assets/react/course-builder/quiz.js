@@ -314,12 +314,16 @@ window.jQuery(document).ready(function($){
                     btn.addClass('tutor-updating-message');
                 },
                 success: function (data) {
-                    if(quiz_id) {
+                    console.log(quiz_id, quiz_id!=0);
+
+                    if(quiz_id && quiz_id!=0) {
                         // Update if exists already
-                        $('#tutor-quiz-'+quiz_id).html(data.data.output_quiz_row);
+                        $('#tutor-quiz-'+quiz_id).replaceWith(data.data.output_quiz_row);
+                        console.log($('#tutor-quiz-'+quiz_id))
                     } else {
                         // Otherwise create new row
                         $('#tutor-topics-'+topic_id+' .tutor-lessons').append(data.data.output_quiz_row);
+                        console.log($('#tutor-topics-'+topic_id+' .tutor-lessons'))
                     }
 
                     // Update modal content
@@ -376,7 +380,7 @@ window.jQuery(document).ready(function($){
                 //Initializing Tutor Select
                 // tutor_select().reInit();
                 enable_quiz_answer_sorting();
-                disableAddoption();
+                // disableAddoption();
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');

@@ -20,7 +20,7 @@ $field_id = 'field_' . $field['key'];
         <button class="tutor-btn tutor-option-media-upload-btn">
             <i class="dashicons dashicons-upload"></i>
 		    <?php
-		    $btn_text = tutils()->array_get('btn_text', $field);
+		    $btn_text = tutor_utils()->array_get('btn_text', $field);
 		    if ( ! $btn_text){
 			    $btn_text = $field['label'];
 		    }

@@ -9,7 +9,7 @@
             <?php
             if (!empty($field['options'])) :
                 foreach ($field['options'] as $optionKey => $option) :
-                    $option_value = $this->get($field['key'], tutils()->array_get('default', $field));
+                    $option_value = $this->get($field['key'], tutor_utils()->array_get('default', $field));
             ?>
                     <div class="tutor-form-check">
                         <input id="radio_<?php echo $optionKey ?>" type="radio" name="tutor_option[<?php echo $field['key']; ?>]" value="<?php echo $optionKey ?>" <?php checked($option_value,  $optionKey) ?> class="tutor-form-check-input" />

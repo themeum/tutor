@@ -483,10 +483,6 @@ End Alert box css
     }
 }
 
-.tutor-updating-message i {
-    display: none;
-}
-
 .tutor-profile-photo-upload-wrap {
     width: 200px;
     height: auto;
@@ -1736,25 +1732,6 @@ p.course-empty-content {
 
 .text-muted {
     color: #cccccc;
-}
-
-/**
-Updating Messsage
- */
-.tutor-updating-message:before {
-    display: inline-block;
-    font-family: "tutor";
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    vertical-align: top;
-    content: "\e91d";
-    -webkit-animation: spin 2s infinite linear;
-    animation: spin 2s infinite linear;
-    margin-right: 6px;
-}
-.rtl .tutor-updating-message:before {
-    margin-right: 0;
-    margin-left: 6px;
 }
 
 /**
