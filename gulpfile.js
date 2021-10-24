@@ -73,8 +73,9 @@ for(let task in scss_blueprints) {
 gulp.task('v2_tutor_prefix', function (resolve) {
 	var exp = path.resolve(__dirname+'/assets/css/tutor-v2.css');
 	var min = path.resolve(__dirname+'/assets/css/tutor-v2.min.css');
+	var docz = path.resolve(__dirname+'/v2-library/bundle/main.min.css');
 	
-	[exp, min].forEach(css=> {
+	[exp, min, docz].forEach(css=> {
 		var string = fs.readFileSync(css).toString();
 		string = string.replace(/\.tutor\-prefix \./g, '.tutor-bs-');
 		fs.writeFileSync(css, string);
