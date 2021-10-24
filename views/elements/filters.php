@@ -46,7 +46,7 @@
 			<label class="tutor-form-label">
 				<?php esc_html_e( 'Course', 'tutor' ); ?>
 			</label>
-			<select class="tutor-form-select tutor-form-control-sm">
+			<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-course">
 				<?php if ( count( $courses ) ) : ?>
 						<option value="">
 							<?php esc_html_e( 'All Courses', 'tutor' ); ?>
@@ -67,7 +67,7 @@
 			<label class="tutor-form-label">
 				<?php esc_html_e( 'Category', 'tutor' ); ?>
 			</label>
-			<select class="tutor-form-select tutor-form-control-sm">
+			<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-category">
 				<?php if ( count( $categories ) ) : ?>
 						<option value="">
 							<?php esc_html_e( 'All Category', 'tutor' ); ?>
@@ -87,7 +87,7 @@
 			<label class="tutor-form-label">
 			<?php esc_html_e( 'Sort By', 'tutor' ); ?>
 			</label>
-			<select class="tutor-form-select tutor-form-control-sm">
+			<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-order">
 			<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
 						<?php esc_html_e( 'DESC', 'tutor' ); ?>
 					</option>
@@ -102,9 +102,9 @@
 			</label>
 			<div class="tutor-input-group tutor-form-control-sm">
 				<input
-				type="date"
+				type="date" id="tutor-backend-filter-date"
 				class="tutor-form-control"
-				placeholder="<?php esc_attr_e( get_option( 'date_format' ) ); ?>"
+				placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>"
 				/>
 			</div>
 			</div>
