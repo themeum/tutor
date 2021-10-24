@@ -1,0 +1,100 @@
+---
+name: WP Dashboard Elements
+route: /mdx-css/ui-wp-dashboard-elements
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css';
+import '../docz-essential.css';
+
+# WP Dashboard Elements
+
+`** Replace "className" with "class" while using with html` <br />
+
+## WP Dashboard Header
+
+`** remove the inline-style from the header`
+
+<Playground>
+	<header class="tutor-wp-dashboard-header d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20" style={{border: '1px solid #fdfcfc'}}>
+		<div class="header-title-wrap d-flex align-items-center mb-lg-0 mb-3">
+			<div className="d-flex align-items-end header-title">
+				<span className="text-medium-h5 color-text-primary">Addons List</span>
+				<span className="text-regular-caption color-text-primary">/ Habijabi</span>
+			</div>
+			<button className="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+				<span className="btn-icon ttr-plus-bold-filled"></span>
+				<span>Add New</span>
+			</button>
+		</div>
+		<div class="filter-btns text-regular-body color-text-subsued">
+			<a href="#" class="filter-btn" data-tab-filter-target="all">
+				All <span class="item-count">(1205)</span>
+			</a>
+			<a href="#" class="filter-btn" data-tab-filter-target="active">
+				Active<span class="item-count">(10) </span>
+			</a>
+			<a href="#" class="filter-btn is-active" data-tab-filter-target="deactive">
+				Deactive <span class="item-count">(12)</span>
+			</a>
+		</div>
+	</header>
+</Playground>
+
+## WP Dashboard Filter 
+
+<Playground>
+	<div class="tutor-wp-dashboard-filter d-flex flex-xl-nowrap flex-wrap align-items-end justify-content-between">
+		<div class="tutor-wp-dashboard-filter-items d-flex flex-xl-nowrap flex-wrap">
+			<div className="tutor-form-select-with-btn">
+				<select
+					title="Please select a color"
+					className="tutor-form-select tutor-form-control-sm"
+				>
+					<option value="Default" selected>
+					Default
+					</option>
+					<option value="Red">Red</option>
+					<option value="Blue">Blue</option>
+					<option value="Yellow">Yellow</option>
+				</select>
+				<button className="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-md">
+					Button
+				</button>
+			</div>
+		</div>
+		<div class="tutor-wp-dashboard-filter-items d-flex flex-xl-nowrap flex-wrap">
+			<div className="">
+				<label className="tutor-form-label">Category</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+					<option value="1" selected>One</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</div>
+			<div className="">
+				<label className="tutor-form-label">Short By</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+					<option value="1" selected>One</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</div>
+			<div className="">
+				<label className="tutor-form-label">Date</label>
+				<div class="tutor-input-group tutor-form-control-sm">
+					<input type="date" class="tutor-form-control" placeholder="dd/mm/yyyy"/>
+				</div>
+			</div>
+			<div class="">
+				<label className="tutor-form-label">Search</label>
+				<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
+					<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+					<input type="search" class="tutor-form-control" placeholder="Search ..."/>
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>

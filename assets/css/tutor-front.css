@@ -1024,7 +1024,9 @@ body {
   margin-bottom: 45px;
 }
 
-.tutor-full-width-course-top h4, .tutor-full-width-course-top h5, .tutor-full-width-course-top h6 {
+.tutor-full-width-course-top h4,
+.tutor-full-width-course-top h5,
+.tutor-full-width-course-top h6 {
   color: #000;
   font-weight: 500;
 }
@@ -2297,14 +2299,6 @@ ul.tutor-required-fields {
 .tutor-star-rating-group i {
   margin-right: 4px;
   cursor: pointer;
-}
-
-@media (max-width: 546px) {
-  .tutor-write-review-box .tutor-star-rating-group {
-    font-size: 26px;
-    display: block;
-    text-align: center;
-  }
 }
 
 .tutor-queston-and-answer-wrap {
@@ -9257,35 +9251,6 @@ Withdraw Method
   text-align: center;
   margin-bottom: 20px;
   font-size: 40px;
-}
-
-.tutor-course-review-popup-form textarea {
-  background: white;
-  border: 1px solid #C0C3CB;
-  border-radius: 6px;
-  width: 100%;
-  height: 108px;
-  padding: 15px;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 15px;
-  line-height: 24px;
-  color: #757c8e;
-  resize: none;
-}
-
-.tutor-course-review-popup-form textarea, .tutor-course-review-popup-form textarea:focus {
-  outline: none;
-  box-shadow: none;
-  -o-box-shadow: none;
-  -ms-box-shadow: none;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-}
-
-.tutor-course-review-popup-form textarea:focus {
-  color: #50545f;
-  border: 1px solid #a0a2a8;
 }
 
 .tutor-instructor-list, .tutor-instructor-list:focus, .tutor-instructor-list:active {
