@@ -94,6 +94,21 @@ if ( $user_id != $attempt_data->user_id ){
     return;
 }
 $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
+
+$correct = 0;
+$incorrect = 0;
+if(is_array($answers) && count($answers) > 0) {
+    foreach ($answers as $answer){
+        if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
+            $correct++;
+        } else {
+            if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+            } else {
+                $incorrect++;
+            }
+        }
+    }
+}
 ?>
 
 
@@ -108,69 +123,75 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
         <div class="attempt-header-quiz"><?php echo "<a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>
     </div>
         
-    <table class="tutor-dashboard-table">
+    <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
         <thead>
             <tr>
-                <th><?php _e('Date', 'tutor'); ?></th>
-                <th><?php _e('Question', 'tutor'); ?></th>
-                <th><?php _e('Total Marks', 'tutor'); ?></th>
-                <th><?php _e('Pass Marks', 'tutor'); ?></th>
-                <th><?php _e('Correct', 'tutor'); ?></th>
-                <th><?php _e('Incorrect', 'tutor'); ?></th>
-                <th><?php _e('Earned Marks', 'tutor'); ?></th>
-                <th><?php _e('Result', 'tutor'); ?></th>
+                <th><span class="text-regular-small color-text-subsued"><?php _e('Date', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php _e('Question', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php _e('Total Marks', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php _e('Pass Marks', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php _e('Correct', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php _e('Incorrect', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php _e('Earned Marks', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php _e('Result', 'tutor'); ?></span></th>
             </tr>
         </thead>
         <tbody>
         <tr>
-            <td>
-                <?php
-                    echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
-                ?>
+            <td data-th="<?php _e('Date', 'tutor'); ?>">
+                <span class="text-medium-caption color-text-primary">
+                    <?php
+                        echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
+                    ?>
+                </span>
             </td>
-            <td><?php echo $attempt_data->total_questions; ?></td>
-            <td><?php echo $attempt_data->total_marks; ?></td>
-            <td>
-                <?php 
-                    $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
-                    echo $pass_mark_percent.'%';
-                ?>
+            <td data-th="<?php _e('Question', 'tutor'); ?>">
+                <span class="text-medium-caption color-text-primary">
+                    <?php echo $attempt_data->total_questions; ?>
+                </span>
             </td>
-            <td>
-                <?php
-                $correct = 0;
-                $incorrect = 0;
-                if(is_array($answers) && count($answers) > 0) {
-                    foreach ($answers as $answer){
-                        if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                            $correct++;
-                        } else {
-                            if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-                            } else {
-                                $incorrect++;
-                            }
+            <td data-th="<?php _e('Total Marks', 'tutor'); ?>">
+                <span class="text-medium-caption color-text-primary">
+                    <?php echo $attempt_data->total_marks; ?>
+                </span>
+            </td>
+            <td data-th="<?php _e('Pass Marks', 'tutor'); ?>">
+                <span class="text-medium-caption color-text-primary">
+                    <?php 
+                        $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
+                        echo $pass_mark_percent.'%';
+                    ?>
+                </span>
+            </td>
+            <td data-th="<?php _e('Correct', 'tutor'); ?>">
+                <span class="text-medium-caption color-text-primary">
+                    <?php echo $correct; ?>
+                </span>
+            </td>
+            <td data-th="<?php _e('Incorrect', 'tutor'); ?>">
+                <span class="text-medium-caption color-text-primary">
+                    <?php echo $incorrect; ?>
+                </span>
+            </td>
+            <td data-th="<?php _e('Earned Marks', 'tutor'); ?>">
+                <span class="text-medium-caption color-text-primary">
+                    <?php 
+                        echo $attempt_data->earned_marks; 
+                        $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
+                        echo '('.$earned_percentage.'%)';
+                    ?>
+                </span>
+            </td>
+            <td data-th="<?php _e('Result', 'tutor'); ?>">
+                <span class="text-medium-caption color-text-primary">
+                    <?php 
+                        if ($earned_percentage >= $pass_mark_percent){
+                            echo '<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>';
+                        }else{
+                            echo '<span class="tutor-badge-label label-danger">'.__('Fail', 'tutor').'</span>';
                         }
-                    }
-                }
-                echo $correct;
-                ?>
-            </td>
-            <td><?php echo $incorrect; ?></td>
-            <td>
-                <?php 
-                    echo $attempt_data->earned_marks; 
-                    $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
-                    echo '('.$earned_percentage.'%)';
-                ?>
-            </td>
-            <td>
-                <?php 
-                    if ($earned_percentage >= $pass_mark_percent){
-                        echo '<span class="tutor-badge tutor-bg-success tutor-m-5">'.__('Pass', 'tutor').'</span>';
-                    }else{
-                        echo '<span class="tutor-badge tutor-bg-danger tutor-m-5">'.__('Fail', 'tutor').'</span>';
-                    }
-                ?>
+                    ?>
+                </span>
             </td>
         </tr>
         </tbody>
@@ -196,204 +217,239 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id($attempt_id);
 <div class="tutor-quiz-attempt-review-wrap">
     <?php
     if (is_array($answers) && count($answers)){
-
         ?>
         <div class="quiz-attempt-answers-wrap">
-
             <div class="attempt-answers-header">
                 <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
-            <table class="tutor-dashboard-table">
+            <table class="tutor-ui-table tutor-ui-table-responsive">
                 <thead>
                     <tr>
-                        <th><?php _e('No.', 'tutor'); ?></th>
-                        <th><?php _e('Type', 'tutor'); ?></th>
-                        <th><?php _e('Question', 'tutor'); ?></th>
-                        <th><?php _e('Given Answers', 'tutor'); ?></th>
-                        <th><?php _e('Correct Answers', 'tutor'); ?></th>
-                        <th><?php _e('Answer', 'tutor'); ?></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php _e('No.', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php _e('Type', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php _e('Question', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php _e('Given Answers', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php _e('Correct Answers', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php _e('Answer', 'tutor'); ?></span></th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php
-                $answer_i = 0;
-                foreach ($answers as $answer){
-                    $answer_i++;
-                    $question_type = tutor_utils()->get_question_types($answer->question_type);
-                    ?>
-                    <tr>
-                        <td><?php echo $answer_i; ?></td>
-                        <td>
-                            <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-                            <span data-title="<?php echo $type['name']; ?>"><?php echo $question_type['icon']; ?></span>
-                        </td>
-                        <td><?php echo stripslashes($answer->question_title); ?></td>
-                        <td>
-                            <?php
-                            if ($answer->question_type === 'true_false' || $answer->question_type === 'single_choice' ){
-                                $get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
-                                $answer_titles = wp_list_pluck($get_answers, 'answer_title');
-                                $answer_titles = array_map('stripslashes', $answer_titles);
-                                echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
-                            }elseif ($answer->question_type === 'multiple_choice'){
-                                $get_answers = tutor_utils()->get_answer_by_id(maybe_unserialize($answer->given_answer));
-                                $answer_titles = wp_list_pluck($get_answers, 'answer_title');
-                                $answer_titles = array_map('stripslashes', $answer_titles);
-                                echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
-                            }elseif ($answer->question_type === 'fill_in_the_blank'){
-                                $answer_titles = maybe_unserialize($answer->given_answer);
-                                $get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
-                                foreach ($get_db_answers_by_question as $db_answer);
-                                $count_dash_fields = substr_count($db_answer->answer_title, '{dash}');
-                                if ($count_dash_fields){
-                                    $dash_string = array();
-                                    $input_data = array();
-                                    for($i=0; $i<$count_dash_fields; $i++){
-                                        $input_data[] =  isset($answer_titles[$i]) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : "______";
-                                    }
-                                    $answer_title = $db_answer->answer_title;
-                                    foreach($input_data as $replace){
-                                        $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
-                                    }
-                                    echo str_replace('{dash}', '_____', stripslashes($answer_title));
-                                }
-
-                            }elseif ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-
-                                if ($answer->given_answer){
-                                    echo wpautop(stripslashes($answer->given_answer));
-                                }
-
-                            }elseif ($answer->question_type === 'ordering'){
-
-                                $ordering_ids = maybe_unserialize($answer->given_answer);
-                                foreach ($ordering_ids as $ordering_id){
-                                    $get_answers = tutor_utils()->get_answer_by_id($ordering_id);
-                                    $answer_titles = wp_list_pluck($get_answers, 'answer_title');
-                                    $answer_titles = array_map('stripslashes', $answer_titles);
-                                    echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
-                                }
-
-                            }elseif ($answer->question_type === 'matching'){
-
-                                $ordering_ids = maybe_unserialize($answer->given_answer);
-                                $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
-
-                                foreach ($original_saved_answers as $key => $original_saved_answer){
-                                    $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
-                                    $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
-                                    if(tutils()->count($provided_answer_order)){
-                                        foreach ($provided_answer_order as $provided_answer_order);
-                                        echo stripslashes($original_saved_answer->answer_title)  .' - '. stripslashes($provided_answer_order->answer_two_gap_match).'<br />';
-                                    }
-                                }
-
-                            }elseif ($answer->question_type === 'image_matching'){
-
-                                $ordering_ids = maybe_unserialize($answer->given_answer);
-                                $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
-
-                                echo '<div class="answer-image-matched-wrap">';
-                                foreach ($original_saved_answers as $key => $original_saved_answer){
-                                    $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
-                                    $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
-                                    foreach ($provided_answer_order as $provided_answer_order);
-                                    ?>
-                                    <div class="image-matching-item">
-                                        <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
-                                        <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
-                                    </div>
-                                    <?php
-                                }
-                                echo '</div>';
-                            }elseif ($answer->question_type === 'image_answering'){
-
-                                $ordering_ids = maybe_unserialize($answer->given_answer);
-
-                                echo '<div class="answer-image-matched-wrap">';
-                                foreach ($ordering_ids as $answer_id => $image_answer){
-                                    $db_answers = tutor_utils()->get_answer_by_id($answer_id);
-                                    foreach ($db_answers as $db_answer);
-                                    ?>
-                                    <div class="image-matching-item">
-                                        <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id); ?>" /> </p>
-                                        <p class="dragged-caption"><?php echo $image_answer; ?></p>
-                                    </div>
-                                    <?php
-                                }
-                                echo '</div>';
-                            }
-
-                            ?>
-                        </td>
-
-
-                        <td>
-                            <?php
-                            if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
-                                global $wpdb;
-                                if ( $answer->question_type === 'true_false' ) {
-                                    $correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
-                                    echo $correct_answer;
-
-                                } elseif ( $answer->question_type === 'single_choice' ) {
-                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
-                                    show_correct_answer($correct_answer);
-
-                                } elseif ( $answer->question_type === 'multiple_choice' ) {
-                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1 ;", $answer->question_id ) );
-                                    show_correct_answer($correct_answer);
-
-                                } elseif ( $answer->question_type === 'fill_in_the_blank' ) {
-                                    $correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d", $answer->question_id ) );
-                                    if($correct_answer){
-                                        echo implode(', ', explode('|', stripslashes($correct_answer)));
-                                    }
-
-                                } elseif ( $answer->question_type === 'ordering' ) {
-                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
-                                    show_correct_answer($correct_answer);
-
-                                } elseif( $answer->question_type === 'matching' ){
-                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_two_gap_match, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
-                                    show_correct_answer($correct_answer);
-
-                                } elseif( $answer->question_type === 'image_matching' ) {
-                                    $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
-                                    show_correct_answer($correct_answer);
-                                }
-                            }
-                            ?>
-                        </td>
-
-                        <td>
-                            <?php
-
-                            if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                                echo '<span class="tutor-badge tutor-bg-success tutor-m-5">'.__('Correct', 'tutor').'</span>';
-                            } else {
-                                if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-                                    if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-                                        echo '<span class="tutor-badge tutor-bg-danger tutor-m-5">'.__('Wrong', 'tutor').'</span>';
-                                    } else {
-                                        echo '<span class="tutor-badge tutor-bg-warning tutor-m-5">'.__('Pending', 'tutor').'</span>';
-                                    }
-								} else {
-                                    echo '<span class="tutor-badge tutor-bg-danger tutor-m-5">'.__('Wrong', 'tutor').'</span>';
-                                }
-                            }
-                            ?>
-                        </td>
-
-                    </tr>
                     <?php
-                }
-                ?>
+                        $answer_i = 0;
+                        foreach ($answers as $answer){
+                            $answer_i++;
+                            $question_type = tutor_utils()->get_question_types($answer->question_type);
+                            ?>
+                            
+                            <tr>
+                                <td data-th="<?php _e('No.', 'tutor'); ?>">
+                                    <span class="text-medium-caption color-text-primary">
+                                        <?php echo $answer_i; ?>
+                                    </span>
+                                </td>
+                                <td data-th="<?php _e('Type', 'tutor'); ?>">
+                                    <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
+                                    
+                                    <span data-title="<?php echo $type['name']; ?>">
+                                        <?php echo $question_type['icon']; ?>
+                                    </span>
+                                </td>
+                                <td data-th="<?php _e('Question', 'tutor'); ?>">
+                                    <span class="text-medium-small">
+                                        <?php echo stripslashes($answer->question_title); ?>
+                                    </span>
+                                </td>
+                                <td data-th="<?php _e('Given Answers', 'tutor'); ?>">
+                                    <?php
+                                        // True false or single choise
+                                        if ($answer->question_type === 'true_false' || $answer->question_type === 'single_choice' ){
+                                            $get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
+                                            $answer_titles = wp_list_pluck($get_answers, 'answer_title');
+                                            $answer_titles = array_map('stripslashes', $answer_titles);
+                                            
+                                            echo '<span class="text-medium-caption color-text-primary">'.implode('</p><p>', $answer_titles).'</span>';
+                                        } 
+                                    
+                                        // Multiple choice
+                                        elseif ($answer->question_type === 'multiple_choice'){
+                                            $get_answers = tutor_utils()->get_answer_by_id(maybe_unserialize($answer->given_answer));
+                                            $answer_titles = wp_list_pluck($get_answers, 'answer_title');
+                                            $answer_titles = array_map('stripslashes', $answer_titles);
+
+                                            echo '<p class="text-medium-caption color-text-primary">'.implode('</p><p>', $answer_titles).'</p>';
+                                        }
+                                    
+                                        // Fill in the blank
+                                        elseif ($answer->question_type === 'fill_in_the_blank'){
+                                            $answer_titles = maybe_unserialize($answer->given_answer);
+                                            $get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+
+                                            // Loop through the answers
+                                            foreach ($get_db_answers_by_question as $db_answer){
+                                                $count_dash_fields = substr_count($db_answer->answer_title, '{dash}');
+                                                
+                                                if ($count_dash_fields){
+                                                    $dash_string = array();
+                                                    $input_data = array();
+                                                    for($i=0; $i<$count_dash_fields; $i++){
+                                                        $input_data[] =  isset($answer_titles[$i]) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : "______";
+                                                    }
+                                                    $answer_title = $db_answer->answer_title;
+                                                    foreach($input_data as $replace){
+                                                        $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
+                                                    }
+                                                    echo str_replace('{dash}', '_____', stripslashes($answer_title));
+                                                }
+                                            }
+                                        }
+                                    
+                                        // Open ended or short answer
+                                        elseif ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                                            if ($answer->given_answer){
+                                                echo wpautop(stripslashes($answer->given_answer));
+                                            }
+                                        }
+                                    
+                                        // Ordering
+                                        elseif ($answer->question_type === 'ordering'){
+                                            $ordering_ids = maybe_unserialize($answer->given_answer);
+                                            foreach ($ordering_ids as $ordering_id){
+                                                $get_answers = tutor_utils()->get_answer_by_id($ordering_id);
+                                                $answer_titles = wp_list_pluck($get_answers, 'answer_title');
+                                                $answer_titles = array_map('stripslashes', $answer_titles);
+                                                echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
+                                            }
+                                        }
+                                    
+                                        // Matching
+                                        elseif ($answer->question_type === 'matching'){
+
+                                            $ordering_ids = maybe_unserialize($answer->given_answer);
+                                            $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+
+                                            foreach ($original_saved_answers as $key => $original_saved_answer){
+                                                $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
+                                                $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
+                                                if(tutils()->count($provided_answer_order)){
+                                                    foreach ($provided_answer_order as $provided_answer_order);
+                                                    echo stripslashes($original_saved_answer->answer_title)  .' - '. stripslashes($provided_answer_order->answer_two_gap_match).'<br />';
+                                                }
+                                            }
+                                        }
+                                    
+                                    elseif ($answer->question_type === 'image_matching'){
+
+                                        $ordering_ids = maybe_unserialize($answer->given_answer);
+                                        $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+
+                                        echo '<div class="answer-image-matched-wrap">';
+                                        foreach ($original_saved_answers as $key => $original_saved_answer){
+                                            $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
+                                            $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
+                                            foreach ($provided_answer_order as $provided_answer_order);
+                                            ?>
+                                            <div class="image-matching-item">
+                                                <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
+                                                <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
+                                            </div>
+                                            <?php
+                                        }
+                                        echo '</div>';
+                                    }elseif ($answer->question_type === 'image_answering'){
+
+                                        $ordering_ids = maybe_unserialize($answer->given_answer);
+
+                                        echo '<div class="answer-image-matched-wrap">';
+                                        foreach ($ordering_ids as $answer_id => $image_answer){
+                                            $db_answers = tutor_utils()->get_answer_by_id($answer_id);
+                                            foreach ($db_answers as $db_answer);
+                                            ?>
+                                            <div class="image-matching-item">
+                                                <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id); ?>" /> </p>
+                                                <p class="dragged-caption"><?php echo $image_answer; ?></p>
+                                            </div>
+                                            <?php
+                                        }
+                                        echo '</div>';
+                                    }
+
+                                    ?>
+                                </td>
+
+
+                                <td>
+                                    <?php
+                                    if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
+
+                                        global $wpdb;
+                                        if ( $answer->question_type === 'true_false' ) {
+                                            $correct_answer = $wpdb->get_var( $wpdb->prepare( 
+                                                "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers 
+                                                WHERE belongs_question_id = %d AND is_correct = 1", 
+                                                $answer->question_id 
+                                            ) );
+
+                                            echo '<span class="text-medium-caption color-text-primary">' . $correct_answer . '</span>';
+                                        } 
+                                        
+                                        elseif ( $answer->question_type === 'single_choice' ) {
+                                            $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
+                                            show_correct_answer($correct_answer);
+                                        } 
+                                        
+                                        elseif ( $answer->question_type === 'multiple_choice' ) {
+                                            $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1 ;", $answer->question_id ) );
+                                            show_correct_answer($correct_answer);
+
+                                        } elseif ( $answer->question_type === 'fill_in_the_blank' ) {
+                                            $correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d", $answer->question_id ) );
+                                            if($correct_answer){
+                                                echo implode(', ', explode('|', stripslashes($correct_answer)));
+                                            }
+
+                                        } elseif ( $answer->question_type === 'ordering' ) {
+                                            $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
+                                            show_correct_answer($correct_answer);
+
+                                        } elseif( $answer->question_type === 'matching' ){
+                                            $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_two_gap_match, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
+                                            show_correct_answer($correct_answer);
+
+                                        } elseif( $answer->question_type === 'image_matching' ) {
+                                            $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
+                                            show_correct_answer($correct_answer);
+                                        }
+                                    }
+                                    ?>
+                                </td>
+
+                                <td>
+                                    <?php
+
+                                    if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
+                                        echo '<span class="tutor-badge-label label-success">'.__('Correct', 'tutor').'</span>';
+                                    } else {
+                                        if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                                            if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+                                                echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                            } else {
+                                                echo '<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>';
+                                            }
+                                        } else {
+                                            echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                        }
+                                    }
+                                    ?>
+                                </td>
+
+                            </tr>
+                            <?php
+                        }
+                    ?>
                 </tbody>
             </table>
         </div>
-
         <?php
     }
     ?>
