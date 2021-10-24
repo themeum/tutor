@@ -2,6 +2,18 @@ window.jQuery(document).ready($ => {
 
     const {__} = wp.i18n;
 
+    function toggle_star_(star){
+        star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
+        star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+    }
+
+    /**
+     * Hover tutor rating and set value
+     */
+    $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+        toggle_star_($(this));
+    });
+
     $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
         var rating = $(this).attr('data-rating-value');
         $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
@@ -73,10 +85,5 @@ window.jQuery(document).ready($ => {
     $(document).on('click', '.write-course-review-link-btn', function (e) {
         e.preventDefault();
         $(this).siblings('.tutor-write-review-form').slideToggle();
-    });
-
-    // Hide the review form on cancel click (Single course page)
-    $(document).on('click', '.tutor_cancel_review_btn', function() {
-        $(this).closest('form').hide();
     });
 });

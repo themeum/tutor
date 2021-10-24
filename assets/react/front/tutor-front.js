@@ -131,18 +131,6 @@ jQuery(document).ready(function ($) {
             .replace(/-+$/, '');            // Trim - from end of text
     }
 
-    function toggle_star_(star){
-        star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
-        star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
-    }
-
-    /**
-     * Hover tutor rating and set value
-     */
-    $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
-        toggle_star_($(this));
-    });
-
     $(document).on('click', '.tutor-ask-question-btn', function (e) {
         e.preventDefault();
         $('.tutor-add-question-wrap').slideToggle();
