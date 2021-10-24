@@ -1,0 +1,43 @@
+---
+name: Tooltip
+route: /mdx-css/ui-tooltip
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-icon-test.css';
+import '../docz-essential.css';
+
+
+## Tooltip
+
+`** Replace "className" with "class" while using with html`
+
+<Playground>
+	<div style={{display:'flex', gap: '30px'}}>
+		<div class="tooltip-wrap">
+			Hover me
+			<span class="tooltip-txt tooltip-right">I'm your tiny tooltips text</span>
+		</div>
+	</div>
+</Playground>
+
+## Tooltip positions
+
+<Playground>
+	<div style={{display:'flex', gap: '30px'}}>
+		<div class="tooltip-wrap tooltip-icon">
+			<span class="tooltip-txt tooltip-top">I'm your tiny tooltips text</span>
+		</div>
+		<div class="tooltip-wrap tooltip-icon">
+			<span class="tooltip-txt tooltip-right">I'm your tiny tooltips text</span>
+		</div>
+		<div class="tooltip-wrap tooltip-icon">
+			<span class="tooltip-txt tooltip-bottom">I'm your tiny tooltips text</span>
+		</div>
+		<div class="tooltip-wrap tooltip-icon">
+			<span class="tooltip-txt tooltip-left">I'm your tiny tooltips text</span>
+		</div>
+	</div>
+</Playground>
