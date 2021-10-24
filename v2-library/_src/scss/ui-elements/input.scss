@@ -20,6 +20,7 @@ input.tutor-form-control {
 	background-color: var(--tutor-white);
 	box-sizing: border-box;
 	color: var(--tutor-text-primary);
+	font-family: inherit;
 
 	&::placeholder {
 		color: $text-hints;

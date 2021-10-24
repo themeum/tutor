@@ -6,7 +6,7 @@
 			<input type="hidden" name="action" value="<?php echo esc_html( $data['ajax_action'] ); ?>">
 			<div class="tutor-form-select-with-btn">
 				<select
-					title="<?php esc_html_e( 'Please select a action', 'tutor' );?>"
+					title="<?php echo esc_attr( 'Please select a action', 'tutor' ); ?>"
 					class="tutor-form-select tutor-form-control-sm"
 				>
 					<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
