@@ -16,6 +16,7 @@ $instructors = new Instructors_List();
 /**
  * Short able params
  */
+$user_id = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
 $course_id = isset( $_GET['course-id'] ) ? $_GET['course-id'] : '';
 $order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date      = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
@@ -33,32 +34,22 @@ $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$instructors_list = tutor_utils()->get_instructors( $current_page *$per_page, $per_page, $search_filter, $course_filter, $date_filter, $order_filter, $status, $cat_ids = array() );
-$total            = tutor_utils()->get_total_instructors($search_filter);
+$instructors_list = tutor_utils()->get_instructors($offset, $per_page, $search, $user_id, $date, $order, $course_id );
+$total            = tutor_utils()->get_total_instructors($active_tab, $search, $user_id, $date, $course_id);
 
 /**
  * Navbar data to make nav menu
  */
 $navbar_data = array(
 	'page_title' => $instructors->page_title,
-	'tabs'       => $instructors->tabs_key_value( $user_id, $date, $search ),
+	'tabs'       => $instructors->tabs_key_value(  $user_id, $date, $search, $course_id ),
 	'active'     => $active_tab,
 );
 
-//var_dump($navbar_data);
-
-/**
- * Bulk action & filters
- */
-// $filters = array(
-// 'bulk_action'   => $enrollments->bulk_action,
-// 'bulk_actions'  => $enrollments->prpare_bulk_actions(),
-// 'search_filter' => true,
-// );
 $filters = array(
 	'bulk_action'   => $instructors->bulk_action,
 	'bulk_actions'  => $instructors->prpare_bulk_actions(),
-	'ajax_action'   => 'tutor_enrollment_bulk_action',
+	'ajax_action'   => 'tutor_instructor_bulk_action',
 	'filters'       => true,
 	'course_filter' => true,
 );
