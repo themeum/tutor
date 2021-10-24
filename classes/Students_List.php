@@ -8,11 +8,152 @@ if ( ! class_exists( 'Tutor_List_Table' ) ) {
 	include_once tutor()->path.'classes/Tutor_List_Table.php';
 }
 
+use TUTOR\Backend_Page_Trait;
+
 class Students_List extends \Tutor_List_Table {
+
+	/**
+	 * Trait for utilities
+	 *
+	 * @var $page_title
+	 */
+
+	use Backend_Page_Trait;
+	/**
+	 * Page Title
+	 *
+	 * @var $page_title
+	 */
+	public $page_title;
+
+	/**
+	 * Bulk Action
+	 *
+	 * @var $bulk_action
+	 */
+	public $bulk_action = true;
+
+	/**
+	 * Handle dependencies
+	 */
+	public function __construct() {
+		$this->page_title = __( 'Students', 'tutor' );
+		/**
+		 * Handle bulk action
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'wp_ajax_tutor_student_bulk_action', array( $this, 'student_bulk_action' ) );
+	}
+
+	/**
+	 * Prepare bulk actions that will show on dropdown options
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function prpare_bulk_actions(): array {
+		$actions = array(
+			$this->bulk_action_default(),
+			$this->bulk_action_delete(),
+		);
+		return $actions;
+	}
+
+	/**
+	 * Count enrolled number by status & filters
+	 * Count all enrollment | approved | cancelled
+	 *
+	 * @param string $status | required.
+	 * @param string $course_id selected course id | optional.
+	 * @param string $date selected date | optional.
+	 * @param string $search_term search by user name or email | optional.
+	 * @return int
+	 * @since v2.0.0
+	 */
+	protected static function get_stude( string $user_id = '', $date = '', $search_term = '' ): int {
+		global $wpdb;
+		$user_id   = sanitize_text_field( $user_id );
+		$date        = sanitize_text_field( $date );
+		$search_term = sanitize_text_field( $search_term );
+
+		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+		// add course id in where clause.
+		$student_query = '';
+		if ( '' !== $user_id ) {
+			$student_query = "AND user.ID = $user_id";
+		}
+
+		// add date in where clause.
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE) ";
+		}
+
+		$count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*)
+					FROM 	{$wpdb->users}
+							INNER JOIN {$wpdb->usermeta}
+								ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id )
+								WHERE 	{$wpdb->usermeta}.meta_key = %s
+					AND ( {$wpdb->users}.display_name LIKE %s OR {$wpdb->users}.user_email LIKE %s )
+			ORDER BY {$wpdb->usermeta}.meta_value DESC
+			LIMIT 	{$start}, {$limit};
+			",
+			'_is_tutor_student',
+				$status,
+				$search_term,
+				$search_term,
+				$search_term
+			)
+		);
+		return $count ? $count : 0;
+	}
+
+	/**
+	 * Handle bulk action for student delete
+	 *
+	 * @return string JSON response.
+	 * @since v2.0.0
+	 */
+	public function student_bulk_action() {
+		// check nonce.
+		tutor_utils()->checking_nonce();
+		$status   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
+		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
+		$update   = self::update_students( $status, $bulk_ids );
+		return true === $update ? wp_send_json_success() : wp_send_json_error();
+		exit;
+	}
+
+	/**
+	 * Execute bulk action for enrollments ex: complete | cancel
+	 *
+	 * @param string $status hold status for updating.
+	 * @param string $user_ids ids that need to update.
+	 * @return bool
+	 * @since v2.0.0
+	 */
+	public static function update_students( $status, $user_ids ): bool {
+		global $wpdb;
+		$users_table = $wpdb->users;
+		$update     = $wpdb->query(
+			$wpdb->prepare(
+				" UPDATE {$users_table}
+				SET post_status = %s 
+				WHERE ID IN ($user_ids)
+			",
+				$status
+			)
+		);
+		return false === $update ? false : true;
+	}
 
 	const STUDENTS_LIST_PAGE = 'tutor-students';
 
-	function __construct() {
+	/*function __construct() {
 		global $status, $page;
 
 		//Set parent defaults
@@ -21,7 +162,7 @@ class Students_List extends \Tutor_List_Table {
 			'plural'    => 'students',    //plural name of the listed records
 			'ajax'      => false        //does this table support ajax?
 		) );
-	}
+	}*/
 
 	function column_default( $item, $column_name ) {
 		switch( $column_name ) {
@@ -63,8 +204,10 @@ class Students_List extends \Tutor_List_Table {
 	function get_columns() {
 		$columns = array(
 			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
+			'get_avatar_url'		=> __('Photo', 'tutor'),
 			'display_name'      => __('Name', 'tutor'),
 			'user_email'        => __('E-Mail', 'tutor'),
+			'user_registered'        => __('Registration Date', 'tutor'),
 			'course_taken'		=> __( 'Course Taken', 'tutor' ),
 			'completed_course'  => __('Completed Course', 'tutor'),
 		);

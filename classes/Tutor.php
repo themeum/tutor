@@ -68,7 +68,7 @@ final class Tutor{
 	 * @var $course_list
 	 * @since v2.0.0
 	 */
-	private $course_list;
+	private $Course_List;
 
 	/**
 	 * @return null|Tutor

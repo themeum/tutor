@@ -1,24 +1,30 @@
 <?php if ( isset( $data ) ) : ?>
-	<div class="tutor-admin-page-filters" style="display: flex; justify-content: space-between;">
-		<?php if ( $data['bulk_action'] ) : ?>
-			<div class="tutor-admin-bulk-action-wrapper">
-				<form action="" method="post" id="tutor-admin-bulk-action-form">
+	<div
+  class="tutor-wp-dashboard-filter d-flex align-items-end justify-content-between tutor-mr-15"
+  style="display: flex; justify-content: space-between;"
+>
+<?php if ( $data['bulk_action'] ) : ?>
+  <div class="tutor-wp-dashboard-filter-items">
+  <form action="" method="post" id="tutor-admin-bulk-action-form">
 					<input type="hidden" name="action" value="<?php esc_html_e( $data['ajax_action'] ); ?>">
-					<div class="tutor-bulk-action-group">
-						<select name="bulk-action" id="tutor-admin-bulk-action" required>
-							<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
+    <div class="tutor-form-select-with-btn">
+      <select
+        title="Please select a color"
+        class="tutor-form-select tutor-form-control-sm"
+      >
+	  <?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
 								<option value="<?php esc_attr_e( $v['value'] ); ?>">
 									<?php esc_html_e( $v['option'] ); ?>
 								</option>
 							<?php endforeach; ?>
-						</select>
-						<button type="button" id="tutor-admin-bulk-action-btn" class="tutor-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
-							<?php esc_html_e( 'Apply', 'tutor' ); ?>
-						</button>
-					</div>
-				</form>
-			</div>
-		<?php endif; ?>
+      </select>
+      <button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-md" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
+	  <?php esc_html_e( 'Apply', 'tutor' ); ?>
+      </button>
+    </div>
+	</form>
+  </div>
+  <?php endif; ?>
 		<?php if ( isset( $data['filters'] ) && true === $data['filters'] ) : ?>
 			<?php
 				$courses = ( current_user_can( 'administrator' ) ) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
@@ -29,7 +35,8 @@
 				);
 				$categories = get_terms( $terms_arg );
 			?>
-			<div class="tutor-admin-page-filter-wrapper" style="display: flex;">
+
+			<div class="tutor-wp-dashboard-filter-items">
 				<?php 
 					$course_id = isset( $_GET['course-id'] ) ? esc_html__( $_GET['course-id'] ) : '';
 					$order     = isset( $_GET['order'] ) ?  esc_html__( $_GET['order'] ) : '';
@@ -38,12 +45,12 @@
 					$category_slug  = isset( $_GET['category'] ) ?  esc_html__( $_GET['category'] ) : '';
 				?>
 				<?php if ( isset( $data['course_filter'] ) && true === $data['course_filter'] ) : ?>
-					<div class="tutor-form-group">
-						<label for="tutor-backend-filter-course">
-							<?php esc_html_e( 'Course', 'tutor' ); ?>
-						</label>
-						<select type="text" id="tutor-backend-filter-course" name="tutor-backend-filter-course">
-						<?php if ( count( $courses ) ) : ?>
+				<div class="">
+				<label class="tutor-form-label">
+				<?php esc_html_e( 'Course', 'tutor' ); ?>
+				</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+				<?php if ( count( $courses ) ) : ?>
 							<option value="">
 								<?php esc_html_e( 'All Courses', 'tutor' ); ?>
 							</option>
@@ -55,17 +62,16 @@
 					<?php else : ?>
 						<option value=""><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
 					<?php endif; ?>
-						</select>
-					</div>
+				</select>
+				</div>
 				<?php endif; ?>
-
 				<?php if ( isset( $data['category_filter'] ) && true === $data['category_filter'] ) : ?>
-					<div class="tutor-form-group">
-						<label for="tutor-backend-filter-category">
-							<?php esc_html_e( 'Category', 'tutor' ); ?>
-						</label>
-						<select type="text" id="tutor-backend-filter-category" name="tutor-backend-filter-category">
-						<?php if ( count( $categories ) ) : ?>
+				<div class="">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'Category', 'tutor' ); ?>
+				</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+				<?php if ( count( $categories ) ) : ?>
 							<option value="">
 								<?php esc_html_e( 'All Category', 'tutor' ); ?>
 							</option>
@@ -77,37 +83,47 @@
 					<?php else : ?>
 						<option value=""><?php esc_html_e( 'No category found', 'tutor' ); ?></option>
 					<?php endif; ?>
-						</select>
-					</div>
+				</select>
+				</div>
 				<?php endif; ?>
-
-				<div class="tutor-form-group">
-					<label for="tutor-backend-filter-order">
-						<?php esc_html_e( 'Sort By', 'tutor' ); ?>
-					</label>
-					<select type="text" id="tutor-backend-filter-order" name="tutor-backend-filter-course">
-						<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
+				<div class="">
+				<label class="tutor-form-label">
+				<?php esc_html_e( 'Sort By', 'tutor' ); ?>
+				</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+				<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
 							<?php esc_html_e( 'DESC', 'tutor' ); ?>
 						</option>
 						<option value="ASC" <?php selected( $order, 'ASC', 'selected' ); ?>>
 							<?php esc_html_e( 'ASC', 'tutor' ); ?>
 						</option>
-					</select>
+				</select>
 				</div>
-				<div class="tutor-form-group">
-					<label for="tutor-backend-filter-date">
-						<?php esc_html_e( 'Date', 'tutor' ); ?>
-					</label>
-					<input type="date" name="tutor-backend-filter-date" id="tutor-backend-filter-date" value="<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ), $date )); ?>" value="<?php esc_attr_e( $date ); ?>">
+				<div class="">
+				<label class="tutor-form-label">
+				<?php esc_html_e( 'Date', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-form-control-sm">
+					<input
+					type="date"
+					class="tutor-form-control"
+					placeholder="dd/mm/yyyy"
+					/>
 				</div>
-				<form action="" method="get" id="tutor-admin-search-filter-form">
-					<div class="tutor-form-group">
-						<label for="tutor-backend-filter-search">
-							<?php esc_html_e( 'Search', 'tutor' ); ?>
-						</label>
-						<input type="search" id="tutor-backend-filter-search" name="tutor-backend-filter-search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php esc_html_e( $search ) ; ?>">
-					</div>
-				</form>
+				</div>
+				<div class="">
+				<label class="tutor-form-label">
+				<?php esc_html_e( 'Search', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
+					<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+					<input
+					type="search"
+					class="tutor-form-control"
+					id="tutor-backend-filter-search" name="tutor-backend-filter-search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php esc_html_e( $search ) ; ?>"
+					/>
+				</div>
+				</div>
 			</div>
 		<?php endif; ?>
 	</div>

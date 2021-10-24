@@ -109,7 +109,7 @@ class Ajax{
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s", tutor_time());
-
+		
 		if(!tutils()->has_enrolled_content_access('course', $course_id)) {
 			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
 			exit;
