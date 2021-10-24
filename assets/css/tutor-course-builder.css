@@ -1531,11 +1531,6 @@ body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-cours
   color: #393c40;
 }
 
-body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .course-content-item .tutor-lesson-top .tutor-updating-message i,
-body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-topics .tutor-topics-wrap .tutor-topics-body .course-content-item .tutor-lesson-top .tutor-updating-message i {
-  display: none;
-}
-
 body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-content-wrap .tutor-topics-wrap .tutor-topics-body .course-content-item .tutor-lesson-top i.tutor-icon-garbage:hover,
 body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-topics .tutor-topics-wrap .tutor-topics-body .course-content-item .tutor-lesson-top i.tutor-icon-garbage:hover {
   color: red;
@@ -1659,11 +1654,6 @@ body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-cours
 body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-content-wrap .tutor-lesson-top a,
 body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-topics .tutor-lesson-top a {
   color: #393c40;
-}
-
-body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-content-wrap .tutor-lesson-top a.tutor-updating-message i,
-body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-topics .tutor-lesson-top a.tutor-updating-message i {
-  display: none;
 }
 
 body.tutor-screen-course-builder #tutor-course-content-builder-root #tutor-course-content-wrap .tutor-lesson-top a:nth-child(2),
@@ -1984,11 +1974,11 @@ body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap a.ba
   display: block;
 }
 
-body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap.tutor-has-question-from .tutor-modal-footer .row > div:not(:last-child) {
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap.tutor-has-question-from .tutor-modal-footer .tutor-bs-row > div:not(:last-child) {
   display: none !important;
 }
 
-body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap.tutor-has-question-from .tutor-modal-footer .row > div:last-child {
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap.tutor-has-question-from .tutor-modal-footer .tutor-bs-row > div:last-child {
   text-align: center;
 }
 
@@ -1996,7 +1986,7 @@ body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap.tuto
   padding-bottom: 0;
 }
 
-body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap:not(.tutor-has-question-from) .tutor-modal-footer .row > div:last-child {
+body.tutor-screen-course-builder .tutor-modal.tutor-quiz-builder-modal-wrap:not(.tutor-has-question-from) .tutor-modal-footer .tutor-bs-row > div:last-child {
   display: none;
 }
 

@@ -21,7 +21,7 @@ class WooCommerce extends Tutor_Base {
 		// Add option settings
 		add_filter( 'tutor_monetization_options', array( $this, 'tutor_monetization_options' ) );
 		
-		$monetize_by = tutils()->get_option( 'monetize_by' );
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		if ( $monetize_by !== 'wc' ) {
 			return;
 		}
@@ -67,7 +67,7 @@ class WooCommerce extends Tutor_Base {
 		 *
 		 * @since v.1.3.5
 		 */
-		if ( tutils()->has_wc() ) {
+		if ( tutor_utils()->has_wc() ) {
 			add_action( 'tutor_course/single/before/inner-wrap', 'wc_print_notices', 10 );
 			add_action( 'tutor_course/single/enrolled/before/inner-wrap', 'wc_print_notices', 10 );
 		}
@@ -198,7 +198,7 @@ class WooCommerce extends Tutor_Base {
 			if ( is_array( $enrolled_ids ) && count( $enrolled_ids ) ) {
 				foreach ( $enrolled_ids as $enrolled_id ) {
 
-					tutils()->course_enrol_status_change( $enrolled_id, $status_to );
+					tutor_utils()->course_enrol_status_change( $enrolled_id, $status_to );
 
 					// Invoke enrolled hook
 					if ( $status_to == 'completed' ) {
@@ -281,7 +281,7 @@ class WooCommerce extends Tutor_Base {
 	 * @since v.1.3.5
 	 */
 	public function tutor_monetization_options( $arr ) {
-		$has_wc = tutils()->has_wc();
+		$has_wc = tutor_utils()->has_wc();
 		if ( $has_wc ) {
 			$arr['wc'] = __( 'WooCommerce', 'tutor' );
 		}
@@ -496,7 +496,7 @@ class WooCommerce extends Tutor_Base {
 	 * @since v.1.7.8
 	 */
 	public function disable_tutor_monetization() {
-		tutils()->update_option( 'monetize_by', 'free' );
+		tutor_utils()->update_option( 'monetize_by', 'free' );
 		update_option( 'tutor_show_woocommerce_notice', true );
 	}
 
@@ -508,7 +508,7 @@ class WooCommerce extends Tutor_Base {
 	 * @since 1.9.0
 	 */
 	public function redirect_to_enrolled_courses( $order_id ) {
-		if ( ! tutils()->get_option( 'wc_automatic_order_complete_redirect_to_courses' ) ) {
+		if ( ! tutor_utils()->get_option( 'wc_automatic_order_complete_redirect_to_courses' ) ) {
 			// Since 1.9.1
 			return;
 		}
@@ -563,7 +563,7 @@ add_action(
 	'admin_notices',
 	function() {
 
-		$show = get_option( 'tutor_show_woocommerce_notice' ) && tutils()->get_option( 'monetize_by', 'free' ) == 'free';
+		$show = get_option( 'tutor_show_woocommerce_notice' ) && tutor_utils()->get_option( 'monetize_by', 'free' ) == 'free';
 
 		if ( $show ) {
 			$message = __( 'Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce.', 'tutor' );

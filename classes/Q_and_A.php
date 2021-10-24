@@ -62,12 +62,12 @@ class Q_and_A {
 	 * @since  v.1.6.4
 	 */
 	public function tutor_delete_dashboard_question() {
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		global $wpdb;
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
 		
-		if( !$question_id || !tutils()->can_user_manage('question', $question_id)) {
+		if( !$question_id || !tutor_utils()->can_user_manage('question', $question_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 

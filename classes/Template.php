@@ -207,7 +207,7 @@ class Template extends Tutor_Base {
 			setup_postdata($page_id);
 
 			if (is_user_logged_in()) {
-				$has_content_access = tutils()->has_enrolled_content_access('lesson');
+				$has_content_access = tutor_utils()->has_enrolled_content_access('lesson');
 				if ($has_content_access) {
 					$template = tutor_get_template('single-lesson');
 				} else {
@@ -319,8 +319,8 @@ class Template extends Tutor_Base {
 
 
 				$dashboard_page = tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars);
-				$get_dashboard_config = tutils()->tutor_dashboard_permalinks();
-				$target_dashboard_page = tutils()->array_get($dashboard_page, $get_dashboard_config);
+				$get_dashboard_config = tutor_utils()->tutor_dashboard_permalinks();
+				$target_dashboard_page = tutor_utils()->array_get($dashboard_page, $get_dashboard_config);
 
 				if (isset($target_dashboard_page['login_require']) && $target_dashboard_page['login_require'] === false){
 					$template = tutor_load_template_part( "template-part.{$dashboard_page}" );
@@ -371,7 +371,7 @@ class Template extends Tutor_Base {
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'tutor_quiz'){
 			if (is_user_logged_in()){
-				$has_content_access = tutils()->has_enrolled_content_access('quiz');
+				$has_content_access = tutor_utils()->has_enrolled_content_access('quiz');
 				if ($has_content_access) {
 					$template = tutor_get_template('single-quiz');
 				} else {
@@ -390,7 +390,7 @@ class Template extends Tutor_Base {
 
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === 'tutor_assignments'){
 			if (is_user_logged_in()){
-				$has_content_access = tutils()->has_enrolled_content_access('assignment');
+				$has_content_access = tutor_utils()->has_enrolled_content_access('assignment');
 				if ($has_content_access) {
 					$template = tutor_get_template('single-assignment');
 				} else {

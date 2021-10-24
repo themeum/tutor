@@ -53,7 +53,7 @@ class Course_Settings_Tabs{
         $settings_meta = get_post_meta(get_the_ID(), '_tutor_course_settings', true);
         $this->settings_meta = (array) maybe_unserialize($settings_meta);
 
-        if (tutils()->count($this->args) && $post->post_type === $this->course_post_type) {
+        if (tutor_utils()->count($this->args) && $post->post_type === $this->course_post_type) {
             include tutor()->path . "views/metabox/course/settings-tabs.php";
         }
     }
@@ -70,9 +70,9 @@ class Course_Settings_Tabs{
     }
 
     public function generate_field($fields = array()){
-        if (tutils()->count($fields)){
+        if (tutor_utils()->count($fields)){
             foreach ($fields as $field_key => $field){
-                $type = tutils()->array_get('type', $field);
+                $type = tutor_utils()->array_get('type', $field);
                 ?>
                 <div class="tutor-bs-row">
                     <?php
@@ -104,7 +104,7 @@ class Course_Settings_Tabs{
     }
 
     public function get($key = null, $default = false){
-        return tutils()->array_get($key, $this->settings_meta, $default);
+        return tutor_utils()->array_get($key, $this->settings_meta, $default);
     }
 
     /**
@@ -114,8 +114,8 @@ class Course_Settings_Tabs{
      * Fire when course saving...
      */
     public function save_course($post_ID, $post){
-        $_tutor_course_settings = tutils()->array_get('_tutor_course_settings', $_POST);
-        if (tutils()->count($_tutor_course_settings)){
+        $_tutor_course_settings = tutor_utils()->array_get('_tutor_course_settings', $_POST);
+        if (tutor_utils()->count($_tutor_course_settings)){
             update_post_meta($post_ID, '_tutor_course_settings', $_tutor_course_settings);
         }
     }

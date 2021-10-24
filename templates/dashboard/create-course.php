@@ -183,12 +183,12 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                             </div>
 
                             <?php
-                                $monetize_by = tutils()->get_option('monetize_by');
+                                $monetize_by = tutor_utils()->get_option('monetize_by');
                                 if ($monetize_by === 'wc' || $monetize_by === 'edd') {
                                     $course_price = tutor_utils()->get_raw_course_price(get_the_ID());
                                     $currency_symbol = tutor_utils()->currency_symbol();
 
-                                    $_tutor_course_price_type = tutils()->price_type();
+                                    $_tutor_course_price_type = tutor_utils()->price_type();
                                     ?>
                                         <div class="tutor-mb-30">
                                             <label class="tutor-form-label"><?php _e('Course Price', 'tutor'); ?></label>

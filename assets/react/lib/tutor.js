@@ -214,7 +214,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-delete-lesson-btn', function(e){
         e.preventDefault();
 
-        if( ! confirm( __( 'Are you sure?', 'tutor' ) )){
+        if( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
             return;
         }
 
@@ -421,7 +421,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-delete-quiz-btn', function(e){
         e.preventDefault();
 
-        if( ! confirm( __( 'Are you sure?', 'tutor' ) )){
+        if( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
             return;
         }
 
@@ -431,9 +431,26 @@ jQuery(document).ready(function($){
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
-            data : {quiz_id : quiz_id, action: 'tutor_delete_quiz_by_id'},
+            data : {
+                quiz_id : quiz_id, 
+                action: 'tutor_delete_quiz_by_id'
+            },
             beforeSend: function () {
-                $that.closest('.course-content-item').remove();
+                $that.addClass('tutor-updating-message');
+            },
+            success: function(resp) {
+                const {data={}, success} = resp || {};
+                const {message=__('Something Went Wrong!')} = data;
+
+                if(success) {
+                    $that.closest('.course-content-item').remove();
+                    return;
+                }
+
+                tutor_toast('Error!', message, 'error');
+            },
+            complete:function() {
+                $that.removeClass('tutor-updating-message')
             }
         });
     });

@@ -476,10 +476,10 @@ if ( ! function_exists('tutor_course_loop_price')) {
     function tutor_course_loop_price() {
         ob_start();
 
-        if(tutils()->is_course_added_to_cart(get_the_ID())){
+        if(tutor_utils()->is_course_added_to_cart(get_the_ID())){
             tutor_load_template( 'loop.course-in-cart' );
         }
-        else if(tutils()->is_enrolled(get_the_ID())){
+        else if(tutor_utils()->is_enrolled(get_the_ID())){
             tutor_load_template( 'loop.course-continue' );
         }
         else{
@@ -847,7 +847,7 @@ if ( ! function_exists('tutor_course_target_reviews_html')) {
 
 if ( ! function_exists('tutor_course_target_review_form_html')) {
     function tutor_course_target_review_form_html($echo = true) {
-        $isDisableReview = (bool) tutils()->get_option('disable_course_review');
+        $isDisableReview = (bool) tutor_utils()->get_option('disable_course_review');
         if ($isDisableReview){
             $output = apply_filters('tutor_review_disabled_text', '');
 
@@ -1540,8 +1540,8 @@ if ( ! function_exists('get_tnotice')) {
  */
 
 function tutor_next_previous_pagination($course_content_id = 0, $echo = true){
-    $content_id = tutils()->get_post_id($course_content_id);
-    $contents = tutils()->get_course_prev_next_contents_by_id($content_id);
+    $content_id = tutor_utils()->get_post_id($course_content_id);
+    $contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
     $previous_id = $contents->previous_id;
     $next_id = $contents->next_id;
 

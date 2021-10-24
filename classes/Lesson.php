@@ -83,7 +83,7 @@ class Lesson extends Tutor_Base {
 		}
 
 		//Video
-		$video_source = sanitize_text_field( tutils()->array_get('video.source', $_POST) );
+		$video_source = sanitize_text_field( tutor_utils()->array_get('video.source', $_POST) );
 		if ( $video_source === '-1'){
 			delete_post_meta($post_ID, '_video');
 		}elseif($video_source) {
@@ -112,12 +112,12 @@ class Lesson extends Tutor_Base {
 	}
 
 	public function tutor_load_edit_lesson_modal(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$lesson_id = (int) tutor_utils()->avalue_dot('lesson_id', $_POST);
 		$topic_id = (int) sanitize_text_field( $_POST['topic_id'] );
 
-		if(!tutils()->can_user_manage('topic', $topic_id)) {
+		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
@@ -148,7 +148,7 @@ class Lesson extends Tutor_Base {
 	 * @updated v.1.5.1
 	 */
 	public function tutor_modal_create_or_update_lesson(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		global $wpdb;
 		
@@ -157,7 +157,7 @@ class Lesson extends Tutor_Base {
 		$course_id = tutor_utils()->get_course_id_by('topic', $topic_id);
 		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
 		
-		if(!tutils()->can_user_manage('topic', $topic_id)) {
+		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
@@ -210,11 +210,11 @@ class Lesson extends Tutor_Base {
 	 * Delete Lesson from course builder
 	 */
 	public function tutor_delete_lesson_by_id(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 
-		if(!tutils()->can_user_manage('lesson', $lesson_id)) {
+		if(!tutor_utils()->can_user_manage('lesson', $lesson_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
@@ -325,7 +325,7 @@ class Lesson extends Tutor_Base {
 	 * Render the lesson content
 	 */
 	public function tutor_render_lesson_content(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 
@@ -333,7 +333,7 @@ class Lesson extends Tutor_Base {
 		$course_id = !empty($ancestors) ? array_pop($ancestors): $lesson_id;
 
 		// Course must be public or current user must be enrolled to access this lesson
-		if(get_post_meta($course_id, '_tutor_is_public_course', true)!=='yes' && !tutils()->is_enrolled($course_id)){
+		if(get_post_meta($course_id, '_tutor_is_public_course', true)!=='yes' && !tutor_utils()->is_enrolled($course_id)){
 			
 			$is_admin = tutor_utils()->has_user_role('administrator');
 			$allowed = $is_admin ? true : tutor_utils()->is_instructor_of_this_course(get_current_user_id(), $course_id);
@@ -365,7 +365,7 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$post_id = sanitize_text_field($_POST['post_id']);
-		$content_id = tutils()->get_post_id($post_id);
+		$content_id = tutor_utils()->get_post_id($post_id);
 		$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
 
 		$autoload_course_content = (bool) get_tutor_option('autoload_next_course_content');

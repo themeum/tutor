@@ -55,13 +55,13 @@ class User {
 	}
 
 	public function tutor_user_photo_remove(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 		
 		$this->delete_existing_user_photo(get_current_user_id(), $_POST['photo_type']);
 	}
 
 	public function update_user_photo(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
 		$meta_key = $_POST['photo_type']=='cover_photo' ? '_tutor_cover_photo' : '_tutor_profile_photo';
@@ -70,9 +70,9 @@ class User {
 		 * Photo Update from profile
 		 *
 		 */
-		$photo = tutils()->array_get('photo_file', $_FILES);
-		$photo_size = tutils()->array_get('size', $photo);
-		$photo_type = tutils()->array_get('type', $photo);
+		$photo = tutor_utils()->array_get('photo_file', $_FILES);
+		$photo_size = tutor_utils()->array_get('size', $photo);
+		$photo_type = tutor_utils()->array_get('type', $photo);
 
 		if ($photo_size && strpos($photo_type, 'image') !== false) {
 			if ( ! function_exists( 'wp_handle_upload' ) ) {
@@ -83,8 +83,8 @@ class User {
 			$movefile         = wp_handle_upload( $photo, $upload_overrides );
 
 			if ( $movefile && ! isset( $movefile['error'] ) ) {
-				$file_path = tutils()->array_get( 'file', $movefile );
-				$file_url  = tutils()->array_get( 'url', $movefile );
+				$file_path = tutor_utils()->array_get( 'file', $movefile );
+				$file_url  = tutor_utils()->array_get( 'url', $movefile );
 
 				$media_id = wp_insert_attachment( array(
 					'guid'           => $file_path,
@@ -112,7 +112,7 @@ class User {
 	}
 
 	public function profile_update($user_id){
-		if (tutils()->array_get('tutor_action', $_POST) !== 'tutor_profile_update_by_wp' ){
+		if (tutor_utils()->array_get('tutor_action', $_POST) !== 'tutor_profile_update_by_wp' ){
 			return;
 		}
 
@@ -140,7 +140,7 @@ class User {
 
 	public function hide_notices() {
 		if(is_admin() && isset( $_GET['tutor-hide-notice'] ) && $_GET['tutor-hide-notice']=='registration') {
-			tutils()->checking_nonce('get');
+			tutor_utils()->checking_nonce('get');
 
 			if(isset($_GET['tutor-registration']) && $_GET['tutor-registration']==='enable') {
 				update_option( 'users_can_register', 1 );
@@ -155,7 +155,7 @@ class User {
 
 		if( 
 				self::$hide_registration_notice ||
-				!tutils()->is_tutor_dashboard() || 
+				!tutor_utils()->is_tutor_dashboard() || 
 				get_option( 'users_can_register' ) || 
 				isset( $_COOKIE['tutor_notice_hide_registration'] ) ||
 				!current_user_can( 'manage_options' )

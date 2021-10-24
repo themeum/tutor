@@ -8,7 +8,7 @@
 
     <div class="new-topic-btn-wrap">
         <a data-tutor-modal-target="tutor-modal-add-topic" href="javascript:;" class="create_new_topic_btn tutor-btn bordered-btn"> 
-            <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e('Add new topic', 'tutor'); ?>
+            <i class="tutor-icon-text-document-add-button-with-plus-sign tutor-mr-10"></i> <?php _e('Add new topic', 'tutor'); ?>
         </a>
     </div>
 

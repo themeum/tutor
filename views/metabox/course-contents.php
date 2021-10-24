@@ -128,12 +128,12 @@
                     <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
 
                     <button class="tutor-btn tutor-is-outline tutor-is-sm open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
-                        <i class="tutor-icon-plus-square-button"></i>
+                        <i class="tutor-icon-plus-square-button tutor-mr-10"></i>
                         <?php _e('Lesson', 'tutor'); ?>
                     </button>
                     
                     <button class="tutor-btn tutor-is-outline tutor-is-sm tutor-add-quiz-btn" data-topic-id="<?php echo $topic->ID; ?>">
-                        <i class="tutor-icon-plus-square-button"></i>
+                        <i class="tutor-icon-plus-square-button tutor-mr-10"></i>
                         <?php _e('Quiz', 'tutor'); ?>
                     </button>
 

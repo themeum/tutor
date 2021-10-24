@@ -4809,10 +4809,6 @@
   }
 }
 
-.w-100pc {
-  width: 100%;
-}
-
 /* Only reusable function, or code allowed here. No direct css please. */
 .color-brand-wordpress {
   color: #1973aa;
@@ -9310,6 +9306,22 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 
 .tutor-star-rating-group i.tutor-icon-star-full {
   color: #ED9700 !important;
+}
+
+.tutor-updating-message i {
+  display: none;
+}
+
+.tutor-updating-message:before {
+  display: inline-block;
+  font-family: "tutor";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: top;
+  content: "\e91d";
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+  margin-right: 6px;
 }
 
 /**

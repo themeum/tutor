@@ -1,5 +1,5 @@
 <?php
-$tutor_pages = tutils()->tutor_pages();
+$tutor_pages = tutor_utils()->tutor_pages();
 ?>
 
 <div id="tools-tutor-pages" class="tools-tutor-pages">
