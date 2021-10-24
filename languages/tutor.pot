@@ -2040,7 +2040,7 @@ msgstr ""
 msgid "Answer"
 msgstr ""
 
-#: classes/Question_Answers_List.php:73, classes/Quiz.php:771, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/question-answer.php:26, views/metabox/course-topics.php:47, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:771, templates/dashboard/my-quiz-attempts.php:34, templates/dashboard/question-answer.php:26, views/metabox/course-topics.php:47, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
 msgid "Question"
 msgstr ""
 
@@ -2100,11 +2100,11 @@ msgstr ""
 msgid " pass "
 msgstr ""
 
-#: classes/Quiz_Attempts_List.php:98, templates/dashboard/my-quiz-attempts.php:97, templates/dashboard/quiz-attempts.php:98, views/pages/view_attempt.php:101, templates/dashboard/my-quiz-attempts/attempts-details.php:171, templates/dashboard/quiz-attempts/quiz-reviews.php:159, templates/single/quiz/previous-attempts.php:75
+#: classes/Quiz_Attempts_List.php:98, templates/dashboard/my-quiz-attempts.php:96, templates/dashboard/quiz-attempts.php:98, views/pages/view_attempt.php:101, templates/dashboard/my-quiz-attempts/attempts-details.php:171, templates/dashboard/quiz-attempts/quiz-reviews.php:159, templates/single/quiz/previous-attempts.php:75
 msgid "Fail"
 msgstr ""
 
-#: classes/Quiz_Attempts_List.php:96, templates/dashboard/my-quiz-attempts.php:97, templates/dashboard/quiz-attempts.php:98, views/pages/view_attempt.php:99, templates/dashboard/my-quiz-attempts/attempts-details.php:169, templates/dashboard/quiz-attempts/quiz-reviews.php:157, templates/single/quiz/previous-attempts.php:75
+#: classes/Quiz_Attempts_List.php:96, templates/dashboard/my-quiz-attempts.php:96, templates/dashboard/quiz-attempts.php:98, views/pages/view_attempt.php:99, templates/dashboard/my-quiz-attempts/attempts-details.php:169, templates/dashboard/quiz-attempts/quiz-reviews.php:157, templates/single/quiz/previous-attempts.php:75
 msgid "Pass"
 msgstr ""
 
@@ -2765,6 +2765,7 @@ msgid "Retrieve Password"
 msgstr ""
 
 #: classes/Utils.php:2593, templates/dashboard/dashboard.php:27, templates/dashboard/my-quiz-attempts.php:95, views/pages/course-list.php:130, templates/dashboard/my-quiz-attempts/attempts-details.php:380
+#: classes/Utils.php:2593, templates/dashboard/dashboard.php:27, templates/dashboard/my-quiz-attempts.php:94, views/pages/course-list.php:130, templates/dashboard/my-quiz-attempts/attempts-details.php:380
 msgid "Pending"
 msgstr ""
 
@@ -3290,7 +3291,7 @@ msgstr ""
 msgid "Assignment Name"
 msgstr ""
 
-#: templates/dashboard/assignments.php:78, templates/dashboard/my-quiz-attempts.php:36, templates/dashboard/my-quiz-attempts/attempts-details.php:116, templates/dashboard/quiz-attempts/quiz-reviews.php:104
+#: templates/dashboard/assignments.php:78, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/my-quiz-attempts/attempts-details.php:116, templates/dashboard/quiz-attempts/quiz-reviews.php:104
 msgid "Total Marks"
 msgstr ""
 
@@ -3534,27 +3535,27 @@ msgstr ""
 msgid "Bio"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:111
+#: templates/dashboard/my-quiz-attempts.php:108
 msgid "You have not attempted any quiz yet"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:34, views/metabox/course-topics.php:43
+#: templates/dashboard/my-quiz-attempts.php:33, views/metabox/course-topics.php:43
 msgid "Quiz Info"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:37, templates/dashboard/quiz-attempts.php:33, templates/single/quiz/previous-attempts.php:17
+#: templates/dashboard/my-quiz-attempts.php:36, templates/dashboard/quiz-attempts.php:33, templates/single/quiz/previous-attempts.php:17
 msgid "Correct Answer"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:38, templates/dashboard/quiz-attempts.php:34, templates/single/quiz/previous-attempts.php:18
+#: templates/dashboard/my-quiz-attempts.php:37, templates/dashboard/quiz-attempts.php:34, templates/single/quiz/previous-attempts.php:18
 msgid "Incorrect Answer"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:39, templates/dashboard/my-quiz-attempts/attempts-details.php:120, templates/dashboard/quiz-attempts/quiz-reviews.php:108, templates/single/quiz/previous-attempts.php:19
+#: templates/dashboard/my-quiz-attempts.php:38, templates/dashboard/my-quiz-attempts/attempts-details.php:120, templates/dashboard/quiz-attempts/quiz-reviews.php:108, templates/single/quiz/previous-attempts.php:19
 msgid "Earned Marks"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:40, templates/dashboard/quiz-attempts.php:36, views/pages/view_attempt.php:87, templates/dashboard/assignments/submitted.php:89, templates/dashboard/assignments/submitted.php:134, templates/dashboard/my-quiz-attempts/attempts-details.php:121, templates/single/quiz/previous-attempts.php:20
+#: templates/dashboard/my-quiz-attempts.php:39, templates/dashboard/quiz-attempts.php:36, views/pages/view_attempt.php:87, templates/dashboard/assignments/submitted.php:89, templates/dashboard/assignments/submitted.php:134, templates/dashboard/my-quiz-attempts/attempts-details.php:121, templates/single/quiz/previous-attempts.php:20
 msgid "Result"
 msgstr ""
 

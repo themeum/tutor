@@ -13906,8 +13906,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 @media (min-width: 1400px) {
   .tutor-wp-dashboard-filter-items select.tutor-form-select,
   .tutor-wp-dashboard-filter-items .tutor-input-group {
-    width: 227px;
-    max-width: 227px;
+    width: 180px;
+    max-width: 180px;
   }
 }
 
