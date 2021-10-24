@@ -2680,7 +2680,7 @@ class Utils {
 			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
 
-		$cat_ids = array_filter($cat_ids, function($id) {
+		$cat_ids = array_filter( $cat_ids = array() , function($id) {
 			return is_numeric($id);
 		});
 

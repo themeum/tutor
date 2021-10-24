@@ -41,7 +41,7 @@ $total            = tutor_utils()->get_total_students( $active_tab, $search, $us
  * Navbar data to make nav menu
  */
 $navbar_data = array(
-	'page_title' => $instructors->page_title,
+	'page_title' => $students->page_title,
 );
 
 //var_dump($navbar_data);
