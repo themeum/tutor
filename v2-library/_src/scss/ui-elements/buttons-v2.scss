@@ -124,6 +124,10 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 		}
 	}
 
+	&.tutor-btn-full {
+		width: 100%;
+	}
+
 	// Button Sizes and Typography
 	&.tutor-btn-xl {
 		@extend .text-btn-xlarge;
