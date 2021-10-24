@@ -136,14 +136,14 @@ class Students_List extends \Tutor_List_Table {
 	 * @return bool
 	 * @since v2.0.0
 	 */
-	public static function update_students( $status, $user_ids ): bool {
+	public static function update_students( $status, $users_ids ): bool {
 		global $wpdb;
 		$users_table = $wpdb->users;
 		$update     = $wpdb->query(
 			$wpdb->prepare(
 				" UPDATE {$users_table}
 				SET post_status = %s 
-				WHERE ID IN ($user_ids)
+				WHERE ID IN ($users_ids)
 			",
 				$status
 			)

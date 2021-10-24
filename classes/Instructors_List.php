@@ -72,11 +72,11 @@ class Instructors_List extends \Tutor_List_Table {
 	 * @return array
 	 * @since v2.0.0
 	 */
-	public function tabs_key_value( $instructor_id, $date, $search ): array {
+	public function tabs_key_value( $users_id, $date, $search ): array {
 		$url       = get_pagenum_link();
-		$approve  = self::get_instructor_number( 'approved', $instructor_id, $date, $search );
-		$pending = self::get_instructor_number( 'pending', $instructor_id, $date, $search );
-		$blocked = self::get_instructor_number( 'blocked', $instructor_id, $date, $search );
+		$approve  = self::get_instructor_number( 'approved', $users_id, $date, $search );
+		$pending = self::get_instructor_number( 'pending', $users_id, $date, $search );
+		$blocked = self::get_instructor_number( 'blocked', $users_id, $date, $search );
 		$tabs      = array(
 			array(
 				'key'   => 'all',
@@ -194,11 +194,11 @@ class Instructors_List extends \Tutor_List_Table {
 	 * Execute bulk action for enrollments ex: complete | cancel
 	 *
 	 * @param string $status hold status for updating.
-	 * @param string $enrollment_ids ids that need to update.
+	 * @param string $users_ids ids that need to update.
 	 * @return bool
 	 * @since v2.0.0
 	 */
-	public static function update_instructors( $status, $enrollment_ids ): bool {
+	public static function update_instructors( $status, $users_ids ): bool {
 		global $wpdb;
 		$instructor_table = $wpdb->user_meta;
 		$update     = $wpdb->query(

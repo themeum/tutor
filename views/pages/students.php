@@ -16,10 +16,16 @@ $students = new Students_List();
 /**
  * Short able params
  */
-$ID = isset( $_GET['ID'] ) ? $_GET['ID'] : '';
+$user_id = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
+$course_id = isset( $_GET['course-id'] ) ? $_GET['course-id'] : '';
 $order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date      = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
 $search    = isset( $_GET['search'] ) ? $_GET['search'] : '';
+
+/**
+ * Determine active tab
+ */
+$active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET['data'] ) : 'all';
 
 /**
  * Pagination data
@@ -28,14 +34,14 @@ $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$students_list = tutor_utils()->get_students( $current_page * $per_page, $per_page, $search_term );
-$total            = tutor_utils()->get_total_students( $search_term );
+$students_list = tutor_utils()->get_students( $offset, $per_page, $search, $user_id, $date, $order, $course_id );
+$total            = tutor_utils()->get_total_students( $active_tab, $search, $user_id, $date, $course_id );
 
 /**
  * Navbar data to make nav menu
  */
 $navbar_data = array(
-	'page_title' => $students->page_title,
+	'page_title' => $instructors->page_title,
 );
 
 //var_dump($navbar_data);
@@ -43,15 +49,10 @@ $navbar_data = array(
 /**
  * Bulk action & filters
  */
-// $filters = array(
-// 'bulk_action'   => $enrollments->bulk_action,
-// 'bulk_actions'  => $enrollments->prpare_bulk_actions(),
-// 'search_filter' => true,
-// );
 $filters = array(
 	'bulk_action'   => $students->bulk_action,
 	'bulk_actions'  => $students->prpare_bulk_actions(),
-	'ajax_action'   => 'tutor_enrollment_bulk_action',
+	'ajax_action'   => 'tutor_student_bulk_action',
 	'filters'       => true,
 	'course_filter' => true,
 );
@@ -62,7 +63,7 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = tutor()->path . 'views/elements/student-navbar.php';
+		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		$filters_template = tutor()->path . 'views/elements/filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
