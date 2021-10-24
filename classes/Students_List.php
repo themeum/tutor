@@ -12,6 +12,8 @@ use TUTOR\Backend_Page_Trait;
 
 class Students_List extends \Tutor_List_Table {
 
+	const STUDENTS_LIST_PAGE = 'tutor-students';
+
 	/**
 	 * Trait for utilities
 	 *
@@ -82,7 +84,7 @@ class Students_List extends \Tutor_List_Table {
 		// add course id in where clause.
 		$student_query = '';
 		if ( '' !== $user_id ) {
-			$student_query = "AND user.ID = $user_id";
+			$student_query = "AND student.ID = $user_id";
 		}
 
 		// add date in where clause.
@@ -93,7 +95,7 @@ class Students_List extends \Tutor_List_Table {
 
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*)
+				"SELECT *
 					FROM 	{$wpdb->users}
 							INNER JOIN {$wpdb->usermeta}
 								ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id )
@@ -127,31 +129,6 @@ class Students_List extends \Tutor_List_Table {
 		return true === $update ? wp_send_json_success() : wp_send_json_error();
 		exit;
 	}
-
-	/**
-	 * Execute bulk action for enrollments ex: complete | cancel
-	 *
-	 * @param string $status hold status for updating.
-	 * @param string $user_ids ids that need to update.
-	 * @return bool
-	 * @since v2.0.0
-	 */
-	public static function update_students( $status, $user_ids ): bool {
-		global $wpdb;
-		$users_table = $wpdb->users;
-		$update     = $wpdb->query(
-			$wpdb->prepare(
-				" UPDATE {$users_table}
-				SET post_status = %s 
-				WHERE ID IN ($user_ids)
-			",
-				$status
-			)
-		);
-		return false === $update ? false : true;
-	}
-
-	const STUDENTS_LIST_PAGE = 'tutor-students';
 
 	/*function __construct() {
 		global $status, $page;

@@ -146,7 +146,7 @@ $available_status = array(
 
 	?>
 
-	<div class="tutor-admin-page-content-wrapper">
+	<div class="tutor-admin-page-content-wrapper tutor-mt-30 tutor-mr-20">
 		<div class="tutor-ui-table-wrapper">
 			<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
 				<thead class="tutor-text-sm tutor-text-400">
@@ -199,8 +199,9 @@ $available_status = array(
 							$the_query->the_post();
 							$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
 							$count_quiz       = Analytics::get_all_quiz_by_course( $post->ID );
+							$topics           = tutor_utils()->get_topics( $post->ID );
 							$count_assignment = tutor_utils()->get_assignments_by_course( $post->ID )->count;
-							$count_topic      = count( tutor_utils()->get_topics( $post->ID ) );
+							$count_topic      = $topics->found_posts;
 							$student_details  = CourseAnalytics::course_enrollments_with_student_details( $post->ID );
 							$total_student    = $student_details['total_enrollments'];
 							$author_details   = get_userdata( $post->post_author );
@@ -291,7 +292,7 @@ $available_status = array(
 											echo wp_kses_post( wc_price( $price ) );
 										}
 										// Alert class for course status.
-										$status = ( 'publish' === $post->post_status  ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
+										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
 										?>
 									</div>
 								</td>
