@@ -26,7 +26,7 @@ import '../docz-essential.css';
 					alt="Course Thumbnail"
 				/>
 			</div>
-			<div class="tutor-course-listing-item-body">
+			<div class="tutor-course-listing-item-body tutor-p-20">
 				<div class="list-item-rating">
 					<div className="tutor-ratings">
 						<div className="tutor-rating-stars">
@@ -39,34 +39,54 @@ import '../docz-essential.css';
 						<div className="tutor-rating-text">4.5 (10)</div>
 					</div>
 				</div>
-				<div class="list-item-title text-medium-h5 color-text-primary">Creative Nonfiction: Write Truth with Style</div>
-				<div class="list-item-meta text-medium-caption color-text-primary tutor-bs-d-flex">
-					<div class="meta tutor-bs-d-flex tutor-bs-align-items-center">
-						<span class="ttr-clock-filled color-text-hints"></span>
+				<div class="list-item-title text-medium-h5 color-text-primary tutor-mt-5">
+					Creative Nonfiction: Write Truth with Style
+				</div>
+				<div class="list-item-meta text-medium-caption color-text-primary tutor-bs-d-flex tutor-mt-15">
+					<div class="tutor-bs-d-flex tutor-bs-align-items-center">
+						<span class="meta-icon ttr-clock-filled color-text-hints"></span>
 						<span>6 h 30m</span>
 					</div>
-					<div class="meta tutor-bs-d-flex tutor-bs-align-items-center">
-						<span class="ttr-user-filled color-text-hints"></span>
+					<div class="tutor-bs-d-flex tutor-bs-align-items-center">
+						<span class="meta-icon ttr-user-filled color-text-hints"></span>
 						<span>1050</span>
 					</div>
 				</div>
-				<div class="list-item-author tutor-avatar tutor-bs-d-flex tutor-bs-align-items-center">
-					<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="Course Thumbnail" />
+				<div class="list-item-author tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-35">
+					<div class="tutor-avatar">
+						<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="Course Thumbnail" />
+					</div>
 					<div className="text-regular-caption color-text-subsued">
-						by <span className="text-medium-caption color-text-primary">Mario Jenkins</span>in{' '}
-						<span className="text-medium-caption color-text-primary">Design</span>
+						by <span className="text-medium-caption color-text-primary">Mario Jenkins </span>
+						in <span className="text-medium-caption color-text-primary">Design</span>
 					</div>
 				</div>
 			</div>
-			<div class="tutor-course-listing-item-footer">
-				<div class="list-item-price">
-					<span class="price">$39.99</span>
-					<span class="discount">
-						<del>$49.99</del>
-					</span>
+			<div class="tutor-course-listing-item-footer has-border tutor-py-15 tutor-px-20">
+				<div class="list-item-price-with-booking tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+					<div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center">
+						<span class="price text-bold-h6 color-text-primary">$39.99</span>
+						<span class="discount text-regular-caption colot-text-hints">
+							<del>$49.99</del>
+						</span>
+					</div>
+					<div class="list-item-booking tutor-bs-d-flex tutor-bs-align-items-center">
+						<div class="progress tutor-bs-d-flex">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<circle cx="12" cy="12" r="10" stroke="#BDCAF1" stroke-width="3" />
+								<path
+									d="M2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2"
+									stroke="#3E64DE"
+									stroke-width="3"
+									stroke-linecap="round"
+								/>
+							</svg>
+						</div>
+						<div class="text-medium-caption color-text-primary">72% booked</div>
+					</div>
 				</div>
-				<div class="list-item-button">
-					<button className="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-no-hover tutor-btn-md">
+				<div class="list-item-button tutor-mt-15">
+					<button className="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-btn-full">
 						<span className="btn-icon ttr-cart-line-filled"></span>
 						<span>Button</span>
 					</button>
