@@ -1,0 +1,138 @@
+---
+name: Course Listing
+route: /mdx-css/ui-course-listing
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css';
+import '../docz-essential.css';
+
+# Course Listing
+
+`** Replace "className" with "class" while using with html` <br />
+
+## Course Listing - Grid 3
+
+`** remove the inline-style from the header`
+
+<Playground>
+	<div class="tutor-course-listing tutor-course-listing-grid-3 tutor-course-listing-grid-4 tutor-course-listing-filter-grid-2 tutor-course-listing-filter-grid-3">
+		<div class="tutor-course-listing-item">
+			<div class="tutor-course-listing-item-head">
+				<img
+					src="https://preview.tutorlms.com/marketplace/wp-content/uploads/sites/6/2019/05/course-thumb-17.jpg"
+					alt="Course Thumbnail"
+				/>
+			</div>
+			<div class="tutor-course-listing-item-body">
+				<div class="list-item-rating">
+					<div className="tutor-ratings">
+						<div className="tutor-rating-stars">
+							<span className="ttr-star-full-filled"></span>
+							<span className="ttr-star-full-filled"></span>
+							<span className="ttr-star-full-filled"></span>
+							<span className="ttr-star-half-filled"></span>
+							<span className="ttr-star-line-filled"></span>
+						</div>
+						<div className="tutor-rating-text">4.5 (10)</div>
+					</div>
+				</div>
+				<div class="list-item-title text-medium-h5 color-text-primary">Creative Nonfiction: Write Truth with Style</div>
+				<div class="list-item-meta text-medium-caption color-text-primary tutor-bs-d-flex">
+					<div class="meta tutor-bs-d-flex tutor-bs-align-items-center">
+						<span class="ttr-clock-filled color-text-hints"></span>
+						<span>6 h 30m</span>
+					</div>
+					<div class="meta tutor-bs-d-flex tutor-bs-align-items-center">
+						<span class="ttr-user-filled color-text-hints"></span>
+						<span>1050</span>
+					</div>
+				</div>
+				<div class="list-item-author tutor-avatar tutor-bs-d-flex tutor-bs-align-items-center">
+					<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="Course Thumbnail" />
+					<div className="text-regular-caption color-text-subsued">
+						by <span className="text-medium-caption color-text-primary">Mario Jenkins</span>in{' '}
+						<span className="text-medium-caption color-text-primary">Design</span>
+					</div>
+				</div>
+			</div>
+			<div class="tutor-course-listing-item-footer">
+				<div class="list-item-price">
+					<span class="price">$39.99</span>
+					<span class="discount">
+						<del>$49.99</del>
+					</span>
+				</div>
+				<div class="list-item-button">
+					<button className="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-no-hover tutor-btn-md">
+						<span className="btn-icon ttr-cart-line-filled"></span>
+						<span>Button</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>
+
+## Course Listing - Grid 4
+
+## Course Listing with Filter - Grid 2
+
+## Course Listing with Filter - Grid 3
+
+## WP Dashboard Filter
+
+<Playground>
+	<div class="tutor-wp-dashboard-filter tutor-bs-d-flex d-flex- flex-xl-nowrap flex-wrap align-items-end justify-content-between">
+		<div class="tutor-wp-dashboard-filter-items d-flex flex-xl-nowrap flex-wrap">
+			<div className="tutor-form-select-with-btn">
+				<select title="Please select a color" className="tutor-form-select tutor-form-control-sm">
+					<option value="Default" selected>
+						Default
+					</option>
+					<option value="Red">Red</option>
+					<option value="Blue">Blue</option>
+					<option value="Yellow">Yellow</option>
+				</select>
+				<button className="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-md">Button</button>
+			</div>
+		</div>
+		<div class="tutor-wp-dashboard-filter-items d-flex flex-xl-nowrap flex-wrap">
+			<div className="">
+				<label className="tutor-form-label">Category</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+					<option value="1" selected>
+						One
+					</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</div>
+			<div className="">
+				<label className="tutor-form-label">Short By</label>
+				<select class="tutor-form-select tutor-form-control-sm">
+					<option value="1" selected>
+						One
+					</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</div>
+			<div className="">
+				<label className="tutor-form-label">Date</label>
+				<div class="tutor-input-group tutor-form-control-sm">
+					<input type="date" class="tutor-form-control" placeholder="dd/mm/yyyy" />
+				</div>
+			</div>
+			<div class="">
+				<label className="tutor-form-label">Search</label>
+				<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
+					<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+					<input type="search" class="tutor-form-control" placeholder="Search ..." />
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>
