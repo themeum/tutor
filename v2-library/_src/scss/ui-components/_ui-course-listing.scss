@@ -1,0 +1,36 @@
+.tutor-course-listing {
+	display: grid;
+	&-item {
+		/* bg/white */
+
+		background: $bg-white;
+		/* stroke/light30 */
+
+		border: 1px solid $stroke-light-30;
+		border-radius: 6px;
+		overflow: hidden;
+		img {
+			max-width: 100%;
+		}
+	}
+	.list-item-author.tutor-avatar {
+		width: 34px;
+		height: 34px;
+		border-radius: 50%;
+	}
+	&-grid-3 {
+		grid-template-columns: repeat(3, 1fr);
+		&-item {
+			max-width: 350px;
+		}
+	}
+	&-grid-4 {
+		&-item {
+			max-width: 255px;
+		}
+	}
+	&-grid-2 {
+	}
+	&-grid-3 {
+	}
+}
