@@ -307,7 +307,7 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-delete-lesson-btn', function (e) {
     e.preventDefault();
 
-    if (!confirm(__('Are you sure?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
       return;
     }
 
@@ -505,7 +505,7 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-delete-quiz-btn', function (e) {
     e.preventDefault();
 
-    if (!confirm(__('Are you sure?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
       return;
     }
 
@@ -519,7 +519,26 @@ jQuery(document).ready(function ($) {
         action: 'tutor_delete_quiz_by_id'
       },
       beforeSend: function beforeSend() {
-        $that.closest('.course-content-item').remove();
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(resp) {
+        var _ref2 = resp || {},
+            _ref2$data = _ref2.data,
+            data = _ref2$data === void 0 ? {} : _ref2$data,
+            success = _ref2.success;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!') : _data$message;
+
+        if (success) {
+          $that.closest('.course-content-item').remove();
+          return;
+        }
+
+        tutor_toast('Error!', message, 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
       }
     });
   });
@@ -873,19 +892,22 @@ window.jQuery(document).ready(function ($) {
   }); // Ajax action 
 
   $(document).on('click', '.tutor-list-ajax-action', function () {
-    var url = $(this).data('url');
-    var type = $(this).data('type') || 'GET';
+    var $that = $(this);
     var prompt = $(this).data('prompt');
-    var del = $(this).data('delete_id');
-    console.log(prompt);
+    var del = $(this).data('delete_element_id');
+    var data = $(this).data('request_data') || {};
 
     if (prompt && !window.confirm(prompt)) {
       return;
     }
 
     $.ajax({
-      url: url,
-      type: type,
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('updating-icon');
+      },
       success: function success(data) {
         if (data.success) {
           if (del) {
@@ -906,7 +928,9 @@ window.jQuery(document).ready(function ($) {
       error: function error() {
         tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
       },
-      complete: function complete() {}
+      complete: function complete() {
+        $that.removeClass('updating-icon');
+      }
     });
   });
 });

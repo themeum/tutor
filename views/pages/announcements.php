@@ -62,10 +62,11 @@ $navbar_data = array(
  * Filters for sorting searching
  */
 $filters = array(
-	'bulk_action'  => $announcement_obj->bulk_action,
-	'bulk_actions' => $announcement_obj->prepare_bulk_actions(),
-	'ajax_action'  => 'tutor_announcement_bulk_action',
-	'filters'      => true,
+	'bulk_action'   => $announcement_obj->bulk_action,
+	'bulk_actions'  => $announcement_obj->prepare_bulk_actions(),
+	'ajax_action'   => 'tutor_announcement_bulk_action',
+	'filters'       => true,
+	'course_filter' => true,
 );
 ?>
 <div class="tutor-admin-page-wrapper">
@@ -73,8 +74,8 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$filters_template = esc_url( tutor()->path . 'views/elements/filters.php' );
-		$navbar_template  = esc_url( tutor()->path . 'views/elements/navbar.php' );
+		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
@@ -102,16 +103,16 @@ $filters = array(
 	
 	<div class="tutor-admin-page-content-wrapper">
 	<?php
-		$announcements = $the_query->have_posts() ? $the_query->posts : array();
-		$announcement_template = esc_url( tutor()->path . '/views/fragments/announcement-list.php' );
+		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
+		$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';
 		tutor_load_template_from_custom_path(
 			$announcement_template,
 			array(
 				'announcements' => is_array( $announcements ) ? $announcements : array(),
-                'the_query' => $the_query,
-                'paged' => $paged
+				'the_query'     => $the_query,
+				'paged'         => $paged,
 			)
 		);
-    ?>
+		?>
 	</div>
 </div>

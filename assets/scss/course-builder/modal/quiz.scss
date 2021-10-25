@@ -13,9 +13,9 @@ a.back-to-quiz-questions-btn {
 	display: block;
 }
 
-// Show hide add to question button based on screen
+// Show add to question button when quiz editor opened
 &.tutor-has-question-from {
-    .tutor-modal-footer .row>div{
+    .tutor-modal-footer .tutor-bs-row>div{
         &:not(:last-child) {
             display: none !important;
         }
@@ -30,8 +30,9 @@ a.back-to-quiz-questions-btn {
     }
 }
 
+// Hide add to question button when the container has no quiz editor opened
 &:not(.tutor-has-question-from) {
-    .tutor-modal-footer .row>div{
+    .tutor-modal-footer .tutor-bs-row>div{
         &:last-child {
             display: none;
         }

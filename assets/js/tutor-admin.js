@@ -713,6 +713,395 @@ displayAddons(freeAddonsList);
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/filter.js":
+/*!*********************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/filter.js ***!
+  \*********************************************************/
+/***/ (() => {
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+/**
+ * On click add filter value on the url
+ * and refresh page
+ *
+ * Handle bulk action
+ *
+ * @package Filter / sorting
+ * @since v2.0.0
+ */
+var _wp$i18n = wp.i18n,
+    __ = _wp$i18n.__,
+    _x = _wp$i18n._x,
+    _n = _wp$i18n._n,
+    _nx = _wp$i18n._nx;
+
+window.onload = function () {
+  var filterCourse = document.getElementById("tutor-backend-filter-course");
+
+  if (filterCourse) {
+    filterCourse.onchange = function (e) {
+      window.location = urlPrams("course-id", e.target.value);
+    };
+  }
+
+  var filterCategory = document.getElementById("tutor-backend-filter-category");
+
+  if (filterCategory) {
+    filterCategory.onchange = function (e) {
+      window.location = urlPrams("category", e.target.value);
+    };
+  }
+
+  var filterOrder = document.getElementById("tutor-backend-filter-order");
+
+  if (filterOrder) {
+    filterOrder.onchange = function (e) {
+      window.location = urlPrams("order", e.target.value);
+    };
+  }
+
+  var filterDate = document.getElementById("tutor-backend-filter-date");
+
+  if (filterDate) {
+    filterDate.onchange = function (e) {
+      window.location = urlPrams("date", e.target.value);
+    };
+  }
+
+  var filterSearch = document.getElementById("tutor-admin-search-filter-form");
+
+  if (filterSearch) {
+    filterSearch.onsubmit = function (e) {
+      e.preventDefault();
+      var search = document.getElementById("tutor-backend-filter-search").value;
+      window.location = urlPrams("search", search);
+    };
+  }
+  /**
+   * Onsubmit bulk form handle ajax request then reload page
+   */
+
+
+  var bulkForm = document.getElementById("tutor-admin-bulk-action-form");
+
+  if (bulkForm) {
+    bulkForm.onsubmit = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+        var formData, bulkIds, bulkFields, _iterator, _step, field, post;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(bulkForm);
+                bulkIds = [];
+                bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+                _iterator = _createForOfIteratorHelper(bulkFields);
+
+                try {
+                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                    field = _step.value;
+
+                    if (field.checked) {
+                      bulkIds.push(field.value);
+                    }
+                  }
+                } catch (err) {
+                  _iterator.e(err);
+                } finally {
+                  _iterator.f();
+                }
+
+                formData.set("bulk-ids", bulkIds);
+                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                _context.prev = 8;
+                _context.next = 11;
+                return fetch(window._tutorobject.ajaxurl, {
+                  method: "POST",
+                  body: formData
+                });
+
+              case 11:
+                post = _context.sent;
+
+                if (post.ok) {
+                  location.reload();
+                }
+
+                _context.next = 18;
+                break;
+
+              case 15:
+                _context.prev = 15;
+                _context.t0 = _context["catch"](8);
+                alert(_context.t0);
+
+              case 18:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[8, 15]]);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+  }
+  /**
+   * onclick bulk action button show confirm popup
+   * on click confirm button submit bulk form
+   */
+
+
+  var bulkActionButton = document.getElementById("tutor-confirm-bulk-action");
+
+  if (bulkActionButton) {
+    bulkActionButton.onclick = function () {
+      var input = document.createElement("input");
+      input.type = "submit";
+      bulkForm.appendChild(input);
+      input.click();
+      input.remove();
+    };
+  }
+
+  function urlPrams(type, val) {
+    var url = new URL(window.location.href);
+    var params = url.searchParams;
+    params.set(type, val);
+    params.set("paged", 1);
+    return url;
+  }
+  /**
+   * Select all bulk checkboxes
+   *
+   * @since v2.0.0
+   */
+
+
+  var selectAll = document.querySelector("#tutor-bulk-checkbox-all");
+
+  if (selectAll) {
+    selectAll.addEventListener("click", function () {
+      var checkboxes = document.querySelectorAll(".tutor-bulk-checkbox");
+      checkboxes.forEach(function (item) {
+        if (selectAll.checked) {
+          item.checked = true;
+        } else {
+          item.checked = false;
+        }
+      });
+    });
+  }
+  /**
+   * On change status 
+   * update course status
+   */
+
+
+  var availableStatus = ['publish', 'pending', 'draft'];
+  var courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
+
+  var _iterator2 = _createForOfIteratorHelper(courseStatusUpdate),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var status = _step2.value;
+
+      status.onchange = /*#__PURE__*/function () {
+        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+          var target, newStatus, prevStatus, formData, post, response, putStatus;
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  target = e.target;
+                  newStatus = availableStatus[target.selectedIndex];
+                  prevStatus = target.dataset.status;
+
+                  if (!(newStatus === prevStatus)) {
+                    _context2.next = 5;
+                    break;
+                  }
+
+                  return _context2.abrupt("return");
+
+                case 5:
+                  formData = new FormData();
+                  formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                  formData.set('id', target.dataset.id);
+                  formData.set('status', newStatus);
+                  formData.set('action', 'tutor_change_course_status');
+                  _context2.next = 12;
+                  return ajaxHandler(formData);
+
+                case 12:
+                  post = _context2.sent;
+                  _context2.next = 15;
+                  return post.json();
+
+                case 15:
+                  response = _context2.sent;
+
+                  if (response) {
+                    target.dataset.status = newStatus;
+                    putStatus = '';
+                    newStatus === 'publish' ? putStatus = 'select-success' : newStatus === 'pending' ? putStatus = 'select-warning' : 'select-default';
+
+                    if (!target.closest(".tutor-form-select-with-icon").classList.contains(putStatus)) {
+                      target.closest(".tutor-form-select-with-icon").classList.add(putStatus);
+                    }
+
+                    tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
+                  } else {
+                    tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
+                  }
+
+                case 17:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2);
+        }));
+
+        return function (_x4) {
+          return _ref2.apply(this, arguments);
+        };
+      }();
+    }
+    /**
+     * Delete course delete 
+     */
+
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+
+  var deleteCourse = document.querySelectorAll(".tutor-admin-course-delete");
+
+  var _iterator3 = _createForOfIteratorHelper(deleteCourse),
+      _step3;
+
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var course = _step3.value;
+
+      course.onclick = /*#__PURE__*/function () {
+        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+          var id, formData, post, response;
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  if (!confirm('Do you want to delete this course?')) {
+                    _context3.next = 13;
+                    break;
+                  }
+
+                  id = e.currentTarget.dataset.id;
+                  formData = new FormData();
+                  formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+                  formData.set('id', id);
+                  formData.set('action', 'tutor_course_delete');
+                  _context3.next = 8;
+                  return ajaxHandler(formData);
+
+                case 8:
+                  post = _context3.sent;
+                  _context3.next = 11;
+                  return post.json();
+
+                case 11:
+                  response = _context3.sent;
+
+                  if (response) {
+                    tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
+                    e.target.closest("tr").remove();
+                  } else {
+                    tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
+                  }
+
+                case 13:
+                case "end":
+                  return _context3.stop();
+              }
+            }
+          }, _callee3);
+        }));
+
+        return function (_x5) {
+          return _ref3.apply(this, arguments);
+        };
+      }();
+    }
+    /**
+     * Handle ajax request show toast message on success | failure
+     *
+     * @param {*} formData including action and all form fields
+     */
+
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+
+  function ajaxHandler(_x3) {
+    return _ajaxHandler.apply(this, arguments);
+  }
+
+  function _ajaxHandler() {
+    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(formData) {
+      var post;
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              _context4.next = 3;
+              return fetch(window._tutorobject.ajaxurl, {
+                method: "POST",
+                body: formData
+              });
+
+            case 3:
+              post = _context4.sent;
+              return _context4.abrupt("return", post);
+
+            case 7:
+              _context4.prev = 7;
+              _context4.t0 = _context4["catch"](0);
+              tutor_toast(__("Operation failed", "tutor"), _context4.t0, "error");
+
+            case 10:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 7]]);
+    }));
+    return _ajaxHandler.apply(this, arguments);
+  }
+};
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/image-preview.js":
 /*!****************************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/image-preview.js ***!
@@ -1117,7 +1506,7 @@ function tutor_option_history_load(history_data) {
           key = _ref2[0],
           value = _ref2[1];
 
-      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span className=\"tutor-badge-label label-success\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
+      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span className=\"tutor-badge-label label-success\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
@@ -1403,6 +1792,7 @@ var angleRight = tutorIconsV2.angleRight,
     warning = tutorIconsV2.warning;
 document.addEventListener("DOMContentLoaded", function () {
   var $ = window.jQuery;
+  var __ = wp.i18n.__;
   var image_uploader = document.querySelectorAll(".image_upload_button"); // let image_input = document.getElementById("image_url_field");
 
   var _loop = function _loop(i) {
@@ -1479,11 +1869,21 @@ document.addEventListener("DOMContentLoaded", function () {
       type: "POST",
       data: data,
       beforeSend: function beforeSend() {},
-      success: function success(data) {
-        $(".tutor-notification").addClass("show");
-        setTimeout(function () {
-          $(".tutor-notification").removeClass("show");
-        }, 4000);
+      success: function success(resp) {
+        var _ref = resp || {},
+            _ref$data = _ref.data,
+            data = _ref$data === void 0 ? {} : _ref$data,
+            success = _ref.success;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
+
+        if (success) {
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
+          return;
+        }
+
+        tutor_toast('Error!', message, 'tutor');
       },
       complete: function complete() {}
     });
@@ -1729,208 +2129,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-/***/ }),
-
-/***/ "./assets/react/lib/filter.js":
-/*!************************************!*\
-  !*** ./assets/react/lib/filter.js ***!
-  \************************************/
-/***/ (() => {
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-/**
- * On click add filter value on the url
- * and refresh page
- *
- * Handle bulk action
- *
- * @package Filter / sorting
- * @since v2.0.0
- */
-var _wp$i18n = wp.i18n,
-    __ = _wp$i18n.__,
-    _x = _wp$i18n._x,
-    _n = _wp$i18n._n,
-    _nx = _wp$i18n._nx;
-
-window.onload = function () {
-  var filterCourse = document.getElementById("tutor-backend-filter-course");
-
-  if (filterCourse) {
-    filterCourse.onchange = function (e) {
-      window.location = urlPrams("course-id", e.target.value);
-    };
-  }
-
-  var filterOrder = document.getElementById("tutor-backend-filter-order");
-
-  if (filterOrder) {
-    filterOrder.onchange = function (e) {
-      window.location = urlPrams("order", e.target.value);
-    };
-  }
-
-  var filterDate = document.getElementById("tutor-backend-filter-date");
-
-  if (filterDate) {
-    filterDate.onchange = function (e) {
-      window.location = urlPrams("date", e.target.value);
-    };
-  }
-
-  var filterSearch = document.getElementById("tutor-admin-search-filter-form");
-
-  if (filterSearch) {
-    filterSearch.onsubmit = function (e) {
-      e.preventDefault();
-      var search = document.getElementById("tutor-backend-filter-search").value;
-      window.location = urlPrams("search", search);
-    };
-  } // document.getElementById("tutor-backend-filter-course").onchange = (e) => {
-  //   window.location = urlPrams("course-id", e.target.value);
-  // };
-  // document.getElementById("tutor-backend-filter-order").onchange = (e) => {
-  //   window.location = urlPrams("order", e.target.value);
-  // };
-  // document.getElementById("tutor-backend-filter-date").onchange = (e) => {
-  //   window.location = urlPrams("date", e.target.value);
-  // };
-  // document.getElementById("tutor-admin-search-filter-form").onsubmit = (e) => {
-  //   e.preventDefault();
-  //   const search = document.getElementById("tutor-backend-filter-search").value;
-  //   window.location = urlPrams("search", search);
-  // };
-
-  /**
-   * Onsubmit bulk form handle ajax request then reload page
-   */
-
-
-  var bulkForm = document.getElementById("tutor-admin-bulk-action-form");
-
-  if (bulkForm) {
-    bulkForm.onsubmit = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var formData, bulkIds, bulkFields, _iterator, _step, field, post;
-
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                e.preventDefault();
-                formData = new FormData(bulkForm);
-                bulkIds = [];
-                bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
-                _iterator = _createForOfIteratorHelper(bulkFields);
-
-                try {
-                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                    field = _step.value;
-
-                    if (field.checked) {
-                      bulkIds.push(field.value);
-                    }
-                  }
-                } catch (err) {
-                  _iterator.e(err);
-                } finally {
-                  _iterator.f();
-                }
-
-                formData.set("bulk-ids", bulkIds);
-                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                _context.prev = 8;
-                _context.next = 11;
-                return fetch(window._tutorobject.ajaxurl, {
-                  method: "POST",
-                  body: formData
-                });
-
-              case 11:
-                post = _context.sent;
-
-                if (post.ok) {
-                  location.reload();
-                }
-
-                _context.next = 18;
-                break;
-
-              case 15:
-                _context.prev = 15;
-                _context.t0 = _context["catch"](8);
-                alert(_context.t0);
-
-              case 18:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, null, [[8, 15]]);
-      }));
-
-      return function (_x2) {
-        return _ref.apply(this, arguments);
-      };
-    }();
-  }
-  /**
-   * onclick bulk action button show confirm popup
-   * on click confirm button submit bulk form
-   */
-
-
-  var bulkActionButton = document.getElementById("tutor-confirm-bulk-action");
-
-  if (bulkActionButton) {
-    bulkActionButton.onclick = function () {
-      var input = document.createElement("input");
-      input.type = "submit";
-      bulkForm.appendChild(input);
-      input.click();
-      input.remove();
-    };
-  }
-
-  function urlPrams(type, val) {
-    var url = new URL(window.location.href);
-    var params = url.searchParams;
-    params.set(type, val);
-    params.set("paged", 1);
-    return url;
-  }
-  /**
-   * Select all bulk checkboxes
-   *
-   * @since v2.0.0
-   */
-
-
-  var selectAll = document.querySelector("#tutor-bulk-checkbox-all");
-
-  if (selectAll) {
-    selectAll.addEventListener("click", function () {
-      var checkboxes = document.querySelectorAll(".tutor-bulk-checkbox");
-      checkboxes.forEach(function (item) {
-        if (selectAll.checked) {
-          item.checked = true;
-        } else {
-          item.checked = false;
-        }
-      });
-    });
-  }
-};
 
 /***/ }),
 
@@ -2221,7 +2419,7 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-delete-lesson-btn', function (e) {
     e.preventDefault();
 
-    if (!confirm(__('Are you sure?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
       return;
     }
 
@@ -2419,7 +2617,7 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-delete-quiz-btn', function (e) {
     e.preventDefault();
 
-    if (!confirm(__('Are you sure?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
       return;
     }
 
@@ -2433,7 +2631,26 @@ jQuery(document).ready(function ($) {
         action: 'tutor_delete_quiz_by_id'
       },
       beforeSend: function beforeSend() {
-        $that.closest('.course-content-item').remove();
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(resp) {
+        var _ref2 = resp || {},
+            _ref2$data = _ref2.data,
+            data = _ref2$data === void 0 ? {} : _ref2$data,
+            success = _ref2.success;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!') : _data$message;
+
+        if (success) {
+          $that.closest('.course-content-item').remove();
+          return;
+        }
+
+        tutor_toast('Error!', message, 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
       }
     });
   });
@@ -2787,19 +3004,22 @@ window.jQuery(document).ready(function ($) {
   }); // Ajax action 
 
   $(document).on('click', '.tutor-list-ajax-action', function () {
-    var url = $(this).data('url');
-    var type = $(this).data('type') || 'GET';
+    var $that = $(this);
     var prompt = $(this).data('prompt');
-    var del = $(this).data('delete_id');
-    console.log(prompt);
+    var del = $(this).data('delete_element_id');
+    var data = $(this).data('request_data') || {};
 
     if (prompt && !window.confirm(prompt)) {
       return;
     }
 
     $.ajax({
-      url: url,
-      type: type,
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('updating-icon');
+      },
       success: function success(data) {
         if (data.success) {
           if (del) {
@@ -2820,7 +3040,9 @@ window.jQuery(document).ready(function ($) {
       error: function error() {
         tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
       },
-      complete: function complete() {}
+      complete: function complete() {
+        $that.removeClass('updating-icon');
+      }
     });
   });
 });
@@ -2925,6 +3147,99 @@ window.jQuery(document).ready(function ($) {
   });
   $('.tutor-announcement-search-sorting').on('click', function (e) {
     window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/modules/instructor-review.js":
+/*!***************************************************!*\
+  !*** ./assets/react/modules/instructor-review.js ***!
+  \***************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+
+  function toggle_star_(star) {
+    star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
+    star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+  }
+  /**
+   * Hover tutor rating and set value
+   */
+
+
+  $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+    toggle_star_($(this));
+  });
+  $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+    var rating = $(this).attr('data-rating-value');
+    $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
+    toggle_star_($(this));
+  });
+  $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function () {
+    var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
+    var rating = parseInt(value);
+    var selected = $(this).find('[data-rating-value="' + rating + '"]');
+    rating && selected && selected.length > 0 ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+  });
+  $(document).on('click', '.tutor_submit_review_btn', function (e) {
+    // Prevent normal submission to validate input
+    e.preventDefault(); // Collect input
+
+    var $that = $(this);
+    var form = $that.closest('form');
+    var rating = form.find('input[name="tutor_rating_gen_input"]').val();
+    var review = (form.find('textarea[name="review"]').val() || '').trim();
+    var course_id = form.find('input[name="course_id"]').val();
+    var review_id = form.find('input[name="review_id"]').val();
+    var data = form.serializeObject(); // Validat
+
+    if (!rating || rating == 0 || !review) {
+      alert(__('Rating and review required', 'tutor'));
+      return;
+    }
+
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('updating-icon');
+      },
+      success: function success(response) {
+        var _ref = response || {},
+            success = _ref.success,
+            _ref$data = _ref.data,
+            data = _ref$data === void 0 ? {} : _ref$data;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
+
+        if (!success) {
+          tutor_toast(__('Error!', 'tutor'), message, 'error');
+          return;
+        } // Show thank you
+
+
+        new window.tutor_popup($, 'icon-rating', 40).popup({
+          title: review_id ? __('Updated successfully!', 'tutor') : __('Thank You for Rating The Course!', 'tutor'),
+          description: review_id ? __('Updated rating will now be visible in the course page', 'tutor') : __('Your rating will now be visible in the course page', 'tutor')
+        });
+        setTimeout(function () {
+          location.reload();
+        }, 3000);
+      },
+      complete: function complete() {
+        $that.removeClass('updating-icon');
+      }
+    });
+  }); // Show review form on opn (Single course)
+
+  $(document).on('click', '.write-course-review-link-btn', function (e) {
+    e.preventDefault();
+    $(this).siblings('.tutor-write-review-form').slideToggle();
   });
 });
 
@@ -31948,11 +32263,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _lib_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/filter */ "./assets/react/lib/filter.js");
-/* harmony import */ var _lib_filter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_lib_filter__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
 /* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../modules/instructor-review */ "./assets/react/modules/instructor-review.js");
+/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_modules_instructor_review__WEBPACK_IMPORTED_MODULE_8__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 
@@ -32002,26 +32320,6 @@ jQuery(document).ready(function ($) {
   $(".tutor-form-toggle-input").on("change", function (e) {
     var toggleInput = $(this).siblings("input");
     $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
-  });
-  $("#tutor-option-form").submit(function (e) {
-    e.preventDefault();
-    var $form = $(this);
-    var data = $form.serializeObject();
-    console.log(data);
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: data,
-      beforeSend: function beforeSend() {
-        $form.find(".button").addClass("tutor-updating-message");
-      },
-      success: function success(data) {
-        data.success ? tutor_toast(__("Saved", "tutor"), $form.data("toast_success_message"), "success") : tutor_toast(__("Request Error", "tutor"), __("Could not save", "tutor"), "error");
-      },
-      complete: function complete() {
-        $form.find(".button").removeClass("tutor-updating-message");
-      }
-    });
   });
   /**
    * End Withdraw nav tabs

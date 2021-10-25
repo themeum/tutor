@@ -4,9 +4,10 @@ import "./segments/options";
 import "./segments/import-export";
 import "./segments/addonlist";
 import "./addons-list/addons-list-main";
-import "../lib/filter";
+import "./segments/filter";
 
-import '../modules/announcement';
+import "../modules/announcement";
+import "../modules/instructor-review";
 
 jQuery(document).ready(function($) {
   "use strict";
@@ -45,30 +46,6 @@ jQuery(document).ready(function($) {
   $(".tutor-form-toggle-input").on("change", function(e) {
     var toggleInput = $(this).siblings("input");
     $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
-  });
-
-  $("#tutor-option-form").submit(function(e) {
-    e.preventDefault();
-
-    var $form = $(this);
-    var data = $form.serializeObject();
-    console.log(data);
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: data,
-      beforeSend: function() {
-        $form.find(".button").addClass("tutor-updating-message");
-      },
-      success: function(data) {
-        data.success
-          ? tutor_toast(__("Saved", "tutor"), $form.data("toast_success_message"), "success")
-          : tutor_toast(__("Request Error", "tutor"), __("Could not save", "tutor"), "error");
-      },
-      complete: function() {
-        $form.find(".button").removeClass("tutor-updating-message");
-      },
-    });
   });
 
   /**

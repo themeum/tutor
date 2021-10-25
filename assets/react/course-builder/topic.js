@@ -35,15 +35,14 @@ window.jQuery(document).ready(function($){
     /**
      * Confirmation for deleting Topic
      */
-     $(document).on('click', '.tutor-topics-wrap .tutor-icon-garbage', function(e){
+     $(document).on('click', '.tutor-topics-wrap .topic-delete-btn', function(e){
+         var $that = $(this);
         var container = $(this).closest('.tutor-topics-wrap');
         var topic_id = container.attr('data-topic-id');
 
-        if ( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
+        if ( ! confirm( __( 'Are you sure to delete the topic?', 'tutor' ) )){
             return;
         }
-
-        container.fadeOut('fast');
 
         $.ajax({
             url: window._tutorobject.ajaxurl,
@@ -52,17 +51,20 @@ window.jQuery(document).ready(function($){
                 action: 'tutor_delete_topic',
                 topic_id
             },
+            beforeSend: function() {
+                $that.addClass('tutor-updating-message');
+            },
             success: function(data) {
                 // To Do: Load updated topic list here
                 if(data.success) {
                     container.remove();
-                } else {
-                    container.fadeIn('fast');
-                    alert((data.data || {}).msg || __('Something Went Wrong', 'tutor'));
+                    return;
                 }
+                
+                tutor_toast('Error!', (data.data || {}).message || __('Something Went Wrong', 'tutor'), 'error');
             }, 
-            error: function() {
-                container.fadeIn('fast');
+            complete: function() {
+                $that.removeClass('tutor-updating-message');
             }
         })
     });

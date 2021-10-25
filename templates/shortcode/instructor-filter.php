@@ -31,7 +31,7 @@ if ( $total_categories && $total_categories > $limit ) {
 	<div class="tutor-instructor-filter-sidebar">
 		<div class="tutor-instructor-customize-wrapper">
 			<div class="tutor-instructor-filters">
-				<i class="ttr ttr-customize-filled color-text-brand"></i>
+				<i class="ttr-customize-filled color-text-brand"></i>
 				<span class="text-medium-h5 color-text-primary">
 					<?php esc_html_e( 'Filters', 'tutor' ); ?>
 				</span>
@@ -75,7 +75,7 @@ if ( $total_categories && $total_categories > $limit ) {
 			<?php if ( $show_more ) : ?>
 				<div class="tutor-instructor-category-show-more">
 					<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
-						<i class="ttr ttr-plus-bold-filled color-text-brand"></i>
+						<i class="ttr-plus-bold-filled color-text-brand"></i>
 						<span class="text-subsued text-medium-caption">
 							<?php esc_html_e( 'Show More', 'tutor' ); ?>
 							<span class="tutor-show-more-loading"></span>
@@ -93,7 +93,7 @@ if ( $total_categories && $total_categories > $limit ) {
 			<div class="tutor-instructor-rating-range-wrapper">
 				<div class="tutor-instructor-ratings">
 					<?php for ( $i = 1; $i < 6; $i++ ) : ?>
-						<i class="ttr ttr-star-line-filled color-black-fill-20" data-value="<?php echo $i; ?>"></i>
+						<i class="ttr-star-line-filled color-black-fill-20" data-value="<?php echo $i; ?>"></i>
 					<?php endfor; ?> 
 				</div>
 				<span class="text-subsued text-medium-body tutor-instructor-rating-filter"></span>   
@@ -163,7 +163,7 @@ if ( $total_categories && $total_categories > $limit ) {
 					<?php if ( $show_more ) : ?>
 					<div class="tutor-instructor-category-show-more tutor-mb-25">
 						<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
-							<i class="ttr ttr-plus-bold-filled color-text-brand"></i>
+							<i class="ttr-plus-bold-filled color-text-brand"></i>
 							<span class="text-subsued text-medium-caption">
 								<?php esc_html_e( 'Show More', 'tutor' ); ?>
 								<span class="tutor-show-more-loading"></span>

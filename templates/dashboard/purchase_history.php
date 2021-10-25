@@ -9,10 +9,10 @@
 <h2><?php _e('Purchase History', 'tutor'); ?></h2>
 
 <?php
-$orders = tutils()->get_orders_by_user_id();
-$monetize_by = tutils()->get_option('monetize_by');
+$orders = tutor_utils()->get_orders_by_user_id();
+$monetize_by = tutor_utils()->get_option('monetize_by');
 
-if (tutils()->count($orders)){
+if (tutor_utils()->count($orders)){
 	?>
     <div class="responsive-table-wrap">
         <table class="tutor-table">
@@ -27,8 +27,8 @@ if (tutils()->count($orders)){
             foreach ($orders as $order) {
                 if ($monetize_by === 'wc') {
                     $wc_order = wc_get_order($order->ID);
-                    $price = tutils()->tutor_price($wc_order->get_total());
-                    $status = tutils()->order_status_context($order->post_status);
+                    $price = tutor_utils()->tutor_price($wc_order->get_total());
+                    $status = tutor_utils()->order_status_context($order->post_status);
                 } else if ($monetize_by === 'edd') {
                     $edd_order = edd_get_payment($order->ID);
                     $price = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
@@ -39,8 +39,8 @@ if (tutils()->count($orders)){
                     <td>#<?php echo $order->ID; ?></td>
                     <td>
                         <?php
-                        $courses = tutils()->get_course_enrolled_ids_by_order_id($order->ID);
-                        if (tutils()->count($courses)){
+                        $courses = tutor_utils()->get_course_enrolled_ids_by_order_id($order->ID);
+                        if (tutor_utils()->count($courses)){
                             foreach ($courses as $course){
                                 echo '<p>'.get_the_title($course['course_id']).'</p>';
                             }

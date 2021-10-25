@@ -36,7 +36,7 @@ if (isset($wp_query->query_vars['tutor_dashboard_sub_page']) && $wp_query->query
 
 $user_id = get_current_user_id();
 $user = get_user_by('ID', $user_id);
-$enable_profile_completion = tutils()->get_option('enable_profile_completion');
+$enable_profile_completion = tutor_utils()->get_option('enable_profile_completion');
 $is_instructor = tutor_utils()->is_instructor();
 
 // URLS
@@ -86,13 +86,13 @@ do_action('tutor_dashboard/before/wrap');
                                     <h4><strong><?php echo $user->display_name; ?></strong> </h4>
                                 </div>
                                 <?php 
-                                    $instructor_rating = tutils()->get_instructor_ratings($user->ID);
+                                    $instructor_rating = tutor_utils()->get_instructor_ratings($user->ID);
                                 
                                     if (current_user_can(tutor()->instructor_role)){
                                         ?>
                                         <div class="tutor-dashboard-header-stats">
                                             <div class="tutor-dashboard-header-ratings">
-                                                <?php tutils()->star_rating_generator($instructor_rating->rating_avg); ?>
+                                                <?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
                                                 <span><?php echo esc_html($instructor_rating->rating_avg);  ?></span>
                                                 <span> (<?php echo sprintf(__('%d Ratings', 'tutor'), $instructor_rating->rating_count); ?>) </span>
                                             </div>
@@ -114,9 +114,9 @@ do_action('tutor_dashboard/before/wrap');
                                     $info_message_style = 'display:inline-block; color:#7A7A7A; font-size: 15px;';
 
                                     ob_start();
-                                    if (tutils()->get_option('enable_become_instructor_btn')) {
+                                    if (tutor_utils()->get_option('enable_become_instructor_btn')) {
                                         ?>
-                                            <a id="tutor-become-instructor-button" style="vertical-align:middle" class="tutor-btn bordered-btn" href="<?php echo esc_url(tutils()->instructor_register_url()); ?>">
+                                            <a id="tutor-become-instructor-button" style="vertical-align:middle" class="tutor-btn bordered-btn" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
                                                 <i class="tutor-icon-man-user"></i> &nbsp; <?php _e("Become an instructor", 'tutor'); ?>
                                             </a>
                                         <?php
@@ -180,13 +180,13 @@ do_action('tutor_dashboard/before/wrap');
             <div class="tutor-bs-col-12 tutor-bs-col-md-4 tutor-bs-col-lg-3 tutor-dashboard-left-menu">
                 <ul class="tutor-dashboard-permalinks">
                     <?php
-                    $dashboard_pages = tutils()->tutor_dashboard_nav_ui_items();
+                    $dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
                     foreach ($dashboard_pages as $dashboard_key => $dashboard_page) {
                         $menu_title = $dashboard_page;
-                        $menu_link = tutils()->get_tutor_dashboard_page_permalink($dashboard_key);
+                        $menu_link = tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key);
                         $separator = false;
                         if (is_array($dashboard_page)){
-                            $menu_title = tutils()->array_get('title', $dashboard_page);
+                            $menu_title = tutor_utils()->array_get('title', $dashboard_page);
                             //Add new menu item property "url" for custom link
                             if (isset($dashboard_page['url'])) {
                                 $menu_link = $dashboard_page['url'];
