@@ -77,7 +77,6 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/filters.php';
 		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
-		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
 	<div class="tutor-dashboard-content-inner">
@@ -86,22 +85,25 @@ $filters = array(
 				<i class="tutor-icon-speaker"></i>
 			</div>
 			<div>
-				<small><?php _e( 'Create Announcement', 'tutor' ); ?></small>
 				<p>
 					<strong>
-						<?php _e( 'Notify all students of your course', 'tutor' ); ?>
+						<?php esc_html_e( 'Create a new announcement and notify your students about it', 'tutor' ); ?>
 					</strong>
 				</p>
 			</div>
 			<div class="new-announcement-button">
 				<button type="button" class="tutor-btn" data-tutor-modal-target="tutor_announcement_new">
-					<?php _e( 'Add New Announcement', 'tutor' ); ?>
+					<?php esc_html_e( 'Add New Announcement', 'tutor' ); ?>
 				</button>
 			</div>
 		</div>
 	</div>
-	
-	<div class="tutor-admin-page-content-wrapper">
+
+	<?php
+		tutor_load_template_from_custom_path( $filters_template, $filters );
+	?>
+
+	<div class="tutor-admin-page-content-wrapper tutor-mt-50">
 	<?php
 		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
 		$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';
