@@ -12,7 +12,7 @@
 global $post;
 $currentPost = $post;
 
-$course_id = tutils()->get_course_id_by_content($post);
+$course_id = tutor_utils()->get_course_id_by_content($post);
 
 $disable_qa_for_this_course = get_post_meta($course_id, '_tutor_disable_qa', true);
 $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');

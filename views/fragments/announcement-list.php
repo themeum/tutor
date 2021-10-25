@@ -184,7 +184,7 @@ function tutor_announcement_modal_delete($id, $announcment_id, $row_id) {
 }
 
 extract($data); // $announcements, $the_query, $paged
-$courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
+$courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
 ?>
 
 <!-- Now Load The View -->
@@ -217,7 +217,7 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                 <th>
                     <div class="inline-flex-center color-text-subsued">
                         <span class="text-regular-small"><?php _e('Announcements', 'tutor'); ?></span>
-                        <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                        <span class="ttr-ordering-a-to-z-filled"></span>
                     </div>
                 </th>
                 <th class="tutor-shrink"></th>
@@ -277,13 +277,13 @@ $courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutil
                                 <ul class="popup-menu" id="<?php echo $update_modal_id; ?>_action">
                                     <li>
                                         <a href="#" class="tutor-quiz-open-question-form" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
-                                            <span class="icon tutor-v2-icon-test icon-edit-filled color-design-white"></span>
+                                            <span class="ttr-edit-filled color-design-white"></span>
                                             <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="#" class="tutor-quiz-question-trash" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
-                                            <span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+                                            <span class="ttr-delete-fill-filled color-design-white"></span>
                                             <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                         </a>
                                     </li>

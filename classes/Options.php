@@ -53,13 +53,13 @@ class Options {
 	}
 
 	public function tutor_option_save(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		!current_user_can( 'manage_options' ) ? wp_send_json_error( ) : 0;
 
 		do_action('tutor_option_save_before');
 
-		$option = (array)tutils()->array_get('tutor_option', $_POST, array());
+		$option = (array)tutor_utils()->array_get('tutor_option', $_POST, array());
 		
 		foreach ( $option as $key => $value ) {
 			if ( 'lesson_permalink_base' === $key ) {
@@ -795,9 +795,9 @@ class Options {
 		$attrs = apply_filters('tutor/options/attr', $attr);
 		$extends = apply_filters('tutor/options/extend/attr', array());
 
-		if (tutils()->count($extends)){
+		if (tutor_utils()->count($extends)){
 			foreach ($extends as $extend_key => $extend_option){
-				if (isset($attrs[$extend_key])&& tutils()->count($extend_option['sections']) ){
+				if (isset($attrs[$extend_key])&& tutor_utils()->count($extend_option['sections']) ){
 					$sections = $attrs[$extend_key]['sections'];
 					$sections = array_merge($sections, $extend_option['sections']);
 					$attrs[$extend_key]['sections'] = $sections;

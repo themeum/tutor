@@ -57,7 +57,7 @@ class Ajax{
 		$duration = sanitize_text_field($_POST['duration']);
 		$currentTime = sanitize_text_field($_POST['currentTime']);
 
-		if(!tutils()->has_enrolled_content_access('lesson', $post_id)) {
+		if(!tutor_utils()->has_enrolled_content_access('lesson', $post_id)) {
 			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
 			exit;
 		}
@@ -97,7 +97,7 @@ class Ajax{
 	public function tutor_place_rating(){
 		global $wpdb;
 
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$rating = sanitize_text_field(tutor_utils()->avalue_dot('tutor_rating_gen_input', $_POST));
 		$course_id = sanitize_text_field(tutor_utils()->avalue_dot('course_id', $_POST));
@@ -110,7 +110,7 @@ class Ajax{
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s", tutor_time());
 		
-		if(!tutils()->has_enrolled_content_access('course', $course_id)) {
+		if(!tutor_utils()->has_enrolled_content_access('course', $course_id)) {
 			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
 			exit;
 		}
@@ -181,7 +181,7 @@ class Ajax{
 
 		$review_id = sanitize_text_field( tutor_utils()->array_get('review_id', $_POST) );
 
-		if(!tutils()->can_user_manage('review', $review_id)) {
+		if(!tutor_utils()->can_user_manage('review', $review_id)) {
 			wp_send_json_error( array('message' => __('Permissioned Denied!', 'tutor')) );
 			exit;
 		}
@@ -202,7 +202,7 @@ class Ajax{
 		$question_title = sanitize_text_field($_POST['question_title']);
 		$question = wp_kses_post($_POST['question']);
 
-		if(!tutils()->has_enrolled_content_access('course', $course_id)) {
+		if(!tutor_utils()->has_enrolled_content_access('course', $course_id)) {
 			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
 			exit;
 		}
@@ -260,7 +260,7 @@ class Ajax{
 		$user = get_userdata($user_id);
 		$date = date("Y-m-d H:i:s", tutor_time());
 
-		if(!tutils()->has_enrolled_content_access('qa_question', $question_id)) {
+		if(!tutor_utils()->has_enrolled_content_access('qa_question', $question_id)) {
 			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
 			exit;
 		}
@@ -288,7 +288,7 @@ class Ajax{
 
 
 	public function tutor_course_add_to_wishlist(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		if ( ! is_user_logged_in()){
@@ -336,9 +336,9 @@ class Ajax{
                 /**
                  * Checking if there any dependant plugin exists
                  */
-                $depends = tutils()->array_get( 'depend_plugins', $addon );
+                $depends = tutor_utils()->array_get( 'depend_plugins', $addon );
                 $plugins_required = array();
-                if ( tutils()->count( $depends ) ) {
+                if ( tutor_utils()->count( $depends ) ) {
                     foreach ( $depends as $plugin_base => $plugin_name ) {
                         if ( ! is_plugin_active( $plugin_base ) ) {
                             $plugins_required[ $plugin_base ] = $plugin_name;
@@ -435,11 +435,11 @@ class Ajax{
 	 * @since v.1.6.3
 	 */
 	public function process_ajax_login(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		$username = tutils()->array_get('log', $_POST);
-		$password = tutils()->array_get('pwd', $_POST);
-		$redirect_to = tutils()->array_get('redirect_to', $_POST);
+		$username = tutor_utils()->array_get('log', $_POST);
+		$password = tutor_utils()->array_get('pwd', $_POST);
+		$redirect_to = tutor_utils()->array_get('redirect_to', $_POST);
 
 		try {
 			$creds = array(
@@ -497,7 +497,7 @@ class Ajax{
 	 * @since  v.1.7.9
 	 */
 	public function create_or_update_annoucement() {   
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 		
         $error = array();
 		$course_id = sanitize_text_field($_POST['tutor_announcement_course']);
@@ -505,7 +505,7 @@ class Ajax{
 		$announcement_summary = sanitize_textarea_field($_POST['tutor_announcement_summary']);
 		
 		// Check if user can manage this announcment
-		if(!tutils()->can_user_manage('course', $course_id)) {
+		if(!tutor_utils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
         
@@ -567,9 +567,9 @@ class Ajax{
 	 */
     public function delete_annoucement() {
 		$announcement_id = sanitize_text_field($_POST['announcement_id']);
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		if(!tutils()->can_user_manage('announcement', $announcement_id)) {
+		if(!tutor_utils()->can_user_manage('announcement', $announcement_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 

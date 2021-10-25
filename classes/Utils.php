@@ -32,7 +32,11 @@ class Utils {
 			return $option;
 		}
 		if ( array_key_exists( $key, $option ) ) {
-			return apply_filters( $key, $option[$key] );
+			// Convert off/on switch values to boolean
+			$value = $option[$key];
+			$value == 'off' ? $value = false : 0;
+			$value == 'on' ? $value = true : 0;
+			return apply_filters( $key, $value );
 		}
 		//Access array value via dot notation, such as option->get('value.subvalue')
 		if ( strpos($key, '.') ) {
@@ -46,7 +50,14 @@ class Utils {
 					return $default;
 				}
 			}
-			return apply_filters( $key, $new_option );
+
+
+			// Convert off/on switch values to boolean
+			$value = $new_option;
+			$value == 'off' ? $value = false : 0;
+			$value == 'on' ? $value = true : 0;
+
+			return apply_filters( $key, $value );
 		}
 
 		return $default;
@@ -750,12 +761,12 @@ class Utils {
 		$course_id 	      = $this->get_post_id($course_id);
 		$user_id          = $this->get_user_id($user_id);
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
-        $course_contents  = tutils()->get_course_contents_by_id($course_id);
+        $course_contents  = tutor_utils()->get_course_contents_by_id($course_id);
         $totalContents    = $this->count($course_contents);
         $totalContents    = $totalContents ? $totalContents : 0;
         $completedCount   = $completed_lesson;
 
-        if ( tutils()->count( $course_contents ) ) {
+        if ( tutor_utils()->count( $course_contents ) ) {
             foreach ( $course_contents as $content ) {
                 if ( $content->post_type === 'tutor_quiz' ) {
                     $attempt = $this->get_quiz_attempt( $content->ID, $user_id );
@@ -916,7 +927,7 @@ class Utils {
 	public function checking_nonce( $request_method = 'post' ) {
 
 		$data = $request_method === 'post' ? $_POST : $_GET;
-		$nonce_value = sanitize_text_field(tutils()->array_get(tutor()->nonce, $data, null));
+		$nonce_value = sanitize_text_field(tutor_utils()->array_get(tutor()->nonce, $data, null));
 		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
 
 		! $matched ? exit( __('Nonce not matched', 'tutor') ) : 0;
@@ -1262,7 +1273,7 @@ class Utils {
 
 		$first_lesson = false;
 
-		if ( tutils()->count( $lessons ) ) {
+		if ( tutor_utils()->count( $lessons ) ) {
 		    if ( ! empty( $lessons[0] ) ) {
                 $first_lesson = $lessons[0];
             }
@@ -2535,7 +2546,7 @@ class Utils {
 			$page_key = '';
 		}
 		if ( ! $page_id ) {
-            $page_id = (int) tutils()->get_option( 'tutor_dashboard_page_id' );
+            $page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
         }
 		return trailingslashit( get_permalink( $page_id ) ) . $page_key;
 	}
@@ -5945,7 +5956,7 @@ class Utils {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id();
-		$monetize_by = tutils()->get_option( 'monetize_by' );
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 
 		$post_type = "";
 		$user_meta = "";
@@ -6416,8 +6427,8 @@ class Utils {
 		$instructor_id = $this->get_user_id( $instructor_id );
 
 		if ( user_can( $instructor_id, tutor()->instructor_role ) ) {
-			$permitted_course_ids = tutils()->get_assigned_courses_ids_by_instructors();
-			$course_id            = tutils()->get_course_id_by( 'lesson', $lesson_id );
+			$permitted_course_ids = tutor_utils()->get_assigned_courses_ids_by_instructors();
+			$course_id            = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
 
 			if ( in_array( $course_id, $permitted_course_ids ) ) {
 				return true;
@@ -6683,7 +6694,7 @@ class Utils {
 			}
 		}
 
-		if ( tutils()->count( $contents) ) {
+		if ( tutor_utils()->count( $contents) ) {
 			foreach ( $contents as $key => $content ) {
 				if ( $current_item->ID == $content->ID ) {
 					if ( ! empty( $contents[ $key-1 ]->ID ) ) {
@@ -6829,7 +6840,7 @@ class Utils {
 	public function course_progress_status_context( $course_id = 0, $user_id = 0 ) {
 		$course_id    = $this->get_post_id( $course_id );
 		$user_id      = $this->get_user_id( $user_id );
-		$is_completed = tutils()->is_completed_course( $course_id, $user_id );
+		$is_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
 
 		$html = '';
 		if ( $is_completed ) {
@@ -7364,7 +7375,7 @@ class Utils {
 			return true;
 		}
 		//Check Lesson edit access to support page builders (eg: Oxygen)
-		if ( current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access() ) {
+		if ( current_user_can(tutor()->instructor_role) && tutor_utils()->has_lesson_edit_access() ) {
 			return true;
 		}
 

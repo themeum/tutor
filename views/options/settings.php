@@ -18,7 +18,7 @@
 		<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 		<div class="search-field">
 			<div class="tutor-input-group tutor-form-control-has-icon">
-				<span class="tutor-input-group-icon tutor-v2-icon-test icon-search-filled"></span>
+				<span class="tutor-input-group-icon ttr-search-filled"></span>
 				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" />
 				<div class="search-popup-opener search_result">
 					<a href="#">
@@ -98,19 +98,6 @@
 			</div>
 			<!-- end /.tutor-option-tab-pages -->
 		</form>
-	</div>
-
-	<div class="tutor-notification tutor-is-success">
-		<div class="tutor-notification-icon">
-			<i class="fas fa-check"></i>
-		</div>
-		<div class="tutor-notification-content">
-			<h5>Successful</h5>
-			<p>Your file was uploaded</p>
-		</div>
-		<button class="tutor-notification-close">
-			<i class="fas fa-times"></i>
-		</button>
 	</div>
 </section>
 

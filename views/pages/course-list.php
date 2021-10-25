@@ -171,7 +171,7 @@ $available_status = array(
 								<span class="text-regular-small">
 								<?php esc_html_e( 'Author', 'tutor-pro' ); ?>
 								</span>
-								<span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+								<span class="ttr-ordering-a-to-z-filled"></span>
 							</div>
 						</th>	
 						<th>
@@ -199,8 +199,9 @@ $available_status = array(
 							$the_query->the_post();
 							$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
 							$count_quiz       = Analytics::get_all_quiz_by_course( $post->ID );
+							$topics           = tutor_utils()->get_topics( $post->ID );
 							$count_assignment = tutor_utils()->get_assignments_by_course( $post->ID )->count;
-							$count_topic      = count( tutor_utils()->get_topics( $post->ID ) );
+							$count_topic      = $topics->found_posts;
 							$student_details  = CourseAnalytics::course_enrollments_with_student_details( $post->ID );
 							$total_student    = $student_details['total_enrollments'];
 							$author_details   = get_userdata( $post->post_author );
@@ -262,7 +263,7 @@ $available_status = array(
 										href="#"
 										class="btn-text btn-detail-link color-design-dark"
 										>
-										<span class="tutor-v2-icon-test icon-detail-link-filled"></span>
+										<span class="ttr-detail-link-filled"></span>
 										</a>
 									</div>
 								</td>
@@ -291,7 +292,7 @@ $available_status = array(
 											echo wp_kses_post( wc_price( $price ) );
 										}
 										// Alert class for course status.
-										$status = ( 'publish' === $post->post_status  ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
+										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
 										?>
 									</div>
 								</td>
@@ -323,7 +324,7 @@ $available_status = array(
 										<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
-													<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+													<span class="ttr-msg-archive-filled color-design-white"></span>
 													<span class="text-regular-body color-text-white">
 														<?php esc_html_e( 'View Course', 'tutor' ); ?>
 													</span>
@@ -332,7 +333,7 @@ $available_status = array(
 											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="#" class="tutor-admin-course-delete" data-id="<?php echo esc_attr( $post->ID ); ?>">
-													<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+													<span class="ttr-delete-fill-filled color-design-white"></span>
 													<span class="text-regular-body color-text-white">
 													<?php esc_html_e( 'Delete', 'tutor' ); ?>
 													</span>

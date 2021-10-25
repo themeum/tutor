@@ -20,7 +20,7 @@ $field_id = 'field_' . $field['key'];
                         <div class="layout-label"><?php echo ucwords($optkey) ?></div>
                         <div class="fields-wrapper">
                             <?php foreach ($options as $optionKey => $option) :
-                                $option_value = $this->get($field['key'], tutils()->array_get('default', $field));
+                                $option_value = $this->get($field['key'], tutor_utils()->array_get('default', $field));
                                 $field_key = $optkey . '_' . $optionKey;
                             ?>
                                 <label for="<?php echo $optkey . '_' . $optionKey ?>">
