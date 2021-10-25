@@ -56,7 +56,7 @@ var AddonCard = function AddonCard(_ref) {
       handleOnChange = _useAddonsUpdate.handleOnChange;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-card ".concat(addon.depend_plugins || addon.ext_required ? 'not-subscribed' : '', " tutor-addons-card-").concat(addonId + 1),
+    className: "tutor-addons-card ".concat(addon.depend_plugins ? 'not-subscribed' : '', " tutor-addons-card-").concat(addonId + 1),
     style: {
       transitionDelay: "".concat(100 * addonId, "ms")
     }
@@ -79,41 +79,57 @@ var AddonCard = function AddonCard(_ref) {
   }, author))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-des text-regular-body color-text-subsued tutor-mt-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, addon.description))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: " card-footer tutor-px-30 tutor-py-25 d-flex justify-content-between align-items-center"
+    className: " card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-toggle"
-  }, addon.ext_required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
-    className: "tutor-form-toggle"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-    type: "checkbox",
-    className: "tutor-form-toggle-input",
-    name: addon.basename,
-    checked: !!addon.is_enabled,
-    onChange: function onChange(event) {
-      return handleOnChange(event, addon.basename);
-    }
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "tutor-form-toggle-control"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5"
-  }, "Active")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    className: "text-medium-small color-text-hints"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    style: {
+      margin: '2px 0'
+    },
     className: "color-text-hints text-medium-small"
-  }, "Required Extension(s)"), addon.ext_required.map(function (extension, index) {
+  }, addon.ext_required ? 'Required for Push Notification' : addon.depend_plugins ? 'Required Plugin(s)' : 'No additional plugin(s) required'), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-      className: "color-text-primary text-medium-caption tutor-mt-2",
-      key: index,
+      style: {
+        marginTop: '2px',
+        marginBottom: 0
+      },
+      className: "tutor-bs-d-flex color-text-primary text-medium-caption",
+      key: index
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+      style: {
+        fontSize: '24px',
+        marginLeft: '-7px'
+      },
+      className: "ttr-bullet-point-filled"
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+      style: {
+        fontSize: '14px'
+      },
       dangerouslySetInnerHTML: {
         __html: extension
       }
-    });
-  })) : addon.depend_plugins ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-    className: "color-text-hints text-medium-small"
-  }, "Required Plugin(s)"), addon.plugins_required.map(function (plugin, index) {
+    }));
+  }) : addon.depend_plugins ? addon.plugins_required.map(function (plugin, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-      key: index,
-      className: "color-text-primary text-medium-caption tutor-mt-2"
-    }, plugin);
-  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
+      style: {
+        marginTop: '2px'
+      },
+      className: "tutor-bs-d-flex color-text-primary text-medium-caption",
+      key: index
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+      style: {
+        fontSize: '24px',
+        marginLeft: '-7px'
+      },
+      className: "addon-list-icon ttr-bullet-point-filled"
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+      style: {
+        fontSize: '14px'
+      }
+    }, plugin));
+  }) : ''), !addon.depend_plugins && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "addon-toggle"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
     className: "tutor-form-toggle"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     type: "checkbox",
@@ -127,11 +143,7 @@ var AddonCard = function AddonCard(_ref) {
     className: "tutor-form-toggle-control"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
     className: "tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5"
-  }, "Active")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-version text-medium-small color-text-hints"
-  }, "Version : ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "text-bold-small color-text-primary"
-  }, addon.tutor_version))));
+  }, "Active")))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonCard);

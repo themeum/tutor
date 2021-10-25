@@ -4590,31 +4590,31 @@ msgstr ""
 msgid "Get pro plugin from themeum.com"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:23
+#: views/pages/tutor-pro-addons.php:138
 msgid "Get All of Our Addons for a Single Price"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:25
+#: views/pages/tutor-pro-addons.php:140
 msgid "Affordable $49/month, free 7-day trial, no credit card required"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:28
+#: views/pages/tutor-pro-addons.php:143
 msgid "Effortless Easy two-minute installation for 24/7 compliance"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:31
+#: views/pages/tutor-pro-addons.php:146
 msgid "Compliant Accessibility statement and certificate of performance"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:39
+#: views/pages/tutor-pro-addons.php:154
 msgid "Buy Pro"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:45
+#: views/pages/tutor-pro-addons.php:160
 msgid "Addons List"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:53
+#: views/pages/tutor-pro-addons.php:168
 msgid "Search…"
 msgstr ""
 
