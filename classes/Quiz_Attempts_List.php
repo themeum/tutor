@@ -141,7 +141,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			$wpdb->prepare(
 				"SELECT COUNT(attempt_id)
 				FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-					   INNER JOIN {$wpdb->posts} quiz
+					   INNER JOIN {$wpdb->tutor_quiz_attempt_answers} quiz
 							   ON quiz_attempts.quiz_id = quiz.ID
 					   INNER JOIN {$wpdb->users}
 							   ON quiz_attempts.user_id = {$wpdb->users}.ID
@@ -233,6 +233,12 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		
 	}
 
+	function column_quiz_action($item){
+		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&attempt_id=%s" class="btn-outline tutor-btn">'.__('Review', 'tutor').'</a>',$_REQUEST['page'],'view_attempt',$item->attempt_id);
+		
+		return $this->row_actions($actions);
+	}
+
 	function column_student_info($item){
 		return $item->display_name;
 	}
@@ -264,12 +270,12 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	}
 
 	function column_total_correct_answer($item) {
-		echo $item->total_correct_answer;
+		echo $item->is_correct;
 	}
 
-	function column_earned_marks($item){
+	function column_full_result($item){
 
-	    /*if ($item->attempt_status === 'review_required'){
+	    if ($item->attempt_status === 'review_required'){
             $output = '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
         }else {
 
@@ -285,9 +291,39 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
                 $output .= '<span class="result-fail">' . __('Fail', 'tutor') . '</span>';
             }
         }
-		return $output;*/
+		return $output;
+	}
+
+	function column_total_marks($item){
 
 		return $item->total_marks;
+	}
+
+	function column_earned_percentage($item){
+		$pass_mark_percent = tutor_utils()->get_quiz_option($item->quiz_id, 'passing_grade', 0);
+		$earned_percentage = $item->earned_marks > 0 ? (number_format(($item->earned_marks * 100) / $item->total_marks)) : 0;
+
+		$output = $item->earned_marks;
+		$output .= "({$earned_percentage}%) ";
+		return $output;
+	}
+
+	function column_quiz_result($item){
+
+	    if ($item->attempt_status === 'review_required'){
+            $output = '<span class="tutor-badge-label label-warning">' . __('Under Review', 'tutor') . '</span>';
+        }else {
+
+            $pass_mark_percent = tutor_utils()->get_quiz_option($item->quiz_id, 'passing_grade', 0);
+            $earned_percentage = $item->earned_marks > 0 ? (number_format(($item->earned_marks * 100) / $item->total_marks)) : 0;
+
+            if ($earned_percentage >= $pass_mark_percent) {
+                $output .= '<span class="tutor-badge-label label-success">' . __('Pass', 'tutor') . '</span>';
+            } else {
+                $output .= '<span class="tutor-badge-label label-danger">' . __('Fail', 'tutor') . '</span>';
+            }
+        }
+		return $output;
 	}
 
 	function column_attempt_status($item){

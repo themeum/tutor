@@ -157,38 +157,33 @@ $filters = array(
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_earned_marks( $list, 'total_marks' ); ?>
+						<?php echo $quiz_attempts->column_total_marks( $list, 'total_marks' ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_total_correct_answer( $list, 'total_correct_answer' ); ?>
+						<?php echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo esc_html( $list->user_email ); ?>
+						<?php echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
 						</span>
 					</td>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_total_course( $list, 'total_course' ); ?>
+							<?php echo $quiz_attempts->column_earned_percentage( $list, 'earned_percentage' ); ?>
 						</span>
 					</td>
 					<td data-th="Course Taklen">
 						<span class="color-text-primary text-medium-caption">
-						<?php echo $quiz_attempts->column_status( $list, 'status' ); ?>
+						<?php echo $quiz_attempts->column_quiz_result( $list, 'output' ); ?>
 						</span>
 					</td>
 					<td data-th="URL">
 						<div class="inline-flex-center td-action-btns">
-						<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php'));
-							?>
-						<a href="<?php echo $edit_link; ?>" 
-							class="btn-outline tutor-btn">
-						<?php esc_html_e( 'Details', 'tutor-pro' ); ?>
-						</a>
+						<?php echo $quiz_attempts->column_quiz_action( $list, 'actions' ); ?>
 						</div>
 					</td>
 				</tr>

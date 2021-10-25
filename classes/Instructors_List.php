@@ -225,10 +225,26 @@ class Instructors_List extends \Tutor_List_Table {
 	 *
 	 * Completed Course by User
 	 */
-	function column_status($item){
+
+	function column_status($item) {
+		//Build row actions
+		$actions = array();
+
 		$status = tutor_utils()->instructor_status($item->ID, false);
-		$status_name = tutor_utils()->instructor_status($item->ID);
-		echo "<span class='tutor-status-context tutor-status-{$status}-context'>{$status_name}</span>";
+
+		switch ($status){
+			case 'pending':
+				$actions['approved'] = sprintf('<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>');
+				break;
+			case 'approved':
+				$actions['blocked'] = sprintf('<span class="tutor-badge-label label-success">'.__('Approved', 'tutor').'</span>');
+				break;
+			case 'blocked':
+				$actions['approved'] = sprintf('<span class="tutor-badge-label label-danger">'.__('Blocked', 'tutor').'</span>');
+				break;
+		}
+
+		return $this->row_actions($actions);
 	}
 
 	function column_display_name($item) {
@@ -239,13 +255,13 @@ class Instructors_List extends \Tutor_List_Table {
 
 		switch ($status){
 			case 'pending':
-				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
+				$actions['approved'] = sprintf('<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID);
+				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID);
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Unblock', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
+				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Unblock', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
 				break;
 		}
 
@@ -265,6 +281,27 @@ class Instructors_List extends \Tutor_List_Table {
 			$item->ID,
 			$this->row_actions($actions)
 		);
+	}
+
+	function column_action($item) {
+		//Build row actions
+		$actions = array();
+
+		$status = tutor_utils()->instructor_status($item->ID, false);
+
+		switch ($status){
+			case 'pending':
+				$actions['approved'] = sprintf('<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
+				break;
+			case 'approved':
+				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID);
+				break;
+			case 'blocked':
+				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Unblock', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
+				break;
+		}
+
+		return $this->row_actions($actions);
 	}
 
 	function column_cb($item){
