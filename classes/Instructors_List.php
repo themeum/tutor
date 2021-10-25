@@ -13,21 +13,6 @@ use TUTOR\Backend_Page_Trait;
 class Instructors_List extends \Tutor_List_Table {
 
 	const INSTRUCTOR_LIST_PAGE = 'tutor-instructors';
-	/*
-	function __construct(){
-		global $status, $page;
-
-		//Set parent defaults
-		parent::__construct( array(
-			'singular'  => 'instructor',     //singular name of the listed records
-			'plural'    => 'instructors',    //plural name of the listed records
-			'ajax'      => false        //does this table support ajax?
-		) );
-
-		//$this->process_bulk_action();
-	}*/
-
-
 
 	/**
 	 * Trait for utilities
@@ -72,11 +57,11 @@ class Instructors_List extends \Tutor_List_Table {
 	 * @return array
 	 * @since v2.0.0
 	 */
-	public function tabs_key_value( $instructor_id, $date, $search ): array {
+	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
 		$url       = get_pagenum_link();
-		$approve  = self::get_instructor_number( 'approved', $instructor_id, $date, $search );
-		$pending = self::get_instructor_number( 'pending', $instructor_id, $date, $search );
-		$blocked = self::get_instructor_number( 'blocked', $instructor_id, $date, $search );
+		$approve  = self::get_instructor_number( 'approved', $user_id, $course_id, $date, $search );
+		$pending = self::get_instructor_number( 'pending', $user_id, $course_id, $date, $search );
+		$blocked = self::get_instructor_number( 'blocked', $user_id, $course_id, $date, $search );
 		$tabs      = array(
 			array(
 				'key'   => 'all',
@@ -131,16 +116,17 @@ class Instructors_List extends \Tutor_List_Table {
 	 * @return int
 	 * @since v2.0.0
 	 */
-	protected static function get_instructor_number( $status = '', $user_id = '', $date = '', $search_term = ''  ): int {
+	protected static function get_instructor_number( $status = '', $user_id = '', $course_id = '', $date = '', $search_term = ''  ): int {
 		global $wpdb;
 		$status      = sanitize_text_field( $status );
+		$course_id   = sanitize_text_field( $course_id );
 		$user_id   = sanitize_text_field( $user_id );
 		$date        = sanitize_text_field( $date );
 		$search_term = sanitize_text_field( $search_term );
 
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
 
-		// add course id in where clause.
+		// add instructor id in where clause.
 		$instructor_query = '';
 		if ( '' !== $user_id ) {
 			$instructor_query = "AND instructor.ID = $user_id";
@@ -194,18 +180,18 @@ class Instructors_List extends \Tutor_List_Table {
 	 * Execute bulk action for enrollments ex: complete | cancel
 	 *
 	 * @param string $status hold status for updating.
-	 * @param string $enrollment_ids ids that need to update.
+	 * @param string $users_ids ids that need to update.
 	 * @return bool
 	 * @since v2.0.0
 	 */
-	public static function update_instructors( $status, $enrollment_ids ): bool {
+	public static function update_instructors( $status, $user_ids ): bool {
 		global $wpdb;
 		$instructor_table = $wpdb->user_meta;
 		$update     = $wpdb->query(
 			$wpdb->prepare(
 				" UPDATE {$instructor_table}
 				SET inst_status = %s 
-				WHERE ID IN ($users_ids)
+				WHERE ID IN ($user_ids)
 			",
 				$status
 			)

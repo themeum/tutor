@@ -26,9 +26,9 @@ class FormHandler {
 	}
 
 	public function tutor_retrieve_password(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		$login = sanitize_user( tutils()->array_get('user_login', $_POST));
+		$login = sanitize_user( tutor_utils()->array_get('user_login', $_POST));
 
 		if ( empty( $login ) ) {
 			tutor_flash_set('danger', __( 'Enter a username or email address.', 'tutor' ));
@@ -94,16 +94,16 @@ class FormHandler {
 	}
 
 	public function lostpassword_url($url){
-		return tutils()->tutor_dashboard_url('retrieve-password');
+		return tutor_utils()->tutor_dashboard_url('retrieve-password');
 	}
 
 	public function tutor_process_reset_password(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		$reset_key = sanitize_text_field(tutils()->array_get('reset_key', $_POST));
-		$user_id = (int) sanitize_text_field(tutils()->array_get('user_id', $_POST));
-		$password = sanitize_text_field(tutils()->array_get('password', $_POST));
-		$confirm_password = sanitize_text_field(tutils()->array_get('confirm_password', $_POST));
+		$reset_key = sanitize_text_field(tutor_utils()->array_get('reset_key', $_POST));
+		$user_id = (int) sanitize_text_field(tutor_utils()->array_get('user_id', $_POST));
+		$password = sanitize_text_field(tutor_utils()->array_get('password', $_POST));
+		$confirm_password = sanitize_text_field(tutor_utils()->array_get('confirm_password', $_POST));
 
 		$user = get_user_by('ID', $user_id);
 		$user = check_password_reset_key( $reset_key, $user->user_login );
@@ -125,7 +125,7 @@ class FormHandler {
 				return false;
 			}
 
-			tutils()->reset_password($user, $password);
+			tutor_utils()->reset_password($user, $password);
 
 			do_action( 'tutor_user_reset_password', $user );
 
@@ -135,7 +135,7 @@ class FormHandler {
 
 			do_action( 'tutor_user_reset_password_login', $user );
 
-			wp_safe_redirect( tutils()->tutor_dashboard_url() );
+			wp_safe_redirect( tutor_utils()->tutor_dashboard_url() );
 			exit;
 		}
 	}

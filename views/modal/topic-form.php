@@ -16,7 +16,7 @@
                     <div class="tutor-input-group tutor-mb-15">
                         <input type="text" name="topic_title" class="tutor-form-control tutor-mb-10" value="<?php echo !empty($data['title']) ? $data['title'] : ''; ?>"/>
                         <p class="tutor-input-feedback tutor-has-icon">
-                            <i class="tutor-v2-icon-test icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                            <i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
                             <?php _e('Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.', 'tutor'); ?>
                         </p>
                     </div>
@@ -26,7 +26,7 @@
                     <div class="tutor-input-group tutor-mb-15">
                         <textarea name="topic_summery" class="tutor-form-control tutor-mb-10"><?php echo !empty($data['summary']) ? $data['summary'] : ''; ?></textarea>
                         <p class="tutor-input-feedback tutor-has-icon">
-                            <i class="tutor-v2-icon-test icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                            <i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
                             <?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
                         </p>
                         <input type="hidden" name="tutor_topic_course_ID" value="<?php echo $data['course_id']; ?>">

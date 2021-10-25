@@ -15,10 +15,10 @@ class Course_Filter{
     }
 
     public function load_listing(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-        $default_per_page = tutils()->get_option('courses_per_page', 12);
-		$courses_per_page = (int)sanitize_text_field(tutils()->array_get('course_per_page', $_POST, $default_per_page));
+        $default_per_page = tutor_utils()->get_option('courses_per_page', 12);
+		$courses_per_page = (int)sanitize_text_field(tutor_utils()->array_get('course_per_page', $_POST, $default_per_page));
         $page = (isset($_POST['page']) && is_numeric($_POST['page']) && $_POST['page']>0) ? $_POST['page'] : 1;
 
         $args = array(
@@ -34,7 +34,7 @@ class Course_Filter{
         // Prepare taxonomy
         foreach(array('category', 'tag') as $taxonomy) {
 
-            $term_array = tutils()->array_get('tutor-course-filter-'.$taxonomy, $_POST, array());
+            $term_array = tutor_utils()->array_get('tutor-course-filter-'.$taxonomy, $_POST, array());
             !is_array($term_array) ? $term_array = array($term_array) : 0;
 
             $term_array = array_filter($term_array, function($term_id) {
@@ -53,7 +53,7 @@ class Course_Filter{
         }
 
         // Prepare level and price type
-        $is_membership = get_tutor_option('monetize_by')=='pmpro' && tutils()->has_pmpro();
+        $is_membership = get_tutor_option('monetize_by')=='pmpro' && tutor_utils()->has_pmpro();
         $level_price=array();
         foreach(array( 'level', 'price' ) as $type){
             
@@ -61,7 +61,7 @@ class Course_Filter{
                 continue;
             }
 
-            $type_array = tutils()->array_get('tutor-course-filter-'.$type, $_POST, array());
+            $type_array = tutor_utils()->array_get('tutor-course-filter-'.$type, $_POST, array());
             $type_array = array_map('sanitize_text_field', (is_array($type_array) ? $type_array : array($type_array)));
 
             if(count( $type_array ) > 0){
@@ -74,7 +74,7 @@ class Course_Filter{
         }
         count($level_price) ? $args['meta_query'] = $level_price : 0;
 
-        $search_key = sanitize_text_field(tutils()->array_get('keyword', $_POST, null));
+        $search_key = sanitize_text_field(tutor_utils()->array_get('keyword', $_POST, null));
         $search_key ? $args['s'] = $search_key : 0;
 
         if(isset($_POST['tutor_course_filter'])){
@@ -99,7 +99,7 @@ class Course_Filter{
         }
 
         query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
-        $col_per_row = (int)sanitize_text_field(tutils()->array_get('column_per_row', $_POST, 3));
+        $col_per_row = (int)sanitize_text_field(tutor_utils()->array_get('column_per_row', $_POST, 3));
 		$GLOBALS['tutor_shortcode_arg']=array(
 			'column_per_row' => $col_per_row<=0 ? 3 : $col_per_row,
 			'course_per_page' => $courses_per_page

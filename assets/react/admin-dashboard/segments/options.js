@@ -17,6 +17,7 @@ const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
 
 document.addEventListener("DOMContentLoaded", function() {
   var $ = window.jQuery;
+  const {__} = wp.i18n;
 
   let image_uploader = document.querySelectorAll(".image_upload_button");
   // let image_input = document.getElementById("image_url_field");
@@ -102,11 +103,16 @@ document.addEventListener("DOMContentLoaded", function() {
       type: "POST",
       data: data,
       beforeSend: function() {},
-      success: function(data) {
-        $(".tutor-notification").addClass("show");
-        setTimeout(() => {
-          $(".tutor-notification").removeClass("show");
-        }, 4000);
+      success: function(resp) {
+        const {data={}, success} = resp || {};
+        const {message=__('Something Went Wrong!', 'tutor')} = data;
+
+        if(success) {
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
+          return;
+        }
+
+        tutor_toast('Error!', message, 'tutor');
       },
       complete: function() {},
     });

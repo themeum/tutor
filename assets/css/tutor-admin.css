@@ -1301,10 +1301,6 @@ p.course-empty-content {
   color: #cccccc;
 }
 
-.tutor-updating-message i {
-  display: none;
-}
-
 /**
   Instructor
    */
@@ -2445,26 +2441,6 @@ span.filled_dash_unser {
 
 .tutor-uninstall-btn-group {
   margin: 50px 0;
-}
-
-/**
-  Updating Messsage
-   */
-.tutor-updating-message:before {
-  display: inline-block;
-  font-family: "tutor";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  vertical-align: top;
-  content: "\e91d";
-  -webkit-animation: rotation 2s infinite linear;
-  animation: rotation 2s infinite linear;
-  margin-right: 6px;
-}
-
-.rtl .tutor-updating-message:before {
-  margin-right: 0;
-  margin-left: 6px;
 }
 
 .lesson-modal-field.tutor-lesson-modal-title-wrap {
