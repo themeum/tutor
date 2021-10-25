@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) )
 	<?php do_action("tutor_before_login_form");?>
 
     <?php
-    $current_url = tutils()->get_current_url();
+    $current_url = tutor_utils()->get_current_url();
     $register_page = tutor_utils()->student_register_url();
 	$query_args = array(
 		'redirect_to' => $current_url
@@ -53,7 +53,7 @@ if ( ! defined( 'ABSPATH' ) )
 	    'id_remember'               => 'rememberme',
 	    'id_submit'                 => 'wp-submit',
 	    'remember'                  => true,
-	    'value_username'            => tutils()->input_old('log'),
+	    'value_username'            => tutor_utils()->input_old('log'),
 	    // Set 'value_remember' to true to default the "Remember me" checkbox to checked.
 	    'value_remember'            => false,
 	    'wp_lostpassword_url'       => apply_filters('tutor_lostpassword_url', wp_lostpassword_url()),

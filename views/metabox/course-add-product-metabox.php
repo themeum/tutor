@@ -9,7 +9,7 @@
  */
 
 
-$_tutor_course_price_type = tutils()->price_type();
+$_tutor_course_price_type = tutor_utils()->price_type();
 
 ?>
 

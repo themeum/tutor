@@ -14,8 +14,11 @@ if ( isset( $data ) && count( $data ) ) : ?>
 			<?php echo esc_html( $data['page_title'] ); ?>
 		</span>
 		<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
-			<a href="<?php echo esc_url( $data['button_url'] ); ?>" class="">
-				<?php echo esc_html( $data['button_title'] ); ?>
+			<a class="tutor-pl-10" href="<?php echo esc_url( $data['button_url'] ); ?>">
+				<button class="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+					<span class="btn-icon ttr-plus-bold-filled"></span>
+					<span><?php echo esc_html( $data['button_title'] ); ?></span>
+				</button>
 			</a>
 		<?php endif; ?>
   </div>

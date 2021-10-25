@@ -11,7 +11,7 @@
         <div class="tutor-input-group tutor-mb-15">
             <input type="text" name="lesson_title" class="tutor-form-control tutor-mb-10" value="<?php echo stripslashes($post->post_title); ?>"/>
             <p class="tutor-input-feedback tutor-has-icon">
-                <i class="tutor-v2-icon-test icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                <i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
                 <?php _e('Lesson titles are displayed publicly wherever required.', 'tutor'); ?>
             </p>
         </div>
@@ -56,7 +56,7 @@
                         </p>
                         
                         <button class="tutor-btn tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">
-                            <span class="tutor-btn-icon tutor-v2-icon-test icon-image-filled"></span>
+                            <span class="tutor-btn-icon ttr-image-filled"></span>
                             <span>Upload Image</span>
                         </button>
                     </div>

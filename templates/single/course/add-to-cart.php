@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 $isLoggedIn = is_user_logged_in();
 
-$monetize_by = tutils()->get_option('monetize_by');
+$monetize_by = tutor_utils()->get_option('monetize_by');
 $enable_guest_course_cart = tutor_utils()->get_option('enable_guest_course_cart');
 
 $is_public = get_post_meta( get_the_ID(), '_tutor_is_public_course', true )=='yes';
@@ -37,7 +37,7 @@ $tutor_course_sell_by = apply_filters('tutor_course_sell_by', null);
 
 do_action('tutor_course/single/add-to-cart/before');
 
-$is_tutor_login_disabled = tutils()->get_option('disable_tutor_native_login');
+$is_tutor_login_disabled = tutor_utils()->get_option('disable_tutor_native_login');
 $auth_url = $is_tutor_login_disabled ? wp_login_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) : '';
 ?>
 

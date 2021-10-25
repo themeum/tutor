@@ -175,7 +175,7 @@ class Shortcode {
 
 	private function prepare_instructor_list( $current_page, $atts, $cat_ids = array(), $keyword = '' ) {
 
-		$limit         = (int) sanitize_text_field( tutils()->array_get( 'count', $atts, 9 ) );
+		$limit         = (int) sanitize_text_field( tutor_utils()->array_get( 'count', $atts, 9 ) );
 		$page          = $current_page - 1;
 		$rating_filter = isset( $_POST['rating_filter'] ) ? $_POST['rating_filter'] : '';
 		/**
@@ -197,14 +197,14 @@ class Shortcode {
 		$previous_page = $page > 0 ? $current_page - 1 : null;
 		$next_page     = ( is_array( $next_instructors ) && count( $next_instructors ) > 0 ) ? $current_page + 1 : null;
 
-		$layout = sanitize_text_field( tutils()->array_get( 'layout', $atts, '' ) );
+		$layout = sanitize_text_field( tutor_utils()->array_get( 'layout', $atts, '' ) );
 		$layout = in_array( $layout, $this->instructor_layout ) ? $layout : tutor_utils()->get_option( 'instructor_list_layout', $this->instructor_layout[0] );
 
 		$payload = array(
 			'instructors'   => is_array( $instructors ) ? $instructors : array(),
 			'next_page'     => $next_page,
 			'previous_page' => $previous_page,
-			'column_count'  => sanitize_text_field( tutils()->array_get( 'column_per_row', $atts, 3 ) ),
+			'column_count'  => sanitize_text_field( tutor_utils()->array_get( 'column_per_row', $atts, 3 ) ),
 			'layout'        => $layout,
 			'limit'         => $limit,
 			'current_page'  => $current_page,
@@ -346,11 +346,11 @@ class Shortcode {
 	public function load_filtered_instructor() {
 		tutor_utils()->checking_nonce();
 
-		$attributes   = (array) tutils()->array_get( 'attributes', $_POST, array() );
-		$current_page = (int) sanitize_text_field( tutils()->array_get( 'current_page', $attributes, 1 ) );
-		$keyword      = (string) sanitize_text_field( tutils()->array_get( 'keyword', $_POST, '' ) );
+		$attributes   = (array) tutor_utils()->array_get( 'attributes', $_POST, array() );
+		$current_page = (int) sanitize_text_field( tutor_utils()->array_get( 'current_page', $attributes, 1 ) );
+		$keyword      = (string) sanitize_text_field( tutor_utils()->array_get( 'keyword', $_POST, '' ) );
 
-		$category = (array) tutils()->array_get( 'category', $_POST, array() );
+		$category = (array) tutor_utils()->array_get( 'category', $_POST, array() );
 		$category = array_filter(
 			$category,
 			function( $cat ) {

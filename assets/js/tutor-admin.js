@@ -1505,7 +1505,7 @@ function tutor_option_history_load(history_data) {
           key = _ref2[0],
           value = _ref2[1];
 
-      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span className=\"tutor-badge-label label-success\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
+      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span className=\"tutor-badge-label label-success\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
@@ -1791,6 +1791,7 @@ var angleRight = tutorIconsV2.angleRight,
     warning = tutorIconsV2.warning;
 document.addEventListener("DOMContentLoaded", function () {
   var $ = window.jQuery;
+  var __ = wp.i18n.__;
   var image_uploader = document.querySelectorAll(".image_upload_button"); // let image_input = document.getElementById("image_url_field");
 
   var _loop = function _loop(i) {
@@ -1867,11 +1868,21 @@ document.addEventListener("DOMContentLoaded", function () {
       type: "POST",
       data: data,
       beforeSend: function beforeSend() {},
-      success: function success(data) {
-        $(".tutor-notification").addClass("show");
-        setTimeout(function () {
-          $(".tutor-notification").removeClass("show");
-        }, 4000);
+      success: function success(resp) {
+        var _ref = resp || {},
+            _ref$data = _ref.data,
+            data = _ref$data === void 0 ? {} : _ref$data,
+            success = _ref.success;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
+
+        if (success) {
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
+          return;
+        }
+
+        tutor_toast('Error!', message, 'tutor');
       },
       complete: function complete() {}
     });
@@ -2407,7 +2418,7 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-delete-lesson-btn', function (e) {
     e.preventDefault();
 
-    if (!confirm(__('Are you sure?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
       return;
     }
 
@@ -2605,7 +2616,7 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-delete-quiz-btn', function (e) {
     e.preventDefault();
 
-    if (!confirm(__('Are you sure?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
       return;
     }
 
@@ -2619,7 +2630,26 @@ jQuery(document).ready(function ($) {
         action: 'tutor_delete_quiz_by_id'
       },
       beforeSend: function beforeSend() {
-        $that.closest('.course-content-item').remove();
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(resp) {
+        var _ref2 = resp || {},
+            _ref2$data = _ref2.data,
+            data = _ref2$data === void 0 ? {} : _ref2$data,
+            success = _ref2.success;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!') : _data$message;
+
+        if (success) {
+          $that.closest('.course-content-item').remove();
+          return;
+        }
+
+        tutor_toast('Error!', message, 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
       }
     });
   });
@@ -32289,26 +32319,6 @@ jQuery(document).ready(function ($) {
   $(".tutor-form-toggle-input").on("change", function (e) {
     var toggleInput = $(this).siblings("input");
     $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
-  });
-  $("#tutor-option-form").submit(function (e) {
-    e.preventDefault();
-    var $form = $(this);
-    var data = $form.serializeObject();
-    console.log(data);
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: data,
-      beforeSend: function beforeSend() {
-        $form.find(".button").addClass("tutor-updating-message");
-      },
-      success: function success(data) {
-        data.success ? tutor_toast(__("Saved", "tutor"), $form.data("toast_success_message"), "success") : tutor_toast(__("Request Error", "tutor"), __("Could not save", "tutor"), "error");
-      },
-      complete: function complete() {
-        $form.find(".button").removeClass("tutor-updating-message");
-      }
-    });
   });
   /**
    * End Withdraw nav tabs

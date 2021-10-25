@@ -1,6 +1,6 @@
 <?php
 $args = $this->args;
-$current_tab = tutils()->array_get('settings_tab', $_GET);
+$current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 
 ?>
 
@@ -19,8 +19,8 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 						$active = $i ===1 ? 'active' : '';
 					}
 
-					$label      = tutils()->array_get('label', $arg);
-					$icon_class = tutils()->array_get('icon_class', $arg);
+					$label      = tutor_utils()->array_get('label', $arg);
+					$icon_class = tutor_utils()->array_get('icon_class', $arg);
 					$url        = add_query_arg(array('settings_tab' => $key));
 
 					$icon = '';
@@ -39,9 +39,9 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 			foreach ($args as $key => $tab){
 				$i++;
 
-				$label = tutils()->array_get('label', $tab);
-				$callback = tutils()->array_get('callback', $tab);
-				$fields = tutils()->array_get('fields', $tab);
+				$label = tutor_utils()->array_get('label', $tab);
+				$callback = tutor_utils()->array_get('callback', $tab);
+				$fields = tutor_utils()->array_get('fields', $tab);
 
 				if ($current_tab){
 					$active = $current_tab === $key ? 'active' : '' ;
@@ -56,7 +56,7 @@ $current_tab = tutils()->array_get('settings_tab', $_GET);
 				do_action("tutor_course/settings_tab_content/before", $key, $tab);
 				do_action("tutor_course/settings_tab_content/before/{$key}", $tab);
 
-				if (tutils()->count($fields)){
+				if (tutor_utils()->count($fields)){
 					$this->generate_field($fields);
 				}
 

@@ -41,7 +41,7 @@ class Student {
 	 * @since v.1.0.0
 	 */
 	public function register_student() {
-		if ( tutils()->array_get( 'tutor_action', $_POST ) !== 'tutor_register_student' || ! get_option( 'users_can_register', false ) ) {
+		if ( tutor_utils()->array_get( 'tutor_action', $_POST ) !== 'tutor_register_student' || ! get_option( 'users_can_register', false ) ) {
 			// Action must be register, and registrtion must be enabled in dashoard
 			return;
 		}
@@ -119,7 +119,7 @@ class Student {
 			// since 1.9.8 do enroll if guest attempt to enroll
 			do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
 			// Redirect page
-			$redirect_page = tutils()->array_get( 'redirect_to', $_REQUEST );
+			$redirect_page = tutor_utils()->array_get( 'redirect_to', $_REQUEST );
 			if ( ! $redirect_page ) {
 				$redirect_page = tutor_utils()->tutor_dashboard_url();
 			}
@@ -141,7 +141,7 @@ class Student {
 	}
 
 	public function update_profile() {
-		if ( tutils()->array_get( 'tutor_action', $_POST ) !== 'tutor_profile_edit' ) {
+		if ( tutor_utils()->array_get( 'tutor_action', $_POST ) !== 'tutor_profile_edit' ) {
 			return;
 		}
 
@@ -156,7 +156,7 @@ class Student {
 		$phone_number      = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$tutor_profile_bio = wp_kses_post( tutor_utils()->input_old( 'tutor_profile_bio' ) );
 
-		$display_name = sanitize_text_field( tutils()->input_old( 'display_name' ) );
+		$display_name = sanitize_text_field( tutor_utils()->input_old( 'display_name' ) );
 
 		$userdata = array(
 			'ID'           => $user_id,
@@ -170,7 +170,7 @@ class Student {
 			update_user_meta( $user_id, 'phone_number', $phone_number );
 			update_user_meta( $user_id, '_tutor_profile_bio', $tutor_profile_bio );
 
-			$tutor_user_social = tutils()->tutor_user_social_icons();
+			$tutor_user_social = tutor_utils()->tutor_user_social_icons();
 			foreach ( $tutor_user_social as $key => $social ) {
 				$user_social_value = sanitize_text_field( tutor_utils()->input_old( $key ) );
 				if ( $user_social_value ) {
@@ -281,7 +281,7 @@ class Student {
 		tutor_utils()->checking_nonce();
 
 		$user_id           = get_current_user_id();
-		$tutor_user_social = tutils()->tutor_user_social_icons();
+		$tutor_user_social = tutor_utils()->tutor_user_social_icons();
 
 		foreach ( $tutor_user_social as $key => $social ) {
 			$user_social_value = sanitize_text_field( tutor_utils()->input_old( $key ) );

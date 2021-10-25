@@ -1,0 +1,17 @@
+.tutor-updating-message{
+    i {
+        display: none;
+    }
+
+    &:before {
+        display: inline-block;
+        font-family: "tutor";
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        vertical-align: top;
+        content: "\e91d";
+        -webkit-animation: spin 2s infinite linear;
+        animation: spin 2s infinite linear;
+        margin-right: 6px;
+    }
+}
