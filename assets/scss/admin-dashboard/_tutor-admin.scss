@@ -232,6 +232,7 @@ p.course-empty-content {
     color: #cccccc;
 }
 
+
 /**
   Instructor
    */
@@ -1396,7 +1397,6 @@ span.filled_dash_unser {
 .tutor-uninstall-btn-group {
     margin: 50px 0;
 }
-
 
 .lesson-modal-field.tutor-lesson-modal-title-wrap {
     width: 95%;
@@ -3108,6 +3108,21 @@ table.tutor-table p {
 
 .tutor-wp-dashboard-filter-items {
     display: inherit;
+}
+
+.row-actions {
+    left: 0;
+}
+
+table.tutor-ui-table.table-instructors .instructor-action {
+    min-width: 70px;
+    text-align: center;
+}
+
+table.tutor-ui-table.table-instructors .td-action-btns .toggle-row,
+table.tutor-ui-table.my-quiz-attempts .td-action-btns .toggle-row,
+table.tutor-ui-table.table-instructors .toggle-row {
+    display: none;
 }
 
 

@@ -4159,6 +4159,21 @@ table.tutor-table p {
   display: inherit;
 }
 
+.row-actions {
+  left: 0;
+}
+
+table.tutor-ui-table.table-instructors .instructor-action {
+  min-width: 70px;
+  text-align: center;
+}
+
+table.tutor-ui-table.table-instructors .td-action-btns .toggle-row,
+table.tutor-ui-table.my-quiz-attempts .td-action-btns .toggle-row,
+table.tutor-ui-table.table-instructors .toggle-row {
+  display: none;
+}
+
 /* /.report-course-list - end */
 body {
   -webkit-font-smoothing: antialiased;
