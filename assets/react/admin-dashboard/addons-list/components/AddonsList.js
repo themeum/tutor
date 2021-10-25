@@ -2,6 +2,8 @@ import React from 'react';
 import { useAddons } from '../context/AddonsContext';
 import AddonCard from './AddonCard';
 
+const { __ } = wp.i18n;
+
 const emptyStateImg = `${_tutorobject.tutor_url}assets/images/empty-state.svg`;
 
 const AddonsList = () => {
@@ -23,7 +25,7 @@ const AddonsList = () => {
 				<div className="tutor-addons-card empty-state tutor-py-20">
 					<div className="card-body">
 						<img src={emptyStateImg} alt="empty state illustration" />
-						<div className="text-medium-caption tutor-mb-20">Nothing Found!</div>
+						<div className="text-medium-caption tutor-mb-20">{__('Nothing Found!', 'tutor')}</div>
 					</div>
 				</div>
 			)}
