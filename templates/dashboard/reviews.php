@@ -18,7 +18,7 @@ if(!tutor_utils()->is_instructor()) {
 }
 
 //Pagination Variable
-$per_page = tutils()->get_option('pagination_per_page', 20);
+$per_page = tutor_utils()->get_option('pagination_per_page', 20);
 $current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 

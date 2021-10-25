@@ -130,13 +130,13 @@ if(count($instructor_course)) {
                         <th>
                             <div class="inline-flex-center color-text-subsued">
                                 <span class="text-regular-small"><?php _e('Enrolled', 'tutor'); ?></span>
-                                <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                                <span class="ttr-ordering-a-to-z-filled"></span>
                             </div>
                         </th>
                         <th>
                             <div class="inline-flex-center color-text-subsued">
                                 <span class="text-regular-small"><?php _e('Rating', 'tutor'); ?></span>
-                                <span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+                                <span class="ttr-ordering-a-to-z-filled"></span>
                             </div>
                         </th>
                     </tr>

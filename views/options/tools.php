@@ -13,7 +13,7 @@
 		<div class="title"><?php _e( 'Tools', 'tutor' ); ?></div>
 		<div class="search-field">
 			<div class="tutor-input-group tutor-form-control-has-icon">
-				<span class="tutor-input-group-icon tutor-v2-icon-test icon-search-filled"></span>
+				<span class="tutor-input-group-icon ttr-search-filled"></span>
 				<input type="search" autocomplete="off" class="tutor-form-control" placeholder="<?php _e( 'Search', 'tutor' ); ?>" />
 			</div>
 		</div>
@@ -55,18 +55,6 @@
 			</div>
 		<!-- end /.tutor-option-tab-pages -->
 		</div>
-	</div>
-	<div class="tutor-notification tutor-is-success">
-		<div class="tutor-notification-icon">
-			<i class="fas fa-check"></i>
-		</div>
-		<div class="tutor-notification-content">
-			<h5>Successful</h5>
-			<p>Your file was uploaded</p>
-		</div>
-		<button class="tutor-notification-close">
-			<i class="fas fa-times"></i>
-		</button>
 	</div>
 </section>
 

@@ -739,12 +739,16 @@ window.jQuery(document).ready(function ($) {
           btn.addClass('tutor-updating-message');
         },
         success: function success(data) {
-          if (quiz_id) {
+          console.log(quiz_id, quiz_id != 0);
+
+          if (quiz_id && quiz_id != 0) {
             // Update if exists already
-            $('#tutor-quiz-' + quiz_id).html(data.data.output_quiz_row);
+            $('#tutor-quiz-' + quiz_id).replaceWith(data.data.output_quiz_row);
+            console.log($('#tutor-quiz-' + quiz_id));
           } else {
             // Otherwise create new row
             $('#tutor-topics-' + topic_id + ' .tutor-lessons').append(data.data.output_quiz_row);
+            console.log($('#tutor-topics-' + topic_id + ' .tutor-lessons'));
           } // Update modal content
 
 
@@ -797,8 +801,7 @@ window.jQuery(document).ready(function ($) {
         modal.addClass('tutor-has-question-from'); //Initializing Tutor Select
         // tutor_select().reInit();
 
-        enable_quiz_answer_sorting();
-        disableAddoption();
+        enable_quiz_answer_sorting(); // disableAddoption();
       },
       complete: function complete() {
         $that.removeClass('tutor-updating-message');
@@ -967,15 +970,15 @@ window.jQuery(document).ready(function ($) {
    * Confirmation for deleting Topic
    */
 
-  $(document).on('click', '.tutor-topics-wrap .tutor-icon-garbage', function (e) {
+  $(document).on('click', '.tutor-topics-wrap .topic-delete-btn', function (e) {
+    var $that = $(this);
     var container = $(this).closest('.tutor-topics-wrap');
     var topic_id = container.attr('data-topic-id');
 
-    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete the topic?', 'tutor'))) {
       return;
     }
 
-    container.fadeOut('fast');
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: 'POST',
@@ -983,17 +986,20 @@ window.jQuery(document).ready(function ($) {
         action: 'tutor_delete_topic',
         topic_id: topic_id
       },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
       success: function success(data) {
         // To Do: Load updated topic list here
         if (data.success) {
           container.remove();
-        } else {
-          container.fadeIn('fast');
-          alert((data.data || {}).msg || __('Something Went Wrong', 'tutor'));
+          return;
         }
+
+        tutor_toast('Error!', (data.data || {}).message || __('Something Went Wrong', 'tutor'), 'error');
       },
-      error: function error() {
-        container.fadeIn('fast');
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
       }
     });
   });
@@ -1103,9 +1109,9 @@ window.jQuery(document).ready(function ($) {
     $(this).addClass('is-active').siblings().removeClass('is-active');
     $('#' + $(this).data('tutor-tab-target')).show().siblings().hide();
   });
-  $('.').click(function () {
-    $(this).siblings().filter('tutor-certificate-collapsible');
-  });
+  /* $('.').click(function() {
+      $(this).siblings().filter('tutor-certificate-collapsible')
+  }); */
 });
 })();
 

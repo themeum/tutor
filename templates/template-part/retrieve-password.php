@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 tutor_alert(null, 'any');
 
 
-if (tutils()->array_get('reset_key', $_GET) && tutils()->array_get('user_id', $_GET)){
+if (tutor_utils()->array_get('reset_key', $_GET) && tutor_utils()->array_get('user_id', $_GET)){
     tutor_load_template('template-part.form-retrieve-password');
 }else{
 	do_action( 'tutor_before_retrieve_password_form' );

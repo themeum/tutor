@@ -21,7 +21,7 @@
         <div class="create-certificate-btn">
             <button class="tutor-btn tutor-is-sm">
                 <!-- <span class="tutor-btn-icon las la-file-signature"></span> -->
-                <span class="tutor-btn-icon tutor-v2-icon-test icon-certificate-filled"></span>
+                <span class="tutor-btn-icon ttr-certificate-filled"></span>
                 <span>Create Certificate</span>
             </button>
         </div>
