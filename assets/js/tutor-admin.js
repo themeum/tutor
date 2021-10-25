@@ -45,6 +45,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
 
 
+var __ = wp.i18n.__;
 
 var AddonCard = function AddonCard(_ref) {
   var addon = _ref.addon,
@@ -87,7 +88,7 @@ var AddonCard = function AddonCard(_ref) {
       margin: '2px 0'
     },
     className: "color-text-hints text-medium-small"
-  }, addon.ext_required ? 'Required for Push Notification' : addon.depend_plugins ? 'Required Plugin(s)' : 'No additional plugin(s) required'), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
+  }, addon.ext_required ? __('Required for Push Notification', 'tutor') : addon.depend_plugins ? __('Required Plugin(s)', 'tutor') : __('No additional plugin(s) required', 'tutor')), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
       style: {
         marginTop: '2px',
@@ -143,7 +144,7 @@ var AddonCard = function AddonCard(_ref) {
     className: "tutor-form-toggle-control"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
     className: "tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5"
-  }, "Active")))));
+  }, __('Active', 'tutor'))))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonCard);
@@ -167,6 +168,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var __ = wp.i18n.__;
 var emptyStateImg = "".concat(_tutorobject.tutor_url, "assets/images/empty-state.svg");
 
 var AddonsList = function AddonsList() {
@@ -193,7 +195,7 @@ var AddonsList = function AddonsList() {
     alt: "empty state illustration"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "text-medium-caption tutor-mb-20"
-  }, "Nothing Found!"))));
+  }, __('Nothing Found!', 'tutor')))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonsList);
@@ -249,6 +251,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
 
 
+var __ = wp.i18n.__;
 
 var Header = function Header() {
   var filterBtns = ['all', 'active', 'deactive', 'required'];
@@ -273,7 +276,7 @@ var Header = function Header() {
     className: "tutor-addons-list-header tutor-bs-d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "title text-medium-h5 color-text-primary tutor-bs-mb-lg-0 tutor-bs-mb-3"
-  }, "Addons List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, __('Addons List', 'tutor')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "filter-btns text-regular-body color-text-subsued "
   }, filterBtns.map(function (btn, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {

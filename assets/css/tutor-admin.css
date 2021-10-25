@@ -6895,12 +6895,6 @@ li.tutor-option-nav-item h4 {
   background: #ffffff;
 }
 
-@media (min-width: 992px) {
-  .tutor-addons-list-header {
-    height: 60px;
-  }
-}
-
 @media (max-width: 991px) {
   .tutor-addons-list-header {
     margin-bottom: -3px;
@@ -6938,7 +6932,7 @@ li.tutor-option-nav-item h4 {
   width: 100%;
   height: 3px;
   background: #1973aa;
-  bottom: calc(0% - 17px);
+  bottom: calc(0% - 23px);
   -webkit-transition: -webkit-transform 200ms linear;
   transition: -webkit-transform 200ms linear;
   transition: transform 200ms linear;

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAddonsUpdate } from '../context/AddonsContext';
+
+const { __ } = wp.i18n;
 
 const AddonCard = ({ addon, addonId }) => {
 	const author = 'Themeum';
@@ -32,7 +34,7 @@ const AddonCard = ({ addon, addonId }) => {
 			</div>
 			<div className=" card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center">
 				<div className="text-medium-small color-text-hints">	
-					<p style={{margin: '2px 0'}} className="color-text-hints text-medium-small">{addon.ext_required ? 'Required for Push Notification' : addon.depend_plugins ? 'Required Plugin(s)' : 'No additional plugin(s) required'}</p>
+					<p style={{margin: '2px 0'}} className="color-text-hints text-medium-small">{addon.ext_required ? __('Required for Push Notification', 'tutor') : addon.depend_plugins ? __('Required Plugin(s)', 'tutor') : __('No additional plugin(s) required', 'tutor')}</p>
 						{addon.ext_required &&
 							addon.ext_required ? addon.ext_required.map((extension, index) => {
 								return (
@@ -68,7 +70,7 @@ const AddonCard = ({ addon, addonId }) => {
 						/>
 						<span className="tutor-form-toggle-control"></span>
 						<span className="tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5">
-							Active
+							{__('Active', 'tutor')}
 						</span>
 					</label>
 				</div>
