@@ -4179,6 +4179,10 @@ table.tutor-table p {
   padding: 0 0 30px 0;
 }
 
+.tutor-wp-dashboard-filter-items {
+  display: inherit;
+}
+
 /* /.report-course-list - end */
 body {
   -webkit-font-smoothing: antialiased;
