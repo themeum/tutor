@@ -14,9 +14,6 @@
 }
 
 .tutor-addons-list-header {
-    @include breakpoint-min(992) {
-        height: 60px;
-    }
     @include breakpoint-max(991) {
         margin-bottom: -3px;
     }
