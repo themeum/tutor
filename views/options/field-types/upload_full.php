@@ -22,7 +22,7 @@ $field_id     = 'field_' . $field['key'];
 				<label for="builder-logo-upload" class="tutor-btn tutor-is-sm image_upload_button">
 					<input type="hidden" class="input_file" name="tutor_option[<?php echo $field['key']; ?>]" value="<?php echo $option_value; ?>">
 					<input type="file" class="input_file" id="<?php echo $field_id; ?>" accept=".jpg, .jpeg, .png, .svg">
-					<span class="tutor-btn-icon tutor-v2-icon-test icon-image-filled"></span>
+					<span class="tutor-btn-icon ttr-image-filled"></span>
 					<span>Upload Image</span>
 				</label>
 			</div>

@@ -24,21 +24,23 @@ $profile_data = array(
     array(__('Username', 'tutor'), $uname),
     array(__('Email', 'tutor'), $email),
     array(__('Phone Number', 'tutor'), ($phone ? $phone : "________")),
-    array(__('Bio', 'tutor'), $bio ? $bio : '________')
+    'bio' => array(__('Bio', 'tutor'), $bio ? $bio : '________')
 )
 ?>
 
 <h3><?php _e('My Profile', 'tutor'); ?></h3>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
     <?php 
-        foreach($profile_data as $data) {
+        foreach($profile_data as $key=>$data) {
             ?>
             <div class="tutor-bs-row">
                 <div class="tutor-bs-col-12 tutor-bs-col-sm-5 tutor-bs-col-md-4">
                     <span><?php echo $data[0]; ?></span>
                 </div>
                 <div class="tutor-bs-col-12 tutor-bs-col-sm-7 tutor-bs-col-md-8">
-                    <p><?php echo $data[1]; ?></p>
+                    <p>
+                        <?php echo $key=='bio' ? $data[1] : '<strong>' . $data[1] . '</strong>'; ?>
+                    </p>
                 </div>
             </div>
             <?php

@@ -117,7 +117,7 @@ msgstr ""
 msgid "Tutor LMS"
 msgstr ""
 
-#: classes/Admin.php:65, classes/Admin.php:65, classes/Course_List.php:43, classes/Post_types.php:49, classes/Tutor_List_Table.php:1252, templates/dashboard.php:50, templates/student-public-profile.php:106, templates/student-public-profile.php:166, templates/dashboard/announcements.php:89, templates/dashboard/assignments.php:35, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, templates/single/course/instructors.php:72
+#: classes/Admin.php:65, classes/Admin.php:65, classes/Course_List.php:43, classes/Post_types.php:56, classes/Tutor_List_Table.php:1252, templates/dashboard.php:50, templates/student-public-profile.php:106, templates/student-public-profile.php:166, templates/dashboard/announcements.php:89, templates/dashboard/assignments.php:35, templates/dashboard/purchase_history.php:21, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, templates/single/course/instructors.php:72
 msgid "Courses"
 msgstr ""
 
@@ -125,19 +125,19 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: classes/Admin.php:69, classes/Admin.php:69, classes/Post_types.php:141, templates/single/course/tags.php:20
+#: classes/Admin.php:69, classes/Admin.php:69, classes/Post_types.php:148, templates/single/course/tags.php:20
 msgid "Tags"
 msgstr ""
 
-#: classes/Admin.php:71, classes/Admin.php:71, classes/Course.php:495, classes/Options.php:591, classes/Quiz_Attempts_List.php:113, templates/student-public-profile.php:111, views/pages/students.php:8
+#: classes/Admin.php:71, classes/Admin.php:71, classes/Course.php:495, classes/Options.php:591, classes/Quiz_Attempts_List.php:113, classes/Students_List.php:42, templates/student-public-profile.php:111
 msgid "Students"
 msgstr ""
 
-#: classes/Admin.php:74, classes/Admin.php:74, classes/Course.php:182, classes/Course.php:268, classes/Options.php:552, views/pages/instructors.php:29
+#: classes/Admin.php:74, classes/Admin.php:74, classes/Course.php:182, classes/Course.php:268, classes/Options.php:552
 msgid "Instructors"
 msgstr ""
 
-#: classes/Admin.php:77, classes/Admin.php:77, classes/Announcements.php:43, classes/Utils.php:1295, classes/Utils.php:2462, views/fragments/announcement-list.php:219
+#: classes/Admin.php:77, classes/Admin.php:77, classes/Announcements.php:43, classes/Utils.php:1306, classes/Utils.php:2473, views/fragments/announcement-list.php:219
 msgid "Announcements"
 msgstr ""
 
@@ -149,7 +149,7 @@ msgstr ""
 msgid "Q & A "
 msgstr ""
 
-#: classes/Admin.php:81, classes/Admin.php:81, classes/Utils.php:2464, templates/dashboard/quiz-attempts.php:19, views/pages/quiz_attempts.php:29
+#: classes/Admin.php:81, classes/Admin.php:81, classes/Utils.php:2475, templates/dashboard/quiz-attempts.php:19
 msgid "Quiz Attempts"
 msgstr ""
 
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Add-ons"
 msgstr ""
 
-#: classes/Admin.php:91, classes/Admin.php:91, classes/Admin.php:421, classes/Utils.php:2477, templates/dashboard/settings.php:8, views/metabox/course-topics.php:51, views/options/settings.php:18, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/social-profile.php:12
+#: classes/Admin.php:91, classes/Admin.php:91, classes/Admin.php:421, classes/Utils.php:2488, templates/dashboard/settings.php:8, views/metabox/course-topics.php:51, views/options/settings.php:18, templates/dashboard/notifications/profile-completion.php:14, templates/dashboard/settings/social-profile.php:12
 msgid "Settings"
 msgstr ""
 
@@ -185,7 +185,7 @@ msgstr ""
 msgid "Tutor Pages"
 msgstr ""
 
-#: classes/Admin.php:154, classes/Instructors_List.php:121, classes/Tools_V2.php:95, templates/dashboard/purchase_history.php:23, templates/dashboard/withdraw.php:186, views/pages/view_attempt.php:59, views/pages/tools/tutor_pages.php:13
+#: classes/Admin.php:154, classes/Instructors_List.php:295, classes/Tools_V2.php:95, templates/dashboard/purchase_history.php:23, templates/dashboard/withdraw.php:186, views/pages/view_attempt.php:59, views/pages/tools/tutor_pages.php:13
 msgid "Status"
 msgstr ""
 
@@ -209,87 +209,91 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:67, classes/Ajax.php:120, classes/Ajax.php:184, classes/Ajax.php:242, classes/Ajax.php:382, classes/Ajax.php:422, classes/Ajax.php:443, classes/Ajax.php:540, classes/Ajax.php:604, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1141, classes/Quiz.php:1201, classes/Q_and_A.php:71
+#: classes/Ajax.php:61, classes/Ajax.php:114, classes/Ajax.php:206, classes/Ajax.php:264, classes/Ajax.php:404, classes/Ajax.php:509, classes/Ajax.php:573, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1159, classes/Quiz.php:1219, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
-#: classes/Ajax.php:170
-msgid "Rating placed success"
+#: classes/Ajax.php:174
+msgid "Rating placed successsully!"
 msgstr ""
 
-#: classes/Ajax.php:189
+#: classes/Ajax.php:185
+msgid "Permissioned Denied!"
+msgstr ""
+
+#: classes/Ajax.php:211
 msgid "Empty question title or body"
 msgstr ""
 
-#: classes/Ajax.php:221
+#: classes/Ajax.php:243
 msgid "Question has been added successfully"
 msgstr ""
 
-#: classes/Ajax.php:231
+#: classes/Ajax.php:253
 msgid "Please write answer"
 msgstr ""
 
-#: classes/Ajax.php:264
+#: classes/Ajax.php:286
 msgid "Answer has been added successfully"
 msgstr ""
 
-#: classes/Ajax.php:285
+#: classes/Ajax.php:307
 msgid "Course added to wish list"
 msgstr ""
 
-#: classes/Ajax.php:282
+#: classes/Ajax.php:304
 msgid "Course removed from wish list"
 msgstr ""
 
-#: classes/Ajax.php:338
+#: classes/Ajax.php:360
 msgid "PHP 7.2.5 or greater is required"
 msgstr ""
 
-#: classes/Ajax.php:339
+#: classes/Ajax.php:361
 msgid "Please install SSL certificate properly"
 msgstr ""
 
-#: classes/Ajax.php:486, classes/Ajax.php:490
+#: classes/Ajax.php:455, classes/Ajax.php:459
 msgid "ERROR:"
 msgstr ""
 
-#: classes/Ajax.php:490
+#: classes/Ajax.php:459
 msgid "Username is required."
 msgstr ""
 
-#: classes/Ajax.php:558
+#: classes/Ajax.php:527
 msgid "Course name required"
 msgstr ""
 
-#: classes/Ajax.php:563
+#: classes/Ajax.php:532
 msgid "Announcement title required"
 msgstr ""
 
-#: classes/Ajax.php:567
+#: classes/Ajax.php:536
 msgid "Announcement summary required"
 msgstr ""
 
-#: classes/Ajax.php:574
+#: classes/Ajax.php:543
 msgid "All fields required!"
 msgstr ""
 
-#: classes/Ajax.php:588
+#: classes/Ajax.php:557
 msgid "Announcement created successfully"
 msgstr ""
 
-#: classes/Ajax.php:588
+#: classes/Ajax.php:557
 msgid "Announcement updated successfully"
 msgstr ""
 
-#: classes/Ajax.php:592
+#: classes/Ajax.php:561
 msgid "Something Went Wrong!"
 msgstr ""
 
-#: classes/Ajax.php:609
+#: classes/Ajax.php:578
 msgid "Announcement deleted successfully"
 msgstr ""
 
-#: classes/Ajax.php:612
+#: classes/Ajax.php:581
 msgid "Announcement delete failed"
 msgstr ""
 
@@ -317,7 +321,7 @@ msgstr ""
 msgid "Topic has been updated"
 msgstr ""
 
-#: classes/Course.php:494, classes/Options.php:445, classes/Post_types.php:172, templates/single/course/course-topics.php:38
+#: classes/Course.php:494, classes/Options.php:445, classes/Post_types.php:179, templates/single/course/course-topics.php:38
 msgid "Lessons"
 msgstr ""
 
@@ -541,59 +545,63 @@ msgstr ""
 msgid "Instructor has been added successfully"
 msgstr ""
 
-#: classes/Instructors_List.php:68, classes/Withdraw_Requests_List.php:51, classes/Withdraw_Requests_List.php:59
+#: classes/Instructors_List.php:42, classes/Options_V2.php:357, classes/Tutor_Setup.php:275, classes/Tutor_Setup.php:564, classes/Utils.php:2470
+msgid "Instructor"
+msgstr ""
+
+#: classes/Instructors_List.php:242, classes/Withdraw_Requests_List.php:51, classes/Withdraw_Requests_List.php:59
 msgid "Approve"
 msgstr ""
 
-#: classes/Instructors_List.php:71
+#: classes/Instructors_List.php:245
 msgid "Sure to Block?"
 msgstr ""
 
-#: classes/Instructors_List.php:71
+#: classes/Instructors_List.php:245
 msgid "Block"
 msgstr ""
 
-#: classes/Instructors_List.php:74
+#: classes/Instructors_List.php:248
 msgid "Sure to Un Block?"
 msgstr ""
 
-#: classes/Instructors_List.php:74
+#: classes/Instructors_List.php:248
 msgid "Unblock"
 msgstr ""
 
-#: classes/Instructors_List.php:84
+#: classes/Instructors_List.php:258
 msgid "Reject"
 msgstr ""
 
-#: classes/Instructors_List.php:84
+#: classes/Instructors_List.php:258
 msgid "Remove as Instructor"
 msgstr ""
 
-#: classes/Instructors_List.php:85
+#: classes/Instructors_List.php:259
 msgid "Sure to Reject?"
 msgstr ""
 
-#: classes/Instructors_List.php:85
+#: classes/Instructors_List.php:259
 msgid "Sure to Remove as Instructor?"
 msgstr ""
 
-#: classes/Instructors_List.php:116, classes/Students_List.php:66
+#: classes/Instructors_List.php:290, classes/Students_List.php:185
 msgid "Name"
 msgstr ""
 
-#: classes/Instructors_List.php:117, classes/Students_List.php:67, templates/dashboard/registration.php:83, templates/dashboard/registration.php:86, views/pages/add_new_instructor.php:69, views/pages/add_new_instructor.php:75, templates/dashboard/instructor/registration.php:86, templates/dashboard/instructor/registration.php:89
+#: classes/Instructors_List.php:291, classes/Students_List.php:186, templates/dashboard/registration.php:83, templates/dashboard/registration.php:86, views/pages/add_new_instructor.php:69, views/pages/add_new_instructor.php:75, templates/dashboard/instructor/registration.php:86, templates/dashboard/instructor/registration.php:89
 msgid "E-Mail"
 msgstr ""
 
-#: classes/Instructors_List.php:118
+#: classes/Instructors_List.php:292
 msgid "Total Course"
 msgstr ""
 
-#: classes/Instructors_List.php:119
+#: classes/Instructors_List.php:293
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:120, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, views/elements/filters.php:67, views/fragments/announcement-list.php:213, views/fragments/announcement-list.php:254, views/pages/course-list.php:135, templates/dashboard/assignments/submitted.php:69, templates/dashboard/assignments/submitted.php:113, templates/dashboard/my-quiz-attempts/attempts-details.php:114
+#: classes/Instructors_List.php:294, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, templates/dashboard/reviews.php:56, templates/dashboard/reviews.php:83, views/elements/filters.php:101, views/fragments/announcement-list.php:213, views/fragments/announcement-list.php:254, views/pages/course-list.php:161, templates/dashboard/assignments/submitted.php:69, templates/dashboard/assignments/submitted.php:113, templates/dashboard/my-quiz-attempts/attempts-details.php:129, templates/dashboard/my-quiz-attempts/attempts-details.php:141
 msgid "Date"
 msgstr ""
 
@@ -617,7 +625,7 @@ msgstr ""
 msgid "Couldn't create lesson."
 msgstr ""
 
-#: classes/Lesson.php:271, classes/Options.php:217, classes/Options_V2.php:382, classes/Options_V2.php:722, classes/Options_V2.php:1036, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:115, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/assignments.php:106, templates/dashboard/question-answer.php:28, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, views/elements/filters.php:35, views/elements/search-filter.php:28, views/fragments/announcement-list.php:113, views/pages/view_attempt.php:73, templates/dashboard/assignments/review.php:46, templates/dashboard/assignments/submitted.php:28, templates/single/quiz/top.php:27
+#: classes/Lesson.php:271, classes/Options.php:217, classes/Options_V2.php:382, classes/Options_V2.php:722, classes/Options_V2.php:1036, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:115, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/assignments.php:106, templates/dashboard/question-answer.php:28, templates/dashboard/reviews.php:97, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, views/elements/filters.php:47, views/elements/search-filter.php:28, views/fragments/announcement-list.php:113, views/pages/view_attempt.php:73, templates/dashboard/assignments/review.php:46, templates/dashboard/assignments/submitted.php:28, templates/single/quiz/top.php:27
 msgid "Course"
 msgstr ""
 
@@ -662,7 +670,7 @@ msgstr ""
 msgid "Keyword Search"
 msgstr ""
 
-#: classes/Options.php:110, classes/Options_V2.php:761, templates/course-filter/filters.php:33, templates/shortcode/instructor-filter.php:50
+#: classes/Options.php:110, classes/Options_V2.php:761, templates/course-filter/filters.php:33, templates/shortcode/instructor-filter.php:50, views/elements/filters.php:68
 msgid "Category"
 msgstr ""
 
@@ -678,7 +686,7 @@ msgstr ""
 msgid "Price Type"
 msgstr ""
 
-#: classes/Options.php:126, classes/Options_V2.php:327, classes/Utils.php:6864
+#: classes/Options.php:126, classes/Options_V2.php:327, classes/Utils.php:6888
 msgid "Dashboard Page"
 msgstr ""
 
@@ -1198,7 +1206,7 @@ msgstr ""
 msgid "Allow multiple instructors to upload their courses."
 msgstr ""
 
-#: classes/Options.php:567, classes/Options_V2.php:1067, classes/Utils.php:6865
+#: classes/Options.php:567, classes/Options_V2.php:1067, classes/Utils.php:6889
 msgid "Instructor Registration Page"
 msgstr ""
 
@@ -1226,7 +1234,7 @@ msgstr ""
 msgid "Student Profile settings"
 msgstr ""
 
-#: classes/Options.php:599, classes/Options_V2.php:1075, classes/Utils.php:6866
+#: classes/Options.php:599, classes/Options_V2.php:1075, classes/Utils.php:6890
 msgid "Student Registration Page"
 msgstr ""
 
@@ -1412,10 +1420,6 @@ msgstr ""
 
 #: classes/Options_V2.php:343, classes/Options_V2.php:365, classes/Options_V2.php:373, classes/Options_V2.php:406, classes/Options_V2.php:414, classes/Options_V2.php:434, classes/Options_V2.php:448, classes/Options_V2.php:456, classes/Options_V2.php:574, classes/Options_V2.php:600, classes/Options_V2.php:622, classes/Options_V2.php:645, classes/Options_V2.php:653, classes/Options_V2.php:700, classes/Options_V2.php:750, classes/Options_V2.php:758, classes/Options_V2.php:800, classes/Options_V2.php:808, classes/Options_V2.php:1045, classes/Options_V2.php:1053, classes/Options_V2.php:1105, classes/Options_V2.php:1113, classes/Options_V2.php:1121, classes/Options_V2.php:1129, classes/Options_V2.php:1137, classes/Options_V2.php:1145, classes/WooCommerce.php:266
 msgid ""
-msgstr ""
-
-#: classes/Options_V2.php:357, classes/Tutor_Setup.php:275, classes/Tutor_Setup.php:564, classes/Utils.php:2459
-msgid "Instructor"
 msgstr ""
 
 #: classes/Options_V2.php:364
@@ -1630,417 +1634,417 @@ msgstr ""
 msgid "Hide Frontend Admin Bar"
 msgstr ""
 
-#: classes/Post_types.php:40
+#: classes/Post_types.php:47
 msgctxt "post type general name"
 msgid "Courses"
 msgstr ""
 
-#: classes/Post_types.php:41
+#: classes/Post_types.php:48
 msgctxt "post type singular name"
 msgid "Course"
 msgstr ""
 
-#: classes/Post_types.php:42
+#: classes/Post_types.php:49
 msgctxt "admin menu"
 msgid "Courses"
 msgstr ""
 
-#: classes/Post_types.php:43
+#: classes/Post_types.php:50
 msgctxt "add new on admin bar"
 msgid "Course"
 msgstr ""
 
-#: classes/Post_types.php:44
+#: classes/Post_types.php:51
 msgctxt "tutor course add"
 msgid "Add New"
 msgstr ""
 
-#: classes/Post_types.php:45
+#: classes/Post_types.php:52
 msgid "Add New Course"
 msgstr ""
 
-#: classes/Post_types.php:46
+#: classes/Post_types.php:53
 msgid "New Course"
 msgstr ""
 
-#: classes/Post_types.php:47
+#: classes/Post_types.php:54
 msgid "Edit Course"
 msgstr ""
 
-#: classes/Post_types.php:48, templates/dashboard/create-course.php:29, templates/single/lesson/required-enroll.php:10
+#: classes/Post_types.php:55, templates/dashboard/create-course.php:29, views/pages/course-list.php:329, templates/single/lesson/required-enroll.php:10
 msgid "View Course"
 msgstr ""
 
-#: classes/Post_types.php:50
+#: classes/Post_types.php:57
 msgid "Search Courses"
 msgstr ""
 
-#: classes/Post_types.php:51
+#: classes/Post_types.php:58
 msgid "Parent Courses:"
 msgstr ""
 
-#: classes/Post_types.php:52
+#: classes/Post_types.php:59
 msgid "No courses found."
 msgstr ""
 
-#: classes/Post_types.php:53
+#: classes/Post_types.php:60
 msgid "No courses found in Trash."
 msgstr ""
 
-#: classes/Post_types.php:58, classes/Post_types.php:181, classes/Post_types.php:231, classes/Post_types.php:264, classes/Post_types.php:296, classes/Post_types.php:390
+#: classes/Post_types.php:65, classes/Post_types.php:188, classes/Post_types.php:238, classes/Post_types.php:271, classes/Post_types.php:303, classes/Post_types.php:397
 msgid "Description."
 msgstr ""
 
-#: classes/Post_types.php:94
+#: classes/Post_types.php:101
 msgctxt "taxonomy general name"
 msgid "Course Categories"
 msgstr ""
 
-#: classes/Post_types.php:95
+#: classes/Post_types.php:102
 msgctxt "taxonomy singular name"
 msgid "Category"
 msgstr ""
 
-#: classes/Post_types.php:96
+#: classes/Post_types.php:103
 msgid "Search Categories"
 msgstr ""
 
-#: classes/Post_types.php:97
+#: classes/Post_types.php:104
 msgid "Popular Categories"
 msgstr ""
 
-#: classes/Post_types.php:98
+#: classes/Post_types.php:105
 msgid "All Categories"
 msgstr ""
 
-#: classes/Post_types.php:101
+#: classes/Post_types.php:108
 msgid "Edit Category"
 msgstr ""
 
-#: classes/Post_types.php:102
+#: classes/Post_types.php:109
 msgid "Update Category"
 msgstr ""
 
-#: classes/Post_types.php:103
+#: classes/Post_types.php:110
 msgid "Add New Category"
 msgstr ""
 
-#: classes/Post_types.php:104
+#: classes/Post_types.php:111
 msgid "New Category Name"
 msgstr ""
 
-#: classes/Post_types.php:105
+#: classes/Post_types.php:112
 msgid "Separate categories with commas"
 msgstr ""
 
-#: classes/Post_types.php:106
+#: classes/Post_types.php:113
 msgid "Add or remove categories"
 msgstr ""
 
-#: classes/Post_types.php:107
+#: classes/Post_types.php:114
 msgid "Choose from the most used categories"
 msgstr ""
 
-#: classes/Post_types.php:108
+#: classes/Post_types.php:115
 msgid "No categories found."
 msgstr ""
 
-#: classes/Post_types.php:109
+#: classes/Post_types.php:116
 msgid "Course Categories"
 msgstr ""
 
-#: classes/Post_types.php:126
+#: classes/Post_types.php:133
 msgctxt "taxonomy general name"
 msgid "Tags"
 msgstr ""
 
-#: classes/Post_types.php:127
+#: classes/Post_types.php:134
 msgctxt "taxonomy singular name"
 msgid "Tag"
 msgstr ""
 
-#: classes/Post_types.php:128
+#: classes/Post_types.php:135
 msgid "Search Tags"
 msgstr ""
 
-#: classes/Post_types.php:129
+#: classes/Post_types.php:136
 msgid "Popular Tags"
 msgstr ""
 
-#: classes/Post_types.php:130
+#: classes/Post_types.php:137
 msgid "All Tags"
 msgstr ""
 
-#: classes/Post_types.php:133
+#: classes/Post_types.php:140
 msgid "Edit Tag"
 msgstr ""
 
-#: classes/Post_types.php:134
+#: classes/Post_types.php:141
 msgid "Update Tag"
 msgstr ""
 
-#: classes/Post_types.php:135
+#: classes/Post_types.php:142
 msgid "Add New Tag"
 msgstr ""
 
-#: classes/Post_types.php:136
+#: classes/Post_types.php:143
 msgid "New Tag Name"
 msgstr ""
 
-#: classes/Post_types.php:137
+#: classes/Post_types.php:144
 msgid "Separate Tags with commas"
 msgstr ""
 
-#: classes/Post_types.php:138
+#: classes/Post_types.php:145
 msgid "Add or remove Tags"
 msgstr ""
 
-#: classes/Post_types.php:139
+#: classes/Post_types.php:146
 msgid "Choose from the most used Tags"
 msgstr ""
 
-#: classes/Post_types.php:140
+#: classes/Post_types.php:147
 msgid "No Tags found."
 msgstr ""
 
-#: classes/Post_types.php:163
+#: classes/Post_types.php:170
 msgctxt "post type general name"
 msgid "Lessons"
 msgstr ""
 
-#: classes/Post_types.php:164
+#: classes/Post_types.php:171
 msgctxt "post type singular name"
 msgid "Lesson"
 msgstr ""
 
-#: classes/Post_types.php:165
+#: classes/Post_types.php:172
 msgctxt "admin menu"
 msgid "Lessons"
 msgstr ""
 
-#: classes/Post_types.php:166
+#: classes/Post_types.php:173
 msgctxt "add new on admin bar"
 msgid "Lesson"
 msgstr ""
 
-#: classes/Post_types.php:167
+#: classes/Post_types.php:174
 msgctxt "tutor lesson add"
 msgid "Add New"
 msgstr ""
 
-#: classes/Post_types.php:168
+#: classes/Post_types.php:175
 msgid "Add New Lesson"
 msgstr ""
 
-#: classes/Post_types.php:169
+#: classes/Post_types.php:176
 msgid "New Lesson"
 msgstr ""
 
-#: classes/Post_types.php:170
+#: classes/Post_types.php:177
 msgid "Edit Lesson"
 msgstr ""
 
-#: classes/Post_types.php:171
+#: classes/Post_types.php:178
 msgid "View Lesson"
 msgstr ""
 
-#: classes/Post_types.php:173
+#: classes/Post_types.php:180
 msgid "Search Lessons"
 msgstr ""
 
-#: classes/Post_types.php:174
+#: classes/Post_types.php:181
 msgid "Parent Lessons:"
 msgstr ""
 
-#: classes/Post_types.php:175
+#: classes/Post_types.php:182
 msgid "No lessons found."
 msgstr ""
 
-#: classes/Post_types.php:176
+#: classes/Post_types.php:183
 msgid "No lessons found in Trash."
 msgstr ""
 
-#: classes/Post_types.php:213
+#: classes/Post_types.php:220
 msgctxt "post type general name"
 msgid "Quizzes"
 msgstr ""
 
-#: classes/Post_types.php:214
+#: classes/Post_types.php:221
 msgctxt "post type singular name"
 msgid "Quiz"
 msgstr ""
 
-#: classes/Post_types.php:215
-msgctxt "admin menu"
-msgid "Quizzes"
-msgstr ""
-
-#: classes/Post_types.php:216
-msgctxt "add new on admin bar"
-msgid "Quiz"
-msgstr ""
-
-#: classes/Post_types.php:217
-msgctxt "tutor quiz add"
-msgid "Add New"
-msgstr ""
-
-#: classes/Post_types.php:218
-msgid "Add New Quiz"
-msgstr ""
-
-#: classes/Post_types.php:219
-msgid "New Quiz"
-msgstr ""
-
-#: classes/Post_types.php:220
-msgid "Edit Quiz"
-msgstr ""
-
-#: classes/Post_types.php:221
-msgid "View Quiz"
-msgstr ""
-
 #: classes/Post_types.php:222
+msgctxt "admin menu"
 msgid "Quizzes"
 msgstr ""
 
 #: classes/Post_types.php:223
-msgid "Search Quizzes"
+msgctxt "add new on admin bar"
+msgid "Quiz"
 msgstr ""
 
 #: classes/Post_types.php:224
-msgid "Parent Quizzes:"
+msgctxt "tutor quiz add"
+msgid "Add New"
 msgstr ""
 
 #: classes/Post_types.php:225
-msgid "No quizzes found."
+msgid "Add New Quiz"
 msgstr ""
 
 #: classes/Post_types.php:226
+msgid "New Quiz"
+msgstr ""
+
+#: classes/Post_types.php:227
+msgid "Edit Quiz"
+msgstr ""
+
+#: classes/Post_types.php:228
+msgid "View Quiz"
+msgstr ""
+
+#: classes/Post_types.php:229
+msgid "Quizzes"
+msgstr ""
+
+#: classes/Post_types.php:230
+msgid "Search Quizzes"
+msgstr ""
+
+#: classes/Post_types.php:231
+msgid "Parent Quizzes:"
+msgstr ""
+
+#: classes/Post_types.php:232
+msgid "No quizzes found."
+msgstr ""
+
+#: classes/Post_types.php:233
 msgid "No quizzes found in Trash."
 msgstr ""
 
-#: classes/Post_types.php:278
+#: classes/Post_types.php:285
 msgctxt "post type general name"
 msgid "Assignments"
 msgstr ""
 
-#: classes/Post_types.php:279
+#: classes/Post_types.php:286
 msgctxt "post type singular name"
 msgid "Assignment"
 msgstr ""
 
-#: classes/Post_types.php:280
+#: classes/Post_types.php:287
 msgctxt "admin menu"
 msgid "Assignments"
 msgstr ""
 
-#: classes/Post_types.php:281
+#: classes/Post_types.php:288
 msgctxt "add new on admin bar"
 msgid "Assignment"
 msgstr ""
 
-#: classes/Post_types.php:282
+#: classes/Post_types.php:289
 msgctxt "tutor assignment add"
 msgid "Add New"
 msgstr ""
 
-#: classes/Post_types.php:283
+#: classes/Post_types.php:290
 msgid "Add New Assignment"
 msgstr ""
 
-#: classes/Post_types.php:284
+#: classes/Post_types.php:291
 msgid "New Assignment"
 msgstr ""
 
-#: classes/Post_types.php:285
+#: classes/Post_types.php:292
 msgid "Edit Assignment"
 msgstr ""
 
-#: classes/Post_types.php:286
+#: classes/Post_types.php:293
 msgid "View Assignment"
 msgstr ""
 
-#: classes/Post_types.php:287
+#: classes/Post_types.php:294
 msgid "Assignments"
 msgstr ""
 
-#: classes/Post_types.php:288
+#: classes/Post_types.php:295
 msgid "Search Assignments"
 msgstr ""
 
-#: classes/Post_types.php:289
+#: classes/Post_types.php:296
 msgid "Parent Assignments:"
 msgstr ""
 
-#: classes/Post_types.php:290
+#: classes/Post_types.php:297
 msgid "No Assignments found."
 msgstr ""
 
-#: classes/Post_types.php:291
+#: classes/Post_types.php:298
 msgid "No Assignments found in Trash."
 msgstr ""
 
-#: classes/Post_types.php:335, classes/Post_types.php:338
+#: classes/Post_types.php:342, classes/Post_types.php:345
 msgid "Course updated."
 msgstr ""
 
-#: classes/Post_types.php:336
+#: classes/Post_types.php:343
 msgid "Custom field updated."
 msgstr ""
 
-#: classes/Post_types.php:337
+#: classes/Post_types.php:344
 msgid "Custom field deleted."
 msgstr ""
 
 #. translators: %s: date and time of the revision
-#: classes/Post_types.php:340
+#: classes/Post_types.php:347
 msgid "Course restored to revision from %s"
 msgstr ""
 
-#: classes/Post_types.php:341
+#: classes/Post_types.php:348
 msgid "Course published."
 msgstr ""
 
-#: classes/Post_types.php:342
+#: classes/Post_types.php:349
 msgid "Course saved."
 msgstr ""
 
-#: classes/Post_types.php:343
+#: classes/Post_types.php:350
 msgid "Course submitted."
 msgstr ""
 
-#: classes/Post_types.php:345
+#: classes/Post_types.php:352
 msgid "Course scheduled for: <strong>%1$s</strong>."
 msgstr ""
 
 #. translators: Publish box date format, see http://php.net/date
-#: classes/Post_types.php:347
+#: classes/Post_types.php:354
 msgid "M j, Y @ G:i"
 msgstr ""
 
-#: classes/Post_types.php:349
+#: classes/Post_types.php:356
 msgid "Course draft updated."
 msgstr ""
 
-#: classes/Post_types.php:355
+#: classes/Post_types.php:362
 msgid "View course"
 msgstr ""
 
-#: classes/Post_types.php:361
+#: classes/Post_types.php:368
 msgid "Preview course"
 msgstr ""
 
-#: classes/Question_Answers_List.php:44, classes/Question_Answers_List.php:76, classes/Quiz.php:1086, templates/dashboard/question-answer.php:29, views/modal/question_form.php:145, views/pages/answer.php:11, templates/dashboard/my-quiz-attempts/attempts-details.php:215, templates/dashboard/question-answer/answers.php:13
+#: classes/Question_Answers_List.php:44, classes/Question_Answers_List.php:76, classes/Quiz.php:1104, templates/dashboard/question-answer.php:29, views/modal/question_form.php:145, views/pages/answer.php:11, templates/dashboard/my-quiz-attempts/attempts-details.php:234, templates/dashboard/question-answer/answers.php:13
 msgid "Answer"
 msgstr ""
 
-#: classes/Question_Answers_List.php:73, classes/Quiz.php:771, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/question-answer.php:26, views/metabox/course-topics.php:47, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:115, templates/dashboard/my-quiz-attempts/attempts-details.php:212, templates/dashboard/quiz-attempts/quiz-reviews.php:227
+#: classes/Question_Answers_List.php:73, classes/Quiz.php:771, templates/dashboard/my-quiz-attempts.php:34, templates/dashboard/my-quiz-attempts.php:79, templates/dashboard/question-answer.php:26, views/metabox/course-topics.php:47, views/pages/view_attempt.php:192, templates/dashboard/my-quiz-attempts/attempts-details.php:130, templates/dashboard/my-quiz-attempts/attempts-details.php:148, templates/dashboard/my-quiz-attempts/attempts-details.php:231, templates/dashboard/my-quiz-attempts/attempts-details.php:258, templates/dashboard/quiz-attempts/quiz-reviews.php:227
 msgid "Question"
 msgstr ""
 
-#: classes/Question_Answers_List.php:74, templates/student-public-profile.php:111, templates/dashboard/question-answer.php:27, templates/dashboard/quiz-attempts.php:32, views/elements/search-filter.php:31, templates/dashboard/assignments/review.php:54, templates/dashboard/assignments/submitted.php:75, templates/dashboard/assignments/submitted.php:118
+#: classes/Question_Answers_List.php:74, templates/student-public-profile.php:111, templates/dashboard/question-answer.php:27, templates/dashboard/quiz-attempts.php:32, templates/dashboard/reviews.php:51, templates/dashboard/reviews.php:75, views/elements/search-filter.php:31, templates/dashboard/assignments/review.php:54, templates/dashboard/assignments/submitted.php:75, templates/dashboard/assignments/submitted.php:118
 msgid "Student"
 msgstr ""
 
@@ -2064,19 +2068,19 @@ msgstr ""
 msgid "False"
 msgstr ""
 
-#: classes/Quiz.php:1070
+#: classes/Quiz.php:1084
 msgid "Answer options &amp; mark correct"
 msgstr ""
 
-#: classes/Quiz.php:1073
+#: classes/Quiz.php:1087
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order exactly."
 msgstr ""
 
-#: classes/Quiz.php:1108, classes/Quiz.php:1102, views/modal/question_form.php:169, views/modal/question_form.php:162, views/pages/view_attempt.php:342, templates/dashboard/quiz-attempts/quiz-reviews.php:400
+#: classes/Quiz.php:1126, classes/Quiz.php:1120, views/modal/question_form.php:169, views/modal/question_form.php:162, views/pages/view_attempt.php:342, templates/dashboard/quiz-attempts/quiz-reviews.php:400
 msgid "Mark as correct"
 msgstr ""
 
-#: classes/Quiz.php:1228
+#: classes/Quiz.php:1246
 msgid "Access Denied."
 msgstr ""
 
@@ -2096,11 +2100,11 @@ msgstr ""
 msgid " pass "
 msgstr ""
 
-#: classes/Quiz_Attempts_List.php:98, templates/dashboard/my-quiz-attempts.php:97, templates/dashboard/quiz-attempts.php:98, views/pages/view_attempt.php:101, templates/dashboard/my-quiz-attempts/attempts-details.php:171, templates/dashboard/quiz-attempts/quiz-reviews.php:159, templates/single/quiz/previous-attempts.php:75
+#: classes/Quiz_Attempts_List.php:98, templates/dashboard/my-quiz-attempts.php:111, templates/dashboard/quiz-attempts.php:98, views/pages/view_attempt.php:101, templates/dashboard/my-quiz-attempts/attempts-details.php:191, templates/dashboard/quiz-attempts/quiz-reviews.php:159, templates/single/quiz/previous-attempts.php:75
 msgid "Fail"
 msgstr ""
 
-#: classes/Quiz_Attempts_List.php:96, templates/dashboard/my-quiz-attempts.php:97, templates/dashboard/quiz-attempts.php:98, views/pages/view_attempt.php:99, templates/dashboard/my-quiz-attempts/attempts-details.php:169, templates/dashboard/quiz-attempts/quiz-reviews.php:157, templates/single/quiz/previous-attempts.php:75
+#: classes/Quiz_Attempts_List.php:96, templates/dashboard/my-quiz-attempts.php:110, templates/dashboard/quiz-attempts.php:98, views/pages/view_attempt.php:99, templates/dashboard/my-quiz-attempts/attempts-details.php:189, templates/dashboard/quiz-attempts/quiz-reviews.php:157, templates/single/quiz/previous-attempts.php:75
 msgid "Pass"
 msgstr ""
 
@@ -2136,11 +2140,19 @@ msgstr ""
 msgid "Password set successfully"
 msgstr ""
 
-#: classes/Students_List.php:68
+#: classes/Students_List.php:184
+msgid "Photo"
+msgstr ""
+
+#: classes/Students_List.php:187, templates/dashboard/my-profile.php:21
+msgid "Registration Date"
+msgstr ""
+
+#: classes/Students_List.php:188
 msgid "Course Taken"
 msgstr ""
 
-#: classes/Students_List.php:69, templates/dashboard/enrolled-courses/completed-courses.php:9
+#: classes/Students_List.php:189, templates/dashboard/enrolled-courses/completed-courses.php:9
 msgid "Completed Course"
 msgstr ""
 
@@ -2308,7 +2320,7 @@ msgstr ""
 msgid "Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it."
 msgstr ""
 
-#: classes/Tutor.php:542, classes/Utils.php:2449, templates/dashboard.php:50, templates/dashboard/dashboard.php:9
+#: classes/Tutor.php:542, classes/Utils.php:2460, templates/dashboard.php:50, templates/dashboard/dashboard.php:9
 msgid "Dashboard"
 msgstr ""
 
@@ -2332,7 +2344,7 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:108, templates/dashboard/assignments.php:53, views/elements/filters.php:54
+#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:108, templates/dashboard/assignments.php:53, views/elements/filters.php:88
 msgid "Sort By"
 msgstr ""
 
@@ -2340,11 +2352,11 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:48, views/elements/filters.php:48, views/fragments/announcement-list.php:43, views/pages/course-list.php:318
+#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:48, views/elements/filters.php:60, views/fragments/announcement-list.php:43, views/pages/course-list.php:352
 msgid "No course found"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/elements/filters.php:74, views/options/settings.php:22, views/options/tools.php:17, views/pages/question_answer.php:23, views/pages/students.php:13, views/pages/withdraw_requests.php:13
+#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/elements/filters.php:113, views/options/settings.php:22, views/options/tools.php:17, views/pages/question_answer.php:23, views/pages/withdraw_requests.php:13
 msgid "Search"
 msgstr ""
 
@@ -2692,191 +2704,191 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: classes/Utils.php:922
+#: classes/Utils.php:933
 msgid "Nonce not matched"
 msgstr ""
 
-#: classes/Utils.php:1294, templates/dashboard.php:56
+#: classes/Utils.php:1305, templates/dashboard.php:56
 msgid "Q&A"
 msgstr ""
 
-#: classes/Utils.php:2144, templates/student-public-profile.php:123
+#: classes/Utils.php:2155, templates/student-public-profile.php:123
 msgid "Course Enrolled"
 msgstr ""
 
-#: classes/Utils.php:2450, templates/dashboard/my-profile.php:31
+#: classes/Utils.php:2461, templates/dashboard/my-profile.php:31
 msgid "My Profile"
 msgstr ""
 
-#: classes/Utils.php:2451, templates/dashboard/dashboard.php:39, templates/dashboard/enrolled-courses.php:9
+#: classes/Utils.php:2462, templates/dashboard/dashboard.php:40, templates/dashboard/enrolled-courses.php:9
 msgid "Enrolled Courses"
 msgstr ""
 
-#: classes/Utils.php:2452, templates/dashboard/wishlist.php:10
+#: classes/Utils.php:2463, templates/dashboard/wishlist.php:10
 msgid "Wishlist"
 msgstr ""
 
-#: classes/Utils.php:2453
+#: classes/Utils.php:2464
 msgid "Reviews"
 msgstr ""
 
-#: classes/Utils.php:2454, templates/dashboard/my-quiz-attempts.php:26
+#: classes/Utils.php:2465, templates/dashboard/my-quiz-attempts.php:26
 msgid "My Quiz Attempts"
 msgstr ""
 
-#: classes/Utils.php:2455, templates/dashboard/purchase_history.php:9
+#: classes/Utils.php:2466, templates/dashboard/purchase_history.php:9
 msgid "Purchase History"
 msgstr ""
 
-#: classes/Utils.php:2460, templates/dashboard.php:130
+#: classes/Utils.php:2471, templates/dashboard.php:130
 msgid "Create Course"
 msgstr ""
 
-#: classes/Utils.php:2461, templates/dashboard/my-courses.php:9
+#: classes/Utils.php:2472, templates/dashboard/my-courses.php:9
 msgid "My Courses"
 msgstr ""
 
-#: classes/Utils.php:2463
+#: classes/Utils.php:2474
 msgid "Withdrawals"
 msgstr ""
 
-#: classes/Utils.php:2465, templates/dashboard/question-answer.php:10, views/pages/question_answer.php:18
+#: classes/Utils.php:2476, templates/dashboard/question-answer.php:10, views/pages/question_answer.php:18
 msgid "Question & Answer"
 msgstr ""
 
-#: classes/Utils.php:2478
+#: classes/Utils.php:2489
 msgid "Logout"
 msgstr ""
 
-#: classes/Utils.php:2489
+#: classes/Utils.php:2500
 msgid "Retrieve Password"
 msgstr ""
 
-#: classes/Utils.php:2593, templates/dashboard/dashboard.php:27, templates/dashboard/my-quiz-attempts.php:95, templates/dashboard/my-quiz-attempts/attempts-details.php:380
+#: classes/Utils.php:2604, templates/dashboard/dashboard.php:27, templates/dashboard/my-quiz-attempts.php:107, views/pages/course-list.php:130, templates/dashboard/my-quiz-attempts/attempts-details.php:437
 msgid "Pending"
 msgstr ""
 
-#: classes/Utils.php:2594
+#: classes/Utils.php:2605
 msgid "Approved"
 msgstr ""
 
-#: classes/Utils.php:2595
+#: classes/Utils.php:2606
 msgid "Blocked"
 msgstr ""
 
-#: classes/Utils.php:4237
+#: classes/Utils.php:4261
 msgid "True/False"
 msgstr ""
 
-#: classes/Utils.php:4238
+#: classes/Utils.php:4262
 msgid "Single Choice"
 msgstr ""
 
-#: classes/Utils.php:4239
+#: classes/Utils.php:4263
 msgid "Multiple Choice"
 msgstr ""
 
-#: classes/Utils.php:4240
+#: classes/Utils.php:4264
 msgid "Open Ended/Essay"
 msgstr ""
 
-#: classes/Utils.php:4241
+#: classes/Utils.php:4265
 msgid "Fill In The Blanks"
 msgstr ""
 
-#: classes/Utils.php:4242
+#: classes/Utils.php:4266
 msgid "Short Answer"
 msgstr ""
 
-#: classes/Utils.php:4243
+#: classes/Utils.php:4267
 msgid "Matching"
 msgstr ""
 
-#: classes/Utils.php:4244
+#: classes/Utils.php:4268
 msgid "Image Matching"
 msgstr ""
 
-#: classes/Utils.php:4245
+#: classes/Utils.php:4269
 msgid "Image Answering"
 msgstr ""
 
-#: classes/Utils.php:4246
+#: classes/Utils.php:4270
 msgid "Ordering"
 msgstr ""
 
-#: classes/Utils.php:5073
+#: classes/Utils.php:5097
 msgid "All Levels"
 msgstr ""
 
-#: classes/Utils.php:5074, templates/course-filter/filters.php:4
+#: classes/Utils.php:5098, templates/course-filter/filters.php:4
 msgid "Beginner"
 msgstr ""
 
-#: classes/Utils.php:5075, templates/course-filter/filters.php:5
+#: classes/Utils.php:5099, templates/course-filter/filters.php:5
 msgid "Intermediate"
 msgstr ""
 
-#: classes/Utils.php:5076, templates/course-filter/filters.php:6
+#: classes/Utils.php:5100, templates/course-filter/filters.php:6
 msgid "Expert"
 msgstr ""
 
-#: classes/Utils.php:5099
+#: classes/Utils.php:5123
 msgid "Courses Taken"
 msgstr ""
 
-#: classes/Utils.php:5106
+#: classes/Utils.php:5130
 msgid "Enrolled Course"
 msgstr ""
 
-#: classes/Utils.php:5110
+#: classes/Utils.php:5134
 msgid "Reviews Written"
 msgstr ""
 
-#: classes/Utils.php:5396
+#: classes/Utils.php:5420
 msgid "Facebook"
 msgstr ""
 
-#: classes/Utils.php:5401
+#: classes/Utils.php:5425
 msgid "Twitter"
 msgstr ""
 
-#: classes/Utils.php:5406
+#: classes/Utils.php:5430
 msgid "Linkedin"
 msgstr ""
 
-#: classes/Utils.php:5411
+#: classes/Utils.php:5435
 msgid "Website"
 msgstr ""
 
-#: classes/Utils.php:5416
+#: classes/Utils.php:5440
 msgid "Github"
 msgstr ""
 
-#: classes/Utils.php:6829
+#: classes/Utils.php:6853
 msgid "Not Taken"
 msgstr ""
 
-#: classes/Utils.php:6827
+#: classes/Utils.php:6851, templates/dashboard/enrolled-courses.php:22
 msgid "In Progress"
 msgstr ""
 
-#: classes/Utils.php:6823
+#: classes/Utils.php:6847
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:7006, templates/dashboard/my-profile.php:22, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:123, templates/dashboard/settings/profile.php:124
+#: classes/Utils.php:7030, templates/dashboard/my-profile.php:22, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:123, templates/dashboard/settings/profile.php:124
 msgid "First Name"
 msgstr ""
 
-#: classes/Utils.php:7007, templates/dashboard/my-profile.php:23, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:130, templates/dashboard/settings/profile.php:131
+#: classes/Utils.php:7031, templates/dashboard/my-profile.php:23, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:130, templates/dashboard/settings/profile.php:131
 msgid "Last Name"
 msgstr ""
 
-#: classes/Utils.php:7008
+#: classes/Utils.php:7032
 msgid "Profile Photo"
 msgstr ""
 
-#: classes/Utils.php:7009
+#: classes/Utils.php:7033
 msgid "Withdraw Method"
 msgstr ""
 
@@ -2960,7 +2972,7 @@ msgstr ""
 msgid "Are you Sure? It can not be undone."
 msgstr ""
 
-#: classes/Withdraw_Requests_List.php:63, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:43, views/fragments/announcement-list.php:136, views/fragments/announcement-list.php:287, views/modal/edit_quiz.php:55, templates/dashboard/settings/profile.php:96, views/options/field-types/media.php:30
+#: classes/Withdraw_Requests_List.php:63, templates/dashboard/my-courses.php:78, templates/dashboard/question-answer.php:43, views/fragments/announcement-list.php:136, views/fragments/announcement-list.php:287, views/modal/edit_quiz.php:55, views/pages/course-list.php:338, templates/dashboard/reviews/given-reviews.php:73, templates/dashboard/settings/profile.php:96, views/options/field-types/media.php:30
 msgid "Delete"
 msgstr ""
 
@@ -3234,7 +3246,7 @@ msgstr ""
 msgid "Biography"
 msgstr ""
 
-#: templates/course-filter/filters.php:9, templates/dashboard/create-course.php:210, templates/loop/course-continue.php:19, templates/loop/course-in-cart.php:20, templates/loop/course-price-edd.php:20, templates/loop/course-price-woocommerce.php:20, templates/loop/course-price-woocommerce.php:35, templates/loop/course-price.php:19, views/metabox/course-add-edd-product-metabox.php:59, views/metabox/course-add-product-metabox.php:66, views/pages/course-list.php:263, templates/single/course/wc-price-html.php:23
+#: templates/course-filter/filters.php:9, templates/dashboard/create-course.php:210, templates/loop/course-continue.php:19, templates/loop/course-in-cart.php:20, templates/loop/course-price-edd.php:20, templates/loop/course-price-woocommerce.php:20, templates/loop/course-price-woocommerce.php:35, templates/loop/course-price.php:19, views/metabox/course-add-edd-product-metabox.php:59, views/metabox/course-add-product-metabox.php:66, views/pages/course-list.php:290, templates/single/course/wc-price-html.php:23
 msgid "Free"
 msgstr ""
 
@@ -3250,23 +3262,23 @@ msgstr ""
 msgid "Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:68, views/pages/announcements.php:88
+#: templates/dashboard/announcements.php:68, views/pages/announcements.php:89
 msgid "Create Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:71, views/pages/announcements.php:91
+#: templates/dashboard/announcements.php:71, views/pages/announcements.php:92
 msgid "Notify all students of your course"
 msgstr ""
 
-#: templates/dashboard/announcements.php:77, views/pages/announcements.php:97
+#: templates/dashboard/announcements.php:77, views/pages/announcements.php:98
 msgid "Add New Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:110, templates/dashboard/assignments.php:55, views/elements/filters.php:61
+#: templates/dashboard/announcements.php:110, templates/dashboard/assignments.php:55, views/elements/filters.php:95
 msgid "ASC"
 msgstr ""
 
-#: templates/dashboard/announcements.php:111, templates/dashboard/assignments.php:56, views/elements/filters.php:58
+#: templates/dashboard/announcements.php:111, templates/dashboard/assignments.php:56, views/elements/filters.php:92
 msgid "DESC"
 msgstr ""
 
@@ -3278,7 +3290,7 @@ msgstr ""
 msgid "Assignment Name"
 msgstr ""
 
-#: templates/dashboard/assignments.php:78, templates/dashboard/my-quiz-attempts.php:36, templates/dashboard/my-quiz-attempts/attempts-details.php:116, templates/dashboard/quiz-attempts/quiz-reviews.php:104
+#: templates/dashboard/assignments.php:78, templates/dashboard/my-quiz-attempts.php:35, templates/dashboard/my-quiz-attempts.php:84, templates/dashboard/my-quiz-attempts/attempts-details.php:131, templates/dashboard/my-quiz-attempts/attempts-details.php:153, templates/dashboard/quiz-attempts/quiz-reviews.php:104
 msgid "Total Marks"
 msgstr ""
 
@@ -3402,59 +3414,59 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:47, templates/dashboard/enrolled-courses.php:17, templates/dashboard/enrolled-courses/active-courses.php:16, templates/dashboard/enrolled-courses/completed-courses.php:16
+#: templates/dashboard/dashboard.php:50, templates/dashboard/enrolled-courses/active-courses.php:16, templates/dashboard/enrolled-courses/completed-courses.php:16
 msgid "Active Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:55, templates/dashboard/enrolled-courses.php:19, templates/dashboard/enrolled-courses/active-courses.php:18, templates/dashboard/enrolled-courses/completed-courses.php:18
+#: templates/dashboard/dashboard.php:60, templates/dashboard/enrolled-courses.php:27, templates/dashboard/enrolled-courses/active-courses.php:18, templates/dashboard/enrolled-courses/completed-courses.php:18
 msgid "Completed Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:67
+#: templates/dashboard/dashboard.php:74
 msgid "Total Students"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:75
+#: templates/dashboard/dashboard.php:84
 msgid "Total Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:83
+#: templates/dashboard/dashboard.php:94
 msgid "Total Earnings"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:105
+#: templates/dashboard/dashboard.php:116
 msgid "Popular Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:107
+#: templates/dashboard/dashboard.php:118
 msgid "View All"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:116, templates/dashboard/dashboard.php:143
+#: templates/dashboard/dashboard.php:127, templates/dashboard/dashboard.php:154
 msgid "Course Name"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:121, templates/dashboard/dashboard.php:150
+#: templates/dashboard/dashboard.php:132, templates/dashboard/dashboard.php:161
 msgid "Enrolled"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:127, templates/dashboard/dashboard.php:156
+#: templates/dashboard/dashboard.php:138, templates/dashboard/dashboard.php:166
 msgid "Rating"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:16, views/elements/filters.php:40, templates/dashboard/enrolled-courses/active-courses.php:15, templates/dashboard/enrolled-courses/completed-courses.php:15
+#: templates/dashboard/enrolled-courses.php:17, views/elements/filters.php:52, templates/dashboard/enrolled-courses/active-courses.php:15, templates/dashboard/enrolled-courses/completed-courses.php:15
 msgid "All Courses"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:81
+#: templates/dashboard/enrolled-courses.php:91
 msgid "You haven't purchased any course"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:59, templates/dashboard/enrolled-courses/active-courses.php:53, templates/dashboard/enrolled-courses/completed-courses.php:53
+#: templates/dashboard/enrolled-courses.php:69, templates/dashboard/enrolled-courses/active-courses.php:53, templates/dashboard/enrolled-courses/completed-courses.php:53
 msgid "Total Lessons:"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:65, templates/dashboard/enrolled-courses/active-courses.php:59, templates/dashboard/enrolled-courses/completed-courses.php:59
+#: templates/dashboard/enrolled-courses.php:75, templates/dashboard/enrolled-courses/active-courses.php:59, templates/dashboard/enrolled-courses/completed-courses.php:59
 msgid "Completed Lessons:"
 msgstr ""
 
@@ -3466,7 +3478,7 @@ msgstr ""
 msgid "Not Found"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:91, templates/dashboard/reviews.php:85, templates/dashboard/assignments/review.php:19, templates/dashboard/reviews/given-reviews.php:37
+#: templates/dashboard/my-courses.php:91, templates/dashboard/reviews.php:113, templates/dashboard/assignments/review.php:19, templates/dashboard/reviews/given-reviews.php:39
 msgid "Sorry, but you are looking for something that isn't here."
 msgstr ""
 
@@ -3486,7 +3498,7 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:75, views/fragments/announcement-list.php:139, views/fragments/announcement-list.php:281, views/modal/edit_quiz.php:49
+#: templates/dashboard/my-courses.php:75, views/fragments/announcement-list.php:139, views/fragments/announcement-list.php:281, views/modal/edit_quiz.php:49, views/pages/course-list.php:313, templates/dashboard/reviews/given-reviews.php:70
 msgid "Edit"
 msgstr ""
 
@@ -3498,16 +3510,12 @@ msgstr ""
 msgid "You are going to delete this course, it can't be undone"
 msgstr ""
 
-#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:131, views/fragments/announcement-list.php:173, views/metabox/course-topics.php:74, views/metabox/course-topics.php:110, views/metabox/course-topics.php:143, views/modal/review.php:19, views/modal/topic-form.php:46, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:131, views/fragments/announcement-list.php:173, views/metabox/course-topics.php:74, views/metabox/course-topics.php:110, views/metabox/course-topics.php:143, views/modal/review.php:34, views/modal/topic-form.php:46, templates/dashboard/reviews/given-reviews.php:122, templates/dashboard/reviews/given-reviews.php:153, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
 #: templates/dashboard/my-courses.php:110
 msgid "Yes, Delete Course"
-msgstr ""
-
-#: templates/dashboard/my-profile.php:21
-msgid "Registration Date"
 msgstr ""
 
 #: templates/dashboard/my-profile.php:24
@@ -3526,27 +3534,27 @@ msgstr ""
 msgid "Bio"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:111
+#: templates/dashboard/my-quiz-attempts.php:123
 msgid "You have not attempted any quiz yet"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:34, views/metabox/course-topics.php:43
+#: templates/dashboard/my-quiz-attempts.php:33, templates/dashboard/my-quiz-attempts.php:67, views/metabox/course-topics.php:43
 msgid "Quiz Info"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:37, templates/dashboard/quiz-attempts.php:33, templates/single/quiz/previous-attempts.php:17
+#: templates/dashboard/my-quiz-attempts.php:36, templates/dashboard/my-quiz-attempts.php:89, templates/dashboard/quiz-attempts.php:33, templates/single/quiz/previous-attempts.php:17
 msgid "Correct Answer"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:38, templates/dashboard/quiz-attempts.php:34, templates/single/quiz/previous-attempts.php:18
+#: templates/dashboard/my-quiz-attempts.php:37, templates/dashboard/my-quiz-attempts.php:94, templates/dashboard/quiz-attempts.php:34, templates/single/quiz/previous-attempts.php:18
 msgid "Incorrect Answer"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:39, templates/dashboard/my-quiz-attempts/attempts-details.php:120, templates/dashboard/quiz-attempts/quiz-reviews.php:108, templates/single/quiz/previous-attempts.php:19
+#: templates/dashboard/my-quiz-attempts.php:38, templates/dashboard/my-quiz-attempts.php:99, templates/dashboard/my-quiz-attempts/attempts-details.php:135, templates/dashboard/my-quiz-attempts/attempts-details.php:176, templates/dashboard/quiz-attempts/quiz-reviews.php:108, templates/single/quiz/previous-attempts.php:19
 msgid "Earned Marks"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts.php:40, templates/dashboard/quiz-attempts.php:36, views/pages/view_attempt.php:87, templates/dashboard/assignments/submitted.php:89, templates/dashboard/assignments/submitted.php:134, templates/dashboard/my-quiz-attempts/attempts-details.php:121, templates/single/quiz/previous-attempts.php:20
+#: templates/dashboard/my-quiz-attempts.php:39, templates/dashboard/my-quiz-attempts.php:104, templates/dashboard/quiz-attempts.php:36, views/pages/view_attempt.php:87, templates/dashboard/assignments/submitted.php:89, templates/dashboard/assignments/submitted.php:134, templates/dashboard/my-quiz-attempts/attempts-details.php:136, templates/dashboard/my-quiz-attempts/attempts-details.php:185, templates/single/quiz/previous-attempts.php:20
 msgid "Result"
 msgstr ""
 
@@ -3622,24 +3630,16 @@ msgstr ""
 msgid "Go to Home"
 msgstr ""
 
-#: templates/dashboard/reviews.php:35, templates/dashboard/reviews/given-reviews.php:27
+#: templates/dashboard/reviews.php:35, templates/dashboard/reviews/given-reviews.php:29
 msgid "Received"
 msgstr ""
 
-#: templates/dashboard/reviews.php:37, templates/dashboard/reviews/given-reviews.php:28
+#: templates/dashboard/reviews.php:37, templates/dashboard/reviews/given-reviews.php:30
 msgid "Given"
 msgstr ""
 
-#: templates/dashboard/reviews.php:51
-msgid "Showing results %d to %d out of %d"
-msgstr ""
-
-#: templates/dashboard/reviews.php:64, templates/dashboard/reviews/given-reviews.php:53
-msgid "Course: "
-msgstr ""
-
-#: templates/dashboard/reviews.php:72, templates/profile/reviews_wrote.php:49, views/pages/answer.php:54, views/pages/answer.php:94, templates/dashboard/question-answer/answers.php:24, templates/dashboard/question-answer/answers.php:52, templates/dashboard/reviews/given-reviews.php:67, templates/single/course/reviews.php:93, templates/single/lesson/sidebar_question_and_answer.php:54, templates/single/lesson/sidebar_question_and_answer.php:83, templates/single/course/enrolled/question_and_answer.php:75, templates/single/course/enrolled/question_and_answer.php:104
-msgid "%s ago"
+#: templates/dashboard/reviews.php:61, templates/dashboard/reviews.php:88
+msgid "Feedback"
 msgstr ""
 
 #: templates/dashboard/wishlist.php:42
@@ -3818,6 +3818,10 @@ msgstr ""
 msgid "No review yet."
 msgstr ""
 
+#: templates/profile/reviews_wrote.php:49, views/pages/answer.php:54, views/pages/answer.php:94, templates/dashboard/question-answer/answers.php:24, templates/dashboard/question-answer/answers.php:52, templates/single/course/reviews.php:93, templates/single/lesson/sidebar_question_and_answer.php:54, templates/single/lesson/sidebar_question_and_answer.php:83, templates/single/course/enrolled/question_and_answer.php:75, templates/single/course/enrolled/question_and_answer.php:104
+msgid "%s ago"
+msgstr ""
+
 #: templates/profile/reviews_wrote.php:57
 msgid "On"
 msgstr ""
@@ -3894,8 +3898,16 @@ msgstr ""
 msgid "Yes, I'am Sure"
 msgstr ""
 
-#: views/elements/filters.php:16, views/elements/search-filter.php:16, views/elements/search-filter.php:36
+#: views/elements/filters.php:19, views/elements/search-filter.php:16, views/elements/search-filter.php:36
 msgid "Apply"
+msgstr ""
+
+#: views/elements/filters.php:81
+msgid "No category found"
+msgstr ""
+
+#: views/elements/filters.php:73
+msgid "All Category"
 msgstr ""
 
 #: views/fragments/announcement-list.php:49
@@ -3914,7 +3926,7 @@ msgstr ""
 msgid "Summary..."
 msgstr ""
 
-#: views/fragments/announcement-list.php:68
+#: views/fragments/announcement-list.php:68, views/pages/course-list.php:129
 msgid "Publish"
 msgstr ""
 
@@ -3930,7 +3942,7 @@ msgstr ""
 msgid "Are you sure you want to delete this Announcement permanently from the site? Please confirm your choice."
 msgstr ""
 
-#: views/fragments/announcement-list.php:176
+#: views/fragments/announcement-list.php:176, templates/dashboard/reviews/given-reviews.php:156
 msgid "Yes, Delete This"
 msgstr ""
 
@@ -3979,54 +3991,54 @@ msgid "Select a product if you want to sell your course. The sale will be handle
 msgstr ""
 
 #: views/metabox/course-additional-data.php:18
-msgid "Total Course Duration"
+msgid "Total Course Durationd"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:26
+#: views/metabox/course-additional-data.php:22
 msgid "HH"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:30
+#: views/metabox/course-additional-data.php:26
 msgid "MM"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:35
+#: views/metabox/course-additional-data.php:31
 msgid "SS"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:49
+#: views/metabox/course-additional-data.php:37
 msgid "Benefits of the course"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:55
+#: views/metabox/course-additional-data.php:41
 msgid "List the knowledge and skills that students will learn after completing this course. (One per line)"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:63
+#: views/metabox/course-additional-data.php:47
 msgid "Requirements/Instructions"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:70
+#: views/metabox/course-additional-data.php:51
 msgid "Additional requirements or special instructions for the students (One per line)"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:78
+#: views/metabox/course-additional-data.php:57
 msgid "Targeted Audience"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:85
+#: views/metabox/course-additional-data.php:61
 msgid "Specify the target audience that will benefit the most from the course. (One line per target audience.)"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:94
+#: views/metabox/course-additional-data.php:67
 msgid "Materials Included"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:101
+#: views/metabox/course-additional-data.php:71
 msgid "A list of assets you will be providing for the students in this course (One per line)"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:108
+#: views/metabox/course-additional-data.php:76
 msgid "Choose a tag"
 msgstr ""
 
@@ -4474,19 +4486,19 @@ msgstr ""
 msgid "Add An Option"
 msgstr ""
 
-#: views/modal/review.php:5
+#: views/modal/review.php:20
 msgid "How would you rate this course?"
 msgstr ""
 
-#: views/modal/review.php:6
+#: views/modal/review.php:21
 msgid "Select Rating"
 msgstr ""
 
-#: views/modal/review.php:14
+#: views/modal/review.php:30
 msgid "Tell us about your own personal experience taking this course. Was it a good match for you?"
 msgstr ""
 
-#: views/modal/review.php:22
+#: views/modal/review.php:37
 msgid "Submit"
 msgstr ""
 
@@ -4546,28 +4558,36 @@ msgstr ""
 msgid "on"
 msgstr ""
 
-#: views/pages/course-list.php:201
+#: views/pages/course-list.php:49
+msgid "Add New"
+msgstr ""
+
+#: views/pages/course-list.php:131
+msgid "Draft"
+msgstr ""
+
+#: views/pages/course-list.php:228
 msgid "Topic:"
 msgstr ""
 
-#: views/pages/course-list.php:207
+#: views/pages/course-list.php:234
 msgid "Lesson:"
 msgstr ""
 
-#: views/pages/course-list.php:213, templates/dashboard/quiz-attempts/quiz-reviews.php:95
+#: views/pages/course-list.php:240, templates/dashboard/quiz-attempts/quiz-reviews.php:95
 msgid "Quiz:"
 msgstr ""
 
-#: views/pages/course-list.php:219
+#: views/pages/course-list.php:246
 msgid "Assignment:"
+msgstr ""
+
+#: views/pages/course-list.php:302
+msgid "Update course status"
 msgstr ""
 
 #: views/pages/get-pro.php:2
 msgid "Get pro plugin from themeum.com"
-msgstr ""
-
-#: views/pages/instructors.php:34
-msgid "Add New Instructor"
 msgstr ""
 
 #: views/pages/tutor-pro-addons.php:23
@@ -4646,19 +4666,19 @@ msgstr ""
 msgid "Manually reviewed at: "
 msgstr ""
 
-#: views/pages/view_attempt.php:185, templates/dashboard/my-quiz-attempts/attempts-details.php:204, templates/dashboard/quiz-attempts/quiz-reviews.php:220
+#: views/pages/view_attempt.php:185, templates/dashboard/my-quiz-attempts/attempts-details.php:223, templates/dashboard/quiz-attempts/quiz-reviews.php:220
 msgid "Quiz Overview"
 msgstr ""
 
-#: views/pages/view_attempt.php:190, templates/dashboard/my-quiz-attempts/attempts-details.php:211, templates/dashboard/quiz-attempts/quiz-reviews.php:226
+#: views/pages/view_attempt.php:190, templates/dashboard/my-quiz-attempts/attempts-details.php:230, templates/dashboard/my-quiz-attempts/attempts-details.php:251, templates/dashboard/quiz-attempts/quiz-reviews.php:226
 msgid "Type"
 msgstr ""
 
-#: views/pages/view_attempt.php:191, templates/dashboard/my-quiz-attempts/attempts-details.php:210, templates/dashboard/quiz-attempts/quiz-reviews.php:225
+#: views/pages/view_attempt.php:191, templates/dashboard/my-quiz-attempts/attempts-details.php:229, templates/dashboard/my-quiz-attempts/attempts-details.php:246, templates/dashboard/quiz-attempts/quiz-reviews.php:225
 msgid "No."
 msgstr ""
 
-#: views/pages/view_attempt.php:193, templates/dashboard/my-quiz-attempts/attempts-details.php:213, templates/dashboard/quiz-attempts/quiz-reviews.php:228
+#: views/pages/view_attempt.php:193, templates/dashboard/my-quiz-attempts/attempts-details.php:232, templates/dashboard/my-quiz-attempts/attempts-details.php:263, templates/dashboard/quiz-attempts/quiz-reviews.php:228
 msgid "Given Answers"
 msgstr ""
 
@@ -4670,11 +4690,11 @@ msgstr ""
 msgid "Manual Review"
 msgstr ""
 
-#: views/pages/view_attempt.php:331, views/pages/view_attempt.php:324, templates/dashboard/my-quiz-attempts/attempts-details.php:119, templates/dashboard/quiz-attempts/quiz-reviews.php:107, templates/dashboard/quiz-attempts/quiz-reviews.php:393, templates/dashboard/quiz-attempts/quiz-reviews.php:388
+#: views/pages/view_attempt.php:331, views/pages/view_attempt.php:324, templates/dashboard/my-quiz-attempts/attempts-details.php:134, templates/dashboard/my-quiz-attempts/attempts-details.php:171, templates/dashboard/quiz-attempts/quiz-reviews.php:107, templates/dashboard/quiz-attempts/quiz-reviews.php:393, templates/dashboard/quiz-attempts/quiz-reviews.php:388
 msgid "Incorrect"
 msgstr ""
 
-#: views/pages/view_attempt.php:327, views/pages/view_attempt.php:311, templates/dashboard/my-quiz-attempts/attempts-details.php:118, templates/dashboard/my-quiz-attempts/attempts-details.php:374, templates/dashboard/quiz-attempts/quiz-reviews.php:106, templates/dashboard/quiz-attempts/quiz-reviews.php:384
+#: views/pages/view_attempt.php:327, views/pages/view_attempt.php:311, templates/dashboard/my-quiz-attempts/attempts-details.php:133, templates/dashboard/my-quiz-attempts/attempts-details.php:166, templates/dashboard/my-quiz-attempts/attempts-details.php:431, templates/dashboard/quiz-attempts/quiz-reviews.php:106, templates/dashboard/quiz-attempts/quiz-reviews.php:384
 msgid "Correct"
 msgstr ""
 
@@ -4686,7 +4706,7 @@ msgstr ""
 msgid "Mark as In correct"
 msgstr ""
 
-#: views/pages/view_attempt.php:361, templates/dashboard/my-quiz-attempts/attempts-details.php:186, templates/dashboard/quiz-attempts/quiz-reviews.php:173, templates/dashboard/quiz-attempts/quiz-reviews.php:416
+#: views/pages/view_attempt.php:361, templates/dashboard/my-quiz-attempts/attempts-details.php:207, templates/dashboard/quiz-attempts/quiz-reviews.php:173, templates/dashboard/quiz-attempts/quiz-reviews.php:416
 msgid "Instructor Feedback"
 msgstr ""
 
@@ -4858,23 +4878,23 @@ msgstr ""
 msgid "You have no access."
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts/attempts-details.php:102, templates/dashboard/quiz-attempts/quiz-reviews.php:89
+#: templates/dashboard/my-quiz-attempts/attempts-details.php:117, templates/dashboard/quiz-attempts/quiz-reviews.php:89
 msgid "Back to Attempt List"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts/attempts-details.php:107, templates/dashboard/quiz-attempts/quiz-reviews.php:96
+#: templates/dashboard/my-quiz-attempts/attempts-details.php:122, templates/dashboard/quiz-attempts/quiz-reviews.php:96
 msgid "Course:"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts/attempts-details.php:117, templates/dashboard/quiz-attempts/quiz-reviews.php:105
+#: templates/dashboard/my-quiz-attempts/attempts-details.php:132, templates/dashboard/my-quiz-attempts/attempts-details.php:158, templates/dashboard/quiz-attempts/quiz-reviews.php:105
 msgid "Pass Marks"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts/attempts-details.php:214, templates/dashboard/quiz-attempts/quiz-reviews.php:229
+#: templates/dashboard/my-quiz-attempts/attempts-details.php:233, templates/dashboard/quiz-attempts/quiz-reviews.php:229
 msgid "Correct Answers"
 msgstr ""
 
-#: templates/dashboard/my-quiz-attempts/attempts-details.php:383, templates/dashboard/my-quiz-attempts/attempts-details.php:378
+#: templates/dashboard/my-quiz-attempts/attempts-details.php:440, templates/dashboard/my-quiz-attempts/attempts-details.php:435
 msgid "Wrong"
 msgstr ""
 
@@ -4918,20 +4938,24 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
-#: templates/dashboard/reviews/edit-review-form.php:16, templates/single/course/review-form.php:34
+#: templates/dashboard/reviews/given-reviews.php:58
+msgid "Course: "
+msgstr ""
+
+#: templates/dashboard/reviews/given-reviews.php:106, templates/single/course/review-form.php:38
 msgid "write a review"
 msgstr ""
 
-#: templates/dashboard/reviews/edit-review-form.php:19
+#: templates/dashboard/reviews/given-reviews.php:116
 msgid "Update Review"
 msgstr ""
 
-#: templates/dashboard/reviews/given-reviews.php:59
-msgid "Edit Feedback"
+#: templates/dashboard/reviews/given-reviews.php:145
+msgid "Delete This Review?"
 msgstr ""
 
-#: templates/dashboard/reviews/given-reviews.php:85
-msgid "Edit Review"
+#: templates/dashboard/reviews/given-reviews.php:148
+msgid "Are you sure you want to delete this review permanently from the site? Please confirm your choice."
 msgstr ""
 
 #: templates/dashboard/settings/nav-bar.php:25
@@ -5210,15 +5234,15 @@ msgstr ""
 msgid "This feature has been disabled by the administrator"
 msgstr ""
 
-#: templates/single/course/review-form.php:17
+#: templates/single/course/review-form.php:19
 msgid "Write a review"
 msgstr ""
 
-#: templates/single/course/review-form.php:15
+#: templates/single/course/review-form.php:17
 msgid "Edit review"
 msgstr ""
 
-#: templates/single/course/review-form.php:37
+#: templates/single/course/review-form.php:41
 msgid "Submit Review"
 msgstr ""
 
@@ -5395,19 +5419,47 @@ msgid "Post Question"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Updated", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course status updated ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Failed", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course status update failed ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Delete", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course has been deleted ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course delete failed ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Operation failed", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something Went Wrong!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Settings Saved"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "__("Search students", "tutor""
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "__("Saved", "tutor""
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "__("Request Error", "tutor""
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "__("Could not save", "tutor""
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
@@ -5467,7 +5519,7 @@ msgid "Quiz Updated"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Are you sure to delete?"
+msgid "Are you sure to delete the topic?"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
@@ -5492,18 +5544,6 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Keep Data"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Rating and review required"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Thank You for Rating This Course!"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Your rating will now be visible in the course page"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
@@ -5591,7 +5631,7 @@ msgid "Use this media"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Are you sure?"
+msgid "Are you sure to delete?"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
@@ -5599,9 +5639,25 @@ msgid "Copied!"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Something Went Wrong!"
+msgid "Error!"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Error!"
+msgid "Rating and review required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Updated successfully!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Thank You for Rating The Course!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Updated rating will now be visible in the course page"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Your rating will now be visible in the course page"
 msgstr ""

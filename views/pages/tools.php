@@ -4,7 +4,7 @@
 
 	<nav class="nav-tab-wrapper tutor-nav-tab-wrapper">
 		<?php
-		if (tutils()->count($pages)){
+		if (tutor_utils()->count($pages)){
 			foreach ($pages as $key => $page){
 				$title = is_array($page)? $page['title'] : $page;
 				$active_class = $key == $current_page ? 'nav-tab-item-active' : '';

@@ -6,7 +6,7 @@ if ( ! isset( $field['select_options'] ) || $field['select_options'] !== false )
 }
 if ( ! empty( $field['options'] ) ) {
 	foreach ( $field['options'] as $optionKey => $option ) {
-		$option_value = $this->get( $field['field_key'], tutils()->array_get( 'default', $field ) );
+		$option_value = $this->get( $field['field_key'], tutor_utils()->array_get( 'default', $field ) );
 		?>
         <p class="option-type-radio-wrap">
             <label>
