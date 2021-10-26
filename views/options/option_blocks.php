@@ -60,11 +60,13 @@
 
 	<?php
 	elseif ( $blocks['block_type'] == 'color_picker' ) :
-		?>
-
-
-
-		<?php echo $this->template( array( 'template' => $blocks['block_type'],'blocks'=> $blocks) ); ?>
-<?php elseif ( $blocks['block_type'] == 'custom' ) : ?>
-	<?php include $blocks['template_path']; ?>
-<?php endif; ?>
+		echo $this->template(
+			array(
+				'template' => $blocks['block_type'],
+				'blocks'   => $blocks,
+			)
+		);
+	elseif ( $blocks['block_type'] == 'custom' ) :
+		include $blocks['template_path'];
+	endif;
+	?>
