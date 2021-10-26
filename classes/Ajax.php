@@ -361,13 +361,11 @@ class Ajax{
                     ! is_ssl() ? $required[] = __( 'Please install SSL certificate properly', 'tutor' ) : 0;
             
                     foreach ( array( 'curl', 'gmp', 'mbstring', 'openssl' ) as $ext ) {
-                        ! extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong> not found' : 0;
+                        ! extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong>' : 0;
                     }
             
                     $plugins_data[$base_name]['ext_required'] = $required;
                 }
-				// Add tutor plugin version to all addons.
-				$plugins_data[$base_name]['tutor_version'] = TUTOR_VERSION;
             }
         }
 
@@ -428,6 +426,8 @@ class Ajax{
 			do_action( "tutor_addon_after_disable_{$addonFieldName}" );
 		}
 		do_action( 'tutor_addon_after_enable_disable' );
+
+		wp_send_json_success();
 	}
 
 	/**

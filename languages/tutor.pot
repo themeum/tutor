@@ -209,7 +209,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:61, classes/Ajax.php:114, classes/Ajax.php:206, classes/Ajax.php:264, classes/Ajax.php:404, classes/Ajax.php:509, classes/Ajax.php:573, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1159, classes/Quiz.php:1219, classes/Q_and_A.php:71
+#: classes/Ajax.php:61, classes/Ajax.php:114, classes/Ajax.php:206, classes/Ajax.php:264, classes/Ajax.php:402, classes/Ajax.php:507, classes/Ajax.php:571, classes/Course.php:435, classes/Course.php:470, classes/Course.php:704, classes/Course.php:755, classes/Course.php:792, classes/Course.php:805, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1159, classes/Quiz.php:1219, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -253,47 +253,47 @@ msgstr ""
 msgid "Please install SSL certificate properly"
 msgstr ""
 
-#: classes/Ajax.php:455, classes/Ajax.php:459
+#: classes/Ajax.php:453, classes/Ajax.php:457
 msgid "ERROR:"
 msgstr ""
 
-#: classes/Ajax.php:459
+#: classes/Ajax.php:457
 msgid "Username is required."
 msgstr ""
 
-#: classes/Ajax.php:527
+#: classes/Ajax.php:525
 msgid "Course name required"
 msgstr ""
 
-#: classes/Ajax.php:532
+#: classes/Ajax.php:530
 msgid "Announcement title required"
 msgstr ""
 
-#: classes/Ajax.php:536
+#: classes/Ajax.php:534
 msgid "Announcement summary required"
 msgstr ""
 
-#: classes/Ajax.php:543
+#: classes/Ajax.php:541
 msgid "All fields required!"
 msgstr ""
 
-#: classes/Ajax.php:557
+#: classes/Ajax.php:555
 msgid "Announcement created successfully"
 msgstr ""
 
-#: classes/Ajax.php:557
+#: classes/Ajax.php:555
 msgid "Announcement updated successfully"
 msgstr ""
 
-#: classes/Ajax.php:561
+#: classes/Ajax.php:559
 msgid "Something Went Wrong!"
 msgstr ""
 
-#: classes/Ajax.php:578
+#: classes/Ajax.php:576
 msgid "Announcement deleted successfully"
 msgstr ""
 
-#: classes/Ajax.php:581
+#: classes/Ajax.php:579
 msgid "Announcement delete failed"
 msgstr ""
 
@@ -4598,31 +4598,31 @@ msgstr ""
 msgid "Get pro plugin from themeum.com"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:23
+#: views/pages/tutor-pro-addons.php:138
 msgid "Get All of Our Addons for a Single Price"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:25
+#: views/pages/tutor-pro-addons.php:140
 msgid "Affordable $49/month, free 7-day trial, no credit card required"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:28
+#: views/pages/tutor-pro-addons.php:143
 msgid "Effortless Easy two-minute installation for 24/7 compliance"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:31
+#: views/pages/tutor-pro-addons.php:146
 msgid "Compliant Accessibility statement and certificate of performance"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:35
+#: views/pages/tutor-pro-addons.php:154
 msgid "Buy Pro"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:41
+#: views/pages/tutor-pro-addons.php:160
 msgid "Addons List"
 msgstr ""
 
-#: views/pages/tutor-pro-addons.php:49
+#: views/pages/tutor-pro-addons.php:168
 msgid "Search…"
 msgstr ""
 
@@ -5424,6 +5424,34 @@ msgstr ""
 
 #: templates/single/course/enrolled/question_and_answer.php:53
 msgid "Post Question"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Required for Push Notification"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Required Plugin(s)"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No additional plugin(s) required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Active"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No Addons Found!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Addons List"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Search…"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1

@@ -350,7 +350,12 @@ jQuery(document).ready(function ($) {
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'GET',
-            data: { action: 'review_quiz_answer', attempt_id: attempt_id, attempt_answer_id: attempt_answer_id, mark_as: mark_as },
+            data: { 
+                action: 'review_quiz_answer', 
+                attempt_id: attempt_id, 
+                attempt_answer_id: attempt_answer_id, 
+                mark_as: mark_as 
+            },
             beforeSend: function () {
                 $that.find('i').addClass('updating-icon');
             },
