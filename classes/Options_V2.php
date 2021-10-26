@@ -262,7 +262,7 @@ class Options_V2 {
 		do_action( 'tutor_option_save_after' );
 
 		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
-		wp_send_json_success( $update_option );
+		wp_send_json_success( $_POST );
 	}
 
 	/**
@@ -721,6 +721,166 @@ class Options_V2 {
 				'template' => 'design',
 				'icon'     => __( 'design', 'tutor' ),
 				'blocks'   => array(
+
+					array(
+						'label'        => __( 'Colors', 'tutor' ),
+						'slug'         => 'Colors',
+						'block_type'   => 'color_picker',
+						'fields_group' => array(
+							array(
+								'key'    => 'color_preset_type',
+								'type'   => 'color_preset',
+								'label'  => __( 'Preset Colors', 'tutor' ),
+								'desc'   => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
+								'default'  => 'default',
+								'fields' => array(
+									array(
+										'key'    => 'default',
+										'label'  => 'Default',
+										'colors' => array(
+											array(
+												'slug'        => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value'       => '#1973AA',
+											),
+											array(
+												'slug'        => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value'       => '#5B616F',
+											),
+											array(
+												'slug'        => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value'       => '#CDCFD5',
+											),
+											array(
+												'slug'        => 'tutor_light_color',
+												'preset_name' => 'light',
+												'value'       => '#EFF1F6',
+											),
+										),
+									),
+									array(
+										'key'    => 'landscape',
+										'label'  => 'Landscape',
+										'colors' => array(
+											array(
+												'slug'        => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value'       => '#43AA8B',
+											),
+											array(
+												'slug'        => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value'       => '#4D908E',
+											),
+											array(
+												'slug'        => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value'       => '#90BE6D',
+											),
+											array(
+												'slug'        => 'tutor_light_color',
+												'preset_name' => 'light',
+												'value'       => '#F9C74F',
+											),
+										),
+									),
+									array(
+										'key'    => 'ocean',
+										'label'  => 'Ocean',
+										'colors' => array(
+											array(
+												'slug'        => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value'       => '#4EA8DE',
+											),
+											array(
+												'slug'        => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value'       => '#5A18C2',
+											),
+											array(
+												'slug'        => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value'       => '#5E60CE',
+											),
+											array(
+												'slug'        => 'tutor_light_color',
+												'preset_name' => 'light',
+												'value'       => '#64DFDF',
+											),
+										),
+									),
+									array(
+										'key'    => 'custom',
+										'label'  => 'Custom',
+										'colors' => array(
+											array(
+												'slug'        => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value'       => '#000000',
+											),
+											array(
+												'slug'        => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value'       => '#5d5d5d',
+											),
+											array(
+												'slug'        => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value'       => '#a2a2a2',
+											),
+											array(
+												'slug'        => 'tutor_light_color',
+												'preset_name' => 'light',
+												'value'       => '#d8d8d8',
+											),
+										),
+									),
+								),
+							),
+							array(
+								'key'    => 'tutor_color_presets',
+								'type'   => 'color_fields',
+								'label'  => __( 'Preset Colors', 'tutor' ),
+								'fields' => array(
+									array(
+										'key'         => 'tutor_primary_color',
+										'type'        => 'color_field',
+										'preset_name' => 'primary',
+										'label'       => __( 'Primary Color', 'tutor' ),
+										'default'     => '#000000',
+										'desc'        => __( 'Choose a custom primary color', 'tutor' ),
+									),
+									array(
+										'key'         => 'tutor_primary_hover_color',
+										'type'        => 'color_field',
+										'preset_name' => 'hover',
+										'label'       => __( 'Primary Hover color', 'tutor' ),
+										'default'     => '#5d5d5d',
+										'desc'        => __( 'Choose a custom primary hover color', 'tutor' ),
+									),
+									array(
+										'key'         => 'tutor_text_color',
+										'type'        => 'color_field',
+										'preset_name' => 'text',
+										'label'       => __( 'Text Color', 'tutor' ),
+										'default'     => '#a2a2a2',
+										'desc'        => __( 'Choose a custom color for your website text', 'tutor' ),
+									),
+									array(
+										'key'         => 'tutor_light_color',
+										'type'        => 'color_field',
+										'preset_name' => 'light',
+										'label'       => __( 'Light color', 'tutor' ),
+										'default'     => '#d8d8d8',
+										'desc'        => __( 'Choose a  light color for your website ', 'tutor' ),
+									),
+								),
+							),
+						),
+					),
 					'block_course' => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
@@ -1027,148 +1187,7 @@ class Options_V2 {
 						),
 					),
 
-					array(
-						'label'        => __( 'Colors', 'tutor' ),
-						'slug'         => 'Colors',
-						'block_type'   => 'color_picker',
-						'fields_group' => array(
-							array(
-								'key'    => 'enable_gutenberg_course_edit',
-								'type'   => 'preset_horizontal',
-								'label'  => __( 'Preset Colors', 'tutor' ),
-								'desc'   => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
-								'fields' => array(
-									'preset_1'      => array(
-										array(
-											'slug'        => 'tutor_primary_color',
-											'preset_name' => 'primary',
-											'value'       => '#1973AA',
-										),
-										array(
-											'slug'        => 'tutor_primary_hover_color',
-											'preset_name' => 'hover',
-											'value'       => '#5B616F',
-										),
-										array(
-											'slug'        => 'tutor_text_color',
-											'preset_name' => 'text',
-											'value'       => '#CDCFD5',
-										),
-										array(
-											'slug'        => 'tutor_light_color',
-											'preset_name' => 'light',
-											'value'       => '#EFF1F6',
-										),
-									),
-									'preset_2'      => array(
-										array(
-											'slug'        => 'tutor_primary_color',
-											'preset_name' => 'primary',
-											'value'       => '#43AA8B',
-										),
-										array(
-											'slug'        => 'tutor_primary_hover_color',
-											'preset_name' => 'hover',
-											'value'       => '#4D908E',
-										),
-										array(
-											'slug'        => 'tutor_text_color',
-											'preset_name' => 'text',
-											'value'       => '#90BE6D',
-										),
-										array(
-											'slug'        => 'tutor_light_color',
-											'preset_name' => 'light',
-											'value'       => '#F9C74F',
-										),
-									),
-									'preset_3'      => array(
-										array(
-											'slug'        => 'tutor_primary_color',
-											'preset_name' => 'primary',
-											'value'       => '#4EA8DE',
-										),
-										array(
-											'slug'        => 'tutor_primary_hover_color',
-											'preset_name' => 'hover',
-											'value'       => '#5A18C2',
-										),
-										array(
-											'slug'        => 'tutor_text_color',
-											'preset_name' => 'text',
-											'value'       => '#5E60CE',
-										),
-										array(
-											'slug'        => 'tutor_light_color',
-											'preset_name' => 'light',
-											'value'       => '#64DFDF',
-										),
-									),
-									'preset_custom' => array(
-										array(
-											'slug'  => 'tutor_primary_color',
-											'preset_name' => 'primary',
-											'value' => '#000000',
-										),
-										array(
-											'slug'  => 'tutor_primary_hover_color',
-											'preset_name' => 'hover',
-											'value' => '#5d5d5d',
-										),
-										array(
-											'slug'  => 'tutor_text_color',
-											'preset_name' => 'text',
-											'value' => '#a2a2a2',
-										),
-										array(
-											'slug'  => 'tutor_light_color',
-											'preset_name' => 'light',
-											'value' => '#d8d8d8',
-										),
-									),
-								),
-							),
-							array(
-								'key'    => 'tutor_color_presets',
-								'type'   => 'color_fields',
-								'label'  => __( 'Preset Colors', 'tutor' ),
-								'fields' => array(
-									array(
-										'key'     => 'tutor_primary_color',
-										'type'    => 'color_field',
-										'preset_name' => 'primary',
-										'label'   => __( 'Primary Color', 'tutor' ),
-										'default' => '#000000',
-										'desc'    => __( 'Choose a custom primary color', 'tutor' ),
-									),
-									array(
-										'key'     => 'tutor_primary_hover_color',
-										'type'    => 'color_field',
-										'preset_name' => 'hover',
-										'label'   => __( 'Primary Hover color', 'tutor' ),
-										'default' => '#5d5d5d',
-										'desc'    => __( 'Choose a custom primary hover color', 'tutor' ),
-									),
-									array(
-										'key'     => 'tutor_text_color',
-										'type'    => 'color_field',
-										'preset_name' => 'text',
-										'label'   => __( 'Text Color', 'tutor' ),
-										'default' => '#a2a2a2',
-										'desc'    => __( 'Choose a custom color for your website text', 'tutor' ),
-									),
-									array(
-										'key'     => 'tutor_light_color',
-										'type'    => 'color_field',
-										'preset_name' => 'light',
-										'label'   => __( 'Light color', 'tutor' ),
-										'default' => '#d8d8d8',
-										'desc'    => __( 'Choose a  light color for your website ', 'tutor' ),
-									),
-								),
-							),
-						),
-					),
+
 				),
 
 			),
