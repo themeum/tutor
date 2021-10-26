@@ -40,7 +40,7 @@
 	flex-direction: column;
 	/* text/white */
 
-	background: #ffffff;
+	background: transparent;
 	/* stroke/light30 */
 
 	border: 1px solid #cdcfd5;
@@ -51,14 +51,12 @@
 		flex-direction: row;
 	}
 
-	.tutor-pagination-hint {
-	}
-
 	ul.tutor-pagination-numbers {
 		list-style: none;
 		display: flex;
 		align-items: center;
 		gap: 20px;
+
 		@include breakpoint-max(mobile) {
 			margin-top: 10px;
 			gap: 10px;
@@ -72,41 +70,11 @@
 			justify-content: center;
 		}
 
-		li.pagination-prev,
-		li.pagination-next {
-			width: 32px;
-			height: 32px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			/* color/black/fill/05 */
-			background: rgba(239, 241, 247, 0.8);
-			border-radius: 6px;
-			transition: all 150ms linear;
-
-			&:hover {
-				color: $design-white;
-				background: $design-brand;
-			}
-		}
-
-		@include breakpoint-min(desktop-lg) {
-			li.pagination-prev {
-				margin-right: 25px;
-			}
-
-			li.pagination-next {
-				margin-left: 25px;
-			}
-		}
-
-		li.pagination-number {
+		.page-numbers {
 			@extend .text-medium-caption;
 			@extend .color-text-primary;
-			// color: #000;
 			position: relative;
-			// background: thistle;
-			// overflow-x: hidden;
+			padding: 0 5px;
 
 			&:hover {
 				color: $design-brand;
@@ -116,13 +84,41 @@
 				padding: 1px 6px;
 			}
 
+			&.prev,
+			&.next {
+				font-size: 20px;
+				width: 32px;
+				height: 32px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				/* color/black/fill/05 */
+				background: rgba(239, 241, 247, 0.8);
+				border-radius: 6px;
+				transition: all 150ms linear;
+
+				&:hover {
+					color: $design-white;
+					background: $design-brand;
+				}
+			}
+			@include breakpoint-min(desktop-lg) {
+				&.prev {
+					margin-right: 25px;
+				}
+
+				&.next {
+					margin-left: 25px;
+				}
+			}
+
 			&:before {
 				content: '';
 				position: absolute;
 				width: 100%;
 				height: 2px;
 				background: $text-brand;
-				bottom: calc(0% - 11px);
+				bottom: calc(0% - 12px);
 				// left: 0;
 				transform: scaleY(0);
 				transform-origin: bottom;

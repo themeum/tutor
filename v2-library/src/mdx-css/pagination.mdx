@@ -58,29 +58,32 @@ import '../docz-essential.css';
 				<span className="text-medium-caption color-text-primary">12</span>
 			</div>
 		</div>
-		<ul className="tutor-pagination-numbers">
-			<li className="pagination-prev">
-				<a href="#">
-					<span className="ttr-angle-left-filled"></span>
-				</a>
-			</li>
-			<li className="pagination-number">
-				<a href="#">1</a>
-			</li>
-			<li className="pagination-number">
-				<a href="#">2</a>
-			</li>
-			<li className="pagination-number current">
-				<a href="#">3</a>
-			</li>
-			<li className="pagination-number">
-				<a href="#">4</a>
-			</li>
-			<li className="pagination-next">
-				<a href="#">
-					<span className="ttr-angle-right-filled"></span>
-				</a>
-			</li>
+		<ul class="tutor-pagination-numbers">
+			<a class="prev page-numbers" href="#">
+				<span class="ttr-angle-left-filled"></span>
+			</a>
+			<span aria-current="page" class="page-numbers">
+				1
+			</span>
+			<a class="page-numbers" href="#">
+				2
+			</a>
+			<a class="page-numbers current" href="#">
+				3
+			</a>
+			<a class="page-numbers" href="#">
+				4
+			</a>
+			<span class="page-numbers dots">…</span>
+			<a class="page-numbers" href="#">
+				7
+			</a>
+			<a class="page-numbers" href="#">
+				8
+			</a>
+			<a class="next page-numbers" href="#">
+				<span class="ttr-angle-right-filled"></span>
+			</a>
 		</ul>
 	</nav>
 </Playground>
