@@ -33,33 +33,33 @@
 
 // tutor-dashboard-pagination
 
-.tutor-dashboard-pagination {
+.tutor-ui-pagination {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	flex-direction: column;
 	/* text/white */
 
-	background: #ffffff;
+	background: transparent;
 	/* stroke/light30 */
 
-	border: 1px solid #cdcfd5;
+	border: 1px solid $stroke-light-30;
 	border-radius: 6px;
 	padding: 7px 18px;
 
-	@include breakpoint-min(mobile) {
+	@include breakpoint-min(tablet) {
 		flex-direction: row;
-	}
-
-	.tutor-pagination-hint {
 	}
 
 	ul.tutor-pagination-numbers {
 		list-style: none;
 		display: flex;
 		align-items: center;
-		gap: 20px;
-		@include breakpoint-max(mobile) {
+		gap: 11px;
+		padding: 0;
+		margin: 0;
+
+		@include breakpoint-max(tablet) {
 			margin-top: 10px;
 			gap: 10px;
 		}
@@ -67,46 +67,16 @@
 		a {
 			text-decoration: none;
 			color: inherit;
-			display: flex;
-			align-items: center;
-			justify-content: center;
 		}
 
-		li.pagination-prev,
-		li.pagination-next {
-			width: 32px;
-			height: 32px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			/* color/black/fill/05 */
-			background: rgba(239, 241, 247, 0.8);
-			border-radius: 6px;
-			transition: all 150ms linear;
-
-			&:hover {
-				color: $design-white;
-				background: $design-brand;
-			}
-		}
-
-		@include breakpoint-min(desktop-lg) {
-			li.pagination-prev {
-				margin-right: 25px;
-			}
-
-			li.pagination-next {
-				margin-left: 25px;
-			}
-		}
-
-		li.pagination-number {
+		.page-numbers {
 			@extend .text-medium-caption;
 			@extend .color-text-primary;
-			// color: #000;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			position: relative;
-			// background: thistle;
-			// overflow-x: hidden;
+			padding: 0 5px;
 
 			&:hover {
 				color: $design-brand;
@@ -116,14 +86,46 @@
 				padding: 1px 6px;
 			}
 
+			&.prev,
+			&.next {
+				padding: 0;
+				font-size: 20px;
+				width: 32px;
+				height: 32px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				/* color/black/fill/05 */
+				background: rgba(239, 241, 247, 0.8);
+				// border: 1px solid $black-20;
+				border-radius: 6px;
+				transition: all 150ms linear;
+
+				&:hover {
+					color: $design-white;
+					background: $design-brand;
+					// border-color: $design-brand;
+				}
+			}
+			@include breakpoint-min(desktop-lg) {
+				--margin: 35px;
+				&.prev {
+					margin-right: var(--margin);
+				}
+
+				&.next {
+					margin-left: var(--margin);
+				}
+			}
+
 			&:before {
 				content: '';
 				position: absolute;
 				width: 100%;
 				height: 2px;
 				background: $text-brand;
-				bottom: calc(0% - 11px);
-				// left: 0;
+				bottom: calc(0% - 12px);
+				left: 0;
 				transform: scaleY(0);
 				transform-origin: bottom;
 				transition: transform 100ms linear;
@@ -138,4 +140,34 @@
 			}
 		} // end .pagination-number
 	} // end .tutor-pagination-numbers
-} // end .tutor-dashboard-pagination
+
+	&.tutor-ui-pagination-wp {
+		ul.tutor-pagination-numbers {
+			.page-numbers {
+				&:hover {
+					color: $brand-wordpress;
+					// @extend .color-brand-wordpress;
+				}
+
+				&.prev,
+				&.next {
+					border: 1px solid $black-20;
+					background: transparent;
+					&:hover {
+						color: $design-white;
+						background: $brand-wordpress;
+						border-color: $brand-wordpress;
+					}
+				}
+
+				&:before {
+					background: $brand-wordpress;
+				}
+
+				&.current {
+					color: $brand-wordpress;
+				}
+			} // end .pagination-number
+		} // end .tutor-pagination-numbers
+	} // end &.tutor-ui-pagination-wp
+} // end .tutor-ui-pagination
