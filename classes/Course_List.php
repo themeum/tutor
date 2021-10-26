@@ -99,31 +99,31 @@ class Course_List {
 		$tabs = array(
 			array(
 				'key'   => 'all',
-				'title' => __( 'All', 'tutor-pro' ),
+				'title' => __( 'All', 'tutor' ),
 				'value' => $all,
 				'url'   => $url . '&data=all',
 			),
 			array(
 				'key'   => 'mine',
-				'title' => __( 'Mine', 'tutor-pro' ),
+				'title' => __( 'Mine', 'tutor' ),
 				'value' => $mine,
 				'url'   => $url . '&data=mine',
 			),
 			array(
 				'key'   => 'published',
-				'title' => __( 'Published', 'tutor-pro' ),
+				'title' => __( 'Published', 'tutor' ),
 				'value' => $published,
 				'url'   => $url . '&data=published',
 			),
 			array(
 				'key'   => 'draft',
-				'title' => __( 'Draft', 'tutor-pro' ),
+				'title' => __( 'Draft', 'tutor' ),
 				'value' => $draft,
 				'url'   => $url . '&data=draft',
 			),
 			array(
 				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor-pro' ),
+				'title' => __( 'Pending', 'tutor' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
 			),

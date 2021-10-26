@@ -77,49 +77,49 @@ $filters = array(
 					</th>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Quiz Info', 'tutor-pro' ); ?></span>
+						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Quiz Info', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
 						</div>
 					</th>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Course', 'tutor-pro' ); ?></span>
+						<span class="text-regular-small"><?php esc_html_e( 'Course', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
 						</div>
 					</th>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Question', 'tutor-pro' ); ?></span>
+						<span class="text-regular-small"><?php esc_html_e( 'Question', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
 						</div>
 					</th>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Total Marks', 'tutor-pro' ); ?></span>
+						<span class="text-regular-small"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
 						</div>
 					</th>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Correct Answer', 'tutor-pro' ); ?></span>
+						<span class="text-regular-small"><?php esc_html_e( 'Correct Answer', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
 						</div>
 					</th>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Incorrect Answer', 'tutor-pro' ); ?></span>
+						<span class="text-regular-small"><?php esc_html_e( 'Incorrect Answer', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
 						</div>
 					</th>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Earned Marks', 'tutor-pro' ); ?></span>
+						<span class="text-regular-small"><?php esc_html_e( 'Earned Marks', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
 						</div>
 					</th>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Result', 'tutor-pro' ); ?></span>
+						<span class="text-regular-small"><?php esc_html_e( 'Result', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
 						</div>
 					</th>

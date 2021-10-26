@@ -36,6 +36,13 @@ if ( isset( $data ) && count( $data ) ) : ?>
 			</ul>
 		</div>
 	<?php endif; ?>
+	<?php if ( isset( $data['grade_button'] ) && $data['grade_button'] ) : ?>
+		<ul style="display: flex; column-gap: 15px;">
+			<li>
+				<a href="<?php echo esc_url( $data['grade_button_url'] ); ?>"><?php echo esc_html( $data['grade_button_title'] ); ?></a>
+			</li>
+		</ul>
+	<?php endif; ?>
   </div>
 </header>
 <?php endif; ?>
