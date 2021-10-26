@@ -4838,7 +4838,7 @@
   color: #f44337;
 }
 
-.color-text-primary, select.tutor-form-select, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number {
+.color-text-primary, select.tutor-form-select, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers {
   color: #212327;
 }
 
@@ -4858,7 +4858,7 @@
   color: #ffffff;
 }
 
-.color-text-brand, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number.current {
+.color-text-brand, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current {
   color: #3e64de;
 }
 
@@ -5644,7 +5644,7 @@
   line-height: 162%;
 }
 
-.text-medium-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number, .tutor-wp-dashboard-filter-items .tutor-form-label {
+.text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-wp-dashboard-filter-items .tutor-form-label {
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;
@@ -5704,7 +5704,7 @@
   line-height: 162%;
 }
 
-.text-bold-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number.current {
+.text-bold-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current {
   font-weight: 700;
   font-size: 15px;
   line-height: 160%;
@@ -11561,7 +11561,7 @@ select.tutor-form-select:focus {
   padding: 0 5px;
 }
 
-.tutor-dashboard-pagination {
+.tutor-ui-pagination {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -11576,15 +11576,15 @@ select.tutor-form-select:focus {
       -ms-flex-direction: column;
           flex-direction: column;
   /* text/white */
-  background: #ffffff;
+  background: transparent;
   /* stroke/light30 */
   border: 1px solid #cdcfd5;
   border-radius: 6px;
   padding: 7px 18px;
 }
 
-@media (min-width: 576px) {
-  .tutor-dashboard-pagination {
+@media (min-width: 768px) {
+  .tutor-ui-pagination {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
@@ -11592,7 +11592,7 @@ select.tutor-form-select:focus {
   }
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers {
+.tutor-ui-pagination ul.tutor-pagination-numbers {
   list-style: none;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -11600,19 +11600,24 @@ select.tutor-form-select:focus {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  gap: 20px;
+  gap: 11px;
+  padding: 0;
+  margin: 0;
 }
 
-@media (max-width: 575.98px) {
-  .tutor-dashboard-pagination ul.tutor-pagination-numbers {
+@media (max-width: 767.98px) {
+  .tutor-ui-pagination ul.tutor-pagination-numbers {
     margin-top: 10px;
     gap: 10px;
   }
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers a {
+.tutor-ui-pagination ul.tutor-pagination-numbers a {
   text-decoration: none;
   color: inherit;
+}
+
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -11622,10 +11627,21 @@ select.tutor-form-select:focus {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  position: relative;
+  padding: 0 5px;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-prev,
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-next {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers:hover {
+  color: #3e64de;
+}
+
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers a {
+  padding: 1px 6px;
+}
+
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.prev, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.next {
+  padding: 0;
+  font-size: 20px;
   width: 32px;
   height: 32px;
   display: -webkit-box;
@@ -11644,40 +11660,31 @@ select.tutor-form-select:focus {
   transition: all 150ms linear;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-prev:hover,
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-next:hover {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.prev:hover, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.next:hover {
   color: #ffffff;
   background: #3e64de;
 }
 
 @media (min-width: 1200px) {
-  .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-prev {
-    margin-right: 25px;
+  .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers {
+    --margin: 35px;
   }
-  .tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-next {
-    margin-left: 25px;
+  .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.prev {
+    margin-right: var(--margin);
+  }
+  .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.next {
+    margin-left: var(--margin);
   }
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number {
-  position: relative;
-}
-
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number:hover {
-  color: #3e64de;
-}
-
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number a {
-  padding: 1px 6px;
-}
-
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number:before {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers:before {
   content: '';
   position: absolute;
   width: 100%;
   height: 2px;
   background: #3e64de;
-  bottom: calc(0% - 11px);
+  bottom: calc(0% - 12px);
+  left: 0;
   -webkit-transform: scaleY(0);
           transform: scaleY(0);
   -webkit-transform-origin: bottom;
@@ -11688,9 +11695,32 @@ select.tutor-form-select:focus {
   transition: transform 100ms linear, -webkit-transform 100ms linear;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers li.pagination-number.current:before {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current:before {
   -webkit-transform: scaleY(1);
           transform: scaleY(1);
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers:hover {
+  color: #1973aa;
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.prev, .tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.next {
+  border: 1px solid #c0c3cb;
+  background: transparent;
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.prev:hover, .tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.next:hover {
+  color: #ffffff;
+  background: #1973aa;
+  border-color: #1973aa;
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers:before {
+  background: #1973aa;
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.current {
+  color: #1973aa;
 }
 
 .tutor-badge-label.label-primary {
@@ -12040,6 +12070,11 @@ select.tutor-form-select:focus {
 
 .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover).tutor-btn-wordpress-outline:hover {
   background: #1973aa;
+}
+
+.tutor-btn.tutor-btn-ghost {
+  padding: 0 !important;
+  border: none !important;
 }
 
 .tutor-btn.tutor-btn-loading:not(.tutor-btn-icon) {
@@ -13913,7 +13948,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   max-width: 180px;
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1500px) {
   .tutor-wp-dashboard-filter-items select.tutor-form-select,
   .tutor-wp-dashboard-filter-items .tutor-input-group {
     width: 227px;
@@ -13952,24 +13987,20 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-course-listing {
+  max-width: 1110px;
   display: grid;
 }
 
 .tutor-course-listing-grid-3 {
   grid-template-columns: repeat(3, 1fr);
-}
-
-.tutor-course-listing-grid-3 .tutor-course-listing-item {
-  max-width: 350px;
+  grid-gap: 40px 30px;
 }
 
 .tutor-course-listing-item {
   /* bg/white */
   background: #ffffff;
   /* stroke/light30 */
-  border: 1px solid #cdcfd5;
-  border-radius: 6px;
-  overflow: hidden;
+  display: grid;
 }
 
 .tutor-course-listing-item img {
@@ -13990,6 +14021,38 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   font-size: 28px;
 }
 
+.tutor-course-listing-item-head {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tutor-course-listing-item-head .save-bookmark-btn {
+  position: absolute;
+  top: 12px;
+  right: 21px;
+  width: 38px;
+  height: 38px;
+  background: rgba(33, 35, 39, 0.4);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  -webkit-transition: 200ms linear;
+  transition: 200ms linear;
+}
+
+.tutor-course-listing-item-head .save-bookmark-btn:hover {
+  background: #3e64de;
+  color: #ffffff;
+}
+
+.tutor-course-listing-item-body {
+  border-left: 1px solid #cdcfd5;
+  border-right: 1px solid #cdcfd5;
+}
+
 .tutor-course-listing-item-body .list-item-author {
   gap: 10px;
 }
@@ -14000,8 +14063,21 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border-radius: 50%;
 }
 
+.tutor-course-listing-item-footer {
+  border-left: 1px solid #cdcfd5;
+  border-right: 1px solid #cdcfd5;
+  border-bottom: 1px solid #cdcfd5;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  display: grid;
+}
+
+.tutor-course-listing-item-footer.has-border {
+  border-top: 1px solid #e0e2ea;
+}
+
 .tutor-course-listing-item-footer .list-item-price-with-booking .list-item-booking {
-  gap: 8px;
+  gap: 7px;
 }
 
 .tutor-course-listing-item-footer .list-item-price-with-booking .list-item-booking > * {
@@ -14010,12 +14086,59 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   display: flex;
 }
 
-.tutor-course-listing-item-footer.has-border {
-  border-top: 1px solid #e0e2ea;
-}
-
 .tutor-course-listing-item-footer .list-item-price {
   gap: 10px;
+}
+
+.tutor-course-listing-item-footer .list-item-booking .circle-progress {
+  --w: 23px;
+  --pd: 3px;
+  position: relative;
+  width: var(--w);
+  height: var(--w);
+  padding: var(--pd);
+  border-radius: 50%;
+  background: conic-gradient(#3e64de var(--pro), 0, #bdcaf1 100%);
+}
+
+.tutor-course-listing-item-footer .list-item-booking .circle-progress:before {
+  content: '';
+  position: absolute;
+  inset: calc(0% + var(--pd));
+  border-radius: 50%;
+  background: #fff;
+}
+
+.tutor-course-listing-item-footer .list-item-booking .circle-progress.progress-full {
+  background: conic-gradient(#f44337 var(--pro), 0, #bdcaf1 100%);
+}
+
+.tutor-course-listing-item-footer .list-item-booking.booking-full .btn-icon {
+  font-size: 30px;
+}
+
+.tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost {
+  color: #161616;
+}
+
+.tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost .btn-icon {
+  border-radius: 50%;
+  font-size: 25px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost:hover .btn-icon {
+  background: #f6f8fd;
 }
 
 .tooltip-wrap {
