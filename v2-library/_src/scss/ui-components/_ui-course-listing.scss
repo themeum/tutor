@@ -1,6 +1,7 @@
 .tutor-course-listing {
-	max-width: 1110px;
+	// max-width: 1110px;
 	display: grid;
+	grid-gap: 30px;
 	&-grid-3 {
 		grid-template-columns: repeat(3, 1fr);
 		grid-gap: 40px 30px;
@@ -9,6 +10,7 @@
 		}
 	}
 	&-grid-4 {
+		grid-template-columns: repeat(4, 1fr);
 		.tutor-course-listing-item {
 			// max-width: 255px;
 		}
