@@ -48,6 +48,8 @@ __webpack_require__.r(__webpack_exports__);
 var __ = wp.i18n.__;
 
 var AddonCard = function AddonCard(_ref) {
+  var _addon$plugins_requir, _addon$ext_required, _addon$plugins_requir2;
+
   var addon = _ref.addon,
       addonId = _ref.addonId;
   var author = 'Themeum';
@@ -57,7 +59,7 @@ var AddonCard = function AddonCard(_ref) {
       handleOnChange = _useAddonsUpdate.handleOnChange;
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-card ".concat(addon.depend_plugins ? 'not-subscribed' : '', " tutor-addons-card-").concat(addonId + 1),
+    className: "tutor-addons-card ".concat(addon.plugins_required.length > 0 ? 'not-subscribed' : '', " tutor-addons-card-").concat(addonId + 1),
     style: {
       transitionDelay: "".concat(100 * addonId, "ms")
     }
@@ -85,7 +87,7 @@ var AddonCard = function AddonCard(_ref) {
     className: "text-medium-small color-text-hints"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "extra-plugins color-text-hints text-medium-small"
-  }, addon.ext_required ? __('Required for Push Notification', 'tutor') : addon.depend_plugins ? __('Required Plugin(s)', 'tutor') : __('No additional plugin(s) required', 'tutor')), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
+  }, ((_addon$plugins_requir = addon.plugins_required) === null || _addon$plugins_requir === void 0 ? void 0 : _addon$plugins_requir.length) > 0 ? __('Required Plugin(s)', 'tutor') : ((_addon$ext_required = addon.ext_required) === null || _addon$ext_required === void 0 ? void 0 : _addon$ext_required.length) > 0 ? __('Required for Push Notification', 'tutor') : __('No additional plugin(s) required', 'tutor')), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
       className: "extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption",
       key: index
@@ -106,7 +108,7 @@ var AddonCard = function AddonCard(_ref) {
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
       className: "plugin-title"
     }, plugin));
-  }) : ''), !addon.depend_plugins && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }) : ''), ((_addon$plugins_requir2 = addon.plugins_required) === null || _addon$plugins_requir2 === void 0 ? void 0 : _addon$plugins_requir2.length) === 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-toggle"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
     className: "tutor-form-toggle"
