@@ -1301,6 +1301,10 @@ p.course-empty-content {
   color: #cccccc;
 }
 
+.tutor-updating-message i {
+  display: none;
+}
+
 /**
   Instructor
    */
@@ -2443,6 +2447,26 @@ span.filled_dash_unser {
   margin: 50px 0;
 }
 
+/**
+  Updating Messsage
+   */
+.tutor-updating-message:before {
+  display: inline-block;
+  font-family: "tutor";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: top;
+  content: "\e91d";
+  -webkit-animation: rotation 2s infinite linear;
+  animation: rotation 2s infinite linear;
+  margin-right: 6px;
+}
+
+.rtl .tutor-updating-message:before {
+  margin-right: 0;
+  margin-left: 6px;
+}
+
 .lesson-modal-field.tutor-lesson-modal-title-wrap {
   width: 95%;
 }
@@ -2952,8 +2976,8 @@ span.withdraw-method-label {
 /** END Calender */
 /**
   * report.css
-  *Moved report.css from pro add to here
-   */
+  * Moved report.css from pro add to here
+  */
 h2.tutor-page-heading {
   background-color: #ffffff;
   padding: 30px !important;
@@ -3043,71 +3067,6 @@ h2.tutor-page-heading {
   margin: 30px 0;
 }
 
-.report-stats {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-}
-
-.report-stat-box {
-  padding: 0;
-  margin-bottom: 30px;
-  width: 25%;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 25%;
-  flex: 0 0 25%;
-}
-
-.report-stat-box-body {
-  background-color: #ffffff;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  margin-right: 30px;
-}
-
-.report-stat-box:nth-child(4n) .report-stat-box-body {
-  margin-right: 0;
-}
-
-.report-stat-box .box-icon {
-  font-size: 50px;
-  line-height: 46px;
-  padding: 13px;
-  color: #3057d5;
-}
-
-.report-stat-box h4,
-.report-stat-box p {
-  margin: 5px 0;
-}
-
-.report-stat-box .box-stats-text h3,
-.report-stat-box .box-stats-text p {
-  margin: 5px 0;
-}
-
-.report-stat-box .box-stats-text {
-  padding: 12px 0;
-}
-
-.report-stat-box .box-stats-text h3 {
-  font-size: 20px;
-  font-weight: 300;
-}
-
-.report-stat-box .box-stats-text p {
-  color: #888b90;
-}
-
 .box-padding {
   padding: 30px;
 }
@@ -3156,58 +3115,59 @@ h2.tutor-page-heading {
   color: #ffffff;
 }
 
-.tutor-report-overview-section {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin: 20px 0;
-}
+/* 
+//   .tutor-report-overview-section {
+// 	display: -webkit-box;
+// 	display: -ms-flexbox;
+// 	display: flex;
+// 	margin: 20px 0;
+//   }
 
-.overview-section-col6 {
-  width: 50%;
-}
-
-.overview-section-col6 {
-  margin-right: 1%;
-  margin-left: 1%;
-}
-
-.overview-section-col6:first-child {
-  margin-left: 0;
-}
-
-.overview-section-col6:last-child {
-  margin-right: 0;
-}
-
-.last-revews-wrap {
-  width: 100%;
-}
-
-table.tutor-report-table {
-  border: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
-.tutor-report-table th {
-  background-color: #fcfcfc;
-  border-top: 1px solid #eaeaea;
-  border-bottom: 1px solid #eaeaea;
-  padding: 20px;
-  color: #878a8f;
-}
-
-.tutor-report-table td {
-  border-bottom: 1px solid #eaeaea;
-  padding: 20px;
-}
-
-.tutor-report-table td img.avatar {
-  float: left;
-  margin-right: 5px;
-}
-
+  .overview-section-col6 {
+	width: 50%;
+  }
+  
+  .overview-section-col6 {
+	margin-right: 1%;
+	margin-left: 1%;
+  }
+  
+  .overview-section-col6:first-child {
+	margin-left: 0;
+  }
+  
+  .overview-section-col6:last-child {
+	margin-right: 0;
+  }
+  
+  .last-revews-wrap {
+	width: 100%;
+  }
+  
+  table.tutor-report-table {
+	border: none;
+	-webkit-box-shadow: none;
+			box-shadow: none;
+  }
+  
+  .tutor-report-table th {
+	background-color: #fcfcfc;
+	border-top: 1px solid #eaeaea;
+	border-bottom: 1px solid #eaeaea;
+	padding: 20px;
+	color: #878a8f;
+  }
+  
+  .tutor-report-table td {
+	border-bottom: 1px solid #eaeaea;
+	padding: 20px;
+  }
+  
+  .tutor-report-table td img.avatar {
+	float: left;
+	margin-right: 5px;
+  }
+  */
 /**
   Icon
    */
@@ -3748,87 +3708,6 @@ table.tutor-table p {
    * Common CSS .tutor-list-*  - start 
    * .tutor-list-wrap > .tutor-list-header + .tutor-list-table + .tutor-list-footer
   */
-.tutor-list-wrap {
-  border-radius: 3px;
-  background-color: #ffffff;
-  margin-top: 40px;
-}
-
-.tutor-list-wrap .tutor-list-header,
-.tutor-list-wrap .tutor-list-footer {
-  padding: 30px;
-}
-
-.tutor-list-wrap .heading {
-  font-size: 20px;
-  line-height: 1.5;
-  color: #3f435b;
-}
-
-.tutor-list-wrap .tutor-list-table {
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
-}
-
-.tutor-list-wrap .tutor-list-table .table-toggle {
-  display: none;
-}
-
-.tutor-list-wrap .tutor-list-table .table-toggle.open {
-  display: table-row;
-}
-
-[class^="tutor-report-"] .tutor-list-table tbody td.detail {
-  vertical-align: top;
-}
-
-.tutor-list-wrap .tutor-list-table thead,
-.tutor-list-wrap .tutor-list-table tr:first-child th {
-  background-color: #f7f7f9;
-  border-top: 1px solid #eaeaea;
-  border-bottom: 1px solid #eaeaea;
-}
-
-.tutor-list-wrap .tutor-list-table th {
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.75;
-  letter-spacing: 0.7px;
-  color: #737787;
-  text-transform: uppercase;
-}
-
-.tutor-list-wrap .tutor-list-table td,
-.tutor-list-wrap .tutor-list-table td p {
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.75;
-  color: #3f435b;
-}
-
-.report-course-list-wrap .tutor-list-table th i {
-  margin-left: 3px;
-}
-
-.tutor-list-wrap .tutor-list-table tr th,
-.tutor-list-wrap .tutor-list-table tr td {
-  padding: 15px 20px;
-}
-
-.tutor-list-wrap .tutor-list-header,
-.tutor-list-wrap .tutor-list-table th:last-child,
-.tutor-list-wrap .tutor-list-table td:last-child,
-.tutor-report-course-list .tutor-list-footer {
-  padding-right: 36px;
-}
-
-.tutor-list-wrap .tutor-list-header,
-.tutor-list-wrap .tutor-list-table th:first-child,
-.tutor-list-wrap .tutor-list-table td:first-child {
-  padding-left: 30px;
-}
-
 .tutor-list-wrap .tutor-list-table tbody td {
   padding: 25px 20px;
   vertical-align: top;
@@ -4060,8 +3939,8 @@ table.tutor-table p {
 }
 
 @media (max-width: 991px) {
-  .report-course-list-wrap .tutor-list-table th:nth-child(n+7),
-  .report-course-list-wrap .tutor-list-table td:nth-child(n+7) {
+  .report-course-list-wrap .tutor-list-table th:nth-child(n + 7),
+  .report-course-list-wrap .tutor-list-table td:nth-child(n + 7) {
     display: none;
   }
 }
