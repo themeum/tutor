@@ -4838,7 +4838,7 @@
   color: #f44337;
 }
 
-.color-text-primary, select.tutor-form-select, .tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers {
+.color-text-primary, select.tutor-form-select, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers {
   color: #212327;
 }
 
@@ -4858,7 +4858,7 @@
   color: #ffffff;
 }
 
-.color-text-brand, .tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.current {
+.color-text-brand, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current {
   color: #3e64de;
 }
 
@@ -5644,7 +5644,7 @@
   line-height: 162%;
 }
 
-.text-medium-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-wp-dashboard-filter-items .tutor-form-label {
+.text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-wp-dashboard-filter-items .tutor-form-label {
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;
@@ -5704,7 +5704,7 @@
   line-height: 162%;
 }
 
-.text-bold-caption, .tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.current {
+.text-bold-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current {
   font-weight: 700;
   font-size: 15px;
   line-height: 160%;
@@ -11561,7 +11561,7 @@ select.tutor-form-select:focus {
   padding: 0 5px;
 }
 
-.tutor-dashboard-pagination {
+.tutor-ui-pagination {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -11583,8 +11583,8 @@ select.tutor-form-select:focus {
   padding: 7px 18px;
 }
 
-@media (min-width: 576px) {
-  .tutor-dashboard-pagination {
+@media (min-width: 768px) {
+  .tutor-ui-pagination {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
@@ -11592,7 +11592,7 @@ select.tutor-form-select:focus {
   }
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers {
+.tutor-ui-pagination ul.tutor-pagination-numbers {
   list-style: none;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -11600,19 +11600,24 @@ select.tutor-form-select:focus {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  gap: 20px;
+  gap: 11px;
+  padding: 0;
+  margin: 0;
 }
 
-@media (max-width: 575.98px) {
-  .tutor-dashboard-pagination ul.tutor-pagination-numbers {
+@media (max-width: 767.98px) {
+  .tutor-ui-pagination ul.tutor-pagination-numbers {
     margin-top: 10px;
     gap: 10px;
   }
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers a {
+.tutor-ui-pagination ul.tutor-pagination-numbers a {
   text-decoration: none;
   color: inherit;
+}
+
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -11622,22 +11627,20 @@ select.tutor-form-select:focus {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-}
-
-.tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers {
   position: relative;
   padding: 0 5px;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers:hover {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers:hover {
   color: #3e64de;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers a {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers a {
   padding: 1px 6px;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.prev, .tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.next {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.prev, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.next {
+  padding: 0;
   font-size: 20px;
   width: 32px;
   height: 32px;
@@ -11657,27 +11660,31 @@ select.tutor-form-select:focus {
   transition: all 150ms linear;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.prev:hover, .tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.next:hover {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.prev:hover, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.next:hover {
   color: #ffffff;
   background: #3e64de;
 }
 
 @media (min-width: 1200px) {
-  .tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.prev {
-    margin-right: 25px;
+  .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers {
+    --margin: 35px;
   }
-  .tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.next {
-    margin-left: 25px;
+  .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.prev {
+    margin-right: var(--margin);
+  }
+  .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.next {
+    margin-left: var(--margin);
   }
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers:before {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers:before {
   content: '';
   position: absolute;
   width: 100%;
   height: 2px;
   background: #3e64de;
   bottom: calc(0% - 12px);
+  left: 0;
   -webkit-transform: scaleY(0);
           transform: scaleY(0);
   -webkit-transform-origin: bottom;
@@ -11688,9 +11695,32 @@ select.tutor-form-select:focus {
   transition: transform 100ms linear, -webkit-transform 100ms linear;
 }
 
-.tutor-dashboard-pagination ul.tutor-pagination-numbers .page-numbers.current:before {
+.tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current:before {
   -webkit-transform: scaleY(1);
           transform: scaleY(1);
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers:hover {
+  color: #1973aa;
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.prev, .tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.next {
+  border: 1px solid #c0c3cb;
+  background: transparent;
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.prev:hover, .tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.next:hover {
+  color: #ffffff;
+  background: #1973aa;
+  border-color: #1973aa;
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers:before {
+  background: #1973aa;
+}
+
+.tutor-ui-pagination.tutor-ui-pagination-wp ul.tutor-pagination-numbers .page-numbers.current {
+  color: #1973aa;
 }
 
 .tutor-badge-label.label-primary {
