@@ -84,49 +84,27 @@ var AddonCard = function AddonCard(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "text-medium-small color-text-hints"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-    style: {
-      margin: '2px 0'
-    },
-    className: "color-text-hints text-medium-small"
+    className: "extra-plugins color-text-hints text-medium-small"
   }, addon.ext_required ? __('Required for Push Notification', 'tutor') : addon.depend_plugins ? __('Required Plugin(s)', 'tutor') : __('No additional plugin(s) required', 'tutor')), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-      style: {
-        marginTop: '2px',
-        marginBottom: 0
-      },
-      className: "tutor-bs-d-flex color-text-primary text-medium-caption",
+      className: "extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption",
       key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      style: {
-        fontSize: '24px',
-        marginLeft: '-7px'
-      },
-      className: "ttr-bullet-point-filled"
+      className: "addon-icon ttr-bullet-point-filled"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      style: {
-        fontSize: '14px'
-      },
+      className: "plugin-title",
       dangerouslySetInnerHTML: {
         __html: extension
       }
     }));
   }) : addon.depend_plugins ? addon.plugins_required.map(function (plugin, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-      style: {
-        marginTop: '2px'
-      },
-      className: "tutor-bs-d-flex color-text-primary text-medium-caption",
+      className: "plugins-wrapper tutor-bs-d-flex color-text-primary text-medium-caption",
       key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      style: {
-        fontSize: '24px',
-        marginLeft: '-7px'
-      },
-      className: "addon-list-icon ttr-bullet-point-filled"
+      className: "addon-icon ttr-bullet-point-filled"
     }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      style: {
-        fontSize: '14px'
-      }
+      className: "plugin-title"
     }, plugin));
   }) : ''), !addon.depend_plugins && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-toggle"
@@ -169,7 +147,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var __ = wp.i18n.__;
-var emptyStateImg = "".concat(_tutorobject.tutor_url, "assets/images/empty-state.svg");
+var emptyStateImg = "".concat(_tutorobject.tutor_url, "assets/images/addon-empty-state.svg");
 
 var AddonsList = function AddonsList() {
   var _useAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)(),
@@ -187,6 +165,9 @@ var AddonsList = function AddonsList() {
   }) : loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "tutor-addons-loading"
   }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    style: {
+      background: 'transparent'
+    },
     className: "tutor-addons-card empty-state tutor-py-20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "card-body"
@@ -195,7 +176,7 @@ var AddonsList = function AddonsList() {
     alt: "empty state illustration"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "text-medium-caption tutor-mb-20"
-  }, __('Nothing Found!', 'tutor')))));
+  }, __('No Addons Found!', 'tutor')))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonsList);
@@ -323,6 +304,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+var __ = wp.i18n.__;
 
 var debounce = function debounce(fn) {
   var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
@@ -365,7 +347,7 @@ var Search = function Search() {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     type: "search",
     className: "tutor-form-control",
-    placeholder: "Search\u2026",
+    placeholder: __('Search…', 'tutor'),
     value: search,
     onChange: handleChange
   })));
@@ -685,7 +667,7 @@ var addonsList = document.getElementById('tutor-free-addons');
 var searchBar = document.getElementById('free-addons-search');
 var freeAddonsList = _tutorobject.addons_data || [];
 var searchString = '';
-var emptyStateImg = "".concat(_tutorobject.tutor_url, "assets/images/empty-state.svg");
+var emptyStateImg = "".concat(_tutorobject.tutor_url, "assets/images/addon-empty-state.svg");
 
 if (null !== searchBar) {
   searchBar.addEventListener('input', function (e) {
@@ -703,7 +685,7 @@ if (null !== searchBar) {
 }
 
 var emptySearch = function emptySearch() {
-  var nothingFound = "\n        <div class=\"tutor-addons-card empty-state tutor-py-20\">\n            <div class=\"card-body\">\n                <img src=".concat(emptyStateImg, " alt=\"empty state illustration\" />\n                <div class=\"text-medium-caption tutor-mb-20\">Nothing Found!</div>\n            </div>\n        </div>");
+  var nothingFound = "\n        <div style=\"background:transparent\" class=\"tutor-addons-card empty-state tutor-py-20\">\n            <div class=\"card-body\">\n                <img src=".concat(emptyStateImg, " alt=\"empty state illustration\" />\n                <div class=\"text-medium-caption tutor-mb-20\">No Addons Found!</div>\n            </div>\n        </div>");
 
   if (null !== addonsList) {
     addonsList.innerHTML = nothingFound;

@@ -4,7 +4,7 @@ import AddonCard from './AddonCard';
 
 const { __ } = wp.i18n;
 
-const emptyStateImg = `${_tutorobject.tutor_url}assets/images/empty-state.svg`;
+const emptyStateImg = `${_tutorobject.tutor_url}assets/images/addon-empty-state.svg`;
 
 const AddonsList = () => {
 	const { allAddons, loading } = useAddons();
@@ -22,10 +22,10 @@ const AddonsList = () => {
 			) : loading ? (
 				<div className="tutor-addons-loading"></div>
 			) : (
-				<div className="tutor-addons-card empty-state tutor-py-20">
+				<div style={{background: 'transparent'}} className="tutor-addons-card empty-state tutor-py-20">
 					<div className="card-body">
 						<img src={emptyStateImg} alt="empty state illustration" />
-						<div className="text-medium-caption tutor-mb-20">{__('Nothing Found!', 'tutor')}</div>
+						<div className="text-medium-caption tutor-mb-20">{__('No Addons Found!', 'tutor')}</div>
 					</div>
 				</div>
 			)}

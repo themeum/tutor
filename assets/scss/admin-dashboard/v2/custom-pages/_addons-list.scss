@@ -159,6 +159,33 @@
         background: rgba(239, 241, 247, 0.4);
         /* stroke/light20 */
         border-top: 1px solid #e0e2ea;
+
+        .extra-plugins {
+            margin: 2px 0;
+        }
+        .extension-wrapper {
+            margin-top: 2px;
+            margin-bottom: 0;
+
+            span.addon-icon {
+                font-size: 24px;
+                margin-left: -7px;
+            }
+            span.plugin-title {
+                font-size: 14px;
+            }
+        }
+        .plugins-wrapper {
+            margin-top: 2px;
+
+            span.addon-icon {
+                font-size: 24px;
+                margin-left: -7px;
+            }
+            span.plugin-title {
+                font-size: 14px;
+            }
+        }
     }
     &.not-subscribed {
         .card-footer {
@@ -166,6 +193,33 @@
 
             /* color/warning/fill/60 */
             border-top: 1px solid #f9d093;
+
+            .extra-plugins {
+                margin: 2px 0;
+            }
+            .extension-wrapper {
+                margin-top: 2px;
+                margin-bottom: 0;
+
+                span.addon-icon {
+                    font-size: 24px;
+                    margin-left: -7px;
+                }
+                span.plugin-title {
+                    font-size: 14px;
+                }
+            }
+            .plugins-wrapper {
+                margin-top: 2px;
+
+                span.addon-icon {
+                    font-size: 24px;
+                    margin-left: -7px;
+                }
+                span.plugin-title {
+                    font-size: 14px;
+                }
+            }
         }
     }
 
@@ -173,6 +227,11 @@
         text-align: center;
         grid-area: 1 / -1;
         height: 250px;
+        .card-body {
+            img {
+                width: 70%;
+            }
+        }
     }
 
     .addons-jumbotron {

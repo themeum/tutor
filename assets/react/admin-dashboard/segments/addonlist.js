@@ -4,7 +4,7 @@ const addonsList = document.getElementById('tutor-free-addons');
 const searchBar = document.getElementById('free-addons-search');
 let freeAddonsList = _tutorobject.addons_data || [];
 let searchString = '';
-const emptyStateImg = `${_tutorobject.tutor_url}assets/images/empty-state.svg`;
+const emptyStateImg = `${_tutorobject.tutor_url}assets/images/addon-empty-state.svg`;
 
 if (null !== searchBar) {
     searchBar.addEventListener('input', (e) => {
@@ -25,10 +25,10 @@ if (null !== searchBar) {
 
 const emptySearch = () => {
     const nothingFound = `
-        <div class="tutor-addons-card empty-state tutor-py-20">
+        <div style="background:transparent" class="tutor-addons-card empty-state tutor-py-20">
             <div class="card-body">
                 <img src=${emptyStateImg} alt="empty state illustration" />
-                <div class="text-medium-caption tutor-mb-20">Nothing Found!</div>
+                <div class="text-medium-caption tutor-mb-20">No Addons Found!</div>
             </div>
         </div>`;
        if ( null !== addonsList ) {
