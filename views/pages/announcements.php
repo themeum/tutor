@@ -79,7 +79,7 @@ $filters = array(
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	?>
 
-	<div class="tutor-dashboard-content-inner">
+	<div class="tutor-dashboard-content-inner  tutor-mr-20">
 		<div class="tutor-component-three-col-action new-announcement-wrap">
 			<div class="tutor-announcement-big-icon">
 				<i class="tutor-icon-speaker"></i>
@@ -103,7 +103,7 @@ $filters = array(
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-page-content-wrapper tutor-mt-50">
+	<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-mr-20">
 	<?php
 		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
 		$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';

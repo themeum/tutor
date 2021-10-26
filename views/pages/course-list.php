@@ -357,7 +357,7 @@ $available_status = array(
 			</table>
 		</div>
 	</div>
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-50 tutor-mr-20">
+	<div class="tutor-admin-page-pagination-wrapperp tutor-mt-50 tutor-mr-20">
 		<?php
 		/**
 		 * Prepare pagination data & load template
