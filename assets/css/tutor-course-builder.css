@@ -1100,10 +1100,6 @@ body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs {
   border-radius: 6px;
 }
 
-body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-metabox-course-settings-tabs {
-  border: none;
-}
-
 body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs .settings-tabs-heading {
   padding: 1em;
   border-bottom: 1px solid #e5e5e5;
@@ -1201,6 +1197,22 @@ body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs .course-set
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
   overflow: hidden;
+}
+
+body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #course-settings .inside {
+  margin: 0;
+  padding: 0;
+}
+
+body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-metabox-course-settings-tabs {
+  border: none;
+}
+
+body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-metabox-course-settings-tabs, body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-metabox-course-settings-tabs .settings-tabs-navs-wrap, body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-metabox-course-settings-tabs .settings-tabs-container {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 body.tutor-screen-course-builder .tutor-course-available-instructors {

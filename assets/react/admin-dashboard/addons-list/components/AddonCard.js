@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAddonsUpdate } from '../context/AddonsContext';
+
+const { __ } = wp.i18n;
 
 const AddonCard = ({ addon, addonId }) => {
 	const author = 'Themeum';
@@ -9,7 +11,7 @@ const AddonCard = ({ addon, addonId }) => {
 	return (
 		<div
 			className={`tutor-addons-card ${
-				addon.depend_plugins || addon.ext_required ? 'not-subscribed' : ''
+				addon.depend_plugins ? 'not-subscribed' : ''
 			} tutor-addons-card-${addonId + 1}`}
 			style={{ transitionDelay: `${100 * addonId}ms` }}
 		>
@@ -18,7 +20,7 @@ const AddonCard = ({ addon, addonId }) => {
 					<img src={addon.thumb_url} alt={addon.name} />
 				</div>
 				<div className="addon-title tutor-mt-20">
-					<h5 className="text-medium-h5 color-text-primary">{addon.name}</h5>
+					<h5 className="text-medium-h5 color-text-primary tutor-mb-4">{addon.name}</h5>
 					<p className="text-medium-small color-text-hints tutor-mt-5">
 						By{' '}
 						<a href={url} className="color-brand-wordpress">
@@ -30,60 +32,49 @@ const AddonCard = ({ addon, addonId }) => {
 					<p>{addon.description}</p>
 				</div>
 			</div>
-			<div className=" card-footer tutor-px-30 tutor-py-25 d-flex justify-content-between align-items-center">
-				<div className="addon-toggle">
-					{addon.ext_required ? (
-						<>
-							<label className="tutor-form-toggle">
-								<input
-									type="checkbox"
-									className="tutor-form-toggle-input"
-									name={addon.basename}
-									checked={!!addon.is_enabled}
-									onChange={(event) => handleOnChange(event, addon.basename)}
-								/>
-								<span className="tutor-form-toggle-control"></span>
-								<span className="tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5">
-									Active
-								</span>
-							</label>
-							<p className="color-text-hints text-medium-small">Required Extension(s)</p>
-							{addon.ext_required.map((extension, index) => {
+			<div className=" card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center">
+				<div className="text-medium-small color-text-hints">	
+					<p className="extra-plugins color-text-hints text-medium-small">{addon.ext_required ? __('Required for Push Notification', 'tutor') : addon.depend_plugins ? __('Required Plugin(s)', 'tutor') : __('No additional plugin(s) required', 'tutor')}</p>
+						{addon.ext_required &&
+							addon.ext_required ? addon.ext_required.map((extension, index) => {
 								return (
-									<p
-										className="color-text-primary text-medium-caption tutor-mt-2"
-										key={index}
-										dangerouslySetInnerHTML={{ __html: extension }}
-									/>
+									<p className="extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
+										<span className="addon-icon ttr-bullet-point-filled"></span>
+										<span className="plugin-title" dangerouslySetInnerHTML={{ __html: extension }} />
+									</p>	
 								);
-							})}
-						</>
-					) : addon.depend_plugins ? (
-						<>
-							<p className="color-text-hints text-medium-small">Required Plugin(s)</p>
-							<p className="color-text-primary text-medium-caption tutor-mt-2">Woocommerce Subscription</p>
-						</>
-					) : (
-						<>
-							<label className="tutor-form-toggle">
-								<input
-									type="checkbox"
-									className="tutor-form-toggle-input"
-									name={addon.basename}
-									checked={addon.is_enabled}
-									onChange={(event) => handleOnChange(event, addon.basename)}
-								/>
-								<span className="tutor-form-toggle-control"></span>
-								<span className="tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5">
-									Active
-								</span>
-							</label>
-						</>
-					)}
+							}) 
+							: 
+							addon.depend_plugins ? addon.plugins_required.map((plugin, index) => {
+								return (
+									<p className="plugins-wrapper tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
+										<span className="addon-icon ttr-bullet-point-filled"></span>
+										<span className="plugin-title">{plugin}</span>
+									</p>
+								);
+							})
+							:
+							''
+						}
+					
 				</div>
-				<div className="addon-version text-medium-small color-text-hints">
-					Version : <span className="text-bold-small color-text-primary">{addon.tutor_version}</span>
+				{!addon.depend_plugins &&
+				<div className="addon-toggle">
+					<label className="tutor-form-toggle">
+						<input
+							type="checkbox"
+							className="tutor-form-toggle-input"
+							name={addon.basename}
+							checked={addon.is_enabled}
+							onChange={(event) => handleOnChange(event, addon.basename)}
+						/>
+						<span className="tutor-form-toggle-control"></span>
+						<span className="tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5">
+							{__('Active', 'tutor')}
+						</span>
+					</label>
 				</div>
+				}
 			</div>
 		</div>
 	);

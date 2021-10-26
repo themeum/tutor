@@ -54,7 +54,7 @@ class Course_Settings_Tabs{
         $this->settings_meta = (array) maybe_unserialize($settings_meta);
 
         if (tutor_utils()->count($this->args) && $post->post_type === $this->course_post_type) {
-            include tutor()->path . "views/metabox/course/settings-tabs.php";
+            include tutor()->path . "views/metabox/settings-tabs.php";
         }
     }
 
@@ -73,8 +73,14 @@ class Course_Settings_Tabs{
         if (tutor_utils()->count($fields)){
             foreach ($fields as $field_key => $field){
                 $type = tutor_utils()->array_get('type', $field);
+
+                if($type=='line_break') {
+                    echo '<hr class="tutor-mb-30"/>';
+                    continue;
+                }
+
                 ?>
-                <div class="tutor-bs-row">
+                <div class="tutor-bs-row tutor-mb-30">
                     <?php
                     if (!empty($field['label'])){
                         ?>
@@ -86,11 +92,17 @@ class Course_Settings_Tabs{
                     ?>
                     <div class="tutor-bs-col-8">
                         <?php
-                        $field['field_key'] = $field_key;
-                        $this->field_type($field);
-                        if (isset($field['desc'])){
-                            echo "<p class='desc'>{$field['desc']}</p>";
-                        }
+                            $field['field_key'] = $field_key;
+                            $this->field_type($field);
+                            
+                            if (isset($field['desc'])){
+                                ?>
+                                    <p class="tutor-input-feedback tutor-has-icon">
+                                        <i class="far fa-question-circle tutor-input-feedback-icon"></i>
+                                        <?php echo $field['desc']; ?>
+                                    </p>
+                                <?php
+                            }
                         ?>
                     </div>
                 </div>
