@@ -426,6 +426,8 @@ class Ajax{
 			do_action( "tutor_addon_after_disable_{$addonFieldName}" );
 		}
 		do_action( 'tutor_addon_after_enable_disable' );
+
+		wp_send_json_success();
 	}
 
 	/**
