@@ -40,7 +40,8 @@ $total            = tutor_utils()->get_total_instructors($active_tab, $search, $
 /**
  * Navbar data to make nav menu
  */
-$add_insructor_url = admin_url( 'admin.php?page=tutor-instructors&sub_page=add_new_instructor' );
+$url                = get_pagenum_link();
+$add_insructor_url  = $url . '&sub_page=add_new_instructor';
 $navbar_data = array(
 	'page_title' => $instructors->page_title,
 	'tabs'       => $instructors->tabs_key_value(  $user_id, $date, $search, $course_id ),
