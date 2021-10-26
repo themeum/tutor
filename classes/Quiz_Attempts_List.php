@@ -63,25 +63,25 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$tabs      = array(
 			array(
 				'key'   => 'all',
-				'title' => __( 'All', 'tutor-pro' ),
+				'title' => __( 'All', 'tutor' ),
 				'value' => $pass + $fail + $pending,
 				'url'   => $url . '&data=all',
 			),
 			array(
 				'key'   => 'pass',
-				'title' => __( 'Pass', 'tutor-pro' ),
+				'title' => __( 'Pass', 'tutor' ),
 				'value' => $pass,
 				'url'   => $url . '&data=pass',
 			),
 			array(
 				'key'   => 'fail',
-				'title' => __( 'Fail', 'tutor-pro' ),
+				'title' => __( 'Fail', 'tutor' ),
 				'value' => $fail,
 				'url'   => $url . '&data=fail',
 			),
 			array(
 				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor-pro' ),
+				'title' => __( 'Pending', 'tutor' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
 			),

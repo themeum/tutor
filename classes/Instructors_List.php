@@ -65,25 +65,25 @@ class Instructors_List extends \Tutor_List_Table {
 		$tabs      = array(
 			array(
 				'key'   => 'all',
-				'title' => __( 'All', 'tutor-pro' ),
+				'title' => __( 'All', 'tutor' ),
 				'value' => $approve + $pending + $blocked,
 				'url'   => $url . '&data=all',
 			),
 			array(
 				'key'   => 'approved',
-				'title' => __( 'Approve', 'tutor-pro' ),
+				'title' => __( 'Approve', 'tutor' ),
 				'value' => $approve,
 				'url'   => $url . '&data=approved',
 			),
 			array(
 				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor-pro' ),
+				'title' => __( 'Pending', 'tutor' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
 			),
 			array(
 				'key'   => 'blocked',
-				'title' => __( 'Block', 'tutor-pro' ),
+				'title' => __( 'Block', 'tutor' ),
 				'value' => $blocked,
 				'url'   => $url . '&data=blocked',
 			),
