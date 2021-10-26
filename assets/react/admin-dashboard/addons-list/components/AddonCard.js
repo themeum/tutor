@@ -34,22 +34,22 @@ const AddonCard = ({ addon, addonId }) => {
 			</div>
 			<div className=" card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center">
 				<div className="text-medium-small color-text-hints">	
-					<p style={{margin: '2px 0'}} className="color-text-hints text-medium-small">{addon.ext_required ? __('Required for Push Notification', 'tutor') : addon.depend_plugins ? __('Required Plugin(s)', 'tutor') : __('No additional plugin(s) required', 'tutor')}</p>
+					<p className="extra-plugins color-text-hints text-medium-small">{addon.ext_required ? __('Required for Push Notification', 'tutor') : addon.depend_plugins ? __('Required Plugin(s)', 'tutor') : __('No additional plugin(s) required', 'tutor')}</p>
 						{addon.ext_required &&
 							addon.ext_required ? addon.ext_required.map((extension, index) => {
 								return (
-									<p style={{marginTop: '2px', marginBottom: 0}} className="tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
-										<span style={{fontSize: '24px', marginLeft:'-7px'}} className="ttr-bullet-point-filled"></span>
-										<span style={{fontSize:'14px'}} dangerouslySetInnerHTML={{ __html: extension }} />
+									<p className="extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
+										<span className="addon-icon ttr-bullet-point-filled"></span>
+										<span className="plugin-title" dangerouslySetInnerHTML={{ __html: extension }} />
 									</p>	
 								);
 							}) 
 							: 
 							addon.depend_plugins ? addon.plugins_required.map((plugin, index) => {
 								return (
-									<p style={{marginTop: '2px'}} className="tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
-										<span style={{fontSize: '24px', marginLeft:'-7px'}} className="addon-list-icon ttr-bullet-point-filled"></span>
-										<span style={{fontSize:'14px'}}>{plugin}</span>
+									<p className="plugins-wrapper tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
+										<span className="addon-icon ttr-bullet-point-filled"></span>
+										<span className="plugin-title">{plugin}</span>
 									</p>
 								);
 							})
