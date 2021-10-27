@@ -3491,7 +3491,8 @@
   }
 }
 
-.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > img, .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > img,
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span {
   display: inline-block;
   vertical-align: middle;
 }
@@ -3502,7 +3503,7 @@
   font-weight: normal;
   font-size: 13px;
   line-height: 18px;
-  color: #7A7A7A;
+  color: #7a7a7a;
 }
 
 .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_photo_meta_area > span > span {
@@ -3515,7 +3516,7 @@
 
 .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area {
   height: 245px;
-  background-color: #E9EDFB;
+  background-color: #e9edfb;
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -3535,7 +3536,7 @@
 }
 
 .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_uploader {
-  background: #3E64DE;
+  background: #3e64de;
   border-radius: 6px;
   color: white;
   border: none;
@@ -3543,7 +3544,7 @@
   font-style: normal;
   font-weight: 600;
   font-size: 12px;
-  color: #FFFFFF;
+  color: #ffffff;
   position: absolute;
   padding: 8px 20px;
   right: 22px;
@@ -3579,6 +3580,11 @@
   cursor: pointer;
 }
 
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter .dashboard-profile-delete {
+  font-size: 24px;
+  line-height: 35px;
+}
+
 .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_cover_area .tutor_cover_deleter:hover {
   background: rgba(0, 0, 0, 0.438);
 }
@@ -3592,7 +3598,7 @@
   border: 5px solid white;
   position: absolute;
   overflow: hidden;
-  background-color: #E9EDFB;
+  background-color: #e9edfb;
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -3672,7 +3678,7 @@
   font-weight: normal;
   font-size: 16px;
   line-height: 26px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option span:first-of-type {
@@ -3687,6 +3693,22 @@
 
 .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option span:hover {
   background: #6b6b6b;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option .profile-uploader {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option .profile-uploader .profile-upload-icon {
+  font-size: 24px;
 }
 
 .tutor-dashboard .tutor-dashboard-content #tutor_profile_cover_photo_editor #tutor_pp_option .up-arrow {
