@@ -13382,6 +13382,16 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   padding: 4px;
 }
 
+.tutor-certificate-template-tab .tab-header.d-flex, .tutor-certificate-template-tab .tab-header.tutor-instructor-card, .tutor-certificate-template-tab .tutor-instructor-card .tab-header.tutor-name, .tutor-instructor-card .tutor-certificate-template-tab .tab-header.tutor-name, .tutor-certificate-template-tab .tab-header.tutor-text-card.tutor-is-vertical, .tutor-certificate-template-tab .tab-header.tutor-btn.tutor-is-fullwidth, .tutor-certificate-template-tab .tab-header.tutor-btn.tutor-is-block, .tutor-certificate-template-tab .tutor-btn.tutor-is-icon-btn .tab-header.tutor-btn-icon, .tutor-btn.tutor-is-icon-btn .tutor-certificate-template-tab .tab-header.tutor-btn-icon, .tutor-certificate-template-tab .tab-header.tutor-input-group, .tutor-certificate-template-tab .tab-header.tutor-form-check, .tutor-certificate-template-tab .tab-header.tutor-profile-badge, .tutor-certificate-template-tab .tab-header.tutor-pagination, .tutor-certificate-template-tab .tutor-pagination a.tab-header, .tutor-pagination .tutor-certificate-template-tab a.tab-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+}
+
 .tutor-certificate-template-tab .tab-header-item {
   color: #9ca0ac;
   font-weight: 500;
@@ -13415,6 +13425,15 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           box-shadow: 0px 1px 2px rgba(2, 11, 83, 0.2);
 }
 
+.tutor-certificate-template-tab .tab-header-item:not(.is-active) img {
+  filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+  opacity: 0.55;
+}
+
 .tutor-certificate-template {
   display: grid;
   gap: 25px;
@@ -13423,7 +13442,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   grid-template-rows: min-content;
   position: relative;
   min-height: 580px;
-  max-height: 944px;
 }
 
 .tutor-certificate-template .template-item {
@@ -13444,8 +13462,14 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border-radius: 6px;
 }
 
+.tutor-certificate-template label.template-radio-field, .tutor-certificate-template label.template-radio-field > span, .tutor-certificate-template label.template-radio-field > span > img {
+  width: 100%;
+}
+
 .tutor-certificate-template label.template-radio-field img {
   max-width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .tutor-certificate-template label.template-radio-field input[type='radio'] {

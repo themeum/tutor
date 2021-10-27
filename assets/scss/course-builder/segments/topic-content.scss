@@ -78,7 +78,7 @@
                     margin-bottom: 15px;
                     background: white;
             
-                    .tutor-lesson-top {
+                    .tutor-course-content-top {
                         display: flex;
                         align-items: center;
                         
@@ -163,7 +163,7 @@
             }
         }
 
-        .tutor-lesson-top {
+        .tutor-course-content-top {
             @include valueWithPrefix(display, flex);
             font-size: 14px;
 
@@ -206,7 +206,7 @@
 
         @at-root {
             #{$body}.rtl {
-                #tutor-course-content-wrap .tutor-lesson-top {
+                #tutor-course-content-wrap .tutor-course-content-top {
                     i.tutor-icon-move {
                         margin-right: 0;
                         margin-left: 10px;
