@@ -742,8 +742,7 @@ var _wp$i18n = wp.i18n,
     _x = _wp$i18n._x,
     _n = _wp$i18n._n,
     _nx = _wp$i18n._nx;
-
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function () {
   var filterCourse = document.getElementById("tutor-backend-filter-course");
 
   if (filterCourse) {
@@ -1097,7 +1096,7 @@ window.onload = function () {
     }));
     return _ajaxHandler.apply(this, arguments);
   }
-};
+});
 
 /***/ }),
 
