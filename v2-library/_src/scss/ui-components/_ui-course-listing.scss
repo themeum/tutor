@@ -64,6 +64,9 @@
 				background: $design-brand;
 				color: $design-white;
 			}
+			&.bookmark-is-filled {
+				background: rgba(27, 27, 27, 0.4);
+			}
 		}
 	}
 	&-body {
