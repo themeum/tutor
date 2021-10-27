@@ -146,7 +146,7 @@ $available_status = array(
 
 	?>
 
-	<div class="tutor-admin-page-content-wrapper tutor-mt-30 tutor-mr-20">
+	<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-mr-20">
 		<div class="tutor-ui-table-wrapper">
 			<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
 				<thead class="tutor-text-sm tutor-text-400">
@@ -260,8 +260,8 @@ $available_status = array(
 											<?php echo esc_html( $author_details->display_name ); ?>
 										</p>
 										<a
-										href="#"
-										class="btn-text btn-detail-link color-design-dark"
+										href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author ) ); ?>"
+										class="btn-text btn-detail-link color-design-dark" target="_blank"
 										>
 										<span class="ttr-detail-link-filled"></span>
 										</a>
@@ -357,7 +357,7 @@ $available_status = array(
 			</table>
 		</div>
 	</div>
-	<div class="tutor-admin-page-pagination-wrapper">
+	<div class="tutor-admin-page-pagination-wrapperp tutor-mt-50 tutor-mr-20">
 		<?php
 		/**
 		 * Prepare pagination data & load template

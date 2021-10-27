@@ -2,32 +2,55 @@ window.jQuery(document).ready(function($){
 
     const {__} = wp.i18n;
 
-    $(document).on('click', '#tutor-add-topic-btn', function (e) {
+    $(document).on('click', '.tutor-save-topic-btn', function(e){
         e.preventDefault();
-        var $that = $(this);
-        var container = $that.closest('.tutor-modal');
-        var form_data = container.find('input, textarea').serializeObject();
-        form_data.action = 'tutor_add_course_topic';
+
+        let $button = $(this);
+        let modal = $button.closest('.tutor-modal');
+
+        let topic_id = modal.find('[name="topic_id"]').val();;
+        let topic_title = modal.find('[name="topic_title"]').val();
+        let topic_summery = modal.find('[name="topic_summery"]').val();
+        let topic_course_id = modal.find('[name="topic_course_id"]').val();
+
+        let data = {
+            topic_title,
+            topic_summery,
+            topic_id,
+            topic_course_id,
+            action: 'tutor_save_topic'
+        };
 
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
-            data : form_data,
+            data : data,
             beforeSend: function () {
-                $that.addClass('tutor-updating-message');
+                $button.addClass('tutor-updating-message');
             },
-            success: function (data) {
-                if (data.success){
-                    $('#tutor-course-content-wrap').html(data.data.course_contents);
-                    container.find('input[type!="hidden"], textarea').each(function () {
-                        $(this).val('');
-                    });
-                    container.removeClass('tutor-is-active');
-                    enable_sorting_topic_lesson();
+            success: function (resp) {
+                const {data={}, success} = resp;
+                const {message=__('Something Went Wrong!', 'tutor'), course_contents, topic_title} = data;
+
+                if(!success) {
+                    tutor_toast('Error!', message, 'error');
+                    return;
+                }
+
+                // Close Modal
+                modal.removeClass('tutor-is-active', $('#tutor-course-content-wrap'));
+
+                // Show updated contents
+                if (topic_id){
+                    // It's topic update
+                    $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
+                } else {
+                    // It's new topic creation
+                    $('#tutor-course-content-wrap').html(course_contents);
                 }
             },
             complete: function () {
-                $that.removeClass('tutor-updating-message');
+                $button.removeClass('tutor-updating-message');
             }
         });
     });
