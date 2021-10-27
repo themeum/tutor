@@ -109,17 +109,19 @@
 			</div>
 			</div>
 			<div class="">
-			<label class="tutor-form-label">
-			<?php esc_html_e( 'Search', 'tutor' ); ?>
-			</label>
-			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
-				<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
-				<input
-				type="search"
-				class="tutor-form-control"
-				id="tutor-backend-filter-search" name="tutor-backend-filter-search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php esc_html_e( $search ); ?>"
-				/>
-			</div>
+				<form action="" method="GET">
+					<label class="tutor-form-label">
+					<?php esc_html_e( 'Search', 'tutor' ); ?>
+					</label>
+					<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
+						<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+						<input
+						type="search"
+						class="tutor-form-control"
+						id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php esc_html_e( $search ); ?>"
+						/>
+					</div>
+				</form>
 			</div>
 		</div>
 	<?php endif; ?>

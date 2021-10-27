@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: tutor.php:77, classes/Tutor.php:447
+#: tutor.php:77, classes/Tutor.php:449
 msgid "Tutor Instructor"
 msgstr ""
 
@@ -2320,15 +2320,15 @@ msgstr ""
 msgid "Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it."
 msgstr ""
 
-#: classes/Tutor.php:542, classes/Utils.php:2460, templates/dashboard.php:50, templates/dashboard/dashboard.php:9
+#: classes/Tutor.php:544, classes/Utils.php:2460, templates/dashboard.php:50, templates/dashboard/dashboard.php:9
 msgid "Dashboard"
 msgstr ""
 
-#: classes/Tutor.php:551
+#: classes/Tutor.php:553
 msgid "Student Registration"
 msgstr ""
 
-#: classes/Tutor.php:560
+#: classes/Tutor.php:562
 msgid "Instructor Registration"
 msgstr ""
 
@@ -3910,8 +3910,12 @@ msgstr ""
 msgid "All Category"
 msgstr ""
 
-#: views/elements/pagination.php:13, views/elements/pagination.php:17
+#: views/elements/pagination.php:13, templates/dashboard/elements/pagination.php:13
 msgid "Page"
+msgstr ""
+
+#: views/elements/pagination.php:17, templates/dashboard/elements/pagination.php:17
+msgid "of"
 msgstr ""
 
 #: views/fragments/announcement-list.php:49
@@ -3950,7 +3954,7 @@ msgstr ""
 msgid "Yes, Delete This"
 msgstr ""
 
-#: views/fragments/announcement-list.php:343
+#: views/fragments/announcement-list.php:341
 msgid "No Announcment"
 msgstr ""
 
@@ -5427,11 +5431,11 @@ msgid "Post Question"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Required for Push Notification"
+msgid "Required Plugin(s)"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Required Plugin(s)"
+msgid "Required for Push Notification"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
