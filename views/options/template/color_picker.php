@@ -16,6 +16,7 @@
 							<?php
 							foreach ( $fields_group['fields'] as $fields ) :
 								$option_value = $this->get( $fields_group['key'], tutils()->array_get( 'default', $fields_group ) );
+								// pr( $fields );
 								?>
 							<label for="<?php esc_attr_e( $fields['key'] ); ?>" class="color-preset-input">
 								<input type="radio" name="tutor_option[<?php esc_attr_e( $fields_group['key'] ); ?>]" id="<?php esc_attr_e( $fields['key'] ); ?>" value="<?php esc_attr_e( $fields['key'] ); ?>" <?php checked( $option_value, $fields['key'] ); ?> >
@@ -23,9 +24,11 @@
 									<div class="header">
 										<?php
 										foreach ( $fields['colors'] as $color ) :
-											$get_color = $this->get( $color['slug'] );
+											$get_color   = ( $option_value != 'custom' && $fields['key'] == 'custom' ) ? $color['value'] : $this->get( $color['slug'] );
+											$color_value = $fields['key'] == 'custom' ? $get_color : $color['value'];
+											$preset_name = (string) $color['preset_name'];
 											?>
-										<span data-preset="<?php echo $color['preset_name']; ?>" data-color="<?php echo $fields['key'] == 'custom' ? $get_color : $color['value']; ?>" style="background-color: <?php echo $fields['key'] == 'custom' ? $get_color : $color['value']; ?>;">1</span>
+										<span data-preset="<?php esc_attr_e( $preset_name, 'tutor' ); ?>" data-color="<?php echo $color_value; ?>" style="background-color: <?php echo $color_value; ?>;"></span>
 										<?php endforeach; ?>
 									</div>
 									<div class="footer">

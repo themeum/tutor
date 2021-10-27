@@ -250,7 +250,7 @@ class Options_V2 {
 		$get_option_data                          = get_option( 'tutor_settings_log', array() );
 
 		if ( ! empty( $get_option_data ) ) {
-			$update_option = array_merge( $get_option_data, $import_data );
+			$update_option = array_merge( $import_data, $get_option_data );
 		} else {
 			$update_option = array_merge( $import_data );
 		}
@@ -518,18 +518,17 @@ class Options_V2 {
 								'desc'    => __( 'Choose whether to show or hide previous button for single question.', 'tutor' ),
 							),
 							array(
-								'key'            => 'quiz_grade_method',
-								'type'           => 'select',
-								'label'          => __( 'Final grade calculation', 'tutor' ),
-								'default'        => 'highest_grade',
-								'select_options' => false,
-								'options'        => array(
+								'key'     => 'quiz_grade_method',
+								'type'    => 'radio_horizontal_full',
+								'label'   => __( 'Final grade calculation', 'tutor' ),
+								'desc'    => __( 'When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'tutor' ),
+								'default' => 'highest_grade',
+								'options' => array(
 									'highest_grade' => __( 'Highest Grade', 'tutor' ),
 									'average_grade' => __( 'Average Grade', 'tutor' ),
 									'first_attempt' => __( 'First Attempt', 'tutor' ),
 									'last_attempt'  => __( 'Last Attempt', 'tutor' ),
 								),
-								'desc'           => __( 'When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'tutor' ),
 							),
 						),
 					),
@@ -721,167 +720,7 @@ class Options_V2 {
 				'template' => 'design',
 				'icon'     => __( 'design', 'tutor' ),
 				'blocks'   => array(
-
-					array(
-						'label'        => __( 'Colors', 'tutor' ),
-						'slug'         => 'Colors',
-						'block_type'   => 'color_picker',
-						'fields_group' => array(
-							array(
-								'key'    => 'color_preset_type',
-								'type'   => 'color_preset',
-								'label'  => __( 'Preset Colors', 'tutor' ),
-								'desc'   => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
-								'default'  => 'default',
-								'fields' => array(
-									array(
-										'key'    => 'default',
-										'label'  => 'Default',
-										'colors' => array(
-											array(
-												'slug'        => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value'       => '#1973AA',
-											),
-											array(
-												'slug'        => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value'       => '#5B616F',
-											),
-											array(
-												'slug'        => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value'       => '#CDCFD5',
-											),
-											array(
-												'slug'        => 'tutor_light_color',
-												'preset_name' => 'light',
-												'value'       => '#EFF1F6',
-											),
-										),
-									),
-									array(
-										'key'    => 'landscape',
-										'label'  => 'Landscape',
-										'colors' => array(
-											array(
-												'slug'        => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value'       => '#43AA8B',
-											),
-											array(
-												'slug'        => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value'       => '#4D908E',
-											),
-											array(
-												'slug'        => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value'       => '#90BE6D',
-											),
-											array(
-												'slug'        => 'tutor_light_color',
-												'preset_name' => 'light',
-												'value'       => '#F9C74F',
-											),
-										),
-									),
-									array(
-										'key'    => 'ocean',
-										'label'  => 'Ocean',
-										'colors' => array(
-											array(
-												'slug'        => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value'       => '#4EA8DE',
-											),
-											array(
-												'slug'        => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value'       => '#5A18C2',
-											),
-											array(
-												'slug'        => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value'       => '#5E60CE',
-											),
-											array(
-												'slug'        => 'tutor_light_color',
-												'preset_name' => 'light',
-												'value'       => '#64DFDF',
-											),
-										),
-									),
-									array(
-										'key'    => 'custom',
-										'label'  => 'Custom',
-										'colors' => array(
-											array(
-												'slug'        => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value'       => '#000000',
-											),
-											array(
-												'slug'        => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value'       => '#5d5d5d',
-											),
-											array(
-												'slug'        => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value'       => '#a2a2a2',
-											),
-											array(
-												'slug'        => 'tutor_light_color',
-												'preset_name' => 'light',
-												'value'       => '#d8d8d8',
-											),
-										),
-									),
-								),
-							),
-							array(
-								'key'    => 'tutor_color_presets',
-								'type'   => 'color_fields',
-								'label'  => __( 'Preset Colors', 'tutor' ),
-								'fields' => array(
-									array(
-										'key'         => 'tutor_primary_color',
-										'type'        => 'color_field',
-										'preset_name' => 'primary',
-										'label'       => __( 'Primary Color', 'tutor' ),
-										'default'     => '#000000',
-										'desc'        => __( 'Choose a custom primary color', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_primary_hover_color',
-										'type'        => 'color_field',
-										'preset_name' => 'hover',
-										'label'       => __( 'Primary Hover color', 'tutor' ),
-										'default'     => '#5d5d5d',
-										'desc'        => __( 'Choose a custom primary hover color', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_text_color',
-										'type'        => 'color_field',
-										'preset_name' => 'text',
-										'label'       => __( 'Text Color', 'tutor' ),
-										'default'     => '#a2a2a2',
-										'desc'        => __( 'Choose a custom color for your website text', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_light_color',
-										'type'        => 'color_field',
-										'preset_name' => 'light',
-										'label'       => __( 'Light color', 'tutor' ),
-										'default'     => '#d8d8d8',
-										'desc'        => __( 'Choose a  light color for your website ', 'tutor' ),
-									),
-								),
-							),
-						),
-					),
-					'block_course' => array(
+					'block_course'    => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',
@@ -900,19 +739,19 @@ class Options_V2 {
 								'desc'    => __( 'Define how many column you want to use to display courses.', 'tutor' ),
 							),
 							array(
-								'key'     => 'courses_per_page',
-								'type'    => 'number',
-								'label'   => __( 'Courses Per Page', 'tutor' ),
-								'default' => '12',
-								'desc'    => __( 'Define how many courses you want to show per page', 'tutor' ),
-							),
-							array(
 								'key'         => 'course_archive_filter',
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Course Filter', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
 								'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
+							),
+							array(
+								'key'     => 'courses_per_page',
+								'type'    => 'number',
+								'label'   => __( 'Pagination', 'tutor' ),
+								'default' => '12',
+								'desc'    => __( 'Number of items you want to be displayed "per page" in the pagination', 'tutor' ),
 							),
 							array(
 								'key'         => 'supported_course_filters',
@@ -930,51 +769,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
-						'label'      => __( 'Student Profile', 'tutor' ),
-						'slug'       => 'student_profile',
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'     => 'students_own_review_show_at_profile',
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Show reviews on profile', 'tutor' ),
-								'default' => 'on',
-								'desc'    => __( 'Enabling this will show the reviews written by each student on their profile', 'tutor' ) . '<br />' . $student_url,
-							),
-							array(
-								'key'     => 'show_courses_completed_by_student',
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Show completed courses', 'tutor' ),
-								'default' => 'on',
-								'desc'    => __( 'Completed courses will be shown on student profiles. <br/> For example, you can see this link-', 'tutor' ) . $student_url,
-							),
-						),
-					),
-					array(
-						'label'      => __( 'Video Player', 'tutor' ),
-						'slug'       => 'video_player',
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'         => 'disable_default_player_youtube',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Use Tutor Player for YouTube', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Enable this option to use Tutor LMS video player.', 'tutor' ),
-							),
-							array(
-								'key'         => 'disable_default_player_vimeo',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Use Tutor Player for Vimeo', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Enable this option to use Tutor LMS video player.', 'tutor' ),
-							),
-						),
-					),
-					array(
+					'layout'          => array(
 						'label'      => __( 'Layout', 'tutor' ),
 						'slug'       => 'layout',
 						'block_type' => 'uniform',
@@ -983,6 +778,8 @@ class Options_V2 {
 								'key'           => 'instructor_list_layout',
 								'type'          => 'group_radio',
 								'label'         => __( 'Instructor List Layout', 'tutor' ),
+								'desc'          => __( 'Choose a layout for the list of instructor inside a course page. You can change this any time.', 'tutor' ),
+								'default'       => 'pp-top-full',
 								'group_options' => array(
 									'vertical'   => array(
 										'pp-top-full' => array(
@@ -1009,12 +806,13 @@ class Options_V2 {
 										),
 									),
 								),
-								'desc'          => __( 'Content Needed Here...', 'tutor' ),
 							),
 							array(
 								'key'           => 'public_profile_layout',
 								'type'          => 'group_radio_full_3',
 								'label'         => __( 'Public Profile Layout', 'tutor' ),
+								'desc'          => __( 'Choose a layout design for a user’s public profile', 'tutor' ),
+								'default'       => 'pp-rectangle',
 								'group_options' => array(
 									'private'      => array(
 										'title' => 'Private',
@@ -1033,11 +831,10 @@ class Options_V2 {
 										'image' => 'profile-layout/profile-classic.svg',
 									),
 								),
-								'desc'          => __( 'Content Needed Here...', 'tutor' ),
 							),
 						),
 					),
-					array(
+					'course-details'  => array(
 						'label'      => __( 'Course Details', 'tutor' ),
 						'slug'       => 'course-details',
 						'block_type' => 'isolate',
@@ -1186,10 +983,210 @@ class Options_V2 {
 							),
 						),
 					),
-
-
+					'colors'          => array(
+						'label'        => __( 'Colors', 'tutor' ),
+						'slug'         => 'colors',
+						'block_type'   => 'color_picker',
+						'fields_group' => array(
+							array(
+								'key'     => 'color_preset_type',
+								'type'    => 'color_preset',
+								'label'   => __( 'Preset Colors', 'tutor' ),
+								'desc'    => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
+								'default' => 'default',
+								'fields'  => array(
+									array(
+										'key'    => 'default',
+										'label'  => 'Default',
+										'colors' => array(
+											array(
+												'slug'  => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value' => '#1973AA',
+											),
+											array(
+												'slug'  => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value' => '#5B616F',
+											),
+											array(
+												'slug'  => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value' => '#CDCFD5',
+											),
+											array(
+												'slug'  => 'tutor_light_color',
+												'preset_name' => 'light',
+												'value' => '#EFF1F6',
+											),
+										),
+									),
+									array(
+										'key'    => 'landscape',
+										'label'  => 'Landscape',
+										'colors' => array(
+											array(
+												'slug'  => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value' => '#43AA8B',
+											),
+											array(
+												'slug'  => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value' => '#4D908E',
+											),
+											array(
+												'slug'  => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value' => '#90BE6D',
+											),
+											array(
+												'slug'  => 'tutor_light_color',
+												'preset_name' => 'light',
+												'value' => '#F9C74F',
+											),
+										),
+									),
+									array(
+										'key'    => 'ocean',
+										'label'  => 'Ocean',
+										'colors' => array(
+											array(
+												'slug'  => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value' => '#4EA8DE',
+											),
+											array(
+												'slug'  => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value' => '#5A18C2',
+											),
+											array(
+												'slug'  => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value' => '#5E60CE',
+											),
+											array(
+												'slug'  => 'tutor_light_color',
+												'preset_name' => 'light',
+												'value' => '#64DFDF',
+											),
+										),
+									),
+									array(
+										'key'    => 'custom',
+										'label'  => 'Custom',
+										'colors' => array(
+											array(
+												'slug'  => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value' => '#000000',
+											),
+											array(
+												'slug'  => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value' => '#5d5d5d',
+											),
+											array(
+												'slug'  => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value' => '#a2a2a2',
+											),
+											array(
+												'slug'  => 'tutor_light_color',
+												'preset_name' => 'light',
+												'value' => '#d8d8d8',
+											),
+										),
+									),
+								),
+							),
+							array(
+								'key'    => 'tutor_color_presets',
+								'type'   => 'color_fields',
+								'label'  => __( 'Preset Colors', 'tutor' ),
+								'fields' => array(
+									array(
+										'key'         => 'tutor_primary_color',
+										'type'        => 'color_field',
+										'preset_name' => 'primary',
+										'label'       => __( 'Primary Color', 'tutor' ),
+										'default'     => '#000000',
+										'desc'        => __( 'Choose a custom primary color', 'tutor' ),
+									),
+									array(
+										'key'         => 'tutor_primary_hover_color',
+										'type'        => 'color_field',
+										'preset_name' => 'hover',
+										'label'       => __( 'Primary Hover color', 'tutor' ),
+										'default'     => '#5d5d5d',
+										'desc'        => __( 'Choose a custom primary hover color', 'tutor' ),
+									),
+									array(
+										'key'         => 'tutor_text_color',
+										'type'        => 'color_field',
+										'preset_name' => 'text',
+										'label'       => __( 'Text Color', 'tutor' ),
+										'default'     => '#a2a2a2',
+										'desc'        => __( 'Choose a custom color for your website text', 'tutor' ),
+									),
+									array(
+										'key'         => 'tutor_light_color',
+										'type'        => 'color_field',
+										'preset_name' => 'light',
+										'label'       => __( 'Light color', 'tutor' ),
+										'default'     => '#d8d8d8',
+										'desc'        => __( 'Choose a  light color for your website ', 'tutor' ),
+									),
+								),
+							),
+						),
+					),
+					'student_profile' => array(
+						'label'      => __( 'Student Profile', 'tutor' ),
+						'slug'       => 'student_profile',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'students_own_review_show_at_profile',
+								'type'    => 'toggle_switch',
+								'label'   => __( 'Show reviews on profile', 'tutor' ),
+								'default' => 'on',
+								'desc'    => __( 'Enabling this will show the reviews written by each student on their profile', 'tutor' ) . '<br />' . $student_url,
+							),
+							array(
+								'key'     => 'show_courses_completed_by_student',
+								'type'    => 'toggle_switch',
+								'label'   => __( 'Show completed courses', 'tutor' ),
+								'default' => 'on',
+								'desc'    => __( 'Completed courses will be shown on student profiles. <br/> For example, you can see this link-', 'tutor' ) . $student_url,
+							),
+						),
+					),
+					'video_player'    => array(
+						'label'      => __( 'Video Player', 'tutor' ),
+						'slug'       => 'video_player',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'         => 'disable_default_player_youtube',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Use Tutor Player for YouTube', 'tutor' ),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'Enable this option to use Tutor LMS video player.', 'tutor' ),
+							),
+							array(
+								'key'         => 'disable_default_player_vimeo',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Use Tutor Player for Vimeo', 'tutor' ),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'Enable this option to use Tutor LMS video player.', 'tutor' ),
+							),
+						),
+					),
 				),
-
 			),
 			'advanced'     => array(
 				'label'    => __( 'Advanced', 'tutor' ),
@@ -1295,14 +1292,6 @@ class Options_V2 {
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
 								'desc'        => __( 'Delete all data during uninstallation', 'tutor' ),
-							),
-							array(
-								'key'         => 'hide_admin_bar_for_users',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Hide Frontend Admin Bar', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_tutor_maintenance_mode',

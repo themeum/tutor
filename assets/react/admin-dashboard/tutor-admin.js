@@ -48,7 +48,7 @@ jQuery(document).ready(function($) {
     $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
   });
 
-  $("#tutor-option-form").submit(function(e) {
+  /* $("#tutor-option-form").submit(function(e) {
     e.preventDefault();
 
     var $form = $(this);
@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
         $form.find(".button").removeClass("tutor-updating-message");
       },
     });
-  });
+  }); */
 
   /**
    * End Withdraw nav tabs
