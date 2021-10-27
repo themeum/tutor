@@ -13987,13 +13987,13 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-course-listing {
+  max-width: 1110px;
   display: grid;
   grid-gap: 30px;
 }
 
 .tutor-course-listing-grid-3 {
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 40px 30px;
 }
 
 .tutor-course-listing-grid-4 {
@@ -14050,6 +14050,10 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-course-listing-item-head .save-bookmark-btn:hover {
   background: #3e64de;
   color: #ffffff;
+}
+
+.tutor-course-listing-item-head .save-bookmark-btn.bookmark-is-filled {
+  background: rgba(27, 27, 27, 0.4);
 }
 
 .tutor-course-listing-item-body {
