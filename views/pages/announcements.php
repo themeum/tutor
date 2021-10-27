@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 use TUTOR\Announcements;
 $announcement_obj = new Announcements();
 
-$per_page = tutor_utils()->get_option( 'pagination_per_page' );
-$paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
+$limit       = tutor_utils()->get_option( 'pagination_per_page' );
+$page_filter = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
 
 $order_filter  = ( isset( $_GET['order'] ) && strtolower( $_GET['order'] ) == 'asc' ) ? 'ASC' : 'DESC';
 $search_filter = sanitize_text_field( tutor_utils()->array_get( 'search', $_GET, '' ) );
@@ -31,8 +31,8 @@ $args = array(
 	'post_status'    => 'publish',
 	's'              => $search_filter,
 	'post_parent'    => $course_id,
-	'posts_per_page' => sanitize_text_field( $per_page ),
-	'paged'          => sanitize_text_field( $paged ),
+	'posts_per_page' => sanitize_text_field( $limit ),
+	'paged'          => sanitize_text_field( $page_filter ),
 	'orderBy'        => 'ID',
 	'order'          => sanitize_text_field( $order_filter ),
 
@@ -112,9 +112,10 @@ $filters = array(
 			array(
 				'announcements' => is_array( $announcements ) ? $announcements : array(),
 				'the_query'     => $the_query,
-				'paged'         => $paged,
+				'paged'         => $page_filter,
 			)
 		);
 		?>
 	</div>
+	
 </div>
