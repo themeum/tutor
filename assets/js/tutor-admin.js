@@ -2123,6 +2123,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_media_chooser__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utilities */ "./assets/react/lib/utilities.js");
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utilities__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sorting */ "./assets/react/lib/sorting.js");
+/* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_sorting__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -2178,6 +2181,51 @@ window.jQuery(document).ready(function ($) {
     wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
     wrapper.find('img').attr('src', '');
     $that.hide();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/sorting.js":
+/*!*************************************!*\
+  !*** ./assets/react/lib/sorting.js ***!
+  \*************************************/
+/***/ (() => {
+
+window.addEventListener('DOMContentLoaded', function () {
+  var _this = this;
+
+  var getCellValue = function getCellValue(tr, idx) {
+    return tr.children[idx].innerText || tr.children[idx].textContent;
+  };
+
+  var comparer = function comparer(idx, asc) {
+    return function (a, b) {
+      return function (v1, v2) {
+        return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
+      }(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+    };
+  };
+
+  document.querySelectorAll(".tutor-table-rows-sorting").forEach(function (th) {
+    return th.addEventListener('click', function (e) {
+      var table = th.closest('table');
+      var tbody = table.querySelector('tbody');
+      var currentTarget = e.currentTarget;
+      var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // swap class name to change icon
+
+      if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
+        icon.classList.remove("ttr-ordering-a-to-z-filled");
+        icon.classList.add("ttr-ordering-z-to-a-filled");
+      } else {
+        icon.classList.remove("ttr-ordering-z-to-a-filled");
+        icon.classList.add("ttr-ordering-a-to-z-filled");
+      }
+
+      Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
+        return tbody.appendChild(tr);
+      });
+    });
   });
 });
 
