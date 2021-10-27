@@ -7,12 +7,12 @@ vd( $value );
 $field_id = 'field_' . $field['key'];
 ?>
 
-<div class="tutor-option-field-row tutor-bs-d-block" id="<?php echo $field_id; ?>"
+<div class="tutor-option-field-row d-block" id="<?php echo $field_id; ?>"
 >
 	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
 
-	<div class="tutor-option-field-input tutor-bs-d-block">
-		<div class="type-check tutor-bs-d-block has-desc">
+	<div class="tutor-option-field-input d-block">
+		<div class="type-check d-block has-desc">
 			<?php
 			if ( ! empty( $field['options'] ) ) :
 				foreach ( $field['options'] as $optionKey => $option ) :
@@ -44,8 +44,8 @@ $field_id = 'field_' . $field['key'];
 		<?php
 		foreach ( $fields_group['fields'] as $fields ) :
 			// pr( $fields );
-            $option_value = $this->get( $field['key'], tutils()->array_get( 'default', $field ) );
-?>
+			$option_value = $this->get( $field['key'], tutils()->array_get( 'default', $field ) );
+			?>
 		<label for="<?php esc_attr_e( $fields['key'] ); ?>" class="color-preset-input preset-1">
 			<input type="radio" name="tutor_option[<?php esc_attr_e( $fields_group['key'] ); ?>]" id="<?php esc_attr_e( $fields['key'] ); ?>" value="<?php esc_attr_e( $fields['key'] ); ?>" checked="">
 			<div class="preset-item">

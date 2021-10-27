@@ -1175,7 +1175,8 @@ function tutor_option_history_load(history_data) {
           key = _ref2[0],
           value = _ref2[1];
 
-      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span className=\"tutor-badge-label label-success\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
+      var badgeStatus = value.datatype == "saved" ? " label-primary-wp" : " label-refund";
+      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"icon tutor-v2-icon-test icon-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
@@ -1503,8 +1504,14 @@ document.addEventListener("DOMContentLoaded", function () {
         attachment = attachment.toJSON(); // Do something with attachment.id and/or attachment.url here
 
         var image_url = attachment.sizes[display.size].url;
-        upload_preview.src = input_file.value = image_url;
-        email_title_logo.src = input_file.value = image_url;
+
+        if (null !== upload_preview) {
+          upload_preview.src = input_file.value = image_url;
+        }
+
+        if (null !== email_title_logo) {
+          email_title_logo.src = input_file.value = image_url;
+        }
       });
     };
 
@@ -1538,10 +1545,7 @@ document.addEventListener("DOMContentLoaded", function () {
       data: data,
       beforeSend: function beforeSend() {},
       success: function success(data) {
-        $(".tutor-notification").addClass("show");
-        setTimeout(function () {
-          $(".tutor-notification").removeClass("show");
-        }, 4000);
+        tutor_toast("Save successfully!", "Tutor option is saved successfully!", "success");
       },
       complete: function complete() {}
     });
@@ -32064,26 +32068,37 @@ jQuery(document).ready(function ($) {
     var toggleInput = $(this).siblings("input");
     $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
   });
-  $("#tutor-option-form").submit(function (e) {
+  /* $("#tutor-option-form").submit(function(e) {
     e.preventDefault();
-    var $form = $(this);
+     var $form = $(this);
     var data = $form.serializeObject();
     console.log(data);
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: data,
-      beforeSend: function beforeSend() {
+      beforeSend: function() {
         $form.find(".button").addClass("tutor-updating-message");
       },
-      success: function success(data) {
-        data.success ? tutor_toast(__("Saved", "tutor"), $form.data("toast_success_message"), "success") : tutor_toast(__("Request Error", "tutor"), __("Could not save", "tutor"), "error");
+      success: function(data) {
+        data.success
+          ? tutor_toast(
+              __("Saved", "tutor"),
+              $form.data("toast_success_message"),
+              "success"
+            )
+          : tutor_toast(
+              __("Request Error", "tutor"),
+              __("Could not save", "tutor"),
+              "error"
+            );
       },
-      complete: function complete() {
+      complete: function() {
         $form.find(".button").removeClass("tutor-updating-message");
-      }
+      },
     });
-  });
+  }); */
+
   /**
    * End Withdraw nav tabs
    */
