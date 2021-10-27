@@ -144,11 +144,11 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         <div class="tutor-course-builder-section-content">
                             <div class="tutor-mb-30">
                                 <label class="tutor-form-label"><?php _e('Course Title', 'tutor'); ?></label>
-                                <div class="tutor-input-group tutor-mb-15 tutor-input-tooltip">
+                                <div class="tooltip-wrap">
+                                    <span class="tooltip-txt tooltip-right">
+                                        <?php _e('60', 'tutor'); ?>
+                                    </span>
                                     <input type="text" name="title" class="tutor-from-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>">
-                                    <p class="desc">
-                                        <strong><?php _e('60', 'tutor'); ?></strong>
-                                    </p>
                                 </div>
                             </div>
                             

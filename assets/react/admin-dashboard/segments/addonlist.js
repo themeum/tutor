@@ -4,7 +4,7 @@ const addonsList = document.getElementById('tutor-free-addons');
 const searchBar = document.getElementById('free-addons-search');
 let freeAddonsList = _tutorobject.addons_data || [];
 let searchString = '';
-const emptyStateImg = `${_tutorobject.tutor_url}assets/images/empty-state.svg`;
+const emptyStateImg = `${_tutorobject.tutor_url}assets/images/addon-empty-state.svg`;
 
 if (null !== searchBar) {
     searchBar.addEventListener('input', (e) => {
@@ -25,10 +25,10 @@ if (null !== searchBar) {
 
 const emptySearch = () => {
     const nothingFound = `
-        <div class="tutor-addons-card empty-state tutor-py-20">
+        <div style="background:transparent" class="tutor-addons-card empty-state tutor-py-20">
             <div class="card-body">
                 <img src=${emptyStateImg} alt="empty state illustration" />
-                <div class="text-medium-caption tutor-mb-20">Nothing Found!</div>
+                <div class="text-medium-caption tutor-mb-20">No Addons Found!</div>
             </div>
         </div>`;
        if ( null !== addonsList ) {
@@ -39,19 +39,17 @@ const emptySearch = () => {
 const displayAddons = (addons) => {
     const htmlString = addons.map((addon) => {
         const { name, url, description } = addon;
-        const themeumUrl = 'https://www.themeum.com';
-        const author = 'Themeum'
         return `
             <div class="tutor-addons-card">
-                <div class="card-body tutor-px-30 tutor-py-40">
+                <div class="tooltip-wrap tutor-lock-tooltip">
+					<span class="tooltip-txt tooltip-top">Available in Pro</span>
+				</div>
+                <div class="card-body tutor-px-30 tutor-py-35">
                     <div class="addon-logo">
                         <img src="${url}" alt="${name}" /> 
                     </div>
                     <div class="addon-title tutor-mt-20">
-                        <h5 class="text-medium-h5 color-text-primary">${name}</h5>
-                        <p class="text-medium-small color-text-hints tutor-mt-5">
-                            By <a href="${themeumUrl}" class="color-brand-wordpress">${author}</a>
-                        </p>
+                        <h5 class="text-medium-h5 color-text-primary tutor-mb-4">${name}</h5>
                     </div>
                     <div class="addon-des text-regular-body color-text-subsued tutor-mt-20">
                         <p>${description}</p>
