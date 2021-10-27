@@ -61,6 +61,7 @@ final class Tutor{
 	 * @since v2.0.0
 	 */
 	private $announcements;
+	private $reviews;
 
 	/**
 	 * Course List
@@ -166,6 +167,7 @@ final class Tutor{
 		 */
 		$this->announcements = new Announcements();
 		$this->course_list   = new Course_List();
+		$this->reviews   	 = new Reviews();
 
 		/**
 		 * Run Method
