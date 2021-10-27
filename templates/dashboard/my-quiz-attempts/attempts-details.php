@@ -47,13 +47,15 @@ function show_correct_answer( $answers= array() ){
                         }
 					echo '</div>';
                     break;
+                    
 				case 'text':
-					echo '<div class="text-type">';
-                        if(isset($ans->answer_title)) {
-                            echo '<span class="text-item-caption">'.stripslashes($ans->answer_title).'</span>';
-                        }
-                    echo '</div>';
+                    if(isset($ans->answer_title)) {
+                        echo '<span class="text-medium-caption color-text-primary">'
+                            .stripslashes($ans->answer_title).
+                        '</span>';
+                    }
                     break;
+
 				case 'image':
 					echo '<div class="image-type">';
                         if(isset($ans->image_id)){
@@ -250,10 +252,12 @@ if(is_array($answers) && count($answers) > 0) {
                                 </td>
                                 <td data-th="<?php _e('Type', 'tutor'); ?>">
                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-                                    
-                                    <span data-title="<?php echo $type['name']; ?>">
+                                    <div class="tooltip-wrap tooltip-icon-">
                                         <?php echo $question_type['icon']; ?>
-                                    </span>
+                                        <span class="tooltip-txt tooltip-top">
+                                            <?php echo $type['name']; ?>
+                                        </span>
+                                    </div>
                                 </td>
                                 <td data-th="<?php _e('Question', 'tutor'); ?>">
                                     <span class="text-medium-small">
@@ -394,7 +398,14 @@ if(is_array($answers) && count($answers) > 0) {
                                         } 
                                         
                                         elseif ( $answer->question_type === 'single_choice' ) {
-                                            $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
+                                            $correct_answer = $wpdb->get_results( $wpdb->prepare( 
+                                                "SELECT answer_title, image_id, answer_view_format 
+                                                FROM {$wpdb->prefix}tutor_quiz_question_answers 
+                                                WHERE belongs_question_id = %d AND 
+                                                    is_correct = 1", 
+                                                    $answer->question_id 
+                                                ) );
+
                                             show_correct_answer($correct_answer);
                                         } 
                                         

@@ -53,29 +53,26 @@ $current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 
 				echo "<div id='settings-tab-{$key}' class='settings-tab-wrap {$active}' style='display: {$display};'>";
 
-				do_action("tutor_course/settings_tab_content/before", $key, $tab);
-				do_action("tutor_course/settings_tab_content/before/{$key}", $tab);
+					do_action("tutor_course/settings_tab_content/before", $key, $tab);
+					do_action("tutor_course/settings_tab_content/before/{$key}", $tab);
 
-				if (tutor_utils()->count($fields)){
-					$this->generate_field($fields);
-				}
+					if (tutor_utils()->count($fields)){
+						$this->generate_field($fields);
+					}
 
-				/**
-				 * Handling Callback
-				 */
-				if ( $callback && is_callable( $callback ) ) {
-					call_user_func( $callback, $key, $tab );
-				}
+					/**
+					 * Handling Callback
+					 */
+					if ( $callback && is_callable( $callback ) ) {
+						call_user_func( $callback, $key, $tab );
+					}
 
-				do_action("tutor_course/settings_tab_content/after", $key, $tab);
-				do_action("tutor_course/settings_tab_content/after/{$key}", $tab);
+					do_action("tutor_course/settings_tab_content/after", $key, $tab);
+					do_action("tutor_course/settings_tab_content/after/{$key}", $tab);
 
 				echo "</div>";
 			}
 			?>
         </div>
-
     </div>
-
-
 </div>
