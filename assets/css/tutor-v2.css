@@ -14052,6 +14052,10 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   color: #ffffff;
 }
 
+.tutor-course-listing-item-head .save-bookmark-btn.bookmark-is-filled {
+  background: rgba(27, 27, 27, 0.4);
+}
+
 .tutor-course-listing-item-body {
   border-left: 1px solid #cdcfd5;
   border-right: 1px solid #cdcfd5;
