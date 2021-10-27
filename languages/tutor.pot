@@ -3262,15 +3262,15 @@ msgstr ""
 msgid "Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:68, views/pages/announcements.php:89
+#: templates/dashboard/announcements.php:68
 msgid "Create Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:71, views/pages/announcements.php:92
+#: templates/dashboard/announcements.php:71
 msgid "Notify all students of your course"
 msgstr ""
 
-#: templates/dashboard/announcements.php:77, views/pages/announcements.php:98
+#: templates/dashboard/announcements.php:77, views/pages/announcements.php:96
 msgid "Add New Announcement"
 msgstr ""
 
@@ -3910,6 +3910,10 @@ msgstr ""
 msgid "All Category"
 msgstr ""
 
+#: views/elements/pagination.php:13, views/elements/pagination.php:17
+msgid "Page"
+msgstr ""
+
 #: views/fragments/announcement-list.php:49
 msgid "Announcement Title"
 msgstr ""
@@ -4544,6 +4548,10 @@ msgstr ""
 
 #: views/pages/add_new_instructor.php:3, views/pages/add_new_instructor.php:138
 msgid "Add new instructor"
+msgstr ""
+
+#: views/pages/announcements.php:90
+msgid "Create a new announcement and notify your students about it"
 msgstr ""
 
 #: views/pages/answer.php:31
