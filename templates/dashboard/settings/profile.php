@@ -57,16 +57,16 @@ $public_display = array_unique( $public_display );
 
 	<div id="tutor_profile_cover_photo_editor">
 		<input id="tutor_photo_dialogue_box" type="file" accept=".png,.jpg,.jpeg"/>
-		<div id="tutor_cover_area" data-fallback="<?php echo $cover_placeholder; ?>" style="background-image:url(<?php echo $cover_photo_src; ?>)">
+		<div id="tutor_cover_area" data-fallback="<?php esc_attr_e( $cover_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $cover_photo_src ); ?>)">
 			<span class="tutor_cover_deleter">
-				<i class="tutor-icon-garbage"></i>
+				<span class="dashboard-profile-delete ttr-delete-fill-filled"></span>
 			</span>
 			<div class="tutor_overlay">
 				<button class="tutor_cover_uploader">
 					<i class="tutor-icon-image-ans"></i>
 					<span>
 					   <?php
-							echo $profile_photo_id ? __( 'Update Cover Photo', 'tutor' ) : __( 'Upload Cover Photo', 'tutor' );
+							echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' );
 						?>
 						 
 					</span>
@@ -74,12 +74,12 @@ $public_display = array_unique( $public_display );
 			</div>
 		</div>
 		<div id="tutor_photo_meta_area">
-			<img src="<?php echo tutor()->url . '/assets/images/'; ?>info-icon.svg" />
-			<span><?php _e( 'Profile Photo Size', 'tutor' ); ?>: <span><?php _e( '200x200', 'tutor' ); ?></span> <?php _e( 'pixels', 'tutor' ); ?>,</span>
-			<span>&nbsp;&nbsp;&nbsp;&nbsp;<?php _e( 'Cover Photo Size', 'tutor' ); ?>: <span><?php _e( '700x430', 'tutor' ); ?></span> <?php _e( 'pixels', 'tutor' ); ?> </span>
-			<span class="loader-area"><?php _e( 'Saving...', 'tutor' ); ?></span>
+			<img src="<?php echo esc_url( tutor()->url . '/assets/images/' ); ?>info-icon.svg" />
+			<span><?php esc_html_e( 'Profile Photo Size', 'tutor' ); ?>: <span><?php esc_html_e( '200x200', 'tutor' ); ?></span> <?php esc_html_e( 'pixels', 'tutor' ); ?>,</span>
+			<span>&nbsp;&nbsp;&nbsp;&nbsp;<?php esc_html_e( 'Cover Photo Size', 'tutor' ); ?>: <span><?php esc_html_e( '700x430', 'tutor' ); ?></span> <?php esc_html_e( 'pixels', 'tutor' ); ?> </span>
+			<span class="loader-area"><?php esc_html_e( 'Saving...', 'tutor' ); ?></span>
 		</div>
-		<div id="tutor_profile_area" data-fallback="<?php echo $profile_placeholder; ?>" style="background-image:url(<?php echo $profile_photo_src; ?>)">
+		<div id="tutor_profile_area" data-fallback="<?php esc_attr_e( $profile_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $profile_photo_src ); ?>)">
 			<div class="tutor_overlay">
 				<i class="tutor-icon-image-ans"></i>
 			</div>
@@ -89,11 +89,11 @@ $public_display = array_unique( $public_display );
 				<i></i>
 			</div>
 			
-			<span class="tutor_pp_uploader">
-				<i class="tutor-icon-image"></i> <?php _e( 'Upload Photo', 'tutor' ); ?>
+			<span class="tutor_pp_uploader profile-uploader">
+				<i class="profile-upload-icon ttr-image-filled"></i> <?php esc_html_e( 'Upload Photo', 'tutor' ); ?>
 			</span>
-			<span class="tutor_pp_deleter">
-				<i class="tutor-icon-garbage"></i> <?php _e( 'Delete', 'tutor' ); ?>
+			<span class="tutor_pp_deleter profile-uploader">
+				<i class="profile-upload-icon ttr-delete-fill-filled"></i> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 			</span>
 
 			<div></div>
@@ -120,15 +120,15 @@ $public_display = array_unique( $public_display );
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
 				<label>
-					<?php _e( 'First Name', 'tutor' ); ?>
-					<input class="tutor-form-control" type="text" name="first_name" value="<?php echo $user->first_name; ?>" placeholder="<?php _e( 'First Name', 'tutor' ); ?>">
+					<?php esc_html_e( 'First Name', 'tutor' ); ?>
+					<input class="tutor-form-control" type="text" name="first_name" value="<?php esc_attr_e( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
 				</label>
 			</div>
 
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
 				<label>
-					<?php _e( 'Last Name', 'tutor' ); ?>
-					<input class="tutor-form-control" type="text" name="last_name" value="<?php echo $user->last_name; ?>" placeholder="<?php _e( 'Last Name', 'tutor' ); ?>">
+					<?php esc_html_e( 'Last Name', 'tutor' ); ?>
+					<input class="tutor-form-control" type="text" name="last_name" value="<?php esc_attr_e( $user->last_name ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>">
 				</label>
 			</div>
 		</div>
@@ -136,15 +136,24 @@ $public_display = array_unique( $public_display );
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
 				<label>
-					<?php _e( 'User Name', 'tutor' ); ?>
-					<input class="tutor-form-control" type="text" disabled="disabled" value="<?php echo $user->user_login; ?>">
+					<?php esc_html_e( 'User Name', 'tutor' ); ?>
+					<input class="tutor-form-control" type="text" disabled="disabled" value="<?php esc_attr_e( $user->user_login ); ?>">
 				</label>
 			</div>
 
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
 				<label>
-					<?php _e( 'Phone Number', 'tutor' ); ?>
-					<input class="tutor-form-control" type="tel" name="phone_number" value="<?php echo get_user_meta( $user->ID, 'phone_number', true ); ?>" placeholder="<?php _e( 'Phone Number', 'tutor' ); ?>">
+					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
+					<input class="tutor-form-control" type="tel" name="phone_number" value="<?php esc_attr_e( get_user_meta( $user->ID, 'phone_number', true ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
+				</label>
+			</div>
+		</div>
+
+		<div class="tutor-bs-row">
+			<div class="tutor-bs-col-12 tutor-mb-30">
+				<label>
+					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
+					<input class="tutor-form-control" type="text" name="_tutor_profile_job_title" value="<?php esc_attr_e( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
 				</label>
 			</div>
 		</div>
@@ -181,7 +190,7 @@ $public_display = array_unique( $public_display );
 			</div>
 		</div>
 
-		<?php do_action( 'tutor_profile_edit_input_after' ); ?>
+		<?php do_action( 'tutor_profile_edit_input_after', $user ); ?>
 
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12">
