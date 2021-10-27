@@ -153,7 +153,7 @@ $public_display = array_unique( $public_display );
 			<div class="tutor-bs-col-12 tutor-mb-30">
 				<label>
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
-					<input class="tutor-form-control" type="text" name="_tutor_profile_job_title" value="<?php esc_attr_e( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
+					<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php esc_attr_e( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
 				</label>
 			</div>
 		</div>
