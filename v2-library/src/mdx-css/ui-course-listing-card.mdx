@@ -1,6 +1,6 @@
 ---
-name: Course Listing
-route: /mdx-css/ui-course-listing
+name: Course Card Demo
+route: /mdx-css/ui-course-listing-card
 menu: UI Components
 ---
 
@@ -9,16 +9,12 @@ import '../../bundle/main.min.css';
 import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css';
 import '../docz-essential.css';
 
-# Course Listing
+# Course List Card Variations 
 
-`** Replace "className" with "class" while using with html` <br />
-
-## Course Listing - ------------------------------------------ Grid 3
-
-`** remove the inline-style from the header`
+`** Replace "className" with "class" while using with html` `dont use class="tutor-course-listing-card-demo" on production` <br />
 
 <Playground>
-	<div class="tutor-course-listing tutor-course-listing-grid-3 tutor-course-listing-filter-grid-2 tutor-course-listing-filter-grid-3">
+	<div class="tutor-course-listing tutor-course-listing-card-demo">
 		<div class="tutor-course-listing-item">
 			<div class="tutor-course-listing-item-head tutor-bs-d-flex">
 				<img
@@ -323,13 +319,7 @@ import '../docz-essential.css';
 				</div>
 			</div> {/* tutor-course-listing-item-footer */}
 		</div> {/* tutor-course-listing-item */}
-	</div>
-</Playground>
-
-## Course Listing - ------------------------------------------ Grid 4
-<Playground>
-	<div class="tutor-course-listing tutor-course-listing-grid-4 tutor-course-listing-filter-grid-2 tutor-course-listing-filter-grid-3">
-		<div class="tutor-course-listing-item">
+		<div class="tutor-course-listing-item tutor-course-listing-item-grid-4">
 			<div class="tutor-course-listing-item-head tutor-bs-d-flex">
 				<img
 					src="https://preview.tutorlms.com/marketplace/wp-content/uploads/sites/6/2019/05/course-thumb-17.jpg"
@@ -389,10 +379,5 @@ import '../docz-essential.css';
 				</div>
 			</div> {/* tutor-course-listing-item-footer */}
 		</div> {/* tutor-course-listing-item */}
-	
 	</div>
 </Playground>
-
-## Course Listing with Filter - Grid 2
-
-## Course Listing with Filter - Grid 3
