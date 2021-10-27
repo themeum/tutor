@@ -13987,13 +13987,13 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-course-listing {
+  max-width: 1110px;
   display: grid;
   grid-gap: 30px;
 }
 
 .tutor-course-listing-grid-3 {
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 40px 30px;
 }
 
 .tutor-course-listing-grid-4 {
