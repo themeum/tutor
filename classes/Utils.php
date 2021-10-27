@@ -4872,23 +4872,7 @@ class Utils {
 			$start,
 			$limit
 		) );
-
-		$count = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT(attempt_id)
-		 	FROM 	{$wpdb->prefix}tutor_quiz_attempt_answers quiz_attempt_answers
-					INNER JOIN {$wpdb->tutor_quiz_attempt_answers} quiz
-							ON quiz_attempts.quiz_id = quiz.ID
-					INNER JOIN {$wpdb->users}
-							ON quiz_attempts.user_id = {$wpdb->users}.ID
-			WHERE 	attempt_status != %s
-					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
-			",
-			'attempt_started',
-			$search_term,
-			$search_term,
-			$search_term
-		) );
-
+		
 		return $query;
 	}
 
