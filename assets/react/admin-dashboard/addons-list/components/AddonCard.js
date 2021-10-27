@@ -11,7 +11,7 @@ const AddonCard = ({ addon, addonId }) => {
 	return (
 		<div
 			className={`tutor-addons-card ${
-				addon.depend_plugins ? 'not-subscribed' : ''
+				addon.plugins_required.length > 0 ? 'not-subscribed' : ''
 			} tutor-addons-card-${addonId + 1}`}
 			style={{ transitionDelay: `${100 * addonId}ms` }}
 		>
@@ -33,8 +33,8 @@ const AddonCard = ({ addon, addonId }) => {
 				</div>
 			</div>
 			<div className=" card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center">
-				<div className="text-medium-small color-text-hints">	
-					<p className="extra-plugins color-text-hints text-medium-small">{addon.ext_required ? __('Required for Push Notification', 'tutor') : addon.depend_plugins ? __('Required Plugin(s)', 'tutor') : __('No additional plugin(s) required', 'tutor')}</p>
+				<div className="text-medium-small color-text-hints">
+					<p className="extra-plugins color-text-hints text-medium-small">{addon.plugins_required?.length > 0 ? __('Required Plugin(s)', 'tutor') : addon.ext_required?.length > 0 ? __('Required for Push Notification', 'tutor') : __('No additional plugin(s) required', 'tutor')}</p>
 						{addon.ext_required &&
 							addon.ext_required ? addon.ext_required.map((extension, index) => {
 								return (
@@ -58,7 +58,7 @@ const AddonCard = ({ addon, addonId }) => {
 						}
 					
 				</div>
-				{!addon.depend_plugins &&
+				{addon.plugins_required?.length === 0 &&
 				<div className="addon-toggle">
 					<label className="tutor-form-toggle">
 						<input
