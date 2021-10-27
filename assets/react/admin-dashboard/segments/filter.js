@@ -8,8 +8,7 @@
  * @since v2.0.0
  */
 const { __, _x, _n, _nx } = wp.i18n;
-
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', function() {
     const filterCourse = document.getElementById("tutor-backend-filter-course");
     if (filterCourse) {
         filterCourse.onchange = (e) => {
@@ -193,5 +192,4 @@ window.onload = () => {
             tutor_toast(__("Operation failed", "tutor"), error, "error")
         }
     }
-
-};
+});
