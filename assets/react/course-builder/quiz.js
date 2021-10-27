@@ -398,10 +398,21 @@ window.jQuery(document).ready(function($){
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
-            data : {question_id : question_id, action: 'tutor_quiz_builder_question_delete'},
-            beforeSend: function () {
-                $that.closest('.quiz-builder-question-wrap').remove();
+            data : {
+                question_id : question_id, 
+                action: 'tutor_quiz_builder_question_delete'
             },
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success:function() {
+                $that.closest('.quiz-builder-question-wrap').fadeOut(function(){
+                    $(this).remove();
+                });
+            },
+            complete: function() {
+                $that.removeClass('tutor-updating-message');
+            }
         });
     });
 
