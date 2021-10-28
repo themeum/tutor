@@ -712,6 +712,65 @@ displayAddons(freeAddonsList);
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/color-preset.js":
+/*!***************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/color-preset.js ***!
+  \***************************************************************/
+/***/ (() => {
+
+/**
+ * Color PRESET and PICKER manipulation
+ */
+var colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
+var colorPickerInputs = document.querySelectorAll(".color-picker-input input[type='color']");
+var presetView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
+
+colorPresetInputs.forEach(function (preset) {
+  // listening preset input events
+  preset.addEventListener("input", function (e) {
+    var presetItem = preset.parentElement.querySelector(".preset-item");
+    var presetColors = presetItem.querySelectorAll(".header span");
+
+    var _loop = function _loop(i) {
+      var presetKey = presetColors[i].dataset.key;
+      var presetColor = presetColors[i].dataset.color;
+      presetView[i].querySelector("input").value = presetColor;
+      presetView[i].querySelector(".picker-value").innerHTML = presetColor;
+      presetView[i].style.borderColor = presetColor;
+      presetView[i].style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
+      setTimeout(function () {
+        presetView[i].style.borderColor = "#cdcfd5";
+        presetView[i].style.boxShadow = "none";
+      }, 5000);
+    };
+
+    for (var i = 0; i < presetColors.length; i++) {
+      _loop(i);
+    }
+  });
+}); // Updating Custom Color PRESET
+
+var updateCustomPreset = function updateCustomPreset(picker) {
+  var customPresetEl = document.querySelector("label.color-preset-input:last-child"); // listening picker input events
+
+  picker.addEventListener("input", function (e) {
+    var presetColors = customPresetEl.querySelectorAll(".header span");
+    colorPickerInputs.forEach(function (picker, i) {
+      presetColors[i].dataset.color = picker.value;
+      presetColors[i].style.backgroundColor = picker.value;
+      presetView[i].querySelector(".picker-value").innerHTML = picker.value;
+      customPresetEl.querySelector('input[type="radio"]').checked = true;
+    });
+  });
+}; // listening color pickers input event
+
+
+colorPickerInputs.forEach(function (picker) {
+  updateCustomPreset(picker);
+});
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/filter.js":
 /*!*********************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/filter.js ***!
@@ -1504,7 +1563,8 @@ function tutor_option_history_load(history_data) {
           key = _ref2[0],
           value = _ref2[1];
 
-      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span className=\"tutor-badge-label label-success\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
+      var badgeStatus = value.datatype == "saved" ? " label-primary-wp" : " label-refund";
+      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
@@ -1833,8 +1893,14 @@ document.addEventListener("DOMContentLoaded", function () {
         attachment = attachment.toJSON(); // Do something with attachment.id and/or attachment.url here
 
         var image_url = attachment.sizes[display.size].url;
-        upload_preview.src = input_file.value = image_url;
-        email_title_logo.src = input_file.value = image_url;
+
+        if (null !== upload_preview) {
+          upload_preview.src = input_file.value = image_url;
+        }
+
+        if (null !== email_title_logo) {
+          email_title_logo.src = input_file.value = image_url;
+        }
       });
     };
 
@@ -1877,11 +1943,11 @@ document.addEventListener("DOMContentLoaded", function () {
             message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
 
         if (success) {
-          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
           return;
         }
 
-        tutor_toast('Error!', message, 'tutor');
+        tutor_toast('Error!', message, 'tutor', true);
       },
       complete: function complete() {}
     });
@@ -2952,12 +3018,12 @@ jQuery.fn.serializeObject = function () {
   return values;
 };
 
-window.tutor_toast = function (title, description, type) {
+window.tutor_toast = function (title, description, type, is_left) {
   var tutor_ob = window._tutorobject || {};
   var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
   if (!jQuery('.tutor-toast-parent').length) {
-    jQuery('body').append('<div class="tutor-toast-parent"></div>');
+    jQuery('body').append('<div class="tutor-toast-parent ' + (is_left ? 'tutor-toast-left' : '') + '"></div>');
   }
 
   var icons = {
@@ -32277,14 +32343,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../modules/instructor-review */ "./assets/react/modules/instructor-review.js");
-/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_modules_instructor_review__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
+/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../modules/instructor-review */ "./assets/react/modules/instructor-review.js");
+/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_modules_instructor_review__WEBPACK_IMPORTED_MODULE_9__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 

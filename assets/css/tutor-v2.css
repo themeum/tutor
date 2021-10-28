@@ -5944,6 +5944,10 @@
   background-color: #fdfdfd;
 }
 
+.tutor-bg-gray-10 {
+  background-color: #eff1f6 !important;
+}
+
 .tutor-text-nowrap {
   white-space: nowrap;
 }
@@ -9163,6 +9167,23 @@
   font-size: 14px;
 }
 
+.tutor-toast-parent.tutor-toast-left {
+  position: fixed;
+  bottom: 40px;
+  left: calc(0% + 200px);
+  z-index: 999;
+}
+
+.tutor-toast-parent.tutor-toast-left > div > div:nth-child(3) {
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  padding: 8px;
+}
+
+.tutor-toast-parent.tutor-toast-left > div > div {
+  padding: 0;
+}
+
 body.rtl .tutor-toast-parent {
   right: auto;
   left: 50px;
@@ -10209,7 +10230,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 
 .tutor-modal .tutor-modal-body-alt {
   padding: 24px 30px;
-  background: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .tutor-modal .tutor-modal-footer {

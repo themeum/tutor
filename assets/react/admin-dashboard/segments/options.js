@@ -69,8 +69,12 @@ document.addEventListener("DOMContentLoaded", function() {
         // Do something with attachment.id and/or attachment.url here
         var image_url = attachment.sizes[display.size].url;
 
-        upload_preview.src = input_file.value = image_url;
-        email_title_logo.src = input_file.value = image_url;
+        if (null !== upload_preview) {
+          upload_preview.src = input_file.value = image_url;
+        }
+        if (null !== email_title_logo) {
+          email_title_logo.src = input_file.value = image_url;
+        }
       });
     };
 
@@ -108,11 +112,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const {message=__('Something Went Wrong!', 'tutor')} = data;
 
         if(success) {
-          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
           return;
         }
 
-        tutor_toast('Error!', message, 'tutor');
+        tutor_toast('Error!', message, 'tutor', true);
       },
       complete: function() {},
     });

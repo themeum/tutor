@@ -55,7 +55,8 @@
                     </ul>
                 </div>
 
-                <div class="tutor-modal-body-alt modal-container">
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
+
                 </div>
 
                 <div class="tutor-modal-footer">
@@ -98,7 +99,11 @@
                         <span class="las la-times"></span>
                     </button>
                 </div>
-                <div class="tutor-modal-body-alt modal-container"></div>
+
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
+
+                </div>
+                
                 <div class="tutor-modal-footer">
                     <div class="tutor-bs-row">
                         <div class="tutor-bs-col">
@@ -129,7 +134,7 @@
                         <span class="las la-times"></span>
                     </button>
                 </div>
-                <div class="tutor-modal-body-alt modal-container">
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
 
                 </div>
                 <div class="tutor-modal-footer">
