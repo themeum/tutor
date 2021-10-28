@@ -9,7 +9,7 @@ $field_id = 'field_' . $field['key'];
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
 	<!-- has-bg -->
 	<div class="tutor-option-field-label">
-		<label><?php echo $field['label']; ?></label>
+		<h5 class="label"><?php echo $field['label']; ?></h5>
 		<p class="desc"><?php echo $field['desc']; ?></p>
 	</div>
 	<div class="tutor-option-field-input">
