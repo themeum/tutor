@@ -1592,6 +1592,8 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         // beforeSend: function () {},
         success: function success(data) {
+          // console.log(data.data);
+          // return false;
           var output = "",
               wrapped_item = "",
               notfound = true,
@@ -1685,9 +1687,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function highlightSearchedItem(dataKey) {
     var target = document.querySelector("#".concat(dataKey));
-    var targetEl = target && target.querySelector(".tutor-option-field-label label");
-    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row");
-    console.log("target -> ".concat(target, " scrollTarget -> ").concat(scrollTargetEl));
+    var targetEl = target && target.querySelector(".tutor-option-field-label h5.label");
+    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row"); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
     if (scrollTargetEl) {
       targetEl.classList.add("isHighlighted");
