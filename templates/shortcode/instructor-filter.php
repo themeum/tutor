@@ -110,7 +110,7 @@ if ( $total_categories && $total_categories > $limit ) {
 		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-30">
 			<div class="tutor-instructor-form-group">
 				<label for="tutor-instructor-relevant-sort" class="text-hints text-regular-body">
-					<?php _e( 'Short by', 'tutor-pro' ); ?>
+					<?php _e( 'Short by', 'tutor' ); ?>
 				</label>
 				<select class="text-title  text-regular-body" id="tutor-instructor-relevant-sort">
 					<?php foreach ( $short_by as $k => $v ) : ?>

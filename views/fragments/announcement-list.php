@@ -202,7 +202,7 @@ $courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : 
                                 name="tutor-bulk-checkbox-all"
                             />
                             <label for="tutor-bulk-checkbox-all">
-                                <?php esc_html_e( 'Date', 'tutor-pro' ); ?>
+                                <?php esc_html_e( 'Date', 'tutor' ); ?>
                             </label>
                         </div>
                     </th>
@@ -301,44 +301,42 @@ $courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : 
             <?php endforeach; ?>
         </tbody>
     </table>
-
+    
+    <div class="tutor-pagination-wrapper <?php echo esc_attr( is_admin() ? 'tutor-mt-20' : '' ); ?>">
     <?php 
-        $big = 999999999; // need an unlikely integer
-        $pages = paginate_links(array(
-            'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
-            'format'    => '?current_page=%#%',
-            'current'   => $paged,
-            'total'     => $the_query->max_num_pages,
-            'type'      => 'array',
-            'previous_text' => '<span class="ttr-angle-left-filled"></span>',
-            'next_text' => '<span class="ttr-angle-right-filled"></span>'
-        ));
+        // Need an unlikely integer.
+        // $big = 999999999; 
+        // $pages = paginate_links( array(
+        //     'base'      => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
+        //     'format'    => '?current_page=%#%',
+        //     'current'   => $paged,
+        //     'total'     => $the_query->max_num_pages,
+        //     'type'      => 'array',
+        //     'previous_text' => '<span class="ttr-angle-left-filled"></span>',
+        //     'next_text' => '<span class="ttr-angle-right-filled"></span>'
+        // ));
         
-        if(is_array($pages)) {
-            ?>
-            <nav class="tutor-dashboard-pagination tutor-mt-30">
-                <div classNames="tutor-pagination-hints">
-                    <div class="text-regular-caption color-text-subsued">
-                        Page <span class="text-medium-caption color-text-primary"><?php echo $paged; ?></span>
-                        of <span class="text-medium-caption color-text-primary"><?php echo $the_query->max_num_pages; ?></span>
-                    </div>
-                </div>
-                <ul class="tutor-pagination-numbers">
-                    <?php 
-                    foreach ( $pages as $page ) {
-                        ?>
-                        <li class="pagination-number <?php echo $paged==$page ? 'current' : ''; ?>">
-                            <a href="#"><?php echo $page; ?></a>
-                        </li>
-                        <?php
-                    }
-                    ?>
-                </ul>
-            </nav>
-            <?php
+		/**
+		 * Prepare pagination data & load template
+		 */
+        $limit  = tutor_utils()->get_option( 'pagination_per_page' );
+		$pagination_data     = array(
+			'total_items' => $the_query->found_posts,
+			'per_page'    => $limit,
+			'paged'       => $paged,
+		);
+       
+		$pagination_template = tutor()->path . 'views/elements/pagination.php';
+        if ( is_admin() ) {
+            tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+        } else {
+            $pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+            tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
         }
+        
     ?>
-    </nav>
+    </div>
+ 
 <?php else: ?>
     <span><?php _e('No Announcment', 'tutor'); ?></span>
 <?php endif; ?>

@@ -26,15 +26,20 @@ if ( isset( $data ) && count( $data ) ) : ?>
 		<div class="tutor-admin-page-navbar-tabs">
 			<ul style="display: flex; column-gap: 15px;">
 				<?php foreach ( $data['tabs'] as $key => $v ) : ?>
-					<li class="<?php echo esc_attr( $data['active'] == $v['key'] ? 'active' : '' ); ?>">
-						<a href="<?php echo esc_attr( $v['url'] ); ?>">
-							<?php echo esc_html( $v['title'] ); ?>
-							(<?php echo esc_attr( $v['value'] ); ?>)
-						</a>
-					</li>
+					<a href="<?php echo esc_attr( $v['url'] ); ?>" class="filter-btn <?php echo esc_attr( $data['active'] == $v['key'] ? 'is-active' : '' ); ?>">
+						<?php echo esc_html( $v['title'] ); ?>
+						(<?php echo esc_attr( $v['value'] ); ?>)
+					</a>
 				<?php endforeach; ?>
 			</ul>
 		</div>
+	<?php endif; ?>
+	<?php if ( isset( $data['grade_button'] ) && $data['grade_button'] ) : ?>
+		<ul style="display: flex; column-gap: 15px;">
+			<li>
+				<a href="<?php echo esc_url( $data['grade_button_url'] ); ?>"><?php echo esc_html( $data['grade_button_title'] ); ?></a>
+			</li>
+		</ul>
 	<?php endif; ?>
   </div>
 </header>

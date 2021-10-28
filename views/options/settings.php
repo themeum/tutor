@@ -68,7 +68,7 @@
 				<ul class="tutor-option-nav">
 					<?php
 					foreach ( $option_fields as $key => $section ) {
-						$icon = tutor()->icon_dir . $key . '.svg';
+						$icon         = tutor()->icon_dir . $key . '.svg';
 						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
 						?>
 						<li class="tutor-option-nav-item">
@@ -86,14 +86,14 @@
 
 			<div class="tutor-option-tab-pages">
 				<?php
-					foreach ( $option_fields as $key => $section ) {
-						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
-						?>
+				foreach ( $option_fields as $key => $section ) {
+					$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
+					?>
 						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
-							<?php echo $this->template( $section ); ?>
+						<?php echo $this->template( $section ); ?>
 						</div>
 						<?php
-					}
+				}
 				?>
 			</div>
 			<!-- end /.tutor-option-tab-pages -->
@@ -103,16 +103,25 @@
 
 
 <style>
+	.color-picker-input input[type=color]:focus,.color-picker-input input[type=color]:active {box-shadow: none;}
+	.color-preset-input [type="radio"]{position: absolute;opacity: 0;visibility: hidden;z-index: -1;}
 	.isHighlighted {}
 
+	.tutor-toast-parent,
 	.tutor-notification {
 		position: fixed;
 		bottom: 40px;
+		left: calc(0% + 200px);
 		z-index: 999;
-		opacity: 0;
-		visibility: hidden;
 	}
-
+	.tutor-toast-parent>div>div:nth-child(3){
+		align-self: flex-start;
+		padding:8px;
+	}
+	.tutor-toast-parent>div>div{
+		padding:0;
+	}
+/*
 	.tutor-notification.show {
 		opacity: 1;
 		visibility: visible;
@@ -120,5 +129,5 @@
 
 	.tutor-notification .tutor-notification-close{
 		transition: unset;
-	}
+	} */
 </style>

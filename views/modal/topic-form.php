@@ -29,7 +29,7 @@
                             <i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
                             <?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
                         </p>
-                        <input type="hidden" name="tutor_topic_course_ID" value="<?php echo $data['course_id']; ?>">
+                        <input type="hidden" name="topic_course_id" value="<?php echo $data['course_id']; ?>">
                         <input type="hidden" name="topic_id" value="<?php echo $data['topic_id']; ?>">
                     </div>
                 </div>

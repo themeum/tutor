@@ -26,14 +26,11 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 				$paged    = $data['paged'];
 				$per_page = $data['per_page'];
 				$big      = 999999999;
-				$base     = is_admin() ? str_replace( $big, '%#%', esc_url( admin_url( $big ) . 'admin.php?paged=%#%' ) ) : str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) );
 
 				echo paginate_links(
 					array(
-						// 'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-						// 'base'      => str_replace( $big, '%#%', esc_url( admin_url( $big ) . 'admin.php?paged=%#%' ) ),
-						'base'      => $base,
-						'format'    => is_admin() ? '?paged=%#%' : '?current_page=%#%',
+						'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+						'format'    => '?current_page=%#%',
 						'current'   => $paged,
 						'total'     => ceil( $data['total_items'] / $per_page ),
 						'prev_text' => '<span class="ttr-angle-left-filled"></span>',

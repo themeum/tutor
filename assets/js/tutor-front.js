@@ -579,6 +579,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_media_chooser__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utilities */ "./assets/react/lib/utilities.js");
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utilities__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sorting */ "./assets/react/lib/sorting.js");
+/* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_sorting__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -634,6 +637,51 @@ window.jQuery(document).ready(function ($) {
     wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
     wrapper.find('img').attr('src', '');
     $that.hide();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/sorting.js":
+/*!*************************************!*\
+  !*** ./assets/react/lib/sorting.js ***!
+  \*************************************/
+/***/ (() => {
+
+window.addEventListener('DOMContentLoaded', function () {
+  var _this = this;
+
+  var getCellValue = function getCellValue(tr, idx) {
+    return tr.children[idx].innerText || tr.children[idx].textContent;
+  };
+
+  var comparer = function comparer(idx, asc) {
+    return function (a, b) {
+      return function (v1, v2) {
+        return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
+      }(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+    };
+  };
+
+  document.querySelectorAll(".tutor-table-rows-sorting").forEach(function (th) {
+    return th.addEventListener('click', function (e) {
+      var table = th.closest('table');
+      var tbody = table.querySelector('tbody');
+      var currentTarget = e.currentTarget;
+      var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // swap class name to change icon
+
+      if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
+        icon.classList.remove("ttr-ordering-a-to-z-filled");
+        icon.classList.add("ttr-ordering-z-to-a-filled");
+      } else {
+        icon.classList.remove("ttr-ordering-z-to-a-filled");
+        icon.classList.add("ttr-ordering-a-to-z-filled");
+      }
+
+      Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
+        return tbody.appendChild(tr);
+      });
+    });
   });
 });
 
@@ -833,37 +881,6 @@ jQuery(document).ready(function ($) {
   $(document).on('change keyup', '.course-edit-topic-title-input', function (e) {
     e.preventDefault();
     $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());
-  });
-  $(document).on('click', '.tutor-topics-edit-button', function (e) {
-    e.preventDefault();
-    var $button = $(this);
-    var topics_id = $button.closest('.tutor-topics-wrap').find('[name="topic_id"]').val();
-    ;
-    var topic_title = $button.closest('.tutor-topics-wrap').find('[name="topic_title"]').val();
-    var topic_summery = $button.closest('.tutor-topics-wrap').find('[name="topic_summery"]').val();
-    var data = {
-      topic_title: topic_title,
-      topic_summery: topic_summery,
-      topic_id: topics_id,
-      action: 'tutor_update_topic'
-    };
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: data,
-      beforeSend: function beforeSend() {
-        $button.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        if (data.success) {
-          $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
-          $button.closest('.tutor-modal').removeClass('tutor-is-active');
-        }
-      },
-      complete: function complete() {
-        $button.removeClass('tutor-updating-message');
-      }
-    });
   });
   /**
    * Delete Lesson from course builder
