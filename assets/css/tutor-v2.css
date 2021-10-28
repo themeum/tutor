@@ -5944,6 +5944,10 @@
   background-color: #fdfdfd;
 }
 
+.tutor-bg-gray-10 {
+  background-color: #eff1f6 !important;
+}
+
 .tutor-text-nowrap {
   white-space: nowrap;
 }
@@ -10209,7 +10213,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 
 .tutor-modal .tutor-modal-body-alt {
   padding: 24px 30px;
-  background: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .tutor-modal .tutor-modal-footer {
