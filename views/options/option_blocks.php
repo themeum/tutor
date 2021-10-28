@@ -35,7 +35,8 @@
 			<h4><?php echo $blocks['status_label']; ?></h4>
 		</div>
 		<div class="item-wrapper">
-			<?php foreach ( $blocks['fields'] as $field ) :
+			<?php
+			foreach ( $blocks['fields'] as $field ) :
 				echo $this->generate_field( $field );
 				endforeach;
 			?>
@@ -57,6 +58,15 @@
 		</div>
 	</div>
 
-<?php elseif ( $blocks['block_type'] == 'custom' ) : ?>
-	<?php include $blocks['template_path']; ?>
-<?php endif; ?>
+	<?php
+	elseif ( $blocks['block_type'] == 'color_picker' ) :
+		echo $this->template(
+			array(
+				'template' => $blocks['block_type'],
+				'blocks'   => $blocks,
+			)
+		);
+	elseif ( $blocks['block_type'] == 'custom' ) :
+		include $blocks['template_path'];
+	endif;
+	?>

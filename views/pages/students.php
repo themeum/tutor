@@ -79,25 +79,25 @@ $filters = array(
 				<th>
 				<div class="inline-flex-center color-text-subsued">
 				<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input tutor-form-check-square" name="tutor-bulk-checkbox-all">
-					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor-pro' ); ?></span>
+					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
 					<span class="ttr-ordering-a-to-z-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor-pro' ); ?></span>
+					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Registration Date', 'tutor-pro' ); ?></span>
+					<span class="text-regular-small"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Course Taken', 'tutor-pro' ); ?></span>
+					<span class="text-regular-small"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
@@ -110,19 +110,15 @@ $filters = array(
 				<td data-th="Student">
 				<div class="td-avatar">
 				<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-form-check-square tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
-					<?php
-						$avatar_url  = get_avatar_url( $list->ID );
-					?>
-					<img
-					src="<?php echo $avatar_url; ?>"
-					alt="student avatar"
-					/>
-					
-					<div>
+					<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
+					<img src="<?php echo $avatar_url; ?>" alt="student avatar"/>
 					<p class="color-text-primary text-medium-body">
-					<?php echo esc_html( $list->display_name ); ?>
+						<?php echo esc_html( $list->display_name ); ?>
 					</p>
-					</div>
+					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
+					<a href="<?php echo $edit_link; ?>" class="btn-text btn-detail-link color-design-dark">
+						<span class="ttr-detail-link-filled tutor-mt-5"></span>
+					</a>
 				</div>
 				</td>
 				<td data-th="Registration Date">
@@ -141,12 +137,10 @@ $filters = array(
 				</td>
 				<td data-th="URL">
 				<div class="inline-flex-center td-action-btns">
-					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php'));
-						
-					?>
+					
 					<a href="<?php echo $edit_link; ?>" 
 					class="btn-outline tutor-btn">
-					<?php esc_html_e( 'Details', 'tutor-pro' ); ?>
+					<?php esc_html_e( 'Details', 'tutor' ); ?>
 					</a>
 				</div>
 				</td>
