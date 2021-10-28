@@ -33,7 +33,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_default(): array {
 		return array(
 			'value'  => '',
-			'option' => __( 'Bulk Action', 'tutor-pro' ),
+			'option' => __( 'Bulk Action', 'tutor' ),
 		);
 	}
 
@@ -46,7 +46,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_complete(): array {
 		return array(
 			'value'  => 'complete',
-			'option' => __( 'Complete', 'tutor-pro' ),
+			'option' => __( 'Complete', 'tutor' ),
 		);
 	}
 
@@ -59,7 +59,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_publish(): array {
 		return array(
 			'value'  => 'publish',
-			'option' => __( 'Publish', 'tutor-pro' ),
+			'option' => __( 'Publish', 'tutor' ),
 		);
 	}
 
@@ -72,7 +72,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_draft(): array {
 		return array(
 			'value'  => 'draft',
-			'option' => __( 'Draft', 'tutor-pro' ),
+			'option' => __( 'Draft', 'tutor' ),
 		);
 	}
 
@@ -85,7 +85,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_on_hold(): array {
 		return array(
 			'value'  => 'on-hold',
-			'option' => __( 'On Hold', 'tutor-pro' ),
+			'option' => __( 'On Hold', 'tutor' ),
 		);
 	}
 
@@ -98,7 +98,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_pending(): array {
 		return array(
 			'value'  => 'pending',
-			'option' => __( 'Pending', 'tutor-pro' ),
+			'option' => __( 'Pending', 'tutor' ),
 		);
 	}
 
@@ -111,7 +111,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_processing(): array {
 		return array(
 			'value'  => 'processing',
-			'option' => __( 'Processing', 'tutor-pro' ),
+			'option' => __( 'Processing', 'tutor' ),
 		);
 	}
 
@@ -124,7 +124,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_delete(): array {
 		return array(
 			'value'  => 'delete',
-			'option' => __( 'Delete', 'tutor-pro' ),
+			'option' => __( 'Delete', 'tutor' ),
 		);
 	}
 
@@ -137,7 +137,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_cancel(): array {
 		return array(
 			'value'  => 'cancel',
-			'option' => __( 'Cancel', 'tutor-pro' ),
+			'option' => __( 'Cancel', 'tutor' ),
 		);
 	}
 }
