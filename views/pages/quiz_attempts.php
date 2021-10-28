@@ -67,16 +67,12 @@ $filters = array(
 		
 	?>
 	<div class="tutor-ui-table-responsive tutor-mt-30 tutor-mr-20">
-		<table class="tutor-ui-table my-quiz-attempts">
+		<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
 			<thead>
 				<tr>
 					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input tutor-form-check-square" name="tutor-bulk-checkbox-all">
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
+						<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input" name="tutor-bulk-checkbox-all">
 						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Quiz Info', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
 						</div>
@@ -129,20 +125,20 @@ $filters = array(
 			<tbody>
 				<?php foreach ( $quiz_attempts_list as $list ) : ?>
 				<tr>
-					<td>
-						<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-form-check-square tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
-					</td>
-					<td data-th="Quiz Info" class="column-fullwidth">
+					<td data-th="Quiz Info" class="column-fullwidth ">
+						<div class="inline-flex-center tutor-mr-10">
+							<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
+						</div>
 						<div class="td-statement-infor">
-						<span class="text-regular-small color-text-primary">
-						<?php echo $quiz_attempts->column_student( $list, 'attempt_ended_at' ); ?>
-						</span>
-						<p class="text-medium-body color-text-primary">
-							<?php echo $quiz_attempts->column_quiz( $list, 'post_title' ); ?>
-						</p>
-						<span class="text-regular-small color-text-primary">
-							Student: <?php echo $quiz_attempts->column_student_info( $list, 'display_name' ); ?>
-						</span>
+							<span class="text-regular-small color-text-primary">
+							<?php echo $quiz_attempts->column_student( $list, 'attempt_ended_at' ); ?>
+							</span>
+							<p class="text-medium-body color-text-primary">
+								<?php echo $quiz_attempts->column_quiz( $list, 'post_title' ); ?>
+							</p>
+							<span class="text-regular-small color-text-primary">
+								Student: <?php echo $quiz_attempts->column_student_info( $list, 'display_name' ); ?>
+							</span>
 						</div>
 					</td>
 					<td data-th="Registration Date">
