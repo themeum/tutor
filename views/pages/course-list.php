@@ -4,11 +4,11 @@
  *
  * @package Course List
  */
-/*
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-*/
+
 
 use TUTOR\Course_List;
 use TUTOR_REPORT\Analytics;
