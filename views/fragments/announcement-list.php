@@ -202,7 +202,7 @@ $courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : 
                                 name="tutor-bulk-checkbox-all"
                             />
                             <label for="tutor-bulk-checkbox-all">
-                                <?php esc_html_e( 'Date', 'tutor-pro' ); ?>
+                                <?php esc_html_e( 'Date', 'tutor' ); ?>
                             </label>
                         </div>
                     </th>
