@@ -1,37 +1,37 @@
 <?php if ( isset( $data ) ) : ?>
 <div class="tutor-wp-dashboard-filter tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap tutor-bs-align-items-end tutor-bs-justify-content-between tutor-pr-20">
-<?php if ( $data['bulk_action'] ) : ?>
+	<?php if ( $data['bulk_action'] ) : ?>
   <div class="tutor-wp-dashboard-filter-items tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap">
   <form action="" method="post" id="tutor-admin-bulk-action-form">
 					<input type="hidden" name="action" value="<?php esc_html_e( $data['ajax_action'] ); ?>">
-    <div class="tutor-form-select-with-btn">
-      <select
-        title="Please select an action"
-        class="tutor-form-select tutor-form-control-sm"
-      >
-	  <?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
-								<option value="<?php esc_attr_e( $v['value'] ); ?>">
-									<?php esc_html_e( $v['option'] ); ?>
-								</option>
-							<?php endforeach; ?>
-      </select>
-      <button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
-	  <?php esc_html_e( 'Apply', 'tutor' ); ?>
-      </button>
-    </div>
+	<div class="tutor-form-select-with-btn">
+	  <select name="bulk-action"
+		title="Please select an action"
+		class="tutor-form-select tutor-form-control-sm"
+	  >
+		<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
+			<option value="<?php esc_attr_e( $v['value'] ); ?>">
+				<?php esc_html_e( $v['option'] ); ?>
+			</option>
+		<?php endforeach; ?>
+	  </select>
+	  <button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
+		<?php esc_html_e( 'Apply', 'tutor' ); ?>
+	  </button>
+	</div>
 	</form>
   </div>
   <?php endif; ?>
 		<?php if ( isset( $data['filters'] ) && true === $data['filters'] ) : ?>
 			<?php
-				$courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
-				$terms_arg = array(
+				$courses    = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
+				$terms_arg  = array(
 					'taxonomy' => 'course-category',
-					'orderby' => 'term_id',
-					'order' => 'DESC'
+					'orderby'  => 'term_id',
+					'order'    => 'DESC',
 				);
 				$categories = get_terms( $terms_arg );
-			?>
+				?>
 
 		<div class="tutor-wp-dashboard-filter-items tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap">
 			<?php
