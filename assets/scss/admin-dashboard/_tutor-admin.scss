@@ -226,6 +226,7 @@
   display: none;
 }
 
+
 /**
   Instructor
    */
@@ -1382,11 +1383,6 @@ span.filled_dash_unser {
   -webkit-animation: rotation 2s infinite linear;
   animation: rotation 2s infinite linear;
   margin-right: 6px;
-}
-
-.rtl .tutor-updating-message:before {
-  margin-right: 0;
-  margin-left: 6px;
 }
 
 .lesson-modal-field.tutor-lesson-modal-title-wrap {
@@ -2990,4 +2986,25 @@ table.tutor-table p {
   align-items: center;
   padding: 0 0 30px 0;
 }
+
+.tutor-wp-dashboard-filter-items {
+    display: inherit;
+}
+
+.row-actions {
+    left: 0;
+}
+
+table.tutor-ui-table.table-instructors .instructor-action {
+    min-width: 70px;
+    text-align: center;
+}
+
+table.tutor-ui-table.table-instructors .td-action-btns .toggle-row,
+table.tutor-ui-table.my-quiz-attempts .td-action-btns .toggle-row,
+table.tutor-ui-table.table-instructors .toggle-row {
+    display: none;
+}
+
+
 /* /.report-course-list - end */

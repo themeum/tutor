@@ -4875,7 +4875,7 @@ class Utils {
 			$start,
 			$limit
 		) );
-
+		
 		return $query;
 	}
 

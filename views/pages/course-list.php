@@ -163,30 +163,30 @@ $available_status = array(
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-							<?php esc_html_e( 'Title', 'tutor-pro' ); ?>
+							<?php esc_html_e( 'Title', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="inline-flex-center color-text-subsued">
 								<span class="text-regular-small">
-								<?php esc_html_e( 'Author', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Author', 'tutor' ); ?>
 								</span>
 								<span class="ttr-ordering-a-to-z-filled"></span>
 							</div>
 						</th>	
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Course Categories', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Course Categories', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Students', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Students', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Price', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</div>
 						</th>
 						<th class="tutor-shrink"></th>											

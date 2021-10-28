@@ -355,7 +355,7 @@ class Tutor_List_Table {
 		$courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
 		$markup = '
 			<div class="alignright">
-				<label>'.__('Course', 'tutor-pro').'</label>
+				<label>'.__('Course', 'tutor').'</label>
 				<select class="tutor-assignment-course-sorting">
 					<option value="0">'.__('All','tutor').'</option>
 					OPTIONS_PLACEHOLDER

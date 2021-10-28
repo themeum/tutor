@@ -18,5 +18,4 @@ $shortcode_arg = isset($GLOBALS['tutor_shortcode_arg']) ? $GLOBALS['tutor_shortc
 $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_per_row', 4 ) : $shortcode_arg;
 
 ?>
-
-<div class="tutor-courses tutor-courses-loop-wrap tutor-courses-layout-<?php echo $courseCols; ?>">
+<div class="tutor-course-listing tutor-course-listing-grid-<?php echo $courseCols; ?> tutor-course-listing-filter-grid-2 tutor-course-listing-filter-grid-3">
