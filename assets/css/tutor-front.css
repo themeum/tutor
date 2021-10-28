@@ -6181,6 +6181,17 @@ table.course-single-gradebooks a {
   -webkit-align-items: center;
 }
 
+.list-item-price ins {
+  text-decoration: none;
+}
+
+.list-item-price del {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 160%;
+  color: #757c8e;
+}
+
 .tutor-forgot-password-form, .tutor-reset-password-form {
   max-width: 520px;
   padding: 15px;

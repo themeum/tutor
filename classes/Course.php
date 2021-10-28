@@ -142,6 +142,7 @@ class Course extends Tutor_Base {
 		 * @since 1.9.8
 		 */
 		add_action(  'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
+
 	}
 
 	public function restrict_new_student_entry($content) {
@@ -151,10 +152,8 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 			
-		return '<span class="tutor-course-booked-fully">
-			<img src="' . tutor()->url . '/assets/images/icon-warning-info.svg"/>
-			<span>' . __('Fully booked', 'tutor') . '</span>
-		</span>';
+		
+		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon color-design-warning ttr-circle-outline-info-filled"></span></div><div class="text-medium-caption color-text-primary">Fully Booked</div></div>';
 	}
 
 	function restrict_media( $where ){
