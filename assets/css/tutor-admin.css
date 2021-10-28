@@ -7458,4 +7458,33 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 34px;
 }
 
+.tutor-admin-announcements-list .new-announcement-wrap {
+  background-color: #fff;
+}
+
+.tutor-admin-announcements-list .new-announcement-wrap .new-announcement-button button {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 32px;
+  text-align: center;
+  color: #FFFFFF;
+  background: #1973AA;
+  border-radius: 6px;
+}
+
+.tutor-admin-announcements-list .new-announcement-wrap .new-announcement-button button:hover {
+  background: #1973AA;
+}
+
+.tutor-admin-announcements-list .tutor-announcement-big-icon i {
+  background: #E9EDFB;
+  border-radius: 100%;
+  width: 56px;
+  height: 56px;
+  color: #1973AA;
+  padding: 20px;
+  font-size: 24px;
+}
+
 /*# sourceMappingURL=tutor-admin.css.map */
