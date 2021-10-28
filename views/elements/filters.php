@@ -109,7 +109,7 @@
 			</div>
 			</div>
 			<div class="">
-				<form action="" method="GET">
+				<form action="" method="get" id="tutor-admin-search-filter-form">
 					<label class="tutor-form-label">
 					<?php esc_html_e( 'Search', 'tutor' ); ?>
 					</label>
