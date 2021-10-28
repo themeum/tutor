@@ -112,11 +112,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const {message=__('Something Went Wrong!', 'tutor')} = data;
 
         if(success) {
-          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
           return;
         }
 
-        tutor_toast('Error!', message, 'tutor');
+        tutor_toast('Error!', message, 'tutor', true);
       },
       complete: function() {},
     });

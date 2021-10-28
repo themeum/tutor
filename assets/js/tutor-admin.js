@@ -1943,11 +1943,11 @@ document.addEventListener("DOMContentLoaded", function () {
             message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
 
         if (success) {
-          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
           return;
         }
 
-        tutor_toast('Error!', message, 'tutor');
+        tutor_toast('Error!', message, 'tutor', true);
       },
       complete: function complete() {}
     });
@@ -3018,12 +3018,12 @@ jQuery.fn.serializeObject = function () {
   return values;
 };
 
-window.tutor_toast = function (title, description, type) {
+window.tutor_toast = function (title, description, type, is_left) {
   var tutor_ob = window._tutorobject || {};
   var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
   if (!jQuery('.tutor-toast-parent').length) {
-    jQuery('body').append('<div class="tutor-toast-parent"></div>');
+    jQuery('body').append('<div class="tutor-toast-parent ' + (is_left ? 'tutor-toast-left' : '') + '"></div>');
   }
 
   var icons = {
