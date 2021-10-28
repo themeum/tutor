@@ -722,44 +722,52 @@ displayAddons(freeAddonsList);
  * Color PRESET and PICKER manipulation
  */
 var colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
-var colorPickerInputs = document.querySelectorAll(".color-picker-input input[type='color']");
-var presetView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
+var colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
+var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
 
 colorPresetInputs.forEach(function (preset) {
   // listening preset input events
   preset.addEventListener("input", function (e) {
     var presetItem = preset.parentElement.querySelector(".preset-item");
     var presetColors = presetItem.querySelectorAll(".header span");
+    presetColors.forEach(function (color) {
+      var presetKey = color.dataset.preset;
+      var presetColor = color.dataset.color;
+      pickerView.forEach(function (toPicker) {
+        var pickerInput = toPicker.dataset.key;
 
-    var _loop = function _loop(i) {
-      var presetKey = presetColors[i].dataset.key;
-      var presetColor = presetColors[i].dataset.color;
-      presetView[i].querySelector("input").value = presetColor;
-      presetView[i].querySelector(".picker-value").innerHTML = presetColor;
-      presetView[i].style.borderColor = presetColor;
-      presetView[i].style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
-      setTimeout(function () {
-        presetView[i].style.borderColor = "#cdcfd5";
-        presetView[i].style.boxShadow = "none";
-      }, 5000);
-    };
-
-    for (var i = 0; i < presetColors.length; i++) {
-      _loop(i);
-    }
+        if (pickerInput == presetKey) {
+          toPicker.querySelector("input").value = presetColor;
+          toPicker.querySelector(".picker-value").innerHTML = presetColor;
+          toPicker.style.borderColor = presetColor;
+          toPicker.style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
+          setTimeout(function () {
+            toPicker.style.borderColor = "#cdcfd5";
+            toPicker.style.boxShadow = "none";
+          }, 5000);
+        }
+      });
+    });
   });
 }); // Updating Custom Color PRESET
 
 var updateCustomPreset = function updateCustomPreset(picker) {
-  var customPresetEl = document.querySelector("label.color-preset-input:last-child"); // listening picker input events
+  var customPresetEl = document.querySelector("label.color-preset-input[for='custom']"); // listening picker input events
 
   picker.addEventListener("input", function (e) {
     var presetColors = customPresetEl.querySelectorAll(".header span");
-    colorPickerInputs.forEach(function (picker, i) {
-      presetColors[i].dataset.color = picker.value;
-      presetColors[i].style.backgroundColor = picker.value;
-      presetView[i].querySelector(".picker-value").innerHTML = picker.value;
-      customPresetEl.querySelector('input[type="radio"]').checked = true;
+    var presetItem = customPresetEl.querySelector('input[type="radio"]');
+    var pickerCode = picker.nextElementSibling;
+    colorPickerInputs.forEach(function (picker) {
+      var preset = picker.dataset.picker;
+      presetColors.forEach(function (toPreset) {
+        if (toPreset.dataset.preset == preset) {
+          toPreset.dataset.color = picker.value;
+          toPreset.style.backgroundColor = picker.value;
+        }
+      });
+      pickerCode.innerText = picker.value;
+      presetItem.checked = true;
     });
   });
 }; // listening color pickers input event

@@ -92,6 +92,9 @@
 .tutor-option-field-row input[type="number"],
 .tutor-option-field-row input[type="password"],
 .tutor-option-field-row textarea {
+  &:last-child {
+    margin-right: 0;
+  }
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 3px;
