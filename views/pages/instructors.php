@@ -40,10 +40,15 @@ $total            = tutor_utils()->get_total_instructors($active_tab, $search, $
 /**
  * Navbar data to make nav menu
  */
+$url                = get_pagenum_link();
+$add_insructor_url  = $url . '&sub_page=add_new_instructor';
 $navbar_data = array(
 	'page_title' => $instructors->page_title,
 	'tabs'       => $instructors->tabs_key_value(  $user_id, $date, $search, $course_id ),
 	'active'     => $active_tab,
+	'add_button'   => true,
+	'button_title' => __( 'Add New', 'tutor' ),
+	'button_url'   => $add_insructor_url,
 );
 
 $filters = array(
@@ -70,31 +75,31 @@ $filters = array(
 	
 
 	<div class="tutor-ui-table-responsive tutor-mt-30 tutor-mr-20">
-		<table class="tutor-ui-table table-students">
+		<table class="tutor-ui-table table-students table-instructors">
 			<thead>
 			<tr>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
 				<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input tutor-form-check-square" name="tutor-bulk-checkbox-all">
-					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor-pro' ); ?></span>
+					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
 					<span class="ttr-ordering-a-to-z-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor-pro' ); ?></span>
+					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Total Course', 'tutor-pro' ); ?></span>
+					<span class="text-regular-small"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor-pro' ); ?></span>
+					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled"></span>
 				</div>
 				</th>
@@ -106,20 +111,16 @@ $filters = array(
 			<tr>
 				<td data-th="Student">
 				<div class="td-avatar">
-				<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-form-check-square tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
-					<?php
-						$avatar_url  = get_avatar_url( $list->ID );
-					?>
-					<img
-					src="<?php echo $avatar_url; ?>"
-					alt="student avatar"
-					/>
-					
-					<div>
+					<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-form-check-square tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
+					<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
+					<img src="<?php echo $avatar_url; ?>" alt="student avatar"/>
 					<p class="color-text-primary text-medium-body">
-					<?php echo esc_html( $list->display_name ); ?>
+						<?php echo esc_html( $list->display_name ); ?>
 					</p>
-					</div>
+					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
+					<a href="<?php echo $edit_link; ?>" class="btn-text btn-detail-link color-design-dark">
+						<span class="ttr-detail-link-filled tutor-mt-5"></span>
+					</a>
 				</div>
 				</td>
 				<td data-th="Registration Date">
@@ -140,13 +141,7 @@ $filters = array(
 				</td>
 				<td data-th="URL">
 				<div class="inline-flex-center td-action-btns">
-					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php'));
-						
-					?>
-					<a href="<?php echo $edit_link; ?>" 
-					class="btn-outline tutor-btn">
-					<?php esc_html_e( 'Details', 'tutor-pro' ); ?>
-					</a>
+					<?php echo $instructors->column_action( $list, 'status' ); ?>
 				</div>
 				</td>
 			</tr>
