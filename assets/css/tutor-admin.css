@@ -4163,17 +4163,6 @@ table.tutor-table p {
   left: 0;
 }
 
-table.tutor-ui-table.table-instructors .instructor-action {
-  min-width: 70px;
-  text-align: center;
-}
-
-table.tutor-ui-table.table-instructors .td-action-btns .toggle-row,
-table.tutor-ui-table.my-quiz-attempts .td-action-btns .toggle-row,
-table.tutor-ui-table.table-instructors .toggle-row {
-  display: none;
-}
-
 /* /.report-course-list - end */
 body {
   -webkit-font-smoothing: antialiased;
@@ -7414,6 +7403,24 @@ li.tutor-option-nav-item h4 {
 
 #tutor_notifications .tutor-option-single-item:not(:last-child) {
   margin-bottom: 34px;
+}
+
+table.tutor-ui-table.table-instructors .instructor-action {
+  min-width: 70px;
+  text-align: center;
+}
+
+table.tutor-ui-table.table-instructors .td-action-btns .toggle-row,
+table.tutor-ui-table.my-quiz-attempts .td-action-btns .toggle-row,
+table.tutor-ui-table.table-instructors .toggle-row {
+  display: none;
+}
+
+@media only screen and (min-width: 1201px) {
+  .my-quiz-attempts .td-statement-infor {
+    margin-top: -24px;
+    margin-left: 25px;
+  }
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */
