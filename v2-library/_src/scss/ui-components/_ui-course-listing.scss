@@ -1,5 +1,6 @@
 .tutor-course-listing {
 	max-width: 1110px;
+	margin: 0 auto;
 	display: grid;
 	grid-gap: 30px;
 	&-grid-3 {
@@ -22,12 +23,7 @@
 }
 
 .tutor-course-listing-item {
-	/* bg/white */
 	background: $bg-white;
-	/* stroke/light30 */
-	// border: 1px solid $stroke-light-30;
-	// border-radius: 6px;
-	// overflow: hidden;
 	display: grid;
 	img {
 		max-width: 100%;
@@ -152,5 +148,28 @@
 				}
 			}
 		}
+	}
+
+	&-grid-4 {
+		.list-item-meta .meta-icon {
+			font-size: 20px;
+		}
+		.tutor-ratings {
+			.tutor-rating-text {
+				@extend .text-medium-small;
+			}
+		}
+	} // end  .tutor-course-listing-item-grid-4
+} // end  .tutor-course-listing-item
+
+// .tutor-course-listing-* variations demo
+.tutor-course-listing-card-demo {
+	max-width: 100%;
+	margin: 0 auto;
+	@include responsiveGrid(350px, 1fr);
+	grid-gap: 30px;
+
+	.tutor-course-listing-item {
+		display: initial;
 	}
 }

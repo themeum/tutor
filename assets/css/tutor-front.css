@@ -4973,11 +4973,6 @@ button.tm-close.tutor-icon-line-cross:hover {
 * Course adding page
 * Course Builder
 */
-p.course-empty-content {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
 .ui-sortable-placeholder {
   visibility: visible;
   background-color: #dddd;
