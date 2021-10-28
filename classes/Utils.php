@@ -3141,6 +3141,29 @@ class Utils {
 		return $output;
 	}
 
+	public function star_rating_generator_course( $current_rating = 0.00, $echo = true ) {
+
+		for ( $i = 1; $i <=5 ; $i++ ) {
+			$intRating = (int) $current_rating;
+
+			if ( $intRating >= $i ) {
+				$output.= '<span class="ttr-star-full-filled" data-rating-value="'.$i.'"></span>';
+			} else {
+				if ( ( $current_rating - $i) == -0.5 ) {
+					$output.= '<span class="ttr-star-half-filled" data-rating-value="'.$i.'"></span>';
+				} else {
+					$output.= '<span class="ttr-star-line-filled" data-rating-value="'.$i.'"></span>';
+				}
+			}
+		}
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+
 	/**
 	 * @param $string
 	 *
@@ -7599,6 +7622,16 @@ class Utils {
 		$maximum_students = (int) $this->get_course_settings($course_id, 'maximum_students');
 
 		return $maximum_students && $maximum_students <= $total_enrolled;
+	}
+
+	function is_course_booked($course_id = 0) {
+
+		$total_enrolled = $this->count_enrolled_users_by_course($course_id);
+		$maximum_students = (int) $this->get_course_settings($course_id, 'maximum_students');
+
+		$total_booked = 100/$maximum_students*$total_enrolled;
+
+		return $total_booked;
 	}
 
 	/**

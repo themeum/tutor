@@ -13,18 +13,21 @@
  */
 ?>
 
-<div class="tutor-course-loop-price">
-    <?php
+<?php
     $course_id = get_the_ID();
-    $enroll_btn = '<div  class="tutor-public-course-start-learning">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="'. get_the_permalink(). '">'.__('Get Enrolled', 'tutor'). '</a>' ) . '</div>';
-    $price_html = '<div class="price"> '.__('Free', 'tutor').$enroll_btn. '</div>';
+    $is_public = get_post_meta( $course_id, '_tutor_is_public_course', true )=='yes';
+    $enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">' . __('Get Enrolled', 'tutor') . '</a>' ) . '</div>';
+    $free_html = $enroll_btn;
     if (tutor_utils()->is_course_purchasable()) {
 	    $enroll_btn = tutor_course_loop_add_to_cart(false);
 
 	    $product_id = tutor_utils()->get_course_product_id($course_id);
-	    $price_html = '<div class="price"> ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div>';
-    }
 
-    echo $price_html;
-    ?>
-</div>
+            $price_html = '<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between"><div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center"> <span class="price text-bold-h6 color-text-primary">'.$product->get_price_html() . ' </span></div>';
+            $cart_html = '<div class="list-item-button"> '.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
+            echo $price_html;
+            echo $cart_html;
+        } else{
+            echo $free_html;
+    }
+?>
