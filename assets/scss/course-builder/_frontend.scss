@@ -185,11 +185,7 @@
 	.tutor-form-group input{
 		margin-bottom: 0;
 	}
-	.tutor-styled-radio{
-		display: flex;
-		align-items: center;
-	}
-
+	
 	.field-container{
 		@include valueWithPrefix(display, flex);
 		@include propertyWithPrefix(align-items, center);

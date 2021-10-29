@@ -1347,26 +1347,6 @@ body.tutor-screen-course-builder .tutor-course-available-instructors .added-inst
   opacity: 1;
 }
 
-body.tutor-screen-course-builder #tutor-instructors h2 {
-  padding: 15px;
-  line-height: 30px;
-}
-
-body.tutor-screen-course-builder #tutor-instructors h2:before {
-  content: "\e93c";
-  color: var(--tutor-primary-color);
-  font-family: "tutor" !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin-right: 10px;
-}
-
 body.tutor-screen-course-builder .tutor-course-builder-attachments {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2186,15 +2166,6 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-fro
   margin-bottom: 0;
 }
 
-body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-builder-course-price .tutor-styled-radio {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-frontend-builder-course-price .field-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2285,27 +2256,6 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-cou
   background: #3E64DE;
   left: -26px;
   top: 9px;
-}
-
-body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-course-topics .postbox-header h2 {
-  padding: 15px;
-  line-height: 30px;
-  display: block;
-}
-
-body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-course-topics .postbox-header h2:before {
-  content: "\e936";
-  color: var(--tutor-primary-color);
-  font-family: "tutor" !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin-right: 10px;
 }
 
 body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-course-topics .inside {

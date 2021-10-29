@@ -141,6 +141,8 @@ class Course extends Tutor_Base {
 		 * @since 1.9.8
 		 */
 		add_action(  'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
+	
+		add_action( 'tutor/frontend_course_edit/after/category', array($this, 'pricing_metabox') );
 	}
 
 	public function restrict_new_student_entry($content) {
@@ -177,8 +179,15 @@ class Course extends Tutor_Base {
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
+		
 		if ($course_marketplace) {
 			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
+		}
+
+		// Register unified pricing metabox at backend builder
+		$monetize_by = tutor_utils()->get_option('monetize_by');
+    	if ($monetize_by === 'wc' || $monetize_by === 'edd'){
+			add_meta_box( 'tutor-course-pricing', __( 'Course Pricing ', 'tutor' ), array($this, 'pricing_metabox'), $coursePostType );
 		}
 
 		/**
@@ -200,17 +209,30 @@ class Course extends Tutor_Base {
 		}
 	}
 
+	public function pricing_metabox($echo = true) {
+		
+		ob_start();
+		include  tutor()->path.'views/metabox/course-pricing.php';
+		$content = ob_get_clean();
+
+		if (!$echo){
+			return $content;
+		}
+
+		echo $content;
+	}
+
 	public function course_additional_data_meta_box($echo = true){
 
 		ob_start();
 		include  tutor()->path.'views/metabox/course-additional-data.php';
 		$content = ob_get_clean();
 
-		if ($echo){
-			echo $content;
-		}else{
+		if (!$echo){
 			return $content;
 		}
+		
+		echo $content;
 	}
 
 	public function video_metabox($echo = true){
@@ -816,13 +838,14 @@ class Course extends Tutor_Base {
 		$course_price = sanitize_text_field(tutor_utils()->array_get('course_price', $_POST));
 
 		if ( ! $course_price){
+			// Return if price not set or 0
 			return;
 		}
 
 		$monetize_by = tutor_utils()->get_option('monetize_by');
 		$course = get_post($post_ID);
 
-		if ($monetize_by === 'wc'){
+		if ($monetize_by === 'wc') {
 
 			$is_update = false;
 			if ($attached_product_id){
@@ -903,10 +926,7 @@ class Course extends Tutor_Base {
 				}
 
 			}
-
-
 		}
-
 	}
 
 	/**
