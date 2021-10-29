@@ -3039,3 +3039,13 @@ table.course-single-gradebooks a {
     line-height: 160%;
     color: #757c8e;
 }
+
+.list-item-button.booking-available .btn-icon {
+    height: 0px !important;
+    width: 0px !important;
+    margin-right: 10px !important;
+}
+
+.list-item-button.booking-available button:hover span {
+    color: #fff;
+}
