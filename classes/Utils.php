@@ -930,7 +930,10 @@ class Utils {
 		$nonce_value = sanitize_text_field(tutor_utils()->array_get(tutor()->nonce, $data, null));
 		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
 
-		! $matched ? exit( __('Nonce not matched', 'tutor') ) : 0;
+		if(!$matched) {
+			wp_send_json_error( array('message' => __('Nonce not matched. Action failed!', 'tutor') ) );
+			exit;
+		}
 	}
 
 	/**

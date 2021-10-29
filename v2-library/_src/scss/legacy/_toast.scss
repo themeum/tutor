@@ -61,6 +61,22 @@
 			font-size: 14px;
 		}
 	}
+
+	&.tutor-toast-left {
+		position: fixed;
+		bottom: 40px;
+		left: calc(0% + 200px);
+		z-index: 999;
+
+		&>div>div:nth-child(3){
+			align-self: flex-start;
+			padding:8px;
+		}
+
+		&>div>div{
+			padding:0;
+		}
+	}
 }
 
 body.rtl .tutor-toast-parent {

@@ -57,24 +57,3 @@
 		</div>
 	</div>
 </section>
-
-<style>
-	.isHighlighted {}
-
-	.tutor-notification {
-		position: fixed;
-		bottom: 40px;
-		z-index: 999;
-		opacity: 0;
-		visibility: hidden;
-	}
-
-	.tutor-notification.show {
-		opacity: 1;
-		visibility: visible;
-	}
-
-	.tutor-notification .tutor-notification-close{
-		transition: unset;
-	}
-</style>

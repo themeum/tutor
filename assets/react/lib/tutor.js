@@ -181,33 +181,6 @@ jQuery(document).ready(function($){
         $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());
     });
 
-    $(document).on('click', '.tutor-topics-edit-button', function(e){
-        e.preventDefault();
-        var $button = $(this);
-        var topics_id = $button.closest('.tutor-topics-wrap').find('[name="topic_id"]').val();;
-        var topic_title = $button.closest('.tutor-topics-wrap').find('[name="topic_title"]').val();
-        var topic_summery = $button.closest('.tutor-topics-wrap').find('[name="topic_summery"]').val();
-
-        var data = {topic_title: topic_title, topic_summery : topic_summery, topic_id : topics_id, action: 'tutor_update_topic'};
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : data,
-            beforeSend: function () {
-                $button.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
-                    $button.closest('.tutor-modal').removeClass('tutor-is-active');
-                }
-            },
-            complete: function () {
-                $button.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
     /**
      * Delete Lesson from course builder
      */
@@ -744,12 +717,12 @@ jQuery.fn.serializeObject = function()
    return values;
 };
 
-window.tutor_toast=function(title, description, type) {
+window.tutor_toast=function(title, description, type, is_left) {
     var tutor_ob = window._tutorobject || {};
     var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
     if(!jQuery('.tutor-toast-parent').length) {
-        jQuery('body').append('<div class="tutor-toast-parent"></div>');
+        jQuery('body').append('<div class="tutor-toast-parent '+(is_left ? 'tutor-toast-left' : '')+'"></div>');
     }
 
     var icons = {

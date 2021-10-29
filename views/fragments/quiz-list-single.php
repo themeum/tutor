@@ -1,5 +1,5 @@
 <div id="tutor-quiz-<?php echo $data['quiz_id']; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $data['quiz_id']; ?>">
-    <div class="tutor-lesson-top">
+    <div class="tutor-course-content-top">
         <i class="tutor-icon-move"></i>
         <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $data['quiz_id']; ?>" data-topic-id="<?php echo $data['topic_id']; ?>"> 
             <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($data['quiz_title']); ?> 

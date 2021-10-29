@@ -16,9 +16,8 @@ class Course extends Tutor_Base {
 		
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'), 10, 2);
-		add_action('wp_ajax_tutor_add_course_topic', array($this, 'tutor_add_course_topic'));
-		add_action('wp_ajax_tutor_update_topic', array($this, 'tutor_update_topic'));
-
+		add_action('wp_ajax_tutor_save_topic', array($this, 'tutor_save_topic'));
+		
 		//Add Column
 		add_filter( "manage_{$this->course_post_type}_posts_columns", array($this, 'add_column'), 10,1 );
 		add_action( "manage_{$this->course_post_type}_posts_custom_column" , array($this, 'custom_lesson_column'), 10, 2 );
@@ -421,22 +420,27 @@ class Course extends Tutor_Base {
 	/**
 	 * Tutor add course topic
 	 */
-	public function tutor_add_course_topic(){
+	public function tutor_save_topic(){
 		tutor_utils()->checking_nonce();
 
+		// Check required fields
 		if (empty($_POST['topic_title']) ) {
-			wp_send_json_error();
+			wp_send_json_error(array('message' => __('Topic title is required!', 'tutor')));
 		}
-		$course_id = (int) tutor_utils()->avalue_dot('tutor_topic_course_ID', $_POST);
+
+		// Gather parameters
+		$course_id = (int) tutor_utils()->avalue_dot('topic_course_id', $_POST);
+		$topic_id = (int) tutor_utils()->avalue_dot('topic_id', $_POST);
+		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
+		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id);
 		
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
+		// Validate if user can manage the topic
+		if(!tutor_utils()->can_user_manage('course', $course_id) || ($topic_id && !tutor_utils()->can_user_manage('topic', $topic_id))) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
-		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
-		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
-
+		// Create payload to create/update the topic
 		$post_arr = array(
 			'post_type'    => 'topics',
 			'post_title'   => $topic_title,
@@ -446,39 +450,17 @@ class Course extends Tutor_Base {
 			'post_parent'  => $course_id,
 			'menu_order'  => $next_topic_order_id,
 		);
+		$topic_id ? $post_arr['ID']=$topic_id : 0;
 		$current_topic_id = wp_insert_post( $post_arr );
 
 		ob_start();
 		include  tutor()->path.'views/metabox/course-contents.php';
-		$course_contents = ob_get_clean();
-
-		wp_send_json_success(array('course_contents' => $course_contents));
+		
+		wp_send_json_success(array(
+			'topic_title' => $topic_title,
+			'course_contents' => ob_get_clean()
+		));
 	}
-
-	/**
-	 * Update the topic
-	 */
-	public function tutor_update_topic(){
-		tutor_utils()->checking_nonce();
-
-		$topic_id = (int) sanitize_text_field($_POST['topic_id']);
-		$topic_title = sanitize_text_field($_POST['topic_title']);
-		$topic_summery = wp_kses_post($_POST['topic_summery']);
-
-		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-
-		$topic_attr = array(
-			'ID'           => $topic_id,
-			'post_title'   => $topic_title,
-			'post_content' => $topic_summery,
-		);
-		wp_update_post( $topic_attr );
-
-		wp_send_json_success(array('msg' => __('Topic has been updated', 'tutor') ));
-	}
-
 
 	/**
 	 * @param $columns
