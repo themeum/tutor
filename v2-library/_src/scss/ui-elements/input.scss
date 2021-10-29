@@ -104,6 +104,10 @@ textarea.tutor-form-control {
 	padding: 20px;
 	min-height: 180px;
 	resize: vertical;
+
+	&.tutor-textarea-auto-height {
+		min-height: 71px;
+	}
 }
 
 .tutor-input-group {

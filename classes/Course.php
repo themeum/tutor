@@ -59,7 +59,7 @@ class Course extends Tutor_Base {
 		 * Add course level to course settings
 		 * @since v.1.4.1
 		 */
-		add_action('tutor_course/settings_tab_content/after/general', array($this, 'add_course_level_to_settings'));
+		add_filter( 'tutor_course_settings_tabs', array($this, 'add_course_level_to_settings'));
 
 		/**
 		 * Enable Disable Course Details Page Feature
@@ -173,7 +173,7 @@ class Course extends Tutor_Base {
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
 		$course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
-        //add_meta_box( 'tutor-course-levels', __( 'Course Level', 'tutor' ), array($this, 'course_level_metabox'), $coursePostType );
+        
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
@@ -216,18 +216,6 @@ class Course extends Tutor_Base {
 	public function video_metabox($echo = true){
 		ob_start();
 		include  tutor()->path.'views/metabox/video-metabox.php';
-		$content = ob_get_clean();
-
-		if ($echo){
-			echo $content;
-		}else{
-			return $content;
-		}
-	}
-
-	public function course_level_metabox($echo = true){
-		ob_start();
-		include  tutor()->path.'views/metabox/course-level-metabox.php';
 		$content = ob_get_clean();
 
 		if ($echo){
@@ -921,13 +909,24 @@ class Course extends Tutor_Base {
 
 	}
 
-
 	/**
 	 * Add Course level to course settings
 	 * @since v.1.4.1
 	 */
-	public function add_course_level_to_settings(){
-		include  tutor()->path.'views/metabox/course-level-metabox.php';
+	public function add_course_level_to_settings($args){
+		$course_id = get_the_ID();
+		$levels = tutor_utils()->course_levels();
+		$course_level = get_post_meta($course_id, '_tutor_course_level', true);
+
+		$args['general']['fields']['course_level'] = array(
+			'type'      => 'select',
+			'label'     => __('Difficulty Level', 'tutor'),
+			'label_title' => __('Enable', 'tutor'),
+			'default' => $course_level ? $course_level : 'intermediate',
+			'desc'      => __('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor'),
+		);
+
+		return $args;
 	}
 
 	/**

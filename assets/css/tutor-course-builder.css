@@ -1199,6 +1199,13 @@ body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs .course-set
   overflow: hidden;
 }
 
+body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs .course-settings-tabs-container .settings-tabs-container label.tutor-course-setting-label {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
+}
+
 body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #course-settings .inside {
   margin: 0;
   padding: 0;
@@ -2029,6 +2036,15 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-cou
   padding: 0 15px 0 9px;
 }
 
+body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-course-builder-section .tutor-course-field-label {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
+  margin-bottom: 10px;
+  display: block;
+}
+
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header {
   padding: 10px 0px;
   border-bottom: 1px solid #C0C3CB;
@@ -2095,10 +2111,9 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-das
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button {
   margin: 0;
-  padding: 0px 25px;
+  padding: 0px 15px;
   line-height: 30px;
   border: none;
-  border-left: 1px solid #DCDFE5;
   background: transparent;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -2108,12 +2123,6 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-das
   transition: 300ms;
   font-weight: 500;
   white-space: nowrap;
-}
-
-@media (max-width: 991px) {
-  body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button {
-    border-left: none;
-  }
 }
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header .tutor-dashboard-builder-header-left button i {
@@ -2276,14 +2285,6 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-cou
   background: #3E64DE;
   left: -26px;
   top: 9px;
-}
-
-body.tutor-screen-course-builder.tutor-screen-course-builder-frontend span.select2-container.select2-container--open {
-  margin-top: 32px !important;
-}
-
-body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .select2-search__field {
-  min-width: 1em !important;
 }
 
 body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tutor-course-topics .postbox-header h2 {

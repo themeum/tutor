@@ -1926,13 +1926,16 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   $("#tutor-option-form").submit(function (e) {
     e.preventDefault();
+    var button = $("#save_tutor_option");
     var $form = $(this);
     var data = $form.serializeObject();
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: data,
-      beforeSend: function beforeSend() {},
+      beforeSend: function beforeSend() {
+        button.addClass('tutor-updating-message');
+      },
       success: function success(resp) {
         var _ref = resp || {},
             _ref$data = _ref.data,
@@ -1949,7 +1952,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         tutor_toast('Error!', message, 'tutor', true);
       },
-      complete: function complete() {}
+      complete: function complete() {
+        button.removeClass('tutor-updating-message');
+      }
     });
   });
 
@@ -3125,7 +3130,13 @@ window.jQuery(document).ready(function ($) {
         $that.removeClass('updating-icon');
       }
     });
+  }); // Textarea auto height
+
+  $(document).on('input', '.tutor-textarea-auto-height', function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
   });
+  $('.tutor-textarea-auto-height').trigger('input');
 });
 
 /***/ }),

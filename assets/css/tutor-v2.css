@@ -9943,6 +9943,73 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   margin-right: 6px;
 }
 
+body.tutor-screen-course-builder .select2-container--open {
+  margin-top: 32px;
+}
+
+body.tutor-screen-course-builder .select2-container {
+  margin-bottom: 20px;
+  width: 100% !important;
+}
+
+body.tutor-screen-course-builder .select2-container ul.select2-selection__rendered {
+  padding: 4px 9px;
+  display: block;
+}
+
+body.tutor-screen-course-builder .select2-container li.select2-selection__choice {
+  background: #E3E5EB;
+  line-height: 29px;
+  border-radius: 100px;
+  padding: 1px 9px 1px 16.5px;
+  margin: 5px;
+  border: none;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #41454F;
+}
+
+body.tutor-screen-course-builder .select2-container li.select2-selection__choice .select2-selection__choice__remove {
+  margin-left: 11px;
+  float: right;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-search__field {
+  padding: 8px 3px 8px 6px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-search__field::-webkit-input-placeholder {
+  color: #abafb6;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-search__field::-moz-placeholder {
+  color: #abafb6;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-search__field:-ms-input-placeholder {
+  color: #abafb6;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-search__field:-moz-placeholder {
+  color: #abafb6;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-selection--single, body.tutor-screen-course-builder .select2-container .select2-selection--multiple {
+  border-color: #dcdfe5;
+}
+
+body.tutor-screen-course-builder .select2-container.select2-container--focus .select2-selection--single, body.tutor-screen-course-builder .select2-container.select2-container--focus .select2-selection--multiple {
+  border-color: var(--tutor-primary-color);
+}
+
+body.tutor-screen-course-builder .select2-container .select2-search__field {
+  min-width: 1em !important;
+}
+
 /**
  * Add option disabled
  * @since 1.9.7
@@ -11662,6 +11729,10 @@ textarea.tutor-form-control {
   padding: 20px;
   min-height: 180px;
   resize: vertical;
+}
+
+textarea.tutor-form-control.tutor-textarea-auto-height {
+  min-height: 71px;
 }
 
 .tutor-input-group {
