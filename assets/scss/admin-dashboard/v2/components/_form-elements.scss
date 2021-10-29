@@ -1,30 +1,5 @@
-.tutor-backend-settings-page {
-}
-.type-toggle-grid,
 .tutor-option-field-row,
 .tutor-dashboard-page {
-  // Toggle/Switch
-  .tutor-form-toggle {
-    span[class^="label-"] {
-      @include getTypography(400, 15px, 160%);
-      color: $text-primary;
-      &.label-before {
-        margin-right: 5px;
-      }
-    }
-
-    input {
-      ~ .tutor-form-toggle-control {
-        background-color: #cdcfd5;
-        &::before {
-          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
-        }
-      }
-      &:checked ~ .tutor-form-toggle-control {
-        background-color: $brand-wordpress;
-      }
-    }
-  }
   // Input, Textarea, Select etc.
   input[type="radio"] {
     background-size: 120%;
@@ -130,5 +105,28 @@
   .tutor-form-check-input {
     width: 20px;
     height: 20px;
+  }
+}
+
+// Toggle/Switch
+.tutor-form-toggle {
+  span[class^="label-"] {
+    @include getTypography(400, 15px, 160%);
+    color: $text-primary;
+    &.label-before {
+      margin-right: 5px;
+    }
+  }
+
+  input {
+    ~ .tutor-form-toggle-control {
+      background-color: #cdcfd5;
+      &::before {
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
+      }
+    }
+    &:checked ~ .tutor-form-toggle-control {
+      background-color: $brand-wordpress;
+    }
   }
 }
