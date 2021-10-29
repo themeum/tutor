@@ -13,9 +13,6 @@
 	}
 	&-grid-4 {
 		grid-template-columns: repeat(4, 1fr);
-		.tutor-course-listing-item {
-			// max-width: 255px;
-		}
 	}
 
 	// Course Grid with Filter
@@ -206,6 +203,9 @@
 		label {
 			@extend .color-text-title;
 			@extend .text-regular-body;
+		}
+		input.tutor-form-check-input[type='checkbox'] {
+			// border-color: $stroke-light-30;
 		}
 	}
 	&.tutor-filter-course-grid-2 {

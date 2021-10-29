@@ -5781,6 +5781,46 @@
   --tutor-bg-grey-light: rgba(243, 243, 243, 0.3);
   --tutor-bg-dark-grey: #656565;
   --tutor-bg-black: #000000;
+  --tutor-brand-wordpress: #1973aa;
+  --tutor-brand-wordpress-hover: #166494;
+  --tutor-color-white: #ffffff;
+  --tutor-color-brand: #3e64de;
+  --tutor-color-success: #24a148;
+  --tutor-color-warning: #ed9700;
+  --tutor-color-error: #f44337;
+  --tutor-text-primary: #161616;
+  --tutor-text-title: #353535;
+  --tutor-text-subsued: #5b616f;
+  --tutor-text-hints: #7A7A7A;
+  --tutor-text-white: #ffffff;
+  --tutor-text-brand: #3e64de;
+  --tutor-text-success: #24a148;
+  --tutor-text-warning: #ed9700;
+  --tutor-text-error: #f44337;
+  --tutor-design-dark: #1a1b1e;
+  --tutor-design-grey: #41454f;
+  --tutor-design-white: #ffffff;
+  --tutor-design-brand: #3e64de;
+  --tutor-design-success: #24a148;
+  --tutor-design-warning: #ed9700;
+  --tutor-design-danger: #f44337;
+  --tutor-design-error: #f44337;
+  --tutor-stroke-light-10: #eff1f6;
+  --tutor-stroke-light-20: #e0e2ea;
+  --tutor-stroke-light-30: #cdcfd5;
+  --tutor-stroke-gray: #c0c3cb;
+  --tutor-stroke-blue: #3e64de;
+  --tutor-stroke-danger: #f44337;
+  --tutor-stroke-success: #24a148;
+  --tutor-bg-brand: #3e64de;
+  --tutor-bg-white: #ffffff;
+  --tutor-bg-gray-10: #eff1f6;
+  --tutor-bg-gray-20: #e3e5eb;
+  --tutor-bg-dark-10: #212327;
+  --tutor-bg-dark-20: #31343b;
+  --tutor-bg-dark-30: #41454f;
+  --tutor-shadow-1: 0px 8px 16px rgba(41, 45, 47, 0.08);
+  --tutor-shadow-3: 0px 6px 20px rgba(28, 49, 104, 0.1);
 }
 
 .tutor-h1,
@@ -11658,7 +11698,7 @@ input.tutor-form-check-input {
   width: 24px;
   height: 24px;
   margin: 0;
-  border: 2px solid var(--tutor-border-color);
+  border: 2px solid var(--tutor-stroke-gray);
   border-radius: 4px;
   cursor: pointer;
   appearance: none;
@@ -11667,7 +11707,7 @@ input.tutor-form-check-input {
   -webkit-appearance: none;
   -moz-appearance: none;
   -webkit-print-color-adjust: exact;
-  background-size: 14px;
+  background-size: 12px;
   background-position: center;
   background-repeat: no-repeat;
   -webkit-transition: 300ms;
