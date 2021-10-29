@@ -16,7 +16,7 @@
 <?php
     $course_id = get_the_ID();
     $is_public = get_post_meta( $course_id, '_tutor_is_public_course', true )=='yes';
-    $enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">' . __('Get Enrolled', 'tutor') . '</a>' ) . '</div>';
+    $enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">' . __('Enroll Course', 'tutor') . '</a>' ) . '</div>';
     $free_html = $enroll_btn;
     if (tutor_utils()->is_course_purchasable()) {
 	    $enroll_btn = tutor_course_loop_add_to_cart(false);
