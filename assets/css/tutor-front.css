@@ -6176,6 +6176,27 @@ table.course-single-gradebooks a {
   -webkit-align-items: center;
 }
 
+.tutor-course-listing-filter {
+  padding-top: 50px !important;
+  margin: 0px auto;
+}
+
+.tutor-course-listing-filter .tutor-course-filter-loop-container {
+  margin-top: 0px;
+}
+
+.tutor-course-archive-filters-wrap select {
+  font-family: var(--body-font);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 21px;
+  border: 1px solid #e1e7ec;
+  border-radius: 4px;
+  padding: 12px 19px;
+  color: #57586e;
+  outline: none;
+}
+
 .list-item-price ins {
   text-decoration: none;
 }
