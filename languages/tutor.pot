@@ -657,7 +657,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:331, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, templates/dashboard/reviews.php:56, templates/dashboard/reviews.php:83, views/elements/filters.php:115, views/fragments/announcement-list.php:213, views/fragments/announcement-list.php:205, views/fragments/announcement-list.php:254, views/pages/course-list.php:161, templates/dashboard/assignments/submitted.php:69, templates/dashboard/assignments/submitted.php:113, templates/dashboard/my-quiz-attempts/attempts-details.php:131, templates/dashboard/my-quiz-attempts/attempts-details.php:143
+#: classes/Instructors_List.php:331, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, templates/dashboard/reviews.php:56, templates/dashboard/reviews.php:83, views/elements/filters.php:101, views/fragments/announcement-list.php:213, views/fragments/announcement-list.php:205, views/fragments/announcement-list.php:254, views/pages/course-list.php:161, templates/dashboard/assignments/submitted.php:69, templates/dashboard/assignments/submitted.php:113, templates/dashboard/my-quiz-attempts/attempts-details.php:131, templates/dashboard/my-quiz-attempts/attempts-details.php:143
 msgid "Date"
 msgstr ""
 
@@ -681,7 +681,7 @@ msgstr ""
 msgid "Couldn't create lesson."
 msgstr ""
 
-#: classes/Lesson.php:271, classes/Options.php:217, classes/Options_V2.php:382, classes/Options_V2.php:724, classes/Options_V2.php:1199, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:340, classes/Tutor_List_Table.php:358, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/assignments.php:106, templates/dashboard/question-answer.php:28, templates/dashboard/reviews.php:97, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, views/elements/filters.php:52, views/elements/search-filter.php:28, views/fragments/announcement-list.php:113, views/pages/quiz_attempts.php:86, views/pages/view_attempt.php:73, templates/dashboard/assignments/review.php:46, templates/dashboard/assignments/submitted.php:28, templates/single/quiz/top.php:27
+#: classes/Lesson.php:271, classes/Options.php:217, classes/Options_V2.php:382, classes/Options_V2.php:724, classes/Options_V2.php:1199, classes/Question_Answers_List.php:75, classes/Quiz_Attempts_List.php:340, classes/Tutor_List_Table.php:358, classes/Tutor_Setup.php:562, templates/student-public-profile.php:106, templates/dashboard/assignments.php:106, templates/dashboard/question-answer.php:28, templates/dashboard/reviews.php:97, templates/shortcode/tutor-instructor.php:41, templates/shortcode/tutor-instructor.php:28, views/elements/filters.php:47, views/elements/search-filter.php:28, views/fragments/announcement-list.php:113, views/pages/quiz_attempts.php:86, views/pages/view_attempt.php:73, templates/dashboard/assignments/review.php:46, templates/dashboard/assignments/submitted.php:28, templates/single/quiz/top.php:27
 msgid "Course"
 msgstr ""
 
@@ -726,7 +726,7 @@ msgstr ""
 msgid "Keyword Search"
 msgstr ""
 
-#: classes/Options.php:110, classes/Options_V2.php:763, templates/course-filter/filters.php:33, templates/shortcode/instructor-filter.php:50, views/elements/filters.php:76
+#: classes/Options.php:110, classes/Options_V2.php:763, templates/course-filter/filters.php:33, templates/shortcode/instructor-filter.php:50, views/elements/filters.php:68
 msgid "Category"
 msgstr ""
 
@@ -2440,7 +2440,7 @@ msgstr ""
 msgid "Add Product"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:108, templates/dashboard/assignments.php:53, views/elements/filters.php:99
+#: classes/Tutor_List_Table.php:384, classes/Tutor_List_Table.php:1277, templates/dashboard/announcements.php:108, templates/dashboard/assignments.php:53, views/elements/filters.php:88
 msgid "Sort By"
 msgstr ""
 
@@ -2448,11 +2448,11 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:48, views/elements/filters.php:65, views/fragments/announcement-list.php:43, views/pages/course-list.php:352
+#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:48, views/elements/filters.php:60, views/fragments/announcement-list.php:43, views/pages/course-list.php:352
 msgid "No course found"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/elements/filters.php:126, views/options/settings.php:22, views/options/tools.php:17, views/pages/question_answer.php:23, views/pages/withdraw_requests.php:13
+#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/elements/filters.php:114, views/options/settings.php:22, views/options/tools.php:17, views/pages/question_answer.php:23, views/pages/withdraw_requests.php:13
 msgid "Search"
 msgstr ""
 
@@ -3354,15 +3354,15 @@ msgstr ""
 msgid "Notify all students of your course"
 msgstr ""
 
-#: templates/dashboard/announcements.php:77, views/pages/announcements.php:96
+#: templates/dashboard/announcements.php:77, views/pages/announcements.php:94
 msgid "Add New Announcement"
 msgstr ""
 
-#: templates/dashboard/announcements.php:110, templates/dashboard/assignments.php:55, views/elements/filters.php:106
+#: templates/dashboard/announcements.php:110, templates/dashboard/assignments.php:55, views/elements/filters.php:95
 msgid "ASC"
 msgstr ""
 
-#: templates/dashboard/announcements.php:111, templates/dashboard/assignments.php:56, views/elements/filters.php:103
+#: templates/dashboard/announcements.php:111, templates/dashboard/assignments.php:56, views/elements/filters.php:92
 msgid "DESC"
 msgstr ""
 
@@ -3534,7 +3534,7 @@ msgstr ""
 msgid "Rating"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:17, views/elements/filters.php:57, templates/dashboard/enrolled-courses/active-courses.php:15, templates/dashboard/enrolled-courses/completed-courses.php:15
+#: templates/dashboard/enrolled-courses.php:17, views/elements/filters.php:52, templates/dashboard/enrolled-courses/active-courses.php:15, templates/dashboard/enrolled-courses/completed-courses.php:15
 msgid "All Courses"
 msgstr ""
 
@@ -3978,15 +3978,15 @@ msgstr ""
 msgid "Yes, I'am Sure"
 msgstr ""
 
-#: views/elements/filters.php:18, views/elements/search-filter.php:16, views/elements/search-filter.php:36
+#: views/elements/filters.php:19, views/elements/search-filter.php:16, views/elements/search-filter.php:36
 msgid "Apply"
 msgstr ""
 
-#: views/elements/filters.php:89
+#: views/elements/filters.php:81
 msgid "No category found"
 msgstr ""
 
-#: views/elements/filters.php:81
+#: views/elements/filters.php:73
 msgid "All Category"
 msgstr ""
 
@@ -4370,75 +4370,79 @@ msgstr ""
 msgid "This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer."
 msgstr ""
 
-#: views/modal/edit_quiz.php:189
-msgid "Quiz Auto Start"
-msgstr ""
-
-#: views/modal/edit_quiz.php:192
-msgid "If you enable this option, the quiz will start automatically after the page is loaded."
+#: views/modal/edit_quiz.php:186
+msgid "Advance Settings"
 msgstr ""
 
 #: views/modal/edit_quiz.php:198
-msgid "Question Layout"
+msgid "Quiz Auto Start"
 msgstr ""
 
 #: views/modal/edit_quiz.php:201
+msgid "If you enable this option, the quiz will start automatically after the page is loaded."
+msgstr ""
+
+#: views/modal/edit_quiz.php:206
+msgid "Question Layout"
+msgstr ""
+
+#: views/modal/edit_quiz.php:208
 msgid "Set question layout view"
 msgstr ""
 
-#: views/modal/edit_quiz.php:202
+#: views/modal/edit_quiz.php:209
 msgid "Single Question"
 msgstr ""
 
-#: views/modal/edit_quiz.php:203
+#: views/modal/edit_quiz.php:210
 msgid "Question Pagination"
 msgstr ""
 
-#: views/modal/edit_quiz.php:204
+#: views/modal/edit_quiz.php:211
 msgid "Question below each other"
 msgstr ""
 
-#: views/modal/edit_quiz.php:209
+#: views/modal/edit_quiz.php:216
 msgid "Questions Order"
 msgstr ""
 
-#: views/modal/edit_quiz.php:212
+#: views/modal/edit_quiz.php:218
 msgid "Random"
 msgstr ""
 
-#: views/modal/edit_quiz.php:213
+#: views/modal/edit_quiz.php:219
 msgid "Sorting"
 msgstr ""
 
-#: views/modal/edit_quiz.php:215
+#: views/modal/edit_quiz.php:220
 msgid "Ascending"
 msgstr ""
 
-#: views/modal/edit_quiz.php:216
+#: views/modal/edit_quiz.php:221
 msgid "Descending"
 msgstr ""
 
-#: views/modal/edit_quiz.php:230
+#: views/modal/edit_quiz.php:228
 msgid "Hide question number"
 msgstr ""
 
-#: views/modal/edit_quiz.php:233
+#: views/modal/edit_quiz.php:230
 msgid "Show/hide question number during attempt."
 msgstr ""
 
-#: views/modal/edit_quiz.php:237
+#: views/modal/edit_quiz.php:234
 msgid "Short answer characters limit"
 msgstr ""
 
-#: views/modal/edit_quiz.php:243
+#: views/modal/edit_quiz.php:236
 msgid "Student will place answer in short answer question type within this characters limit."
 msgstr ""
 
-#: views/modal/edit_quiz.php:247
+#: views/modal/edit_quiz.php:240
 msgid "Open-Ended/Essay questions answer character limit"
 msgstr ""
 
-#: views/modal/edit_quiz.php:253
+#: views/modal/edit_quiz.php:242
 msgid "Students will place the answer in the Open-Ended/Essay question type within this character limit."
 msgstr ""
 
@@ -4630,7 +4634,7 @@ msgstr ""
 msgid "Add new instructor"
 msgstr ""
 
-#: views/pages/announcements.php:90
+#: views/pages/announcements.php:89
 msgid "Create a new announcement and notify your students about it"
 msgstr ""
 

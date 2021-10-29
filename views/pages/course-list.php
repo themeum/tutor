@@ -157,7 +157,7 @@ $available_status = array(
 							</div>
 						</th>
 						<th>
-							  <div class="text-regular-small color-text-subsued">
+							<div class="text-regular-small color-text-subsued">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
 							</div>
 						</th>
