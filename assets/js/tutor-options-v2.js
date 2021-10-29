@@ -61,10 +61,6 @@ jQuery(document).ready(function ($) {
     $(".tutor-notification, .search_result").removeClass("show");
   });
 
-  $(".tutor-notification-close").click(function (e) {
-    $(".tutor-notification").removeClass("show");
-  });
-
   $("#save_tutor_option").click(function (e) {
     e.preventDefault();
     $("#tutor-option-form").submit();
