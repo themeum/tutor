@@ -74,13 +74,13 @@ $current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 								<?php
 									if (!empty($field['label'])){
 										?>
-										<div class="tutor-bs-col-12 tutor-bs-col-lg-4">
+										<div class="tutor-bs-col-12">
 											<label class="tutor-course-setting-label"><?php echo $field['label']; ?></label>
 										</div>
 										<?php
 									}
 								?>
-								<div class="tutor-bs-col-12 tutor-bs-col-lg-8">
+								<div class="tutor-bs-col-12">
 									<?php
 										switch($field['type']) {
 											case 'number' :

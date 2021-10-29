@@ -3533,11 +3533,6 @@ table.tutor-table p {
   text-decoration: underline !important;
 }
 
-/* Fixing course builder css overlap issue */
-#tutor-instructors h2 {
-  display: block;
-}
-
 #settings-tab-general .tutor-option-field-row input[type="number"] {
   width: 185px;
 }

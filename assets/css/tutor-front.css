@@ -975,37 +975,6 @@ body {
   color: var(--tutor-primary-color);
 }
 
-.tutor-styled-radio > span {
-  position: relative;
-  padding-left: 30px;
-  cursor: pointer;
-}
-
-.tutor-styled-radio > span::before {
-  content: '';
-  height: 18px;
-  width: 18px;
-  background: #F1F3F7;
-  border: 1px solid #DCDFE5;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  margin-top: -9px;
-  left: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  -webkit-transition: 200ms;
-  transition: 200ms;
-}
-
-.tutor-styled-radio > input {
-  display: none !important;
-}
-
-.tutor-styled-radio > input:checked + span::before {
-  border: 5px solid var(--tutor-primary-color);
-}
-
 /*
 .tutor-course-content-content{
   font-size: 14px;
