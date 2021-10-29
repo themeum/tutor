@@ -148,7 +148,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                     <!--.tutor-course-builder-section-title-->
                     <div class="tutor-course-builder-section-content">
                         <div class="tutor-mb-30">
-                            <label class="tutor-form-label"><?php _e('Course Title', 'tutor'); ?></label>
+                            <label class="tutor-course-field-label"><?php _e('Course Title', 'tutor'); ?></label>
                             <div class="tooltip-wrap tutor-bs-d-block">
                                 <span class="tooltip-txt tooltip-right">
                                     <?php _e('60', 'tutor'); ?>
@@ -158,7 +158,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         </div>
                         
                         <div class="tutor-mb-30">
-                            <label class="tutor-form-label"><?php _e('Description', 'tutor'); ?></label>
+                            <label class="tutor-course-field-label"><?php _e('Description', 'tutor'); ?></label>
                             <div class="tutor-input-group tutor-mb-15">
                                 <?php
                                     $editor_settings = array(
@@ -196,7 +196,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                 $_tutor_course_price_type = tutor_utils()->price_type();
                                 ?>
                                     <div class="tutor-mb-30">
-                                        <label class="tutor-form-label"><?php _e('Course Price', 'tutor'); ?></label>
+                                        <label class="tutor-course-field-label"><?php _e('Course Price', 'tutor'); ?></label>
                                         <div class="tutor-input-group tutor-mb-15">
                                             <div class="tutor-bs-row">
                                                 <div class="tutor-bs-col-4">
@@ -223,7 +223,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         ?>
 
                         <div class="tutor-mb-30">
-                            <label class="tutor-form-label"><?php _e('Course Thumbnail', 'tutor'); ?></label>
+                            <label class="tutor-course-field-label"><?php _e('Course Thumbnail', 'tutor'); ?></label>
                             <div class="tutor-input-group tutor-mb-15">
                                 <div class="tutor-thumbnail-uploader">
                                     <div class="thumbnail-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10 tutor-p-15">

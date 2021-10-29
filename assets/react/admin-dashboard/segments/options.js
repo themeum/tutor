@@ -100,13 +100,17 @@ document.addEventListener("DOMContentLoaded", function() {
   $("#tutor-option-form").submit(function(e) {
     e.preventDefault();
 
+    var button = $("#save_tutor_option");
     var $form = $(this);
     var data = $form.serializeObject();
+
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: data,
-      beforeSend: function() {},
+      beforeSend: function() {
+        button.addClass('tutor-updating-message');
+      },
       success: function(resp) {
         const {data={}, success} = resp || {};
         const {message=__('Something Went Wrong!', 'tutor')} = data;
@@ -118,7 +122,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         tutor_toast('Error!', message, 'tutor', true);
       },
-      complete: function() {},
+      complete: function() {
+        button.removeClass('tutor-updating-message');
+      },
     });
   });
 

@@ -62,6 +62,15 @@
 			}
 		}
 	} 
+
+	.tutor-course-field-label {
+		font-style: normal;
+		font-weight: 500;
+		font-size: 16px;
+		color: #212327;
+		margin-bottom: 10px;
+		display: block;
+	}
 }
 
 .tutor-dashboard-builder-header{
@@ -112,24 +121,22 @@
 
 		button{
 			margin: 0;
-			padding: 0px 25px;
+			padding: 0px 15px;
 			line-height: 30px;
 			border: none;
-			border-left: 1px solid #DCDFE5;
 			background: transparent;
 			display: inline-flex;
 			color: var(--tutor-text-color);
 			transition: 300ms;
 			font-weight: 500;
 			white-space: nowrap;
-			@media (max-width: 991px){
-				border-left: none;
-			}
+			
 			i{
 				font-size: 24px;
 				line-height: 30px;
 				margin-right: 9px;
 			}
+
 			&:hover{
 				color: var(--tutor-primary-color);
 				background: transparent;
@@ -137,7 +144,6 @@
 					color: var(--tutor-primary-color)
 				}
 			}
-			
 		}
 	}
 }
@@ -257,12 +263,4 @@ Content Drip (Pro)
             }
         }
     }
-}
-
-span.select2-container.select2-container--open {
-    margin-top: 32px !important;
-}
-
-.select2-search__field {
-    min-width: 1em !important;
 }
