@@ -4842,7 +4842,7 @@
   color: #212327;
 }
 
-.color-text-title, .tutor-wp-dashboard-filter-items .tutor-form-label {
+.color-text-title, .tutor-wp-dashboard-filter-items .tutor-form-label, .tutor-course-listing-filter .filter-widget-checkboxes label {
   color: #41454f;
 }
 
@@ -5578,7 +5578,7 @@
   line-height: 150%;
 }
 
-.text-regular-body {
+.text-regular-body, .tutor-course-listing-filter .filter-widget-checkboxes label {
   font-weight: 400;
   font-size: 16px;
   line-height: 162%;
@@ -5650,7 +5650,7 @@
   line-height: 160%;
 }
 
-.text-medium-small, .tutor-badge-label, .tutor-course-listing-item-grid-4 .tutor-ratings .tutor-rating-text {
+.text-medium-small, .tutor-badge-label, .tutor-course-listing-item-sm .tutor-ratings .tutor-rating-text {
   font-weight: 500;
   font-size: 13px;
   line-height: 162%;
@@ -5942,6 +5942,10 @@
 
 .tutor-bg-light {
   background-color: #fdfdfd;
+}
+
+.tutor-bg-gray-10 {
+  background-color: #eff1f6 !important;
 }
 
 .tutor-text-nowrap {
@@ -9163,6 +9167,23 @@
   font-size: 14px;
 }
 
+.tutor-toast-parent.tutor-toast-left {
+  position: fixed;
+  bottom: 40px;
+  left: calc(0% + 200px);
+  z-index: 999;
+}
+
+.tutor-toast-parent.tutor-toast-left > div > div:nth-child(3) {
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  padding: 8px;
+}
+
+.tutor-toast-parent.tutor-toast-left > div > div {
+  padding: 0;
+}
+
 body.rtl .tutor-toast-parent {
   right: auto;
   left: 50px;
@@ -10209,7 +10230,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 
 .tutor-modal .tutor-modal-body-alt {
   padding: 24px 30px;
-  background: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .tutor-modal .tutor-modal-footer {
@@ -14445,10 +14466,12 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-course-listing {
-  max-width: 1110px;
-  margin: 0 auto;
   display: grid;
   grid-gap: 30px;
+}
+
+.tutor-course-listing-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .tutor-course-listing-grid-3 {
@@ -14500,17 +14523,17 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border: none;
   border-radius: 50%;
   font-size: 20px;
-  -webkit-transition: 200ms linear;
-  transition: 200ms linear;
+  -webkit-transition: 150ms linear;
+  transition: 150ms linear;
+}
+
+.tutor-course-listing-item-head .save-bookmark-btn.bookmark-is-filled {
+  background: rgba(27, 27, 27, 0.4);
 }
 
 .tutor-course-listing-item-head .save-bookmark-btn:hover {
   background: #3e64de;
   color: #ffffff;
-}
-
-.tutor-course-listing-item-head .save-bookmark-btn.bookmark-is-filled {
-  background: rgba(27, 27, 27, 0.4);
 }
 
 .tutor-course-listing-item-body {
@@ -14600,13 +14623,20 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           justify-content: center;
   width: 40px;
   height: 40px;
+  -webkit-transition: 150ms linear;
+  transition: 150ms linear;
+}
+
+.tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost .btn-icon:before {
+  margin-left: 3px;
+  margin-top: 1px;
 }
 
 .tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost:hover .btn-icon {
   background: #f6f8fd;
 }
 
-.tutor-course-listing-item-grid-4 .list-item-meta .meta-icon {
+.tutor-course-listing-item-sm .list-item-meta .meta-icon {
   font-size: 20px;
 }
 
@@ -14620,6 +14650,42 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-course-listing-card-demo .tutor-course-listing-item {
   display: initial;
+}
+
+.tutor-course-listing-filter {
+  max-width: 1110px;
+  display: grid;
+}
+
+@media (min-width: 1200px) {
+  .tutor-course-listing-filter {
+    grid-template-columns: 1fr 2.5fr;
+  }
+  .tutor-course-listing-filter .filter-widget-input-wrapper {
+    margin-top: 42px;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .tutor-course-listing-filter .filter-widget-input-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-gap: 30px;
+  }
+}
+
+.tutor-course-listing-filter.tutor-filter-course-grid-2 {
+  grid-gap: 60px;
+}
+
+.tutor-course-listing-filter.tutor-filter-course-grid-3 {
+  grid-gap: 30px;
+}
+
+@media (min-width: 1200px) {
+  .tutor-course-filter-widget .filter-widget-input:not(:last-child) {
+    margin-bottom: 50px;
+  }
 }
 
 .tooltip-wrap {

@@ -329,7 +329,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:140, templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:131, views/fragments/announcement-list.php:173, views/metabox/course-topics.php:75, views/metabox/course-topics.php:111, views/metabox/course-topics.php:144, views/modal/review.php:34, views/modal/topic-form.php:46, templates/dashboard/reviews/given-reviews.php:122, templates/dashboard/reviews/given-reviews.php:153, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: classes/Backend_Page_Trait.php:140, templates/dashboard/my-courses.php:109, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:131, views/fragments/announcement-list.php:173, views/metabox/course-topics.php:76, views/metabox/course-topics.php:116, views/metabox/course-topics.php:149, views/modal/review.php:34, views/modal/topic-form.php:46, templates/dashboard/reviews/given-reviews.php:122, templates/dashboard/reviews/given-reviews.php:153, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -1494,7 +1494,7 @@ msgstr ""
 msgid "Logged Only"
 msgstr ""
 
-#: classes/Options_V2.php:440, views/metabox/course-contents.php:123, views/metabox/course-topics.php:95
+#: classes/Options_V2.php:440, views/metabox/course-contents.php:123, views/metabox/course-topics.php:96
 msgid "Lesson"
 msgstr ""
 
@@ -4142,27 +4142,27 @@ msgstr ""
 msgid "Add Topic"
 msgstr ""
 
-#: views/metabox/course-topics.php:66, views/modal/question_form.php:9, templates/dashboard/assignments/review.php:38, templates/dashboard/assignments/submitted.php:22, templates/single/quiz/body.php:389
+#: views/metabox/course-topics.php:67, views/modal/question_form.php:9, templates/dashboard/assignments/review.php:38, templates/dashboard/assignments/submitted.php:22, templates/single/quiz/body.php:389
 msgid "Back"
 msgstr ""
 
-#: views/metabox/course-topics.php:69
+#: views/metabox/course-topics.php:70
 msgid "Save & Next"
 msgstr ""
 
-#: views/metabox/course-topics.php:80
+#: views/metabox/course-topics.php:81
 msgid "Add To Questions"
 msgstr ""
 
-#: views/metabox/course-topics.php:106
+#: views/metabox/course-topics.php:111
 msgid "Update Lesson"
 msgstr ""
 
-#: views/metabox/course-topics.php:126
+#: views/metabox/course-topics.php:131
 msgid "Assignment"
 msgstr ""
 
-#: views/metabox/course-topics.php:139
+#: views/metabox/course-topics.php:144
 msgid "Update Assignment"
 msgstr ""
 
