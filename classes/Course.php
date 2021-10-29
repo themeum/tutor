@@ -143,7 +143,7 @@ class Course extends Tutor_Base {
 		add_action(  'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
 
 	}
-
+	
 	public function restrict_new_student_entry($content) {
 
 		if(!tutor_utils()->is_course_fully_booked()) {
