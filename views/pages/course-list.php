@@ -166,12 +166,12 @@ $available_status = array(
 							<?php esc_html_e( 'Title', 'tutor' ); ?>
 							</div>
 						</th>
-						<th>
+						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center color-text-subsued">
 								<span class="text-regular-small">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 								</span>
-								<span class="ttr-ordering-a-to-z-filled"></span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
 							</div>
 						</th>	
 						<th>
