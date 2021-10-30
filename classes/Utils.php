@@ -5846,9 +5846,9 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 * @param array $filter
-	 *
+	 * @param int $user_id | optional.
+	 * @param array $filter | ex: 
+	 * array('status' => '','date' => '', 'order' => '', 'start' => 10, 'per_page' => 10,'search' => '')
 	 * get withdrawal history
 	 *
 	 * @return object
