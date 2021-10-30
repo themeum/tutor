@@ -3957,6 +3957,14 @@ table.tutor-table p {
   padding: 0 0 30px 0;
 }
 
+.tutor-wp-dashboard-filter-items {
+  display: inherit;
+}
+
+.row-actions {
+  left: 0;
+}
+
 /* /.report-course-list - end */
 body {
   -webkit-font-smoothing: antialiased;
@@ -7253,6 +7261,24 @@ li.tutor-option-nav-item h4 {
   color: #1973AA;
   padding: 20px;
   font-size: 24px;
+}
+
+table.tutor-ui-table.table-instructors .instructor-action {
+  min-width: 70px;
+  text-align: center;
+}
+
+table.tutor-ui-table.table-instructors .td-action-btns .toggle-row,
+table.tutor-ui-table.my-quiz-attempts .td-action-btns .toggle-row,
+table.tutor-ui-table.table-instructors .toggle-row {
+  display: none;
+}
+
+@media only screen and (min-width: 1201px) {
+  .my-quiz-attempts .td-statement-infor {
+    margin-top: -24px;
+    margin-left: 25px;
+  }
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */

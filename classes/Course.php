@@ -144,7 +144,7 @@ class Course extends Tutor_Base {
 	
 		add_action( 'tutor/frontend_course_edit/after/category', array($this, 'pricing_metabox') );
 	}
-
+	
 	public function restrict_new_student_entry($content) {
 
 		if(!tutor_utils()->is_course_fully_booked()) {
@@ -152,10 +152,8 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 			
-		return '<span class="tutor-course-booked-fully">
-			<img src="' . tutor()->url . '/assets/images/icon-warning-info.svg"/>
-			<span>' . __('Fully booked', 'tutor') . '</span>
-		</span>';
+		
+		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon color-design-warning ttr-circle-outline-info-filled"></span></div><div class="text-medium-caption color-text-primary">Fully Booked</div></div>';
 	}
 
 	function restrict_media( $where ){
