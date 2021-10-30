@@ -25,8 +25,7 @@
         }else{
             $action_class = apply_filters('tutor_popup_login_class', 'cart-required-login');
         }
-
-		//echo '<button className="save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center"><span className="ttr-fav-line-filled">'.get_tutor_course_level().'</span></button>';
-		echo '<button class="save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center"><span class="ttr-fav-line-filled"><a href="javascript:;" class="'.$action_class.' '.$has_wish_list.' " data-course-id="'.$course_id.'"></a> </span></button>';
+        
+		echo '<a href="javascript:;" class="'.$action_class.' '.$has_wish_list.' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'.$course_id.'"><span class="ttr-fav-line-filled"></span></a>';
 		?>
 </div>

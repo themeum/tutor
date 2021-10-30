@@ -3133,7 +3133,8 @@
   padding-top: 30px;
 }
 
-.tutor-dashboard .tutor-dashboard-content > h3, .tutor-dashboard .tutor-dashboard-content > h4 {
+.tutor-dashboard .tutor-dashboard-content > h3,
+.tutor-dashboard .tutor-dashboard-content > h4 {
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
@@ -3791,6 +3792,10 @@
   font-weight: normal;
   font-size: 15px;
   color: #5b616f;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-courses .tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost .btn-icon {
+  font-size: 18px !important;
 }
 
 /*# sourceMappingURL=tutor-frontend-dashboard.css.map */
