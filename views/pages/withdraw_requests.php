@@ -189,8 +189,17 @@ $filters = array(
 								<td>
 									<?php
 										$updated_at = $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '';
-										echo esc_html( $updated_at );
-									?>
+									if ( 'pending' === $list->status ) :
+										?>
+										<button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+										<?php esc_html_e( 'Approve', 'tutor' ); ?>
+										</button>
+										<button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+										<?php esc_html_e( 'Reject', 'tutor' ); ?>
+										</button>
+									<?php else : ?>
+										<?php echo esc_html( $updated_at ); ?>
+									<?php endif; ?>
 								</td>
 							</tr>
 						<?php endforeach; ?>
