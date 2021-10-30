@@ -148,7 +148,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		if ( 'delete' === $this->current_action() ) {
 			$should_withdraw_delete = apply_filters( 'tutor_should_withdraw_delete', true );
 
-			if ($should_withdraw_delete){
+			if ( $should_withdraw_delete ) {
 				$withdraw_id = isset( $_GET['withdraw_id'] ) ? (int) sanitize_text_field( $_GET['withdraw_id'] ) : 0;
 				// $withdraw_id = (int) sanitize_text_field($_GET['withdraw_id']);
 
@@ -167,12 +167,12 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		/**
 		 * Reject Withdraw
 		 */
-		if( 'approved' === $this->current_action() ) {
+		if ( 'approved' === $this->current_action() ) {
 			$withdraw_id = isset( $_GET['withdraw_id'] ) ? (int) sanitize_text_field( $_GET['withdraw_id'] ) : 0;
 			// $withdraw_id = (int) sanitize_text_field($_GET['withdraw_id']);
 
-			$withdraw = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id));
-			if ( ! $withdraw || $withdraw->status === 'approved'){
+			$withdraw = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id ) );
+			if ( ! $withdraw || $withdraw->status === 'approved' ) {
 				return;
 			}
 
@@ -195,10 +195,10 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		/**
 		 * Rejected
 		 */
-		if( 'rejected' === $this->current_action() ) {
+		if ( 'rejected' === $this->current_action() ) {
 			$withdraw_id = isset( $_GET['withdraw_id'] ) ? (int) sanitize_text_field( $_GET['withdraw_id'] ) : 0;
-			$withdraw = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id));
-			if ( ! $withdraw || $withdraw->status === 'rejected'){
+			$withdraw    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id ) );
+			if ( ! $withdraw || $withdraw->status === 'rejected' ) {
 				return;
 			}
 
@@ -254,41 +254,87 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
-	 * @param string $order ASC | DESC.
-	 * @param string $date YYYY-MM-DD.
-	 * @param stirng $search
+	 * @param string $date withdraw request date | optional.
+	 * @param string $search search by instructor name or email | optional.
 	 * @return array
 	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $date = '', $search = '' ): array {
+		$approved = self::tabs_data( 'approved', $date, $search );
+		$pending  = self::tabs_data( 'pending', $date, $search );
+		$rejected = self::tabs_data( 'rejected', $date, $search );
+
 		$url  = get_pagenum_link();
 		$tabs = array(
 			array(
 				'key'   => 'all',
 				'title' => __( 'All', 'tutor-pro' ),
-				'value' => 100,
+				'value' => $approved + $pending + $rejected,
 				'url'   => $url . '&data=all',
 			),
 			array(
 				'key'   => 'approved',
 				'title' => __( 'Approved', 'tutor-pro' ),
-				'value' => 80,
+				'value' => $approved,
 				'url'   => $url . '&data=approved',
 			),
 			array(
 				'key'   => 'pending',
 				'title' => __( 'Pending', 'tutor-pro' ),
-				'value' => 10,
+				'value' => $pending,
 				'url'   => $url . '&data=pending',
 			),
 			array(
 				'key'   => 'rejected',
-				'title' => __( 'Pending', 'tutor-pro' ),
-				'value' => 10,
+				'title' => __( 'Rejected', 'tutor-pro' ),
+				'value' => $rejected,
 				'url'   => $url . '&data=rejected',
 			),
 		);
 		return $tabs;
+	}
+
+	/**
+	 * Get counted number of withdraw list by status ex: approved | pending | rejected
+	 *
+	 * @param string $status status required | available : (approved | pending | rejected).
+	 * @param string $date withdraw request date | optional | YYYY-MM-DD.
+	 * @param string $search search by instructor name or email | optional.
+	 * @return int
+	 * @since v2.0.0
+	 */
+	public static function tabs_data( string $status, $date = '', $search = '' ): int {
+		global $wpdb;
+		$withdraw_table = $wpdb->prefix . 'tutor_withdraws';
+		$user_table     = $wpdb->users;
+		$status         = sanitize_text_field( $status );
+		$date           = sanitize_text_field( $date );
+		$search         = sanitize_text_field( $search );
+		// Prepare date query.
+		$date_query = '';
+		if ( '' !== $date_query ) {
+			$date_query = "AND DATE(withdraw.created_at) = CAST('{$date}' AS DATE) ";
+		}
+
+		// Prepare search query.
+		$search = '%' . $wpdb->esc_like( $search ) . '%';
+
+		$count  = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(*) FROM {$withdraw_table} AS withdraw
+				INNER JOIN {$user_table} AS user
+					ON user.ID = withdraw.user_id 
+				WHERE  withdraw.status = %s
+					{$date_query}
+					AND ( user.user_login LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s )
+			",
+				$status,
+				$search,
+				$search,
+				$search
+			)
+		);
+		return $count ? $count : 0;
 	}
 
 }
