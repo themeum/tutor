@@ -1182,10 +1182,10 @@
   min-height: 35px;
 }
 
-.tutor-option-field-row input[type="text"]:last-child,
-.tutor-option-field-row input[type="email"]:last-child,
-.tutor-option-field-row input[type="number"]:last-child,
-.tutor-option-field-row input[type="password"]:last-child,
+.tutor-option-field-row input[type='text']:last-child,
+.tutor-option-field-row input[type='email']:last-child,
+.tutor-option-field-row input[type='number']:last-child,
+.tutor-option-field-row input[type='password']:last-child,
 .tutor-option-field-row textarea:last-child {
   margin-right: 0;
 }
