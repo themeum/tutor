@@ -1,14 +1,15 @@
 .tutor-course-listing {
-	max-width: 1110px;
-	margin: 0 auto;
+	// max-width: 1110px;
+	// margin: 0 auto;
 	display: grid;
 	grid-gap: 30px;
+
+	// Course Grid
+	&-grid-2 {
+		grid-template-columns: repeat(2, 1fr);
+	}
 	&-grid-3 {
 		grid-template-columns: repeat(3, 1fr);
-		// grid-gap: 40px 30px;
-		.tutor-course-listing-item {
-			// max-width: 350px;
-		}
 	}
 	&-grid-4 {
 		grid-template-columns: repeat(4, 1fr);
@@ -16,6 +17,8 @@
 			// max-width: 255px;
 		}
 	}
+
+	// Course Grid with Filter
 	&-filter-grid-2 {
 	}
 	&-filter-grid-3 {
@@ -55,16 +58,17 @@
 			border: none;
 			border-radius: 50%;
 			font-size: 20px;
-			transition: 200ms linear;
+			transition: 150ms linear;
+			&.bookmark-is-filled {
+				background: rgba(27, 27, 27, 0.4);
+			}
 			&:hover {
 				background: $design-brand;
 				color: $design-white;
 			}
-			&.bookmark-is-filled {
-				background: rgba(27, 27, 27, 0.4);
-			}
 		}
 	}
+
 	&-body {
 		border-left: 1px solid #cdcfd5;
 		border-right: 1px solid #cdcfd5;
@@ -77,6 +81,7 @@
 			border-radius: 50%;
 		}
 	}
+
 	&-footer {
 		border-left: 1px solid #cdcfd5;
 		border-right: 1px solid #cdcfd5;
@@ -101,6 +106,7 @@
 		.list-item-price {
 			gap: 10px;
 		}
+
 		.list-item-booking {
 			.circle-progress {
 				--w: 23px;
@@ -130,6 +136,7 @@
 				}
 			}
 		}
+
 		.list-item-button {
 			.tutor-btn.tutor-btn-ghost {
 				color: $text-primary;
@@ -141,6 +148,11 @@
 					justify-content: center;
 					width: 40px;
 					height: 40px;
+					transition: 150ms linear;
+					&:before {
+						margin-left: 3px;
+						margin-top: 1px;
+					}
 				}
 
 				&:hover .btn-icon {
@@ -150,7 +162,7 @@
 		}
 	}
 
-	&-grid-4 {
+	&-sm {
 		.list-item-meta .meta-icon {
 			font-size: 20px;
 		}
@@ -171,5 +183,45 @@
 
 	.tutor-course-listing-item {
 		display: initial;
+	}
+}
+
+.tutor-course-listing-filter {
+	max-width: 1110px;
+	display: grid;
+	@include breakpoint-min(desktop-lg) {
+		grid-template-columns: 1fr 2.5fr;
+		.filter-widget-input-wrapper {
+			margin-top: 42px;
+		}
+	}
+	@include breakpoint-max(desktop-lg) {
+		.filter-widget-input-wrapper {
+			@include responsiveGrid(350px, 1fr);
+			grid-gap: 30px;
+		}
+	}
+
+	.filter-widget-checkboxes {
+		label {
+			@extend .color-text-title;
+			@extend .text-regular-body;
+		}
+	}
+	&.tutor-filter-course-grid-2 {
+		grid-gap: 60px;
+	}
+	&.tutor-filter-course-grid-3 {
+		grid-gap: 30px;
+	}
+}
+
+.tutor-course-filter-widget {
+	@include breakpoint-min(desktop-lg) {
+		.filter-widget-input {
+			&:not(:last-child) {
+				margin-bottom: 50px;
+			}
+		}
 	}
 }
