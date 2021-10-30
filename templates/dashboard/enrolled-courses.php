@@ -4,14 +4,11 @@
  * @version 1.4.3
  */
 
-$shortcode_arg = isset($GLOBALS['tutor_shortcode_arg']) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
-$courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_per_row', 4 ) : $shortcode_arg;
-
 ?>
 
 <h3><?php _e('Enrolled Courses', 'tutor'); ?></h3>
 
-<div class="tutor-dashboard-content-inner">
+<div class="tutor-dashboard-content-inner enrolled-courses">
 
     <div class="tutor-dashboard-inline-links">
         <ul>
@@ -33,7 +30,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
         </ul>
     </div>
 
-    <div class="tutor-course-listing tutor-course-listing-grid-<?php echo $courseCols; ?>">
+    <div class="tutor-course-listing tutor-course-listing-grid-3">
 	<?php
 	$my_courses = tutor_utils()->get_enrolled_courses_by_user(get_current_user_id(), array('private', 'publish'));
 
