@@ -2,7 +2,7 @@
     extract($data); // $media_heading, $media_id, $input_name, $media_url
 
     if(empty($media_url)) {
-        $media_url = get_the_post_thumbnail_url($media_id);
+        $media_url = wp_get_attachment_url($media_id);
     }
 ?>
 <div class="tutor-thumbnail-uploader" data-media-heading="<?php echo !empty($media_heading) ? $media_heading : __('Select or Upload Media Of Your Chosen Persuasion', 'tutor'); ?>" data-button-text="<?php echo !empty($button_text) ? $button_text : __( 'Use this media', 'tutor' ); ?>">
