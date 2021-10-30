@@ -14,14 +14,15 @@
         $publish_courses_count = count(tutor_utils()->get_courses_by_instructor($user->ID));
         $pending_courses_count = count(tutor_utils()->get_pending_courses_by_instructor($user->ID));
     ?>
+
     <div class="tutor-dashboard-inline-links">
         <ul>
-            <li class="active">
+            <li>
                 <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('my-courses'); ?>"> 
                     <?php _e('Publish', 'tutor'); ?> <?php echo "(".$publish_courses_count.")"; ?>
                 </a> 
             </li>
-            <li>
+            <li class="active">
                 <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses'); ?>"> 
                     <?php _e('Pending', 'tutor'); ?> <?php echo "(".$pending_courses_count.")"; ?>
                 </a> 
@@ -30,7 +31,7 @@
     </div>
 
 	<?php
-	$my_courses = tutor_utils()->get_courses_by_instructor(null, array('publish'));
+	$my_courses = tutor_utils()->get_courses_by_instructor(null, array('draft', 'pending'));
 
 	if (is_array($my_courses) && count($my_courses)):
 		global $post;
