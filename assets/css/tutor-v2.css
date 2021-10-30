@@ -14740,16 +14740,23 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   grid-gap: 30px;
 }
 
-.tutor-course-listing-grid-2 {
-  grid-template-columns: repeat(2, 1fr);
+@media (max-width: 767.98px) {
+  .tutor-course-listing {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
 }
 
-.tutor-course-listing-grid-3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.tutor-course-listing-grid-4 {
-  grid-template-columns: repeat(4, 1fr);
+@media (min-width: 992px) {
+  .tutor-course-listing-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tutor-course-listing-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .tutor-course-listing-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .tutor-course-listing-item {
