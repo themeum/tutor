@@ -116,7 +116,7 @@ $filters = array(
 						<?php foreach ( $withdraw_list->results as $list ) : ?>
 							<?php
 								$user_data = get_userdata( $list->user_id );
-								$details = unserialize( $list->method_data );
+								$details   = unserialize( $list->method_data );
 							?>
 							<tr>
 								<td>
@@ -136,25 +136,61 @@ $filters = array(
 								<td>
 									<li>
 										<?php esc_html_e( 'Name:', 'tutor' ); ?>
+										<span>
+											<?php
+												$account_name = isset( $details['account_name']['value'] ) ? $details['account_name']['value'] : '';
+												echo esc_html( $account_name );
+											?>
+										</span>
 									</li>
 									<li>
-										<?php esc_html_e( 'Name:', 'tutor' ); ?>
+										<?php esc_html_e( 'Account No:', 'tutor' ); ?>
+										<span>
+											<?php
+												$account_no = isset( $details['account_number']['value'] ) ? $details['account_number']['value'] : '';
+												echo esc_html( $account_no );
+											?>
+										</span>
 									</li>
 									<li>
-										<?php esc_html_e( 'Name:', 'tutor' ); ?>
+										<?php esc_html_e( 'Bank Name:', 'tutor' ); ?>
+										<span>
+											<?php
+												$bank_name = isset( $details['bank_name']['value'] ) ? $details['bank_name']['value'] : '';
+												echo esc_html( $bank_name );
+											?>
+										</span>										
 									</li>
 									<li>
-										<?php esc_html_e( 'Name:', 'tutor' ); ?>
+										<?php esc_html_e( 'IBAN:', 'tutor' ); ?>
+										<span>
+											<?php
+												$iban = isset( $details['iban']['value'] ) ? $details['iban']['value'] : '';
+												echo esc_html( $iban );
+											?>
+										</span>										
+									</li>
+									<li>
+										<?php esc_html_e( 'BIC/SWIFT:', 'tutor' ); ?>
+										<span>
+											<?php
+												$swift = isset( $details['swift']['value'] ) ? $details['swift']['value'] : '';
+												echo esc_html( $swift );
+											?>
+										</span>	
 									</li>
 								</td>
 								<td>
-									<?php echo esc_html( $list->amount ); ?>
+									<?php echo wp_kses_post( tutor_utils()->tutor_price( $list->amount ) ); ?>
 								</td>
 								<td>
 									<?php echo esc_html( $list->status ); ?>
 								</td>
 								<td>
-									Update
+									<?php
+										$updated_at = $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '';
+										echo esc_html( $updated_at );
+									?>
 								</td>
 							</tr>
 						<?php endforeach; ?>
