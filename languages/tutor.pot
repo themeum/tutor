@@ -2448,7 +2448,7 @@ msgstr ""
 msgid "No course found"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/elements/filters.php:114, views/options/settings.php:22, views/options/tools.php:17, views/pages/question_answer.php:23
+#: classes/Tutor_List_Table.php:1295, classes/Tutor_List_Table.php:1297, views/elements/filters.php:114, views/options/settings.php:61, views/options/tools.php:17, views/pages/question_answer.php:23
 msgid "Search"
 msgstr ""
 
@@ -4570,7 +4570,11 @@ msgstr ""
 msgid "The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name."
 msgstr ""
 
-#: views/options/settings.php:61
+#: views/options/settings.php:22
+msgid "Search ... "
+msgstr ""
+
+#: views/options/settings.php:66
 msgid "Save Changes"
 msgstr ""
 

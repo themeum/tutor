@@ -936,11 +936,6 @@
   line-height: 123%;
 }
 
-.text-body {
-  font-family: 'SF Pro Display', sans-serif;
-  font-style: normal;
-}
-
 :root {
   --initial: #fff;
   --primary-text: #81878f;
