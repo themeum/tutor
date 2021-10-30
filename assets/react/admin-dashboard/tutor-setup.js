@@ -59,13 +59,8 @@ jQuery(document).ready(function($) {
 	
 
 	/* ---------------------
-	* Wizard Skip
+	* Navigate Wizard Screens
 	* ---------------------- */
-	$(".tutor-boarding-next, .tutor-boarding-skip").on("click", function(e) {
-		e.preventDefault();
-		$(".tutor-setup-wizard-boarding").removeClass("active");
-		$(".tutor-setup-wizard-type").addClass("active");
-	});
 	$(".tutor-type-next, .tutor-type-skip").on("click", function(e) {
 		e.preventDefault();
 		$(".tutor-setup-wizard-type").removeClass("active");
