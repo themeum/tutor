@@ -1182,10 +1182,18 @@
   min-height: 35px;
 }
 
-.tutor_lesson_modal_form .tutor-option-field-row input[type='text'],
-.tutor_lesson_modal_form .tutor-option-field-row input[type='email'],
-.tutor_lesson_modal_form .tutor-option-field-row input[type='number'],
-.tutor_lesson_modal_form .tutor-option-field-row input[type='password'],
+.tutor-option-field-row input[type="text"]:last-child,
+.tutor-option-field-row input[type="email"]:last-child,
+.tutor-option-field-row input[type="number"]:last-child,
+.tutor-option-field-row input[type="password"]:last-child,
+.tutor-option-field-row textarea:last-child {
+  margin-right: 0;
+}
+
+.tutor_lesson_modal_form .tutor-option-field-row input[type="text"],
+.tutor_lesson_modal_form .tutor-option-field-row input[type="email"],
+.tutor_lesson_modal_form .tutor-option-field-row input[type="number"],
+.tutor_lesson_modal_form .tutor-option-field-row input[type="password"],
 .tutor_lesson_modal_form .tutor-option-field-row textarea {
   width: 100%;
   display: block;
@@ -4275,8 +4283,8 @@ li.tutor-option-nav-item h4 {
 
 .radio-thumbnail.has-title label {
   text-align: center;
-  font-size: 400;
-  font-weight: 15px;
+  font-size: 15px;
+  font-weight: 400;
   line-height: 160%;
 }
 
@@ -4287,8 +4295,8 @@ li.tutor-option-nav-item h4 {
 
 .items-per-row-label {
   text-align: center;
-  font-size: 400;
-  font-weight: 15px;
+  font-size: 15px;
+  font-weight: 400;
   line-height: 160%;
 }
 
@@ -4753,35 +4761,6 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 12px;
 }
 
-.tutor-option-field-row .tutor-form-toggle span[class^="label-"],
-.tutor-dashboard-page .tutor-form-toggle span[class^="label-"] {
-  font-size: 400;
-  font-weight: 15px;
-  line-height: 160%;
-  color: #212327;
-}
-
-.tutor-option-field-row .tutor-form-toggle span[class^="label-"].label-before,
-.tutor-dashboard-page .tutor-form-toggle span[class^="label-"].label-before {
-  margin-right: 5px;
-}
-
-.tutor-option-field-row .tutor-form-toggle input ~ .tutor-form-toggle-control,
-.tutor-dashboard-page .tutor-form-toggle input ~ .tutor-form-toggle-control {
-  background-color: #cdcfd5;
-}
-
-.tutor-option-field-row .tutor-form-toggle input ~ .tutor-form-toggle-control::before,
-.tutor-dashboard-page .tutor-form-toggle input ~ .tutor-form-toggle-control::before {
-  -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
-          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
-}
-
-.tutor-option-field-row .tutor-form-toggle input:checked ~ .tutor-form-toggle-control,
-.tutor-dashboard-page .tutor-form-toggle input:checked ~ .tutor-form-toggle-control {
-  background-color: #1973aa;
-}
-
 .tutor-option-field-row input[type="radio"],
 .tutor-dashboard-page input[type="radio"] {
   background-size: 120%;
@@ -4811,8 +4790,8 @@ li.tutor-option-nav-item h4 {
 
 .tutor-option-field-row .tutor-form-check label > .desc,
 .tutor-dashboard-page .tutor-form-check label > .desc {
-  font-size: 400;
-  font-weight: 13px;
+  font-size: 13px;
+  font-weight: 400;
   line-height: 138%;
   color: #5b616f;
 }
@@ -4888,8 +4867,8 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-row textarea.tutor-form-control:-moz-read-only, .tutor-dashboard-page textarea.tutor-form-control:-moz-read-only {
-  font-size: 400;
-  font-weight: 16px;
+  font-size: 16px;
+  font-weight: 400;
   line-height: 162%;
   border-color: #bababa;
 }
@@ -4902,8 +4881,8 @@ li.tutor-option-nav-item h4 {
 .tutor-dashboard-page input.tutor-form-control,
 .tutor-dashboard-page textarea.tutor-form-control,
 .tutor-dashboard-page textarea.tutor-form-control:read-only {
-  font-size: 400;
-  font-weight: 16px;
+  font-size: 16px;
+  font-weight: 400;
   line-height: 162%;
   border-color: #bababa;
 }
@@ -4966,6 +4945,30 @@ li.tutor-option-nav-item h4 {
 .tutor-dashboard-page .tutor-form-check-input {
   width: 20px;
   height: 20px;
+}
+
+.tutor-form-toggle span[class^="label-"] {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 160%;
+  color: #212327;
+}
+
+.tutor-form-toggle span[class^="label-"].label-before {
+  margin-right: 5px;
+}
+
+.tutor-form-toggle input ~ .tutor-form-toggle-control {
+  background-color: #cdcfd5;
+}
+
+.tutor-form-toggle input ~ .tutor-form-toggle-control::before {
+  -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
+}
+
+.tutor-form-toggle input:checked ~ .tutor-form-toggle-control {
+  background-color: #1973aa;
 }
 
 .search-popup-opener,
@@ -5106,6 +5109,11 @@ li.tutor-option-nav-item h4 {
   overflow: hidden;
   -webkit-transition: 200ms linear;
   transition: 200ms linear;
+}
+
+.color-preset-grid label.color-preset-input .preset-item:hover {
+  -webkit-box-shadow: 0 0 0 1px #cdcfd5;
+          box-shadow: 0 0 0 1px #cdcfd5;
 }
 
 .color-preset-grid label.color-preset-input .header {
@@ -6040,8 +6048,8 @@ li.tutor-option-nav-item h4 {
 
 .tutor-option-field-input .logo-upload .logo-upload-wrap {
   color: #161616;
-  font-size: 400;
-  font-weight: 15px;
+  font-size: 15px;
+  font-weight: 400;
   line-height: 160%;
 }
 
@@ -6085,8 +6093,8 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-input .layout-label {
-  font-size: 400;
-  font-weight: 15px;
+  font-size: 15px;
+  font-weight: 400;
   line-height: 160%;
   color: #212327;
 }
@@ -6134,9 +6142,15 @@ li.tutor-option-nav-item h4 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.tutor-option-field-input .type-toggle-grid > .toggle-item:hover {
+  border: 1px solid #41454f;
 }
 
 .tutor-option-field-input .type-toggle-grid > .toggle-item .tutor-form-toggle-control {

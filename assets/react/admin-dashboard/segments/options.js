@@ -174,6 +174,8 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         // beforeSend: function () {},
         success: function(data) {
+          // console.log(data.data);
+          // return false;
           var output = "",
             wrapped_item = "",
             notfound = true,
@@ -201,6 +203,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 searchKeyRegex,
                 `<span style='color: #212327; font-weight:500'>${matchedText}</span>`
               );
+
               output += view_item(
                 wrapped_item,
                 section_slug,
@@ -244,11 +247,13 @@ document.addEventListener("DOMContentLoaded", function() {
       link.addEventListener("click", (e) => {
         const dataTab = e.target.closest("[data-tab]").dataset.tab;
         const dataKey = e.target.closest("[data-key]").dataset.key;
+
         if (dataTab) {
           // remove active from other buttons
           navTabItems.forEach((item) => {
             item.classList.remove("active");
           });
+
           // add active to the current nav item
           document
             .querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`)
@@ -274,7 +279,6 @@ document.addEventListener("DOMContentLoaded", function() {
           .querySelector(".search-popup-opener")
           .classList.remove("visible");
         document.querySelector('.search-field input[type="search"]').value = "";
-
         // Highlight selected element
         highlightSearchedItem(dataKey);
       });
@@ -287,11 +291,11 @@ document.addEventListener("DOMContentLoaded", function() {
   function highlightSearchedItem(dataKey) {
     const target = document.querySelector(`#${dataKey}`);
     const targetEl =
-      target && target.querySelector(`.tutor-option-field-label label`);
+      target && target.querySelector(`.tutor-option-field-label h5.label`);
     const scrollTargetEl =
       target && target.parentNode.querySelector(".tutor-option-field-row");
 
-    console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
+    // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
     if (scrollTargetEl) {
       targetEl.classList.add("isHighlighted");

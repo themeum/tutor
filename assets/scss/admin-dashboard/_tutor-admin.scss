@@ -91,24 +91,27 @@
 .tutor-option-field-row input[type='number'],
 .tutor-option-field-row input[type='password'],
 .tutor-option-field-row textarea {
-	background-color: #fff;
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-	color: #333;
-	display: inline-block;
-	vertical-align: middle;
-	padding: 7px 12px;
-	margin: 0 10px 0 0;
-	width: 400px;
-	min-height: 35px;
+  &:last-child {
+    margin-right: 0;
+  }
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #333;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 7px 12px;
+  margin: 0 10px 0 0;
+  width: 400px;
+  min-height: 35px;
 }
 
-.tutor_lesson_modal_form .tutor-option-field-row input[type='text'],
-.tutor_lesson_modal_form .tutor-option-field-row input[type='email'],
-.tutor_lesson_modal_form .tutor-option-field-row input[type='number'],
-.tutor_lesson_modal_form .tutor-option-field-row input[type='password'],
+.tutor_lesson_modal_form .tutor-option-field-row input[type="text"],
+.tutor_lesson_modal_form .tutor-option-field-row input[type="email"],
+.tutor_lesson_modal_form .tutor-option-field-row input[type="number"],
+.tutor_lesson_modal_form .tutor-option-field-row input[type="password"],
 .tutor_lesson_modal_form .tutor-option-field-row textarea {
 	width: 100%;
 	display: block;

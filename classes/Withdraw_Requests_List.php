@@ -148,8 +148,9 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		if ( 'delete' === $this->current_action() ) {
 			$should_withdraw_delete = apply_filters( 'tutor_should_withdraw_delete', true );
 
-			if ( $should_withdraw_delete ) {
-				$withdraw_id = (int) sanitize_text_field( $_GET['withdraw_id'] );
+			if ($should_withdraw_delete){
+				$withdraw_id = isset( $_GET['withdraw_id'] ) ? (int) sanitize_text_field( $_GET['withdraw_id'] ) : 0;
+				// $withdraw_id = (int) sanitize_text_field($_GET['withdraw_id']);
 
 				do_action( 'tutor_before_delete_withdraw', $withdraw_id );
 
@@ -166,10 +167,12 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		/**
 		 * Reject Withdraw
 		 */
-		if ( 'approved' === $this->current_action() ) {
-			$withdraw_id = (int) sanitize_text_field( $_GET['withdraw_id'] );
-			$withdraw    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id ) );
-			if ( ! $withdraw || $withdraw->status === 'approved' ) {
+		if( 'approved' === $this->current_action() ) {
+			$withdraw_id = isset( $_GET['withdraw_id'] ) ? (int) sanitize_text_field( $_GET['withdraw_id'] ) : 0;
+			// $withdraw_id = (int) sanitize_text_field($_GET['withdraw_id']);
+
+			$withdraw = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id));
+			if ( ! $withdraw || $withdraw->status === 'approved'){
 				return;
 			}
 
@@ -192,10 +195,10 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		/**
 		 * Rejected
 		 */
-		if ( 'rejected' === $this->current_action() ) {
-			$withdraw_id = (int) sanitize_text_field( $_GET['withdraw_id'] );
-			$withdraw    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id ) );
-			if ( ! $withdraw || $withdraw->status === 'rejected' ) {
+		if( 'rejected' === $this->current_action() ) {
+			$withdraw_id = isset( $_GET['withdraw_id'] ) ? (int) sanitize_text_field( $_GET['withdraw_id'] ) : 0;
+			$withdraw = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id));
+			if ( ! $withdraw || $withdraw->status === 'rejected'){
 				return;
 			}
 
