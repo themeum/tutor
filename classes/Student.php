@@ -155,6 +155,7 @@ class Student {
 		$last_name         = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
 		$phone_number      = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$tutor_profile_bio = wp_kses_post( tutor_utils()->input_old( 'tutor_profile_bio' ) );
+		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 
 		$display_name = sanitize_text_field( tutor_utils()->input_old( 'display_name' ) );
 
@@ -169,6 +170,7 @@ class Student {
 		if ( ! is_wp_error( $user_id ) ) {
 			update_user_meta( $user_id, 'phone_number', $phone_number );
 			update_user_meta( $user_id, '_tutor_profile_bio', $tutor_profile_bio );
+			update_user_meta( $user_id, '_tutor_profile_job_title', $tutor_profile_job_title );
 
 			$tutor_user_social = tutor_utils()->tutor_user_social_icons();
 			foreach ( $tutor_user_social as $key => $social ) {

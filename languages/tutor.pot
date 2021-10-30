@@ -209,7 +209,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:61, classes/Ajax.php:114, classes/Ajax.php:206, classes/Ajax.php:264, classes/Ajax.php:402, classes/Ajax.php:509, classes/Ajax.php:573, classes/Course.php:449, classes/Course.php:694, classes/Course.php:745, classes/Course.php:782, classes/Course.php:795, classes/Instructor.php:250, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1159, classes/Quiz.php:1219, classes/Q_and_A.php:71
+#: classes/Ajax.php:61, classes/Ajax.php:114, classes/Ajax.php:206, classes/Ajax.php:264, classes/Ajax.php:402, classes/Ajax.php:509, classes/Ajax.php:573, classes/Course.php:449, classes/Course.php:694, classes/Course.php:745, classes/Course.php:782, classes/Course.php:795, classes/Instructor.php:252, classes/Lesson.php:121, classes/Lesson.php:161, classes/Lesson.php:218, classes/Quiz.php:130, classes/Quiz.php:532, classes/Quiz.php:633, classes/Quiz.php:690, classes/Quiz.php:734, classes/Quiz.php:762, classes/Quiz.php:860, classes/Quiz.php:883, classes/Quiz.php:904, classes/Quiz.php:1015, classes/Quiz.php:1060, classes/Quiz.php:1159, classes/Quiz.php:1219, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -593,7 +593,7 @@ msgstr ""
 msgid "Phone Number field is required"
 msgstr ""
 
-#: classes/Instructor.php:240
+#: classes/Instructor.php:242
 msgid "Instructor has been added successfully"
 msgstr ""
 
@@ -2220,23 +2220,23 @@ msgstr ""
 msgid "Earned Points"
 msgstr ""
 
-#: classes/Student.php:249
+#: classes/Student.php:251
 msgid "Incorrect Previous Password"
 msgstr ""
 
-#: classes/Student.php:252
+#: classes/Student.php:254
 msgid "New Password Required"
 msgstr ""
 
-#: classes/Student.php:255
+#: classes/Student.php:257
 msgid "Confirm Password Required"
 msgstr ""
 
-#: classes/Student.php:258
+#: classes/Student.php:260
 msgid "New password and confirm password does not matched"
 msgstr ""
 
-#: classes/Student.php:268
+#: classes/Student.php:270
 msgid "Password set successfully"
 msgstr ""
 
@@ -3582,7 +3582,7 @@ msgstr ""
 msgid "Phone Number"
 msgstr ""
 
-#: templates/dashboard/my-profile.php:27, views/pages/add_new_instructor.php:121, templates/dashboard/settings/profile.php:155
+#: templates/dashboard/my-profile.php:27, views/pages/add_new_instructor.php:121, templates/dashboard/settings/profile.php:164
 msgid "Bio"
 msgstr ""
 
@@ -5058,15 +5058,23 @@ msgstr ""
 msgid "Upload Photo"
 msgstr ""
 
-#: templates/dashboard/settings/profile.php:164
+#: templates/dashboard/settings/profile.php:155
+msgid "Skill/Occupation"
+msgstr ""
+
+#: templates/dashboard/settings/profile.php:156
+msgid "UX Designer"
+msgstr ""
+
+#: templates/dashboard/settings/profile.php:173
 msgid "Display name publicly as"
 msgstr ""
 
-#: templates/dashboard/settings/profile.php:178
+#: templates/dashboard/settings/profile.php:187
 msgid "The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate."
 msgstr ""
 
-#: templates/dashboard/settings/profile.php:189, templates/dashboard/settings/social-profile.php:50
+#: templates/dashboard/settings/profile.php:198, templates/dashboard/settings/social-profile.php:50
 msgid "Update Profile"
 msgstr ""
 
