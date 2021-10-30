@@ -620,7 +620,7 @@
 
     .logo-upload-wrap {
       color: #161616;
-      @include getTypography(15px, 400, 160%);
+      @include getTypography(400, 15px, 160%);
       p {
         margin-bottom: 12px;
       }
@@ -667,7 +667,7 @@
   }
 
   .layout-label {
-    @include getTypography(15px, 400, 160%);
+    @include getTypography(400, 15px, 160%);
     color: $text-primary;
   }
 } // end of .tutor-option-field-input
@@ -710,11 +710,15 @@
       grid-template-columns: repeat(3, 1fr);
     }
     > .toggle-item {
+      &:hover {
+        border: 1px solid #41454f;
+      }
       border: 1px solid #bababa;
       border-radius: 6px;
       padding: 16px 9px;
       text-align: left;
       display: flex;
+      transition: all 0.3s;
       align-items: center;
       .tutor-form-toggle-control {
         margin-right: 8px;

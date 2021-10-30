@@ -9,10 +9,11 @@ class Course_Settings_Tabs{
     public $course_post_type = '';
     public $args = array();
     public $settings_meta = null;
+    private $is_frontend = null;
 
     public function __construct() {
         $this->course_post_type = tutor()->course_post_type;
-
+        
         add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
             
         add_action( 'tutor/frontend_course_edit/after/description', array($this, 'display_frontend'), 10, 0 );
@@ -36,7 +37,7 @@ class Course_Settings_Tabs{
                         'type'      => 'number',
                         'label'     => __('Maximum Students', 'tutor'),
                         'label_title' => __('Enable', 'tutor'),
-                        'default' => '0',
+                        'value'     => (int) tutor_utils()->get_course_settings(get_the_ID(), 'maximum_students', 0),
                         'desc'      => __('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor'),
                     ),
                 ),
@@ -67,52 +68,6 @@ class Course_Settings_Tabs{
             </div>
         </div>
         <?php
-    }
-
-    public function generate_field($fields = array()){
-        if (tutor_utils()->count($fields)){
-            foreach ($fields as $field_key => $field){
-                $type = tutor_utils()->array_get('type', $field);
-
-                if($type=='line_break') {
-                    echo '<hr class="tutor-mb-30"/>';
-                    continue;
-                }
-
-                ?>
-                <div class="tutor-bs-row tutor-mb-30">
-                    <?php
-                    if (!empty($field['label'])){
-                        ?>
-                        <div class="tutor-bs-col-4">
-                            <label for=""><?php echo $field['label']; ?></label>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                    <div class="tutor-bs-col-8">
-                        <?php
-                            $field['field_key'] = $field_key;
-                            $this->field_type($field);
-                            
-                            if (isset($field['desc'])){
-                                ?>
-                                    <p class="tutor-input-feedback tutor-has-icon">
-                                        <i class="far fa-question-circle tutor-input-feedback-icon"></i>
-                                        <?php echo $field['desc']; ?>
-                                    </p>
-                                <?php
-                            }
-                        ?>
-                    </div>
-                </div>
-                <?php
-            }
-        }
-    }
-
-    public function field_type($field = array()){
-        include tutor()->path."views/metabox/course/field-types/{$field['type']}.php";
     }
 
     public function get($key = null, $default = false){
