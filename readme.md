@@ -73,6 +73,28 @@ Shows student progress from assignment and quiz
 
 <tr>
 
+<tr>
+
+<td align="center" width="33.3333%">
+<img src=".github/addons/calendar.png" alt="Calendar" height="100px" >
+<h4>Calendar</h4>
+Allow students to see everything in a calendar view.
+</td>
+
+<td align="center" width="33.3333%">
+<img src=".github/addons/restrict-content-pro.png" alt="Enrollments" height="100px" >
+<h4>Restrict Content Pro</h4>
+Unlock Course depending on Restrict Content Permission.
+</td>
+
+<td align="center" width="33.3333%">
+<img src=".github/addons/quiz-import-export.png" alt="Quiz Export/Import" height="100px" >
+<h4>Quiz Export/Import</h4>
+Save time by exporting/importing quiz data with easy options.
+</tr>
+
+<tr>
+
 <td align="center">
 <img src=".github/addons/pmpro.png" alt="Paid Memberships Pro" height="100px" />
 <h4>Paid Memberships Pro</h4>
@@ -162,6 +184,29 @@ Capture Residual Revenue with Recurring Payments.
 
 </tr>
 
+
+<tr>
+
+<td align="center">
+<img src=".github/addons/wpml.png" alt="WPML Multilingual CMS" height="100px" >
+<h4>WPML Multilingual CMS</h4>
+Create multilingual courses, lessons, dashboard and more for a global audience.
+</td>
+
+<td align="center">
+<img src=".github/addons/notifications.png" alt="Notifications" height="100px" >
+<h4>Notifications</h4>
+Get notifications on frontend dashboard for specified tutor events.
+</td>
+
+<td align="center">
+<img src=".github/addons/buddypress.png" alt="BuddyPress" height="100px" >
+<h4>BuddyPress</h4>
+Discuss about course and share your knowledge with your friends through BuddyPress
+</td>
+
+
+</tr>
 
 
 
