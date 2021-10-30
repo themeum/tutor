@@ -41,7 +41,7 @@ $defaults = array(
 	'class'      => implode( ' ', array_filter( array(
 		'button',
 		'product_type_' . $product->get_type(),
-		$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button' : '',
+		$product->is_purchasable() && $product->is_in_stock() ? 'tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md add_to_cart_button' : '',
 		$ajax_add_to_cart_class,
 		$required_loggedin_class
 	) ) ),
@@ -61,10 +61,9 @@ if ( isset( $args['attributes']['aria-label'] ) ) {
 
 ?>
 
-<div class="tutor-loop-cart-btn-wrap">
 	<?php
 		echo apply_filters( 'tutor_course_restrict_new_entry', apply_filters( 'woocommerce_loop_add_to_cart_link', // WPCS: XSS ok.
-			sprintf( '<a href="%s" data-quantity="%s" class="%s" %s>%s</a>',
+			sprintf( '<a href="%s" data-quantity="%s" class="%s" %s><span class="btn-icon ttr-cart-line-filled"></span><span>%s</span></a>',
 				esc_url( $product->add_to_cart_url() ),
 				esc_attr( isset( $args['quantity'] ) ? $args['quantity'] : 1 ),
 				esc_attr( isset( $args['class'] ) ? $args['class'] : 'button' ),
@@ -73,5 +72,4 @@ if ( isset( $args['attributes']['aria-label'] ) ) {
 			),
 			$product, $args ) );
 	?>
-</div>
 

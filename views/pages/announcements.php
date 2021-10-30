@@ -69,7 +69,7 @@ $filters = array(
 	'course_filter' => true,
 );
 ?>
-<div class="tutor-admin-page-wrapper">
+<div class="tutor-admin-page-wrapper tutor-admin-announcements-list">
 	<?php
 		/**
 		 * Load Templates with data.
@@ -79,16 +79,14 @@ $filters = array(
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	?>
 
-	<div class="tutor-dashboard-content-inner  tutor-mr-20">
+	<div class="tutor-dashboard-content-inner tutor-mt-10 tutor-mb-24 tutor-mr-20">
 		<div class="tutor-component-three-col-action new-announcement-wrap">
 			<div class="tutor-announcement-big-icon">
 				<i class="tutor-icon-speaker"></i>
 			</div>
 			<div>
-				<p>
-					<strong>
-						<?php esc_html_e( 'Create a new announcement and notify your students about it', 'tutor' ); ?>
-					</strong>
+				<p class="text-regular-h5 color-text-primary">
+				<?php esc_html_e( 'Create a new announcement and notify your students about it', 'tutor' ); ?>
 				</p>
 			</div>
 			<div class="new-announcement-button">

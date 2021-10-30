@@ -89,9 +89,10 @@ class Options_V2 {
 		// !current_user_can('manage_options') ? wp_send_json_error() : 0;
 		// $keyword = strtolower( $_POST['keyword'] );
 
-		$attr       = $this->options_attr();
-		$data_array = array();
-		foreach ( $attr as $block ) {
+		$attr = $this->get_setting_fields();
+
+		/*
+		 foreach ( $attr as $block ) {
 			foreach ( $block['sections'] as $sections ) {
 				foreach ( $sections['blocks'] as $blocks ) {
 					foreach ( $blocks['fields'] as $fields ) {
@@ -102,9 +103,23 @@ class Options_V2 {
 					}
 				}
 			}
-		}
+		} */
 
+		$data_array = array();
+		foreach ( $attr as $sections ) {
+			foreach ( $sections as $section ) {
+				foreach ( $section['blocks'] as $blocks ) {
+					foreach ( $blocks['fields'] as $fields ) {
+						$fields['section_label'] = $section['label'];
+						$fields['section_slug']  = $section['slug'];
+						$fields['block_label']   = $blocks['label'];
+						$data_array['fields'][]  = $fields;
+					}
+				}
+			}
+		}
 		wp_send_json_success( $data_array );
+
 	}
 
 	public function tutor_export_settings() {
@@ -147,7 +162,7 @@ class Options_V2 {
 	 * @return JSON
 	 */
 	public function tutor_default_settings() {
-		$attr = $this->options_attr();
+		$attr = $this->get_setting_fields();
 		foreach ( $attr as $sections ) {
 			foreach ( $sections['sections'] as $section ) {
 				foreach ( $section['blocks'] as $blocks ) {
