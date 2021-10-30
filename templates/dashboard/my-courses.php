@@ -31,7 +31,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
             </li>
         </ul>
     </div>
-    <div class="tutor-course-listing tutor-course-listing-grid-<?php echo $courseCols; ?>">
+    <div class="tutor-course-listing tutor-course-listing-grid-3">
 	<?php
 	$my_courses = tutor_utils()->get_courses_by_instructor(null, array('publish'));
 
@@ -44,17 +44,17 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
             $tutor_course_img = get_tutor_course_thumbnail_src();
 			?>
 
-            <div id="tutor-dashboard-course-<?php the_ID(); ?>" class="tutor-course-listing-item tutor-mycourse-<?php the_ID(); ?>">
+            <div id="tutor-dashboard-course-<?php the_ID(); ?>" class="tutor-course-listing-item tutor-course-listing-item-sm tutor-mycourse-<?php the_ID(); ?>">
                 <div class="tutor-course-listing-item-head tutor-bs-d-flex">
                     <img src="<?php echo esc_url($tutor_course_img); ?>" alt="Course Thumbnail">
                 </div>
                 <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-18">
                     <div class="list-item-rating tutor-bs-d-flex tutor-mb-10">
-                        <span class="price text-h6 color-text-primary">
+                        <span class="date text-h6 color-text-primary">
                             <?php echo esc_html( get_the_date() ); ?> <?php echo esc_html( get_the_time() ); ?>
                         </span>
                     </div>
-                    <div class="list-item-title text-medium-h5 color-text-primary">
+                    <div class="list-item-title text-medium-h6 color-text-primary">
                         <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
                     </div>
                     <div class="list-item-meta text-medium-caption color-text-primary tutor-bs-d-flex tutor-mt-10">

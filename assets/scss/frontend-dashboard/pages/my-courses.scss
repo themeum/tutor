@@ -1,3 +1,34 @@
-.my-courses .tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost .btn-icon {
-    font-size: 18px !important;
+.my-courses {
+    .tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost .btn-icon {
+        font-size: 18px !important;
+    }
+    .date {
+        font-size: 14px;
+    }
+    .list-item-title {
+        font-size: 16px;
+    }
+}
+
+.enrolled-courses {
+    .list-item-meta,
+    .list-item-author {
+        display: none !important;
+    }
+    .list-item-title {
+        font-size: 16px !important;
+        margin-top: 15px !important;
+        margin-bottom: 5px !important;
+    }
+}
+
+.my-wishlist {
+    .list-item-meta,
+    .course-category {
+        display: none !important;
+    }
+    .list-item-title {
+        font-size: 16px !important;
+        margin-top: 15px !important;
+    }
 }

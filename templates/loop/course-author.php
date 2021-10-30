@@ -30,7 +30,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
         if(!empty($course_categories) && is_array($course_categories ) && count($course_categories)){
             ?>
             <?php esc_html_e('In', 'tutor') ?>
-		<span class="text-medium-caption color-text-primary">
+		<span class="text-medium-caption course-category color-text-primary">
         <?php
             foreach ($course_categories as $course_category){
                 $category_name = $course_category->name;
