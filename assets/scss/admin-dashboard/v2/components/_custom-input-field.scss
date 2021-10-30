@@ -67,7 +67,7 @@
   &.has-title {
     label {
       text-align: center;
-      @include getTypography(15px, 400, 160%);
+      @include getTypography(400, 15px, 160%);
       .title {
         margin-top: 6px;
         display: block;
@@ -78,7 +78,7 @@
 
 .items-per-row-label {
   text-align: center;
-  @include getTypography(15px, 400, 160%);
+  @include getTypography(400, 15px, 160%);
   input[type="radio"] {
     &:checked + .icon-col {
       background: #e9edfb;

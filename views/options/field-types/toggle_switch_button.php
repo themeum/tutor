@@ -6,7 +6,7 @@ $tooltip_desc = ! empty( $field['desc'] ) ? $field['desc'] : null;
 ?>
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
-		<label><?php echo $field['label']; ?></label>
+		<h5 class="label"><?php echo $field['label']; ?></h5>
 		<?php
 		if ( $tooltip_desc ) {
 			?>

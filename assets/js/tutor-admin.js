@@ -722,44 +722,52 @@ displayAddons(freeAddonsList);
  * Color PRESET and PICKER manipulation
  */
 var colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
-var colorPickerInputs = document.querySelectorAll(".color-picker-input input[type='color']");
-var presetView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
+var colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
+var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
 
 colorPresetInputs.forEach(function (preset) {
   // listening preset input events
   preset.addEventListener("input", function (e) {
     var presetItem = preset.parentElement.querySelector(".preset-item");
     var presetColors = presetItem.querySelectorAll(".header span");
+    presetColors.forEach(function (color) {
+      var presetKey = color.dataset.preset;
+      var presetColor = color.dataset.color;
+      pickerView.forEach(function (toPicker) {
+        var pickerInput = toPicker.dataset.key;
 
-    var _loop = function _loop(i) {
-      var presetKey = presetColors[i].dataset.key;
-      var presetColor = presetColors[i].dataset.color;
-      presetView[i].querySelector("input").value = presetColor;
-      presetView[i].querySelector(".picker-value").innerHTML = presetColor;
-      presetView[i].style.borderColor = presetColor;
-      presetView[i].style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
-      setTimeout(function () {
-        presetView[i].style.borderColor = "#cdcfd5";
-        presetView[i].style.boxShadow = "none";
-      }, 5000);
-    };
-
-    for (var i = 0; i < presetColors.length; i++) {
-      _loop(i);
-    }
+        if (pickerInput == presetKey) {
+          toPicker.querySelector("input").value = presetColor;
+          toPicker.querySelector(".picker-value").innerHTML = presetColor;
+          toPicker.style.borderColor = presetColor;
+          toPicker.style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
+          setTimeout(function () {
+            toPicker.style.borderColor = "#cdcfd5";
+            toPicker.style.boxShadow = "none";
+          }, 5000);
+        }
+      });
+    });
   });
 }); // Updating Custom Color PRESET
 
 var updateCustomPreset = function updateCustomPreset(picker) {
-  var customPresetEl = document.querySelector("label.color-preset-input:last-child"); // listening picker input events
+  var customPresetEl = document.querySelector("label.color-preset-input[for='custom']"); // listening picker input events
 
   picker.addEventListener("input", function (e) {
     var presetColors = customPresetEl.querySelectorAll(".header span");
-    colorPickerInputs.forEach(function (picker, i) {
-      presetColors[i].dataset.color = picker.value;
-      presetColors[i].style.backgroundColor = picker.value;
-      presetView[i].querySelector(".picker-value").innerHTML = picker.value;
-      customPresetEl.querySelector('input[type="radio"]').checked = true;
+    var presetItem = customPresetEl.querySelector('input[type="radio"]');
+    var pickerCode = picker.nextElementSibling;
+    colorPickerInputs.forEach(function (picker) {
+      var preset = picker.dataset.picker;
+      presetColors.forEach(function (toPreset) {
+        if (toPreset.dataset.preset == preset) {
+          toPreset.dataset.color = picker.value;
+          toPreset.style.backgroundColor = picker.value;
+        }
+      });
+      pickerCode.innerText = picker.value;
+      presetItem.checked = true;
     });
   });
 }; // listening color pickers input event
@@ -1592,24 +1600,23 @@ var export_settings_all = function export_settings_all() {
           "Content-Type": "application/x-www-form-urlencoded",
           "Cache-Control": "no-cache"
         },
-        body: new URLSearchParams({
-          action: "tutor_export_settings"
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (response) {
-        var fileName = "tutor_options_" + time_now();
-        (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(JSON.stringify(response), fileName);
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    };
-  }
-};
-/**
- *
- * @returns time by second
- */
+        // beforeSend: function () {},
+        success: function success(data) {
+          // console.log(data.data);
+          // return false;
+          var output = "",
+              wrapped_item = "",
+              notfound = true,
+              item_text = "",
+              section_slug = "",
+              section_label = "",
+              block_label = "",
+              matchedText = "",
+              searchKeyRegex = "",
+              field_key = "",
+              result = data.data.fields;
+          Object.values(result).forEach(function (item, index, arr) {
+            var _item_text$match;
 
 
 var time_now = function time_now() {
@@ -1742,18 +1749,10 @@ var delete_history_data = function delete_history_data() {
   var noticeMessage = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".tutor-notification");
   var delete_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".delete_single_settings");
 
-  var _loop3 = function _loop3(i) {
-    delete_settings[i].onclick = function () {
-      var delete_id = delete_settings[i].dataset.id;
-      var formData = new FormData();
-      formData.append("action", "tutor_delete_single_settings");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      formData.append("time", Date.now());
-      formData.append("delete_id", delete_id);
-      noticeMessage.classList.add("show");
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
+  function highlightSearchedItem(dataKey) {
+    var target = document.querySelector("#".concat(dataKey));
+    var targetEl = target && target.querySelector(".tutor-option-field-label h5.label");
+    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row"); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
