@@ -1,4 +1,7 @@
 (function thumbnailUploadPreview() {
+	// It is managed by mediachooser.js
+	return;
+
 	/**
 	 * Image Preview : Logo and Signature Upload
 	 * Selector -> .tutor-option-field-input.image-previewer
