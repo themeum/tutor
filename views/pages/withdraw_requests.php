@@ -29,9 +29,17 @@ $active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET
  */
 $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
-$start    = ( $per_page * $paged ) - $per_page;
+$offset   = ( $per_page * $paged ) - $per_page;
 
-$withdraw_list = tutor_utils()->get_withdrawals_history( null, compact( 'start', 'per_page', 'search_term' ) );
+$args          = array(
+	'status'   => 'all' === $active_tab ? '' : $active_tab,
+	'date'     => $date,
+	'order'    => $order,
+	'start'    => $offset,
+	'per_page' => $per_page,
+	'search'   => $search_term,
+);
+$withdraw_list = tutor_utils()->get_withdrawals_history( null, $args );
 $total         = $withdraw_list->count;
 
 /**

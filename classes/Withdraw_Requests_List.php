@@ -312,7 +312,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 		$search         = sanitize_text_field( $search );
 		// Prepare date query.
 		$date_query = '';
-		if ( '' !== $date_query ) {
+		if ( '' !== $date ) {
 			$date_query = "AND DATE(withdraw.created_at) = CAST('{$date}' AS DATE) ";
 		}
 
@@ -326,9 +326,10 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 					ON user.ID = withdraw.user_id 
 				WHERE  withdraw.status = %s
 					{$date_query}
-					AND ( user.user_login LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s )
+					AND ( user.user_login LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.display_name LIKE %s )
 			",
 				$status,
+				$search,
 				$search,
 				$search,
 				$search
