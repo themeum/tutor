@@ -23,6 +23,9 @@
   display: inherit;
 
   .preset-item {
+    &:hover {
+      box-shadow: 0 0 0 1px $stroke-light-30;
+    }
     background: $color-white;
     border: 1px solid $stroke-light-30;
     border-radius: 6px;

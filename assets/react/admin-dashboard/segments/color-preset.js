@@ -6,9 +6,9 @@ const colorPresetInputs = document.querySelectorAll(
   "label.color-preset-input input[type='radio']"
 );
 const colorPickerInputs = document.querySelectorAll(
-  ".color-picker-input input[type='color']"
+  "label.color-picker-input input[type='color']"
 );
-const presetView = document.querySelectorAll(
+const pickerView = document.querySelectorAll(
   ".color-picker-wrapper [data-key]"
 );
 // Color PRESET Slecetion (color inputs)
@@ -18,38 +18,51 @@ colorPresetInputs.forEach((preset) => {
     const presetItem = preset.parentElement.querySelector(".preset-item");
     const presetColors = presetItem.querySelectorAll(".header span");
 
-    for (let i = 0; i < presetColors.length; i++) {
-      let presetKey = presetColors[i].dataset.key;
-      let presetColor = presetColors[i].dataset.color;
+    presetColors.forEach((color) => {
+      let presetKey = color.dataset.preset;
+      let presetColor = color.dataset.color;
 
-      presetView[i].querySelector("input").value = presetColor;
-      presetView[i].querySelector(".picker-value").innerHTML = presetColor;
+      pickerView.forEach((toPicker) => {
+        let pickerInput = toPicker.dataset.key;
+        if (pickerInput == presetKey) {
+          toPicker.querySelector("input").value = presetColor;
+          toPicker.querySelector(".picker-value").innerHTML = presetColor;
 
-      presetView[i].style.borderColor = presetColor;
-      presetView[i].style.boxShadow = `inset 0 0 0 1px ${presetColor}`;
+          toPicker.style.borderColor = presetColor;
+          toPicker.style.boxShadow = `inset 0 0 0 1px ${presetColor}`;
 
-      setTimeout(() => {
-        presetView[i].style.borderColor = "#cdcfd5";
-        presetView[i].style.boxShadow = "none";
-      }, 5000);
-    }
+          setTimeout(() => {
+            toPicker.style.borderColor = "#cdcfd5";
+            toPicker.style.boxShadow = "none";
+          }, 5000);
+        }
+      });
+    });
   });
 });
 
 // Updating Custom Color PRESET
 const updateCustomPreset = (picker) => {
   const customPresetEl = document.querySelector(
-    "label.color-preset-input:last-child"
+    "label.color-preset-input[for='custom']"
   );
 
   // listening picker input events
   picker.addEventListener("input", function(e) {
     const presetColors = customPresetEl.querySelectorAll(".header span");
-    colorPickerInputs.forEach((picker, i) => {
-      presetColors[i].dataset.color = picker.value;
-      presetColors[i].style.backgroundColor = picker.value;
-      presetView[i].querySelector(".picker-value").innerHTML = picker.value;
-      customPresetEl.querySelector('input[type="radio"]').checked = true;
+    const presetItem = customPresetEl.querySelector('input[type="radio"]');
+    const pickerCode = picker.nextElementSibling;
+
+    colorPickerInputs.forEach((picker) => {
+      let preset = picker.dataset.picker;
+      presetColors.forEach((toPreset) => {
+        if (toPreset.dataset.preset == preset) {
+          toPreset.dataset.color = picker.value;
+          toPreset.style.backgroundColor = picker.value;
+        }
+      });
+      pickerCode.innerText = picker.value;
+      presetItem.checked = true;
     });
   });
 };

@@ -1,0 +1,30 @@
+
+.tutor-admin-announcements-list {
+    .new-announcement-wrap {
+        background-color: #fff;
+        .new-announcement-button button {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 32px;
+            text-align: center;
+            color: #FFFFFF;
+            background: #1973AA;
+            border-radius: 6px;
+            &:hover {
+                background: #1973AA;
+            }
+        }
+    }
+    .tutor-announcement-big-icon {
+        i {
+            background: #E9EDFB;
+            border-radius: 100%;
+            width: 56px;
+            height: 56px;
+            color: #1973AA;
+            padding: 20px;
+            font-size: 24px;
+        }
+    }
+}

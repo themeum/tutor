@@ -13,8 +13,8 @@
 
 ?>
 <!-- .tutor-backend-wrap -->
-<section class="tutor-backend-settings-page" style="padding-top: 60px;">
-	<header class="tutor-option-header px-3 py-2" style="position: fixed;right:0;z-index:99;width:calc(100% - 160px);top:32px;">
+<section class="tutor-backend-settings-page" style="padding-top: 60px;margin-left: -20px;">
+	<header class="tutor-option-header tutor-bs-px-3 tutor-bs-py-2" style="position: fixed;right:0;z-index:99;width:calc(100% - 160px);top:32px;">
 		<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 		<div class="search-field">
 			<div class="tutor-input-group tutor-form-control-has-icon">
@@ -62,10 +62,10 @@
 		</div>
 	</header>
 	<div class="tutor-option-body">
-		<form class="tutor-option-form py-4 px-3" id="tutor-option-form">
+		<form class="tutor-option-form tutor-bs-py-4 tutor-bs-px-3" id="tutor-option-form">
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-option-tabs">
-				<ul class="tutor-option-nav">
+				<ul class="tutor-option-nav tutor-bs-mt-0">
 					<?php
 					foreach ( $option_fields as $key => $section ) {
 						$icon         = tutor()->icon_dir . $key . '.svg';
