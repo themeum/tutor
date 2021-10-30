@@ -106,17 +106,12 @@ if ( ! defined( 'ABSPATH' ) )
             $full_width_fields = array('rows', 'slider', 'radio', 'range', 'payments', 'dropdown');
 
             foreach ($field_arr as $key_parent => $field_parent) {
-
+                
                 $html .= '<li class="'.($i==1 ? "active" : "").'">';
                     $html .= '<div class="tutor-setup-content-heading heading">';
-                        $html .= '<div>'.$field_parent['lable'].'</div>';
-                        $html .= '<div>';
-                            $html .= '<strong class="tutor-steps-current">'.$i.'</strong> / <span class="tutor-steps">'.count($field_arr).'</span> ';
-                            if ($i > 1) {
-                                $html .= __('Steps Completed', 'tutor');
-                            } else {
-                                $html .= __('Step Completed', 'tutor');
-                            }
+                        $html .= '<div class="setup-section-title">'.$field_parent['lable'].'</div>';
+                        $html .= '<div class="step-info">';
+                            $html .= '<span class="">'.__('Step', 'tutor').':</span> <strong>'.$i.' / '.count($field_arr).'</strong>';
                         $html .= '</div>';
                         $html .= '<div class="tutor-reset-section">'.__('Reset Default', 'tutor').'</div>';
                     $html .= '</div>';
@@ -389,8 +384,8 @@ if ( ! defined( 'ABSPATH' ) )
                         'lesson_permalink_base' => array(
                             'type' => 'text',
                             'max' => 50,
-                            'lable' => __('Lesson Slug', 'tutor'),
-                            'desc' => __('Pick the URL prefix you want for your lessons.', 'tutor'),
+                            'lable' => __('Lesson permalink', 'tutor'),
+                            'desc' => sprintf( __('Example:  %s', 'tutor'), get_home_url().'/courses/sample-course/<strong>'.(tutor_utils()->get_option('lesson_permalink_base', 'lessons')).'</strong>/sample-lesson/'),
                         )
                     )
                 ),
@@ -580,7 +575,7 @@ if ( ! defined( 'ABSPATH' ) )
                                 <li>
                                     <div class="tutor-setup-content-heading greetings">
                                         <div class="header">
-                                            <img src="<?php echo tutor()->url . 'assets/images/greeting-img.jpg'; ?>" alt="greeting">
+                                            <img src="<?php echo tutor()->url . 'assets/images/greeting-img.png'; ?>" alt="greeting">
                                         </div>
                                         <div class="content">
                                             <h2><?php _e('Congratulations, you’re all set!', 'tutor'); ?></h2>
@@ -588,8 +583,12 @@ if ( ! defined( 'ABSPATH' ) )
                                             <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a target="_blank" href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
-                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>"><?php _e('CREATE A NEW COURSE', 'tutor'); ?></button>
-                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>"><?php _e('EXPLORE ADDONS', 'tutor'); ?></button>
+                                            <button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
+                                                <?php _e('CREATE A NEW COURSE', 'tutor'); ?>
+                                            </button>
+                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
+                                                <?php _e('EXPLORE ADDONS', 'tutor'); ?>
+                                            </button>
                                         </div>
                                     </div>
                                 </li>
@@ -608,22 +607,16 @@ if ( ! defined( 'ABSPATH' ) )
             
             $html = '<div class="tutor-setup-content-footer footer">';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
-                    $html .= '<button class="tutor-setup-previous previous animated-btn">';
-                        $html .= '<svg xmlns="http://www.w3.org/2000/svg" id="prev-arrow-1" width="17" height="12">';
-                            $html .= '<path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>';
-                        $html .= '</svg>';
-                        $html .= '<span>'.__('Previous', 'tutor').'</span>';
+                    $html .= '<button class="tutor-btn tutor-btn-disable-outline tutor-btn-md tutor-setup-previous">';
+                        $html .= '<span>&#8592;</span>&nbsp;<span>'.__('Previous', 'tutor').'</span>';
                     $html .= '</button>';
                 $html .= '</div>';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
                     $html .= '<button class="tutor-setup-skip">'.__('Skip This Step', 'tutor').'</button>';
                 $html .= '</div>';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
-                    $html .= '<button class="tutor-setup-next next animated-btn">';
-                        $html .= '<span>'.__('Next', 'tutor').'</span>';
-                        $html .= '<svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-2" width="17" height="12">';
-                            $html .= '<path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>';
-                        $html .= '</svg>';
+                    $html .= '<button class="tutor-btn tutor-btn-md tutor-setup-next">';
+                        $html .= '<span>'.__('Next', 'tutor').'</span>&nbsp;<span>&#8594;</span>';
                     $html .= '</button>';
                 $html .= '</div>';
             $html .= '</div>';
@@ -637,8 +630,17 @@ if ( ! defined( 'ABSPATH' ) )
             <div class="tutor-wizard-container">
                 <div class="tutor-wrapper-boarding tutor-setup-wizard-boarding active">
                     <div class="wizard-boarding-header">
-                        <div><img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" /></div>
-                        <div><?php printf(__('Hello %s, welcome to Tutor LMS! Thank you for choosing us.', 'tutor'), $current_user->user_login); ?></div>
+                        <div>
+                            <img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" />
+                        </div>
+                        <div>
+                            <h3>
+                                <?php printf(__('Hello %s, welcome to Tutor LMS!', 'tutor'), $current_user->user_login); ?>
+                            </h3>
+                            <h2>
+                                <?php _e('Thank You for Choosing Us', 'tutor'); ?>
+                            </h2>
+                        </div>
                     </div>
                     <div class="wizard-boarding-body">
                         <ul class="slider tutor-boarding">
@@ -672,14 +674,15 @@ if ( ! defined( 'ABSPATH' ) )
                     </div>
                     <div class="wizard-boarding-footer">
                         <div>
-                            <button class="tutor-boarding-next next animated-btn">
-                                <span><?php _e('Let’s Start', 'tutor'); ?></span>
-                                <svg xmlns="http://www.w3.org/2000/svg" id="next-arrow-2" width="17" height="12">
-                                    <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
-                                </svg>
+                            <button class="tutor-btn tutor-boarding-next">
+                                <?php _e('Let’s Start', 'tutor'); ?>
                             </button>
                         </div>
-                        <div><a href="<?php echo admin_url(); ?>"><?php _e('I already know, skip this!', 'tutor'); ?></a></div>
+                        <div>
+                            <a href="<?php echo admin_url(); ?>" class="tutor-boarding-skip text-bold-caption">
+                                <?php _e('I already know, skip it!', 'tutor'); ?>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -701,9 +704,14 @@ if ( ! defined( 'ABSPATH' ) )
                             <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace_setup" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-0">
-                                <img src="<?php echo tutor()->url.'assets/images/single-marketplace.png'; ?>" />
+                                <img src="<?php echo tutor()->url.'assets/images/single-marketplace.svg'; ?>" />
                                 <div class="title"><?php _e( 'Individual', 'tutor' ); ?></div>
-                                <div class="subtitle"><?php _e( 'I want to start my solo journey as an educator and spread my knowledge.', 'tutor' ); ?></div>
+                                <div class="subtitle"><?php _e( 'Share solo journey as an educator and spared knowledge', 'tutor' ); ?></div>
+                                <div class="action">
+                                    <button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-type-next">
+                                        <?php _e('Next', 'tutor'); ?>
+                                    </button>
+                                </div>
                             </label>
                         </div>
 
@@ -711,30 +719,24 @@ if ( ! defined( 'ABSPATH' ) )
                             <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace_setup" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-1">
-                                <img src="<?php echo tutor()->url.'assets/images/multiple-marketplace.png'; ?>" />
+                                <img src="<?php echo tutor()->url.'assets/images/multiple-marketplace.svg'; ?>" />
                                 <div class="title"><?php _e( 'Marketplace', 'tutor' ); ?></div>
-                                <div class="subtitle"><?php _e( 'I want to create an eLearning platform to let anyone earn by teaching online.', 'tutor' ); ?></div>
+                                <div class="subtitle"><?php _e( 'Create an eLearning platform to let anyone earn by teaching online', 'tutor' ); ?></div>
+                                <div class="action">
+                                    <button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-type-next">
+                                        <?php _e('Next', 'tutor'); ?>
+                                    </button>
+                                </div>
                             </label>
                         </div>
                     </div>
 
                     <div class="wizard-type-footer">
                         <div>
-                            <button class="tutor-setup-type-previous previous animated-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" id="prev-arrow-1" width="17" height="12">
-                                    <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"></path></svg>
-                                <?php _e('Previous', 'tutor'); ?>
-                            </button>
-
-                            <button class="tutor-type-next primary-btn next">
-                                <span><?php _e('Next', 'tutor'); ?></span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="12">
-                                    <path fill="#fff" stroke="" d="M11.492.65a.603.603 0 0 0-.86 0 .607.607 0 0 0 0 .85l4.361 4.362H.603A.6.6 0 0 0 0 6.465c0 .335.267.61.602.61h14.391l-4.36 4.353a.617.617 0 0 0 0 .86c.24.241.627.241.86 0l5.393-5.393a.592.592 0 0 0 0-.852L11.492.65z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div>
-                            <a href="#" class="tutor-type-skip" class=""><?php _e('Not sure. Let’s go to the next step.', 'tutor'); ?></a>
+                            <span><?php _e('Not sure?', 'tutor'); ?></span>&nbsp;
+                            <a href="#" class="tutor-type-skip" class="">
+                                <?php _e('Let’s go to the next step.', 'tutor'); ?>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -771,7 +773,6 @@ if ( ! defined( 'ABSPATH' ) )
             <?php
         }
 
-
         public function enqueue_scripts() {
             if (isset($_GET['page'])) {
                 if ($_GET['page'] == 'tutor-setup') {
@@ -779,12 +780,10 @@ if ( ! defined( 'ABSPATH' ) )
                     wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), TUTOR_VERSION );
                     wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), TUTOR_VERSION );
                     wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-                    wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'tutor-slick' ), TUTOR_VERSION, true );
+                    wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'tutor-slick', 'wp-i18n' ), TUTOR_VERSION, true );
                     wp_localize_script('tutor-setup', '_tutorobject', array('ajaxurl' => admin_url('admin-ajax.php')));
                 }
             }
         }
-
-
     }
 
