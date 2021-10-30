@@ -5,7 +5,7 @@ $field_id     = 'field_' . $field['key'];
 ?>
 <div class="tutor-option-field-row d-block" id="<?php echo $field_id; ?>">
 	<div class="tutor-option-field-label">
-		<label><?php echo $field['label']; ?></label>
+		<h5 class="label"><?php echo $field['label']; ?></h5>
 	</div>
 	<div class="tutor-option-field-input image-previewer is-selected">
 		<div class="d-flex logo-upload">

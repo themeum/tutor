@@ -73,12 +73,12 @@ $filters = array(
 	
 
 	<div class="tutor-ui-table-responsive tutor-mt-30 tutor-mr-20">
-		<table class="tutor-ui-table table-students">
+		<table class="tutor-ui-table tutor-ui-table-responsive table-students">
 			<thead>
 			<tr>
 				<th>
 				<div class="inline-flex-center color-text-subsued">
-				<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input tutor-form-check-square" name="tutor-bulk-checkbox-all">
+				<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input" name="tutor-bulk-checkbox-all">
 					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
 					<span class="ttr-ordering-a-to-z-filled"></span>
 				</div>
@@ -107,9 +107,9 @@ $filters = array(
 			<tbody>
 			<?php foreach ( $students_list as $list ) : ?>
 			<tr>
-				<td data-th="Student">
+				<td class="column-fullwidth">
 				<div class="td-avatar">
-				<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-form-check-square tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
+				<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
 					<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
 					<img src="<?php echo $avatar_url; ?>" alt="student avatar"/>
 					<p class="color-text-primary text-medium-body">

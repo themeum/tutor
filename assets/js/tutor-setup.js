@@ -949,7 +949,13 @@ window.jQuery(document).ready(function ($) {
         $that.removeClass('updating-icon');
       }
     });
+  }); // Textarea auto height
+
+  $(document).on('input', '.tutor-textarea-auto-height', function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
   });
+  $('.tutor-textarea-auto-height').trigger('input');
 });
 
 /***/ }),
@@ -1525,14 +1531,9 @@ jQuery(document).ready(function ($) {
     }
   });
   /* ---------------------
-  * Wizard Skip
+  * Navigate Wizard Screens
   * ---------------------- */
 
-  $(".tutor-boarding-next, .tutor-boarding-skip").on("click", function (e) {
-    e.preventDefault();
-    $(".tutor-setup-wizard-boarding").removeClass("active");
-    $(".tutor-setup-wizard-type").addClass("active");
-  });
   $(".tutor-type-next, .tutor-type-skip").on("click", function (e) {
     e.preventDefault();
     $(".tutor-setup-wizard-type").removeClass("active");

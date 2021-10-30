@@ -1,0 +1,66 @@
+body.tutor-screen-course-builder{
+
+    .select2-container--open {
+        margin-top: 32px;
+    }
+
+    .select2-container {
+        margin-bottom: 20px;
+        width: 100% !important;
+
+        ul.select2-selection__rendered {
+            padding: 4px 9px;
+            display: block;
+        }
+
+        li.select2-selection__choice {
+            background: #E3E5EB;
+            line-height: 29px;
+            border-radius: 100px;
+            padding: 1px 9px 1px 16.5px;
+            margin: 5px;
+            border: none;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            color: #41454F;
+
+            .select2-selection__choice__remove {
+                margin-left: 11px;
+                float: right;
+            }
+        }
+
+        .select2-search__field {
+            padding: 8px 3px 8px 6px;
+            box-sizing: border-box;
+            margin: 0;
+            &::-webkit-input-placeholder {
+                color: #abafb6;
+            }
+            &::-moz-placeholder {
+                color: #abafb6;
+            }
+            &:-ms-input-placeholder {
+                color: #abafb6;
+            }
+            &:-moz-placeholder {
+                color: #abafb6;
+            }
+        }
+        
+        .select2-selection--single, .select2-selection--multiple {
+            border-color: #dcdfe5;
+        }
+
+        &.select2-container--focus {
+            .select2-selection--single, .select2-selection--multiple {
+                border-color: var(--tutor-primary-color);
+            }
+        } 
+
+        .select2-search__field {
+            min-width: 1em !important;
+        }
+    }
+}

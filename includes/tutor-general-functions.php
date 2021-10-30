@@ -694,15 +694,15 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 	}
 }
 
-	/**
-	 * Convert date to desire format
-	 *
-	 * @param $format string
-	 *
-	 * @param $date string
-	 *
-	 * @return string ( date )
-	*/
+/**
+ * Convert date to desire format
+ *
+ * @param $format string
+ *
+ * @param $date string
+ *
+ * @return string ( date )
+*/
 if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	function tutor_get_formated_date( string $require_format, string $user_date ) {
 		return date( $require_format, strtotime( $user_date ) );
@@ -757,3 +757,16 @@ if ( ! function_exists( 'get_request' ) ) {
 
 
 
+
+/**
+ * @return array
+ *
+ * Get all Withdraw Methods available on this system
+ *
+ * @since v.1.5.7
+ */
+if (!function_exists('get_tutor_all_withdrawal_methods')) {
+	function get_tutor_all_withdrawal_methods() {
+		return apply_filters( 'tutor_withdrawal_methods_all', array() );
+	}
+}
