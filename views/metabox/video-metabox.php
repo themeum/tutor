@@ -27,8 +27,9 @@ $supported_sources = tutor_utils()->get_option('supported_video_sources', $video
 $supported_sources = array_keys($supported_sources);
 ?>
 
+
 <div class="tutor-mb-30">
-    <label class="tutor-form-label">
+    <label class="tutor-course-field-label">
         <?php
         if ($post->post_type === tutor()->course_post_type){
             _e('Course Intro Video', 'tutor');
@@ -37,7 +38,7 @@ $supported_sources = array_keys($supported_sources);
         }
         ?>
     </label>
-    <div class="tutor-input-group tutor-mb-15">
+    <div class="tutor-input-group tutor-mb-15 tutor-bs-d-block">
         <div class="tutor-video-upload-wrap container-fluid g-0">
             <select name="video[source]" class="tutor-form-select tutor_lesson_video_source tutor-form-select">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
@@ -50,7 +51,7 @@ $supported_sources = array_keys($supported_sources);
                 ?>
             </select>
             
-            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_html5" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_html5 tutor-dashed-uploader" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
                 <div class="video-metabox-source-html5-upload">
                     <p class="video-upload-icon"><i class="tutor-icon-upload"></i></p>
                     <p><strong><?php _e('Upload Your Video'); ?></strong></p>
@@ -61,55 +62,29 @@ $supported_sources = array_keys($supported_sources);
                         <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
                         <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo $sourceVideoID; ?></span></p>
                     </div>
-
                 </div>
 
-                <div class="video-metabox-source-html5-poster">
-                    <div class="tutor-form-field tutor-form-field-course-thumbnail tutor-thumbnail-wrap">
-                        <div class="tutor-bs-row tutor-bs-align-items-center">
-                            <div class="tutor-bs-col">
-                                <div class="builder-course-thumbnail-img-src html5-video-poster">
-                                    <?php
-                                    $builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
-                                    $poster_url = $builder_course_img_src;
-                                    if ( $poster){
-                                        $poster_url = wp_get_attachment_image_url($poster);
-                                    }
-                                    ?>
-                                    <img src="<?php echo $poster_url; ?>" class="thumbnail-img" data-placeholder-src="<?php echo $builder_course_img_src; ?>">
-                                    <a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display: <?php echo
-                                    $poster ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
-                                    <div class="tutor-builder-course-video-poster-text">
-                                        <h5><?php esc_html_e("Video Poster", 'tutor'); ?></h5>
-                                        <span><?php esc_html_e("Thumb Size: 700x430 pixels. File Support: jpg, jpeg, or png", 'tutor'); ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tutor-bs-col-auto">
-                                <div class="builder-course-thumbnail-upload-wrap">
-                                    <input type="hidden" id="tutor_course_thumbnail_id" name="video[poster]" value="<?php echo $poster; ?>">
-                                    <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-btn tutor-is-outline button-transparent"><i class="tutor-icon-photo-add"></i> <?php _e('Upload Image', 'tutor'); ?></a>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                <?php 
+                    tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
+                        'media_id' => tutor_utils()->avalue_dot('poster', $video),
+                        'input_name' => 'video[poster]'
+                    ), false);
+                ?>
             </div>
 
-            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_external_url" style="display: <?php echo $videoSource === 'external_url' ? 'block' : 'none'; ?>;">
-                <input class="tutor-form-control" type="text" name="video[source_external_url]" value="<?php echo tutor_utils()->avalue_dot('source_external_url', $video); ?>" placeholder="<?php _e('External Video URL', 'tutor'); ?>">
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_external_url tutor-dashed-uploader" style="display: <?php echo $videoSource === 'external_url' ? 'block' : 'none'; ?>;">
+                <input class="tutor-form-control" type="text" name="video[source_external_url]" value="<?php echo tutor_utils()->avalue_dot('source_external_url', $video); ?>" placeholder="<?php _e('Paste External Video URL', 'tutor'); ?>">
             </div>
 
-            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' : 'none'; ?>;">
-                <input class="tutor-form-control" type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('YouTube Video URL', 'tutor'); ?>" data-youtube_api_key="<?php echo tutor_utils()->get_option('lesson_video_duration_youtube_api_key', ''); ?>">
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_youtube tutor-dashed-uploader" style="display: <?php echo $videoSource === 'youtube' ? 'block' : 'none'; ?>;">
+                <input class="tutor-form-control" type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot('source_youtube', $video); ?>" placeholder="<?php _e('Paste YouTube Video URL', 'tutor'); ?>" data-youtube_api_key="<?php echo tutor_utils()->get_option('lesson_video_duration_youtube_api_key', ''); ?>">
             </div>
 
-            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
-                <input class="tutor-form-control" type="text" name="video[source_vimeo]" value="<?php echo tutor_utils()->avalue_dot('source_vimeo', $video); ?>" placeholder="<?php _e('Vimeo Video URL', 'tutor'); ?>">
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_vimeo tutor-dashed-uploader" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
+                <input class="tutor-form-control" type="text" name="video[source_vimeo]" value="<?php echo tutor_utils()->avalue_dot('source_vimeo', $video); ?>" placeholder="<?php _e('Paste Vimeo Video URL', 'tutor'); ?>">
             </div>
 
-            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_embedded" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_embedded tutor-dashed-uploader" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
                 <textarea class="tutor-form-control" name="video[source_embedded]" placeholder="<?php _e('Place your embedded code here', 'tutor'); ?>"><?php echo tutor_utils()->avalue_dot('source_embedded', $video);?></textarea>
             </div>
         </div>

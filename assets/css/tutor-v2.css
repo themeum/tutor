@@ -9983,12 +9983,32 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   margin-right: 6px;
 }
 
-body.tutor-screen-course-builder .select2-container--open {
+body.tutor-screen-course-builder .select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 46px;
+}
+
+body.tutor-screen-course-builder .select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 46px;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-selection--single .select2-selection__rendered {
+  padding-left: 13px;
+  font-size: 16px;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-selection--single {
+  height: 48px;
+}
+
+body.tutor-screen-course-builder .select2-container .select2-selection--multiple {
+  min-height: 50px;
+}
+
+body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .select2-dropdown.select2-dropdown--below, body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .select2-dropdown.select2-dropdown--above {
   margin-top: 32px;
 }
 
 body.tutor-screen-course-builder .select2-container {
-  margin-bottom: 20px;
   width: 100% !important;
 }
 
@@ -14536,7 +14556,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   display: block;
 }
 
-.tutor-attachment-cards span.ttr {
+.tutor-attachment-cards span.tutor-delete-attachment {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -14564,10 +14584,10 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   cursor: pointer;
   width: 40px;
   height: 40px;
-  font-size: 30px;
+  font-size: 14px;
 }
 
-.tutor-attachment-cards span.ttr:hover {
+.tutor-attachment-cards span.tutor-delete-attachment:hover {
   background: #eff1f7;
 }
 
