@@ -935,11 +935,6 @@
   line-height: 123%;
 }
 
-.text-body {
-  font-family: 'SF Pro Display', sans-serif;
-  font-style: normal;
-}
-
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

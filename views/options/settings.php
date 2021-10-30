@@ -13,17 +13,17 @@
 
 ?>
 <!-- .tutor-backend-wrap -->
-<section class="tutor-backend-settings-page" style="padding-top: 60px;margin-left: -20px;">
-	<header class="tutor-option-header tutor-bs-px-3 tutor-bs-py-2" style="position: fixed;right:0;z-index:99;width:calc(100% - 160px);top:32px;">
+<section class="tutor-backend-settings-page" style="margin-left: -20px;">
+	<header class="tutor-option-header tutor-bs-px-3 tutor-bs-py-2">
 		<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 		<div class="search-field">
-			<div class="tutor-input-group tutor-form-control-has-icon">
-				<span class="tutor-input-group-icon tutor-v2-icon-test icon-search-filled"></span>
-				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" />
+			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
+				<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search ... ', 'tutor' ); ?>" />
 				<div class="search-popup-opener search_result">
 					<a href="#">
 						<div class="search_result_title">
-							<i class="las la-search"></i>›
+							<i class="ttr-search-filled"></i>›
 							<span>Result results one</span>
 						</div>
 						<div class="search_navigation">
@@ -34,7 +34,7 @@
 					</a>
 					<a href="#">
 						<div class="search_result_title">
-							<i class="las la-search"></i>
+							<i class="ttr-search-filled"></i>
 							<span>Result results tow</span>
 						</div>
 						<div class="search_navigation">
@@ -45,7 +45,7 @@
 					</a>
 					<a href="#">
 						<div class="search_result_title">
-							<i class="las la-search"></i>
+							<i class="ttr-search-filled"></i>
 							<span>Result results three</span>
 						</div>
 						<div class="search_navigation">
@@ -55,6 +55,11 @@
 						</div>
 					</a>
 				</div>
+			</div>
+			<div class="tutor-input-group tutor-form-control-has-icon">
+				<!-- <span class="tutor-input-group-icon ttr-search-filled"></span>
+				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" /> -->
+				
 			</div>
 		</div>
 		<div class="save-button">
