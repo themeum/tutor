@@ -5429,6 +5429,7 @@ li.tutor-option-nav-item h4 {
 @media (max-width: 782px) {
   .tutor-option-header {
     left: 0;
+    top: 47px;
   }
 }
 
