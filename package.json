@@ -8,6 +8,7 @@
 		"build-dev": "webpack --mode=development && gulp build",
 		"css-watch": "gulp watch",
 		"js-watch": "webpack --watch --mode=development",
+		"docz-build": "docz build",
 		"docz-init": "docz build && node doczcp.js",
 		"docz-watch": "docz dev",
 		"watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\" \"npm run docz-watch\"",
