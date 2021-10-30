@@ -933,6 +933,10 @@ window.jQuery(document).ready(function ($) {
   $(document).on('change', 'input.tutor_select_value_holder', function (e) {
     $('.add_question_answers_option').trigger('click');
     $('#tutor_quiz_question_answers').trigger('refresh');
+  }); // Collapse/expand advanced settings
+
+  $(document).on('click', '.tutor-quiz-advance-settings .tutor-quiz-advance-header', function () {
+    $(this).parent().toggleClass('tutor-is-active').find('.ttr-angle-down-filled').toggleClass('ttr-angle-up-filled');
   });
 });
 
