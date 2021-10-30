@@ -139,9 +139,11 @@ class Course_Filter{
 
         foreach($terms as $term){
             ?>
-                <div class="tutor-course-filter-nested-terms">
-                    <label>
-                        <input type="checkbox" name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
+                <div class="tutor-form-check tutor-mb-18">
+
+                <input type="checkbox" class="tutor-form-check-input" id="<?php echo $term->term_id; ?>"  name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
+
+                    <label for="<?php echo $term->term_id; ?>">
                         <?php echo $term->name; ?>
                     </label>
 

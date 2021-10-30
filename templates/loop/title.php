@@ -11,7 +11,7 @@
  */
 ?>
 
-<div class="tutor-course-loop-title">
-    <h2><a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a></h2>
+<div class="list-item-title text-medium-h5 color-text-primary">
+    <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
 </div>
 
