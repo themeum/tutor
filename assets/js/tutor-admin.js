@@ -1600,23 +1600,24 @@ var export_settings_all = function export_settings_all() {
           "Content-Type": "application/x-www-form-urlencoded",
           "Cache-Control": "no-cache"
         },
-        // beforeSend: function () {},
-        success: function success(data) {
-          // console.log(data.data);
-          // return false;
-          var output = "",
-              wrapped_item = "",
-              notfound = true,
-              item_text = "",
-              section_slug = "",
-              section_label = "",
-              block_label = "",
-              matchedText = "",
-              searchKeyRegex = "",
-              field_key = "",
-              result = data.data.fields;
-          Object.values(result).forEach(function (item, index, arr) {
-            var _item_text$match;
+        body: new URLSearchParams({
+          action: "tutor_export_settings"
+        })
+      }).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        var fileName = "tutor_options_" + time_now();
+        (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(JSON.stringify(response), fileName);
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    };
+  }
+};
+/**
+ *
+ * @returns time by second
+ */
 
 
 var time_now = function time_now() {
@@ -1749,10 +1750,18 @@ var delete_history_data = function delete_history_data() {
   var noticeMessage = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".tutor-notification");
   var delete_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".delete_single_settings");
 
-  function highlightSearchedItem(dataKey) {
-    var target = document.querySelector("#".concat(dataKey));
-    var targetEl = target && target.querySelector(".tutor-option-field-label h5.label");
-    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row"); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
+  var _loop3 = function _loop3(i) {
+    delete_settings[i].onclick = function () {
+      var delete_id = delete_settings[i].dataset.id;
+      var formData = new FormData();
+      formData.append("action", "tutor_delete_single_settings");
+      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+      formData.append("time", Date.now());
+      formData.append("delete_id", delete_id);
+      noticeMessage.classList.add("show");
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", _tutorobject.ajaxurl, true);
+      xhttp.send(formData);
 
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
@@ -1990,6 +1999,8 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         // beforeSend: function () {},
         success: function success(data) {
+          // console.log(data.data);
+          // return false;
           var output = "",
               wrapped_item = "",
               notfound = true,
@@ -2083,9 +2094,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function highlightSearchedItem(dataKey) {
     var target = document.querySelector("#".concat(dataKey));
-    var targetEl = target && target.querySelector(".tutor-option-field-label label");
-    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row");
-    console.log("target -> ".concat(target, " scrollTarget -> ").concat(scrollTargetEl));
+    var targetEl = target && target.querySelector(".tutor-option-field-label h5.label");
+    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row"); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
     if (scrollTargetEl) {
       targetEl.classList.add("isHighlighted");
