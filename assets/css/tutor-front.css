@@ -975,37 +975,6 @@ body {
   color: var(--tutor-primary-color);
 }
 
-.tutor-styled-radio > span {
-  position: relative;
-  padding-left: 30px;
-  cursor: pointer;
-}
-
-.tutor-styled-radio > span::before {
-  content: '';
-  height: 18px;
-  width: 18px;
-  background: #F1F3F7;
-  border: 1px solid #DCDFE5;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  margin-top: -9px;
-  left: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  -webkit-transition: 200ms;
-  transition: 200ms;
-}
-
-.tutor-styled-radio > input {
-  display: none !important;
-}
-
-.tutor-styled-radio > input:checked + span::before {
-  border: 5px solid var(--tutor-primary-color);
-}
-
 /*
 .tutor-course-content-content{
   font-size: 14px;
@@ -4075,72 +4044,6 @@ Instructor
   padding-left: 35px;
 }
 
-.tutor-option-field .select2-container,
-.tutor-form-group .select2-container {
-  margin-bottom: 20px;
-  width: 100% !important;
-}
-
-.tutor-option-field .select2-container ul.select2-selection__rendered,
-.tutor-form-group .select2-container ul.select2-selection__rendered {
-  padding: 4px 9px;
-  display: block;
-}
-
-.tutor-option-field .select2-container li.select2-selection__choice,
-.tutor-form-group .select2-container li.select2-selection__choice {
-  background: #ebeef0;
-  color: #606c8f;
-  line-height: 29px;
-  border-radius: 3px;
-  padding: 0 9px;
-  margin: 5px;
-  border: none;
-  font-weight: 600;
-}
-
-.tutor-option-field .select2-container .select2-search__field,
-.tutor-form-group .select2-container .select2-search__field {
-  padding: 8px 3px 8px 6px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  margin: 0;
-}
-
-.tutor-option-field .select2-container .select2-search__field::-webkit-input-placeholder,
-.tutor-form-group .select2-container .select2-search__field::-webkit-input-placeholder {
-  color: #abafb6;
-}
-
-.tutor-option-field .select2-container .select2-search__field::-moz-placeholder,
-.tutor-form-group .select2-container .select2-search__field::-moz-placeholder {
-  color: #abafb6;
-}
-
-.tutor-option-field .select2-container .select2-search__field:-ms-input-placeholder,
-.tutor-form-group .select2-container .select2-search__field:-ms-input-placeholder {
-  color: #abafb6;
-}
-
-.tutor-option-field .select2-container .select2-search__field:-moz-placeholder,
-.tutor-form-group .select2-container .select2-search__field:-moz-placeholder {
-  color: #abafb6;
-}
-
-.tutor-option-field .select2-container .select2-selection--single,
-.tutor-option-field .select2-container .select2-selection--multiple,
-.tutor-form-group .select2-container .select2-selection--single,
-.tutor-form-group .select2-container .select2-selection--multiple {
-  border-color: #dcdfe5;
-}
-
-.tutor-option-field .select2-container.select2-container--focus .select2-selection--single,
-.tutor-option-field .select2-container.select2-container--focus .select2-selection--multiple,
-.tutor-form-group .select2-container.select2-container--focus .select2-selection--single,
-.tutor-form-group .select2-container.select2-container--focus .select2-selection--multiple {
-  border-color: var(--tutor-primary-color);
-}
-
 .tutor-option-field textarea,
 .tutor-form-group textarea {
   line-height: 26px;
@@ -6174,6 +6077,48 @@ table.course-single-gradebooks a {
   -ms-align-items: center;
   -moz-align-items: center;
   -webkit-align-items: center;
+}
+
+.tutor-course-listing-filter {
+  padding-top: 50px !important;
+  margin: 0px auto;
+}
+
+.tutor-course-listing-filter .tutor-course-filter-loop-container {
+  margin-top: 0px;
+}
+
+.tutor-course-archive-filters-wrap select {
+  font-family: var(--body-font);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 21px;
+  border: 1px solid #e1e7ec;
+  border-radius: 4px;
+  padding: 12px 19px;
+  color: #57586e;
+  outline: none;
+}
+
+.list-item-price ins {
+  text-decoration: none;
+}
+
+.list-item-price del {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 160%;
+  color: #757c8e;
+}
+
+.list-item-button.booking-available .btn-icon {
+  height: 0px !important;
+  width: 0px !important;
+  margin-right: 10px !important;
+}
+
+.list-item-button.booking-available button:hover span {
+  color: #fff;
 }
 
 .tutor-forgot-password-form, .tutor-reset-password-form {

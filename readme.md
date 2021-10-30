@@ -47,122 +47,126 @@ The WordPress codex contains [instructions on how to do this here](https://codex
 Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS Pro Version](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository), then you will get automatically all addons.
 
 
-
 <table>
-
-<tr>
-
-<td align="center" width="33.3333%">
-<img src=".github/addons/content-drip.png" alt="Content Drip" height="100px" />
-<h4>Content Drip</h4>
-Unlock lessons by schedule or when the student meets specific condition.
-</td>
-
-<td align="center" width="33.3333%">
-<img src=".github/addons/enrollments.png" alt="Enrollments" height="100px" />
-<h4>Enrollments</h4>
-Take advanced control on enrollments. Enroll the student manually.
-</td>
-
-<td align="center" width="33.3333%">
-<img src=".github/addons/gradebook.png" alt="Gradebook" height="100px" />
-<h4>Gradebook</h4>
-Shows student progress from assignment and quiz
-</td>
-</tr>
-
-<tr>
-
-<td align="center">
-<img src=".github/addons/pmpro.png" alt="Paid Memberships Pro" height="100px" />
-<h4>Paid Memberships Pro</h4>
-Maximize revenue by selling membership access to all of your courses.
-</td>
-
-<td align="center">
-<img src=".github/addons/tutor-assignments.png" alt="Assignments" height="100px" />
-<h4>Assignments</h4>
-Tutor assignments is a great way to assign tasks to students.
-</td>
-
-<td align="center">
-<img src=".github/addons/tutor-certificate.png" alt="Certificate" height="100px" />
-<h4>Certificate</h4>
-Students will be able to download a certificate after course completion.
-</td>
-
-</tr>
-
-
-<tr>
-
-<td align="center">
-<img src=".github/addons/tutor-course-attachments.png" alt="Course Attachments" height="100px" />
-<h4>Course Attachments</h4>
-Add unlimited attachments/ private files to any Tutor course
-</td>
-
-<td align="center">
-<img src=".github/addons/tutor-course-preview.png" alt="Course Preview" height="100px" />
-<h4>Course Preview</h4>
-Unlock some lessons for students before enrollment.
-</td>
-
-<td align="center">
-<img src=".github/addons/tutor-email.png" alt="E-Mail" height="100px" />
-<h4>E-Mail</h4>
-Send email on various tutor events
-</td>
-
-</tr>
-
-
-<tr>
-
-<td align="center">
-<img src=".github/addons/tutor-multi-instructors.png" alt="Multi Instructors" height="100px" />
-<h4>Multi Instructors</h4>
-Start a course with multiple instructors by Tutor Multi Instructors
-</td>
-
-<td align="center">
-<img src=".github/addons/tutor-prerequisites.png" alt="Prerequisites" height="100px" />
-<h4>Prerequisites</h4>
-Specific course you must complete before you can enroll new course by Tutor Prerequisites
-</td>
-
-<td align="center">
-<img src=".github/addons/tutor-report.png" alt="Report" height="100px" />
-<h4>Report</h4>
-Check your course performance through Tutor Report stats.
-</td>
-
-</tr>
-
-<tr>
-
-<td align="center">
-<img src=".github/addons/tutor-zoom.png" alt="Tutor Zoom Integration" height="100px" />
-<h4>Tutor Zoom Integration</h4>
-Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.
-</td>
-
-<td align="center">
-<img src=".github/addons/google-classroom.png" alt="Google Classroom Integration" height="100px" />
-<h4>Google Classroom Integration</h4>
-Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course.
-</td>
-
-<td align="center">
-<img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" height="100px" />
-<h4>WooCommerce Subscriptions</h4>
-Capture Residual Revenue with Recurring Payments.
-</td>
-
-
-</tr>
-
-
-
-
+    <tbody>
+        <tr>
+            <td align="center" width="33.3333%">
+                <img src=".github/addons/content-drip.png" alt="Content Drip" height="100px" />
+                <h4>Content Drip</h4>
+                Unlock lessons by schedule or when the student meets specific condition.
+            </td>
+            <td align="center" width="33.3333%">
+                <img src=".github/addons/enrollments.png" alt="Enrollments" height="100px" />
+                <h4>Enrollments</h4>
+                Take advanced control on enrollments. Enroll the student manually.
+            </td>
+            <td align="center" width="33.3333%">
+                <img src=".github/addons/gradebook.png" alt="Gradebook" height="100px" />
+                <h4>Gradebook</h4>
+                Shows student progress from assignment and quiz
+            </td>
+        </tr>
+        <tr>
+            <td align="center" width="33.3333%">
+                <img src=".github/addons/calendar.png" alt="Calendar" height="100px" />
+                <h4>Calendar</h4>
+                Allow students to see everything in a calendar view.
+            </td>
+            <td align="center" width="33.3333%">
+                <img src=".github/addons/restrict-content-pro.png" alt="Enrollments" height="100px" />
+                <h4>Restrict Content Pro</h4>
+                Unlock Course depending on Restrict Content Permission.
+            </td>
+            <td align="center" width="33.3333%">
+                <img src=".github/addons/quiz-import-export.png" alt="Quiz Export/Import" height="100px" />
+                <h4>Quiz Export/Import</h4>
+                Save time by exporting/importing quiz data with easy options.
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <img src=".github/addons/pmpro.png" alt="Paid Memberships Pro" height="100px" />
+                <h4>Paid Memberships Pro</h4>
+                Maximize revenue by selling membership access to all of your courses.
+            </td>
+            <td align="center">
+                <img src=".github/addons/tutor-assignments.png" alt="Assignments" height="100px" />
+                <h4>Assignments</h4>
+                Tutor assignments is a great way to assign tasks to students.
+            </td>
+            <td align="center">
+                <img src=".github/addons/tutor-certificate.png" alt="Certificate" height="100px" />
+                <h4>Certificate</h4>
+                Students will be able to download a certificate after course completion.
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <img src=".github/addons/tutor-course-attachments.png" alt="Course Attachments" height="100px" />
+                <h4>Course Attachments</h4>
+                Add unlimited attachments/ private files to any Tutor course
+            </td>
+            <td align="center">
+                <img src=".github/addons/tutor-course-preview.png" alt="Course Preview" height="100px" />
+                <h4>Course Preview</h4>
+                Unlock some lessons for students before enrollment.
+            </td>
+            <td align="center">
+                <img src=".github/addons/tutor-email.png" alt="E-Mail" height="100px" />
+                <h4>E-Mail</h4>
+                Send email on various tutor events
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <img src=".github/addons/tutor-multi-instructors.png" alt="Multi Instructors" height="100px" />
+                <h4>Multi Instructors</h4>
+                Start a course with multiple instructors by Tutor Multi Instructors
+            </td>
+            <td align="center">
+                <img src=".github/addons/tutor-prerequisites.png" alt="Prerequisites" height="100px" />
+                <h4>Prerequisites</h4>
+                Specific course you must complete before you can enroll new course by Tutor Prerequisites
+            </td>
+            <td align="center">
+                <img src=".github/addons/tutor-report.png" alt="Report" height="100px" />
+                <h4>Report</h4>
+                Check your course performance through Tutor Report stats.
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <img src=".github/addons/tutor-zoom.png" alt="Tutor Zoom Integration" height="100px" />
+                <h4>Tutor Zoom Integration</h4>
+                Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.
+            </td>
+            <td align="center">
+                <img src=".github/addons/google-classroom.png" alt="Google Classroom Integration" height="100px" />
+                <h4>Google Classroom Integration</h4>
+                Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course.
+            </td>
+            <td align="center">
+                <img src=".github/addons/wc-subscriptions.png" alt="WooCommerce Subscriptions" height="100px" />
+                <h4>WooCommerce Subscriptions</h4>
+                Capture Residual Revenue with Recurring Payments.
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <img src=".github/addons/wpml.png" alt="WPML Multilingual CMS" height="100px" />
+                <h4>WPML Multilingual CMS</h4>
+                Create multilingual courses, lessons, dashboard and more for a global audience.
+            </td>
+            <td align="center">
+                <img src=".github/addons/notifications.png" alt="Notifications" height="100px" />
+                <h4>Notifications</h4>
+                Get notifications on frontend dashboard for specified tutor events.
+            </td>
+            <td align="center">
+                <img src=".github/addons/buddypress.png" alt="BuddyPress" height="100px" />
+                <h4>BuddyPress</h4>
+                Discuss about course and share your knowledge with your friends through BuddyPress
+            </td>
+        </tr>
+    </tbody>
 </table>

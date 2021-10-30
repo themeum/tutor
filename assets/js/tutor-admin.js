@@ -722,44 +722,52 @@ displayAddons(freeAddonsList);
  * Color PRESET and PICKER manipulation
  */
 var colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
-var colorPickerInputs = document.querySelectorAll(".color-picker-input input[type='color']");
-var presetView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
+var colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
+var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
 
 colorPresetInputs.forEach(function (preset) {
   // listening preset input events
   preset.addEventListener("input", function (e) {
     var presetItem = preset.parentElement.querySelector(".preset-item");
     var presetColors = presetItem.querySelectorAll(".header span");
+    presetColors.forEach(function (color) {
+      var presetKey = color.dataset.preset;
+      var presetColor = color.dataset.color;
+      pickerView.forEach(function (toPicker) {
+        var pickerInput = toPicker.dataset.key;
 
-    var _loop = function _loop(i) {
-      var presetKey = presetColors[i].dataset.key;
-      var presetColor = presetColors[i].dataset.color;
-      presetView[i].querySelector("input").value = presetColor;
-      presetView[i].querySelector(".picker-value").innerHTML = presetColor;
-      presetView[i].style.borderColor = presetColor;
-      presetView[i].style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
-      setTimeout(function () {
-        presetView[i].style.borderColor = "#cdcfd5";
-        presetView[i].style.boxShadow = "none";
-      }, 5000);
-    };
-
-    for (var i = 0; i < presetColors.length; i++) {
-      _loop(i);
-    }
+        if (pickerInput == presetKey) {
+          toPicker.querySelector("input").value = presetColor;
+          toPicker.querySelector(".picker-value").innerHTML = presetColor;
+          toPicker.style.borderColor = presetColor;
+          toPicker.style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
+          setTimeout(function () {
+            toPicker.style.borderColor = "#cdcfd5";
+            toPicker.style.boxShadow = "none";
+          }, 5000);
+        }
+      });
+    });
   });
 }); // Updating Custom Color PRESET
 
 var updateCustomPreset = function updateCustomPreset(picker) {
-  var customPresetEl = document.querySelector("label.color-preset-input:last-child"); // listening picker input events
+  var customPresetEl = document.querySelector("label.color-preset-input[for='custom']"); // listening picker input events
 
   picker.addEventListener("input", function (e) {
     var presetColors = customPresetEl.querySelectorAll(".header span");
-    colorPickerInputs.forEach(function (picker, i) {
-      presetColors[i].dataset.color = picker.value;
-      presetColors[i].style.backgroundColor = picker.value;
-      presetView[i].querySelector(".picker-value").innerHTML = picker.value;
-      customPresetEl.querySelector('input[type="radio"]').checked = true;
+    var presetItem = customPresetEl.querySelector('input[type="radio"]');
+    var pickerCode = picker.nextElementSibling;
+    colorPickerInputs.forEach(function (picker) {
+      var preset = picker.dataset.picker;
+      presetColors.forEach(function (toPreset) {
+        if (toPreset.dataset.preset == preset) {
+          toPreset.dataset.color = picker.value;
+          toPreset.style.backgroundColor = picker.value;
+        }
+      });
+      pickerCode.innerText = picker.value;
+      presetItem.checked = true;
     });
   });
 }; // listening color pickers input event
@@ -1926,13 +1934,16 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   $("#tutor-option-form").submit(function (e) {
     e.preventDefault();
+    var button = $("#save_tutor_option");
     var $form = $(this);
     var data = $form.serializeObject();
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: data,
-      beforeSend: function beforeSend() {},
+      beforeSend: function beforeSend() {
+        button.addClass('tutor-updating-message');
+      },
       success: function success(resp) {
         var _ref = resp || {},
             _ref$data = _ref.data,
@@ -1949,7 +1960,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         tutor_toast('Error!', message, 'tutor', true);
       },
-      complete: function complete() {}
+      complete: function complete() {
+        button.removeClass('tutor-updating-message');
+      }
     });
   });
 
@@ -1986,6 +1999,8 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         // beforeSend: function () {},
         success: function success(data) {
+          // console.log(data.data);
+          // return false;
           var output = "",
               wrapped_item = "",
               notfound = true,
@@ -2079,9 +2094,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function highlightSearchedItem(dataKey) {
     var target = document.querySelector("#".concat(dataKey));
-    var targetEl = target && target.querySelector(".tutor-option-field-label label");
-    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row");
-    console.log("target -> ".concat(target, " scrollTarget -> ").concat(scrollTargetEl));
+    var targetEl = target && target.querySelector(".tutor-option-field-label h5.label");
+    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row"); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
     if (scrollTargetEl) {
       targetEl.classList.add("isHighlighted");
@@ -3125,7 +3139,13 @@ window.jQuery(document).ready(function ($) {
         $that.removeClass('updating-icon');
       }
     });
+  }); // Textarea auto height
+
+  $(document).on('input', '.tutor-textarea-auto-height', function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
   });
+  $('.tutor-textarea-auto-height').trigger('input');
 });
 
 /***/ }),
