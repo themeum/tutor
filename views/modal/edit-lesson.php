@@ -29,39 +29,17 @@
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Feature Image', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
-            <div class="tutor-thumbnail-uploader" data-media-heading="<?php _e('Select or Upload Media Of Your Chosen Persuasion', 'tutor'); ?>" data-button-text="<?php _e( 'Use this media', 'tutor' )?>">
-                <div class="thumbnail-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10 tutor-p-15">
-                        <div class="thumbnail-preview image-previewer">
-                        <span class="preview-loading"></span>
-                        <?php 
-                            $lesson_thumbnail_id = '';
-                            $lesson_thumbnail_url = '';
-                            if (has_post_thumbnail($post->ID)){
-                                $lesson_thumbnail_id = get_post_meta($post->ID, '_thumbnail_id', true);
-                                $lesson_thumbnail_url = get_the_post_thumbnail_url($post->ID);
-                            }
-                        ?>
-                        <input type="hidden" class="tutor-tumbnail-id-input" name="_lesson_thumbnail_id" value="<?php echo $lesson_thumbnail_id; ?>">
-                        <img src="<?php echo $lesson_thumbnail_url; ?>" alt="course builder logo"/>
-                        <span class="delete-btn" style="<?php echo !$lesson_thumbnail_url ? 'display:none' : ''; ?>"></span>
-                    </div>
-                    <div class="thumbnail-input">
-                        <p class="text-regular-body color-text-subsued">
-                            <strong class="text-medium-body">Size: 700x430 pixels;</strong>
-                            <br />
-                            File Support:
-                            <strong class="text-medium-body">
-                            jpg, .jpeg,. gif, or .png.
-                            </strong>
-                        </p>
-                        
-                        <button class="tutor-btn tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">
-                            <span class="tutor-btn-icon ttr-image-filled"></span>
-                            <span>Upload Image</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <?php 
+                $lesson_thumbnail_id = '';
+                if (has_post_thumbnail($post->ID)){
+                    $lesson_thumbnail_id = get_post_meta($post->ID, '_thumbnail_id', true);
+                }
+
+                tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
+                    'media_id' => $lesson_thumbnail_id,
+                    'input_name' => '_lesson_thumbnail_id'
+                ), false);
+            ?>
         </div>
     </div>
 

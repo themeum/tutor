@@ -63,7 +63,9 @@
 			</div>
 		</div>
 		<div class="save-button">
-			<button id="save_tutor_option" class="tutor-btn"><?php _e( 'Save Changes', 'tutor' ); ?></button>
+			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap">
+				<?php _e( 'Save Changes', 'tutor' ); ?>
+			</button>
 		</div>
 	</header>
 	<div class="tutor-option-body">

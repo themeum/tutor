@@ -40,12 +40,12 @@ window.jQuery(document).ready(function($){
                             <a href="${attachment.url}" target="_blank">
                                 ${attachment.filename}
                             </a>
-                            <input type="hidden" name="${name}" value="${attachment.id}">
-                        </div>
-                        <div>
                             <span class="filesize">
                                 ${__('Size', 'tutor')}: ${attachment.filesizeHumanReadable}
                             </span>
+                            <input type="hidden" name="${name}" value="${attachment.id}">
+                        </div>
+                        <div>
                             <span class="tutor-delete-attachment tutor-icon-line-cross"></span>
                         </div>
                     </div>`;
