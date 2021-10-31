@@ -4,15 +4,21 @@
 	display: grid;
 	grid-gap: 30px;
 
-	// Course Grid
-	&-grid-2 {
-		grid-template-columns: repeat(2, 1fr);
+	@include breakpoint-max(tablet) {
+		@include responsiveGrid(350px, 1fr);
 	}
-	&-grid-3 {
-		grid-template-columns: repeat(3, 1fr);
-	}
-	&-grid-4 {
-		grid-template-columns: repeat(4, 1fr);
+
+	@include breakpoint-min(desktop) {
+		// Course Grid
+		&-grid-2 {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		&-grid-3 {
+			grid-template-columns: repeat(3, 1fr);
+		}
+		&-grid-4 {
+			grid-template-columns: repeat(4, 1fr);
+		}
 	}
 
 	// Course Grid with Filter
@@ -214,6 +220,10 @@
 	&.tutor-filter-course-grid-3 {
 		grid-gap: 30px;
 	}
+	.has-show-more {
+		.tutor-show-more-btn {
+		}
+	}
 }
 
 .tutor-course-filter-widget {
@@ -222,6 +232,10 @@
 			&:not(:last-child) {
 				margin-bottom: 50px;
 			}
+		}
+	}
+	.filter-widget-input {
+		&.has-show-more {
 		}
 	}
 }

@@ -165,7 +165,8 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                                         'media_buttons' => false,
                                         'quicktags'     => false,
                                         'editor_height' => 150,
-                                        'textarea_name' => 'content'
+                                        'textarea_name' => 'content',
+                                        'statusbar'     => false
                                     );
                                     wp_editor($post->post_content, 'course_description', $editor_settings);
                                 ?>
@@ -192,35 +193,12 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
                         <div class="tutor-mb-30">
                             <label class="tutor-course-field-label"><?php _e('Course Thumbnail', 'tutor'); ?></label>
                             <div class="tutor-input-group tutor-mb-15">
-                                <div class="tutor-thumbnail-uploader">
-                                    <div class="thumbnail-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10 tutor-p-15">
-                                        <div class="thumbnail-preview image-previewer">
-                                            <span class="preview-loading"></span>
-                                            <?php 
-                                                $_thumbnail_url = get_the_post_thumbnail_url($course_id);
-                                                $post_thumbnail_id = get_post_thumbnail_id($course_id);
-                                            ?>
-                                            <input type="hidden" class="tutor-tumbnail-id-input" name="tutor_course_thumbnail_id" value="<?php echo $post_thumbnail_id; ?>">
-                                            <img src="<?php echo $_thumbnail_url; ?>" alt="course builder logo"/>
-                                            <span class="delete-btn" style="<?php echo !$_thumbnail_url ? 'display:none' : ''; ?>"></span>
-                                        </div>
-                                        <div class="thumbnail-input">
-                                            <p class="text-regular-body color-text-subsued">
-                                                <strong class="text-medium-body">Size: 700x430 pixels;</strong>
-                                                <br />
-                                                File Support:
-                                                <strong class="text-medium-body">
-                                                jpg, .jpeg,. gif, or .png.
-                                                </strong>
-                                            </p>
-                                            
-                                            <button class="tutor-btn tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">
-                                                <span class="tutor-btn-icon tutor-v2-icon-test icon-image-filled"></span>
-                                                <span>Upload Image</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php 
+                                    tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
+                                        'media_id' => get_post_thumbnail_id($course_id),
+                                        'input_name' => 'tutor_course_thumbnail_id'
+                                    ), false);
+                                ?>
                             </div>
                         </div>
                         <?php do_action('tutor/frontend_course_edit/after/thumbnail', $post); ?>
