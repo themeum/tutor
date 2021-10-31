@@ -89,22 +89,33 @@ $current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 
 											case 'radio' :
 												foreach($field['options'] as $value => $label) {
+													$id_string = 'course_setting_radio_' . $field_key;
 													?>
-													<label class="tutor-bs-d-block tutor-cursor-pointer tutor-mb-15">
-														<input type="radio" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/> &nbsp;
-														<?php echo $label; ?>
-													</label>
+													<div class="tutor-form-check tutor-mb-10">
+														<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
+														<label for="<?php echo $id_string; ?>" class="text-medium-caption">
+															<?php echo $label; ?>
+														</label>
+													</div>
 													<?php
 												}
 												break;
 
 											case 'checkbox' :
 												foreach($field['options'] as $option) {
+													$id_string = 'course_setting_' . $field_key;
 													?>
-													<label class="tutor-bs-d-block tutor-cursor-pointer tutor-mb-15">
-														<input type="checkbox" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
-														<?php echo $option['label_title']; ?>
-													</label>
+													<div class="tutor-form-check tutor-mb-10">
+														<input id="<?php echo $id_string; ?>" type="checkbox" class="tutor-form-check-input" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
+														<label for="<?php echo $id_string; ?>" class="text-medium-caption">
+															<?php echo $option['label_title']; ?>
+															<?php 
+																if(!empty($option['hint'])) {
+																	echo '<span class="tutor-bs-d-block text-regular-small">'.$option['hint'].'</span>';
+																}
+															?>
+														</label>
+													</div>
 													<?php
 												}
 												break;

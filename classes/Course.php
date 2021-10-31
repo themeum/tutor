@@ -30,7 +30,7 @@ class Course extends Tutor_Base {
 		add_action('init', array($this, 'mark_course_complete'));
 
 		//Modal Perform
-		add_action('wp_ajax_tutor_load_instructors_modal', array($this, 'tutor_load_instructors_modal'));
+		add_action('wp_ajax_tutor_course_instructor_search', array($this, 'tutor_course_instructor_search'));
 		add_action('wp_ajax_tutor_add_instructors_to_course', array($this, 'tutor_add_instructors_to_course'));
 		add_action('wp_ajax_detach_instructor_from_course', array($this, 'detach_instructor_from_course'));
 
@@ -103,7 +103,6 @@ class Course extends Tutor_Base {
          * @since v.1.6.6
          */
 		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
-		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));
 
 		/**
          * Delete course data after deleted course
@@ -187,12 +186,6 @@ class Course extends Tutor_Base {
     	if ($monetize_by === 'wc' || $monetize_by === 'edd'){
 			add_meta_box( 'tutor-course-pricing', __( 'Course Pricing ', 'tutor' ), array($this, 'pricing_metabox'), $coursePostType );
 		}
-
-		/**
-         * Tutor course sidebar settings metabox
-         * @since v.1.7.0
-         */
-		add_meta_box( 'tutor-course-sidebar-settings', __( 'Tutor Settings', 'tutor' ), array($this, 'tutor_course_setting_metabox'), $coursePostType, 'side' );
 	}
 
 	public function course_meta_box($echo = true){
@@ -682,7 +675,7 @@ class Course extends Tutor_Base {
 		}
 	}
 	
-	public function tutor_load_instructors_modal(){
+	public function tutor_course_instructor_search(){
 		tutor_utils()->checking_nonce();
 		
 		global $wpdb;
@@ -710,7 +703,9 @@ class Course extends Tutor_Base {
 			$search_sql = "AND (user.user_login like '%{$search_terms}%' or user.user_nicename like '%{$search_terms}%' or user.display_name like '%{$search_terms}%') ";
 		}
 
-		$instructors = $wpdb->get_results("SELECT user.ID, user.display_name from {$wpdb->users} user
+		$instructors = $wpdb->get_results(
+			"SELECT user.ID, user.display_name, user.user_email
+			FROM {$wpdb->users} user
 			INNER JOIN {$wpdb->usermeta} meta ON user.ID = meta.user_id AND meta.meta_key = '_tutor_instructor_status' AND meta.meta_value = 'approved'
 			WHERE 1=1 {$not_in_sql} {$search_sql} limit 10 ");
 
@@ -718,7 +713,12 @@ class Course extends Tutor_Base {
 		if (is_array($instructors) && count($instructors)){
 			$instructor_output = '';
 			foreach ($instructors as $instructor){
-				$instructor_output .= "<p><label><input type='radio' name='tutor_instructor_ids[]' value='{$instructor->ID}' > {$instructor->display_name} </label></p>";
+				$instructor_output .= "<div>
+					<label data-user_id='{$instructor->ID}'>
+							{$instructor->display_name} 
+							<span>{}</span>
+					</label>
+				</div>";
 			}
 
 			$output .= apply_filters('tutor_course_instructors_html', $instructor_output, $instructors);
@@ -727,9 +727,10 @@ class Course extends Tutor_Base {
 			$output .= __('<p>No instructor available or you have already added maximum instructors</p>', 'tutor');
 		}
 
-
 		if ( ! defined('TUTOR_MT_VERSION')){
-			$output .= '<p class="tutor-notice-warning" style="margin-top: 50px; font-size: 14px;">'. sprintf( __('To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s', 'tutor'), '<a href="https://www.themeum.com/product/tutor-lms" target="_blank">', "</a>" ) .'</p>';
+			$output .= '<p class="tutor-notice-warning" style="margin-top: 50px; font-size: 14px;">'
+						. sprintf( __('To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s', 'tutor'), '<a href="https://www.themeum.com/product/tutor-lms" target="_blank">', "</a>" ) 
+					.'</p>';
 		}
 
 		wp_send_json_success(array('output' => $output));
@@ -761,7 +762,9 @@ class Course extends Tutor_Base {
                     <span class="instructor-icon">'.get_avatar($t->ID, 30).'</span>
                     <span class="instructor-name"> '.$t->display_name.' </span>
                     <span class="instructor-control">
-                        <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-line-cross"></i></a>
+                        <a href="javascript:;" class="tutor-instructor-delete-btn tutor-action-icon">
+							<i class="tutor-icon-line-cross"></i>
+						</a>
                     </span>
                 </div>';
 			}
@@ -941,7 +944,7 @@ class Course extends Tutor_Base {
 			'label'     => __('Difficulty Level', 'tutor'),
 			'label_title' => __('Enable', 'tutor'),
 			'default' => $course_level ? $course_level : 'intermediate',
-			'desc'      => __('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor'),
+			'desc'      => __('Course difficulty level', 'tutor'),
 		);
 
 		return $args;
@@ -1292,57 +1295,6 @@ class Course extends Tutor_Base {
 				}
 			}
 		}
-	}
-
-	/**
-	 * tutor course setting metabox
-	 * @since v.1.7.0
-	 */
-	function tutor_course_setting_metabox( $post ) {
-		
-		$disable_qa = $this->additional_meta[0];
-		$is_public = $this->additional_meta[1];
-
-		$disable_qa_checked = get_post_meta($post->ID, $disable_qa, true)=='yes' ? 'checked="checked"' : '';
-		$is_public_checked = get_post_meta($post->ID, $is_public, true)=='yes' ? 'checked="checked"' : '';
-
-		do_action('tutor_before_course_sidebar_settings_metabox', $post);
-		?>
-		<div class="tutor-course-sidebar-settings-item" id="_tutor_is_course_public_meta_checkbox" style="display:none">
-			<label for="<?php echo $is_public; ?>">
-				<input id="<?php echo $is_public; ?>" type="checkbox" name="<?php echo $is_public; ?>" value="yes" <?php echo $is_public_checked; ?> />
-				<?php _e('Make This Course Public', 'tutor'); ?>
-				<small style="display:block;padding-left:24px">
-					<?php _e('No enrollment required.', 'tutor'); ?> 
-				</small>
-			</label>
-		</div>
-		<div class="tutor-course-sidebar-settings-item">
-			<label for="<?php echo $disable_qa; ?>">
-				<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
-				<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
-				<?php _e('Disable Q&A', 'tutor'); ?>
-			</label>
-		</div>
-		<?php
-		do_action('tutor_after_course_sidebar_settings_metabox', $post);
-	}
-
-	function tutor_course_setting_metabox_frontend( $post ){
-		?>		
-			<div class="tutor-course-builder-section tutor-course-builder-info">
-				<div class="tutor-course-builder-section-title">
-					<h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Tutor Settings', 'tutor'); ?></span></h3>
-				</div>
-				<div class="tutor-course-builder-section-content">
-					<div class="tutor-frontend-builder-item-scope">
-						<div class="tutor-form-group">
-							<?php $this->tutor_course_setting_metabox($post); ?>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php
 	}
 
 	/**

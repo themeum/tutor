@@ -104,7 +104,7 @@ window.jQuery(document).ready(function ($) {
       _x = _wp$i18n._x,
       _n = _wp$i18n._n,
       _nx = _wp$i18n._nx;
-  $(document).on('click', '.tutor-attachment-cards .tutor-delete-attachment', function (e) {
+  $(document).on('click', '.tutor-attachment-cards:not(.tutor-no-control) .tutor-delete-attachment', function (e) {
     e.preventDefault();
     $(this).closest('[data-attachment_id]').remove();
   });
@@ -136,13 +136,117 @@ window.jQuery(document).ready(function ($) {
       if (attachments.length) {
         for (var i = 0; i < attachments.length; i++) {
           var attachment = attachments[i];
-          var inputHtml = "<div data-attachment_id=\"".concat(attachment.id, "\">\n                        <div>\n                            <a href=\"").concat(attachment.url, "\" target=\"_blank\">\n                                ").concat(attachment.filename, "\n                            </a>\n                            <span class=\"filesize\">\n                                ").concat(__('Size', 'tutor'), ": ").concat(attachment.filesizeHumanReadable, "\n                            </span>\n                            <input type=\"hidden\" name=\"").concat(name, "\" value=\"").concat(attachment.id, "\">\n                        </div>\n                        <div>\n                            <span class=\"tutor-delete-attachment tutor-icon-line-cross\"></span>\n                        </div>\n                    </div>");
+          var inputHtml = "<div data-attachment_id=\"".concat(attachment.id, "\">\n                        <div>\n                            <a href=\"").concat(attachment.url, "\" target=\"_blank\">\n                                ").concat(attachment.filename, "\n                            </a>\n                            <span class=\"filesize\">\n                                ").concat(__('Size', 'tutor'), ": ").concat(attachment.filesizeHumanReadable, "\n                            </span>\n                            <input type=\"hidden\" name=\"").concat(name, "\" value=\"").concat(attachment.id, "\">\n                        </div>\n                        <div>\n                            <span class=\"tutor-delete-attachment tutor-action-icon tutor-icon-line-cross\"></span>\n                        </div>\n                    </div>");
           $that.parent().find('.tutor-attachment-cards').append(inputHtml);
         }
       }
     }); // Finally, open the modal on click
 
     frame.open();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/course-builder/instructor-multi.js":
+/*!*********************************************************!*\
+  !*** ./assets/react/course-builder/instructor-multi.js ***!
+  \*********************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  var search_container = $('#tutor_course_instructor_modal .tutor-search-result');
+  var course_id = $('#tutor_course_instructor_modal').data('course_id');
+  var search_timeout; // Search on input
+
+  $(document).on('input', '#tutor_course_instructor_modal input[type="text"]', function () {
+    var _this = this;
+
+    var ajax_call = function ajax_call() {
+      search_timeout = undefined;
+      var search_terms = ($(_this).val() || '').trim(); // Clear result if no keyword
+
+      if (!search_terms) {
+        search_container.empty();
+        return;
+      } // Ajax request
+
+
+      $.ajax({
+        url: _tutorobject.ajaxurl,
+        type: 'POST',
+        data: {
+          course_id: course_id,
+          search_terms: search_terms,
+          action: 'tutor_course_instructor_search'
+        },
+        success: function success(resp) {
+          search_container.html((resp.data || {}).output);
+        }
+      });
+    };
+
+    if (search_timeout) {
+      clearTimeout(search_timeout);
+    }
+
+    search_timeout = setTimeout(ajax_call, 600);
+  });
+  $(document).on('click', '.add_instructor_to_course_btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $modal = $('.tutor-modal-wrap');
+    var course_id = $('#post_ID').val();
+    var data = $modal.find('input').serializeObject();
+    data.course_id = course_id;
+    data.action = 'tutor_add_instructors_to_course';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $('.tutor-course-available-instructors').html(data.data.output);
+          $('.tutor-modal-wrap').removeClass('show');
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('click', '.tutor-instructor-delete-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var course_id = $('#post_ID').val();
+    var instructor_id = $that.closest('.added-instructor-item').attr('data-instructor-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        course_id: course_id,
+        instructor_id: instructor_id,
+        action: 'detach_instructor_from_course'
+      },
+      beforeSend: function beforeSend() {
+        return $that.addClass('tutor-updating-message');
+      },
+      complete: function complete() {
+        return $that.removeClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $that.closest('.added-instructor-item').remove();
+          return;
+        }
+
+        tutor_toast('Error!', get_response_message(data), 'error');
+      }
+    });
   });
 });
 
@@ -1048,6 +1152,61 @@ window.jQuery(document).ready(function ($) {
   });
 });
 
+/***/ }),
+
+/***/ "./assets/react/course-builder/video-picker.js":
+/*!*****************************************************!*\
+  !*** ./assets/react/course-builder/video-picker.js ***!
+  \*****************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__; // On Remove video
+
+  $(document).on('click', '.video_source_wrap_html5 .tutor-attachment-cards .tutor-delete-attachment', function () {
+    $(this).closest('.video_source_wrap_html5').removeClass('tutor-has-video').find('input.input_source_video_id').val('');
+  }); // Upload video
+
+  $(document).on("click", ".video_source_wrap_html5 .video_upload_btn", function (event) {
+    event.preventDefault();
+    var container = $(this).closest('.video_source_wrap_html5');
+    var attachment_card = container.find('.tutor-attachment-cards');
+    var frame; // If the media frame already exists, reopen it.
+
+    if (frame) {
+      frame.open();
+      return;
+    } // Create a new media frame
+
+
+    frame = wp.media({
+      title: __("Select or Upload Media Of Your Choice", "tutor"),
+      button: {
+        text: __("Upload media", "tutor")
+      },
+      library: {
+        type: "video"
+      },
+      multiple: false // Set to true to allow multiple files to be selected
+
+    }); // When an image is selected in the media frame...
+
+    frame.on("select", function () {
+      // Get media attachment details from the frame state
+      var attachment = frame.state().get("selection").first().toJSON(); // Show video info
+
+      attachment_card.find(".filename").text(attachment.name).attr('href', attachment.url);
+      attachment_card.find('.filesize').text(attachment.filesizeHumanReadable); // Add video id to hidden input
+
+      container.find("input.input_source_video_id").val(attachment.id); // Add identifer that video added
+
+      container.addClass('tutor-has-video');
+    }); // Finally, open the modal on click
+
+    frame.open();
+  }); // Remove video
+});
+
 /***/ })
 
 /******/ 	});
@@ -1136,6 +1295,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _assignment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_assignment__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _attachment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./attachment */ "./assets/react/course-builder/attachment.js");
 /* harmony import */ var _attachment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_attachment__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _video_picker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./video-picker */ "./assets/react/course-builder/video-picker.js");
+/* harmony import */ var _video_picker__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_video_picker__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _instructor_multi__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./instructor-multi */ "./assets/react/course-builder/instructor-multi.js");
+/* harmony import */ var _instructor_multi__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_instructor_multi__WEBPACK_IMPORTED_MODULE_6__);
+
+
 
 
 

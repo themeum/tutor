@@ -51,25 +51,38 @@ $supported_sources = array_keys($supported_sources);
                 ?>
             </select>
             
-            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_html5 tutor-dashed-uploader" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_html5 tutor-dashed-uploader <?php echo $sourceVideoID ? 'tutor-has-video' : ''; ?>" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
                 <div class="video-metabox-source-html5-upload">
                     <p class="video-upload-icon"><i class="tutor-icon-upload"></i></p>
-                    <p><strong><?php _e('Upload Your Video'); ?></strong></p>
-                    <p><?php _e('File Format: '); ?> .mp4</p>
+                    <p><strong><?php _e('Drag & Drop Your Video', 'tutor'); ?></strong></p>
+                    <p><?php _e('File Format: ', 'tutor'); ?> .mp4</p>
+                    <p><?php _e('Or', 'tutor'); ?> .mp4</p>
 
                     <div class="video_source_upload_wrap_html5">
-                        <a href="javascript:;" class="video_upload_btn tutor-btn tutor-is-outline"><?php _e('Upload Video', 'tutor'); ?></a>
+                        <button class="video_upload_btn tutor-btn tutor-btn-secondary tutor-btn-md">
+                            <?php _e('Browse File', 'tutor'); ?>
+                        </button>
                         <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
-                        <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo $sourceVideoID; ?></span></p>
                     </div>
                 </div>
 
-                <?php 
-                    tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
-                        'media_id' => tutor_utils()->avalue_dot('poster', $video),
-                        'input_name' => 'video[poster]'
-                    ), false);
-                ?>
+                <div class="html5-video-data">
+                    <?php 
+                        // Load Attachment card segment
+                        tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/attachments.php', array(
+                            'attachments' => array((object)array()),
+                            'size_below' => true,
+                            'no_control' => true
+                        ), false);
+
+                        echo '<h4>'.__('Upload Video Poster', 'tutor').'</h4>';
+                        // Load thumbnail segment
+                        tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
+                            'media_id' => tutor_utils()->avalue_dot('poster', $video),
+                            'input_name' => 'video[poster]'
+                        ), false);
+                    ?>
+                </div>
             </div>
 
             <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_external_url tutor-dashed-uploader" style="display: <?php echo $videoSource === 'external_url' ? 'block' : 'none'; ?>;">
@@ -90,28 +103,26 @@ $supported_sources = array_keys($supported_sources);
         </div>
     </div>
 </div>
-<?php
-    if ( $post->post_type !== tutor()->course_post_type){
-        ?>
-        <div class="tutor-mb-30">
-            <label class="tutor-form-label"><?php _e('Video playback time', 'tutor'); ?></label>
-            <div class="tutor-input-group tutor-mb-15 tutor-option-field-video-duration">
-                <div class="tutor-bs-row">
-                    <div class="tutor-bs-col-4">
-                        <input class="tutor-form-control" type="number" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
-                        <span><?php _e('Hour', 'tutor'); ?></span>
-                    </div>
-                    <div class="tutor-bs-col-4">
-                        <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
-                        <span><?php _e('Minute', 'tutor'); ?></span>
-                    </div>
-                    <div class="tutor-bs-col-4">
-                        <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
-                        <span><?php _e('Second', 'tutor'); ?></span>
-                    </div>
+
+<!-- For Lesson -->
+<?php if ( $post->post_type !== tutor()->course_post_type): ?>
+    <div class="tutor-mb-30">
+        <label class="tutor-form-label"><?php _e('Video playback time', 'tutor'); ?></label>
+        <div class="tutor-input-group tutor-mb-15 tutor-option-field-video-duration">
+            <div class="tutor-bs-row">
+                <div class="tutor-bs-col-4">
+                    <input class="tutor-form-control" type="number" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
+                    <span><?php _e('Hour', 'tutor'); ?></span>
+                </div>
+                <div class="tutor-bs-col-4">
+                    <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
+                    <span><?php _e('Minute', 'tutor'); ?></span>
+                </div>
+                <div class="tutor-bs-col-4">
+                    <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
+                    <span><?php _e('Second', 'tutor'); ?></span>
                 </div>
             </div>
         </div>
-        <?php 
-    }
-?>
+    </div>
+<?php endif; ?>

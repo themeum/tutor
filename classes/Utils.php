@@ -2832,11 +2832,12 @@ class Utils {
 		$instructors = $wpdb->get_results( $wpdb->prepare(
 			"SELECT ID,
 					display_name,
+					_user.user_email,
 					get_course.meta_value AS taught_course_id,
 					tutor_job_title.meta_value AS tutor_profile_job_title,
 					tutor_bio.meta_value AS tutor_profile_bio,
 					tutor_photo.meta_value AS tutor_profile_photo
-			FROM	{$wpdb->users}
+			FROM	{$wpdb->users} _user
 					INNER JOIN {$wpdb->usermeta} get_course
 							ON ID = get_course.user_id
 						   AND get_course.meta_key = %s

@@ -11103,6 +11103,41 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   white-space: nowrap;
 }
 
+.tutor-action-icon {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  display: -o-inline-flex;
+  display: -ms-inline-flex;
+  display: -moz-inline-flex;
+  display: -webkit-inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  background: transparent;
+  border-radius: 50%;
+  font-size: 30px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.tutor-action-icon:hover {
+  background: #eff1f7;
+}
+
 /**
  * Buttons
  */
@@ -14549,41 +14584,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   margin-right: 20px;
   color: #5b616f;
   display: block;
-}
-
-.tutor-attachment-cards span.tutor-delete-attachment {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  display: -o-inline-flex;
-  display: -ms-inline-flex;
-  display: -moz-inline-flex;
-  display: -webkit-inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -o-align-items: center;
-  -ms-align-items: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -o-justify-content: center;
-  -ms-justify-content: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-  background: transparent;
-  border-radius: 50%;
-  font-size: 30px;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  font-size: 14px;
-}
-
-.tutor-attachment-cards span.tutor-delete-attachment:hover {
-  background: #eff1f7;
 }
 
 .tutor-attachment-cards > div > div:first-child {
