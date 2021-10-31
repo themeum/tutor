@@ -1322,10 +1322,13 @@ function tutorModal() {
 /***/ (() => {
 
 (function thumbnailUploadPreview() {
+  // It is managed by mediachooser.js
+  return;
   /**
    * Image Preview : Logo and Signature Upload
    * Selector -> .tutor-option-field-input.image-previewer
    */
+
   var imgPreviewers = document.querySelectorAll('.tutor-thumbnail-uploader');
   var imgPreviews = document.querySelectorAll('.tutor-thumbnail-uploader img');
   var imgPrevInputs = document.querySelectorAll('.tutor-thumbnail-uploader input[type=file]');
@@ -1531,14 +1534,9 @@ jQuery(document).ready(function ($) {
     }
   });
   /* ---------------------
-  * Wizard Skip
+  * Navigate Wizard Screens
   * ---------------------- */
 
-  $(".tutor-boarding-next, .tutor-boarding-skip").on("click", function (e) {
-    e.preventDefault();
-    $(".tutor-setup-wizard-boarding").removeClass("active");
-    $(".tutor-setup-wizard-type").addClass("active");
-  });
   $(".tutor-type-next, .tutor-type-skip").on("click", function (e) {
     e.preventDefault();
     $(".tutor-setup-wizard-type").removeClass("active");

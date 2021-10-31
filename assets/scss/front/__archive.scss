@@ -1044,29 +1044,6 @@ Instructor
     padding-right: 30px;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 46px;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 46px;
-}
-
-.select2-container .select2-selection--single .select2-selection__rendered {
-    padding-left: 13px;
-    font-size: 16px;
-}
-
-.select2-container .select2-selection--single {
-    height: 48px;
-}
-
-.select2-container .select2-selection--multiple {
-    min-height: 50px;
-}
-
-.select2-container--default.select2-container--focus .select2-selection--multiple {}
-
 
 /* ********************* */
 
@@ -1732,11 +1709,6 @@ button.tm-close.tutor-icon-line-cross:hover {
 
 .received-marks {
     color: var(--tutor-primary-color);
-}
-
-.video_source_wrap_html5 {
-    width: 100px;
-    text-align: center;
 }
 
 .video-poster-img img {
