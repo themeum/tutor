@@ -406,7 +406,7 @@ if ( ! function_exists( 'get_tutor_footer' ) ) {
 	 */
 if ( ! function_exists( 'get_tutor_option' ) ) {
 	function get_tutor_option( $key = null, $default = false ) {
-		return tutils()->get_option( $key, $default );
+		return tutor_utils()->get_option( $key, $default );
 	}
 }
 
@@ -420,7 +420,7 @@ if ( ! function_exists( 'get_tutor_option' ) ) {
 	 */
 if ( ! function_exists( 'update_tutor_option' ) ) {
 	function update_tutor_option( $key = null, $value = false ) {
-		tutils()->update_option( $key, $value );
+		tutor_utils()->update_option( $key, $value );
 	}
 }
 	/**
@@ -436,7 +436,7 @@ if ( ! function_exists( 'update_tutor_option' ) ) {
 	 */
 if ( ! function_exists( 'get_tutor_course_settings' ) ) {
 	function get_tutor_course_settings( $course_id = 0, $key = null, $default = false ) {
-		return tutils()->get_course_settings( $course_id, $key, $default );
+		return tutor_utils()->get_course_settings( $course_id, $key, $default );
 	}
 }
 
@@ -452,7 +452,7 @@ if ( ! function_exists( 'get_tutor_course_settings' ) ) {
 
 if ( ! function_exists( 'get_item_content_drip_settings' ) ) {
 	function get_item_content_drip_settings( $lesson_id = 0, $key = null, $default = false ) {
-		return tutils()->get_item_content_drip_settings( $lesson_id, $key, $default );
+		return tutor_utils()->get_item_content_drip_settings( $lesson_id, $key, $default );
 	}
 }
 
@@ -555,7 +555,7 @@ if ( ! function_exists( 'tutor_flash_get' ) ) {
 			if ( empty( $_SESSION ) ) {
 				return null;
 			}
-			$message = tutils()->array_get( $key, $_SESSION );
+			$message = tutor_utils()->array_get( $key, $_SESSION );
 			if ( $message ) {
 				unset( $_SESSION[ $key ] );
 			}
@@ -575,7 +575,7 @@ if ( ! function_exists( 'tutor_redirect_back' ) ) {
 	 */
 	function tutor_redirect_back( $url = null ) {
 		if ( ! $url ) {
-			$url = tutils()->referer();
+			$url = tutor_utils()->referer();
 		}
 		wp_safe_redirect( $url );
 		exit();
@@ -694,15 +694,15 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 	}
 }
 
-	/**
-	 * Convert date to desire format
-	 *
-	 * @param $format string
-	 *
-	 * @param $date string
-	 *
-	 * @return string ( date )
-	*/
+/**
+ * Convert date to desire format
+ *
+ * @param $format string
+ *
+ * @param $date string
+ *
+ * @return string ( date )
+*/
 if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	function tutor_get_formated_date( string $require_format, string $user_date ) {
 		return date( $require_format, strtotime( $user_date ) );
@@ -757,3 +757,16 @@ if ( ! function_exists( 'get_request' ) ) {
 
 
 
+
+/**
+ * @return array
+ *
+ * Get all Withdraw Methods available on this system
+ *
+ * @since v.1.5.7
+ */
+if (!function_exists('get_tutor_all_withdrawal_methods')) {
+	function get_tutor_all_withdrawal_methods() {
+		return apply_filters( 'tutor_withdrawal_methods_all', array() );
+	}
+}

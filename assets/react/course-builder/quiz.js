@@ -314,12 +314,16 @@ window.jQuery(document).ready(function($){
                     btn.addClass('tutor-updating-message');
                 },
                 success: function (data) {
-                    if(quiz_id) {
+                    console.log(quiz_id, quiz_id!=0);
+
+                    if(quiz_id && quiz_id!=0) {
                         // Update if exists already
-                        $('#tutor-quiz-'+quiz_id).html(data.data.output_quiz_row);
+                        $('#tutor-quiz-'+quiz_id).replaceWith(data.data.output_quiz_row);
+                        console.log($('#tutor-quiz-'+quiz_id))
                     } else {
                         // Otherwise create new row
                         $('#tutor-topics-'+topic_id+' .tutor-lessons').append(data.data.output_quiz_row);
+                        console.log($('#tutor-topics-'+topic_id+' .tutor-lessons'))
                     }
 
                     // Update modal content
@@ -376,7 +380,7 @@ window.jQuery(document).ready(function($){
                 //Initializing Tutor Select
                 // tutor_select().reInit();
                 enable_quiz_answer_sorting();
-                disableAddoption();
+                // disableAddoption();
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -394,10 +398,21 @@ window.jQuery(document).ready(function($){
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
-            data : {question_id : question_id, action: 'tutor_quiz_builder_question_delete'},
-            beforeSend: function () {
-                $that.closest('.quiz-builder-question-wrap').remove();
+            data : {
+                question_id : question_id, 
+                action: 'tutor_quiz_builder_question_delete'
             },
+            beforeSend: function () {
+                $that.addClass('tutor-updating-message');
+            },
+            success:function() {
+                $that.closest('.quiz-builder-question-wrap').fadeOut(function(){
+                    $(this).remove();
+                });
+            },
+            complete: function() {
+                $that.removeClass('tutor-updating-message');
+            }
         });
     });
 
@@ -504,5 +519,11 @@ window.jQuery(document).ready(function($){
      $(document).on('change', 'input.tutor_select_value_holder', function(e) {
         $('.add_question_answers_option').trigger('click');
         $('#tutor_quiz_question_answers').trigger('refresh');
+    });
+
+    // Collapse/expand advanced settings
+    $(document).on('click', '.tutor-quiz-advance-settings .tutor-quiz-advance-header', function() {
+        $(this).parent().toggleClass('tutor-is-active')
+            .find('.ttr-angle-down-filled').toggleClass('ttr-angle-up-filled');
     });
 });

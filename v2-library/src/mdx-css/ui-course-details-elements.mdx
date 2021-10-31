@@ -1,0 +1,55 @@
+---
+name: Course Details Elements
+route: /mdx-css/ui-course-details-elements
+menu: UI Components
+---
+
+import { Playground } from 'docz';
+import '../../bundle/main.min.css';
+import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css';
+import '../docz-essential.css';
+
+# Course Detail Elements
+
+`** Replace "className" with "class" while using with html` <br />
+
+## Course Details Header
+
+`** remove the inline-style from the header`
+
+<Playground>
+	<header className="tutor-course-details-header">
+		<div className="tutor-course-details-ratings">
+			<div className="tutor-ratings">
+				<div className="tutor-rating-stars">
+					<span className="ttr-star-full-filled"></span>
+					<span className="ttr-star-full-filled"></span>
+					<span className="ttr-star-full-filled"></span>
+					<span className="ttr-star-half-filled"></span>
+					<span className="ttr-star-line-filled"></span>
+				</div>
+				<div className="tutor-rating-text">4.5 (172 Ratings)</div>
+			</div>
+		</div>
+		<div className="tutor-course-details-title text-bold-h4 color-text-primary tutor-mt-10">
+			React 16 - The Complete Guide (incl. React Router 4 & Redux)
+		</div>
+		<div className="d-flex align-items-center justify-content-between tutor-mt-28">
+			<div className="tutor-course-details-category text-medium-body color-text-primary">
+				<span className="text-regular-body color-text-hints">Categories:</span>
+				<span>Development, Heath & Fitness. </span>
+				<a href="#" className="color-text-brand">
+					See All
+				</a>
+			</div>
+			<div className="tutor-course-details-action-btns">
+				<a href="#" className="text-regular-body color-text-primary">
+					<span className="ttr-fav-line-filled"></span>Wishlist
+				</a>
+				<a href="#" className="text-regular-body color-text-primary">
+					<span className="ttr-share-filled"></span>Share
+				</a>
+			</div>
+		</div>
+	</header>
+</Playground>

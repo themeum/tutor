@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 use TUTOR\Announcements;
 $announcement_obj = new Announcements();
 
-$per_page = tutor_utils()->get_option( 'pagination_per_page' );
-$paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
+$limit       = tutor_utils()->get_option( 'pagination_per_page' );
+$page_filter = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? $_GET['paged'] : 1;
 
 $order_filter  = ( isset( $_GET['order'] ) && strtolower( $_GET['order'] ) == 'asc' ) ? 'ASC' : 'DESC';
 $search_filter = sanitize_text_field( tutor_utils()->array_get( 'search', $_GET, '' ) );
@@ -31,8 +31,8 @@ $args = array(
 	'post_status'    => 'publish',
 	's'              => $search_filter,
 	'post_parent'    => $course_id,
-	'posts_per_page' => sanitize_text_field( $per_page ),
-	'paged'          => sanitize_text_field( $paged ),
+	'posts_per_page' => sanitize_text_field( $limit ),
+	'paged'          => sanitize_text_field( $page_filter ),
 	'orderBy'        => 'ID',
 	'order'          => sanitize_text_field( $order_filter ),
 
@@ -62,56 +62,58 @@ $navbar_data = array(
  * Filters for sorting searching
  */
 $filters = array(
-	'bulk_action'  => $announcement_obj->bulk_action,
-	'bulk_actions' => $announcement_obj->prepare_bulk_actions(),
-	'ajax_action'  => 'tutor_announcement_bulk_action',
-	'filters'      => true,
+	'bulk_action'   => $announcement_obj->bulk_action,
+	'bulk_actions'  => $announcement_obj->prepare_bulk_actions(),
+	'ajax_action'   => 'tutor_announcement_bulk_action',
+	'filters'       => true,
+	'course_filter' => true,
 );
 ?>
-<div class="tutor-admin-page-wrapper">
+<div class="tutor-admin-page-wrapper tutor-admin-announcements-list">
 	<?php
 		/**
 		 * Load Templates with data.
 		 */
-		$filters_template = esc_url( tutor()->path . 'views/elements/filters.php' );
-		$navbar_template  = esc_url( tutor()->path . 'views/elements/navbar.php' );
+		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
-		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-dashboard-content-inner">
+	<div class="tutor-dashboard-content-inner tutor-mt-10 tutor-mb-24 tutor-mr-20">
 		<div class="tutor-component-three-col-action new-announcement-wrap">
 			<div class="tutor-announcement-big-icon">
 				<i class="tutor-icon-speaker"></i>
 			</div>
 			<div>
-				<small><?php _e( 'Create Announcement', 'tutor' ); ?></small>
-				<p>
-					<strong>
-						<?php _e( 'Notify all students of your course', 'tutor' ); ?>
-					</strong>
+				<p class="text-regular-h5 color-text-primary">
+				<?php esc_html_e( 'Create a new announcement and notify your students about it', 'tutor' ); ?>
 				</p>
 			</div>
 			<div class="new-announcement-button">
 				<button type="button" class="tutor-btn" data-tutor-modal-target="tutor_announcement_new">
-					<?php _e( 'Add New Announcement', 'tutor' ); ?>
+					<?php esc_html_e( 'Add New Announcement', 'tutor' ); ?>
 				</button>
 			</div>
 		</div>
 	</div>
-	
-	<div class="tutor-admin-page-content-wrapper">
+
 	<?php
-		$announcements = $the_query->have_posts() ? $the_query->posts : array();
-		$announcement_template = esc_url( tutor()->path . '/views/fragments/announcement-list.php' );
+		tutor_load_template_from_custom_path( $filters_template, $filters );
+	?>
+
+	<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-mr-20">
+	<?php
+		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
+		$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';
 		tutor_load_template_from_custom_path(
 			$announcement_template,
 			array(
 				'announcements' => is_array( $announcements ) ? $announcements : array(),
-                'the_query' => $the_query,
-                'paged' => $paged
+				'the_query'     => $the_query,
+				'paged'         => $page_filter,
 			)
 		);
-    ?>
+		?>
 	</div>
+	
 </div>

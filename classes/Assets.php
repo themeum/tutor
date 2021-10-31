@@ -195,7 +195,7 @@ class Assets {
 			if ( ! empty($post->post_type) && $post->post_type === 'tutor_quiz'){
 				$single_quiz_options = (array) tutor_utils()->get_quiz_option($post->ID);
 				$saved_quiz_options = array(
-					'quiz_when_time_expires' => tutils()->get_option('quiz_when_time_expires'),
+					'quiz_when_time_expires' => tutor_utils()->get_option('quiz_when_time_expires'),
 				);
 
 				$quiz_options = array_merge($single_quiz_options, $saved_quiz_options);
@@ -254,56 +254,27 @@ class Assets {
 	}
 
 	private function load_color_palette() {
+		$colors = array(
+			'tutor_primary_color' => '--tutor-primary-color',
+			'tutor_primary_hover_color' => '--tutor-primary-hover-color',
+			'tutor_text_color' => '--tutor-text-color',
+			'tutor_light_color' => '--tutor-light-color',
 
-		/**
-		 * Default Color
-		 */
-		$tutor_css = ":root{";
-		$tutor_primary_color = tutor_utils()->get_option('tutor_primary_color');
-		$tutor_primary_hover_color = tutor_utils()->get_option('tutor_primary_hover_color');
-		$tutor_text_color = tutor_utils()->get_option('tutor_text_color');
-		$tutor_light_color = tutor_utils()->get_option('tutor_light_color');
+			'tutor_button_primary' => '--tutor-primary-button-color',
+			'tutor_button_danger' => '--tutor-danger-button-color',
+			'tutor_button_success' => '--tutor-success-button-color',
+			'tutor_button_warning' => '--tutor-warning-button-color',
+		);
 
-		/**
-		 * tutor buttons style
-		 */
-		$tutor_button_primary = tutor_utils()->get_option('tutor_button_primary');
-		$tutor_button_danger = tutor_utils()->get_option('tutor_button_danger');
-		$tutor_button_success = tutor_utils()->get_option('tutor_button_success');
-		$tutor_button_warning = tutor_utils()->get_option('tutor_button_warning');
-
-		if ($tutor_primary_color) {
-			$tutor_css .= " --tutor-primary-color: {$tutor_primary_color};";
-		}
-		if ($tutor_primary_hover_color) {
-			$tutor_css .= " --tutor-primary-hover-color: {$tutor_primary_hover_color};";
-		}
-		if ($tutor_text_color) {
-			$tutor_css .= " --tutor-text-color: {$tutor_text_color};";
-		}
-		if ($tutor_light_color) {
-			$tutor_css .= " --tutor-light-color: {$tutor_light_color};";
+		$color_string = '';
+		foreach($colors as $key => $property) {
+			$color = tutor_utils()->get_option($key);
+			if($color) {
+				$color_string.= $property . ':' . $color . ';';
+			}
 		}
 
-		/**
-		 * check if button style setup
-		 */
-		if ($tutor_button_primary) {
-			$tutor_css .= " --tutor-primary-button-color: {$tutor_button_primary}; ";
-		}
-		if ($tutor_button_danger) {
-			$tutor_css .= " --tutor-danger-button-color: {$tutor_button_danger}; ";
-		}
-		if ($tutor_button_success) {
-			$tutor_css .= " --tutor-success-button-color: {$tutor_button_success}; ";
-		}
-		if ($tutor_button_warning) {
-			$tutor_css .= " --tutor-warning-button-color: {$tutor_button_warning}; ";
-		}
-
-		$tutor_css .= "}";
-
-		return $tutor_css;
+		return ':root{'.$color_string.'}';
 	}
 
 	/**
@@ -397,6 +368,12 @@ class Assets {
 
 		if(!$course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard()) {
 			$to_add[] = 'tutor-screen-frontend-dashboard';
+		}
+
+		if(is_admin()) {
+			if(isset($_GET['page']) && $_GET['page']=='tutor_settings') {
+				$to_add[] = 'tutor-screen-backend-settings';
+			}
 		}
 
 		is_array($classes) ? $classes=array_merge($classes, $to_add) : $classes.=implode('', $to_add);

@@ -9,10 +9,11 @@ class Course_Settings_Tabs{
     public $course_post_type = '';
     public $args = array();
     public $settings_meta = null;
+    private $is_frontend = null;
 
     public function __construct() {
         $this->course_post_type = tutor()->course_post_type;
-
+        
         add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
             
         add_action( 'tutor/frontend_course_edit/after/description', array($this, 'display_frontend'), 10, 0 );
@@ -36,7 +37,7 @@ class Course_Settings_Tabs{
                         'type'      => 'number',
                         'label'     => __('Maximum Students', 'tutor'),
                         'label_title' => __('Enable', 'tutor'),
-                        'default' => '0',
+                        'value'     => (int) tutor_utils()->get_course_settings(get_the_ID(), 'maximum_students', 0),
                         'desc'      => __('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor'),
                     ),
                 ),
@@ -53,8 +54,8 @@ class Course_Settings_Tabs{
         $settings_meta = get_post_meta(get_the_ID(), '_tutor_course_settings', true);
         $this->settings_meta = (array) maybe_unserialize($settings_meta);
 
-        if (tutils()->count($this->args) && $post->post_type === $this->course_post_type) {
-            include tutor()->path . "views/metabox/course/settings-tabs.php";
+        if (tutor_utils()->count($this->args) && $post->post_type === $this->course_post_type) {
+            include tutor()->path . "views/metabox/settings-tabs.php";
         }
     }
 
@@ -69,42 +70,8 @@ class Course_Settings_Tabs{
         <?php
     }
 
-    public function generate_field($fields = array()){
-        if (tutils()->count($fields)){
-            foreach ($fields as $field_key => $field){
-                $type = tutils()->array_get('type', $field);
-                ?>
-                <div class="tutor-bs-row">
-                    <?php
-                    if (!empty($field['label'])){
-                        ?>
-                        <div class="tutor-bs-col-4">
-                            <label for=""><?php echo $field['label']; ?></label>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                    <div class="tutor-bs-col-8">
-                        <?php
-                        $field['field_key'] = $field_key;
-                        $this->field_type($field);
-                        if (isset($field['desc'])){
-                            echo "<p class='desc'>{$field['desc']}</p>";
-                        }
-                        ?>
-                    </div>
-                </div>
-                <?php
-            }
-        }
-    }
-
-    public function field_type($field = array()){
-        include tutor()->path."views/metabox/course/field-types/{$field['type']}.php";
-    }
-
     public function get($key = null, $default = false){
-        return tutils()->array_get($key, $this->settings_meta, $default);
+        return tutor_utils()->array_get($key, $this->settings_meta, $default);
     }
 
     /**
@@ -114,8 +81,8 @@ class Course_Settings_Tabs{
      * Fire when course saving...
      */
     public function save_course($post_ID, $post){
-        $_tutor_course_settings = tutils()->array_get('_tutor_course_settings', $_POST);
-        if (tutils()->count($_tutor_course_settings)){
+        $_tutor_course_settings = tutor_utils()->array_get('_tutor_course_settings', $_POST);
+        if (tutor_utils()->count($_tutor_course_settings)){
             update_post_meta($post_ID, '_tutor_course_settings', $_tutor_course_settings);
         }
     }

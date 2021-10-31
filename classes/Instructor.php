@@ -172,7 +172,7 @@ class Instructor {
 
 	public function add_new_instructor(){
 
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 		
 		// Only admin should be able to add instructor
 		if(!current_user_can( 'manage_options' ) || !get_option( 'users_can_register', false )) {
@@ -215,6 +215,7 @@ class Instructor {
 		$phone_number   = sanitize_text_field(tutor_utils()->input_old('phone_number'));
 		$password       = sanitize_text_field(tutor_utils()->input_old('password'));
 		$tutor_profile_bio = wp_kses_post(tutor_utils()->input_old('tutor_profile_bio'));
+		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 
 		$userdata = apply_filters('add_new_instructor_data', array(
 			'user_login'    =>  $user_login,
@@ -232,6 +233,7 @@ class Instructor {
 			update_user_meta($user_id, 'phone_number', $phone_number);
 			update_user_meta($user_id, 'description', $tutor_profile_bio);
 			update_user_meta($user_id, '_tutor_profile_bio', $tutor_profile_bio);
+			update_user_meta($user_id, '_tutor_profile_job_title', $tutor_profile_job_title);
 			update_user_meta($user_id, '_is_tutor_instructor', tutor_time());
 			update_user_meta($user_id, '_tutor_instructor_status', apply_filters('tutor_initial_instructor_status', 'approved'));
 
@@ -244,14 +246,14 @@ class Instructor {
 	}
 
 	public function instructor_approval_action(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		if(!current_user_can( 'manage_options' )) {
 			wp_send_json_error( array('message' =>__('Access Denied', 'tutor')) );
 		}
 
-		$instructor_id = (int) sanitize_text_field(tutils()->array_get('instructor_id', $_POST));
-		$action = sanitize_text_field(tutils()->array_get('action_name', $_POST));
+		$instructor_id = (int) sanitize_text_field(tutor_utils()->array_get('instructor_id', $_POST));
+		$action = sanitize_text_field(tutor_utils()->array_get('action_name', $_POST));
 
 		if( 'approve' === $action ) {
 			do_action('tutor_before_approved_instructor', $instructor_id);

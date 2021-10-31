@@ -60,7 +60,5 @@ $typographyUtils: (
 }
 
 .text-body {
-	font-family: 'SF Pro Display', sans-serif;
-	font-style: normal;
 	@extend .text-regular-small;
 }

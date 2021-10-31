@@ -17,6 +17,7 @@ const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
 
 document.addEventListener("DOMContentLoaded", function() {
   var $ = window.jQuery;
+  const {__} = wp.i18n;
 
   let image_uploader = document.querySelectorAll(".image_upload_button");
   // let image_input = document.getElementById("image_url_field");
@@ -99,21 +100,31 @@ document.addEventListener("DOMContentLoaded", function() {
   $("#tutor-option-form").submit(function(e) {
     e.preventDefault();
 
+    var button = $("#save_tutor_option");
     var $form = $(this);
     var data = $form.serializeObject();
+
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: data,
-      beforeSend: function() {},
-      success: function(data) {
-        tutor_toast(
-          "Save successfully!",
-          "Tutor option is saved successfully!",
-          "success"
-        );
+      beforeSend: function() {
+        button.addClass('tutor-updating-message');
       },
-      complete: function() {},
+      success: function(resp) {
+        const {data={}, success} = resp || {};
+        const {message=__('Something Went Wrong!', 'tutor')} = data;
+
+        if(success) {
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
+          return;
+        }
+
+        tutor_toast('Error!', message, 'tutor', true);
+      },
+      complete: function() {
+        button.removeClass('tutor-updating-message');
+      },
     });
   });
 

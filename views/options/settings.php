@@ -13,17 +13,17 @@
 
 ?>
 <!-- .tutor-backend-wrap -->
-<section class="tutor-backend-settings-page" style="padding-top: 60px;margin-left: -20px;">
-	<header class="tutor-option-header tutor-bs-px-3 tutor-bs-py-2" style="position: fixed;right:0;z-index:99;width:calc(100% - 160px);top:32px;">
+<section class="tutor-backend-settings-page" style="margin-left: -20px;">
+	<header class="tutor-option-header tutor-bs-px-3 tutor-bs-py-2">
 		<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 		<div class="search-field">
-			<div class="tutor-input-group tutor-form-control-has-icon">
-				<span class="tutor-input-group-icon tutor-v2-icon-test icon-search-filled"></span>
-				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" />
+			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
+				<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search ... ', 'tutor' ); ?>" />
 				<div class="search-popup-opener search_result">
 					<a href="#">
 						<div class="search_result_title">
-							<i class="las la-search"></i>›
+							<i class="ttr-search-filled"></i>›
 							<span>Result results one</span>
 						</div>
 						<div class="search_navigation">
@@ -34,7 +34,7 @@
 					</a>
 					<a href="#">
 						<div class="search_result_title">
-							<i class="las la-search"></i>
+							<i class="ttr-search-filled"></i>
 							<span>Result results tow</span>
 						</div>
 						<div class="search_navigation">
@@ -45,7 +45,7 @@
 					</a>
 					<a href="#">
 						<div class="search_result_title">
-							<i class="las la-search"></i>
+							<i class="ttr-search-filled"></i>
 							<span>Result results three</span>
 						</div>
 						<div class="search_navigation">
@@ -56,9 +56,16 @@
 					</a>
 				</div>
 			</div>
+			<div class="tutor-input-group tutor-form-control-has-icon">
+				<!-- <span class="tutor-input-group-icon ttr-search-filled"></span>
+				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" /> -->
+				
+			</div>
 		</div>
 		<div class="save-button">
-			<button id="save_tutor_option" class="tutor-btn"><?php _e( 'Save Changes', 'tutor' ); ?></button>
+			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap">
+				<?php _e( 'Save Changes', 'tutor' ); ?>
+			</button>
 		</div>
 	</header>
 	<div class="tutor-option-body">
@@ -99,48 +106,9 @@
 			<!-- end /.tutor-option-tab-pages -->
 		</form>
 	</div>
-
-	<!-- <div class="tutor-notification tutor-is-success">
-		<div class="tutor-notification-icon">
-			<i class="fas fa-check"></i>
-		</div>
-		<div class="tutor-notification-content">
-			<h5>Successful</h5>
-			<p>Your file was uploaded</p>
-		</div>
-		<button class="tutor-notification-close">
-			<i class="fas fa-times"></i>
-		</button>
-	</div> -->
 </section>
-
 
 <style>
 	.color-picker-input input[type=color]:focus,.color-picker-input input[type=color]:active {box-shadow: none;}
 	.color-preset-input [type="radio"]{position: absolute;opacity: 0;visibility: hidden;z-index: -1;}
-	.isHighlighted {}
-
-	.tutor-toast-parent,
-	.tutor-notification {
-		position: fixed;
-		bottom: 40px;
-		left: calc(0% + 200px);
-		z-index: 999;
-	}
-	.tutor-toast-parent>div>div:nth-child(3){
-		align-self: flex-start;
-		padding:8px;
-	}
-	.tutor-toast-parent>div>div{
-		padding:0;
-	}
-/*
-	.tutor-notification.show {
-		opacity: 1;
-		visibility: visible;
-	}
-
-	.tutor-notification .tutor-notification-close{
-		transition: unset;
-	} */
 </style>

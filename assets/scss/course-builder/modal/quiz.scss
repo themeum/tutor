@@ -13,9 +13,9 @@ a.back-to-quiz-questions-btn {
 	display: block;
 }
 
-// Show hide add to question button based on screen
+// Show add to question button when quiz editor opened
 &.tutor-has-question-from {
-    .tutor-modal-footer .row>div{
+    .tutor-modal-footer .tutor-bs-row>div{
         &:not(:last-child) {
             display: none !important;
         }
@@ -30,8 +30,9 @@ a.back-to-quiz-questions-btn {
     }
 }
 
+// Hide add to question button when the container has no quiz editor opened
 &:not(.tutor-has-question-from) {
-    .tutor-modal-footer .row>div{
+    .tutor-modal-footer .tutor-bs-row>div{
         &:last-child {
             display: none;
         }
@@ -123,4 +124,79 @@ a.back-to-quiz-questions-btn {
 .quiz-builder-question-wrap {
     @include valueWithPrefix(display, flex);
 	margin-bottom: 15px;
+}
+
+.tutor-quiz-advance-settings {
+    border: 1px solid #E0E2EA;
+    box-sizing: border-box;
+    border-radius: 6px;
+
+    h4 {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 15px;
+        color: #41454F;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+
+    p.help {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13px;
+        color: #757C8E;
+    }
+
+    // Header bottom border only when expanded
+    &.tutor-is-active {
+        .tutor-quiz-advance-header {
+            &>div:first-child{
+                border-bottom: 1px solid #E0E2EA;
+                border-bottom-right-radius: 6px;
+            }
+        }
+    }
+    
+    .tutor-quiz-advance-header {
+        &>div{
+            padding: 12px;
+            
+            &:first-child {
+                border-right: 1px solid #E0E2EA;
+
+                span{
+                    @include valueWithPrefix(display, inline-flex);
+                    @include propertyWithPrefix(align-items, center);
+                    @include propertyWithPrefix(justify-content, center);
+
+                    width: 37px;
+                    height: 37px;
+                    background: #E9EDFB;
+                    border-radius: 50%;
+
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 20px;
+                    color: #000000;
+
+                    i{
+                        color: #3E64DE;
+                        font-size: 25px;
+                    }
+                }
+            }
+
+            &:last-child{
+                padding: 0 15px;
+                font-size: 30px;
+                color: #3E64DE;
+            }
+        }
+    }
+
+    &:not(.tutor-is-active) {
+        .tutor-quiz-advance-content{
+            display: none;
+        }
+    }
 }

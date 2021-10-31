@@ -51,7 +51,7 @@ if (!current_user_can('administrator')) {
 $the_query = new WP_Query($args);
 
 //get courses
-$courses = (current_user_can('administrator')) ? tutils()->get_courses() : tutils()->get_courses_by_instructor();
+$courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : tutor_utils()->get_courses_by_instructor();
 $image_base = tutor()->url . '/assets/images/';
 
 

@@ -136,7 +136,7 @@ window.jQuery(document).ready(function ($) {
       if (attachments.length) {
         for (var i = 0; i < attachments.length; i++) {
           var attachment = attachments[i];
-          var inputHtml = "<div data-attachment_id=\"".concat(attachment.id, "\">\n                        <div>\n                            <a href=\"").concat(attachment.url, "\" target=\"_blank\">\n                                ").concat(attachment.filename, "\n                            </a>\n                            <input type=\"hidden\" name=\"").concat(name, "\" value=\"").concat(attachment.id, "\">\n                        </div>\n                        <div>\n                            <span class=\"filesize\">\n                                ").concat(__('Size', 'tutor'), ": ").concat(attachment.filesizeHumanReadable, "\n                            </span>\n                            <span class=\"tutor-delete-attachment tutor-icon-line-cross\"></span>\n                        </div>\n                    </div>");
+          var inputHtml = "<div data-attachment_id=\"".concat(attachment.id, "\">\n                        <div>\n                            <a href=\"").concat(attachment.url, "\" target=\"_blank\">\n                                ").concat(attachment.filename, "\n                            </a>\n                            <span class=\"filesize\">\n                                ").concat(__('Size', 'tutor'), ": ").concat(attachment.filesizeHumanReadable, "\n                            </span>\n                            <input type=\"hidden\" name=\"").concat(name, "\" value=\"").concat(attachment.id, "\">\n                        </div>\n                        <div>\n                            <span class=\"tutor-delete-attachment tutor-icon-line-cross\"></span>\n                        </div>\n                    </div>");
           $that.parent().find('.tutor-attachment-cards').append(inputHtml);
         }
       }
@@ -739,12 +739,16 @@ window.jQuery(document).ready(function ($) {
           btn.addClass('tutor-updating-message');
         },
         success: function success(data) {
-          if (quiz_id) {
+          console.log(quiz_id, quiz_id != 0);
+
+          if (quiz_id && quiz_id != 0) {
             // Update if exists already
-            $('#tutor-quiz-' + quiz_id).html(data.data.output_quiz_row);
+            $('#tutor-quiz-' + quiz_id).replaceWith(data.data.output_quiz_row);
+            console.log($('#tutor-quiz-' + quiz_id));
           } else {
             // Otherwise create new row
             $('#tutor-topics-' + topic_id + ' .tutor-lessons').append(data.data.output_quiz_row);
+            console.log($('#tutor-topics-' + topic_id + ' .tutor-lessons'));
           } // Update modal content
 
 
@@ -797,8 +801,7 @@ window.jQuery(document).ready(function ($) {
         modal.addClass('tutor-has-question-from'); //Initializing Tutor Select
         // tutor_select().reInit();
 
-        enable_quiz_answer_sorting();
-        disableAddoption();
+        enable_quiz_answer_sorting(); // disableAddoption();
       },
       complete: function complete() {
         $that.removeClass('tutor-updating-message');
@@ -818,7 +821,15 @@ window.jQuery(document).ready(function ($) {
         action: 'tutor_quiz_builder_question_delete'
       },
       beforeSend: function beforeSend() {
-        $that.closest('.quiz-builder-question-wrap').remove();
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success() {
+        $that.closest('.quiz-builder-question-wrap').fadeOut(function () {
+          $(this).remove();
+        });
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
       }
     });
   });
@@ -922,6 +933,10 @@ window.jQuery(document).ready(function ($) {
   $(document).on('change', 'input.tutor_select_value_holder', function (e) {
     $('.add_question_answers_option').trigger('click');
     $('#tutor_quiz_question_answers').trigger('refresh');
+  }); // Collapse/expand advanced settings
+
+  $(document).on('click', '.tutor-quiz-advance-settings .tutor-quiz-advance-header', function () {
+    $(this).parent().toggleClass('tutor-is-active').find('.ttr-angle-down-filled').toggleClass('ttr-angle-up-filled');
   });
 });
 
@@ -935,31 +950,56 @@ window.jQuery(document).ready(function ($) {
 
 window.jQuery(document).ready(function ($) {
   var __ = wp.i18n.__;
-  $(document).on('click', '#tutor-add-topic-btn', function (e) {
+  $(document).on('click', '.tutor-save-topic-btn', function (e) {
     e.preventDefault();
-    var $that = $(this);
-    var container = $that.closest('.tutor-modal');
-    var form_data = container.find('input, textarea').serializeObject();
-    form_data.action = 'tutor_add_course_topic';
+    var $button = $(this);
+    var modal = $button.closest('.tutor-modal');
+    var topic_id = modal.find('[name="topic_id"]').val();
+    ;
+    var topic_title = modal.find('[name="topic_title"]').val();
+    var topic_summery = modal.find('[name="topic_summery"]').val();
+    var topic_course_id = modal.find('[name="topic_course_id"]').val();
+    var data = {
+      topic_title: topic_title,
+      topic_summery: topic_summery,
+      topic_id: topic_id,
+      topic_course_id: topic_course_id,
+      action: 'tutor_save_topic'
+    };
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: 'POST',
-      data: form_data,
+      data: data,
       beforeSend: function beforeSend() {
-        $that.addClass('tutor-updating-message');
+        $button.addClass('tutor-updating-message');
       },
-      success: function success(data) {
-        if (data.success) {
-          $('#tutor-course-content-wrap').html(data.data.course_contents);
-          container.find('input[type!="hidden"], textarea').each(function () {
-            $(this).val('');
-          });
-          container.removeClass('tutor-is-active');
-          enable_sorting_topic_lesson();
+      success: function success(resp) {
+        var _resp$data = resp.data,
+            data = _resp$data === void 0 ? {} : _resp$data,
+            success = resp.success;
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message,
+            course_contents = data.course_contents,
+            topic_title = data.topic_title;
+
+        if (!success) {
+          tutor_toast('Error!', message, 'error');
+          return;
+        } // Close Modal
+
+
+        modal.removeClass('tutor-is-active', $('#tutor-course-content-wrap')); // Show updated contents
+
+        if (topic_id) {
+          // It's topic update
+          $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
+        } else {
+          // It's new topic creation
+          $('#tutor-course-content-wrap').html(course_contents);
         }
       },
       complete: function complete() {
-        $that.removeClass('tutor-updating-message');
+        $button.removeClass('tutor-updating-message');
       }
     });
   });
@@ -967,15 +1007,15 @@ window.jQuery(document).ready(function ($) {
    * Confirmation for deleting Topic
    */
 
-  $(document).on('click', '.tutor-topics-wrap .tutor-icon-garbage', function (e) {
+  $(document).on('click', '.tutor-topics-wrap .topic-delete-btn', function (e) {
+    var $that = $(this);
     var container = $(this).closest('.tutor-topics-wrap');
     var topic_id = container.attr('data-topic-id');
 
-    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete the topic?', 'tutor'))) {
       return;
     }
 
-    container.fadeOut('fast');
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: 'POST',
@@ -983,17 +1023,20 @@ window.jQuery(document).ready(function ($) {
         action: 'tutor_delete_topic',
         topic_id: topic_id
       },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
       success: function success(data) {
         // To Do: Load updated topic list here
         if (data.success) {
           container.remove();
-        } else {
-          container.fadeIn('fast');
-          alert((data.data || {}).msg || __('Something Went Wrong', 'tutor'));
+          return;
         }
+
+        tutor_toast('Error!', (data.data || {}).message || __('Something Went Wrong', 'tutor'), 'error');
       },
-      error: function error() {
-        container.fadeIn('fast');
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
       }
     });
   });
@@ -1103,9 +1146,9 @@ window.jQuery(document).ready(function ($) {
     $(this).addClass('is-active').siblings().removeClass('is-active');
     $('#' + $(this).data('tutor-tab-target')).show().siblings().hide();
   });
-  $('.').click(function () {
-    $(this).siblings().filter('tutor-certificate-collapsible');
-  });
+  /* $('.').click(function() {
+      $(this).siblings().filter('tutor-certificate-collapsible')
+  }); */
 });
 })();
 
