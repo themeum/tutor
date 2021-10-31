@@ -24,7 +24,7 @@
         position: relative;
         -webkit-box-sizing: border-box;
                 box-sizing: border-box;
-        margin: 0px 10px 20px;
+        margin: 0px 10px 10px 0;
 
         @media (min-width: 1300px) {
             -ms-flex: 0 0 calc(33.333% - 20px);
@@ -47,19 +47,18 @@
             font-size: 12px;
             -webkit-transform: translateY(-50%);
             transform: translateY(-50%);
-            opacity: 0;
+            display: none;
             -webkit-transition: 300ms;
             transition: 300ms;
 
             a {
-                color: red;
                 text-decoration: none;
             }
         }
 
         &:hover{
             .instructor-control {
-                opacity: 1;
+                display: inline-block;
             }
         }
 

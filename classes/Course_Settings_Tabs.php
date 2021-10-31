@@ -39,12 +39,37 @@ class Course_Settings_Tabs{
                         'label_title' => __('Enable', 'tutor'),
                         'value'     => (int) tutor_utils()->get_course_settings(get_the_ID(), 'maximum_students', 0),
                         'desc'      => __('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor'),
-                    ),
+                    )
                 ),
             ),
         );
 
-        return apply_filters('tutor_course_settings_tabs', $args);
+        $filtered = apply_filters('tutor_course_settings_tabs', $args);
+
+        $filtered['general']['fields']['_tutor_is_public_course'] = array(
+            'type'        => 'checkbox',
+            'options'	  => array(
+                array(
+                    'label_title' => __('Make This Course Public', 'tutor'),
+                    'checked' => get_post_meta(get_the_ID(), '_tutor_is_public_course', true)=='yes',
+                    'value' => 'yes',
+                    'hint' => __('No enrollment required', 'tutor')
+                )
+            )
+        );
+
+        $filtered['general']['fields']['_tutor_disable_qa'] = array(
+            'type'        => 'checkbox',
+            'options'	  => array(
+                array(
+                    'label_title' => __('Disable Q&A', 'tutor'),
+                    'checked' => get_post_meta(get_the_ID(), '_tutor_disable_qa')=='yes',
+                    'value' => 'yes'
+                )
+            )
+        );
+
+        return $filtered;
     }
 
     public function display(){
