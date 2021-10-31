@@ -75,14 +75,18 @@ $filters = array(
 	
 
 	<div class="tutor-ui-table-responsive tutor-mt-30 tutor-mr-20">
-		<table class="tutor-ui-table tutor-ui-table-responsive table-students table-instructors">
+		<table class="tutor-ui-table tutor-ui-table-responsive table-instructors">
 			<thead>
 			<tr>
 				<th>
+					<div class="d-flex">
+						<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
+					</div>
+				</th>
+				<th class="tutor-table-rows-sorting">
 				<div class="inline-flex-center color-text-subsued">
-				<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input" name="tutor-bulk-checkbox-all">
 					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
-					<span class="ttr-ordering-a-to-z-filled"></span>
+					<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon"></span>
 				</div>
 				</th>
 				<th>
@@ -109,9 +113,13 @@ $filters = array(
 			<tbody>
 			<?php foreach ( $instructors_list as $list ) : ?>
 			<tr>
+				<td data-th="Checkbox">
+					<div class="td-checkbox d-flex ">
+						<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
+					</div>
+				</td>
 				<td class="column-fullwidth">
 				<div class="td-avatar">
-					<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
 					<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
 					<img src="<?php echo $avatar_url; ?>" alt="student avatar"/>
 					<p class="color-text-primary text-medium-body">

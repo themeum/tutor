@@ -33,6 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 
 		if(1 != $pages){
 ?>
+<nav class="tutor-course-list-pagination tutor-ui-pagination">
 <div class="tutor-pagination-hints">
 	<div class="text-regular-caption color-text-subsued">
 		<?php _e('Page', 'tutor'); ?> 
@@ -62,14 +63,13 @@ if ( ! defined( 'ABSPATH' ) ) {
         }
 	?>
 </ul>
+</nav>
 <?php } } ?>
 
 <?php do_action('tutor_course/archive/pagination/before');  ?>
-
-	<nav class="tutor-ui-pagination tutor-mt-50 tutor-mx-60">
-		<?php if (function_exists("course_listing_pagination")) {
-			course_listing_pagination($additional_loop->max_num_pages);
-		} ?>
-	</nav>
-
+	
+	<?php if (function_exists("course_listing_pagination")) {
+		course_listing_pagination($additional_loop->max_num_pages);
+	} ?>
+	
 <?php do_action('tutor_course/archive/pagination/after');  ?>

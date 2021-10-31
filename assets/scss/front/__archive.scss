@@ -2938,10 +2938,9 @@ table.course-single-gradebooks a {
 .tutor-course-listing-filter {
     padding-top: 50px !important;
     margin: 0px auto;
-}
-
-.tutor-course-listing-filter .tutor-course-filter-loop-container {
-    margin-top: 0px;
+    .tutor-course-filter-loop-container {
+        margin-top: 0px;
+    }
 }
 
 .tutor-course-archive-filters-wrap select {
@@ -2956,28 +2955,44 @@ table.course-single-gradebooks a {
     outline: none;
 }
 
-.list-item-price ins {
-    text-decoration: none;
+.list-item-price {
+    ins {
+        text-decoration: none;
+    }
+    del {
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 160%;
+        color: #757c8e;
+    }
 }
 
-.list-item-price del {
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 160%;
-    color: #757c8e;
-}
-
-.list-item-button.booking-available .btn-icon {
-    height: 0px !important;
-    width: 0px !important;
-    margin-right: 10px !important;
-}
-
-.list-item-button.booking-available button:hover span {
-    color: #fff;
+.list-item-button.booking-available {
+    .btn-icon {
+        height: 0px !important;
+        width: 0px !important;
+        margin-right: 10px !important;
+    }
+    button:hover span {
+        color: #fff;
+    }
 }
 
 .has-wish-listed {
     color: #fff !important;
     background-color: #3e64de !important;
+}
+
+@media only screen and (min-width: 1200px) {
+    .tutor-course-list-pagination.tutor-ui-pagination {
+        width: 80%;
+        margin: 50px auto 0px;
+    }
+}
+
+@media only screen and (max-width: 1199px) {
+    .tutor-course-list-pagination.tutor-ui-pagination {
+        width: 90%;
+        margin: 50px auto 0px;
+    }
 }
