@@ -2095,10 +2095,13 @@ function tutorModal() {
 /***/ (() => {
 
 (function thumbnailUploadPreview() {
+  // It is managed by mediachooser.js
+  return;
   /**
    * Image Preview : Logo and Signature Upload
    * Selector -> .tutor-option-field-input.image-previewer
    */
+
   var imgPreviewers = document.querySelectorAll('.tutor-thumbnail-uploader');
   var imgPreviews = document.querySelectorAll('.tutor-thumbnail-uploader img');
   var imgPrevInputs = document.querySelectorAll('.tutor-thumbnail-uploader input[type=file]');
