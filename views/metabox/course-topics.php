@@ -7,12 +7,13 @@
     </div>
 
     <div class="new-topic-btn-wrap">
-        <a data-tutor-modal-target="tutor-modal-add-topic" href="javascript:;" class="create_new_topic_btn tutor-btn bordered-btn"> 
-            <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e('Add new topic', 'tutor'); ?>
-        </a>
+        <button data-tutor-modal-target="tutor-modal-add-topic" class="create_new_topic_btn tutor-btn bordered-btn"> 
+            <i class="tutor-icon-text-document-add-button-with-plus-sign tutor-mr-10"></i> <?php _e('Add new topic', 'tutor'); ?>
+        </button>
     </div>
 
     <?php 
+        // Topic modal for new topic creation
         tutor_load_template_from_custom_path(tutor()->path.'/views/modal/topic-form.php', array(
             'modal_title'   => __('Add Topic', 'tutor'),
             'wrapper_id'    => 'tutor-modal-add-topic',
@@ -20,7 +21,7 @@
             'course_id'     => $course_id,
             'wrapper_class' => '',
             'button_text'   => __('Add Topic', 'tutor'),
-            'button_id'     => 'tutor-add-topic-btn'
+            'button_class'     => 'tutor-save-topic-btn'
         ), false); 
     ?>
 
@@ -54,7 +55,8 @@
                     </ul>
                 </div>
 
-                <div class="tutor-modal-body-alt modal-container">
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
+
                 </div>
 
                 <div class="tutor-modal-footer">
@@ -97,7 +99,11 @@
                         <span class="las la-times"></span>
                     </button>
                 </div>
-                <div class="tutor-modal-body-alt modal-container"></div>
+
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
+
+                </div>
+                
                 <div class="tutor-modal-footer">
                     <div class="tutor-bs-row">
                         <div class="tutor-bs-col">
@@ -128,7 +134,7 @@
                         <span class="las la-times"></span>
                     </button>
                 </div>
-                <div class="tutor-modal-body-alt modal-container">
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
 
                 </div>
                 <div class="tutor-modal-footer">

@@ -181,40 +181,13 @@ jQuery(document).ready(function($){
         $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());
     });
 
-    $(document).on('click', '.tutor-topics-edit-button', function(e){
-        e.preventDefault();
-        var $button = $(this);
-        var topics_id = $button.closest('.tutor-topics-wrap').find('[name="topic_id"]').val();;
-        var topic_title = $button.closest('.tutor-topics-wrap').find('[name="topic_title"]').val();
-        var topic_summery = $button.closest('.tutor-topics-wrap').find('[name="topic_summery"]').val();
-
-        var data = {topic_title: topic_title, topic_summery : topic_summery, topic_id : topics_id, action: 'tutor_update_topic'};
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : data,
-            beforeSend: function () {
-                $button.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
-                    $button.closest('.tutor-modal').removeClass('tutor-is-active');
-                }
-            },
-            complete: function () {
-                $button.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
     /**
      * Delete Lesson from course builder
      */
     $(document).on('click', '.tutor-delete-lesson-btn', function(e){
         e.preventDefault();
 
-        if( ! confirm( __( 'Are you sure?', 'tutor' ) )){
+        if( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
             return;
         }
 
@@ -421,7 +394,7 @@ jQuery(document).ready(function($){
     $(document).on('click', '.tutor-delete-quiz-btn', function(e){
         e.preventDefault();
 
-        if( ! confirm( __( 'Are you sure?', 'tutor' ) )){
+        if( ! confirm( __( 'Are you sure to delete?', 'tutor' ) )){
             return;
         }
 
@@ -431,9 +404,26 @@ jQuery(document).ready(function($){
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
-            data : {quiz_id : quiz_id, action: 'tutor_delete_quiz_by_id'},
+            data : {
+                quiz_id : quiz_id, 
+                action: 'tutor_delete_quiz_by_id'
+            },
             beforeSend: function () {
-                $that.closest('.course-content-item').remove();
+                $that.addClass('tutor-updating-message');
+            },
+            success: function(resp) {
+                const {data={}, success} = resp || {};
+                const {message=__('Something Went Wrong!')} = data;
+
+                if(success) {
+                    $that.closest('.course-content-item').remove();
+                    return;
+                }
+
+                tutor_toast('Error!', message, 'error');
+            },
+            complete:function() {
+                $that.removeClass('tutor-updating-message')
             }
         });
     });
@@ -727,12 +717,12 @@ jQuery.fn.serializeObject = function()
    return values;
 };
 
-window.tutor_toast=function(title, description, type) {
+window.tutor_toast=function(title, description, type, is_left) {
     var tutor_ob = window._tutorobject || {};
     var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
     if(!jQuery('.tutor-toast-parent').length) {
-        jQuery('body').append('<div class="tutor-toast-parent"></div>');
+        jQuery('body').append('<div class="tutor-toast-parent '+(is_left ? 'tutor-toast-left' : '')+'"></div>');
     }
 
     var icons = {

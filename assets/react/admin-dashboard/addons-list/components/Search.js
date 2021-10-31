@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useAddonsUpdate } from '../context/AddonsContext';
+const { __ } = wp.i18n;
 
 const debounce = (fn, delay = 500) => {
 	let timer = null;
@@ -36,7 +37,7 @@ const Search = () => {
 				<input
 					type="search"
 					className="tutor-form-control"
-					placeholder="Search…"
+					placeholder={__('Search…', 'tutor')}
 					value={search}
 					onChange={handleChange}
 				/>

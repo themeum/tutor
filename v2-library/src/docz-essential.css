@@ -49,5 +49,14 @@ code {
 }
 
 [data-testid='main-container'] {
-	max-width: 1700px !important;
+	max-width: 1788px !important;
+}
+
+body {
+	font-family: -apple-system, 'SF Pro Display', sans-serif;
+	/* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif; */
+}
+
+.css-1ouyflx {
+	font-family: unset !important;
 }

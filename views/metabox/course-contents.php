@@ -1,33 +1,25 @@
 <div class="course-contents tutor-course-builder-content-container">
 
-    <div class="wp_editor_config_example" style="display: none;">
-        <?php wp_editor('', 'tutor_editor_config'); ?>
-    </div>
-
 	<?php
-	if (empty($current_topic_id)){
-		$current_topic_id = (int) tutor_utils()->avalue_dot('current_topic_id', $_POST);
-	}
-
 	$query_lesson = tutor_utils()->get_lesson($course_id, -1);
-	// $query_topics = tutor_utils()->get_topics($course_id);
 	$attached_lesson_ids = array();
 
     // tutor_utils()->get_topics function doesn't work correctly for multi instructor case. Rather use get_posts.    
-    $topic_args = array(
-        'post_type'  => 'topics',
-        'post_parent'  => $course_id,
-        'orderby' => 'menu_order',
-        'order'   => 'ASC',
-        'posts_per_page'    => -1,
-    );
-    $query_topics = (object) array('posts' => get_posts($topic_args));
-
-	if ( ! count($query_topics->posts)){
-		echo '<p class="course-empty-content">'.__('Add a topic to build your course', 'tutor').'</p>';
+    $query_topics = get_posts(array(
+        'post_type'      => 'topics',
+        'post_parent'    => $course_id,
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+        'posts_per_page' => -1,
+    ));
+    
+	if ( !count($query_topics)){
+		echo '<span class="color-text-warning tutor-bs-d-block tutor-mb-20">'.
+                __('Add a topic to build your course', 'tutor')
+            .'</span>';
 	}
 
-	foreach ($query_topics->posts as $topic){
+	foreach ($query_topics as $topic){
 		?>
         <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
             <div class="tutor-topics-top">
@@ -44,7 +36,6 @@
                         <i class="tutor-icon-light-down"></i>
                     </span>
                 </h4>
-
                 <?php 
                     tutor_load_template_from_custom_path(tutor()->path.'/views/modal/topic-form.php', array(
                         'modal_title'   => __('Update Topic', 'tutor'),
@@ -55,7 +46,7 @@
                         'summary'       => $topic->post_content,
                         'wrapper_class' => 'tutor-topics-edit-form',
                         'button_text'   => __('Update Topic', 'tutor'),
-                        'button_class'  => 'tutor-topics-edit-button'
+                        'button_class'  => 'tutor-save-topic-btn'
                     ), false); 
                 ?>
             </div>
@@ -88,7 +79,7 @@
 						} elseif ($lesson->post_type === 'tutor_assignments'){
 							?>
                             <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $lesson->ID; ?>">
-                                <div class="tutor-lesson-top">
+                                <div class="tutor-course-content-top">
                                     <i class="fas fa-bars"></i>
                                     <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $lesson->ID; ?>"
                                        data-topic-id="<?php echo $topic->ID; ?>"><i class="tutor-icon-clipboard"></i> <?php echo
@@ -100,7 +91,7 @@
                         } elseif ($lesson->post_type === 'tutor_zoom_meeting'){
 							?>
                             <div id="tutor-zoom-meeting-<?php echo $lesson->ID; ?>" class="course-content-item tutor-zoom-meeting-item tutor-zoom-meeting-<?php echo $lesson->ID; ?>">
-                                <div class="tutor-lesson-top">
+                                <div class="tutor-course-content-top">
                                     <i class="fas fa-bars"></i>
                                     <a href="javascript:;" class="tutor-zoom-meeting-modal-open-btn" data-meeting-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>" data-click-form="course-builder">
                                         <?php echo stripslashes($lesson->post_title); ?>
@@ -113,7 +104,7 @@
 							?>
                             <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
 							$lesson->ID; ?>">
-                                <div class="tutor-lesson-top">
+                                <div class="tutor-course-content-top">
                                     <i class="fas fa-bars"></i>
                                     <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
                                     <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
@@ -128,12 +119,12 @@
                     <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
 
                     <button class="tutor-btn tutor-is-outline tutor-is-sm open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
-                        <i class="tutor-icon-plus-square-button"></i>
+                        <i class="tutor-icon-plus-square-button tutor-mr-10"></i>
                         <?php _e('Lesson', 'tutor'); ?>
                     </button>
                     
                     <button class="tutor-btn tutor-is-outline tutor-is-sm tutor-add-quiz-btn" data-topic-id="<?php echo $topic->ID; ?>">
-                        <i class="tutor-icon-plus-square-button"></i>
+                        <i class="tutor-icon-plus-square-button tutor-mr-10"></i>
                         <?php _e('Quiz', 'tutor'); ?>
                     </button>
 
@@ -169,7 +160,7 @@
 							?>
                             <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
 							$lesson->ID; ?>">
-                                <div class="tutor-lesson-top">
+                                <div class="tutor-course-content-top">
                                     <i class="fas fa-bars"></i>
                                     <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $lesson->ID; ?>"
                                        data-topic-id="<?php echo $topic->ID; ?>"><i class="tutor-icon-clipboard"></i> <?php echo
@@ -182,7 +173,7 @@
 							?>
                             <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
 							$lesson->ID; ?>">
-                                <div class="tutor-lesson-top">
+                                <div class="tutor-course-content-top">
                                     <i class="fas fa-bars"></i>
                                     <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo is_object($topic) ? $topic->ID : ''; ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
                                     <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
