@@ -64,7 +64,11 @@ $filters = array(
 	'filters'       => true,
 	'course_filter' => false,
 );
-
+$available_status = array(
+	'pending'  => __( 'pending', 'tutor' ),
+	'approved' => __( 'approved', 'tutor' ),
+	'rejected' => __( 'rejected', 'tutor' ),
+);
 ?>
 <div class="tutor-admin-page-wrapper">
 	<?php
@@ -139,7 +143,7 @@ $filters = array(
 									</span>
 								</td>
 								<td>
-									<?php echo esc_html( $details['withdraw_method_name'] ); ?>
+									<?php echo esc_html( isset( $details['withdraw_method_name'] ) ? $details['withdraw_method_name'] : '' ); ?>
 								</td>
 								<td>
 									<li>
@@ -197,16 +201,18 @@ $filters = array(
 								<td>
 									<?php
 										$updated_at = $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '';
+										$updated_time = $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '';
 									if ( 'pending' === $list->status ) :
 										?>
-										<button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm" data-tutor-modal-target="tutor-admin-withdraw-approve" class="tutor-btn">
-										<?php esc_html_e( 'Approve', 'tutor' ); ?>
+										<button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm tutor-admin-open-withdraw-approve-modal" data-tutor-modal-target="tutor-admin-withdraw-approve" data-amount="<?php echo esc_attr( tutor_utils()->tutor_price( $list->amount ) ); ?>" data-name="<?php echo esc_attr( $account_name ); ?>" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>">
+											<?php esc_html_e( 'Approve', 'tutor' ); ?>
 										</button>
-										<button data-tutor-modal-target="tutor-admin-withdraw-reject" class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
-										<?php esc_html_e( 'Reject', 'tutor' ); ?>
+										<button data-tutor-modal-target="tutor-admin-withdraw-reject" class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm tutor-admin-open-withdraw-reject-modal" data-amount="<?php echo esc_attr( tutor_utils()->tutor_price( $list->amount ) ); ?>" data-name="<?php echo esc_attr( $account_name ); ?>" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>">
+											<?php esc_html_e( 'Reject', 'tutor' ); ?>
 										</button>
 									<?php else : ?>
-										<?php echo esc_html( $updated_at ); ?>
+										<?php echo esc_html( $updated_at ); ?>,
+										<?php echo esc_html( $updated_time ); ?>
 									<?php endif; ?>
 								</td>
 							</tr>
@@ -247,6 +253,8 @@ $filters = array(
 			<div class="tutor-modal-inner">
 			<div class="tutor-modal-body tutor-text-center">
 				<form action="" id="tutor-admin-withdraw-approve-form">
+					<input type="hidden" name="action" value="<?php echo esc_html( 'tutor_admin_withdraw_action' ); ?>">
+					<input type="hidden" name="action-type" value="<?php echo esc_html( 'approved' ); ?>">
 					<div class="tutor-modal-icon">
 					<img src="https://i.imgur.com/Nx6U2u7.png" alt="" />
 					</div>
@@ -265,7 +273,7 @@ $filters = array(
 					>
 						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 					</button>
-					<button class="tutor-btn">
+					<button type="submit" class="tutor-btn">
 						<?php esc_html_e( 'Yes, Approve Withdrawal', 'tutor' ); ?>
 					</button>
 					</div>
@@ -286,6 +294,8 @@ $filters = array(
 			<div class="tutor-modal-inner">
 			<div class="tutor-modal-body tutor-text-center">
 				<form action="" id="tutor-admin-withdraw-reject-form">
+					<input type="hidden" name="action" value="<?php echo esc_html( 'tutor_admin_withdraw_action' ); ?>">
+					<input type="hidden" name="action-type" value="<?php echo esc_html( 'rejected' ); ?>">
 					<div class="tutor-modal-icon">
 					<img src="https://i.imgur.com/Nx6U2u7.png" alt="" />
 					</div>
@@ -297,7 +307,7 @@ $filters = array(
 
 						</p>
 						<div class="tutor-mb-15">
-							<select class="tutor-form-select">
+							<select class="tutor-form-select" name="reject-type" id="tutor-admin-withdraw-reject-type">
 								<option value="<?php esc_attr_e( 'Invalid Payment Details', 'tutor' ); ?>">
 									<?php esc_html_e( 'Invalid Payment Details', 'tutor' ); ?>
 								</option>
@@ -309,6 +319,9 @@ $filters = array(
 								</option>
 							</select>
 						</div>
+						<div class="tutor-md-15" id="tutor-withdraw-reject-other" style="width: 96%;">
+
+						</div>
 					</div>
 					<div class="tutor-modal-btns tutor-btn-group">
 					<button
@@ -317,7 +330,7 @@ $filters = array(
 					>
 						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 					</button>
-					<button class="tutor-btn">
+					<button type="submit" class="tutor-btn">
 						<?php esc_html_e( 'Yes, Reject Withdrawal', 'tutor' ); ?>
 					</button>
 					</div>
