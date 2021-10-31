@@ -10,8 +10,8 @@
 					class="tutor-form-select tutor-form-control-sm"
 				>
 					<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
-						<option value="<?php esc_attr_e( $v['value'] ); ?>">
-							<?php esc_html_e( $v['option'] ); ?>
+						<option value="<?php echo esc_attr( $v['value'] ); ?>">
+							<?php echo esc_html( $v['option'] ); ?>
 						</option>
 					<?php endforeach; ?>
 				</select>
