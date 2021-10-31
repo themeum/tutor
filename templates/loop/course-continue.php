@@ -10,12 +10,13 @@
  * @package TutorLMS/Templates
  * @version 1.7.4
  */
+
 ?>
 
     
 <div  class="list-item-button">
 <?php
-if ( $wp_query->query['post_type'] !== 'lesson' ) {
+    
     $course_id = get_the_ID();
     $enroll_btn = '<div class="tutor-loop-cart-btn-wrap"><a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">' . __( 'Check This Course', 'tutor' ) . '</a></div>';
     $lesson_url = tutor_utils()->get_course_first_lesson();
@@ -44,6 +45,5 @@ if ( $wp_query->query['post_type'] !== 'lesson' ) {
     } else {
         echo $enroll_btn;
     }
-}
 ?>
 </div>

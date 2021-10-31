@@ -68,8 +68,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php do_action('tutor_course/archive/pagination/before');  ?>
 	
-	<?php if (function_exists("course_listing_pagination")) {
-		course_listing_pagination($additional_loop->max_num_pages);
-	} ?>
+	<?php 
+		$additional_loop = '';
+		if (function_exists("course_listing_pagination")) {
+		course_listing_pagination( $additional_loop->max_num_pages );
+		} 
+	?>
 	
 <?php do_action('tutor_course/archive/pagination/after');  ?>
