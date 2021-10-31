@@ -1,5 +1,5 @@
 
-/* Multi instructor styles */
+// Multi instructor list styles
 .tutor-course-available-instructors {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -119,6 +119,81 @@
                 }
             }
         }
+    }
+}
+
+// Multi instructor picker modal
+#tutor_course_instructor_modal {
+    .tutor-search-result {
+        position: absolute;
+        width: 300px;
+        background: white;
+        max-height: 216px;
+        overflow: auto;
+        border: 1px solid #CDCFD5;
+        box-sizing: border-box;
+        border-radius: 6px;
         
+        &:empty{
+            display: none;
+            border: none;
+            margin: 0;
+            padding: 0;
+            height: 0;
+        }
+
+        &>div{
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(align-items, center);
+            padding: 12px 0;
+
+            &:hover{
+                background: #EFF1F7;
+            }
+
+            img {
+                // Profile pic
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                overflow: hidden;
+                margin: 0 19px;
+            }
+
+            span {
+                // Name
+                @include propertyWithPrefix(flex, 1);
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 23px;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 16px;
+                color: #212327;
+
+                &>span{
+                    // Email
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 13px;
+                    color: #5B616F;
+                }
+            }
+
+            i{
+                // Add icon
+                padding: 0 20px;
+                color: #3E64DE;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            &:not(:hover){
+                i{
+                    display: none;
+                }
+            }
+        }
     }
 }

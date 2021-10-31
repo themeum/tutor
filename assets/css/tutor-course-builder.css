@@ -937,7 +937,6 @@
 
 body.tutor-screen-course-builder {
   /* Course settings module */
-  /* Multi instructor styles */
   /* Screen specific declarations (Frontend editor) */
 }
 
@@ -1274,6 +1273,91 @@ body.tutor-screen-course-builder .tutor-course-available-instructors .added-inst
 
 body.tutor-screen-course-builder .tutor-course-available-instructors .added-instructor-item .instructor-name img:hover + i.instructor-name-tooltip {
   opacity: 1;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result {
+  position: absolute;
+  width: 300px;
+  background: white;
+  max-height: 216px;
+  overflow: auto;
+  border: 1px solid #CDCFD5;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 6px;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result:empty {
+  display: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  height: 0;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  padding: 12px 0;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result > div:hover {
+  background: #EFF1F7;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result > div img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 19px;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result > div span {
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 23px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result > div span > span {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: #5B616F;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result > div i {
+  padding: 0 20px;
+  color: #3E64DE;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result > div:not(:hover) i {
+  display: none;
 }
 
 body.tutor-screen-course-builder .tutor-course-builder-attachments {

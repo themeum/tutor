@@ -157,21 +157,26 @@ window.jQuery(document).ready(function ($) {
 window.jQuery(document).ready(function ($) {
   var __ = wp.i18n.__;
   var search_container = $('#tutor_course_instructor_modal .tutor-search-result');
+  var shortlist_container = $('#tutor_course_instructor_modal .tutor-selected-result');
   var course_id = $('#tutor_course_instructor_modal').data('course_id');
-  var search_timeout; // Search on input
+  var search_timeout;
 
-  $(document).on('input', '#tutor_course_instructor_modal input[type="text"]', function () {
-    var _this = this;
-
+  var search_method = function search_method(user_id, callback) {
     var ajax_call = function ajax_call() {
       search_timeout = undefined;
-      var search_terms = ($(_this).val() || '').trim(); // Clear result if no keyword
+      var input = $('#tutor_course_instructor_modal input[type="text"]');
+      var search_terms = (input.val() || '').trim(); // Clear result if no keyword
 
       if (!search_terms) {
         search_container.empty();
         return;
-      } // Ajax request
+      }
 
+      var shortlisted = [];
+      shortlist_container.find('input[name="tutor-instructor-short-list"]').each(function () {
+        shortlisted.push($(this).val());
+      });
+      user_id && !isNaN(user_id) ? shortlisted.push(user_id) : 0; // Ajax request
 
       $.ajax({
         url: _tutorobject.ajaxurl,
@@ -179,10 +184,23 @@ window.jQuery(document).ready(function ($) {
         data: {
           course_id: course_id,
           search_terms: search_terms,
+          shortlisted: shortlisted,
           action: 'tutor_course_instructor_search'
         },
+        beforeSend: function beforeSend() {
+          if (!callback) {
+            // Don't show if click on add. Then add loading icon should appear
+            search_container.html('<div class="tutor-text-center"><span class="tutor-updating-message"></span></div>');
+          }
+        },
         success: function success(resp) {
-          search_container.html((resp.data || {}).output);
+          var _ref = resp.data || {},
+              search_result = _ref.search_result,
+              shortlisted = _ref.shortlisted;
+
+          search_container.html(search_result);
+          shortlist_container.html(shortlisted);
+          callback ? callback() : 0;
         }
       });
     };
@@ -191,28 +209,61 @@ window.jQuery(document).ready(function ($) {
       clearTimeout(search_timeout);
     }
 
-    search_timeout = setTimeout(ajax_call, 600);
-  });
+    search_timeout = setTimeout(ajax_call, 350);
+  }; // Search/Click input
+
+
+  $(document).on('input', '#tutor_course_instructor_modal input[type="text"]', search_method);
+  $(document).on('focus', '#tutor_course_instructor_modal input[type="text"]', function () {
+    search_container.show();
+  }); // Shortlist on plus click
+
+  $(document).on('click', '#tutor_course_instructor_modal .tutor-shortlist-instructor', function () {
+    $(this).addClass('tutor-updating-message');
+    search_method($(this).closest('[data-user_id]').data('user_id'), function () {
+      search_container.hide();
+    });
+  }); // Remove from shortlist
+
+  $(document).on('click', '#tutor_course_instructor_modal .tutor-selected-result .instructor-control a', function () {
+    $(this).closest('.added-instructor-item').fadeOut(function () {
+      $(this).remove();
+    });
+  }); // Add instructor to course from shortlist
+
   $(document).on('click', '.add_instructor_to_course_btn', function (e) {
     e.preventDefault();
     var $that = $(this);
-    var $modal = $('.tutor-modal-wrap');
-    var course_id = $('#post_ID').val();
-    var data = $modal.find('input').serializeObject();
-    data.course_id = course_id;
-    data.action = 'tutor_add_instructors_to_course';
+    var course_id = $('#tutor_course_instructor_modal').data('course_id');
+    var shortlisted = [];
+    shortlist_container.find('input[name="tutor-instructor-short-list"]').each(function () {
+      shortlisted.push($(this).val());
+    });
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: 'POST',
-      data: data,
+      data: {
+        course_id: course_id,
+        tutor_instructor_ids: shortlisted,
+        action: 'tutor_add_instructors_to_course'
+      },
       beforeSend: function beforeSend() {
         $that.addClass('tutor-updating-message');
       },
       success: function success(data) {
         if (data.success) {
+          // remove search content 
+          search_container.empty();
+          shortlist_container.empty(); // Hide the modal
+
+          $('#tutor_course_instructor_modal').removeClass('tutor-is-active'); // Show the result in course editor
+
           $('.tutor-course-available-instructors').html(data.data.output);
           $('.tutor-modal-wrap').removeClass('show');
+          return;
         }
+
+        tutor_toast('Error!', get_response_message(data), 'error');
       },
       complete: function complete() {
         $that.removeClass('tutor-updating-message');
