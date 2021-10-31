@@ -199,10 +199,10 @@ $filters = array(
 										$updated_at = $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '';
 									if ( 'pending' === $list->status ) :
 										?>
-										<button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+										<button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm" data-tutor-modal-target="tutor-admin-withdraw-approve" class="tutor-btn">
 										<?php esc_html_e( 'Approve', 'tutor' ); ?>
 										</button>
-										<button class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+										<button data-tutor-modal-target="tutor-admin-withdraw-reject" class="tutor-btn tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
 										<?php esc_html_e( 'Reject', 'tutor' ); ?>
 										</button>
 									<?php else : ?>
@@ -236,4 +236,95 @@ $filters = array(
 			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
 			?>
 	</div>
+
+	<!-- withdraw approve modal-->
+	<div id="tutor-admin-withdraw-approve" class="tutor-modal">
+		<span class="tutor-modal-overlay"></span>
+		<button data-tutor-modal-close class="tutor-modal-close">
+			<span class="las la-times"></span>
+		</button>
+		<div class="tutor-modal-root">
+			<div class="tutor-modal-inner">
+			<div class="tutor-modal-body tutor-text-center">
+				<form action="" id="tutor-admin-withdraw-approve-form">
+					<div class="tutor-modal-icon">
+					<img src="https://i.imgur.com/Nx6U2u7.png" alt="" />
+					</div>
+					<div class="tutor-modal-text-wrap">
+					<h3 class="tutor-modal-title">
+						<?php esc_html_e( 'Approve Withdrawal?', 'tutor' ); ?>
+					</h3>
+					<p id="tutor-admin-withdraw-approve-content">
+
+					</p>
+					</div>
+					<div class="tutor-modal-btns tutor-btn-group">
+					<button
+						data-tutor-modal-close
+						class="tutor-btn tutor-is-outline tutor-is-default"
+					>
+						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+					</button>
+					<button class="tutor-btn">
+						<?php esc_html_e( 'Yes, Approve Withdrawal', 'tutor' ); ?>
+					</button>
+					</div>
+				</form>
+			</div>
+			</div>
+		</div>
+	</div>
+	<!-- withdraw approve modal end-->
+
+	<!-- withdraw reject modal-->
+	<div id="tutor-admin-withdraw-reject" class="tutor-modal">
+		<span class="tutor-modal-overlay"></span>
+		<button data-tutor-modal-close class="tutor-modal-close">
+			<span class="las la-times"></span>
+		</button>
+		<div class="tutor-modal-root">
+			<div class="tutor-modal-inner">
+			<div class="tutor-modal-body tutor-text-center">
+				<form action="" id="tutor-admin-withdraw-reject-form">
+					<div class="tutor-modal-icon">
+					<img src="https://i.imgur.com/Nx6U2u7.png" alt="" />
+					</div>
+					<div class="tutor-modal-text-wrap">
+						<h3 class="tutor-modal-title">
+							<?php esc_html_e( 'Reject Withdrawal?', 'tutor' ); ?>
+						</h3>
+						<p id="tutor-admin-withdraw-reject-content">
+
+						</p>
+						<div class="tutor-mb-15">
+							<select class="tutor-form-select">
+								<option value="<?php esc_attr_e( 'Invalid Payment Details', 'tutor' ); ?>">
+									<?php esc_html_e( 'Invalid Payment Details', 'tutor' ); ?>
+								</option>
+								<option value="<?php esc_attr_e( 'Invalid Request', 'tutor' ); ?>">
+									<?php esc_html_e( 'Invalid Request', 'tutor' ); ?>
+								</option>
+								<option value="<?php esc_attr_e( 'Other', 'tutor' ); ?>">
+									<?php esc_html_e( 'Other', 'tutor' ); ?>
+								</option>
+							</select>
+						</div>
+					</div>
+					<div class="tutor-modal-btns tutor-btn-group">
+					<button
+						data-tutor-modal-close
+						class="tutor-btn tutor-is-outline tutor-is-default"
+					>
+						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+					</button>
+					<button class="tutor-btn">
+						<?php esc_html_e( 'Yes, Reject Withdrawal', 'tutor' ); ?>
+					</button>
+					</div>
+				</form>
+			</div>
+			</div>
+		</div>
+	</div>
+	<!-- withdraw approve modal end-->
 </div>
