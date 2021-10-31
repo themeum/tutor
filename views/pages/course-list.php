@@ -257,7 +257,7 @@ $available_status = array(
 											echo wp_kses_post( tutor_utils()->get_tutor_avatar( $post->post_author ) );
 										?>
 										<p class="text-medium-body color-text-primary">
-											<?php echo esc_html( $author_details->display_name ); ?>
+											<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 										</p>
 										<a
 										href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author ) ); ?>"
