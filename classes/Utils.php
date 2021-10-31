@@ -15,6 +15,7 @@ class Utils {
 	/**
 	 * @param null $key
 	 * @param bool $default
+	 * @param bool $type if false return string
 	 *
 	 * @return array|bool|mixed
 	 *
@@ -22,7 +23,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_option( $key = null, $default = false ) {
+	public function get_option( $key = null, $default = false, $type = true ) {
 		$option = (array) maybe_unserialize(get_option('tutor_option'));
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
@@ -34,8 +35,12 @@ class Utils {
 		if ( array_key_exists( $key, $option ) ) {
 			// Convert off/on switch values to boolean
 			$value = $option[$key];
-			$value == 'off' ? $value = false : 0;
-			$value == 'on' ? $value = true : 0;
+
+			if( true == $type ){
+				$value == 'off' ? $value = false : 0;
+				$value == 'on' ? $value = true : 0;
+			}
+
 			return apply_filters( $key, $value );
 		}
 		//Access array value via dot notation, such as option->get('value.subvalue')
@@ -54,8 +59,11 @@ class Utils {
 
 			// Convert off/on switch values to boolean
 			$value = $new_option;
-			$value == 'off' ? $value = false : 0;
-			$value == 'on' ? $value = true : 0;
+
+			if( true == $type ){
+				$value == 'off' ? $value = false : 0;
+				$value == 'on' ? $value = true : 0;
+			}
 
 			return apply_filters( $key, $value );
 		}
@@ -267,7 +275,7 @@ class Utils {
 		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
 		$depends           = is_array($plugin_path) ? $plugin_path : array( $plugin_path );
 		$has_plugin        = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
-	
+
 		return $has_plugin;
 	}
 
@@ -279,7 +287,7 @@ class Utils {
 	public function is_addon_enabled($basename) {
 		if($this->is_plugin_active('tutor-pro/tutor-pro.php')) {
 			$addonConfig = $this->get_addon_config($basename);
-			
+
 			return (bool) $this->avalue_dot('is_enable', $addonConfig);
 		}
 	}
@@ -643,9 +651,9 @@ class Utils {
 	public function get_pending_course_by_instructor( ) {
 	global $wp_query;
 	return $wp_query->post_count;
-	
+
 	}
-	
+
 
 	/**
 	 * @return mixed
@@ -2758,7 +2766,7 @@ class Utils {
 			$category_where = " AND term.term_id IN ({$cat_ids})";
 		}
 
-		//rating wise sorting @since v2.0.0 
+		//rating wise sorting @since v2.0.0
 		$rating 		= isset($_POST['rating_filter'] ) ? $rating : '';
 		$rating_having 	= '';
 		if ( '' !== $rating ) {
@@ -2768,7 +2776,7 @@ class Utils {
 		/**
 		 * Handle Short by Relevant | New | Popular & Order Shorting
 		 * from instructor list backend
-		 * 
+		 *
 		 * @since v2.0.0
 		 */
 		$order_query = '';
@@ -3436,7 +3444,7 @@ class Utils {
 			$course_ids = implode(',', $course_ids);
 			$course_filter = " AND _comment.comment_post_ID IN ($course_ids)";
 		}
-		
+
 		$reviews = $wpdb->get_results( $wpdb->prepare(
 			"SELECT _comment.comment_ID,
 					_comment.comment_post_ID,
@@ -4942,7 +4950,7 @@ class Utils {
 			$start,
 			$limit
 		) );
-		
+
 		return $query;
 	}
 
@@ -4975,7 +4983,7 @@ class Utils {
 	 */
 	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null ) {
 		global $wpdb;
-		
+
 		$course_ids = array_map( function( $id ) {
 			return "'" . esc_sql( $id ) . "'";
 		}, $course_ids );
@@ -7412,7 +7420,7 @@ class Utils {
 			case 'review' :
 				// just check if own review. Instructor privilege already checked in the earlier blocks
 				$id = $wpdb->get_var($wpdb->prepare(
-					"SELECT comment_ID 
+					"SELECT comment_ID
 					FROM {$wpdb->comments} WHERE user_id %d",
 					$user_id
 				));
@@ -7832,9 +7840,9 @@ class Utils {
 
 	/**
 	 * Get all courses along with topics & course materials for current student
-	 * 
+	 *
 	 * @since 1.9.10
-	 * 
+	 *
 	 * @return array
 	 */
 	public function course_with_materials(): array {
@@ -7914,8 +7922,8 @@ class Utils {
                 }
 
                 $plugins_data[$base_name]['url'] = $thumbnailURL;
-                
-               
+
+
             }
         }
 
