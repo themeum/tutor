@@ -1,15 +1,12 @@
 <?php
     $filter_object = new \TUTOR\Course_Filter();
-    $filter_levels = array(
-        'beginner'=> __('Beginner', 'tutor'),
-        'intermediate'=> __('Intermediate', 'tutor'),
-        'expert'=> __('Expert', 'tutor')
-    );
+    
     $filter_prices=array(
         'free'=> __('Free', 'tutor'),
         'paid'=> __('Paid', 'tutor'),
     );
 
+    $course_levels      = tutor_utils()->course_levels();
     $supported_filters = tutor_utils()->get_option('supported_course_filters', array());
     $supported_filters = array_keys($supported_filters);
 ?>
@@ -64,18 +61,16 @@
                 <?php _e('Level', 'tutor'); ?>
             </div>
             <div class="filter-widget-checkboxes">
-                <?php 
-                    foreach($filter_levels as $value=>$title){
-                        ?>  
-                        <div class="tutor-form-check tutor-mb-18">
-                            <input type="checkbox" class="tutor-form-check-input" id="<?php echo $value; ?>" name="tutor-course-filter-level" value="<?php echo $value; ?>"/>&nbsp;
-                            <label for="<?php echo $value; ?>">
-                                <?php echo $title; ?>
-                            </label>
-                        </div>
-                        <?php
-                    }
-                ?>
+                <?php
+                    foreach ($course_levels as  $value => $title) {
+                        if ($key == 'all_levels') continue; ?>
+                    <div class="tutor-form-check tutor-mb-18">
+                        <input type="checkbox" class="tutor-form-check-input" id="<?php echo $value; ?>" name="tutor-course-filter-level" value="<?php echo $value; ?>"/>&nbsp;
+                        <label for="<?php echo $value; ?>">
+                            <?php echo $title; ?>
+                        </label>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </div>

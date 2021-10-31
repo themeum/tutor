@@ -3844,4 +3844,8 @@
   margin-top: 15px !important;
 }
 
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .cart-text {
+  display: none;
+}
+
 /*# sourceMappingURL=tutor-frontend-dashboard.css.map */

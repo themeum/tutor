@@ -12,19 +12,38 @@
  */
 ?>
 
-    <?php
+    
+<div  class="list-item-button">
+<?php
+if ( $wp_query->query['post_type'] !== 'lesson' ) {
     $course_id = get_the_ID();
-    $enroll_btn = '<div  class="list-item-button"><a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">'.__('Continue Course', 'tutor'). '</a></div>';
-    $default_price = apply_filters('tutor-loop-default-price', __('Free', 'tutor'));
-    $price_html = $enroll_btn;
-    if (tutor_utils()->is_course_purchasable()) {
-        
-	    $product_id = tutor_utils()->get_course_product_id($course_id);
-	    $product    = wc_get_product( $product_id );
+    $enroll_btn = '<div class="tutor-loop-cart-btn-wrap"><a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">' . __( 'Check This Course', 'tutor' ) . '</a></div>';
+    $lesson_url = tutor_utils()->get_course_first_lesson();
+    $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
+    $completed_percent = tutor_utils()->get_course_completed_percent();
+    $is_completed_course = tutor_utils()->is_completed_course();
+    $retake_course = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
 
-	    if ( $product ) {
-		    $price_html = $enroll_btn;;
-	    }
+    if ( $lesson_url && ! $is_completed_course ) { 
+        $button_class = 'tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
+        ?>
+        <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
+            <?php
+                if ( $retake_course ) {
+                    _e( 'Retake This Course', 'tutor' );
+                } 
+                if ( ! $is_completed_course && $completed_percent != 0 ) {
+                    _e( 'Continue Course', 'tutor' );
+                }
+                if ( $completed_percent == 0 && ! $is_completed_course ) {
+                    esc_html_e( 'Start Course', 'tutor' );
+                }
+            ?>
+        </a>
+        <?php 
+    } else {
+        echo $enroll_btn;
     }
-    echo $price_html;
-    ?>
+}
+?>
+</div>
