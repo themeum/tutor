@@ -6136,7 +6136,7 @@
 }
 
 .tutor-bg-white {
-  background-color: #ffffff;
+  background-color: white !important;
 }
 
 .tutor-bg-light {
@@ -6149,6 +6149,8 @@
 
 .tutor-text-nowrap {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tutor-text-center {
@@ -9972,7 +9974,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   vertical-align: top;
-  content: "\e91d";
+  content: "\e91d" !important;
   -webkit-animation: spin 2s infinite linear;
   animation: spin 2s infinite linear;
   margin-right: 6px;

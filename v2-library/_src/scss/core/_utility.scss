@@ -76,7 +76,7 @@
 }
 
 .tutor-bg-white {
-	background-color: #ffffff;
+	background-color: white !important;
 }
 
 .tutor-bg-light {
@@ -90,6 +90,8 @@
 
 .tutor-text-nowrap {
 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .tutor-text-center {

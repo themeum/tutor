@@ -2137,14 +2137,6 @@ span.result-review-required {
   padding: 10px 20px;
 }
 
-/*
-	  Tutor Instructor
-  */
-.tutor-course-instructors-metabox-wrap {
-  margin-top: 10px;
-  margin-left: -10px;
-}
-
 .answer-image-matched-wrap {
   display: -webkit-box;
   display: -ms-flexbox;

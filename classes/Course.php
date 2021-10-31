@@ -14,7 +14,7 @@ class Course extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 		
-		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
+		add_action('add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'), 10, 2);
 		add_action('wp_ajax_tutor_save_topic', array($this, 'tutor_save_topic'));
 		
@@ -28,11 +28,6 @@ class Course extends Tutor_Base {
 		//Frontend Action
 		add_action('template_redirect', array($this, 'enroll_now'));
 		add_action('init', array($this, 'mark_course_complete'));
-
-		//Modal Perform
-		add_action('wp_ajax_tutor_course_instructor_search', array($this, 'tutor_course_instructor_search'));
-		add_action('wp_ajax_tutor_add_instructors_to_course', array($this, 'tutor_add_instructors_to_course'));
-		add_action('wp_ajax_detach_instructor_from_course', array($this, 'detach_instructor_from_course'));
 
 		/**
 		 * Frontend Dashboard
@@ -171,16 +166,11 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
-		$course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
-        
+		
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
 		
-		if ($course_marketplace) {
-			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
-		}
-
 		// Register unified pricing metabox at backend builder
 		$monetize_by = tutor_utils()->get_option('monetize_by');
     	if ($monetize_by === 'wc' || $monetize_by === 'edd'){
@@ -238,18 +228,6 @@ class Course extends Tutor_Base {
 		}
 	}
 
-	public function instructors_metabox($echo = true){
-		ob_start();
-		include tutor()->path . 'views/metabox/instructors-metabox.php';
-		$content = ob_get_clean();
-
-		if ($echo){
-			echo $content;
-		}else{
-			return $content;
-		}
-	}
-
 	/**
 	 * Register metabox in course builder tutor
 	 * @since v.1.3.4
@@ -264,9 +242,6 @@ class Course extends Tutor_Base {
 		
         course_builder_section_wrap($this->course_meta_box($echo = false), __( 'Course Builder', 'tutor' ) );
 		do_action('tutor/frontend_course_edit/after/course_builder', $post);
-
-        course_builder_section_wrap($this->instructors_metabox($echo = false), __( 'Instructors', 'tutor' ) );
-		do_action('tutor/frontend_course_edit/after/instructors', $post);
 
         course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), __( 'Additional Data', 'tutor' ) );
 		do_action('tutor/frontend_course_edit/after/additional_data', $post);
@@ -675,120 +650,6 @@ class Course extends Tutor_Base {
 		}
 	}
 	
-	public function tutor_course_instructor_search(){
-		tutor_utils()->checking_nonce();
-		
-		global $wpdb;
-
-		$course_id = (int) sanitize_text_field($_POST['course_id']);
-		$search_terms = sanitize_text_field(tutor_utils()->avalue_dot('search_terms', $_POST));
-
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-		
-		$saved_instructors = tutor_utils()->get_instructors_by_course($course_id);
-		$instructors = array();
-
-		$not_in_sql = apply_filters('tutor_instructor_query_when_exists', " AND ID <1 ");
-
-		if ($saved_instructors){
-			$saved_instructors_ids = wp_list_pluck($saved_instructors, 'ID');
-			$instructor_not_in_ids = implode(',', $saved_instructors_ids);
-			$not_in_sql .= "AND user.ID NOT IN($instructor_not_in_ids) ";
-		}
-
-		$search_sql = '';
-		if ($search_terms){
-			$search_sql = "AND (user.user_login like '%{$search_terms}%' or user.user_nicename like '%{$search_terms}%' or user.display_name like '%{$search_terms}%') ";
-		}
-
-		$instructors = $wpdb->get_results(
-			"SELECT user.ID, user.display_name, user.user_email
-			FROM {$wpdb->users} user
-			INNER JOIN {$wpdb->usermeta} meta ON user.ID = meta.user_id AND meta.meta_key = '_tutor_instructor_status' AND meta.meta_value = 'approved'
-			WHERE 1=1 {$not_in_sql} {$search_sql} limit 10 ");
-
-		$output = '';
-		if (is_array($instructors) && count($instructors)){
-			$instructor_output = '';
-			foreach ($instructors as $instructor){
-				$instructor_output .= "<div>
-					<label data-user_id='{$instructor->ID}'>
-							{$instructor->display_name} 
-							<span>{}</span>
-					</label>
-				</div>";
-			}
-
-			$output .= apply_filters('tutor_course_instructors_html', $instructor_output, $instructors);
-
-		}else{
-			$output .= __('<p>No instructor available or you have already added maximum instructors</p>', 'tutor');
-		}
-
-		if ( ! defined('TUTOR_MT_VERSION')){
-			$output .= '<p class="tutor-notice-warning" style="margin-top: 50px; font-size: 14px;">'
-						. sprintf( __('To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s', 'tutor'), '<a href="https://www.themeum.com/product/tutor-lms" target="_blank">', "</a>" ) 
-					.'</p>';
-		}
-
-		wp_send_json_success(array('output' => $output));
-	}
-
-	public function tutor_add_instructors_to_course(){
-		tutor_utils()->checking_nonce();
-
-		$course_id = (int) sanitize_text_field($_POST['course_id']);
-		$instructor_ids = tutor_utils()->avalue_dot('tutor_instructor_ids', $_POST);
-		
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-
-		if (is_array($instructor_ids) && count($instructor_ids)){
-			foreach ($instructor_ids as $instructor_id){
-				add_user_meta($instructor_id, '_tutor_instructor_course_id', $course_id);
-			}
-		}
-
-		$saved_instructors = tutor_utils()->get_instructors_by_course($course_id);
-		$output = '';
-
-		if ($saved_instructors){
-			foreach ($saved_instructors as $t){
-
-				$output .= '<div id="added-instructor-id-'.$t->ID.'" class="added-instructor-item added-instructor-item-'.$t->ID.'" data-instructor-id="'.$t->ID.'">
-                    <span class="instructor-icon">'.get_avatar($t->ID, 30).'</span>
-                    <span class="instructor-name"> '.$t->display_name.' </span>
-                    <span class="instructor-control">
-                        <a href="javascript:;" class="tutor-instructor-delete-btn tutor-action-icon">
-							<i class="tutor-icon-line-cross"></i>
-						</a>
-                    </span>
-                </div>';
-			}
-		}
-
-		wp_send_json_success(array('output' => $output));
-	}
-
-	public function detach_instructor_from_course(){
-		tutor_utils()->checking_nonce();
-
-		global $wpdb;
-
-		$instructor_id = (int) sanitize_text_field($_POST['instructor_id']);
-		$course_id = (int) sanitize_text_field($_POST['course_id']);
-
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-		
-		$wpdb->delete($wpdb->usermeta, array('user_id' => $instructor_id, 'meta_key' => '_tutor_instructor_course_id', 'meta_value' => $course_id) );
-		wp_send_json_success();
-	}
-
 	public function tutor_delete_dashboard_course(){
 		tutor_utils()->checking_nonce();
 
