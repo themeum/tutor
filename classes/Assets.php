@@ -370,6 +370,12 @@ class Assets {
 			$to_add[] = 'tutor-screen-frontend-dashboard';
 		}
 
+		if(is_admin()) {
+			if(isset($_GET['page']) && $_GET['page']=='tutor_settings') {
+				$to_add[] = 'tutor-screen-backend-settings';
+			}
+		}
+
 		is_array($classes) ? $classes=array_merge($classes, $to_add) : $classes.=implode('', $to_add);
 
 		return $classes;
