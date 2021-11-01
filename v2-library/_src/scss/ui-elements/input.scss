@@ -298,6 +298,10 @@ input.tutor-form-check-input {
 	transition: 300ms;
 	box-shadow: 0 0 0 0 var(--tutor-primary-lighter);
 
+	&:before {
+		display: none !important;
+	}
+
 	&:focus {
 		box-shadow: 0 0 0 6px var(--tutor-primary-lighter);
 	}
