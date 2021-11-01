@@ -474,6 +474,20 @@ table.tutor-ui-table {
 				@extend .color-text-subsued;
 			}
 		}
+
+		.list-item-checklist {
+			input.tutor-form-check-input[type='checkbox'] {
+				width: 12px;
+				height: 12px;
+				background-size: 6px;
+				border-width: 2px;
+				border-color: $stroke-light-30;
+				&:checked {
+					border-color: $brand-wordpress;
+					background-color: $brand-wordpress;
+				}
+			}
+		}
 	}
 } // end Table th/td Content Styles
 
@@ -620,7 +634,7 @@ table.tutor-ui-table-no-border {
 		[class^='ttr-']:before {
 			content: '\e941';
 		}
-		border-left: 1px solid #e7e8ef !important;
+		box-shadow: -1px 0 0 #e7e8ef;
 		background: #f7f8fa !important;
 	}
 
@@ -629,7 +643,6 @@ table.tutor-ui-table-no-border {
 		border-top-color: transparent;
 		background-color: #f7f8fa !important;
 		&.active {
-			// border-bottom-color: transparent !important;
 			border-top-color: #e7e8ef !important;
 		}
 		> * {
