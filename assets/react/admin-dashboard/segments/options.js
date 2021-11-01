@@ -17,6 +17,7 @@ const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
 
 document.addEventListener("DOMContentLoaded", function() {
   var $ = window.jQuery;
+  const {__} = wp.i18n;
 
   let image_uploader = document.querySelectorAll(".image_upload_button");
   // let image_input = document.getElementById("image_url_field");
@@ -68,8 +69,12 @@ document.addEventListener("DOMContentLoaded", function() {
         // Do something with attachment.id and/or attachment.url here
         var image_url = attachment.sizes[display.size].url;
 
-        upload_preview.src = input_file.value = image_url;
-        email_title_logo.src = input_file.value = image_url;
+        if (null !== upload_preview) {
+          upload_preview.src = input_file.value = image_url;
+        }
+        if (null !== email_title_logo) {
+          email_title_logo.src = input_file.value = image_url;
+        }
       });
     };
 
@@ -95,20 +100,31 @@ document.addEventListener("DOMContentLoaded", function() {
   $("#tutor-option-form").submit(function(e) {
     e.preventDefault();
 
+    var button = $("#save_tutor_option");
     var $form = $(this);
     var data = $form.serializeObject();
+
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: data,
-      beforeSend: function() {},
-      success: function(data) {
-        $(".tutor-notification").addClass("show");
-        setTimeout(() => {
-          $(".tutor-notification").removeClass("show");
-        }, 4000);
+      beforeSend: function() {
+        button.addClass('tutor-updating-message');
       },
-      complete: function() {},
+      success: function(resp) {
+        const {data={}, success} = resp || {};
+        const {message=__('Something Went Wrong!', 'tutor')} = data;
+
+        if(success) {
+          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
+          return;
+        }
+
+        tutor_toast('Error!', message, 'tutor', true);
+      },
+      complete: function() {
+        button.removeClass('tutor-updating-message');
+      },
     });
   });
 
@@ -158,6 +174,8 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         // beforeSend: function () {},
         success: function(data) {
+          // console.log(data.data);
+          // return false;
           var output = "",
             wrapped_item = "",
             notfound = true,
@@ -185,6 +203,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 searchKeyRegex,
                 `<span style='color: #212327; font-weight:500'>${matchedText}</span>`
               );
+
               output += view_item(
                 wrapped_item,
                 section_slug,
@@ -228,11 +247,13 @@ document.addEventListener("DOMContentLoaded", function() {
       link.addEventListener("click", (e) => {
         const dataTab = e.target.closest("[data-tab]").dataset.tab;
         const dataKey = e.target.closest("[data-key]").dataset.key;
+
         if (dataTab) {
           // remove active from other buttons
           navTabItems.forEach((item) => {
             item.classList.remove("active");
           });
+
           // add active to the current nav item
           document
             .querySelector(`.tutor-option-tabs [data-tab=${dataTab}]`)
@@ -258,7 +279,6 @@ document.addEventListener("DOMContentLoaded", function() {
           .querySelector(".search-popup-opener")
           .classList.remove("visible");
         document.querySelector('.search-field input[type="search"]').value = "";
-
         // Highlight selected element
         highlightSearchedItem(dataKey);
       });
@@ -271,11 +291,11 @@ document.addEventListener("DOMContentLoaded", function() {
   function highlightSearchedItem(dataKey) {
     const target = document.querySelector(`#${dataKey}`);
     const targetEl =
-      target && target.querySelector(`.tutor-option-field-label label`);
+      target && target.querySelector(`.tutor-option-field-label h5.label`);
     const scrollTargetEl =
       target && target.parentNode.querySelector(".tutor-option-field-row");
 
-    console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
+    // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
     if (scrollTargetEl) {
       targetEl.classList.add("isHighlighted");

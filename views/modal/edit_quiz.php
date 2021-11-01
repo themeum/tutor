@@ -45,13 +45,13 @@
                             <ul class="popup-menu" id="<?php echo $id_target; ?>">
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="icon tutor-v2-icon-test icon-edit-filled color-design-white"></span>
+                                        <span class="ttr-edit-filled color-design-white"></span>
                                         <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+                                        <span class="ttr-delete-fill-filled color-design-white"></span>
                                         <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>
@@ -67,7 +67,7 @@
 
     <div class="tutor-quiz-builder-form-row">
         <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-is-outline tutor-is-sm">
-            <i class="tutor-icon-add-line"></i>
+            <i class="tutor-icon-add-line tutor-mr-10"></i>
             <?php _e('Add Question', 'tutor'); ?>
         </a>
     </div>
@@ -111,7 +111,7 @@
                 <?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>
             </p>
 
-            <label class="tutor-radio-select tutor-mb-10 w-100pc">
+            <label class="tutor-radio-select tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Default', 'tutor'); ?></span>
@@ -119,7 +119,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-mb-10 w-100pc">
+            <label class="tutor-radio-select tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
@@ -127,7 +127,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-mb-10 w-100pc">
+            <label class="tutor-radio-select tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Reveal Mode', 'tutor'); ?></span>
@@ -175,81 +175,80 @@
         </div>
     </div>
 
+    <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer">
+        <!-- Header -->
+        <div class="tutor-bs-row tutor-bs-align-items-center tutor-quiz-advance-header tutor-bs-g-0">
+            <div class="tutor-bs-col">
+                <div class="tutor-bs-row tutor-bs-align-items-center">
+                    <div class="tutor-bs-col-auto">
+                        <span><i class="ttr-settings-filled"></i></span>
+                    </div>
+                    <div class="tutor-bs-col tutor-padding-0">
+                        <?php _e('Advance Settings', 'tutor'); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="tutor-bs-col-auto">
+                <i class="ttr-angle-down-filled"></i>
+            </div>
+        </div>
+
+        <!-- Fields -->
+        <div class="tutor-quiz-advance-content tutor-padding-30">
+            <div class="tutor-quiz-advance-settings-fields tutor-bs-row">
+                <div class="tutor-bs-col-12 tutor-mb-30">
+                    <label class="tutor-form-toggle">
+                        <input type="checkbox" class="tutor-form-toggle-input" value="1" name="quiz_option[quiz_auto_start]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'quiz_auto_start')); ?> />
+                        <span class="tutor-form-toggle-control"></span> <?php _e('Quiz Auto Start', 'tutor'); ?>
+                    </label>
+                    <p class="help">
+                        <?php _e('If you enable this option, the quiz will start automatically after the page is loaded.', 'tutor'); ?>
+                    </p>
+                </div>
+
+                <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-mb-30">
+                    <h4><?php _e('Question Layout', 'tutor'); ?></h4>
+                    <select class="tutor-form-select" name="quiz_option[question_layout_view]">
+                        <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
+                        <option value="single_question" <?php selected('single_question', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Single Question', 'tutor'); ?> </option>
+                        <option value="question_pagination" <?php selected('question_pagination', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Question Pagination', 'tutor'); ?> </option>
+                        <option value="question_below_each_other" <?php selected('question_below_each_other', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Question below each other', 'tutor'); ?> </option>
+                    </select>
+                </div>
+
+                <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-mb-30">
+                    <h4><?php _e('Questions Order', 'tutor'); ?></h4>
+                    <select class="tutor-form-select" name="quiz_option[questions_order]">
+                        <option value="rand" <?php selected('rand', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
+                        <option value="sorting" <?php selected('sorting', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Sorting', 'tutor'); ?> </option>
+                        <option value="asc" <?php selected('asc', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Ascending', 'tutor'); ?> </option>
+                        <option value="desc" <?php selected('desc', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Descending', 'tutor'); ?> </option>
+                    </select>
+                </div>
+
+                <div class="tutor-bs-col-12 tutor-mb-30">
+                    <label class="tutor-form-toggle">
+                        <input type="checkbox" class="tutor-form-toggle-input" value="1" name="quiz_option[hide_question_number_overview]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_question_number_overview')); ?> />
+                        <span class="tutor-form-toggle-control"></span> <?php _e('Hide question number', 'tutor'); ?></span>
+                    </label>
+                    <p class="help"><?php _e('Show/hide question number during attempt.', 'tutor'); ?></p>
+                </div>
+
+                <div class="tutor-bs-col-12 tutor-mb-30">
+                    <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
+                    <input class="tutor-form-control" type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>">
+                    <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
+                </div>
+
+                <div class="tutor-bs-col-12">
+                    <h4><?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?></h4>
+                    <input class="tutor-form-control" type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>">
+                    <p class="help"><?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <?php do_action('tutor_quiz_edit_modal_settings_tab_after', $quiz) ?>
 </div>
 
-<div id="quiz-builder-tab-advanced-options" class="quiz-builder-tab-container">
-    <div class="tutor-quiz-builder-group">
-        <div class="tutor-quiz-builder-row">
-            <div class="tutor-quiz-builder-col auto-width">
-                <label class="btn-switch">
-                    <input type="checkbox" value="1" name="quiz_option[quiz_auto_start]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'quiz_auto_start')); ?> />
-                    <div class="btn-slider btn-round"></div>
-                </label>
-                <span><?php _e('Quiz Auto Start', 'tutor'); ?></span>
-            </div>
-        </div>
-        <p class="help"><?php _e('If you enable this option, the quiz will start automatically after the page is loaded.', 'tutor'); ?></p>
-    </div>
-
-    <div class="tutor-quiz-builder-group">
-        <div class="tutor-quiz-builder-row">
-            <div class="tutor-quiz-builder-col auto-width">
-                <h4><?php _e('Question Layout', 'tutor'); ?></h4>
-
-                <select name="quiz_option[question_layout_view]">
-                    <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
-                    <option value="single_question" <?php selected('single_question', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Single Question', 'tutor'); ?> </option>
-                    <option value="question_pagination" <?php selected('question_pagination', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Question Pagination', 'tutor'); ?> </option>
-                    <option value="question_below_each_other" <?php selected('question_below_each_other', tutor_utils()->get_quiz_option($quiz_id, 'question_layout_view')); ?>> <?php _e('Question below each other', 'tutor'); ?> </option>
-                </select>
-            </div>
-
-            <div class="tutor-quiz-builder-col auto-width">
-                <h4><?php _e('Questions Order', 'tutor'); ?></h4>
-
-                <select name="quiz_option[questions_order]">
-                    <option value="rand" <?php selected('rand', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
-                    <option value="sorting" <?php selected('sorting', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Sorting', 'tutor'); ?> </option>
-
-                    <option value="asc" <?php selected('asc', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Ascending', 'tutor'); ?> </option>
-                    <option value="desc" <?php selected('desc', tutils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Descending', 'tutor'); ?> </option>
-                </select>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="tutor-quiz-builder-group">
-        <div class="tutor-quiz-builder-row">
-            <div class="tutor-quiz-builder-col auto-width">
-                <label class="btn-switch">
-                    <input type="checkbox" value="1" name="quiz_option[hide_question_number_overview]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_question_number_overview')); ?> />
-                    <div class="btn-slider btn-round"></div>
-                </label>
-                <span><?php _e('Hide question number', 'tutor'); ?></span>
-            </div>
-        </div>
-        <p class="help"><?php _e('Show/hide question number during attempt.', 'tutor'); ?></p>
-    </div>
-
-    <div class="tutor-quiz-builder-group">
-        <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
-        <div class="tutor-quiz-builder-row">
-            <div class="tutor-quiz-builder-col">
-                <input type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>">
-            </div>
-        </div>
-        <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
-    </div>
-
-    <div class="tutor-quiz-builder-group">
-        <h4><?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?></h4>
-        <div class="tutor-quiz-builder-row">
-            <div class="tutor-quiz-builder-col">
-                <input type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>">
-            </div>
-        </div>
-        <p class="help"><?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?></p>
-    </div>
-</div>

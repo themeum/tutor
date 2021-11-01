@@ -6,14 +6,13 @@
 
 ?>
 
-<div class="tutor-course-header">
+<div class="tutor-course-listing-item-head tutor-bs-d-flex">
 	<?php
 	tutor_course_loop_thumbnail();
 
 	$course_id = get_the_ID();
 	?>
-    <div class="tutor-course-loop-header-meta">
-		<?php
+    <?php
         $is_wishlisted = tutor_utils()->is_wishlisted($course_id);
         $has_wish_list = '';
         if ($is_wishlisted){
@@ -26,9 +25,7 @@
         }else{
             $action_class = apply_filters('tutor_popup_login_class', 'cart-required-login');
         }
-
-		echo '<span class="tutor-course-loop-level">'.get_tutor_course_level().'</span>';
-		echo '<span class="tutor-course-wishlist"><a href="javascript:;" class="tutor-icon-fav-line '.$action_class.' '.$has_wish_list.' " data-course-id="'.$course_id.'"></a> </span>';
+        
+		echo '<a href="javascript:;" class="'.$action_class.' '.$has_wish_list.' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'.$course_id.'"><span class="ttr-fav-line-filled"></span></a>';
 		?>
-    </div>
 </div>

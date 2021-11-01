@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
 use TUTOR\Course_List;
 use TUTOR_REPORT\Analytics;
 use TUTOR_REPORT\CourseAnalytics;
@@ -140,9 +141,12 @@ $available_status = array(
 	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
+
+	
+
 	?>
 
-	<div class="tutor-admin-page-content-wrapper">
+	<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-mr-20">
 		<div class="tutor-ui-table-wrapper">
 			<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
 				<thead class="tutor-text-sm tutor-text-400">
@@ -153,36 +157,36 @@ $available_status = array(
 							</div>
 						</th>
 						<th>
-							  <div class="text-regular-small color-text-subsued">
+							<div class="text-regular-small color-text-subsued">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-							<?php esc_html_e( 'Title', 'tutor-pro' ); ?>
+							<?php esc_html_e( 'Title', 'tutor' ); ?>
 							</div>
 						</th>
-						<th>
+						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center color-text-subsued">
 								<span class="text-regular-small">
-								<?php esc_html_e( 'Author', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Author', 'tutor' ); ?>
 								</span>
-								<span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
 							</div>
 						</th>	
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Course Categories', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Course Categories', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Students', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Students', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Price', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</div>
 						</th>
 						<th class="tutor-shrink"></th>											
@@ -195,8 +199,9 @@ $available_status = array(
 							$the_query->the_post();
 							$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
 							$count_quiz       = Analytics::get_all_quiz_by_course( $post->ID );
+							$topics           = tutor_utils()->get_topics( $post->ID );
 							$count_assignment = tutor_utils()->get_assignments_by_course( $post->ID )->count;
-							$count_topic      = count( tutor_utils()->get_topics( $post->ID ) );
+							$count_topic      = $topics->found_posts;
 							$student_details  = CourseAnalytics::course_enrollments_with_student_details( $post->ID );
 							$total_student    = $student_details['total_enrollments'];
 							$author_details   = get_userdata( $post->post_author );
@@ -252,13 +257,13 @@ $available_status = array(
 											echo wp_kses_post( tutor_utils()->get_tutor_avatar( $post->post_author ) );
 										?>
 										<p class="text-medium-body color-text-primary">
-											<?php echo esc_html( $author_details->display_name ); ?>
+											<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 										</p>
 										<a
-										href="#"
-										class="btn-text btn-detail-link color-design-dark"
+										href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author ) ); ?>"
+										class="btn-text btn-detail-link color-design-dark" target="_blank"
 										>
-										<span class="tutor-v2-icon-test icon-detail-link-filled"></span>
+										<span class="ttr-detail-link-filled"></span>
 										</a>
 									</div>
 								</td>
@@ -287,7 +292,7 @@ $available_status = array(
 											echo wp_kses_post( wc_price( $price ) );
 										}
 										// Alert class for course status.
-										$status = ( 'publish' === $post->post_status  ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
+										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
 										?>
 									</div>
 								</td>
@@ -319,7 +324,7 @@ $available_status = array(
 										<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
-													<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+													<span class="ttr-msg-archive-filled color-design-white"></span>
 													<span class="text-regular-body color-text-white">
 														<?php esc_html_e( 'View Course', 'tutor' ); ?>
 													</span>
@@ -328,7 +333,7 @@ $available_status = array(
 											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="#" class="tutor-admin-course-delete" data-id="<?php echo esc_attr( $post->ID ); ?>">
-													<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+													<span class="ttr-delete-fill-filled color-design-white"></span>
 													<span class="text-regular-body color-text-white">
 													<?php esc_html_e( 'Delete', 'tutor' ); ?>
 													</span>
@@ -352,7 +357,7 @@ $available_status = array(
 			</table>
 		</div>
 	</div>
-	<div class="tutor-admin-page-pagination-wrapper">
+	<div class="tutor-admin-page-pagination-wrapperp tutor-mt-50 tutor-mr-20">
 		<?php
 		/**
 		 * Prepare pagination data & load template

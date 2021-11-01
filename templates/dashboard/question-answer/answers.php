@@ -4,9 +4,9 @@ if (isset($_GET['question_id'])){
 	$question_id = (int) $_GET['question_id'];
 }
 
-$question = tutils()->get_qa_question($question_id);
-$answers = tutils()->get_qa_answer_by_question($question_id);
-$profile_url = tutils()->profile_url($question->user_id);
+$question = tutor_utils()->get_qa_question($question_id);
+$answers = tutor_utils()->get_qa_answer_by_question($question_id);
+$profile_url = tutor_utils()->profile_url($question->user_id);
 
 ?>
 
@@ -17,7 +17,7 @@ $profile_url = tutils()->profile_url($question->user_id);
             <div class="tutor-question-wrap">
                 <div class="question-top-meta">
                     <div class="tutor-question-avater">
-                        <a href="<?php echo $profile_url; ?>"> <?php echo tutils()->get_tutor_avatar($question->user_id); ?></a>
+                        <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($question->user_id); ?></a>
                     </div>
                     <p class="review-meta">
                         <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a>
@@ -37,14 +37,14 @@ $profile_url = tutils()->profile_url($question->user_id);
             <?php
                 if (is_array($answers) && count($answers)) {
                     foreach ($answers as $answer) {
-                        $answer_profile = tutils()->profile_url($answer->user_id);
+                        $answer_profile = tutor_utils()->profile_url($answer->user_id);
                         ?>
                         <div class="tutor_individual_answer <?php echo ($question->user_id == $answer->user_id) ? 'tutor-bg-white' : 'tutor-bg-light'
                         ?> ">
                             <div class="tutor-question-wrap">
                                 <div class="question-top-meta">
                                     <div class="tutor-question-avater">
-                                        <a href="<?php echo $answer_profile; ?>"> <?php echo tutils()->get_tutor_avatar($answer->user_id); ?></a>
+                                        <a href="<?php echo $answer_profile; ?>"> <?php echo tutor_utils()->get_tutor_avatar($answer->user_id); ?></a>
                                     </div>
                                     <p class="review-meta">
                                         <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a>

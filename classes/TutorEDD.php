@@ -17,13 +17,12 @@ class TutorEDD extends Tutor_Base {
 		//Add Tutor Option
 		add_filter('tutor_monetization_options', array($this, 'tutor_monetization_options'));
 
-		$monetize_by = tutils()->get_option('monetize_by');
+		$monetize_by = tutor_utils()->get_option('monetize_by');
 
 		if ($monetize_by !== 'edd') {
 			return;
 		}
 
-		add_action('add_meta_boxes', array($this, 'register_meta_box'));
 		add_action('save_post_' . $this->course_post_type, array($this, 'save_course_meta'));
 
 		/**
@@ -46,23 +45,11 @@ class TutorEDD extends Tutor_Base {
 	 * @since v.1.3.5
 	 */
 	public function tutor_monetization_options($arr) {
-		$has_edd = tutils()->has_edd();
+		$has_edd = tutor_utils()->has_edd();
 		if ($has_edd) {
 			$arr['edd'] = __('Easy Digital Downloads', 'tutor');
 		}
 		return $arr;
-	}
-
-	public function register_meta_box() {
-		add_meta_box('tutor-attached-edd-product', __('Add Product', 'tutor'), array($this, 'course_add_product_metabox'), $this->course_post_type, 'advanced', 'high');
-	}
-
-	/**
-	 * @param $post
-	 * MetaBox for Lesson Modal Edit Mode
-	 */
-	public function course_add_product_metabox() {
-		include  tutor()->path . 'views/metabox/course-add-edd-product-metabox.php';
 	}
 
 	public function save_course_meta($post_ID) {

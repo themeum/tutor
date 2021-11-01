@@ -1,5 +1,5 @@
 <?php
-$tutor_pages = tutils()->tutor_pages();
+$tutor_pages = tutor_utils()->tutor_pages();
 ?>
 <div class="tutor-option-main-title">
 	<h2>Tutor Pages</h2>
@@ -35,7 +35,7 @@ $tutor_pages = tutils()->tutor_pages();
 
 				if ( $page['page_exists'] ) {
 					$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-					echo "<a href='{$edit_url}' target='_blank' class='icon-link'><span class=' tutor-v2-icon-test icon-detail-link-filled'></span></a>";
+					echo "<a href='{$edit_url}' target='_blank' class='icon-link'><span class=' ttr-detail-link-filled'></span></a>";
 				}
 					echo '</p>';
 				?>
@@ -44,7 +44,7 @@ $tutor_pages = tutils()->tutor_pages();
 				<?php
 				if ( $page['page_exists'] && $page['page_visible'] ) {
 						$page = get_post( $page_id );
-						echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='text-medium-caption'> <span class='icon-check tutor-v2-icon-test icon-mark-filled'></span>/{$page->post_name} </a>";
+						echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='text-medium-caption'> <span class='icon-check ttr-mark-filled'></span>/{$page->post_name} </a>";
 				}
 				?>
 			</div>
@@ -65,6 +65,6 @@ $tutor_pages = tutils()->tutor_pages();
 
 </div><br>
 <div class="tutor-backend-alert alert-primary">
-	<span class="alert-icon tutor-v2-icon-test icon-warning-filled"></span>
+	<span class="alert-icon ttr-warning-filled"></span>
 	<span class="alert-content"><?php echo esc_html( 'Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor' ); ?></span>
 </div>

@@ -118,7 +118,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                         <td data-th="<?php _e('Student', 'tutor'); ?>">
                             <div class="student-column">
                                 <div class="student-avatar">
-                                    <?php echo tutils()->get_tutor_avatar($comment_author->ID); ?>
+                                    <?php echo tutor_utils()->get_tutor_avatar($comment_author->ID); ?>
                                 </div>
                                 <div class="student-details">
                                     <h4><?php echo $comment_author->display_name; ?></h4>

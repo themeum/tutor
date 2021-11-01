@@ -11,13 +11,13 @@
 
 <?php
 $per_page = 10;
-$current_page = max( 1, tutils()->avalue_dot('current_page', $_GET) );
+$current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 
-$total_items = tutils()->get_total_qa_question();
-$questions = tutils()->get_qa_questions($offset,  $per_page);
+$total_items = tutor_utils()->get_total_qa_question();
+$questions = tutor_utils()->get_qa_questions($offset,  $per_page);
 
-if (tutils()->count($questions)) {
+if (tutor_utils()->count($questions)) {
 ?>
     <div class="tutor-dashboard-info-table-wrap tutor-dashboard-q-and-a">
         <table class="tutor-dashboard-table">
@@ -34,7 +34,7 @@ if (tutils()->count($questions)) {
                 <?php
                 foreach ($questions as $question) { ?>
                     <tr id="tutor-dashboard-question-<?php echo $question->comment_ID; ?>">
-                        <td><a href="<?php echo tutils()->get_tutor_dashboard_page_permalink('question-answer/answers?question_id='.$question->comment_ID); ?>"><?php echo $question->question_title; ?></a></td>
+                        <td><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('question-answer/answers?question_id='.$question->comment_ID); ?>"><?php echo $question->question_title; ?></a></td>
                         <td><?php echo $question->display_name; ?></td>
                         <td><?php echo $question->post_title; ?></td>
                         <td><?php echo $question->answer_count; ?></td>
