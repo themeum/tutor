@@ -333,7 +333,10 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		?>
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
-				<h3><i class="tutor-icon-down"></i> <span><?php echo $title; ?></span></h3>
+				<h3>
+					<i class="ttr-angle-down-filled"></i> 
+					<span><?php echo $title; ?></span>
+				</h3>
 			</div>
 			<div class="tutor-course-builder-section-content">
 				<?php echo $content; ?>

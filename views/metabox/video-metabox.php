@@ -14,6 +14,7 @@ $runtimeMinutes = tutor_utils()->avalue_dot('runtime.minutes', $video);
 $runtimeSeconds = tutor_utils()->avalue_dot('runtime.seconds', $video);
 $sourceVideoID = tutor_utils()->avalue_dot('source_video_id', $video);
 $poster = tutor_utils()->avalue_dot('poster', $video);
+$videoAttachment = $sourceVideoID ? tutor_utils()->get_attachment_data($sourceVideoID) : null;
 
 $video_sources = array(
     'html5' => array('title' => __('HTML 5 (mp4)', 'tutor'), 'icon' => 'html5'),
@@ -70,7 +71,7 @@ $supported_sources = array_keys($supported_sources);
                     <?php 
                         // Load Attachment card segment
                         tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/attachments.php', array(
-                            'attachments' => array((object)array()),
+                            'attachments' => array($videoAttachment ? $videoAttachment : (object)array()),
                             'size_below' => true,
                             'no_control' => true
                         ), false);

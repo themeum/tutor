@@ -33,7 +33,7 @@ class Course_Settings_Tabs{
                 'icon_class'  => ' tutor-icon-settings-1',
                 'callback'  => '',
                 'fields'    => array(
-                    'maximum_students' => array(
+                    '_tutor_course_settings[maximum_students]' => array(
                         'type'      => 'number',
                         'label'     => __('Maximum Students', 'tutor'),
                         'label_title' => __('Enable', 'tutor'),
@@ -47,24 +47,27 @@ class Course_Settings_Tabs{
         $filtered = apply_filters('tutor_course_settings_tabs', $args);
 
         $filtered['general']['fields']['_tutor_is_public_course'] = array(
-            'type'        => 'checkbox',
+            'type'        => 'toggle_switch',
+            'label' => __('Public Course', 'tutor'),
             'options'	  => array(
                 array(
-                    'label_title' => __('Make This Course Public', 'tutor'),
                     'checked' => get_post_meta(get_the_ID(), '_tutor_is_public_course', true)=='yes',
                     'value' => 'yes',
-                    'hint' => __('No enrollment required', 'tutor')
+                    'hint' => __('Make This Course Public. No enrollment required.', 'tutor')
                 )
             )
         );
 
-        $filtered['general']['fields']['_tutor_disable_qa'] = array(
-            'type'        => 'checkbox',
+        $qa_enabled = get_post_meta(get_the_ID(), '_tutor_enable_qa', true);
+        !$qa_enabled ? $qa_enabled = 'yes' : 0;
+        $filtered['general']['fields']['_tutor_enable_qa'] = array(
+            'type'        => 'toggle_switch',
+            'label'       => __('Q&A', 'tutor'),
             'options'	  => array(
                 array(
-                    'label_title' => __('Disable Q&A', 'tutor'),
-                    'checked' => get_post_meta(get_the_ID(), '_tutor_disable_qa')=='yes',
-                    'value' => 'yes'
+                    'checked' => $qa_enabled=='yes',
+                    'value' => 'yes',
+                    'hint' => __('Enable Q&A section for your course', 'tutor')
                 )
             )
         );
@@ -111,5 +114,4 @@ class Course_Settings_Tabs{
             update_post_meta($post_ID, '_tutor_course_settings', $_tutor_course_settings);
         }
     }
-
 }
