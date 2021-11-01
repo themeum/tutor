@@ -53,8 +53,8 @@
 			}
 			
 			i {
-				color: var(--tutor-primary-color);
-				font-size: 14px;
+				color: #3E64DE;
+				font-size: 30px;
 			}
 
 			span {
@@ -76,11 +76,15 @@
 .tutor-dashboard-builder-header{
 	padding: 10px 0px;
 	border-bottom: 1px solid #C0C3CB;
-	position: sticky;
 	top: 0px;
 	background: #fff;
 	width: 100%;
 	z-index: 1999;
+
+	// Keep sticky until 601 px.
+	@media (min-width:601px) {
+		position: sticky;
+	}
 
 	@at-root{
 		// Top position in case of admin bar
