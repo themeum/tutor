@@ -72,7 +72,7 @@ $text-white: $color-white;
 $text-brand: $color-brand;
 $text-success: $color-success;
 $text-warning: $color-warning;
-$text-error: $color-error;
+$text-error: $danger-main;
 
 // Design Colors
 $design-dark: $black-90;
@@ -82,6 +82,7 @@ $design-brand: $color-brand;
 $design-success: $color-success;
 $design-warning: $color-warning;
 $design-danger: $color-error;
+$design-error: $color-error;
 
 // Strokes
 $stroke-light-10: #eff1f6;

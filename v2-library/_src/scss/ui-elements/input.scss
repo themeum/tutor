@@ -20,6 +20,7 @@ input.tutor-form-control {
 	background-color: var(--tutor-white);
 	box-sizing: border-box;
 	color: var(--tutor-text-primary);
+	font-family: inherit;
 
 	&::placeholder {
 		color: $text-hints;
@@ -77,6 +78,25 @@ input.tutor-form-control {
 			color: var(--tutor-disabled-color);
 		}
 	}
+
+	&:disabled {
+		background: $bg-gray-20;
+		border-color: $bg-gray-20;
+		cursor: not-allowed;
+		&::placeholder {
+			color: $text-hints;
+		}
+	}
+}
+
+input.tutor-form-control {
+	// &[type='date'] {
+	// 	@include svg-calender-line;
+	// }
+
+	// &[type='date' i]::-webkit-calendar-picker-indicator {
+	// 	@include svg-calender-line;
+	// }
 }
 
 textarea.tutor-form-control {
@@ -84,6 +104,10 @@ textarea.tutor-form-control {
 	padding: 20px;
 	min-height: 180px;
 	resize: vertical;
+
+	&.tutor-textarea-auto-height {
+		min-height: 71px;
+	}
 }
 
 .tutor-input-group {
@@ -259,7 +283,7 @@ input.tutor-form-check-input {
 	width: 24px;
 	height: 24px;
 	margin: 0;
-	border: 2px solid var(--tutor-border-color);
+	border: 2px solid var(--tutor-stroke-gray);
 	border-radius: 4px;
 	cursor: pointer;
 	appearance: none;
@@ -268,7 +292,7 @@ input.tutor-form-check-input {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	-webkit-print-color-adjust: exact;
-	background-size: 14px;
+	background-size: 12px;
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: 300ms;

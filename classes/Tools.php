@@ -29,14 +29,14 @@ class Tools {
 	 * @since v.1.4.3
 	 */
 	public function regenerate_tutor_pages(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		$tutor_pages = tutils()->tutor_pages();
+		$tutor_pages = tutor_utils()->tutor_pages();
 		
 		foreach ($tutor_pages as $page){
-			$visible = tutils()->array_get('page_visible', $page);
-			$page_title = tutils()->array_get('page_name', $page);
-			$option_key = tutils()->array_get('option_key', $page);
+			$visible = tutor_utils()->array_get('page_visible', $page);
+			$page_title = tutor_utils()->array_get('page_name', $page);
+			$option_key = tutor_utils()->array_get('option_key', $page);
 
 			if ( ! $visible){
 				$page_arg = array(
@@ -102,7 +102,7 @@ class Tools {
      * @since v.1.5.7
      */
     public function redirect_to_wizard_page(){
-	    if (tutils()->array_get('page', $_GET) === 'tutor-tools' && tutils()->array_get('sub_page', $_GET) === 'tutor-setup' ){
+	    if (tutor_utils()->array_get('page', $_GET) === 'tutor-tools' && tutor_utils()->array_get('sub_page', $_GET) === 'tutor-setup' ){
             exit(wp_redirect(admin_url('admin.php?page=tutor-setup')));
         }
     }

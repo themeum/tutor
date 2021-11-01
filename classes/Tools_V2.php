@@ -54,7 +54,7 @@ class Tools_V2 {
 	 * @return JSON
 	 */
 	public function tutor_default_settings() {
-		$attr = $this->options_attr();
+		$attr = $this->get_setting_fields();
 		foreach ( $attr as $sections ) {
 			foreach ( $sections['sections'] as $section ) {
 				foreach ( $section['blocks'] as $blocks ) {
@@ -359,7 +359,7 @@ class Tools_V2 {
 			// Use runtime cache for repetitve call
 			return $this->environment_status;
 		}
-		
+
 		// Figure out cURL version, if installed.
 		$curl_version = '';
 		if (function_exists('curl_version')) {
@@ -409,7 +409,7 @@ class Tools_V2 {
 	}
 
 	public function status( $type = '' ) {
-		
+
 		$data         = array();
 		$data[ null ] = 'null';
 

@@ -14,6 +14,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_media_chooser__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utilities */ "./assets/react/lib/utilities.js");
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utilities__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sorting */ "./assets/react/lib/sorting.js");
+/* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_sorting__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -69,6 +72,51 @@ window.jQuery(document).ready(function ($) {
     wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
     wrapper.find('img').attr('src', '');
     $that.hide();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/sorting.js":
+/*!*************************************!*\
+  !*** ./assets/react/lib/sorting.js ***!
+  \*************************************/
+/***/ (() => {
+
+window.addEventListener('DOMContentLoaded', function () {
+  var _this = this;
+
+  var getCellValue = function getCellValue(tr, idx) {
+    return tr.children[idx].innerText || tr.children[idx].textContent;
+  };
+
+  var comparer = function comparer(idx, asc) {
+    return function (a, b) {
+      return function (v1, v2) {
+        return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
+      }(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+    };
+  };
+
+  document.querySelectorAll(".tutor-table-rows-sorting").forEach(function (th) {
+    return th.addEventListener('click', function (e) {
+      var table = th.closest('table');
+      var tbody = table.querySelector('tbody');
+      var currentTarget = e.currentTarget;
+      var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // swap class name to change icon
+
+      if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
+        icon.classList.remove("ttr-ordering-a-to-z-filled");
+        icon.classList.add("ttr-ordering-z-to-a-filled");
+      } else {
+        icon.classList.remove("ttr-ordering-z-to-a-filled");
+        icon.classList.add("ttr-ordering-a-to-z-filled");
+      }
+
+      Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
+        return tbody.appendChild(tr);
+      });
+    });
   });
 });
 
@@ -269,37 +317,6 @@ jQuery(document).ready(function ($) {
     e.preventDefault();
     $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());
   });
-  $(document).on('click', '.tutor-topics-edit-button', function (e) {
-    e.preventDefault();
-    var $button = $(this);
-    var topics_id = $button.closest('.tutor-topics-wrap').find('[name="topic_id"]').val();
-    ;
-    var topic_title = $button.closest('.tutor-topics-wrap').find('[name="topic_title"]').val();
-    var topic_summery = $button.closest('.tutor-topics-wrap').find('[name="topic_summery"]').val();
-    var data = {
-      topic_title: topic_title,
-      topic_summery: topic_summery,
-      topic_id: topics_id,
-      action: 'tutor_update_topic'
-    };
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: data,
-      beforeSend: function beforeSend() {
-        $button.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        if (data.success) {
-          $button.closest('.tutor-topics-wrap').find('span.topic-inner-title').text(topic_title);
-          $button.closest('.tutor-modal').removeClass('tutor-is-active');
-        }
-      },
-      complete: function complete() {
-        $button.removeClass('tutor-updating-message');
-      }
-    });
-  });
   /**
    * Delete Lesson from course builder
    */
@@ -307,7 +324,7 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-delete-lesson-btn', function (e) {
     e.preventDefault();
 
-    if (!confirm(__('Are you sure?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
       return;
     }
 
@@ -505,7 +522,7 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-delete-quiz-btn', function (e) {
     e.preventDefault();
 
-    if (!confirm(__('Are you sure?', 'tutor'))) {
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
       return;
     }
 
@@ -519,7 +536,26 @@ jQuery(document).ready(function ($) {
         action: 'tutor_delete_quiz_by_id'
       },
       beforeSend: function beforeSend() {
-        $that.closest('.course-content-item').remove();
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(resp) {
+        var _ref2 = resp || {},
+            _ref2$data = _ref2.data,
+            data = _ref2$data === void 0 ? {} : _ref2$data,
+            success = _ref2.success;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!') : _data$message;
+
+        if (success) {
+          $that.closest('.course-content-item').remove();
+          return;
+        }
+
+        tutor_toast('Error!', message, 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
       }
     });
   });
@@ -806,12 +842,12 @@ jQuery.fn.serializeObject = function () {
   return values;
 };
 
-window.tutor_toast = function (title, description, type) {
+window.tutor_toast = function (title, description, type, is_left) {
   var tutor_ob = window._tutorobject || {};
   var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
   if (!jQuery('.tutor-toast-parent').length) {
-    jQuery('body').append('<div class="tutor-toast-parent"></div>');
+    jQuery('body').append('<div class="tutor-toast-parent ' + (is_left ? 'tutor-toast-left' : '') + '"></div>');
   }
 
   var icons = {
@@ -873,19 +909,22 @@ window.jQuery(document).ready(function ($) {
   }); // Ajax action 
 
   $(document).on('click', '.tutor-list-ajax-action', function () {
-    var url = $(this).data('url');
-    var type = $(this).data('type') || 'GET';
+    var $that = $(this);
     var prompt = $(this).data('prompt');
-    var del = $(this).data('delete_id');
-    console.log(prompt);
+    var del = $(this).data('delete_element_id');
+    var data = $(this).data('request_data') || {};
 
     if (prompt && !window.confirm(prompt)) {
       return;
     }
 
     $.ajax({
-      url: url,
-      type: type,
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('updating-icon');
+      },
       success: function success(data) {
         if (data.success) {
           if (del) {
@@ -906,9 +945,17 @@ window.jQuery(document).ready(function ($) {
       error: function error() {
         tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
       },
-      complete: function complete() {}
+      complete: function complete() {
+        $that.removeClass('updating-icon');
+      }
     });
+  }); // Textarea auto height
+
+  $(document).on('input', '.tutor-textarea-auto-height', function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
   });
+  $('.tutor-textarea-auto-height').trigger('input');
 });
 
 /***/ }),
@@ -1275,10 +1322,13 @@ function tutorModal() {
 /***/ (() => {
 
 (function thumbnailUploadPreview() {
+  // It is managed by mediachooser.js
+  return;
   /**
    * Image Preview : Logo and Signature Upload
    * Selector -> .tutor-option-field-input.image-previewer
    */
+
   var imgPreviewers = document.querySelectorAll('.tutor-thumbnail-uploader');
   var imgPreviews = document.querySelectorAll('.tutor-thumbnail-uploader img');
   var imgPrevInputs = document.querySelectorAll('.tutor-thumbnail-uploader input[type=file]');
@@ -1484,14 +1534,9 @@ jQuery(document).ready(function ($) {
     }
   });
   /* ---------------------
-  * Wizard Skip
+  * Navigate Wizard Screens
   * ---------------------- */
 
-  $(".tutor-boarding-next, .tutor-boarding-skip").on("click", function (e) {
-    e.preventDefault();
-    $(".tutor-setup-wizard-boarding").removeClass("active");
-    $(".tutor-setup-wizard-type").addClass("active");
-  });
   $(".tutor-type-next, .tutor-type-skip").on("click", function (e) {
     e.preventDefault();
     $(".tutor-setup-wizard-type").removeClass("active");

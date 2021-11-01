@@ -2,7 +2,7 @@
 	<h2>Import/Export</h2>
 </div>
 <div class="tutor-backend-alert alert-warning">
-	<span class="alert-icon tutor-v2-icon-test icon-warning-filled"></span>
+	<span class="alert-icon ttr-warning-filled"></span>
 	<span class="alert-content">Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.</span>
 </div>
 
@@ -13,7 +13,7 @@
 		<div class="tutor-option-field-row tutor-bs-d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
-					<span class="icon tutor-v2-icon-test icon-upload-icon-line"></span>
+					<span class="ttr-upload-icon-line"></span>
 					<div class="title">Drag &amp; Drop your JSON File here </div>
 					<div class="subtitle"><span>File Format:</span> .json <br> Or</div>
 					<label for="drag-drop-input" class="tutor-btn tutor-is-sm">
@@ -56,11 +56,14 @@
 			</div>
 		</div>
 		<?php if ( $tutor_options = get_option( 'tutor_settings_log', array() ) ) : ?>
-			<?php foreach ( $tutor_options as $key => $option_data ) : ?>
+			<?php
+			foreach ( $tutor_options as $key => $option_data ) :
+				$datetypeClass = $option_data['datatype'] == 'saved' ? ' label-primary-wp' : ' label-refund';
+				?>
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
 						<p class="text-medium-small"><?php echo esc_html( $option_data['history_date'] ); ?>
-						<span class="tutor-badge-label<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
+						<span class="tutor-badge-label tutor-ml-15<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>
@@ -71,13 +74,13 @@
 							<ul class="popup-menu">
 								<li>
 									<a class="export_single_settings" data-id="<?php echo $key; ?>">
-										<span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span>
+										<span class="ttr-msg-archive-filled"></span>
 										<span>Download</span>
 									</a>
 								</li>
 								<li>
 									<a class="delete_single_settings" data-id="<?php echo $key; ?>">
-										<span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span>
+										<span class="ttr-delete-fill-filled"></span>
 										<span>Delete</span>
 									</a>
 								</li>

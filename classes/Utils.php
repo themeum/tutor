@@ -32,7 +32,11 @@ class Utils {
 			return $option;
 		}
 		if ( array_key_exists( $key, $option ) ) {
-			return apply_filters( $key, $option[$key] );
+			// Convert off/on switch values to boolean
+			$value = $option[$key];
+			$value == 'off' ? $value = false : 0;
+			$value == 'on' ? $value = true : 0;
+			return apply_filters( $key, $value );
 		}
 		//Access array value via dot notation, such as option->get('value.subvalue')
 		if ( strpos($key, '.') ) {
@@ -46,7 +50,14 @@ class Utils {
 					return $default;
 				}
 			}
-			return apply_filters( $key, $new_option );
+
+
+			// Convert off/on switch values to boolean
+			$value = $new_option;
+			$value == 'off' ? $value = false : 0;
+			$value == 'on' ? $value = true : 0;
+
+			return apply_filters( $key, $value );
 		}
 
 		return $default;
@@ -561,7 +572,6 @@ class Utils {
 	 */
 	public function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ) ) {
 		global $wpdb;
-
 		$instructor_id    = $this->get_user_id($instructor_id);
 		$course_post_type = tutor()->course_post_type;
 
@@ -591,6 +601,51 @@ class Utils {
 
 		return $pageposts;
 	}
+
+	public function get_pending_courses_by_instructor( $instructor_id = 0, $post_status = array( 'pending' ) ) {
+		global $wpdb;
+		$instructor_id    = $this->get_user_id($instructor_id);
+		$course_post_type = tutor()->course_post_type;
+
+		if ( $post_status === 'any' ) {
+			$where_post_status = "";
+		} else {
+			$post_status       = (array) $post_status;
+			$statuses          = "'" . implode( "','", $post_status ) . "'";
+			$where_post_status = "AND $wpdb->posts.post_status IN({$statuses}) ";
+		}
+
+		$pageposts = $wpdb->get_results( $wpdb->prepare(
+			"SELECT $wpdb->posts.*
+			FROM 	$wpdb->posts
+					INNER JOIN {$wpdb->usermeta}
+							ON $wpdb->usermeta.user_id = %d
+						   AND $wpdb->usermeta.meta_key = %s
+						   AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
+			WHERE	1 = 1 {$where_post_status}
+					AND $wpdb->posts.post_type = %s
+			ORDER BY $wpdb->posts.post_date DESC;
+			",
+			$instructor_id,
+			'_tutor_instructor_course_id',
+			$course_post_type
+		), OBJECT);
+
+		return $pageposts;
+	}
+
+	public function get_publish_courses_by_instructor( ) {
+	global $wp_query;
+	return $wp_query->post_count;
+
+	}
+
+	public function get_pending_course_by_instructor( ) {
+	global $wp_query;
+	return $wp_query->post_count;
+	
+	}
+	
 
 	/**
 	 * @return mixed
@@ -750,12 +805,12 @@ class Utils {
 		$course_id 	      = $this->get_post_id($course_id);
 		$user_id          = $this->get_user_id($user_id);
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
-        $course_contents  = tutils()->get_course_contents_by_id($course_id);
+        $course_contents  = tutor_utils()->get_course_contents_by_id($course_id);
         $totalContents    = $this->count($course_contents);
         $totalContents    = $totalContents ? $totalContents : 0;
         $completedCount   = $completed_lesson;
 
-        if ( tutils()->count( $course_contents ) ) {
+        if ( tutor_utils()->count( $course_contents ) ) {
             foreach ( $course_contents as $content ) {
                 if ( $content->post_type === 'tutor_quiz' ) {
                     $attempt = $this->get_quiz_attempt( $content->ID, $user_id );
@@ -916,10 +971,13 @@ class Utils {
 	public function checking_nonce( $request_method = 'post' ) {
 
 		$data = $request_method === 'post' ? $_POST : $_GET;
-		$nonce_value = sanitize_text_field(tutils()->array_get(tutor()->nonce, $data, null));
+		$nonce_value = sanitize_text_field(tutor_utils()->array_get(tutor()->nonce, $data, null));
 		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
 
-		! $matched ? exit( __('Nonce not matched', 'tutor') ) : 0;
+		if(!$matched) {
+			wp_send_json_error( array('message' => __('Nonce not matched. Action failed!', 'tutor') ) );
+			exit;
+		}
 	}
 
 	/**
@@ -1262,7 +1320,7 @@ class Utils {
 
 		$first_lesson = false;
 
-		if ( tutils()->count( $lessons ) ) {
+		if ( tutor_utils()->count( $lessons ) ) {
 		    if ( ! empty( $lessons[0] ) ) {
                 $first_lesson = $lessons[0];
             }
@@ -2535,7 +2593,7 @@ class Utils {
 			$page_key = '';
 		}
 		if ( ! $page_id ) {
-            $page_id = (int) tutils()->get_option( 'tutor_dashboard_page_id' );
+            $page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
         }
 		return trailingslashit( get_permalink( $page_id ) ) . $page_key;
 	}
@@ -2680,7 +2738,7 @@ class Utils {
 			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
 
-		$cat_ids = array_filter($cat_ids, function($id) {
+		$cat_ids = array_filter( $cat_ids = array() , function($id) {
 			return is_numeric($id);
 		});
 
@@ -3130,6 +3188,29 @@ class Utils {
 		return $output;
 	}
 
+	public function star_rating_generator_course( $current_rating = 0.00, $echo = true ) {
+
+		for ( $i = 1; $i <=5 ; $i++ ) {
+			$intRating = (int) $current_rating;
+
+			if ( $intRating >= $i ) {
+				$output.= '<span class="ttr-star-full-filled" data-rating-value="'.$i.'"></span>';
+			} else {
+				if ( ( $current_rating - $i) == -0.5 ) {
+					$output.= '<span class="ttr-star-half-filled" data-rating-value="'.$i.'"></span>';
+				} else {
+					$output.= '<span class="ttr-star-line-filled" data-rating-value="'.$i.'"></span>';
+				}
+			}
+		}
+
+		if ( $echo ) {
+			echo $output;
+		}
+
+		return $output;
+	}
+
 	/**
 	 * @param $string
 	 *
@@ -3345,32 +3426,39 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = 150, $get_object = false ) {
+	public function get_reviews_by_user( $user_id = 0, $offset = 0, $limit = 150, $get_object = false, $course_id=null ) {
 		$user_id = $this->get_user_id( $user_id );
 		global $wpdb;
 
+		$course_filter = '';
+		if($course_id) {
+			$course_ids = is_array($course_id) ? $course_id : array($course_id);
+			$course_ids = implode(',', $course_ids);
+			$course_filter = " AND _comment.comment_post_ID IN ($course_ids)";
+		}
+		
 		$reviews = $wpdb->get_results( $wpdb->prepare(
-			"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_author,
-					{$wpdb->comments}.comment_author_email,
-					{$wpdb->comments}.comment_date,
-					{$wpdb->comments}.comment_content,
-					{$wpdb->comments}.user_id,
-					{$wpdb->commentmeta}.meta_value as rating,
+			"SELECT _comment.comment_ID,
+					_comment.comment_post_ID,
+					_comment.comment_author,
+					_comment.comment_author_email,
+					_comment.comment_date,
+					_comment.comment_content,
+					_comment.user_id,
+					_meta.meta_value as rating,
 					{$wpdb->users}.display_name
 
-			FROM 	{$wpdb->comments}
-					INNER JOIN {$wpdb->commentmeta}
-							ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+			FROM 	{$wpdb->comments} _comment
+					INNER JOIN {$wpdb->commentmeta} _meta
+							ON _comment.comment_ID = _meta.comment_id
 					INNER  JOIN {$wpdb->users}
-							ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE 	{$wpdb->comments}.user_id = %d
-					AND comment_type = %s
-					AND meta_key = %s
-			ORDER BY comment_ID DESC
-			LIMIT %d, %d;
-			",
+							ON _comment.user_id = {$wpdb->users}.ID
+			WHERE 	_comment.user_id = %d
+					AND _comment.comment_type = %s
+					AND _meta.meta_key = %s
+					{$course_filter}
+			ORDER BY _comment.comment_ID DESC
+			LIMIT %d, %d;",
 			$user_id,
 			'tutor_course_rating',
 			'tutor_rating',
@@ -3380,6 +3468,7 @@ class Utils {
 
 
 		if($get_object) {
+			// Prepare other data for multiple reviews case
 			$count = (int)$wpdb->get_var( $wpdb->prepare(
 				"SELECT COUNT({$wpdb->comments}.comment_ID)
 				FROM 	{$wpdb->comments}
@@ -3399,6 +3488,11 @@ class Utils {
 				'count' => $count,
 				'results' => $reviews
 			);
+		}
+
+		// Return single review for single course
+		if($course_id && !is_array($course_id)) {
+			return count($reviews) ? $reviews[0] : null;
 		}
 
 		return $reviews;
@@ -4848,7 +4942,7 @@ class Utils {
 			$start,
 			$limit
 		) );
-
+		
 		return $query;
 	}
 
@@ -4881,7 +4975,7 @@ class Utils {
 	 */
 	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null ) {
 		global $wpdb;
-
+		
 		$course_ids = array_map( function( $id ) {
 			return "'" . esc_sql( $id ) . "'";
 		}, $course_ids );
@@ -5752,9 +5846,9 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 * @param array $filter
-	 *
+	 * @param int $user_id | optional.
+	 * @param array $filter | ex: 
+	 * array('status' => '','date' => '', 'order' => '', 'start' => 10, 'per_page' => 10,'search' => '')
 	 * get withdrawal history
 	 *
 	 * @return object
@@ -5787,6 +5881,26 @@ class Utils {
 			$query_by_user_sql = " AND user_id = {$user_id} ";
 		}
 
+		// Order query @since v2.0.0
+		$order_query = '';
+		if ( isset( $order ) && '' !== $order ) {
+			$order_query = "ORDER BY  	created_at {$order}";
+		} else {
+			$order_query = "ORDER BY  	created_at DESC";
+		}
+
+		// Date query @since v.2.0.0 
+		$date_query = '';
+		if ( isset( $date ) && '' !== $date ) {
+			$date_query = "AND DATE(created_at) = CAST( '$date' AS DATE )";
+		}
+
+		// Search query @since v.2.0.0 
+		$search_query = '%%';
+		if ( isset( $search ) && '' !== $search ) {
+			$search_query = '%' . $wpdb->esc_like( $search ) . '%';
+		}
+
 		$count = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(withdraw_id)
 			FROM 	{$wpdb->prefix}tutor_withdraws
@@ -5799,18 +5913,25 @@ class Utils {
 
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT 	withdraw_tbl.*,
-						user_tbl.display_name AS user_name,
-						user_tbl.user_email
-			FROM 		{$wpdb->prefix}tutor_withdraws withdraw_tbl
-						INNER JOIN {$wpdb->users} user_tbl
-								ON withdraw_tbl.user_id = user_tbl.ID
-			WHERE 		1 = %d
-						{$query_by_user_sql}
-						{$query_by_status_sql}
-			ORDER BY  	created_at DESC
-			{$query_by_pagination}
+					user_tbl.display_name AS user_name,
+					user_tbl.user_email
+				FROM {$wpdb->prefix}tutor_withdraws withdraw_tbl
+					INNER JOIN {$wpdb->users} user_tbl
+							ON withdraw_tbl.user_id = user_tbl.ID
+				WHERE 1 = %d
+					{$query_by_user_sql}
+					{$query_by_status_sql}
+					{$date_query}
+					
+					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
+				{$order_query}
+				{$query_by_pagination}
 			",
-			1
+			1,
+			$search_query,
+			$search_query,
+			$search_query,
+			$search_query
 		) );
 
 		$withdraw_history = array(
@@ -5932,7 +6053,7 @@ class Utils {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id();
-		$monetize_by = tutils()->get_option( 'monetize_by' );
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 
 		$post_type = "";
 		$user_meta = "";
@@ -6403,8 +6524,8 @@ class Utils {
 		$instructor_id = $this->get_user_id( $instructor_id );
 
 		if ( user_can( $instructor_id, tutor()->instructor_role ) ) {
-			$permitted_course_ids = tutils()->get_assigned_courses_ids_by_instructors();
-			$course_id            = tutils()->get_course_id_by( 'lesson', $lesson_id );
+			$permitted_course_ids = tutor_utils()->get_assigned_courses_ids_by_instructors();
+			$course_id            = tutor_utils()->get_course_id_by( 'lesson', $lesson_id );
 
 			if ( in_array( $course_id, $permitted_course_ids ) ) {
 				return true;
@@ -6670,7 +6791,7 @@ class Utils {
 			}
 		}
 
-		if ( tutils()->count( $contents) ) {
+		if ( tutor_utils()->count( $contents) ) {
 			foreach ( $contents as $key => $content ) {
 				if ( $current_item->ID == $content->ID ) {
 					if ( ! empty( $contents[ $key-1 ]->ID ) ) {
@@ -6816,7 +6937,7 @@ class Utils {
 	public function course_progress_status_context( $course_id = 0, $user_id = 0 ) {
 		$course_id    = $this->get_post_id( $course_id );
 		$user_id      = $this->get_user_id( $user_id );
-		$is_completed = tutils()->is_completed_course( $course_id, $user_id );
+		$is_completed = tutor_utils()->is_completed_course( $course_id, $user_id );
 
 		$html = '';
 		if ( $is_completed ) {
@@ -7313,6 +7434,19 @@ class Utils {
 			return $is_listed;
 		}
 
+		global $wpdb;
+		switch($content) {
+			case 'review' :
+				// just check if own review. Instructor privilege already checked in the earlier blocks
+				$id = $wpdb->get_var($wpdb->prepare(
+					"SELECT comment_ID 
+					FROM {$wpdb->comments} WHERE user_id %d",
+					$user_id
+				));
+
+				return $id ? true : false;
+		}
+
 		return false;
 	}
 
@@ -7338,7 +7472,7 @@ class Utils {
 			return true;
 		}
 		//Check Lesson edit access to support page builders (eg: Oxygen)
-		if ( current_user_can(tutor()->instructor_role) && tutils()->has_lesson_edit_access() ) {
+		if ( current_user_can(tutor()->instructor_role) && tutor_utils()->has_lesson_edit_access() ) {
 			return true;
 		}
 
@@ -7562,6 +7696,16 @@ class Utils {
 		$maximum_students = (int) $this->get_course_settings($course_id, 'maximum_students');
 
 		return $maximum_students && $maximum_students <= $total_enrolled;
+	}
+
+	function is_course_booked($course_id = 0) {
+
+		$total_enrolled = $this->count_enrolled_users_by_course($course_id);
+		$maximum_students = (int) $this->get_course_settings($course_id, 'maximum_students');
+
+		$total_booked = 100/$maximum_students*$total_enrolled;
+
+		return $total_booked;
 	}
 
 	/**

@@ -4,23 +4,36 @@
  * @version 1.4.3
  */
 
+$shortcode_arg = isset($GLOBALS['tutor_shortcode_arg']) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
+$courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_per_row', 4 ) : $shortcode_arg;
+
 ?>
 
 <h3><?php _e('Enrolled Courses', 'tutor'); ?></h3>
 
 <div class="tutor-dashboard-content-inner">
 
-
     <div class="tutor-dashboard-inline-links">
         <ul>
-            <li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses'); ?>"> <?php _e('All Courses', 'tutor'); ?></a> </li>
-            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses/active-courses'); ?>"> <?php _e('Active Courses', 'tutor'); ?> </a> </li>
-            <li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses/completed-courses'); ?>">
-					<?php _e('Completed Courses', 'tutor'); ?> </a> </li>
+            <li class="active">
+                <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses'); ?>"> 
+                    <?php _e('All Courses', 'tutor'); ?>
+                </a> 
+            </li>
+            <li>
+                <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses/active-courses'); ?>"> 
+                    <?php _e('In Progress', 'tutor'); ?> 
+                </a> 
+            </li>
+            <li>
+                <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('enrolled-courses/completed-courses'); ?>">
+					<?php _e('Completed Courses', 'tutor'); ?> 
+                </a> 
+            </li>
         </ul>
     </div>
 
-
+    <div class="tutor-course-listing tutor-course-listing-grid-<?php echo $courseCols; ?>">
 	<?php
 	$my_courses = tutor_utils()->get_enrolled_courses_by_user(get_current_user_id(), array('private', 'publish'));
 
@@ -35,43 +48,28 @@
              * url is set to post_type/slug (courses/course-slug)
              * @since 1.8.10
             */
+            
             $post = $my_courses->post;
             $custom_url = home_url($post->post_type.'/'.$post->post_name);
 			?>
-            <div class="tutor-mycourse-wrap tutor-mycourse-<?php the_ID(); ?>">
-                <a class="tutor-stretched-link" href="<?php echo esc_url($custom_url);?>"><span class="sr-only"><?php the_title(); ?></span></a>
-                <div class="tutor-mycourse-thumbnail" style="background-image: url(<?php echo esc_url($tutor_course_img); ?>)"></div>
-                <div class="tutor-mycourse-content">
-                    <div class="tutor-mycourse-rating">
-		                <?php tutor_utils()->star_rating_generator($avg_rating); ?>
-                    </div>
+           
+            <?php
+                /**
+                 * @hook tutor_course/archive/before_loop_course
+                 * @type action
+                 * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
+                 */
+                do_action('tutor_course/archive/before_loop_course');
 
-                    <h3><a href="<?php echo esc_url($custom_url);?>"><?php the_title(); ?></a></h3>
-                    
-                    <div class="tutor-meta tutor-course-metadata">
-		                <?php
-                            $total_lessons = tutor_utils()->get_lesson_count_by_course();
-                            $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
-		                ?>
-                        <ul>
-                            <li>
-				                <?php
-				                _e('Total Lessons:', 'tutor');
-				                echo "<span>$total_lessons</span>";
-				                ?>
-                            </li>
-                            <li>
-				                <?php
-				                _e('Completed Lessons:', 'tutor');
-				                echo "<span>$completed_lessons / $total_lessons</span>";
-				                ?>
-                            </li>
-                        </ul>
-                    </div>
-	                <?php tutor_course_completing_progress_bar(); ?>
-                </div>
-
-            </div>
+                tutor_load_template('loop.course');
+    
+                /**
+                 * @hook tutor_course/archive/after_loop_course
+                 * @type action
+                 * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
+                 */
+                do_action('tutor_course/archive/after_loop_course');
+            ?>
 
 			<?php
 		endwhile;
@@ -82,5 +80,5 @@
 	endif;
 
 	?>
-
+    </div>
 </div>

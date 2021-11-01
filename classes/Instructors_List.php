@@ -8,21 +8,195 @@ if (! class_exists('Tutor_List_Table')){
 	include_once tutor()->path.'classes/Tutor_List_Table.php';
 }
 
+use TUTOR\Backend_Page_Trait;
+
 class Instructors_List extends \Tutor_List_Table {
 
 	const INSTRUCTOR_LIST_PAGE = 'tutor-instructors';
 
-	function __construct(){
-		global $status, $page;
+	/**
+	 * Trait for utilities
+	 *
+	 * @var $page_title
+	 */
 
-		//Set parent defaults
-		parent::__construct( array(
-			'singular'  => 'instructor',     //singular name of the listed records
-			'plural'    => 'instructors',    //plural name of the listed records
-			'ajax'      => false        //does this table support ajax?
-		) );
+	use Backend_Page_Trait;
+	/**
+	 * Page Title
+	 *
+	 * @var $page_title
+	 */
+	public $page_title;
 
-		//$this->process_bulk_action();
+	/**
+	 * Bulk Action
+	 *
+	 * @var $bulk_action
+	 */
+	public $bulk_action = true;
+
+	/**
+	 * Handle dependencies
+	 */
+	public function __construct() {
+		$this->page_title = __( 'Instructor', 'tutor' );
+		/**
+		 * Handle bulk action
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'wp_ajax_tutor_instructor_bulk_action', array( $this, 'instructor_bulk_action' ) );
+	}
+
+	/**
+	 * Available tabs that will visible on the right side of page navbar
+	 *
+	 * @param string $user_id selected instructor id | optional.
+	 * @param string $date selected date | optional.
+	 * @param string $search search by user name or email | optional.
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
+		$url       = get_pagenum_link();
+		$approve  = self::get_instructor_number( 'approved', $user_id, $course_id, $date, $search );
+		$pending = self::get_instructor_number( 'pending', $user_id, $course_id, $date, $search );
+		$blocked = self::get_instructor_number( 'blocked', $user_id, $course_id, $date, $search );
+		$tabs      = array(
+			array(
+				'key'   => 'all',
+				'title' => __( 'All', 'tutor' ),
+				'value' => $approve + $pending + $blocked,
+				'url'   => $url . '&data=all',
+			),
+			array(
+				'key'   => 'approved',
+				'title' => __( 'Approve', 'tutor' ),
+				'value' => $approve,
+				'url'   => $url . '&data=approved',
+			),
+			array(
+				'key'   => 'pending',
+				'title' => __( 'Pending', 'tutor' ),
+				'value' => $pending,
+				'url'   => $url . '&data=pending',
+			),
+			array(
+				'key'   => 'blocked',
+				'title' => __( 'Block', 'tutor' ),
+				'value' => $blocked,
+				'url'   => $url . '&data=blocked',
+			),
+		);
+		return $tabs;
+	}
+
+	/**
+	 * Prepare bulk actions that will show on dropdown options
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function prpare_bulk_actions(): array {
+		$actions = array(
+			$this->bulk_action_default(),
+			$this->bulk_action_delete(),
+		);
+		return $actions;
+	}
+
+	/**
+	 * Count enrolled number by status & filters
+	 * Count all enrollment | approved | cancelled
+	 *
+	 * @param string $status | required.
+	 * @param string $user_id selected user id | optional.
+	 * @param string $date selected date | optional.
+	 * @param string $search_term search by user name or email | optional.
+	 * @return int
+	 * @since v2.0.0
+	 */
+	protected static function get_instructor_number( $status = '', $user_id = '', $course_id = '', $date = '', $search_term = ''  ): int {
+		global $wpdb;
+		$status      = sanitize_text_field( $status );
+		$course_id   = sanitize_text_field( $course_id );
+		$user_id   = sanitize_text_field( $user_id );
+		$date        = sanitize_text_field( $date );
+		$search_term = sanitize_text_field( $search_term );
+
+		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+		// add instructor id in where clause.
+		$instructor_query = '';
+		if ( '' !== $user_id ) {
+			$instructor_query = "AND instructor.ID = $user_id";
+		}
+
+		// add date in where clause.
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE) ";
+		}
+
+		$count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT user.*, user_meta.meta_value AS instructor_from_date
+					FROM 	{$wpdb->users} user
+					INNER JOIN {$wpdb->usermeta} user_meta
+							ON ( user.ID = user_meta.user_id )
+					INNER JOIN {$wpdb->usermeta} inst_status
+							ON ( user.ID = inst_status.user_id )
+							WHERE 	user_meta.meta_key = %s
+					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+					",
+				'_is_tutor_instructor',
+				$status,
+				$search_term,
+				$search_term,
+				$search_term,
+				$search_term
+			)
+		);
+		return $count ? $count : 0;
+	}
+
+	/**
+	 * Handle bulk action for instructor delete
+	 *
+	 * @return string JSON response.
+	 * @since v2.0.0
+	 */
+	public function instructor_bulk_action() {
+		// check nonce.
+		tutor_utils()->checking_nonce();
+		$status   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
+		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
+		$update   = self::update_instructors( $status, $bulk_ids );
+		return true === $update ? wp_send_json_success() : wp_send_json_error();
+		exit;
+	}
+
+	/**
+	 * Execute bulk action for enrollments ex: complete | cancel
+	 *
+	 * @param string $status hold status for updating.
+	 * @param string $users_ids ids that need to update.
+	 * @return bool
+	 * @since v2.0.0
+	 */
+	public static function update_instructors( $status, $user_ids ): bool {
+		global $wpdb;
+		$instructor_table = $wpdb->user_meta;
+		$update     = $wpdb->query(
+			$wpdb->prepare(
+				" UPDATE {$instructor_table}
+				SET inst_status = %s 
+				WHERE ID IN ($user_ids)
+			",
+				$status
+			)
+		);
+		return false === $update ? false : true;
 	}
 
 	function column_default($item, $column_name){
@@ -51,10 +225,26 @@ class Instructors_List extends \Tutor_List_Table {
 	 *
 	 * Completed Course by User
 	 */
-	function column_status($item){
+
+	function column_status($item) {
+		//Build row actions
+		$actions = array();
+
 		$status = tutor_utils()->instructor_status($item->ID, false);
-		$status_name = tutor_utils()->instructor_status($item->ID);
-		echo "<span class='tutor-status-context tutor-status-{$status}-context'>{$status_name}</span>";
+
+		switch ($status){
+			case 'pending':
+				$actions['approved'] = sprintf('<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>');
+				break;
+			case 'approved':
+				$actions['blocked'] = sprintf('<span class="tutor-badge-label label-success">'.__('Approved', 'tutor').'</span>');
+				break;
+			case 'blocked':
+				$actions['approved'] = sprintf('<span class="tutor-badge-label label-danger">'.__('Blocked', 'tutor').'</span>');
+				break;
+		}
+
+		return $this->row_actions($actions);
 	}
 
 	function column_display_name($item) {
@@ -65,13 +255,13 @@ class Instructors_List extends \Tutor_List_Table {
 
 		switch ($status){
 			case 'pending':
-				$actions['approved'] = sprintf('<a class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
+				$actions['approved'] = sprintf('<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID);
+				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID);
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Unblock', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
+				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Unblock', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
 				break;
 		}
 
@@ -91,6 +281,27 @@ class Instructors_List extends \Tutor_List_Table {
 			$item->ID,
 			$this->row_actions($actions)
 		);
+	}
+
+	function column_action($item) {
+		//Build row actions
+		$actions = array();
+
+		$status = tutor_utils()->instructor_status($item->ID, false);
+
+		switch ($status){
+			case 'pending':
+				$actions['approved'] = sprintf('<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Approve', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
+				break;
+			case 'approved':
+				$actions['blocked'] = sprintf('<a data-prompt-message="'.__('Sure to Block?', 'tutor').'" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Block', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID);
+				break;
+			case 'blocked':
+				$actions['approved'] = sprintf('<a data-prompt-message="'.__('Sure to Un Block?', 'tutor').'" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="'.$item->ID.'" href="?page=%s&action=%s&instructor=%s">'.__('Unblock', 'tutor').'</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID);
+				break;
+		}
+
+		return $this->row_actions($actions);
 	}
 
 	function column_cb($item){
@@ -130,12 +341,6 @@ class Instructors_List extends \Tutor_List_Table {
 		return $sortable_columns;
 	}
 
-	function get_bulk_actions() {
-		$actions = array(
-			'delete'    => 'Delete'
-		);
-		return $actions;
-	}
 
 	function process_bulk_action() {
 		if( 'approve' === $this->current_action() ) {

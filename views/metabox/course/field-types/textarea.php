@@ -1,1 +1,0 @@
-<textarea name="_tutor_course_settings[<?php echo $field['field_key']; ?>]" rows="10"><?php echo $this->get($field['field_key']) ?></textarea>

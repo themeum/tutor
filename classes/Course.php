@@ -16,9 +16,8 @@ class Course extends Tutor_Base {
 		
 		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'), 10, 2);
-		add_action('wp_ajax_tutor_add_course_topic', array($this, 'tutor_add_course_topic'));
-		add_action('wp_ajax_tutor_update_topic', array($this, 'tutor_update_topic'));
-
+		add_action('wp_ajax_tutor_save_topic', array($this, 'tutor_save_topic'));
+		
 		//Add Column
 		add_filter( "manage_{$this->course_post_type}_posts_columns", array($this, 'add_column'), 10,1 );
 		add_action( "manage_{$this->course_post_type}_posts_custom_column" , array($this, 'custom_lesson_column'), 10, 2 );
@@ -60,7 +59,7 @@ class Course extends Tutor_Base {
 		 * Add course level to course settings
 		 * @since v.1.4.1
 		 */
-		add_action('tutor_course/settings_tab_content/after/general', array($this, 'add_course_level_to_settings'));
+		add_filter( 'tutor_course_settings_tabs', array($this, 'add_course_level_to_settings'));
 
 		/**
 		 * Enable Disable Course Details Page Feature
@@ -142,19 +141,19 @@ class Course extends Tutor_Base {
 		 * @since 1.9.8
 		 */
 		add_action(  'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
+	
+		add_action( 'tutor/frontend_course_edit/after/category', array($this, 'pricing_metabox') );
 	}
-
+	
 	public function restrict_new_student_entry($content) {
 
-		if(!tutils()->is_course_fully_booked()) {
+		if(!tutor_utils()->is_course_fully_booked()) {
 			// No restriction if not fully booked
 			return $content;
 		}
 			
-		return '<span class="tutor-course-booked-fully">
-			<img src="' . tutor()->url . '/assets/images/icon-warning-info.svg"/>
-			<span>' . __('Fully booked', 'tutor') . '</span>
-		</span>';
+		
+		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon color-design-warning ttr-circle-outline-info-filled"></span></div><div class="text-medium-caption color-text-primary">Fully Booked</div></div>';
 	}
 
 	function restrict_media( $where ){
@@ -174,12 +173,19 @@ class Course extends Tutor_Base {
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
 		$course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
-        //add_meta_box( 'tutor-course-levels', __( 'Course Level', 'tutor' ), array($this, 'course_level_metabox'), $coursePostType );
+        
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
+		
 		if ($course_marketplace) {
 			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
+		}
+
+		// Register unified pricing metabox at backend builder
+		$monetize_by = tutor_utils()->get_option('monetize_by');
+    	if ($monetize_by === 'wc' || $monetize_by === 'edd'){
+			add_meta_box( 'tutor-course-pricing', __( 'Course Pricing ', 'tutor' ), array($this, 'pricing_metabox'), $coursePostType );
 		}
 
 		/**
@@ -201,34 +207,35 @@ class Course extends Tutor_Base {
 		}
 	}
 
+	public function pricing_metabox($echo = true) {
+		
+		ob_start();
+		include  tutor()->path.'views/metabox/course-pricing.php';
+		$content = ob_get_clean();
+
+		if (!$echo){
+			return $content;
+		}
+
+		echo $content;
+	}
+
 	public function course_additional_data_meta_box($echo = true){
 
 		ob_start();
 		include  tutor()->path.'views/metabox/course-additional-data.php';
 		$content = ob_get_clean();
 
-		if ($echo){
-			echo $content;
-		}else{
+		if (!$echo){
 			return $content;
 		}
+		
+		echo $content;
 	}
 
 	public function video_metabox($echo = true){
 		ob_start();
 		include  tutor()->path.'views/metabox/video-metabox.php';
-		$content = ob_get_clean();
-
-		if ($echo){
-			echo $content;
-		}else{
-			return $content;
-		}
-	}
-
-	public function course_level_metabox($echo = true){
-		ob_start();
-		include  tutor()->path.'views/metabox/course-level-metabox.php';
 		$content = ob_get_clean();
 
 		if ($echo){
@@ -287,14 +294,14 @@ class Course extends Tutor_Base {
 		/**
 		 * Save course price type
 		 */
-		$price_type = tutils()->array_get('tutor_course_price_type', $_POST);
+		$price_type = tutor_utils()->array_get('tutor_course_price_type', $_POST);
 		if ($price_type){
 			update_post_meta($post_ID, '_tutor_course_price_type', $price_type);
 		}
 
 		//Course Duration
 		if ( ! empty($_POST['course_duration'])){
-			$video = tutils()->sanitize_array($_POST['course_duration']);
+			$video = tutor_utils()->sanitize_array($_POST['course_duration']);
 			update_post_meta($post_ID, '_course_duration', $video);
 		}
 
@@ -303,7 +310,7 @@ class Course extends Tutor_Base {
 			update_post_meta($post_ID, '_tutor_course_level', $course_level);
 		}
 
-		$additional_data_edit = tutils()->avalue_dot('_tutor_course_additional_data_edit', $_POST);
+		$additional_data_edit = tutor_utils()->avalue_dot('_tutor_course_additional_data_edit', $_POST);
 		if ($additional_data_edit) {
 			if (!empty($_POST['course_benefits'])) {
 				$course_benefits = wp_kses_post($_POST['course_benefits']);
@@ -422,22 +429,27 @@ class Course extends Tutor_Base {
 	/**
 	 * Tutor add course topic
 	 */
-	public function tutor_add_course_topic(){
-		tutils()->checking_nonce();
+	public function tutor_save_topic(){
+		tutor_utils()->checking_nonce();
 
+		// Check required fields
 		if (empty($_POST['topic_title']) ) {
-			wp_send_json_error();
+			wp_send_json_error(array('message' => __('Topic title is required!', 'tutor')));
 		}
-		$course_id = (int) tutor_utils()->avalue_dot('tutor_topic_course_ID', $_POST);
+
+		// Gather parameters
+		$course_id = (int) tutor_utils()->avalue_dot('topic_course_id', $_POST);
+		$topic_id = (int) tutor_utils()->avalue_dot('topic_id', $_POST);
+		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
+		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id);
 		
-		if(!tutils()->can_user_manage('course', $course_id)) {
+		// Validate if user can manage the topic
+		if(!tutor_utils()->can_user_manage('course', $course_id) || ($topic_id && !tutor_utils()->can_user_manage('topic', $topic_id))) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
-		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
-		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
-
+		// Create payload to create/update the topic
 		$post_arr = array(
 			'post_type'    => 'topics',
 			'post_title'   => $topic_title,
@@ -447,39 +459,17 @@ class Course extends Tutor_Base {
 			'post_parent'  => $course_id,
 			'menu_order'  => $next_topic_order_id,
 		);
+		$topic_id ? $post_arr['ID']=$topic_id : 0;
 		$current_topic_id = wp_insert_post( $post_arr );
 
 		ob_start();
 		include  tutor()->path.'views/metabox/course-contents.php';
-		$course_contents = ob_get_clean();
-
-		wp_send_json_success(array('course_contents' => $course_contents));
+		
+		wp_send_json_success(array(
+			'topic_title' => $topic_title,
+			'course_contents' => ob_get_clean()
+		));
 	}
-
-	/**
-	 * Update the topic
-	 */
-	public function tutor_update_topic(){
-		tutils()->checking_nonce();
-
-		$topic_id = (int) sanitize_text_field($_POST['topic_id']);
-		$topic_title = sanitize_text_field($_POST['topic_title']);
-		$topic_summery = wp_kses_post($_POST['topic_summery']);
-
-		if(!tutils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-
-		$topic_attr = array(
-			'ID'           => $topic_id,
-			'post_title'   => $topic_title,
-			'post_content' => $topic_summery,
-		);
-		wp_update_post( $topic_attr );
-
-		wp_send_json_success(array('msg' => __('Topic has been updated', 'tutor') ));
-	}
-
 
 	/**
 	 * @param $columns
@@ -516,7 +506,7 @@ class Course extends Tutor_Base {
 		if ($column === 'price'){
 			$price = tutor_utils()->get_course_price($post_id);
 			if ($price){
-				$monetize_by = tutils()->get_option('monetize_by');
+				$monetize_by = tutor_utils()->get_option('monetize_by');
 				if (function_exists('wc_price') && $monetize_by === 'wc'){
 					echo '<span class="tutor-label-success">'.wc_price($price).'</span>';
 				}else{
@@ -531,13 +521,13 @@ class Course extends Tutor_Base {
 
 	public function tutor_delete_topic(){
 
-		tutils()->checking_nonce('get'); 
+		tutor_utils()->checking_nonce(); 
 
 		global $wpdb;
 		$topic_id = sanitize_text_field(!empty($_POST['topic_id']) ? $_POST['topic_id'] : '');
 
 		if(!$topic_id || !is_numeric($topic_id) || !tutor_utils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_error(array('msg' => 'Access Forbidden'));
+			wp_send_json_error(array('message' => 'Access Forbidden'));
 		}
 
 		// Set contents under the topic orphan
@@ -693,14 +683,14 @@ class Course extends Tutor_Base {
 	}
 	
 	public function tutor_load_instructors_modal(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 		
 		global $wpdb;
 
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		$search_terms = sanitize_text_field(tutor_utils()->avalue_dot('search_terms', $_POST));
 
-		if(!tutils()->can_user_manage('course', $course_id)) {
+		if(!tutor_utils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 		
@@ -746,12 +736,12 @@ class Course extends Tutor_Base {
 	}
 
 	public function tutor_add_instructors_to_course(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 		$instructor_ids = tutor_utils()->avalue_dot('tutor_instructor_ids', $_POST);
 		
-		if(!tutils()->can_user_manage('course', $course_id)) {
+		if(!tutor_utils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
@@ -781,14 +771,14 @@ class Course extends Tutor_Base {
 	}
 
 	public function detach_instructor_from_course(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		global $wpdb;
 
 		$instructor_id = (int) sanitize_text_field($_POST['instructor_id']);
 		$course_id = (int) sanitize_text_field($_POST['course_id']);
 
-		if(!tutils()->can_user_manage('course', $course_id)) {
+		if(!tutor_utils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 		
@@ -797,11 +787,11 @@ class Course extends Tutor_Base {
 	}
 
 	public function tutor_delete_dashboard_course(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$course_id = intval(sanitize_text_field($_POST['course_id']));
 
-		if(!tutils()->can_user_manage('course', $course_id)) {
+		if(!tutor_utils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
@@ -814,7 +804,7 @@ class Course extends Tutor_Base {
 		global $wpdb;
 
 		$courses_post_type = tutor()->course_post_type;
-		$post_type = tutils()->array_get('post_type', $postarr);
+		$post_type = tutor_utils()->array_get('post_type', $postarr);
 
 		if ($courses_post_type === $post_type){
             $post_ID = (int) tutor_utils()->avalue_dot('ID', $postarr);
@@ -846,13 +836,14 @@ class Course extends Tutor_Base {
 		$course_price = sanitize_text_field(tutor_utils()->array_get('course_price', $_POST));
 
 		if ( ! $course_price){
+			// Return if price not set or 0
 			return;
 		}
 
 		$monetize_by = tutor_utils()->get_option('monetize_by');
 		$course = get_post($post_ID);
 
-		if ($monetize_by === 'wc'){
+		if ($monetize_by === 'wc') {
 
 			$is_update = false;
 			if ($attached_product_id){
@@ -933,19 +924,27 @@ class Course extends Tutor_Base {
 				}
 
 			}
-
-
 		}
-
 	}
-
 
 	/**
 	 * Add Course level to course settings
 	 * @since v.1.4.1
 	 */
-	public function add_course_level_to_settings(){
-		include  tutor()->path.'views/metabox/course-level-metabox.php';
+	public function add_course_level_to_settings($args){
+		$course_id = get_the_ID();
+		$levels = tutor_utils()->course_levels();
+		$course_level = get_post_meta($course_id, '_tutor_course_level', true);
+
+		$args['general']['fields']['course_level'] = array(
+			'type'      => 'select',
+			'label'     => __('Difficulty Level', 'tutor'),
+			'label_title' => __('Enable', 'tutor'),
+			'default' => $course_level ? $course_level : 'intermediate',
+			'desc'      => __('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor'),
+		);
+
+		return $args;
 	}
 
 	/**
@@ -954,7 +953,7 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function tutor_lesson_load_before(){
-		$course_id = tutils()->get_course_id_by_content(get_the_ID());
+		$course_id = tutor_utils()->get_course_id_by_content(get_the_ID());
 		$completed_lessons = tutor_utils()->get_completed_lesson_count_by_course($course_id);
 		if (is_user_logged_in()){
 			$is_course_started = get_post_meta($course_id, '_tutor_course_started', true);
@@ -1063,12 +1062,12 @@ class Course extends Tutor_Base {
 		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_disable_qa', true) : '';
 
 		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
-			if(tutils()->array_get('questions', $items)) {
+			if(tutor_utils()->array_get('questions', $items)) {
 				unset($items['questions']);
 			}
 		}
 		if($disable_course_announcements){
-			if(tutils()->array_get('announcements', $items)) {
+			if(tutor_utils()->array_get('announcements', $items)) {
 				unset($items['announcements']);
 			}
 		}
@@ -1143,7 +1142,7 @@ class Course extends Tutor_Base {
 
 	    if ($should_removed){
             $course_id = get_the_ID();
-	        $enrolled = tutils()->is_enrolled($course_id);
+	        $enrolled = tutor_utils()->is_enrolled($course_id);
 	        if ($enrolled){
 	            $html = '';
             }
@@ -1159,13 +1158,13 @@ class Course extends Tutor_Base {
      */
     function tutor_lms_hide_course_complete_btn($html){
 
-	    $completion_mode = tutils()->get_option('course_completion_process');
+	    $completion_mode = tutor_utils()->get_option('course_completion_process');
 	    if ($completion_mode !== 'strict'){
 	        return $html;
         }
 
-        $completed_lesson = tutils()->get_completed_lesson_count_by_course();
-        $lesson_count = tutils()->get_lesson_count_by_course();
+        $completed_lesson = tutor_utils()->get_completed_lesson_count_by_course();
+        $lesson_count = tutor_utils()->get_lesson_count_by_course();
 
         if ($completed_lesson < $lesson_count){
             return '<p class="suggestion-before-course-complete">'.__('complete all lessons to mark this course as complete', 'tutor').'</p>';
@@ -1173,8 +1172,8 @@ class Course extends Tutor_Base {
 
         $quizzes = array();
 
-        $course_contents = tutils()->get_course_contents_by_id();
-        if (tutils()->count($course_contents)){
+        $course_contents = tutor_utils()->get_course_contents_by_id();
+        if (tutor_utils()->count($course_contents)){
             foreach ($course_contents as $content){
                 if ($content->post_type === 'tutor_quiz'){
                     $quizzes[] = $content;
@@ -1185,10 +1184,10 @@ class Course extends Tutor_Base {
         $is_pass = true;
         $required_quiz_pass = 0;
 
-        if (tutils()->count($quizzes)){
+        if (tutor_utils()->count($quizzes)){
             foreach ($quizzes as $quiz){
 
-                $attempt = tutils()->get_quiz_attempt($quiz->ID);
+                $attempt = tutor_utils()->get_quiz_attempt($quiz->ID);
                 if ($attempt) {
                     $passing_grade = tutor_utils()->get_quiz_option($quiz->ID, 'passing_grade', 0);
                     $earned_percentage = $attempt->earned_marks > 0 ? (number_format(($attempt->earned_marks * 100) / $attempt->total_marks)) : 0;
@@ -1212,7 +1211,7 @@ class Course extends Tutor_Base {
     }
 
     public function get_generate_greadbook($html){
-        if ( ! tutils()->is_completed_course()){
+        if ( ! tutor_utils()->is_completed_course()){
             return '';
         }
         return $html;
@@ -1370,12 +1369,12 @@ class Course extends Tutor_Base {
             $course_id = get_post_field('post_parent', $enroll_id);
             $user_id = get_post_field('post_author', $enroll_id);
 
-            tutils()->cancel_course_enrol($course_id, $user_id);
+            tutor_utils()->cancel_course_enrol($course_id, $user_id);
         }
     }
 
 	public function tutor_reset_course_progress() {
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 		$course_id = tutor_utils()->array_get('course_id', $_POST);
 
 		if(!$course_id || !is_numeric($course_id) || !tutor_utils()->is_enrolled( $course_id )) {

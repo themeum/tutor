@@ -10,7 +10,7 @@ window.jQuery(document).ready(function($) {
         $('#'+$(this).data('tutor-tab-target')).show().siblings().hide();
     });
 
-    $('.').click(function() {
+    /* $('.').click(function() {
         $(this).siblings().filter('tutor-certificate-collapsible')
-    });
+    }); */
 });

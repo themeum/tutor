@@ -1,7 +1,6 @@
 <?php
-$value = $this->get($field['key']);
-print_r( $value);
-if ( isset($field['default']) && empty($value) ) {
+$value = $this->get( $field['key'] );
+if ( isset( $field['default'] ) && empty( $value ) ) {
 	$value = $field['default'];
 }
 $field_id = 'field_' . $field['key'];
@@ -10,8 +9,8 @@ $field_id = 'field_' . $field['key'];
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
 	<!-- has-bg -->
 	<div class="tutor-option-field-label">
-		<label><?php echo $field['label'] ?></label>
-		<p class="desc"><?php echo $field['desc'] ?></p>
+		<h5 class="label"><?php echo $field['label']; ?></h5>
+		<p class="desc"><?php echo $field['desc']; ?></p>
 	</div>
 	<div class="tutor-option-field-input">
 		<input class="tutor-form-control" type="number" name="tutor_option[<?php echo $field['key']; ?>]" value="<?php echo $value; ?>" placeholder="0" min="0">

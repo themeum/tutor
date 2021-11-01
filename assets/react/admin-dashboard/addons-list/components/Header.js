@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAddons, useAddonsUpdate } from '../context/AddonsContext';
 
+const { __ } = wp.i18n;
+
 const Header = () => {
 	const filterBtns = ['all', 'active', 'deactive', 'required'];
 	const { addonList } = useAddons();
@@ -11,7 +13,7 @@ const Header = () => {
 
 	return (
 		<header className="tutor-addons-list-header tutor-bs-d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20">
-			<div className="title text-medium-h5 color-text-primary tutor-bs-mb-lg-0 tutor-bs-mb-3">Addons List</div>
+			<div className="title text-medium-h5 color-text-primary tutor-bs-mb-lg-0 tutor-bs-mb-3">{__('Addons List', 'tutor')}</div>
 			<div className="filter-btns text-regular-body color-text-subsued ">
 				{filterBtns.map((btn, index) => {
 					return (

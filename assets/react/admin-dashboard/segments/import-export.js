@@ -66,14 +66,16 @@ function tutor_option_history_load(history_data) {
   var output = "";
   if (0 !== dataset.length) {
     Object.entries(dataset).forEach(([key, value]) => {
+      let badgeStatus =
+        value.datatype == "saved" ? " label-primary-wp" : " label-refund";
       output += `<div class="tutor-option-field-row">
           <div class="tutor-option-field-label">
             <p class="text-medium-small">${value.history_date}
-            <span className="tutor-badge-label label-success">${value.datatype}</span>
+            <span class="tutor-badge-label tutor-ml-15${badgeStatus}">${value.datatype}</span>
             </p>
           </div>
           <div class="tutor-option-field-input"><button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="${key}">Apply</button>
-            <div class="popup-opener"><button type="button" class="popup-btn"><span class="toggle-icon"></span></button><ul class="popup-menu"><li><a class="export_single_settings" data-id="${key}"><span class="icon tutor-v2-icon-test icon-msg-archive-filled"></span><span>Download</span></a></li><li><a class="delete_single_settings" data-id="${key}"><span class="icon tutor-v2-icon-test icon-delete-fill-filled"></span><span>Delete</span></a></li></ul></div></div>
+            <div class="popup-opener"><button type="button" class="popup-btn"><span class="toggle-icon"></span></button><ul class="popup-menu"><li><a class="export_single_settings" data-id="${key}"><span class="ttr-msg-archive-filled"></span><span>Download</span></a></li><li><a class="delete_single_settings" data-id="${key}"><span class="ttr-delete-fill-filled"></span><span>Delete</span></a></li></ul></div></div>
         </div>`;
     });
   } else {
