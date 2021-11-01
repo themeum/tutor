@@ -137,34 +137,29 @@ $filters = array(
 					<td data-th="Quiz Info" class="column-fullwidth">
 						<div class="td-statement-infor">
 							<span class="text-regular-small color-text-primary">
-							<?php echo $quiz_attempts->column_student( $list, 'attempt_ended_at' ); ?>
+							<?php echo esc_html( $quiz_attempts->column_student( $list, 'attempt_ended_at' ) ); ?>
 							</span>
 							<p class="text-medium-body color-text-primary">
-								<?php echo $quiz_attempts->column_quiz( $list, 'post_title' ); ?>
+								<?php echo esc_html_e( $quiz_attempts->column_quiz( $list, 'post_title' ) ); ?>
 							</p>
 							<span class="text-regular-small color-text-primary">
-								Student: <?php echo $quiz_attempts->column_student_info( $list, 'display_name' ); ?>
+								<?php esc_html_e( 'Student:', 'tutor' ) ?> <?php echo esc_html_e( $quiz_attempts->column_student_info( $list, 'display_name' ) ); ?>
 							</span>
 						</div>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_course( $list, 'quiz' ); ?>
+						<?php echo wp_kses_post( $quiz_attempts->column_course( $list, 'quiz' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_total_questions( $list, 'total_questions' ); ?>
+						<?php echo esc_html_e( $quiz_attempts->column_total_questions( $list, 'total_questions' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_total_marks( $list, 'total_marks' ); ?>
-						</span>
-					</td>
-					<td data-th="Registration Date">
-						<span class="color-text-primary text-regular-caption">
-						<?php //echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
+						<?php echo esc_html_e( $quiz_attempts->column_total_marks( $list, 'total_marks' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
@@ -172,20 +167,25 @@ $filters = array(
 						<?php //echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
 						</span>
 					</td>
+					<td data-th="Registration Date">
+						<span class="color-text-primary text-regular-caption">
+						<?php //echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
+						</span>
+					</td>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-							<?php echo $quiz_attempts->column_earned_percentage( $list, 'earned_percentage' ); ?>
+							<?php echo wp_kses_post( $quiz_attempts->column_earned_percentage( $list, 'earned_percentage' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Course Taklen">
 						<span class="color-text-primary text-medium-caption">
-						<?php echo $quiz_attempts->column_quiz_result( $list, 'output' ); ?>
+						<?php echo wp_kses_post( $quiz_attempts->column_quiz_result( $list, 'output' ) ); ?>
 						</span>
 					</td>
 					<td data-th="URL">
 						<div class="inline-flex-center td-action-btns">
-						<?php echo $quiz_attempts->column_quiz_action( $list, 'actions' ); ?>
+						<?php echo wp_kses_post( $quiz_attempts->column_quiz_action( $list, 'actions' ) ); ?>
 						</div>
 					</td>
 				</tr>

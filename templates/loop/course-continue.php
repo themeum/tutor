@@ -24,17 +24,17 @@
     $completed_percent = tutor_utils()->get_course_completed_percent();
     $is_completed_course = tutor_utils()->is_completed_course();
     $retake_course = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
-
+    $button_class = 'tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
+    
     if ( $lesson_url && ! $is_completed_course ) { 
-        $button_class = 'tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
         ?>
         <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
             <?php
-                if ( $retake_course ) {
-                    _e( 'Retake This Course', 'tutor' );
+                if ( $retake_course && $is_completed_course  ) {
+                    esc_html_e( 'Retake This Course', 'tutor' );
                 } 
                 if ( ! $is_completed_course && $completed_percent != 0 ) {
-                    _e( 'Continue Course', 'tutor' );
+                    esc_html_e( 'Continue Course', 'tutor' );
                 }
                 if ( $completed_percent == 0 && ! $is_completed_course ) {
                     esc_html_e( 'Start Course', 'tutor' );
@@ -42,8 +42,12 @@
             ?>
         </a>
         <?php 
+    } elseif( $retake_course && $is_completed_course  ) {
+        echo wp_kses_post('<a href="'. $lesson_url .'" class="'. $button_class .'" data-course_id="'. get_the_ID() .'">');
+            esc_html_e( 'Retake This Course', 'tutor' );
+        echo wp_kses_post('</a>');
     } else {
-        echo $enroll_btn;
+        echo wp_kses_post($enroll_btn);
     }
 ?>
 </div>

@@ -119,12 +119,12 @@ $filters = array(
 				<td class="column-fullwidth">
 				<div class="td-avatar">
 					<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
-					<img src="<?php echo $avatar_url; ?>" alt="student avatar"/>
+					<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
 					<p class="color-text-primary text-medium-body">
-						<?php echo esc_html( $list->display_name ); ?>
+						<?php echo esc_html_e( $list->display_name ); ?>
 					</p>
 					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
-					<a href="<?php echo $edit_link; ?>" class="btn-text btn-detail-link color-design-dark">
+					<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
 						<span class="ttr-detail-link-filled tutor-mt-5"></span>
 					</a>
 				</div>
@@ -141,7 +141,7 @@ $filters = array(
 				</span>
 				</td>
 				<td data-th="Course Taklen">
-				<span class="color-text-primary text-medium-caption"><?php echo $students->column_default( $list, 'course_taken' ); ?></span>
+				<span class="color-text-primary text-medium-caption"><?php echo esc_html( $students->column_default( $list, 'course_taken' )); ?></span>
 				</td>
 				<td data-th="URL">
 				<div class="inline-flex-center td-action-btns">

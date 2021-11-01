@@ -6,7 +6,7 @@
 
 ?>
 
-<h3><?php _e('Enrolled Courses', 'tutor'); ?></h3>
+<h3><?php esc_html_e('Enrolled Courses', 'tutor'); ?></h3>
 
 <div class="tutor-dashboard-content-inner enrolled-courses">
 
@@ -73,7 +73,7 @@
 		    endwhile;
 		        wp_reset_postdata();
             else:
-                echo "<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__( 'You haven\'t purchased any course', 'tutor' )."</div></div>";
+                echo wp_kses_post("<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__( 'You haven\'t purchased any course', 'tutor' )."</div></div>");
 	        endif;
 	    ?>
     </div>
