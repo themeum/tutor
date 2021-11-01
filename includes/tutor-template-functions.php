@@ -1034,7 +1034,7 @@ function tutor_single_course_add_to_cart($echo = true){
     $isLoggedIn = is_user_logged_in();
     $output = '';
 
-    //$template = tutor_utils()->is_course_fully_booked(null) ? 'closed-enrollment' : 'add-to-cart';
+    $template = tutor_utils()->is_course_fully_booked(null) ? 'closed-enrollment' : 'add-to-cart';
 
     tutor_load_template( 'single.course.'.$template );
     $output .= apply_filters( 'tutor_course/single/'.$template, ob_get_clean() );

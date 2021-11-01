@@ -3,6 +3,8 @@ import './lesson';
 import './quiz';
 import './assignment';
 import './attachment';
+import './video-picker';
+import './instructor-multi';
 
 window.jQuery(document).ready(function($) {
     $('.tutor-certificate-template-tab [data-tutor-tab-target]').click(function(){

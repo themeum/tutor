@@ -3,7 +3,7 @@ window.jQuery(document).ready(function($){
     
     const { __, _x, _n, _nx } = wp.i18n;
     
-    $(document).on('click', '.tutor-attachment-cards .tutor-delete-attachment', function(e){
+    $(document).on('click', '.tutor-attachment-cards:not(.tutor-no-control) .tutor-delete-attachment', function(e){
         e.preventDefault();
         $(this).closest('[data-attachment_id]').remove();
     });
@@ -46,7 +46,7 @@ window.jQuery(document).ready(function($){
                             <input type="hidden" name="${name}" value="${attachment.id}">
                         </div>
                         <div>
-                            <span class="tutor-delete-attachment tutor-icon-line-cross"></span>
+                            <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross"></span>
                         </div>
                     </div>`;
                     

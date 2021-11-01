@@ -9,7 +9,7 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         vertical-align: top;
-        content: "\e91d";
+        content: "\e91d" !important;
         -webkit-animation: spin 2s infinite linear;
         animation: spin 2s infinite linear;
         margin-right: 6px;

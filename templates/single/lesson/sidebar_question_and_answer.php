@@ -14,9 +14,9 @@ $currentPost = $post;
 
 $course_id = tutor_utils()->get_course_id_by_content($post);
 
-$disable_qa_for_this_course = get_post_meta($course_id, '_tutor_disable_qa', true);
+$disable_qa_for_this_course = get_post_meta($course_id, '_tutor_enable_qa', true)!='yes';
 $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course');
-if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
+if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course ) {
 	tutor_load_template( 'single.course.q_and_a_turned_off' );
 	return;
 }

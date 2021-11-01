@@ -1423,33 +1423,7 @@ class Utils {
 
 		if ( is_array( $attachments ) && count( $attachments ) ) {
 			foreach ( $attachments as $attachment ) {
-				$url       = wp_get_attachment_url( $attachment );
-				$file_type = wp_check_filetype( $url );
-				$ext       = $file_type['ext'];
-				$title     = get_the_title($attachment);
-
-				$file_path  = get_attached_file( $attachment );
-				$size_bytes = file_exists($file_path) ? filesize( $file_path ) : 0;
-				$size       = size_format( $size_bytes, 2 );
-				$type       = wp_ext2type( $ext );
-
-				$icon = 'default';
-				if ( $type && in_array( $type, $font_icons ) ) {
-					$icon = $type;
-				}
-
-				$data = array(
-					'post_id'    => $post_id,
-					'id'         => $attachment,
-					'url'        => $url,
-					'name'       => $title . '.' . $ext,
-					'title'      => $title,
-					'ext'        => $ext,
-					'size'       => $size,
-					'size_bytes' => $size_bytes,
-					'icon'       => $icon,
-				);
-
+				$data = (array)$this->get_attachment_data($attachment);
 				$attachments_arr[] = (object) apply_filters( 'tutor/posts/attachments', $data );
 			}
 		}
@@ -1457,6 +1431,36 @@ class Utils {
 		return $attachments_arr;
 	}
 
+	public function get_attachment_data($attachment_id) {
+		$url       = wp_get_attachment_url( $attachment_id );
+		$file_type = wp_check_filetype( $url );
+		$ext       = $file_type['ext'];
+		$title     = get_the_title($attachment_id);
+
+		$file_path  = get_attached_file( $attachment_id );
+		$size_bytes = file_exists($file_path) ? filesize( $file_path ) : 0;
+		$size       = size_format( $size_bytes, 2 );
+		$type       = wp_ext2type( $ext );
+
+		$icon = 'default';
+		if ( $type && in_array( $type, $font_icons ) ) {
+			$icon = $type;
+		}
+
+		$data = array(
+			'post_id'    => $post_id,
+			'id'         => $attachment_id,
+			'url'        => $url,
+			'name'       => $title . '.' . $ext,
+			'title'      => $title,
+			'ext'        => $ext,
+			'size'       => $size,
+			'size_bytes' => $size_bytes,
+			'icon'       => $icon,
+		);
+
+		return (object)$data;
+	}
 
 	/**
 	 * @param $seconds
@@ -2840,11 +2844,12 @@ class Utils {
 		$instructors = $wpdb->get_results( $wpdb->prepare(
 			"SELECT ID,
 					display_name,
+					_user.user_email,
 					get_course.meta_value AS taught_course_id,
 					tutor_job_title.meta_value AS tutor_profile_job_title,
 					tutor_bio.meta_value AS tutor_profile_bio,
 					tutor_photo.meta_value AS tutor_profile_photo
-			FROM	{$wpdb->users}
+			FROM	{$wpdb->users} _user
 					INNER JOIN {$wpdb->usermeta} get_course
 							ON ID = get_course.user_id
 						   AND get_course.meta_key = %s
@@ -7934,4 +7939,18 @@ class Utils {
 
         return $prepared_addons;
     }
+
+	/**
+	 * Empty state template
+	 * 
+	 * @param string $title
+	 * 
+	 * @return mixed|html
+	 */
+	public function tutor_empty_state( string $title ) { ?>
+		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center">
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $title ); ?>" />
+			<p><?php echo sprintf( esc_html_x( '%s', $title, 'tutor' ), $title ); ?></p>
+		</div>
+	<?php }
 }
