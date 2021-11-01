@@ -2051,8 +2051,8 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-cou
 }
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-course-builder-section .tutor-course-builder-section-title h3 i {
-  color: var(--tutor-primary-color);
-  font-size: 14px;
+  color: #3E64DE;
+  font-size: 30px;
 }
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-course-builder-section .tutor-course-builder-section-title h3 span {
@@ -2071,11 +2071,16 @@ body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-cou
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header {
   padding: 10px 0px;
   border-bottom: 1px solid #C0C3CB;
-  position: sticky;
   top: 0px;
   background: #fff;
   width: 100%;
   z-index: 1999;
+}
+
+@media (min-width: 601px) {
+  body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .tutor-dashboard-builder-header {
+    position: sticky;
+  }
 }
 
 body.admin-bar .tutor-dashboard-builder-header {

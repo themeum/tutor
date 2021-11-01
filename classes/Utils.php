@@ -1415,33 +1415,7 @@ class Utils {
 
 		if ( is_array( $attachments ) && count( $attachments ) ) {
 			foreach ( $attachments as $attachment ) {
-				$url       = wp_get_attachment_url( $attachment );
-				$file_type = wp_check_filetype( $url );
-				$ext       = $file_type['ext'];
-				$title     = get_the_title($attachment);
-
-				$file_path  = get_attached_file( $attachment );
-				$size_bytes = file_exists($file_path) ? filesize( $file_path ) : 0;
-				$size       = size_format( $size_bytes, 2 );
-				$type       = wp_ext2type( $ext );
-
-				$icon = 'default';
-				if ( $type && in_array( $type, $font_icons ) ) {
-					$icon = $type;
-				}
-
-				$data = array(
-					'post_id'    => $post_id,
-					'id'         => $attachment,
-					'url'        => $url,
-					'name'       => $title . '.' . $ext,
-					'title'      => $title,
-					'ext'        => $ext,
-					'size'       => $size,
-					'size_bytes' => $size_bytes,
-					'icon'       => $icon,
-				);
-
+				$data = (array)$this->get_attachment_data($attachment);
 				$attachments_arr[] = (object) apply_filters( 'tutor/posts/attachments', $data );
 			}
 		}
@@ -1449,6 +1423,36 @@ class Utils {
 		return $attachments_arr;
 	}
 
+	public function get_attachment_data($attachment_id) {
+		$url       = wp_get_attachment_url( $attachment_id );
+		$file_type = wp_check_filetype( $url );
+		$ext       = $file_type['ext'];
+		$title     = get_the_title($attachment_id);
+
+		$file_path  = get_attached_file( $attachment_id );
+		$size_bytes = file_exists($file_path) ? filesize( $file_path ) : 0;
+		$size       = size_format( $size_bytes, 2 );
+		$type       = wp_ext2type( $ext );
+
+		$icon = 'default';
+		if ( $type && in_array( $type, $font_icons ) ) {
+			$icon = $type;
+		}
+
+		$data = array(
+			'post_id'    => $post_id,
+			'id'         => $attachment_id,
+			'url'        => $url,
+			'name'       => $title . '.' . $ext,
+			'title'      => $title,
+			'ext'        => $ext,
+			'size'       => $size,
+			'size_bytes' => $size_bytes,
+			'icon'       => $icon,
+		);
+
+		return (object)$data;
+	}
 
 	/**
 	 * @param $seconds

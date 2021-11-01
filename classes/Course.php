@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) )
 class Course extends Tutor_Base {
 	
 	private $additional_meta=array(
-		'_tutor_disable_qa',
+		'_tutor_enable_qa',
 		'_tutor_is_public_course'
 	);
 
@@ -170,12 +170,6 @@ class Course extends Tutor_Base {
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
-		
-		// Register unified pricing metabox at backend builder
-		$monetize_by = tutor_utils()->get_option('monetize_by');
-    	if ($monetize_by === 'wc' || $monetize_by === 'edd'){
-			add_meta_box( 'tutor-course-pricing', __( 'Course Pricing ', 'tutor' ), array($this, 'pricing_metabox'), $coursePostType );
-		}
 	}
 
 	public function course_meta_box($echo = true){
@@ -188,19 +182,6 @@ class Course extends Tutor_Base {
 		}else{
 			return $content;
 		}
-	}
-
-	public function pricing_metabox($echo = true) {
-		
-		ob_start();
-		include  tutor()->path.'views/metabox/course-pricing.php';
-		$content = ob_get_clean();
-
-		if (!$echo){
-			return $content;
-		}
-
-		echo $content;
 	}
 
 	public function course_additional_data_meta_box($echo = true){
@@ -273,8 +254,8 @@ class Course extends Tutor_Base {
 			update_post_meta($post_ID, '_course_duration', $video);
 		}
 
-		if ( ! empty($_POST['course_level'])){
-			$course_level = sanitize_text_field($_POST['course_level']);
+		if ( ! empty($_POST['_tutor_course_level'])){
+			$course_level = sanitize_text_field($_POST['_tutor_course_level']);
 			update_post_meta($post_ID, '_tutor_course_level', $course_level);
 		}
 
@@ -800,12 +781,13 @@ class Course extends Tutor_Base {
 		$levels = tutor_utils()->course_levels();
 		$course_level = get_post_meta($course_id, '_tutor_course_level', true);
 
-		$args['general']['fields']['course_level'] = array(
-			'type'      => 'select',
-			'label'     => __('Difficulty Level', 'tutor'),
-			'label_title' => __('Enable', 'tutor'),
-			'default' => $course_level ? $course_level : 'intermediate',
-			'desc'      => __('Course difficulty level', 'tutor'),
+		$args['general']['fields']['_tutor_course_level'] = array(
+			'type'       => 'select',
+			'label'      => __('Difficulty Level', 'tutor'),
+			'label_title'=> __('Enable', 'tutor'),
+			'options'	 => $levels,
+			'value' 	 => $course_level ? $course_level : 'intermediate',
+			'desc'       => __('Course difficulty level', 'tutor'),
 		);
 
 		return $args;
@@ -923,9 +905,9 @@ class Course extends Tutor_Base {
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
 
-		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_disable_qa', true) : '';
+		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_enable_qa', true)!='yes' : true;
 
-		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
+		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course) {
 			if(tutor_utils()->array_get('questions', $items)) {
 				unset($items['questions']);
 			}

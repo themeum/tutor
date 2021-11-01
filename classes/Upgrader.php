@@ -87,7 +87,7 @@ class Upgrader {
 
 		if ( ! $exists_gradebook_table){
 			$gradebook_table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks} (
-				gradebook_id int(11) NOT NULL AUTO_INCREMENT,
+				gradebook_id bigint(20) NOT NULL AUTO_INCREMENT,
 				grade_name varchar(50) DEFAULT NULL,
 				grade_point varchar(20) DEFAULT NULL,
 				grade_point_to varchar(20) DEFAULT NULL,
@@ -100,12 +100,12 @@ class Upgrader {
 		}
 		if ( ! $exists_gradebook_results_table){
 			$gradebook_results = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks_results} (
-				gradebook_result_id int(11) NOT NULL AUTO_INCREMENT,
-				user_id int(11) DEFAULT NULL,
-				course_id int(11) DEFAULT NULL,
-				quiz_id int(11) DEFAULT NULL,
-				assignment_id int(11) DEFAULT NULL,
-				gradebook_id int(11) DEFAULT NULL,
+				gradebook_result_id bigint(20) NOT NULL AUTO_INCREMENT,
+				user_id bigint(20) DEFAULT NULL,
+				course_id bigint(20) DEFAULT NULL,
+				quiz_id bigint(20) DEFAULT NULL,
+				assignment_id bigint(20) DEFAULT NULL,
+				gradebook_id bigint(20) DEFAULT NULL,
 				result_for varchar(50) DEFAULT NULL,
 				grade_name varchar(50) DEFAULT NULL,
 				grade_point varchar(20) DEFAULT NULL,
