@@ -7953,4 +7953,46 @@ class Utils {
 
         return $prepared_addons;
     }
+
+	/**
+	 * Get completed assignment number
+	 *
+	 * @param int $course_id course id | required.
+	 * @param int $student_id student id | required.
+	 * @return int
+	 */
+	public function count_completed_assignment( int $course_id, int $student_id ): int {
+		global $wpdb;
+		$count = $wpdb->get_var( $wpdb->prepare(
+			" SELECT COUNT(*) FROM {$wpdb->posts} AS assignment 
+				INNER JOIN {$wpdb->posts} AS topic
+					ON topic.ID = assignment.post_parent
+				INNER JOIN {$wpdb->posts} AS course
+					ON course.ID = topic.post_parent 
+				INNER JOIN {$wpdb->comments} AS submit
+					ON submit.comment_post_ID = assignment.ID 
+				WHERE assignment.post_type = %s
+					AND course.ID = %d
+					AND submit.user_id = %d
+			",
+			'tutor_assignments',
+			$course_id,
+			$student_id
+		) );
+		return $count ? $count : 0;
+	}
+
+	/*
+	 * Empty state template
+	 * 
+	 * @param string $title
+	 * 
+	 * @return mixed|html
+	 */
+	public function tutor_empty_state( string $title ) { ?>
+		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center">
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $title ); ?>" />
+			<p><?php echo sprintf( esc_html_x( '%s', $title, 'tutor' ), $title ); ?></p>
+		</div>
+	<?php }
 }
