@@ -7981,4 +7981,18 @@ class Utils {
 		) );
 		return $count ? $count : 0;
 	}
+
+	/*
+	 * Empty state template
+	 * 
+	 * @param string $title
+	 * 
+	 * @return mixed|html
+	 */
+	public function tutor_empty_state( string $title ) { ?>
+		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center">
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $title ); ?>" />
+			<p><?php echo sprintf( esc_html_x( '%s', $title, 'tutor' ), $title ); ?></p>
+		</div>
+	<?php }
 }
