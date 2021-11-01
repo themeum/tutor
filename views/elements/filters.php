@@ -1,5 +1,5 @@
 <?php if ( isset( $data ) ) : ?>
-<div class="tutor-wp-dashboard-filter tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap tutor-bs-align-items-end tutor-bs-justify-content-<?php echo esc_attr( isset( $data['bulk_action'] ) ? 'between' : 'end' ); ?> tutor-pr-20">
+<div class="tutor-wp-dashboard-filter tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap tutor-bs-align-items-end tutor-bs-justify-content-<?php echo esc_attr( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ? 'between' : 'end' ); ?> tutor-pr-20">
 	<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
   <div class="tutor-wp-dashboard-filter-items tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap">
 	<form action="" method="post" id="tutor-admin-bulk-action-form">

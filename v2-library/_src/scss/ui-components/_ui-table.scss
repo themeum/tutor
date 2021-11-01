@@ -8,6 +8,10 @@
 		overflow-x: auto;
 	}
 }
+.tutor-ui-table-wrapper {
+	background: #fff;
+	border-radius: 6px;
+}
 
 // Table Base Structure
 table.tutor-ui-table {
@@ -459,6 +463,18 @@ table.tutor-ui-table {
 			margin-top: 7px;
 		}
 	}
+
+	.td-list-item {
+		&:not(:last-child) {
+			@extend .tutor-mr-80;
+		}
+		.tutor-form-check {
+			label {
+				@extend .text-regular-caption;
+				@extend .color-text-subsued;
+			}
+		}
+	}
 } // end Table th/td Content Styles
 
 // Table Responsive Styles
@@ -587,5 +603,67 @@ table.tutor-ui-table-no-border {
 
 	&:not(.tutor-is-flexible) {
 		width: 100%;
+	}
+}
+
+// Table toggle collapse td/tr
+.tutor-ui-table-has-data-td-target {
+	.has-data-td-target {
+		//td > div
+		> * {
+			pointer-events: none;
+		}
+	}
+
+	// angle-down icon
+	.is-active {
+		[class^='ttr-']:before {
+			content: '\e941';
+		}
+		border-left: 1px solid #e7e8ef !important;
+		background: #f7f8fa !important;
+	}
+
+	td.data-td-content {
+		padding: unset !important;
+		border-top-color: transparent;
+		background-color: #f7f8fa !important;
+		&.active {
+			// border-bottom-color: transparent !important;
+			border-top-color: #e7e8ef !important;
+		}
+		> * {
+			display: none;
+		}
+
+		&.active {
+			padding: 30px !important;
+			border-top-color: $stroke-light-30;
+			> * {
+				display: block;
+			}
+		}
+	}
+
+	tr {
+		&:last-child {
+			td {
+				// border-bottom: none;
+			}
+		}
+		&:nth-last-child(2) {
+			td {
+				// border-bottom: 1px solid rgba(255, 0, 0, 0.473);
+
+				&:first-child {
+					// border-bottom-left-radius: 15px;
+					// background: rgba(221, 33, 33, 0.205);
+				}
+				&:last-child {
+					// border-bottom-right-radius: 15px;
+					// background: rgba(221, 33, 33, 0.205);
+				}
+			}
+		}
 	}
 }
