@@ -6,7 +6,7 @@
 
 ?>
 
-<h3><?php _e('Active Course', 'tutor'); ?></h3>
+<h3><?php esc_html_e('Active Course', 'tutor'); ?></h3>
 
 <div class="tutor-dashboard-content-inner enrolled-courses">
 
@@ -63,7 +63,7 @@
 		    endwhile;
 		        wp_reset_postdata();
             else:
-                echo "<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__('You are not enrolled in any course at this moment.', 'tutor')."</div></div>";
+                echo wp_kses_post("<div class='tutor-mycourse-wrap'><div class='tutor-mycourse-content'>".__('You are not enrolled in any course at this moment.', 'tutor')."</div></div>");
 	        endif;
 	    ?>
     </div>

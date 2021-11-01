@@ -49,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <ul class="tutor-pagination-numbers">
 	<?php
 		if($paged > 1 ){
-			echo "<a href='".get_pagenum_link(1)."' class='prev page-numbers'><span class='ttr-angle-left-filled'></span></a>";
+			echo wp_kses_post("<a href='".get_pagenum_link(1)."' class='prev page-numbers'><span class='ttr-angle-left-filled'></span></a>");
 		}
 
 		for ($i=1; $i <= $pages; $i++){
@@ -59,7 +59,7 @@ if ( ! defined( 'ABSPATH' ) ) {
          }
  
         if ($paged < $pages) {
-            echo "<a href=\"".get_pagenum_link($paged + 1)."\" class='next page-numbers'><span class='ttr-angle-right-filled'></span></a>";
+            echo wp_kses_post("<a href=\"".get_pagenum_link($paged + 1)."\" class='next page-numbers'><span class='ttr-angle-right-filled'></span></a>");
         }
 	?>
 </ul>
