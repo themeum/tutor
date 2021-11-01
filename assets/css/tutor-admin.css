@@ -3960,6 +3960,10 @@ table.tutor-table p {
   left: 0;
 }
 
+.tutor-table-rows-sorting {
+  cursor: pointer;
+}
+
 /* /.report-course-list - end */
 body {
   -webkit-font-smoothing: antialiased;
