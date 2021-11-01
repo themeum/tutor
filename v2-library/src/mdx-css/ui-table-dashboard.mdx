@@ -18,7 +18,7 @@ import '../docz-essential.css';
 
 <Playground>
 	<div className="tutor-ui-table-wrapper">
-		<table className="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
+		<table className="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle tutor-ui-table-has-data-td-target">
 			<thead>
 				<tr>
 					<th>
@@ -47,6 +47,7 @@ import '../docz-essential.css';
 					<th>
 						<div className="text-regular-small color-text-subsued">Price</div>
 					</th>
+					<th className="tutor-shrink"></th>
 					<th className="tutor-shrink"></th>
 				</tr>
 			</thead>
@@ -134,6 +135,128 @@ import '../docz-essential.css';
 							</div>
 						</div>
 					</td>
+					<td data-th="data td">
+						<div className="d-flex has-data-td-target" data-td-target="target-td-1">
+							{/* <span className="text-regular-small">target-td-1</span> */}
+							<span className="ttr-icon-light-down-line"></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="9" class="data-td-content" id="target-td-1">
+						<div className="td-toggle-content">
+							<div className="td-list-item-wrapper tutor-bs-d-flex">
+								<div className="td-list-item">
+									<div className="list-item-title text-regular-body color-text-primary tutor-mb-10">Lesson</div>
+									<div className="list-item-checklist">
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-1"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-1"
+												checked="checked"
+											/>
+											<label for="item-checklist-1" class="text-regular-caption color-text-subsued">
+												Select Option
+											</label>
+										</div>
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-2"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-2"
+												checked="checked"
+											/>
+											<label for="item-checklist-22">Select Option</label>
+										</div>
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-3"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-3"
+											/>
+											<label for="item-checklist-3">Select Option</label>
+										</div>
+									</div>
+								</div>
+								<div className="td-list-item">
+									<div className="td-list-item-title text-regular-body color-text-primary tutor-mb-10">Lesson</div>
+									<div className="td-list-item-checklist">
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-1"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-1"
+												checked="checked"
+											/>
+											<label for="item-checklist-1" class="text-regular-caption color-text-subsued">
+												Select Option
+											</label>
+										</div>
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-2"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-2"
+												checked="checked"
+											/>
+											<label for="item-checklist-22">Select Option</label>
+										</div>
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-3"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-3"
+											/>
+											<label for="item-checklist-3">Select Option</label>
+										</div>
+									</div>
+								</div>
+								<div className="td-list-item">
+									<div className="td-list-item-title text-regular-body color-text-primary tutor-mb-10">Lesson</div>
+									<div className="td-list-item-checklist">
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-1"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-1"
+												checked="checked"
+											/>
+											<label for="item-checklist-1" class="text-regular-caption color-text-subsued">
+												Select Option
+											</label>
+										</div>
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-2"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-2"
+												checked="checked"
+											/>
+											<label for="item-checklist-22">Select Option</label>
+										</div>
+										<div class="tutor-form-check">
+											<input
+												id="item-checklist-3"
+												type="checkbox"
+												class="tutor-form-check-input tutor-form-check-circle"
+												name="item-checklist-3"
+											/>
+											<label for="item-checklist-3">Select Option</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<td data-th="Checkbox">
@@ -216,6 +339,21 @@ import '../docz-essential.css';
 									</li>
 								</ul>
 							</div>
+						</div>
+					</td>
+					<td data-th="data td">
+						<div className="d-flex has-data-td-target" data-td-target="target-td-2">
+							{/* <span className="text-regular-small">target-td-2</span> */}
+							<span className="ttr-icon-light-down-line"></span>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="9" class="data-td-content" id="target-td-2">
+						<div className="td-toggle-content">
+							about reading, decided to use system fonts. If it works for them, chances are it works for you as well.
+							Even the Wordpress dashboard - that runs millions of websites - uses system fonts, and Medium, which is
+							all
 						</div>
 					</td>
 				</tr>

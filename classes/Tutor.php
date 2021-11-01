@@ -343,10 +343,10 @@ final class Tutor {
 		 * @since v.1.0.0
 		 */
 		$quiz_attempts_sql = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempts (
-				attempt_id int(11) NOT NULL AUTO_INCREMENT,
-				course_id int(11) DEFAULT NULL,
-				quiz_id int(11) DEFAULT NULL,
-				user_id int(11) DEFAULT NULL,
+				attempt_id bigint(20) NOT NULL AUTO_INCREMENT,
+				course_id bigint(20) DEFAULT NULL,
+				quiz_id bigint(20) DEFAULT NULL,
+				user_id bigint(20) DEFAULT NULL,
 				total_questions int(11) DEFAULT NULL,
 				total_answered_questions int(11) DEFAULT NULL,
 				total_marks decimal(9,2) DEFAULT NULL,
@@ -362,11 +362,11 @@ final class Tutor {
 			) $charset_collate;";
 
 		$quiz_attempt_answers = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempt_answers (
-			  	attempt_answer_id int(11) NOT NULL AUTO_INCREMENT,
-				user_id int(11) DEFAULT NULL,
-			  	quiz_id int(11) DEFAULT NULL,
-			  	question_id int(11) DEFAULT NULL,
-			  	quiz_attempt_id int(11) DEFAULT NULL,
+			  	attempt_answer_id bigint(20) NOT NULL AUTO_INCREMENT,
+				user_id bigint(20) DEFAULT NULL,
+			  	quiz_id bigint(20) DEFAULT NULL,
+			  	question_id bigint(20) DEFAULT NULL,
+			  	quiz_attempt_id bigint(20) DEFAULT NULL,
 			  	given_answer longtext,
 			  	question_mark decimal(8,2) DEFAULT NULL,
 			  	achieved_mark decimal(8,2) DEFAULT NULL,
@@ -376,8 +376,8 @@ final class Tutor {
 			) $charset_collate;";
 
 		$tutor_quiz_questions = "CREATE TABLE {$wpdb->prefix}tutor_quiz_questions (
-				question_id int(11) NOT NULL AUTO_INCREMENT,
-				quiz_id int(11) DEFAULT NULL,
+				question_id bigint(20) NOT NULL AUTO_INCREMENT,
+				quiz_id bigint(20) DEFAULT NULL,
 				question_title text,
 				question_description longtext,
 				question_type varchar(50) DEFAULT NULL,
@@ -388,12 +388,12 @@ final class Tutor {
 			) $charset_collate;";
 
 		$tutor_quiz_question_answers = "CREATE TABLE {$wpdb->prefix}tutor_quiz_question_answers (
-			 	answer_id int(11) NOT NULL AUTO_INCREMENT,
-			  	belongs_question_id int(11) DEFAULT NULL,
+			 	answer_id bigint(20) NOT NULL AUTO_INCREMENT,
+			  	belongs_question_id bigint(20) DEFAULT NULL,
 			  	belongs_question_type varchar(250) DEFAULT NULL,
 			  	answer_title text,
 			  	is_correct tinyint(4) DEFAULT NULL,
-			  	image_id int(11) DEFAULT NULL,
+			  	image_id bigint(20) DEFAULT NULL,
 			  	answer_two_gap_match text,
 			  	answer_view_format varchar(250) DEFAULT NULL,
 			  	answer_settings text,
@@ -402,10 +402,10 @@ final class Tutor {
 			) $charset_collate;";
 
 		$earning_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_earnings (
-			earning_id int(11) NOT NULL AUTO_INCREMENT,
-			user_id int(11) DEFAULT NULL,
-			course_id int(11) DEFAULT NULL,
-			order_id int(11) DEFAULT NULL,
+			earning_id bigint(20) NOT NULL AUTO_INCREMENT,
+			user_id bigint(20) DEFAULT NULL,
+			course_id bigint(20) DEFAULT NULL,
+			order_id bigint(20) DEFAULT NULL,
 			order_status varchar(50) DEFAULT NULL,
 			course_price_total decimal(16,2) DEFAULT NULL,
 			course_price_grand_total decimal(16,2) DEFAULT NULL,
@@ -423,8 +423,8 @@ final class Tutor {
 		) $charset_collate;";
 
 		$withdraw_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_withdraws (
-			withdraw_id int(11) NOT NULL AUTO_INCREMENT,
-			user_id int(11) DEFAULT NULL,
+			withdraw_id bigint(20) NOT NULL AUTO_INCREMENT,
+			user_id bigint(20) DEFAULT NULL,
 			amount decimal(16,2) DEFAULT NULL,
 			method_data text DEFAULT NULL,
 			status varchar(50) DEFAULT NULL,
@@ -632,10 +632,10 @@ final class Tutor {
 		 */
 
 		$earning_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_earnings (
-			earning_id int(11) NOT NULL AUTO_INCREMENT,
-			user_id int(11) DEFAULT NULL,
-			course_id int(11) DEFAULT NULL,
-			order_id int(11) DEFAULT NULL,
+			earning_id bigint(20) NOT NULL AUTO_INCREMENT,
+			user_id bigint(20) DEFAULT NULL,
+			course_id bigint(20) DEFAULT NULL,
+			order_id bigint(20) DEFAULT NULL,
 			order_status varchar(50) DEFAULT NULL,
 			course_price_total decimal(16,2) DEFAULT NULL,
 			course_price_grand_total decimal(16,2) DEFAULT NULL,
@@ -653,8 +653,8 @@ final class Tutor {
 		) $charset_collate;";
 
 		$withdraw_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_withdraws (
-			withdraw_id int(11) NOT NULL AUTO_INCREMENT,
-			user_id int(11) DEFAULT NULL,
+			withdraw_id bigint(20) NOT NULL AUTO_INCREMENT,
+			user_id bigint(20) DEFAULT NULL,
 			amount decimal(16,2) DEFAULT NULL,
 			method_data text DEFAULT NULL,
 			status varchar(50) DEFAULT NULL,

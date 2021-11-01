@@ -1108,43 +1108,6 @@ jQuery(document).ready(function ($) {
     });
 
     /**
-     * Course builder video
-     * @since v.1.3.4
-     */
-
-
-    $(document).on('click', '.video_source_upload_wrap_html5 .video_upload_btn', function (event) {
-        event.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        // If the media frame already exists, reopen it.
-        if (frame) {
-            frame.open();
-            return;
-        }
-        frame = wp.media({
-            title: __( 'Select / Upload Media Of Your Chosen Persuasion', 'tutor' ),
-            button: {
-                text: __( 'Use media', 'tutor' )
-            },
-            library: { type: 'video' },
-            multiple: false  // Set to true to allow multiple files to be selected
-        });
-        frame.on('select', function () {
-            // Get media attachment details from the frame state
-            var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.video_source_upload_wrap_html5').find('span.video_media_id').data('video_url', attachment.url).text(attachment.id).trigger('paste').closest('p').show();
-            $that.closest('.video_source_upload_wrap_html5').find('input').val(attachment.id);
-        });
-        frame.open();
-    });
-
-    /**
-     * END: Tutor Course builder JS
-     */
-
-    /**
      * Single Assignment Upload Button
      * @since v.1.3.4
      */
