@@ -17,21 +17,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php
-	function course_listing_pagination($pages = '', $range = 4) {  
-		$showitems = ($range * 2)+1;  
+
+	global $wp_query;
+
+	function course_listing_pagination( $pages = '', $range = 4 ) {  
+		$showitems = ( $range * 2 )+1;  
 	 
 		global $paged;
-		if(empty($paged)) $paged = 1;
+		if(empty( $paged )) $paged = 1;
 	 
-		 if($pages == ''){
-			global $wp_query;
+		 if( $pages == '' ){
 			$pages = $wp_query->max_num_pages;
-			if(!$pages){
+			if( !$pages ){
 				$pages = 1;
-			}
-		}   
+		}
+	}   
 	 
-		if(1 != $pages){
+	if( 1 != $pages ){
+	
 ?>
 <nav class="tutor-course-list-pagination tutor-ui-pagination">
 <div class="tutor-pagination-hints">
@@ -64,15 +67,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?>
 </ul>
 </nav>
-<?php } } ?>
+<?php } }  ?>
 
 <?php do_action('tutor_course/archive/pagination/before');  ?>
 	
 	<?php 
-		$additional_loop = '';
 		if (function_exists("course_listing_pagination")) {
-		course_listing_pagination( $additional_loop->max_num_pages );
+		course_listing_pagination( $wp_query->max_num_pages );
 		} 
 	?>
-	
+
 <?php do_action('tutor_course/archive/pagination/after');  ?>
