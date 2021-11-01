@@ -22130,6 +22130,19 @@ table.tutor-ui-table .td-checkbox input[type='checkbox'] {
   margin-top: 7px;
 }
 
+table.tutor-ui-table .td-list-item .list-item-checklist input.tutor-form-check-input[type='checkbox'] {
+  width: 12px;
+  height: 12px;
+  background-size: 6px;
+  border-width: 2px;
+  border-color: #cdcfd5;
+}
+
+table.tutor-ui-table .td-list-item .list-item-checklist input.tutor-form-check-input[type='checkbox']:checked {
+  border-color: #1973aa;
+  background-color: #1973aa;
+}
+
 table.tutor-ui-table.tutor-ui-table-responsive {
   /*
 	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
@@ -22252,7 +22265,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-ui-table-data-td-target .is-active {
-  border-left: 1px solid #e7e8ef !important;
+  -webkit-box-shadow: -1px 0 0 #e7e8ef;
+          box-shadow: -1px 0 0 #e7e8ef;
   background: #f7f8fa !important;
 }
 
