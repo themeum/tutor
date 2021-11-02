@@ -1,15 +1,12 @@
 <?php
     $filter_object = new \TUTOR\Course_Filter();
-    $filter_levels = array(
-        'beginner'=> __('Beginner', 'tutor'),
-        'intermediate'=> __('Intermediate', 'tutor'),
-        'expert'=> __('Expert', 'tutor')
-    );
+    
     $filter_prices=array(
         'free'=> __('Free', 'tutor'),
         'paid'=> __('Paid', 'tutor'),
     );
 
+    $course_levels      = tutor_utils()->course_levels();
     $supported_filters = tutor_utils()->get_option('supported_course_filters', array());
     $supported_filters = array_keys($supported_filters);
 ?>
@@ -33,7 +30,7 @@
                 if(in_array('category', $supported_filters)){
             ?>
             <div class="filter-widget-title text-regular-h6 color-text-primary tutor-mb-26">
-                <?php _e('Category', 'tutor'); ?>
+                <?php esc_html_e('Category', 'tutor'); ?>
             </div>
             <div class="filter-widget-checkboxes">
                 <?php $filter_object->render_terms('category'); ?>
@@ -47,7 +44,7 @@
                 if(in_array('tag', $supported_filters)){
             ?>
             <div class="filter-widget-title text-regular-h6 color-text-primary tutor-mb-26">
-                <?php _e('Tag', 'tutor'); ?>
+                <?php esc_html_e( 'Tag', 'tutor' ); ?>
             </div>
             <div class="filter-widget-checkboxes">
                 <?php $filter_object->render_terms('tag'); ?>
@@ -61,21 +58,20 @@
     <div class="filter-widget-input-wrapper tutor-mt-26">
         <div class="filter-widget-input">
             <div class="filter-widget-title text-regular-h6 color-text-primary tutor-mb-26">
-                <?php _e('Level', 'tutor'); ?>
+                <?php esc_html_e( 'Level', 'tutor' ); ?>
             </div>
             <div class="filter-widget-checkboxes">
-                <?php 
-                    foreach($filter_levels as $value=>$title){
-                        ?>  
-                        <div class="tutor-form-check tutor-mb-18">
-                            <input type="checkbox" class="tutor-form-check-input" id="<?php echo $value; ?>" name="tutor-course-filter-level" value="<?php echo $value; ?>"/>&nbsp;
-                            <label for="<?php echo $value; ?>">
-                                <?php echo $title; ?>
-                            </label>
-                        </div>
-                        <?php
-                    }
-                ?>
+                <?php
+                    $key = '';
+                    foreach ($course_levels as  $value => $title) {
+                        if ($key == 'all_levels') continue; ?>
+                    <div class="tutor-form-check tutor-mb-18">
+                        <input type="checkbox" class="tutor-form-check-input" id="<?php echo esc_html( $value ); ?>" name="tutor-course-filter-level" value="<?php echo esc_html( $value ); ?>"/>&nbsp;
+                        <label for="<?php echo esc_html( $value ); ?>">
+                            <?php echo esc_html_e( $title ); ?>
+                        </label>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -94,9 +90,9 @@
                     foreach($filter_prices as $value=>$title){
                         ?>  
                         <div class="tutor-form-check tutor-mb-18">
-                            <input type="checkbox" class="tutor-form-check-input" id="<?php echo $value; ?>" name="tutor-course-filter-price" value="<?php echo $value; ?>"/>&nbsp;
-                            <label for="<?php echo $value; ?>">
-                                <?php echo $title; ?>
+                            <input type="checkbox" class="tutor-form-check-input" id="<?php echo esc_html( $value ); ?>" name="tutor-course-filter-price" value="<?php echo esc_html( $value ); ?>"/>&nbsp;
+                            <label for="<?php echo esc_html( $value ); ?>">
+                                <?php echo esc_html_e( $title ); ?>
                             </label>
                         </div>
                         <?php
@@ -110,7 +106,7 @@
         <div class="filter-widget-input">
             <div class="tutor-clear-all-filter">
                 <a href="#" onclick="window.location.reload()">
-                    <i class="tutor-icon-cross"></i> Clear All Filter
+                    <i class="tutor-icon-cross"></i> <?php esc_html_e( 'Clear All Filter', 'tutor' ); ?>
                 </a>
             </div>
         </div>

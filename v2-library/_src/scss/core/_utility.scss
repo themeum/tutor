@@ -168,8 +168,8 @@
 }
 
 // spacing
-$sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30, 32, 35, 40, 42, 45, 48, 50, 60,
-	70, 80, 90, 100, 120, 150, 200;
+$sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30, 32, 34, 35, 36, 40, 42, 44, 45,
+	46, 48, 50, 60, 70, 80, 90, 100, 120, 150, 200;
 
 @each $size in $sizes {
 	// padding
@@ -222,6 +222,223 @@ $sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26
 	.tutor-my-#{$size} {
 		margin-top: #{$size}px;
 		margin-bottom: #{$size}px;
+	}
+
+	// sm
+	@include breakpoint-min(mobile) {
+		// padding
+		.tutor-p-sm-#{$size},
+		.tutor-padding-sm-#{$size} {
+			padding: #{$size}px;
+		}
+		.tutor-pb-sm-#{$size} {
+			padding-bottom: #{$size}px;
+		}
+		.tutor-pt-sm-#{$size} {
+			padding-top: #{$size}px;
+		}
+		.tutor-pr-sm-#{$size} {
+			padding-right: #{$size}px;
+		}
+		.tutor-pl-sm-#{$size} {
+			padding-left: #{$size}px;
+		}
+		.tutor-px-sm-#{$size} {
+			padding-left: #{$size}px;
+			padding-right: #{$size}px;
+		}
+		.tutor-py-sm-#{$size} {
+			padding-top: #{$size}px;
+			padding-bottom: #{$size}px;
+		}
+
+		// margin
+		.tutor-m-sm-#{$size},
+		.tutor-margin-sm-#{$size} {
+			margin: #{$size}px;
+		}
+		.tutor-mb-sm-#{$size} {
+			margin-bottom: #{$size}px;
+		}
+		.tutor-mt-sm-#{$size} {
+			margin-top: #{$size}px;
+		}
+		.tutor-mr-sm-#{$size} {
+			margin-right: #{$size}px;
+		}
+		.tutor-ml-sm-#{$size} {
+			margin-left: #{$size}px;
+		}
+		.tutor-mx-sm-#{$size} {
+			margin-left: #{$size}px;
+			margin-right: #{$size}px;
+		}
+		.tutor-my-sm-#{$size} {
+			margin-top: #{$size}px;
+			margin-bottom: #{$size}px;
+		}
+	}
+	// md
+	@include breakpoint-min(tablet) {
+		// padding
+		.tutor-p-md-#{$size},
+		.tutor-padding-md-#{$size} {
+			padding: #{$size}px;
+		}
+		.tutor-pb-md-#{$size} {
+			padding-bottom: #{$size}px;
+		}
+		.tutor-pt-md-#{$size} {
+			padding-top: #{$size}px;
+		}
+		.tutor-pr-md-#{$size} {
+			padding-right: #{$size}px;
+		}
+		.tutor-pl-md-#{$size} {
+			padding-left: #{$size}px;
+		}
+		.tutor-px-md-#{$size} {
+			padding-left: #{$size}px;
+			padding-right: #{$size}px;
+		}
+		.tutor-py-md-#{$size} {
+			padding-top: #{$size}px;
+			padding-bottom: #{$size}px;
+		}
+
+		// margin
+		.tutor-m-md-#{$size},
+		.tutor-margin-md-#{$size} {
+			margin: #{$size}px;
+		}
+		.tutor-mb-md-#{$size} {
+			margin-bottom: #{$size}px;
+		}
+		.tutor-mt-md-#{$size} {
+			margin-top: #{$size}px;
+		}
+		.tutor-mr-md-#{$size} {
+			margin-right: #{$size}px;
+		}
+		.tutor-ml-md-#{$size} {
+			margin-left: #{$size}px;
+		}
+		.tutor-mx-md-#{$size} {
+			margin-left: #{$size}px;
+			margin-right: #{$size}px;
+		}
+		.tutor-my-md-#{$size} {
+			margin-top: #{$size}px;
+			margin-bottom: #{$size}px;
+		}
+	}
+	// lg
+	@include breakpoint-min(desktop) {
+		// padding
+		.tutor-p-lg-#{$size},
+		.tutor-padding-lg-#{$size} {
+			padding: #{$size}px;
+		}
+		.tutor-pb-lg-#{$size} {
+			padding-bottom: #{$size}px;
+		}
+		.tutor-pt-lg-#{$size} {
+			padding-top: #{$size}px;
+		}
+		.tutor-pr-lg-#{$size} {
+			padding-right: #{$size}px;
+		}
+		.tutor-pl-lg-#{$size} {
+			padding-left: #{$size}px;
+		}
+		.tutor-px-lg-#{$size} {
+			padding-left: #{$size}px;
+			padding-right: #{$size}px;
+		}
+		.tutor-py-lg-#{$size} {
+			padding-top: #{$size}px;
+			padding-bottom: #{$size}px;
+		}
+
+		// margin
+		.tutor-m-lg-#{$size},
+		.tutor-margin-lg-#{$size} {
+			margin: #{$size}px;
+		}
+		.tutor-mb-lg-#{$size} {
+			margin-bottom: #{$size}px;
+		}
+		.tutor-mt-lg-#{$size} {
+			margin-top: #{$size}px;
+		}
+		.tutor-mr-lg-#{$size} {
+			margin-right: #{$size}px;
+		}
+		.tutor-ml-lg-#{$size} {
+			margin-left: #{$size}px;
+		}
+		.tutor-mx-lg-#{$size} {
+			margin-left: #{$size}px;
+			margin-right: #{$size}px;
+		}
+		.tutor-my-lg-#{$size} {
+			margin-top: #{$size}px;
+			margin-bottom: #{$size}px;
+		}
+	}
+	// xl
+	@include breakpoint-min(desktop-lg) {
+		// padding
+		.tutor-p-xl-#{$size},
+		.tutor-padding-xl-#{$size} {
+			padding: #{$size}px;
+		}
+		.tutor-pb-xl-#{$size} {
+			padding-bottom: #{$size}px;
+		}
+		.tutor-pt-xl-#{$size} {
+			padding-top: #{$size}px;
+		}
+		.tutor-pr-xl-#{$size} {
+			padding-right: #{$size}px;
+		}
+		.tutor-pl-xl-#{$size} {
+			padding-left: #{$size}px;
+		}
+		.tutor-px-xl-#{$size} {
+			padding-left: #{$size}px;
+			padding-right: #{$size}px;
+		}
+		.tutor-py-xl-#{$size} {
+			padding-top: #{$size}px;
+			padding-bottom: #{$size}px;
+		}
+
+		// margin
+		.tutor-m-xl-#{$size},
+		.tutor-margin-xl-#{$size} {
+			margin: #{$size}px;
+		}
+		.tutor-mb-xl-#{$size} {
+			margin-bottom: #{$size}px;
+		}
+		.tutor-mt-xl-#{$size} {
+			margin-top: #{$size}px;
+		}
+		.tutor-mr-xl-#{$size} {
+			margin-right: #{$size}px;
+		}
+		.tutor-ml-xl-#{$size} {
+			margin-left: #{$size}px;
+		}
+		.tutor-mx-xl-#{$size} {
+			margin-left: #{$size}px;
+			margin-right: #{$size}px;
+		}
+		.tutor-my-xl-#{$size} {
+			margin-top: #{$size}px;
+			margin-bottom: #{$size}px;
+		}
 	}
 }
 
