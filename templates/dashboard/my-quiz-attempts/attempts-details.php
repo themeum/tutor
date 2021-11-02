@@ -21,7 +21,7 @@ $attempt = tutor_utils()->get_attempt($attempt_id);
 
 if ( ! $attempt){
 	?>
-    <h1><?php _e('Attempt not found', 'tutor'); ?></h1>
+    <h1><?php esc_html_e('Attempt not found', 'tutor'); ?></h1>
 	<?php
 	return;
 }
@@ -29,60 +29,60 @@ if ( ! $attempt){
 function show_correct_answer( $answers= array() ){
     if(!empty($answers)){
 
-		echo '<div class="correct-answer-wrap">';
+		echo wp_kses_post('<div class="correct-answer-wrap">');
         foreach ($answers as $key => $ans) {
             $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
-            if (isset($ans->answer_two_gap_match)) { echo '<div class="matching-type">'; }
+            if (isset($ans->answer_two_gap_match)) { echo wp_kses_post('<div class="matching-type">'); }
             switch ($type) {
 				case 'text_image':
-					echo '<div class="text-image-type">';
+					echo wp_kses_post('<div class="text-image-type">');
                         if(isset($ans->image_id)){
                             $img_url = wp_get_attachment_image_url($ans->image_id);
                             if($img_url){
-                                echo '<span class="image"><img src="'.$img_url.'" /></span>';
+                                echo wp_kses_post('<span class="image"><img src="'.$img_url.'" /></span>');
                             }
                         }
                         if(isset($ans->answer_title)) {
-                            echo '<span class="caption">'.stripslashes($ans->answer_title).'</span>';
+                            echo wp_kses_post('<span class="caption">'.stripslashes($ans->answer_title).'</span>');
                         }
-					echo '</div>';
+					echo wp_kses_post('</div>');
                     break;
                     
 				case 'text':
                     if(isset($ans->answer_title)) {
-                        echo '<span class="text-medium-caption color-text-primary">'
+                        echo wp_kses_post('<span class="text-medium-caption color-text-primary">'
                             .stripslashes($ans->answer_title).
-                        '</span>';
+                        '</span>');
                     }
                     break;
 
 				case 'image':
-					echo '<div class="image-type">';
+					echo wp_kses_post('<div class="image-type">');
                         if(isset($ans->image_id)){
                             $img_url = wp_get_attachment_image_url($ans->image_id);
                             if($img_url){
-                                echo '<span class="image"><img src="'.$img_url.'" />'.'</span>';
+                                echo wp_kses_post('<span class="image"><img src="'.$img_url.'" />'.'</span>');
                             }
                         }
-                    echo '</div>';
+                    echo wp_kses_post('</div>');
                     break;
                 default:
                     break;
             }
             if (isset($ans->answer_two_gap_match)) {
-                echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
-                echo '<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>';
-                echo '</div>';
+                echo wp_kses_post('<div class="matching-separator">&nbsp;-&nbsp;</div>');
+                echo wp_kses_post('<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>');
+                echo wp_kses_post('</div>');
 			}
         }
-		echo '</div>';
+		echo wp_kses_post('</div>');
     }
 }
 
 
 if (!$attempt_id){
     ?>
-    <h1><?php _e('Attempt not found', 'tutor'); ?></h1>
+    <h1><?php esc_html_e('Attempt not found', 'tutor'); ?></h1>
     <?php
     return;
 }
@@ -91,7 +91,7 @@ $user_id = tutor_utils()->get_user_id();
 $attempt_data = tutor_utils()->get_attempt($attempt_id);
 if ( $user_id != $attempt_data->user_id ){
     ?>
-    <h1><?php _e('You have no access.', 'tutor'); ?></h1>
+    <h1><?php esc_html_e('You have no access.', 'tutor'); ?></h1>
     <?php
     return;
 }
@@ -116,7 +116,7 @@ if(is_array($answers) && count($answers) > 0) {
 
 <div>
     <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('my-quiz-attempts'); ?>
-    <a class="prev-btn" href="<?php echo $attempts_page; ?>"><span>&leftarrow;</span><?php _e('Back to Attempt List', 'tutor'); ?></a>
+    <a class="prev-btn" href="<?php echo esc_url($attempts_page); ?>"><span>&leftarrow;</span><?php esc_html_e('Back to Attempt List', 'tutor'); ?></a>
 </div>
 
 <div class="tutor-quiz-attempt-review-wrap">
@@ -128,36 +128,36 @@ if(is_array($answers) && count($answers) > 0) {
     <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
         <thead>
             <tr>
-                <th><span class="text-regular-small color-text-subsued"><?php _e('Date', 'tutor'); ?></span></th>
-                <th><span class="text-regular-small color-text-subsued"><?php _e('Question', 'tutor'); ?></span></th>
-                <th><span class="text-regular-small color-text-subsued"><?php _e('Total Marks', 'tutor'); ?></span></th>
-                <th><span class="text-regular-small color-text-subsued"><?php _e('Pass Marks', 'tutor'); ?></span></th>
-                <th><span class="text-regular-small color-text-subsued"><?php _e('Correct', 'tutor'); ?></span></th>
-                <th><span class="text-regular-small color-text-subsued"><?php _e('Incorrect', 'tutor'); ?></span></th>
-                <th><span class="text-regular-small color-text-subsued"><?php _e('Earned Marks', 'tutor'); ?></span></th>
-                <th><span class="text-regular-small color-text-subsued"><?php _e('Result', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Date', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Question', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Total Marks', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Pass Marks', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Correct', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Incorrect', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Earned Marks', 'tutor'); ?></span></th>
+                <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Result', 'tutor'); ?></span></th>
             </tr>
         </thead>
         <tbody>
         <tr>
-            <td data-th="<?php _e('Date', 'tutor'); ?>">
+            <td data-th="<?php esc_html_e('Date', 'tutor'); ?>">
                 <span class="text-medium-caption color-text-primary">
                     <?php
                         echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
                     ?>
                 </span>
             </td>
-            <td data-th="<?php _e('Question', 'tutor'); ?>">
+            <td data-th="<?php esc_html_e('Question', 'tutor'); ?>">
                 <span class="text-medium-caption color-text-primary">
                     <?php echo $attempt_data->total_questions; ?>
                 </span>
             </td>
-            <td data-th="<?php _e('Total Marks', 'tutor'); ?>">
+            <td data-th="<?php esc_html_e('Total Marks', 'tutor'); ?>">
                 <span class="text-medium-caption color-text-primary">
                     <?php echo $attempt_data->total_marks; ?>
                 </span>
             </td>
-            <td data-th="<?php _e('Pass Marks', 'tutor'); ?>">
+            <td data-th="<?php esc_html_e('Pass Marks', 'tutor'); ?>">
                 <span class="text-medium-caption color-text-primary">
                     <?php 
                         $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
@@ -165,17 +165,17 @@ if(is_array($answers) && count($answers) > 0) {
                     ?>
                 </span>
             </td>
-            <td data-th="<?php _e('Correct', 'tutor'); ?>">
+            <td data-th="<?php esc_html_e('Correct', 'tutor'); ?>">
                 <span class="text-medium-caption color-text-primary">
                     <?php echo $correct; ?>
                 </span>
             </td>
-            <td data-th="<?php _e('Incorrect', 'tutor'); ?>">
+            <td data-th="<?php esc_html_e('Incorrect', 'tutor'); ?>">
                 <span class="text-medium-caption color-text-primary">
                     <?php echo $incorrect; ?>
                 </span>
             </td>
-            <td data-th="<?php _e('Earned Marks', 'tutor'); ?>">
+            <td data-th="<?php esc_html_e('Earned Marks', 'tutor'); ?>">
                 <span class="text-medium-caption color-text-primary">
                     <?php 
                         echo $attempt_data->earned_marks; 
@@ -184,13 +184,13 @@ if(is_array($answers) && count($answers) > 0) {
                     ?>
                 </span>
             </td>
-            <td data-th="<?php _e('Result', 'tutor'); ?>">
+            <td data-th="<?php esc_html_e('Result', 'tutor'); ?>">
                 <span class="text-medium-caption color-text-primary">
                     <?php 
                         if ($earned_percentage >= $pass_mark_percent){
-                            echo '<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>';
+                            echo wp_kses_post('<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>') ;
                         }else{
-                            echo '<span class="tutor-badge-label label-danger">'.__('Fail', 'tutor').'</span>';
+                            echo wp_kses_post('<span class="tutor-badge-label label-danger">'.__('Fail', 'tutor').'</span>');
                         }
                     ?>
                 </span>
@@ -206,7 +206,7 @@ if(is_array($answers) && count($answers) > 0) {
     <div class="tutor-quiz-attempt-review-wrap">
         <div class="quiz-attempt-answers-wrap">
             <div class="attempt-answers-header">
-                <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
+                <div class="attempt-header-quiz"><?php esc_html_e('Instructor Feedback', 'tutor'); ?></div>
             </div>
             <div class="instructor-feedback-content">
                 <p><?php echo $feedback; ?></p>
@@ -222,18 +222,18 @@ if(is_array($answers) && count($answers) > 0) {
         ?>
         <div class="quiz-attempt-answers-wrap">
             <div class="attempt-answers-header">
-                <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
+                <div class="attempt-header-quiz"><?php esc_html_e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
             <table class="tutor-ui-table tutor-ui-table-responsive">
                 <thead>
                     <tr>
-                        <th><span class="text-regular-small color-text-subsued"><?php _e('No.', 'tutor'); ?></span></th>
-                        <th><span class="text-regular-small color-text-subsued"><?php _e('Type', 'tutor'); ?></span></th>
-                        <th><span class="text-regular-small color-text-subsued"><?php _e('Question', 'tutor'); ?></span></th>
-                        <th><span class="text-regular-small color-text-subsued"><?php _e('Given Answers', 'tutor'); ?></span></th>
-                        <th><span class="text-regular-small color-text-subsued"><?php _e('Correct Answers', 'tutor'); ?></span></th>
-                        <th><span class="text-regular-small color-text-subsued"><?php _e('Answer', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('No.', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Type', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Question', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Given Answers', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Correct Answers', 'tutor'); ?></span></th>
+                        <th><span class="text-regular-small color-text-subsued"><?php esc_html_e('Answer', 'tutor'); ?></span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -245,12 +245,12 @@ if(is_array($answers) && count($answers) > 0) {
                             ?>
                             
                             <tr>
-                                <td data-th="<?php _e('No.', 'tutor'); ?>">
+                                <td data-th="<?php esc_html_e('No.', 'tutor'); ?>">
                                     <span class="text-medium-caption color-text-primary">
                                         <?php echo $answer_i; ?>
                                     </span>
                                 </td>
-                                <td data-th="<?php _e('Type', 'tutor'); ?>">
+                                <td data-th="<?php esc_html_e('Type', 'tutor'); ?>">
                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
                                     <div class="tooltip-wrap tooltip-icon-">
                                         <?php echo $question_type['icon']; ?>
@@ -259,12 +259,12 @@ if(is_array($answers) && count($answers) > 0) {
                                         </span>
                                     </div>
                                 </td>
-                                <td data-th="<?php _e('Question', 'tutor'); ?>">
+                                <td data-th="<?php esc_html_e('Question', 'tutor'); ?>">
                                     <span class="text-medium-small">
                                         <?php echo stripslashes($answer->question_title); ?>
                                     </span>
                                 </td>
-                                <td data-th="<?php _e('Given Answers', 'tutor'); ?>">
+                                <td data-th="<?php esc_html_e('Given Answers', 'tutor'); ?>">
                                     <?php
                                         // True false or single choise
                                         if ($answer->question_type === 'true_false' || $answer->question_type === 'single_choice' ){
@@ -272,7 +272,7 @@ if(is_array($answers) && count($answers) > 0) {
                                             $answer_titles = wp_list_pluck($get_answers, 'answer_title');
                                             $answer_titles = array_map('stripslashes', $answer_titles);
                                             
-                                            echo '<span class="text-medium-caption color-text-primary">'.implode('</p><p>', $answer_titles).'</span>';
+                                            echo wp_kses_post('<span class="text-medium-caption color-text-primary">'.implode('</p><p>', $answer_titles).'</span>');
                                         } 
                                     
                                         // Multiple choice
@@ -281,7 +281,7 @@ if(is_array($answers) && count($answers) > 0) {
                                             $answer_titles = wp_list_pluck($get_answers, 'answer_title');
                                             $answer_titles = array_map('stripslashes', $answer_titles);
 
-                                            echo '<p class="text-medium-caption color-text-primary">'.implode('</p><p>', $answer_titles).'</p>';
+                                            echo wp_kses_post('<p class="text-medium-caption color-text-primary">'.implode('</p><p>', $answer_titles).'</p>');
                                         }
                                     
                                         // Fill in the blank
@@ -322,7 +322,7 @@ if(is_array($answers) && count($answers) > 0) {
                                                 $get_answers = tutor_utils()->get_answer_by_id($ordering_id);
                                                 $answer_titles = wp_list_pluck($get_answers, 'answer_title');
                                                 $answer_titles = array_map('stripslashes', $answer_titles);
-                                                echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
+                                                echo wp_kses_post('<p>'.implode('</p><p>', $answer_titles).'</p>');
                                             }
                                         }
                                     
@@ -347,7 +347,7 @@ if(is_array($answers) && count($answers) > 0) {
                                         $ordering_ids = maybe_unserialize($answer->given_answer);
                                         $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
 
-                                        echo '<div class="answer-image-matched-wrap">';
+                                        echo wp_kses_post('<div class="answer-image-matched-wrap">');
                                         foreach ($original_saved_answers as $key => $original_saved_answer){
                                             $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
                                             $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
@@ -359,12 +359,12 @@ if(is_array($answers) && count($answers) > 0) {
                                             </div>
                                             <?php
                                         }
-                                        echo '</div>';
+                                        echo wp_kses_post('</div>');
                                     }elseif ($answer->question_type === 'image_answering'){
 
                                         $ordering_ids = maybe_unserialize($answer->given_answer);
 
-                                        echo '<div class="answer-image-matched-wrap">';
+                                        echo wp_kses_post('<div class="answer-image-matched-wrap">');
                                         foreach ($ordering_ids as $answer_id => $image_answer){
                                             $db_answers = tutor_utils()->get_answer_by_id($answer_id);
                                             foreach ($db_answers as $db_answer);
@@ -375,7 +375,7 @@ if(is_array($answers) && count($answers) > 0) {
                                             </div>
                                             <?php
                                         }
-                                        echo '</div>';
+                                        echo wp_kses_post('</div>');
                                     }
 
                                     ?>
@@ -394,7 +394,7 @@ if(is_array($answers) && count($answers) > 0) {
                                                 $answer->question_id 
                                             ) );
 
-                                            echo '<span class="text-medium-caption color-text-primary">' . $correct_answer . '</span>';
+                                            echo wp_kses_post('<span class="text-medium-caption color-text-primary">' . $correct_answer . '</span>');
                                         } 
                                         
                                         elseif ( $answer->question_type === 'single_choice' ) {
@@ -439,16 +439,16 @@ if(is_array($answers) && count($answers) > 0) {
                                     <?php
 
                                     if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                                        echo '<span class="tutor-badge-label label-success">'.__('Correct', 'tutor').'</span>';
+                                        echo wp_kses_post('<span class="tutor-badge-label label-success">'.__('Correct', 'tutor').'</span>');
                                     } else {
                                         if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
                                             if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-                                                echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                                echo wp_kses_post('<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>');
                                             } else {
-                                                echo '<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>';
+                                                echo wp_kses_post('<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>');
                                             }
                                         } else {
-                                            echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                            echo wp_kses_post('<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>');
                                         }
                                     }
                                     ?>
