@@ -3222,6 +3222,7 @@ window.jQuery(document).ready(function ($) {
     var prompt = $(this).data('prompt');
     var del = $(this).data('delete_element_id');
     var data = $(this).data('request_data') || {};
+    typeof data == 'string' ? data = JSON.parse(data) : 0;
 
     if (prompt && !window.confirm(prompt)) {
       return;
@@ -3322,36 +3323,6 @@ window.jQuery(document).ready(function ($) {
       },
       error: function error(data) {
         tutor_toast(__('Something Went Wrong!', 'tutor'));
-      }
-    });
-  }); // Delete announcement
-
-  $('.tutor-announcement-delete').click(function () {
-    var announcement_id = $(this).data('announcement-id');
-    var whichtr = $("#" + $(this).data('target-announcement-row-id'));
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: {
-        action: 'tutor_announcement_delete',
-        announcement_id: announcement_id
-      },
-      beforeSend: function beforeSend() {},
-      success: function success(data) {
-        var _ref2 = data.data || {},
-            _ref2$message = _ref2.message,
-            message = _ref2$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref2$message;
-
-        if (data.success) {
-          whichtr.remove();
-          tutor_toast('Success!', message, 'success');
-          return;
-        } else {
-          tutor_toast('Error!', message, 'error');
-        }
-      },
-      error: function error() {
-        tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
       }
     });
   }); // Announcement filter
@@ -3494,16 +3465,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * Table td/tr toggle
+ */
+
 document.addEventListener('click', function (e) {
   var attr = 'data-td-target';
-  var dataTdTarget = e.target.dataset.tdTarget; // console.log(document.getElementById(dataTdTarget));
+  var dataTdTarget = e.target.dataset.tdTarget;
 
   if (dataTdTarget) {
     e.target.closest('td').classList.toggle('is-active');
-    document.getElementById(dataTdTarget).classList.toggle('active'); // document
-    // 	.getElementById(dataTdTarget)
-    // 	.closest('tr')
-    // 	.classList.toggle('active');
+    document.getElementById(dataTdTarget).classList.toggle('is-active');
   }
 });
 
