@@ -8,7 +8,6 @@ if (!defined('ABSPATH'))
 class Assets {
 
 	public function __construct() {
-		echo wp_kses_post( '<button class="sdfsdf">ssdf</button>' ); exit;
 		/**
 		 * Common scripts loading
 		 */
