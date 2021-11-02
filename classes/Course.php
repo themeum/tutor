@@ -7,14 +7,14 @@ if ( ! defined( 'ABSPATH' ) )
 class Course extends Tutor_Base {
 	
 	private $additional_meta=array(
-		'_tutor_disable_qa',
+		'_tutor_enable_qa',
 		'_tutor_is_public_course'
 	);
 
 	public function __construct() {
 		parent::__construct();
 		
-		add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
+		add_action('add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'), 10, 2);
 		add_action('wp_ajax_tutor_save_topic', array($this, 'tutor_save_topic'));
 		
@@ -28,11 +28,6 @@ class Course extends Tutor_Base {
 		//Frontend Action
 		add_action('template_redirect', array($this, 'enroll_now'));
 		add_action('init', array($this, 'mark_course_complete'));
-
-		//Modal Perform
-		add_action('wp_ajax_tutor_load_instructors_modal', array($this, 'tutor_load_instructors_modal'));
-		add_action('wp_ajax_tutor_add_instructors_to_course', array($this, 'tutor_add_instructors_to_course'));
-		add_action('wp_ajax_detach_instructor_from_course', array($this, 'detach_instructor_from_course'));
 
 		/**
 		 * Frontend Dashboard
@@ -103,7 +98,6 @@ class Course extends Tutor_Base {
          * @since v.1.6.6
          */
 		add_action('deleted_post', array($this, 'delete_tutor_course_data'));
-		add_action('tutor/dashboard_course_builder_form_field_after', array($this, 'tutor_course_setting_metabox_frontend'));
 
 		/**
          * Delete course data after deleted course
@@ -172,27 +166,10 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
-		$course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
-        
+		
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
-		
-		if ($course_marketplace) {
-			add_meta_box( 'tutor-instructors', __( 'Instructors', 'tutor' ), array( $this, 'instructors_metabox' ), $coursePostType );
-		}
-
-		// Register unified pricing metabox at backend builder
-		$monetize_by = tutor_utils()->get_option('monetize_by');
-    	if ($monetize_by === 'wc' || $monetize_by === 'edd'){
-			add_meta_box( 'tutor-course-pricing', __( 'Course Pricing ', 'tutor' ), array($this, 'pricing_metabox'), $coursePostType );
-		}
-
-		/**
-         * Tutor course sidebar settings metabox
-         * @since v.1.7.0
-         */
-		add_meta_box( 'tutor-course-sidebar-settings', __( 'Tutor Settings', 'tutor' ), array($this, 'tutor_course_setting_metabox'), $coursePostType, 'side' );
 	}
 
 	public function course_meta_box($echo = true){
@@ -205,19 +182,6 @@ class Course extends Tutor_Base {
 		}else{
 			return $content;
 		}
-	}
-
-	public function pricing_metabox($echo = true) {
-		
-		ob_start();
-		include  tutor()->path.'views/metabox/course-pricing.php';
-		$content = ob_get_clean();
-
-		if (!$echo){
-			return $content;
-		}
-
-		echo $content;
 	}
 
 	public function course_additional_data_meta_box($echo = true){
@@ -245,18 +209,6 @@ class Course extends Tutor_Base {
 		}
 	}
 
-	public function instructors_metabox($echo = true){
-		ob_start();
-		include tutor()->path . 'views/metabox/instructors-metabox.php';
-		$content = ob_get_clean();
-
-		if ($echo){
-			echo $content;
-		}else{
-			return $content;
-		}
-	}
-
 	/**
 	 * Register metabox in course builder tutor
 	 * @since v.1.3.4
@@ -271,9 +223,6 @@ class Course extends Tutor_Base {
 		
         course_builder_section_wrap($this->course_meta_box($echo = false), __( 'Course Builder', 'tutor' ) );
 		do_action('tutor/frontend_course_edit/after/course_builder', $post);
-
-        course_builder_section_wrap($this->instructors_metabox($echo = false), __( 'Instructors', 'tutor' ) );
-		do_action('tutor/frontend_course_edit/after/instructors', $post);
 
         course_builder_section_wrap($this->course_additional_data_meta_box($echo = false), __( 'Additional Data', 'tutor' ) );
 		do_action('tutor/frontend_course_edit/after/additional_data', $post);
@@ -305,8 +254,8 @@ class Course extends Tutor_Base {
 			update_post_meta($post_ID, '_course_duration', $video);
 		}
 
-		if ( ! empty($_POST['course_level'])){
-			$course_level = sanitize_text_field($_POST['course_level']);
+		if ( ! empty($_POST['_tutor_course_level'])){
+			$course_level = sanitize_text_field($_POST['_tutor_course_level']);
 			update_post_meta($post_ID, '_tutor_course_level', $course_level);
 		}
 
@@ -682,110 +631,6 @@ class Course extends Tutor_Base {
 		}
 	}
 	
-	public function tutor_load_instructors_modal(){
-		tutor_utils()->checking_nonce();
-		
-		global $wpdb;
-
-		$course_id = (int) sanitize_text_field($_POST['course_id']);
-		$search_terms = sanitize_text_field(tutor_utils()->avalue_dot('search_terms', $_POST));
-
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-		
-		$saved_instructors = tutor_utils()->get_instructors_by_course($course_id);
-		$instructors = array();
-
-		$not_in_sql = apply_filters('tutor_instructor_query_when_exists', " AND ID <1 ");
-
-		if ($saved_instructors){
-			$saved_instructors_ids = wp_list_pluck($saved_instructors, 'ID');
-			$instructor_not_in_ids = implode(',', $saved_instructors_ids);
-			$not_in_sql .= "AND user.ID NOT IN($instructor_not_in_ids) ";
-		}
-
-		$search_sql = '';
-		if ($search_terms){
-			$search_sql = "AND (user.user_login like '%{$search_terms}%' or user.user_nicename like '%{$search_terms}%' or user.display_name like '%{$search_terms}%') ";
-		}
-
-		$instructors = $wpdb->get_results("SELECT user.ID, user.display_name from {$wpdb->users} user
-			INNER JOIN {$wpdb->usermeta} meta ON user.ID = meta.user_id AND meta.meta_key = '_tutor_instructor_status' AND meta.meta_value = 'approved'
-			WHERE 1=1 {$not_in_sql} {$search_sql} limit 10 ");
-
-		$output = '';
-		if (is_array($instructors) && count($instructors)){
-			$instructor_output = '';
-			foreach ($instructors as $instructor){
-				$instructor_output .= "<p><label><input type='radio' name='tutor_instructor_ids[]' value='{$instructor->ID}' > {$instructor->display_name} </label></p>";
-			}
-
-			$output .= apply_filters('tutor_course_instructors_html', $instructor_output, $instructors);
-
-		}else{
-			$output .= __('<p>No instructor available or you have already added maximum instructors</p>', 'tutor');
-		}
-
-
-		if ( ! defined('TUTOR_MT_VERSION')){
-			$output .= '<p class="tutor-notice-warning" style="margin-top: 50px; font-size: 14px;">'. sprintf( __('To add unlimited multiple instructors in your course, get %sTutor LMS Pro%s', 'tutor'), '<a href="https://www.themeum.com/product/tutor-lms" target="_blank">', "</a>" ) .'</p>';
-		}
-
-		wp_send_json_success(array('output' => $output));
-	}
-
-	public function tutor_add_instructors_to_course(){
-		tutor_utils()->checking_nonce();
-
-		$course_id = (int) sanitize_text_field($_POST['course_id']);
-		$instructor_ids = tutor_utils()->avalue_dot('tutor_instructor_ids', $_POST);
-		
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-
-		if (is_array($instructor_ids) && count($instructor_ids)){
-			foreach ($instructor_ids as $instructor_id){
-				add_user_meta($instructor_id, '_tutor_instructor_course_id', $course_id);
-			}
-		}
-
-		$saved_instructors = tutor_utils()->get_instructors_by_course($course_id);
-		$output = '';
-
-		if ($saved_instructors){
-			foreach ($saved_instructors as $t){
-
-				$output .= '<div id="added-instructor-id-'.$t->ID.'" class="added-instructor-item added-instructor-item-'.$t->ID.'" data-instructor-id="'.$t->ID.'">
-                    <span class="instructor-icon">'.get_avatar($t->ID, 30).'</span>
-                    <span class="instructor-name"> '.$t->display_name.' </span>
-                    <span class="instructor-control">
-                        <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-line-cross"></i></a>
-                    </span>
-                </div>';
-			}
-		}
-
-		wp_send_json_success(array('output' => $output));
-	}
-
-	public function detach_instructor_from_course(){
-		tutor_utils()->checking_nonce();
-
-		global $wpdb;
-
-		$instructor_id = (int) sanitize_text_field($_POST['instructor_id']);
-		$course_id = (int) sanitize_text_field($_POST['course_id']);
-
-		if(!tutor_utils()->can_user_manage('course', $course_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-		
-		$wpdb->delete($wpdb->usermeta, array('user_id' => $instructor_id, 'meta_key' => '_tutor_instructor_course_id', 'meta_value' => $course_id) );
-		wp_send_json_success();
-	}
-
 	public function tutor_delete_dashboard_course(){
 		tutor_utils()->checking_nonce();
 
@@ -936,12 +781,13 @@ class Course extends Tutor_Base {
 		$levels = tutor_utils()->course_levels();
 		$course_level = get_post_meta($course_id, '_tutor_course_level', true);
 
-		$args['general']['fields']['course_level'] = array(
-			'type'      => 'select',
-			'label'     => __('Difficulty Level', 'tutor'),
-			'label_title' => __('Enable', 'tutor'),
-			'default' => $course_level ? $course_level : 'intermediate',
-			'desc'      => __('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor'),
+		$args['general']['fields']['_tutor_course_level'] = array(
+			'type'       => 'select',
+			'label'      => __('Difficulty Level', 'tutor'),
+			'label_title'=> __('Enable', 'tutor'),
+			'options'	 => $levels,
+			'value' 	 => $course_level ? $course_level : 'intermediate',
+			'desc'       => __('Course difficulty level', 'tutor'),
 		);
 
 		return $args;
@@ -1059,9 +905,9 @@ class Course extends Tutor_Base {
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
 
-		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_disable_qa', true) : '';
+		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_enable_qa', true)!='yes' : true;
 
-		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
+		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course) {
 			if(tutor_utils()->array_get('questions', $items)) {
 				unset($items['questions']);
 			}
@@ -1292,57 +1138,6 @@ class Course extends Tutor_Base {
 				}
 			}
 		}
-	}
-
-	/**
-	 * tutor course setting metabox
-	 * @since v.1.7.0
-	 */
-	function tutor_course_setting_metabox( $post ) {
-		
-		$disable_qa = $this->additional_meta[0];
-		$is_public = $this->additional_meta[1];
-
-		$disable_qa_checked = get_post_meta($post->ID, $disable_qa, true)=='yes' ? 'checked="checked"' : '';
-		$is_public_checked = get_post_meta($post->ID, $is_public, true)=='yes' ? 'checked="checked"' : '';
-
-		do_action('tutor_before_course_sidebar_settings_metabox', $post);
-		?>
-		<div class="tutor-course-sidebar-settings-item" id="_tutor_is_course_public_meta_checkbox" style="display:none">
-			<label for="<?php echo $is_public; ?>">
-				<input id="<?php echo $is_public; ?>" type="checkbox" name="<?php echo $is_public; ?>" value="yes" <?php echo $is_public_checked; ?> />
-				<?php _e('Make This Course Public', 'tutor'); ?>
-				<small style="display:block;padding-left:24px">
-					<?php _e('No enrollment required.', 'tutor'); ?> 
-				</small>
-			</label>
-		</div>
-		<div class="tutor-course-sidebar-settings-item">
-			<label for="<?php echo $disable_qa; ?>">
-				<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
-				<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
-				<?php _e('Disable Q&A', 'tutor'); ?>
-			</label>
-		</div>
-		<?php
-		do_action('tutor_after_course_sidebar_settings_metabox', $post);
-	}
-
-	function tutor_course_setting_metabox_frontend( $post ){
-		?>		
-			<div class="tutor-course-builder-section tutor-course-builder-info">
-				<div class="tutor-course-builder-section-title">
-					<h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Tutor Settings', 'tutor'); ?></span></h3>
-				</div>
-				<div class="tutor-course-builder-section-content">
-					<div class="tutor-frontend-builder-item-scope">
-						<div class="tutor-form-group">
-							<?php $this->tutor_course_setting_metabox($post); ?>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php
 	}
 
 	/**

@@ -64,6 +64,6 @@
 // radius
 @for $s from 10 through 50  {
 	.tutor-font-size-#{$s} {
-		font-size: #{$s}px;
+		font-size: #{$s}px !important;
 	}
 }
