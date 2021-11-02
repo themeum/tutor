@@ -1868,7 +1868,7 @@ class Utils {
 	 *
 	 * @return bool|\WP_Query
 	 *
-	 * Return courses by user_id
+	 * Return completed courses by user_id
 	 *
 	 * @since v.1.0.0
 	 */
