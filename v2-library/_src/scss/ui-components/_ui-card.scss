@@ -25,24 +25,6 @@
         display: block;
     }
 
-    span.tutor-delete-attachment {
-        @include valueWithPrefix(display, inline-flex);
-        @include propertyWithPrefix(align-items, center);
-        @include propertyWithPrefix(justify-content, center);
-        background: transparent;
-        border-radius: 50%;
-        font-size: 30px;
-        cursor: pointer;
-
-        width: 40px;
-        height: 40px;
-        font-size: 14px;
-
-        &:hover{
-            background: $black-05;
-        }
-    }
-
     &>div>div {
         &:first-child {
             white-space: nowrap;
