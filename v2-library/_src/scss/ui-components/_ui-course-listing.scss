@@ -1,23 +1,26 @@
 .tutor-course-listing {
 	// max-width: 1110px;
 	// margin: 0 auto;
-	display: grid;
-	grid-gap: 30px;
 
-	@include breakpoint-max(tablet) {
-		@include responsiveGrid(350px, 1fr);
-	}
-
-	@include breakpoint-min(desktop) {
-		// Course Grid
-		&-grid-2 {
-			grid-template-columns: repeat(2, 1fr);
+	// .tutor-course-listing-grid
+	&-grid {
+		display: grid;
+		grid-gap: 30px;
+		grid-template-rows: min-content;
+		@include breakpoint-max(tablet) {
+			@include responsiveGrid(350px, 1fr);
 		}
-		&-grid-3 {
-			grid-template-columns: repeat(3, 1fr);
-		}
-		&-grid-4 {
-			grid-template-columns: repeat(4, 1fr);
+		@include breakpoint-min(desktop) {
+			// tutor-course-listing-grid-*
+			&-2 {
+				grid-template-columns: repeat(2, 1fr);
+			}
+			&-3 {
+				grid-template-columns: repeat(3, 1fr);
+			}
+			&-4 {
+				grid-template-columns: repeat(4, 1fr);
+			}
 		}
 	}
 
@@ -30,7 +33,11 @@
 
 .tutor-course-listing-item {
 	background: $bg-white;
-	display: grid;
+	// display: grid;
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
 	img {
 		max-width: 100%;
 	}
@@ -50,6 +57,9 @@
 		border-top-right-radius: 6px;
 		overflow: hidden;
 		position: relative;
+		> a {
+			display: flex;
+		}
 		.save-bookmark-btn {
 			position: absolute;
 			top: 12px;
@@ -210,9 +220,6 @@
 			@extend .color-text-title;
 			@extend .text-regular-body;
 		}
-		input.tutor-form-check-input[type='checkbox'] {
-			// border-color: $stroke-light-30;
-		}
 	}
 	&.tutor-filter-course-grid-2 {
 		grid-gap: 60px;
@@ -220,8 +227,33 @@
 	&.tutor-filter-course-grid-3 {
 		grid-gap: 30px;
 	}
+
 	.has-show-more {
+		.filter-widget-checkboxes {
+			position: relative;
+			&:before {
+				content: '';
+				position: absolute;
+				width: 100%;
+				height: 80px;
+				bottom: 0;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
+				display: none;
+			}
+		}
 		.tutor-show-more-btn {
+			display: none;
+		}
+
+		&.is-active {
+			.filter-widget-checkboxes {
+				&:before {
+					display: block;
+				}
+			}
+			.tutor-show-more-btn {
+				display: block;
+			}
 		}
 	}
 }
