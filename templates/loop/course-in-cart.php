@@ -29,7 +29,7 @@
 		    $cart_html = '<div class="list-item-button"> '.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
 	    }
     }
-    echo $price_html;
-    echo $cart_html;
+    echo wp_kses_post($price_html);
+    echo wp_kses_post($cart_html);
     ?>
 </div>

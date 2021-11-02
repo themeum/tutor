@@ -67,12 +67,16 @@ $filters = array(
 		
 	?>
 	<div class="tutor-ui-table-responsive tutor-mt-30 tutor-mr-20">
-		<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
+		<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts td-align-middle">
 			<thead>
 				<tr>
 					<th>
+						<div class="d-flex">
+							<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
+						</div>
+					</th>
+					<th>
 						<div class="inline-flex-center color-text-subsued">
-						<input id="tutor-bulk-checkbox-all" type="checkbox" class="tutor-form-check-input" name="tutor-bulk-checkbox-all">
 						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Quiz Info', 'tutor' ); ?></span>
 						<span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
 						</div>
@@ -125,61 +129,63 @@ $filters = array(
 			<tbody>
 				<?php foreach ( $quiz_attempts_list as $list ) : ?>
 				<tr>
-					<td data-th="Quiz Info" class="column-fullwidth ">
-						<div class="inline-flex-center tutor-mr-10">
-							<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php esc_attr_e( $list->ID ); ?>"/>
+					<td data-th="Checkbox">
+						<div class="td-checkbox d-flex ">
+							<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
 						</div>
+					</td>
+					<td data-th="Quiz Info" class="column-fullwidth">
 						<div class="td-statement-infor">
 							<span class="text-regular-small color-text-primary">
-							<?php echo $quiz_attempts->column_student( $list, 'attempt_ended_at' ); ?>
+							<?php echo esc_html( $quiz_attempts->column_student( $list, 'attempt_ended_at' ) ); ?>
 							</span>
 							<p class="text-medium-body color-text-primary">
-								<?php echo $quiz_attempts->column_quiz( $list, 'post_title' ); ?>
+								<?php echo esc_html_e( $quiz_attempts->column_quiz( $list, 'post_title' ) ); ?>
 							</p>
 							<span class="text-regular-small color-text-primary">
-								Student: <?php echo $quiz_attempts->column_student_info( $list, 'display_name' ); ?>
+								<?php esc_html_e( 'Student:', 'tutor' ) ?> <?php echo esc_html_e( $quiz_attempts->column_student_info( $list, 'display_name' ) ); ?>
 							</span>
 						</div>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_course( $list, 'quiz' ); ?>
+						<?php echo wp_kses_post( $quiz_attempts->column_course( $list, 'quiz' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_total_questions( $list, 'total_questions' ); ?>
+						<?php echo esc_html_e( $quiz_attempts->column_total_questions( $list, 'total_questions' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_total_marks( $list, 'total_marks' ); ?>
+						<?php echo esc_html_e( $quiz_attempts->column_total_marks( $list, 'total_marks' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
+						<?php //echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
+						<?php //echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
 						</span>
 					</td>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-							<?php echo $quiz_attempts->column_earned_percentage( $list, 'earned_percentage' ); ?>
+							<?php echo wp_kses_post( $quiz_attempts->column_earned_percentage( $list, 'earned_percentage' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Course Taklen">
 						<span class="color-text-primary text-medium-caption">
-						<?php echo $quiz_attempts->column_quiz_result( $list, 'output' ); ?>
+						<?php echo wp_kses_post( $quiz_attempts->column_quiz_result( $list, 'output' ) ); ?>
 						</span>
 					</td>
 					<td data-th="URL">
 						<div class="inline-flex-center td-action-btns">
-						<?php echo $quiz_attempts->column_quiz_action( $list, 'actions' ); ?>
+						<?php echo wp_kses_post( $quiz_attempts->column_quiz_action( $list, 'actions' ) ); ?>
 						</div>
 					</td>
 				</tr>

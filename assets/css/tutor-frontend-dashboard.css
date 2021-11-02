@@ -3815,4 +3815,37 @@
   font-size: 18px !important;
 }
 
+.tutor-dashboard .tutor-dashboard-content .my-courses .date {
+  font-size: 14px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-courses .list-item-title {
+  font-size: 16px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-meta,
+.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-author {
+  display: none !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-title {
+  font-size: 16px !important;
+  margin-top: 15px !important;
+  margin-bottom: 5px !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .list-item-meta,
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .course-category {
+  display: none !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .list-item-title {
+  font-size: 16px !important;
+  margin-top: 15px !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .cart-text {
+  display: none;
+}
+
 /*# sourceMappingURL=tutor-frontend-dashboard.css.map */

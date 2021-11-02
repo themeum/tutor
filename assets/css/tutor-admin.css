@@ -7060,13 +7060,6 @@ table.tutor-ui-table.table-instructors .toggle-row {
   display: none;
 }
 
-@media only screen and (min-width: 1201px) {
-  .my-quiz-attempts .td-statement-infor {
-    margin-top: -24px;
-    margin-left: 25px;
-  }
-}
-
 .tutor-admin-page-wrapper table td ul.tutor-table-inside-table {
   text-decoration: none;
 }

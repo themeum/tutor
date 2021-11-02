@@ -24,11 +24,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 				tutor_utils()->star_rating_generator_course($course_rating->rating_avg);
 			?>
         </div>
-        <div class="tutor-rating-text">
+        <div class="tutor-rating-text color-text-subsued text-medium-small">
 			<?php
 				if ($course_rating->rating_avg > 0) {
 					echo apply_filters('tutor_course_rating_average', $course_rating->rating_avg);
-					echo '(' . apply_filters('tutor_course_rating_count', $course_rating->rating_count) . ')';
+					//echo '(' . apply_filters('tutor_course_rating_count', $course_rating->rating_count) . ')';
 				}
 			?>
 		</div>

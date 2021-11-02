@@ -5815,6 +5815,25 @@ table.course-single-gradebooks a {
   color: #fff;
 }
 
+.has-wish-listed {
+  color: #fff !important;
+  background-color: #3e64de !important;
+}
+
+@media only screen and (min-width: 1200px) {
+  .tutor-course-list-pagination.tutor-ui-pagination {
+    width: 80%;
+    margin: 50px auto 0px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .tutor-course-list-pagination.tutor-ui-pagination {
+    width: 90%;
+    margin: 50px auto 0px;
+  }
+}
+
 .tutor-forgot-password-form, .tutor-reset-password-form {
   max-width: 520px;
   padding: 15px;

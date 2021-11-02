@@ -22,17 +22,17 @@ do_action('tutor_global/before/attachments');
 if (is_array($attachments) && count($attachments)){
 	?>
     <div class="tutor-page-segment tutor-attachments-wrap">
-        <h3><?php _e('Attachments', 'tutor'); ?></h3>
+        <h3><?php esc_html_e('Attachments', 'tutor'); ?></h3>
         <?php
         foreach ($attachments as $attachment){
             ?>
-            <a href="<?php echo $attachment->url; ?>" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?> class="tutor-lesson-attachment clearfix">
+            <a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?> class="tutor-lesson-attachment clearfix">
                 <div class="tutor-attachment-icon">
                     <i class="tutor-icon-<?php echo $attachment->icon; ?>"></i>
                 </div>
                 <div class="tutor-attachment-info">
-                    <span><?php echo $attachment->name; ?></span>
-                    <span><?php echo $attachment->size; ?></span>
+                    <span><?php echo esc_html( $attachment->name ); ?></span>
+                    <span><?php echo esc_html( $attachment->size ); ?></span>
                 </div>
             </a>
             <?php
