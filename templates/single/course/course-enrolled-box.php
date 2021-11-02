@@ -41,16 +41,16 @@ global $wp_query;
             $retake_course = tutor_utils()->get_option('course_retake_feature', false) && ($is_completed_course || $completed_percent >= 100);
 
             if ( $lesson_url ) { 
-                $button_class = 'tutor-course-entry-button tutor-btn tutor-is-fullwidth ' . ($retake_course ? ' tutor-course-retake-button' : '');
+                $button_class = 'tutor-course-entry-button tutor-btn tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ($retake_course ? ' tutor-course-retake-button' : '');
                 ?>
                 <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
                     <?php
-                        if($retake_course) {
+                        if(is_single_course() && $retake_course) {
                             _e( 'Retake This Course', 'tutor' );
                         } else if( $completed_percent <= 0 ){
-                            _e( 'Start Course', 'tutor' );
+                            _e( 'Start Learning', 'tutor' );
                         } else {
-                            _e( 'Continue Course', 'tutor' );
+                            _e( 'Continue Learning', 'tutor' );
                         }
                     ?>
                 </a>

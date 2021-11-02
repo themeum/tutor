@@ -50,38 +50,6 @@ window.jQuery(document).ready($=>{
         });
     });
 
-    // Delete announcement
-    $('.tutor-announcement-delete').click(function(){
-        var announcement_id = $(this).data('announcement-id');
-        var whichtr = $("#"+$(this).data('target-announcement-row-id'));
-        
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {
-                action: 'tutor_announcement_delete',
-                announcement_id: announcement_id
-            },
-            beforeSend: function() {
-            
-            },
-            success: function(data) {
-                const {message=__('Something Went Wrong!', 'tutor')} = data.data || {};
-                
-                if(data.success) {
-                    whichtr.remove();
-                    tutor_toast('Success!', message, 'success');
-                    return;
-                } else {
-                    tutor_toast('Error!', message, 'error');
-                }
-            },
-            error: function(){
-                tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
-            }
-        });
-    });
-
     // Announcement filter
     $('.tutor-announcement-course-sorting').on('change', function(e){
         window.location = urlPrams( 'course-id', $(this).val() );
