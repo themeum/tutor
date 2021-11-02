@@ -143,7 +143,10 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
                 <div class="tutor-course-builder-section tutor-course-builder-info">
                     <div class="tutor-course-builder-section-title">
-                        <h3><i class="tutor-icon-down"></i><span><?php esc_html_e('Course Info', 'tutor'); ?></span></h3>
+                        <h3>
+                            <i class="ttr-angle-down-filled"></i>
+                            <span><?php esc_html_e('Course Info', 'tutor'); ?></span>
+                        </h3>
                     </div>
                     <!--.tutor-course-builder-section-title-->
                     <div class="tutor-course-builder-section-content">

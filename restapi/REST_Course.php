@@ -101,39 +101,39 @@ class REST_Course  {
 
 		$detail = array(
 
-			'course_settings' =>get_post_meta($post_id,'_tutor_course_settings',false),
+			'course_settings' => get_post_meta($post_id,'_tutor_course_settings',false),
 
-			'course_price_type' =>get_post_meta($post_id,'_tutor_course_price_type',false),
+			'course_price_type' => get_post_meta($post_id,'_tutor_course_price_type',false),
 
-			'course_duration' =>get_post_meta($post_id,'_course_duration',false),
+			'course_duration' => get_post_meta($post_id,'_course_duration',false),
 
-			'course_level' =>get_post_meta($post_id,'_tutor_course_level',false),
+			'course_level' => get_post_meta($post_id,'_tutor_course_level',false),
 
-			'course_benefits' =>get_post_meta($post_id,'_tutor_course_benefits',false),
+			'course_benefits' => get_post_meta($post_id,'_tutor_course_benefits',false),
 
-			'course_requirements' =>get_post_meta($post_id,'_tutor_course_requirements',false),
+			'course_requirements' => get_post_meta($post_id,'_tutor_course_requirements',false),
 
-			'course_target_audience' =>get_post_meta($post_id,'_tutor_course_target_audience',false),
+			'course_target_audience' => get_post_meta($post_id,'_tutor_course_target_audience',false),
 
-			'course_material_includes' =>get_post_meta($post_id,'_tutor_course_material_includes',false),
+			'course_material_includes' => get_post_meta($post_id,'_tutor_course_material_includes',false),
 
-			'video' =>get_post_meta($post_id,'_video',false),
+			'video' => get_post_meta($post_id,'_video',false),
 			
-			'disable_qa' =>get_post_meta($post_id,'_tutor_disable_qa','_video',false)
+			'disable_qa' => get_post_meta($post_id, '_tutor_enable_qa', true)!='yes'
 		);
 
 		if($detail) {
 			$response = array(
-				'status_code'=> "course_detail",
-				"message"=> __('Course detail retrieved successfully','tutor'),
-				'data'=> $detail
+				'status_code' => "course_detail",
+				"message" => __('Course detail retrieved successfully','tutor'),
+				'data' => $detail
 			);
 			return self::send($response);				
 		}
 		$response = array(
-			'status_code'=> "course_detail",
-			"message"=> __('Detail not found for given ID','tutor'),
-			'data'=> []
+			'status_code' => "course_detail",
+			"message" => __('Detail not found for given ID','tutor'),
+			'data' => []
 		);		
 
 		return self::send($response);

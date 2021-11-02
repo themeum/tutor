@@ -68,70 +68,105 @@ $current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 								echo '<hr class="tutor-mb-30"/>';
 								continue;
 							}
-
 							?>
 							<div class="tutor-bs-row tutor-mb-30">
 								<?php
+									$second_class = 'tutor-bs-col-12';
+
 									if (!empty($field['label'])){
+										$second_class = 'tutor-bs-col-12 tutor-bs-col-md-7';
 										?>
-										<div class="tutor-bs-col-12">
-											<label class="tutor-course-setting-label"><?php echo $field['label']; ?></label>
+										<div class="tutor-bs-col-12 tutor-bs-col-md-5">
+											<label class="tutor-course-setting-label">
+												<?php echo $field['label']; ?>
+											</label>
 										</div>
 										<?php
 									}
 								?>
-								<div class="tutor-bs-col-12">
+								<div class="<?php echo $second_class; ?>">
 									<?php
 										switch($field['type']) {
 											case 'number' :
 												echo '<input class="tutor-form-control" type="number" name="' . $field_key . '" value="' . $value . '" >';
 												break;
 
-											case 'radio' :
-												foreach($field['options'] as $value => $label) {
-													?>
-													<label class="tutor-bs-d-block tutor-cursor-pointer tutor-mb-15">
-														<input type="radio" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/> &nbsp;
-														<?php echo $label; ?>
-													</label>
-													<?php
-												}
-												break;
-
+												case 'radio' :
+													foreach($field['options'] as $value => $label) {
+														$id_string = 'course_setting_radio_' . $value;
+														?>
+														<div class="tutor-form-check tutor-mb-10">
+															<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
+															<label for="<?php echo $id_string; ?>" class="text-medium-caption">
+																<?php echo $label; ?>
+															</label>
+														</div>
+														<?php
+													}
+													break;
+	
 											case 'checkbox' :
+											case 'toggle_switch' :
 												foreach($field['options'] as $option) {
-													?>
-													<label class="tutor-bs-d-block tutor-cursor-pointer tutor-mb-15">
-														<input type="checkbox" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
-														<?php echo $option['label_title']; ?>
-													</label>
-													<?php
+													$id_string = 'course_setting_' . $field['type'] . '_' . $field_key;
+
+													if($field['type']=='checkbox') {
+														?>
+														<div class="tutor-form-check tutor-mb-10">
+															<input id="<?php echo $id_string; ?>" type="checkbox" class="tutor-form-check-input" value="<?php echo isset($option['value']) ? $option['value'] : ''; ?>" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
+															<label for="<?php echo $id_string; ?>" class="text-medium-caption">
+																<?php echo $option['label_title']; ?>
+																<?php 
+																	if(!empty($option['hint'])) {
+																		echo '<span class="tutor-bs-d-block text-regular-small">'.$option['hint'].'</span>';
+																	}
+																?>
+															</label>
+														</div>
+														<?php
+													} else if($field['type']=='toggle_switch') {
+														?>
+															<label class="tutor-form-toggle">
+																<input id="<?php echo $id_string; ?>" type="checkbox" class="tutor-form-toggle-input" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
+																<span class="tutor-form-toggle-control"></span> <?php echo isset( $option['label_title'] ) ? $option['label_title'] : ''; ?>
+															</label>
+														<?php 
+
+														if(!empty($option['hint'])) {
+															?>
+															<p class="tutor-input-feedback tutor-has-icon">
+																<i class="ttr-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19"></i>
+																<?php echo $option['hint']; ?>
+															</p>
+															<?php
+														}
+													}
 												}
 												break;
 
 											case 'select' :
 												?>
-												<select class="tutor-form-select" name="_tutor_course_settings[<?php echo $field['field_key']; ?>]" class="tutor_select2">
+												<select class="tutor-form-select" name="<?php echo $field_key; ?>" class="tutor_select2">
 													<?php
-													if ( ! isset($field['select_options']) || $field['select_options'] !== false){
-														echo '<option value="">'.__('Select Option', 'tutor').'</option>';
-													}
 													if ( ! empty($field['options'])){
 														foreach ($field['options'] as $optionKey => $option){
 															?>
-															<option value="<?php echo $optionKey ?>" <?php selected($this->get($field['field_key']),  $optionKey) ?> ><?php echo $option ?></option>
+															<option value="<?php echo $optionKey ?>" <?php selected($field['value'],  $optionKey) ?> >
+																<?php echo $option; ?>
+															</option>
 															<?php
 														}
 													}
 													?>
 												</select>
 												<?php
+												break;
 										}
 
 										if (isset($field['desc'])){
 											?>
 												<p class="tutor-input-feedback tutor-has-icon">
-													<i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
+													<i class="ttr-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19"></i>
 													<?php echo $field['desc']; ?>
 												</p>
 											<?php
