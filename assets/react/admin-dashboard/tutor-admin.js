@@ -53,56 +53,6 @@ jQuery(document).ready(function($) {
    * End Withdraw nav tabs
    */
 
-  $(document).on(
-    "click",
-    ".video_source_wrap_html5 .video_upload_btn",
-    function(event) {
-      event.preventDefault();
-
-      var $that = $(this);
-      var frame;
-      // If the media frame already exists, reopen it.
-      if (frame) {
-        frame.open();
-        return;
-      }
-
-      // Create a new media frame
-      frame = wp.media({
-        title: __("Select or Upload Media Of Your Choice", "tutor"),
-        button: {
-          text: __("Upload media", "tutor"),
-        },
-        library: { type: "video" },
-        multiple: false, // Set to true to allow multiple files to be selected
-      });
-
-      // When an image is selected in the media frame...
-      frame.on("select", function() {
-        // Get media attachment details from the frame state
-        var attachment = frame
-          .state()
-          .get("selection")
-          .first()
-          .toJSON();
-        $that
-          .closest(".video_source_wrap_html5")
-          .find("span.video_media_id")
-          .data("video_url", attachment.url)
-          .text(attachment.id)
-          .trigger("paste")
-          .closest("p")
-          .show();
-        $that
-          .closest(".video_source_wrap_html5")
-          .find("input.input_source_video_id")
-          .val(attachment.id);
-      });
-      // Finally, open the modal on click
-      frame.open();
-    }
-  );
-
   /**
    * Open Sidebar Menu
    */
