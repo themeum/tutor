@@ -8,9 +8,9 @@
 
 <div class="tutor-course-listing-item-head tutor-bs-d-flex">
 	<?php
-	tutor_course_loop_thumbnail();
+	    tutor_course_loop_thumbnail();
 
-	$course_id = get_the_ID();
+	    $course_id = get_the_ID();
 	?>
     <?php
         $is_wishlisted = tutor_utils()->is_wishlisted($course_id);
@@ -26,6 +26,6 @@
             $action_class = apply_filters('tutor_popup_login_class', 'cart-required-login');
         }
         
-		echo '<a href="javascript:;" class="'.$action_class.' '.$has_wish_list.' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'.$course_id.'"><span class="ttr-fav-line-filled"></span></a>';
-		?>
+		echo wp_kses_post('<a href="javascript:;" class="'.$action_class.' '.$has_wish_list.' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'.$course_id.'"><span class="ttr-fav-line-filled"></span></a>');
+	?>
 </div>

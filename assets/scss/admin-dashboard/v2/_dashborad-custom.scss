@@ -8,10 +8,3 @@ table.tutor-ui-table.my-quiz-attempts .td-action-btns .toggle-row,
 table.tutor-ui-table.table-instructors .toggle-row {
     display: none;
 }
-
-@media only screen and (min-width: 1201px) {
-    .my-quiz-attempts .td-statement-infor {
-        margin-top: -24px;
-        margin-left: 25px;
-    }
-}

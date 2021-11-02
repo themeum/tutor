@@ -116,7 +116,7 @@ class Instructors_List extends \Tutor_List_Table {
 	 * @return int
 	 * @since v2.0.0
 	 */
-	protected static function get_instructor_number( $status = '', $user_id = '', $course_id = '', $date = '', $search_term = ''  ): int {
+	protected static function get_instructor_number( string $status, $user_id = '', $course_id = '', $date = '', $search_term = ''  ): int {
 		global $wpdb;
 		$status      = sanitize_text_field( $status );
 		$course_id   = sanitize_text_field( $course_id );

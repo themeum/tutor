@@ -3166,6 +3166,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function star_rating_generator( $current_rating = 0.00, $echo = true ) {
+
 		$output = '<div class="tutor-star-rating-group">';
 
 		for ( $i = 1; $i <=5 ; $i++ ) {
@@ -3194,7 +3195,7 @@ class Utils {
 	}
 
 	public function star_rating_generator_course( $current_rating = 0.00, $echo = true ) {
-
+		$output = '';
 		for ( $i = 1; $i <=5 ; $i++ ) {
 			$intRating = (int) $current_rating;
 
