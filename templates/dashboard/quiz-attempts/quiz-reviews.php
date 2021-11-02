@@ -19,7 +19,7 @@ $attempt = tutor_utils()->get_attempt($attempt_id);
 
 if ( ! $attempt){
 	?>
-    <h1><?php _e('Attempt not found', 'tutor'); ?></h1>
+    <h1><?php esc_html_e('Attempt not found', 'tutor'); ?></h1>
 	<?php
 	return;
 }
@@ -33,51 +33,51 @@ $user = get_userdata($user_id);
 function show_correct_answer( $answers= array() ){
     if(!empty($answers)){
 
-		echo '<div class="correct-answer-wrap">';
+		echo wp_kses_post('<div class="correct-answer-wrap">');
         foreach ($answers as $key => $ans) {
             $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
-            if (isset($ans->answer_two_gap_match)) { echo '<div class="matching-type">'; }
+            if (isset($ans->answer_two_gap_match)) { echo wp_kses_post('<div class="matching-type">'); }
             switch ($type) {
 				case 'text_image':
-					echo '<div class="text-image-type">';
+					echo wp_kses_post('<div class="text-image-type">');
                         if(isset($ans->image_id)){
                             $img_url = wp_get_attachment_image_url($ans->image_id);
                             if($img_url){
-                                echo '<span class="image"><img src="'.$img_url.'" /></span>';
+                                echo wp_kses_post('<span class="image"><img src="'.$img_url.'" /></span>');
                             }
                         }
                         if(isset($ans->answer_title)) {
-                            echo '<span class="caption">'.stripslashes($ans->answer_title).'</span>';
+                            echo wp_kses_post('<span class="caption">'.stripslashes($ans->answer_title).'</span>');
                         }
-					echo '</div>';
+					echo wp_kses_post('</div>');
                     break;
 				case 'text':
-					echo '<div class="text-type">';
+					echo wp_kses_post('<div class="text-type">');
                         if(isset($ans->answer_title)) {
                             echo '<span class="text-item-caption">'.stripslashes($ans->answer_title);
                         }
-                    echo '</div>';
+                    echo wp_kses_post('</div>');
                     break;
 				case 'image':
-					echo '<div class="image-type">';
+					echo wp_kses_post('<div class="image-type">');
                         if(isset($ans->image_id)){
                             $img_url = wp_get_attachment_image_url($ans->image_id);
                             if($img_url){
-                                echo '<span class="image"><img src="'.$img_url.'" />'.'</span>';
+                                echo wp_kses_post('<span class="image"><img src="'.$img_url.'" />'.'</span>');
                             }
                         }
-                    echo '</div>';
+                    echo wp_kses_post('</div>');
                     break;
                 default:
                     break;
             }
             if (isset($ans->answer_two_gap_match)) {
-                echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
-                echo '<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>';
-                echo '</div>';
+                echo wp_kses_post('<div class="matching-separator">&nbsp;-&nbsp;</div>');
+                echo wp_kses_post('<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>');
+                echo wp_kses_post('</div>');
 			}
         }
-		echo '</div>';
+		echo wp_kses_post('</div>');
     }
 }
 
@@ -86,7 +86,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 
 <div>
     <?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink('quiz-attempts'); ?>
-    <a class="prev-btn" href="<?php echo $attempts_page; ?>"><span>&leftarrow;</span><?php _e('Back to Attempt List', 'tutor'); ?></a>
+    <a class="prev-btn" href="<?php echo esc_url($attempts_page); ?>"><span>&leftarrow;</span><?php esc_html_e('Back to Attempt List', 'tutor'); ?></a>
 </div>
 
 
@@ -98,26 +98,26 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
             
         <table class="wp-list-table">
             <tr>
-                <th><?php _e('#', 'tutor'); ?></th>
-                <th><?php _e('Attempts Date', 'tutor'); ?></th>
-                <th><?php _e('Questions', 'tutor'); ?></th>
-                <th><?php _e('Total Marks', 'tutor'); ?></th>
-                <th><?php _e('Pass Marks', 'tutor'); ?></th>
-                <th><?php _e('Correct', 'tutor'); ?></th>
-                <th><?php _e('Incorrect', 'tutor'); ?></th>
-                <th><?php _e('Earned Marks', 'tutor'); ?></th>
-                <th><?php _e('Results', 'tutor'); ?></th>
+                <th><?php esc_html_e('#', 'tutor'); ?></th>
+                <th><?php esc_html_e('Attempts Date', 'tutor'); ?></th>
+                <th><?php esc_html_e('Questions', 'tutor'); ?></th>
+                <th><?php esc_html_e('Total Marks', 'tutor'); ?></th>
+                <th><?php esc_html_e('Pass Marks', 'tutor'); ?></th>
+                <th><?php esc_html_e('Correct', 'tutor'); ?></th>
+                <th><?php esc_html_e('Incorrect', 'tutor'); ?></th>
+                <th><?php esc_html_e('Earned Marks', 'tutor'); ?></th>
+                <th><?php esc_html_e('Results', 'tutor'); ?></th>
             </tr>
             
             <tr>
-                <td><?php echo $attempt_data->attempt_id; ?></td>
+                <td><?php echo esc_html($attempt_data->attempt_id); ?></td>
                 <td>
                     <?php
-                        echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
+                        echo esc_attr(date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at)));
                     ?>
                 </td>
-                <td><?php echo $attempt_data->total_questions; ?></td>
-                <td><?php echo $attempt_data->total_marks; ?></td>
+                <td><?php echo esc_html_e($attempt_data->total_questions); ?></td>
+                <td><?php echo esc_html_e($attempt_data->total_marks); ?></td>
                 <td>
                     <?php 
                         $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
@@ -140,23 +140,23 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
                             }
                         }
                     }
-                    echo $correct;
+                    echo esc_html_e($correct);
                     ?>
                 </td>
-                <td><?php echo $incorrect; ?></td>
+                <td><?php echo esc_html_e($incorrect); ?></td>
                 <td>
                     <?php 
-                        echo $attempt_data->earned_marks; 
+                        echo esc_html_e($attempt_data->earned_marks); 
                         $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
-                        echo '('.$earned_percentage.'%)';
+                        echo wp_kses_post('('.$earned_percentage.'%)');
                     ?>
                 </td>
                 <td>
                     <?php 
                         if ($earned_percentage >= $pass_mark_percent){
-                            echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
+                            echo wp_kses_post('<span class="result-pass">'.__('Pass', 'tutor').'</span>');
                         }else{
-                            echo '<span class="result-fail">'.__('Fail', 'tutor').'</span>';
+                            echo wp_kses_post('<span class="result-fail">'.__('Fail', 'tutor').'</span>');
                         }
                     ?>
                 </td>
@@ -170,10 +170,10 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
         <div class="tutor-quiz-attempt-review-wrap">
             <div class="quiz-attempt-answers-wrap">
                 <div class="attempt-answers-header">
-                    <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
+                    <div class="attempt-header-quiz"><?php esc_html_e('Instructor Feedback', 'tutor'); ?></div>
                 </div>
                 <div class="instructor-feedback-content">
-                    <p><?php echo $feedback; ?></p>
+                    <p><?php echo esc_html_e($feedback); ?></p>
                 </div>
             </div>
         </div>
@@ -192,7 +192,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 				}
 			}
 			if (count($required_review)){
-				echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>'.__('Reminder:', 'tutor').' </strong> '.sprintf(__('Please review answers for question no. %s', 'tutor'), implode(', ', $required_review)).'</p>';
+				echo wp_kses_post('<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>'.__('Reminder:', 'tutor').' </strong> '.sprintf(__('Please review answers for question no. %s', 'tutor'), implode(', ', $required_review)).'</p>');
 			}
 		}
 		?>
@@ -202,7 +202,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
             <p class="attempt-review-at">
                 <span class="circle-arrow">&circlearrowright; </span>
                 <strong>
-	                <?php _e('Manually reviewed at: ', 'tutor'); ?>
+	                <?php esc_html_e('Manually reviewed at: ', 'tutor'); ?>
                 </strong>
 		        <?php echo date_i18n(get_option('date_format'), strtotime($attempt->manually_reviewed_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt->manually_reviewed_at)); ?>
             </p>
@@ -217,18 +217,18 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
         <div class="quiz-attempt-answers-wrap">
 
             <div class="attempt-answers-header">
-                <div class="attempt-header-quiz"><?php _e('Quiz Overview', 'tutor'); ?></div>
+                <div class="attempt-header-quiz"><?php esc_html_e('Quiz Overview', 'tutor'); ?></div>
             </div>
 
             <table class="wp-list-table">
                 <tr>
-                    <th><?php _e('No.', 'tutor'); ?></th>
-                    <th><?php _e('Type', 'tutor'); ?></th>
-                    <th><?php _e('Question', 'tutor'); ?></th>
-                    <th><?php _e('Given Answers', 'tutor'); ?></th>
-                    <th><?php _e('Correct Answers', 'tutor'); ?></th>
-                    <th><?php _e('Correct/Incorrect', 'tutor'); ?></th>
-                    <th><?php _e('Manual Review', 'tutor'); ?></th>
+                    <th><?php esc_html_e('No.', 'tutor'); ?></th>
+                    <th><?php esc_html_e('Type', 'tutor'); ?></th>
+                    <th><?php esc_html_e('Question', 'tutor'); ?></th>
+                    <th><?php esc_html_e('Given Answers', 'tutor'); ?></th>
+                    <th><?php esc_html_e('Correct Answers', 'tutor'); ?></th>
+                    <th><?php esc_html_e('Correct/Incorrect', 'tutor'); ?></th>
+                    <th><?php esc_html_e('Manual Review', 'tutor'); ?></th>
                 </tr>
 				<?php
 				$answer_i = 0;
@@ -237,21 +237,21 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 					$question_type = tutor_utils()->get_question_types($answer->question_type);
 					?>
                     <tr>
-                        <td><?php echo $answer_i; ?></td>
-                        <td><?php echo $question_type['icon']; ?></td>
-                        <td><?php echo stripslashes($answer->question_title); ?></td>
+                        <td><?php echo esc_html($answer_i); ?></td>
+                        <td><?php echo wp_kses_post($question_type['icon']); ?></td>
+                        <td><?php echo wp_kses_post(stripslashes($answer->question_title)); ?></td>
                         <td>
 							<?php
 							if ($answer->question_type === 'true_false' || $answer->question_type === 'single_choice' ){
 							    $get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
 								$answer_titles = array_map('stripslashes', $answer_titles);
-								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
+								echo wp_kses_post('<p>'.implode('</p><p>', $answer_titles).'</p>');
 							}elseif ($answer->question_type === 'multiple_choice'){
 								$get_answers = tutor_utils()->get_answer_by_id(maybe_unserialize($answer->given_answer));
 								$answer_titles = wp_list_pluck($get_answers, 'answer_title');
 								$answer_titles = array_map('stripslashes', $answer_titles);
-								echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
+								echo wp_kses_post('<p>'.implode('</p><p>', $answer_titles).'</p>');
 							}elseif ($answer->question_type === 'fill_in_the_blank'){
 								$answer_titles = maybe_unserialize($answer->given_answer);
 								$get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
@@ -284,7 +284,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 									$get_answers = tutor_utils()->get_answer_by_id($ordering_id);
 									$answer_titles = wp_list_pluck($get_answers, 'answer_title');
 									$answer_titles = array_map('stripslashes', $answer_titles);
-									echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
+									echo wp_kses_post('<p>'.implode('</p><p>', $answer_titles).'</p>');
 								}
 
 							}elseif ($answer->question_type === 'matching'){
@@ -297,7 +297,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 									$provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
 									if(tutor_utils()->count($provided_answer_order)){
                                         foreach ($provided_answer_order as $provided_answer_order);
-                                        echo stripslashes($original_saved_answer->answer_title)  .' - '.stripslashes($provided_answer_order->answer_two_gap_match).' <br />';
+                                        echo wp_kses_post(stripslashes($original_saved_answer->answer_title)  .' - '.stripslashes($provided_answer_order->answer_two_gap_match).' <br />');
                                     }
 								}
 
@@ -306,35 +306,35 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 								$ordering_ids = maybe_unserialize($answer->given_answer);
 								$original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
 
-								echo '<div class="answer-image-matched-wrap">';
+								echo wp_kses_post('<div class="answer-image-matched-wrap">');
 								foreach ($original_saved_answers as $key => $original_saved_answer){
 									$provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
 									$provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
 									foreach ($provided_answer_order as $provided_answer_order);
 									?>
                                     <div class="image-matching-item">
-                                        <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
-                                        <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
+                                        <p class="dragged-img-rap"><img src="<?php echo esc_url(wp_get_attachment_image_url( $original_saved_answer->image_id)); ?>" /> </p>
+                                        <p class="dragged-caption"><?php echo wp_kses_post(stripslashes($provided_answer_order->answer_title)); ?></p>
                                     </div>
 									<?php
 								}
-								echo '</div>';
+								echo wp_kses_post('</div>');
 							}elseif ($answer->question_type === 'image_answering'){
 
 								$ordering_ids = maybe_unserialize($answer->given_answer);
 
-								echo '<div class="answer-image-matched-wrap">';
+								echo  wp_kses_post('<div class="answer-image-matched-wrap">');
 								foreach ($ordering_ids as $answer_id => $image_answer){
 									$db_answers = tutor_utils()->get_answer_by_id($answer_id);
 									foreach ($db_answers as $db_answer);
 									?>
                                     <div class="image-matching-item">
-                                        <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id); ?>" /> </p>
-                                        <p class="dragged-caption"><?php echo $image_answer; ?></p>
+                                        <p class="dragged-img-rap"><img src="<?php echo esc_url(wp_get_attachment_image_url( $db_answer->image_id)); ?>" /> </p>
+                                        <p class="dragged-caption"><?php echo wp_kses_post($image_answer); ?></p>
                                     </div>
 									<?php
 								}
-								echo '</div>';
+								echo wp_kses_post('</div>');
 							}
 
 							?>
@@ -346,7 +346,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
                                 global $wpdb;
                                 if ( $answer->question_type === 'true_false' ) {
                                     $correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1" , $answer->question_id ) );
-                                    echo $correct_answer;
+                                    echo esc_html($correct_answer);
 
                                 } elseif ( $answer->question_type === 'single_choice' ) {
                                     $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
@@ -381,24 +381,24 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
                         <td>
 							<?php
 							if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-								echo '<span class="tutor-status-approved-context"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
+								echo wp_kses_post('<span class="tutor-status-approved-context"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>');
 							} else {
 								if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
                                     if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-                                        echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+                                        echo wp_kses_post('<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>');
                                     } else {
-                                        echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>';
+                                        echo wp_kses_post('<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> '.__('Review Required', 'tutor').'</p>');
                                     }
 								} else {
-									echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
+									echo wp_kses_post('<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>');
 								}
 							}
 							?>
                         </td>
 
                         <td style="white-space: nowrap">
-							<a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
-                            <a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
+							<a href="javascript:;" data-attempt-id="<?php echo esc_html($attempt_id); ?>" data-attempt-answer-id="<?php echo esc_html($answer->attempt_answer_id); ?>" data-mark-as="correct" title="<?php esc_html_e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
+                            <a href="javascript:;" data-attempt-id="<?php echo esc_html($attempt_id); ?>" data-attempt-answer-id="<?php echo esc_html($answer->attempt_answer_id); ?>" data-mark-as="incorrect" title="<?php esc_html_e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
                         </td>
                     </tr>
 					<?php
@@ -413,10 +413,10 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 
 <div class="quiz-attempt-answers-wrap">
     <div class="attempt-answers-header">
-        <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
+        <div class="attempt-header-quiz"><?php esc_html_e('Instructor Feedback', 'tutor'); ?></div>
     </div>
     <div class="tutor-instructor-feedback-wrap">
-        <textarea class="tutor-instructor-feedback-content" style="width:100%; height: 100px;"><?php echo get_post_meta($attempt_id, 'instructor_feedback', true); ?></textarea>
-        <a class="tutor-btn tutor-instructor-feedback" data-attemptid="<?php echo $attempt_id; ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>"><?php _e('Update', 'tutor'); ?></a>
+        <textarea class="tutor-instructor-feedback-content" style="width:100%; height: 100px;"><?php echo esc_html(get_post_meta($attempt_id, 'instructor_feedback', true)); ?></textarea>
+        <a class="tutor-btn tutor-instructor-feedback" data-attemptid="<?php echo esc_html($attempt_id); ?>" data-toast_success_message="<?php esc_html_e('Updated', 'tutor'); ?>"><?php esc_html_e('Update', 'tutor'); ?></a>
     </div>
 </div>
