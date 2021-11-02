@@ -22216,6 +22216,22 @@ table.tutor-ui-table .td-list-item .list-item-checklist input.tutor-form-check-i
   background-color: #1973aa;
 }
 
+table.tutor-ui-table .column-empty-state {
+  padding: 0 !important;
+}
+
+table.tutor-ui-table .column-empty-state:before {
+  display: none;
+}
+
+table.tutor-ui-table .column-empty-state .td-empty-state {
+  text-align: center;
+}
+
+table.tutor-ui-table .column-empty-state .td-empty-state img {
+  max-width: 100%;
+}
+
 table.tutor-ui-table.tutor-ui-table-responsive {
   /*
 	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
@@ -22373,15 +22389,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   }
 }
 
-@media (min-width: 1200px) {
-  .tutor-ui-table-data-td-target td.data-td-content.is-active {
-    position: relative;
-    border-top-color: transparent !important;
-    -webkit-box-shadow: 0 2px 0 -1px #f4f6f9, 0 -2px 0 -1px #f4f6f9;
-            box-shadow: 0 2px 0 -1px #f4f6f9, 0 -2px 0 -1px #f4f6f9;
-  }
-}
-
 .tutor-ui-table-data-td-target td.data-td-content > * {
   display: none;
 }
@@ -22393,6 +22400,15 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   display: block;
+}
+
+@media (min-width: 1200px) {
+  .tutor-ui-table-data-td-target td.data-td-content.is-active {
+    position: relative;
+    border-top-color: transparent !important;
+    -webkit-box-shadow: 0 2px 0 -1px #f4f6f9, 0 -2px 0 -1px #f4f6f9;
+            box-shadow: 0 2px 0 -1px #f4f6f9, 0 -2px 0 -1px #f4f6f9;
+  }
 }
 
 .tutor-thumbnail-uploader {
@@ -23693,13 +23709,15 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   gap: 2px;
 }
 
-.tutor-course-listing {
+.tutor-course-listing-grid {
   display: grid;
   grid-gap: 30px;
+  grid-template-rows: -webkit-min-content;
+  grid-template-rows: min-content;
 }
 
 @media (max-width: 767.98px) {
-  .tutor-course-listing {
+  .tutor-course-listing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   }
@@ -23719,7 +23737,11 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-course-listing-item {
   background: #ffffff;
-  display: grid;
+}
+
+.tutor-course-listing-item a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .tutor-course-listing-item img {
@@ -23745,6 +23767,12 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border-top-right-radius: 6px;
   overflow: hidden;
   position: relative;
+}
+
+.tutor-course-listing-item-head > a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .tutor-course-listing-item-head .save-bookmark-btn {
@@ -23915,6 +23943,33 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-course-listing-filter.tutor-filter-course-grid-3 {
   grid-gap: 30px;
+}
+
+.tutor-course-listing-filter .has-show-more .filter-widget-checkboxes {
+  position: relative;
+}
+
+.tutor-course-listing-filter .has-show-more .filter-widget-checkboxes:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 80px;
+  bottom: 0;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0)), color-stop(15.41%, rgba(255, 255, 255, 0)), to(#ffffff));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
+  display: none;
+}
+
+.tutor-course-listing-filter .has-show-more .tutor-show-more-btn {
+  display: none;
+}
+
+.tutor-course-listing-filter .has-show-more.is-active .filter-widget-checkboxes:before {
+  display: block;
+}
+
+.tutor-course-listing-filter .has-show-more.is-active .tutor-show-more-btn {
+  display: block;
 }
 
 @media (min-width: 1200px) {
