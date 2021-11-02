@@ -2239,7 +2239,7 @@ msgstr ""
 msgid "Course Taken"
 msgstr ""
 
-#: classes/Students_List.php:189, templates/dashboard/enrolled-courses/completed-courses.php:9
+#: classes/Students_List.php:189
 msgid "Completed Course"
 msgstr ""
 
@@ -2814,7 +2814,7 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
-#: classes/Utils.php:2513, templates/dashboard/dashboard.php:40, templates/dashboard/enrolled-courses.php:9
+#: classes/Utils.php:2513, templates/dashboard/dashboard.php:40
 msgid "Enrolled Courses"
 msgstr ""
 
@@ -3465,11 +3465,11 @@ msgstr ""
 msgid "Trash"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:50, templates/dashboard/enrolled-courses.php:22, templates/dashboard/enrolled-courses/active-courses.php:22, templates/dashboard/enrolled-courses/completed-courses.php:22
+#: templates/dashboard/dashboard.php:50, templates/dashboard/enrolled-courses.php:9
 msgid "Active Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:60, templates/dashboard/enrolled-courses.php:27, templates/dashboard/enrolled-courses/active-courses.php:27, templates/dashboard/enrolled-courses/completed-courses.php:27
+#: templates/dashboard/dashboard.php:60, templates/dashboard/enrolled-courses.php:10
 msgid "Completed Courses"
 msgstr ""
 
@@ -3505,11 +3505,11 @@ msgstr ""
 msgid "Rating"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:17, views/elements/filters.php:52, templates/dashboard/enrolled-courses/active-courses.php:17, templates/dashboard/enrolled-courses/completed-courses.php:17
+#: templates/dashboard/enrolled-courses.php:8, views/elements/filters.php:52
 msgid "All Courses"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses.php:76
+#: templates/dashboard/enrolled-courses.php:95
 msgid "You haven't purchased any course"
 msgstr ""
 
@@ -3825,20 +3825,12 @@ msgstr ""
 msgid "In"
 msgstr ""
 
-#: templates/loop/course-continue.php:21
-msgid "Check This Course"
+#: templates/loop/course-continue.php:23, templates/loop/course-continue.php:42, templates/single/course/add-to-cart.php:58, templates/single/course/course-enrolled-box.php:51
+msgid "Start Learning"
 msgstr ""
 
-#: templates/loop/course-continue.php:47, templates/loop/course-continue.php:34, templates/single/course/course-enrolled-box.php:49
-msgid "Retake This Course"
-msgstr ""
-
-#: templates/loop/course-continue.php:37, templates/single/course/course-enrolled-box.php:53
-msgid "Continue Course"
-msgstr ""
-
-#: templates/loop/course-continue.php:40, templates/single/course/course-enrolled-box.php:51
-msgid "Start Course"
+#: templates/loop/course-continue.php:39, templates/single/course/course-enrolled-box.php:53
+msgid "Continue Learning"
 msgstr ""
 
 #: templates/loop/course-in-cart.php:19, templates/single/course/add-to-cart-woocommerce.php:19
@@ -4929,18 +4921,6 @@ msgstr ""
 msgid "Details URL"
 msgstr ""
 
-#: templates/dashboard/enrolled-courses/active-courses.php:9
-msgid "Active Course"
-msgstr ""
-
-#: templates/dashboard/enrolled-courses/active-courses.php:66
-msgid "You are not enrolled in any course at this moment."
-msgstr ""
-
-#: templates/dashboard/enrolled-courses/completed-courses.php:66
-msgid "There's no completed course"
-msgstr ""
-
 #: templates/dashboard/instructor/apply_for_instructor.php:16
 msgid "Apply to become an instructor"
 msgstr ""
@@ -5265,10 +5245,6 @@ msgstr ""
 msgid "Enroll Now"
 msgstr ""
 
-#: templates/single/course/add-to-cart.php:58
-msgid "Start Learning"
-msgstr ""
-
 #: templates/single/course/closed-enrollment.php:22
 msgid "100% Booked"
 msgstr ""
@@ -5283,6 +5259,10 @@ msgstr ""
 
 #: templates/single/course/continue-lesson.php:41
 msgid "Continue to lesson"
+msgstr ""
+
+#: templates/single/course/course-enrolled-box.php:49
+msgid "Retake This Course"
 msgstr ""
 
 #: templates/single/course/course-enrolled-box.php:76
