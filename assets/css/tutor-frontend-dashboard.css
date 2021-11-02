@@ -3300,6 +3300,31 @@
   margin: 0;
 }
 
+.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-meta,
+.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-author {
+  display: none !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-title {
+  font-size: 16px !important;
+  margin-top: 15px !important;
+  margin-bottom: 5px !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .list-item-meta,
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .course-category {
+  display: none !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .list-item-title {
+  font-size: 16px !important;
+  margin-top: 15px !important;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-wishlist .cart-text {
+  display: none;
+}
+
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-single-review {
   border: 1px solid #dcdfe5;
   border-radius: 4px;
@@ -3815,37 +3840,31 @@
   font-size: 18px !important;
 }
 
+.tutor-dashboard .tutor-dashboard-content .my-courses .list-item-price > span:first-child {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: #757C8E;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-courses .list-item-price > span:last-child {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: #212327;
+}
+
+.tutor-dashboard .tutor-dashboard-content .my-courses .list-item-button > a, .tutor-dashboard .tutor-dashboard-content .my-courses .list-item-button > i {
+  color: gray;
+  cursor: pointer;
+}
+
 .tutor-dashboard .tutor-dashboard-content .my-courses .date {
   font-size: 14px;
 }
 
 .tutor-dashboard .tutor-dashboard-content .my-courses .list-item-title {
   font-size: 16px;
-}
-
-.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-meta,
-.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-author {
-  display: none !important;
-}
-
-.tutor-dashboard .tutor-dashboard-content .enrolled-courses .list-item-title {
-  font-size: 16px !important;
-  margin-top: 15px !important;
-  margin-bottom: 5px !important;
-}
-
-.tutor-dashboard .tutor-dashboard-content .my-wishlist .list-item-meta,
-.tutor-dashboard .tutor-dashboard-content .my-wishlist .course-category {
-  display: none !important;
-}
-
-.tutor-dashboard .tutor-dashboard-content .my-wishlist .list-item-title {
-  font-size: 16px !important;
-  margin-top: 15px !important;
-}
-
-.tutor-dashboard .tutor-dashboard-content .my-wishlist .cart-text {
-  display: none;
 }
 
 /*# sourceMappingURL=tutor-frontend-dashboard.css.map */
