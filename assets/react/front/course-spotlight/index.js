@@ -1,0 +1,1 @@
+console.log('Course spotlight JS loaded');

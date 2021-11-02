@@ -1,6 +1,16 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./assets/react/front/course-spotlight/index.js":
+/*!******************************************************!*\
+  !*** ./assets/react/front/course-spotlight/index.js ***!
+  \******************************************************/
+/***/ (() => {
+
+console.log('Course spotlight JS loaded');
+
+/***/ }),
+
 /***/ "./assets/react/front/dashboard.js":
 /*!*****************************************!*\
   !*** ./assets/react/front/dashboard.js ***!
@@ -2118,6 +2128,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages/course-landing */ "./assets/react/front/pages/course-landing.js");
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_pages_course_landing__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./course-spotlight/index */ "./assets/react/front/course-spotlight/index.js");
+/* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_course_spotlight_index__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
