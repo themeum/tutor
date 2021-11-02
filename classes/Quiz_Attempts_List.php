@@ -309,7 +309,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	}
 
 	function column_quiz_result($item){
-
+		$output = '';
 	    if ($item->attempt_status === 'review_required'){
             $output = '<span class="tutor-badge-label label-warning">' . __('Under Review', 'tutor') . '</span>';
         }else {

@@ -3698,6 +3698,10 @@ table.tutor-table p {
   left: 0;
 }
 
+.tutor-table-rows-sorting {
+  cursor: pointer;
+}
+
 /* /.report-course-list - end */
 body {
   -webkit-font-smoothing: antialiased;
@@ -7056,11 +7060,22 @@ table.tutor-ui-table.table-instructors .toggle-row {
   display: none;
 }
 
-@media only screen and (min-width: 1201px) {
-  .my-quiz-attempts .td-statement-infor {
-    margin-top: -24px;
-    margin-left: 25px;
-  }
+.tutor-admin-page-wrapper table td ul.tutor-table-inside-table {
+  text-decoration: none;
+}
+
+.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li span:first-child {
+  width: 37%;
+}
+
+.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li span:last-child {
+  width: 50%;
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */

@@ -1,0 +1,18 @@
+.tutor-admin-page-wrapper {
+    table {
+        td {
+            ul.tutor-table-inside-table {
+                text-decoration: none;
+                li {
+                    display: flex;
+                    span:first-child {
+                        width: 37%;
+                    }
+                    span:last-child {
+                        width: 50%;
+                    }
+                }
+            }
+        }
+    }
+}

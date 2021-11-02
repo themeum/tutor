@@ -33,27 +33,27 @@
                 $percet_html = '<div class="list-item-booking tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><div class="circle-progress progress-full" style="--pro:'.$b_total .'%;"></div></div><div class="text-medium-caption color-text-primary">'.$b_total . __('% Booked', 'tutor') . '</div></div></div>';
                 $cart_html = '<div class="list-item-button tutor-mt-15 booking-available"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-md tutor-btn-full">'.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </button></div>';
 
-                echo $price_html;
-                echo $percet_html;
-                echo $cart_html;
+                echo wp_kses_post($price_html);
+                echo wp_kses_post($percet_html);
+                echo wp_kses_post($cart_html);
             }
 
             if ( $product && $maximum_students == $total_enrolled && $maximum_students != 0) {
                 $price_html = '<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between"><div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center"> <span class="price text-bold-h6 color-text-primary">'.$product->get_price_html() . ' </span></div>';
                 $restrict = '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon color-design-warning ttr-circle-outline-info-filled"></span></div><div class="text-medium-caption color-text-primary">'. __('Fully Booked', 'tutor') .'</div></div></div>';
-                echo $price_html;
-                echo $restrict;
+                echo wp_kses_post($price_html);
+                echo wp_kses_post($restrict);
             }
 
             if ( $product && $maximum_students == 0) {
                 $price_html = '<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between"><div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center"> <span class="price text-bold-h6 color-text-primary">'.$product->get_price_html() . ' </span></div>';
                 $cart_html = '<div class="list-item-button"> '.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
-                echo $price_html;
-                echo $cart_html;
+                echo wp_kses_post($price_html);
+                echo wp_kses_post($cart_html);
             }
 
 
         } else{
-            echo $free_html;
+            echo wp_kses_post($free_html);
     }
 ?>
