@@ -134,14 +134,31 @@ window.addEventListener('DOMContentLoaded', function () {
       var table = th.closest('table');
       var tbody = table.querySelector('tbody');
       var currentTarget = e.currentTarget;
-      var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // swap class name to change icon
+      var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // If a-to-z icon
 
-      if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
-        icon.classList.remove("ttr-ordering-a-to-z-filled");
-        icon.classList.add("ttr-ordering-z-to-a-filled");
+      if (icon) {
+        // swap class name to change icon
+        if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
+          icon.classList.remove("ttr-ordering-a-to-z-filled");
+          icon.classList.add("ttr-ordering-z-to-a-filled");
+        } else {
+          icon.classList.remove("ttr-ordering-z-to-a-filled");
+          icon.classList.add("ttr-ordering-a-to-z-filled");
+        }
       } else {
-        icon.classList.remove("ttr-ordering-z-to-a-filled");
-        icon.classList.add("ttr-ordering-a-to-z-filled");
+        // swap class name to change icon
+        // Order up-down-icon
+        var _icon = currentTarget.querySelector(".up-down-icon");
+
+        if (_icon.classList.contains('ttr-order-down-filled')) {
+          _icon.classList.remove("ttr-order-down-filled");
+
+          _icon.classList.add("ttr-order-up-filled");
+        } else {
+          _icon.classList.remove("ttr-order-up-filled");
+
+          _icon.classList.add("ttr-order-down-filled");
+        }
       }
 
       Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
