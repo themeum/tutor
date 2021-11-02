@@ -925,15 +925,13 @@
   line-height: 200%;
 }
 
-.text-btn-medium, .tutor-backend-settings-page .tutor-btn.tutor-is-sm,
-.tutor-dashboard-page .tutor-btn.tutor-is-sm {
+.text-btn-medium, .tutor-backend-settings-page .tutor-btn.tutor-is-sm {
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;
 }
 
-.text-btn-small, .tutor-backend-settings-page .tutor-btn.tutor-is-xs,
-.tutor-dashboard-page .tutor-btn.tutor-is-xs {
+.text-btn-small, .tutor-backend-settings-page .tutor-btn.tutor-is-xs {
   font-weight: 500;
   font-size: 13px;
   line-height: 123%;
@@ -3700,6 +3698,10 @@ table.tutor-table p {
   left: 0;
 }
 
+.tutor-table-rows-sorting {
+  cursor: pointer;
+}
+
 /* /.report-course-list - end */
 body {
   -webkit-font-smoothing: antialiased;
@@ -3739,96 +3741,81 @@ a {
   padding: 0;
 }
 
-.tutor-backend-settings-page .tutor-btn,
-.tutor-dashboard-page .tutor-btn {
+.tutor-backend-settings-page .tutor-btn {
   cursor: pointer;
   border-radius: 6px;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-sm,
-.tutor-dashboard-page .tutor-btn.tutor-is-sm {
+.tutor-backend-settings-page .tutor-btn.tutor-is-sm {
   padding: 7px 16.65px;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-xs,
-.tutor-dashboard-page .tutor-btn.tutor-is-xs {
+.tutor-backend-settings-page .tutor-btn.tutor-is-xs {
   padding: 8px 14px;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-xs .tutor-btn-icon,
-.tutor-dashboard-page .tutor-btn.tutor-is-xs .tutor-btn-icon {
+.tutor-backend-settings-page .tutor-btn.tutor-is-xs .tutor-btn-icon {
   font-size: 16px;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-outline,
-.tutor-dashboard-page .tutor-btn.tutor-is-outline {
+.tutor-backend-settings-page .tutor-btn.tutor-is-outline {
   border-color: #1973aa;
   color: #1973aa;
   background: transparent;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover,
-.tutor-dashboard-page .tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover {
   background-color: #166494;
   border-color: #166494;
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-outline.tutor-is-default,
-.tutor-dashboard-page .tutor-btn.tutor-is-outline.tutor-is-default {
+.tutor-backend-settings-page .tutor-btn.tutor-is-outline.tutor-is-default {
   border-color: var(--tutor-border-color-alt);
   color: var(--tutor-text-hints);
   background: var(--tutor-white);
 }
 
-.tutor-backend-settings-page .tutor-btn.tutor-is-outline.tutor-is-default:not(.tutor-no-hover):hover,
-.tutor-dashboard-page .tutor-btn.tutor-is-outline.tutor-is-default:not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn.tutor-is-outline.tutor-is-default:not(.tutor-no-hover):hover {
   background: unset;
   color: #166494;
   border-color: #166494;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline),
-.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline) {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline) {
   background-color: #1973aa;
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover):hover,
-.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover):hover {
   background-color: #166494;
   border-color: #166494;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default,
-.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline).tutor-is-default {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default {
   background-color: var(--tutor-bg-grey);
   border-color: var(--tutor-bg-grey);
   color: var(--tutor-text-primary);
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default:not(.tutor-no-hover):hover,
-.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline).tutor-is-default:not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default:not(.tutor-no-hover):hover {
   background-color: var(--tutor-bg-grey);
   color: #1973aa;
   border-color: #1973aa;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only,
-.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only {
   background-color: transparent;
   border-color: transparent;
   color: inherit;
 }
 
-.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only:not(.tutor-no-hover):hover,
-.tutor-dashboard-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only:not(.tutor-no-hover):hover {
+.tutor-backend-settings-page .tutor-btn:not(.tutor-is-outline).tutor-is-default.is-text-only:not(.tutor-no-hover):hover {
   background-color: var(--tutor-bg-grey-light);
   color: #1973aa;
   border-color: transparent;
 }
 
-.tutor-backend-settings-page .tutor-btn .tutor-btn-icon,
-.tutor-dashboard-page .tutor-btn .tutor-btn-icon {
+.tutor-backend-settings-page .tutor-btn .tutor-btn-icon {
   font-size: 24px;
 }
 
@@ -6849,11 +6836,22 @@ table.tutor-ui-table.table-instructors .toggle-row {
   display: none;
 }
 
-@media only screen and (min-width: 1201px) {
-  .my-quiz-attempts .td-statement-infor {
-    margin-top: -24px;
-    margin-left: 25px;
-  }
+.tutor-admin-page-wrapper table td ul.tutor-table-inside-table {
+  text-decoration: none;
+}
+
+.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li span:first-child {
+  width: 37%;
+}
+
+.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li span:last-child {
+  width: 50%;
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */

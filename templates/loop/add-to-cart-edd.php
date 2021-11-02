@@ -22,7 +22,7 @@ if ($download->ID) {
 		$button_text = edd_currency_filter( edd_format_amount( $download->price ) ) .'&nbsp;&ndash;&nbsp;'. $args['text'];
 		$button_class = implode( ' ', array( $args['style'], $args['color'], $args['class'] ) );
 
-		echo '<button class="'.$button_class.'">'.$button_text.'</button>';
+		echo wp_kses_post('<button class="'.$button_class.'">'.$button_text.'</button>');
 	} else {
 		echo edd_get_purchase_link( array( 'download_id' => $download->ID ) );
 	}
