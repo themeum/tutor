@@ -172,3 +172,11 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 		}
 	}
 }
+
+.tutor-loading-spinner {
+	$size: var(--size);
+	position: relative;
+	@include spinner($design-brand, #f1f1f1, $size);
+	// For custom call this with position: relative;
+	// spinner($lineColor: #ababab, $lineBgColor: #f1f1f1, $size: 20px)
+}
