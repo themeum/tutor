@@ -18,7 +18,7 @@
 <?php
     
     $course_id = get_the_ID();
-    $enroll_btn = '<div class="tutor-loop-cart-btn-wrap"><a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">' . __( 'Check This Course', 'tutor' ) . '</a></div>';
+    $enroll_btn = '<div class="tutor-loop-cart-btn-wrap"><a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">' . __( 'Download Certificate', 'tutor' ) . '</a></div>';
     $lesson_url = tutor_utils()->get_course_first_lesson();
     $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
     $completed_percent = tutor_utils()->get_course_completed_percent();
@@ -34,10 +34,10 @@
                     esc_html_e( 'Retake This Course', 'tutor' );
                 } 
                 if ( ! $is_completed_course && $completed_percent != 0 ) {
-                    esc_html_e( 'Continue Course', 'tutor' );
+                    esc_html_e( 'Continue Learning', 'tutor' );
                 }
                 if ( $completed_percent == 0 && ! $is_completed_course ) {
-                    esc_html_e( 'Start Course', 'tutor' );
+                    esc_html_e( 'Start Learning', 'tutor' );
                 }
             ?>
         </a>
