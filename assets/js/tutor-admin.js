@@ -2373,6 +2373,12 @@ document.addEventListener("DOMContentLoaded", function () {
   function ajaxHandler(_x4) {
     return _ajaxHandler.apply(this, arguments);
   }
+  /*
+  * function to copy 
+  * @textToCopy string
+  * return a promise
+  */
+
 
   function _ajaxHandler() {
     _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(formData) {
@@ -2406,6 +2412,63 @@ document.addEventListener("DOMContentLoaded", function () {
       }, _callee3, null, [[1, 8]]);
     }));
     return _ajaxHandler.apply(this, arguments);
+  }
+
+  function copyToClipboard(textToCopy) {
+    // navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+      // navigator clipboard api method'
+      return navigator.clipboard.writeText(textToCopy);
+    } else {
+      // text area method
+      var textArea = document.createElement("textarea");
+      textArea.value = textToCopy; // make the textarea out of viewport
+
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      return new Promise(function (res, rej) {
+        // here the magic happens
+        document.execCommand('copy') ? res() : rej();
+        textArea.remove();
+      });
+    }
+  }
+
+  var withDrawContent = document.querySelector('.withdraw-tutor-tooltip-content');
+  var withDrawCopyBtns = document.querySelectorAll('.withdraw-tutor-copy-to-clipboard');
+
+  if (withDrawCopyBtns) {
+    var _iterator3 = _createForOfIteratorHelper(withDrawCopyBtns),
+        _step3;
+
+    try {
+      var _loop = function _loop() {
+        var withDrawCopyBtn = _step3.value;
+        withDrawCopyBtn.addEventListener('click', function (event) {
+          // console.log(withDrawCopyBtn.previousSibling);
+          console.log(event.currentTarget.dataset.textCopy);
+          copyToClipboard(event.currentTarget.dataset.textCopy).then(function (text) {
+            // withDrawCopyBtn.innerHTML = 'Copied';
+            withDrawCopyBtn.innerText = 'Copied';
+            setTimeout(function () {
+              withDrawCopyBtn.innerText = 'Copy';
+            }, 3000);
+          });
+        });
+      };
+
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+        _loop();
+      }
+    } catch (err) {
+      _iterator3.e(err);
+    } finally {
+      _iterator3.f();
+    }
   }
 });
 
