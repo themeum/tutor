@@ -3,7 +3,7 @@ window.jQuery(document).ready(function($){
     const {__} = window.wp.i18n;
 
     /**
-     * Lesson upload thumbnail
+     * upload thumbnail
      */
      $(document).on( 'click', '.tutor-thumbnail-uploader .tutor-thumbnail-upload-button',  function( event ){
         event.preventDefault();
@@ -19,7 +19,8 @@ window.jQuery(document).ready(function($){
             button: {
                 text: wrapper.data('button-text')
             },
-            multiple: false
+            library: { type: "image" },
+            multiple: false, // Set to true to allow multiple files to be selected
         });
         frame.on( 'select', function() {
             var attachment = frame.state().get('selection').first().toJSON();
@@ -32,7 +33,7 @@ window.jQuery(document).ready(function($){
     });
 
     /**
-     * Lesson Feature Image Delete
+     * Thumbnail Delete
      * @since v.1.5.6
      */
      $(document).on('click', '.tutor-thumbnail-uploader .delete-btn', function(e){
@@ -46,5 +47,4 @@ window.jQuery(document).ready(function($){
         
         $that.hide();
     });
-
-})
+});

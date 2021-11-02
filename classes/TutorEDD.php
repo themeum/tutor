@@ -14,15 +14,19 @@ class TutorEDD extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
+		//add_action('tutor_options_before_tutor_edd', array($this, 'notice_before_option'));
+
 		//Add Tutor Option
 		add_filter('tutor_monetization_options', array($this, 'tutor_monetization_options'));
+		//add_filter('tutor/options/attr', array($this, 'add_options'));
 
-		$monetize_by = tutor_utils()->get_option('monetize_by');
+		$monetize_by = tutils()->get_option('monetize_by');
 
 		if ($monetize_by !== 'edd') {
 			return;
 		}
 
+		add_action('add_meta_boxes', array($this, 'register_meta_box'));
 		add_action('save_post_' . $this->course_post_type, array($this, 'save_course_meta'));
 
 		/**
@@ -35,6 +39,52 @@ class TutorEDD extends Tutor_Base {
 		add_action('edd_update_payment_status', array($this, 'edd_update_payment_status'), 10, 3);
 	}
 
+	public function notice_before_option() {
+		$has_edd = tutor_utils()->has_edd();
+		if ($has_edd) {
+			return;
+		}
+
+		ob_start();
+		?>
+		<div class="tutor-notice-warning">
+			<p>
+				<?php _e(' Seems like you don’t have <strong>Easy Digital Downloads</strong> plugin installed on your site. In order to use this functionality, you need to have the  <strong>Easy Digital Downloads</strong> plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling courses with Tutor.', 'tutor'); ?>
+			</p>
+			<p><?php _e('This notice will disappear after activating <strong>EDD</strong>', 'tutor'); ?></p>
+		</div>
+		<?php
+		echo ob_get_clean();
+	}
+
+	/**
+	 * @param $attr
+	 *
+	 * @return mixed
+	 *
+	 * Add Option for tutor
+	 */
+	public function add_options($attr) {
+		$attr['tutor_edd'] = array(
+			'label' => __('EDD', 'tutor-edd'),
+
+			'sections'    => array(
+				'general' => array(
+					'label' => __('General', 'tutor-edd'),
+					'desc' => __('Tutor Course Attachments Settings', 'tutor-edd'),
+					'fields' => array(
+						'enable_tutor_edd' => array(
+							'type'          => 'checkbox',
+							'label'         => __('Enable EDD', 'tutor'),
+							'desc'          => __('This will enable sell your product via EDD',	'tutor'),
+						),
+					),
+				),
+			),
+		);
+		return $attr;
+	}
+
 	/**
 	 * @param $arr
 	 *
@@ -45,11 +95,23 @@ class TutorEDD extends Tutor_Base {
 	 * @since v.1.3.5
 	 */
 	public function tutor_monetization_options($arr) {
-		$has_edd = tutor_utils()->has_edd();
+		$has_edd = tutils()->has_edd();
 		if ($has_edd) {
 			$arr['edd'] = __('Easy Digital Downloads', 'tutor');
 		}
 		return $arr;
+	}
+
+	public function register_meta_box() {
+		add_meta_box('tutor-attached-edd-product', __('Add Product', 'tutor'), array($this, 'course_add_product_metabox'), $this->course_post_type, 'advanced', 'high');
+	}
+
+	/**
+	 * @param $post
+	 * MetaBox for Lesson Modal Edit Mode
+	 */
+	public function course_add_product_metabox() {
+		include  tutor()->path . 'views/metabox/course-add-edd-product-metabox.php';
 	}
 
 	public function save_course_meta($post_ID) {
