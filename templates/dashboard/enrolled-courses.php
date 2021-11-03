@@ -49,7 +49,7 @@
         </ul>
     </div>
 
-    <div class="tutor-course-listing tutor-course-listing-grid-3">
+    <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
         <?php
             // Loop through all the courses
             if ( $courses_list && $courses_list->have_posts() ) {
