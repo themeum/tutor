@@ -7060,25 +7060,29 @@ table.tutor-ui-table.table-instructors .toggle-row {
   display: none;
 }
 
-.tutor-admin-page-wrapper table td ul.tutor-table-inside-table {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper .td-avatar-detials .ttr-detail-link-filled {
+  font-size: 20px;
+}
+
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td ul.tutor-table-inside-table {
   text-decoration: none;
 }
 
-.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td ul.tutor-table-inside-table li {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li span:first-child {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td ul.tutor-table-inside-table li span:first-child {
   width: 37%;
 }
 
-.tutor-admin-page-wrapper table td ul.tutor-table-inside-table li span:last-child {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td ul.tutor-table-inside-table li span:last-child {
   width: 50%;
 }
 
-.tutor-admin-page-wrapper table td .tooltip-wrap {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -7087,7 +7091,7 @@ table.tutor-ui-table.table-instructors .toggle-row {
           justify-content: space-between;
 }
 
-.tutor-admin-page-wrapper table td .tooltip-wrap .tooltip-txt {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap .tooltip-txt {
   max-width: 400px;
   min-width: 230px;
   padding: 0px 0px;
@@ -7096,67 +7100,67 @@ table.tutor-ui-table.table-instructors .toggle-row {
   display: flex;
 }
 
-.tutor-admin-page-wrapper table td .tooltip-wrap .tooltip-txt > div {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap .tooltip-txt > div {
   height: 32px;
   border-radius: 0px 10px 10px 0px;
 }
 
-.tutor-admin-page-wrapper table td .tooltip-wrap .tooltip-txt .withdraw-tutor-tooltip-content {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap .tooltip-txt .withdraw-tutor-tooltip-content {
   -ms-flex-preferred-size: 100%;
       flex-basis: 100%;
   padding: 1px 11px;
 }
 
-.tutor-admin-page-wrapper table td .tooltip-wrap .tooltip-txt .withdraw-tutor-copy-to-clipboard {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap .tooltip-txt .withdraw-tutor-copy-to-clipboard {
   padding: 0px 5px 0px 3px;
   -ms-flex-preferred-size: 100px;
       flex-basis: 100px;
   background: #41454f;
 }
 
-.tutor-admin-page-wrapper table td .tooltip-wrap .tooltip-txt .withdraw-tutor-copy-to-clipboard span {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap .tooltip-txt .withdraw-tutor-copy-to-clipboard span {
   font-size: 18px;
   padding: 0px 3px 0px 0px;
 }
 
-.tutor-admin-page-wrapper table td.tutor-withdraw-btns {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns {
   width: 16%;
 }
 
-.tutor-admin-page-wrapper table td.tutor-withdraw-btns button {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns button {
   max-width: 80px;
 }
 
-.tutor-admin-page-wrapper #tutor-admin-withdraw-approve .tutor-modal-root .tutor-modal-icon,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject .tutor-modal-root .tutor-modal-icon {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-approve .tutor-modal-root .tutor-modal-icon,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject .tutor-modal-root .tutor-modal-icon {
   margin-bottom: 25px;
 }
 
-.tutor-admin-page-wrapper #tutor-admin-withdraw-approve .tutor-modal-root #tutor-admin-withdraw-approve-content,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-approve .tutor-modal-root #tutor-admin-withdraw-reject-content,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject .tutor-modal-root #tutor-admin-withdraw-approve-content,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject .tutor-modal-root #tutor-admin-withdraw-reject-content {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-approve .tutor-modal-root #tutor-admin-withdraw-approve-content,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-approve .tutor-modal-root #tutor-admin-withdraw-reject-content,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject .tutor-modal-root #tutor-admin-withdraw-approve-content,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject .tutor-modal-root #tutor-admin-withdraw-reject-content {
   margin-bottom: 25px;
 }
 
 @media (max-width: 600px) {
-  .tutor-admin-page-wrapper #tutor-admin-withdraw-approve .tutor-modal-root .tutor-modal-btns.tutor-btn-group button:not(:last-child),
-  .tutor-admin-page-wrapper #tutor-admin-withdraw-reject .tutor-modal-root .tutor-modal-btns.tutor-btn-group button:not(:last-child) {
+  .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-approve .tutor-modal-root .tutor-modal-btns.tutor-btn-group button:not(:last-child),
+  .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject .tutor-modal-root .tutor-modal-btns.tutor-btn-group button:not(:last-child) {
     margin-bottom: 15px;
   }
 }
 
-.tutor-admin-page-wrapper #tutor-admin-withdraw-approve .tutor-modal-root .tutor-modal-btns.tutor-btn-group button,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject .tutor-modal-root .tutor-modal-btns.tutor-btn-group button {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-approve .tutor-modal-root .tutor-modal-btns.tutor-btn-group button,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject .tutor-modal-root .tutor-modal-btns.tutor-btn-group button {
   padding: 3px 30px;
 }
 
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject input:focus,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject button:focus,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject input.tutor-form-control:focus,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject input.tutor-form-control:focus,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject textarea.tutor-form-control:focus,
-.tutor-admin-page-wrapper #tutor-admin-withdraw-reject select.tutor-form-select:focus:focus {
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject input:focus,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject button:focus,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject input.tutor-form-control:focus,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject input.tutor-form-control:focus,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject textarea.tutor-form-control:focus,
+.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject select.tutor-form-select:focus:focus {
   border: 2px solid #1973AA;
 }
 

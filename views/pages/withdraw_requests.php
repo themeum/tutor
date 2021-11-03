@@ -82,150 +82,201 @@ $available_status = array(
 	?>
 
 
-<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-mr-20">
+<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-50 tutor-mr-20">
 		<div class="tutor-ui-table-wrapper">
 			<table class="tutor-ui-table tutor-ui-table-responsive">
 				<thead class="tutor-text-sm tutor-text-400">
 					<tr>
-						<th>
+					<th>
 							<div class="text-regular-small color-text-subsued">
-								Request Date							
+								<?php esc_html_e( 'Request Date', 'tutor-pro' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								Request By							
+								<?php esc_html_e( 'Request By', 'tutor-pro' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								Withdraw Method							
+								<?php esc_html_e( 'Withdraw Method', 'tutor-pro' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								Withdraw Details							
+								<?php esc_html_e( 'Withdraw Details', 'tutor-pro' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								Amount							
+								<?php esc_html_e( 'Amount', 'tutor-pro' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								Status							
+								<?php esc_html_e( 'Status', 'tutor-pro' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								Update							
+								<?php esc_html_e( 'Update', 'tutor-pro' ); ?>
 							</div>
 						</th>
 					</tr>
 				</thead>
 				<tbody class="tutor-text-500">
-					<tr>
-						<td>
-							<div class="text-medium-caption color-text-primary"> October 31, 2021 11:23 am </div>
-						</td>
-						<td>
-							<div class="text-medium-caption color-text-primary"> 
-								tutor2@gmail.com
-							</div>
-						</td>
-						<td>
-							<div class="text-medium-caption color-text-primary" style=""> 
-								Bank Transfer
-							</div>
-							<div class="tooltip-wrap">
-								<span class="dotedtext">de****mail@mail.com</span>
-								<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
-									<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
-										dehsnmmail@mail.com
-									</div>
-									<div data-text-copy="dehsnmmail@mail.com" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
-										<span class="icon ttr-copy-filled"></span>
-										Copy
+					<?php if ( is_array( $withdraw_list->results ) && count( $withdraw_list->results ) ) : ?>
+						<?php foreach ( $withdraw_list->results as $list ) : ?>
+							<?php
+								$user_data = get_userdata( $list->user_id );
+								$details = unserialize( $list->method_data );
+							?>
+						<tr>
+							<td>
+								<div class="text-medium-caption color-text-primary">
+									<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $list->created_at ) ); ?>
+								</div>
+							</td>
+							<td>
+								<div class="td-avatar">
+									<?php echo get_avatar( $user_data->ID, 50 ); ?>					
+									<div class="td-avatar-detials">
+											<div class="td-avatar-name d-flex align-items-center">
+												<span class="color-text-primary text-medium-body">
+													<?php echo esc_html( $user_data->display_name ); ?>												
+												</span>
+												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID ) ); ?>" class="tutor-ml-10 d-flex" target="_blank">
+													<span class="ttr-detail-link-filled color-text-primary"></span>
+												</a>
+											</div>
+											<span class="color-text-title text-regular-small">
+												<?php echo esc_html( $user_data->user_email ); ?>										
+											</span>
 									</div>
 								</div>
-							</div>
-						</td>
-						<td>
-							<ul class="tutor-table-inside-table">
-								<li>
-									<span class="text-regular-small color-text-hints">Name:</span>
-									<span class="text-medium-small color-text-primary">Ricky Ponting</span>
-								</li>
-								<li>
-									<span class="text-regular-small color-text-hints">A/C Number:</span>
-									<div class="tooltip-wrap">
-										<span class="text-medium-small color-text-primary">002465********45</span>
-										<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
-											<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
-												00246000034045
-											</div>
-											<div data-text-copy="00246502343048234045" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
-												<span class="icon ttr-copy-filled"></span>
-												Copy
-											</div>
+							</td>
+							<td>
+								<div class="text-medium-caption color-text-primary" style=""> 
+									<?php echo esc_html( $details['withdraw_method_name'] ); ?>
+								</div>
+								<div class="tooltip-wrap">
+									<span class="dotedtext">de****mail@mail.com</span>
+									<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
+										<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+											dehsnmmail@mail.com
+										</div>
+										<div data-text-copy="dehsnmmail@mail.com" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+											<span class="icon ttr-copy-filled"></span>
+											Copy
 										</div>
 									</div>
-								</li>
-								<li>        
-									<span class="text-regular-small color-text-hints">Bank Name:</span>
-									<span class="text-medium-small color-text-primary">One Bank Limited</span>										
-								</li>
-								<li>                    
-									<span class="text-regular-small color-text-hints">IBAN:</span>
-									<div class="tooltip-wrap">
-										<span class="text-medium-small color-text-primary dotedtext">IBAN000********65</span>
-										<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
-											<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
-												IBAN0000000065
+								</div>
+							</td>
+							<td>
+								<ul class="tutor-table-inside-table">
+									<li>
+										<span class="text-regular-small color-text-hints">
+											<?php esc_html_e( 'Name:', 'tutor' ); ?>
+										</span>
+										<span class="text-medium-small color-text-primary">
+											<?php echo esc_html( $details['account_name']['value'] ); ?>
+										</span>
+									</li>
+									<li>
+										<span class="text-regular-small color-text-hints">
+											<?php esc_html_e( 'A/C Number:', 'tutor' ); ?>
+										</span>
+										<div class="tooltip-wrap">
+											<span class="text-medium-small color-text-primary">
+												<?php echo esc_html( $details['account_number']['value'] ); ?>
+											</span>
+											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
+												<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+													<?php echo esc_html( $details['account_number']['value'] ); ?>
+												</div>
+												<div data-text-copy="00246502343048234045" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+													<span class="icon ttr-copy-filled"></span>
+													<?php esc_html_e( 'Copy', 'tutor' ); ?>
+												</div>
 											</div>
-											<div data-text-copy="IBAN0000000065" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
-												<span class="icon ttr-copy-filled"></span>
-												Copy
-											</div>
-										</div>		
-									</div>						
-								</li>
-								<li>        
-									<span class="text-regular-small color-text-hints">BIC/SWIFT:</span>
-									<span class="text-medium-small color-text-primary">INHA66A</span>	
-								</li>
-							</ul>
-						</td>
-						<td>
-							<div class="text-medium-caption color-text-primary"> 
-								$60.00
-							</div>
-						</td>
-						<td>
-							<div class="d-flex flex-column">
-								<span class="tutor-badge-label label-success tutor-m-5 justify-content-center">Success</span>
-								<!-- <span class="tutor-badge-label label-primary-wp tutor-m-5 justify-content-center">WordPress</span>
-								<span class="tutor-badge-label label-success tutor-m-5 justify-content-center">Success</span>
-								<span class="tutor-badge-label label-warning tutor-m-5 justify-content-center">Warning</span>
-								<span class="tutor-badge-label label-danger tutor-m-5 justify-content-center">Danger</span>
-								<span class="tutor-badge-label label-processing tutor-m-5 justify-content-center">Processing</span>
-								<span class="tutor-badge-label label-onhold tutor-m-5 justify-content-center">On hold</span>
-								<span class="tutor-badge-label label-refund tutor-m-5 justify-content-center">Refunded</span>
-								<span class="tutor-badge-label tutor-m-5 justify-content-center">Default</span> -->
-							</div>
-						</td>
-						<td class="tutor-withdraw-btns">
-							<div class="d-flex justify-content-center align-items-center">
-								<button data-tutor-modal-target="tutor-admin-withdraw-approve" class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-mr-20">
-									Approve
-								</button>
-								<button data-tutor-modal-target="tutor-admin-withdraw-reject" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-sm">
-									Reject
-								</button>
-							</div>
-						</td>
-					</tr>
+										</div>
+									</li>
+									<li>        
+										<span class="text-regular-small color-text-hints">
+											<?php esc_html_e( 'Bank Name:', 'tutor' ); ?>
+										</span>
+										<span class="text-medium-small color-text-primary">
+											<?php echo esc_html( $details['bank_name']['value'] ); ?>
+										</span>										
+									</li>
+									<li>                    
+										<span class="text-regular-small color-text-hints">
+											<?php esc_html_e( 'IBAN:', 'tutor' ); ?>
+										</span>
+										<div class="tooltip-wrap">
+											<span class="text-medium-small color-text-primary dotedtext">
+												<?php echo esc_html( $details['iban']['value'] ); ?>
+											</span>
+											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
+												<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+													<?php echo esc_html( $details['iban']['value'] ); ?>
+												</div>
+												<div data-text-copy="IBAN0000000065" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+													<span class="icon ttr-copy-filled"></span>
+													<?php esc_html_e( 'Copy', 'tutor' ); ?>
+												</div>
+											</div>		
+										</div>						
+									</li>
+									<li>        
+										<span class="text-regular-small color-text-hints">
+											<?php esc_html_e( 'BIC/SWIFT:', 'tutor' ); ?>
+										</span>
+										<span class="text-medium-small color-text-primary">
+											<?php echo esc_html( $details['swift']['value'] ); ?>
+										</span>	
+									</li>
+								</ul>
+							</td>
+							<td>
+								<div class="text-medium-caption color-text-primary"> 
+									<?php echo wp_kses_post( tutor_utils()->tutor_price( $list->amount ) ); ?>
+								</div>
+							</td>
+							<td>
+								<div>
+									<span class="tutor-badge-label label-success tutor-m-5 justify-content-center">
+										<?php echo esc_html( $list->status ); ?>
+									</span>
+									<!-- <span class="tutor-badge-label label-primary-wp tutor-m-5 justify-content-center">WordPress</span>
+									<span class="tutor-badge-label label-success tutor-m-5 justify-content-center">Success</span>
+									<span class="tutor-badge-label label-warning tutor-m-5 justify-content-center">Warning</span>
+									<span class="tutor-badge-label label-danger tutor-m-5 justify-content-center">Danger</span>
+									<span class="tutor-badge-label label-processing tutor-m-5 justify-content-center">Processing</span>
+									<span class="tutor-badge-label label-onhold tutor-m-5 justify-content-center">On hold</span>
+									<span class="tutor-badge-label label-refund tutor-m-5 justify-content-center">Refunded</span>
+									<span class="tutor-badge-label tutor-m-5 justify-content-center">Default</span> -->
+								</div>
+							</td>
+							<td class="tutor-withdraw-btns">
+								<div class="d-flex justify-content-center align-items-center">
+									<button data-tutor-modal-target="tutor-admin-withdraw-approve" class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-mr-20">
+										<?php esc_html_e( 'Approve', 'tutor' ); ?>
+									</button>
+									<button data-tutor-modal-target="tutor-admin-withdraw-reject" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-sm">
+										<?php esc_html_e( 'Reject', 'tutor' ); ?>
+									</button>
+								</div>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					<?php else : ?>
+						<tr>
+							<td colspan="100%">
+								<?php tutor_utils()->tutor_empty_state(); ?>
+							</td>
+						</tr>
+					<?php endif; ?>
 				</tbody>
 			</table>
 		</div>
