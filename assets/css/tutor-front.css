@@ -7011,23 +7011,6 @@ Withdraw Method
   margin: 5px 0;
 }
 
-.tutor-announcement-content-wrap {
-  text-align: left !important;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.tutor-announcement-content-wrap p {
-  margin: 0;
-}
-
 .tutor-dashboard-announcement-sorting-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7052,69 +7035,6 @@ Withdraw Method
       flex-basis: 30%;
 }
 
-.tutor-dashboard-announcement-table {
-  border-spacing: 0;
-  border-collapse: collapse;
-  border: 1px solid #ccd0d4;
-}
-
-.tutor-dashboard-announcement-table thead th, .tutor-dashboard-announcement-table thead td {
-  border-bottom: 1px solid #ccd0d4;
-}
-
-.tutor-dashboard-announcement-table tbody tr:last-child {
-  border-bottom: 1px solid #ccd0d4;
-}
-
-.tutor-dashboard-announcement-table tbody td:first-child {
-  padding-left: 30px;
-  line-height: 24px;
-}
-
-.tutor-dashboard-announcement-table tr {
-  background-color: #F3F3F3;
-}
-
-.tutor-dashboard-announcement-table tr:nth-child(odd) {
-  background-color: #fff;
-}
-
-.tutor-dashboard-announcement-table th, .tutor-dashboard-announcement-table td {
-  border: 0;
-  vertical-align: middle;
-}
-
-.tutor-dashboard-announcement-table th h4, .tutor-dashboard-announcement-table td h4 {
-  font-size: 16px;
-  margin-bottom: 0;
-}
-
-.tutor-dashboard-announcement-table th p, .tutor-dashboard-announcement-table th a, .tutor-dashboard-announcement-table td p, .tutor-dashboard-announcement-table td a {
-  font-size: 13px;
-  margin-bottom: 0;
-}
-
-.tutor-dashboard-announcement-table th:last-child, .tutor-dashboard-announcement-table td:last-child {
-  padding-right: 30px;
-}
-
-.tutor-dashboard-announcement-table th {
-  padding: 15px 0;
-  background-color: #f3f3f3;
-}
-
-.tutor-dashboard-announcement-table td {
-  padding: 30px 0;
-}
-
-.tutor-dashboard-announcement-table th:first-child {
-  padding-left: 40px;
-}
-
-.tutor-dashboard-announcement-table th:last-child {
-  padding-right: 40px;
-}
-
 .tutor-announcement-datepicker {
   position: relative;
 }
@@ -7127,19 +7047,6 @@ Withdraw Method
   top: 50%;
   right: 10px;
   color: #3e64de;
-}
-
-.tutor-announcement-buttons {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.tutor-announcement-buttons li {
-  list-style: none;
 }
 
 .tutor-dropdown {
@@ -7160,25 +7067,6 @@ Withdraw Method
 
 .tutor-dropdown.show .tutor-dropdown-menu {
   display: block !important;
-}
-
-.tutor-announcement-modal-content {
-  border-radius: 20px;
-}
-
-.tutor-announcement-modal-footer-buttons {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
-.tutor-announcement-cancel-btn {
-  background: #e8e8e8 !important;
-  border-radius: 3px !important;
-  color: #7a7a7a !important;
 }
 
 .tutor-announcement-big-icon {
@@ -7211,90 +7099,6 @@ Withdraw Method
   -ms-justify-content: center;
   -moz-justify-content: center;
   -webkit-justify-content: center;
-}
-
-.tutor-announcement-detail-content {
-  margin-top: 35px;
-}
-
-.tutor-announcement-detail-content h3 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #161616;
-}
-
-.tutor-announcement-detail-content p {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  color: #7a7a7a;
-  margin-top: 15px;
-  margin-bottom: 10px;
-}
-
-.tutor-detail-course-content-wrap {
-  background-color: #f3f3f3;
-}
-
-.tutor-detail-course-content {
-  padding: 30px 70px 70px;
-}
-
-.tutor-detail-course-info-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  margin-bottom: 50px;
-}
-
-.tutor-announce-detail-popup-button-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
-.announcement-detail-edit-delete-button > .tutor-announcement-delete {
-  background: #e8e8e8 !important;
-  color: #7a7a7a !important;
-}
-
-.tutor-border-none {
-  border: none !important;
-}
-
-.announcement-detail-edit-delete-button > button {
-  padding: 10px 20px !important;
-}
-
-.announcement-detail-edit-delete-button {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 10px;
-}
-
-.tutor-announcement-detail-course-info p,
-.tutor-announcement-detail-date-info p {
-  font-size: 16px;
-  color: #161616;
-  font-weight: 700;
-  max-width: 95%;
-}
-
-.tutor-announcements-modal-wrap .tutor-modal-content {
-  max-width: 660px !important;
-}
-
-.tutor-announcements-modal-wrap .modal-footer {
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
 }
 
 .attempt-review-title {

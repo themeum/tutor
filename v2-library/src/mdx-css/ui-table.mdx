@@ -8,10 +8,49 @@ import { Playground } from 'docz';
 import '../../bundle/main.min.css';
 import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-icon-test.css';
 import '../docz-essential.css';
+import emptyStateImg from '../../../assets/images/emptystate.svg'
 
 # UI Table variations
 `** Replace "className" with "class" while using with html` <br />
 `** Add the th content to the tds as data-th="TH_CONTENT" `
+
+## Table Empty State
+
+<Playground>
+	<div className="tutor-ui-table-wrapper">
+		<table className="tutor-ui-table tutor-ui-table-responsive table-popular-courses">
+			<thead>
+				<tr>
+					<th>
+						<span className="text-regular-small color-text-subsued">Course Name</span>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Total Enrolled</span>
+							<span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+						</div>
+					</th>
+					<th>
+						<div className="inline-flex-center color-text-subsued">
+							<span className="text-regular-small">Rating</span>
+							<span className="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td colSpan="100%" className="column-empty-state">
+						<div className="td-empty-state tutor-p-30">
+							<img src={emptyStateImg}/>
+							<div className="text-regular-h5 color-text-primary tutor-mt-20">Kichu Khuje Pawa Jay Nai.</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>
 
 ## Most Popular Courses
 
