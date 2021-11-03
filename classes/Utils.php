@@ -2971,7 +2971,7 @@ class Utils {
 		 * @since v.2.0.0
 		 */
 		if ( $instructor_id ) {
-			$author_query = "course.post_author = $instructor_id";
+			$author_query = "AND course.post_author = $instructor_id";
 		}
 
 		$students = $wpdb->get_results( $wpdb->prepare(
