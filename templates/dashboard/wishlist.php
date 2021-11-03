@@ -9,7 +9,7 @@
 <h3><?php esc_html_e('Wishlist', 'tutor'); ?></h3>
 <div class="tutor-dashboard-content-inner my-wishlist">
     <div class="tutor-bs-row">
-		<div class="tutor-course-listing tutor-course-listing-grid-3">
+		<div class="tutor-course-listing-grid tutor-course-listing-grid-3">
 			<?php
 				$wishlists = tutor_utils()->get_wishlist();
 				if (is_array($wishlists) && count($wishlists)):

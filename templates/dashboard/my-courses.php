@@ -35,9 +35,9 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
     </div>
 
     <!-- Course list -->
-    <div class="tutor-course-listing tutor-course-listing-grid-3">
+    <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
 	    <?php
-            $status = $active_tab=='my-courses' ? array('publish') : array('pending');
+            $status = $active_tab=='my-courses' ? array('publish') : array('pending', 'draft');
 	        $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
 
 	        if (is_array($my_courses) && count($my_courses)):
@@ -90,7 +90,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                             <div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
                                 <div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center">
                                     <span class="price text-h6">
-                                        <?php _e('Price:', 'tutor') ?> 
+                                        <?php esc_html_e('Price:', 'tutor') ?> 
                                     </span>
                                     <span class="price text-h6 color-text-primary">
                                         <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
@@ -121,18 +121,18 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                                         </div>
                                         <div class="tutor-modal-text-wrap">
                                             <h3 class="tutor-modal-title">
-                                                <?php _e('Delete This Course?', 'tutor'); ?>
+                                                <?php esc_html_e('Delete This Course?', 'tutor'); ?>
                                             </h3>
                                             <p>
-                                                <?php _e('Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor'); ?>
+                                                <?php esc_html_e('Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor'); ?>
                                             </p>
                                         </div>
                                         <div class="tutor-modal-btns tutor-btn-group">
                                             <button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
-                                                <?php _e('Cancel', 'tutor'); ?>
+                                                <?php esc_html_e('Cancel', 'tutor'); ?>
                                             </button>
                                             <button class="tutor-btn tutor-list-ajax-action" data-request_data='{"course_id":<?php echo $post->ID;?>,"action":"tutor_delete_dashboard_course"}' data-delete_element_id="<?php echo $row_id; ?>">
-                                                <?php _e('Yes, Delete This', 'tutor'); ?>
+                                                <?php esc_html_e('Yes, Delete This', 'tutor'); ?>
                                             </button>
                                         </div>
                                     </div>
