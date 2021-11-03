@@ -1868,7 +1868,7 @@ class Utils {
 	 *
 	 * @return bool|\WP_Query
 	 *
-	 * Return courses by user_id
+	 * Return completed courses by user_id
 	 *
 	 * @since v.1.0.0
 	 */
@@ -5852,9 +5852,9 @@ class Utils {
 	}
 
 	/**
-	 * @param int $user_id
-	 * @param array $filter
-	 *
+	 * @param int $user_id | optional.
+	 * @param array $filter | ex: 
+	 * array('status' => '','date' => '', 'order' => '', 'start' => 10, 'per_page' => 10,'search' => '')
 	 * get withdrawal history
 	 *
 	 * @return object
@@ -5887,6 +5887,26 @@ class Utils {
 			$query_by_user_sql = " AND user_id = {$user_id} ";
 		}
 
+		// Order query @since v2.0.0
+		$order_query = '';
+		if ( isset( $order ) && '' !== $order ) {
+			$order_query = "ORDER BY  	created_at {$order}";
+		} else {
+			$order_query = "ORDER BY  	created_at DESC";
+		}
+
+		// Date query @since v.2.0.0 
+		$date_query = '';
+		if ( isset( $date ) && '' !== $date ) {
+			$date_query = "AND DATE(created_at) = CAST( '$date' AS DATE )";
+		}
+
+		// Search query @since v.2.0.0 
+		$search_query = '%%';
+		if ( isset( $search ) && '' !== $search ) {
+			$search_query = '%' . $wpdb->esc_like( $search ) . '%';
+		}
+
 		$count = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(withdraw_id)
 			FROM 	{$wpdb->prefix}tutor_withdraws
@@ -5899,18 +5919,25 @@ class Utils {
 
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT 	withdraw_tbl.*,
-						user_tbl.display_name AS user_name,
-						user_tbl.user_email
-			FROM 		{$wpdb->prefix}tutor_withdraws withdraw_tbl
-						INNER JOIN {$wpdb->users} user_tbl
-								ON withdraw_tbl.user_id = user_tbl.ID
-			WHERE 		1 = %d
-						{$query_by_user_sql}
-						{$query_by_status_sql}
-			ORDER BY  	created_at DESC
-			{$query_by_pagination}
+					user_tbl.display_name AS user_name,
+					user_tbl.user_email
+				FROM {$wpdb->prefix}tutor_withdraws withdraw_tbl
+					INNER JOIN {$wpdb->users} user_tbl
+							ON withdraw_tbl.user_id = user_tbl.ID
+				WHERE 1 = %d
+					{$query_by_user_sql}
+					{$query_by_status_sql}
+					{$date_query}
+					
+					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
+				{$order_query}
+				{$query_by_pagination}
 			",
-			1
+			1,
+			$search_query,
+			$search_query,
+			$search_query,
+			$search_query
 		) );
 
 		$withdraw_history = array(
@@ -7934,6 +7961,34 @@ class Utils {
     }
 
 	/**
+	 * Get completed assignment number
+	 *
+	 * @param int $course_id course id | required.
+	 * @param int $student_id student id | required.
+	 * @return int
+	 */
+	public function count_completed_assignment( int $course_id, int $student_id ): int {
+		global $wpdb;
+		$count = $wpdb->get_var( $wpdb->prepare(
+			" SELECT COUNT(*) FROM {$wpdb->posts} AS assignment 
+				INNER JOIN {$wpdb->posts} AS topic
+					ON topic.ID = assignment.post_parent
+				INNER JOIN {$wpdb->posts} AS course
+					ON course.ID = topic.post_parent 
+				INNER JOIN {$wpdb->comments} AS submit
+					ON submit.comment_post_ID = assignment.ID 
+				WHERE assignment.post_type = %s
+					AND course.ID = %d
+					AND submit.user_id = %d
+			",
+			'tutor_assignments',
+			$course_id,
+			$student_id
+		) );
+		return $count ? $count : 0;
+	}
+
+	/*
 	 * Empty state template
 	 * 
 	 * @param string $title

@@ -166,12 +166,12 @@ $available_status = array(
 							<?php esc_html_e( 'Title', 'tutor' ); ?>
 							</div>
 						</th>
-						<th>
+						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center color-text-subsued">
 								<span class="text-regular-small">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 								</span>
-								<span class="ttr-ordering-a-to-z-filled"></span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
 							</div>
 						</th>	
 						<th>
@@ -257,7 +257,7 @@ $available_status = array(
 											echo wp_kses_post( tutor_utils()->get_tutor_avatar( $post->post_author ) );
 										?>
 										<p class="text-medium-body color-text-primary">
-											<?php echo esc_html( $author_details->display_name ); ?>
+											<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 										</p>
 										<a
 										href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author ) ); ?>"

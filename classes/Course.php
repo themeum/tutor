@@ -635,13 +635,12 @@ class Course extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$course_id = intval(sanitize_text_field($_POST['course_id']));
-
 		if(!tutor_utils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
-		wp_trash_post($course_id);
-		wp_send_json_success(['element'=>'course']);
+		wp_delete_post($course_id, true);
+		wp_send_json_success();
 	}
 
 

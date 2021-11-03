@@ -812,6 +812,7 @@ window.jQuery(document).ready(function ($) {
     var prompt = $(this).data('prompt');
     var del = $(this).data('delete_element_id');
     var data = $(this).data('request_data') || {};
+    typeof data == 'string' ? data = JSON.parse(data) : 0;
 
     if (prompt && !window.confirm(prompt)) {
       return;
@@ -888,16 +889,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * Table td/tr toggle
+ */
+
 document.addEventListener('click', function (e) {
   var attr = 'data-td-target';
-  var dataTdTarget = e.target.dataset.tdTarget; // console.log(document.getElementById(dataTdTarget));
+  var dataTdTarget = e.target.dataset.tdTarget;
 
   if (dataTdTarget) {
     e.target.closest('td').classList.toggle('is-active');
-    document.getElementById(dataTdTarget).classList.toggle('active'); // document
-    // 	.getElementById(dataTdTarget)
-    // 	.closest('tr')
-    // 	.classList.toggle('active');
+    document.getElementById(dataTdTarget).classList.toggle('is-active');
   }
 });
 
