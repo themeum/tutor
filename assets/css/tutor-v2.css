@@ -20818,7 +20818,7 @@ input.tutor-form-check-input {
           box-shadow: 0 0 0 0 var(--tutor-primary-lighter);
 }
 
-input.tutor-form-check-input:before {
+input.tutor-form-check-input:before, input.tutor-form-check-input:after {
   display: none !important;
 }
 
@@ -23713,13 +23713,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   grid-gap: 30px;
   grid-template-rows: -webkit-min-content;
   grid-template-rows: min-content;
-}
-
-@media (max-width: 767.98px) {
-  .tutor-course-listing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
 @media (min-width: 992px) {
@@ -23975,6 +23970,27 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   .tutor-course-filter-widget .filter-widget-input:not(:last-child) {
     margin-bottom: 50px;
   }
+}
+
+.list-item-progress .progress-bar {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: #e3e5eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.list-item-progress .progress-bar .progress-value {
+  background: #3e64de;
+  position: absolute;
+  width: var(--progress-value);
+  height: 100%;
+  border-radius: 2px;
+}
+
+.list-item-progress .progress-text {
+  margin-left: 10px;
 }
 
 .tooltip-wrap {
