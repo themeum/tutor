@@ -2191,6 +2191,226 @@ var popupToggle = function popupToggle() {
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/withdraw.js":
+/*!***********************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/withdraw.js ***!
+  \***********************************************************/
+/***/ (() => {
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+document.addEventListener("DOMContentLoaded", function () {
+  var _wp$i18n = wp.i18n,
+      __ = _wp$i18n.__,
+      _x = _wp$i18n._x,
+      _n = _wp$i18n._n,
+      _nx = _wp$i18n._nx; // Approve and Reject button
+
+  var approveButton = document.querySelectorAll('.tutor-admin-open-withdraw-approve-modal');
+  var rejectButton = document.querySelectorAll('.tutor-admin-open-withdraw-reject-modal');
+  var withdrawId; // Onclick button dynamically create content
+
+  if (approveButton) {
+    var _iterator = _createForOfIteratorHelper(approveButton),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var button = _step.value;
+
+        button.onclick = function (e) {
+          withdrawId = e.currentTarget.dataset.id;
+          var amount = e.currentTarget.dataset.amount;
+          var accountName = e.currentTarget.dataset.name;
+          var content = document.getElementById('tutor-admin-withdraw-approve-content');
+          content.innerHTML = "".concat(__('You are approving ' + "<strong>".concat(accountName, "</strong>") + ' withdrawal request for ' + "<strong>".concat(amount, "</strong>") + '. Are you sure you want to approve?', 'tutor'));
+        };
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  } // Onclick button dynamically create content
+
+
+  if (rejectButton) {
+    var _iterator2 = _createForOfIteratorHelper(rejectButton),
+        _step2;
+
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _button = _step2.value;
+
+        _button.onclick = function (e) {
+          withdrawId = e.currentTarget.dataset.id;
+          var amount = e.currentTarget.dataset.amount;
+          var accountName = e.currentTarget.dataset.name;
+          var content = document.getElementById('tutor-admin-withdraw-reject-content');
+          content.innerHTML = "".concat(__('You are rejecting ' + "<strong>".concat(accountName, "</strong>") + ' withdrawal request for ' + "<strong>".concat(amount, "</strong>") + '. Are you sure you want to reject?', 'tutor'));
+        };
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+  } // Approve & Reject form
+
+
+  var approveForm = document.getElementById('tutor-admin-withdraw-approve-form');
+  var rejectForm = document.getElementById('tutor-admin-withdraw-reject-form'); // Handle form submit
+
+  if (approveForm) {
+    approveForm.onsubmit = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+        var formData, post, success;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(approveForm);
+                formData.set('withdraw-id', withdrawId);
+                _context.next = 5;
+                return ajaxHandler(formData);
+
+              case 5:
+                post = _context.sent;
+
+                if (post.ok) {
+                  success = post.json();
+
+                  if (success) {
+                    location.reload();
+                  } else {
+                    tutor_toast(__('Failed', 'tutor'), __('Something went wrong, please try again!', 'tutor'), "error");
+                  }
+                }
+
+              case 7:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+  }
+
+  if (rejectForm) {
+    rejectForm.onsubmit = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+        var formData, post, success;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(rejectForm);
+                formData.set('withdraw-id', withdrawId);
+                _context2.next = 5;
+                return ajaxHandler(formData);
+
+              case 5:
+                post = _context2.sent;
+
+                if (post.ok) {
+                  success = post.json();
+
+                  if (success) {
+                    location.reload();
+                  } else {
+                    tutor_toast(__('Failed', 'tutor'), __('Something went wrong, please try again!', 'tutor'), "error");
+                  }
+                }
+
+              case 7:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+  } // Onchange reject reason if other is value then create input field for adding reason
+
+
+  var rejectType = document.getElementById('tutor-admin-withdraw-reject-type');
+
+  if (rejectType) {
+    rejectType.onchange = function (e) {
+      var type = e.target.value;
+
+      if (type === 'Other') {
+        document.getElementById('tutor-withdraw-reject-other').innerHTML = "<div class=\"tutor-input-group tutor-form-control-lg tutor-mb-15\">\n                <input type=\"text\" name=\"reject-comment\" class=\"tutor-form-control\" placeholder=\"".concat(__('Withdraw Reject Reason', 'tutor'), "\" required/>\n              </div>");
+      }
+    };
+  }
+  /**
+   * Handle ajax request show toast message on success | failure
+   *
+   * @param {*} formData including action and all form fields
+   */
+
+
+  function ajaxHandler(_x4) {
+    return _ajaxHandler.apply(this, arguments);
+  }
+
+  function _ajaxHandler() {
+    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(formData) {
+      var post;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+              _context3.prev = 1;
+              _context3.next = 4;
+              return fetch(window._tutorobject.ajaxurl, {
+                method: "POST",
+                body: formData
+              });
+
+            case 4:
+              post = _context3.sent;
+              return _context3.abrupt("return", post);
+
+            case 8:
+              _context3.prev = 8;
+              _context3.t0 = _context3["catch"](1);
+              tutor_toast(__("Operation failed", "tutor"), _context3.t0, "error");
+
+            case 11:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[1, 8]]);
+    }));
+    return _ajaxHandler.apply(this, arguments);
+  }
+});
+
+/***/ }),
+
 /***/ "./assets/react/helper/response.js":
 /*!*****************************************!*\
   !*** ./assets/react/helper/response.js ***!
@@ -3002,6 +3222,7 @@ window.jQuery(document).ready(function ($) {
     var prompt = $(this).data('prompt');
     var del = $(this).data('delete_element_id');
     var data = $(this).data('request_data') || {};
+    typeof data == 'string' ? data = JSON.parse(data) : 0;
 
     if (prompt && !window.confirm(prompt)) {
       return;
@@ -3102,36 +3323,6 @@ window.jQuery(document).ready(function ($) {
       },
       error: function error(data) {
         tutor_toast(__('Something Went Wrong!', 'tutor'));
-      }
-    });
-  }); // Delete announcement
-
-  $('.tutor-announcement-delete').click(function () {
-    var announcement_id = $(this).data('announcement-id');
-    var whichtr = $("#" + $(this).data('target-announcement-row-id'));
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: {
-        action: 'tutor_announcement_delete',
-        announcement_id: announcement_id
-      },
-      beforeSend: function beforeSend() {},
-      success: function success(data) {
-        var _ref2 = data.data || {},
-            _ref2$message = _ref2.message,
-            message = _ref2$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref2$message;
-
-        if (data.success) {
-          whichtr.remove();
-          tutor_toast('Success!', message, 'success');
-          return;
-        } else {
-          tutor_toast('Error!', message, 'error');
-        }
-      },
-      error: function error() {
-        tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
       }
     });
   }); // Announcement filter
@@ -3274,16 +3465,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * Table td/tr toggle
+ */
+
 document.addEventListener('click', function (e) {
   var attr = 'data-td-target';
-  var dataTdTarget = e.target.dataset.tdTarget; // console.log(document.getElementById(dataTdTarget));
+  var dataTdTarget = e.target.dataset.tdTarget;
 
   if (dataTdTarget) {
     e.target.closest('td').classList.toggle('is-active');
-    document.getElementById(dataTdTarget).classList.toggle('active'); // document
-    // 	.getElementById(dataTdTarget)
-    // 	.closest('tr')
-    // 	.classList.toggle('active');
+    document.getElementById(dataTdTarget).classList.toggle('is-active');
   }
 });
 
@@ -32286,7 +32478,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../modules/instructor-review */ "./assets/react/modules/instructor-review.js");
 /* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_modules_instructor_review__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_10__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 

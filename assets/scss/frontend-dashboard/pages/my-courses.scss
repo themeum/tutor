@@ -1,38 +1,49 @@
 .my-courses {
-    .tutor-course-listing-item-footer .list-item-button .tutor-btn.tutor-btn-ghost .btn-icon {
-        font-size: 18px !important;
+    .tutor-course-listing-item-footer{
+        .list-item-button{
+            .tutor-btn{
+                &.tutor-btn-ghost{
+                    .btn-icon {
+                        font-size: 18px !important;
+                    }
+                } 
+            }
+        } 
+        
+    } 
+
+    .list-item-price {
+        &>span{
+            &:first-child {
+                font-style: normal;
+                font-weight: normal;
+                font-size: 15px;
+                color: #757C8E;
+            }
+
+            &:last-child{
+                font-style: normal;
+                font-weight: 500;
+                font-size: 15px;
+                color: #212327;
+            }
+        }
     }
+
+    .list-item-button {
+        &>a, &>i {
+            color: gray;
+            cursor: pointer;
+            
+        }
+    }
+
     .date {
         font-size: 14px;
     }
+
     .list-item-title {
         font-size: 16px;
-    }
-}
-
-.enrolled-courses {
-    .list-item-meta,
-    .list-item-author {
-        display: none !important;
-    }
-    .list-item-title {
-        font-size: 16px !important;
-        margin-top: 15px !important;
-        margin-bottom: 5px !important;
-    }
-}
-
-.my-wishlist {
-    .list-item-meta,
-    .course-category {
-        display: none !important;
-    }
-    .list-item-title {
-        font-size: 16px !important;
-        margin-top: 15px !important;
-    }
-    .cart-text {
-        display: none;
     }
 }
 
