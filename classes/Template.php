@@ -48,7 +48,7 @@ class Template extends Tutor_Base {
 		 * Dummy template for Spotlight mode design. It will be removed once we adopt the design to core.
 		 */
 		add_action( 'wp_loaded', function(){
-			if(!is_admin() && $_GET['course-spotlight-v2'] && $_GET['course-spotlight-v2']==1) {
+			if(!is_admin() && isset($_GET['course-spotlight-v2']) && $_GET['course-spotlight-v2']==1) {
 				get_header();
 				include tutor()->path . '/views/course-spotlight-v2-static.php';
 				get_footer();
