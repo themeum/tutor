@@ -81,78 +81,165 @@ if(is_array($answers) && count($answers) > 0) {
         }
     }
 }
+
+$table_1_columns = array(
+    'user'              => __('Attempt By', 'tutor'),
+    'date'              => __('Date', 'tutor'),
+    'qeustion_count'    => __('Question', 'tutor'),
+    'quiz_time'         => __('Quiz Time', 'tutor'),
+    'attempt_time'      => __('Attempt Time', 'tutor'),
+    'total_marks'       => __('Total Marks', 'tutor'),
+    'pass_marks'        => __('Pass Marks', 'tutor'),
+    'correct_answer'    => __('Correct Answer', 'tutor'),
+    'incorrect_answer'  => __('Incorrect Answer', 'tutor'),
+    'earned_marks'      => __('Earned Marks', 'tutor'),
+    'result'            => __('Result', 'tutor')
+);
+
+if(!is_admin()) {
+    // Exclude some columns in frontend dashboard
+    unset($table_1_columns['user']);
+    unset($table_1_columns['quiz_time']);
+    unset($table_1_columns['attempt_time']);
+}
 ?>
 
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts tutor-mb-30">
     <thead>
         <tr>
-            <th><span class="text-regular-small color-text-subsued"><?php _e('Date', 'tutor'); ?></span></th>
-            <th><span class="text-regular-small color-text-subsued"><?php _e('Question', 'tutor'); ?></span></th>
-            <th><span class="text-regular-small color-text-subsued"><?php _e('Total Marks', 'tutor'); ?></span></th>
-            <th><span class="text-regular-small color-text-subsued"><?php _e('Pass Marks', 'tutor'); ?></span></th>
-            <th><span class="text-regular-small color-text-subsued"><?php _e('Correct', 'tutor'); ?></span></th>
-            <th><span class="text-regular-small color-text-subsued"><?php _e('Incorrect', 'tutor'); ?></span></th>
-            <th><span class="text-regular-small color-text-subsued"><?php _e('Earned Marks', 'tutor'); ?></span></th>
-            <th><span class="text-regular-small color-text-subsued"><?php _e('Result', 'tutor'); ?></span></th>
+            <?php 
+                foreach($table_1_columns as $key => $column) {
+                    echo '<th><span class="text-regular-small color-text-subsued">'.$column.'</span></th>';
+                }
+            ?>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td data-th="<?php _e('Date', 'tutor'); ?>">
-                <span class="text-medium-caption color-text-primary">
-                    <?php
-                        echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
-                    ?>
-                </span>
-            </td>
-            <td data-th="<?php _e('Question', 'tutor'); ?>">
-                <span class="text-medium-caption color-text-primary">
-                    <?php echo $attempt_data->total_questions; ?>
-                </span>
-            </td>
-            <td data-th="<?php _e('Total Marks', 'tutor'); ?>">
-                <span class="text-medium-caption color-text-primary">
-                    <?php echo $attempt_data->total_marks; ?>
-                </span>
-            </td>
-            <td data-th="<?php _e('Pass Marks', 'tutor'); ?>">
-                <span class="text-medium-caption color-text-primary">
-                    <?php 
-                        $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
-                        echo $pass_mark_percent.'%';
-                    ?>
-                </span>
-            </td>
-            <td data-th="<?php _e('Correct', 'tutor'); ?>">
-                <span class="text-medium-caption color-text-primary">
-                    <?php echo $correct; ?>
-                </span>
-            </td>
-            <td data-th="<?php _e('Incorrect', 'tutor'); ?>">
-                <span class="text-medium-caption color-text-primary">
-                    <?php echo $incorrect; ?>
-                </span>
-            </td>
-            <td data-th="<?php _e('Earned Marks', 'tutor'); ?>">
-                <span class="text-medium-caption color-text-primary">
-                    <?php 
-                        echo $attempt_data->earned_marks; 
-                        $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
-                        echo '('.$earned_percentage.'%)';
-                    ?>
-                </span>
-            </td>
-            <td data-th="<?php _e('Result', 'tutor'); ?>">
-                <span class="text-medium-caption color-text-primary">
-                    <?php 
-                        if ($earned_percentage >= $pass_mark_percent){
-                            echo '<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>';
-                        }else{
-                            echo '<span class="tutor-badge-label label-danger">'.__('Fail', 'tutor').'</span>';
-                        }
-                    ?>
-                </span>
-            </td>
+            <?php foreach($table_1_columns as $key => $column): ?>
+                <?php 
+                    switch($key) {
+                        case 'user':
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                
+                            </td>
+                            <?php
+                            break;
+
+                        case 'date' :
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php
+                                        echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
+                                    ?>
+                                </span>
+                            </td>
+                            <?php
+                            break;
+
+                        case 'qeustion_count' :
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php echo $attempt_data->total_questions; ?>
+                                </span>
+                            </td>
+                            <?php
+                            break;
+
+                        case 'quiz_time':
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                
+                            </td>
+                            <?php
+                            break;
+
+                        case 'attempt_time':
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                
+                            </td>
+                            <?php
+                            break;
+                            
+                        case 'total_marks' :
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php echo $attempt_data->total_marks; ?>
+                                </span>
+                            </td>
+                            <?php
+                            break;
+
+                        case 'pass_marks' :
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php 
+                                        $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
+                                        echo $pass_mark_percent.'%';
+                                    ?>
+                                </span>
+                            </td>
+                            <?php
+                            break;
+
+                        case 'correct_answer' :
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php echo $correct; ?>
+                                </span>
+                            </td>
+                            <?php
+                            break;
+
+                        case 'incorrect_answer' :
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php echo $incorrect; ?>
+                                </span>
+                            </td>
+                            <?php
+                            break;
+
+                        case 'earned_marks' :
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php 
+                                        echo $attempt_data->earned_marks; 
+                                        $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
+                                        echo '('.$earned_percentage.'%)';
+                                    ?>
+                                </span>
+                            </td>
+                            <?php
+                            break;
+
+                        case 'result':
+                            ?>
+                            <td data-th="<?php echo $column; ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php 
+                                        if ($earned_percentage >= $pass_mark_percent){
+                                            echo '<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>';
+                                        }else{
+                                            echo '<span class="tutor-badge-label label-danger">'.__('Fail', 'tutor').'</span>';
+                                        }
+                                    ?>
+                                </span>
+                            </td>
+                            <?php
+                            break;
+                    }
+                ?>
+            <?php endforeach; ?>
         </tr>
     </tbody>
 </table>
@@ -160,7 +247,8 @@ if(is_array($answers) && count($answers) > 0) {
 <?php
     if (is_array($answers) && count($answers)){
         ?>
-        <table class="tutor-ui-table tutor-ui-table-responsive">
+        <strong><?php _e('Quiz Overview', 'tutor'); ?></strong>
+        <table class="tutor-ui-table tutor-ui-table-responsive tutor-mb-30">
             <thead>
                 <tr>
                     <th><span class="text-regular-small color-text-subsued"><?php _e('No.', 'tutor'); ?></span></th>

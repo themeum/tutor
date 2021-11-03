@@ -30,11 +30,9 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
     </a>
 </div>
 
-<div class="tutor-quiz-attempt-review-wrap">
-    <div class="attempt-answers-header">
-        <div class="attempt-header-course"><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></div>
-        <div class="attempt-header-quiz"><?php echo "<a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>
-    </div>
+<div class="attempt-answers-header">
+    <div class="attempt-header-course"><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></div>
+    <div class="attempt-header-quiz"><?php echo "<a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>
 </div>
 
 <?php 
@@ -47,14 +45,12 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 
 <?php $feedback = get_post_meta($attempt_id ,'instructor_feedback', true); ?>
 <?php if($feedback){ ?>
-    <div class="tutor-quiz-attempt-review-wrap">
-        <div class="quiz-attempt-answers-wrap">
-            <div class="attempt-answers-header">
-                <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
-            </div>
-            <div class="instructor-feedback-content">
-                <p><?php echo $feedback; ?></p>
-            </div>
+    <div class="quiz-attempt-answers-wrap">
+        <div class="attempt-answers-header">
+            <div class="attempt-header-quiz"><?php _e('Instructor Feedback', 'tutor'); ?></div>
+        </div>
+        <div class="instructor-feedback-content">
+            <p><?php echo $feedback; ?></p>
         </div>
     </div>
 <?php } ?>
