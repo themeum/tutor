@@ -15,3 +15,31 @@
         background: $black-05;
     }
 }
+
+.tutor-icon-rounded {
+    @include valueWithPrefix(display, inline-flex);
+    @include propertyWithPrefix(align-items, center);
+    @include propertyWithPrefix(justify-content, center);
+    width: 32px;
+    height: 32px;
+    overflow: hidden;
+    border-radius: 50%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 13px;
+    cursor: pointer;
+
+    &.tutor-text-danger {
+        border-color: var(--tutor-danger);
+    }
+
+    &.tutor-text-success {
+        border-color: var(--tutor-success);
+    }
+
+    &:not(:hover) {
+        opacity: .8;
+    }
+}

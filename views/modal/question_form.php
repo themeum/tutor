@@ -10,8 +10,6 @@ $settings = maybe_unserialize($question->question_settings);
         </a>
     </div>
     <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>"/>
-    <input type="hidden" name="topic_id" value="<?php echo $topic_id; ?>"/>
-
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Write your question here', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
