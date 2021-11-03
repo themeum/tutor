@@ -7,9 +7,8 @@
 		display: grid;
 		grid-gap: 30px;
 		grid-template-rows: min-content;
-		@include breakpoint-max(tablet) {
-			@include responsiveGrid(350px, 1fr);
-		}
+		@include responsiveGrid(250px, 1fr);
+
 		@include breakpoint-min(desktop) {
 			// tutor-course-listing-grid-*
 			&-2 {
@@ -269,5 +268,26 @@
 	.filter-widget-input {
 		&.has-show-more {
 		}
+	}
+}
+
+.list-item-progress {
+	.progress-bar {
+		position: relative;
+		width: 100%;
+		height: 4px;
+		background: #e3e5eb;
+		border-radius: 2px;
+		overflow: hidden;
+		.progress-value {
+			background: #3e64de;
+			position: absolute;
+			width: var(--progress-value);
+			height: 100%;
+			border-radius: 2px;
+		}
+	}
+	.progress-text {
+		margin-left: 10px;
 	}
 }
