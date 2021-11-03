@@ -829,6 +829,7 @@ window.jQuery(document).ready(function ($) {
     var prompt = $(this).data('prompt');
     var del = $(this).data('delete_element_id');
     var data = $(this).data('request_data') || {};
+    typeof data == 'string' ? data = JSON.parse(data) : 0;
 
     if (prompt && !window.confirm(prompt)) {
       return;

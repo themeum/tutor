@@ -489,6 +489,18 @@ table.tutor-ui-table {
 			}
 		}
 	}
+	.column-empty-state {
+		padding: 0 !important;
+		&:before {
+			display: none;
+		}
+		.td-empty-state {
+			img {
+				max-width: 100%;
+			}
+			text-align: center;
+		}
+	}
 } // end Table th/td Content Styles
 
 // Table Responsive Styles
@@ -653,22 +665,21 @@ table.tutor-ui-table-no-border {
 			}
 		}
 
-		&.is-active {
-			@include breakpoint-min(desktop-lg) {
-				position: relative;
-				border-top-color: transparent !important;
-				box-shadow: 0 2px 0 -1px $black-03, 0 -2px 0 -1px $black-03;
-			}
-		}
 		> * {
 			display: none;
 		}
 
 		&.is-active {
-			padding: 20px 30px 30px 30px !important;
-			border-top-color: $stroke-light-30;
 			> * {
 				display: block;
+			}
+
+			padding: 20px 30px 30px 30px !important;
+			border-top-color: $stroke-light-30;
+			@include breakpoint-min(desktop-lg) {
+				position: relative;
+				border-top-color: transparent !important;
+				box-shadow: 0 2px 0 -1px $black-03, 0 -2px 0 -1px $black-03;
 			}
 		}
 	}
