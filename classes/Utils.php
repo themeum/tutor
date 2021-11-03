@@ -2934,6 +2934,7 @@ class Utils {
 		$course_id 		= sanitize_text_field( $course_id );
 		$date_filter 	= sanitize_text_field( $date_filter );
 		$search_filter 	= sanitize_text_field( $search_filter );
+		$instructor_id 	= sanitize_text_field( $instructor_id );
 
 		$order_by    	= 'user.ID';
 		if ( 'registration_date' === $order_by ) {
@@ -2955,12 +2956,22 @@ class Utils {
 		$search_query = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_query = '';
 		$date_query   = '';
+		$author_query = '';
 
 		if ( $course_id ) {
 			$course_query = " AND course.ID = $course_id ";
 		}
 		if ( '' !== $date_filter ) {
 			$date_query = " AND DATE(user.user_registered) = CAST( '$date_filter' AS DATE ) ";
+		}
+		/**
+		 * If instructor id set then by only students that belongs to instructor
+		 * otherwise get all
+		 *
+		 * @since v.2.0.0
+		 */
+		if ( $instructor_id ) {
+			$author_query = "course.post_author = $instructor_id";
 		}
 
 		$students = $wpdb->get_results( $wpdb->prepare(
@@ -2970,11 +2981,11 @@ class Utils {
 							ON enrollment.post_parent=course.ID
 					INNER  JOIN {$wpdb->users} AS user
 							ON user.ID = enrollment.post_author
-				WHERE 	course.post_author = %d
-					AND course.post_type = %s
+				WHERE course.post_type = %s
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
+					{$author_query}
 					{$course_query}
 					{$date_query}
 					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
@@ -2983,7 +2994,6 @@ class Utils {
 				ORDER BY {$order_by} {$order}
 				LIMIT %d, %d
 			",
-			$instructor_id,
 			$course_post_type,
 			'publish',
 			'tutor_enrolled',
@@ -3002,19 +3012,18 @@ class Utils {
 							ON enrollment.post_parent=course.ID
 					INNER  JOIN {$wpdb->users} AS user
 							ON user.ID = enrollment.post_author
-				WHERE 	course.post_author = %d
-					AND course.post_type = %s
+				WHERE course.post_type = %s
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
 					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s )
+					{$author_query}
 					{$course_query}
 					{$date_query}
 				GROUP BY enrollment.post_author
 				ORDER BY {$order_by} {$order}
 
 			",
-			$instructor_id,
 			$course_post_type,
 			'publish',
 			'tutor_enrolled',
