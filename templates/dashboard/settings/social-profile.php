@@ -9,7 +9,7 @@
 $user = wp_get_current_user();
 ?>
 
-<h3><?php _e( 'Settings', 'tutor' ); ?></h3>
+<h3><?php esc_html_e( 'Settings', 'tutor' ); ?></h3>
 
 <div class="tutor-dashboard-setting-social tutor-dashboard-content-inner">
 
@@ -18,7 +18,7 @@ $user = wp_get_current_user();
 			tutor_load_template( 'dashboard.settings.nav-bar', array( 'active_setting_nav' => 'social-profile' ) );
 		?>
 		
-		<h3><?php _e( 'Social Profile Link', 'tutor' ); ?></h3>
+		<h3><?php esc_html_e( 'Social Profile Link', 'tutor' ); ?></h3>
 	</div>
 
 	<form action="" method="post" enctype="multipart/form-data">
@@ -47,7 +47,7 @@ $user = wp_get_current_user();
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12">
 				<button type="submit" class="tutor-btn">
-					<?php _e( 'Update Profile', 'tutor' ); ?>
+					<?php esc_html_e( 'Update Profile', 'tutor' ); ?>
 				</button>
 			</div>
 		</div>
