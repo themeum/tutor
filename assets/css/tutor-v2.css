@@ -21076,7 +21076,7 @@ select.tutor-form-select:focus {
   color: var(--tutor-warning);
 }
 
-.tutor-ratings .tutor-rating-stars span {
+.tutor-ratings .tutor-rating-stars span:not(:last-child) {
   margin-right: 3px;
 }
 
@@ -23706,6 +23706,22 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
       -ms-flex-align: center;
           align-items: center;
   gap: 2px;
+}
+
+.tutor-course-details-action-btns .action-btn [class^='ttr-'] {
+  font-size: 21px;
+}
+
+.tutor-course-details-widget .widget-list li [class^='ttr-'] {
+  font-size: 26px;
+}
+
+.tutor-course-details-widget .widget-tags .tutor-btn {
+  margin-bottom: 15px;
+}
+
+.tutor-course-details-widget .widget-tags .tutor-btn:not(:last-child) {
+  margin-right: 15px;
 }
 
 .tutor-course-listing-grid {
