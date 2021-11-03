@@ -69,7 +69,7 @@ $col_classes = array(
                                 <div class="<?php echo esc_attr( $field_count > 1 ? 'tutor-bs-col-12 tutor-bs-col-sm-6' : 'tutor-bs-col-12' ); ?> tutor-mb-30">
                                     <?php
                                     if ( ! empty( $field['label'] ) ) {
-                                        echo "<label for='field_{$method_id}_$field_name'>{$field['label']}</label>";
+                                        echo wp_kses_post("<label for='field_{$method_id}_$field_name'>{$field['label']}</label>");
                                     }
 
                                     $passing_data = apply_filters( 'tutor_withdraw_account_field_type_data', array(
@@ -97,7 +97,7 @@ $col_classes = array(
                                     }
 
                                     if ( ! empty( $field['desc'] ) ) {
-                                        echo "<p class='withdraw-field-desc'>{$field['desc']}</p>";
+                                        echo wp_kses_post("<p class='withdraw-field-desc'>{$field['desc']}</p>");
                                     }
                                     ?>
                                 </div>
