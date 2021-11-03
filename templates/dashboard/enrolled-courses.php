@@ -38,7 +38,7 @@
 
                                 $course_count = ($courses_list_array[$slug] && $courses_list_array[$slug]->have_posts()) ? count($courses_list_array[$slug]->posts) : 0;
                                 if($course_count) {
-                                    echo '&nbsp;('.$course_count.')';
+                                    echo esc_html('&nbsp;('.$course_count.')');
                                 }
                             ?>
                         </a> 
