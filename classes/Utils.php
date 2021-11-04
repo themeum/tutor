@@ -8031,9 +8031,13 @@ class Utils {
 	 */
 	public function translate_dynamic_text( $key ): string {
 		$key_value = array(
-			'pending'  => __( 'Pending', 'tutor' ),
-			'approved' => __( 'Approved', 'tutor' ),
-			'rejected' => __( 'Rejected', 'tutor' )
+			'pending'  		=> __( 'Pending', 'tutor' ),
+			'approved' 		=> __( 'Approved', 'tutor' ),
+			'rejected' 		=> __( 'Rejected', 'tutor' ),
+			'completed'  	=> __( 'Completed', 'tutor' ),
+			'processing' 	=> __( 'Processing', 'tutor' ),
+			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
+			'canceled'  	=> __( 'Cancelled', 'tutor' ),
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
