@@ -5,7 +5,7 @@
 		@extend .d-inline-flex;
 		@extend .align-items-center;
 		color: var(--tutor-warning);
-		span {
+		span:not(:last-child) {
 			margin-right: 3px;
 		}
 		span,
