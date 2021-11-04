@@ -317,7 +317,7 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:84, classes/Utils.php:2663, templates/dashboard/dashboard.php:27, templates/dashboard/my-courses.php:31, views/pages/course-list.php:130, views/quiz/attempt-details.php:471, views/quiz/attempt-table.php:83
+#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:84, classes/Utils.php:2663, templates/dashboard/dashboard.php:27, templates/dashboard/my-courses.php:31, views/pages/course-list.php:130, views/pages/withdraw_requests.php:68, views/quiz/attempt-details.php:471, views/quiz/attempt-table.php:83
 msgid "Pending"
 msgstr ""
 
@@ -329,7 +329,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:140, templates/dashboard/my-courses.php:132, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:131, views/fragments/announcement-list.php:173, views/metabox/course-topics.php:76, views/metabox/course-topics.php:116, views/metabox/course-topics.php:149, views/modal/review.php:34, views/modal/topic-form.php:46, views/pages/withdraw_requests.php:347, views/pages/withdraw_requests.php:414, templates/dashboard/reviews/given-reviews.php:122, templates/dashboard/reviews/given-reviews.php:153, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: classes/Backend_Page_Trait.php:140, templates/dashboard/my-courses.php:132, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:131, views/fragments/announcement-list.php:173, views/metabox/course-topics.php:76, views/metabox/course-topics.php:116, views/metabox/course-topics.php:149, views/modal/review.php:34, views/modal/topic-form.php:46, views/pages/withdraw_requests.php:357, views/pages/withdraw_requests.php:424, templates/dashboard/reviews/given-reviews.php:122, templates/dashboard/reviews/given-reviews.php:153, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -593,7 +593,7 @@ msgstr ""
 msgid "Instructor"
 msgstr ""
 
-#: classes/Instructors_List.php:74, classes/Instructors_List.php:258, classes/Instructors_List.php:294, views/pages/withdraw_requests.php:264
+#: classes/Instructors_List.php:74, classes/Instructors_List.php:258, classes/Instructors_List.php:294, views/pages/withdraw_requests.php:274
 msgid "Approve"
 msgstr ""
 
@@ -601,7 +601,7 @@ msgstr ""
 msgid "Block"
 msgstr ""
 
-#: classes/Instructors_List.php:240, classes/Utils.php:2664
+#: classes/Instructors_List.php:240, classes/Utils.php:2664, views/pages/withdraw_requests.php:69
 msgid "Approved"
 msgstr ""
 
@@ -621,7 +621,7 @@ msgstr ""
 msgid "Unblock"
 msgstr ""
 
-#: classes/Instructors_List.php:274, views/pages/withdraw_requests.php:267
+#: classes/Instructors_List.php:274, views/pages/withdraw_requests.php:277
 msgid "Reject"
 msgstr ""
 
@@ -2989,6 +2989,10 @@ msgctxt "$page_title"
 msgid "%s"
 msgstr ""
 
+#: classes/Utils.php:8026
+msgid "XYZ"
+msgstr ""
+
 #: classes/Withdraw.php:34
 msgid "Bank Transfer"
 msgstr ""
@@ -4715,67 +4719,59 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:68
-msgid "pending"
-msgstr ""
-
-#: views/pages/withdraw_requests.php:69
-msgid "approved"
-msgstr ""
-
 #: views/pages/withdraw_requests.php:70
-msgid "rejected"
+msgid "Rejected"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:179
+#: views/pages/withdraw_requests.php:169
 msgid "Name:"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:187
+#: views/pages/withdraw_requests.php:177
 msgid "A/C Number:"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:199, views/pages/withdraw_requests.php:226
+#: views/pages/withdraw_requests.php:189, views/pages/withdraw_requests.php:216
 msgid "Copy"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:206
+#: views/pages/withdraw_requests.php:196
 msgid "Bank Name:"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:214
+#: views/pages/withdraw_requests.php:204
 msgid "IBAN:"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:233
+#: views/pages/withdraw_requests.php:223
 msgid "BIC/SWIFT:"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:336
+#: views/pages/withdraw_requests.php:346
 msgid "Approve Withdrawal?"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:350
+#: views/pages/withdraw_requests.php:360
 msgid "Yes, Approve Withdrawal"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:388
+#: views/pages/withdraw_requests.php:398
 msgid "Reject Withdrawal?"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:395, views/pages/withdraw_requests.php:396
+#: views/pages/withdraw_requests.php:405, views/pages/withdraw_requests.php:406
 msgid "Invalid Payment Details"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:398, views/pages/withdraw_requests.php:399
+#: views/pages/withdraw_requests.php:408, views/pages/withdraw_requests.php:409
 msgid "Invalid Request"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:401, views/pages/withdraw_requests.php:402
+#: views/pages/withdraw_requests.php:411, views/pages/withdraw_requests.php:412
 msgid "Other"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:417
+#: views/pages/withdraw_requests.php:427
 msgid "Yes, Reject Withdrawal"
 msgstr ""
 

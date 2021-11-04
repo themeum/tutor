@@ -8020,4 +8020,21 @@ class Utils {
 			<p><?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?></p>
 		</div>
 	<?php }
+
+	/**
+	 * Translate dynamic text, dynamic text is not translate while potting 
+	 * that's why define key here to make it translate able. It will put text in the pot file while compilling
+	 * 
+	 * @param string $key, pass key to get translate text | required.
+	 * @return string
+	 * @since v2.0.0 
+	 */
+	public function translate_dynamic_text( $key ): string {
+		$key_value = array(
+			'pending'  => __( 'Pending', 'tutor' ),
+			'approved' => __( 'Approved', 'tutor' ),
+			'rejected' => __( 'Rejected', 'tutor' )
+		);
+		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
+	}
 }
