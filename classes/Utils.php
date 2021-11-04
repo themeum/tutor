@@ -7164,43 +7164,31 @@ class Utils {
 		$instructor = $this->is_instructor( $user_id );
 		$instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 
-		$required_fields = apply_filters( 'tutor_profile_required_fields', array(
-			'first_name' 				  => __( 'First Name', 'tutor' ),
-			'last_name' 				  => __( 'Last Name', 'tutor' ),
-			'_tutor_profile_photo' 		  => __( 'Profile Photo', 'tutor' ),
-			'_tutor_withdraw_method_data' => __( 'Withdraw Method', 'tutor' ),
-		));
+		$settings_url = tutor_utils()->tutor_dashboard_url('settings');
+		$withdraw_settings_url = tutor_utils()->tutor_dashboard_url('settings/withdraw-settings');
 
-		if ( 'approved' !== $instructor_status && array_key_exists( "_tutor_withdraw_method_data", $required_fields ) ) {
-			unset( $required_fields[ '_tutor_withdraw_method_data' ] );
-		}
-
-		$empty_fields = array();
-		foreach ( $required_fields as $key => $field ) {
-			$value = get_user_meta( $user_id, $key, true );
-			if ( !$value ) {
-				array_push( $empty_fields, $field );
-			}
-		}
-
-		$total_empty_fields    = count( $empty_fields );
-		$total_required_fields = count( $required_fields );
-		$signup_point          = apply_filters( 'tutor_profile_completion_signup_point', 50 );
-
-		if ( $total_empty_fields == 0 ) {
-			$progress = 100;
-		} else {
-			$completed_field = $total_required_fields-$total_empty_fields;
-			$per_field_point = $signup_point / $total_required_fields;
-			$progress        = $signup_point + ceil($per_field_point * $completed_field);
-		}
-
-		$return = array(
-			'empty_fields' => $empty_fields,
-			'progress'     => $progress,
+		// List constantly required fields
+		$required_fields = array(
+			'first_name' 				  => sprintf( __( 'Set Your %sFirst Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'_tutor_profile_photo' 		  => sprintf( __( 'Set Your %sProfile Photo%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
 		);
 
-		return (object) $return;
+		// Add payment method as a required on if current user is an approved instructor
+		if ( 'approved' == $instructor_status ) {
+			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%', 'tutor' ), '<a class="color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
+		}
+
+		// Now assign identifer whether set or not
+		foreach ( $required_fields as $key => $field ) {
+			$required_fields[$key] = array(
+				'label_html' => $field,
+				'is_set' => get_user_meta( $user_id, $key, true ) ? true : false
+			);
+		}
+
+		// Apply fitlers on the list
+		return apply_filters( 'tutor/user/profile/completion', $required_fields );
 	}
 
 	/**
