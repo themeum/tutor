@@ -6,9 +6,6 @@ import "./segments/addonlist";
 import "./segments/color-preset";
 import "./addons-list/addons-list-main";
 import "./segments/filter";
-
-import "../modules/announcement";
-import "../modules/instructor-review";
 import "./segments/withdraw";
 
 jQuery(document).ready(function($) {

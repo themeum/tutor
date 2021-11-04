@@ -44,8 +44,6 @@ $navbar_data = array(
 	'page_title' => $students->page_title,
 );
 
-//var_dump($navbar_data);
-
 /**
  * Bulk action & filters
  */
@@ -58,7 +56,7 @@ $filters = array(
 );
 
 ?>
-<div class="tutor-admin-page-wrapper">
+<div class="wrap">
 	<?php
 		/**
 		 * Load Templates with data.

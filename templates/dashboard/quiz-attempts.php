@@ -48,10 +48,7 @@ if ( $quiz_attempts_count ){
 
     tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
         'attempt_list' => $quiz_attempts,
-        'column_hook' => array(
-            'tutor_quiz/student_attempts/table/thead/col',
-            'tutor_quiz/student_attempts/table/tbody/col'
-        )
+        'context' => 'frontend-dashboard-students-quiz-attempts'
     ));
 	
     ?>
