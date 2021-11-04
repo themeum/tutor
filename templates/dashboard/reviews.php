@@ -48,17 +48,17 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                         <tr>
                             <th>
                                 <span class="text-regular-small color-text-subsued">
-                                    <?php _e('Student', 'tutor'); ?>
+                                    <?php esc_html_e('Student', 'tutor'); ?>
                                 </span>
                             </th>
                             <th>
                                 <span class="text-regular-small color-text-subsued">
-                                    <?php _e('Date', 'tutor'); ?>
+                                    <?php esc_html_e('Date', 'tutor'); ?>
                                 </span>
                             </th>
                             <th>
                                 <span class="text-regular-small color-text-subsued">
-                                    <?php _e('Feedback', 'tutor'); ?>
+                                    <?php esc_html_e('Feedback', 'tutor'); ?>
                                 </span>
                             </th>
                         </tr>
@@ -72,20 +72,20 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                             $student_name = $user_data->display_name;
                             ?>
                             <tr>
-                                <td data-th="<?php _e('Student', 'tutor'); ?>" class="column-fullwidth">
+                                <td data-th="<?php esc_html_e('Student', 'tutor'); ?>" class="column-fullwidth">
                                     <div class="td-avatar">
-                                        <img src="<?php echo $avatar_url; ?>" alt="student avatar"/>
+                                        <img src="<?php echo esc_url($avatar_url); ?>" alt="student avatar"/>
                                         <span class="text-medium-body color-text-primary">
-                                            <?php echo $student_name; ?>
+                                            <?php esc_html_e($student_name); ?>
                                         </span>
                                     </div>
                                 </td>
-                                <td data-th="<?php _e('Date', 'tutor'); ?>">
+                                <td data-th="<?php esc_html_e('Date', 'tutor'); ?>">
                                     <span class="text-medium-caption color-text-primary">
-                                        <?php echo  date( get_option( 'date_format'), strtotime($review->comment_date) ); ?>
+                                        <?php echo  esc_attr(date( get_option( 'date_format'), strtotime($review->comment_date) )); ?>
                                     </span>
                                 </td>
-                                <td data-th="<?php _e('Feedback', 'tutor'); ?>">
+                                <td data-th="<?php esc_html_e('Feedback', 'tutor'); ?>">
                                     <div class="td-feedback">
                                         <div class="td-tutor-rating text-regular-body color-text-subsued">
                                             <?php tutor_utils()->star_rating_generator($review->rating); ?>
@@ -94,9 +94,9 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                                             <?php echo htmlspecialchars($review->comment_content); ?>
                                         </p>
                                         <p class="course-name text-medium-small color-text-title tutor-mb-0">
-                                            <strong><?php _e('Course', 'tutor'); ?>:</strong>&nbsp;
-                                            <a href="<?php echo get_the_permalink($review->comment_post_ID); ?>">
-                                                <?php echo get_the_title($review->comment_post_ID); ?>
+                                            <strong><?php esc_html_e('Course', 'tutor'); ?>:</strong>&nbsp;
+                                            <a href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
+                                                <?php esc_html_e(get_the_title($review->comment_post_ID)); ?>
                                             </a>
                                         </p>
                                     </div>
@@ -110,7 +110,7 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
 			<?php }else{
 				?>
                 <div class="tutor-dashboard-content-inner">
-                    <p><?php _e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
+                    <p><?php esc_html_e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
                 </div>
 				<?php
 			} 

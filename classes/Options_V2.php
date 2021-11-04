@@ -79,34 +79,15 @@ class Options_V2 {
 	}
 
 	/**
-	 * tutor_option_search
+	 * Function to get all fields for search tutor_option_search
 	 *
 	 * @return array
 	 */
 	public function tutor_option_search() {
-		 tutor_utils()->checking_nonce();
-
-		// !current_user_can('manage_options') ? wp_send_json_error() : 0;
-		// $keyword = strtolower( $_POST['keyword'] );
-
-		$attr = $this->get_setting_fields();
-
-		/*
-		 foreach ( $attr as $block ) {
-			foreach ( $block['sections'] as $sections ) {
-				foreach ( $sections['blocks'] as $blocks ) {
-					foreach ( $blocks['fields'] as $fields ) {
-						$fields['section_label'] = $sections['label'];
-						$fields['section_slug']  = $sections['slug'];
-						$fields['block_label']   = $blocks['label'];
-						$data_array['fields'][]  = $fields;
-					}
-				}
-			}
-		} */
+		tutor_utils()->checking_nonce();
 
 		$data_array = array();
-		foreach ( $attr as $sections ) {
+		foreach ( $this->get_setting_fields() as $sections ) {
 			foreach ( $sections as $section ) {
 				foreach ( $section['blocks'] as $blocks ) {
 					foreach ( $blocks['fields'] as $fields ) {
