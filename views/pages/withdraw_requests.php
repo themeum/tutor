@@ -70,7 +70,7 @@ $available_status = array(
 	'rejected' => __( 'rejected', 'tutor' ),
 );
 ?>
-<div class="tutor-admin-page-wrapper">
+<div class="wrap">
 	<?php
 		/**
 		 * Load Templates with data.

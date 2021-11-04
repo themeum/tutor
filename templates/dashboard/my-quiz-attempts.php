@@ -28,10 +28,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
     if ($attempted_count){
         tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
             'attempt_list' => $previous_attempts,
-            'column_hook' => array(
-                'tutor_quiz/my_attempts/table/thead/col',
-                'tutor_quiz/my_attempts/table/tbody/col'
-            )
+            'context' => 'frontend-dashboard-my-quiz-attempts'
         ));
     } else {
         echo __('You have not attempted any quiz yet', 'tutor');

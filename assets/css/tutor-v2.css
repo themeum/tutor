@@ -18780,6 +18780,13 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   color: #ED9700 !important;
 }
 
+.tutor-updating-message {
+  /* 
+        position: relative;
+        @include spinner($design-brand, #f1f1f1, 20px);
+    */
+}
+
 .tutor-updating-message i, .tutor-updating-message [class^='ttr-'], .tutor-updating-message [class*=' ttr-'], .tutor-updating-message [class^='tutor-icon-'], .tutor-updating-message [class*=' tutor-icon-'] {
   display: none;
 }
@@ -18793,6 +18800,10 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   content: "\e91d" !important;
   -webkit-animation: spin 2s infinite linear;
   animation: spinner 2s infinite linear;
+}
+
+.tutor-updating-message:before + * {
+  margin-left: 8px;
 }
 
 body.tutor-screen-course-builder .select2-container--default .select2-selection--single .select2-selection__rendered {

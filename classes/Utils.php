@@ -976,8 +976,8 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function checking_nonce( $request_method = 'post' ) {
-
+	public function checking_nonce( $request_method = null ) {
+		!$request_method ? $request_method = strtolower($_SERVER['REQUEST_METHOD']) : 0;
 		$data = $request_method === 'post' ? $_POST : $_GET;
 		$nonce_value = sanitize_text_field(tutor_utils()->array_get(tutor()->nonce, $data, null));
 		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );

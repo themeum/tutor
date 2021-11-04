@@ -69,7 +69,7 @@ $filters = array(
 	'course_filter' => true,
 );
 ?>
-<div class="tutor-admin-page-wrapper tutor-admin-announcements-list">
+<div class="wrap tutor-admin-announcements-list">
 	<?php
 		/**
 		 * Load Templates with data.

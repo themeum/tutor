@@ -66,7 +66,7 @@ $filters = array(
 );
 
 ?>
-<div class="tutor-admin-page-wrapper">
+<div class="wrap">
 	<?php
 		/**
 		 * Load Templates with data.
