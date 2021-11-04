@@ -6071,10 +6071,10 @@ class Utils {
 	 *
 	 * Get purchase history by customer id
 	 */
-	public function get_orders_by_user_id( $user_id = 0, $period, $start_date, $end_date ) {
+	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
 		global $wpdb;
 
-		$user_id     = $this->get_user_id();
+		$user_id     = $this->get_user_id($user_id);
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 
 		$post_type = "";
