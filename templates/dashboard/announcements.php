@@ -65,16 +65,16 @@ $image_base = tutor()->url . '/assets/images/';
             <i class="tutor-icon-speaker"></i>
         </div>
         <div>
-            <small><?php _e('Create Announcement', 'tutor'); ?></small>
+            <small><?php esc_html_e('Create Announcement', 'tutor'); ?></small>
             <p>
                 <strong>
-                    <?php _e('Notify all students of your course', 'tutor'); ?>
+                    <?php esc_html_e('Notify all students of your course', 'tutor'); ?>
                 </strong>
             </p>
         </div>
         <div class="new-announcement-button">
             <button type="button" class="tutor-btn" data-tutor-modal-target="tutor_announcement_new">
-                <?php _e('Add New Announcement', 'tutor'); ?>
+                <?php esc_html_e('Add New Announcement', 'tutor'); ?>
             </button>
         </div>
     </div>
@@ -86,34 +86,34 @@ $image_base = tutor()->url . '/assets/images/';
 <div class="tutor-bs-row tutor-mb-30">
     <div class="tutor-bs-col-12 tutor-bs-col-lg-6">
         <label class="tutor-bs-d-block">
-            <?php _e('Courses', 'tutor'); ?>
+            <?php esc_html_e('Courses', 'tutor'); ?>
         </label>
         <select class="tutor-form-select tutor-announcement-course-sorting">
            
-            <option value=""><?php _e('All', 'tutor'); ?></option>
+            <option value=""><?php esc_html_e('All', 'tutor'); ?></option>
         
             <?php if ($courses) : ?>
                 <?php foreach ($courses as $course) : ?>
                     <option value="<?php echo esc_attr($course->ID) ?>" <?php selected($course_id, $course->ID, 'selected') ?>>
-                        <?php echo $course->post_title; ?>
+                        <?php esc_html_e($course->post_title); ?>
                     </option>
                 <?php endforeach; ?>
             <?php else : ?>
-                <option value=""><?php _e('No course found', 'tutor'); ?></option>
+                <option value=""><?php esc_html_e('No course found', 'tutor'); ?></option>
             <?php endif; ?>
         </select>
     </div>
 
     <div class="tutor-bs-col-6 tutor-bs-col-lg-3">
-        <label class="tutor-bs-d-block"><?php _e('Sort By', 'tutor'); ?></label>
+        <label class="tutor-bs-d-block"><?php esc_html_e('Sort By', 'tutor'); ?></label>
         <select class="tutor-form-select tutor-announcement-order-sorting">
-            <option <?php selected($order_filter, 'ASC'); ?>><?php _e('ASC', 'tutor'); ?></option>
-            <option <?php selected($order_filter, 'DESC'); ?>><?php _e('DESC', 'tutor'); ?></option>
+            <option <?php selected($order_filter, 'ASC'); ?>><?php esc_html_e('ASC', 'tutor'); ?></option>
+            <option <?php selected($order_filter, 'DESC'); ?>><?php esc_html_e('DESC', 'tutor'); ?></option>
         </select>
     </div>
 
     <div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-announcement-datepicker">
-        <label class="tutor-bs-d-block"><?php _e('Date', 'tutor'); ?></label>
+        <label class="tutor-bs-d-block"><?php esc_html_e('Date', 'tutor'); ?></label>
         <input type="text" class="tutor-form-control tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
         <i class="tutor-icon-calendar"></i>
     </div>

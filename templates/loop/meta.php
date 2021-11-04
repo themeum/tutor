@@ -40,7 +40,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 	<div class="text-regular-caption color-text-subsued">
 		<?php esc_html_e('By', 'tutor') ?>
 		<span class="text-medium-caption color-text-primary">
-		<?php echo esc_html_e(get_the_author()); ?>
+		<?php esc_html_e(get_the_author()); ?>
 		</span>
 		<?php
             $course_categories = get_tutor_course_categories();
