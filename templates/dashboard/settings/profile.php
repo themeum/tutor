@@ -176,7 +176,7 @@ $public_display = array_unique( $public_display );
 						<?php
 						foreach ( $public_display as $id => $item ) {
 							?>
-									<option <?php selected( $user->display_name, $item ); ?>><?php echo esc_html_e($item); ?></option>
+									<option <?php selected( $user->display_name, $item ); ?>><?php esc_html_e($item); ?></option>
 								<?php
 						}
 						?>

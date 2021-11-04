@@ -56,7 +56,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
                         <div class="tutor-dashboard-review-heading">
                             <div class="tutor-dashboard-review-title">
 								<?php esc_html_e('Course: ', 'tutor'); ?>
-                                <a href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>"><?php echo esc_html_e(get_the_title($review->comment_post_ID)); ?></a>
+                                <a href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>"><?php esc_html_e(get_the_title($review->comment_post_ID)); ?></a>
                             </div>
                         </div>
                     </div>
@@ -104,7 +104,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
                                         ?>
                                     </div>
                                     <textarea class="tutor-form-control tutor-mt-10" name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php 
-                                        echo esc_html_e(stripslashes($review->comment_content)); 
+                                        esc_html_e(stripslashes($review->comment_content)); 
                                     ?></textarea>
                                 </div>
 

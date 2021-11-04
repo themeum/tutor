@@ -16,7 +16,7 @@ $assignment_submitted_id = (int) sanitize_text_field(tutor_utils()->array_get('v
 $submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink('assignments/submitted');
 
 if(!$assignment_submitted_id){
-	echo esc_html_e("Sorry, but you are looking for something that isn't here." , 'tutor');
+	esc_html_e("Sorry, but you are looking for something that isn't here." , 'tutor');
 	return;
 }
 ?>
@@ -46,7 +46,7 @@ if(!$assignment_submitted_id){
                     <td><?php esc_html_e('Course' , 'tutor'); ?>:</td>
                     <td>
                         <a href="<?php echo esc_url( get_the_permalink($submitted_assignment->comment_parent) ); ?>" target="_blank">
-                            <?php echo esc_html_e( get_the_title($submitted_assignment->comment_parent) ); ?>
+                            <?php esc_html_e( get_the_title($submitted_assignment->comment_parent) ); ?>
                         </a>
                     </td>
                 </tr>
@@ -126,7 +126,7 @@ if(!$assignment_submitted_id){
                 <label for=""><?php esc_html_e('Write a note', 'tutor'); ?></label>
             </div>
             <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9">
-                <textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php echo esc_html_e( $instructor_note ); ?></textarea>
+                <textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php esc_html_e( $instructor_note ); ?></textarea>
             </div>
             
             <div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3"></div>

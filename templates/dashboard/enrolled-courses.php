@@ -24,7 +24,7 @@
     $courses_list = $courses_list_array[$active_tab];
 ?>
 
-<h3><?php echo esc_html_e($page_tabs[$active_tab]); ?></h3>
+<h3><?php esc_html_e($page_tabs[$active_tab]); ?></h3>
 <div class="tutor-dashboard-content-inner enrolled-courses">
     <div class="tutor-dashboard-inline-links">
         <ul>
