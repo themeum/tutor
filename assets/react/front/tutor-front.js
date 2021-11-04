@@ -2305,9 +2305,11 @@ jQuery(document).ready(function ($) {
         const target      = event.target;
         const targetTag   = target.tagName 
         const parentTag   = target.parentElement.tagName;
+        const targetClass = target.className;
+        const allowedClass  = [ 'tutor-quiz-question-paginate-item', 'tutor-icon-angle-left', 'tutor-lesson-sidebar-hide-bar' ];
 
         if ( $tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED' ) {
-            if ( targetTag === 'A' || parentTag === 'A' ) {
+            if ( ( targetTag === 'A' || parentTag === 'A' ) && ! allowedClass.includes( targetClass ) ) {
                 event.preventDefault();
                 event.stopImmediatePropagation();
                 let popup;
