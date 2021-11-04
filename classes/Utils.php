@@ -8023,7 +8023,7 @@ class Utils {
 
 	/**
 	 * Translate dynamic text, dynamic text is not translate while potting 
-	 * that's why define key here to make it translate able. It will put text in the pot file while compilling
+	 * that's why define key here to make it translate able. It will put text in the pot file while compilling.
 	 * 
 	 * @param string $key, pass key to get translate text | required.
 	 * @return string
