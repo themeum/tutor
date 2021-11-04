@@ -59,7 +59,7 @@ $navbar_data = array(
 // 'bulk_actions'  => $enrollments->prpare_bulk_actions(),
 // 'search_filter' => true,
 // );
-$filters          = array(
+$filters = array(
 	'bulk_action'   => false,
 	'filters'       => true,
 	'course_filter' => false,
@@ -127,6 +127,10 @@ $filters          = array(
 								$user_data = get_userdata( $list->user_id );
 								$details   = unserialize( $list->method_data );
 								$alert     = ( 'pending' == $list->status ? 'warning' : ( 'rejected' === $list->status ? 'danger' : ( 'approved' === $list->status ? 'success' : 'default' ) ) );
+								$data_name = isset( $details['account_name']['value'] ) ? $details['account_name']['value'] : $user_data->display_name;
+								if ( ! $details ) {
+									continue;
+								}
 							?>
 						<tr>
 							<td>
@@ -254,25 +258,54 @@ $filters          = array(
 									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-5 justify-content-center">
 										<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
 									</span>
-									<!-- <span class="tutor-badge-label label-primary-wp tutor-m-5 justify-content-center">WordPress</span>
-									<span class="tutor-badge-label label-success tutor-m-5 justify-content-center">Success</span>
-									<span class="tutor-badge-label label-warning tutor-m-5 justify-content-center">Warning</span>
-									<span class="tutor-badge-label label-danger tutor-m-5 justify-content-center">Danger</span>
-									<span class="tutor-badge-label label-processing tutor-m-5 justify-content-center">Processing</span>
-									<span class="tutor-badge-label label-onhold tutor-m-5 justify-content-center">On hold</span>
-									<span class="tutor-badge-label label-refund tutor-m-5 justify-content-center">Refunded</span>
-									<span class="tutor-badge-label tutor-m-5 justify-content-center">Default</span> -->
 								</div>
 							</td>
 							<td class="tutor-withdraw-btns">
+								<?php if ( 'pending' === $list->status ) : ?>
 								<div class="d-flex justify-content-center align-items-center">
-									<button data-tutor-modal-target="tutor-admin-withdraw-approve" class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-mr-20">
+									<button data-tutor-modal-target="tutor-admin-withdraw-approve" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>" class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-mr-20 tutor-admin-open-withdraw-approve-modal">
 										<?php esc_html_e( 'Approve', 'tutor' ); ?>
 									</button>
-									<button data-tutor-modal-target="tutor-admin-withdraw-reject" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-sm">
+									<button data-tutor-modal-target="tutor-admin-withdraw-reject"  data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>"  class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-sm tutor-admin-open-withdraw-reject-modal">
 										<?php esc_html_e( 'Reject', 'tutor' ); ?>
 									</button>
 								</div>
+								<?php elseif ( 'approved' === $list->status ) : ?>
+									<div>
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
+										,<br>
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
+									</div>
+								<?php elseif ( 'rejected' === $list->status ) : ?>
+									<div class="d-flex justify-content-between">
+										<div>
+											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
+											,<br>
+											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
+										</div>
+										<div class="tooltip-wrap">
+											<span class="text-medium-small color-text-primary">
+												<i class="ttr-circle-outline-info-filled"></i>
+											</span>
+											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
+												<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+													<strong>
+														<?php echo esc_html( $details['rejects']['reject_type'] ); ?>
+													</strong><br>
+													<span>
+														<?php echo esc_html( $details['rejects']['reject_comment'] ); ?>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								<?php else : ?>
+									<div>
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
+										<br>
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
+									</div>
+								<?php endif; ?>
 							</td>
 						</tr>
 						<?php endforeach; ?>
@@ -352,7 +385,7 @@ $filters          = array(
 					>
 						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 					</button>
-					<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn">
+					<button type="submit" class="tutor-btn tutor-btn-loading tutor-no-hover tutor-btn-wordpress tutor-btn-lg">
 						<?php esc_html_e( 'Yes, Approve Withdrawal', 'tutor' ); ?>
 					</button>
 					</div>
@@ -419,7 +452,7 @@ $filters          = array(
 							class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn">
+						<button type="submit" class="tutor-btn tutor-btn-loading tutor-no-hover tutor-btn-wordpress tutor-btn-lg tutor-btn">
 							<?php esc_html_e( 'Yes, Reject Withdrawal', 'tutor' ); ?>
 						</button>
 					</div>

@@ -2281,7 +2281,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 formData = new FormData(approveForm);
                 formData.set('withdraw-id', withdrawId);
                 _context.next = 5;
-                return ajaxHandler(formData);
+                return ajaxHandler(formData, e.currentTarget);
 
               case 5:
                 post = _context.sent;
@@ -2322,7 +2322,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 formData = new FormData(rejectForm);
                 formData.set('withdraw-id', withdrawId);
                 _context2.next = 5;
-                return ajaxHandler(formData);
+                return ajaxHandler(formData, e.currentTarget);
 
               case 5:
                 post = _context2.sent;
@@ -2370,7 +2370,7 @@ document.addEventListener("DOMContentLoaded", function () {
    */
 
 
-  function ajaxHandler(_x4) {
+  function ajaxHandler(_x4, _x5) {
     return _ajaxHandler.apply(this, arguments);
   }
   /*
@@ -2381,35 +2381,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   function _ajaxHandler() {
-    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(formData) {
-      var post;
+    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(formData, target) {
+      var loadingButton, prevHtml, post;
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
               _context3.prev = 1;
-              _context3.next = 4;
+              // select loading button
+              loadingButton = target.querySelector(".tutor-btn-loading"); // keep previous text
+
+              prevHtml = loadingButton.innerHTML; // add loading ball
+
+              loadingButton.innerHTML = "<div class=\"ball\"></div>\n            <div class=\"ball\"></div>\n            <div class=\"ball\"></div>\n            <div class=\"ball\"></div>";
+              _context3.next = 7;
               return fetch(window._tutorobject.ajaxurl, {
                 method: "POST",
                 body: formData
               });
 
-            case 4:
+            case 7:
               post = _context3.sent;
+              // after network request get previous html
+              loadingButton.innerHTML = prevHtml;
               return _context3.abrupt("return", post);
 
-            case 8:
-              _context3.prev = 8;
+            case 12:
+              _context3.prev = 12;
               _context3.t0 = _context3["catch"](1);
               tutor_toast(__("Operation failed", "tutor"), _context3.t0, "error");
 
-            case 11:
+            case 15:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[1, 8]]);
+      }, _callee3, null, [[1, 12]]);
     }));
     return _ajaxHandler.apply(this, arguments);
   }
@@ -2438,7 +2446,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  var withDrawContent = document.querySelector('.withdraw-tutor-tooltip-content');
   var withDrawCopyBtns = document.querySelectorAll('.withdraw-tutor-copy-to-clipboard');
 
   if (withDrawCopyBtns) {
@@ -2452,11 +2459,11 @@ document.addEventListener("DOMContentLoaded", function () {
           // console.log(withDrawCopyBtn.previousSibling);
           console.log(event.currentTarget.dataset.textCopy);
           copyToClipboard(event.currentTarget.dataset.textCopy).then(function (text) {
-            // withDrawCopyBtn.innerHTML = 'Copied';
-            withDrawCopyBtn.innerText = 'Copied';
+            var html = withDrawCopyBtn.innerHTML;
+            withDrawCopyBtn.innerHTML = "".concat(__('Copied', 'tutor'));
             setTimeout(function () {
-              withDrawCopyBtn.innerText = 'Copy';
-            }, 3000);
+              withDrawCopyBtn.innerHTML = html;
+            }, 5000);
           });
         });
       };
