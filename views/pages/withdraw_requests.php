@@ -64,11 +64,7 @@ $filters          = array(
 	'filters'       => true,
 	'course_filter' => false,
 );
-$available_status = array(
-	'pending'  => __( 'Pending', 'tutor' ),
-	'approved' => __( 'Approved', 'tutor' ),
-	'rejected' => __( 'Rejected', 'tutor' ),
-);
+
 ?>
 <div class="tutor-admin-page-wrapper">
 	<?php
@@ -256,7 +252,7 @@ $available_status = array(
 							<td>
 								<div>
 									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-5 justify-content-center">
-										<?php echo esc_html( isset( $available_status[ $list->status ] ) ? $available_status[ $list->status ] : $list->status ); ?>
+										<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
 									</span>
 									<!-- <span class="tutor-badge-label label-primary-wp tutor-m-5 justify-content-center">WordPress</span>
 									<span class="tutor-badge-label label-success tutor-m-5 justify-content-center">Success</span>
