@@ -4,10 +4,12 @@
     @import './lib/dropdown-action.scss';
     @import './lib/inline-link.scss';
     @import './lib/phone-number-field.scss';
+
     // Frontend dashboard wrapper header, sidebar etc.
     @import './header.scss';
     @import './sidebar.scss';
     @import './footer';
+
     // Individual dashboard pages
     .tutor-dashboard-content {
         padding-top: 30px;
@@ -19,6 +21,7 @@
             color: $black-main;
             margin: 0 0 20px 0;
         }
+        
         @import './pages/dashboard.scss';
         @import './pages/my-profile.scss';
         @import './pages/enrolled-courses.scss';
