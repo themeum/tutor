@@ -141,9 +141,7 @@ $available_status = array(
 	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
-
 	
-
 	?>
 
 	<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-mr-20">
@@ -324,7 +322,7 @@ $available_status = array(
 										<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
-													<span class="ttr-msg-archive-filled color-design-white"></span>
+													<i class="ttr-eye-fill-filled"></i>
 													<span class="text-regular-body color-text-white">
 														<?php esc_html_e( 'View Course', 'tutor' ); ?>
 													</span>
@@ -333,7 +331,7 @@ $available_status = array(
 											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="#" class="tutor-admin-course-delete" data-id="<?php echo esc_attr( $post->ID ); ?>">
-													<span class="ttr-delete-fill-filled color-design-white"></span>
+													<i class="ttr-delete-fill-filled color-design-white"></i>
 													<span class="text-regular-body color-text-white">
 													<?php esc_html_e( 'Delete', 'tutor' ); ?>
 													</span>
