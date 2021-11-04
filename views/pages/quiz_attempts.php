@@ -9,6 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if (isset($_GET['sub_page']) && $_GET['sub_page']=='view_attempt'){
+    include tutor()->path."views/pages/view_attempt.php";
+    return;
+}
+
 use TUTOR\Quiz_Attempts_List;
 $quiz_attempts = new Quiz_Attempts_List();
 
@@ -35,7 +40,7 @@ $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
 $quiz_attempts_list = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $user_id, $date, $order, $course_id );
-$total            = tutor_utils()->get_total_quiz_attempts($active_tab, $search, $user_id, $date, $course_id);
+$total = tutor_utils()->get_total_quiz_attempts($active_tab, $search, $user_id, $date, $course_id);
 
 /**
  * Navbar data to make nav menu

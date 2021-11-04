@@ -499,7 +499,11 @@ jQuery(document).ready(function($){
     $.ajax({
         url : (window.ajaxurl || _tutorobject.ajaxurl),
         type : 'POST',
-        data : {attempts_id: $that.data('attemptid'), feedback: $('.tutor-instructor-feedback-content').val() , action: 'tutor_instructor_feedback'},
+        data : {
+            attempts_id: $that.data('attemptid'), 
+            feedback: $('.tutor-instructor-feedback-content').val() , 
+            action: 'tutor_instructor_feedback'
+        },
         beforeSend: function () {
             $that.addClass('tutor-updating-message'); 
         },

@@ -1,6 +1,4 @@
 <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>"/>
-<input type="hidden" name="topic_id" value="<?php echo $topic_id; ?>"/>
-
 <div id="quiz-builder-tab-quiz-info">
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Quiz Title', 'tutor'); ?></label>

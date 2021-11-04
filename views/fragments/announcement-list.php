@@ -276,7 +276,7 @@ $courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : 
                                 </button>
                                 <ul class="popup-menu" id="<?php echo $update_modal_id; ?>_action">
                                     <li>
-                                        <a href="#" class="tutor-quiz-open-question-form" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
+                                        <a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
                                             <span class="ttr-edit-filled color-design-white"></span>
                                             <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                         </a>
