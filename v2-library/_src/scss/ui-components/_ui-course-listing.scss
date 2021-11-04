@@ -196,6 +196,9 @@
 	.tutor-course-listing-item {
 		display: initial;
 	}
+	> div {
+		height: max-content;
+	}
 }
 
 .tutor-course-listing-filter {

@@ -30,10 +30,70 @@
 		}
 	}
 	.widget-tags {
-		.tutor-btn {
-			margin-bottom: 15px;
+		.tutor-tag-list li {
+			// margin-bottom: -15px;
+			a {
+				margin-bottom: 15px;
+			}
+		}
+	}
+
+	&-col-2 {
+		@include breakpoint-min(tablet) {
+			.widget-list {
+				column-count: 2;
+			}
+		}
+	}
+}
+
+.tutor-instructor-info-card {
+	/* stroke/light30 */
+	border: 1px solid $stroke-light-30;
+	border-radius: 6px;
+	&-body {
+	}
+	&-footer {
+		border-top: 1px solid $stroke-light-30;
+	}
+	.tutor-ins-avatar {
+		img {
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+		}
+	}
+	.tutor-ins-meta {
+		&-item {
 			&:not(:last-child) {
-				margin-right: 15px;
+				margin-right: 16px;
+			}
+		}
+	}
+}
+
+.tutor-course-sidebar-card {
+	border: 1px solid $stroke-light-30;
+	border-radius: 6px;
+	&-body {
+	}
+	&-footer {
+		border-top: 1px solid $stroke-light-30;
+	}
+	&-pricing {
+	}
+	&-btns {
+	}
+	&-meta-list {
+		li {
+			> div {
+				max-width: 50%;
+				flex-basis: 50%;
+				justify-content: flex-start;
+			}
+
+			&:not(:last-child) {
+				margin-bottom: 9px;
 			}
 		}
 	}
