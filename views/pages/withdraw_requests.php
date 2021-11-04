@@ -83,7 +83,7 @@ $filters = array(
 			<table class="tutor-ui-table tutor-ui-table-responsive">
 				<thead class="tutor-text-sm tutor-text-400">
 					<tr>
-					<th>
+						<th>
 							<div class="text-regular-small color-text-subsued">
 								<?php esc_html_e( 'Request Date', 'tutor-pro' ); ?>
 							</div>
@@ -133,12 +133,12 @@ $filters = array(
 								}
 							?>
 						<tr>
-							<td>
+							<td data-th="<?php esc_html_e( 'Request Date', 'tutor-pro' ); ?>">
 								<div class="text-medium-caption color-text-primary">
 									<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $list->created_at ) ); ?>
 								</div>
 							</td>
-							<td>
+							<td data-th="<?php esc_html_e( 'Request By', 'tutor-pro' ); ?>">
 								<div class="td-avatar">
 									<?php echo get_avatar( $user_data->ID, 50 ); ?>					
 									<div class="td-avatar-detials">
@@ -156,12 +156,12 @@ $filters = array(
 									</div>
 								</div>
 							</td>
-							<td>
+							<td data-th="<?php esc_html_e( 'Withdraw Method', 'tutor-pro' ); ?>">
 								<div class="text-medium-caption color-text-primary" style=""> 
 									<?php echo esc_html( $details['withdraw_method_name'] ); ?>
 								</div>
 							</td>
-							<td>
+							<td data-th="<?php esc_html_e( 'Withdraw Details', 'tutor-pro' ); ?>">
 								<?php if ( 'bank_transfer_withdraw' === $details['withdraw_method_key'] ) : ?>
 									<ul class="tutor-table-inside-table">
 										<li>
@@ -248,19 +248,19 @@ $filters = array(
 									</div>
 								<?php endif; ?>
 							</td>
-							<td>
+							<td data-th="<?php esc_html_e( 'Amount', 'tutor-pro' ); ?>">
 								<div class="text-medium-caption color-text-primary"> 
 									<?php echo wp_kses_post( tutor_utils()->tutor_price( $list->amount ) ); ?>
 								</div>
 							</td>
-							<td>
+							<td data-th="<?php esc_html_e( 'Status', 'tutor-pro' ); ?>">
 								<div>
 									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-5 justify-content-center">
 										<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
 									</span>
 								</div>
 							</td>
-							<td class="tutor-withdraw-btns">
+							<td data-th="<?php esc_html_e( 'Update', 'tutor-pro' ); ?>" class="tutor-withdraw-btns">
 								<?php if ( 'pending' === $list->status ) : ?>
 								<div class="d-flex justify-content-center align-items-center">
 									<button data-tutor-modal-target="tutor-admin-withdraw-approve" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>" class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-mr-20 tutor-admin-open-withdraw-approve-modal">
@@ -287,7 +287,7 @@ $filters = array(
 											<span class="text-medium-small color-text-primary">
 												<i class="ttr-circle-outline-info-filled"></i>
 											</span>
-											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
+											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt <?php echo 'tooltip-left'; ?>">
 												<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
 													<strong>
 														<?php echo esc_html( $details['rejects']['reject_type'] ); ?>
