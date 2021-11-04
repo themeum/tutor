@@ -59,15 +59,15 @@ $navbar_data = array(
 // 'bulk_actions'  => $enrollments->prpare_bulk_actions(),
 // 'search_filter' => true,
 // );
-$filters = array(
+$filters          = array(
 	'bulk_action'   => false,
 	'filters'       => true,
 	'course_filter' => false,
 );
 $available_status = array(
-	'pending'  => __( 'pending', 'tutor' ),
-	'approved' => __( 'approved', 'tutor' ),
-	'rejected' => __( 'rejected', 'tutor' ),
+	'pending'  => __( 'Pending', 'tutor' ),
+	'approved' => __( 'Approved', 'tutor' ),
+	'rejected' => __( 'Rejected', 'tutor' ),
 );
 ?>
 <div class="tutor-admin-page-wrapper">
@@ -129,7 +129,8 @@ $available_status = array(
 						<?php foreach ( $withdraw_list->results as $list ) : ?>
 							<?php
 								$user_data = get_userdata( $list->user_id );
-								$details = unserialize( $list->method_data );
+								$details   = unserialize( $list->method_data );
+								$alert     = ( 'pending' == $list->status ? 'warning' : ( 'rejected' === $list->status ? 'danger' : ( 'approved' === $list->status ? 'success' : 'default' ) ) );
 							?>
 						<tr>
 							<td>
@@ -159,84 +160,93 @@ $available_status = array(
 								<div class="text-medium-caption color-text-primary" style=""> 
 									<?php echo esc_html( $details['withdraw_method_name'] ); ?>
 								</div>
-								<div class="tooltip-wrap">
-									<span class="dotedtext">de****mail@mail.com</span>
-									<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
-										<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
-											dehsnmmail@mail.com
-										</div>
-										<div data-text-copy="dehsnmmail@mail.com" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
-											<span class="icon ttr-copy-filled"></span>
-											Copy
-										</div>
-									</div>
-								</div>
 							</td>
 							<td>
-								<ul class="tutor-table-inside-table">
-									<li>
-										<span class="text-regular-small color-text-hints">
-											<?php esc_html_e( 'Name:', 'tutor' ); ?>
-										</span>
-										<span class="text-medium-small color-text-primary">
-											<?php echo esc_html( $details['account_name']['value'] ); ?>
-										</span>
-									</li>
-									<li>
-										<span class="text-regular-small color-text-hints">
-											<?php esc_html_e( 'A/C Number:', 'tutor' ); ?>
-										</span>
-										<div class="tooltip-wrap">
-											<span class="text-medium-small color-text-primary">
-												<?php echo esc_html( $details['account_number']['value'] ); ?>
+								<?php if ( 'bank_transfer_withdraw' === $details['withdraw_method_key'] ) : ?>
+									<ul class="tutor-table-inside-table">
+										<li>
+											<span class="text-regular-small color-text-hints">
+												<?php esc_html_e( 'Name:', 'tutor' ); ?>
 											</span>
-											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
-												<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+											<span class="text-medium-small color-text-primary">
+												<?php echo esc_html( $details['account_name']['value'] ); ?>
+											</span>
+										</li>
+										<li>
+											<span class="text-regular-small color-text-hints">
+												<?php esc_html_e( 'A/C Number:', 'tutor' ); ?>
+											</span>
+											<div class="tooltip-wrap">
+												<span class="text-medium-small color-text-primary">
 													<?php echo esc_html( $details['account_number']['value'] ); ?>
-												</div>
-												<div data-text-copy="00246502343048234045" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
-													<span class="icon ttr-copy-filled"></span>
-													<?php esc_html_e( 'Copy', 'tutor' ); ?>
+												</span>
+												<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
+													<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+														<?php echo esc_html( $details['account_number']['value'] ); ?>
+													</div>
+													<div data-text-copy="00246502343048234045" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+														<span class="icon ttr-copy-filled"></span>
+														<?php esc_html_e( 'Copy', 'tutor' ); ?>
+													</div>
 												</div>
 											</div>
-										</div>
-									</li>
-									<li>        
-										<span class="text-regular-small color-text-hints">
-											<?php esc_html_e( 'Bank Name:', 'tutor' ); ?>
-										</span>
-										<span class="text-medium-small color-text-primary">
-											<?php echo esc_html( $details['bank_name']['value'] ); ?>
-										</span>										
-									</li>
-									<li>                    
-										<span class="text-regular-small color-text-hints">
-											<?php esc_html_e( 'IBAN:', 'tutor' ); ?>
-										</span>
-										<div class="tooltip-wrap">
-											<span class="text-medium-small color-text-primary dotedtext">
-												<?php echo esc_html( $details['iban']['value'] ); ?>
+										</li>
+										<li>        
+											<span class="text-regular-small color-text-hints">
+												<?php esc_html_e( 'Bank Name:', 'tutor' ); ?>
 											</span>
-											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
-												<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+											<span class="text-medium-small color-text-primary">
+												<?php echo esc_html( $details['bank_name']['value'] ); ?>
+											</span>										
+										</li>
+										<li>                    
+											<span class="text-regular-small color-text-hints">
+												<?php esc_html_e( 'IBAN:', 'tutor' ); ?>
+											</span>
+											<div class="tooltip-wrap">
+												<span class="text-medium-small color-text-primary dotedtext">
 													<?php echo esc_html( $details['iban']['value'] ); ?>
-												</div>
-												<div data-text-copy="IBAN0000000065" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
-													<span class="icon ttr-copy-filled"></span>
-													<?php esc_html_e( 'Copy', 'tutor' ); ?>
-												</div>
-											</div>		
-										</div>						
-									</li>
-									<li>        
-										<span class="text-regular-small color-text-hints">
-											<?php esc_html_e( 'BIC/SWIFT:', 'tutor' ); ?>
+												</span>
+												<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
+													<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+														<?php echo esc_html( $details['iban']['value'] ); ?>
+													</div>
+													<div data-text-copy="IBAN0000000065" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+														<span class="icon ttr-copy-filled"></span>
+														<?php esc_html_e( 'Copy', 'tutor' ); ?>
+													</div>
+												</div>		
+											</div>						
+										</li>
+										<li>        
+											<span class="text-regular-small color-text-hints">
+												<?php esc_html_e( 'BIC/SWIFT:', 'tutor' ); ?>
+											</span>
+											<span class="text-medium-small color-text-primary">
+												<?php echo esc_html( $details['swift']['value'] ); ?>
+											</span>	
+										</li>
+									</ul>
+								<?php elseif ( 'echeck_withdraw' === $details['withdraw_method_key'] ) : ?>
+									<span>
+										<?php echo esc_html( $details['physical_address']['value'] ); ?>
+									</span>
+								<?php elseif ( 'paypal_withdraw' === $details['withdraw_method_key'] ) : ?>
+									<div class="tooltip-wrap">
+										<span class="dotedtext">
+											<?php echo esc_html( $details['paypal_email']['value'] ); ?>
 										</span>
-										<span class="text-medium-small color-text-primary">
-											<?php echo esc_html( $details['swift']['value'] ); ?>
-										</span>	
-									</li>
-								</ul>
+										<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-top">
+											<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
+												<?php echo esc_html( $details['paypal_email']['value'] ); ?>
+											</div>
+											<div data-text-copy="dehsnmmail@mail.com" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+												<span class="icon ttr-copy-filled"></span>
+												Copy
+											</div>
+										</div>
+									</div>
+								<?php endif; ?>
 							</td>
 							<td>
 								<div class="text-medium-caption color-text-primary"> 
@@ -245,8 +255,8 @@ $available_status = array(
 							</td>
 							<td>
 								<div>
-									<span class="tutor-badge-label label-success tutor-m-5 justify-content-center">
-										<?php echo esc_html( $list->status ); ?>
+									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-5 justify-content-center">
+										<?php echo esc_html( isset( $available_status[ $list->status ] ) ? $available_status[ $list->status ] : $list->status ); ?>
 									</span>
 									<!-- <span class="tutor-badge-label label-primary-wp tutor-m-5 justify-content-center">WordPress</span>
 									<span class="tutor-badge-label label-success tutor-m-5 justify-content-center">Success</span>
@@ -298,7 +308,7 @@ $available_status = array(
 			?>
 	</div>
 
-    <!-- withdraw approve modal-->
+	<!-- withdraw approve modal-->
 	<div id="tutor-admin-withdraw-approve" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
 		<button data-tutor-modal-close class="tutor-modal-close">
