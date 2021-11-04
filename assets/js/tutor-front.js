@@ -1,6 +1,16 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./assets/react/front/course-spotlight/index.js":
+/*!******************************************************!*\
+  !*** ./assets/react/front/course-spotlight/index.js ***!
+  \******************************************************/
+/***/ (() => {
+
+console.log('Course spotlight JS loaded');
+
+/***/ }),
+
 /***/ "./assets/react/front/dashboard.js":
 /*!*****************************************!*\
   !*** ./assets/react/front/dashboard.js ***!
@@ -699,14 +709,31 @@ window.addEventListener('DOMContentLoaded', function () {
       var table = th.closest('table');
       var tbody = table.querySelector('tbody');
       var currentTarget = e.currentTarget;
-      var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // swap class name to change icon
+      var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // If a-to-z icon
 
-      if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
-        icon.classList.remove("ttr-ordering-a-to-z-filled");
-        icon.classList.add("ttr-ordering-z-to-a-filled");
+      if (icon) {
+        // swap class name to change icon
+        if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
+          icon.classList.remove("ttr-ordering-a-to-z-filled");
+          icon.classList.add("ttr-ordering-z-to-a-filled");
+        } else {
+          icon.classList.remove("ttr-ordering-z-to-a-filled");
+          icon.classList.add("ttr-ordering-a-to-z-filled");
+        }
       } else {
-        icon.classList.remove("ttr-ordering-z-to-a-filled");
-        icon.classList.add("ttr-ordering-a-to-z-filled");
+        // swap class name to change icon
+        // Order up-down-icon
+        var _icon = currentTarget.querySelector(".up-down-icon");
+
+        if (_icon.classList.contains('ttr-order-down-filled')) {
+          _icon.classList.remove("ttr-order-down-filled");
+
+          _icon.classList.add("ttr-order-up-filled");
+        } else {
+          _icon.classList.remove("ttr-order-up-filled");
+
+          _icon.classList.add("ttr-order-down-filled");
+        }
       }
 
       Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
@@ -2118,6 +2145,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages/course-landing */ "./assets/react/front/pages/course-landing.js");
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_pages_course_landing__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./course-spotlight/index */ "./assets/react/front/course-spotlight/index.js");
+/* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_course_spotlight_index__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 

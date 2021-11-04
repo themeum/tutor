@@ -2,6 +2,7 @@ import '../lib/common';
 import './dashboard';
 import './pages/instructor-list-filter';
 import './pages/course-landing';
+import './course-spotlight/index';
 
 jQuery(document).ready(function ($) {
     'use strict';

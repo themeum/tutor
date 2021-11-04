@@ -651,7 +651,8 @@ window.jQuery(document).ready(function ($) {
       next.addClass('tutor-is-completed');
       modal.attr('data-target', next.data('tab'));
       return true;
-    }
+    } // If there is no more next screen, it means quiz saved and show the toast
+
 
     tutor_toast(__('Success', 'tutor'), __('Quiz Updated'), 'success');
     modal.removeClass('tutor-is-active');
@@ -813,7 +814,7 @@ window.jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-add-quiz-btn, .open-tutor-quiz-modal, .back-to-quiz-questions-btn', function (e) {
     e.preventDefault();
     var $that = $(this);
-    var step_1 = $(this).hasClass('open-tutor-quiz-modal');
+    var step_1 = $(this).hasClass('open-tutor-quiz-modal') || $(this).hasClass('tutor-add-quiz-btn');
     var modal = $('.tutor-modal.tutor-quiz-builder-modal-wrap');
     var quiz_id = $that.hasClass('tutor-add-quiz-btn') ? 0 : $that.attr('data-quiz-id');
     var topic_id = $that.closest('.tutor-topics-wrap').data('topic-id');
@@ -833,12 +834,13 @@ window.jQuery(document).ready(function ($) {
       success: function success(data) {
         $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
         $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
-        $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('quiz-for-post-id', topic_id).addClass('show');
+        $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('data-topic-id-of-quiz', topic_id).addClass('show');
         modal.removeClass('tutor-has-question-from');
 
         if (step_1) {
-          step_switch(modal, false, true);
-          step_switch(modal, false, true);
+          step_switch(modal, false, true); // Back to second from third
+
+          step_switch(modal, false, true); // Back to first from second
         }
 
         $(document).trigger('quiz_modal_loaded', {
@@ -871,7 +873,7 @@ window.jQuery(document).ready(function ($) {
 
 
     var course_id = $('#post_ID').val();
-    var topic_id = modal.find('[name="topic_id"]').val();
+    var topic_id = $(this).closest('.tutor-quiz-builder-modal-wrap').data('topic-id-of-quiz');
     var quiz_id = modal.find('[name="quiz_id"]').val();
 
     if (current_tab == 'quiz-builder-tab-quiz-info' || current_tab == 'quiz-builder-tab-settings') {
@@ -879,15 +881,26 @@ window.jQuery(document).ready(function ($) {
       var quiz_title = modal.find('[name="quiz_title"]').val();
       var quiz_description = modal.find('[name="quiz_description"]').val();
       var settings = modal.find('#quiz-builder-tab-settings :input, #quiz-builder-tab-advanced-options :input').serializeObject();
+      var quiz_info_required = {
+        quiz_title: quiz_title,
+        course_id: course_id,
+        quiz_id: quiz_id,
+        topic_id: topic_id
+      };
+
+      for (var k in quiz_info_required) {
+        if (!quiz_info_required[k]) {
+          console.log(quiz_info_required);
+          tutor_toast('Error!', k + ' not found', 'error');
+          return;
+        }
+      }
+
       $.ajax({
         url: window._tutorobject.ajaxurl,
         type: 'POST',
-        data: _objectSpread(_objectSpread({}, settings), {}, {
-          quiz_title: quiz_title,
+        data: _objectSpread(_objectSpread(_objectSpread({}, settings), quiz_info_required), {}, {
           quiz_description: quiz_description,
-          course_id: course_id,
-          quiz_id: quiz_id,
-          topic_id: topic_id,
           action: 'tutor_quiz_save'
         }),
         beforeSend: function beforeSend() {
