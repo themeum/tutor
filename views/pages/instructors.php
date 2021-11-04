@@ -9,6 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if (isset($_GET['sub_page'])){
+    $page = sanitize_text_field($_GET['sub_page']);
+    include_once tutor()->path."views/pages/{$page}.php";
+    return;
+}
+
 use TUTOR\Instructors_List;
 $instructors = new Instructors_List();
 
