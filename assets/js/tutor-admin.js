@@ -809,7 +809,7 @@ var _wp$i18n = wp.i18n,
     _x = _wp$i18n._x,
     _n = _wp$i18n._n,
     _nx = _wp$i18n._nx;
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   var filterCourse = document.getElementById("tutor-backend-filter-course");
 
   if (filterCourse) {
@@ -971,12 +971,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
   /**
-   * On change status 
+   * On change status
    * update course status
    */
 
 
-  var availableStatus = ['publish', 'pending', 'draft'];
+  var availableStatus = ["publish", "pending", "draft"];
   var courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
 
   var _iterator2 = _createForOfIteratorHelper(courseStatusUpdate),
@@ -1007,9 +1007,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 case 5:
                   formData = new FormData();
                   formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                  formData.set('id', target.dataset.id);
-                  formData.set('status', newStatus);
-                  formData.set('action', 'tutor_change_course_status');
+                  formData.set("id", target.dataset.id);
+                  formData.set("status", newStatus);
+                  formData.set("action", "tutor_change_course_status");
                   _context2.next = 12;
                   return ajaxHandler(formData);
 
@@ -1023,8 +1023,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                   if (response) {
                     target.dataset.status = newStatus;
-                    putStatus = '';
-                    newStatus === 'publish' ? putStatus = 'select-success' : newStatus === 'pending' ? putStatus = 'select-warning' : 'select-default';
+                    putStatus = "";
+                    newStatus === "publish" ? putStatus = "select-success" : newStatus === "pending" ? putStatus = "select-warning" : "select-default";
 
                     if (!target.closest(".tutor-form-select-with-icon").classList.contains(putStatus)) {
                       target.closest(".tutor-form-select-with-icon").classList.add(putStatus);
@@ -1049,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }();
     }
     /**
-     * Delete course delete 
+     * Delete course delete
      */
 
   } catch (err) {
@@ -1074,7 +1074,7 @@ document.addEventListener('DOMContentLoaded', function () {
             while (1) {
               switch (_context3.prev = _context3.next) {
                 case 0:
-                  if (!confirm('Do you want to delete this course?')) {
+                  if (!confirm("Do you want to delete this course?")) {
                     _context3.next = 13;
                     break;
                   }
@@ -1082,8 +1082,8 @@ document.addEventListener('DOMContentLoaded', function () {
                   id = e.currentTarget.dataset.id;
                   formData = new FormData();
                   formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                  formData.set('id', id);
-                  formData.set('action', 'tutor_course_delete');
+                  formData.set("id", id);
+                  formData.set("action", "tutor_course_delete");
                   _context3.next = 8;
                   return ajaxHandler(formData);
 
