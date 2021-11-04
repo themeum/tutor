@@ -24,7 +24,7 @@
     $courses_list = $courses_list_array[$active_tab];
 ?>
 
-<h3><?php echo $page_tabs[$active_tab]; ?></h3>
+<h3><?php esc_html_e($page_tabs[$active_tab]); ?></h3>
 <div class="tutor-dashboard-content-inner enrolled-courses">
     <div class="tutor-dashboard-inline-links">
         <ul>
@@ -34,11 +34,11 @@
                     <li class="<?php echo $slug==$active_tab ? 'active' : '' ?>">
                         <a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( $slug ) ); ?>"> 
                             <?php 
-                                echo $tab; 
+                                echo esc_html($tab); 
 
                                 $course_count = ($courses_list_array[$slug] && $courses_list_array[$slug]->have_posts()) ? count($courses_list_array[$slug]->posts) : 0;
                                 if($course_count) {
-                                    echo '&nbsp;('.$course_count.')';
+                                    echo esc_html('&nbsp;('.$course_count.')');
                                 }
                             ?>
                         </a> 
@@ -49,7 +49,7 @@
         </ul>
     </div>
 
-    <div class="tutor-course-listing tutor-course-listing-grid-3">
+    <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
         <?php
             // Loop through all the courses
             if ( $courses_list && $courses_list->have_posts() ) {
@@ -92,7 +92,7 @@
                 ?>
                     <div class='tutor-mycourse-wrap'>
                         <div class='tutor-mycourse-content'>
-                            <?php _e( 'You haven\'t purchased any course', 'tutor' ); ?>
+                            <?php esc_html_e( 'You haven\'t purchased any course', 'tutor' ); ?>
                         </div>
                     </div>
                 <?php

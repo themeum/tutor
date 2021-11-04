@@ -17,10 +17,10 @@ $profile_url = tutor_utils()->profile_url($question->user_id);
             <div class="tutor-question-wrap">
                 <div class="question-top-meta">
                     <div class="tutor-question-avater">
-                        <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($question->user_id); ?></a>
+                        <a href="<?php echo esc_url($profile_url); ?>"> <?php echo wp_kses_post(tutor_utils()->get_tutor_avatar($question->user_id)); ?></a>
                     </div>
                     <p class="review-meta">
-                        <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a>
+                        <a href="<?php echo esc_url($profile_url); ?>"><?php echo esc_html($question->display_name); ?></a>
                         <span class="tutor-text-mute"><?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime
                             ($question->comment_date_gmt))) ; ?></span>
                     </p>
@@ -44,10 +44,10 @@ $profile_url = tutor_utils()->profile_url($question->user_id);
                             <div class="tutor-question-wrap">
                                 <div class="question-top-meta">
                                     <div class="tutor-question-avater">
-                                        <a href="<?php echo $answer_profile; ?>"> <?php echo tutor_utils()->get_tutor_avatar($answer->user_id); ?></a>
+                                        <a href="<?php echo esc_url($answer_profile); ?>"> <?php echo wp_kses_post(tutor_utils()->get_tutor_avatar($answer->user_id)); ?></a>
                                     </div>
                                     <p class="review-meta">
-                                        <a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a>
+                                        <a href="<?php echo esc_url($answer_profile); ?>"><?php echo esc_html($answer->display_name); ?></a>
                                         <span class="tutor-text-mute">
                                             <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($answer->comment_date_gmt)) ) ; ?>
                                         </span>
@@ -55,7 +55,7 @@ $profile_url = tutor_utils()->profile_url($question->user_id);
                                 </div>
 
                                 <div class="tutor_question_area">
-                                    <?php echo wpautop(stripslashes($answer->comment_content)); ?>
+                                    <?php echo wp_kses_post(wpautop(stripslashes($answer->comment_content))); ?>
                                 </div>
                             </div>
                         </div>
@@ -67,20 +67,20 @@ $profile_url = tutor_utils()->profile_url($question->user_id);
                 <form action="<?php echo admin_url('admin-post.php') ?>" id="tutor_admin_answer_form" method="post">
                     <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                     <input type="hidden" value="tutor_place_answer" name="action"/>
-                    <input type="hidden" value="<?php echo $question_id; ?>" name="question_id"/>
+                    <input type="hidden" value="<?php echo esc_html($question_id); ?>" name="question_id"/>
                     <div class="tutor-form-group">
                         <?php
-                        $editor_settings = array(
-                            'teeny' => true,
-                            'media_buttons' => false,
-                            'quicktags' => false,
-                            'editor_height' => 100,
-                        );
-                        wp_editor(null, 'answer', $editor_settings);
+                            $editor_settings = array(
+                                'teeny' => true,
+                                'media_buttons' => false,
+                                'quicktags' => false,
+                                'editor_height' => 100,
+                            );
+                            wp_editor(null, 'answer', $editor_settings);
                         ?>
                     </div>
                     <div class="tutor-form-group">
-                        <button type="submit" class="tutor-btn" name="tutor_question_search_btn"><?php _e('Reply', 'tutor'); ?> </button>
+                        <button type="submit" class="tutor-btn" name="tutor_question_search_btn"><?php esc_html_e('Reply', 'tutor'); ?> </button>
                     </div>
                 </form>
             </div>

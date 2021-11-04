@@ -16,4 +16,25 @@
 		align-items: center;
 		gap: 2px;
 	}
+	.action-btn [class^='ttr-'] {
+		font-size: 21px;
+	}
+}
+
+.tutor-course-details-widget {
+	.widget-title {
+	}
+	.widget-list {
+		li [class^='ttr-'] {
+			font-size: 26px;
+		}
+	}
+	.widget-tags {
+		.tutor-btn {
+			margin-bottom: 15px;
+			&:not(:last-child) {
+				margin-right: 15px;
+			}
+		}
+	}
 }
