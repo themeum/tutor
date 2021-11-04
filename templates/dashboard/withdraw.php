@@ -43,10 +43,10 @@ else if(function_exists('edd_currency_symbol')){
     <h4><?php echo __('Withdrawal', 'tutor'); ?></h4>
 
     <div class="tutor-component-three-col-action">
-        <img src="<?php echo $image_base; ?>wallet.svg" />
+        <img src="<?php echo esc_url($image_base); ?>wallet.svg" />
         
         <div>
-            <small><?php _e('Current Balance', 'tutor'); ?></small>
+            <small><?php esc_html_e('Current Balance', 'tutor'); ?></small>
             <p>
                 <?php
                 if ($is_balance_sufficient) {
@@ -62,7 +62,7 @@ else if(function_exists('edd_currency_symbol')){
             if ($is_balance_sufficient && $withdraw_method_name) { 
                 ?>
                 <button class="tutor-btn open-withdraw-form-btn">
-                    <?php _e('Withdrawal Request', 'tutor'); ?>
+                    <?php esc_html_e('Withdrawal Request', 'tutor'); ?>
                 </button> 
                 <?php
             }
@@ -70,7 +70,7 @@ else if(function_exists('edd_currency_symbol')){
     </div>
 
     <div class="current-withdraw-account-wrap withdrawal-preference inline-image-text">
-        <img src="<?php echo $image_base; ?>info-icon-question.svg" />
+        <img src="<?php echo esc_url($image_base); ?>info-icon-question.svg" />
         <span>
             <?php
             $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
@@ -93,8 +93,8 @@ else if(function_exists('edd_currency_symbol')){
                         <br />
                         <div style="text-align:center">
                             <img src="<?php echo $image_base; ?>icon-cheers.svg" />
-                            <h3><?php _e('Your withdrawal request has been successfully accepted', 'tutor'); ?></h3>
-                            <p><?php _e('Please check your transaction notification on your connected withdrawal method', 'tutor'); ?></p>
+                            <h3><?php esc_html_e('Your withdrawal request has been successfully accepted', 'tutor'); ?></h3>
+                            <p><?php esc_html_e('Please check your transaction notification on your connected withdrawal method', 'tutor'); ?></p>
                         </div>
                         <br />
                         <br />
@@ -105,18 +105,18 @@ else if(function_exists('edd_currency_symbol')){
                     <div>
                         <i class="tutor-icon-line-cross close-withdraw-form-btn"></i>
                         <img src="<?php echo $image_base; ?>wallet.svg" />
-                        <h3><?php _e('Withdrawal Request', 'tutor'); ?></h3>
-                        <p><?php _e('Please enter withdrawal amount and click the submit request button', 'tutor'); ?></p>
+                        <h3><?php esc_html_e('Withdrawal Request', 'tutor'); ?></h3>
+                        <p><?php esc_html_e('Please enter withdrawal amount and click the submit request button', 'tutor'); ?></p>
                         <table>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <span><?php _e('Current Balance', 'tutor'); ?></span><br />
-                                        <b><?php echo $balance_formatted; ?></b>
+                                        <span><?php esc_html_e('Current Balance', 'tutor'); ?></span><br />
+                                        <b><?php echo wp_kses_post($balance_formatted); ?></b>
                                     </td>
                                     <td>
-                                        <span><?php _e('Selected Payment Method', 'tutor'); ?></span><br />
-                                        <b><?php echo $withdraw_method_name; ?></b>
+                                        <span><?php esc_html_e('Selected Payment Method', 'tutor'); ?></span><br />
+                                        <b><?php echo esc_html_e($withdraw_method_name); ?></b>
                                     </td>
                                 </tr>
                             </tbody>
@@ -136,10 +136,10 @@ else if(function_exists('edd_currency_symbol')){
                             <input type="hidden" value="tutor_make_an_withdraw" name="action" />
                             <?php do_action('tutor_withdraw_form_before'); ?>
                             <div class="withdraw-form-field-row">
-                                <label for="tutor_withdraw_amount"><?php _e('Amount', 'tutor') ?></label>
+                                <label for="tutor_withdraw_amount"><?php esc_html_e('Amount', 'tutor') ?></label>
                                 <div class="withdraw-form-field-amount">
                                     <span>
-                                        <span><?php echo $currency_symbol; ?></span>
+                                        <span><?php echo esc_attr($currency_symbol); ?></span>
                                     </span>
                                     <input type="number" min="<?php echo esc_attr($min_withdraw); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required>
                                 </div>
@@ -152,8 +152,8 @@ else if(function_exists('edd_currency_symbol')){
                             </div>
 
                             <div class="tutor-withdraw-button-container">
-                                <button class="tutor-btn tutor-btn-secondary close-withdraw-form-btn"><?php _e('Cancel', 'tutor'); ?></button>
-                                <button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php _e('Submit Request', 'tutor'); ?></button>
+                                <button class="tutor-btn tutor-btn-secondary close-withdraw-form-btn"><?php esc_html_e('Cancel', 'tutor'); ?></button>
+                                <button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php esc_html_e('Submit Request', 'tutor'); ?></button>
                             </div>
 
                             <div class="tutor-withdraw-form-response"></div>
@@ -171,7 +171,7 @@ else if(function_exists('edd_currency_symbol')){
 
     <div class="withdraw-history-table-wrap tutor-tooltip-inside">
         <div class="withdraw-history-table-title">
-            <h4> <?php _e('Withdrawal History', 'tutor'); ?></h4>
+            <h4> <?php esc_html_e('Withdrawal History', 'tutor'); ?></h4>
         </div>
 
         <?php
@@ -180,10 +180,10 @@ else if(function_exists('edd_currency_symbol')){
             <table class="withdrawals-history tutor-table">
                 <thead>
                     <tr>
-                        <th><?php _e('Withdrawal Method', 'tutor') ?></th>
-                        <th width="30%"><?php _e('Requested On', 'tutor') ?></th>
-                        <th width="15%"><?php _e('Amount', 'tutor') ?></th>
-                        <th width="15%"><?php _e('Status', 'tutor') ?></th>
+                        <th><?php esc_html_e('Withdrawal Method', 'tutor') ?></th>
+                        <th width="30%"><?php esc_html_e('Requested On', 'tutor') ?></th>
+                        <th width="15%"><?php esc_html_e('Amount', 'tutor') ?></th>
+                        <th width="15%"><?php esc_html_e('Status', 'tutor') ?></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -211,7 +211,7 @@ else if(function_exists('edd_currency_symbol')){
                                 }
                                 ?>
                                 <div class="inline-image-text is-inline-block">
-                                    <img src="<?php echo isset($method_icons[$method_key]) ? $method_icons[$method_key] : ''; ?>" />
+                                    <img src="<?php echo esc_url(isset($method_icons[$method_key]) ? $method_icons[$method_key] : ''); ?>" />
                                     &nbsp;
                                     <span>
                                         <?php
@@ -223,7 +223,7 @@ else if(function_exists('edd_currency_symbol')){
                             </td>
                             <td>
                                 <?php
-                                echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($withdraw_history->created_at));
+                                    echo esc_attr(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($withdraw_history->created_at)));
                                 ?>
                             </td>
                             <td>
@@ -231,7 +231,7 @@ else if(function_exists('edd_currency_symbol')){
                             </td>
                             <td>
                                 <span class="inline-image-text is-inline-block">
-                                    <span class="tutor-status-text status-<?php echo $withdraw_history->status; ?>">
+                                    <span class="tutor-status-text status-<?php echo esc_html_e($withdraw_history->status); ?>">
                                         <?php echo __(ucfirst($withdraw_history->status), 'tutor'); ?>
                                     </span>
                                 </span>
@@ -242,9 +242,9 @@ else if(function_exists('edd_currency_symbol')){
                                 ?>
                                     <span class="tutor-status-text-container">
                                         <span class="tool-tip-container">
-                                            <img src="<?php echo $image_base; ?>info-icon.svg" />
+                                            <img src="<?php echo esc_url($image_base); ?>info-icon.svg" />
                                             <span class="tooltip tip-left" role="tooltip">
-                                                <?php echo $status_message[$withdraw_history->status]; ?>
+                                                <?php echo esc_html_e($status_message[$withdraw_history->status]); ?>
                                             </span>
                                         </span>
                                     </span>
@@ -261,7 +261,7 @@ else if(function_exists('edd_currency_symbol')){
         <?php
         } else {
         ?>
-            <p><?php _e('No withdrawal yet', 'tutor'); ?></p>
+            <p><?php esc_html_e('No withdrawal yet', 'tutor'); ?></p>
         <?php
         }
         ?>
