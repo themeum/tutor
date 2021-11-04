@@ -107,11 +107,11 @@ $public_display = array_unique( $public_display );
 		<?php
 		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+			echo wp_kses_post('<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">');
 			foreach ( $errors as $error_key => $error_value ) {
-				echo "<li>{$error_value}</li>";
+				echo wp_kses_post("<li>{$error_value}</li>");
 			}
-			echo '</ul></div>';
+			echo wp_kses_post('</ul></div>');
 		}
 		?>
 
@@ -176,7 +176,7 @@ $public_display = array_unique( $public_display );
 						<?php
 						foreach ( $public_display as $id => $item ) {
 							?>
-									<option <?php selected( $user->display_name, $item ); ?>><?php echo $item; ?></option>
+									<option <?php selected( $user->display_name, $item ); ?>><?php esc_html_e($item); ?></option>
 								<?php
 						}
 						?>
@@ -184,7 +184,7 @@ $public_display = array_unique( $public_display );
 				</label>
 				<p>
 					<small>
-						<?php _e( 'The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor' ); ?>
+						<?php esc_html_e( 'The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor' ); ?>
 					</small> 
 				</p>
 			</div>
@@ -195,7 +195,7 @@ $public_display = array_unique( $public_display );
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12">
 				<button type="submit" class="tutor-btn">
-					<?php _e( 'Update Profile', 'tutor' ); ?>
+					<?php esc_html_e( 'Update Profile', 'tutor' ); ?>
 				</button>
 			</div>
 		</div>

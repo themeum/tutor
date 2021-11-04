@@ -145,10 +145,10 @@ $filters = array(
 							<?php echo esc_html( $quiz_attempts->column_student( $list, 'attempt_ended_at' ) ); ?>
 							</span>
 							<p class="text-medium-body color-text-primary">
-								<?php echo esc_html_e( $quiz_attempts->column_quiz( $list, 'post_title' ) ); ?>
+								<?php esc_html_e( $quiz_attempts->column_quiz( $list, 'post_title' ) ); ?>
 							</p>
 							<span class="text-regular-small color-text-primary">
-								<?php esc_html_e( 'Student:', 'tutor' ) ?> <?php echo esc_html_e( $quiz_attempts->column_student_info( $list, 'display_name' ) ); ?>
+								<?php esc_html_e( 'Student:', 'tutor' ) ?> <?php esc_html_e( $quiz_attempts->column_student_info( $list, 'display_name' ) ); ?>
 							</span>
 						</div>
 					</td>
@@ -159,12 +159,12 @@ $filters = array(
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo esc_html_e( $quiz_attempts->column_total_questions( $list, 'total_questions' ) ); ?>
+						<?php esc_html_e( $quiz_attempts->column_total_questions( $list, 'total_questions' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">
 						<span class="color-text-primary text-regular-caption">
-						<?php echo esc_html_e( $quiz_attempts->column_total_marks( $list, 'total_marks' ) ); ?>
+						<?php esc_html_e( $quiz_attempts->column_total_marks( $list, 'total_marks' ) ); ?>
 						</span>
 					</td>
 					<td data-th="Registration Date">

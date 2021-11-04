@@ -185,7 +185,7 @@ msgstr ""
 msgid "Tutor Pages"
 msgstr ""
 
-#: classes/Admin.php:154, classes/Instructors_List.php:332, classes/Tools_V2.php:95, templates/dashboard/purchase_history.php:23, templates/dashboard/withdraw.php:186, views/pages/instructors.php:106, views/pages/tools/tutor_pages.php:13
+#: classes/Admin.php:154, classes/Instructors_List.php:332, classes/Tools_V2.php:95, templates/dashboard/purchase_history.php:23, templates/dashboard/withdraw.php:186, views/pages/instructors.php:112, views/pages/tools/tutor_pages.php:13
 msgid "Status"
 msgstr ""
 
@@ -637,7 +637,7 @@ msgstr ""
 msgid "Sure to Remove as Instructor?"
 msgstr ""
 
-#: classes/Instructors_List.php:327, classes/Students_List.php:185, views/pages/instructors.php:88
+#: classes/Instructors_List.php:327, classes/Students_List.php:185, views/pages/instructors.php:94
 msgid "Name"
 msgstr ""
 
@@ -645,7 +645,7 @@ msgstr ""
 msgid "E-Mail"
 msgstr ""
 
-#: classes/Instructors_List.php:329, views/pages/instructors.php:100
+#: classes/Instructors_List.php:329, views/pages/instructors.php:106
 msgid "Total Course"
 msgstr ""
 
@@ -653,7 +653,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:331, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, templates/dashboard/reviews.php:56, templates/dashboard/reviews.php:83, views/elements/filters.php:101, views/fragments/announcement-list.php:213, views/fragments/announcement-list.php:205, views/fragments/announcement-list.php:254, views/pages/course-list.php:159, views/quiz/attempt-details.php:87, templates/dashboard/assignments/submitted.php:69, templates/dashboard/assignments/submitted.php:113
+#: classes/Instructors_List.php:331, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:24, templates/dashboard/reviews.php:56, templates/dashboard/reviews.php:83, views/elements/filters.php:101, views/fragments/announcement-list.php:213, views/fragments/announcement-list.php:205, views/fragments/announcement-list.php:254, views/pages/course-list.php:159, views/quiz/attempt-details.php:87, templates/dashboard/assignments/submitted.php:69
 msgid "Date"
 msgstr ""
 
@@ -734,7 +734,7 @@ msgstr ""
 msgid "Price Type"
 msgstr ""
 
-#: classes/Options.php:126, classes/Options_V2.php:323, classes/Utils.php:7007
+#: classes/Options.php:126, classes/Options_V2.php:323, classes/Utils.php:7009
 msgid "Dashboard Page"
 msgstr ""
 
@@ -1254,7 +1254,7 @@ msgstr ""
 msgid "Allow multiple instructors to upload their courses."
 msgstr ""
 
-#: classes/Options.php:567, classes/Options_V2.php:1226, classes/Utils.php:7008
+#: classes/Options.php:567, classes/Options_V2.php:1226, classes/Utils.php:7010
 msgid "Instructor Registration Page"
 msgstr ""
 
@@ -1282,7 +1282,7 @@ msgstr ""
 msgid "Student Profile settings"
 msgstr ""
 
-#: classes/Options.php:599, classes/Options_V2.php:1234, classes/Utils.php:7009
+#: classes/Options.php:599, classes/Options_V2.php:1234, classes/Utils.php:7011
 msgid "Student Registration Page"
 msgstr ""
 
@@ -2140,7 +2140,7 @@ msgstr ""
 msgid "Question"
 msgstr ""
 
-#: classes/Question_Answers_List.php:74, templates/student-public-profile.php:111, templates/dashboard/question-answer.php:27, templates/dashboard/quiz-attempts.php:45, templates/dashboard/reviews.php:51, templates/dashboard/reviews.php:75, views/elements/search-filter.php:31, templates/dashboard/assignments/review.php:54, templates/dashboard/assignments/submitted.php:75, templates/dashboard/assignments/submitted.php:118
+#: classes/Question_Answers_List.php:74, templates/student-public-profile.php:111, templates/dashboard/question-answer.php:27, templates/dashboard/quiz-attempts.php:45, templates/dashboard/reviews.php:51, templates/dashboard/reviews.php:75, views/elements/search-filter.php:31, templates/dashboard/assignments/review.php:54, templates/dashboard/assignments/submitted.php:75
 msgid "Student"
 msgstr ""
 
@@ -2956,35 +2956,35 @@ msgstr ""
 msgid "Github"
 msgstr ""
 
-#: classes/Utils.php:6972
+#: classes/Utils.php:6974
 msgid "Not Taken"
 msgstr ""
 
-#: classes/Utils.php:6970
+#: classes/Utils.php:6972
 msgid "In Progress"
 msgstr ""
 
-#: classes/Utils.php:6966
+#: classes/Utils.php:6968
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:7149, templates/dashboard/my-profile.php:22, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:123, templates/dashboard/settings/profile.php:124
+#: classes/Utils.php:7151, templates/dashboard/my-profile.php:22, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:123, templates/dashboard/settings/profile.php:124
 msgid "First Name"
 msgstr ""
 
-#: classes/Utils.php:7150, templates/dashboard/my-profile.php:23, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:130, templates/dashboard/settings/profile.php:131
+#: classes/Utils.php:7152, templates/dashboard/my-profile.php:23, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:130, templates/dashboard/settings/profile.php:131
 msgid "Last Name"
 msgstr ""
 
-#: classes/Utils.php:7151
+#: classes/Utils.php:7153
 msgid "Profile Photo"
 msgstr ""
 
-#: classes/Utils.php:7152
+#: classes/Utils.php:7154
 msgid "Withdraw Method"
 msgstr ""
 
-#: classes/Utils.php:8018
+#: classes/Utils.php:8020
 msgctxt "$page_title"
 msgid "%s"
 msgstr ""
@@ -3355,6 +3355,10 @@ msgstr ""
 msgid "Create Date"
 msgstr ""
 
+#: templates/dashboard/assignments.php:147
+msgid "No assignment available"
+msgstr ""
+
 #: templates/dashboard/assignments.php:73
 msgid "Assignment Name"
 msgstr ""
@@ -3555,7 +3559,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: templates/dashboard/my-profile.php:25, views/pages/instructors.php:94, views/pages/students.php:92
+#: templates/dashboard/my-profile.php:25, views/pages/instructors.php:100, views/pages/students.php:92
 msgid "Email"
 msgstr ""
 
@@ -4599,7 +4603,7 @@ msgstr ""
 msgid "on"
 msgstr ""
 
-#: views/pages/course-list.php:49, views/pages/instructors.php:50
+#: views/pages/course-list.php:49, views/pages/instructors.php:56
 msgid "Add New"
 msgstr ""
 
@@ -4647,7 +4651,7 @@ msgstr ""
 msgid "Earned Marks"
 msgstr ""
 
-#: views/pages/quiz_attempts.php:127, views/quiz/attempt-details.php:96, views/quiz/attempt-table.php:14, views/quiz/attempt-table.php:80, templates/dashboard/assignments/submitted.php:89, templates/dashboard/assignments/submitted.php:134, templates/single/quiz/previous-attempts.php:20
+#: views/pages/quiz_attempts.php:127, views/quiz/attempt-details.php:96, views/quiz/attempt-table.php:14, views/quiz/attempt-table.php:80, templates/dashboard/assignments/submitted.php:89, templates/single/quiz/previous-attempts.php:20
 msgid "Result"
 msgstr ""
 
@@ -4823,7 +4827,7 @@ msgstr ""
 msgid "Correct"
 msgstr ""
 
-#: templates/dashboard/assignments/review.php:142
+#: templates/dashboard/assignments/review.php:143
 msgid "Assignments submission not found or not completed"
 msgstr ""
 
@@ -4837,6 +4841,10 @@ msgstr ""
 
 #: templates/dashboard/assignments/review.php:78
 msgid "Attach assignment file(s)"
+msgstr ""
+
+#: templates/dashboard/assignments/review.php:94
+msgid ": 2MB"
 msgstr ""
 
 #: templates/dashboard/assignments/review.php:111
@@ -4875,7 +4883,7 @@ msgstr ""
 msgid "Submission Deadline"
 msgstr ""
 
-#: templates/dashboard/assignments/submitted.php:44, templates/dashboard/assignments/submitted.php:82, templates/dashboard/assignments/submitted.php:129
+#: templates/dashboard/assignments/submitted.php:44, templates/dashboard/assignments/submitted.php:82
 msgid "Total Points"
 msgstr ""
 
@@ -4909,10 +4917,6 @@ msgstr ""
 
 #: templates/dashboard/assignments/submitted.php:108
 msgid "%s Fail %s"
-msgstr ""
-
-#: templates/dashboard/assignments/submitted.php:137
-msgid "Details URL"
 msgstr ""
 
 #: templates/dashboard/instructor/apply_for_instructor.php:16

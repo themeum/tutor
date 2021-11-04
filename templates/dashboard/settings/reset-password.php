@@ -18,7 +18,7 @@
     if ($success_msg){
         ?>
         <div class="tutor-success-msg">
-            <?php echo $success_msg; ?>
+            <?php echo wp_kses_post($success_msg); ?>
         </div>
         <?php
     }
@@ -31,11 +31,11 @@
         <?php
         $errors = apply_filters('tutor_reset_password_validation_errors', array());
         if (is_array($errors) && count($errors)){
-            echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+            echo wp_kses_post('<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">');
             foreach ($errors as $error_key => $error_value){
-                echo "<li>{$error_value}</li>";
+                echo wp_kses_post("<li>{$error_value}</li>");
             }
-            echo '</ul></div>';
+            echo wp_kses_post('</ul></div>');
         }
         ?>
 
@@ -43,7 +43,7 @@
 
         <div class="tutor-bs-row">
             <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
-                <label> <?php _e('Current Password', 'tutor'); ?> </label>
+                <label> <?php esc_html_e('Current Password', 'tutor'); ?> </label>
                 <input class="tutor-form-control" type="password" name="previous_password">
             </div>
         </div>
@@ -53,7 +53,7 @@
                 <div class="tutor-password-strength-checker">
                     <div class="tutor-password-field">
                         <label class="field-label tutor-form-label" for="new-password-1">
-                            <?php _e('New Password', 'tutor'); ?>
+                            <?php esc_html_e('New Password', 'tutor'); ?>
                         </label>
                         <div class="field-group">
                             <input
@@ -83,7 +83,7 @@
             <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
                 <div class="tutor-password-field tutor-settings-pass-field">
                     <label class="tutor-form-label" for="password-field-icon-1">
-                        <?php _e('Re-type New Password', 'tutor'); ?>
+                        <?php esc_html_e('Re-type New Password', 'tutor'); ?>
                     </label>
                     <div class="field-group tutor-input-group">
                         <input
@@ -104,7 +104,7 @@
         <div class="tutor-bs-row">
             <div class="tutor-bs-col-12">
                 <button type="submit" class="tutor-btn">
-                    <?php _e('Reset Password', 'tutor'); ?>
+                    <?php esc_html_e('Reset Password', 'tutor'); ?>
                 </button>
             </div>
         </div>
