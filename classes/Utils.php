@@ -6063,7 +6063,7 @@ class Utils {
 	 *
 	 * Get purchase history by customer id
 	 */
-	public function get_orders_by_user_id( $user_id = 0 ) {
+	public function get_orders_by_user_id( $user_id = 0, $period, $start_date, $end_date ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id();
@@ -6080,6 +6080,22 @@ class Utils {
 			$user_meta = "_edd_payment_user_id";
 		}
 
+		$period_query = '';
+
+		if ( '' !== $period ) {
+			if ( 'today' === $period ) {
+				$period_query = " AND  DATE(post_date) = CURDATE() ";
+			} else if ( 'monthly' === $period ) {
+				$period_query = " AND  MONTH(post_date) = MONTH(CURDATE()) ";
+			} else {
+				$period_query = " AND  YEAR(post_date) = YEAR(CURDATE()) ";
+			}
+		}
+
+		if ( '' !== $start_date AND '' !== $end_date ) {
+			$period_query = " AND  DATE(post_date) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
+		}
+
 		$orders = $wpdb->get_results( $wpdb->prepare(
 			"SELECT {$wpdb->posts}.*
 			FROM	{$wpdb->posts}
@@ -6091,6 +6107,7 @@ class Utils {
 						   AND tutor_order.meta_key = '_is_tutor_order_for_course'
 			WHERE	post_type = %s
 					AND customer.meta_value = %d
+					{$period_query}
 			ORDER BY {$wpdb->posts}.id DESC
 			",
 			$post_type,
