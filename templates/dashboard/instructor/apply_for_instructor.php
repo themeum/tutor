@@ -13,7 +13,7 @@
 		<div class="tutor-form-col-12">
 			<div class="tutor-form-group">
 				<button type="submit" name="tutor_register_instructor_btn" value="apply">
-                    <?php _e('Apply to become an instructor', 'tutor'); ?>
+                    <?php esc_html_e('Apply to become an instructor', 'tutor'); ?>
                 </button>
 			</div>
 		</div>

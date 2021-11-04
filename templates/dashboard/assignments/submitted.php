@@ -19,33 +19,33 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
     <div class="submitted-assignment-title">
-        <a class="prev-btn" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('assignments'); ?>"><span>&leftarrow;</span><?php _e('Back', 'tutor'); ?></a>
+        <a class="prev-btn" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('assignments')); ?>"><span>&leftarrow;</span><?php _e('Back', 'tutor'); ?></a>
     </div>
 
     <?php if (tutor_utils()->count($assignments_submitted)): ?>
         <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
             <p>
-                <?php _e('Course', 'tutor'); ?> :
-                <a href="<?php echo get_the_permalink($assignments_submitted[0]->comment_parent); ?>" target="_blank">
+                <?php esc_html_e('Course', 'tutor'); ?> :
+                <a href="<?php echo esc_url(get_the_permalink($assignments_submitted[0]->comment_parent)); ?>" target="_blank">
                     <?php echo get_the_title($assignments_submitted[0]->comment_parent); ?>
                 </a>
             </p>
             <h3>
-                <a href="<?php echo get_the_permalink($assignment_id); ?>" target="_blank">
+                <a href="<?php echo esc_url(get_the_permalink($assignment_id)); ?>" target="_blank">
                     <?php echo get_the_title($assignment_id); ?>
                 </a>
             </h3>
             <div class="assignment-info">
                 <p>
-                    <?php _e('Submission Deadline', 'tutor'); ?>:
+                    <?php esc_html_e('Submission Deadline', 'tutor'); ?>:
                     <span><?php echo $deadline; ?></span>
                 </p>
                 <p>
-                    <?php _e('Total Points', 'tutor'); ?>:
+                    <?php esc_html_e('Total Points', 'tutor'); ?>:
                     <span><?php echo $max_mark; ?></span>
                 </p>
                 <p>
-                    <?php _e('Pass Points', 'tutor'); ?>:
+                    <?php esc_html_e('Pass Points', 'tutor'); ?>:
                     <span><?php echo $pass_mark; ?></span>
                 </p>
             </div>
@@ -53,7 +53,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
 
         <div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
             <div class="tutor-form-group">
-                <label><?php _e('Sort By:', 'tutor'); ?></label>
+                <label><?php esc_html_e('Sort By:', 'tutor'); ?></label>
                 <select class="tutor-announcement-order-sorting tutor-form-select">
                     <option value="desc" <?php selected($order_filter, 'desc'); ?>><?php _e('Latest', 'tutor'); ?></option>
                     <option value="asc" <?php selected($order_filter, 'asc'); ?>><?php _e('Oldest', 'tutor'); ?></option>
@@ -66,27 +66,27 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                 <tr>
                     <th>
                         <span class="text-regular-small color-text-subsued">
-                            <?php esc_attr_e('Date', 'tutor'); ?>
+                            <?php esc_html_e('Date', 'tutor'); ?>
                         </span>
                     </th>
                     <th>
                         <div class="inline-flex-center color-text-subsued">
                             <span class="text-regular-small">
-                                <?php esc_attr_e('Student', 'tutor'); ?>
+                                <?php esc_html_e('Student', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
                         <div class="inline-flex-center color-text-subsued">
                             <span class="text-regular-small">
-                                <?php esc_attr_e('Total Points', 'tutor'); ?>
+                                <?php esc_html_e('Total Points', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
                         <div class="inline-flex-center color-text-subsued">
                             <span class="text-regular-small">
-                                <?php esc_attr_e('Result', 'tutor'); ?>
+                                <?php esc_html_e('Result', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
@@ -110,34 +110,34 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                         }
                     ?>
                     <tr>
-                        <td data-th="<?php _e('Date', 'tutor'); ?>">
+                        <td data-th="<?php esc_html('Date', 'tutor'); ?>">
                             <span class="color-text-primary text-medium-caption">
-                                <?php echo date('j M, Y,<\b\r>h:i a', strtotime($assignment->comment_date)); ?>
+                                <?php echo wp_kses_post( date('j M, Y,<\b\r>h:i a', strtotime($assignment->comment_date))); ?>
                             </span>
                         </td>
-                        <td data-th="<?php _e('Student', 'tutor'); ?>">
+                        <td data-th="<?php esc_html('Student', 'tutor'); ?>">
                             <div class="student-column">
                                 <div class="student-avatar">
-                                    <?php echo tutor_utils()->get_tutor_avatar($comment_author->ID); ?>
+                                    <?php echo wp_kses_post( tutor_utils()->get_tutor_avatar($comment_author->ID) ); ?>
                                 </div>
                                 <div class="student-details">
-                                    <h4><?php echo $comment_author->display_name; ?></h4>
-                                    <p><?php echo $comment_author->user_email; ?></p>
+                                    <h4><?php esc_html_e( $comment_author->display_name ); ?></h4>
+                                    <p><?php echo esc_html( $comment_author->user_email ); ?></p>
                                 </div>
                             </div>
                         </td>
-                        <td data-th="<?php _e('Total Points', 'tutor'); ?>">
+                        <td data-th="<?php esc_html('Total Points', 'tutor'); ?>">
                             <span class="color-text-primary text-medium-caption">
                                 <?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : ''; ?>
                             </span>
                         </td>
-                        <td data-th="<?php _e('Result', 'tutor'); ?>">
-                            <?php echo $status; ?>
+                        <td data-th="<?php esc_html('Result', 'tutor'); ?>">
+                            <?php echo wp_kses_post( $status ); ?>
                         </td>
-                        <td data-th="<?php _e('Details URL', 'tutor'); ?>">
+                        <td data-th="<?php esc_html('Details URL', 'tutor'); ?>">
                             <div class="inline-flex-center td-action-btns">
                                 <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn btn-outline">
-                                    <?php echo $button_text; ?>
+                                    <?php esc_html_e($button_text); ?>
                                 </a>
                             </div>
                         </td>
@@ -148,6 +148,6 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
             </tbody>
         </table>
     <?php else: ?>
-        <p><?php _e('No assignment has been submitted yet', 'tutor'); ?></p>
+        <p><?php esc_html_e('No assignment has been submitted yet', 'tutor'); ?></p>
     <?php endif; ?>
 </div>

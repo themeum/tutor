@@ -1,6 +1,6 @@
 <?php
-$default      = isset( $field['default'] ) ? $field['default'] : '';
-$option_value = $this->get( $field['key'], $default );
+$default      = isset( $field['default'] ) ? $field['default'] : 'off';
+$option_value = $this->get( $field['key'] . '.' . $field['event'], $default );
 $field_id     = 'field_' . $field['key'];
 $tooltip_desc = ! empty( $field['desc'] ) ? $field['desc'] : null;
 ?>
@@ -19,8 +19,8 @@ $tooltip_desc = ! empty( $field['desc'] ) ? $field['desc'] : null;
 	</div>
 	<div class="tutor-option-field-input d-flex has-btn-after">
 		<label class="tutor-form-toggle">
-			<input type="hidden" name="tutor_option[<?php echo $field['key']; ?>]" value="off">
-			<input type="checkbox" name="tutor_option[<?php echo $field['key']; ?>]" value="on" <?php $option_value ? checked( $option_value[1], 'on' ) : ''; ?> class="tutor-form-toggle-input">
+			<input type="hidden" name="tutor_option[<?php echo $field['key']; ?>][<?php echo $field['event']; ?>]" value="<?php echo esc_attr( $option_value ); ?>">
+			<input type="checkbox" value="on" <?php checked( $option_value, 'on' ); ?> class="tutor-form-toggle-input">
 			<span class="tutor-form-toggle-control"></span>
 		</label>
 		<?php

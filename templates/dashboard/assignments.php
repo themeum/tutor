@@ -32,11 +32,11 @@ $courses            = (current_user_can('administrator')) ? tutor_utils()->get_c
     <div class="tutor-bs-row">
         <div class="tutor-bs-col-12 tutor-bs-col-lg-6">
             <label class="tutor-bs-d-block">
-                <?php _e('Courses', 'tutor'); ?>
+                <?php esc_html_e('Courses', 'tutor'); ?>
             </label>
             <select class="tutor-form-select tutor-announcement-course-sorting">
 
-                <option value=""><?php _e('All', 'tutor'); ?></option>
+                <option value=""><?php esc_html_e('All', 'tutor'); ?></option>
 
                 <?php if ($courses) : ?>
                     <?php foreach ($courses as $course) : ?>
@@ -45,19 +45,19 @@ $courses            = (current_user_can('administrator')) ? tutor_utils()->get_c
                         </option>
                     <?php endforeach; ?>
                 <?php else : ?>
-                    <option value=""><?php _e('No course found', 'tutor'); ?></option>
+                    <option value=""><?php esc_html_e('No course found', 'tutor'); ?></option>
                 <?php endif; ?>
             </select>
         </div>
         <div class="tutor-bs-col-6 tutor-bs-col-lg-3">
-            <label class="tutor-bs-d-block"><?php _e('Sort By', 'tutor'); ?></label>
+            <label class="tutor-bs-d-block"><?php esc_html_e('Sort By', 'tutor'); ?></label>
             <select class="tutor-form-select tutor-announcement-order-sorting">
-                <option <?php selected($order_filter, 'ASC'); ?>><?php _e('ASC', 'tutor'); ?></option>
-                <option <?php selected($order_filter, 'DESC'); ?>><?php _e('DESC', 'tutor'); ?></option>
+                <option <?php selected($order_filter, 'ASC'); ?>><?php esc_html_e('ASC', 'tutor'); ?></option>
+                <option <?php selected($order_filter, 'DESC'); ?>><?php esc_html_e('DESC', 'tutor'); ?></option>
             </select>
         </div>
         <div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-announcement-datepicker">
-            <label><?php _e('Create Date', 'tutor'); ?></label>
+            <label><?php esc_html_e('Create Date', 'tutor'); ?></label>
             <input type="text" class="tutor-form-control tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
             <i class="tutor-icon-calendar"></i>
         </div>
@@ -70,17 +70,17 @@ $courses            = (current_user_can('administrator')) ? tutor_utils()->get_c
                 <tr>
                     <th>
                         <span class="text-regular-small color-text-subsued">
-                            <?php _e('Assignment Name', 'tutor'); ?>
+                            <?php esc_html_e('Assignment Name', 'tutor'); ?>
                         </span>
                     </th>
                     <th>
                         <div class="inline-flex-center color-text-subsued">
-                            <span class="text-regular-small"><?php _e('Total Marks', 'tutor'); ?></span>
+                            <span class="text-regular-small"><?php esc_html_e('Total Marks', 'tutor'); ?></span>
                         </div>
                     </th>
                     <th>
                         <div class="inline-flex-center color-text-subsued">
-                            <span class="text-regular-small"><?php _e('Total Submit', 'tutor'); ?></span>
+                            <span class="text-regular-small"><?php esc_html_e('Total Submit', 'tutor'); ?></span>
                         </div>
                     </th>
                     <th class="tutor-shrink"></th>
@@ -100,29 +100,29 @@ $courses            = (current_user_can('administrator')) ? tutor_utils()->get_c
                         <tr>
                             <td data-th="Course Name" class="column-fullwidth">
                                 <div class="color-text-primary td-course text-medium-body">
-                                    <a href="#"><?php echo esc_html($item->post_title); ?></a>
+                                    <a href="#"><?php esc_html_e($item->post_title); ?></a>
                                     <div class="course-meta">
                                         <span class="color-text-subsued text-regular-caption">
-                                            <strong class="text-medium-caption"><?php _e('Course', 'tutor'); ?>: </strong> 
-                                            <a href='<?php echo get_the_permalink($course_id) ?>' target="_blank"><?php echo get_the_title($course_id); ?> </a>
+                                            <strong class="text-medium-caption"><?php esc_html_e('Course', 'tutor'); ?>: </strong> 
+                                            <a href='<?php echo esc_url(get_the_permalink($course_id)); ?>' target="_blank"><?php echo esc_html_e(get_the_title($course_id)); ?> </a>
                                         </span>
                                     </div>
                                 </div>
                             </td>
                             <td data-th="Total Points">
                                 <span class="color-text-primary text-medium-caption">
-                                    <?php echo $max_mark ?>
+                                    <?php echo esc_html_e($max_mark); ?>
                                 </span> 
                             </td>
                             <td data-th="Total SUbmits">
                                 <span class="color-text-primary text-medium-caption">
-                                    <?php echo $comment_count ?>
+                                    <?php echo esc_html_e($comment_count); ?>
                                 </span>
                             </td>
                             <td data-th="Details URL">
                                 <div class="inline-flex-center td-action-btns">
                                     <a href="<?php echo esc_url($submitted_url . '?assignment=' . $item->ID); ?>" class="btn-outline tutor-btn">
-                                        <?php _e('Details', 'tutor'); ?>
+                                        <?php esc_html_e('Details', 'tutor'); ?>
                                     </a>
                                 </div>
                             </td>
@@ -144,6 +144,6 @@ $courses            = (current_user_can('administrator')) ? tutor_utils()->get_c
         </div>
 
     <?php else: ?>
-        <p><?php _w('No assignment available', 'tutor'); ?></p>
+        <p><?php esc_html_e('No assignment available', 'tutor'); ?></p>
     <?php endif; ?>
 </div>
