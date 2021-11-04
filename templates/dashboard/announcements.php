@@ -95,7 +95,7 @@ $image_base = tutor()->url . '/assets/images/';
             <?php if ($courses) : ?>
                 <?php foreach ($courses as $course) : ?>
                     <option value="<?php echo esc_attr($course->ID) ?>" <?php selected($course_id, $course->ID, 'selected') ?>>
-                        <?php echo esc_html_e($course->post_title); ?>
+                        <?php esc_html_e($course->post_title); ?>
                     </option>
                 <?php endforeach; ?>
             <?php else : ?>

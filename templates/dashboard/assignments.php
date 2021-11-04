@@ -100,7 +100,7 @@ $courses            = (current_user_can('administrator')) ? tutor_utils()->get_c
                         <tr>
                             <td data-th="Course Name" class="column-fullwidth">
                                 <div class="color-text-primary td-course text-medium-body">
-                                    <a href="#"><?php echo esc_html_e($item->post_title); ?></a>
+                                    <a href="#"><?php esc_html_e($item->post_title); ?></a>
                                     <div class="course-meta">
                                         <span class="color-text-subsued text-regular-caption">
                                             <strong class="text-medium-caption"><?php esc_html_e('Course', 'tutor'); ?>: </strong> 

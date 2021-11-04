@@ -76,7 +76,7 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                                     <div class="td-avatar">
                                         <img src="<?php echo esc_url($avatar_url); ?>" alt="student avatar"/>
                                         <span class="text-medium-body color-text-primary">
-                                            <?php echo esc_html_e($student_name); ?>
+                                            <?php esc_html_e($student_name); ?>
                                         </span>
                                     </div>
                                 </td>
@@ -96,7 +96,7 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                                         <p class="course-name text-medium-small color-text-title tutor-mb-0">
                                             <strong><?php esc_html_e('Course', 'tutor'); ?>:</strong>&nbsp;
                                             <a href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
-                                                <?php echo esc_html_e(get_the_title($review->comment_post_ID)); ?>
+                                                <?php esc_html_e(get_the_title($review->comment_post_ID)); ?>
                                             </a>
                                         </p>
                                     </div>

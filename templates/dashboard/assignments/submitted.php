@@ -121,7 +121,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                                     <?php echo wp_kses_post( tutor_utils()->get_tutor_avatar($comment_author->ID) ); ?>
                                 </div>
                                 <div class="student-details">
-                                    <h4><?php echo esc_html_e( $comment_author->display_name ); ?></h4>
+                                    <h4><?php esc_html_e( $comment_author->display_name ); ?></h4>
                                     <p><?php echo esc_html( $comment_author->user_email ); ?></p>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                         <td data-th="<?php esc_html('Details URL', 'tutor'); ?>">
                             <div class="inline-flex-center td-action-btns">
                                 <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn btn-outline">
-                                    <?php echo esc_html_e($button_text); ?>
+                                    <?php esc_html_e($button_text); ?>
                                 </a>
                             </div>
                         </td>

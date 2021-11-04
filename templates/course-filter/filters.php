@@ -68,7 +68,7 @@
                     <div class="tutor-form-check tutor-mb-18">
                         <input type="checkbox" class="tutor-form-check-input" id="<?php echo esc_html( $value ); ?>" name="tutor-course-filter-level" value="<?php echo esc_html( $value ); ?>"/>&nbsp;
                         <label for="<?php echo esc_html( $value ); ?>">
-                            <?php echo esc_html_e( $title ); ?>
+                            <?php esc_html_e( $title ); ?>
                         </label>
                     </div>
                 <?php } ?>
@@ -92,7 +92,7 @@
                         <div class="tutor-form-check tutor-mb-18">
                             <input type="checkbox" class="tutor-form-check-input" id="<?php echo esc_html( $value ); ?>" name="tutor-course-filter-price" value="<?php echo esc_html( $value ); ?>"/>&nbsp;
                             <label for="<?php echo esc_html( $value ); ?>">
-                                <?php echo esc_html_e( $title ); ?>
+                                <?php esc_html_e( $title ); ?>
                             </label>
                         </div>
                         <?php

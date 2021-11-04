@@ -116,7 +116,7 @@ else if(function_exists('edd_currency_symbol')){
                                     </td>
                                     <td>
                                         <span><?php esc_html_e('Selected Payment Method', 'tutor'); ?></span><br />
-                                        <b><?php echo esc_html_e($withdraw_method_name); ?></b>
+                                        <b><?php esc_html_e($withdraw_method_name); ?></b>
                                     </td>
                                 </tr>
                             </tbody>
@@ -231,7 +231,7 @@ else if(function_exists('edd_currency_symbol')){
                             </td>
                             <td>
                                 <span class="inline-image-text is-inline-block">
-                                    <span class="tutor-status-text status-<?php echo esc_html_e($withdraw_history->status); ?>">
+                                    <span class="tutor-status-text status-<?php esc_html_e($withdraw_history->status); ?>">
                                         <?php echo __(ucfirst($withdraw_history->status), 'tutor'); ?>
                                     </span>
                                 </span>
@@ -244,7 +244,7 @@ else if(function_exists('edd_currency_symbol')){
                                         <span class="tool-tip-container">
                                             <img src="<?php echo esc_url($image_base); ?>info-icon.svg" />
                                             <span class="tooltip tip-left" role="tooltip">
-                                                <?php echo esc_html_e($status_message[$withdraw_history->status]); ?>
+                                                <?php esc_html_e($status_message[$withdraw_history->status]); ?>
                                             </span>
                                         </span>
                                     </span>

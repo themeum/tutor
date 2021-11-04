@@ -154,18 +154,18 @@ if(count($instructor_course)) {
                             <td data-th="<?php esc_html_e('Course Name', 'tutor'); ?>" class="column-fullwidth">
                                 <div class="td-course text-medium-body color-text-primary">
                                     <a href="<?php echo esc_url(get_the_permalink($course->ID)); ?>" target="_blank">
-                                        <?php echo esc_html_e($course->post_title); ?>
+                                        <?php esc_html_e($course->post_title); ?>
                                     </a>
                                 </div>
                             </td>
                             <td data-th="<?php esc_html_e('Enrolled', 'tutor'); ?>">
                                 <span class="text-medium-caption color-text-primary">
-                                    <?php echo esc_html_e($enrolled); ?>
+                                    <?php esc_html_e($enrolled); ?>
                                 </span>
                             </td>
                             <td data-th="<?php esc_html_e('Rating', 'tutor'); ?>">
                                 <div class="td-tutor-rating text-regular-body color-text-subsued">
-                                    <?php tutor_utils()->star_rating_generator($course_rating->rating_avg); ?> <span><?php echo esc_html_e($course_rating->rating_avg); ?></span>
+                                    <?php tutor_utils()->star_rating_generator($course_rating->rating_avg); ?> <span><?php esc_html_e($course_rating->rating_avg); ?></span>
                                 </div>
                             </td>
                         </tr>

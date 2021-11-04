@@ -6455,6 +6455,7 @@ class Utils {
 							ON post_meta.post_id = assignment.ID
 						   AND post_meta.meta_key = '_tutor_course_id_for_assignments'
 			WHERE 	post_type = %s
+					AND assignment.post_parent>0
 					AND post_meta.meta_value IN('$in_course_ids')
 					{$date_query}
 			",
@@ -6468,6 +6469,7 @@ class Utils {
 							ON post_meta.post_id = assignment.ID
 						   AND post_meta.meta_key = '_tutor_course_id_for_assignments'
 			WHERE 	post_type = %s
+					AND assignment.post_parent>0
 					AND post_meta.meta_value IN('$in_course_ids')
 					{$date_query}
 					{$sort_query}
