@@ -28,4 +28,6 @@
 @import "_instructor";
 
 //Any kind of denied (permission, unathurized, not found)
-@import "_denied"
+@import "_denied";
+
+@import './course-spotlight/index.scss';
