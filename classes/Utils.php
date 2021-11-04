@@ -7158,14 +7158,15 @@ class Utils {
 
 		$total_empty_fields    = count( $empty_fields );
 		$total_required_fields = count( $required_fields );
-		$signup_point          = apply_filters( 'tutor_profile_completion_signup_point', 50 );
+		$signup_point          = apply_filters( 'tutor_profile_completion_signup_point', 1 );
 
 		if ( $total_empty_fields == 0 ) {
-			$progress = 100;
+			$progress = 5;
 		} else {
 			$completed_field = $total_required_fields-$total_empty_fields;
-			$per_field_point = $signup_point / $total_required_fields;
-			$progress        = $signup_point + ceil($per_field_point * $completed_field);
+			$per_field_point = 1;
+			$total_point     = $per_field_point * $completed_field;
+			$progress        = $signup_point + $total_point;
 		}
 
 		$return = array(

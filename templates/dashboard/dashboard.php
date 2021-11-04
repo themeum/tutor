@@ -5,7 +5,98 @@
  */
 
 ?>
+<?php
 
+$profile_completion = tutor_utils()->user_profile_completion();
+
+if ($profile_completion->progress < 5) { ?>
+    <div class="profile-completion">
+        <div class="tutor-bs-row tutor-bs-align-items-center">
+            <div class="tutor-bs-col-md-8 profile-completion-content">
+                <div class="list-item-title text-medium-h5 color-text-primary">
+                    <?php esc_html_e( 'Complete Your Profile', 'tutor' ) ?>
+                </div>
+                <?php if ($profile_completion->progress == 1) { ?>
+                <div class="tutor-mt-20">
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li>
+                        <span class="tutor-round-icon">
+                            <i class="ttr-award-filled"></i>
+                        </span>
+                    </li>
+                </div>
+                <?php } ?>
+                <?php if ($profile_completion->progress == 2) { ?>
+                <div class="tutor-mt-20">
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li>
+                        <span class="tutor-round-icon">
+                            <i class="ttr-award-filled"></i>
+                        </span>
+                    </li>
+                </div>
+                <?php } ?>
+                <?php if ($profile_completion->progress == 3) { ?>
+                <div class="tutor-mt-20">
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li>
+                        <span class="tutor-round-icon">
+                            <i class="ttr-award-filled"></i>
+                        </span>
+                    </li>
+                </div>
+                <?php } ?>
+                <?php if ($profile_completion->progress == 4) { ?>
+                <div class="tutor-mt-20">
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-full"></button></li>
+                    <li><button class="tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full"></button></li>
+                    <li>
+                        <span class="tutor-round-icon">
+                            <i class="ttr-award-filled"></i>
+                        </span>
+                    </li>
+                </div>
+                <?php } ?>
+                <div class="list-item-title text-medium-h6 tutor-mt-30">
+                    <span><?php esc_html_e( 'You are almost done: ', 'tutor' ) ?></span>
+                    <span class="color-text-primary"><?php echo esc_html_e( $profile_completion->progress ); esc_html_e( '/5', 'tutor' ); ?></span>
+                </div>
+            </div>
+            <div class="tutor-bs-col-md-4 warning">
+                <ul>
+                    <?php foreach ($profile_completion->empty_fields as $empty_field) { ?>
+                    <li>
+                        <span class="icon ttr-tick-circle-outline-filled"></span>
+                        <span>
+                            <?php esc_html_e( 'Set Your', 'tutor' ); ?>
+                            <a class="color-text-primary" href="<?php echo esc_url(tutor_utils()->tutor_dashboard_url('settings')); ?>">
+                                <?php echo $empty_field; ?>
+                            </a>
+                        </span>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+<?php
+    } 
+?>
 <h3><?php _e('Dashboard', 'tutor') ?></h3>
 
 <div class="tutor-dashboard-content-inner">
