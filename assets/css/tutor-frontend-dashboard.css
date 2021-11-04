@@ -3333,6 +3333,11 @@
   font-size: 18px;
 }
 
+.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li a {
+  text-decoration: underline;
+  font-weight: 500;
+}
+
 @media only screen and (max-width: 600px) {
   .tutor-dashboard .tutor-dashboard-content .profile-completion {
     margin-right: 0px;
