@@ -44,7 +44,7 @@ $end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date
                 'type'  => 'monthly'
             ),
             array(
-                'url'   => esc_url( tutor_utils()->tutor_dashboard_url().'purchase_history?period=yearly' ),
+                'url'   => esc_url( tutor_utils()->tutor_dashboard_url() . 'purchase_history?period=yearly' ),
                 'title' => __( 'Yearly', 'tutor' ),
                 'type'  => 'yearly'
             ),
@@ -175,14 +175,17 @@ $end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date
                         <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-5"><?php esc_html_e( $order_status_text ); ?></span>
                     </td>
                     <td data-th="Download">
-                        <a href="#"><span class="ttr-receipt-line" style="font-size:24px"></span></a>
+                        <?php $formatted_date = date_i18n( 'Y-m-d', strtotime( $order->post_date ) ); ?>
+                        <a href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() . 'purchase_history/?purchase_date=' . $formatted_date . '&order_id=' . $order->ID ); ?>"><span class="ttr-receipt-line" style="font-size:24px"></span></a>
                     </td>
                 </tr>
                 <?php } ?>
             <?php } else { ?>
             <tr>
                 <td colspan="100%">
-                    <?php esc_html_e( 'No purchase history available', 'tutor' ); ?>
+                    <div class="td-empty-state">
+                        <?php tutor_utils()->tutor_empty_state( 'No purchase history available' ); ?>
+                    </div>
                 </td>
             </tr>
             <?php } ?>
