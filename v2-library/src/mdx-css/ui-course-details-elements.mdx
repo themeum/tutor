@@ -13,7 +13,50 @@ import '../docz-essential.css';
 
 `** Replace "className" with "class" while using with html` <br />
 
-## Course Details Header
+## Course Details - Tab
+
+<Playground>
+	<div className="tutor-default-tab tutor-course-details-tab">
+		<div class="tab-header tutor-bs-d-flex tutor-bs-justify-content-center-">
+			<div class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-1">
+				<span>Course Info</span>
+			</div>
+			<div class="tab-header-item is-active" data-tutor-tab-target="tutor-course-details-tab-2">
+				<span>Curriculum</span>
+			</div>
+		</div>
+		<div class="tab-body">
+			<div class="tab-body-item" id="tutor-course-details-tab-1">
+				<div>About Course</div>
+				<div>
+					Node.js is probably THE most popular and modern server-side programming language you can dive into these days!
+					Node.js developers are in high demand and the language is used for everything from traditional web apps with
+					server-side rendered views over REST APIs all the way up to GraphQL APIs and real-time web services. Not to
+					mention its applications in build workflows for projects of all sizes. <br />
+					This course will teach you all of that! From scratch with zero prior knowledge assumed. Though if you do bring
+					some knowledge, you'll of course be able to quickly jump into the course modules that are most interesting to you.Does
+					this look like a lot of content? It certainly is! This is not a short course but it is the "Complete Guide" on
+					Node.js after all. .
+				</div>
+			</div>
+			<div class="tab-body-item" id="tutor-course-details-tab-2">
+				<div>Curriculum</div>
+				<div>
+					This course will teach you all of that! From scratch with zero prior knowledge assumed. Though if you do bring
+					some knowledge, you'll of course be able to quickly jump into the course modules that are most interesting to
+					you.Does this look like a lot of content? It certainly is! This is not a short course but it is the "Complete
+					Guide" on Node.js after all. . <br />
+					Node.js is probably THE most popular and modern server-side programming language you can dive into these days!
+					Node.js developers are in high demand and the language is used for everything from traditional web apps with server-side
+					rendered views over REST APIs all the way up to GraphQL APIs and real-time web services. Not to mention its applications
+					in build workflows for projects of all sizes. <br />
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>
+
+## Course Details - Header
 
 `** remove the inline-style from the header`
 
@@ -52,7 +95,11 @@ import '../docz-essential.css';
 			</div>
 		</div>
 	</header>
-	<br />
+</Playground>
+
+## Course Details Sidebar - Widgets
+
+<Playground>
 	<div class="tutor-course-details-widget">
 		<div class="widget-title">
 			<span class="color-text-primary text-medium-h6">Material Includes</span>
@@ -133,7 +180,11 @@ import '../docz-essential.css';
 			</ul>
 		</div>
 	</div>
-	<br />
+</Playground>
+
+## Course Details - Instructor card
+
+<Playground>
 	<div class="color-text-primary text-medium-h6 tutor-mb-16">About the instructors</div>
 	<div class="tutor-instructor-info-card">
 		<div class="tutor-instructor-info-card-body tutor-bs-d-sm-flex tutor-bs-align-items-start tutor-px-30 tutor-py-24">
@@ -177,7 +228,11 @@ import '../docz-essential.css';
 			</div>
 		</div>
 	</div>
-	<br />
+</Playground>
+
+## Course Details Sidebar - Cards
+
+<Playground>
 	<div class="tutor-course-listing-card-demo">
 		<div class="tutor-course-sidebar-card tutor-add-to-cart">
 			<div class="tutor-course-sidebar-card-body tutor-p-30">
@@ -331,7 +386,7 @@ import '../docz-essential.css';
 		<div class="tutor-course-sidebar-card tutor-after-enroll">
 			<div class="tutor-course-sidebar-card-body tutor-p-30">
 				<div class="tutor-course-sidebar-card-btns">
-					<a href="#" class="tutor-btn tutor-btn-disable tutor-btn-lg tutor-btn-full">
+					<a href="#" class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-lg tutor-btn-full">
 						<span>Enroll Course</span>
 					</a>
 				</div>
@@ -394,5 +449,150 @@ import '../docz-essential.css';
 			</div>
 		</div>
 		{/* .tutor-course-sidebar-card.tutor-after-enroll */}
+		<div class="tutor-course-sidebar-card tutor-before-purchase">
+			<div class="tutor-course-sidebar-card-body tutor-p-30">
+				<div className="text-medium-h6 color-text-primary">Congratulations! </div>
+				<div className="text-regular-caption color-text-hints">You Have Successfully completed this course!</div>
+				<div className="tutor-bs-d-flex tutor-bs-align-items-center text-regular-small color-success tutor-mt-8">
+					<span class="tutor-icon-26 color-success ttr-mark-filled tutor-mr-6"></span>
+					Completed <span class="text-bold-small tutor-ml-3">10 July, 2020</span>
+				</div>
+				<div class="tutor-course-sidebar-card-btns">
+					<a href="#" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24">
+						<span>View Certificate</span>
+					</a>
+					<a href="#" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full tutor-mt-24">
+						Retake This Course
+					</a>
+				</div>
+			</div>
+			<div class="tutor-course-sidebar-card-footer tutor-p-30">
+				<ul class="tutor-course-sidebar-card-meta-list">
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-level-line color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Level</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">Intermediate</span>
+						</div>
+					</li>
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-student-line-1 color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Total Enrolled</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">2,426</span>
+						</div>
+					</li>
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-clock-filled color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Duration:</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">3 </span>
+							<span class="text-medium-caption color-text-subsued">hour </span>
+							<span class="text-medium-caption color-text-primary">36 </span>
+							<span class="text-regular-caption color-text-subsued">minute</span>
+						</div>
+					</li>
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-student-line-1 color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Last Updated</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">10 Nov, </span>
+							<span class="text-regular-caption color-text-subsued">2020</span>
+						</div>
+					</li>
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-student-line-1 color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Certificate</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">Yes</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		{/* .tutor-course-sidebar-card.tutor-before-purchase */}
+		<div class="tutor-course-sidebar-card tutor-add-to-cart">
+			<div class="tutor-course-sidebar-card-body tutor-p-30">
+				<div class="tutor-course-sidebar-card-pricing tutor-bs-d-flex align-items-end tutor-bs-justify-content-between">
+					<div>
+						<span className="text-bold-h4 color-text-primary">$129.99</span>
+						<del className="text-regular-caption color-text-hints tutor-ml-7">$195.99</del>
+					</div>
+				</div>
+				<div class="tutor-course-sidebar-card-btns">
+					<a href="#" class="tutor-btn tutor-btn-icon tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24">
+						<span class="btn-icon ttr-cart-filled"></span>
+						<span>Add to cart</span>
+					</a>
+					<a href="#" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full tutor-mt-24">
+						Buy Now
+					</a>
+				</div>
+			</div>
+			<div class="tutor-course-sidebar-card-footer tutor-p-30">
+				<ul class="tutor-course-sidebar-card-meta-list">
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-level-line color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Level</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">Intermediate</span>
+						</div>
+					</li>
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-student-line-1 color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Total Enrolled</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">2,426</span>
+						</div>
+					</li>
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-clock-filled color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Duration:</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">3 </span>
+							<span class="text-medium-caption color-text-subsued">hour </span>
+							<span class="text-medium-caption color-text-primary">36 </span>
+							<span class="text-regular-caption color-text-subsued">minute</span>
+						</div>
+					</li>
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-student-line-1 color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Last Updated</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">10 Nov, </span>
+							<span class="text-regular-caption color-text-subsued">2020</span>
+						</div>
+					</li>
+					<li className="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="flex-center">
+							<span class="tutor-icon-24 ttr-student-line-1 color-text-primary"></span>
+							<span class="text-regular-caption color-text-hints tutor-ml-5">Certificate</span>
+						</div>
+						<div>
+							<span class="text-medium-caption color-text-primary">Yes</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		{/* .tutor-course-sidebar-card.tutor-add-to-cart */}
 	</div>
 </Playground>
