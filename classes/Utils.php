@@ -976,8 +976,8 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function checking_nonce( $request_method = 'post' ) {
-
+	public function checking_nonce( $request_method = null ) {
+		!$request_method ? $request_method = strtolower($_SERVER['REQUEST_METHOD']) : 0;
 		$data = $request_method === 'post' ? $_POST : $_GET;
 		$nonce_value = sanitize_text_field(tutor_utils()->array_get(tutor()->nonce, $data, null));
 		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
@@ -4969,6 +4969,64 @@ class Utils {
 	}
 
 	/**
+	 * @param int context $instructor_id 
+	 *
+	 * @return array
+	 *
+	 *
+	 * Get the attempts stat from specific instructor context
+	 *
+	 * @since 2.0.0
+	 */
+	public function get_quiz_attempts_stat($instructor_id) {
+		global $wpdb;
+
+		$where_clause = '';
+		if(!$this->has_user_role('administrator', $instructor_id)){
+			$course_ids = $this->get_course_id_by('instructor', $instructor_id);
+			$courses_ids = count($courses_ids) ? implode(',', $courses_ids) : '0';
+			$where_clause.=' AND course.ID IN('.$cours_ids.')';
+		}
+		
+		$attempts = $wpdb->get_results(
+			"SELECT attempt.total_marks, attempt.earned_marks, attempt.attempt_info
+			FROM {$wpdb->prefix}tutor_quiz_attempts attempt
+				INNER JOIN {$wpdb->posts} course ON attempt.course_id=course.ID
+			WHERE 1=1 " . $where_clause
+		);
+
+		!is_array($attempts) ? $attempts=array() : 0;
+
+		$stats = array(
+			'all' => count($attempts),
+			'pass' => 0,
+			'fail' => 0,
+			'pending' => 0
+		);
+
+		foreach($attempts as $attempt) {
+			$info = @unserialize($attempt->attempt_info);
+			$passing_grade = (is_array($info) && $info['passing_grade']) ? (int)$info['passing_grade'] : 0;
+
+			// Pending count
+			if($attempt->earned_marks===null || $attempt->total_marks===null) {
+				$stats['pending']+=1;
+				continue;
+			}
+
+			// Pass/fail
+			$pass_mark = !$passing_grade ? 0 : ($passing_grade/100)*$attempt->total_marks;
+			if($pass_mark>=$attempt->earned_marks) {
+				$stats['pass']+=1;
+			} else {
+				$stats['fail']+=1;
+			}
+		}
+
+		return $stats;
+	}
+
+	/**
 	 * Delete quizattempt for user
 	 *
 	 * @since v1.9.5
@@ -6074,7 +6132,7 @@ class Utils {
 	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
 		global $wpdb;
 
-		$user_id     = $this->get_user_id($user_id);
+		$user_id     = $this->get_user_id( $user_id );
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 
 		$post_type = "";
@@ -6123,6 +6181,24 @@ class Utils {
 		) );
 
 		return $orders;
+	}
+
+	/**
+	 * Export purchased course data
+	 */
+	public function export_purchased_course_data( $order_id = '', $purchase_date = '' ) {
+		global $wpdb;
+
+		$purchased_data = $wpdb->get_results( $wpdb->prepare(
+			"SELECT tutor_order.*, course.post_title 
+   			FROM {$wpdb->prefix}tutor_earnings AS tutor_order
+   			INNER JOIN {$wpdb->posts} AS course 
+     			ON course.ID = tutor_order.course_id 
+  			WHERE tutor_order.order_id = %d",
+			  $order_id
+		) );
+
+		return $purchased_data;
 	}
 
 	/**
@@ -7336,7 +7412,7 @@ class Utils {
 	 *
 	 * @since v1.7.9
 	 *
-	 * Return the course ID by lession, quiz, answer etc.
+	 * Return the course ID(s) by lession, quiz, answer etc.
 	 */
 	public function get_course_id_by( $content, $object_id ) {
 		global $wpdb;
@@ -7428,6 +7504,19 @@ class Utils {
 					",
 					$object_id
 				) );
+				break;
+
+			case 'instructor' : 
+				$course_ids = $wpdb->get_col($wpdb->prepare(
+					"SELECT meta_value FROM {$wpdb->usermeta}
+					WHERE user_id=%d AND meta_key='_tutor_instructor_course_id'",
+					$object_id
+				));
+
+				!is_array($course_ids) ? $course_ids=array() : 0;
+				$course_id = array_filter($courses_ids, function($id) {
+					return ($id && is_numeric($id));
+				});
 				break;
 		}
 
@@ -8025,4 +8114,25 @@ class Utils {
 			<p><?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?></p>
 		</div>
 	<?php }
+
+	/**
+	 * Translate dynamic text, dynamic text is not translate while potting 
+	 * that's why define key here to make it translate able. It will put text in the pot file while compilling.
+	 * 
+	 * @param string $key, pass key to get translate text | required.
+	 * @return string
+	 * @since v2.0.0 
+	 */
+	public function translate_dynamic_text( $key ): string {
+		$key_value = array(
+			'pending'  		=> __( 'Pending', 'tutor' ),
+			'approved' 		=> __( 'Approved', 'tutor' ),
+			'rejected' 		=> __( 'Rejected', 'tutor' ),
+			'completed'  	=> __( 'Completed', 'tutor' ),
+			'processing' 	=> __( 'Processing', 'tutor' ),
+			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
+			'canceled'  	=> __( 'Cancelled', 'tutor' ),
+		);
+		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
+	}
 }

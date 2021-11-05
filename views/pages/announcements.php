@@ -69,16 +69,17 @@ $filters = array(
 	'course_filter' => true,
 );
 ?>
-<div class="tutor-admin-page-wrapper tutor-admin-announcements-list">
-	<?php
-		/**
-		 * Load Templates with data.
-		 */
-		$filters_template = tutor()->path . 'views/elements/filters.php';
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
-	?>
 
+<?php
+	/**
+	 * Load Templates with data.
+	 */
+	$filters_template = tutor()->path . 'views/elements/filters.php';
+	$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
+?>
+
+<div class="wrap tutor-admin-announcements-list">
 	<div class="tutor-dashboard-content-inner tutor-mt-10 tutor-mb-24 tutor-mr-20">
 		<div class="tutor-component-three-col-action new-announcement-wrap">
 			<div class="tutor-announcement-big-icon">

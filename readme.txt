@@ -245,7 +245,9 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 New: Certificate builder in frontend dashboard
 Update: Overall Design System
-Update: Backend dashboard settings rearranged with updated design
+Update: Backend dashboard settings rearranged
+Update: Primary table columns data type is now bigint
+Update: Disbaling quiz details attempt feature removed
 
 = 1.9.11 - October 18, 2021 =
 

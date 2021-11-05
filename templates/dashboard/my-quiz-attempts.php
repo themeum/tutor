@@ -13,9 +13,9 @@
  */
 
 
-if(isset($_GET['view_quiz_attempt_id']) && get_tutor_option('tutor_quiz_student_attempt_view_in_profile')) {
-    $_GET['attempt_id'] = $_GET['view_quiz_attempt_id'];
-    echo tutor_get_template_html('dashboard.my-quiz-attempts.attempts-details');
+if(isset($_GET['view_quiz_attempt_id'])) {
+    // Load single attempt details if ID provided
+    include __DIR__ . '/my-quiz-attempts/attempts-details.php';
     return;
 }
 
@@ -28,10 +28,7 @@ $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
     if ($attempted_count){
         tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
             'attempt_list' => $previous_attempts,
-            'column_hook' => array(
-                'tutor_quiz/my_attempts/table/thead/col',
-                'tutor_quiz/my_attempts/table/tbody/col'
-            )
+            'context' => 'frontend-dashboard-my-attempts'
         ));
     } else {
         echo __('You have not attempted any quiz yet', 'tutor');
