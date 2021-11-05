@@ -2,8 +2,17 @@
     i, [class^='ttr-'], [class*=' ttr-'], [class^='tutor-icon-'], [class*=' tutor-icon-']  {
         display: none;
     }
+    
 
+    /* 
+        position: relative;
+        @include spinner($design-brand, #f1f1f1, 20px);
+    */
     &:before {
+        &+*{
+            margin-left: 8px;
+        }
+        
         display: inline-block;
         font-family: "tutor";
         -webkit-font-smoothing: antialiased;

@@ -6925,6 +6925,15 @@ li.tutor-option-nav-item h4 {
   font-size: 24px;
 }
 
+@media screen and (min-width: 1200px) {
+  .tutor-admin-announcements-list table.tutor-ui-table td {
+    padding: 0 10px !important;
+  }
+  .tutor-admin-announcements-list table.tutor-ui-table td:first-child {
+    padding-left: 20px !important;
+  }
+}
+
 table.tutor-ui-table.table-instructors .instructor-action {
   min-width: 70px;
   text-align: center;
@@ -6956,15 +6965,6 @@ table.tutor-ui-table.table-instructors .toggle-row {
 
 .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td ul.tutor-table-inside-table li span:last-child {
   width: 50%;
-}
-
-.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
 }
 
 .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap .tooltip-txt {
@@ -6999,12 +6999,13 @@ table.tutor-ui-table.table-instructors .toggle-row {
   padding: 0px 3px 0px 0px;
 }
 
-.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns {
-  width: 16%;
-}
-
-.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns button {
-  max-width: 80px;
+@media (min-width: 1200pxpx) {
+  .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns {
+    width: 16%;
+  }
+  .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns button {
+    max-width: 80px;
+  }
 }
 
 .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-approve .tutor-modal-root .tutor-modal-icon,

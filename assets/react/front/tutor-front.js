@@ -3,6 +3,7 @@ import './dashboard';
 import './pages/instructor-list-filter';
 import './pages/course-landing';
 import './course-spotlight/index';
+import './dashboard/export-csv';
 
 jQuery(document).ready(function ($) {
     'use strict';
@@ -336,38 +337,6 @@ jQuery(document).ready(function ($) {
             $quiz_start_form.submit();
         }
     }
-
-    /**
-     * Quiz Frontend Review Action
-     * @since 1.4.0
-     */
-    $(document).on('click', '.quiz-manual-review-action', function (e) {
-        e.preventDefault();
-        var $that = $(this),
-            attempt_id = $that.attr('data-attempt-id'),
-            attempt_answer_id = $that.attr('data-attempt-answer-id'),
-            mark_as = $that.attr('data-mark-as');
-
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'GET',
-            data: { 
-                action: 'review_quiz_answer', 
-                attempt_id: attempt_id, 
-                attempt_answer_id: attempt_answer_id, 
-                mark_as: mark_as 
-            },
-            beforeSend: function () {
-                $that.find('i').addClass('updating-icon');
-            },
-            success: function (data) {
-                location.reload();
-            },
-            complete: function () {
-                $that.find('i').removeClass('updating-icon');
-            }
-        });
-    });
 
     // Quiz Review : Tooltip
     $(".tooltip-btn").on("hover", function (e) {

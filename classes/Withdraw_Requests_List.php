@@ -126,8 +126,12 @@ class Withdraw_Requests_List {
 		$withdraw_id    = isset( $_POST['withdraw-id'] ) ? $_POST['withdraw-id'] : '';
 		$reject_type    = isset( $_POST['reject-type'] ) ? $_POST['reject-type'] : '';
 		$reject_comment = isset( $_POST['reject-comment'] ) ? $_POST['reject-comment'] : '';
-		$update         = self::update( $status, $withdraw_id, $reject_type, $reject_comment );
-		return $update ? wp_send_json( true ) : false;
+		if ( '' === $withdraw_id ) {
+			return false;
+		} else {
+			$update         = self::update( $status, $withdraw_id, $reject_type, $reject_comment );
+			return $update ? wp_send_json( true ) : false;
+		}
 		exit;
 	}
 
