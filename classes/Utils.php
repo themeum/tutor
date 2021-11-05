@@ -6074,7 +6074,7 @@ class Utils {
 	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
 		global $wpdb;
 
-		$user_id     = $this->get_user_id($user_id);
+		$user_id     = $this->get_user_id( $user_id );
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 
 		$post_type = "";
@@ -6123,6 +6123,24 @@ class Utils {
 		) );
 
 		return $orders;
+	}
+
+	/**
+	 * Export purchased course data
+	 */
+	public function export_purchased_course_data( $order_id = '', $purchase_date = '' ) {
+		global $wpdb;
+
+		$purchased_data = $wpdb->get_results( $wpdb->prepare(
+			"SELECT tutor_order.*, course.post_title 
+   			FROM {$wpdb->prefix}tutor_earnings AS tutor_order
+   			INNER JOIN {$wpdb->posts} AS course 
+     			ON course.ID = tutor_order.course_id 
+  			WHERE tutor_order.order_id = %d",
+			  $order_id
+		) );
+
+		return $purchased_data;
 	}
 
 	/**
