@@ -2958,7 +2958,7 @@
   margin-right: 15px;
   vertical-align: middle;
   color: var(--tutor-primary-color);
-  opacity: 0.6;
+  opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
   font-size: 17px;
 }
@@ -2987,6 +2987,10 @@
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a:hover {
   background-color: var(--tutor-primary-hover-color);
+}
+
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a::before {
+  color: var(--tutor-primary-hover-color);
 }
 
 .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li a {
@@ -3019,7 +3023,8 @@
   color: #fff;
 }
 
-.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-bio a:before, .tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-my-profile a:before {
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-bio a:before,
+.tutor-dashboard .tutor-dashboard-left-menu .tutor-dashboard-permalinks li.active a li.tutor-dashboard-menu-my-profile a:before {
   content: "\e963";
 }
 
@@ -3363,11 +3368,11 @@
   height: 60px;
   border-radius: 50%;
   overflow: hidden;
-  background: #E9EDFB;
+  background: #e9edfb;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-cards-container > div p .tutor-round-icon i {
-  color: #3E64DE;
+  color: var(--tutor-primary-color);
   display: inline-block;
   font-size: 40px;
 }
@@ -3391,7 +3396,7 @@
 }
 
 .tutor-dashboard .tutor-dashboard-content .profile-completion {
-  border: 1px solid #CDCFD5;
+  border: 1px solid #cdcfd5;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border-radius: 6px;
@@ -3400,7 +3405,7 @@
 }
 
 .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content {
-  border-right: 1px solid #CDCFD5;
+  border-right: 1px solid #cdcfd5;
   padding: 35px;
 }
 
@@ -3420,7 +3425,7 @@
 }
 
 .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content .tutor-round-icon {
-  background: #3E64DE;
+  background: #3e64de;
   height: 28px;
   width: 28px;
   border-radius: 50%;
@@ -3439,7 +3444,7 @@
   }
   .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content {
     padding: 25px 15px;
-    border-bottom: 1px solid #CDCFD5;
+    border-bottom: 1px solid #cdcfd5;
     border-right: 0px;
   }
   .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content li {
@@ -3468,7 +3473,7 @@
 }
 
 .tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li .icon {
-  color: #F44337;
+  color: #f44337;
   font-size: 18px;
 }
 
