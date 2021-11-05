@@ -524,6 +524,7 @@ class Quiz {
 		global $wpdb;
 
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+		$context = sanitize_text_field($_GET['context']);
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
@@ -600,7 +601,8 @@ class Quiz {
 		ob_start();
 		tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
             'attempt_id' => $attempt_id,
-            'user_id' => $student_id
+            'user_id' => $student_id,
+			'context' => $context
         ));
 		wp_send_json_success( array('html' => ob_get_clean()) );
 	}

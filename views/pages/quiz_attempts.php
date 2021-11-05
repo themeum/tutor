@@ -9,14 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if (isset($_GET['sub_page']) && $_GET['sub_page']=='view_attempt'){
+if (isset($_GET['view_quiz_attempt_id']) && is_numeric($_GET['view_quiz_attempt_id'])){
     include tutor()->path."views/pages/view_attempt.php";
     return;
 }
 
 use TUTOR\Quiz_Attempts_List;
 $quiz_attempts = new Quiz_Attempts_List();
-
 
 /**
  * Short able params
@@ -76,7 +75,7 @@ $filters = array(
     	if ($quiz_attempts_list){
 			tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
 				'attempt_list' => $quiz_attempts_list,
-				'context' => 'instructor'
+				'context' => 'backend-dashboard-students-attempts'
 			));
 		}
 	?>

@@ -1,21 +1,8 @@
 <?php
-    extract($data); // $attempt_list, $context(nullable)
-    !isset($context) ? $context=null : 0;
+    extract($data); // $attempt_list, $context;
 
-    $table_columns = array(
-        'checkbox'          => '<div class="d-flex"><input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" /></div>',
-        'quiz_info'         => __('Quiz Info', 'tutor'),
-        'question'          => __('Question', 'tutor'),
-        'total_marks'       => __('Total Marks', 'tutor'),
-        'correct_answer'    => __('Correct Answer', 'tutor'),
-        'incorrect_answer'  => __('Incorrect Answer', 'tutor'),
-        'earned_marks'      => __('Earned Marks', 'tutor'),
-        'result'            => __('Result', 'tutor')
-    );
-    if(!is_admin()) {
-        unset($table_columns['checkbox']);
-    }
-    $table_columns = apply_filters( 'tutor/quiz/attempt/table/column/list', $table_columns );
+    $page_key = 'attempt-table';
+    $table_columns = include __DIR__ . '/contexts.php';
 ?>
 
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
@@ -67,7 +54,7 @@
                                     
                                 case 'quiz_info' :
                                     ?>
-                                    <td data-th="<?php _e('Quiz Info', 'tutor'); ?>" class="column-fullwidth">
+                                    <td data-th="<?php echo $column; ?>" class="column-fullwidth">
                                         <div class="td-statement-info">
                                             <span class="text-regular-small color-text-primary">
                                                 <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
@@ -83,9 +70,19 @@
                                     <?php
                                     break;
 
+                                case 'course' :
+                                    ?>
+                                    <td data-th="<?php echo $column; ?>">
+                                        <span class="text-medium-caption color-text-primary">
+                                            <?php echo get_the_title($attempt->course_id);?>
+                                        </span>
+                                    </td>
+                                    <?php
+                                    break;
+
                                 case 'question' :
                                     ?>
-                                    <td data-th="<?php _e('Question', 'tutor'); ?>">
+                                    <td data-th="<?php echo $column; ?>">
                                         <span class="text-medium-caption color-text-primary">
                                             <?php echo count($answers);?>
                                         </span>
@@ -95,7 +92,7 @@
 
                                 case 'total_marks' :
                                     ?>
-                                    <td data-th="<?php _e('Total Marks', 'tutor'); ?>">
+                                    <td data-th="<?php echo $column; ?>">
                                         <span class="text-medium-caption color-text-primary">
                                             <?php echo $attempt->total_marks;?>
                                         </span>
@@ -105,7 +102,7 @@
 
                                 case 'correct_answer' :
                                     ?>
-                                    <td data-th="<?php _e('Correct Answer', 'tutor'); ?>">
+                                    <td data-th="<?php echo $column; ?>">
                                         <span class="text-medium-caption color-text-primary">
                                             <?php echo $correct; ?>
                                         </span>
@@ -115,7 +112,7 @@
 
                                 case 'incorrect_answer' :
                                     ?>
-                                    <td data-th="<?php _e('Incorrect Answer', 'tutor'); ?>">
+                                    <td data-th="<?php echo $column; ?>">
                                         <span class="text-medium-caption color-text-primary">
                                             <?php echo $incorrect; ?>
                                         </span>
@@ -125,7 +122,7 @@
 
                                 case 'earned_marks' :
                                     ?>
-                                    <td data-th="<?php _e('Earned Marks', 'tutor'); ?>">
+                                    <td data-th="<?php echo $column; ?>">
                                         <span class="text-medium-caption color-text-primary">
                                             <?php echo $attempt->earned_marks.' ('.$earned_percentage.'%)'; ?>
                                         </span>
@@ -135,7 +132,7 @@
 
                                 case 'result' :
                                     ?>
-                                    <td data-th="<?php _e('Result', 'tutor'); ?>">
+                                    <td data-th="<?php echo $column; ?>">
                                         <?php
                                             if ($attempt->attempt_status === 'review_required'){
                                                 echo '<span class="tutor-badge-label label-warning">' . __('Pending', 'tutor') . '</span>';
@@ -149,7 +146,18 @@
                                     <?php
                                     break;
 
-                                default : do_action( 'tutor/quiz/attempt/table/column/content/'.$key, $attempt, $context );
+                                case 'details' :
+                                    $url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
+                                    ?>
+                                        <td data-th="See Details">
+                                            <div class="inline-flex-center td-action-btns">
+                                                <a href="<?php echo $url; ?>" class="btn-outline tutor-btn">
+                                                    <?php _e( 'Details', 'tutor-pro' ); ?>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    <?php
+                                    break;
                             }
                         }
                     ?>
