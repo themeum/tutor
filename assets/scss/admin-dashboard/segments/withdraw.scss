@@ -21,8 +21,6 @@
                     }
                 }
                 .tooltip-wrap {
-                    display: flex;
-                    justify-content: space-between;
                     .tooltip-txt {
                         max-width: 400px;
                         min-width: 230px;
@@ -52,9 +50,11 @@
                 }
             }
             td.tutor-withdraw-btns {
-                width: 16%;
-                button {
-                    max-width: 80px;
+                @include breakpoint-min(1200px) {
+                    width: 16%;
+                    button {
+                        max-width: 80px;
+                    }
                 }
             }
         }

@@ -27,4 +27,13 @@
             font-size: 24px;
         }
     }
+    //large device
+    @media screen and (min-width: 1200px) {
+        table.tutor-ui-table td {
+            padding: 0 10px !important;
+        }
+        table.tutor-ui-table td:first-child {
+            padding-left: 20px !important;
+        }
+    }
 }
