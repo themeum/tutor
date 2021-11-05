@@ -552,7 +552,7 @@ class Options_V2 {
 				),
 			),
 			'monetization' => array(
-				'label'    => __( 'Monitization', 'tutor' ),
+				'label'    => __( 'Monetization', 'tutor' ),
 				'slug'     => 'monetization',
 				'desc'     => __( 'Monitization Settings', 'tutor' ),
 				'template' => 'basic',
