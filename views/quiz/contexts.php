@@ -12,7 +12,7 @@ $contexts =  array(
             'incorrect_answer'  => __('Incorrect Answer', 'tutor'),
             'earned_marks'      => __('Earned Marks', 'tutor'),
             'result'            => __('Result', 'tutor'),
-            'details'           => __('Details', 'tutor')
+            // 'details'           => __('Details', 'tutor')
         ),
         'contexts' => array(
             'frontend-dashboard-my-attempts' => array(
@@ -26,7 +26,7 @@ $contexts =  array(
                 'details'
             ),
             'frontend-dashboard-students-attempts' => 'frontend-dashboard-my-attempts',
-            'course-single-previous' => 'frontend-dashboard-my-attempts',
+            'course-single-previous-attempts' => 'frontend-dashboard-my-attempts',
             'backend-dashboard-students-attempts' => true,
         )
     ),
@@ -56,7 +56,7 @@ $contexts =  array(
                 'result'
             ),
             'frontend-dashboard-students-attempts' => 'frontend-dashboard-my-attempts',
-            'course-single-previous' => 'frontend-dashboard-my-attempts',
+            'course-single-previous-attempts' => 'frontend-dashboard-my-attempts',
             'backend-dashboard-students-attempts' => true,
         )
     ),
@@ -89,13 +89,13 @@ $contexts =  array(
                 'manual_review'
             ),
             'backend-dashboard-students-attempts' => 'frontend-dashboard-students-attempts',
-            'course-single-previous' => 'frontend-dashboard-my-attempts',
+            'course-single-previous-attempts' => 'frontend-dashboard-my-attempts',
         )
     )
 );
 
 $fields = array();
-$columns = $contexts[$page_key]['columns'];
+$columns = apply_filters( 'tutor/quiz/attempts/table/column', $contexts[$page_key]['columns'] );
 $allowed = $contexts[$page_key]['contexts'][$context];
 is_string($allowed) ? $allowed=$contexts[$page_key]['contexts'][$allowed] : 0; // By reference
 

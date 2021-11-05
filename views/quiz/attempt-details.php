@@ -54,6 +54,7 @@ function show_correct_answer( $answers= array() ){
                         }
                     echo '</div>';
                     break;
+
                 default:
                     break;
             }
@@ -121,7 +122,7 @@ $table_2_columns = include __DIR__ . '/contexts.php';
 ?>
 
 <?php 
-    /* if($context) {
+    if($context && file_exists($file_path=__DIR__ . '/header-context/'.$context.'.php')) {
         // Prepare header data
         $course_title   = get_the_title( $attempt_data->course_id );
         $course_url     = get_permalink( $attempt_data->course_id );
@@ -136,13 +137,17 @@ $table_2_columns = include __DIR__ . '/contexts.php';
         $attempt_time   = $attempt_duration_taken;
 
         $question_count = $attempt_data->total_questions;
-        $earned_marks   = '';
+        $total_marks    = $attempt_data->total_marks;
+        $earned_marks   = $attempt_data->earned_marks;
         $pass_marks     = '';
         
-        include __DIR__ . '/header-context/'.$context.'.php';
-    } */
+        $back_url       = remove_query_arg( 'view_quiz_attempt_id', tutor()->current_url );
+
+        include $file_path;
+    }
 ?>
 
+<?php echo is_admin() ? '<div class="wrap">' : ''; ?>
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts tutor-mb-30">
     <thead>
         <tr>
@@ -479,6 +484,8 @@ $table_2_columns = include __DIR__ . '/contexts.php';
                                                 if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
 
                                                     global $wpdb;
+
+                                                    // True false
                                                     if ( $answer->question_type === 'true_false' ) {
                                                         $correct_answer = $wpdb->get_var( $wpdb->prepare( 
                                                             "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers 
@@ -489,6 +496,7 @@ $table_2_columns = include __DIR__ . '/contexts.php';
                                                         echo '<span class="text-medium-caption color-text-primary">' . $correct_answer . '</span>';
                                                     } 
                                                     
+                                                    // Single choice
                                                     elseif ( $answer->question_type === 'single_choice' ) {
                                                         $correct_answer = $wpdb->get_results( $wpdb->prepare( 
                                                             "SELECT answer_title, image_id, answer_view_format 
@@ -501,25 +509,38 @@ $table_2_columns = include __DIR__ . '/contexts.php';
                                                         show_correct_answer($correct_answer);
                                                     } 
                                                     
+                                                    // Multiple choice
                                                     elseif ( $answer->question_type === 'multiple_choice' ) {
                                                         $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1 ;", $answer->question_id ) );
                                                         show_correct_answer($correct_answer);
 
-                                                    } elseif ( $answer->question_type === 'fill_in_the_blank' ) {
+                                                    } 
+                                                    
+                                                    // Fill in the blanks
+                                                    elseif ( $answer->question_type === 'fill_in_the_blank' ) {
                                                         $correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d", $answer->question_id ) );
                                                         if($correct_answer){
                                                             echo implode(', ', explode('|', stripslashes($correct_answer)));
                                                         }
 
-                                                    } elseif ( $answer->question_type === 'ordering' ) {
+                                                    } 
+                                                    
+                                                    // Ordering
+                                                    elseif ( $answer->question_type === 'ordering' ) {
                                                         $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
                                                         show_correct_answer($correct_answer);
 
-                                                    } elseif( $answer->question_type === 'matching' ){
+                                                    } 
+                                                    
+                                                    // Matching
+                                                    elseif( $answer->question_type === 'matching' ){
                                                         $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_two_gap_match, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
                                                         show_correct_answer($correct_answer);
 
-                                                    } elseif( $answer->question_type === 'image_matching' ) {
+                                                    } 
+                                                    
+                                                    // Image matching
+                                                    elseif( $answer->question_type === 'image_matching' ) {
                                                         $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_two_gap_match FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
                                                         show_correct_answer($correct_answer);
                                                     }
@@ -575,3 +596,5 @@ $table_2_columns = include __DIR__ . '/contexts.php';
         <?php
     }
 ?>
+
+<?php echo is_admin() ? '</div>' : ''; ?>

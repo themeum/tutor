@@ -72,11 +72,13 @@ $filters = array(
 
 <div class="wrap">
 	<?php
-    	if ($quiz_attempts_list){
+    	if ($quiz_attempts_list && count($quiz_attempts_list)){
 			tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
 				'attempt_list' => $quiz_attempts_list,
 				'context' => 'backend-dashboard-students-attempts'
 			));
+		} else {
+			_e('No Quiz Attempt Found', 'tutor');
 		}
 	?>
 	<div class="tutor-admin-page-pagination-wrapper">
