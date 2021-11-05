@@ -22,18 +22,18 @@ $user_id = tutor_utils()->avalue_dot('user_id', $attempt);
 $user = get_userdata($user_id);
 ?>
 
-<div class="wrap">
-    <div class="tutor-quiz-attempt-details-wrapper">
-        <?php 
-            tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
-                'attempt_id' => $attempt_id,
-                'attempt_data' => $attempt_data,
-                'user_id' => $user_id,
-                'context' => 'backend-dashboard-students-attempts'
-            ));
-        ?>
-    </div>
+<div class="tutor-quiz-attempt-details-wrapper">
+    <?php 
+        tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
+            'attempt_id' => $attempt_id,
+            'attempt_data' => $attempt_data,
+            'user_id' => $user_id,
+            'context' => 'backend-dashboard-students-attempts'
+        ));
+    ?>
+</div>
 
+<div class="wrap">
     <div class="quiz-attempt-answers-wrap">
         <div class="attempt-answers-header">
             <div class="attempt-header-quiz">
