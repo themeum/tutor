@@ -12,7 +12,7 @@
  * @version 1.4.3
  */
 
-    $attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+    $attempt_id = (int) sanitize_text_field($_GET['view_quiz_attempt_id']);
     $attempt_data = tutor_utils()->get_attempt($attempt_id);
     $user_id = tutor_utils()->avalue_dot('user_id', $attempt_data);
 ?>
@@ -20,16 +20,11 @@
 <div class="wrap">
     <div class="tutor-quiz-attempt-details-wrapper">
         <?php 
-            add_filter( 'tutor/quiz/attempt/review/table/answers/column/list', function($columns) {
-                $columns['manual_review'] = __('Manual Review', 'tutor');
-                return $columns;
-            } );
-
             tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
                 'attempt_id' => $attempt_id,
                 'attempt_data' => $attempt_data,
                 'user_id' => $user_id,
-                'context' => 'frontend-dashboard-students-attempt'
+                'context' => 'frontend-dashboard-students-attempts'
             ));
         ?>
     </div>

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) )
 exit;
 
 $user_id = get_current_user_id();
-$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+$attempt_id = (int) sanitize_text_field($_GET['view_quiz_attempt_id']);
 $attempt_data = tutor_utils()->get_attempt($attempt_id);
 
 ?>
@@ -28,7 +28,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
             'attempt_id' => $attempt_id,
             'attempt_data' => $attempt_data,
             'user_id' => $user_id,
-            'context' => 'frontend-dashboard-my-attempt'
+            'context' => 'frontend-dashboard-my-attempts'
         ));
     ?>
 </div>

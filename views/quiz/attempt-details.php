@@ -112,45 +112,16 @@ if(is_array($answers) && count($answers) > 0) {
 }
 
 // Prepare the column list for the first summary table
-$table_1_columns = array(
-    'user'              => __('Attempt By', 'tutor'),
-    'date'              => __('Date', 'tutor'),
-    'qeustion_count'    => __('Question', 'tutor'),
-    'quiz_time'         => __('Quiz Time', 'tutor'),
-    'attempt_time'      => __('Attempt Time', 'tutor'),
-    'total_marks'       => __('Total Marks', 'tutor'),
-    'pass_marks'        => __('Pass Marks', 'tutor'),
-    'correct_answer'    => __('Correct Answer', 'tutor'),
-    'incorrect_answer'  => __('Incorrect Answer', 'tutor'),
-    'earned_marks'      => __('Earned Marks', 'tutor'),
-    'result'            => __('Result', 'tutor')
-);
-if(!is_admin()) {
-    // Exclude some columns in frontend dashboard
-    unset($table_1_columns['user']);
-    unset($table_1_columns['quiz_time']);
-    unset($table_1_columns['attempt_time']);
-}
-$table_1_columns = apply_filters( 'tutor/quiz/attempt/review/table/summary/column/list', $table_1_columns, $attempt_data );
+$page_key ='attempt-details-summary';
+$table_1_columns = include __DIR__ . '/contexts.php';
 
 // Prepare the column list for the second table (eery single answer list)
-$table_2_columns = array(
-    'no' => __('No', 'tutor'),
-    'type' => __('Type', 'tutor'),
-    'questions' => __('Questions', 'tutor'),
-    'given_answer' => __('Given Answer', 'tutor'),
-    'correct_answer' => __('Correct Answer', 'tutor'),
-    'answer' => __('Answer', 'tutor'),
-    'manual_review' => __('Manual Review', 'tutor')
-);
-if(!is_admin()) {
-    unset($table_2_columns['manual_review']);
-}
-$table_2_columns = apply_filters( 'tutor/quiz/attempt/review/table/answers/column/list', $table_2_columns );
+$page_key = 'attempt-details-answers';
+$table_2_columns = include __DIR__ . '/contexts.php';
 ?>
 
 <?php 
-    if($context) {
+    /* if($context) {
         // Prepare header data
         $course_title   = get_the_title( $attempt_data->course_id );
         $course_url     = get_permalink( $attempt_data->course_id );
@@ -169,7 +140,7 @@ $table_2_columns = apply_filters( 'tutor/quiz/attempt/review/table/answers/colum
         $pass_marks     = '';
         
         include __DIR__ . '/header-context/'.$context.'.php';
-    }
+    } */
 ?>
 
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts tutor-mb-30">
@@ -313,8 +284,6 @@ $table_2_columns = apply_filters( 'tutor/quiz/attempt/review/table/answers/colum
                             </td>
                             <?php
                             break;
-
-                        default : do_action( 'tutor/quiz/attempt/review/table/summary/column/content'.$key, $attempt_data, $context );
                     }
                 }
             ?>
@@ -586,10 +555,10 @@ $table_2_columns = apply_filters( 'tutor/quiz/attempt/review/table/answers/colum
                                         case 'manual_review' :
                                             ?>
                                             <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10">
-                                                <a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-10 tutor-icon-rounded tutor-text-success">
+                                                <a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-10 tutor-icon-rounded tutor-text-success">
                                                     <i class="tutor-icon-mark"></i> 
                                                 </a>
-                                                <a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-text-danger">
+                                                <a href="javascript:;" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" data-context="<?php echo $context; ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-text-danger">
                                                     <i class="tutor-icon-line-cross"></i>
                                                 </a>
                                             </td>

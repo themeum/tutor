@@ -3,7 +3,7 @@
  * Student's Quiz Review Backend
  */
 
-$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+$attempt_id = (int) sanitize_text_field($_GET['view_quiz_attempt_id']);
 $attempt = tutor_utils()->get_attempt($attempt_id);
 $attempt_data = $attempt;
 $user_id = tutor_utils()->avalue_dot('user_id', $attempt_data);
@@ -28,7 +28,8 @@ $user = get_userdata($user_id);
             tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
                 'attempt_id' => $attempt_id,
                 'attempt_data' => $attempt_data,
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                'context' => 'backend-dashboard-students-attempts'
             ));
         ?>
     </div>

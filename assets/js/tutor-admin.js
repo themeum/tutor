@@ -2778,14 +2778,16 @@ window.jQuery(document).ready(function ($) {
     var attempt_id = $that.attr('data-attempt-id');
     var attempt_answer_id = $that.attr('data-attempt-answer-id');
     var mark_as = $that.attr('data-mark-as');
+    var context = $that.attr('data-context');
     $.ajax({
       url: _tutorobject.ajaxurl,
       type: 'GET',
       data: {
-        action: 'review_quiz_answer',
         attempt_id: attempt_id,
         attempt_answer_id: attempt_answer_id,
-        mark_as: mark_as
+        mark_as: mark_as,
+        context: context,
+        action: 'review_quiz_answer'
       },
       beforeSend: function beforeSend() {
         $that.addClass('tutor-updating-message');
