@@ -313,15 +313,15 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:88, templates/dashboard/purchase_history.php:128
+#: classes/Backend_Page_Trait.php:88, templates/dashboard/purchase_history.php:129
 msgid "On Hold"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:84, classes/Utils.php:2663, templates/dashboard/dashboard.php:92, templates/dashboard/my-courses.php:31, templates/dashboard/purchase_history.php:140, views/pages/course-list.php:130, views/quiz/attempt-details.php:471, views/quiz/attempt-table.php:83
+#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:84, classes/Utils.php:2663, classes/Utils.php:8057, templates/dashboard/dashboard.php:92, templates/dashboard/my-courses.php:31, templates/dashboard/purchase_history.php:141, views/pages/course-list.php:130, views/quiz/attempt-details.php:471, views/quiz/attempt-table.php:83
 msgid "Pending"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:114, templates/dashboard/purchase_history.php:124, templates/dashboard/purchase_history.php:132
+#: classes/Backend_Page_Trait.php:114, classes/Utils.php:8061, templates/dashboard/purchase_history.php:125, templates/dashboard/purchase_history.php:133
 msgid "Processing"
 msgstr ""
 
@@ -329,7 +329,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:140, templates/dashboard/my-courses.php:132, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:131, views/fragments/announcement-list.php:173, views/metabox/course-topics.php:76, views/metabox/course-topics.php:116, views/metabox/course-topics.php:149, views/modal/review.php:34, views/modal/topic-form.php:46, views/pages/withdraw_requests.php:357, views/pages/withdraw_requests.php:424, templates/dashboard/reviews/given-reviews.php:122, templates/dashboard/reviews/given-reviews.php:153, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
+#: classes/Backend_Page_Trait.php:140, templates/dashboard/my-courses.php:132, templates/dashboard/question-answer.php:76, templates/dashboard/withdraw.php:155, views/fragments/announcement-list.php:74, views/fragments/announcement-list.php:131, views/fragments/announcement-list.php:173, views/metabox/course-topics.php:76, views/metabox/course-topics.php:116, views/metabox/course-topics.php:149, views/modal/review.php:34, views/modal/topic-form.php:46, views/pages/withdraw_requests.php:386, views/pages/withdraw_requests.php:453, templates/dashboard/reviews/given-reviews.php:122, templates/dashboard/reviews/given-reviews.php:153, templates/single/lesson/sidebar_question_and_answer.php:115, templates/single/course/enrolled/question_and_answer.php:52, templates/single/course/enrolled/question_and_answer.php:136
 msgid "Cancel"
 msgstr ""
 
@@ -593,7 +593,7 @@ msgstr ""
 msgid "Instructor"
 msgstr ""
 
-#: classes/Instructors_List.php:74, classes/Instructors_List.php:258, classes/Instructors_List.php:294, views/pages/withdraw_requests.php:274
+#: classes/Instructors_List.php:74, classes/Instructors_List.php:258, classes/Instructors_List.php:294, views/pages/withdraw_requests.php:267
 msgid "Approve"
 msgstr ""
 
@@ -601,7 +601,7 @@ msgstr ""
 msgid "Block"
 msgstr ""
 
-#: classes/Instructors_List.php:240, classes/Utils.php:2664, views/pages/withdraw_requests.php:69
+#: classes/Instructors_List.php:240, classes/Utils.php:2664, classes/Utils.php:8058
 msgid "Approved"
 msgstr ""
 
@@ -621,7 +621,7 @@ msgstr ""
 msgid "Unblock"
 msgstr ""
 
-#: classes/Instructors_List.php:274, views/pages/withdraw_requests.php:277
+#: classes/Instructors_List.php:274, views/pages/withdraw_requests.php:270
 msgid "Reject"
 msgstr ""
 
@@ -734,7 +734,7 @@ msgstr ""
 msgid "Price Type"
 msgstr ""
 
-#: classes/Options.php:126, classes/Options_V2.php:323, classes/Utils.php:7026
+#: classes/Options.php:126, classes/Options_V2.php:323, classes/Utils.php:7044
 msgid "Dashboard Page"
 msgstr ""
 
@@ -1254,7 +1254,7 @@ msgstr ""
 msgid "Allow multiple instructors to upload their courses."
 msgstr ""
 
-#: classes/Options.php:567, classes/Options_V2.php:1226, classes/Utils.php:7027
+#: classes/Options.php:567, classes/Options_V2.php:1226, classes/Utils.php:7045
 msgid "Instructor Registration Page"
 msgstr ""
 
@@ -1282,7 +1282,7 @@ msgstr ""
 msgid "Student Profile settings"
 msgstr ""
 
-#: classes/Options.php:599, classes/Options_V2.php:1234, classes/Utils.php:7028
+#: classes/Options.php:599, classes/Options_V2.php:1234, classes/Utils.php:7046
 msgid "Student Registration Page"
 msgstr ""
 
@@ -2956,41 +2956,45 @@ msgstr ""
 msgid "Github"
 msgstr ""
 
-#: classes/Utils.php:6991
+#: classes/Utils.php:7009
 msgid "Not Taken"
 msgstr ""
 
-#: classes/Utils.php:6989
+#: classes/Utils.php:7007
 msgid "In Progress"
 msgstr ""
 
-#: classes/Utils.php:6985, templates/dashboard/purchase_history.php:120
+#: classes/Utils.php:7003, classes/Utils.php:8060, templates/dashboard/purchase_history.php:121
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:7172
+#: classes/Utils.php:7190
 msgid "Set Your %sFirst Name%s"
 msgstr ""
 
-#: classes/Utils.php:7173
+#: classes/Utils.php:7191
 msgid "Set Your %sLast Name%"
 msgstr ""
 
-#: classes/Utils.php:7174
+#: classes/Utils.php:7192
 msgid "Set Your %sProfile Photo%s"
 msgstr ""
 
-#: classes/Utils.php:7179
+#: classes/Utils.php:7197
 msgid "Set %sWithdraw Method%"
 msgstr ""
 
-#: classes/Utils.php:8025
+#: classes/Utils.php:8043
 msgctxt "$page_title"
 msgid "%s"
 msgstr ""
 
-#: classes/Utils.php:8026
-msgid "XYZ"
+#: classes/Utils.php:8059
+msgid "Rejected"
+msgstr ""
+
+#: classes/Utils.php:8062, classes/Utils.php:8063, templates/dashboard/purchase_history.php:137
+msgid "Cancelled"
 msgstr ""
 
 #: classes/Withdraw.php:34
@@ -3609,14 +3613,6 @@ msgstr ""
 
 #: templates/dashboard/purchase_history.php:82
 msgid "Order ID"
-msgstr ""
-
-#: templates/dashboard/purchase_history.php:185
-msgid "No purchase history available"
-msgstr ""
-
-#: templates/dashboard/purchase_history.php:136
-msgid "Cancelled"
 msgstr ""
 
 #: templates/dashboard/question-answer.php:87
@@ -4751,10 +4747,6 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:70
-msgid "Rejected"
-msgstr ""
-
 #: views/pages/withdraw_requests.php:169
 msgid "Name:"
 msgstr ""
@@ -4779,31 +4771,31 @@ msgstr ""
 msgid "BIC/SWIFT:"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:346
+#: views/pages/withdraw_requests.php:375
 msgid "Approve Withdrawal?"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:360
+#: views/pages/withdraw_requests.php:389
 msgid "Yes, Approve Withdrawal"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:398
+#: views/pages/withdraw_requests.php:427
 msgid "Reject Withdrawal?"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:405, views/pages/withdraw_requests.php:406
+#: views/pages/withdraw_requests.php:434, views/pages/withdraw_requests.php:435
 msgid "Invalid Payment Details"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:408, views/pages/withdraw_requests.php:409
+#: views/pages/withdraw_requests.php:437, views/pages/withdraw_requests.php:438
 msgid "Invalid Request"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:411, views/pages/withdraw_requests.php:412
+#: views/pages/withdraw_requests.php:440, views/pages/withdraw_requests.php:441
 msgid "Other"
 msgstr ""
 
-#: views/pages/withdraw_requests.php:427
+#: views/pages/withdraw_requests.php:456
 msgid "Yes, Reject Withdrawal"
 msgstr ""
 
@@ -5593,6 +5585,10 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Withdraw Reject Reason"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Copied"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1

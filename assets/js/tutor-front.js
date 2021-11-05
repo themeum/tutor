@@ -40,6 +40,71 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./assets/react/front/dashboard/export-csv.js":
+/*!****************************************************!*\
+  !*** ./assets/react/front/dashboard/export-csv.js ***!
+  \****************************************************/
+/***/ (() => {
+
+document.addEventListener("DOMContentLoaded", function () {
+  var _wp$i18n = wp.i18n,
+      __ = _wp$i18n.__,
+      _x = _wp$i18n._x,
+      _n = _wp$i18n._n,
+      _nx = _wp$i18n._nx;
+  /**
+   * Export purchase history
+   *
+   * @since v2.0.0
+   */
+
+  var exportPurchase = document.getElementById("tutor-export-purchase-history");
+
+  exportPurchase.onclick = function (e) {
+    var filename = "purchase-history.csv";
+    var target = e.currentTarget;
+    var data = [{
+      "Order ID ": target.dataset.order,
+      "Course Name": target.dataset.courseName,
+      Price: target.dataset.price,
+      Date: target.dataset.date,
+      Status: target.dataset.status
+    }];
+    exportCSV(data, filename);
+  };
+  /**
+   * Export CSV file
+   *
+   * @param {*} data | data that will be used for generating CSV file
+   * @param {*} filename | filename of CSV file
+   * @since v2.0.0
+   */
+
+
+  function exportCSV(data, filename) {
+    var keys = Object.keys(data[0]);
+    var csvFile = [keys.join(","), data.map(function (row) {
+      return keys.map(function (key) {
+        return row[key];
+      }).join(",");
+    }).join("\n")].join("\n"); //generate csv
+
+    var blob = new Blob([csvFile], {
+      type: "text/csv;charset=utf-8"
+    });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+});
+
+/***/ }),
+
 /***/ "./assets/react/front/dashboard/mobile-nav.js":
 /*!****************************************************!*\
   !*** ./assets/react/front/dashboard/mobile-nav.js ***!
@@ -2147,6 +2212,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_pages_course_landing__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./course-spotlight/index */ "./assets/react/front/course-spotlight/index.js");
 /* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_course_spotlight_index__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _dashboard_export_csv__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dashboard/export-csv */ "./assets/react/front/dashboard/export-csv.js");
+/* harmony import */ var _dashboard_export_csv__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_dashboard_export_csv__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
