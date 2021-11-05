@@ -109,8 +109,9 @@ $end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date
                 if ( tutor_utils()->count ( $orders ) ) {
                     foreach ( $orders as $order ) {
                         if ( $monetize_by === 'wc' ) {
-                            $wc_order = wc_get_order( $order->ID );
-                            $price = tutor_utils()->tutor_price( $wc_order->get_total() );
+                            $wc_order   = wc_get_order( $order->ID );
+                            $price      = tutor_utils()->tutor_price( $wc_order->get_total() );
+                            $raw_price  = $wc_order->get_total();
                             $status = $order->post_status;
                             $order_status = '';
                             $order_status_text = '';
@@ -141,11 +142,12 @@ $end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date
                                     break;
                             }
                         } else if ( $monetize_by === 'edd' ) {
-                            $edd_order = edd_get_payment( $order->ID );
-                            $price = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
-                            $status = $edd_order->status_nicename;
-                            $order_status = '';
-                            $order_status_text = $status;
+                            $edd_order          = edd_get_payment( $order->ID );
+                            $price              = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
+                            $raw_price          = $edd_order->total;
+                            $status             = $edd_order->status_nicename;
+                            $order_status       = '';
+                            $order_status_text  = $status;
                         }
                         
             ?>
@@ -174,9 +176,9 @@ $end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date
                     <td data-th="Status">
                         <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-5"><?php esc_html_e( $order_status_text ); ?></span>
                     </td>
-                    <td data-th="Download">
+                    <td data-th="Download" id="tutor-export-purchase-history" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
                         <?php $formatted_date = date_i18n( 'Y-m-d', strtotime( $order->post_date ) ); ?>
-                        <a href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() . 'purchase_history/?purchase_date=' . $formatted_date . '&order_id=' . $order->ID ); ?>"><span class="ttr-receipt-line" style="font-size:24px"></span></a>
+                        <a><span class="ttr-receipt-line" style="font-size:24px"></span></a>
                     </td>
                 </tr>
                 <?php } ?>
