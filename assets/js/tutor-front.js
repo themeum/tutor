@@ -61,8 +61,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var exportPurchase = document.getElementById("tutor-export-purchase-history");
 
   exportPurchase.onclick = function (e) {
-    var filename = "purchase-history.csv";
     var target = e.currentTarget;
+    var filename = "order-".concat(target.dataset.order, "-purchase-history.csv");
     var data = [{
       "Order ID ": target.dataset.order,
       "Course Name": target.dataset.courseName,

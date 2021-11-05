@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   const exportPurchase = document.getElementById("tutor-export-purchase-history");
   exportPurchase.onclick = (e) => {
-    const filename = "purchase-history.csv";
     const target = e.currentTarget;
+    const filename = `order-${target.dataset.order}-purchase-history.csv`;
     const data = [
       {
         "Order ID ": target.dataset.order,
