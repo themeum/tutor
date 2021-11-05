@@ -317,7 +317,7 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:84, classes/Utils.php:2663, classes/Utils.php:8057, templates/dashboard/dashboard.php:92, templates/dashboard/my-courses.php:31, templates/dashboard/purchase_history.php:141, views/pages/course-list.php:130, views/quiz/attempt-details.php:471, views/quiz/attempt-table.php:83
+#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:84, classes/Utils.php:2663, templates/dashboard/dashboard.php:92, templates/dashboard/my-courses.php:31, templates/dashboard/purchase_history.php:140, views/pages/course-list.php:130, views/quiz/attempt-details.php:471, views/quiz/attempt-table.php:83
 msgid "Pending"
 msgstr ""
 
@@ -2968,23 +2968,23 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:7190
+#: classes/Utils.php:7172
 msgid "Set Your %sFirst Name%s"
 msgstr ""
 
-#: classes/Utils.php:7191
+#: classes/Utils.php:7173
 msgid "Set Your %sLast Name%"
 msgstr ""
 
-#: classes/Utils.php:7192
+#: classes/Utils.php:7174
 msgid "Set Your %sProfile Photo%s"
 msgstr ""
 
-#: classes/Utils.php:7197
+#: classes/Utils.php:7179
 msgid "Set %sWithdraw Method%"
 msgstr ""
 
-#: classes/Utils.php:8043
+#: classes/Utils.php:8025
 msgctxt "$page_title"
 msgid "%s"
 msgstr ""
