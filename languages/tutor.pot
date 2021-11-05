@@ -317,7 +317,7 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:84, classes/Utils.php:2663, templates/dashboard/dashboard.php:118, templates/dashboard/my-courses.php:31, templates/dashboard/purchase_history.php:140, views/pages/course-list.php:130, views/quiz/attempt-details.php:471, views/quiz/attempt-table.php:83
+#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:84, classes/Utils.php:2663, templates/dashboard/dashboard.php:92, templates/dashboard/my-courses.php:31, templates/dashboard/purchase_history.php:140, views/pages/course-list.php:130, views/quiz/attempt-details.php:471, views/quiz/attempt-table.php:83
 msgid "Pending"
 msgstr ""
 
@@ -401,7 +401,7 @@ msgstr ""
 msgid "Mine"
 msgstr ""
 
-#: classes/Course_List.php:114, templates/dashboard/dashboard.php:117
+#: classes/Course_List.php:114, templates/dashboard/dashboard.php:91
 msgid "Published"
 msgstr ""
 
@@ -497,7 +497,7 @@ msgstr ""
 msgid "Total results you like to show"
 msgstr ""
 
-#: classes/Dashboard.php:48
+#: classes/Dashboard.php:46
 msgid "Auto Draft"
 msgstr ""
 
@@ -2412,7 +2412,7 @@ msgstr ""
 msgid "Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it."
 msgstr ""
 
-#: classes/Tutor.php:549, classes/Utils.php:2519, templates/dashboard.php:50, templates/dashboard/dashboard.php:100
+#: classes/Tutor.php:549, classes/Utils.php:2519, templates/dashboard.php:50, templates/dashboard/dashboard.php:74
 msgid "Dashboard"
 msgstr ""
 
@@ -2824,7 +2824,7 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
-#: classes/Utils.php:2521, templates/dashboard/dashboard.php:131
+#: classes/Utils.php:2521, templates/dashboard/dashboard.php:105
 msgid "Enrolled Courses"
 msgstr ""
 
@@ -2968,23 +2968,23 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: classes/Utils.php:7168, templates/dashboard/my-profile.php:22, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:123, templates/dashboard/settings/profile.php:124
-msgid "First Name"
+#: classes/Utils.php:7172
+msgid "Set Your %sFirst Name%s"
 msgstr ""
 
-#: classes/Utils.php:7169, templates/dashboard/my-profile.php:23, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:130, templates/dashboard/settings/profile.php:131
-msgid "Last Name"
+#: classes/Utils.php:7173
+msgid "Set Your %sLast Name%"
 msgstr ""
 
-#: classes/Utils.php:7170
-msgid "Profile Photo"
+#: classes/Utils.php:7174
+msgid "Set Your %sProfile Photo%s"
 msgstr ""
 
-#: classes/Utils.php:7171
-msgid "Withdraw Method"
+#: classes/Utils.php:7179
+msgid "Set %sWithdraw Method%"
 msgstr ""
 
-#: classes/Utils.php:8038
+#: classes/Utils.php:8025
 msgctxt "$page_title"
 msgid "%s"
 msgstr ""
@@ -3475,63 +3475,55 @@ msgstr ""
 msgid "Information from the Additional Data section shows up on the course single page."
 msgstr ""
 
-#: templates/dashboard/dashboard.php:17
+#: templates/dashboard/dashboard.php:22
 msgid "Complete Your Profile"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:76
-msgid "You are almost done: "
+#: templates/dashboard/dashboard.php:44
+msgid "You are almost done"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:77
-msgid "/5"
-msgstr ""
-
-#: templates/dashboard/dashboard.php:86
-msgid "Set Your"
-msgstr ""
-
-#: templates/dashboard/dashboard.php:119
+#: templates/dashboard/dashboard.php:93
 msgid "Trash"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:141, templates/dashboard/enrolled-courses.php:9
+#: templates/dashboard/dashboard.php:115, templates/dashboard/enrolled-courses.php:9
 msgid "Active Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:151, templates/dashboard/enrolled-courses.php:10
+#: templates/dashboard/dashboard.php:125, templates/dashboard/enrolled-courses.php:10
 msgid "Completed Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:165
+#: templates/dashboard/dashboard.php:139
 msgid "Total Students"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:175
+#: templates/dashboard/dashboard.php:149
 msgid "Total Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:185
+#: templates/dashboard/dashboard.php:159
 msgid "Total Earnings"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:207
+#: templates/dashboard/dashboard.php:181
 msgid "Popular Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:209
+#: templates/dashboard/dashboard.php:183
 msgid "View All"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:218, templates/dashboard/dashboard.php:245, templates/dashboard/purchase_history.php:87
+#: templates/dashboard/dashboard.php:192, templates/dashboard/dashboard.php:219, templates/dashboard/purchase_history.php:87
 msgid "Course Name"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:223, templates/dashboard/dashboard.php:252
+#: templates/dashboard/dashboard.php:197, templates/dashboard/dashboard.php:226
 msgid "Enrolled"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:229, templates/dashboard/dashboard.php:257
+#: templates/dashboard/dashboard.php:203, templates/dashboard/dashboard.php:231
 msgid "Rating"
 msgstr ""
 
@@ -3569,6 +3561,14 @@ msgstr ""
 
 #: templates/dashboard/my-courses.php:135, views/fragments/announcement-list.php:176, templates/dashboard/reviews/given-reviews.php:156
 msgid "Yes, Delete This"
+msgstr ""
+
+#: templates/dashboard/my-profile.php:22, templates/dashboard/registration.php:50, templates/dashboard/registration.php:53, views/pages/add_new_instructor.php:29, views/pages/add_new_instructor.php:35, templates/dashboard/instructor/registration.php:51, templates/dashboard/instructor/registration.php:54, templates/dashboard/settings/profile.php:123, templates/dashboard/settings/profile.php:124
+msgid "First Name"
+msgstr ""
+
+#: templates/dashboard/my-profile.php:23, templates/dashboard/registration.php:60, templates/dashboard/registration.php:63, views/pages/add_new_instructor.php:43, views/pages/add_new_instructor.php:49, templates/dashboard/instructor/registration.php:61, templates/dashboard/instructor/registration.php:64, templates/dashboard/settings/profile.php:130, templates/dashboard/settings/profile.php:131
+msgid "Last Name"
 msgstr ""
 
 #: templates/dashboard/my-profile.php:24
