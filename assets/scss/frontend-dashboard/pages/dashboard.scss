@@ -1,5 +1,5 @@
 .tutor-dashboard-cards-container {
-    &>div {
+    & > div {
         p {
             @include valueWithPrefix(display, flex);
             @include propertyWithPrefix(flex-direction, column);
@@ -14,7 +14,7 @@
                 @include propertyWithPrefix(flex-flow, row);
                 padding: 7px 10px;
             }
-            &>span {
+            & > span {
                 font-style: normal;
                 white-space: nowrap;
                 overflow: hidden;
@@ -54,9 +54,9 @@
                 height: 60px;
                 border-radius: 50%;
                 overflow: hidden;
-                background: #E9EDFB;
+                background: #e9edfb;
                 i {
-                    color: #3E64DE;
+                    color: var(--tutor-primary-color);
                     display: inline-block;
                     font-size: 40px;
                 }
@@ -83,14 +83,14 @@
 }
 
 .profile-completion {
-    border: 1px solid #CDCFD5;
+    border: 1px solid #cdcfd5;
     box-sizing: border-box;
     border-radius: 6px;
     margin-right: 25px;
     margin-bottom: 20px;
 
     .profile-completion-content {
-        border-right: 1px solid #CDCFD5;
+        border-right: 1px solid #cdcfd5;
         padding: 35px;
         li {
             list-style: none;
@@ -105,7 +105,7 @@
             padding: 4px 6px;
         }
         .tutor-round-icon {
-            background: #3E64DE;
+            background: #3e64de;
             height: 28px;
             width: 28px;
             border-radius: 50%;
@@ -121,10 +121,10 @@
         margin-right: 0px;
         margin-left: 0px;
         padding-left: 20px;
-        
+
         .profile-completion-content {
             padding: 25px 15px;
-            border-bottom: 1px solid #CDCFD5;
+            border-bottom: 1px solid #cdcfd5;
             border-right: 0px;
             li {
                 margin-right: 0px;
@@ -147,7 +147,7 @@
             li {
                 margin: 10px auto;
                 .icon {
-                    color: #F44337;
+                    color: #f44337;
                     font-size: 18px;
                 }
                 a {
