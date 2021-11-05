@@ -60,144 +60,26 @@ $filters = array(
 );
 
 ?>
+
+<?php
+	/**
+	 * Load Templates with data.
+	 */
+	$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+	$filters_template = tutor()->path . 'views/elements/filters.php';
+	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
+	tutor_load_template_from_custom_path( $filters_template, $filters );
+?>
+
 <div class="wrap">
 	<?php
-		/**
-		 * Load Templates with data.
-		 */
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
-		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
-		tutor_load_template_from_custom_path( $filters_template, $filters );
-		
+    	if ($quiz_attempts_list){
+			tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
+				'attempt_list' => $quiz_attempts_list,
+				'context' => 'instructor'
+			));
+		}
 	?>
-	<div class="tutor-ui-table-responsive tutor-mt-30 tutor-mr-20">
-		<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts td-align-middle">
-			<thead>
-				<tr>
-					<th>
-						<div class="d-flex">
-							<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Quiz Info', 'tutor' ); ?></span>
-						<span class="tutor-v2-icon-test icon-ordering-a-to-z-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Course', 'tutor' ); ?></span>
-						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Question', 'tutor' ); ?></span>
-						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
-						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Correct Answer', 'tutor' ); ?></span>
-						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Incorrect Answer', 'tutor' ); ?></span>
-						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Earned Marks', 'tutor' ); ?></span>
-						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th>
-						<div class="inline-flex-center color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Result', 'tutor' ); ?></span>
-						<span class="tutor-v2-icon-test icon-order-down-filled"></span>
-						</div>
-					</th>
-					<th class="tutor-shrink"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ( $quiz_attempts_list as $list ) : ?>
-				<tr>
-					<td data-th="Checkbox">
-						<div class="td-checkbox d-flex ">
-							<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
-						</div>
-					</td>
-					<td data-th="Quiz Info" class="column-fullwidth">
-						<div class="td-statement-infor">
-							<span class="text-regular-small color-text-primary">
-							<?php echo esc_html( $quiz_attempts->column_student( $list, 'attempt_ended_at' ) ); ?>
-							</span>
-							<p class="text-medium-body color-text-primary">
-								<?php esc_html_e( $quiz_attempts->column_quiz( $list, 'post_title' ) ); ?>
-							</p>
-							<span class="text-regular-small color-text-primary">
-								<?php esc_html_e( 'Student:', 'tutor' ) ?> <?php esc_html_e( $quiz_attempts->column_student_info( $list, 'display_name' ) ); ?>
-							</span>
-						</div>
-					</td>
-					<td data-th="Registration Date">
-						<span class="color-text-primary text-regular-caption">
-						<?php echo wp_kses_post( $quiz_attempts->column_course( $list, 'quiz' ) ); ?>
-						</span>
-					</td>
-					<td data-th="Registration Date">
-						<span class="color-text-primary text-regular-caption">
-						<?php esc_html_e( $quiz_attempts->column_total_questions( $list, 'total_questions' ) ); ?>
-						</span>
-					</td>
-					<td data-th="Registration Date">
-						<span class="color-text-primary text-regular-caption">
-						<?php esc_html_e( $quiz_attempts->column_total_marks( $list, 'total_marks' ) ); ?>
-						</span>
-					</td>
-					<td data-th="Registration Date">
-						<span class="color-text-primary text-regular-caption">
-						<?php //echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
-						</span>
-					</td>
-					<td data-th="Registration Date">
-						<span class="color-text-primary text-regular-caption">
-						<?php //echo $quiz_attempts->column_total_correct_answer( $list, 'is_correct' ); ?>
-						</span>
-					</td>
-					</td>
-					<td data-th="Registration Date">
-						<span class="color-text-primary text-regular-caption">
-							<?php echo wp_kses_post( $quiz_attempts->column_earned_percentage( $list, 'earned_percentage' ) ); ?>
-						</span>
-					</td>
-					<td data-th="Course Taklen">
-						<span class="color-text-primary text-medium-caption">
-						<?php echo wp_kses_post( $quiz_attempts->column_quiz_result( $list, 'output' ) ); ?>
-						</span>
-					</td>
-					<td data-th="URL">
-						<div class="inline-flex-center td-action-btns">
-						<?php echo wp_kses_post( $quiz_attempts->column_quiz_action( $list, 'actions' ) ); ?>
-						</div>
-					</td>
-				</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
-	</div>
 	<div class="tutor-admin-page-pagination-wrapper">
 		<?php
 			/**

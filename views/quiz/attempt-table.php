@@ -1,16 +1,20 @@
 <?php
-    extract($data); // $attempt_list
+    extract($data); // $attempt_list, $context(nullable)
+    !isset($context) ? $context=null : 0;
 
     $table_columns = array(
-        'quiz_info' => __('Quiz Info', 'tutor'),
-        'question' => __('Question', 'tutor'),
-        'total_marks' => __('Total Marks', 'tutor'),
-        'correct_answer' => __('Correct Answer', 'tutor'),
-        'incorrect_answer' => __('Incorrect Answer', 'tutor'),
-        'earned_marks' => __('Earned Marks', 'tutor'),
-        'result' => __('Result', 'tutor')
+        'checkbox'          => '<div class="d-flex"><input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" /></div>',
+        'quiz_info'         => __('Quiz Info', 'tutor'),
+        'question'          => __('Question', 'tutor'),
+        'total_marks'       => __('Total Marks', 'tutor'),
+        'correct_answer'    => __('Correct Answer', 'tutor'),
+        'incorrect_answer'  => __('Incorrect Answer', 'tutor'),
+        'earned_marks'      => __('Earned Marks', 'tutor'),
+        'result'            => __('Result', 'tutor')
     );
-
+    if(!is_admin()) {
+        unset($table_columns['checkbox']);
+    }
     $table_columns = apply_filters( 'tutor/quiz/attempt/table/column/list', $table_columns );
 ?>
 
@@ -19,7 +23,7 @@
         <tr>
             <?php 
                 foreach($table_columns as $key=>$column) {
-                    echo '<th><span class="text-regular-small color-text-subsued">'. __('Quiz Info', 'tutor') . '</span></th>';
+                    echo '<th><span class="text-regular-small color-text-subsued">'. $column . '</span></th>';
                 }
             ?>
         </tr>
@@ -51,6 +55,16 @@
                     <?php 
                         foreach($table_columns as $key=>$column) {
                             switch($key) {
+                                case 'checkbox' :
+                                    ?>
+                                    <td data-th="<?php _e('Mark', 'tutor'); ?>">
+                                        <div class="td-checkbox d-flex ">
+                                            <input id="tutor-admin-list-<?php echo $attempt->attempt_id; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $attempt->attempt_id; ?>" />
+                                        </div>
+                                    </td>
+                                    <?php
+                                    break;
+                                    
                                 case 'quiz_info' :
                                     ?>
                                     <td data-th="<?php _e('Quiz Info', 'tutor'); ?>" class="column-fullwidth">
@@ -63,7 +77,7 @@
                                                     <?php echo get_the_title($attempt->course_id); ?>
                                                 </a>
                                             </p>
-                                            <?php do_action('tutor_quiz/table/after/course_title', $attempt); ?>
+                                            <?php do_action('tutor_quiz/table/after/course_title', $attempt, $context); ?>
                                         </div>
                                     </td>
                                     <?php
@@ -135,7 +149,7 @@
                                     <?php
                                     break;
 
-                                default : do_action( 'tutor/quiz/attempt/table/column/content/'.$key, $attempt );
+                                default : do_action( 'tutor/quiz/attempt/table/column/content/'.$key, $attempt, $context );
                             }
                         }
                     ?>
