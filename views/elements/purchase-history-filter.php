@@ -24,7 +24,7 @@
             <?php if ( isset( $_GET['course_id']) && '' !== $_GET['course_id'] ): ?>
                 <input type="hidden" name="course_id" value="<?php esc_html_e( $_GET['course_id']); ?>">
             <?php endif; ?>    
-            <div class="calendar-filter tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+            <div class="calendar-filter tutor-bs-d-lg-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
                 <div class="tutor-input-group tutor-form-control-sm tutor-mr-5">
                     <input
                     type="date"
@@ -48,7 +48,7 @@
                     required
                     />
                 </div>  
-                <button type="submit" class="tutor-border tutor-radius-6 tutor-p-4 tutor-bg-white">
+                <button type="submit" class="tutor-border tutor-radius-6 tutor-p-4 tutor-bg-white tutor-bs-mt-3 tutor-bs-mt-lg-0">
                     <span style="vertical-align:middle" class="ttr-search-filled color-primary-main text-regular-h4"></span>
                 </button>
             </div>

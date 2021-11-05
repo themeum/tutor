@@ -97,4 +97,49 @@
 			}
 		}
 	}
+
+	// Card Variations
+	&.tutor-before-enroll {
+	}
+	&.tutor-after-enroll {
+	}
+	&.tutor-before-purchase {
+	}
+	&.tutor-after-purchase {
+	}
+}
+
+.tutor-course-details-tab {
+	.tab-header {
+		/* stroke/light30 */
+
+		border-bottom: 1px solid $stroke-light-30;
+	}
+	.tab-header-item {
+		@extend .text-medium-caption;
+		@extend .color-text-subsued;
+		@extend .tutor-pb-12;
+		position: relative;
+		&:before {
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 3px;
+			background: $bg-brand;
+			bottom: calc(0% - 12px);
+			transform: scaleY(0);
+			transform-origin: bottom;
+			transition: 150ms;
+		}
+		&.is-active {
+			transform: scaleY(1);
+		}
+		&:not(:last-child) {
+			margin-right: 40px;
+		}
+	}
+	.tab-body {
+	}
+	.tab-body-item {
+	}
 }

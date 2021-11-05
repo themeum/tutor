@@ -6132,7 +6132,7 @@ class Utils {
 	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
 		global $wpdb;
 
-		$user_id     = $this->get_user_id($user_id);
+		$user_id     = $this->get_user_id( $user_id );
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 
 		$post_type = "";
@@ -6181,6 +6181,24 @@ class Utils {
 		) );
 
 		return $orders;
+	}
+
+	/**
+	 * Export purchased course data
+	 */
+	public function export_purchased_course_data( $order_id = '', $purchase_date = '' ) {
+		global $wpdb;
+
+		$purchased_data = $wpdb->get_results( $wpdb->prepare(
+			"SELECT tutor_order.*, course.post_title 
+   			FROM {$wpdb->prefix}tutor_earnings AS tutor_order
+   			INNER JOIN {$wpdb->posts} AS course 
+     			ON course.ID = tutor_order.course_id 
+  			WHERE tutor_order.order_id = %d",
+			  $order_id
+		) );
+
+		return $purchased_data;
 	}
 
 	/**
@@ -8096,4 +8114,25 @@ class Utils {
 			<p><?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?></p>
 		</div>
 	<?php }
+
+	/**
+	 * Translate dynamic text, dynamic text is not translate while potting 
+	 * that's why define key here to make it translate able. It will put text in the pot file while compilling.
+	 * 
+	 * @param string $key, pass key to get translate text | required.
+	 * @return string
+	 * @since v2.0.0 
+	 */
+	public function translate_dynamic_text( $key ): string {
+		$key_value = array(
+			'pending'  		=> __( 'Pending', 'tutor' ),
+			'approved' 		=> __( 'Approved', 'tutor' ),
+			'rejected' 		=> __( 'Rejected', 'tutor' ),
+			'completed'  	=> __( 'Completed', 'tutor' ),
+			'processing' 	=> __( 'Processing', 'tutor' ),
+			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
+			'canceled'  	=> __( 'Cancelled', 'tutor' ),
+		);
+		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
+	}
 }

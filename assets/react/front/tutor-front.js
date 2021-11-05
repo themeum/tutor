@@ -3,7 +3,7 @@ import './dashboard';
 import './pages/instructor-list-filter';
 import './pages/course-landing';
 import './course-spotlight/index';
-import { get_response_message } from '../helper/response';
+import './dashboard/export-csv';
 
 jQuery(document).ready(function ($) {
     'use strict';
