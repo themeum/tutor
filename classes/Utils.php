@@ -4969,6 +4969,64 @@ class Utils {
 	}
 
 	/**
+	 * @param int context $instructor_id 
+	 *
+	 * @return array
+	 *
+	 *
+	 * Get the attempts stat from specific instructor context
+	 *
+	 * @since 2.0.0
+	 */
+	public function get_quiz_attempts_stat($instructor_id) {
+		global $wpdb;
+
+		$where_clause = '';
+		if(!$this->has_user_role('administrator', $instructor_id)){
+			$course_ids = $this->get_course_id_by('instructor', $instructor_id);
+			$courses_ids = count($courses_ids) ? implode(',', $courses_ids) : '0';
+			$where_clause.=' AND course.ID IN('.$cours_ids.')';
+		}
+		
+		$attempts = $wpdb->get_results(
+			"SELECT attempt.total_marks, attempt.earned_marks, attempt.attempt_info
+			FROM {$wpdb->prefix}tutor_quiz_attempts attempt
+				INNER JOIN {$wpdb->posts} course ON attempt.course_id=course.ID
+			WHERE 1=1 " . $where_clause
+		);
+
+		!is_array($attempts) ? $attempts=array() : 0;
+
+		$stats = array(
+			'all' => count($attempts),
+			'pass' => 0,
+			'fail' => 0,
+			'pending' => 0
+		);
+
+		foreach($attempts as $attempt) {
+			$info = @unserialize($attempt->attempt_info);
+			$passing_grade = (is_array($info) && $info['passing_grade']) ? (int)$info['passing_grade'] : 0;
+
+			// Pending count
+			if($attempt->earned_marks===null || $attempt->total_marks===null) {
+				$stats['pending']+=1;
+				continue;
+			}
+
+			// Pass/fail
+			$pass_mark = !$passing_grade ? 0 : ($passing_grade/100)*$attempt->total_marks;
+			if($pass_mark>=$attempt->earned_marks) {
+				$stats['pass']+=1;
+			} else {
+				$stats['fail']+=1;
+			}
+		}
+
+		return $stats;
+	}
+
+	/**
 	 * Delete quizattempt for user
 	 *
 	 * @since v1.9.5
@@ -7336,7 +7394,7 @@ class Utils {
 	 *
 	 * @since v1.7.9
 	 *
-	 * Return the course ID by lession, quiz, answer etc.
+	 * Return the course ID(s) by lession, quiz, answer etc.
 	 */
 	public function get_course_id_by( $content, $object_id ) {
 		global $wpdb;
@@ -7428,6 +7486,19 @@ class Utils {
 					",
 					$object_id
 				) );
+				break;
+
+			case 'instructor' : 
+				$course_ids = $wpdb->get_col($wpdb->prepare(
+					"SELECT meta_value FROM {$wpdb->usermeta}
+					WHERE user_id=%d AND meta_key='_tutor_instructor_course_id'",
+					$object_id
+				));
+
+				!is_array($course_ids) ? $course_ids=array() : 0;
+				$course_id = array_filter($courses_ids, function($id) {
+					return ($id && is_numeric($id));
+				});
 				break;
 		}
 
