@@ -1,8 +1,11 @@
 <?php
-$default      = isset( $field['default'] ) ? $field['default'] : 'off';
-$option_value = $this->get( $field['key'] . '.' . $field['event'], $default );
-$field_id     = 'field_' . $field['key'];
-$tooltip_desc = ! empty( $field['desc'] ) ? $field['desc'] : null;
+$field_default = sanitize_text_field( $field['default'] );
+$field_key     = sanitize_key( $field['key'] );
+$field_event   = sanitize_key( $field['event'] );
+$default       = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
+$option_value  = $this->get( esc_attr( $field_key . '.' . $field_event ), $default );
+$field_id      = 'field_' . $field['key'];
+$tooltip_desc  = ! empty( $field['desc'] ) ? $field['desc'] : null;
 ?>
 <div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
