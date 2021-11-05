@@ -6925,6 +6925,15 @@ li.tutor-option-nav-item h4 {
   font-size: 24px;
 }
 
+@media screen and (min-width: 1200px) {
+  .tutor-admin-announcements-list table.tutor-ui-table td {
+    padding: 0 10px !important;
+  }
+  .tutor-admin-announcements-list table.tutor-ui-table td:first-child {
+    padding-left: 20px !important;
+  }
+}
+
 table.tutor-ui-table.table-instructors .instructor-action {
   min-width: 70px;
   text-align: center;
