@@ -145,7 +145,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 ?>
 
 <div class="wrap">
-	<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-mr-20">
+	<div class="tutor-admin-page-content-wrapper tutor-mt-30">
 		<div class="tutor-ui-table-wrapper">
 			<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
 				<thead class="tutor-text-sm tutor-text-400">
