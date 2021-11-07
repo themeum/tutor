@@ -79,7 +79,7 @@ $filters = array(
 ?>
 
 <div class="wrap">
-	<div class="tutor-ui-table-responsive tutor-mt-30 tutor-mr-20">
+	<div class="tutor-ui-table-responsive tutor-mt-30">
 		<table class="tutor-ui-table tutor-ui-table-responsive table-instructors">
 			<thead>
 			<tr>

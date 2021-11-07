@@ -7246,7 +7246,7 @@ class Utils {
 		// List constantly required fields
 		$required_fields = array(
 			'first_name' 				  => sprintf( __( 'Set Your %sFirst Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
-			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
 			'_tutor_profile_photo' 		  => sprintf( __( 'Set Your %sProfile Photo%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
 		);
 
