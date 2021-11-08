@@ -111,32 +111,3 @@
 
 .tutor-course-details-tab {
 }
-
-//Backend Alert utlity .alert-#{$variable}{...}
-$variations: (
-	// prefix borderC txtC bgC btnC iconC btnBg btnBorder
-		'primary' $primary-30 $primary-100 $primary-50 $brand-wordpress,
-	'warning' $warning-30 $warning-100 $warning-50 $design-warning,
-	'success' $success-30 $success-100 $success-50 $design-success,
-	'danger' $danger-30 $danger-100 $danger-50 $design-danger
-);
-@each $suffix, $bgColor, $txtColor, $border, $icon in $variations {
-	.tutor-backend-alert.alert-#{$suffix} {
-		background: #{$bgColor};
-		color: #{$txtColor};
-		border: 1px solid #{$border};
-		> .alert-icon {
-			color: #{$icon};
-		}
-	}
-}
-
-// Tutor backend alert
-.tutor-alert {
-	@extend .text-regular-caption;
-
-	background: rgba(255, 255, 255, 0.9);
-	/* color/primary/fill/70 */
-	border: 1px solid #95aaed;
-	border-radius: 6px;
-}
