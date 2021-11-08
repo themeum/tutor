@@ -4,6 +4,7 @@
         <br class="clear">
 		<?php
 		$addons = apply_filters('tutor_pro_addons_lists_for_display', array());
+       
 
 		if (is_array($addons) && count($addons)){
 			?>
