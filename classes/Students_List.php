@@ -67,12 +67,35 @@ class Students_List {
 	 */
 	public function student_bulk_action() {
 		// check nonce.
+
 		tutor_utils()->checking_nonce();
-		$status   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
+		$action   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
 		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
-		$update   = self::update_students( $status, $bulk_ids );
-		return true === $update ? wp_send_json_success() : wp_send_json_error();
+		if ( 'delete' === $action ) {
+			return true === self::delete_students( $bulk_ids ) ? wp_send_json_success() : wp_send_json_error();
+		}
+		return wp_send_json_error();
 		exit;
+	}
+
+	/**
+	 * Delete student
+	 *
+	 * @param string $student_ids, ids that need to delete.
+	 * @param int $reassign_id, reassign to other user.
+	 * @return bool
+	 * @since v2.0.0
+	 */
+	public static function delete_students( string $student_ids, $reassign_id = NULL ): bool {
+		$student_ids = explode( ',', $student_ids );
+		foreach ( $student_ids as $id ) {
+			if ( NULL === $reassign_id ) {
+				wp_delete_user( $id );
+			} else {
+				wp_delete_user( $id, $reassign_id );
+			}
+		}
+		return true;
 	}
 
 }

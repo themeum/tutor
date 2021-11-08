@@ -138,8 +138,8 @@ $filters = array(
 				</td>
 				<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
 					<div class="inline-flex-center td-action-btns">
-						<a href="<?php echo $edit_link; ?>"
-						class="btn-outline tutor-btn">
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
+						class="btn-outline tutor-btn" target="_blank">
 						<?php esc_html_e( 'Details', 'tutor' ); ?>
 						</a>
 					</div>
