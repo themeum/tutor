@@ -51,11 +51,15 @@
                                     break;
 
                                 case 'question' :
+                                    $content = htmlspecialchars( strip_tags($qna->comment_content) );
                                     ?>
-                                    <td data-th="<?php echo $column; ?>">
-                                        <span class="text-medium-caption color-text-primary">
+                                    <td data-th="<?php echo $column; ?>" title="<?php echo $content; ?>">
+                                        <span class="text-medium-caption color-text-primary tutor-bs-d-block">
                                             <?php echo $qna->post_title;?>
                                         </span>
+                                        <small class="tutor-text-nowrap">
+                                            <?php _e('Course'); ?>: <?php echo $content; ?>
+                                        </small>
                                     </td>
                                     <?php
                                     break;
@@ -64,7 +68,7 @@
                                     ?>
                                     <td data-th="<?php echo $column; ?>">
                                         <span class="text-medium-caption color-text-primary">
-                                            <?php echo $question->answer_count; ?>
+                                            <?php echo $qna->answer_count; ?>
                                         </span>
                                     </td>
                                     <?php
@@ -73,7 +77,7 @@
                                 case 'waiting_since' :
                                     ?>
                                     <td data-th="<?php echo $column; ?>">
-                                        &nbsp;
+                                        <?php echo human_time_diff(strtotime($qna->comment_date)); ?>
                                     </td>
                                     <?php
                                     break;

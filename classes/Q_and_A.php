@@ -67,7 +67,7 @@ class Q_and_A {
 		global $wpdb;
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
 		
-		if( !$question_id || !tutor_utils()->can_user_manage('question', $question_id)) {
+		if( !$question_id || !tutor_utils()->can_user_manage('qa_question', $question_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
