@@ -937,6 +937,122 @@
   line-height: 123%;
 }
 
+.tutor-icon-10 {
+  font-size: 10px;
+}
+
+.tutor-icon-12 {
+  font-size: 12px;
+}
+
+.tutor-icon-14 {
+  font-size: 14px;
+}
+
+.tutor-icon-15 {
+  font-size: 15px;
+}
+
+.tutor-icon-16 {
+  font-size: 16px;
+}
+
+.tutor-icon-18 {
+  font-size: 18px;
+}
+
+.tutor-icon-20 {
+  font-size: 20px;
+}
+
+.tutor-icon-22 {
+  font-size: 22px;
+}
+
+.tutor-icon-24 {
+  font-size: 24px;
+}
+
+.tutor-icon-25 {
+  font-size: 25px;
+}
+
+.tutor-icon-26 {
+  font-size: 26px;
+}
+
+.tutor-icon-28 {
+  font-size: 28px;
+}
+
+.tutor-icon-30 {
+  font-size: 30px;
+}
+
+.tutor-icon-32 {
+  font-size: 32px;
+}
+
+.tutor-icon-34 {
+  font-size: 34px;
+}
+
+.tutor-icon-35 {
+  font-size: 35px;
+}
+
+.tutor-icon-36 {
+  font-size: 36px;
+}
+
+.tutor-icon-40 {
+  font-size: 40px;
+}
+
+.tutor-icon-42 {
+  font-size: 42px;
+}
+
+.tutor-icon-44 {
+  font-size: 44px;
+}
+
+.tutor-icon-45 {
+  font-size: 45px;
+}
+
+.tutor-icon-46 {
+  font-size: 46px;
+}
+
+.tutor-icon-48 {
+  font-size: 48px;
+}
+
+.tutor-icon-50 {
+  font-size: 50px;
+}
+
+.tutor-icon-60 {
+  font-size: 60px;
+}
+
+.tutor-icon-70 {
+  font-size: 70px;
+}
+
+.tutor-icon-80 {
+  font-size: 80px;
+}
+
+.tutor-icon-90 {
+  font-size: 90px;
+}
+
+.tutor-icon-100 {
+  font-size: 100px;
+}
+
 #screen-meta-links + .tutor-user-registration-notice-wrapper {
   margin-top: 45px;
 }
@@ -6809,6 +6925,15 @@ li.tutor-option-nav-item h4 {
   font-size: 24px;
 }
 
+@media screen and (min-width: 1200px) {
+  .tutor-admin-announcements-list table.tutor-ui-table td {
+    padding: 0 10px !important;
+  }
+  .tutor-admin-announcements-list table.tutor-ui-table td:first-child {
+    padding-left: 20px !important;
+  }
+}
+
 table.tutor-ui-table.table-instructors .instructor-action {
   min-width: 70px;
   text-align: center;
@@ -6840,15 +6965,6 @@ table.tutor-ui-table.table-instructors .toggle-row {
 
 .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td ul.tutor-table-inside-table li span:last-child {
   width: 50%;
-}
-
-.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
 }
 
 .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td .tooltip-wrap .tooltip-txt {
@@ -6883,12 +6999,13 @@ table.tutor-ui-table.table-instructors .toggle-row {
   padding: 0px 3px 0px 0px;
 }
 
-.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns {
-  width: 16%;
-}
-
-.tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns button {
-  max-width: 80px;
+@media (min-width: 1200pxpx) {
+  .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns {
+    width: 16%;
+  }
+  .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper table td.tutor-withdraw-btns button {
+    max-width: 80px;
+  }
 }
 
 .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-approve .tutor-modal-root .tutor-modal-icon,

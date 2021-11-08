@@ -56,36 +56,36 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
-		$url       = get_pagenum_link();
-		$pass  = self::get_quiz_attempt_number( 'approved', $user_id, $course_id, $date, $search );
-		$fail = self::get_quiz_attempt_number( 'pending', $user_id, $course_id, $date, $search );
-		$pending = self::get_quiz_attempt_number( 'blocked', $user_id, $course_id, $date, $search );
+		$url     = get_pagenum_link();
+		$stats 	 = tutor_utils()->get_quiz_attempts_stat(get_current_user_id());
+		
 		$tabs      = array(
 			array(
 				'key'   => 'all',
 				'title' => __( 'All', 'tutor' ),
-				'value' => $pass + $fail + $pending,
+				'value' => $stats['all'],
 				'url'   => $url . '&data=all',
 			),
 			array(
 				'key'   => 'pass',
 				'title' => __( 'Pass', 'tutor' ),
-				'value' => $pass,
+				'value' => $stats['pass'],
 				'url'   => $url . '&data=pass',
 			),
 			array(
 				'key'   => 'fail',
 				'title' => __( 'Fail', 'tutor' ),
-				'value' => $fail,
+				'value' => $stats['fail'],
 				'url'   => $url . '&data=fail',
 			),
 			array(
 				'key'   => 'pending',
 				'title' => __( 'Pending', 'tutor' ),
-				'value' => $pending,
+				'value' => $stats['pending'],
 				'url'   => $url . '&data=pending',
 			),
 		);
+		
 		return $tabs;
 	}
 

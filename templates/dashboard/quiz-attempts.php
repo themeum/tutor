@@ -11,6 +11,13 @@
  * @version 1.6.4
  */
 
+
+if(isset($_GET['view_quiz_attempt_id'])) {
+    // Load single attempt details if ID provided
+    include __DIR__ . '/quiz-attempts/quiz-reviews.php';
+    return;
+}
+
 $per_page = 20;
 $current_page = max( 1, tutor_utils()->array_get('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
@@ -48,10 +55,7 @@ if ( $quiz_attempts_count ){
 
     tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
         'attempt_list' => $quiz_attempts,
-        'column_hook' => array(
-            'tutor_quiz/student_attempts/table/thead/col',
-            'tutor_quiz/student_attempts/table/tbody/col'
-        )
+        'context' => 'frontend-dashboard-students-attempts'
     ));
 	
     ?>
