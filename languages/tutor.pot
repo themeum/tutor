@@ -3379,7 +3379,7 @@ msgstr ""
 msgid "Total Submit"
 msgstr ""
 
-#: templates/dashboard/assignments.php:125, templates/dashboard/quiz-attempts.php:43, views/fragments/announcement-list.php:269, views/pages/students.php:147, templates/dashboard/assignments/submitted.php:109
+#: templates/dashboard/assignments.php:125, templates/dashboard/quiz-attempts.php:43, views/fragments/announcement-list.php:269, views/pages/students.php:147, views/quiz/contexts.php:15, templates/dashboard/assignments/submitted.php:109
 msgid "Details"
 msgstr ""
 
