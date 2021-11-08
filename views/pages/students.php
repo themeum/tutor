@@ -22,10 +22,6 @@ $order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date      = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
 $search    = isset( $_GET['search'] ) ? $_GET['search'] : '';
 
-/**
- * Determine active tab
- */
-$active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET['data'] ) : 'all';
 
 /**
  * Pagination data
@@ -34,8 +30,8 @@ $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$students_list = tutor_utils()->get_students( $offset, $per_page, $search, $user_id, $date, $order, $course_id );
-$total            = tutor_utils()->get_total_students( $active_tab, $search, $user_id, $date, $course_id );
+$students_list 	= tutor_utils()->get_students( $offset, $per_page, $search, $course_id, $date, $order );
+$total     		= tutor_utils()->get_total_students( $search, $course_id, $date );
 
 /**
  * Navbar data to make nav menu
@@ -133,11 +129,12 @@ $filters = array(
 				</td>
 				<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
 					<span class="color-text-primary text-regular-caption">
-					<?php echo esc_html( $list->user_registered ); ?>
+					<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ). ', ' . get_option( 'time_format' ), $list->user_registered ) ); ?>
 					</span>
 				</td>
 				<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
-					<span class="color-text-primary text-medium-caption"><?php echo esc_html( $students->column_default( $list, 'course_taken' )); ?></span>
+				<?php $course_taken = tutor_utils()->get_enrolled_courses_ids_by_user( $list->ID ); ?>
+					<span class="color-text-primary text-medium-caption"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
 				</td>
 				<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
 					<div class="inline-flex-center td-action-btns">
@@ -152,7 +149,7 @@ $filters = array(
 			</tbody>
 		</table>
 		</div>
-	<div class="tutor-admin-page-pagination-wrapper">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-50">
 		<?php
 			/**
 			 * Prepare pagination data & load template

@@ -1788,24 +1788,48 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_students( $start = 0, $limit = 10, $search_term = '' ) {
+	public function get_students( $start = 0, $limit = 10, $search_term = '', $course_id = '', $date = '', $order = 'DESC' ) {
 		global $wpdb;
 
+		$start 			= sanitize_text_field( $start );
+		$limit 			= sanitize_text_field( $limit );
+		$search_term 	= sanitize_text_field( $search_term );
+		$course_id 		= sanitize_text_field( $course_id );
+		$date 			= sanitize_text_field( $date );
+
+		$course_query = '';
+		if ( '' !== $course_id ) {
+			$course_query = "AND posts.post_parent = {$course_id}";
+		}
+
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
+		}
+
+		$order_query = "ORDER BY posts.post_date {$order}";
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
 
-		$students = $wpdb->get_results( $wpdb->prepare(
-			"SELECT SQL_CALC_FOUND_ROWS {$wpdb->users}.*
-			FROM 	{$wpdb->users}
-					INNER JOIN {$wpdb->usermeta}
-							ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id )
-			WHERE 	{$wpdb->usermeta}.meta_key = %s
-					AND ( {$wpdb->users}.display_name LIKE %s OR {$wpdb->users}.user_email LIKE %s )
-			ORDER BY {$wpdb->usermeta}.meta_value DESC
-			LIMIT 	{$start}, {$limit};
+		$students  = $wpdb->get_results( $wpdb->prepare(
+			"SELECT user.* FROM {$wpdb->posts} AS posts
+				INNER JOIN {$wpdb->users} AS user
+				 	ON user.ID = posts.post_author
+				WHERE posts.post_type = %s
+					AND posts.post_status = %s
+					{$course_query}
+					{$date_query}
+					AND (user.display_name LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s)
+				GROUP BY post_author
+				{$order_query}
+				LIMIT %d, %d
 			",
-			'_is_tutor_student',
+			'tutor_enrolled',
+			'completed',
 			$search_term,
-			$search_term
+			$search_term,
+			$search_term,
+			$start,
+			$limit
 		) );
 
 		return $students;
@@ -1821,25 +1845,43 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_total_students( $search_term = '' ) {
+	public function get_total_students( $search_term = '', $course_id = '', $date = '' ): int {
 		global $wpdb;
 
+		$search_term 	= sanitize_text_field( $search_term );
+		$course_id 		= sanitize_text_field( $course_id );
+		$date 			= sanitize_text_field( $date );
+
+		$course_query = '';
+		if ( '' !== $course_id ) {
+			$course_query = "AND posts.post_parent = {$course_id}";
+		}
+
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
+		}
 		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
 
-		$count = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT({$wpdb->users}.ID)
-			FROM 	{$wpdb->users}
-					INNER JOIN {$wpdb->usermeta}
-							ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id )
-			WHERE 	{$wpdb->usermeta}.meta_key = %s
-					AND ( {$wpdb->users}.display_name LIKE %s OR {$wpdb->users}.user_email LIKE %s );
+		$students  = $wpdb->get_results( $wpdb->prepare(
+			"SELECT user.ID FROM {$wpdb->posts} AS posts
+				INNER JOIN {$wpdb->users} AS user
+				 	ON user.ID = posts.post_author
+				WHERE posts.post_type = %s
+					AND posts.post_status = %s
+					{$course_query}
+					{$date_query}
+					AND (user.display_name LIKE %s OR user.user_email LIKE %s OR user.user_login LIKE %s)
+				GROUP BY user.ID
 			",
-			'_is_tutor_student',
+			'tutor_enrolled',
+			'completed',
+			$search_term,
 			$search_term,
 			$search_term
 		) );
 
-		return (int) $count;
+		return is_array( $students ) ? count( $students ) : 0;
 	}
 
 	/**
