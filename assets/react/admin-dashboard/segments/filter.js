@@ -76,7 +76,13 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         loadingButton.innerHTML = prevHtml;
         if (post.ok) {
-          location.reload();
+          const response = await post.json();
+          if (response.success) {
+            location.reload();
+          } else {
+            tutor_toast(__("Failed", "tutor"), __("Something went wrong, please try again ", "tutor"), "error");
+          }
+          
         }
       } catch (error) {
         alert(error);

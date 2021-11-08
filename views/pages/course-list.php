@@ -11,8 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use TUTOR\Course_List;
-use TUTOR_REPORT\Analytics;
-use TUTOR_REPORT\CourseAnalytics;
 
 $courses = new Course_List();
 
@@ -197,11 +195,11 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 						foreach ( $the_query->posts as $key => $post ) :
 							$the_query->the_post();
 							$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
-							$count_quiz       = Analytics::get_all_quiz_by_course( $post->ID );
+							$count_quiz       = $courses->get_all_quiz_by_course( $post->ID );
 							$topics           = tutor_utils()->get_topics( $post->ID );
 							$count_assignment = tutor_utils()->get_assignments_by_course( $post->ID )->count;
 							$count_topic      = $topics->found_posts;
-							$student_details  = CourseAnalytics::course_enrollments_with_student_details( $post->ID );
+							$student_details  = $courses->course_enrollments_with_student_details( $post->ID );
 							$total_student    = $student_details['total_enrollments'];
 							$author_details   = get_userdata( $post->post_author );
 							?>

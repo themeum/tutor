@@ -861,7 +861,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (bulkForm) {
     bulkForm.onsubmit = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var formData, bulkIds, bulkFields, _iterator, _step, field, loadingButton, prevHtml, post;
+        var formData, bulkIds, bulkFields, _iterator, _step, field, loadingButton, prevHtml, post, response;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -912,24 +912,38 @@ document.addEventListener("DOMContentLoaded", function () {
                 post = _context.sent;
                 loadingButton.innerHTML = prevHtml;
 
-                if (post.ok) {
-                  location.reload();
+                if (!post.ok) {
+                  _context.next = 24;
+                  break;
                 }
 
-                _context.next = 25;
-                break;
+                _context.next = 22;
+                return post.json();
 
               case 22:
-                _context.prev = 22;
+                response = _context.sent;
+
+                if (response.success) {
+                  location.reload();
+                } else {
+                  tutor_toast(__("Failed", "tutor"), __("Something went wrong, please try again ", "tutor"), "error");
+                }
+
+              case 24:
+                _context.next = 29;
+                break;
+
+              case 26:
+                _context.prev = 26;
                 _context.t0 = _context["catch"](11);
                 alert(_context.t0);
 
-              case 25:
+              case 29:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[11, 22]]);
+        }, _callee, null, [[11, 26]]);
       }));
 
       return function (_x2) {
