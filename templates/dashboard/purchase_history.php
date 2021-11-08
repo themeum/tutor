@@ -25,7 +25,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
     }
 ?>
 
-<h3><?php esc_html_e( 'Purchase History', 'tutor' ); ?></h3>
+<h3><?php esc_html_e( 'Order History', 'tutor' ); ?></h3>
 <div class="tutor-purchase-history">
     <!--filter buttons tabs-->
     <?php 
