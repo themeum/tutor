@@ -1,4 +1,69 @@
+.tutor-single-lesson-wraper {
+    display: flex;
+    position: relative;
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    a:focus,
+    a:hover {
+        opacity: 1;
+    }
+    input.tutor-form-check-input.tutor-form-check-circle {
+        width: 20px;
+        height: 20px;
+    }
+    .tutor-quiz-btn-grp {
+        // button {
+        // 	padding: 10px 25px;
+        // }
+        button.skip-quiz-btn {
+            border: none;
+        }
+    }
+    @import './sidebar';
+    .tutor-single-entry-content {
+        flex: 100%;
+        padding-bottom: 90px;
+        .tutor-single-page-top-bar {
+            background: $design-brand;
+            .tutor-lesson-sidebar-hide-bar,
+            .tutor-topbar-content-title-wrap,
+            .tutor-topbar-cross-icon {
+                padding: 15px 12px;
+            }
+            .tutor-topbar-sidebar-toggle {
+                background: $primary-100;
+                span[class^='ttr'],
+                span[class*=' ttr'] {
+                    font-size: 30px;
+                    font-weight: 800;
+                }
+            }
+            .tutor-topbar-content-title-wrap {
+                span[class^='ttr'],
+                span[class*=' ttr'] {
+                    font-size: 24px;
+                }
+            }
+            .tutor-topbar-cross-icon {
+                cursor: pointer;
+                &:hover {
+                    background: $primary-100;
+                }
+                span[class^='ttr'],
+                span[class*=' ttr'] {
+                    font-size: 30px;
+                }
+            }
+        }
+        /* tutor-single-page-top-bar */
+        @import './quiz.scss';
+    }
+}
 
-body{
-    background: red;
+@include breakpoint-max(600) {
+    .tutor-topbar-content-title-wrap {
+        align-items: flex-start;
+    }
 }
