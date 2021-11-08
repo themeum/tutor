@@ -15,6 +15,7 @@ $lname = $user->last_name;
 $uname = $user->user_login;
 $email = $user->user_email;
 $phone = get_user_meta($uid,'phone_number',true);
+$job = nl2br(strip_tags(get_user_meta($uid,'_tutor_profile_job_title',true)));
 $bio = nl2br(strip_tags(get_user_meta($uid,'_tutor_profile_bio',true)));
 
 $profile_data = array(
@@ -24,6 +25,7 @@ $profile_data = array(
     array(__('Username', 'tutor'), $uname),
     array(__('Email', 'tutor'), $email),
     array(__('Phone Number', 'tutor'), ($phone ? $phone : "________")),
+    array(__('Skill/Occupation', 'tutor'), ($job ? $job : "________")),
     'bio' => array(__('Bio', 'tutor'), $bio ? $bio : '________')
 )
 ?>
