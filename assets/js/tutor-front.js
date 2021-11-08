@@ -27,16 +27,96 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_dashboard_settings_profile__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _dashboard_settings_passowrd_reset__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./dashboard/settings/passowrd-reset */ "./assets/react/front/dashboard/settings/passowrd-reset.js");
 /* harmony import */ var _dashboard_settings_passowrd_reset__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_dashboard_settings_passowrd_reset__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../modules/announcement */ "./assets/react/modules/announcement.js");
-/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../modules/instructor-review */ "./assets/react/modules/instructor-review.js");
-/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_modules_instructor_review__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
 
 
+/***/ }),
 
+/***/ "./assets/react/front/dashboard/export-csv.js":
+/*!****************************************************!*\
+  !*** ./assets/react/front/dashboard/export-csv.js ***!
+  \****************************************************/
+/***/ (() => {
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+document.addEventListener("DOMContentLoaded", function () {
+  var _wp$i18n = wp.i18n,
+      __ = _wp$i18n.__,
+      _x = _wp$i18n._x,
+      _n = _wp$i18n._n,
+      _nx = _wp$i18n._nx;
+  /**
+   * Export purchase history
+   *
+   * @since v2.0.0
+   */
+
+  var exportPurchase = document.querySelectorAll(".tutor-export-purchase-history");
+
+  var _iterator = _createForOfIteratorHelper(exportPurchase),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var purchased = _step.value;
+
+      if (purchased) {
+        purchased.onclick = function (e) {
+          var target = e.currentTarget;
+          var filename = "order-".concat(target.dataset.order, "-purchase-history.csv");
+          var data = [{
+            "Order ID ": target.dataset.order,
+            "Course Name": target.dataset.courseName,
+            Price: target.dataset.price,
+            Date: target.dataset.date,
+            Status: target.dataset.status
+          }];
+          exportCSV(data, filename);
+        };
+      }
+    }
+    /**
+     * Export CSV file
+     *
+     * @param {*} data | data that will be used for generating CSV file
+     * @param {*} filename | filename of CSV file
+     * @since v2.0.0
+     */
+
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  function exportCSV(data, filename) {
+    var keys = Object.keys(data[0]);
+    var csvFile = [keys.join(","), data.map(function (row) {
+      return keys.map(function (key) {
+        return row[key];
+      }).join(",");
+    }).join("\n")].join("\n"); //generate csv
+
+    var blob = new Blob([csvFile], {
+      type: "text/csv;charset=utf-8"
+    });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+});
 
 /***/ }),
 
@@ -618,6 +698,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utilities__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sorting */ "./assets/react/lib/sorting.js");
 /* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_sorting__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/announcement */ "./assets/react/lib/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/instructor-review */ "./assets/react/lib/modules/instructor-review.js");
+/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_modules_instructor_review__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _modules_quiz__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/quiz */ "./assets/react/lib/modules/quiz.js");
+
+
+
 
 
 
@@ -678,6 +766,226 @@ window.jQuery(document).ready(function ($) {
     wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
     wrapper.find('img').attr('src', '');
     $that.hide();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/modules/announcement.js":
+/*!**************************************************!*\
+  !*** ./assets/react/lib/modules/announcement.js ***!
+  \**************************************************/
+/***/ (() => {
+
+function urlPrams(type, val) {
+  var url = new URL(window.location.href);
+  var search_params = url.searchParams;
+  search_params.set(type, val);
+  url.search = search_params.toString();
+
+  if (_tutorobject.is_admin) {
+    search_params.set('paged', 1);
+  } else {
+    search_params.set('current_page', 1);
+  }
+
+  url.search = search_params.toString();
+  return url.toString();
+}
+
+window.jQuery(document).ready(function ($) {
+  var __ = window.wp.i18n.__; //create announcement
+
+  $(".tutor-announcements-form").on('submit', function (e) {
+    e.preventDefault();
+    var $btn = $(this).find('button[type="submit"]');
+    var formData = $btn.closest(".tutor-announcements-form").serialize();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: formData,
+      beforeSend: function beforeSend() {
+        $btn.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (!data.success) {
+          var _ref = data.data || {},
+              _ref$message = _ref.message,
+              message = _ref$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref$message;
+
+          tutor_toast(__('Error!', 'tutor'), message, 'error');
+          return;
+        }
+
+        location.reload();
+      },
+      complete: function complete() {
+        $btn.removeClass('tutor-updating-message');
+      },
+      error: function error(data) {
+        tutor_toast(__('Something Went Wrong!', 'tutor'));
+      }
+    });
+  }); // Announcement filter
+
+  $('.tutor-announcement-course-sorting').on('change', function (e) {
+    window.location = urlPrams('course-id', $(this).val());
+  });
+  $('.tutor-announcement-order-sorting').on('change', function (e) {
+    window.location = urlPrams('order', $(this).val());
+  });
+  $('.tutor-announcement-date-sorting').on('change', function (e) {
+    window.location = urlPrams('date', $(this).val());
+  });
+  $('.tutor-announcement-search-sorting').on('click', function (e) {
+    window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/modules/instructor-review.js":
+/*!*******************************************************!*\
+  !*** ./assets/react/lib/modules/instructor-review.js ***!
+  \*******************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+
+  function toggle_star_(star) {
+    star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
+    star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+  }
+  /**
+   * Hover tutor rating and set value
+   */
+
+
+  $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+    toggle_star_($(this));
+  });
+  $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+    var rating = $(this).attr('data-rating-value');
+    $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
+    toggle_star_($(this));
+  });
+  $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function () {
+    var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
+    var rating = parseInt(value);
+    var selected = $(this).find('[data-rating-value="' + rating + '"]');
+    rating && selected && selected.length > 0 ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+  });
+  $(document).on('click', '.tutor_submit_review_btn', function (e) {
+    // Prevent normal submission to validate input
+    e.preventDefault(); // Collect input
+
+    var $that = $(this);
+    var form = $that.closest('form');
+    var rating = form.find('input[name="tutor_rating_gen_input"]').val();
+    var review = (form.find('textarea[name="review"]').val() || '').trim();
+    var course_id = form.find('input[name="course_id"]').val();
+    var review_id = form.find('input[name="review_id"]').val();
+    var data = form.serializeObject(); // Validat
+
+    if (!rating || rating == 0 || !review) {
+      alert(__('Rating and review required', 'tutor'));
+      return;
+    }
+
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('updating-icon');
+      },
+      success: function success(response) {
+        var _ref = response || {},
+            success = _ref.success,
+            _ref$data = _ref.data,
+            data = _ref$data === void 0 ? {} : _ref$data;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
+
+        if (!success) {
+          tutor_toast(__('Error!', 'tutor'), message, 'error');
+          return;
+        } // Show thank you
+
+
+        new window.tutor_popup($, 'icon-rating', 40).popup({
+          title: review_id ? __('Updated successfully!', 'tutor') : __('Thank You for Rating The Course!', 'tutor'),
+          description: review_id ? __('Updated rating will now be visible in the course page', 'tutor') : __('Your rating will now be visible in the course page', 'tutor')
+        });
+        setTimeout(function () {
+          location.reload();
+        }, 3000);
+      },
+      complete: function complete() {
+        $that.removeClass('updating-icon');
+      }
+    });
+  }); // Show review form on opn (Single course)
+
+  $(document).on('click', '.write-course-review-link-btn', function (e) {
+    e.preventDefault();
+    $(this).siblings('.tutor-write-review-form').slideToggle();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/modules/quiz.js":
+/*!******************************************!*\
+  !*** ./assets/react/lib/modules/quiz.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helper/response */ "./assets/react/helper/response.js");
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  /**
+   * Quiz Frontend Review Action
+   * @since 1.4.0
+   */
+
+  $(document).on('click', '.quiz-manual-review-action', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var attempt_id = $that.attr('data-attempt-id');
+    var attempt_answer_id = $that.attr('data-attempt-answer-id');
+    var mark_as = $that.attr('data-mark-as');
+    var context = $that.attr('data-context');
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'GET',
+      data: {
+        attempt_id: attempt_id,
+        attempt_answer_id: attempt_answer_id,
+        mark_as: mark_as,
+        context: context,
+        action: 'review_quiz_answer'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success && (data.data || {}).html) {
+          $that.closest('.tutor-quiz-attempt-details-wrapper').html(data.data.html);
+          return;
+        }
+
+        tutor_toast('Error!', (0,_helper_response__WEBPACK_IMPORTED_MODULE_0__.get_response_message)(data), 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
   });
 });
 
@@ -1452,172 +1760,6 @@ window.jQuery(document).ready(function ($) {
 
 /***/ }),
 
-/***/ "./assets/react/modules/announcement.js":
-/*!**********************************************!*\
-  !*** ./assets/react/modules/announcement.js ***!
-  \**********************************************/
-/***/ (() => {
-
-function urlPrams(type, val) {
-  var url = new URL(window.location.href);
-  var search_params = url.searchParams;
-  search_params.set(type, val);
-  url.search = search_params.toString();
-
-  if (_tutorobject.is_admin) {
-    search_params.set('paged', 1);
-  } else {
-    search_params.set('current_page', 1);
-  }
-
-  url.search = search_params.toString();
-  return url.toString();
-}
-
-window.jQuery(document).ready(function ($) {
-  var __ = window.wp.i18n.__; //create announcement
-
-  $(".tutor-announcements-form").on('submit', function (e) {
-    e.preventDefault();
-    var $btn = $(this).find('button[type="submit"]');
-    var formData = $btn.closest(".tutor-announcements-form").serialize();
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: formData,
-      beforeSend: function beforeSend() {
-        $btn.addClass('tutor-updating-message');
-      },
-      success: function success(data) {
-        if (!data.success) {
-          var _ref = data.data || {},
-              _ref$message = _ref.message,
-              message = _ref$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref$message;
-
-          tutor_toast(__('Error!', 'tutor'), message, 'error');
-          return;
-        }
-
-        location.reload();
-      },
-      complete: function complete() {
-        $btn.removeClass('tutor-updating-message');
-      },
-      error: function error(data) {
-        tutor_toast(__('Something Went Wrong!', 'tutor'));
-      }
-    });
-  }); // Announcement filter
-
-  $('.tutor-announcement-course-sorting').on('change', function (e) {
-    window.location = urlPrams('course-id', $(this).val());
-  });
-  $('.tutor-announcement-order-sorting').on('change', function (e) {
-    window.location = urlPrams('order', $(this).val());
-  });
-  $('.tutor-announcement-date-sorting').on('change', function (e) {
-    window.location = urlPrams('date', $(this).val());
-  });
-  $('.tutor-announcement-search-sorting').on('click', function (e) {
-    window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
-  });
-});
-
-/***/ }),
-
-/***/ "./assets/react/modules/instructor-review.js":
-/*!***************************************************!*\
-  !*** ./assets/react/modules/instructor-review.js ***!
-  \***************************************************/
-/***/ (() => {
-
-window.jQuery(document).ready(function ($) {
-  var __ = wp.i18n.__;
-
-  function toggle_star_(star) {
-    star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
-    star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
-  }
-  /**
-   * Hover tutor rating and set value
-   */
-
-
-  $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
-    toggle_star_($(this));
-  });
-  $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
-    var rating = $(this).attr('data-rating-value');
-    $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
-    toggle_star_($(this));
-  });
-  $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function () {
-    var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
-    var rating = parseInt(value);
-    var selected = $(this).find('[data-rating-value="' + rating + '"]');
-    rating && selected && selected.length > 0 ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
-  });
-  $(document).on('click', '.tutor_submit_review_btn', function (e) {
-    // Prevent normal submission to validate input
-    e.preventDefault(); // Collect input
-
-    var $that = $(this);
-    var form = $that.closest('form');
-    var rating = form.find('input[name="tutor_rating_gen_input"]').val();
-    var review = (form.find('textarea[name="review"]').val() || '').trim();
-    var course_id = form.find('input[name="course_id"]').val();
-    var review_id = form.find('input[name="review_id"]').val();
-    var data = form.serializeObject(); // Validat
-
-    if (!rating || rating == 0 || !review) {
-      alert(__('Rating and review required', 'tutor'));
-      return;
-    }
-
-    $.ajax({
-      url: _tutorobject.ajaxurl,
-      type: 'POST',
-      data: data,
-      beforeSend: function beforeSend() {
-        $that.addClass('updating-icon');
-      },
-      success: function success(response) {
-        var _ref = response || {},
-            success = _ref.success,
-            _ref$data = _ref.data,
-            data = _ref$data === void 0 ? {} : _ref$data;
-
-        var _data$message = data.message,
-            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
-
-        if (!success) {
-          tutor_toast(__('Error!', 'tutor'), message, 'error');
-          return;
-        } // Show thank you
-
-
-        new window.tutor_popup($, 'icon-rating', 40).popup({
-          title: review_id ? __('Updated successfully!', 'tutor') : __('Thank You for Rating The Course!', 'tutor'),
-          description: review_id ? __('Updated rating will now be visible in the course page', 'tutor') : __('Your rating will now be visible in the course page', 'tutor')
-        });
-        setTimeout(function () {
-          location.reload();
-        }, 3000);
-      },
-      complete: function complete() {
-        $that.removeClass('updating-icon');
-      }
-    });
-  }); // Show review form on opn (Single course)
-
-  $(document).on('click', '.write-course-review-link-btn', function (e) {
-    e.preventDefault();
-    $(this).siblings('.tutor-write-review-form').slideToggle();
-  });
-});
-
-/***/ }),
-
 /***/ "./v2-library/_src/js/main.js":
 /*!************************************!*\
   !*** ./v2-library/_src/js/main.js ***!
@@ -2147,6 +2289,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_pages_course_landing__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./course-spotlight/index */ "./assets/react/front/course-spotlight/index.js");
 /* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_course_spotlight_index__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _dashboard_export_csv__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dashboard/export-csv */ "./assets/react/front/dashboard/export-csv.js");
+/* harmony import */ var _dashboard_export_csv__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_dashboard_export_csv__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -2519,39 +2664,8 @@ jQuery(document).ready(function ($) {
     if (_tutorobject.quiz_options.quiz_auto_start === '1') {
       $quiz_start_form.submit();
     }
-  }
-  /**
-   * Quiz Frontend Review Action
-   * @since 1.4.0
-   */
+  } // Quiz Review : Tooltip
 
-
-  $(document).on('click', '.quiz-manual-review-action', function (e) {
-    e.preventDefault();
-    var $that = $(this),
-        attempt_id = $that.attr('data-attempt-id'),
-        attempt_answer_id = $that.attr('data-attempt-answer-id'),
-        mark_as = $that.attr('data-mark-as');
-    $.ajax({
-      url: _tutorobject.ajaxurl,
-      type: 'GET',
-      data: {
-        action: 'review_quiz_answer',
-        attempt_id: attempt_id,
-        attempt_answer_id: attempt_answer_id,
-        mark_as: mark_as
-      },
-      beforeSend: function beforeSend() {
-        $that.find('i').addClass('updating-icon');
-      },
-      success: function success(data) {
-        location.reload();
-      },
-      complete: function complete() {
-        $that.find('i').removeClass('updating-icon');
-      }
-    });
-  }); // Quiz Review : Tooltip
 
   $(".tooltip-btn").on("hover", function (e) {
     $(this).toggleClass("active");

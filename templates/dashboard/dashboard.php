@@ -5,6 +5,71 @@
  */
 
 ?>
+<?php
+
+if(tutor_utils()->get_option('enable_profile_completion')) {
+    $profile_completion = tutor_utils()->user_profile_completion();
+    $total_count = count($profile_completion);
+    $incomplete_count = count(array_filter($profile_completion, function($data){return !$data['is_set'];}));
+    $complete_count = $total_count-$incomplete_count;
+
+    if($total_count && $incomplete_count && $incomplete_count<$total_count) {
+        ?>
+        <div class="profile-completion">
+            <div class="tutor-bs-row tutor-bs-align-items-center">
+                <div class="tutor-bs-col-md-8 profile-completion-content">
+                    <div class="list-item-title text-medium-h5 color-text-primary">
+                        <?php esc_html_e( 'Complete Your Profile', 'tutor' ) ?>
+                    </div>
+                    <div class="tutor-mt-20">
+                        <?php 
+                            for($i=1; $i<=$total_count; $i++) {
+                                $class = $i > $complete_count ?
+                                            'tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full' :
+                                            'tutor-btn tutor-btn-sm tutor-btn-full'
+                                ?>
+                                <li>
+                                    <button class="<?php echo $class; ?>"></button>
+                                </li>
+                                <?php
+                            }
+                        ?>
+                        <li>
+                            <span class="tutor-round-icon">
+                                <i class="ttr-award-filled"></i>
+                            </span>
+                        </li>
+                    </div>
+                    <div class="list-item-title text-medium-h6 tutor-mt-30">
+                        <span><?php $complete_count>($total_count/2) ? _e( 'You are almost done', 'tutor' ) : _e('Please complete profile') ?></span>:&nbsp;
+                        <span class="color-text-primary">
+                            <?php echo $complete_count . '/' . $total_count; ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="tutor-bs-col-md-4 warning">
+                    <ul>
+                        <?php 
+                            foreach ($profile_completion as $key => $data) {
+                                $is_set = $data['is_set']; // Whether the step is done or not
+                                ?>
+                                <li>
+                                    <span class="icon ttr-tick-circle-outline-filled"></span>
+                                    <span>
+                                        <?php echo $data['label_html']; ?>
+                                    </span>
+                                </li>
+                                <?php
+                            }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+}
+?>
 
 <h3><?php _e('Dashboard', 'tutor') ?></h3>
 

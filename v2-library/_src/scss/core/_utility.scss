@@ -184,10 +184,10 @@ $sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26
 		padding-top: #{$size}px;
 	}
 	.tutor-pr-#{$size} {
-		padding-right: #{$size}px !important;
+		padding-right: #{$size}px;
 	}
 	.tutor-pl-#{$size} {
-		padding-left: #{$size}px !important;
+		padding-left: #{$size}px;
 	}
 	.tutor-px-#{$size} {
 		padding-left: #{$size}px;
@@ -223,59 +223,58 @@ $sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26
 		margin-top: #{$size}px;
 		margin-bottom: #{$size}px;
 	}
-
 	// sm
 	@include breakpoint-min(mobile) {
 		// padding
 		.tutor-p-sm-#{$size},
 		.tutor-padding-sm-#{$size} {
-			padding: #{$size}px;
+			padding: #{$size}px !important;
 		}
 		.tutor-pb-sm-#{$size} {
-			padding-bottom: #{$size}px;
+			padding-bottom: #{$size}px !important;
 		}
 		.tutor-pt-sm-#{$size} {
-			padding-top: #{$size}px;
+			padding-top: #{$size}px !important;
 		}
 		.tutor-pr-sm-#{$size} {
-			padding-right: #{$size}px;
+			padding-right: #{$size}px !important;
 		}
 		.tutor-pl-sm-#{$size} {
-			padding-left: #{$size}px;
+			padding-left: #{$size}px !important;
 		}
 		.tutor-px-sm-#{$size} {
-			padding-left: #{$size}px;
-			padding-right: #{$size}px;
+			padding-left: #{$size}px !important;
+			padding-right: #{$size}px !important;
 		}
 		.tutor-py-sm-#{$size} {
-			padding-top: #{$size}px;
-			padding-bottom: #{$size}px;
+			padding-top: #{$size}px !important;
+			padding-bottom: #{$size}px !important;
 		}
 
 		// margin
 		.tutor-m-sm-#{$size},
 		.tutor-margin-sm-#{$size} {
-			margin: #{$size}px;
+			margin: #{$size}px !important;
 		}
 		.tutor-mb-sm-#{$size} {
-			margin-bottom: #{$size}px;
+			margin-bottom: #{$size}px !important;
 		}
 		.tutor-mt-sm-#{$size} {
-			margin-top: #{$size}px;
+			margin-top: #{$size}px !important;
 		}
 		.tutor-mr-sm-#{$size} {
-			margin-right: #{$size}px;
+			margin-right: #{$size}px !important;
 		}
 		.tutor-ml-sm-#{$size} {
-			margin-left: #{$size}px;
+			margin-left: #{$size}px !important;
 		}
 		.tutor-mx-sm-#{$size} {
-			margin-left: #{$size}px;
-			margin-right: #{$size}px;
+			margin-left: #{$size}px !important;
+			margin-right: #{$size}px !important;
 		}
 		.tutor-my-sm-#{$size} {
-			margin-top: #{$size}px;
-			margin-bottom: #{$size}px;
+			margin-top: #{$size}px !important;
+			margin-bottom: #{$size}px !important;
 		}
 	}
 	// md
@@ -283,53 +282,53 @@ $sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26
 		// padding
 		.tutor-p-md-#{$size},
 		.tutor-padding-md-#{$size} {
-			padding: #{$size}px;
+			padding: #{$size}px !important;
 		}
 		.tutor-pb-md-#{$size} {
-			padding-bottom: #{$size}px;
+			padding-bottom: #{$size}px !important;
 		}
 		.tutor-pt-md-#{$size} {
-			padding-top: #{$size}px;
+			padding-top: #{$size}px !important;
 		}
 		.tutor-pr-md-#{$size} {
-			padding-right: #{$size}px;
+			padding-right: #{$size}px !important;
 		}
 		.tutor-pl-md-#{$size} {
-			padding-left: #{$size}px;
+			padding-left: #{$size}px !important;
 		}
 		.tutor-px-md-#{$size} {
-			padding-left: #{$size}px;
-			padding-right: #{$size}px;
+			padding-left: #{$size}px !important;
+			padding-right: #{$size}px !important;
 		}
 		.tutor-py-md-#{$size} {
-			padding-top: #{$size}px;
-			padding-bottom: #{$size}px;
+			padding-top: #{$size}px !important;
+			padding-bottom: #{$size}px !important;
 		}
 
 		// margin
 		.tutor-m-md-#{$size},
 		.tutor-margin-md-#{$size} {
-			margin: #{$size}px;
+			margin: #{$size}px !important;
 		}
 		.tutor-mb-md-#{$size} {
-			margin-bottom: #{$size}px;
+			margin-bottom: #{$size}px !important;
 		}
 		.tutor-mt-md-#{$size} {
-			margin-top: #{$size}px;
+			margin-top: #{$size}px !important;
 		}
 		.tutor-mr-md-#{$size} {
-			margin-right: #{$size}px;
+			margin-right: #{$size}px !important;
 		}
 		.tutor-ml-md-#{$size} {
-			margin-left: #{$size}px;
+			margin-left: #{$size}px !important;
 		}
 		.tutor-mx-md-#{$size} {
-			margin-left: #{$size}px;
-			margin-right: #{$size}px;
+			margin-left: #{$size}px !important;
+			margin-right: #{$size}px !important;
 		}
 		.tutor-my-md-#{$size} {
-			margin-top: #{$size}px;
-			margin-bottom: #{$size}px;
+			margin-top: #{$size}px !important;
+			margin-bottom: #{$size}px !important;
 		}
 	}
 	// lg
@@ -337,53 +336,53 @@ $sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26
 		// padding
 		.tutor-p-lg-#{$size},
 		.tutor-padding-lg-#{$size} {
-			padding: #{$size}px;
+			padding: #{$size}px !important;
 		}
 		.tutor-pb-lg-#{$size} {
-			padding-bottom: #{$size}px;
+			padding-bottom: #{$size}px !important;
 		}
 		.tutor-pt-lg-#{$size} {
-			padding-top: #{$size}px;
+			padding-top: #{$size}px !important;
 		}
 		.tutor-pr-lg-#{$size} {
-			padding-right: #{$size}px;
+			padding-right: #{$size}px !important;
 		}
 		.tutor-pl-lg-#{$size} {
-			padding-left: #{$size}px;
+			padding-left: #{$size}px !important;
 		}
 		.tutor-px-lg-#{$size} {
-			padding-left: #{$size}px;
-			padding-right: #{$size}px;
+			padding-left: #{$size}px !important;
+			padding-right: #{$size}px !important;
 		}
 		.tutor-py-lg-#{$size} {
-			padding-top: #{$size}px;
-			padding-bottom: #{$size}px;
+			padding-top: #{$size}px !important;
+			padding-bottom: #{$size}px !important;
 		}
 
 		// margin
 		.tutor-m-lg-#{$size},
 		.tutor-margin-lg-#{$size} {
-			margin: #{$size}px;
+			margin: #{$size}px !important;
 		}
 		.tutor-mb-lg-#{$size} {
-			margin-bottom: #{$size}px;
+			margin-bottom: #{$size}px !important;
 		}
 		.tutor-mt-lg-#{$size} {
-			margin-top: #{$size}px;
+			margin-top: #{$size}px !important;
 		}
 		.tutor-mr-lg-#{$size} {
-			margin-right: #{$size}px;
+			margin-right: #{$size}px !important;
 		}
 		.tutor-ml-lg-#{$size} {
-			margin-left: #{$size}px;
+			margin-left: #{$size}px !important;
 		}
 		.tutor-mx-lg-#{$size} {
-			margin-left: #{$size}px;
-			margin-right: #{$size}px;
+			margin-left: #{$size}px !important;
+			margin-right: #{$size}px !important;
 		}
 		.tutor-my-lg-#{$size} {
-			margin-top: #{$size}px;
-			margin-bottom: #{$size}px;
+			margin-top: #{$size}px !important;
+			margin-bottom: #{$size}px !important;
 		}
 	}
 	// xl
@@ -391,53 +390,53 @@ $sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26
 		// padding
 		.tutor-p-xl-#{$size},
 		.tutor-padding-xl-#{$size} {
-			padding: #{$size}px;
+			padding: #{$size}px !important;
 		}
 		.tutor-pb-xl-#{$size} {
-			padding-bottom: #{$size}px;
+			padding-bottom: #{$size}px !important;
 		}
 		.tutor-pt-xl-#{$size} {
-			padding-top: #{$size}px;
+			padding-top: #{$size}px !important;
 		}
 		.tutor-pr-xl-#{$size} {
-			padding-right: #{$size}px;
+			padding-right: #{$size}px !important;
 		}
 		.tutor-pl-xl-#{$size} {
-			padding-left: #{$size}px;
+			padding-left: #{$size}px !important;
 		}
 		.tutor-px-xl-#{$size} {
-			padding-left: #{$size}px;
-			padding-right: #{$size}px;
+			padding-left: #{$size}px !important;
+			padding-right: #{$size}px !important;
 		}
 		.tutor-py-xl-#{$size} {
-			padding-top: #{$size}px;
-			padding-bottom: #{$size}px;
+			padding-top: #{$size}px !important;
+			padding-bottom: #{$size}px !important;
 		}
 
 		// margin
 		.tutor-m-xl-#{$size},
 		.tutor-margin-xl-#{$size} {
-			margin: #{$size}px;
+			margin: #{$size}px !important;
 		}
 		.tutor-mb-xl-#{$size} {
-			margin-bottom: #{$size}px;
+			margin-bottom: #{$size}px !important;
 		}
 		.tutor-mt-xl-#{$size} {
-			margin-top: #{$size}px;
+			margin-top: #{$size}px !important;
 		}
 		.tutor-mr-xl-#{$size} {
-			margin-right: #{$size}px;
+			margin-right: #{$size}px !important;
 		}
 		.tutor-ml-xl-#{$size} {
-			margin-left: #{$size}px;
+			margin-left: #{$size}px !important;
 		}
 		.tutor-mx-xl-#{$size} {
-			margin-left: #{$size}px;
-			margin-right: #{$size}px;
+			margin-left: #{$size}px !important;
+			margin-right: #{$size}px !important;
 		}
 		.tutor-my-xl-#{$size} {
-			margin-top: #{$size}px;
-			margin-bottom: #{$size}px;
+			margin-top: #{$size}px !important;
+			margin-bottom: #{$size}px !important;
 		}
 	}
 }

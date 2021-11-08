@@ -49,7 +49,6 @@ class Quiz {
 		add_action('template_redirect', array($this, 'answering_quiz'));
 		add_action('template_redirect', array($this, 'finishing_quiz_attempt'));
 
-		add_action('admin_action_review_quiz_answer', array($this, 'review_quiz_answer'));
 		add_action('wp_ajax_review_quiz_answer', array($this, 'review_quiz_answer'));
 		add_action('wp_ajax_tutor_instructor_feedback', array($this, 'tutor_instructor_feedback')); // Instructor Feedback Action
 
@@ -520,11 +519,12 @@ class Quiz {
 
 	public function review_quiz_answer() {
 		
-		tutor_utils()->checking_nonce(strtolower($_SERVER['REQUEST_METHOD']));
+		tutor_utils()->checking_nonce();
 
 		global $wpdb;
 
 		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
+		$context = sanitize_text_field($_GET['context']);
 		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
 		$mark_as = sanitize_text_field($_GET['mark_as']);
 
@@ -562,17 +562,14 @@ class Quiz {
 	                'is_manually_reviewed' => 1,
 					'manually_reviewed_at' => date("Y-m-d H:i:s", tutor_time()),
 				);
-
-				
 			}
 			
 			if ($question->question_type === 'open_ended' || $question->question_type === 'short_answer' ){
                 $attempt_update_data['attempt_status'] = 'attempt_ended';
             }				
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
-		}
-		elseif($mark_as === 'incorrect')
-		{
+		
+		} elseif($mark_as === 'incorrect') {
 
 			$answer_update_data = array(
 				'achieved_mark' => '0.00',
@@ -601,15 +598,13 @@ class Quiz {
 		do_action('tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as);
 		do_action('tutor_quiz/answer/review/after', $attempt_answer_id, $course_id, $student_id);
 
-		if (wp_doing_ajax())
-		{
-		    wp_send_json_success();
-        }
-        else{
-			wp_redirect(admin_url("admin.php?page=tutor_quiz_attempts&sub_page=view_attempt&attempt_id=".$attempt_id));
-		}
-
-		die();
+		ob_start();
+		tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
+            'attempt_id' => $attempt_id,
+            'user_id' => $student_id,
+			'context' => $context
+        ));
+		wp_send_json_success( array('html' => ob_get_clean()) );
 	}
 
 
@@ -1088,10 +1083,6 @@ class Quiz {
 				break;
 		}
 
-		ob_start();
-		var_dump($answers);
-		$var_d = ob_get_clean();
-
 		if (is_array($answers) && count($answers)){
 			foreach ($answers as $answer){
 				?>
@@ -1146,7 +1137,7 @@ class Quiz {
 		}
 		$output = ob_get_clean();
 
-		wp_send_json_success(array('output' => $output, 'v' => $var_d));
+		wp_send_json_success(array('output' => $output));
 	}
 
 	public function tutor_quiz_builder_delete_answer(){

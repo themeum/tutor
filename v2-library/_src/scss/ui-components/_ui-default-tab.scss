@@ -1,26 +1,43 @@
-//Tutor Notification Tab
+//Tutor Default Tab
 .tutor-default-tab {
 	.tab-header {
+		border-bottom: 1px solid $stroke-light-30;
+		gap: 15px;
+	}
+	.tab-header-item {
+		@extend .text-medium-caption;
+		@extend .color-text-subsued;
+		@extend .tutor-px-20;
+		@extend .tutor-py-12;
 		position: relative;
-		gap: 20px;
+		cursor: pointer;
+		position: relative;
+		> * {
+			pointer-events: none;
+		}
 
-		&-item {
-			cursor: pointer;
-			position: relative;
-			> * {
-				pointer-events: none;
-			}
-
-			&.is-active {
-				color: $design-brand;
-				&:before {
-					transform: scaleY(1);
-				}
+		&:before {
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 2px;
+			background: $bg-brand;
+			left: 0;
+			bottom: -1px;
+			transform: scaleY(0);
+			transform-origin: bottom;
+			transition: 150ms;
+		}
+		&.is-active {
+			color: $design-brand;
+			&:before {
+				transform: scaleY(1);
 			}
 		}
 	}
 
 	.tab-body {
+		@extend .tutor-pt-30;
 		&-item {
 			display: none;
 			&.is-active {
