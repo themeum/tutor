@@ -12,20 +12,16 @@ $field_event   = sanitize_key( $field['event'] );
 $default       = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
 $option_value  = $this->get( esc_attr( $field_key . '.' . $field_event ), $default );
 $field_id      = sanitize_key( 'field_' . $field_key );
-$tooltip_desc  = ! empty( $field['desc'] ) ? $field['desc'] : null;
+$tooltip_desc  = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
 		<h5 class="label"><?php echo esc_attr( $field['label'] ); ?></h5>
-		<?php
-		if ( $tooltip_desc ) {
-			?>
-				<div class="tooltip-wrap tooltip-icon">
-					<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $field['desc'] ); ?></span>
-				</div>
-				<?php
-		}
-		?>
+		<?php if ( $tooltip_desc ) { ?>
+			<div class="tooltip-wrap tooltip-icon">
+				<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $tooltip_desc ); ?></span>
+			</div>
+		<?php } ?>
 	</div>
 	<div class="tutor-option-field-input d-flex has-btn-after">
 		<label class="tutor-form-toggle">

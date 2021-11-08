@@ -12,6 +12,7 @@ $value     = $this->get( $field['key'] );
 if ( isset( $field['default'] ) && empty( $value ) ) {
 	$value = $field['default'];
 }
+$if_other_color = isset( $field['preset_name'] ) && 'other' == $field['preset_name'] ? ' other_color' : '';
 ?>
 
 <div class="tutor-option-field-row">
