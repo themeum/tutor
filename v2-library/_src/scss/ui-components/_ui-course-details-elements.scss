@@ -110,36 +110,33 @@
 }
 
 .tutor-course-details-tab {
-	.tab-header {
-		/* stroke/light30 */
+}
 
-		border-bottom: 1px solid $stroke-light-30;
-	}
-	.tab-header-item {
-		@extend .text-medium-caption;
-		@extend .color-text-subsued;
-		@extend .tutor-pb-12;
-		position: relative;
-		&:before {
-			content: '';
-			position: absolute;
-			width: 100%;
-			height: 3px;
-			background: $bg-brand;
-			bottom: calc(0% - 12px);
-			transform: scaleY(0);
-			transform-origin: bottom;
-			transition: 150ms;
-		}
-		&.is-active {
-			transform: scaleY(1);
-		}
-		&:not(:last-child) {
-			margin-right: 40px;
+//Backend Alert utlity .alert-#{$variable}{...}
+$variations: (
+	// prefix borderC txtC bgC btnC iconC btnBg btnBorder
+		'primary' $primary-30 $primary-100 $primary-50 $brand-wordpress,
+	'warning' $warning-30 $warning-100 $warning-50 $design-warning,
+	'success' $success-30 $success-100 $success-50 $design-success,
+	'danger' $danger-30 $danger-100 $danger-50 $design-danger
+);
+@each $suffix, $bgColor, $txtColor, $border, $icon in $variations {
+	.tutor-backend-alert.alert-#{$suffix} {
+		background: #{$bgColor};
+		color: #{$txtColor};
+		border: 1px solid #{$border};
+		> .alert-icon {
+			color: #{$icon};
 		}
 	}
-	.tab-body {
-	}
-	.tab-body-item {
-	}
+}
+
+// Tutor backend alert
+.tutor-alert {
+	@extend .text-regular-caption;
+
+	background: rgba(255, 255, 255, 0.9);
+	/* color/primary/fill/70 */
+	border: 1px solid #95aaed;
+	border-radius: 6px;
 }
