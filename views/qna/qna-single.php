@@ -1,18 +1,62 @@
 <?php 
-    $answers = tutor_utils()->get_qa_answer_by_question($_GET['question_id']);
+    $question_id = (int)sanitize_text_field( tutor_utils()->array_get('question_id', $_GET) );
+    if(!$question_id || !tutor_utils()->can_user_manage('qa_question', $question_id)){
+        _e('Access Denied. Or question not found.', 'tutor');
+        return;
+    }
+
+    $answers = tutor_utils()->get_qa_answer_by_question($question_id);
+    $back_url = remove_query_arg( 'question_id', tutor()->current_url );
 ?>
 
 <div class="tutor-qna-single-wrapper">
     <div class="tutor-qa-sticky-bar">
         <div>
-            <a href="#"><i class=""></i> <?php _e('Back', 'tutor'); ?></a>
+            <a href="<?php echo $back_url; ?>">
+                <?php _e('Back', 'tutor'); ?>
+            </a>
         </div>
         <div>
             <span><i class="ttr-tick-circle-outline-filled"></i> <?php _e('Solved', 'tutor'); ?></span>
             <span><i class="ttr-msg-important-filled"></i> <?php _e('Important', 'tutor'); ?></span>
             <span><i class="ttr-msg-archive-filled"></i> <?php _e('Archive', 'tutor'); ?></span>
             <span><i class="ttr-msg-unread-filled"></i> <?php _e('Mark as Unread', 'tutor'); ?></span>
-            <span><i class="ttr-delete-fill-filled"></i> <?php _e('Delete', 'tutor'); ?></span>
+            <span data-tutor-modal-target="tutor_qna_delete_single">
+                <i class="ttr-delete-fill-filled"></i> <?php _e('Delete', 'tutor'); ?>
+            </span>
+
+            <!-- Delete modal -->
+            <div id="tutor_qna_delete_single" class="tutor-modal">
+                <span class="tutor-modal-overlay"></span>
+                <button data-tutor-modal-close class="tutor-modal-close">
+                    <span class="las la-times"></span>
+                </button>
+                <div class="tutor-modal-root">
+                    <div class="tutor-modal-inner">
+                        <div class="tutor-modal-body tutor-text-center">
+                            <div class="tutor-modal-icon">
+                                <img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+                            </div>
+                            <div class="tutor-modal-text-wrap">
+                                <h3 class="tutor-modal-title">
+                                    <?php esc_html_e('Delete This Question?', 'tutor'); ?>
+                                </h3>
+                                <p>
+                                    <?php esc_html_e('All the replies also will be deleted.', 'tutor'); ?>
+                                </p>
+                            </div>
+                            <div class="tutor-modal-btns tutor-btn-group">
+                                <button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+                                    <?php esc_html_e('Cancel', 'tutor'); ?>
+                                </button>
+                                <button class="tutor-btn tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $question_id;?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
+                                    <?php esc_html_e('Yes, Delete This', 'tutor'); ?>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="tutor-qa-chatlist">

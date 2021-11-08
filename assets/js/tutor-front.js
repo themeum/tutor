@@ -1711,6 +1711,7 @@ window.jQuery(document).ready(function ($) {
     var $that = $(this);
     var prompt = $(this).data('prompt');
     var del = $(this).data('delete_element_id');
+    var redirect = $(this).data('redirect_to');
     var data = $(this).data('request_data') || {};
     typeof data == 'string' ? data = JSON.parse(data) : 0;
 
@@ -1731,6 +1732,10 @@ window.jQuery(document).ready(function ($) {
             $('#' + del).fadeOut(function () {
               $(this).remove();
             });
+          }
+
+          if (redirect) {
+            window.location.assign(redirect);
           }
 
           return;
