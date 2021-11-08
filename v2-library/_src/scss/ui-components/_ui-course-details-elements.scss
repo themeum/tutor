@@ -107,7 +107,38 @@
 	}
 	&.tutor-after-purchase {
 	}
+
+	.tutor-alert {
+		.tutor-alert-text {
+			align-items: flex-start;
+		}
+		.tutor-alert-icon {
+			margin-top: -5px;
+		}
+	}
 }
 
-.tutor-course-details-tab {
+.tutor-course-details-page {
+	border: 1px solid;
+	&-main {
+		display: grid;
+		grid-template-columns: 8fr 4fr;
+		grid-gap: 55px;
+
+		&-left {
+		}
+		&-right {
+		}
+	}
+
+	.has-show-more-btn {
+		.tutor-show-more-btn {
+			display: none;
+		}
+		&.is-active {
+			.tutor-show-more-btn {
+				display: block;
+			}
+		}
+	}
 }
