@@ -6,21 +6,25 @@ document.addEventListener("DOMContentLoaded", function() {
    * @since v2.0.0
    */
 
-  const exportPurchase = document.getElementById("tutor-export-purchase-history");
-  exportPurchase.onclick = (e) => {
-    const target = e.currentTarget;
-    const filename = `order-${target.dataset.order}-purchase-history.csv`;
-    const data = [
-      {
-        "Order ID ": target.dataset.order,
-        "Course Name": target.dataset.courseName,
-        Price: target.dataset.price,
-        Date: target.dataset.date,
-        Status: target.dataset.status,
-      },
-    ];
-    exportCSV(data, filename);
-  };
+  const exportPurchase = document.querySelectorAll(".tutor-export-purchase-history");
+  for( let purchased of exportPurchase  ) {
+    if ( purchased ) {
+      purchased.onclick = (e) => {
+        const target = e.currentTarget;
+        const filename = `order-${target.dataset.order}-purchase-history.csv`;
+        const data = [
+          {
+            "Order ID ": target.dataset.order,
+            "Course Name": target.dataset.courseName,
+            Price: target.dataset.price,
+            Date: target.dataset.date,
+            Status: target.dataset.status,
+          },
+        ];
+        exportCSV(data, filename);
+      };
+    }
+  }
 
   /**
    * Export CSV file
