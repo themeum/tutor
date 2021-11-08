@@ -317,7 +317,7 @@ msgstr ""
 msgid "On Hold"
 msgstr ""
 
-#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:83, classes/Utils.php:2663, classes/Utils.php:8128, templates/dashboard/dashboard.php:92, templates/dashboard/my-courses.php:31, templates/dashboard/purchase_history.php:141, views/pages/course-list.php:130, views/quiz/attempt-details.php:565, views/quiz/attempt-table.php:138
+#: classes/Backend_Page_Trait.php:101, classes/Course_List.php:126, classes/Instructors_List.php:80, classes/Instructors_List.php:237, classes/Quiz_Attempts_List.php:83, classes/Utils.php:2663, classes/Utils.php:8128, templates/dashboard/dashboard.php:96, templates/dashboard/my-courses.php:31, templates/dashboard/purchase_history.php:141, views/pages/course-list.php:130, views/quiz/attempt-details.php:565, views/quiz/attempt-table.php:138
 msgid "Pending"
 msgstr ""
 
@@ -401,7 +401,7 @@ msgstr ""
 msgid "Mine"
 msgstr ""
 
-#: classes/Course_List.php:114, templates/dashboard/dashboard.php:91
+#: classes/Course_List.php:114, templates/dashboard/dashboard.php:95
 msgid "Published"
 msgstr ""
 
@@ -2412,7 +2412,7 @@ msgstr ""
 msgid "Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it."
 msgstr ""
 
-#: classes/Tutor.php:549, classes/Utils.php:2519, templates/dashboard.php:50, templates/dashboard/dashboard.php:74
+#: classes/Tutor.php:549, classes/Utils.php:2519, templates/dashboard.php:50, templates/dashboard/dashboard.php:78
 msgid "Dashboard"
 msgstr ""
 
@@ -2824,7 +2824,7 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
-#: classes/Utils.php:2521, templates/dashboard/dashboard.php:105
+#: classes/Utils.php:2521, templates/dashboard/dashboard.php:109
 msgid "Enrolled Courses"
 msgstr ""
 
@@ -2973,7 +2973,7 @@ msgid "Set Your %sFirst Name%s"
 msgstr ""
 
 #: classes/Utils.php:7249
-msgid "Set Your %sLast Name%"
+msgid "Set Your %sLast Name%s"
 msgstr ""
 
 #: classes/Utils.php:7250
@@ -3491,47 +3491,47 @@ msgstr ""
 msgid "You are almost done"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:93
+#: templates/dashboard/dashboard.php:97
 msgid "Trash"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:115, templates/dashboard/enrolled-courses.php:9
+#: templates/dashboard/dashboard.php:119, templates/dashboard/enrolled-courses.php:9
 msgid "Active Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:125, templates/dashboard/enrolled-courses.php:10
+#: templates/dashboard/dashboard.php:129, templates/dashboard/enrolled-courses.php:10
 msgid "Completed Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:139
+#: templates/dashboard/dashboard.php:143
 msgid "Total Students"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:149
+#: templates/dashboard/dashboard.php:153
 msgid "Total Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:159
+#: templates/dashboard/dashboard.php:163
 msgid "Total Earnings"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:181
+#: templates/dashboard/dashboard.php:185
 msgid "Popular Courses"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:183
+#: templates/dashboard/dashboard.php:187
 msgid "View All"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:192, templates/dashboard/dashboard.php:219, templates/dashboard/purchase_history.php:87
+#: templates/dashboard/dashboard.php:196, templates/dashboard/dashboard.php:223, templates/dashboard/purchase_history.php:87
 msgid "Course Name"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:197, templates/dashboard/dashboard.php:226
+#: templates/dashboard/dashboard.php:201, templates/dashboard/dashboard.php:230
 msgid "Enrolled"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:203, templates/dashboard/dashboard.php:231
+#: templates/dashboard/dashboard.php:207, templates/dashboard/dashboard.php:235
 msgid "Rating"
 msgstr ""
 
