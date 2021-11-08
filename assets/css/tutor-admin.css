@@ -7041,4 +7041,32 @@ table.tutor-ui-table.table-instructors .toggle-row {
   border: 2px solid #1973AA;
 }
 
+.tutor-wp-dashboard-header {
+  min-height: 60px;
+  height: auto;
+}
+
+.tutor-wp-dashboard-header .back {
+  position: relative;
+}
+
+.tutor-wp-dashboard-header .back a {
+  font-size: 16px;
+  line-height: 0px;
+  font-weight: 400;
+  color: #212327;
+}
+
+.tutor-wp-dashboard-header .back a .ttr-previous-line {
+  font-size: 20px;
+  line-height: 0px;
+  position: absolute;
+}
+
+.tutor-wp-dashboard-header .back a .text {
+  position: absolute;
+  left: 25px;
+  top: 0;
+}
+
 /*# sourceMappingURL=tutor-admin.css.map */
