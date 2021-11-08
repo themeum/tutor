@@ -8,10 +8,14 @@
 defined( 'ABSPATH' ) || exit;
 
 //global variables
-$user_id      = get_current_user_id();
-$time_period  = $active = isset( $_GET['period'] ) ? $_GET['period'] : '';
-$start_date   = isset( $_GET['start_date']) ? sanitize_text_field( $_GET['start_date'] ) : '';
-$end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date'] ) : '';
+$user_id     = get_current_user_id();
+$time_period = $active = isset( $_GET['period'] ) ? $_GET['period'] : '';
+$start_date  = isset( $_GET['start_date']) ? sanitize_text_field( $_GET['start_date'] ) : '';
+$end_date    = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date'] ) : '';
+
+$paged       = ( isset( $_GET['current_page'] ) && is_numeric( $_GET['current_page'] ) && $_GET['current_page'] >= 1 ) ? $_GET['current_page'] : 1;
+$per_page    = tutor_utils()->get_option( 'pagination_per_page' );
+$offset      = ( $per_page * $paged ) - $per_page;
 
     if ( '' !== $start_date ) {
         $start_date = tutor_get_formated_date( 'Y-m-d', $start_date );
@@ -66,8 +70,9 @@ $end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date
         $filter_period_calendar_template = tutor()->path . 'views/elements/purchase-history-filter.php';
         tutor_load_template_from_custom_path( $filter_period_calendar_template, $filter_period_calendar );
         
-        $orders      = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date );
-        $monetize_by = tutor_utils()->get_option( 'monetize_by' );
+        $orders       = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $per_page );
+        $total_orders = tutor_utils()->get_total_orders_by_user_id( $user_id, $time_period, $start_date, $end_date );
+        $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 
     ?>
     <!--filter button tabs end-->
@@ -192,5 +197,17 @@ $end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date
             <?php } ?>
         </tbody>
     </table>
+    <?php
+        /**
+         * Prepare pagination data & load template
+         */
+        $pagination_data = array(
+            'total_items' => ! empty( $total_orders ) ? count( $total_orders ) : 0,
+            'per_page'    => $per_page,
+            'paged'       => $paged,
+        );
+        $pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
+        tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+    ?>
 </div>
 

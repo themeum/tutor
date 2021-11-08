@@ -6129,7 +6129,74 @@ class Utils {
 	 *
 	 * Get purchase history by customer id
 	 */
-	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
+	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date, $offset = '', $per_page = '' ) {
+		global $wpdb;
+
+		$user_id     = $this->get_user_id( $user_id );
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+
+		$post_type = "";
+		$user_meta = "";
+
+		if ( $monetize_by === 'wc' ) {
+			$post_type = "shop_order";
+			$user_meta = "_customer_user";
+		} else if ( $monetize_by === 'edd' ) {
+			$post_type = "edd_payment";
+			$user_meta = "_edd_payment_user_id";
+		}
+
+		$period_query = '';
+
+		if ( '' !== $period ) {
+			if ( 'today' === $period ) {
+				$period_query = " AND  DATE(post_date) = CURDATE() ";
+			} else if ( 'monthly' === $period ) {
+				$period_query = " AND  MONTH(post_date) = MONTH(CURDATE()) ";
+			} else {
+				$period_query = " AND  YEAR(post_date) = YEAR(CURDATE()) ";
+			}
+		}
+
+		if ( '' !== $start_date AND '' !== $end_date ) {
+			$period_query = " AND  DATE(post_date) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
+		}
+
+		$offset_limit_query = '';
+		if ( '' !== $offset && '' !== $per_page ) {
+			$offset_limit_query = "LIMIT $offset, $per_page";
+		}
+
+		$orders = $wpdb->get_results( $wpdb->prepare(
+			"SELECT {$wpdb->posts}.*
+			FROM	{$wpdb->posts}
+					INNER JOIN {$wpdb->postmeta} customer
+							ON id = customer.post_id
+						   AND customer.meta_key = '{$user_meta}'
+					INNER JOIN {$wpdb->postmeta} tutor_order
+							ON id = tutor_order.post_id
+						   AND tutor_order.meta_key = '_is_tutor_order_for_course'
+			WHERE	post_type = %s
+					AND customer.meta_value = %d
+					{$period_query}
+			ORDER BY {$wpdb->posts}.id DESC
+			{$offset_limit_query}
+			",
+			$post_type,
+			$user_id
+		) );
+
+		return $orders;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get total purchase history by customer id
+	 */
+	public function get_total_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id( $user_id );
