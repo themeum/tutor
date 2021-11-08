@@ -1,9 +1,17 @@
 <?php
-$value = $this->get( $field['key'] );
+/**
+ * Color field for settings.
+ *
+ * @package Tutor LMS
+ * @since 2.0
+ */
+
+$field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
+$field_id  = esc_attr( 'field_' . $field_key );
+$value     = $this->get( $field['key'] );
 if ( isset( $field['default'] ) && empty( $value ) ) {
 	$value = $field['default'];
 }
-$field_id = 'field_' . $field['key'];
 ?>
 
 <div class="tutor-option-field-row">
