@@ -176,8 +176,7 @@ $end_date     = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date
                     <td data-th="Status">
                         <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-5"><?php esc_html_e( $order_status_text ); ?></span>
                     </td>
-                    <td data-th="Download" id="tutor-export-purchase-history" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
-                        <?php $formatted_date = date_i18n( 'Y-m-d', strtotime( $order->post_date ) ); ?>
+                    <td data-th="Download" class="tutor-export-purchase-history" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
                         <a><span class="ttr-receipt-line" style="font-size:24px"></span></a>
                     </td>
                 </tr>
