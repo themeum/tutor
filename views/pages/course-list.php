@@ -206,18 +206,18 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 							$author_details   = get_userdata( $post->post_author );
 							?>
 							<tr>
-								<td data-th="Checkbox">
+								<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
 									<div class="td-checkbox d-flex ">
 										<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $post->ID ); ?>" />
 									</div>
 								</td>
-								<td data-th="Date">
+								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
 									<div class="td-datetime text-regular-caption color-text-primary">
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
 									</div>
 								</td>
 
-								<td data-th="Course Name" class="column-fullwidth">
+								<td data-th="<?php esc_html_e( 'Course Name', 'tutor' ); ?>" class="column-fullwidth">
 									<div class="td-course color-text-primary text-medium-body">
 										<a href="#">
 											<?php echo esc_html( $post->post_title ); ?>
@@ -250,7 +250,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										</div>
 									</div>
 								</td>
-								<td data-th="Author">
+								<td data-th="<?php esc_html_e( 'Author', 'tutor' ); ?>">
 									<div class="td-avatar">
 										<?php
 											echo wp_kses_post( tutor_utils()->get_tutor_avatar( $post->post_author ) );
@@ -266,7 +266,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										</a>
 									</div>
 								</td>
-								<td data-th="Course Categories">
+								<td data-th="<?php esc_html_e( 'Course Category', 'tutor' ); ?>">
 									<?php
 										$terms       = wp_get_post_terms( $post->ID, 'course-category' );
 										$total_terms = count( $terms ) - 1;
@@ -276,12 +276,12 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 									}
 									?>
 								</td>
-								<td data-th="Student">
+								<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>">
 									  <div class="text-regular-caption color-text-primary">
 										<?php echo esc_html( $total_student ); ?>
 									</div>
 								</td>
-								<td data-th="Price">
+								<td data-th="<?php esc_html_e( 'Price', 'tutor' ); ?>">
 									<div class="text-regular-caption color-text-primary">
 										<?php
 											$price = tutor_utils()->get_course_price( $post->ID );
@@ -295,7 +295,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										?>
 									</div>
 								</td>
-								<td data-th="Actions">
+								<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
 									<div class="inline-flex-center td-action-btns">
 										<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 										<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-admin-course-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>">
@@ -348,7 +348,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 					<?php else : ?>
 						<tr>
 							<td colspan="100%">
-								<?php esc_html_e( 'No course found', 'tutor' ); ?>
+								<?php tutor_utils()->tutor_empty_state(); ?>
 							</td>
 						</tr>
 					<?php endif; ?>
