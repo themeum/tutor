@@ -1,2483 +1,1579 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./assets/react/admin-dashboard/addons-list/addons-list-main.js":
-/*!**********************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/addons-list-main.js ***!
-  \**********************************************************************/
+/***/ "./assets/react/helper/response.js":
+/*!*****************************************!*\
+  !*** ./assets/react/helper/response.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "get_response_message": () => (/* binding */ get_response_message)
+/* harmony export */ });
+var get_response_message = function get_response_message(response, def_message) {
+  var __ = wp.i18n.__;
+
+  var _ref = response || {},
+      _ref$data = _ref.data,
+      data = _ref$data === void 0 ? {} : _ref$data;
+
+  var _data$message = data.message,
+      message = _data$message === void 0 ? def_message || __('Something Went Wrong!', 'tutor') : _data$message;
+  return message;
+};
+
+
+
+/***/ }),
+
+/***/ "./assets/react/lib/common.js":
+/*!************************************!*\
+  !*** ./assets/react/lib/common.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _tutor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutor */ "./assets/react/lib/tutor.js");
+/* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./media-chooser */ "./assets/react/lib/media-chooser.js");
+/* harmony import */ var _media_chooser__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_media_chooser__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utilities */ "./assets/react/lib/utilities.js");
+/* harmony import */ var _utilities__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utilities__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sorting */ "./assets/react/lib/sorting.js");
+/* harmony import */ var _sorting__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_sorting__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/announcement */ "./assets/react/lib/modules/announcement.js");
+/* harmony import */ var _modules_announcement__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_modules_announcement__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/instructor-review */ "./assets/react/lib/modules/instructor-review.js");
+/* harmony import */ var _modules_instructor_review__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_modules_instructor_review__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _modules_quiz__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/quiz */ "./assets/react/lib/modules/quiz.js");
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./assets/react/lib/media-chooser.js":
+/*!*******************************************!*\
+  !*** ./assets/react/lib/media-chooser.js ***!
+  \*******************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = window.wp.i18n.__;
+  /**
+   * upload thumbnail
+   */
+
+  $(document).on('click', '.tutor-thumbnail-uploader .tutor-thumbnail-upload-button', function (event) {
+    event.preventDefault();
+    var wrapper = $(this).closest('.tutor-thumbnail-uploader');
+    var frame;
+
+    if (frame) {
+      frame.open();
+      return;
+    }
+
+    frame = wp.media({
+      title: wrapper.data('media-heading'),
+      button: {
+        text: wrapper.data('button-text')
+      },
+      library: {
+        type: "image"
+      },
+      multiple: false // Set to true to allow multiple files to be selected
+
+    });
+    frame.on('select', function () {
+      var attachment = frame.state().get('selection').first().toJSON();
+      wrapper.find('img').attr('src', attachment.url);
+      wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
+      wrapper.find('.delete-btn').show();
+    });
+    frame.open();
+  });
+  /**
+   * Thumbnail Delete
+   * @since v.1.5.6
+   */
+
+  $(document).on('click', '.tutor-thumbnail-uploader .delete-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var wrapper = $that.closest('.tutor-thumbnail-uploader');
+    wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
+    wrapper.find('img').attr('src', '');
+    $that.hide();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/modules/announcement.js":
+/*!**************************************************!*\
+  !*** ./assets/react/lib/modules/announcement.js ***!
+  \**************************************************/
+/***/ (() => {
+
+function urlPrams(type, val) {
+  var url = new URL(window.location.href);
+  var search_params = url.searchParams;
+  search_params.set(type, val);
+  url.search = search_params.toString();
+
+  if (_tutorobject.is_admin) {
+    search_params.set('paged', 1);
+  } else {
+    search_params.set('current_page', 1);
+  }
+
+  url.search = search_params.toString();
+  return url.toString();
+}
+
+window.jQuery(document).ready(function ($) {
+  var __ = window.wp.i18n.__; //create announcement
+
+  $(".tutor-announcements-form").on('submit', function (e) {
+    e.preventDefault();
+    var $btn = $(this).find('button[type="submit"]');
+    var formData = $btn.closest(".tutor-announcements-form").serialize();
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: formData,
+      beforeSend: function beforeSend() {
+        $btn.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (!data.success) {
+          var _ref = data.data || {},
+              _ref$message = _ref.message,
+              message = _ref$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref$message;
+
+          tutor_toast(__('Error!', 'tutor'), message, 'error');
+          return;
+        }
+
+        location.reload();
+      },
+      complete: function complete() {
+        $btn.removeClass('tutor-updating-message');
+      },
+      error: function error(data) {
+        tutor_toast(__('Something Went Wrong!', 'tutor'));
+      }
+    });
+  }); // Announcement filter
+
+  $('.tutor-announcement-course-sorting').on('change', function (e) {
+    window.location = urlPrams('course-id', $(this).val());
+  });
+  $('.tutor-announcement-order-sorting').on('change', function (e) {
+    window.location = urlPrams('order', $(this).val());
+  });
+  $('.tutor-announcement-date-sorting').on('change', function (e) {
+    window.location = urlPrams('date', $(this).val());
+  });
+  $('.tutor-announcement-search-sorting').on('click', function (e) {
+    window.location = urlPrams('search', $(".tutor-announcement-search-field").val());
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/modules/instructor-review.js":
+/*!*******************************************************!*\
+  !*** ./assets/react/lib/modules/instructor-review.js ***!
+  \*******************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+
+  function toggle_star_(star) {
+    star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
+    star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+  }
+  /**
+   * Hover tutor rating and set value
+   */
+
+
+  $(document).on('mouseover', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+    toggle_star_($(this));
+  });
+  $(document).on('click', '.tutor-star-rating-container .tutor-star-rating-group i', function () {
+    var rating = $(this).attr('data-rating-value');
+    $(this).closest('.tutor-star-rating-group').find('input[name="tutor_rating_gen_input"]').val(rating);
+    toggle_star_($(this));
+  });
+  $(document).on('mouseout', '.tutor-star-rating-container .tutor-star-rating-group', function () {
+    var value = $(this).find('input[name="tutor_rating_gen_input"]').val();
+    var rating = parseInt(value);
+    var selected = $(this).find('[data-rating-value="' + rating + '"]');
+    rating && selected && selected.length > 0 ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+  });
+  $(document).on('click', '.tutor_submit_review_btn', function (e) {
+    // Prevent normal submission to validate input
+    e.preventDefault(); // Collect input
+
+    var $that = $(this);
+    var form = $that.closest('form');
+    var rating = form.find('input[name="tutor_rating_gen_input"]').val();
+    var review = (form.find('textarea[name="review"]').val() || '').trim();
+    var course_id = form.find('input[name="course_id"]').val();
+    var review_id = form.find('input[name="review_id"]').val();
+    var data = form.serializeObject(); // Validat
+
+    if (!rating || rating == 0 || !review) {
+      alert(__('Rating and review required', 'tutor'));
+      return;
+    }
+
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('updating-icon');
+      },
+      success: function success(response) {
+        var _ref = response || {},
+            success = _ref.success,
+            _ref$data = _ref.data,
+            data = _ref$data === void 0 ? {} : _ref$data;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
+
+        if (!success) {
+          tutor_toast(__('Error!', 'tutor'), message, 'error');
+          return;
+        } // Show thank you
+
+
+        new window.tutor_popup($, 'icon-rating', 40).popup({
+          title: review_id ? __('Updated successfully!', 'tutor') : __('Thank You for Rating The Course!', 'tutor'),
+          description: review_id ? __('Updated rating will now be visible in the course page', 'tutor') : __('Your rating will now be visible in the course page', 'tutor')
+        });
+        setTimeout(function () {
+          location.reload();
+        }, 3000);
+      },
+      complete: function complete() {
+        $that.removeClass('updating-icon');
+      }
+    });
+  }); // Show review form on opn (Single course)
+
+  $(document).on('click', '.write-course-review-link-btn', function (e) {
+    e.preventDefault();
+    $(this).siblings('.tutor-write-review-form').slideToggle();
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/modules/quiz.js":
+/*!******************************************!*\
+  !*** ./assets/react/lib/modules/quiz.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helper/response */ "./assets/react/helper/response.js");
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  /**
+   * Quiz Frontend Review Action
+   * @since 1.4.0
+   */
+
+  $(document).on('click', '.quiz-manual-review-action', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var attempt_id = $that.attr('data-attempt-id');
+    var attempt_answer_id = $that.attr('data-attempt-answer-id');
+    var mark_as = $that.attr('data-mark-as');
+    var context = $that.attr('data-context');
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'GET',
+      data: {
+        attempt_id: attempt_id,
+        attempt_answer_id: attempt_answer_id,
+        mark_as: mark_as,
+        context: context,
+        action: 'review_quiz_answer'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success && (data.data || {}).html) {
+          $that.closest('.tutor-quiz-attempt-details-wrapper').html(data.data.html);
+          return;
+        }
+
+        tutor_toast('Error!', (0,_helper_response__WEBPACK_IMPORTED_MODULE_0__.get_response_message)(data), 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/sorting.js":
+/*!*************************************!*\
+  !*** ./assets/react/lib/sorting.js ***!
+  \*************************************/
+/***/ (() => {
+
+window.addEventListener('DOMContentLoaded', function () {
+  var _this = this;
+
+  var getCellValue = function getCellValue(tr, idx) {
+    return tr.children[idx].innerText || tr.children[idx].textContent;
+  };
+
+  var comparer = function comparer(idx, asc) {
+    return function (a, b) {
+      return function (v1, v2) {
+        return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
+      }(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+    };
+  };
+
+  document.querySelectorAll(".tutor-table-rows-sorting").forEach(function (th) {
+    return th.addEventListener('click', function (e) {
+      var table = th.closest('table');
+      var tbody = table.querySelector('tbody');
+      var currentTarget = e.currentTarget;
+      var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // If a-to-z icon
+
+      if (icon) {
+        // swap class name to change icon
+        if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
+          icon.classList.remove("ttr-ordering-a-to-z-filled");
+          icon.classList.add("ttr-ordering-z-to-a-filled");
+        } else {
+          icon.classList.remove("ttr-ordering-z-to-a-filled");
+          icon.classList.add("ttr-ordering-a-to-z-filled");
+        }
+      } else {
+        // swap class name to change icon
+        // Order up-down-icon
+        var _icon = currentTarget.querySelector(".up-down-icon");
+
+        if (_icon.classList.contains('ttr-order-down-filled')) {
+          _icon.classList.remove("ttr-order-down-filled");
+
+          _icon.classList.add("ttr-order-up-filled");
+        } else {
+          _icon.classList.remove("ttr-order-up-filled");
+
+          _icon.classList.add("ttr-order-down-filled");
+        }
+      }
+
+      Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
+        return tbody.appendChild(tr);
+      });
+    });
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/react/lib/tutor.js":
+/*!***********************************!*\
+  !*** ./assets/react/lib/tutor.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _v2_library_src_js_main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../v2-library/_src/js/main */ "./v2-library/_src/js/main.js");
+/* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helper/response */ "./assets/react/helper/response.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+window.tutor_get_nonce_data = function (send_key_value) {
+  var nonce_data = window._tutorobject || {};
+  var nonce_key = nonce_data.nonce_key || '';
+  var nonce_value = nonce_data[nonce_key] || '';
+
+  if (send_key_value) {
+    return {
+      key: nonce_key,
+      value: nonce_value
+    };
+  }
+
+  return _defineProperty({}, nonce_key, nonce_value);
+};
+
+window.tutor_popup = function ($, icon, padding) {
+  var $this = this;
+  var element;
+
+  this.popup_wrapper = function (wrapper_tag) {
+    var img_tag = icon === '' ? '' : '<img class="tutor-pop-icon" src="' + window._tutorobject.tutor_url + 'assets/images/' + icon + '.svg"/>';
+    return '<' + wrapper_tag + ' class="tutor-component-popup-container">\
+            <div class="tutor-component-popup-' + padding + '">\
+                <div class="tutor-component-content-container">' + img_tag + '</div>\
+                <div class="tutor-component-button-container"></div>\
+            </div>\
+        </' + wrapper_tag + '>';
+  };
+
+  this.popup = function (data) {
+    var title = data.title ? '<h3>' + data.title + '</h3>' : '';
+    var description = data.description ? '<p>' + data.description + '</p>' : '';
+    var buttons = Object.keys(data.buttons || {}).map(function (key) {
+      var button = data.buttons[key];
+      var button_id = button.id ? 'tutor-popup-' + button.id : '';
+      return $('<button id="' + button_id + '" class="' + button["class"] + '">' + button.title + '</button>').click(button.callback);
+    });
+    element = $($this.popup_wrapper(data.wrapper_tag || 'div'));
+    var content_wrapper = element.find('.tutor-component-content-container');
+    content_wrapper.append(title);
+    data.after_title ? content_wrapper.append(data.after_title) : 0;
+    content_wrapper.append(description);
+    data.after_description ? content_wrapper.append(data.after_description) : 0; // Assign close event on click black overlay
+
+    element.click(function () {
+      $(this).remove();
+    }).children().click(function (e) {
+      e.stopPropagation();
+    }); // Append action button
+
+    for (var i = 0; i < buttons.length; i++) {
+      element.find('.tutor-component-button-container').append(buttons[i]);
+    }
+
+    $('body').append(element);
+    return element;
+  };
+
+  return {
+    popup: this.popup
+  };
+};
+
+window.tutorDotLoader = function (loaderType) {
+  return "    \n    <div class=\"tutor-dot-loader ".concat(loaderType ? loaderType : '', "\">\n        <span class=\"dot dot-1\"></span>\n        <span class=\"dot dot-2\"></span>\n        <span class=\"dot dot-3\"></span>\n        <span class=\"dot dot-4\"></span>\n    </div>");
+};
+
+window.tutor_date_picker = function () {
+  if (jQuery.datepicker) {
+    var format = _tutorobject.wp_date_format;
+
+    if (!format) {
+      format = "yy-mm-dd";
+    }
+
+    $(".tutor_date_picker").datepicker({
+      "dateFormat": format
+    });
+  }
+};
+
+jQuery(document).ready(function ($) {
+  'use strict';
+
+  var _wp$i18n = wp.i18n,
+      __ = _wp$i18n.__,
+      _x = _wp$i18n._x,
+      _n = _wp$i18n._n,
+      _nx = _wp$i18n._nx;
+  /**
+   * Global date_picker selector 
+   * 
+   * @since 1.9.7
+   */
+
+  function load_date_picker() {
+    if (jQuery.datepicker) {
+      var format = _tutorobject.wp_date_format;
+
+      if (!format) {
+        format = "yy-mm-dd";
+      }
+
+      $(".tutor_date_picker").datepicker({
+        "dateFormat": format
+      });
+    }
+    /** Disable typing on datePicker field */
+
+
+    $(document).on('keydown', '.hasDatepicker, .tutor_date_picker', function (e) {
+      if (e.keyCode !== 8) {
+        e.preventDefault();
+      }
+    });
+  }
+
+  ;
+  load_date_picker();
+  /**
+   * Video source tabs
+   */
+
+  if (jQuery().select2) {
+    $('.videosource_select2').select2({
+      width: "100%",
+      templateSelection: iformat,
+      templateResult: iformat,
+      allowHtml: true
+    });
+  } //videosource_select2
+
+
+  function iformat(icon) {
+    var originalOption = icon.element;
+    return $('<span><i class="tutor-icon-' + $(originalOption).data('icon') + '"></i> ' + icon.text + '</span>');
+  }
+  /**
+   * Course Builder
+   *
+   * @since v.1.3.4
+   */
+
+
+  $(document).on('click', '.tutor-course-thumbnail-upload-btn', function (event) {
+    event.preventDefault();
+    var $that = $(this);
+    var frame;
+
+    if (frame) {
+      frame.open();
+      return;
+    }
+
+    frame = wp.media({
+      title: __('Select or Upload Media Of Your Chosen Persuasion', 'tutor'),
+      button: {
+        text: __('Use this media', 'tutor')
+      },
+      multiple: false
+    });
+    frame.on('select', function () {
+      var attachment = frame.state().get('selection').first().toJSON();
+      $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('src', attachment.url);
+      $that.closest('.tutor-thumbnail-wrap').find('input').val(attachment.id);
+      $('.tutor-course-thumbnail-delete-btn').show();
+    });
+    frame.open();
+  }); //Delete Thumbnail
+
+  $(document).on('click', '.tutor-course-thumbnail-delete-btn', function (event) {
+    event.preventDefault();
+    var $that = $(this);
+    var placeholder_src = $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('data-placeholder-src');
+    $that.closest('.tutor-thumbnail-wrap').find('.thumbnail-img').attr('src', placeholder_src);
+    $that.closest('.tutor-thumbnail-wrap').find('input').val('');
+    $('.tutor-course-thumbnail-delete-btn').hide();
+  });
+  $(document).on('change keyup', '.course-edit-topic-title-input', function (e) {
+    e.preventDefault();
+    $(this).closest('.tutor-topics-top').find('.topic-inner-title').html($(this).val());
+  });
+  /**
+   * Delete Lesson from course builder
+   */
+
+  $(document).on('click', '.tutor-delete-lesson-btn', function (e) {
+    e.preventDefault();
+
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
+      return;
+    }
+
+    var $that = $(this);
+    var lesson_id = $that.attr('data-lesson-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        lesson_id: lesson_id,
+        action: 'tutor_delete_lesson_by_id'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $that.closest('.course-content-item').remove();
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Quiz Builder Modal Tabs
+   */
+
+  $(document).on('click', '.tutor-quiz-modal-tab-item', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $quizTitle = $('[name="quiz_title"]');
+    var quiz_title = $quizTitle.val();
+
+    if (!quiz_title) {
+      $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('<p class="quiz-form-warning">Please save the quiz' + ' first</p>');
+      return;
+    } else {
+      $quizTitle.closest('.tutor-quiz-builder-form-row').find('.quiz_form_msg').html('');
+    }
+
+    var tabSelector = $that.attr('href');
+    $('.quiz-builder-tab-container').hide();
+    $(tabSelector).show();
+    $('a.tutor-quiz-modal-tab-item').removeClass('active');
+    $that.addClass('active');
+  });
+  /**
+   * Get question answers option edit form
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '.tutor-quiz-answer-edit a', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var answer_id = $that.closest('.tutor-quiz-answer-wrap').attr('data-answer-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        answer_id: answer_id,
+        action: 'tutor_quiz_edit_question_answer'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('#tutor_quiz_question_answer_form').html(data.data.output);
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Saving question answers options
+   * Student should select the right answer at quiz attempts
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '#quiz-answer-save-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
+    $formInput.action = 'tutor_save_quiz_answer_options';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: $formInput,
+      beforeSend: function beforeSend() {
+        $('#quiz_validation_msg_wrap').html("");
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('#tutor_quiz_question_answers').trigger('refresh');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /**
+   * Updating Answer
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '#quiz-answer-edit-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
+    $formInput.action = 'tutor_update_quiz_answer_options';
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: $formInput,
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        $('#tutor_quiz_question_answers').trigger('refresh');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('change', '.tutor-quiz-answers-mark-correct-wrap input', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var answer_id = $that.val();
+    var inputValue = 1;
+
+    if (!$that.prop('checked')) {
+      inputValue = 0;
+    }
+
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        answer_id: answer_id,
+        inputValue: inputValue,
+        action: 'tutor_mark_answer_as_correct'
+      }
+    });
+  });
+  /**
+   * Delete answer for a question in quiz builder
+   *
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '.tutor-quiz-answer-trash-wrap a.answer-trash-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var answer_id = $that.attr('data-answer-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        answer_id: answer_id,
+        action: 'tutor_quiz_builder_delete_answer'
+      },
+      beforeSend: function beforeSend() {
+        $that.closest('.tutor-quiz-answer-wrap').remove();
+      }
+    });
+  });
+  /**
+   * Delete Quiz
+   * @since v.1.0.0
+   */
+
+  $(document).on('click', '.tutor-delete-quiz-btn', function (e) {
+    e.preventDefault();
+
+    if (!confirm(__('Are you sure to delete?', 'tutor'))) {
+      return;
+    }
+
+    var $that = $(this);
+    var quiz_id = $that.attr('data-quiz-id');
+    $.ajax({
+      url: window._tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        quiz_id: quiz_id,
+        action: 'tutor_delete_quiz_by_id'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(resp) {
+        var _ref2 = resp || {},
+            _ref2$data = _ref2.data,
+            data = _ref2$data === void 0 ? {} : _ref2$data,
+            success = _ref2.success;
+
+        var _data$message = data.message,
+            message = _data$message === void 0 ? __('Something Went Wrong!') : _data$message;
+
+        if (success) {
+          $that.closest('.course-content-item').remove();
+          return;
+        }
+
+        tutor_toast('Error!', message, 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('click', '.tutor-media-upload-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var frame;
+
+    if (frame) {
+      frame.open();
+      return;
+    }
+
+    frame = wp.media({
+      title: __('Select or Upload Media Of Your Chosen Persuasion', 'tutor'),
+      button: {
+        text: __('Use this media', 'tutor')
+      },
+      multiple: false
+    });
+    frame.on('select', function () {
+      var attachment = frame.state().get('selection').first().toJSON();
+      $that.html('<img src="' + attachment.url + '" alt="" />');
+      $that.closest('.tutor-media-upload-wrap').find('input').val(attachment.id);
+    });
+    frame.open();
+  });
+  $(document).on('click', '.tutor-media-upload-trash', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    $that.closest('.tutor-media-upload-wrap').find('.tutor-media-upload-btn').html('<i class="tutor-icon-image1"></i>');
+    $that.closest('.tutor-media-upload-wrap').find('input').val('');
+  });
+  $(document).on('click', '.settings-tabs-navs li', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var data_target = $that.find('a').attr('data-target');
+    var url = $that.find('a').attr('href');
+    $that.addClass('active').siblings('li.active').removeClass('active');
+    $('.settings-tab-wrap').removeClass('active').hide();
+    $(data_target).addClass('active').show();
+    window.history.pushState({}, '', url);
+  });
+  /**
+   * Re init required
+   * Modal Loaded...
+   */
+
+  $(document).on('lesson_modal_loaded quiz_modal_loaded assignment_modal_loaded', function (e, obj) {
+    if (jQuery().select2) {
+      $('.select2_multiselect').select2({
+        dropdownCssClass: 'increasezindex'
+      });
+    }
+
+    load_date_picker();
+  });
+  /**
+   * Tutor number validation
+   *
+   * @since v.1.6.3
+   */
+
+  $(document).on('keyup change', '.tutor-number-validation', function (e) {
+    var input = $(this);
+    var val = parseInt(input.val());
+    var min = parseInt(input.attr('data-min'));
+    var max = parseInt(input.attr('data-max'));
+
+    if (val < min) {
+      input.val(min);
+    } else if (val > max) {
+      input.val(max);
+    }
+  });
+  /*
+  * @since v.1.6.4
+  * Quiz Attempts Instructor Feedback 
+  */
+
+  $(document).on('click', '.tutor-instructor-feedback', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    $.ajax({
+      url: window.ajaxurl || _tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        attempts_id: $that.data('attemptid'),
+        feedback: $('.tutor-instructor-feedback-content').val(),
+        action: 'tutor_instructor_feedback'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message');
+      },
+      success: function success(data) {
+        if (data.success) {
+          $that.closest('.course-content-item').remove();
+          tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message');
+      }
+    });
+  }); //dropdown toggle
+
+  $(document).click(function () {
+    $(".tutor-dropdown").removeClass('show');
+  });
+  $(".tutor-dropdown").click(function (e) {
+    e.stopPropagation();
+
+    if ($('.tutor-dropdown').hasClass('show')) {
+      $('.tutor-dropdown').removeClass('show');
+    }
+
+    $(this).addClass('show');
+  });
+  /**
+   * @since v.1.8.6
+   * SUbmit form through ajax
+   */
+
+  $('.tutor-form-submit-through-ajax').submit(function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var url = $(this).attr('action') || window.location.href;
+    var type = $(this).attr('method') || 'GET';
+    var data = $(this).serializeObject();
+    $that.find('button').addClass('tutor-updating-message');
+    $.ajax({
+      url: url,
+      type: type,
+      data: data,
+      success: function success() {
+        tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
+      },
+      complete: function complete() {
+        $that.find('button').removeClass('tutor-updating-message');
+      }
+    });
+  });
+  /*
+  * @since v.1.7.9
+  * Send wp nonce to every ajax request
+  */
+
+  $.ajaxSetup({
+    data: tutor_get_nonce_data()
+  });
+});
+
+jQuery.fn.serializeObject = function () {
+  var values = {};
+  var array = this.serializeArray();
+  jQuery.each(array, function () {
+    if (values[this.name]) {
+      if (!values[this.name].push) {
+        values[this.name] = [values[this.name]];
+      }
+
+      values[this.name].push(this.value || '');
+    } else {
+      values[this.name] = this.value || '';
+    }
+  });
+  return values;
+};
+
+window.tutor_toast = function (title, description, type, is_left) {
+  var tutor_ob = window._tutorobject || {};
+  var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
+
+  if (!jQuery('.tutor-toast-parent').length) {
+    jQuery('body').append('<div class="tutor-toast-parent ' + (is_left ? 'tutor-toast-left' : '') + '"></div>');
+  }
+
+  var icons = {
+    success: asset + 'icon-check.svg',
+    error: asset + 'icon-cross.svg'
+  };
+  var content = jQuery('\
+        <div>\
+            <div>\
+                <img src="' + icons[type] + '"/>\
+            </div>\
+            <div>\
+                <div>\
+                    <b>' + title + '</b>\
+                    <span>' + description + '</span>\
+                </div>\
+            </div>\
+            <div>\
+                <i class="tutor-toast-close tutor-icon-line-cross"></i>\
+            </div>\
+        </div>');
+  content.find('.tutor-toast-close').click(function () {
+    content.remove();
+  });
+  jQuery('.tutor-toast-parent').append(content);
+  setTimeout(function () {
+    if (content) {
+      content.fadeOut('fast', function () {
+        jQuery(this).remove();
+      });
+    }
+  }, 5000);
+};
+
+/***/ }),
+
+/***/ "./assets/react/lib/utilities.js":
+/*!***************************************!*\
+  !*** ./assets/react/lib/utilities.js ***!
+  \***************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__; // Copy text
+
+  $(document).on('click', '.tutor-copy-text', function (e) {
+    // Prevent default action
+    e.stopImmediatePropagation();
+    e.preventDefault(); // Get the text
+
+    var text = $(this).data('text'); // Create input to place texts in
+
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val(text).select();
+    document.execCommand("copy");
+    $temp.remove();
+    tutor_toast(__('Copied!', 'tutor'), text, 'success');
+  }); // Ajax action 
+
+  $(document).on('click', '.tutor-list-ajax-action', function () {
+    var $that = $(this);
+    var prompt = $(this).data('prompt');
+    var del = $(this).data('delete_element_id');
+    var data = $(this).data('request_data') || {};
+    typeof data == 'string' ? data = JSON.parse(data) : 0;
+
+    if (prompt && !window.confirm(prompt)) {
+      return;
+    }
+
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: data,
+      beforeSend: function beforeSend() {
+        $that.addClass('updating-icon');
+      },
+      success: function success(data) {
+        if (data.success) {
+          if (del) {
+            $('#' + del).fadeOut(function () {
+              $(this).remove();
+            });
+          }
+
+          return;
+        }
+
+        var _ref = data.data || {},
+            _ref$message = _ref.message,
+            message = _ref$message === void 0 ? __('Something Went Wrong!', 'tutor') : _ref$message;
+
+        tutor_toast('Error!', message, 'error');
+      },
+      error: function error() {
+        tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
+      },
+      complete: function complete() {
+        $that.removeClass('updating-icon');
+      }
+    });
+  }); // Textarea auto height
+
+  $(document).on('input', '.tutor-textarea-auto-height', function () {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
+  });
+  $('.tutor-textarea-auto-height').trigger('input');
+});
+
+/***/ }),
+
+/***/ "./assets/react/v2/tutor-date-picker.js":
+/*!**********************************************!*\
+  !*** ./assets/react/v2/tutor-date-picker.js ***!
+  \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/App */ "./assets/react/admin-dashboard/addons-list/components/App.js");
-
 
 
 window.addEventListener('DOMContentLoaded', function () {
-  function tutorAddonsList() {
-    var element = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], null);
-    var addonWrapper = document.getElementById('tutor-addons-list-wrapper');
+  function DatePicker() {
+    var element = "<h3>Hello</h3>";
+    var wrapper = document.getElementById('tutor-v2-date-picker');
 
-    if (null !== addonWrapper) {
-      react_dom__WEBPACK_IMPORTED_MODULE_1__.render(element, addonWrapper);
+    if (wrapper) {
+      react_dom__WEBPACK_IMPORTED_MODULE_1__.render(element, document.getElementById('tutor-v2-date-picker'));
     }
   }
 
-  tutorAddonsList();
+  DatePicker();
 });
 
 /***/ }),
 
-/***/ "./assets/react/admin-dashboard/addons-list/components/AddonCard.js":
-/*!**************************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/components/AddonCard.js ***!
-  \**************************************************************************/
+/***/ "./v2-library/_src/js/main.js":
+/*!************************************!*\
+  !*** ./v2-library/_src/js/main.js ***!
+  \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
+/* harmony import */ var _tutorModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutorModal */ "./v2-library/_src/js/tutorModal.js");
+/* harmony import */ var _tutorModal__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_tutorModal__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tutorThumbnailPreview__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tutorThumbnailPreview */ "./v2-library/_src/js/tutorThumbnailPreview.js");
+/* harmony import */ var _tutorThumbnailPreview__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_tutorThumbnailPreview__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _tutorPopupMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./tutorPopupMenu */ "./v2-library/_src/js/tutorPopupMenu.js");
+/* harmony import */ var _tutorPopupMenu__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_tutorPopupMenu__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _tutorOffcanvas__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tutorOffcanvas */ "./v2-library/_src/js/tutorOffcanvas.js");
+/* harmony import */ var _tutorOffcanvas__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_tutorOffcanvas__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./tutorNotificationTab */ "./v2-library/_src/js/tutorNotificationTab.js");
+/* harmony import */ var _tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_tutorNotificationTab__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tutorDefaultTab */ "./v2-library/_src/js/tutorDefaultTab.js");
+/* harmony import */ var _tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_tutorDefaultTab__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _tutorPasswordStrengthChecker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./tutorPasswordStrengthChecker */ "./v2-library/_src/js/tutorPasswordStrengthChecker.js");
+/* harmony import */ var _tutorPasswordStrengthChecker__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_tutorPasswordStrengthChecker__WEBPACK_IMPORTED_MODULE_6__);
 
 
-var __ = wp.i18n.__;
 
-var AddonCard = function AddonCard(_ref) {
-  var _addon$plugins_requir, _addon$ext_required, _addon$plugins_requir2;
 
-  var addon = _ref.addon,
-      addonId = _ref.addonId;
-  var author = 'Themeum';
-  var url = 'https://www.themeum.com';
 
-  var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
-      handleOnChange = _useAddonsUpdate.handleOnChange;
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-card ".concat(addon.plugins_required.length > 0 ? 'not-subscribed' : '', " tutor-addons-card-").concat(addonId + 1),
-    style: {
-      transitionDelay: "".concat(100 * addonId, "ms")
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "card-body tutor-px-30 tutor-py-40"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-logo"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
-    src: addon.thumb_url,
-    alt: addon.name
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-title tutor-mt-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", {
-    className: "text-medium-h5 color-text-primary tutor-mb-4"
-  }, addon.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-    className: "text-medium-small color-text-hints tutor-mt-5"
-  }, "By", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
-    href: url,
-    className: "color-brand-wordpress"
-  }, author))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-des text-regular-body color-text-subsued tutor-mt-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, addon.description))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: " card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "text-medium-small color-text-hints"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-    className: "extra-plugins color-text-hints text-medium-small"
-  }, ((_addon$plugins_requir = addon.plugins_required) === null || _addon$plugins_requir === void 0 ? void 0 : _addon$plugins_requir.length) > 0 ? __('Required Plugin(s)', 'tutor') : ((_addon$ext_required = addon.ext_required) === null || _addon$ext_required === void 0 ? void 0 : _addon$ext_required.length) > 0 ? __('Required for Push Notification', 'tutor') : __('No additional plugin(s) required', 'tutor')), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-      className: "extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption",
-      key: index
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      className: "addon-icon ttr-bullet-point-filled"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      className: "plugin-title",
-      dangerouslySetInnerHTML: {
-        __html: extension
-      }
-    }));
-  }) : addon.depend_plugins ? addon.plugins_required.map(function (plugin, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
-      className: "plugins-wrapper tutor-bs-d-flex color-text-primary text-medium-caption",
-      key: index
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      className: "addon-icon ttr-bullet-point-filled"
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      className: "plugin-title"
-    }, plugin));
-  }) : ''), ((_addon$plugins_requir2 = addon.plugins_required) === null || _addon$plugins_requir2 === void 0 ? void 0 : _addon$plugins_requir2.length) === 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "addon-toggle"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
-    className: "tutor-form-toggle"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-    type: "checkbox",
-    className: "tutor-form-toggle-input",
-    name: addon.basename,
-    checked: addon.is_enabled,
-    onChange: function onChange(event) {
-      return handleOnChange(event, addon.basename);
-    }
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "tutor-form-toggle-control"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5"
-  }, __('Active', 'tutor'))))));
-};
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonCard);
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/addons-list/components/AddonsList.js":
-/*!***************************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/components/AddonsList.js ***!
-  \***************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
-/* harmony import */ var _AddonCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AddonCard */ "./assets/react/admin-dashboard/addons-list/components/AddonCard.js");
-
-
-
-var __ = wp.i18n.__;
-var emptyStateImg = "".concat(_tutorobject.tutor_url, "assets/images/addon-empty-state.svg");
-
-var AddonsList = function AddonsList() {
-  var _useAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)(),
-      allAddons = _useAddons.allAddons,
-      loading = _useAddons.loading;
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-items tutor-mt-30 ".concat(allAddons.length < 3 ? 'is-less-items' : '', " ").concat(allAddons.length ? 'is-active' : '')
-  }, allAddons.length ? allAddons.map(function (addon, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      addon: addon,
-      key: index,
-      addonId: index
-    });
-  }) : loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-loading"
-  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    style: {
-      background: 'transparent'
-    },
-    className: "tutor-addons-card empty-state tutor-py-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "card-body"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
-    src: emptyStateImg,
-    alt: "empty state illustration"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "text-medium-caption tutor-mb-20"
-  }, __('No Addons Found!', 'tutor')))));
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddonsList);
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/addons-list/components/App.js":
-/*!********************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/components/App.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Header */ "./assets/react/admin-dashboard/addons-list/components/Header.js");
-/* harmony import */ var _Search__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Search */ "./assets/react/admin-dashboard/addons-list/components/Search.js");
-/* harmony import */ var _AddonsList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AddonsList */ "./assets/react/admin-dashboard/addons-list/components/AddonsList.js");
-/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
-
-
-
-
-
-
-var App = function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_context_AddonsContext__WEBPACK_IMPORTED_MODULE_4__.AddonsContextProvider, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("main", {
-    className: "tutor-backend-settings-addons-list tutor-dashboard-page"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_1__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-body tutor-p-30"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Search__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_AddonsList__WEBPACK_IMPORTED_MODULE_3__["default"], null))));
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/addons-list/components/Header.js":
-/*!***********************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/components/Header.js ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
-
-
-var __ = wp.i18n.__;
-
-var Header = function Header() {
-  var filterBtns = ['all', 'active', 'deactive', 'required'];
-
-  var _useAddons = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddons)(),
-      addonList = _useAddons.addonList;
-
-  var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
-      activeTab = _useAddonsUpdate.activeTab,
-      getTabStatus = _useAddonsUpdate.getTabStatus;
-
-  var activeCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
-    return sum + Number(addon.is_enabled);
-  }, 0);
-  var deactiveCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
-    return sum + Number(!addon.is_enabled);
-  }, 0);
-  var requiredCount = addonList === null || addonList === void 0 ? void 0 : addonList.reduce(function (sum, addon) {
-    return sum + Number(addon.hasOwnProperty('depend_plugins') || 0);
-  }, 0);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", {
-    className: "tutor-addons-list-header tutor-bs-d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "title text-medium-h5 color-text-primary tutor-bs-mb-lg-0 tutor-bs-mb-3"
-  }, __('Addons List', 'tutor')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "filter-btns text-regular-body color-text-subsued "
-  }, filterBtns.map(function (btn, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-      type: "button",
-      className: "filter-btn ".concat(btn === activeTab ? 'is-active' : ''),
-      key: index,
-      onClick: function onClick() {
-        return getTabStatus(btn);
-      }
-    }, btn, ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-      className: "item-count"
-    }, "(", 'active' === btn ? activeCount : 'deactive' === btn ? deactiveCount : 'required' === btn ? requiredCount : addonList === null || addonList === void 0 ? void 0 : addonList.length, ")"));
-  })));
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/addons-list/components/Search.js":
-/*!***********************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/components/Search.js ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/AddonsContext */ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-var __ = wp.i18n.__;
-
-var debounce = function debounce(fn) {
-  var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
-  var timer = null;
-  return function () {
-    var context = this,
-        args = arguments;
-    clearTimeout(timer);
-    timer = setTimeout(function () {
-      fn.apply(context, args);
-    }, delay);
-  };
-};
-
-var Search = function Search() {
-  var _useAddonsUpdate = (0,_context_AddonsContext__WEBPACK_IMPORTED_MODULE_1__.useAddonsUpdate)(),
-      filterAddons = _useAddonsUpdate.filterAddons;
-
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
-      _useState2 = _slicedToArray(_useState, 2),
-      search = _useState2[0],
-      setSearch = _useState2[1];
-
-  var setDebouncedSearch = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(debounce(function (value) {
-    filterAddons(value);
-  }), []);
-
-  var handleChange = function handleChange(e) {
-    var value = e.target.value;
-    setSearch(value);
-    setDebouncedSearch(value);
-  };
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-addons-list-select-filter d-flex justify-content-end align-items-center"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    className: "ttr-search-filled tutor-input-group-icon"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-    type: "search",
-    className: "tutor-form-control",
-    placeholder: __('Search…', 'tutor'),
-    value: search,
-    onChange: handleChange
-  })));
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Search);
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/addons-list/context/AddonsContext.js":
-/*!***************************************************************************!*\
-  !*** ./assets/react/admin-dashboard/addons-list/context/AddonsContext.js ***!
-  \***************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "useAddons": () => (/* binding */ useAddons),
-/* harmony export */   "useAddonsUpdate": () => (/* binding */ useAddonsUpdate),
-/* harmony export */   "AddonsContextProvider": () => (/* binding */ AddonsContextProvider)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
- // Custom contexts.
-
-var AddonsContext = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)();
-var AddonsUpdateContext = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)();
 /**
- * Custom hook useAddons
- * @returns AddonsContext
+ * Table td/tr toggle
  */
 
-var useAddons = function useAddons() {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(AddonsContext);
-};
-/**
- * Custom hook useAddonsUpdate
- * @returns AddonsUpdateContext
- */
+document.addEventListener('click', function (e) {
+  var attr = 'data-td-target';
+  var dataTdTarget = e.target.dataset.tdTarget;
 
-var useAddonsUpdate = function useAddonsUpdate() {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(AddonsUpdateContext);
-};
-/**
- * Addons Context Provider
- * @param {*} props
- * @returns All ContextProviders with children
- */
-
-var AddonsContextProvider = function AddonsContextProvider(props) {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
-      _useState2 = _slicedToArray(_useState, 2),
-      loading = _useState2[0],
-      setLoding = _useState2[1];
-
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-      _useState4 = _slicedToArray(_useState3, 2),
-      allAddons = _useState4[0],
-      setAllAddons = _useState4[1];
-
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('all'),
-      _useState6 = _slicedToArray(_useState5, 2),
-      activeTab = _useState6[0],
-      setActiveTab = _useState6[1];
-
-  var initialRenderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
-  var allAddonsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-      _useState8 = _slicedToArray(_useState7, 2),
-      addons = _useState8[0],
-      setAddons = _useState8[1];
-
-  var fetchAddons = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-      var formData, _addons, response, data;
-
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              formData = new FormData();
-              formData.set('action', 'tutor_get_all_addons');
-              formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-              _context.prev = 3;
-              _context.next = 6;
-              return fetch(_tutorobject.ajaxurl, {
-                method: 'POST',
-                body: formData
-              });
-
-            case 6:
-              _addons = _context.sent;
-
-              if (!_addons.ok) {
-                _context.next = 13;
-                break;
-              }
-
-              _context.next = 10;
-              return _addons.json();
-
-            case 10:
-              response = _context.sent;
-              data = response.data.addons;
-
-              if (data && data.length) {
-                setAllAddons(data);
-                allAddonsRef.current = data;
-                setLoding(false);
-              }
-
-            case 13:
-              _context.next = 19;
-              break;
-
-            case 15:
-              _context.prev = 15;
-              _context.t0 = _context["catch"](3);
-              console.log(_context.t0);
-              setLoding(false);
-
-            case 19:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, null, [[3, 15]]);
-    }));
-
-    return function fetchAddons() {
-      return _ref.apply(this, arguments);
-    };
-  }(); // Render the component with initial data at on mount.
-
-
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    fetchAddons();
-  }, []);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    if (initialRenderRef.current) {
-      if (activeTab === 'all') {
-        setAllAddons(allAddonsRef.current);
-      } else {
-        var activeAddons = allAddonsRef.current.filter(function (addon) {
-          if (activeTab === 'active') return addon.is_enabled;else if (activeTab === 'deactive') return !addon.is_enabled;else if (activeTab === 'required') return addon === null || addon === void 0 ? void 0 : addon.depend_plugins;
-        });
-        setAllAddons(activeAddons);
-      }
-    } else if (!initialRenderRef.current) initialRenderRef.current = true;
-  }, [activeTab]);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    setAddons(allAddonsRef.current);
-  });
-
-  var handleOnChange = function handleOnChange(event, addonBaseName) {
-    var checked = event.target.checked;
-    var updatedAddonList = allAddonsRef.current.map(function (addon) {
-      if (addon.basename === addonBaseName) return _objectSpread(_objectSpread({}, addon), {}, {
-        is_enabled: checked
-      });
-      return addon;
-    });
-
-    if (activeTab === 'active') {
-      var activeAddons = updatedAddonList.filter(function (updatedAddon) {
-        return updatedAddon.is_enabled;
-      });
-      setAllAddons(activeAddons);
-    } else if (activeTab === 'deactive') {
-      var deActiveAddons = updatedAddonList.filter(function (updatedAddon) {
-        return !updatedAddon.is_enabled;
-      });
-      setAllAddons(deActiveAddons);
-    } else if (activeTab === 'required') {
-      var requiredAddons = updatedAddonList.filter(function (updatedAddon) {
-        return updatedAddon === null || updatedAddon === void 0 ? void 0 : updatedAddon.depend_plugins;
-      });
-      setAllAddons(requiredAddons);
-    } else if (activeTab === 'all') {
-      setAllAddons(updatedAddonList);
-    }
-
-    allAddonsRef.current = updatedAddonList;
-
-    var toggleAddonStatus = /*#__PURE__*/function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-        var formData;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                formData = new FormData();
-                formData.set('action', 'addon_enable_disable');
-                formData.set('isEnable', Number(checked));
-                formData.set('addonFieldName', addonBaseName);
-                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                _context2.prev = 5;
-                _context2.next = 8;
-                return fetch(_tutorobject.ajaxurl, {
-                  method: 'POST',
-                  body: formData
-                });
-
-              case 8:
-                _context2.next = 13;
-                break;
-
-              case 10:
-                _context2.prev = 10;
-                _context2.t0 = _context2["catch"](5);
-                console.log(_context2.t0);
-
-              case 13:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, null, [[5, 10]]);
-      }));
-
-      return function toggleAddonStatus() {
-        return _ref2.apply(this, arguments);
-      };
-    }();
-
-    toggleAddonStatus();
-  };
-
-  var getTabStatus = function getTabStatus(btn) {
-    switch (btn) {
-      case 'active':
-        setActiveTab('active');
-        break;
-
-      case 'deactive':
-        setActiveTab('deactive');
-        break;
-
-      case 'required':
-        setActiveTab('required');
-        break;
-
-      case 'all':
-        setActiveTab('all');
-        break;
-
-      default:
-        setActiveTab('all');
-        break;
-    }
-  };
-
-  var filterAddons = function filterAddons() {
-    var searchValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
-    if (searchValue.trim()) {
-      var filteredAddons = allAddonsRef.current.filter(function (addon) {
-        return addon.name.toLowerCase().includes(searchValue.toLowerCase());
-      });
-      setAllAddons(filteredAddons);
-    } else {
-      setAllAddons(allAddonsRef.current);
-    }
-  };
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsContext.Provider, {
-    value: {
-      allAddons: allAddons,
-      addonList: addons,
-      loading: loading
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(AddonsUpdateContext.Provider, {
-    value: {
-      activeTab: activeTab,
-      getTabStatus: getTabStatus,
-      setActiveTab: setActiveTab,
-      setAllAddons: setAllAddons,
-      handleOnChange: handleOnChange,
-      filterAddons: filterAddons
-    }
-  }, props.children));
-};
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/segments/addonlist.js":
-/*!************************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/addonlist.js ***!
-  \************************************************************/
-/***/ (() => {
-
-var addonsData = _tutorobject.addons_data;
-var addonsList = document.getElementById('tutor-free-addons');
-var searchBar = document.getElementById('free-addons-search');
-var freeAddonsList = _tutorobject.addons_data || [];
-var searchString = '';
-var emptyStateImg = "".concat(_tutorobject.tutor_url, "assets/images/addon-empty-state.svg");
-
-if (null !== searchBar) {
-  searchBar.addEventListener('input', function (e) {
-    searchString = e.target.value.toLowerCase();
-    var filteredAddons = freeAddonsList.filter(function (addon) {
-      return addon.name.toLowerCase().includes(searchString);
-    });
-
-    if (filteredAddons.length > 0) {
-      displayAddons(filteredAddons);
-    } else {
-      emptySearch();
-    }
-  });
-}
-
-var emptySearch = function emptySearch() {
-  var nothingFound = "\n        <div style=\"background:transparent\" class=\"tutor-addons-card empty-state tutor-py-20\">\n            <div class=\"card-body\">\n                <img src=".concat(emptyStateImg, " alt=\"empty state illustration\" />\n                <div class=\"text-medium-caption tutor-mb-20\">No Addons Found!</div>\n            </div>\n        </div>");
-
-  if (null !== addonsList) {
-    addonsList.innerHTML = nothingFound;
+  if (dataTdTarget) {
+    e.target.closest('td').classList.toggle('is-active');
+    document.getElementById(dataTdTarget).classList.toggle('is-active');
   }
-};
-
-var displayAddons = function displayAddons(addons) {
-  var htmlString = addons.map(function (addon) {
-    var name = addon.name,
-        url = addon.url,
-        description = addon.description;
-    return "\n            <div class=\"tutor-addons-card\">\n                <div class=\"tooltip-wrap tutor-lock-tooltip\">\n\t\t\t\t\t<span class=\"tooltip-txt tooltip-top\">Available in Pro</span>\n\t\t\t\t</div>\n                <div class=\"card-body tutor-px-30 tutor-py-35\">\n                    <div class=\"addon-logo\">\n                        <img src=\"".concat(url, "\" alt=\"").concat(name, "\" /> \n                    </div>\n                    <div class=\"addon-title tutor-mt-20\">\n                        <h5 class=\"text-medium-h5 color-text-primary tutor-mb-4\">").concat(name, "</h5>\n                    </div>\n                    <div class=\"addon-des text-regular-body color-text-subsued tutor-mt-20\">\n                        <p>").concat(description, "</p>\n                    </div>\n                </div>\n            </div>");
-  }).join('');
-
-  if (null !== addonsList) {
-    addons.length < 3 ? addonsList.classList.add('is-less-items') : addonsList.classList.remove('is-less-items');
-    addonsList.innerHTML = htmlString;
-  }
-};
-
-displayAddons(freeAddonsList);
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/segments/color-preset.js":
-/*!***************************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/color-preset.js ***!
-  \***************************************************************/
-/***/ (() => {
-
-/**
- * Color PRESET and PICKER manipulation
- */
-var colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
-var colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
-var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
-
-colorPresetInputs.forEach(function (preset) {
-  // listening preset input events
-  preset.addEventListener("input", function (e) {
-    var presetItem = preset.parentElement.querySelector(".preset-item");
-    var presetColors = presetItem.querySelectorAll(".header span");
-    presetColors.forEach(function (color) {
-      var presetKey = color.dataset.preset;
-      var presetColor = color.dataset.color;
-      pickerView.forEach(function (toPicker) {
-        var pickerInput = toPicker.dataset.key;
-
-        if (pickerInput == presetKey) {
-          toPicker.querySelector("input").value = presetColor;
-          toPicker.querySelector(".picker-value").innerHTML = presetColor;
-          toPicker.style.borderColor = presetColor;
-          toPicker.style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
-          setTimeout(function () {
-            toPicker.style.borderColor = "#cdcfd5";
-            toPicker.style.boxShadow = "none";
-          }, 5000);
-        }
-      });
-    });
-  });
-}); // Updating Custom Color PRESET
-
-var updateCustomPreset = function updateCustomPreset(picker) {
-  var customPresetEl = document.querySelector("label.color-preset-input[for='custom']"); // listening picker input events
-
-  picker.addEventListener("input", function (e) {
-    var presetColors = customPresetEl.querySelectorAll(".header span");
-    var presetItem = customPresetEl.querySelector('input[type="radio"]');
-    var pickerCode = picker.nextElementSibling;
-    colorPickerInputs.forEach(function (picker) {
-      var preset = picker.dataset.picker;
-      presetColors.forEach(function (toPreset) {
-        if (toPreset.dataset.preset == preset) {
-          toPreset.dataset.color = picker.value;
-          toPreset.style.backgroundColor = picker.value;
-        }
-      });
-      pickerCode.innerText = picker.value;
-      presetItem.checked = true;
-    });
-  });
-}; // listening color pickers input event
-
-
-colorPickerInputs.forEach(function (picker) {
-  updateCustomPreset(picker);
 });
 
 /***/ }),
 
-/***/ "./assets/react/admin-dashboard/segments/filter.js":
-/*!*********************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/filter.js ***!
-  \*********************************************************/
+/***/ "./v2-library/_src/js/tutorDefaultTab.js":
+/*!***********************************************!*\
+  !*** ./v2-library/_src/js/tutorDefaultTab.js ***!
+  \***********************************************/
 /***/ (() => {
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 /**
- * On click add filter value on the url
- * and refresh page
- *
- * Handle bulk action
- *
- * @package Filter / sorting
- * @since v2.0.0
+ * Tutor Default Tab
  */
-var _wp$i18n = wp.i18n,
-    __ = _wp$i18n.__,
-    _x = _wp$i18n._x,
-    _n = _wp$i18n._n,
-    _nx = _wp$i18n._nx;
-document.addEventListener("DOMContentLoaded", function () {
-  var filterCourse = document.getElementById("tutor-backend-filter-course");
+(function tutorDefaultTab() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-tab-target';
+    var activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active');
 
-  if (filterCourse) {
-    filterCourse.onchange = function (e) {
-      window.location = urlPrams("course-id", e.target.value);
-    };
-  }
-
-  var filterCategory = document.getElementById("tutor-backend-filter-category");
-
-  if (filterCategory) {
-    filterCategory.onchange = function (e) {
-      window.location = urlPrams("category", e.target.value);
-    };
-  }
-
-  var filterOrder = document.getElementById("tutor-backend-filter-order");
-
-  if (filterOrder) {
-    filterOrder.onchange = function (e) {
-      window.location = urlPrams("order", e.target.value);
-    };
-  }
-
-  var filterDate = document.getElementById("tutor-backend-filter-date");
-
-  if (filterDate) {
-    filterDate.onchange = function (e) {
-      window.location = urlPrams("date", e.target.value);
-    };
-  }
-
-  var filterSearch = document.getElementById("tutor-admin-search-filter-form");
-
-  if (filterSearch) {
-    filterSearch.onsubmit = function (e) {
+    if (e.target.hasAttribute(attr)) {
       e.preventDefault();
-      var search = document.getElementById("tutor-backend-filter-search").value;
-      window.location = urlPrams("search", search);
-    };
-  }
-  /**
-   * Onsubmit bulk form handle ajax request then reload page
-   */
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var tabBodyItem = document.getElementById(id);
 
-
-  var bulkForm = document.getElementById("tutor-admin-bulk-action-form");
-
-  if (bulkForm) {
-    bulkForm.onsubmit = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var formData, bulkIds, bulkFields, _iterator, _step, field, post;
-
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                e.preventDefault();
-                formData = new FormData(bulkForm);
-                bulkIds = [];
-                bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
-                _iterator = _createForOfIteratorHelper(bulkFields);
-
-                try {
-                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                    field = _step.value;
-
-                    if (field.checked) {
-                      bulkIds.push(field.value);
-                    }
-                  }
-                } catch (err) {
-                  _iterator.e(err);
-                } finally {
-                  _iterator.f();
-                }
-
-                formData.set("bulk-ids", bulkIds);
-                formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                _context.prev = 8;
-                _context.next = 11;
-                return fetch(window._tutorobject.ajaxurl, {
-                  method: "POST",
-                  body: formData
-                });
-
-              case 11:
-                post = _context.sent;
-
-                if (post.ok) {
-                  location.reload();
-                }
-
-                _context.next = 18;
-                break;
-
-              case 15:
-                _context.prev = 15;
-                _context.t0 = _context["catch"](8);
-                alert(_context.t0);
-
-              case 18:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, null, [[8, 15]]);
-      }));
-
-      return function (_x2) {
-        return _ref.apply(this, arguments);
-      };
-    }();
-  }
-  /**
-   * onclick bulk action button show confirm popup
-   * on click confirm button submit bulk form
-   */
-
-
-  var bulkActionButton = document.getElementById("tutor-confirm-bulk-action");
-
-  if (bulkActionButton) {
-    bulkActionButton.onclick = function () {
-      var input = document.createElement("input");
-      input.type = "submit";
-      bulkForm.appendChild(input);
-      input.click();
-      input.remove();
-    };
-  }
-
-  function urlPrams(type, val) {
-    var url = new URL(window.location.href);
-    var params = url.searchParams;
-    params.set(type, val);
-    params.set("paged", 1);
-    return url;
-  }
-  /**
-   * Select all bulk checkboxes
-   *
-   * @since v2.0.0
-   */
-
-
-  var selectAll = document.querySelector("#tutor-bulk-checkbox-all");
-
-  if (selectAll) {
-    selectAll.addEventListener("click", function () {
-      var checkboxes = document.querySelectorAll(".tutor-bulk-checkbox");
-      checkboxes.forEach(function (item) {
-        if (selectAll.checked) {
-          item.checked = true;
-        } else {
-          item.checked = false;
-        }
-      });
-    });
-  }
-  /**
-   * On change status
-   * update course status
-   */
-
-
-  var availableStatus = ["publish", "pending", "draft"];
-  var courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
-
-  var _iterator2 = _createForOfIteratorHelper(courseStatusUpdate),
-      _step2;
-
-  try {
-    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-      var status = _step2.value;
-
-      status.onchange = /*#__PURE__*/function () {
-        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-          var target, newStatus, prevStatus, formData, post, response, putStatus;
-          return regeneratorRuntime.wrap(function _callee2$(_context2) {
-            while (1) {
-              switch (_context2.prev = _context2.next) {
-                case 0:
-                  target = e.target;
-                  newStatus = availableStatus[target.selectedIndex];
-                  prevStatus = target.dataset.status;
-
-                  if (!(newStatus === prevStatus)) {
-                    _context2.next = 5;
-                    break;
-                  }
-
-                  return _context2.abrupt("return");
-
-                case 5:
-                  formData = new FormData();
-                  formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                  formData.set("id", target.dataset.id);
-                  formData.set("status", newStatus);
-                  formData.set("action", "tutor_change_course_status");
-                  _context2.next = 12;
-                  return ajaxHandler(formData);
-
-                case 12:
-                  post = _context2.sent;
-                  _context2.next = 15;
-                  return post.json();
-
-                case 15:
-                  response = _context2.sent;
-
-                  if (response) {
-                    target.dataset.status = newStatus;
-                    putStatus = "";
-                    newStatus === "publish" ? putStatus = "select-success" : newStatus === "pending" ? putStatus = "select-warning" : "select-default";
-
-                    if (!target.closest(".tutor-form-select-with-icon").classList.contains(putStatus)) {
-                      target.closest(".tutor-form-select-with-icon").classList.add(putStatus);
-                    }
-
-                    tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
-                  } else {
-                    tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
-                  }
-
-                case 17:
-                case "end":
-                  return _context2.stop();
-              }
-            }
-          }, _callee2);
-        }));
-
-        return function (_x4) {
-          return _ref2.apply(this, arguments);
-        };
-      }();
+      if (e.target.hasAttribute(attr) && tabBodyItem) {
+        activeItems.forEach(function (m) {
+          m.classList.remove('is-active');
+        });
+        e.target.classList.add('is-active');
+        tabBodyItem.classList.add('is-active');
+      }
     }
-    /**
-     * Delete course delete
-     */
-
-  } catch (err) {
-    _iterator2.e(err);
-  } finally {
-    _iterator2.f();
-  }
-
-  var deleteCourse = document.querySelectorAll(".tutor-admin-course-delete");
-
-  var _iterator3 = _createForOfIteratorHelper(deleteCourse),
-      _step3;
-
-  try {
-    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-      var course = _step3.value;
-
-      course.onclick = /*#__PURE__*/function () {
-        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-          var id, formData, post, response;
-          return regeneratorRuntime.wrap(function _callee3$(_context3) {
-            while (1) {
-              switch (_context3.prev = _context3.next) {
-                case 0:
-                  if (!confirm("Do you want to delete this course?")) {
-                    _context3.next = 13;
-                    break;
-                  }
-
-                  id = e.currentTarget.dataset.id;
-                  formData = new FormData();
-                  formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                  formData.set("id", id);
-                  formData.set("action", "tutor_course_delete");
-                  _context3.next = 8;
-                  return ajaxHandler(formData);
-
-                case 8:
-                  post = _context3.sent;
-                  _context3.next = 11;
-                  return post.json();
-
-                case 11:
-                  response = _context3.sent;
-
-                  if (response) {
-                    tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
-                    e.target.closest("tr").remove();
-                  } else {
-                    tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
-                  }
-
-                case 13:
-                case "end":
-                  return _context3.stop();
-              }
-            }
-          }, _callee3);
-        }));
-
-        return function (_x5) {
-          return _ref3.apply(this, arguments);
-        };
-      }();
-    }
-    /**
-     * Handle ajax request show toast message on success | failure
-     *
-     * @param {*} formData including action and all form fields
-     */
-
-  } catch (err) {
-    _iterator3.e(err);
-  } finally {
-    _iterator3.f();
-  }
-
-  function ajaxHandler(_x3) {
-    return _ajaxHandler.apply(this, arguments);
-  }
-
-  function _ajaxHandler() {
-    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(formData) {
-      var post;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              _context4.next = 3;
-              return fetch(window._tutorobject.ajaxurl, {
-                method: "POST",
-                body: formData
-              });
-
-            case 3:
-              post = _context4.sent;
-              return _context4.abrupt("return", post);
-
-            case 7:
-              _context4.prev = 7;
-              _context4.t0 = _context4["catch"](0);
-              tutor_toast(__("Operation failed", "tutor"), _context4.t0, "error");
-
-            case 10:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4, null, [[0, 7]]);
-    }));
-    return _ajaxHandler.apply(this, arguments);
-  }
-});
+  });
+})();
 
 /***/ }),
 
-/***/ "./assets/react/admin-dashboard/segments/image-preview.js":
-/*!****************************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/image-preview.js ***!
-  \****************************************************************/
+/***/ "./v2-library/_src/js/tutorModal.js":
+/*!******************************************!*\
+  !*** ./v2-library/_src/js/tutorModal.js ***!
+  \******************************************/
 /***/ (() => {
 
 (function () {
-  'use strict';
+  'use strict'; // modal
 
-  toolTipOnWindowResize();
+  tutorModal();
 })();
-/**
- * Navigation tab
- */
 
+function tutorModal() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-modal-target';
+    var closeAttr = 'data-tutor-modal-close';
+    var overlay = 'tutor-modal-overlay';
 
-var navTabLists = document.querySelectorAll('ul.tutor-option-nav');
-var navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
-var navPages = document.querySelectorAll('.tutor-option-nav-page');
-navTabLists.forEach(function (list) {
-  list.addEventListener('click', function (e) {
-    var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
-    var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
-
-    if (dataTab) {
-      // remove active from other buttons
-      navTabItems.forEach(function (item) {
-        item.classList.remove('active');
-
-        if (e.target.dataset.tab) {
-          e.target.classList.add('active');
-        } else {
-          e.target.parentElement.classList.add('active');
-        }
-      }); // hide other tab contents
-
-      navPages.forEach(function (content) {
-        content.classList.remove('active');
-      }); // add active to the current content
-
-      var currentContent = document.querySelector("#".concat(dataTab));
-      currentContent.classList.add('active'); // History push
-
-      var url = new URL(window.location);
-      var params = new URLSearchParams({
-        page: pageSlug,
-        tab_page: dataTab
-      });
-      var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());
-      window.history.pushState({}, '', pushUrl);
-    }
-  });
-});
-/**
- * Toggle disable input fields
- * Selecetor -> .tutor-option-single-item.monetization-fees
- */
-
-var moniFees = document.querySelector('.monetization-fees');
-var feesToggle = document.querySelector('.monetization-fees input[name=deduct-fees]');
-
-if (moniFees && feesToggle) {
-  window.addEventListener('load', function () {
-    return toggleDisableClass(feesToggle, moniFees);
-  });
-  feesToggle.addEventListener('change', function () {
-    return toggleDisableClass(feesToggle, moniFees);
-  });
-}
-
-var toggleDisableClass = function toggleDisableClass(input, parent) {
-  if (input.checked) {
-    parent.classList.remove('is-disable');
-    toggleDisableAttribute(moniFees, false);
-  } else {
-    parent.classList.add('is-disable');
-    toggleDisableAttribute(moniFees, true);
-  }
-};
-
-var toggleDisableAttribute = function toggleDisableAttribute(elem, state) {
-  var inputArr = elem.querySelectorAll('.tutor-option-field-row:nth-child(2) textarea, .tutor-option-field-row:nth-child(3) select, .tutor-option-field-row:nth-child(3) input');
-  inputArr.forEach(function (item) {
-    return item.disabled = state;
-  });
-};
-/**
- * Image Preview : Logo and Signature Upload
- * Selector -> .tutor-option-field-input.image-previewer
- */
-
-
-var imgPreviewers = document.querySelectorAll('.image-previewer');
-var imgPreviews = document.querySelectorAll('.image-previewer img');
-var imgPrevInputs = document.querySelectorAll('.image-previewer input[type=file]');
-var imgPrevDelBtns = document.querySelectorAll('.image-previewer .delete-btn');
-
-if (imgPrevInputs && imgPrevDelBtns) {
-  // Checking Img Src when document loads
-  document.addEventListener('DOMContentLoaded', function () {
-    imgPreviewers.forEach(function (previewer) {
-      imgPreviews.forEach(function (img) {
-        if (img.getAttribute('src')) {
-          img.closest('.image-previewer').classList.add('is-selected');
-        } else {
-          previewer.classList.remove('is-selected');
-        }
-      });
-    });
-  }); // Updating Image Preview
-
-  imgPrevInputs.forEach(function (input) {
-    input.addEventListener('change', function (e) {
-      var file = this.files[0];
-      var parentEl = input.closest('.image-previewer');
-      var targetImg = parentEl.querySelector('img');
-      var prevLoader = parentEl.querySelector('.preview-loading');
-
-      if (file) {
-        prevLoader.classList.add('is-loading');
-        getImageAsDataURL(file, targetImg);
-        parentEl.classList.add('is-selected');
-        setTimeout(function () {
-          prevLoader.classList.remove('is-loading');
-        }, 200);
-      }
-    });
-  }); // Deleting Image Preview
-
-  imgPrevDelBtns.forEach(function (delBtn) {
-    delBtn.addEventListener('click', function (e) {
-      var parentEl = this.closest('.image-previewer');
-      var targetImg = parentEl.querySelector('img');
-      targetImg.setAttribute('src', '');
-      parentEl.classList.remove('is-selected');
-    });
-  });
-} // Get Image file as Data URL
-
-
-var getImageAsDataURL = function getImageAsDataURL(file, imgSrc) {
-  var reader = new FileReader();
-
-  reader.onload = function () {
-    imgSrc.setAttribute('src', this.result);
-  };
-
-  reader.readAsDataURL(file);
-};
-/**
- * Sharing Percentage : Monitization > Option
- */
-
-
-var insInput = document.querySelector('input[type=number]#revenue-instructor');
-var adminInput = document.querySelector('input[type=number]#revenue-admin');
-var revenueInputs = document.querySelectorAll('.revenue-percentage input[type=number]');
-
-if (insInput && adminInput && revenueInputs) {
-  insInput.addEventListener('input', function (e) {
-    e.target.value <= 100 && (adminInput.value = 100 - e.target.value);
-    revenueInputValidation(e.target.value);
-  });
-  adminInput.addEventListener('input', function (e) {
-    e.target.value <= 100 && (insInput.value = 100 - e.target.value);
-    revenueInputValidation(e.target.value);
-  });
-}
-
-var revenueInputValidation = function revenueInputValidation(value) {
-  value > 100 ? revenueInputs.forEach(function (input) {
-    return input.classList.add('warning');
-  }) : revenueInputs.forEach(function (input) {
-    return input.classList.remove('warning');
-  });
-};
-/**
- * Copy to clipboard : Email > Server Cron
- */
-
-
-var codeTexarea = document.querySelector('.input-field-code textarea');
-var copyBtn = document.querySelector('.code-copy-btn');
-
-if (copyBtn && codeTexarea) {
-  copyBtn.addEventListener('click', function (e) {
-    var _this = this;
-
-    e.preventDefault();
-    this.focus();
-    codeTexarea.select();
-    document.execCommand('copy');
-    var btnEl = this.innerHTML;
-    setTimeout(function () {
-      _this.innerHTML = btnEl;
-    }, 3000);
-    this.innerHTML = "\n\t\t\t<span class=\"tutor-btn-icon las la-clipboard-list\"></span>\n\t\t\t<span>Copied to Clipboard!</span>\n\t\t";
-  });
-}
-/**
- * Popup Menu Toggle -> Import/Export > .settings-history
- */
-
-
-var popupToggle = function popupToggle() {
-  var popupToggleBtns = document.querySelectorAll('.popup-opener .popup-btn');
-  var popupMenus = document.querySelectorAll('.popup-opener .popup-menu');
-
-  if (popupToggleBtns && popupMenus) {
-    popupToggleBtns.forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        var popupClosest = e.target.closest('.popup-opener').querySelector('.popup-menu');
-        popupClosest.classList.toggle('visible');
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu !== popupClosest) {
-            popupMenu.classList.remove('visible');
-          }
-        });
-      });
-    });
-    window.addEventListener('click', function (e) {
-      if (!e.target.matches('.popup-opener .popup-btn')) {
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu.classList.contains('visible')) {
-            popupMenu.classList.remove('visible');
-          }
-        });
-      }
-    });
-  }
-};
-
-popupToggle();
-/**
- * Drag and Drop files -> Import/Export > .import-setting
- */
-
-var dropZoneInputs = document.querySelectorAll('.drag-drop-zone input[type=file]');
-dropZoneInputs.forEach(function (inputEl) {
-  var dropZone = inputEl.closest('.drag-drop-zone');
-  ['dragover', 'dragleave', 'dragend'].forEach(function (dragEvent) {
-    if (dragEvent === 'dragover') {
-      dropZone.addEventListener(dragEvent, function (e) {
-        e.preventDefault();
-        dropZone.classList.add('dragover');
-      });
-    } else {
-      dropZone.addEventListener(dragEvent, function (e) {
-        dropZone.classList.remove('dragover');
-      });
-    }
-  });
-  dropZone.addEventListener('drop', function (e) {
-    e.preventDefault();
-    var files = e.dataTransfer.files;
-    getFilesAndUpdateDOM(files, inputEl, dropZone);
-    dropZone.classList.remove('dragover');
-  });
-  inputEl.addEventListener('change', function (e) {
-    var files = e.target.files;
-    getFilesAndUpdateDOM(files, inputEl, dropZone);
-  });
-});
-
-var getFilesAndUpdateDOM = function getFilesAndUpdateDOM(files, inputEl, dropZone) {
-  if (files.length) {
-    inputEl.files = files;
-    dropZone.classList.add('file-attached');
-    dropZone.querySelector('.file-info').innerHTML = "File attached - ".concat(files[0].name);
-  } else {
-    dropZone.classList.remove('file-attached');
-    dropZone.querySelector('.file-info').innerHTML = '';
-  }
-};
-/**
- * Tooltip direction change on smaller devices -> .tooltip-right
- */
-
-
-function toolTipOnWindowResize() {
-  var mediaQuery = window.matchMedia('(max-width: 992px)');
-
-  if (mediaQuery.matches) {
-    var toolTips = document.querySelectorAll('.tooltip-right');
-    toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-right', 'tooltip-left');
-    });
-  } else {
-    var _toolTips = document.querySelectorAll('.tooltip-left');
-
-    _toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-left', 'tooltip-right');
-    });
-  }
-}
-
-window.addEventListener('resize', toolTipOnWindowResize);
-/**
- * Search Suggestion box
- */
-
-/* const searchInput = document.querySelector('.search-field input[type=search]');
-const searchPopupOpener = document.querySelector('.search-popup-opener');
-
-searchInput.addEventListener('input', (e) => {
-	if (e.target.value) {
-		searchPopupOpener.classList.add('visible');
-	} else {
-		searchPopupOpener.classList.remove('visible');
-	}
-}); */
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/segments/import-export.js":
-/*!****************************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/import-export.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib */ "./assets/react/admin-dashboard/segments/lib.js");
-/* harmony import */ var _popupToggle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./popupToggle */ "./assets/react/admin-dashboard/segments/popupToggle.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-document.addEventListener("readystatechange", function (event) {
-  if (event.target.readyState === "interactive") {
-    export_settings_all();
-  }
-
-  if (event.target.readyState === "complete") {
-    delete_history_data();
-    import_history_data();
-    export_single_settings();
-    reset_default_options();
-    apply_single_settings(); // load_saved_data();
-    // setInterval(function () {
-    //   console.log("working");
-    // }, 10000);
-  }
-});
-/**
- * Highlight items form search suggestion
- */
-
-function highlightSearchedItem(dataKey) {
-  var target = document.querySelector("#".concat(dataKey));
-  var targetEl = target && target.querySelector(".tutor-option-field-label label");
-  var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row");
-  console.log("target -> ".concat(target, " scrollTarget -> ").concat(scrollTargetEl));
-
-  if (scrollTargetEl) {
-    targetEl.classList.add("isHighlighted");
-    setTimeout(function () {
-      targetEl.classList.remove("isHighlighted");
-    }, 6000);
-    scrollTargetEl.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-      inline: "nearest"
-    });
-  } else {
-    console.warn("scrollTargetEl Not found!");
-  }
-}
-
-var load_saved_data = function load_saved_data() {
-  var formData = new FormData();
-  formData.append("action", "load_saved_data");
-  formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", _tutorobject.ajaxurl, true);
-  xhttp.send(formData);
-
-  xhttp.onreadystatechange = function () {
-    if (xhttp.readyState === 4) {
-      tutor_option_history_load(xhttp.response);
-    }
-  };
-};
-
-function tutor_option_history_load(history_data) {
-  var dataset = JSON.parse(history_data).data;
-  var output = "";
-
-  if (0 !== dataset.length) {
-    Object.entries(dataset).forEach(function (_ref) {
-      var _ref2 = _slicedToArray(_ref, 2),
-          key = _ref2[0],
-          value = _ref2[1];
-
-      var badgeStatus = value.datatype == "saved" ? " label-primary-wp" : " label-refund";
-      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
-    });
-  } else {
-    output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
-  }
-
-  var heading = "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p>Date</p></div></div>";
-  (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".history_data").innerHTML = heading + output;
-  export_single_settings();
-  (0,_popupToggle__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  apply_single_settings();
-}
-/* import and list dom */
-
-
-var export_settings_all = function export_settings_all() {
-  var export_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#export_settings"); //document.querySelector("#export_settings");
-
-  if (export_settings) {
-    export_settings.onclick = function (e) {
+    if (e.target.hasAttribute(attr) || e.target.closest("[".concat(attr, "]"))) {
       e.preventDefault();
-      fetch(_tutorobject.ajaxurl, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no-cache"
-        },
-        body: new URLSearchParams({
-          action: "tutor_export_settings"
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (response) {
-        var fileName = "tutor_options_" + time_now();
-        (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(JSON.stringify(response), fileName);
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    };
-  }
-};
-/**
- *
- * @returns time by second
- */
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var modal = document.getElementById(id);
+      console.log(modal);
 
-
-var time_now = function time_now() {
-  return Math.ceil(Date.now() / 1000) + 6 * 60 * 60;
-};
-
-var reset_default_options = function reset_default_options() {
-  var reset_options = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#reset_options");
-
-  if (reset_options) {
-    reset_options.onclick = function () {
-      var formData = new FormData();
-      formData.append("action", "tutor_option_default_save");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
-
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          setTimeout(function () {
-            (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Reset all settings to default successfully!");
-          }, 200);
-        }
-      };
-    };
-  }
-};
-
-var import_history_data = function import_history_data() {
-  var import_options = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#import_options");
-
-  if (import_options) {
-    import_options.onclick = function () {
-      var files = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#drag-drop-input").files;
-
-      if (files.length <= 0) {
-        return false;
+      if (modal) {
+        document.querySelectorAll('.tutor-modal.tutor-is-active').forEach(function (item) {
+          return item.classList.remove('tutor-is-active');
+        });
+        modal.classList.add('tutor-is-active');
       }
+    }
 
-      var fr = new FileReader();
-      fr.readAsText(files.item(0));
+    if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(overlay) || e.target.closest("[".concat(closeAttr, "]"))) {
+      e.preventDefault();
 
-      fr.onload = function (e) {
-        var tutor_options = e.target.result;
-        var formData = new FormData();
-        formData.append("action", "tutor_import_settings");
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-        formData.append("time", time_now());
-        formData.append("tutor_options", tutor_options);
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", _tutorobject.ajaxurl);
-        xhttp.send(formData);
+      var _modal = document.querySelectorAll('.tutor-modal.tutor-is-active');
 
-        xhttp.onreadystatechange = function () {
-          if (xhttp.readyState === 4) {
-            tutor_option_history_load(xhttp.responseText);
-            delete_history_data();
-            import_history_data();
-            setTimeout(function () {
-              (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Data imported successfully!");
-            }, 200);
-          }
-        };
-      };
-    };
-  }
-};
-
-var export_single_settings = function export_single_settings() {
-  var single_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".export_single_settings");
-
-  var _loop = function _loop(i) {
-    single_settings[i].onclick = function () {
-      var export_id = single_settings[i].dataset.id;
-      var formData = new FormData();
-      formData.append("action", "tutor_export_single_settings");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      formData.append("time", Date.now());
-      formData.append("export_id", export_id);
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
-
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          console.log(xhttp.response); // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
-
-          var fileName = export_id;
-          (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(xhttp.response, fileName);
-        }
-      };
-    };
-  };
-
-  for (var i = 0; i < single_settings.length; i++) {
-    _loop(i);
-  }
-};
-
-var apply_single_settings = function apply_single_settings() {
-  var apply_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".apply_settings");
-
-  var _loop2 = function _loop2(i) {
-    apply_settings[i].onclick = function () {
-      var apply_id = apply_settings[i].dataset.id;
-      var formData = new FormData();
-      formData.append("action", "tutor_apply_settings");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      formData.append("apply_id", apply_id);
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
-
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Applied settings successfully!");
-          console.log(xhttp.response);
-        }
-      };
-    };
-  };
-
-  for (var i = 0; i < apply_settings.length; i++) {
-    _loop2(i);
-  }
-};
-
-var delete_history_data = function delete_history_data() {
-  var noticeMessage = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".tutor-notification");
-  var delete_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".delete_single_settings");
-
-  var _loop3 = function _loop3(i) {
-    delete_settings[i].onclick = function () {
-      var delete_id = delete_settings[i].dataset.id;
-      var formData = new FormData();
-      formData.append("action", "tutor_delete_single_settings");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      formData.append("time", Date.now());
-      formData.append("delete_id", delete_id);
-      noticeMessage.classList.add("show");
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
-
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          tutor_option_history_load(xhttp.responseText);
-          delete_history_data();
-          setTimeout(function () {
-            (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Data deleted successfully!");
-          }, 200);
-        }
-      };
-    };
-  };
-
-  for (var i = 0; i < delete_settings.length; i++) {
-    _loop3(i);
-  }
-};
+      _modal.forEach(function (m) {
+        m.classList.remove('tutor-is-active');
+      });
+    }
+  }); // open
+  // const modalButton = document.querySelectorAll("[data-tutor-modal-target]");
+  // modalButton.forEach(b => {
+  //     const id = b.getAttribute("data-tutor-modal-target");
+  //     const modal = document.getElementById(id);
+  //     if (modal) {
+  //         b.addEventListener("click", e => {
+  //             e.preventDefault();
+  //             modal.classList.add("tutor-is-active");
+  //         })
+  //     }
+  // })
+  // close
+  // const close = document.querySelectorAll("[data-tutor-modal-close], .tutor-modal-overlay");
+  // close.forEach(c => {
+  //     c.addEventListener("click", e => {
+  //         e.preventDefault();
+  //         const modal = document.querySelectorAll(".tutor-modal.tutor-is-active");
+  //         modal.forEach(m => {
+  //             m.classList.remove("tutor-is-active");
+  //         })
+  //     })
+  // })
+}
 
 /***/ }),
 
-/***/ "./assets/react/admin-dashboard/segments/lib.js":
-/*!******************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/lib.js ***!
-  \******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "element": () => (/* binding */ element),
-/* harmony export */   "elements": () => (/* binding */ elements),
-/* harmony export */   "notice_message": () => (/* binding */ notice_message),
-/* harmony export */   "json_download": () => (/* binding */ json_download)
-/* harmony export */ });
-var element = function element(selector) {
-  return document.querySelector(selector);
-};
-
-var elements = function elements(selector) {
-  return document.querySelectorAll(selector);
-};
-
-var notice_message = function notice_message() {
-  var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-  var noticeElement = element(".tutor-notification");
-  noticeElement.classList.add("show");
-
-  if (message) {
-    noticeElement.querySelector(".tutor-notification-content p").innerText = message;
-  }
-
-  setTimeout(function () {
-    noticeElement.classList.remove("show");
-  }, 4000);
-};
-/**
- * Function to download json file
- * @param {json} response
- * @param {string} fileName
- */
-
-
-var json_download = function json_download(response, fileName) {
-  var fileToSave = new Blob([response], {
-    type: "application/json"
-  });
-  var el = document.createElement("a");
-  el.href = URL.createObjectURL(fileToSave);
-  el.download = fileName;
-  el.click();
-};
-
-
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/segments/options.js":
-/*!**********************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/options.js ***!
-  \**********************************************************/
+/***/ "./v2-library/_src/js/tutorNotificationTab.js":
+/*!****************************************************!*\
+  !*** ./v2-library/_src/js/tutorNotificationTab.js ***!
+  \****************************************************/
 /***/ (() => {
 
-"use strict";
- // SVG Icons Totor V2
-
-var tutorIconsV2 = {
-  warning: '<svg class="tutor-icon-v2 warning" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.0388 14.2395C18.2457 14.5683 18.3477 14.9488 18.3321 15.3333C18.3235 15.6951 18.2227 16.0493 18.0388 16.3647C17.851 16.6762 17.5885 16.9395 17.2733 17.1326C16.9301 17.3257 16.5383 17.4237 16.1412 17.4159H5.87591C5.47974 17.4234 5.08907 17.3253 4.74673 17.1326C4.42502 16.9409 4.15549 16.6776 3.96071 16.3647C3.77376 16.0506 3.67282 15.6956 3.66741 15.3333C3.6596 14.9496 3.76106 14.5713 3.96071 14.2395L9.11094 5.64829C9.29701 5.31063 9.58016 5.03215 9.9263 4.84641C10.2558 4.67355 10.6248 4.58301 10.9998 4.58301C11.3747 4.58301 11.7437 4.67355 12.0732 4.84641C12.4259 5.02952 12.7154 5.30825 12.9062 5.64829L18.0388 14.2395ZM11.7447 10.4086C11.7447 10.2131 11.7653 10.0176 11.7799 9.81924C11.7946 9.62089 11.8063 9.41971 11.818 9.21853C11.8178 9.1484 11.8129 9.07836 11.8034 9.00885C11.7916 8.94265 11.7719 8.87799 11.7447 8.81617C11.6644 8.64655 11.5255 8.50928 11.3517 8.42798C11.1805 8.3467 10.9848 8.32759 10.8003 8.37414C10.6088 8.42217 10.4413 8.53471 10.3281 8.69149C10.213 8.84985 10.1525 9.03921 10.1551 9.2327C10.1551 9.3602 10.1756 9.48771 10.1844 9.61239C10.1932 9.73706 10.202 9.86457 10.2137 9.99208C10.2401 10.4709 10.2695 10.947 10.2988 11.4088C10.3281 11.8707 10.3545 12.3552 10.3838 12.8256C10.3857 12.9019 10.4032 12.9771 10.4352 13.0468C10.4672 13.1166 10.5131 13.1796 10.5703 13.2322C10.6275 13.2849 10.6948 13.3261 10.7685 13.3536C10.8422 13.381 10.9208 13.3942 10.9998 13.3923C11.0794 13.3946 11.1587 13.3813 11.2328 13.353C11.307 13.3248 11.3744 13.2822 11.4309 13.228C11.5454 13.1171 11.6115 12.968 11.6157 12.8114V12.5281C11.6157 12.4317 11.6157 12.3382 11.6157 12.2447C11.6362 11.9415 11.6538 11.6327 11.6743 11.3238C11.6949 11.015 11.7271 10.7118 11.7447 10.4086ZM10.9998 15.5118C11.1049 15.5119 11.2091 15.4919 11.3062 15.453C11.4034 15.4141 11.4916 15.3571 11.5658 15.2851C11.6441 15.2191 11.7061 15.137 11.7472 15.0448C11.7883 14.9526 11.8075 14.8527 11.8034 14.7524C11.8053 14.6497 11.7863 14.5476 11.7474 14.452C11.7085 14.3564 11.6505 14.2692 11.5767 14.1953C11.5029 14.1213 11.4147 14.0621 11.3172 14.0211C11.2197 13.9801 11.1149 13.958 11.0086 13.9562C10.9023 13.9543 10.7966 13.9727 10.6977 14.0103C10.5987 14.0479 10.5084 14.1039 10.4319 14.1752C10.3553 14.2465 10.2941 14.3317 10.2516 14.4259C10.2092 14.52 10.1863 14.6214 10.1844 14.7241C10.1844 14.933 10.2703 15.1333 10.4232 15.2811C10.5761 15.4288 10.7835 15.5118 10.9998 15.5118Z" fill="#9CA0AC"/></svg>',
-  magnifyingGlass: '<svg class="tutor-icon-v2 magnifying-glass" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.3056 5.375C7.58249 5.375 5.375 7.58249 5.375 10.3056C5.375 13.0286 7.58249 15.2361 10.3056 15.2361C13.0286 15.2361 15.2361 13.0286 15.2361 10.3056C15.2361 7.58249 13.0286 5.375 10.3056 5.375ZM4.125 10.3056C4.125 6.89214 6.89214 4.125 10.3056 4.125C13.719 4.125 16.4861 6.89214 16.4861 10.3056C16.4861 13.719 13.719 16.4861 10.3056 16.4861C6.89214 16.4861 4.125 13.719 4.125 10.3056Z" fill="#9CA0AC"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.7874 13.7872C14.0314 13.5431 14.4272 13.5431 14.6712 13.7872L17.6921 16.8081C17.9362 17.0521 17.9362 17.4479 17.6921 17.6919C17.448 17.936 17.0523 17.936 16.8082 17.6919L13.7874 14.6711C13.5433 14.427 13.5433 14.0313 13.7874 13.7872Z" fill="#9CA0AC"/></svg>',
-  angleRight: '<svg class="tutor-icon-v2 angle-right" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.842 12.633C7.80402 12.6702 7.7592 12.6998 7.71 12.72C7.65839 12.7401 7.60341 12.7503 7.548 12.75C7.49655 12.7496 7.44563 12.7395 7.398 12.72C7.34843 12.7005 7.30347 12.6709 7.266 12.633L6.88201 12.252C6.84384 12.2138 6.81284 12.1691 6.79051 12.12C6.76739 12.0694 6.75367 12.015 6.75001 11.9595C6.74971 11.9045 6.75832 11.8498 6.77551 11.7975C6.79308 11.7477 6.82181 11.7025 6.85951 11.6655L9.53249 9.00001L6.86701 6.33453C6.82576 6.29904 6.79427 6.2536 6.77551 6.20253C6.75832 6.15026 6.74971 6.09555 6.75001 6.04053C6.75367 5.98502 6.76739 5.93064 6.79051 5.88003C6.81284 5.8309 6.84384 5.78619 6.88201 5.74803L7.263 5.36704C7.30047 5.32916 7.34543 5.29953 7.395 5.28004C7.44263 5.26056 7.49355 5.25038 7.545 5.25004C7.60142 5.24931 7.65745 5.2595 7.71 5.28004C7.7592 5.30025 7.80402 5.3298 7.842 5.36704L11.181 8.70752C11.2233 8.74442 11.2579 8.78926 11.283 8.83951C11.3077 8.88941 11.3206 8.94433 11.3206 9.00001C11.3206 9.05569 11.3077 9.11062 11.283 9.16051C11.2579 9.21076 11.2233 9.25561 11.181 9.29251L7.842 12.633Z" fill="#B4B7C0"/></svg>'
-}; // Tutor v2 icons
-
-var angleRight = tutorIconsV2.angleRight,
-    magnifyingGlass = tutorIconsV2.magnifyingGlass,
-    warning = tutorIconsV2.warning;
-document.addEventListener("DOMContentLoaded", function () {
-  var $ = window.jQuery;
-  var __ = wp.i18n.__;
-  var image_uploader = document.querySelectorAll(".image_upload_button"); // let image_input = document.getElementById("image_url_field");
-
-  var _loop = function _loop(i) {
-    var image_upload_wrap = image_uploader[i].closest(".image-previewer");
-    var input_file = image_upload_wrap.querySelector(".input_file");
-    var upload_preview = image_upload_wrap.querySelector(".upload_preview");
-    var email_title_logo = document.querySelector('[data-source="email-title-logo"]'); // document.querySelector(
-    //   "[data-source='email-title-logo']"
-    // );
-
-    var image_delete = image_upload_wrap.querySelector(".delete-btn");
-
-    image_uploader[i].onclick = function (e) {
-      e.preventDefault();
-      var image_frame = wp.media({
-        title: "Upload Image",
-        library: {
-          type: "image"
-        },
-        multiple: false,
-        frame: "post",
-        state: "insert"
-      });
-      image_frame.open();
-      /* image_frame.on("select", function (e) {
-      console.log("image size");
-      console.log(image.state().get("selection").first().toJSON());
-      var image_url = image_frame.state().get("selection").first().toJSON().url;
-      upload_previewer.src = image_input.value = image_url;
-      }); */
-
-      image_frame.on("insert", function (selection) {
-        var state = image_frame.state();
-        selection = selection || state.get("selection");
-        if (!selection) return; // We set multiple to false so only get one image from the uploader
-
-        var attachment = selection.first();
-        var display = state.display(attachment).toJSON(); // <-- additional properties
-
-        attachment = attachment.toJSON(); // Do something with attachment.id and/or attachment.url here
-
-        var image_url = attachment.sizes[display.size].url;
-
-        if (null !== upload_preview) {
-          upload_preview.src = input_file.value = image_url;
-        }
-
-        if (null !== email_title_logo) {
-          email_title_logo.src = input_file.value = image_url;
-        }
-      });
-    };
-
-    image_delete.onclick = function () {
-      input_file.value = "";
-      email_title_logo.src = "https://via.placeholder.com/108x26?text=Upload";
-    };
-  };
-
-  for (var i = 0; i < image_uploader.length; ++i) {
-    _loop(i);
-  }
-
-  $(window).on("click", function (e) {
-    $(".tutor-notification, .search_result").removeClass("show");
-  });
-  $(".tutor-notification-close").click(function (e) {
-    $(".tutor-notification").removeClass("show");
-  });
-  $("#save_tutor_option").click(function (e) {
-    e.preventDefault();
-    $("#tutor-option-form").submit();
-  });
-  $("#tutor-option-form").submit(function (e) {
-    e.preventDefault();
-    var button = $("#save_tutor_option");
-    var $form = $(this);
-    var data = $form.serializeObject();
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: data,
-      beforeSend: function beforeSend() {
-        button.addClass('tutor-updating-message');
-      },
-      success: function success(resp) {
-        var _ref = resp || {},
-            _ref$data = _ref.data,
-            data = _ref$data === void 0 ? {} : _ref$data,
-            success = _ref.success;
-
-        var _data$message = data.message,
-            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
-
-        if (success) {
-          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
-          return;
-        }
-
-        tutor_toast('Error!', message, 'tutor', true);
-      },
-      complete: function complete() {
-        button.removeClass('tutor-updating-message');
-      }
-    });
-  });
-
-  function titleCase(str) {
-    var splitStr = str.toLowerCase().split(" ");
-
-    for (var i = 0; i < splitStr.length; i++) {
-      // You do not need to check if i is larger than splitStr length, as your for does that for you
-      // Assign it back to the array
-      splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-    } // Directly return the joined string
-
-
-    return splitStr.join(" ");
-  }
-
-  function view_item(text, section_slug, section, block, field_key) {
-    var navTrack = block ? "".concat(angleRight, " ").concat(block) : "";
-    var output = "\n\t\t<a data-tab=\"".concat(section_slug, "\" data-key=\"field_").concat(field_key, "\">\n\t\t\t<div class=\"search_result_title\">\n\t\t\t").concat(magnifyingGlass, "\n\t\t\t<span class=\"text-regular-caption\">").concat(text, "</span>\n\t\t\t</div>\n\t\t\t<div class=\"search_navigation\">\n\t\t\t<div class=\"nav-track text-regular-small\">\n\t\t\t\t<span>").concat(section, "</span>\n\t\t\t\t<span>").concat(navTrack, "</span>\n\t\t\t</div>\n\t\t\t</div>\n\t\t</a>");
-    return output;
-  }
-
-  $("#search_settings").on("input", function (e) {
-    e.preventDefault();
-
-    if (e.target.value) {
-      var searchKey = this.value;
-      $.ajax({
-        url: window._tutorobject.ajaxurl,
-        type: "POST",
-        data: {
-          action: "tutor_option_search",
-          keyword: searchKey
-        },
-        // beforeSend: function () {},
-        success: function success(data) {
-          // console.log(data.data);
-          // return false;
-          var output = "",
-              wrapped_item = "",
-              notfound = true,
-              item_text = "",
-              section_slug = "",
-              section_label = "",
-              block_label = "",
-              matchedText = "",
-              searchKeyRegex = "",
-              field_key = "",
-              result = data.data.fields;
-          Object.values(result).forEach(function (item, index, arr) {
-            var _item_text$match;
-
-            item_text = item.label;
-            section_slug = item.section_slug;
-            section_label = item.section_label;
-            block_label = item.block_label;
-            field_key = item.key;
-            searchKeyRegex = new RegExp(searchKey, "ig"); // console.log(item_text.match(searchKeyRegex));
-
-            matchedText = (_item_text$match = item_text.match(searchKeyRegex)) === null || _item_text$match === void 0 ? void 0 : _item_text$match[0];
-
-            if (matchedText) {
-              wrapped_item = item_text.replace(searchKeyRegex, "<span style='color: #212327; font-weight:500'>".concat(matchedText, "</span>"));
-              output += view_item(wrapped_item, section_slug, section_label, block_label, field_key);
-              notfound = false;
-            }
-          });
-
-          if (notfound) {
-            output += "<div class=\"no_item\"> ".concat(warning, " No Results Found</div>");
-          }
-
-          $(".search_result").html(output).addClass("show");
-          output = ""; // console.log("working");
-        },
-        complete: function complete() {
-          // Active navigation element
-          navigationTrigger();
-        }
-      });
-    } else {
-      document.querySelector(".search-popup-opener").classList.remove("show");
-    }
-  });
-  /**
-   * Search suggestion, navigation trigger
-   */
-
-  function navigationTrigger() {
-    var suggestionLinks = document.querySelectorAll(".search-field .search-popup-opener a");
-    var navTabItems = document.querySelectorAll("li.tutor-option-nav-item a");
-    var navPages = document.querySelectorAll(".tutor-option-nav-page");
-    suggestionLinks.forEach(function (link) {
-      link.addEventListener("click", function (e) {
-        var dataTab = e.target.closest("[data-tab]").dataset.tab;
-        var dataKey = e.target.closest("[data-key]").dataset.key;
-
-        if (dataTab) {
-          // remove active from other buttons
-          navTabItems.forEach(function (item) {
-            item.classList.remove("active");
-          }); // add active to the current nav item
-
-          document.querySelector(".tutor-option-tabs [data-tab=".concat(dataTab, "]")).classList.add("active"); // hide other tab contents
-
-          navPages.forEach(function (content) {
-            content.classList.remove("active");
-          }); // add active to the current content
-
-          document.querySelector(".tutor-option-tab-pages #".concat(dataTab)).classList.add("active"); // History push
-
-          var url = new URL(window.location);
-          url.searchParams.set("tab_page", dataTab);
-          window.history.pushState({}, "", url);
-        } // Reset + Hide Suggestion box
-
-
-        document.querySelector(".search-popup-opener").classList.remove("visible");
-        document.querySelector('.search-field input[type="search"]').value = ""; // Highlight selected element
-
-        highlightSearchedItem(dataKey);
-      });
-    });
-  }
-  /**
-   * Highlight items form search suggestion
-   */
-
-
-  function highlightSearchedItem(dataKey) {
-    var target = document.querySelector("#".concat(dataKey));
-    var targetEl = target && target.querySelector(".tutor-option-field-label h5.label");
-    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row"); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
-
-    if (scrollTargetEl) {
-      targetEl.classList.add("isHighlighted");
-      setTimeout(function () {
-        targetEl.classList.remove("isHighlighted");
-      }, 6000);
-      scrollTargetEl.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "nearest"
-      });
-    } else {
-      console.warn("scrollTargetEl Not found!");
-    }
-  }
-
-  var exporter = document.querySelector("#export_settings");
-  !exporter ? 0 : exporter.addEventListener("click", function (e) {
-    e.preventDefault();
-    fetch(_tutorobject.ajaxurl, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Cache-Control": "no-cache"
-      },
-      body: new URLSearchParams({
-        action: "tutor_export_settings"
-      })
-    }).then(function (response) {
-      return response.json();
-    }).then(function (response) {
-      var file = new Blob([JSON.stringify(response)], {
-        type: "application/json"
-      });
-      var url = URL.createObjectURL(file);
-      var element = document.createElement("a");
-      element.setAttribute("href", url);
-      element.setAttribute("download", "tutor_options");
-      element.click();
-      document.body.removeChild(element);
-    })["catch"](function (err) {
-      return console.log(err);
-    });
-  });
-});
-
-/***/ }),
-
-/***/ "./assets/react/admin-dashboard/segments/popupToggle.js":
-/*!**************************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/popupToggle.js ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 /**
- * Popup Menu Toggle -> Import/Export > .settings-history
+ * Tutor Notification Tab
  */
-var popupToggle = function popupToggle() {
-  var popupToggleBtns = document.querySelectorAll(".popup-opener .popup-btn");
-  var popupMenus = document.querySelectorAll(".popup-opener .popup-menu");
+(function tutorNotificationTab() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-notification-tab-target';
+    var activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active');
 
-  if (popupToggleBtns && popupMenus) {
-    popupToggleBtns.forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        var popupClosest = e.target.closest(".popup-opener").querySelector(".popup-menu");
-        popupClosest.classList.toggle("visible");
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu !== popupClosest) {
-            popupMenu.classList.remove("visible");
-          }
+    if (e.target.hasAttribute(attr)) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var tabBodyItem = document.getElementById(id);
+
+      if (e.target.hasAttribute(attr) && tabBodyItem) {
+        activeItems.forEach(function (m) {
+          m.classList.remove('is-active');
         });
-      });
-    });
-    window.addEventListener("click", function (e) {
-      if (!e.target.matches(".popup-opener .popup-btn")) {
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu.classList.contains("visible")) {
-            popupMenu.classList.remove("visible");
-          }
-        });
+        e.target.classList.add('is-active');
+        tabBodyItem.classList.add('is-active');
       }
-    });
-  }
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (popupToggle);
+    }
+  });
+})();
 
 /***/ }),
 
-/***/ "./assets/react/admin-dashboard/segments/withdraw.js":
-/*!***********************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/withdraw.js ***!
-  \***********************************************************/
+/***/ "./v2-library/_src/js/tutorOffcanvas.js":
+/*!**********************************************!*\
+  !*** ./v2-library/_src/js/tutorOffcanvas.js ***!
+  \**********************************************/
 /***/ (() => {
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+/**
+ * Tutor Off Canvas
+ */
+(function tutorOffCanvas() {
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-offcanvas-target';
+    var closeAttr = 'data-tutor-offcanvas-close';
+    var backdrop = 'tutor-offcanvas-backdrop'; // Opening Offcanvas
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+    if (e.target.hasAttribute(attr)) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var offcanvas = document.getElementById(id);
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-document.addEventListener("DOMContentLoaded", function () {
-  var _wp$i18n = wp.i18n,
-      __ = _wp$i18n.__,
-      _x = _wp$i18n._x,
-      _n = _wp$i18n._n,
-      _nx = _wp$i18n._nx; // Approve and Reject button
-
-  var approveButton = document.querySelectorAll('.tutor-admin-open-withdraw-approve-modal');
-  var rejectButton = document.querySelectorAll('.tutor-admin-open-withdraw-reject-modal');
-  var withdrawId; // Onclick button dynamically create content
-
-  if (approveButton) {
-    var _iterator = _createForOfIteratorHelper(approveButton),
-        _step;
-
-    try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var button = _step.value;
-
-        button.onclick = function (e) {
-          withdrawId = e.currentTarget.dataset.id;
-          var amount = e.currentTarget.dataset.amount;
-          var accountName = e.currentTarget.dataset.name;
-          var content = document.getElementById('tutor-admin-withdraw-approve-content');
-          content.innerHTML = "".concat(__('You are approving ' + "<strong>".concat(accountName, "</strong>") + ' withdrawal request for ' + "<strong>".concat(amount, "</strong>") + '. Are you sure you want to approve?', 'tutor'));
-        };
+      if (offcanvas) {
+        offcanvas.classList.add('is-active');
       }
-    } catch (err) {
-      _iterator.e(err);
-    } finally {
-      _iterator.f();
+    } // Closing Offcanvas
+
+
+    if (e.target.hasAttribute(closeAttr) || e.target.classList.contains(backdrop) || e.target.closest("[".concat(closeAttr, "]"))) {
+      e.preventDefault();
+      var activeOffcanvas = document.querySelectorAll('.tutor-offcanvas.is-active');
+      activeOffcanvas.forEach(function (m) {
+        m.classList.remove('is-active');
+      });
     }
-  } // Onclick button dynamically create content
+  }); // Closing Offcanvas on esc key
 
-
-  if (rejectButton) {
-    var _iterator2 = _createForOfIteratorHelper(rejectButton),
-        _step2;
-
-    try {
-      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-        var _button = _step2.value;
-
-        _button.onclick = function (e) {
-          withdrawId = e.currentTarget.dataset.id;
-          var amount = e.currentTarget.dataset.amount;
-          var accountName = e.currentTarget.dataset.name;
-          var content = document.getElementById('tutor-admin-withdraw-reject-content');
-          content.innerHTML = "".concat(__('You are rejecting ' + "<strong>".concat(accountName, "</strong>") + ' withdrawal request for ' + "<strong>".concat(amount, "</strong>") + '. Are you sure you want to reject?', 'tutor'));
-        };
-      }
-    } catch (err) {
-      _iterator2.e(err);
-    } finally {
-      _iterator2.f();
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      var activeOffcanvas = document.querySelectorAll('.tutor-offcanvas.is-active');
+      activeOffcanvas.forEach(function (m) {
+        m.classList.remove('is-active');
+      });
     }
-  } // Approve & Reject form
+  });
+})();
 
+/***/ }),
 
-  var approveForm = document.getElementById('tutor-admin-withdraw-approve-form');
-  var rejectForm = document.getElementById('tutor-admin-withdraw-reject-form'); // Handle form submit
+/***/ "./v2-library/_src/js/tutorPasswordStrengthChecker.js":
+/*!************************************************************!*\
+  !*** ./v2-library/_src/js/tutorPasswordStrengthChecker.js ***!
+  \************************************************************/
+/***/ (() => {
 
-  if (approveForm) {
-    approveForm.onsubmit = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var formData, post, success;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                e.preventDefault();
-                formData = new FormData(approveForm);
-                formData.set('withdraw-id', withdrawId);
-                _context.next = 5;
-                return ajaxHandler(formData, e.currentTarget);
+/**
+ * Tutor Password Strength Checker
+ */
+(function tutorPasswordStrengthChecker() {
+  var passwordCheckerInput = document.querySelector('.tutor-password-field input.password-checker');
+  var indicator = document.querySelector('.tutor-passowrd-strength-hint .indicator');
+  var weak = document.querySelector('.tutor-passowrd-strength-hint .weak');
+  var medium = document.querySelector('.tutor-passowrd-strength-hint .medium');
+  var strong = document.querySelector('.tutor-passowrd-strength-hint .strong');
+  var text = document.querySelector('.tutor-passowrd-strength-hint .text');
+  var showBtn = document.querySelector('.tutor-password-field .show-hide-btn');
+  var regExpWeak = /[a-z]/;
+  var regExpMedium = /\d+/;
+  var regExpStrong = /.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/;
 
-              case 5:
-                post = _context.sent;
+  if (passwordCheckerInput) {
+    passwordCheckerInput.addEventListener('input', function (e) {
+      var input = e.target;
 
-                if (post.ok) {
-                  success = post.json();
+      if (input.value != '') {
+        indicator.style.display = 'flex';
+        if (input.value.length <= 3 && (input.value.match(regExpWeak) || input.value.match(regExpMedium) || input.value.match(regExpStrong))) no = 1;
+        if (input.value.length >= 6 && (input.value.match(regExpWeak) && input.value.match(regExpMedium) || input.value.match(regExpMedium) && input.value.match(regExpStrong) || input.value.match(regExpWeak) && input.value.match(regExpStrong))) no = 2;
+        if (input.value.length >= 6 && input.value.match(regExpWeak) && input.value.match(regExpMedium) && input.value.match(regExpStrong)) no = 3;
 
-                  if (success) {
-                    location.reload();
-                  } else {
-                    tutor_toast(__('Failed', 'tutor'), __('Something went wrong, please try again!', 'tutor'), "error");
-                  }
-                }
+        if (no == 1) {
+          weak.classList.add('active');
+          text.style.display = 'block';
+          text.textContent = 'week';
+          text.classList.add('weak');
+        }
 
-              case 7:
-              case "end":
-                return _context.stop();
-            }
+        if (no == 2) {
+          medium.classList.add('active');
+          text.textContent = 'medium';
+          text.classList.add('medium');
+        } else {
+          medium.classList.remove('active');
+          text.classList.remove('medium');
+        }
+
+        if (no == 3) {
+          weak.classList.add('active');
+          medium.classList.add('active');
+          strong.classList.add('active');
+          text.textContent = 'strong';
+          text.classList.add('strong');
+        } else {
+          strong.classList.remove('active');
+          text.classList.remove('strong');
+        }
+
+        showBtn.style.display = 'block';
+
+        showBtn.onclick = function () {
+          if (input.type == 'password') {
+            input.type = 'text';
+            showBtn.style.color = '#23ad5c';
+            showBtn.classList.add('hide-btn');
+          } else {
+            input.type = 'password';
+            showBtn.style.color = '#000';
+            showBtn.classList.remove('hide-btn');
           }
-        }, _callee);
-      }));
-
-      return function (_x2) {
-        return _ref.apply(this, arguments);
-      };
-    }();
-  }
-
-  if (rejectForm) {
-    rejectForm.onsubmit = /*#__PURE__*/function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-        var formData, post, success;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                e.preventDefault();
-                formData = new FormData(rejectForm);
-                formData.set('withdraw-id', withdrawId);
-                _context2.next = 5;
-                return ajaxHandler(formData, e.currentTarget);
-
-              case 5:
-                post = _context2.sent;
-
-                if (post.ok) {
-                  success = post.json();
-
-                  if (success) {
-                    location.reload();
-                  } else {
-                    tutor_toast(__('Failed', 'tutor'), __('Something went wrong, please try again!', 'tutor'), "error");
-                  }
-                }
-
-              case 7:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }));
-
-      return function (_x3) {
-        return _ref2.apply(this, arguments);
-      };
-    }();
-  } // Onchange reject reason if other is value then create input field for adding reason
-
-
-  var rejectType = document.getElementById('tutor-admin-withdraw-reject-type');
-
-  if (rejectType) {
-    rejectType.onchange = function (e) {
-      var type = e.target.value;
-
-      if (type === 'Other') {
-        document.getElementById('tutor-withdraw-reject-other').innerHTML = "<div class=\"tutor-input-group tutor-form-control-lg tutor-mb-15\">\n                <input type=\"text\" name=\"reject-comment\" class=\"tutor-form-control\" placeholder=\"".concat(__('Withdraw Reject Reason', 'tutor'), "\" required/>\n              </div>");
+        };
+      } else {
+        indicator.style.display = 'none';
+        text.style.display = 'none';
+        showBtn.style.display = 'none';
       }
-    };
+    });
   }
+})();
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/tutorPopupMenu.js":
+/*!**********************************************!*\
+  !*** ./v2-library/_src/js/tutorPopupMenu.js ***!
+  \**********************************************/
+/***/ (() => {
+
+(function tutorPopupMenu() {
   /**
-   * Handle ajax request show toast message on success | failure
-   *
-   * @param {*} formData including action and all form fields
+   * Popup Menu Toggle .tutor-popup-opener
    */
 
-
-  function ajaxHandler(_x4, _x5) {
-    return _ajaxHandler.apply(this, arguments);
-  }
   /*
-  * function to copy 
-  * @textToCopy string
-  * return a promise
-  */
+  const popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
+  const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
+  	 if (popupToggleBtns && popupMenus) {
+  	popupToggleBtns.forEach((btn) => {
+  		btn.addEventListener('click', (e) => {
+  			const popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
+  			popupClosest.classList.toggle('visible');
+  				popupMenus.forEach((popupMenu) => {
+  				if (popupMenu !== popupClosest) {
+  					popupMenu.classList.remove('visible');
+  				}
+  			});
+  		});
+  	});
+  		document.addEventListener('click', (e) => {
+  		if (!e.target.matches('.tutor-popup-opener .popup-btn')) {
+  			popupMenus.forEach((popupMenu) => {
+  				if (popupMenu.classList.contains('visible')) {
+  					popupMenu.classList.remove('visible');
+  				}
+  			});
+  		}
+  	});
+  } */
+  document.addEventListener('click', function (e) {
+    var attr = 'data-tutor-popup-target';
 
+    if (e.target.hasAttribute(attr)) {
+      e.preventDefault();
+      var id = e.target.hasAttribute(attr) ? e.target.getAttribute(attr) : e.target.closest("[".concat(attr, "]")).getAttribute(attr);
+      var popupMenu = document.getElementById(id);
 
-  function _ajaxHandler() {
-    _ajaxHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(formData, target) {
-      var loadingButton, prevHtml, post;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-              _context3.prev = 1;
-              // select loading button
-              loadingButton = target.querySelector(".tutor-btn-loading"); // keep previous text
-
-              prevHtml = loadingButton.innerHTML; // add loading ball
-
-              loadingButton.innerHTML = "<div class=\"ball\"></div>\n            <div class=\"ball\"></div>\n            <div class=\"ball\"></div>\n            <div class=\"ball\"></div>";
-              _context3.next = 7;
-              return fetch(window._tutorobject.ajaxurl, {
-                method: "POST",
-                body: formData
-              });
-
-            case 7:
-              post = _context3.sent;
-              // after network request get previous html
-              loadingButton.innerHTML = prevHtml;
-              return _context3.abrupt("return", post);
-
-            case 12:
-              _context3.prev = 12;
-              _context3.t0 = _context3["catch"](1);
-              tutor_toast(__("Operation failed", "tutor"), _context3.t0, "error");
-
-            case 15:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[1, 12]]);
-    }));
-    return _ajaxHandler.apply(this, arguments);
-  }
-
-  function copyToClipboard(textToCopy) {
-    // navigator clipboard api needs a secure context (https)
-    if (navigator.clipboard && window.isSecureContext) {
-      // navigator clipboard api method'
-      return navigator.clipboard.writeText(textToCopy);
+      if (popupMenu.classList.contains('visible')) {
+        popupMenu.classList.remove('visible');
+      } else {
+        document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach(function (popupMenu) {
+          popupMenu.classList.remove('visible');
+        });
+        popupMenu.classList.add('visible');
+      }
     } else {
-      // text area method
-      var textArea = document.createElement("textarea");
-      textArea.value = textToCopy; // make the textarea out of viewport
-
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      textArea.style.top = "-999999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      return new Promise(function (res, rej) {
-        // here the magic happens
-        document.execCommand('copy') ? res() : rej();
-        textArea.remove();
+      document.querySelectorAll('.tutor-popup-opener .popup-menu').forEach(function (popupMenu) {
+        popupMenu.classList.remove('visible');
       });
     }
-  }
+  });
+})();
 
-  var withDrawCopyBtns = document.querySelectorAll('.withdraw-tutor-copy-to-clipboard');
+/***/ }),
 
-  if (withDrawCopyBtns) {
-    var _iterator3 = _createForOfIteratorHelper(withDrawCopyBtns),
-        _step3;
+/***/ "./v2-library/_src/js/tutorThumbnailPreview.js":
+/*!*****************************************************!*\
+  !*** ./v2-library/_src/js/tutorThumbnailPreview.js ***!
+  \*****************************************************/
+/***/ (() => {
 
-    try {
-      var _loop = function _loop() {
-        var withDrawCopyBtn = _step3.value;
-        withDrawCopyBtn.addEventListener('click', function (event) {
-          // console.log(withDrawCopyBtn.previousSibling);
-          console.log(event.currentTarget.dataset.textCopy);
-          copyToClipboard(event.currentTarget.dataset.textCopy).then(function (text) {
-            var html = withDrawCopyBtn.innerHTML;
-            withDrawCopyBtn.innerHTML = "".concat(__('Copied', 'tutor'));
-            setTimeout(function () {
-              withDrawCopyBtn.innerHTML = html;
-            }, 5000);
-          });
+(function thumbnailUploadPreview() {
+  // It is managed by mediachooser.js
+  return;
+  /**
+   * Image Preview : Logo and Signature Upload
+   * Selector -> .tutor-option-field-input.image-previewer
+   */
+
+  var imgPreviewers = document.querySelectorAll('.tutor-thumbnail-uploader');
+  var imgPreviews = document.querySelectorAll('.tutor-thumbnail-uploader img');
+  var imgPrevInputs = document.querySelectorAll('.tutor-thumbnail-uploader input[type=file]');
+  var imgPrevDelBtns = document.querySelectorAll('.tutor-thumbnail-uploader .delete-btn');
+
+  if (imgPrevInputs && imgPrevDelBtns) {
+    // Checking Img Src when document loads
+    document.addEventListener('DOMContentLoaded', function () {
+      imgPreviewers.forEach(function (previewer) {
+        imgPreviews.forEach(function (img) {
+          if (img.getAttribute('src')) {
+            img.closest('.image-previewer').classList.add('is-selected');
+          } else {
+            previewer.classList.remove('is-selected');
+          }
+
+          console.log(img);
         });
-      };
+      });
+    }); // Updating Image Preview
 
-      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-        _loop();
-      }
-    } catch (err) {
-      _iterator3.e(err);
-    } finally {
-      _iterator3.f();
-    }
-  }
-});
+    imgPrevInputs.forEach(function (input) {
+      input.addEventListener('change', function (e) {
+        var file = this.files[0];
+        var parentEl = input.closest('.image-previewer');
+        var targetImg = parentEl.querySelector('img');
+        var prevLoader = parentEl.querySelector('.preview-loading');
+
+        if (file) {
+          prevLoader.classList.add('is-loading');
+          getImageAsDataURL(file, targetImg);
+          parentEl.classList.add('is-selected');
+          setTimeout(function () {
+            prevLoader.classList.remove('is-loading');
+          }, 200);
+        }
+      });
+    }); // Deleting Image Preview
+
+    imgPrevDelBtns.forEach(function (delBtn) {
+      delBtn.addEventListener('click', function (e) {
+        var parentEl = this.closest('.image-previewer');
+        var targetImg = parentEl.querySelector('img');
+        targetImg.setAttribute('src', '');
+        parentEl.classList.remove('is-selected');
+      });
+    });
+  } // Get Image file as Data URL
+
+
+  var getImageAsDataURL = function getImageAsDataURL(file, imgSrc) {
+    var reader = new FileReader();
+
+    reader.onload = function () {
+      imgSrc.setAttribute('src', this.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+})();
 
 /***/ }),
 
@@ -31057,459 +30153,16 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-/*!*****************************************************!*\
-  !*** ./assets/react/admin-dashboard/tutor-admin.js ***!
-  \*****************************************************/
+/*!***********************************!*\
+  !*** ./assets/react/v2/common.js ***!
+  \***********************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./segments/image-preview */ "./assets/react/admin-dashboard/segments/image-preview.js");
-/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_segments_image_preview__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
-/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
-/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
-/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
-/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_7__);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+/* harmony import */ var _tutor_date_picker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutor-date-picker */ "./assets/react/v2/tutor-date-picker.js");
+/* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
 
 
-
-
-
-
-
-
-
-jQuery(document).ready(function ($) {
-  "use strict";
-
-  var _wp$i18n = wp.i18n,
-      __ = _wp$i18n.__,
-      _x = _wp$i18n._x,
-      _n = _wp$i18n._n,
-      _nx = _wp$i18n._nx;
-
-  var search_student_placeholder = __("Search students", "tutor");
-  /**
-   * Color Picker
-   * @since v.1.2.21
-   */
-
-
-  if (jQuery().wpColorPicker) {
-    $(".tutor_colorpicker").wpColorPicker();
-  }
-
-  if (jQuery().select2) {
-    $(".tutor_select2").select2();
-  }
-  /**
-   * Option Settings Nav Tab
-   */
-
-
-  $(".tutor-option-nav-tabs li a").click(function (e) {
-    e.preventDefault();
-    var tab_page_id = $(this).attr("data-tab");
-    $(".option-nav-item").removeClass("current");
-    $(this).closest("li").addClass("current");
-    $(".tutor-option-nav-page").hide();
-    $(tab_page_id).addClass("current-page").show();
-    window.history.pushState("obj", "", $(this).attr("href"));
-  });
-  $(".tutor-form-toggle-input").on("change", function (e) {
-    var toggleInput = $(this).siblings("input");
-    $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
-  });
-  /**
-   * End Withdraw nav tabs
-   */
-
-  /**
-   * Open Sidebar Menu
-   */
-
-  if (_tutorobject.open_tutor_admin_menu) {
-    var $adminMenu = $("#adminmenu");
-    $adminMenu.find('[href="admin.php?page=tutor"]').closest("li.wp-has-submenu").addClass("wp-has-current-submenu");
-    $adminMenu.find('[href="admin.php?page=tutor"]').closest("li.wp-has-submenu").find("a.wp-has-submenu").removeClass("wp-has-current-submenu").addClass("wp-has-current-submenu");
-  }
-
-  $(document).on("click", ".tutor-option-media-upload-btn", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var frame;
-
-    if (frame) {
-      frame.open();
-      return;
-    }
-
-    frame = wp.media({
-      title: __("Select or Upload Media Of Your Choice", "tutor"),
-      button: {
-        text: __("Upload media", "tutor")
-      },
-      multiple: false
-    });
-    frame.on("select", function () {
-      var attachment = frame.state().get("selection").first().toJSON();
-      $that.closest(".option-media-wrap").find(".option-media-preview").html('<img src="' + attachment.url + '" alt="" />');
-      $that.closest(".option-media-wrap").find("input").val(attachment.id);
-      $that.closest(".option-media-wrap").find(".tutor-media-option-trash-btn").show();
-    });
-    frame.open();
-  });
-  /**
-   * Remove option media
-   * @since v.1.4.3
-   */
-
-  $(document).on("click", ".tutor-media-option-trash-btn", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    $that.closest(".option-media-wrap").find("img").remove();
-    $that.closest(".option-media-wrap").find("input").val("");
-    $that.closest(".option-media-wrap").find(".tutor-media-option-trash-btn").hide();
-  }); // $(document).on("change", ".tutor-form-toggle-input", function(e) {
-  //   var $that = $(this);
-  //   var isEnable = $that.prop("checked") ? 1 : 0;
-  //   var addonFieldName = $that.attr("name");
-  //   $.ajax({
-  //     url: window._tutorobject.ajaxurl,
-  //     type: "POST",
-  //     data: {
-  //       isEnable: isEnable,
-  //       addonFieldName: addonFieldName,
-  //       action: "addon_enable_disable",
-  //     },
-  //     success: function(data) {
-  //       if (data.success) {
-  //         //Success
-  //       }
-  //     },
-  //   });
-  // });
-
-  /**
-   * Add instructor
-   * @since v.1.0.3
-   */
-
-  $(document).on("submit", "#new-instructor-form", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var formData = $that.serializeObject();
-    formData.action = "tutor_add_instructor";
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: formData,
-      success: function success(data) {
-        if (data.success) {
-          $that.trigger("reset");
-          $("#form-response").html('<p class="tutor-status-approved-context">' + data.data.msg + "</p>");
-        } else {
-          var errorMsg = "";
-          var errors = data.data.errors;
-
-          if (errors && Object.keys(errors).length) {
-            $.each(data.data.errors, function (index, value) {
-              if (value && _typeof(value) === "object" && value.constructor === Object) {
-                $.each(value, function (key, value1) {
-                  errorMsg += '<p class="tutor-required-fields">' + value1[0] + "</p>";
-                });
-              } else {
-                errorMsg += '<p class="tutor-required-fields">' + value + "</p>";
-              }
-            });
-            $("#form-response").html(errorMsg);
-          }
-        }
-      }
-    });
-  });
-  /**
-   * Instructor block unblock action
-   * @since v.1.5.3
-   */
-
-  $(document).on("click", "a.instructor-action", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var action = $that.attr("data-action");
-    var instructor_id = $that.attr("data-instructor-id");
-    var prompt_message = $that.attr("data-prompt-message");
-
-    if (prompt_message && !confirm(prompt_message)) {
-      // Avoid Accidental CLick
-      return;
-    }
-
-    var nonce_key = _tutorobject.nonce_key;
-    var json_data = {
-      instructor_id: instructor_id,
-      action_name: action,
-      action: "instructor_approval_action"
-    };
-    json_data[nonce_key] = _tutorobject[nonce_key];
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: json_data,
-      beforeSend: function beforeSend() {
-        $that.addClass("tutor-updating-message");
-      },
-      success: function success(data) {
-        location.reload(true);
-      },
-      complete: function complete() {
-        $that.removeClass("tutor-updating-message");
-      }
-    });
-  });
-  /**
-   * Add Assignment
-   */
-
-  $(document).on("click", ".add-assignment-attachments", function (event) {
-    event.preventDefault();
-    var $that = $(this);
-    var frame; // If the media frame already exists, reopen it.
-
-    if (frame) {
-      frame.open();
-      return;
-    } // Create a new media frame
-
-
-    frame = wp.media({
-      title: __("Select or Upload Media Of Your Choice", "tutor"),
-      button: {
-        text: __("Upload media", "tutor")
-      },
-      multiple: false // Set to true to allow multiple files to be selected
-
-    }); // When an image is selected in the media frame...
-
-    frame.on("select", function () {
-      // Get media attachment details from the frame state
-      var attachment = frame.state().get("selection").first().toJSON();
-      var field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">' + attachment.filename + '</p><input type="hidden" name="tutor_assignment_attachments[]" value="' + attachment.id + '"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
-      $("#assignment-attached-file").append(field_markup);
-      $that.closest(".video_source_wrap_html5").find("input").val(attachment.id);
-    }); // Finally, open the modal on click
-
-    frame.open();
-  });
-  $(document).on("click", ".remove-assignment-attachment-a", function (event) {
-    event.preventDefault();
-    $(this).closest(".tutor-individual-attachment-file").remove();
-  });
-  /**
-   * Used for backend profile photo upload.
-   */
-  //tutor_video_poster_upload_btn
-
-  $(document).on("click", ".tutor_video_poster_upload_btn", function (event) {
-    event.preventDefault();
-    var $that = $(this);
-    var frame; // If the media frame already exists, reopen it.
-
-    if (frame) {
-      frame.open();
-      return;
-    } // Create a new media frame
-
-
-    frame = wp.media({
-      title: __("Select or Upload Media Of Your Choice", "tutor"),
-      button: {
-        text: __("Upload media", "tutor")
-      },
-      multiple: false // Set to true to allow multiple files to be selected
-
-    }); // When an image is selected in the media frame...
-
-    frame.on("select", function () {
-      // Get media attachment details from the frame state
-      var attachment = frame.state().get("selection").first().toJSON();
-      $that.closest(".tutor-video-poster-wrap").find(".video-poster-img").html('<img src="' + attachment.sizes.thumbnail.url + '" alt="" />');
-      $that.closest(".tutor-video-poster-wrap").find("input").val(attachment.id);
-    }); // Finally, open the modal on click
-
-    frame.open();
-  });
-  /**
-   * Tutor Memberships toggle in Paid Membership Pro panel
-   * @since v.1.3.6
-   */
-
-  $(document).on("change", "#tutor_pmpro_membership_model_select", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-
-    if ($that.val() === "category_wise_membership") {
-      $(".membership_course_categories").show();
-    } else {
-      $(".membership_course_categories").hide();
-    }
-  });
-  $(document).on("change", "#tutor_pmpro_membership_model_select", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-
-    if ($that.val() === "category_wise_membership") {
-      $(".membership_course_categories").show();
-    } else {
-      $(".membership_course_categories").hide();
-    }
-  }); // Require category selection
-
-  $(document).on("submit", ".pmpro_admin form", function (e) {
-    var form = $(this);
-
-    if (!form.find('input[name="tutor_action"]').length) {
-      // Level editor or tutor action not necessary
-      return;
-    }
-
-    if (form.find('[name="tutor_pmpro_membership_model"]').val() == "category_wise_membership" && !form.find(".membership_course_categories input:checked").length) {
-      if (!confirm(__("Do you want to save without any category?", "tutor"))) {
-        e.preventDefault();
-      }
-    }
-  });
-  /**
-   * Find user/student from select2
-   * @since v.1.4.0
-   */
-
-  $("#select2_search_user_ajax").select2({
-    allowClear: true,
-    minimumInputLength: 1,
-    placeholder: search_student_placeholder,
-    language: {
-      inputTooShort: function inputTooShort() {
-        return __("Please add 1 or more character", "tutor");
-      }
-    },
-    escapeMarkup: function escapeMarkup(m) {
-      return m;
-    },
-    ajax: {
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      dataType: "json",
-      delay: 1000,
-      data: function data(params) {
-        return {
-          term: params.term,
-          action: "tutor_json_search_students"
-        };
-      },
-      processResults: function processResults(data) {
-        var terms = [];
-
-        if (data) {
-          $.each(data, function (id, text) {
-            terms.push({
-              id: id,
-              text: text
-            });
-          });
-        }
-
-        return {
-          results: terms
-        };
-      },
-      cache: true
-    }
-  });
-  /**
-   * Confirm Alert for deleting enrollments data
-   *
-   * @since v.1.4.0
-   */
-
-  $(document).on("click", "table.enrolments .delete a", function (e) {
-    e.preventDefault();
-    var url = $(this).attr("href");
-    var popup;
-    var data = {
-      title: __("Delete this enrolment", "tutor"),
-      description: __("All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student's enrollment.", "tutor"),
-      buttons: {
-        reset: {
-          title: __("Cancel", "tutor"),
-          "class": "tutor-btn tutor-is-outline tutor-is-default",
-          callback: function callback() {
-            popup.remove();
-          }
-        },
-        keep: {
-          title: __("Yes, Delete This", "tutor"),
-          "class": "tutor-btn",
-          callback: function callback() {
-            window.location.replace(url);
-          }
-        }
-      }
-    };
-    popup = new window.tutor_popup($, "icon-trash", 40).popup(data);
-  });
-  /**
-   * Show hide is course public checkbox (backend dashboard editor)
-   *
-   * @since  v.1.7.2
-   */
-
-  var price_type = $('#tutor-attach-product [name="tutor_course_price_type"]');
-
-  if (price_type.length == 0) {
-    $("#_tutor_is_course_public_meta_checkbox").show();
-  } else {
-    price_type.change(function () {
-      if ($(this).prop("checked")) {
-        var method = $(this).val() == "paid" ? "hide" : "show";
-        $("#_tutor_is_course_public_meta_checkbox")[method]();
-      }
-    }).trigger("change");
-  }
-  /**
-   * Focus selected instructor layout in setting page
-   *
-   * @since  v.1.7.5
-   */
-
-
-  $(document).on("click", ".instructor-layout-template", function () {
-    $(".instructor-layout-template").removeClass("selected-template");
-    $(this).addClass("selected-template");
-  });
-  /**
-   * Programmatically open preview link. For some reason it's not working normally.
-   *
-   * @since  v.1.7.9
-   */
-
-  $("#preview-action a.preview").click(function (e) {
-    var href = $(this).attr("href");
-
-    if (href) {
-      e.preventDefault();
-      window.open(href, "_blank");
-    }
-  });
-});
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=tutor-admin.js.map
+//# sourceMappingURL=tutor-v2.js.map
