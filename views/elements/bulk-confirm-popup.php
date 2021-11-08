@@ -23,9 +23,9 @@
 			data-tutor-modal-close
 			class="tutor-btn tutor-is-outline tutor-is-default"
 		  >
-			Cancel
+			<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 		  </button>
-		  <button class="tutor-btn" type="button" id="tutor-confirm-bulk-action">
+		  <button class="tutor-btn tutor-btn-wordpress tutor-no-hover tutor-btn-loading tutor-btn-lg" type="button" id="tutor-confirm-bulk-action">
 			  <?php esc_html_e( "Yes, I'am Sure", 'tutor' ); ?>
 		  </button>
 		</div>
