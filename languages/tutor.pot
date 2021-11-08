@@ -353,7 +353,7 @@ msgstr ""
 msgid "Lessons"
 msgstr ""
 
-#: classes/Course.php:435, templates/course-filter/filters.php:86, templates/dashboard/purchase_history.php:97, views/pages/course-list.php:188
+#: classes/Course.php:435, templates/course-filter/filters.php:86, templates/dashboard/purchase_history.php:97, views/pages/course-list.php:188, views/pages/course-list.php:284
 msgid "Price"
 msgstr ""
 
@@ -653,7 +653,7 @@ msgstr ""
 msgid "Instructor Commission"
 msgstr ""
 
-#: classes/Instructors_List.php:331, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:92, templates/dashboard/reviews.php:56, templates/dashboard/reviews.php:83, views/elements/filters.php:101, views/fragments/announcement-list.php:213, views/fragments/announcement-list.php:205, views/fragments/announcement-list.php:254, views/pages/course-list.php:160, views/quiz/contexts.php:36, templates/dashboard/assignments/submitted.php:69
+#: classes/Instructors_List.php:331, classes/Tutor_List_Table.php:409, classes/Tutor_List_Table.php:1287, templates/dashboard/announcements.php:116, templates/dashboard/purchase_history.php:92, templates/dashboard/reviews.php:56, templates/dashboard/reviews.php:83, views/elements/filters.php:101, views/fragments/announcement-list.php:213, views/fragments/announcement-list.php:205, views/fragments/announcement-list.php:254, views/pages/course-list.php:160, views/pages/course-list.php:214, views/quiz/contexts.php:36, templates/dashboard/assignments/submitted.php:69
 msgid "Date"
 msgstr ""
 
@@ -2140,7 +2140,7 @@ msgstr ""
 msgid "Question"
 msgstr ""
 
-#: classes/Question_Answers_List.php:74, templates/student-public-profile.php:111, templates/dashboard/question-answer.php:27, templates/dashboard/quiz-attempts.php:52, templates/dashboard/reviews.php:51, templates/dashboard/reviews.php:75, views/elements/search-filter.php:31, templates/dashboard/assignments/review.php:54, templates/dashboard/assignments/submitted.php:75, views/quiz/header-context/frontend-dashboard-students-attempts.php:9
+#: classes/Question_Answers_List.php:74, templates/student-public-profile.php:111, templates/dashboard/question-answer.php:27, templates/dashboard/quiz-attempts.php:52, templates/dashboard/reviews.php:51, templates/dashboard/reviews.php:75, views/elements/search-filter.php:31, views/pages/course-list.php:279, templates/dashboard/assignments/review.php:54, templates/dashboard/assignments/submitted.php:75, views/quiz/header-context/frontend-dashboard-students-attempts.php:9
 msgid "Student"
 msgstr ""
 
@@ -2456,7 +2456,7 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:48, views/elements/filters.php:60, views/fragments/announcement-list.php:43, views/pages/course-list.php:351
+#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:102, templates/dashboard/assignments.php:48, views/elements/filters.php:60, views/fragments/announcement-list.php:43
 msgid "No course found"
 msgstr ""
 
@@ -3523,7 +3523,7 @@ msgstr ""
 msgid "View All"
 msgstr ""
 
-#: templates/dashboard/dashboard.php:192, templates/dashboard/dashboard.php:219, templates/dashboard/purchase_history.php:87
+#: templates/dashboard/dashboard.php:192, templates/dashboard/dashboard.php:219, templates/dashboard/purchase_history.php:87, views/pages/course-list.php:220
 msgid "Course Name"
 msgstr ""
 
@@ -4019,7 +4019,7 @@ msgstr ""
 msgid "No Announcment"
 msgstr ""
 
-#: views/fragments/announcement-list.php:265
+#: views/fragments/announcement-list.php:265, views/pages/course-list.php:298
 msgid "Action"
 msgstr ""
 
@@ -4647,8 +4647,12 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: views/pages/course-list.php:171
+#: views/pages/course-list.php:171, views/pages/course-list.php:253
 msgid "Author"
+msgstr ""
+
+#: views/pages/course-list.php:209
+msgid "Checkbox"
 msgstr ""
 
 #: views/pages/course-list.php:227
@@ -4665,6 +4669,10 @@ msgstr ""
 
 #: views/pages/course-list.php:245
 msgid "Assignment:"
+msgstr ""
+
+#: views/pages/course-list.php:269
+msgid "Course Category"
 msgstr ""
 
 #: views/pages/course-list.php:301

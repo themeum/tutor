@@ -239,6 +239,12 @@ class Assets {
 			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'jquery', 'wp-i18n'), TUTOR_VERSION, true );
 			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION );
 		}
+		/**
+		 * Load tutor common scripts both backend and frontend
+		 *
+		 * @since v2.0.0
+		 */
+		wp_enqueue_script( 'tutor-v2-script', tutor()->url . 'assets/js/tutor-v2.js', array( 'jquery', 'wp-i18n'), TUTOR_VERSION, true );
 	}
 
 	public function load_meta_data() {
