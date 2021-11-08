@@ -2522,7 +2522,7 @@ class Utils {
 			'wishlist'          => __( 'Wishlist', 'tutor' ),
 			'reviews'           => __( 'Reviews', 'tutor' ),
 			'my-quiz-attempts'  => __( 'My Quiz Attempts', 'tutor' ),
-			'purchase_history'  => __( 'Purchase History', 'tutor' ),
+			'purchase_history'  => __( 'Order History', 'tutor' ),
 		));
 
 		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', array(
