@@ -861,7 +861,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (bulkForm) {
     bulkForm.onsubmit = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var formData, bulkIds, bulkFields, _iterator, _step, field, post;
+        var formData, bulkIds, bulkFields, _iterator, _step, field, loadingButton, prevHtml, post;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -887,36 +887,49 @@ document.addEventListener("DOMContentLoaded", function () {
                   _iterator.f();
                 }
 
+                if (bulkIds.length) {
+                  _context.next = 9;
+                  break;
+                }
+
+                alert(__('Select checkbox for action', 'tutor'));
+                return _context.abrupt("return");
+
+              case 9:
                 formData.set("bulk-ids", bulkIds);
                 formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                _context.prev = 8;
-                _context.next = 11;
+                _context.prev = 11;
+                loadingButton = document.querySelector('#tutor-confirm-bulk-action.tutor-btn-loading');
+                prevHtml = loadingButton.innerHTML;
+                loadingButton.innerHTML = "<div class=\"ball\"></div>\n        <div class=\"ball\"></div>\n        <div class=\"ball\"></div>\n        <div class=\"ball\"></div>";
+                _context.next = 17;
                 return fetch(window._tutorobject.ajaxurl, {
                   method: "POST",
                   body: formData
                 });
 
-              case 11:
+              case 17:
                 post = _context.sent;
+                loadingButton.innerHTML = prevHtml;
 
                 if (post.ok) {
                   location.reload();
                 }
 
-                _context.next = 18;
+                _context.next = 25;
                 break;
 
-              case 15:
-                _context.prev = 15;
-                _context.t0 = _context["catch"](8);
+              case 22:
+                _context.prev = 22;
+                _context.t0 = _context["catch"](11);
                 alert(_context.t0);
 
-              case 18:
+              case 25:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[8, 15]]);
+        }, _callee, null, [[11, 22]]);
       }));
 
       return function (_x2) {
