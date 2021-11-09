@@ -342,7 +342,7 @@ $filters = array(
 		</button>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
-			<div class="tutor-modal-body tutor-text-center">
+			<div class="tutor-modal-body tutor-text-center " style="padding: 60px 50px;">
 				<form action="" id="tutor-admin-withdraw-approve-form">
 					<input type="hidden" name="action" value="<?php echo esc_html( 'tutor_admin_withdraw_action' ); ?>">
 					<input type="hidden" name="action-type" value="<?php echo esc_html( 'approved' ); ?>">
