@@ -1,5 +1,13 @@
 <?php
+/**
+ * Instructor List
+ *
+ * @package Instructor List
+ */
+
 namespace TUTOR;
+
+use TUTOR\Students_List;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -101,6 +109,9 @@ class Instructors_List extends \Tutor_List_Table {
 	public function prpare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
+			$this->bulk_action_approved(),
+			$this->bulk_action_pending(),
+			$this->bulk_action_blocked(),
 			$this->bulk_action_delete(),
 		);
 		return $actions;
@@ -115,10 +126,19 @@ class Instructors_List extends \Tutor_List_Table {
 	public function instructor_bulk_action() {
 		// check nonce.
 		tutor_utils()->checking_nonce();
-		$status   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
-		$update   = self::update_instructors( $status, $bulk_ids );
-		return true === $update ? wp_send_json_success() : wp_send_json_error();
+		$action   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
+		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
+		if ( '' === $action || '' === $bulk_ids ) {
+			return wp_send_json_error();
+		}
+		if ( 'delete' === $action ) {
+			// Delete user from student_list class.
+			$response = Students_List::delete_students( $bulk_ids );
+		} else {
+			$response = self::update_instructors( $action, $bulk_ids );
+		}
+
+		return true === $response ? wp_send_json_success() : wp_send_json_error();
 		exit;
 	}
 
@@ -132,14 +152,17 @@ class Instructors_List extends \Tutor_List_Table {
 	 */
 	public static function update_instructors( $status, $user_ids ): bool {
 		global $wpdb;
-		$instructor_table = $wpdb->user_meta;
+		$status           = sanitize_text_field( $status );
+		$instructor_table = $wpdb->usermeta;
 		$update           = $wpdb->query(
 			$wpdb->prepare(
 				" UPDATE {$instructor_table}
-				SET inst_status = %s 
-				WHERE ID IN ($user_ids)
-			",
-				$status
+					SET meta_value = %s 
+					WHERE user_id IN ($user_ids)
+						AND meta_key = %s
+				",
+				$status,
+				'_tutor_instructor_status'
 			)
 		);
 		return false === $update ? false : true;

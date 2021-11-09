@@ -90,7 +90,7 @@ $filters = array(
 		<table class="tutor-ui-table tutor-ui-table-responsive table-instructors">
 			<thead>
 			<tr>
-				<th>
+				<th width="3%">
 					<div class="d-flex">
 						<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
 					</div>
