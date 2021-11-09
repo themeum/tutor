@@ -287,7 +287,7 @@ $filters = array(
 											<span class="text-medium-small color-text-primary">
 												<i class="ttr-circle-outline-info-filled"></i>
 											</span>
-											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt <?php echo 'tooltip-left'; ?>">
+											<div class="tutor-tooltip-wrap-area text-regular-small tooltip-txt tooltip-left">
 												<div class="withdraw-tutor-tooltip-content text-regular-small flex-center">
 													<strong>
 														<?php echo esc_html( $details['rejects']['reject_type'] ); ?>
