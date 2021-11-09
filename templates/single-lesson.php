@@ -24,7 +24,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
         <div class="tutor-lesson-sidebar">
 			<?php tutor_lessons_sidebar(); ?>
         </div>
-        <div id="tutor-single-entry-content" class="ttutor-quiz-single-entry-wrap tutor-single-entry-content sidebar-hidden tutor-single-entry-content-<?php the_ID(); ?>">
+        <div id="tutor-single-entry-content" class="tutor-quiz-single-entry-wrap tutor-single-entry-content sidebar-hidden">
 		    <?php tutor_lesson_content(); ?>
         </div>
     </div>

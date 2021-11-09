@@ -14,9 +14,6 @@
         height: 20px;
     }
     .tutor-quiz-btn-grp {
-        // button {
-        // 	padding: 10px 25px;
-        // }
         button.skip-quiz-btn {
             border: none;
         }
@@ -67,3 +64,15 @@
         align-items: flex-start;
     }
 }
+
+.tutor-start-quiz-wrapper form {
+    display: inline-block;
+}
+
+.tutor-quiz-wrapper {
+    .tutor-next-previous-pagination-wrap {
+        display: none;
+    }
+}
+
+@import './spotlight.scss'

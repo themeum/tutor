@@ -22,7 +22,7 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 $quiz_answers = array();
 ?>
 
-<div id="tutor-quiz-body" class="tutor-quiz-body tutor-quiz-body-<?php the_ID(); ?>">
+<div id="tutor-quiz-image-matching-choice" class="tutor-quiz-wrap tutor-quiz-wrap-<?php the_ID(); ?>">
 	<?php
 
     do_action('tutor_quiz/body/before', $quiz_id);
@@ -44,16 +44,60 @@ $quiz_answers = array();
 		$remaining_time_context = tutor_utils()->seconds_to_time_context($remaining_time_secs);
 		$questions = tutor_utils()->get_random_questions_by_quiz();
 		?>
+			
+		<div class="quiz-meta-info d-flex justify-content-between">
+			<div class="quiz-meta-info-left d-flex">
+				<?php
+					$total_questions = tutor_utils()->total_questions_for_student_by_quiz(get_the_ID());
 
-        <div class="quiz-head-meta-info">
-			<?php
-			if ( ! $hide_quiz_time_display){
+					if($total_questions){
 				?>
-                <div class="time-remaining">
-					<?php _e( 'Time remaining : ', 'tutor' ); ?> <span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>"><?php echo $remaining_time_context; ?></span>
-                </div>
+				<div class="quiz-qno d-flex">
+					<p class="text-regular-body color-text-hints tutor-mr-10"><?php _e('Questions No', 'tutor'); ?>:</p>
+					<span class="text-bold-body color-text-title">
+						<?php echo $total_questions; ?>
+					</span>
+				</div>
+				<?php } ?>
+				<div class="quiz-total-attempt d-flex d-xs-none">
+					<p class="text-regular-body color-text-hints tutor-mr-10">Total
+					<?php _e('Attempted', 'tutor'); ?>:</p>
+					<span class="text-bold-body color-text-title">
+					<?php
+						if($attempted_count){
+							echo $attempted_count . '/';
+						}
+						echo $attempts_allowed == 0 ? __('No limit', 'tutor') : $attempts_allowed;
+					?>
+					</span>
+				</div>
+			</div>
+			<?php
+				if ( ! $hide_quiz_time_display){
+			?>
+			<div class="quiz-meta-info-right">
+				<div class="quiz-time-remaining d-flex">
+					<?php if ($remaining_time_context > 0) { ?>
+					<div class="quiz-time-remaining-progress-circle">
+						<svg viewBox="0 0 50 50" width="50" height="50" style="--quizeProgress: 30;">
+							<circle cx="0" cy="0" r="7"></circle>
+							<circle cx="0" cy="0" r="7"></circle>
+						</svg>
+					</div>
+					<?php } ?>
+					<?php if ($remaining_time_context < 0) { ?>
+					<div class="quiz-time-remaining-expired-circle">
+						<svg viewBox="0 0 50 50" width="50" height="50">
+							<circle cx="0" cy="0" r="8"></circle>
+						</svg>
+					</div>
+					<?php } ?>
+					<p class="text-regular-body color-text-hints tutor-mr-10"><?php _e( 'Time remaining: ', 'tutor' ); ?></p>
+					<span id="tutor-quiz-time-update" class="text-medium-body <?php if ($remaining_time_context < 0) { echo 'color-text-error';} ?>" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>"><?php echo $remaining_time_context; ?></span>
+				</div>
+			</div>
 			<?php } ?>
-        </div>
+		</div>
 
 		<?php
 		if (is_array($questions) && count($questions)) {
@@ -117,42 +161,42 @@ $quiz_answers = array();
 						$previous_question = $question_i>1 ? $questions[$question_i-1] : false;
 						?>
                         <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> data-quiz-feedback-mode="<?php echo $feedback_mode; ?>" >
+							<div class="quiz-question tutor-mt-60 tutor-mr-100">
+								<?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
 
-							<?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
 
+								$question_type = $question->question_type;
 
-							$question_type = $question->question_type;
-
-							$rand_choice = false;
-							if($question_type == 'single_choice' || $question_type == 'multiple_choice'){
-								$choice = maybe_unserialize($question->question_settings);
-								if(isset($choice['randomize_question'])){
-									$rand_choice = $choice['randomize_question'] == 1 ? true : false;
+								$rand_choice = false;
+								if($question_type == 'single_choice' || $question_type == 'multiple_choice'){
+									$choice = maybe_unserialize($question->question_settings);
+									if(isset($choice['randomize_question'])){
+										$rand_choice = $choice['randomize_question'] == 1 ? true : false;
+									}
 								}
-							}
 
-							$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, $rand_choice);
-							$show_question_mark = (bool) tutor_utils()->avalue_dot('show_question_mark', $question_settings);
-							$answer_required = (bool) tutor_utils()->array_get('answer_required', $question_settings);
+								$answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, $rand_choice);
+								$show_question_mark = (bool) tutor_utils()->avalue_dot('show_question_mark', $question_settings);
+								$answer_required = (bool) tutor_utils()->array_get('answer_required', $question_settings);
 
-							echo '<h4 class="question-text">';
-							if ( ! $hide_question_number_overview){
-								echo $question_i. ". ";
-							}
-							echo stripslashes($question->question_title);
-							echo '</h4>';
+								echo '<div class="quiz-question-title text-medium-h4 color-text-primary tutor-mb-20">';
+								if ( ! $hide_question_number_overview){
+									echo $question_i. ". ";
+								}
+								echo stripslashes($question->question_title);
+								echo '</div>';
 
-							if ($show_question_mark){
-								echo '<p class="question-marks"> '.__('Marks : ', 'tutor').$question->question_mark.' </p>';
-							}
+								if ($show_question_mark){
+									echo '<p class="question-marks"> '.__('Marks : ', 'tutor').$question->question_mark.' </p>';
+								}
 
-							$question_description = nl2br( stripslashes($question->question_description) );
-							if ($question_description){
-							    echo "<p class='question-description'>{$question_description}</p>";
-                            }
-							?>
-
-                            <div class="tutor-quiz-answers-wrap question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
+								$question_description = nl2br( stripslashes($question->question_description) );
+								if ($question_description){
+									echo "<div class='matching-quiz-question-desc'><span class='text-regular-caption color-text-subsued'>{$question_description}</span></div>";
+								}
+								?>
+							</div>
+                            <div class="quiz-question-ans-choice-area tutor-mt-70 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
 								<?php
 								if ( is_array($answers) && count($answers) ) {
 									foreach ($answers as $answer){
@@ -161,28 +205,26 @@ $quiz_answers = array();
 
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
-                                            <label class="answer-view-<?php echo $answer->answer_view_format; ?>">
-                                                <div class="quiz-answer-input-body">
-													<?php
-													if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
-														?>
-                                                        <div class="quiz-answer-image-wrap">
-                                                            <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
-                                                        </div>
+                                            
+											<?php
+											if ($answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image'){
+												?>
+												<div class="quiz-answer-image-wrap">
+													<img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
+												</div>
+												<?php
+											}
+											?>
+											<div class="quiz-question-ans-choice">
+												<label for="<?php echo $answer->answer_id; ?>">
+													<input class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+													<span class="text-regular-body color-text-primary">
 														<?php
-													}
-													?>
-                                                    <div class="quiz-answer-input-bottom">
-                                                        <div class="quiz-answer-input-field">
-                                                            <input name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
-                                                            <span>&nbsp;</span>
-                                                            <?php
-                                                                if ($answer->answer_view_format !== 'image'){ echo $answer_title;}
-                                                            ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </label>
+															if ($answer->answer_view_format !== 'image'){ echo $answer_title;}
+														?>
+													</span>
+												</label>
+											</div>
 											<?php
 										}elseif ($question_type === 'multiple_choice'){
 											?>
@@ -380,21 +422,13 @@ $quiz_answers = array();
 							<?php
 							if ($question_layout_view !== 'question_below_each_other'){
 								?>
-								<div class="quiz-answer-footer-bar">
-									<div class="quiz-footer-button">
-										<?php
-											if(!$hide_previous_button && $previous_question) {
-												?>
-												<button type="button" class="tutor-btn tutor-is-outline tutor-quiz-answer-previous-btn">
-													<?php _e( 'Back', 'tutor' ); ?>
-												</button>
-												<?php
-											}
-										?>
-										<button type="submit" class="tutor-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
-											<?php $next_question ? _e( 'Answer &amp; Next Question', 'tutor' ) : _e( 'Submit Quiz', 'tutor' ); ?>
-										</button>
-									</div>
+								<div class="tutor-quiz-btn-grp tutor-quiz-btn-grp tutor-mt-60">
+									<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
+										<?php $next_question ? _e( 'Submit &amp; Next', 'tutor' ) : _e( 'Submit Quiz', 'tutor' ); ?>
+									</button>
+									<a href="#" class="tutor-ml-30">
+										<?php _e( "Skip Quiz", "tutor" ); ?>
+									</a>
 								</div>
 								<?php
 							}
@@ -437,25 +471,7 @@ $quiz_answers = array();
 		}
 	}else{
 
-		if ($attempt_remaining > 0 || $attempts_allowed == 0) {
-			do_action('tuotr_quiz/start_form/before', $quiz_id);
-			?>
-            <div class="start-quiz-wrap">
-                <form id="tutor-start-quiz" method="post">
-					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-
-                    <input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-                    <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
-
-                    <button type="submit" class="tutor-btn" name="start_quiz_btn" value="start_quiz">
-                        <?php _e( 'Start Quiz', 'tutor' ); ?>
-                    </button>
-                </form>
-            </div>
-
-			<?php
-            do_action('tuotr_quiz/start_form/after', $quiz_id);
-		}
+		
 
 
 

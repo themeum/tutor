@@ -1,0 +1,63 @@
+.tutor-course-spotlight-wrapper {
+    .course-players {
+        position: relative;
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .tutor-default-tab {
+        .tab-header {
+            .tab-header-item {
+                flex-wrap: wrap;
+                @include breakpoint-max(mobile) {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+                span[class^='ttr-'],
+                span[class*=' ttr-'] {
+                    font-size: 20px;
+                }
+            }
+        }
+        .tab-body {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 50px 30px;
+            @include breakpoint-max(mobile) {
+                padding: 20px 20px;
+            }
+            .tab-body-item {
+                .tutor-exercise-files {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 20px;
+                    @include breakpoint-max(mobile) {
+                        grid-template-columns: repeat(1, 1fr);
+                    }
+                    .tutor-instructor-card {
+                        cursor: pointer;
+                        &:hover {
+                            .tutor-avatar {
+                                background: $design-brand;
+                                span {
+                                    color: $design-white;
+                                }
+                            }
+                        }
+                        .tutor-icard-content {}
+                        .tutor-avatar {
+                            background: $primary-40;
+                            span {
+                                font-size: 30px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
