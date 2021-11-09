@@ -1,4 +1,3 @@
-import '../lib/common';
 import './dashboard';
 import './pages/instructor-list-filter';
 import './pages/course-landing';

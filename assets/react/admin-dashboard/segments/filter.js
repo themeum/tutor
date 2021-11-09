@@ -57,15 +57,32 @@ document.addEventListener("DOMContentLoaded", function() {
           bulkIds.push(field.value);
         }
       }
+      if (!bulkIds.length) {
+        alert( __('Select checkbox for action', 'tutor') );
+        return;
+      }
       formData.set("bulk-ids", bulkIds);
       formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
       try {
+        const loadingButton = document.querySelector('#tutor-confirm-bulk-action.tutor-btn-loading');
+        const prevHtml = loadingButton.innerHTML;
+        loadingButton.innerHTML = `<div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>`;
         const post = await fetch(window._tutorobject.ajaxurl, {
           method: "POST",
           body: formData,
         });
+        loadingButton.innerHTML = prevHtml;
         if (post.ok) {
-          location.reload();
+          const response = await post.json();
+          if (response.success) {
+            location.reload();
+          } else {
+            tutor_toast(__("Failed", "tutor"), __("Something went wrong, please try again ", "tutor"), "error");
+          }
+          
         }
       } catch (error) {
         alert(error);

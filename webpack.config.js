@@ -67,6 +67,7 @@ module.exports = (env, options) => {
 				'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
 				'tutor-course-builder': './assets/react/course-builder/index.js',
 				'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
+				'tutor-v2': './assets/react/v2/common.js',
 			},
 		},
 		{
