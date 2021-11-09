@@ -4,11 +4,7 @@ namespace TUTOR;
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-if (! class_exists('Tutor_List_Table')){
-	include_once tutor()->path.'classes/Tutor_List_Table.php';
-}
-
-class Quiz_Attempts_List extends \Tutor_List_Table {
+class Quiz_Attempts_List {
 
 	const QUIZ_ATTEMPT_PAGE = 'tutor_quiz_attempts';
 

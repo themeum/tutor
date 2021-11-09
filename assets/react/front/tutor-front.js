@@ -828,7 +828,6 @@ jQuery(document).ready(function ($) {
 
     $(document).on('keyup', function (e) {
         if (e.keyCode === 27) {
-            $('.tutor-frontend-modal').hide();
             $('.tutor-cart-box-login-form').fadeOut(100);
         }
     });
@@ -966,19 +965,6 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    var frontEndModal = $('.tutor-frontend-modal');
-    frontEndModal.each(function () {
-        var modal = $(this),
-            action = $(this).data('popup-rel');
-        $('[href="' + action + '"]').on('click', function (e) {
-            modal.fadeIn();
-            e.preventDefault();
-        });
-    });
-    $(document).on('click', '.tm-close, .tutor-frontend-modal-overlay, .tutor-modal-btn-cancel', function () {
-        frontEndModal.fadeOut();
-    });
-
     /**
      * Delete Course
      */
@@ -1008,7 +994,6 @@ jQuery(document).ready(function ($) {
             },
             complete: function () {
                 $btn.removeClass('updating-icon');
-                $('.tutor-frontend-modal').hide();
             }
         });
     });

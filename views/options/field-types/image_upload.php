@@ -1,4 +1,12 @@
-<div class="tutor-option-field-row d-block">
+<?php
+/**
+ * Image uploader for settings.
+ *
+ * @package Tutor LMS
+ * @since 2.0
+ */
+
+?><div class="tutor-option-field-row d-block">
 <?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input image-previewer">

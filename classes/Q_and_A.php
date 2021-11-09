@@ -67,7 +67,7 @@ class Q_and_A {
 		global $wpdb;
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
 		
-		if( !$question_id || !tutor_utils()->can_user_manage('question', $question_id)) {
+		if( !$question_id || !tutor_utils()->can_user_manage('qa_question', $question_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
@@ -76,6 +76,50 @@ class Q_and_A {
 		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent = %d", $question_id));
 		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id = %d", $question_id));
 		
-		wp_send_json_success(['element'=>'question']);
+		wp_send_json_success();
+	}
+
+	/**
+	 * Available tabs that will visible on the right side of page navbar
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public static function tabs_key_value() {
+		$url = get_pagenum_link();
+		
+		$tabs = array(
+			array(
+				'key'   => 'all',
+				'title' => __( 'All', 'tutor' ),
+				'value' => 0,
+				'url'   => $url . '&data=all',
+			),
+			array(
+				'key'   => 'unread',
+				'title' => __( 'Unread', 'tutor' ),
+				'value' => 0,
+				'url'   => $url . '&data=unread',
+			),
+			array(
+				'key'   => 'followup',
+				'title' => __( 'Follow up', 'tutor' ),
+				'value' => 0,
+				'url'   => $url . '&data=followup',
+			),
+			array(
+				'key'   => 'archive',
+				'title' => __( 'Archive', 'tutor' ),
+				'value' => 0,
+				'url'   => $url . '&data=archive',
+			),
+			array(
+				'key'   => 'draft',
+				'title' => __( 'Draft', 'tutor' ),
+				'value' => 0,
+				'url'   => $url . '&data=draft',
+			),
+		);
+		
+		return $tabs;
 	}
 }

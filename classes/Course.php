@@ -904,7 +904,7 @@ class Course extends Tutor_Base {
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
 
-		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_enable_qa', true)!='yes' : true;
+		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_enable_qa', true)!='yes' : false;
 
 		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course) {
 			if(tutor_utils()->array_get('questions', $items)) {

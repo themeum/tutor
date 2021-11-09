@@ -2564,7 +2564,7 @@ class Utils {
 			'wishlist'          => __( 'Wishlist', 'tutor' ),
 			'reviews'           => __( 'Reviews', 'tutor' ),
 			'my-quiz-attempts'  => __( 'My Quiz Attempts', 'tutor' ),
-			'purchase_history'  => __( 'Purchase History', 'tutor' ),
+			'purchase_history'  => __( 'Order History', 'tutor' ),
 		));
 
 		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', array(
@@ -4039,69 +4039,38 @@ class Utils {
 
 		$in_question_id_query = '';
 		/**
-		 * Get only assinged  courses questions if current user is a
+		 * Get only assinged  courses questions if current user is not admin
 		 */
-		if ( ! current_user_can( 'administrator' ) && current_user_can( tutor()->instructor_role ) ) {
-
-			$get_course_ids = $wpdb->get_col( $wpdb->prepare(
-				"SELECT ID
-				FROM 	{$wpdb->posts}
-				WHERE 	post_author = %d
-						AND post_type = %s
-						AND post_status = %s
-				",
-				$user_id,
-				$course_type,
-				'publish'
-			) );
-
-			$get_assigned_courses_ids = $wpdb->get_col( $wpdb->prepare(
-				"SELECT meta_value
-				FROM	{$wpdb->usermeta}
-				WHERE 	meta_key = %s
-						AND user_id = %d
-				",
-				'_tutor_instructor_course_id',
-				$user_id
-			) );
-
-			$my_course_ids = array_unique( array_merge( $get_course_ids, $get_assigned_courses_ids ) );
-
-			if ( $this->count( $my_course_ids ) ) {
-				$implode_ids = implode( ',', $my_course_ids );
-				$in_question_id_query = " AND {$wpdb->comments}.comment_post_ID IN($implode_ids) ";
-			}
+		if ( !current_user_can( 'administrator' ) && current_user_can( tutor()->instructor_role ) ) {
+			$my_course_ids = $this->get_course_id_by('instructor', $user_id) ;
+			$in_ids = count($my_course_ids) ? implode( ',', $my_course_ids ) : '0';
+			$in_question_id_query = " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
 		}
 
 		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_author,
-					{$wpdb->comments}.comment_date,
-					{$wpdb->comments}.comment_content,
-					{$wpdb->comments}.user_id,
-					{$wpdb->commentmeta}.meta_value as question_title,
+			"SELECT _question.comment_ID,
+					_question.comment_post_ID,
+					_question.comment_author,
+					_question.comment_date,
+					_question.comment_content,
+					_question.user_id,
 					{$wpdb->users}.display_name,
 					{$wpdb->posts}.post_title,
 					(	SELECT  COUNT(answers_t.comment_ID)
 						FROM 	{$wpdb->comments} answers_t
-						WHERE 	answers_t.comment_parent = {$wpdb->comments}.comment_ID
+						WHERE 	answers_t.comment_parent = _question.comment_ID
 					) AS answer_count
-			FROM 	{$wpdb->comments}
-					INNER JOIN {$wpdb->commentmeta}
-							ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+			FROM 	{$wpdb->comments} _question
 					INNER JOIN {$wpdb->posts}
-							ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
+							ON _question.comment_post_ID = {$wpdb->posts}.ID
 					INNER JOIN {$wpdb->users}
-							ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE  	{$wpdb->comments}.comment_type = %s
-					AND {$wpdb->comments}.comment_parent = 0
-					AND {$wpdb->commentmeta}.meta_value LIKE %s
+							ON _question.user_id = {$wpdb->users}.ID
+			WHERE  	_question.comment_type = 'tutor_q_and_a'
+					AND _question.comment_parent = 0
+					AND _question.comment_content LIKE %s
 					{$in_question_id_query}
-			ORDER BY {$wpdb->comments}.comment_ID DESC
-			LIMIT %d, %d;
-			",
-			'tutor_q_and_a',
+			ORDER BY _question.comment_ID DESC
+			LIMIT %d, %d;",
 			$search_term,
 			$start,
 			$limit
@@ -4159,23 +4128,22 @@ class Utils {
 	public function get_qa_answer_by_question( $question_id ) {
 		global $wpdb;
 		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_author,
-					{$wpdb->comments}.comment_date,
-					{$wpdb->comments}.comment_date_gmt,
-					{$wpdb->comments}.comment_content,
-					{$wpdb->comments}.comment_parent,
-					{$wpdb->comments}.user_id,
+			"SELECT _chat.comment_ID,
+					_chat.comment_post_ID,
+					_chat.comment_author,
+					_chat.comment_date,
+					_chat.comment_date_gmt,
+					_chat.comment_content,
+					_chat.comment_parent,
+					_chat.user_id,
 					{$wpdb->users}.display_name
-			FROM	{$wpdb->comments}
+			FROM	{$wpdb->comments} _chat
 					INNER JOIN {$wpdb->users}
-							ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE 	comment_type = %s
-					AND {$wpdb->comments}.comment_parent = %d
-			ORDER BY {$wpdb->comments}.comment_ID ASC;
-			",
-			'tutor_q_and_a',
+							ON _chat.user_id = {$wpdb->users}.ID
+			WHERE 	comment_type = 'tutor_q_and_a'
+					AND ( _chat.comment_ID=%d OR _chat.comment_parent = %d)
+			ORDER BY _chat.comment_ID ASC;",
+			$question_id,
 			$question_id
 		) );
 
@@ -6206,7 +6174,74 @@ class Utils {
 	 *
 	 * Get purchase history by customer id
 	 */
-	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
+	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date, $offset = '', $per_page = '' ) {
+		global $wpdb;
+
+		$user_id     = $this->get_user_id( $user_id );
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+
+		$post_type = "";
+		$user_meta = "";
+
+		if ( $monetize_by === 'wc' ) {
+			$post_type = "shop_order";
+			$user_meta = "_customer_user";
+		} else if ( $monetize_by === 'edd' ) {
+			$post_type = "edd_payment";
+			$user_meta = "_edd_payment_user_id";
+		}
+
+		$period_query = '';
+
+		if ( '' !== $period ) {
+			if ( 'today' === $period ) {
+				$period_query = " AND  DATE(post_date) = CURDATE() ";
+			} else if ( 'monthly' === $period ) {
+				$period_query = " AND  MONTH(post_date) = MONTH(CURDATE()) ";
+			} else {
+				$period_query = " AND  YEAR(post_date) = YEAR(CURDATE()) ";
+			}
+		}
+
+		if ( '' !== $start_date AND '' !== $end_date ) {
+			$period_query = " AND  DATE(post_date) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
+		}
+
+		$offset_limit_query = '';
+		if ( '' !== $offset && '' !== $per_page ) {
+			$offset_limit_query = "LIMIT $offset, $per_page";
+		}
+
+		$orders = $wpdb->get_results( $wpdb->prepare(
+			"SELECT {$wpdb->posts}.*
+			FROM	{$wpdb->posts}
+					INNER JOIN {$wpdb->postmeta} customer
+							ON id = customer.post_id
+						   AND customer.meta_key = '{$user_meta}'
+					INNER JOIN {$wpdb->postmeta} tutor_order
+							ON id = tutor_order.post_id
+						   AND tutor_order.meta_key = '_is_tutor_order_for_course'
+			WHERE	post_type = %s
+					AND customer.meta_value = %d
+					{$period_query}
+			ORDER BY {$wpdb->posts}.id DESC
+			{$offset_limit_query}
+			",
+			$post_type,
+			$user_id
+		) );
+
+		return $orders;
+	}
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return array|null|object
+	 *
+	 * Get total purchase history by customer id
+	 */
+	public function get_total_orders_by_user_id( $user_id, $period, $start_date, $end_date ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id( $user_id );
@@ -7323,7 +7358,7 @@ class Utils {
 		// List constantly required fields
 		$required_fields = array(
 			'first_name' 				  => sprintf( __( 'Set Your %sFirst Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
-			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
 			'_tutor_profile_photo' 		  => sprintf( __( 'Set Your %sProfile Photo%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
 		);
 
@@ -7609,14 +7644,14 @@ class Utils {
 	 */
 	public function can_user_manage( $content, $object_id, $user_id=0, $allow_current_admin=true ) {
 
-		if( $allow_current_admin && current_user_can( 'administrator' ) ) {
-			// Admin has access to everything
-			return true;
-		}
-
 		$course_id = $this->get_course_id_by( $content, $object_id );
 
 		if( $course_id ) {
+
+			if( $allow_current_admin && current_user_can( 'administrator' ) ) {
+				// Admin has access to everything
+				return true;
+			}
 
 			$instructors    = $this->get_instructors_by_course( $course_id );
 			$instructor_ids = is_array( $instructors ) ? array_map( function($instructor) {
@@ -7632,7 +7667,8 @@ class Utils {
 		global $wpdb;
 		switch($content) {
 			case 'review' :
-				// just check if own review. Instructor privilege already checked in the earlier blocks
+			case 'qa_question' :
+				// just check if own content. Instructor privilege already checked in the earlier blocks
 				$id = $wpdb->get_var($wpdb->prepare(
 					"SELECT comment_ID
 					FROM {$wpdb->comments} WHERE user_id %d",
