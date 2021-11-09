@@ -2742,9 +2742,11 @@ class Utils {
 
 		$status_query = '';
 		if ( is_array( $status ) && count( $status ) ) {
-			$status		  = implode(',', $status );
+			$status = array_map( function($str) {
+				return "'{$str}'";
+			}, $status);
 
-			$status_query = "AND ins_status.meta_value IN ('$status')";
+			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
 
 		$course_query = '';
@@ -2797,11 +2799,11 @@ class Utils {
 	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '' ) {
 		global $wpdb;
 
-		$search_filter 	= sanitize_text_field($search_filter);
-		$course_filter 	= sanitize_text_field($course_filter);
-		$date_filter 	= sanitize_text_field($date_filter);
-		$order_filter 	= sanitize_text_field($order_filter);
-		$rating 		= sanitize_text_field($rating);
+		$search_filter 	= sanitize_text_field( $search_filter );
+		$course_filter 	= sanitize_text_field( $course_filter );
+		$date_filter 	= sanitize_text_field( $date_filter );
+		$order_filter 	= sanitize_text_field( $order_filter );
+		$rating 		= sanitize_text_field( $rating );
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_filter	= $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '' ;
