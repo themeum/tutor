@@ -2751,6 +2751,9 @@ class Utils {
 	}
 
 	/**
+	 * Get instructor with optional filters.
+	 * Available instructor status ( approved | blocked | pending )
+	 *
 	 * @param int $start
 	 * @param int $limit
 	 * @param string $search_term
@@ -2764,7 +2767,7 @@ class Utils {
 	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '' ) {
 		global $wpdb;
 
-		$search_filter 	=  sanitize_text_field($search_filter);
+		$search_filter 	= sanitize_text_field($search_filter);
 		$course_filter 	= sanitize_text_field($course_filter);
 		$date_filter 	= sanitize_text_field($date_filter);
 		$order_filter 	= sanitize_text_field($order_filter);

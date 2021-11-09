@@ -89,27 +89,27 @@ $filters = array(
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
-					<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon"></span>
-				</div>
+					<div class="inline-flex-center color-text-subsued">
+						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
+						<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon"></span>
+					</div>
 				</th>
-				<th>
-				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
-					<span class="ttr-order-down-filled"></span>
-				</div>
+				<th class="tutor-table-rows-sorting">
+					<div class="inline-flex-center color-text-subsued">
+						<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
+						<span class="ttr-order-down-filled up-down-icon"></span>
+					</div>
 				</th>
-				<th>
-				<div class="inline-flex-center color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
-					<span class="ttr-order-down-filled"></span>
-				</div>
+				<th class="tutor-table-rows-sorting">
+					<div class="inline-flex-center color-text-subsued">
+						<span class="text-regular-small"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
+						<span class="ttr-order-down-filled up-down-icon"></span>
+					</div>
 				</th>
-				<th>
+				<th class="tutor-table-rows-sorting">
 				<div class="inline-flex-center color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
-					<span class="ttr-order-down-filled"></span>
+					<span class="ttr-order-down-filled up-down-icon"></span>
 				</div>
 				</th>
 				<th class="tutor-shrink"></th>
@@ -118,41 +118,41 @@ $filters = array(
 			<tbody>
 			<?php foreach ( $instructors_list as $list ) : ?>
 			<tr>
-				<td data-th="Checkbox">
+				<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
 					<div class="td-checkbox d-flex ">
 						<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
 					</div>
 				</td>
-				<td class="column-fullwidth">
-				<div class="td-avatar">
-					<?php $avatar_url = get_avatar_url( $list->ID ); ?>
-					<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-					<p class="color-text-primary text-medium-body">
-						<?php esc_html_e( $list->display_name ); ?>
-					</p>
-					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
-					<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
-						<span class="ttr-detail-link-filled tutor-mt-5"></span>
-					</a>
-				</div>
+				<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
+					<div class="td-avatar">
+						<?php $avatar_url = get_avatar_url( $list->ID ); ?>
+						<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
+						<p class="color-text-primary text-medium-body">
+							<?php echo esc_html( $list->display_name ); ?>
+						</p>
+						<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
+						<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
+							<span class="ttr-detail-link-filled tutor-mt-5"></span>
+						</a>
+					</div>
 				</td>
-				<td data-th="Registration Date">
-				<span class="color-text-primary text-regular-caption">
-				<?php echo esc_html( $list->user_email ); ?>
-				</span>
+				<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
+					<span class="color-text-primary text-regular-caption">
+					<?php echo esc_html( $list->user_email ); ?>
+					</span>
 				</td>
 				</td>
-				<td data-th="Registration Date">
-				<span class="color-text-primary text-regular-caption">
-				<?php esc_html_e( $instructors->column_total_course( $list, 'total_course' ) ); ?>
-				</span>
+				<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
+					<span class="color-text-primary text-regular-caption">
+					<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
+					</span>
 				</td>
-				<td data-th="Course Taklen">
+				<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
 				<span class="color-text-primary text-medium-caption">
 				<?php echo wp_kses_post( $instructors->column_status( $list, 'status' ) ); ?>
 				</span>
 				</td>
-				<td data-th="URL">
+				<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
 				<div class="inline-flex-center td-action-btns">
 					<?php echo wp_kses_post( $instructors->column_action( $list, 'status' ) ); ?>
 				</div>
