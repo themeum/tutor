@@ -4951,7 +4951,6 @@ li.tutor-option-nav-item h4 {
 }
 
 .other_colors {
-  height: 0;
   overflow: hidden;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;

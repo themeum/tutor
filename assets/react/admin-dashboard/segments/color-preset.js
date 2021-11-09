@@ -13,10 +13,11 @@ const pickerView = document.querySelectorAll(
 );
 const moreButton = document.querySelector(".more_button");
 const otherColors = document.querySelector(".other_colors");
+const otherColorRows = otherColors.querySelectorAll(".tutor-option-field-row");
 const otherColorsExpanded = document.querySelector(".other_colors.expanded");
+
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "interactive") {
-    console.log("before state");
   }
   if (event.target.readyState === "complete") {
     otherColorsPreview();
@@ -24,17 +25,14 @@ document.addEventListener("readystatechange", (event) => {
 });
 
 const otherColorsPreview = () => {
-  let itemsHeight = 0,
-    initHeight = 0;
-  otherColors
-    .querySelectorAll(".tutor-option-field-row")
-    .forEach((item, index) => {
-      if (0 == index) {
-        initHeight = item.offsetHeight;
-        otherColors.style.height = initHeight - 10 + "px";
-      }
-      itemsHeight = itemsHeight + item.offsetHeight;
-    });
+  let itemsHeight = (initHeight = 0);
+  otherColorRows.forEach((item, index) => {
+    if (0 == index) {
+      initHeight = item.offsetHeight;
+      // otherColors.style.height = initHeight - 10 + "px";
+    }
+    itemsHeight = itemsHeight + item.offsetHeight;
+  });
   const toggleHeight = itemsHeight + moreButton.offsetHeight + "px";
 
   moreButton.onclick = () => {
@@ -55,11 +53,12 @@ const otherColorsPreview = () => {
 
 // Color PRESET Slecetion (color inputs)
 colorPresetInputs.forEach((preset) => {
+  const presetItem = preset.parentElement.querySelector(".preset-item");
+  const presetColors = presetItem.querySelectorAll(".header span");
+  console.log(presetColors);
   // listening preset input events
   preset.addEventListener("input", (e) => {
-    const presetItem = preset.parentElement.querySelector(".preset-item");
-    const presetColors = presetItem.querySelectorAll(".header span");
-
+    // console.log(presetColors);
     presetColors.forEach((color) => {
       let presetKey = color.dataset.preset;
       let presetColor = color.dataset.color;
@@ -96,6 +95,8 @@ const updateCustomPreset = (picker) => {
     const pickerCode = picker.nextElementSibling;
     pickerCode.innerText = picker.value;
 
+    // console.log(presetColors);
+
     colorPickerInputs.forEach((picker) => {
       let preset = picker.dataset.picker;
       presetColors.forEach((toPreset) => {
@@ -108,8 +109,10 @@ const updateCustomPreset = (picker) => {
     });
   });
 };
+// console.log(colorPresetInputs);
 
 // listening color pickers input event
 colorPickerInputs.forEach((picker) => {
+  // console.log(picker.parentNode.dataset.key);
   updateCustomPreset(picker);
 });
