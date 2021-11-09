@@ -733,7 +733,6 @@ document.addEventListener("readystatechange", function (event) {
   }
 
   if (event.target.readyState === "complete") {
-    // console.log("after state");
     otherColorsPreview();
   }
 });
@@ -802,6 +801,7 @@ var updateCustomPreset = function updateCustomPreset(picker) {
     var presetColors = customPresetEl.querySelectorAll(".header span");
     var presetItem = customPresetEl.querySelector('input[type="radio"]');
     var pickerCode = picker.nextElementSibling;
+    pickerCode.innerText = picker.value;
     colorPickerInputs.forEach(function (picker) {
       var preset = picker.dataset.picker;
       presetColors.forEach(function (toPreset) {
@@ -810,7 +810,6 @@ var updateCustomPreset = function updateCustomPreset(picker) {
           toPreset.style.backgroundColor = picker.value;
         }
       });
-      pickerCode.innerText = picker.value;
       presetItem.checked = true;
     });
   });

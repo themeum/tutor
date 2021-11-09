@@ -94,6 +94,7 @@ const updateCustomPreset = (picker) => {
     const presetColors = customPresetEl.querySelectorAll(".header span");
     const presetItem = customPresetEl.querySelector('input[type="radio"]');
     const pickerCode = picker.nextElementSibling;
+    pickerCode.innerText = picker.value;
 
     colorPickerInputs.forEach((picker) => {
       let preset = picker.dataset.picker;
@@ -103,7 +104,6 @@ const updateCustomPreset = (picker) => {
           toPreset.style.backgroundColor = picker.value;
         }
       });
-      pickerCode.innerText = picker.value;
       presetItem.checked = true;
     });
   });
