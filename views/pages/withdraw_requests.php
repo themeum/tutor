@@ -78,7 +78,7 @@ $filters = array(
 ?>
 
 <div class="wrap">
-	<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-50 tutor-mr-20">
+	<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-50">
 		<div class="tutor-ui-table-wrapper">
 			<table class="tutor-ui-table tutor-ui-table-responsive">
 				<thead class="tutor-text-sm tutor-text-400">
