@@ -145,6 +145,7 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 	}
 	&.tutor-btn-sm {
 		@extend .text-btn-small;
+		font-size: 15px;
 	}
 
 	// Button with icon
@@ -164,6 +165,7 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 		}
 		&.tutor-btn-sm {
 			@extend .text-btn-small;
+			font-size: 15px;
 		}
 
 		&.tutor-btn-icon-left,
