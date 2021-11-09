@@ -8214,4 +8214,36 @@ class Utils {
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
 
+	/**
+	 * Show character as asterisk symbol for email
+	 * it will replace character with asterisk till @ symbol
+	 *
+	 * @param string $email | required.
+	 * @return string
+	 * @since v2.0.0
+	 */
+	function asterisks_email( string $email ): string {
+		if ( '' === $email ) {
+			return '';
+		}
+		$mail_part 		= explode( '@', $email );
+		$mail_part[0]	= str_repeat('*', strlen( $mail_part[0] ) );
+		return $mail_part[0] . $mail_part[1];
+	}
+
+	/**
+	 * Show some character as asterisk symbol
+	 * it will replace character with asterisk from the beginning and ending
+	 *
+	 * @param string $text | required.
+	 * @return string
+	 * @since v2.0.0
+	 */
+	function asterisks_center_text( string $str ): string {
+		if ( '' === $str ) {
+			return '';
+		}
+		$str_length = strlen($str);
+		return substr($str, 0, 2).str_repeat('*', $str_length - 2).substr($str, $str_length - 2, 2);
+	}
 }
