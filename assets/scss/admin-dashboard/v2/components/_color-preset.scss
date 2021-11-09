@@ -2,13 +2,50 @@
   > .tutor-option-field-row {
     border-bottom: none !important;
   }
-  .color-picker-wrapper .tutor-option-field-row {
-    &:not(:last-child) {
-      border-bottom: 1px solid #e8e8e8;
+  .color-picker-wrapper {
+    .tutor-option-field-row {
+      &:not(:last-child) {
+        border-bottom: 1px solid #e8e8e8;
+      }
     }
+    /* .tutor-option-field-row.other_color {
+      height: 0;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+    } */
   }
+  position: relative;
 }
-
+.other_colors {
+  height: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.more_button {
+  i {
+    margin-right: 6px;
+    font-weight: bolder;
+    color: #3e64de;
+  }
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    #f4f6f9 1.31%,
+    rgba(244, 246, 249, 0.72) 15.41%,
+    #f4f6f9 100%
+  );
+  cursor: pointer;
+  z-index: 99;
+  height: 90px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .tutor-option-field-input.color-preset-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
