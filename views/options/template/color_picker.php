@@ -2,7 +2,17 @@
 	<?php echo $blocks['label'] ? '<h4>' . $blocks['label'] . '</h4>' : ''; ?>
 	<div class="item-grid">
 		<div class="item-wrapper color-preset-picker">
-		<?php foreach ( $blocks['fields_group'] as $fields_group ) : ?>
+		<?php
+		foreach ( $blocks['fields_group'] as $fields_group ) {
+			if ( $fields_group['type'] == 'color_fields' ) {
+				$color_fields = $fields_group['fields'];
+			}
+		}
+		foreach ( $blocks['fields_group'] as $fields_group ) :
+			if ( $fields_group['type'] == 'color_preset' ) {
+				$color_preset = $fields_group['fields'];
+			}
+			?>
 				<?php
 				if ( $fields_group['type'] == 'color_preset' ) :
 					?>
@@ -21,13 +31,24 @@
 								<div class="preset-item">
 									<div class="header">
 										<?php
-										foreach ( $fields['colors'] as $color ) :
+										foreach ( $fields['colors'] as $color ) {
 											$get_color   = ( $option_value != 'custom' && $fields['key'] == 'custom' ) ? $color['value'] : $this->get( $color['slug'] );
 											$color_value = $fields['key'] == 'custom' ? $get_color : $color['value'];
 											$preset_name = (string) $color['preset_name'];
 											?>
 										<span data-preset="<?php esc_attr_e( $preset_name, 'tutor' ); ?>" data-color="<?php echo $color_value; ?>" style="background-color: <?php echo $color_value; ?>;"></span>
-										<?php endforeach; ?>
+										<?php } ?>
+										<?php
+										foreach ( $color_fields as $color ) {
+											if ( false == $color['preset_exist'] ) {
+												$preset_name = $color['preset_name'];
+												$color_value = $color['default'];
+												?>
+												<span data-preset="<?php esc_attr_e( $preset_name, 'tutor' ); ?>" data-color="<?php echo $color_value; ?>" style="background-color: <?php echo $color_value; ?>;"></span>
+												<?php
+											}
+										}
+										?>
 									</div>
 									<div class="footer">
 										<span class="text-regular-body"><?php esc_attr_e( $fields['label'] ); ?></span><span class="check-icon"></span>
@@ -44,7 +65,7 @@
 					<div class="color-picker-wrapper">
 						<?php
 						foreach ( $fields_group['fields'] as $key => $field ) {
-							if ( 'other' !== $field['preset_name'] ) {
+							if ( true === $field['preset_exist'] ) {
 								echo $this->generate_field( $field );
 							}
 						}
@@ -52,7 +73,7 @@
 						<div class="other_colors">
 							<?php
 							foreach ( $fields_group['fields'] as $key => $field ) {
-								if ( 'other' == $field['preset_name'] ) {
+								if ( false === $field['preset_exist'] ) {
 									echo $this->generate_field( $field );
 								}
 							}

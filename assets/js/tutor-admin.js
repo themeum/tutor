@@ -726,11 +726,10 @@ var colorPickerInputs = document.querySelectorAll("label.color-picker-input inpu
 var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]");
 var moreButton = document.querySelector(".more_button");
 var otherColors = document.querySelector(".other_colors");
+var otherColorRows = otherColors.querySelectorAll(".tutor-option-field-row");
 var otherColorsExpanded = document.querySelector(".other_colors.expanded");
 document.addEventListener("readystatechange", function (event) {
-  if (event.target.readyState === "interactive") {
-    console.log("before state");
-  }
+  if (event.target.readyState === "interactive") {}
 
   if (event.target.readyState === "complete") {
     otherColorsPreview();
@@ -738,12 +737,10 @@ document.addEventListener("readystatechange", function (event) {
 });
 
 var otherColorsPreview = function otherColorsPreview() {
-  var itemsHeight = 0,
-      initHeight = 0;
-  otherColors.querySelectorAll(".tutor-option-field-row").forEach(function (item, index) {
+  var itemsHeight = initHeight = 0;
+  otherColorRows.forEach(function (item, index) {
     if (0 == index) {
-      initHeight = item.offsetHeight;
-      otherColors.style.height = initHeight - 10 + "px";
+      initHeight = item.offsetHeight; // otherColors.style.height = initHeight - 10 + "px";
     }
 
     itemsHeight = itemsHeight + item.offsetHeight;
@@ -769,10 +766,12 @@ var otherColorsPreview = function otherColorsPreview() {
 
 
 colorPresetInputs.forEach(function (preset) {
-  // listening preset input events
+  var presetItem = preset.parentElement.querySelector(".preset-item");
+  var presetColors = presetItem.querySelectorAll(".header span");
+  console.log(presetColors); // listening preset input events
+
   preset.addEventListener("input", function (e) {
-    var presetItem = preset.parentElement.querySelector(".preset-item");
-    var presetColors = presetItem.querySelectorAll(".header span");
+    // console.log(presetColors);
     presetColors.forEach(function (color) {
       var presetKey = color.dataset.preset;
       var presetColor = color.dataset.color;
@@ -801,7 +800,8 @@ var updateCustomPreset = function updateCustomPreset(picker) {
     var presetColors = customPresetEl.querySelectorAll(".header span");
     var presetItem = customPresetEl.querySelector('input[type="radio"]');
     var pickerCode = picker.nextElementSibling;
-    pickerCode.innerText = picker.value;
+    pickerCode.innerText = picker.value; // console.log(presetColors);
+
     colorPickerInputs.forEach(function (picker) {
       var preset = picker.dataset.picker;
       presetColors.forEach(function (toPreset) {
@@ -813,10 +813,12 @@ var updateCustomPreset = function updateCustomPreset(picker) {
       presetItem.checked = true;
     });
   });
-}; // listening color pickers input event
+}; // console.log(colorPresetInputs);
+// listening color pickers input event
 
 
 colorPickerInputs.forEach(function (picker) {
+  // console.log(picker.parentNode.dataset.key);
   updateCustomPreset(picker);
 });
 
