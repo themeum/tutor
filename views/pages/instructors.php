@@ -125,7 +125,11 @@ $filters = array(
 			<tbody>
 				<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
 	
-					<?php foreach ( $instructors_list as $list ) : ?>
+					<?php
+					foreach ( $instructors_list as $list ) :
+						$alert = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
+						?>
+						
 						<tr>
 							<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
 								<div class="td-checkbox d-flex ">
@@ -134,12 +138,12 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
 								<div class="td-avatar">
-									<?php $avatar_url = get_avatar_url( $list->ID ); ?>
+								<?php $avatar_url = get_avatar_url( $list->ID ); ?>
 									<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
 									<p class="color-text-primary text-medium-body">
-										<?php echo esc_html( $list->display_name ); ?>
+									<?php echo esc_html( $list->display_name ); ?>
 									</p>
-									<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
+								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
 									<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
 										<span class="ttr-detail-link-filled tutor-mt-5"></span>
 									</a>
@@ -147,23 +151,25 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
 								<span class="color-text-primary text-regular-caption">
-								<?php echo esc_html( $list->user_email ); ?>
+							<?php echo esc_html( $list->user_email ); ?>
 								</span>
 							</td>
 							</td>
 							<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
 								<span class="color-text-primary text-regular-caption">
-								<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
+							<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
 								</span>
 							</td>
-							<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
-							<span class="color-text-primary text-medium-caption">
-							<?php echo wp_kses_post( $instructors->column_status( $list, 'status' ) ); ?>
-							</span>
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+								<span class="color-text-primary text-medium-caption">
+									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?>">
+									<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
+									</span>
+								</span>
 							</td>
 							<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
 							<div class="inline-flex-center td-action-btns">
-								<?php echo wp_kses_post( $instructors->column_action( $list, 'status' ) ); ?>
+							<?php echo wp_kses_post( $instructors->column_action( $list, 'status' ) ); ?>
 							</div>
 							</td>
 						</tr>
