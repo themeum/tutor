@@ -10,7 +10,7 @@
         <div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
             <?php foreach ( $data['filter_period'] as $key => $value ) : ?>
                 <?php 
-                    $active_class = $active === $value['type'] ? 'tutor-bg-primary color-text-white tutor-py-6' : 'tutor-py-5 tutor-border';    
+                    $active_class = $active === $value['type'] ? 'tutor-bg-primary color-text-white tutor-py-6' : 'tutor-py-5 tutor-border color-text-subsued';    
                 ?>
                 <a href="<?php echo esc_url( $value['url'] ); ?>" class="tutor-radius-6 tutor-px-20 tutor-mr-15 <?php esc_attr_e( $active_class ); ?>">
                     <?php esc_html_e( $value['title'] ); ?>
@@ -30,7 +30,7 @@
                     type="date"
                     id="tutor-backend-filter-date"
                     name="start_date"
-                    class="tutor-form-control"
+                    class="tutor-form-control color-text-subsued"
                     placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>"
                     value="<?php esc_attr_e( $start_date ); ?>"
                     required
@@ -42,7 +42,7 @@
                     type="date"
                     id="tutor-backend-filter-date"
                     name="end_date"
-                    class="tutor-form-control"
+                    class="tutor-form-control color-text-subsued"
                     placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>"
                     value="<?php esc_attr_e( $end_date ); ?>"
                     required

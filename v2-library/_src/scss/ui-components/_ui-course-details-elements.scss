@@ -203,6 +203,7 @@
 		align-items: center;
 		position: relative;
 		cursor: pointer;
+		transition: 200ms;
 		@extend .text-medium-h6;
 		@extend .color-text-title;
 		&::after {
@@ -213,7 +214,7 @@
 			right: 1rem;
 			transition: 150ms;
 		}
-		&.active {
+		&.is-active {
 			color: $primary-main;
 			&::after {
 				// content: '\e941';
@@ -224,7 +225,7 @@
 	&-item-body {
 		max-height: 0;
 		overflow: hidden;
-		transition: max-height 0.2s ease-out;
+		transition: max-height 0.25s linear;
 	}
 	&-item-body-content {
 		@extend .text-regular-body;
@@ -241,6 +242,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		border-top: 1px solid $stroke-light-30;
 		&:not(:last-child) {
 			border-bottom: 1px solid $stroke-light-30;
 		}
