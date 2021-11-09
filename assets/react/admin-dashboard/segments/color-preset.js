@@ -29,7 +29,7 @@ const otherColorsPreview = () => {
   otherColorRows.forEach((item, index) => {
     if (0 == index) {
       initHeight = item.offsetHeight;
-      // otherColors.style.height = initHeight - 10 + "px";
+      otherColors.style.height = initHeight - 10 + "px";
     }
     itemsHeight = itemsHeight + item.offsetHeight;
   });

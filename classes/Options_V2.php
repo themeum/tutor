@@ -728,6 +728,7 @@ class Options_V2 {
 								'desc'    => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
 								'default' => 'default',
 								'fields'  => array(
+									/* First 4 preset_name should be same as color_fields */
 									array(
 										'key'    => 'default',
 										'label'  => 'Default',
@@ -1049,7 +1050,7 @@ class Options_V2 {
 									array(
 										'key'     => 'enable_q_and_a_on_course',
 										'type'    => 'toggle_single',
-										'label'   => __( 'Question and Answer', 'tutor' ),
+										'label'   => __( 'Q&A', 'tutor' ),
 										'default' => 'on',
 										'desc'    => __( 'Enabling this feature will add a Q&amp;A section on every course.', 'tutor' ),
 									),
@@ -1088,7 +1089,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_total_enrolled',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Total Enrolled', 'tutor' ),
+										'label'       => __( 'Enrolled Students', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course total enrolled from the course page.', 'tutor' ),
