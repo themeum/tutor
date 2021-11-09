@@ -5,7 +5,6 @@
 		<?php foreach ( $blocks['fields_group'] as $fields_group ) : ?>
 				<?php
 				if ( $fields_group['type'] == 'color_preset' ) :
-					// pr( $fields_group );
 					?>
 					<div class="tutor-option-field-row d-block">
 						<div class="tutor-option-field-label">
@@ -16,7 +15,6 @@
 							<?php
 							foreach ( $fields_group['fields'] as $fields ) :
 								$option_value = $this->get( $fields_group['key'], tutils()->array_get( 'default', $fields_group ) );
-								// pr( $fields );
 								?>
 							<label for="<?php esc_attr_e( $fields['key'] ); ?>" class="color-preset-input">
 								<input type="radio" name="tutor_option[<?php esc_attr_e( $fields_group['key'] ); ?>]" id="<?php esc_attr_e( $fields['key'] ); ?>" value="<?php esc_attr_e( $fields['key'] ); ?>" <?php checked( $option_value, $fields['key'] ); ?> >
@@ -44,13 +42,30 @@
 
 				<?php if ( $fields_group['type'] === 'color_fields' ) : ?>
 					<div class="color-picker-wrapper">
-						<?php foreach ( $fields_group['fields'] as $key => $field ) : ?>
-							<?php echo $this->generate_field( $field ); ?>
-						<?php endforeach; ?>
+						<?php
+						foreach ( $fields_group['fields'] as $key => $field ) {
+							if ( 'other' !== $field['preset_name'] ) {
+								echo $this->generate_field( $field );
+							}
+						}
+						?>
+						<div class="other_colors">
+							<?php
+							foreach ( $fields_group['fields'] as $key => $field ) {
+								if ( 'other' == $field['preset_name'] ) {
+									echo $this->generate_field( $field );
+								}
+							}
+							?>
+						</div>
 					</div>
 				<?php endif; ?>
 
 		<?php endforeach; ?>
+			<div class="more_button tutor-font-size-16">
+				<i class="ttr-plus-filled"></i>
+				<span>Show More</span>
+			</div>
 		</div>
 	</div>
 </div>

@@ -4785,72 +4785,6 @@ social share
 /**
  * Tutor Front-End Modal
  */
-.tutor-frontend-modal {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  z-index: 999999;
-}
-
-.tutor-frontend-modal .tutor-frontend-modal-overlay {
-  background: rgba(0, 0, 0, 0.7);
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: -1;
-  cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.852 12.004L.23 22.7a.764.764 0 0 0 0 1.076.75.75 0 0 0 1.068 0L12 13l10.703 10.778a.75.75 0 0 0 1.069 0 .764.764 0 0 0 0-1.076L13.148 12.004l10.63-10.706a.764.764 0 0 0 0-1.075.752.752 0 0 0-1.067 0L12 11.008 1.289.223a.752.752 0 0 0-1.068 0 .764.764 0 0 0 0 1.076l10.631 10.705z' fill='%23F0576A' fill-rule='evenodd'/%3E%3C/svg%3E"), auto;
-}
-
-.tutor-frontend-modal .tutor-frontend-modal-content {
-  position: relative;
-  background: #fff;
-  padding: 60px;
-  width: 90%;
-  max-width: 750px;
-  max-height: 90%;
-  overflow-y: auto;
-}
-
-@media (max-width: 768px) {
-  .tutor-frontend-modal .tutor-frontend-modal-content {
-    padding: 40px;
-  }
-}
-
-@media (max-width: 540px) {
-  .tutor-frontend-modal .tutor-frontend-modal-content {
-    padding: 20px;
-  }
-}
-
-button.tm-close.tutor-icon-line-cross {
-  position: absolute;
-  right: 23px;
-  top: 23px;
-  background: transparent;
-  padding: 0;
-  font-size: 24px;
-  border: none;
-  color: var(--tutor-light-color);
-}
-
-button.tm-close.tutor-icon-line-cross:hover {
-  color: red;
-}
-
 .label-order-status {
   padding: 3px 5px;
   border-radius: 3px;
@@ -9251,6 +9185,51 @@ Instructor customize filters styles
 
 body {
   background: red;
+}
+
+body.wp-admin .tutor-qna-single-wrapper {
+  width: calc(100% - 360px);
+}
+
+.tutor-qna-single-wrapper .tutor-qa-sticky-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  background: white;
+  padding: 10px;
+  position: sticky;
+  top: 10px;
+}
+
+.tutor-qna-single-wrapper .tutor-qa-sticky-bar > div:last-child {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  flex: -o-1;
+  -ms-flex: -ms-1;
+      flex: -ms-1;
+  flex: -moz-1;
+  flex: -webkit-1;
+  text-align: right;
+}
+
+.tutor-qna-single-wrapper .tutor-qa-sticky-bar > div:last-child > span {
+  display: inline-block;
+  margin-left: 7px;
+}
+
+.tutor-qna-admin-sidebar {
+  width: 360px;
+  position: fixed;
+  right: 0;
+  top: 32px;
+  bottom: 0;
+  left: auto;
+  background: white;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

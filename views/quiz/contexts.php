@@ -12,7 +12,7 @@ $contexts =  array(
             'incorrect_answer'  => __('Incorrect Answer', 'tutor'),
             'earned_marks'      => __('Earned Marks', 'tutor'),
             'result'            => __('Result', 'tutor'),
-            // 'details'           => __('Details', 'tutor')
+            'details'           => __('Details', 'tutor')
         ),
         'contexts' => array(
             'frontend-dashboard-my-attempts' => array(
