@@ -2734,9 +2734,7 @@ class Utils {
 	 */
 	public function get_total_instructors( $search_filter = '', $status = array(), $course_id = '', $date = '' ): int {
 		global $wpdb;
-		
 		$search_filter  = sanitize_text_field( $search_filter );
-		$status 		= sanitize_text_field( $status );
 		$course_id 		= sanitize_text_field( $course_id );
 		$date 			= sanitize_text_field( $date );
 
@@ -2745,7 +2743,8 @@ class Utils {
 		$status_query = '';
 		if ( is_array( $status ) && count( $status ) ) {
 			$status		  = implode(',', $status );
-			$status_query = "AND ins_status.meta_value IN {$status}";
+
+			$status_query = "AND ins_status.meta_value IN ('$status')";
 		}
 
 		$course_query = '';
