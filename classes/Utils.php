@@ -2746,34 +2746,35 @@ class Utils {
 				return "'{$str}'";
 			}, $status);
 
-			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
+			$status_query = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
 
 		$course_query = '';
 		if ( '' !== $course_id ) {
-			$course_query = "AND course.ID = {$course_id}";
+			$course_query = "AND umeta.meta_value = $course_id ";
 		}
 
 		$date_query = '';
 		if ( '' !== $date ) {
 			$date 		= tutor_get_formated_date( 'Y-m-d', $date ); 
-			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
+			$date_query = "AND  DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 
 		$count = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT(DISTINCT(user.ID))
-			FROM 	{$wpdb->users} as user
-					INNER JOIN {$wpdb->usermeta} as user_meta
-							ON ( user_meta.user_id = user.ID )
-				    INNER JOIN {$wpdb->usermeta} as ins_status
-							ON ins_status.user_id = user.ID AND ins_status.meta_key = '_tutor_instructor_status'
-					INNER JOIN {$wpdb->posts} AS course
-							ON course.post_author = user.ID 
-			WHERE 	user_meta.meta_key = %s
-					{$status_query}
-					{$course_query}
-					{$date_query}
-					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+			"SELECT COUNT(DISTINCT user.ID )
+				FROM 	{$wpdb->users} user
+						INNER JOIN {$wpdb->usermeta} user_meta
+								ON ( user.ID = user_meta.user_id )
+						INNER JOIN {$wpdb->usermeta} inst_status
+								ON ( user.ID = inst_status.user_id )
+						LEFT JOIN {$wpdb->usermeta} AS umeta
+								ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+
+				WHERE 	user_meta.meta_key = %s
+						AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+						{$status_query}
+						{$course_query}
+						{$date_query}
 			",
 			'_is_tutor_instructor',
 			$search_filter,
