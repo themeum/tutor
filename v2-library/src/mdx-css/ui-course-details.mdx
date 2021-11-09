@@ -68,10 +68,19 @@ import '../docz-essential.css';
 						<div class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-2">
 							<span>Curriculum</span>
 						</div>
+						<div class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-3">
+							<span>Reviews</span>
+						</div>
+						<div class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-4">
+							<span>Q&A</span>
+						</div>
+						<div class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-5">
+							<span>Announcement</span>
+						</div>
 					</div>
 					<div class="tab-body">
 						<div class="tab-body-item is-active" id="tutor-course-details-tab-1">
-							<div className="tab-item-content tutor-has-showmore is-active-">
+							<div className="tab-item-content tutor-has-showmore">
 								<div className="tutor-showmore-content">
 									<div className="text-medium-h6 color-text-primary">About Course</div>
 									<div className="text-regular-body color-text-subsued tutor-mt-12">
@@ -110,95 +119,251 @@ import '../docz-essential.css';
 									</button>
 								</div>
 							</div>
+							{/* end of /.tab-item-content.tutor-has-showmore */}
+							<div class="tutor-course-details-widget tutor-course-details-widget-col-2 tutor-mt-30">
+								<div class="widget-title">
+									<span class="color-text-primary text-medium-h6">What Will I Learn?</span>
+								</div>
+								<ul class="widget-list tutor-mt-16">
+									<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
+										<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
+										<span>34 hours on-demand video</span>
+									</li>
+									<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
+										<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
+										<span>45 articles</span>
+									</li>
+									<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
+										<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
+										<span>Full lifetime access</span>
+									</li>
+									<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
+										<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
+										<span>Access on mobile and TV</span>
+									</li>
+									<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
+										<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
+										<span>Access on mobile and TV</span>
+									</li>
+								</ul>
+							</div>
+							<div className="tutor-mt-65">
+								<div class="color-text-primary text-medium-h6 tutor-mb-25">About the instructors</div>
+								<div class="tutor-instructor-info-card">
+									<div class="tutor-instructor-info-card-body tutor-bs-d-sm-flex tutor-bs-align-items-start tutor-px-30 tutor-py-24">
+										<div class="tutor-ins-avatar tutor-mr-sm-15">
+											<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="instructor avatar" />
+										</div>
+										<div class="tutor-ins-rest">
+											<div class="tutor-ins-title text-medium-body color-text-primary">Joseph Robbins</div>
+											<div class="tutor-ins-designation text-regular-caption color-text-hints tutor-mt-3">
+												UX Engineer & Software Developer
+											</div>
+											<div class="tutor-ins-summary text-regular-body text-subsued tutor-mt-18">
+												Over 92% of computers are infected with Adware and spyware. Such software is rarely accompanied
+												by uninstall utility and even when it is it almost always leaves broken Windows Registry keys
+												behind it. is used for everything from traditional web apps with server-side rendered.
+											</div>
+										</div>
+									</div>
+									<div class="tutor-instructor-info-card-footer tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-px-30 tutor-py-15">
+										<div className="tutor-ratings flex-center">
+											<div className="tutor-rating-stars">
+												<span className="ttr-star-full-filled"></span>
+												<span className="ttr-star-full-filled"></span>
+												<span className="ttr-star-full-filled"></span>
+												<span className="ttr-star-half-filled"></span>
+												<span className="ttr-star-line-filled"></span>
+											</div>
+											<div className="tutor-rating-text text-medium-small color-text-primary tutor-mt-3">4.5</div>
+										</div>
+										<div className="tutor-ins-meta tutor-bs-d-flex">
+											<div className="tutor-ins-meta-item color-design-dark flex-center">
+												<span class="tutor-icon-30 ttr-user-filled"></span>
+												<span className="text-bold-body color-text-primary tutor-mr-4">2892</span>
+												<span className="text-regular-caption color-text-subsued">Students</span>
+											</div>
+											<div className="tutor-ins-meta-item color-design-dark flex-center ">
+												<span class="tutor-icon-30 ttr-mortarboard-line"></span>
+												<span className="text-bold-body color-text-primary tutor-mr-4">13</span>
+												<span className="text-regular-caption color-text-subsued">Courses</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
+						{/* end of /.tab-body-item */}
 						<div class="tab-body-item" id="tutor-course-details-tab-2">
-							<div className="text-medium-h6 color-text-primary">Curriculum</div>
-							<div className="text-regular-body color-text-subsued tutor-mt-12">
-								This course will teach you all of that! From scratch with zero prior knowledge assumed. Though if you do
-								bring some knowledge, you'll of course be able to quickly jump into the course modules that are most
-								interesting to you.Does this look like a lot of content? It certainly is! This is not a short course but
-								it is the "Complete Guide" on Node.js after all. .
-								<br /> <br />
-								Node.js is probably THE most popular and modern server-side programming language you can dive into these
-								days! Node.js developers are in high demand and the language is used for everything from traditional web
-								apps with server-side rendered views over REST APIs all the way up to GraphQL APIs and real-time web
-								services. Not to mention its applications in build workflows for projects of all sizes.
+							<div className="tab-item-content tutor-has-showmore">
+								<div className="tutor-showmore-content">
+									<div className="text-medium-h6 color-text-primary">Course Curriculm</div>
+									<div className="text-regular-body color-text-subsued tutor-mt-12">
+										Node.js is probably THE most popular and modern server-side programming language you can dive into
+										these days! Node.js developers are in high demand and the language is used for everything from
+										traditional web apps with server-side rendered views over REST APIs all the way up to GraphQL APIs
+										and real-time web services. Not to mention its applications in build workflows for projects of all
+										sizes.
+										<br /> <br />
+										This course will teach you all of that! From scratch with zero prior knowledge assumed. Though if
+										you do bring some knowledge, you'll of course be able to quickly jump into the course modules that
+										are most interesting to you.Does this look like a lot of content? It certainly is! This is not a
+										short course but it is the "Complete Guide" on Node.js after all.
+										<div className="showmore-text">
+											<br />
+											Node.js is probably THE most popular and modern server-side programming language you can dive into
+											these days! Node.js developers are in high demand and the language is used for everything from traditional
+											web apps with server-side rendered views over REST APIs all the way up to GraphQL APIs and real-time
+											web services. Not to mention its applications in build workflows for projects of all sizes.
+											<br /> <br />
+											This course will teach you all of that! From scratch with zero prior knowledge assumed. Though if you
+											do bring some knowledge, you'll of course be able to quickly jump into the course modules that are
+											most interesting to you.Does this look like a lot of content? It certainly is! This is not a short
+											course but it is the "Complete Guide" on Node.js after all.
+										</div>
+									</div>
+								</div>
+								<div class="tutor-showmore-btn tutor-mt-22" data-showmore>
+									<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showmore">
+										<span class="btn-icon ttr-plus-filled color-design-brand"></span>
+										<span class="color-text-subsued">Show More</span>
+									</button>
+									<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showless">
+										<span class="btn-icon ttr-minus-filled color-design-brand"></span>
+										<span class="color-text-subsued">Show Less</span>
+									</button>
+								</div>
+							</div>
+							{/* end of /.tab-item-content.tutor-has-showmore */}
+							<div class="tutor-accordion tutor-mt-40">
+								<div class="tutor-accordion-item">
+									<div class="tutor-accordion-item-header">01. Overview</div>
+									<div class="tutor-accordion-item-body">
+										<div class="tutor-accordion-item-body-content">
+											<ul className="tutor-courses-lession-list">
+												<li>
+													<div>
+														<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">Introduction</span>
+													</div>
+													<div>
+														<span class="text-regular-caption color-text-hints">1m 10s</span>
+														<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+													</div>
+												</li>
+												<li>
+													<div>
+														<span class="ttr-document-alt-filled tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">What is Exposure?</span>
+													</div>
+													<div>
+														<span class="text-regular-caption color-text-hints">1m 10s</span>
+														<span class="ttr-lock-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+													</div>
+												</li>
+												<li>
+													<div>
+														<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">The Exposure Triangle</span>
+													</div>
+													<div>
+														<span class="text-regular-caption color-text-hints">1m 10s</span>
+														<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								{/* end of /.tutor-accordion-item" */}
+								<div class="tutor-accordion-item">
+									<div class="tutor-accordion-item-header">02. Putting It All Together</div>
+									<div class="tutor-accordion-item-body">
+										<div class="tutor-accordion-item-body-content">
+											<ul className="tutor-courses-lession-list">
+												<li>
+													<div>
+														<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">Introduction</span>
+													</div>
+													<div>
+														<span class="text-regular-caption color-text-hints">1m 10s</span>
+														<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+													</div>
+												</li>
+												<li>
+													<div>
+														<span class="ttr-document-alt-filled tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">What is Exposure?</span>
+													</div>
+													<div>
+														<span class="text-regular-caption color-text-hints">1m 10s</span>
+														<span class="ttr-lock-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								{/* end of /.tutor-accordion-item" */}
+								<div class="tutor-accordion-item">
+									<div class="tutor-accordion-item-header">03. Using ES6, NPM, Babel and Webpack</div>
+									<div class="tutor-accordion-item-body">
+										<div class="tutor-accordion-item-body-content">
+											<ul className="tutor-courses-lession-list">
+												<li>
+													<div>
+														<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">Introduction</span>
+													</div>
+													<div>
+														<span class="text-regular-caption color-text-hints">1m 10s</span>
+														<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+													</div>
+												</li>
+												<li>
+													<div>
+														<span class="ttr-document-alt-filled tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">What is Exposure?</span>
+													</div>
+													<div>
+														<span class="text-regular-caption color-text-hints">1m 10s</span>
+														<span class="ttr-lock-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+													</div>
+												</li>
+												<li>
+													<div>
+														<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">The Exposure Triangle</span>
+													</div>
+													<div>
+														<span class="text-regular-caption color-text-hints">1m 10s</span>
+														<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								{/* end of /.tutor-accordion-item" */}
+							</div>
+							{/* end of /.tutor-accordion */}
+						</div>
+						{/* end of /.tab-body-item */}
+						<div class="tab-body-item" id="tutor-course-details-tab-3">
+							<div className="tab-item-content">
+								<div className="text-medium-h6 color-text-primary">Student Ratings & Reviews</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="tutor-course-details-widget tutor-course-details-widget-col-2 tutor-mt-30">
-					<div class="widget-title">
-						<span class="color-text-primary text-medium-h6">What Will I Learn?</span>
-					</div>
-					<ul class="widget-list tutor-mt-16">
-						<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
-							<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
-							<span>34 hours on-demand video</span>
-						</li>
-						<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
-							<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
-							<span>45 articles</span>
-						</li>
-						<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
-							<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
-							<span>Full lifetime access</span>
-						</li>
-						<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
-							<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
-							<span>Access on mobile and TV</span>
-						</li>
-						<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
-							<span className="ttr-mark-filled color-design-brand tutor-mr-5"></span>
-							<span>Access on mobile and TV</span>
-						</li>
-					</ul>
-				</div>
-				<div className="tutor-mt-65">
-					<div class="color-text-primary text-medium-h6 tutor-mb-25">About the instructors</div>
-					<div class="tutor-instructor-info-card">
-						<div class="tutor-instructor-info-card-body tutor-bs-d-sm-flex tutor-bs-align-items-start tutor-px-30 tutor-py-24">
-							<div class="tutor-ins-avatar tutor-mr-sm-15">
-								<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="instructor avatar" />
-							</div>
-							<div class="tutor-ins-rest">
-								<div class="tutor-ins-title text-medium-body color-text-primary">Joseph Robbins</div>
-								<div class="tutor-ins-designation text-regular-caption color-text-hints tutor-mt-3">
-									UX Engineer & Software Developer
-								</div>
-								<div class="tutor-ins-summary text-regular-body text-subsued tutor-mt-18">
-									Over 92% of computers are infected with Adware and spyware. Such software is rarely accompanied by
-									uninstall utility and even when it is it almost always leaves broken Windows Registry keys behind it.
-									is used for everything from traditional web apps with server-side rendered.
-								</div>
+						{/* end of /.tab-body-item */}
+						<div class="tab-body-item" id="tutor-course-details-tab-4">
+							<div className="tab-item-content">
+								<div className="text-medium-h6 color-text-primary">Question & Answer</div>
 							</div>
 						</div>
-						<div class="tutor-instructor-info-card-footer tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-px-30 tutor-py-15">
-							<div className="tutor-ratings flex-center">
-								<div className="tutor-rating-stars">
-									<span className="ttr-star-full-filled"></span>
-									<span className="ttr-star-full-filled"></span>
-									<span className="ttr-star-full-filled"></span>
-									<span className="ttr-star-half-filled"></span>
-									<span className="ttr-star-line-filled"></span>
-								</div>
-								<div className="tutor-rating-text text-medium-small color-text-primary tutor-mt-3">4.5</div>
-							</div>
-							<div className="tutor-ins-meta tutor-bs-d-flex">
-								<div className="tutor-ins-meta-item color-design-dark flex-center">
-									<span class="tutor-icon-30 ttr-user-filled"></span>
-									<span className="text-bold-body color-text-primary tutor-mr-4">2892</span>
-									<span className="text-regular-caption color-text-subsued">Students</span>
-								</div>
-								<div className="tutor-ins-meta-item color-design-dark flex-center ">
-									<span class="tutor-icon-30 ttr-mortarboard-line"></span>
-									<span className="text-bold-body color-text-primary tutor-mr-4">13</span>
-									<span className="text-regular-caption color-text-subsued">Courses</span>
-								</div>
+						{/* end of /.tab-body-item */}
+						<div class="tab-body-item" id="tutor-course-details-tab-5">
+							<div className="tab-item-content">
+								<div className="text-medium-h6 color-text-primary">Announcements</div>
 							</div>
 						</div>
+						{/* end of /.tab-body-item */}
 					</div>
+					{/* end of /.tab-body */}
 				</div>
+				{/* end of /.tutor-course-details-tab */}
 			</section>
 			<aside className="tutor-course-details-page-main-right">
 				<div class="tutor-course-sidebar-card tutor-add-to-cart">
