@@ -769,10 +769,14 @@ var otherColorsPreview = function otherColorsPreview() {
 colorPresetInputs.forEach(function (preset) {
   var presetItem = preset.parentElement.querySelector(".preset-item");
   var presetColors = presetItem.querySelectorAll(".header span");
-  console.log(presetColors); // listening preset input events
+  var presetInput = preset.closest(".color-preset-input"); // listening preset input events
+
+  if (true === preset.checked) {
+    presetInput.classList.add("is-checked");
+  }
 
   preset.addEventListener("input", function (e) {
-    // console.log(presetColors);
+    presetInput.classList.add("is-checked");
     presetColors.forEach(function (color) {
       var presetKey = color.dataset.preset;
       var presetColor = color.dataset.color;
@@ -801,8 +805,7 @@ var updateCustomPreset = function updateCustomPreset(picker) {
     var presetColors = customPresetEl.querySelectorAll(".header span");
     var presetItem = customPresetEl.querySelector('input[type="radio"]');
     var pickerCode = picker.nextElementSibling;
-    pickerCode.innerText = picker.value; // console.log(presetColors);
-
+    pickerCode.innerText = picker.value;
     colorPickerInputs.forEach(function (picker) {
       var preset = picker.dataset.picker;
       presetColors.forEach(function (toPreset) {
@@ -814,12 +817,10 @@ var updateCustomPreset = function updateCustomPreset(picker) {
       presetItem.checked = true;
     });
   });
-}; // console.log(colorPresetInputs);
-// listening color pickers input event
+}; // listening color pickers input event
 
 
 colorPickerInputs.forEach(function (picker) {
-  // console.log(picker.parentNode.dataset.key);
   updateCustomPreset(picker);
 });
 

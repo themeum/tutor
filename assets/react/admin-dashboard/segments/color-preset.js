@@ -55,10 +55,13 @@ const otherColorsPreview = () => {
 colorPresetInputs.forEach((preset) => {
   const presetItem = preset.parentElement.querySelector(".preset-item");
   const presetColors = presetItem.querySelectorAll(".header span");
-  console.log(presetColors);
+  const presetInput = preset.closest(".color-preset-input");
   // listening preset input events
+  if (true === preset.checked) {
+    presetInput.classList.add("is-checked");
+  }
   preset.addEventListener("input", (e) => {
-    // console.log(presetColors);
+    presetInput.classList.add("is-checked");
     presetColors.forEach((color) => {
       let presetKey = color.dataset.preset;
       let presetColor = color.dataset.color;
@@ -95,8 +98,6 @@ const updateCustomPreset = (picker) => {
     const pickerCode = picker.nextElementSibling;
     pickerCode.innerText = picker.value;
 
-    // console.log(presetColors);
-
     colorPickerInputs.forEach((picker) => {
       let preset = picker.dataset.picker;
       presetColors.forEach((toPreset) => {
@@ -109,10 +110,8 @@ const updateCustomPreset = (picker) => {
     });
   });
 };
-// console.log(colorPresetInputs);
 
 // listening color pickers input event
 colorPickerInputs.forEach((picker) => {
-  // console.log(picker.parentNode.dataset.key);
   updateCustomPreset(picker);
 });
