@@ -154,11 +154,11 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 													<div class="tutor-single-lesson-items-left d-flex">
 														<span class="ttr-zoom-brand color-design-brand"></span>
 														<span class="lesson_title text-regular-caption color-text-title">
-														<?php echo $post->post_title; ?>
+															<?php echo $post->post_title; ?>
 														</span>
 													</div>
 													<div class="tutor-single-lesson-items-right d-flex tutor-lesson-right-icons">
-													<?php do_action('tutor/lesson_list/right_icon_area', $post); ?>
+														<?php do_action('tutor/lesson_list/right_icon_area', $post); ?>
 													</div>
                                                 </a>
                                             </div>
