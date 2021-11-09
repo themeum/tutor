@@ -107,36 +107,148 @@
 	}
 	&.tutor-after-purchase {
 	}
-}
 
-.tutor-course-details-tab {
-}
-
-//Backend Alert utlity .alert-#{$variable}{...}
-$variations: (
-	// prefix borderC txtC bgC btnC iconC btnBg btnBorder
-		'primary' $primary-30 $primary-100 $primary-50 $brand-wordpress,
-	'warning' $warning-30 $warning-100 $warning-50 $design-warning,
-	'success' $success-30 $success-100 $success-50 $design-success,
-	'danger' $danger-30 $danger-100 $danger-50 $design-danger
-);
-@each $suffix, $bgColor, $txtColor, $border, $icon in $variations {
-	.tutor-backend-alert.alert-#{$suffix} {
-		background: #{$bgColor};
-		color: #{$txtColor};
-		border: 1px solid #{$border};
-		> .alert-icon {
-			color: #{$icon};
+	.tutor-alert {
+		.tutor-alert-text {
+			align-items: flex-start;
+		}
+		.tutor-alert-icon {
+			margin-top: -5px;
 		}
 	}
 }
 
-// Tutor backend alert
-.tutor-alert {
-	@extend .text-regular-caption;
+.tutor-course-details-page {
+	// border: 1px solid;
+	&-main {
+		display: grid;
+		grid-template-columns: 8fr 4fr;
+		grid-gap: 55px;
 
-	background: rgba(255, 255, 255, 0.9);
-	/* color/primary/fill/70 */
-	border: 1px solid #95aaed;
-	border-radius: 6px;
+		&-left {
+		}
+		&-right {
+		}
+	}
+
+	.tutor-has-showmore {
+		.tutor-showmore-content {
+			position: relative;
+			&:before {
+				content: '';
+				position: absolute;
+				width: 100%;
+				height: 62px;
+				bottom: 0;
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.0001) 1.31%,
+					rgba(255, 255, 255, 0.721372) 15.41%,
+					#ffffff 100%
+				);
+			}
+		}
+		.showmore-text {
+			display: none;
+		}
+		.btn-showmore {
+			display: flex !important;
+		}
+		.btn-showless {
+			display: none !important;
+		}
+		&.is-active {
+			.showmore-text {
+				display: flex !important;
+			}
+			.btn-showmore {
+				display: none !important;
+			}
+			.btn-showless {
+				display: flex !important;
+			}
+			.tutor-showmore-content {
+				position: relative;
+				&:before {
+					display: none;
+				}
+			}
+		}
+		.tutor-showmore-btn {
+			cursor: pointer;
+			> * {
+				pointer-events: none;
+			}
+		}
+	}
+}
+
+// Tutor Accordion
+.tutor-accordion {
+	&-item {
+		background-color: #fff;
+		/* stroke/light30 */
+
+		border: 1px solid $stroke-light-30;
+		border-radius: 6px;
+
+		&:not(:last-child) {
+			margin-bottom: 20px;
+		}
+	}
+	&-item-header {
+		padding: 15px 20px;
+		min-height: 58px;
+		display: flex;
+		align-items: center;
+		position: relative;
+		cursor: pointer;
+		@extend .text-medium-h6;
+		@extend .color-text-title;
+		&::after {
+			content: '\e940';
+			font-family: 'tutor-v2-iconpack' !important;
+			font-size: 2rem;
+			position: absolute;
+			right: 1rem;
+			transition: 150ms;
+		}
+		&.active {
+			color: $primary-main;
+			&::after {
+				// content: '\e941';
+				transform: rotate(-90deg);
+			}
+		}
+	}
+	&-item-body {
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.2s ease-out;
+	}
+	&-item-body-content {
+		@extend .text-regular-body;
+		@extend .color-text-primary;
+		padding: 0 15px;
+		border-top: 1px solid $stroke-light-30;
+	}
+}
+
+.tutor-courses-lession-list {
+	list-style: none;
+	margin: 0 -15px;
+	li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		&:not(:last-child) {
+			border-bottom: 1px solid $stroke-light-30;
+		}
+		padding: 15px;
+
+		> div {
+			display: flex;
+			align-items: center;
+		}
+	}
 }
