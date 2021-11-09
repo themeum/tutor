@@ -354,7 +354,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 			</table>
 		</div>
 	</div>
-	<div class="tutor-admin-page-pagination-wrapperp tutor-mt-50 tutor-mr-20">
+	<div class="tutor-admin-page-pagination-wrapperp tutor-mt-50">
 		<?php
 		/**
 		 * Prepare pagination data & load template
