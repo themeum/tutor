@@ -9,7 +9,7 @@
     $back_url = remove_query_arg( 'question_id', tutor()->current_url );
 ?>
 
-<div class="tutor-qna-single-wrapper">
+<div class="tutor-qna-single-wrapper" data-question_id="<?php echo $question_id; ?>">
     <div class="tutor-qa-sticky-bar">
         <div>
             <a href="<?php echo $back_url; ?>">
@@ -17,10 +17,10 @@
             </a>
         </div>
         <div>
-            <span><i class="ttr-tick-circle-outline-filled"></i> <?php _e('Solved', 'tutor'); ?></span>
-            <span><i class="ttr-msg-important-filled"></i> <?php _e('Important', 'tutor'); ?></span>
-            <span><i class="ttr-msg-archive-filled"></i> <?php _e('Archive', 'tutor'); ?></span>
-            <span><i class="ttr-msg-unread-filled"></i> <?php _e('Mark as Unread', 'tutor'); ?></span>
+            <span data-action="solved"><i class="ttr-tick-circle-outline-filled"></i> <?php _e('Solved', 'tutor'); ?></span>
+            <span data-action="important"><i class="ttr-msg-important-filled"></i> <?php _e('Important', 'tutor'); ?></span>
+            <span data-action="archive"><i class="ttr-msg-archive-filled"></i> <?php _e('Archive', 'tutor'); ?></span>
+            <span data-action="unread"><i class="ttr-msg-unread-filled"></i> <?php _e('Mark as Unread', 'tutor'); ?></span>
             <span data-tutor-modal-target="tutor_qna_delete_single">
                 <i class="ttr-delete-fill-filled"></i> <?php _e('Delete', 'tutor'); ?>
             </span>
