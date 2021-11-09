@@ -23,7 +23,7 @@ do_action('tutor_quiz/single/before/top');
 
 ?>
 <?php
-	if (!$is_started_quiz && $attempted_count !== 0) {
+	if (!$is_started_quiz && $attempted_count == 0) {
 ?>
 
 <div class="tutor-start-quiz-wrapper mr-auto tutor-p-50">
