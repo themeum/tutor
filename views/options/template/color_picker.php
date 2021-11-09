@@ -1,67 +1,97 @@
-<div class="tutor-option-single-item <?php echo $blocks['slug']; ?>">
-	<?php echo $blocks['label'] ? '<h4>' . $blocks['label'] . '</h4>' : ''; ?>
+<?php
+/**
+ * Color picker template for settings.
+ *
+ * @package Tutor LMS
+ * @since 2.0
+ */
+$fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] : array();
+?>
+<div class="tutor-option-single-item <?php echo esc_attr( $blocks['slug'] ); ?>">
+	<?php echo ( isset( $blocks['label'] ) && ! empty( $blocks['label'] ) ) ? '<h4>' . esc_attr( $blocks['label'] ) . '</h4>' : ''; ?>
 	<div class="item-grid">
 		<div class="item-wrapper color-preset-picker">
-		<?php foreach ( $blocks['fields_group'] as $fields_group ) : ?>
-				<?php
-				if ( $fields_group['type'] == 'color_preset' ) :
-					?>
+		<?php
+		foreach ( $fields_groups as $fields_group ) {
+			if ( 'color_fields' === $fields_group['type'] ) {
+				$all_color_fields = $fields_group['fields'];
+			}
+		}
+		foreach ( $fields_groups as $fields_group ) {
+			if ( 'color_preset' === $fields_group['type'] ) {
+				$preset_color_fields = $fields_group['fields'];
+				?>
 					<div class="tutor-option-field-row d-block">
 						<div class="tutor-option-field-label">
-							<h5 class="label"><?php _e( $fields_group['label'], 'tutor-pro' ); ?></h5>
-							<p class="desc"><?php _e( $fields_group['desc'], 'tutor-pro' ); ?></p>
+							<h5 class="label"><?php echo esc_attr( $fields_group['label'] ); ?></h5>
+							<p class="desc"><?php echo esc_attr( $fields_group['desc'] ); ?></p>
 						</div>
 						<div class="tutor-option-field-input color-preset-grid">
-							<?php
-							foreach ( $fields_group['fields'] as $fields ) :
-								$option_value = $this->get( $fields_group['key'], tutils()->array_get( 'default', $fields_group ) );
-								?>
-							<label for="<?php esc_attr_e( $fields['key'] ); ?>" class="color-preset-input">
-								<input type="radio" name="tutor_option[<?php esc_attr_e( $fields_group['key'] ); ?>]" id="<?php esc_attr_e( $fields['key'] ); ?>" value="<?php esc_attr_e( $fields['key'] ); ?>" <?php checked( $option_value, $fields['key'] ); ?> >
+						<?php
+						foreach ( $preset_color_fields as $fields ) {
+							$option_value  = $this->get( $fields_group['key'], tutils()->array_get( 'default', $fields_group ) );
+							$preset_colors = tutils()->sanitize_array( $fields['colors'] );
+							?>
+							<label for="<?php echo esc_attr( $fields['key'] ); ?>" class="color-preset-input">
+								<input type="radio" name="tutor_option[<?php echo esc_attr( $fields_group['key'] ); ?>]" id="<?php echo esc_attr( $fields['key'] ); ?>" value="<?php echo esc_attr( $fields['key'] ); ?>" <?php esc_attr( checked( $option_value, $fields['key'] ) ); ?> >
 								<div class="preset-item">
 									<div class="header">
+									<?php
+									foreach ( $preset_colors as $color ) {
+										$get_color   = ( 'custom' !== $option_value && 'custom' === $fields['key'] ) ?
+										esc_attr( $color['value'] ) :
+										esc_attr( $this->get( $color['slug'] ) );
+										$color_value = 'custom' === $fields['key'] ? esc_attr( $get_color ) : esc_attr( $color['value'] );
+										$preset_name = (string) esc_attr( $color['preset_name'] );
+										?>
+											<span data-preset="<?php echo esc_attr( $preset_name ); ?>" data-color="<?php echo esc_attr( $color_value ); ?>" style="background-color: <?php echo esc_attr( $color_value ); ?>;"></span>
 										<?php
-										foreach ( $fields['colors'] as $color ) :
-											$get_color   = ( $option_value != 'custom' && $fields['key'] == 'custom' ) ? $color['value'] : $this->get( $color['slug'] );
-											$color_value = $fields['key'] == 'custom' ? $get_color : $color['value'];
-											$preset_name = (string) $color['preset_name'];
+									}
+									foreach ( $all_color_fields as $color ) {
+										if ( false == $color['preset_exist'] ) {
+											$preset_name = (string) esc_attr( $color['preset_name'] );
+											$color_value = esc_attr( $color['default'] );
 											?>
-										<span data-preset="<?php esc_attr_e( $preset_name, 'tutor' ); ?>" data-color="<?php echo $color_value; ?>" style="background-color: <?php echo $color_value; ?>;"></span>
-										<?php endforeach; ?>
+												<span class="hidden" data-preset="<?php echo esc_attr( $preset_name ); ?>" data-color="<?php echo esc_attr( $color_value ); ?>" style="background-color: <?php echo esc_attr( $color_value ); ?>;"></span>
+											<?php
+										}
+									}
+									?>
 									</div>
 									<div class="footer">
-										<span class="text-regular-body"><?php esc_attr_e( $fields['label'] ); ?></span><span class="check-icon"></span>
+										<span class="text-regular-body"><?php echo esc_attr( $fields['label'] ); ?></span><span class="check-icon"></span>
 									</div>
 								</div>
 							</label>
-							<?php endforeach; ?>
+							<?php } ?>
 						</div>
 					</div>
-				<?php endif; ?>
-
-
-				<?php if ( $fields_group['type'] === 'color_fields' ) : ?>
+				<?php
+			}
+			if ( 'color_fields' === $fields_group['type'] ) {
+				?>
 					<div class="color-picker-wrapper">
 						<?php
 						foreach ( $fields_group['fields'] as $key => $field ) {
-							if ( 'other' !== $field['preset_name'] ) {
-								echo $this->generate_field( $field );
+							if ( true === $field['preset_exist'] ) {
+								echo $this->generate_field( tutils()->sanitize_array( $field ) );
 							}
 						}
 						?>
 						<div class="other_colors">
-							<?php
-							foreach ( $fields_group['fields'] as $key => $field ) {
-								if ( 'other' == $field['preset_name'] ) {
-									echo $this->generate_field( $field );
-								}
+					   <?php
+						foreach ( $fields_group['fields'] as $key => $field ) {
+							if ( false === $field['preset_exist'] ) {
+								echo $this->generate_field( tutils()->sanitize_array( $field ) );
 							}
-							?>
+						}
+						?>
 						</div>
 					</div>
-				<?php endif; ?>
-
-		<?php endforeach; ?>
+				<?php
+			}
+		}
+		?>
 			<div class="more_button tutor-font-size-16">
 				<i class="ttr-plus-filled"></i>
 				<span>Show More</span>
