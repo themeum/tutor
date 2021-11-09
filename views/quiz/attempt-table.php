@@ -5,7 +5,7 @@
     $table_columns = include __DIR__ . '/contexts.php';
 ?>
 
-<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
+<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-30">
     <thead>
         <tr>
             <?php 
