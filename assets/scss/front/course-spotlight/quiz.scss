@@ -152,10 +152,6 @@
                     }
                 }
                 .tutor-quiz-correct-ans {
-                    @include breakpoint-max(600) {
-                        margin-left: 0px;
-                        margin-top: 10px;
-                    }
                     span:first-child {
                         font-size: 27px;
                     }

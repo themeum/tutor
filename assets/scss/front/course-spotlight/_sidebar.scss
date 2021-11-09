@@ -5,17 +5,34 @@
     border: 1px solid #cdcfd5;
     border-bottom: none;
     .tutor-sidebar-tabs-wrap {
-        .tutor-lessons-tab {
+        .tutor-lessons-tab-area {
             display: grid;
             grid-template-columns: 1fr 1fr;
             max-height: 60px;
+            >div.active {
+                // border: 0px solid $stroke-light-30;
+                background: $color-white;
+                span:first-child {
+                    color: $design-brand;
+                }
+            }
             >div {
                 text-align: center;
-                // background: $bg-gray-10;
-                // border: 1px solid $stroke-light-30;
                 padding: 12.5px 0px;
                 cursor: pointer;
                 position: relative;
+                background: $bg-gray-10;
+                border-bottom-right-radius: 20px;
+                border-bottom-left-radius: 20px;
+                // > * {
+                // 	pointer-events: none;
+                // }
+                &:first-child {
+                    border-bottom-left-radius: 0px;
+                }
+                &:last-child {
+                    border-bottom-right-radius: 0px;
+                }
                 // &:after,
                 // &:before {
                 // 	content: '';
@@ -42,17 +59,16 @@
                     font-size: 32px;
                 }
             }
-            >div.active {
-                // border: 0px solid $stroke-light-30;
-                background: $color-white;
-                span:first-child {
-                    color: $design-brand;
-                }
-            }
-            .tutor-lessons-lessons-tab {}
-            .tutor-lessons-quiz-tab {}
+            .tutor-lessons-tab {}
+            .tutor-quiz-tab {}
         }
         .tutor-sidebar-tabs-content {
+            >div {
+                display: none;
+                &.active {
+                    display: block;
+                }
+            }
             .tutor-lesson-sidebar-tab-item {}
             #tutor-lesson-sidebar-tab-content {
                 .tutor-topics-in-single-lesson {
@@ -103,8 +119,6 @@
     .tutor-lesson-sidebar {
         position: absolute;
         z-index: 9;
-        // top: 124px;
-        // left: -999999px;
         transition: all 0.5s ease 0s;
         border-radius: unset;
         border-top: none;
