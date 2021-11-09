@@ -28,6 +28,7 @@ window.jQuery(document).ready(function($) {
         let $that = $(this);
         let prompt = $(this).data('prompt');
         let del = $(this).data('delete_element_id');
+        let redirect = $(this).data('redirect_to');
         var data = $(this).data('request_data') || {};
         typeof data=='string' ? data=JSON.parse(data) : 0;
         
@@ -48,6 +49,10 @@ window.jQuery(document).ready(function($) {
                         $('#'+del).fadeOut(function(){
                             $(this).remove();
                         });
+                    }
+
+                    if(redirect) {
+                        window.location.assign(redirect);
                     }
                     return;
                 }

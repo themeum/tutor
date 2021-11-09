@@ -29,7 +29,6 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 
 				echo paginate_links(
 					array(
-						'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 						'format'    => '?current_page=%#%',
 						'current'   => $paged,
 						'total'     => ceil( $data['total_items'] / $per_page ),
