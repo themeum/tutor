@@ -309,5 +309,72 @@ class Course_List {
 		);
 		return $update ? true : false;
 	}
+	/**
+	 * Count quiz for a course
+	 *
+	 * @param $course_id | required.
+	 */
+	public static function get_all_quiz_by_course( int $course_id): int {
+		global $wpdb;
+		$quiz_number = $wpdb->get_var($wpdb->prepare(
+			"SELECT COUNT(ID) FROM {$wpdb->posts}
+			WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type ='topics' AND post_parent = %d AND post_status = 'publish')
+			AND post_type ='tutor_quiz' 
+			AND post_status = 'publish'", $course_id));
+		return $quiz_number ? $quiz_number : 0;
+	}
 
+    /**
+     * Get course enrollments with student info
+     * 
+     * @param $course_id int | required
+     * 
+     * @period string | optional ( today | monthly | yearly ) if not provide then it will 
+     * 
+     * retrieve all records
+     * 
+     * @param $start_date string | optional 
+     * 
+     * @param $end_date string | optional
+     * 
+     * @return array
+     * 
+     * @since v2.0.0
+     */
+    public static function course_enrollments_with_student_details( int $course_id ) {
+		global $wpdb;
+        $course_id          = sanitize_text_field( $course_id );
+        $course_completed   = 0;
+        $course_inprogress  = 0;
+
+		$enrollments = $wpdb->get_results($wpdb->prepare(
+			"SELECT enroll.ID AS enroll_id, enroll.post_author AS enroll_author, user.*, course.ID AS course_id
+                FROM {$wpdb->posts} AS enroll
+                LEFT JOIN {$wpdb->users} AS user ON user.ID = enroll.post_author
+                LEFT JOIN {$wpdb->posts} AS course ON course.ID = enroll.post_parent
+                WHERE enroll.post_type = %s
+                    AND enroll.post_status = %s
+                    AND enroll.post_parent = %d
+			",
+			'tutor_enrolled',
+			'completed',
+			$course_id
+		) );
+
+        foreach( $enrollments as $enrollment ) {
+            $course_progress = tutor_utils()->get_course_completed_percent( $course_id, $enrollment->enroll_author);
+            if ( $course_progress == 100 ) {
+                $course_completed++;
+            } else {
+                $course_inprogress++;
+            }
+        }
+
+        return array(
+            'enrollments'       => $enrollments,
+            'total_completed'   => $course_completed,
+            'total_inprogress'  => $course_inprogress,
+            'total_enrollments' => count( $enrollments )
+        );
+    } 
 }
