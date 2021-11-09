@@ -24739,8 +24739,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           transform: scaleY(0);
   -webkit-transform-origin: bottom;
           transform-origin: bottom;
-  -webkit-transition: 150ms;
-  transition: 150ms;
+  -webkit-transition: 200ms;
+  transition: 200ms;
 }
 
 .tutor-default-tab .tab-header-item.is-active {
@@ -25543,11 +25543,11 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   transition: 150ms;
 }
 
-.tutor-accordion-item-header.active {
+.tutor-accordion-item-header.is-active {
   color: #3e64de;
 }
 
-.tutor-accordion-item-header.active::after {
+.tutor-accordion-item-header.is-active::after {
   -webkit-transform: rotate(-90deg);
           transform: rotate(-90deg);
 }
@@ -25579,6 +25579,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  border-top: 1px solid #cdcfd5;
   padding: 15px;
 }
 
@@ -26124,21 +26125,21 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   transition: 100ms;
 }
 
-input:checked ~ .tutor-details-pricing-plan {
+.tutor-membership-plans input[type='radio'] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: absolute;
+}
+
+.tutor-membership-plans-group input:checked ~ .tutor-details-pricing-plan {
   background-color: #f6f8fd;
   -webkit-box-shadow: 0px 0px 0px 2px #3e64de;
           box-shadow: 0px 0px 0px 2px #3e64de;
 }
 
-input:checked ~ .tutor-details-pricing-plan .tutor-plan-title .tutor-radio-icon {
+.tutor-membership-plans-group input:checked ~ .tutor-details-pricing-plan .tutor-plan-title .tutor-radio-icon {
   border: 6px solid #3e64de;
-}
-
-input[type='radio'] {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  position: absolute;
 }
 
 .tutor-plan-btn-group {
