@@ -2719,7 +2719,12 @@ class Utils {
 	}
 
 	/**
+	 * Get Total number of instructor
+	 *
 	 * @param string $search_term
+	 * @param string $status (approved | pending | blocked)
+	 * @param string $course_id
+	 * @param string $date, user_registered date
 	 *
 	 * @return int
 	 *
@@ -2727,27 +2732,53 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_total_instructors( $search_filter = '') {
+	public function get_total_instructors( $search_filter = '', $status = array(), $course_id = '', $date = '' ): int {
 		global $wpdb;
-
-		sanitize_text_field($search_filter);
+		
+		$search_filter  = sanitize_text_field( $search_filter );
+		$status 		= sanitize_text_field( $status );
+		$course_id 		= sanitize_text_field( $course_id );
+		$date 			= sanitize_text_field( $date );
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 
+		$status_query = '';
+		if ( is_array( $status ) && count( $status ) ) {
+			$status		  = implode(',', $status );
+			$status_query = "AND ins_status.meta_value IN {$status}";
+		}
+
+		$course_query = '';
+		if ( '' !== $course_id ) {
+			$course_query = "AND course.ID = {$course_id}";
+		}
+
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date 		= tutor_get_formated_date( 'Y-m-d', $date ); 
+			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
+		}
+
 		$count = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT(user.ID)
+			"SELECT COUNT(DISTINCT(user.ID))
 			FROM 	{$wpdb->users} as user
 					INNER JOIN {$wpdb->usermeta} as user_meta
 							ON ( user_meta.user_id = user.ID )
-
+				    INNER JOIN {$wpdb->usermeta} as ins_status
+							ON ins_status.user_id = user.ID AND ins_status.meta_key = '_tutor_instructor_status'
+					INNER JOIN {$wpdb->posts} AS course
+							ON course.post_author = user.ID 
 			WHERE 	user_meta.meta_key = %s
-					AND ( user.display_name LIKE %s OR user.user_email LIKE %s );
+					{$status_query}
+					{$course_query}
+					{$date_query}
+					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
 			",
 			'_is_tutor_instructor',
 			$search_filter,
 			$search_filter
 		) );
-		return $count;
+		return $count ? $count : 0;
 	}
 
 	/**
@@ -2774,13 +2805,13 @@ class Utils {
 		$rating 		= sanitize_text_field($rating);
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_filter	= $course_filter != '' ? " AND inst_status.meta_key = '_tutor_instructor_course_id' AND inst_status.meta_value = $course_filter " : '' ;
+		$course_filter	= $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '' ;
 
 		if ( '' != $date_filter ) {
 			$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
 		}
 
-		$date_filter	= $date_filter != '' ? " AND  DATE(user.user_registered) = '$date_filter' " : '' ;
+		$date_filter	= $date_filter != '' ? " AND  DATE(user.user_registered) = CAST('$date_filter' AS DATE) " : '' ;
 
 		$category_join = '';
 		$category_where = '';
@@ -2794,7 +2825,7 @@ class Utils {
 
 			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
-
+	
 		$cat_ids = array_filter( $cat_ids = array() , function($id) {
 			return is_numeric($id);
 		});
@@ -2839,29 +2870,29 @@ class Utils {
 
 		$instructors = $wpdb->get_results( $wpdb->prepare(
 			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating
-			FROM 	{$wpdb->users} user
-					INNER JOIN {$wpdb->usermeta} user_meta
-							ON ( user.ID = user_meta.user_id )
-					INNER JOIN {$wpdb->usermeta} inst_status
-							ON ( user.ID = inst_status.user_id )
-					{$category_join}
-					LEFT JOIN wp_usermeta AS umeta
-						ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
-					LEFT JOIN wp_comments AS c
-						ON c.comment_post_ID = umeta.meta_value
-					LEFT JOIN wp_commentmeta AS cmeta
-						ON cmeta.comment_id = c.comment_ID
-						AND cmeta.meta_key = 'tutor_rating'
-			WHERE 	user_meta.meta_key = %s
-					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
-					{$status}
-					{$category_where}
-					{$course_filter}
-					{$date_filter}
-			GROUP BY user.ID
-			{$rating_having}
-			{$order_query}
-			LIMIT 	%d, %d;
+				FROM 	{$wpdb->users} user
+						INNER JOIN {$wpdb->usermeta} user_meta
+								ON ( user.ID = user_meta.user_id )
+						INNER JOIN {$wpdb->usermeta} inst_status
+								ON ( user.ID = inst_status.user_id )
+						{$category_join}
+						LEFT JOIN {$wpdb->usermeta} AS umeta
+							ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+						LEFT JOIN {$wpdb->comments} AS c
+							ON c.comment_post_ID = umeta.meta_value
+						LEFT JOIN {$wpdb->commentmeta} AS cmeta
+							ON cmeta.comment_id = c.comment_ID
+							AND cmeta.meta_key = 'tutor_rating'
+				WHERE 	user_meta.meta_key = %s
+						AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+						{$status}
+						{$category_where}
+						{$course_filter}
+						{$date_filter}
+				GROUP BY user.ID
+				{$rating_having}
+				{$order_query}
+				LIMIT 	%d, %d;
 			",
 			'_is_tutor_instructor',
 			$search_filter,
@@ -2869,7 +2900,6 @@ class Utils {
 			$start,
 			$limit
 		) );
-
 		return $instructors;
 	}
 
