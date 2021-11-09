@@ -7104,7 +7104,8 @@ body.wp-admin .tutor-qna-single-wrapper {
   background: white;
   padding: 10px;
   position: sticky;
-  top: 10px;
+  top: 32px;
+  margin-left: -19px;
 }
 
 .tutor-qna-single-wrapper .tutor-qa-sticky-bar > div:last-child {
@@ -7124,6 +7125,20 @@ body.wp-admin .tutor-qna-single-wrapper {
   margin-left: 7px;
 }
 
+body.wp-admin .tutor-qa-chatlist {
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
+body.wp-admin .tutor-qa-reply {
+  margin-right: 15px;
+}
+
+body.wp-admin .tutor-qa-reply textarea {
+  height: 100px;
+  min-height: auto;
+}
+
 .tutor-qna-admin-sidebar {
   width: 360px;
   position: fixed;
@@ -7132,6 +7147,91 @@ body.wp-admin .tutor-qna-single-wrapper {
   bottom: 0;
   left: auto;
   background: white;
+  border-left: 1px solid #C0C3CB;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  overflow: auto;
+}
+
+.tutor-qna-admin-sidebar .tutor-qna-user {
+  padding: 20px;
+}
+
+.tutor-qna-admin-sidebar .tutor-qna-user img {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.tutor-qna-admin-sidebar .tutor-qna-user h2 {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+  color: #212327;
+}
+
+.tutor-qna-admin-sidebar .tutor-qna-user strong {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #5B616F;
+}
+
+.tutor-qna-admin-sidebar .tutor-qna-user-details label {
+  cursor: pointer;
+  padding: 15px;
+  border-top: 1px solid #C0C3CB;
+  border-bottom: 1px solid #C0C3CB;
+  display: block;
+  background: #F4F6F9;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
+}
+
+.tutor-qna-admin-sidebar .tutor-qna-user-details > div {
+  display: none;
+  padding: 15px;
+}
+
+.tutor-qna-admin-sidebar .tutor-qna-user-details input {
+  display: none;
+}
+
+.tutor-qna-admin-sidebar .tutor-qna-user-details input:checked + div {
+  display: block;
+}
+
+.tutor-qna-admin-sidebar .qna-previous-questions > div:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.tutor-qna-admin-sidebar .qna-previous-questions > div > * {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.tutor-qna-admin-sidebar .qna-previous-questions > div > span {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: #5B616F;
+}
+
+.tutor-qna-admin-sidebar .qna-previous-questions > div > strong {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  color: #212327;
+}
+
+.tutor-qna-admin-sidebar .qna-previous-questions > div > small {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  color: #525252;
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */
