@@ -1,0 +1,100 @@
+//tutor download certificate image
+
+.tutor-download-certificate {
+	max-width: 750px;
+	display: grid;
+	margin: auto;
+}
+.tutor-certificate-demo {
+	max-width: 730px;
+	height: auto;
+	overflow: hidden;
+	img {
+		width: 100%;
+	}
+}
+.tutor-certificate-info {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	@include breakpoint-max(650) {
+		grid-template-columns: repeat(2, 1fr);
+		.tutor-info-issued,
+		.tutor-info-issued-date {
+			padding-top: 10px;
+		}
+		.tutor-info-id-name,
+		.tutor-info-expiration-name,
+		.tutor-info-issued-name,
+		.tutor-info-date-name {
+			font-size: 13px;
+		}
+		.tutor-info-id-details,
+		.tutor-info-expiration-value,
+		.tutor-info-issued-value,
+		.tutor-info-date-details {
+			font-size: 18px;
+		}
+	}
+	@include breakpoint-max(400) {
+		grid-template-columns: repeat(1, 1fr);
+		.tutor-info-expiration {
+			padding-top: 10px;
+		}
+	}
+}
+.tutor-btn-circle.tutor-is-outline {
+	border-color: $stroke-gray;
+	color: $design-dark;
+}
+.tutor-btn-circle.tutor-is-outline:not(.tutor-no-hover):hover {
+	background-color: var(--tutor-primary);
+	border-color: var(--tutor-primary);
+}
+.tutor-dc-button-group {
+	position: absolute;
+	right: 20px;
+	top: 210px;
+}
+
+@include breakpoint-min(992) {
+	.tutor-download-certificate {
+		padding-top: 100px;
+		padding-bottom: 200px;
+	}
+}
+@include breakpoint-minmax(992, 1200) {
+	.tutor-dc-button-group {
+		top: 200px;
+	}
+}
+@include breakpoint-max(991) {
+	.tutor-dc-button-group {
+		right: 0px;
+		top: 125px;
+	}
+}
+@include breakpoint-min(1200) {
+	button.tutor-btn-circle {
+		margin: 15px;
+	}
+}
+@include breakpoint-minmax(768, 1200) {
+	.tutor-certificate-demo {
+		max-width: 570px;
+	}
+}
+@include breakpoint-minmax(577, 767) {
+	.tutor-certificate-demo {
+		max-width: 420px;
+	}
+}
+@include breakpoint-max(576) {
+	.tutor-certificate-demo {
+		max-width: 82%;
+	}
+}
+
+.tutor-dc-button-group .tooltip-txt.tooltip-left {
+	top: unset;
+	right: calc(100% + 19px);
+}
