@@ -57,7 +57,7 @@ $url               = get_pagenum_link();
 $add_insructor_url = $url . '&sub_page=add_new_instructor';
 $navbar_data       = array(
 	'page_title'   => $instructors->page_title,
-	'tabs'         => $instructors->tabs_key_value( $user_id, $date, $search, $course_id ),
+	'tabs'         => $instructors->tabs_key_value( $search, $course_id, $date ),
 	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
