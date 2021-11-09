@@ -319,7 +319,7 @@ $filters = array(
 	</div>
 
 
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-50 tutor-mr-20">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-50">
 		<?php
 			/**
 			 * Prepare pagination data & load template
