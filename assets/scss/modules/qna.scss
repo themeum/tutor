@@ -14,7 +14,8 @@ $sidebar_width: 360px;
         background: white;
         padding: 10px;
         position: sticky;
-        top: 10px;
+        top: 32px;
+        margin-left: -19px;
 
         &>div{
             &:last-child{
@@ -29,9 +30,24 @@ $sidebar_width: 360px;
         }
     }
 
-    .tutor-qa-chatlist{
-        &>div{
-            
+    @at-root{
+        body.wp-admin {
+            .tutor-qa-chatlist{
+                margin-right: 15px;
+                margin-top: 15px;
+
+                &>div{
+                    
+                }
+            }
+
+            .tutor-qa-reply {
+                margin-right: 15px;
+                textarea {
+                    height: 100px;
+                    min-height: auto;
+                }
+            }
         }
     }
 }
@@ -44,4 +60,96 @@ $sidebar_width: 360px;
     bottom: 0;
     left: auto;
     background: white;
+    border-left: 1px solid #C0C3CB;
+    box-sizing: border-box;
+    overflow: auto;
+    
+    .tutor-qna-user {
+        padding: 20px;
+
+        img{
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        h2 {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 30px;
+            color: #212327;
+        }
+
+        strong{
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            color: #5B616F;
+        }
+    }
+
+    .tutor-qna-user-details {
+        label {
+            cursor: pointer;
+            padding: 15px;
+            border-top: 1px solid #C0C3CB;
+            border-bottom: 1px solid #C0C3CB;
+            display: block;
+            background: #F4F6F9;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            color: #212327;
+        }
+
+        &>div{
+            display: none;
+            padding: 15px;
+        }
+
+        input{
+            display: none;
+
+            &:checked{
+                &+div{
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .qna-previous-questions {
+        &>div{
+            &:not(:last-child) {
+                margin-bottom: 20px;
+            }
+
+            &>* {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            &>span{
+                font-style: normal;
+                font-weight: normal;
+                font-size: 15px;
+                color: #5B616F;
+            }
+
+            &>strong{
+                font-style: normal;
+                font-weight: bold;
+                font-size: 16px;
+                color: #212327;
+            }
+
+            &>small{
+                font-style: normal;
+                font-weight: 500;
+                font-size: 13px;
+                color: #525252;
+            }
+        }
+    }
 }
