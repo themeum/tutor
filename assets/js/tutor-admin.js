@@ -740,7 +740,8 @@ var otherColorsPreview = function otherColorsPreview() {
   var itemsHeight = initHeight = 0;
   otherColorRows.forEach(function (item, index) {
     if (0 == index) {
-      initHeight = item.offsetHeight; // otherColors.style.height = initHeight - 10 + "px";
+      initHeight = item.offsetHeight;
+      otherColors.style.height = initHeight - 10 + "px";
     }
 
     itemsHeight = itemsHeight + item.offsetHeight;
