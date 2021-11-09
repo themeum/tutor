@@ -44,7 +44,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 										$color_value = 'custom' === $fields['key'] ? esc_attr( $get_color ) : esc_attr( $color['value'] );
 										$preset_name = (string) esc_attr( $color['preset_name'] );
 										?>
-										<span data-preset="<?php echo esc_attr( $preset_name ); ?>" data-color="<?php echo esc_attr( $color_value ); ?>" style="background-color: <?php echo esc_attr( $color_value ); ?>;"></span>
+											<span data-preset="<?php echo esc_attr( $preset_name ); ?>" data-color="<?php echo esc_attr( $color_value ); ?>" style="background-color: <?php echo esc_attr( $color_value ); ?>;"></span>
 										<?php
 									}
 									foreach ( $all_color_fields as $color ) {
