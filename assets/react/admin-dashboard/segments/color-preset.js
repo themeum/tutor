@@ -19,7 +19,6 @@ document.addEventListener("readystatechange", (event) => {
     console.log("before state");
   }
   if (event.target.readyState === "complete") {
-    // console.log("after state");
     otherColorsPreview();
   }
 });
@@ -37,6 +36,7 @@ const otherColorsPreview = () => {
       itemsHeight = itemsHeight + item.offsetHeight;
     });
   const toggleHeight = itemsHeight + moreButton.offsetHeight + "px";
+
   moreButton.onclick = () => {
     otherColors.classList.toggle("expanded");
     if (otherColors.classList.contains("expanded")) {
