@@ -2871,7 +2871,7 @@ class Utils {
 		}
 
 		$instructors = $wpdb->get_results( $wpdb->prepare(
-			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating
+			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status
 				FROM 	{$wpdb->users} user
 						INNER JOIN {$wpdb->usermeta} user_meta
 								ON ( user.ID = user_meta.user_id )
@@ -8209,6 +8209,7 @@ class Utils {
 			'processing' 	=> __( 'Processing', 'tutor' ),
 			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
 			'canceled'  	=> __( 'Cancelled', 'tutor' ),
+			'blocked'		=> __( 'Blocked', 'tutor' )
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
