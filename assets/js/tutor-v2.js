@@ -1180,18 +1180,43 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/**
- * Table td/tr toggle
- */
-
 document.addEventListener('click', function (e) {
-  var attr = 'data-td-target';
+  /**
+   * Table td/tr toggle
+   */
   var dataTdTarget = e.target.dataset.tdTarget;
 
   if (dataTdTarget) {
     e.target.closest('td').classList.toggle('is-active');
     document.getElementById(dataTdTarget).classList.toggle('is-active');
   }
+  /**
+   * Course details showmore toggle
+   */
+
+
+  var dataShomore = e.target.dataset.showmore;
+
+  if (dataShomore) {
+    e.target.closest('.tutor-has-showmore').classList.toggle('is-active');
+  }
+});
+/**
+ * Tutor accrodion
+ */
+
+var accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
+accordionItemHeaders.forEach(function (accordionItemHeader) {
+  accordionItemHeader.addEventListener('click', function () {
+    accordionItemHeader.classList.toggle('active');
+    var accordionItemBody = accordionItemHeader.nextElementSibling;
+
+    if (accordionItemHeader.classList.contains('active')) {
+      accordionItemBody.style.maxHeight = accordionItemBody.scrollHeight + 'px';
+    } else {
+      accordionItemBody.style.maxHeight = 0;
+    }
+  });
 });
 
 /***/ }),
