@@ -1,4 +1,10 @@
+<?php
+/**
+ * Template: Field heading
+ */
+
+?>
 <div class="tutor-option-field-label">
-	<?php echo $field['label'] ? '<h5 class="label">' . $field['label'] . '</h5>' : null; ?>
-	<?php echo isset( $field['desc'] ) ? '<p class="desc">' . $field['desc'] . '</p>' : null; ?>
+	<?php isset( $field['label'] ) ? printf( '<h5 class="label">%s</h5>', esc_attr( $field['label'] ) ) : null; ?>
+	<?php isset( $field['desc'] ) ? printf( '<p class="desc">%s</p>', esc_attr( $field['desc'] ) ) : null; ?>
 </div>

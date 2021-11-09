@@ -1,5 +1,5 @@
 .tutor-dashboard-cards-container {
-    & > div {
+    &>div {
         p {
             @include valueWithPrefix(display, flex);
             @include propertyWithPrefix(flex-direction, column);
@@ -14,7 +14,7 @@
                 @include propertyWithPrefix(flex-flow, row);
                 padding: 7px 10px;
             }
-            & > span {
+            &>span {
                 font-style: normal;
                 white-space: nowrap;
                 overflow: hidden;
@@ -88,9 +88,8 @@
     border-radius: 6px;
     margin-right: 25px;
     margin-bottom: 20px;
-
+    padding: 0px;
     .profile-completion-content {
-        border-right: 1px solid #cdcfd5;
         padding: 35px;
         li {
             list-style: none;
@@ -113,15 +112,37 @@
             text-align: center;
             color: #fff;
             font-size: 16px;
-            line-height: 28px;
+            line-height: 30px;
         }
     }
-
+    .warning {
+        padding: 35px;
+        border-left: 1px solid #cdcfd5;
+        ul {
+            list-style: none;
+            padding: 0px;
+            li {
+                margin: 10px auto;
+                font-size: 15px;
+                .empty {
+                    color: #f44337;
+                    font-size: 18px;
+                }
+                .not-empty {
+                    color: #24A148;
+                    font-size: 18px;
+                }
+                a {
+                    text-decoration: underline;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
     @media only screen and (max-width: 600px) {
         margin-right: 0px;
         margin-left: 0px;
         padding-left: 20px;
-
         .profile-completion-content {
             padding: 25px 15px;
             border-bottom: 1px solid #cdcfd5;
@@ -136,25 +157,7 @@
         }
         .warning {
             padding: 15px !important;
-        }
-    }
-
-    .warning {
-        padding: 35px;
-        ul {
-            list-style: none;
-            padding: 0px;
-            li {
-                margin: 10px auto;
-                .icon {
-                    color: #f44337;
-                    font-size: 18px;
-                }
-                a {
-                    text-decoration: underline;
-                    font-weight: 500;
-                }
-            }
+            border-left: 0px;
         }
     }
 }

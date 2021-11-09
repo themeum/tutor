@@ -723,7 +723,51 @@ displayAddons(freeAddonsList);
  */
 var colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
 var colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
-var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]"); // Color PRESET Slecetion (color inputs)
+var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]");
+var moreButton = document.querySelector(".more_button");
+var otherColors = document.querySelector(".other_colors");
+var otherColorsExpanded = document.querySelector(".other_colors.expanded");
+document.addEventListener("readystatechange", function (event) {
+  if (event.target.readyState === "interactive") {
+    console.log("before state");
+  }
+
+  if (event.target.readyState === "complete") {
+    // console.log("after state");
+    otherColorsPreview();
+  }
+});
+
+var otherColorsPreview = function otherColorsPreview() {
+  var itemsHeight = 0,
+      initHeight = 0;
+  otherColors.querySelectorAll(".tutor-option-field-row").forEach(function (item, index) {
+    if (0 == index) {
+      initHeight = item.offsetHeight;
+      otherColors.style.height = initHeight - 10 + "px";
+    }
+
+    itemsHeight = itemsHeight + item.offsetHeight;
+  });
+  var toggleHeight = itemsHeight + moreButton.offsetHeight + "px";
+
+  moreButton.onclick = function () {
+    otherColors.classList.toggle("expanded");
+
+    if (otherColors.classList.contains("expanded")) {
+      otherColors.style.height = toggleHeight;
+      moreButton.querySelector("i").classList.remove("ttr-plus-filled");
+      moreButton.querySelector("i").classList.add("ttr-minus-filled");
+      moreButton.querySelector("span").innerText = "Show Less";
+    } else {
+      otherColors.style.height = initHeight - 10 + "px";
+      moreButton.querySelector("i").classList.remove("ttr-minus-filled");
+      moreButton.querySelector("i").classList.add("ttr-plus-filled");
+      moreButton.querySelector("span").innerText = "Show More";
+    }
+  };
+}; // Color PRESET Slecetion (color inputs)
+
 
 colorPresetInputs.forEach(function (preset) {
   // listening preset input events

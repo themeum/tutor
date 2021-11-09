@@ -11,6 +11,48 @@ const colorPickerInputs = document.querySelectorAll(
 const pickerView = document.querySelectorAll(
   ".color-picker-wrapper [data-key]"
 );
+const moreButton = document.querySelector(".more_button");
+const otherColors = document.querySelector(".other_colors");
+const otherColorsExpanded = document.querySelector(".other_colors.expanded");
+document.addEventListener("readystatechange", (event) => {
+  if (event.target.readyState === "interactive") {
+    console.log("before state");
+  }
+  if (event.target.readyState === "complete") {
+    // console.log("after state");
+    otherColorsPreview();
+  }
+});
+
+const otherColorsPreview = () => {
+  let itemsHeight = 0,
+    initHeight = 0;
+  otherColors
+    .querySelectorAll(".tutor-option-field-row")
+    .forEach((item, index) => {
+      if (0 == index) {
+        initHeight = item.offsetHeight;
+        otherColors.style.height = initHeight - 10 + "px";
+      }
+      itemsHeight = itemsHeight + item.offsetHeight;
+    });
+  const toggleHeight = itemsHeight + moreButton.offsetHeight + "px";
+  moreButton.onclick = () => {
+    otherColors.classList.toggle("expanded");
+    if (otherColors.classList.contains("expanded")) {
+      otherColors.style.height = toggleHeight;
+      moreButton.querySelector("i").classList.remove("ttr-plus-filled");
+      moreButton.querySelector("i").classList.add("ttr-minus-filled");
+      moreButton.querySelector("span").innerText = "Show Less";
+    } else {
+      otherColors.style.height = initHeight - 10 + "px";
+      moreButton.querySelector("i").classList.remove("ttr-minus-filled");
+      moreButton.querySelector("i").classList.add("ttr-plus-filled");
+      moreButton.querySelector("span").innerText = "Show More";
+    }
+  };
+};
+
 // Color PRESET Slecetion (color inputs)
 colorPresetInputs.forEach((preset) => {
   // listening preset input events

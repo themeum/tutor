@@ -1056,6 +1056,7 @@ window.jQuery(document).ready(function ($) {
     var $that = $(this);
     var prompt = $(this).data('prompt');
     var del = $(this).data('delete_element_id');
+    var redirect = $(this).data('redirect_to');
     var data = $(this).data('request_data') || {};
     typeof data == 'string' ? data = JSON.parse(data) : 0;
 
@@ -1076,6 +1077,10 @@ window.jQuery(document).ready(function ($) {
             $('#' + del).fadeOut(function () {
               $(this).remove();
             });
+          }
+
+          if (redirect) {
+            window.location.assign(redirect);
           }
 
           return;
@@ -1101,6 +1106,41 @@ window.jQuery(document).ready(function ($) {
     this.style.height = this.scrollHeight + "px";
   });
   $('.tutor-textarea-auto-height').trigger('input');
+});
+
+/***/ }),
+
+/***/ "./assets/react/v2/qna.js":
+/*!********************************!*\
+  !*** ./assets/react/v2/qna.js ***!
+  \********************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  $(document).on('click', '.tutor-qna-single-wrapper .tutor-qa-sticky-bar [data-action]', function () {
+    var qna_action = $(this).data('action');
+    var question_id = $(this).closest('[data-question_id]').data('question_id');
+    var button = $(this);
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        question_id: question_id,
+        qna_action: qna_action,
+        action: 'tutor_qna_single_action'
+      },
+      beforeSend: function beforeSend() {
+        button.addClass('tutor-updating-message');
+      },
+      success: function success(resp) {
+        console.log(resp);
+      },
+      complete: function complete() {
+        button.removeClass('tutor-updating-message');
+      }
+    });
+  });
 });
 
 /***/ }),
@@ -30203,6 +30243,9 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutor_date_picker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutor-date-picker */ "./assets/react/v2/tutor-date-picker.js");
 /* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
+/* harmony import */ var _qna__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./qna */ "./assets/react/v2/qna.js");
+/* harmony import */ var _qna__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_qna__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 })();

@@ -54,7 +54,11 @@ if(tutor_utils()->get_option('enable_profile_completion')) {
                                 $is_set = $data['is_set']; // Whether the step is done or not
                                 ?>
                                 <li>
-                                    <span class="icon ttr-tick-circle-outline-filled"></span>
+                                    <?php if($is_set){ ?>
+                                    <span class="icon ttr-tick-circle-outline-filled not-empty"></span>
+                                    <?php } else { ?>
+                                    <span class="ttr-cross-circle-outline-filled empty"></span>
+                                    <?php } ?>
                                     <span>
                                         <?php echo $data['label_html']; ?>
                                     </span>

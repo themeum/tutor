@@ -4929,12 +4929,60 @@ li.tutor-option-nav-item h4 {
   display: flex;
 }
 
+.item-wrapper.color-preset-picker {
+  position: relative;
+}
+
 .item-wrapper.color-preset-picker > .tutor-option-field-row {
   border-bottom: none !important;
 }
 
+.item-wrapper.color-preset-picker .color-picker-wrapper {
+  /* .tutor-option-field-row.other_color {
+      height: 0;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+    } */
+}
+
 .item-wrapper.color-preset-picker .color-picker-wrapper .tutor-option-field-row:not(:last-child) {
   border-bottom: 1px solid #e8e8e8;
+}
+
+.other_colors {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.more_button {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, #f4f6f9), color-stop(15.41%, rgba(244, 246, 249, 0.72)), to(#f4f6f9));
+  background: linear-gradient(180deg, #f4f6f9 1.31%, rgba(244, 246, 249, 0.72) 15.41%, #f4f6f9 100%);
+  cursor: pointer;
+  z-index: 99;
+  height: 90px;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.more_button i {
+  margin-right: 6px;
+  font-weight: bolder;
+  color: #3e64de;
 }
 
 .tutor-option-field-input.color-preset-grid {
@@ -7039,6 +7087,51 @@ table.tutor-ui-table.table-instructors .toggle-row {
 .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject textarea.tutor-form-control:focus,
 .tutor-admin-page-wrapper .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper #tutor-admin-withdraw-reject select.tutor-form-select:focus:focus {
   border: 2px solid #1973AA;
+}
+
+body.wp-admin .tutor-qna-single-wrapper {
+  width: calc(100% - 360px);
+}
+
+.tutor-qna-single-wrapper .tutor-qa-sticky-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  background: white;
+  padding: 10px;
+  position: sticky;
+  top: 10px;
+}
+
+.tutor-qna-single-wrapper .tutor-qa-sticky-bar > div:last-child {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  flex: -o-1;
+  -ms-flex: -ms-1;
+      flex: -ms-1;
+  flex: -moz-1;
+  flex: -webkit-1;
+  text-align: right;
+}
+
+.tutor-qna-single-wrapper .tutor-qa-sticky-bar > div:last-child > span {
+  display: inline-block;
+  margin-left: 7px;
+}
+
+.tutor-qna-admin-sidebar {
+  width: 360px;
+  position: fixed;
+  right: 0;
+  top: 32px;
+  bottom: 0;
+  left: auto;
+  background: white;
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */

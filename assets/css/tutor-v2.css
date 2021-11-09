@@ -26055,6 +26055,280 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           transform: translateY(-50%) translateX(-2px);
 }
 
+.tutor-details-pricing {
+  max-width: 920px;
+  margin: auto;
+}
+
+.tutor-details-pricing-plan {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  padding: 28px 20px;
+  border: none;
+  -webkit-box-shadow: 0px 0px 0px 1px #cdcfd5;
+          box-shadow: 0px 0px 0px 1px #cdcfd5;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+@media (max-width: 576px) {
+  .tutor-details-pricing-plan {
+    padding: 20px 15px;
+    grid-template-columns: auto;
+  }
+}
+
+.tutor-plan-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 200px;
+}
+
+@media (min-width: 577px) and (max-width: 767px) {
+  .tutor-plan-title {
+    width: 220px;
+    margin-bottom: 15px;
+    grid-area: 1 / span 3;
+  }
+}
+
+@media (max-width: 576px) {
+  .tutor-plan-title {
+    width: auto;
+    margin-bottom: 15px;
+  }
+}
+
+.tutor-radio-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+  border: 2px solid #c0c3cb;
+  border-radius: 50%;
+  -webkit-transition: 100ms;
+  transition: 100ms;
+}
+
+input:checked ~ .tutor-details-pricing-plan {
+  background-color: #f6f8fd;
+  -webkit-box-shadow: 0px 0px 0px 2px #3e64de;
+          box-shadow: 0px 0px 0px 2px #3e64de;
+}
+
+input:checked ~ .tutor-details-pricing-plan .tutor-plan-title .tutor-radio-icon {
+  border: 6px solid #3e64de;
+}
+
+input[type='radio'] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: absolute;
+}
+
+.tutor-plan-btn-group {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+}
+
+@media (max-width: 576px) {
+  .text-regular-body.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label.text-regular-body, table.tutor-ui-table .td-list-item .tutor-form-check label.tutor-accordion-item-body-content, table.tutor-ui-table .td-list-item .tutor-form-check .tutor-course-listing-filter .filter-widget-checkboxes label, .tutor-course-listing-filter .filter-widget-checkboxes table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .text-regular-body.tab-header-item, .tutor-default-tab .tab-header-item.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item, .color-text-subsued.tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label.color-text-subsued {
+    font-size: 15px;
+  }
+  .text-medium-body, select.tutor-form-select {
+    font-size: 15px;
+  }
+  .text-bold-h4 {
+    font-size: 24px;
+  }
+  .text-regular-h6 {
+    font-size: 17px;
+  }
+  .text-bold-h3 {
+    font-size: 34px;
+  }
+  .tutor-plan-btn-group {
+    grid-template-columns: auto;
+  }
+  .tutor-plan-btn-group > button:last-child {
+    margin-top: 12px;
+  }
+  .tutor-plan-pricing {
+    margin-top: 15px;
+  }
+}
+
+@media (min-width: 992px) {
+  .tutor-btn-group .tutor-btn {
+    margin-left: 35px !important;
+  }
+}
+
+.tutor-dp-plan-switch input:checked ~ .tutor-form-toggle-control {
+  background-color: var(--tutor-success);
+  background-color: var(--tutor-design-brand);
+}
+
+.tutor-dp-plan-switch input ~ .tutor-form-toggle-label.tutor-form-toggle-checked {
+  color: var(--tutor-border-color);
+  color: var(--tutor-design-brand);
+}
+
+.tutor-dp-plan-switch input:checked ~ .tutor-form-toggle-checked {
+  color: inherit;
+}
+
+.tutor-dp-plan-switch input:checked ~ .tutor-form-toggle-unchecked {
+  color: var(--tutor-border-color);
+  color: var(--tutor-design-brand);
+}
+
+.tutor-download-certificate {
+  max-width: 750px;
+  display: grid;
+  margin: auto;
+}
+
+.tutor-certificate-demo {
+  max-width: 730px;
+  height: auto;
+  overflow: hidden;
+}
+
+.tutor-certificate-demo img {
+  width: 100%;
+}
+
+.tutor-certificate-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 650px) {
+  .tutor-certificate-info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tutor-certificate-info .tutor-info-issued,
+  .tutor-certificate-info .tutor-info-issued-date {
+    padding-top: 10px;
+  }
+  .tutor-certificate-info .tutor-info-id-name,
+  .tutor-certificate-info .tutor-info-expiration-name,
+  .tutor-certificate-info .tutor-info-issued-name,
+  .tutor-certificate-info .tutor-info-date-name {
+    font-size: 13px;
+  }
+  .tutor-certificate-info .tutor-info-id-details,
+  .tutor-certificate-info .tutor-info-expiration-value,
+  .tutor-certificate-info .tutor-info-issued-value,
+  .tutor-certificate-info .tutor-info-date-details {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  .tutor-certificate-info {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .tutor-certificate-info .tutor-info-expiration {
+    padding-top: 10px;
+  }
+}
+
+.tutor-btn-circle.tutor-is-outline, .tutor-text-card .tutor-is-outline.tutor-card-icon {
+  border-color: #c0c3cb;
+  color: #1a1b1e;
+}
+
+.tutor-btn-circle.tutor-is-outline:not(.tutor-no-hover):hover, .tutor-text-card .tutor-is-outline.tutor-card-icon:not(.tutor-no-hover):hover {
+  background-color: var(--tutor-primary);
+  border-color: var(--tutor-primary);
+}
+
+.tutor-dc-button-group {
+  position: absolute;
+  right: 20px;
+  top: 210px;
+}
+
+@media (min-width: 992px) {
+  .tutor-download-certificate {
+    padding-top: 100px;
+    padding-bottom: 200px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  .tutor-dc-button-group {
+    top: 200px;
+  }
+}
+
+@media (max-width: 991px) {
+  .tutor-dc-button-group {
+    right: 0px;
+    top: 125px;
+  }
+}
+
+@media (min-width: 1200px) {
+  button.tutor-btn-circle, .tutor-text-card button.tutor-card-icon {
+    margin: 15px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+  .tutor-certificate-demo {
+    max-width: 570px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 767px) {
+  .tutor-certificate-demo {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 576px) {
+  .tutor-certificate-demo {
+    max-width: 82%;
+  }
+}
+
+.tutor-dc-button-group .tooltip-txt.tooltip-left {
+  top: unset;
+  right: calc(100% + 19px);
+}
+
+.tutor-app-process-image {
+  max-width: 920px;
+  height: auto;
+  overflow: hidden;
+}
+
+.tutor-app-process-image img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.tutor-ins-app-title {
+  max-width: 570px;
+}
+
+@media (max-width: 767px) {
+  span.tutor-app-process-title {
+    font-size: 28px;
+  }
+  span.tutor-app-process-subtitle {
+    font-size: 16px;
+  }
+}
+
 .d-grid {
   display: grid;
 }

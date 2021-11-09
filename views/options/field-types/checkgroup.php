@@ -1,24 +1,32 @@
 <?php
-if (!empty($field['group_options'])) {
-    $field_id = 'field_' . $field['key'];
-?>
-    <div class="tutor-option-field-input" id="<?php echo $field_id; ?>">
-        <div class="type-toggle-grid">
-            <?php foreach ($field['group_options'] as $key => $option) :
-                $default = $option['default'] ?? '';
-                $option_value = $this->get($option['key'], $default);
-            ?>
-                <div class="toggle-item">
-                    <label class="tutor-form-toggle">
-                        <input type="checkbox" class="tutor-form-toggle-input" name="tutor_option[<?php echo $option['key']; ?>]" value="1" <?php checked($option_value, '1') ?>>
-                        <span class="tutor-form-toggle-control"></span>
-                        <span class="label-after"> <?php echo $option['label'] ?> </span>
-                    </label>
-                    <div class="tooltip-wrap tooltip-icon">
-                        <span class="tooltip-txt tooltip-right"><?php echo $option['desc'] ?></span>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
+/**
+ * Checkgroup for settings.
+ *
+ * @package Tutor LMS
+ * @since 2.0
+ */
+
+if ( ! empty( $field['group_options'] ) ) {
+	$field_id = 'field_' . $field['key'];
+	?>
+	<div class="tutor-option-field-input" id="<?php echo esc_attr( $field_id ); ?>">
+		<div class="type-toggle-grid">
+			<?php
+			foreach ( $field['group_options'] as $key => $option ) :
+				$default      = $option['default'] ?? '';
+				$option_value = $this->get( $option['key'], $default );
+				?>
+				<div class="toggle-item">
+					<label class="tutor-form-toggle">
+						<input type="checkbox" class="tutor-form-toggle-input" name="tutor_option[<?php echo esc_attr( $option ['key'] ); ?>]" value="1" <?php checked( $option_value, '1' ); ?>>
+						<span class="tutor-form-toggle-control"></span>
+						<span class="label-after"> <?php echo esc_attr( $option ['label'] ); ?> </span>
+					</label>
+					<div class="tooltip-wrap tooltip-icon">
+						<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $option ['desc'] ); ?></span>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	</div>
 <?php } ?>

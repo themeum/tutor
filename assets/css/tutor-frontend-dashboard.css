@@ -3402,10 +3402,10 @@
   border-radius: 6px;
   margin-right: 25px;
   margin-bottom: 20px;
+  padding: 0px;
 }
 
 .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content {
-  border-right: 1px solid #cdcfd5;
   padding: 35px;
 }
 
@@ -3433,7 +3433,37 @@
   text-align: center;
   color: #fff;
   font-size: 16px;
-  line-height: 28px;
+  line-height: 30px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .profile-completion .warning {
+  padding: 35px;
+  border-left: 1px solid #cdcfd5;
+}
+
+.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul {
+  list-style: none;
+  padding: 0px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li {
+  margin: 10px auto;
+  font-size: 15px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li .empty {
+  color: #f44337;
+  font-size: 18px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li .not-empty {
+  color: #24A148;
+  font-size: 18px;
+}
+
+.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li a {
+  text-decoration: underline;
+  font-weight: 500;
 }
 
 @media only screen and (max-width: 600px) {
@@ -3456,30 +3486,8 @@
   }
   .tutor-dashboard .tutor-dashboard-content .profile-completion .warning {
     padding: 15px !important;
+    border-left: 0px;
   }
-}
-
-.tutor-dashboard .tutor-dashboard-content .profile-completion .warning {
-  padding: 35px;
-}
-
-.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul {
-  list-style: none;
-  padding: 0px;
-}
-
-.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li {
-  margin: 10px auto;
-}
-
-.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li .icon {
-  color: #f44337;
-  font-size: 18px;
-}
-
-.tutor-dashboard .tutor-dashboard-content .profile-completion .warning ul li a {
-  text-decoration: underline;
-  font-weight: 500;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile-data > div {
