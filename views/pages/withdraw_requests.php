@@ -184,7 +184,7 @@ $filters = array(
 													<div class="withdraw-tutor-tooltip-content text-regular-small flex-center tutor-mr-10">
 														<?php echo esc_html( $details['account_number']['value'] ); ?>
 													</div>
-													<div data-text-copy="00246502343048234045" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+													<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
 														<span class="icon ttr-copy-filled"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
@@ -211,7 +211,7 @@ $filters = array(
 													<div class="withdraw-tutor-tooltip-content text-regular-small flex-center tutor-mr-10">
 														<?php echo esc_html( $details['iban']['value'] ); ?>
 													</div>
-													<div data-text-copy="IBAN0000000065" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+													<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
 														<span class="icon ttr-copy-filled"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
@@ -240,7 +240,7 @@ $filters = array(
 											<div class="withdraw-tutor-tooltip-content text-regular-small flex-center tutor-mr-10">
 												<?php echo esc_html( $details['paypal_email']['value'] ); ?>
 											</div>
-											<div data-text-copy="dehsnmmail@mail.com" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
+											<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard text-regular-small flex-center">
 												<span class="icon ttr-copy-filled"></span>
 												Copy
 											</div>
