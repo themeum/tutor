@@ -24856,7 +24856,9 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border-radius: 6px;
 }
 
-.tutor-certificate-template label.template-radio-field, .tutor-certificate-template label.template-radio-field > span, .tutor-certificate-template label.template-radio-field > span > img {
+.tutor-certificate-template label.template-radio-field,
+.tutor-certificate-template label.template-radio-field > span,
+.tutor-certificate-template label.template-radio-field > span > img {
   width: 100%;
 }
 
@@ -25015,6 +25017,14 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-certificate-template .template-load-more .load-more-btn span {
   font-size: 20px;
+}
+
+.tutor-certificate-template-tab.tutor-default-tab .tab-header {
+  border-bottom: none;
+}
+
+.tutor-certificate-template-tab.tutor-default-tab .tab-header-item:before {
+  display: none;
 }
 
 .tutor-password-strength-checker {
@@ -25594,6 +25604,58 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.tutor-ratingsreviews {
+  /* stroke/light30 */
+  background: #ffffff;
+  border: 1px solid #cdcfd5;
+  border-radius: 6px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 38px;
+  padding: 30px;
+}
+
+.tutor-ratingsreviews-reviews .review-numbers {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-ratingsreviews-reviews .review-numbers > div {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+.tutor-ratingsreviews .progress-bar {
+  position: relative;
+  width: 100%;
+  display: block;
+  height: 8px;
+  background: #e3e5eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-right: 30px;
+  margin-left: 13px;
+}
+
+.tutor-ratingsreviews .progress-bar .progress-value {
+  position: absolute;
+  width: var(--progress-value);
+  height: 100%;
+  background: #ed9700;
+  border-radius: 50px;
+}
+
+.tutor-ratingsreviews .progress-text {
+  margin-left: 10px;
 }
 
 .tutor-course-listing-grid {
