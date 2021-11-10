@@ -26574,6 +26574,7 @@ input[type='radio'] {
 }
 
 .tutor-react-datepicker .react-datepicker__day {
+  cursor: pointer;
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;
