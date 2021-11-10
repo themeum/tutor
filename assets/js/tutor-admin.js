@@ -1529,27 +1529,23 @@ var getFilesAndUpdateDOM = function getFilesAndUpdateDOM(files, inputEl, dropZon
 
 
 function toolTipOnWindowResize() {
-  const mediaQuery = window.matchMedia('(max-width: 992px)');
-  const hasClass = document.querySelectorAll('.tooltip-responsive');
+  var mediaQuery = window.matchMedia('(max-width: 992px)');
 
-  if (hasClass.length) {
-      if (mediaQuery.matches) {
-          const toolTips = document.querySelectorAll('.tooltip-right');
-          toolTips.forEach((toolTip) => {
-              toolTip.classList.replace('tooltip-right', 'tooltip-left');
-          });
-      } else {
-          const toolTips = document.querySelectorAll('.tooltip-left');
-          toolTips.forEach((toolTip) => {
-              toolTip.classList.replace('tooltip-left', 'tooltip-right');
-          });
-      }
+  if (mediaQuery.matches) {
+    var toolTips = document.querySelectorAll('.tooltip-right');
+    toolTips.forEach(function (toolTip) {
+      toolTip.classList.replace('tooltip-right', 'tooltip-left');
+    });
+  } else {
+    var _toolTips = document.querySelectorAll('.tooltip-left');
+
+    _toolTips.forEach(function (toolTip) {
+      toolTip.classList.replace('tooltip-left', 'tooltip-right');
+    });
   }
 }
 
 window.addEventListener('resize', toolTipOnWindowResize);
-
-
 /**
  * Search Suggestion box
  */
@@ -2542,8 +2538,6 @@ document.addEventListener("DOMContentLoaded", function () {
       var _loop = function _loop() {
         var withDrawCopyBtn = _step3.value;
         withDrawCopyBtn.addEventListener('click', function (event) {
-          // console.log(withDrawCopyBtn.previousSibling);
-          console.log(event.currentTarget.dataset.textCopy);
           copyToClipboard(event.currentTarget.dataset.textCopy).then(function (text) {
             var html = withDrawCopyBtn.innerHTML;
             withDrawCopyBtn.innerHTML = "".concat(__('Copied', 'tutor'));
