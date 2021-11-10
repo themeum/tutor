@@ -1,36 +1,38 @@
 <?php
 /**
- * Radio Group Settings
+ * Group radio for settings.
  *
- * @since v2.0.0
- * @package Radio
+ * @package Tutor LMS
+ * @since 2.0
  */
 
-$field_id = 'field_' . $field['key'];
+$field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
+
+$field_id = esc_attr( 'field_' . $field_key );
 ?>
 <div class="tutor-option-field-row d-block">
 	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
 
-	<div class="tutor-option-field-input" id="<?php echo $field_id; ?>">
+	<div class="tutor-option-field-input" id="<?php echo esc_attr( $field_id ); ?>">
 		<div class="radio-thumbnail has-title instructor-list">
 			<?php
 			if ( ! empty( $field['group_options'] ) ) :
-				foreach ( $field['group_options'] as $optkey => $options ) :
+				foreach ( $field['group_options'] as $group_option_key => $options ) :
 					?>
-					<div class="<?php echo $optkey; ?>">
-						<!-- <div class="layout-label"><?php // echo ucwords( $optkey ); ?></div> -->
+					<div class="<?php echo esc_attr( $group_option_key ); ?>">
+						<!-- <div class="layout-label"><?php // echo ucwords( $group_option_key ); ?></div> -->
 						<div class="fields-wrapper">
 							<?php
-							foreach ( $options as $optionKey => $option ) :
+							foreach ( $options as $option_key => $option ) :
 								$option_value = $this->get( $field['key'], tutils()->array_get( 'default', $field ) );
-								$field_key    = $optkey . '_' . $optionKey;
+								// $field_key    = esc_attr( $group_option_key . '_' . $option_key );
 								?>
-								<label for="<?php echo $optionKey; ?>">
-									<input type="radio" name="tutor_option[<?php echo $field['key']; ?>]" id="<?php echo $optionKey; ?>" <?php checked( $option_value, $optionKey ); ?> value="<?php echo $optionKey; ?>" />
+								<label for="<?php echo esc_attr( $option_key ); ?>">
+									<input type="radio" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" id="<?php echo esc_attr( $option_key ); ?>" <?php echo esc_attr( checked( $option_value, $option_key ) ); ?> value="<?php echo esc_attr( $option_key ); ?>" />
 									<span class="icon-wrapper">
-										<img src="<?php echo tutor()->url; ?>assets/images/images-v2/<?php echo $option['image']; ?>" alt="">
+										<img src="<?php echo esc_url( tutor()->url . 'assets/images/images-v2/' . $option['image'] ); ?>" alt="icon">
 									</span>
-									<span class="title"><?php echo $option['title']; ?></span>
+									<span class="title"><?php echo esc_attr( $option ['title'] ); ?></span>
 								</label>
 							<?php endforeach; ?>
 						</div>

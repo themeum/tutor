@@ -13,7 +13,89 @@ import '../docz-essential.css';
 
 `** Replace "className" with "class" while using with html` <br />
 
-## Course Details - Accordion
+## Ratings & Reviews
+
+<Playground>
+	<div class="tutor-ratingsreviews tutor-mt-30">
+		<div class="tutor-ratingsreviews-ratings">
+			<div class="text-medium-h1">4.6</div>
+			<div class="tutor-ratings tutor-bs-d-block">
+				<div class="tutor-rating-stars">
+					<span class="ttr-star-full-filled"></span>
+					<span class="ttr-star-full-filled"></span>
+					<span class="ttr-star-full-filled"></span>
+					<span class="ttr-star-half-filled"></span>
+					<span class="ttr-star-line-filled"></span>
+				</div>
+				<div class="tutor-rating-text text-medium-small color-text-primary">Total 274 Rating</div>
+			</div>
+		</div>
+		<div class="tutor-ratingsreviews-reviews">
+			<div class="review-numbers">
+				<div class="tutor-ratings tutor-is-sm">
+					<div class="tutor-rating-stars">
+						<span class="ttr-star-line-filled"></span>
+					</div>
+					<div class="tutor-rating-text text-medium-small color-text-primary">5</div>
+				</div>
+				<div class="progress-bar tutor-mt-10" style={{'--progress-value':'80%'}}>
+					<span class="progress-value"></span>
+				</div>
+				<div class="rating-num text-regular-caption color-text-subsued">200 Ratigns</div>
+			</div>
+			<div class="review-numbers">
+				<div class="tutor-ratings tutor-is-sm">
+					<div class="tutor-rating-stars">
+						<span class="ttr-star-line-filled"></span>
+					</div>
+					<div class="tutor-rating-text text-medium-small color-text-primary">5</div>
+				</div>
+				<div class="progress-bar tutor-mt-10" style={{'--progress-value':'50%'}}>
+					<span class="progress-value"></span>
+				</div>
+				<div class="rating-num text-regular-caption color-text-subsued">175 Ratigns</div>
+			</div>
+			<div class="review-numbers">
+				<div class="tutor-ratings tutor-is-sm">
+					<div class="tutor-rating-stars">
+						<span class="ttr-star-line-filled"></span>
+					</div>
+					<div class="tutor-rating-text text-medium-small color-text-primary">5</div>
+				</div>
+				<div class="progress-bar tutor-mt-10" style={{'--progress-value':'30%'}}>
+					<span class="progress-value"></span>
+				</div>
+				<div class="rating-num text-regular-caption color-text-subsued">5 Ratigns</div>
+			</div>
+			<div class="review-numbers">
+				<div class="tutor-ratings tutor-is-sm">
+					<div class="tutor-rating-stars">
+						<span class="ttr-star-line-filled"></span>
+					</div>
+					<div class="tutor-rating-text text-medium-small color-text-primary">5</div>
+				</div>
+				<div class="progress-bar tutor-mt-10" style={{'--progress-value':'10%'}}>
+					<span class="progress-value"></span>
+				</div>
+				<div class="rating-num text-regular-caption color-text-subsued">2 Ratigns</div>
+			</div>
+			<div class="review-numbers">
+				<div class="tutor-ratings tutor-is-sm">
+					<div class="tutor-rating-stars">
+						<span class="ttr-star-line-filled"></span>
+					</div>
+					<div class="tutor-rating-text text-medium-small color-text-primary">5</div>
+				</div>
+				<div class="progress-bar tutor-mt-10" style={{'--progress-value':'0%'}}>
+					<span class="progress-value"></span>
+				</div>
+				<div class="rating-num text-regular-caption color-text-subsued">0 Ratigns</div>
+			</div>
+		</div>
+	</div>
+</Playground>
+
+## Accordion
 
 <Playground>
 	<div class="tutor-accordion">
@@ -21,9 +103,6 @@ import '../docz-essential.css';
 			<div class="tutor-accordion-item-header">01. Overview</div>
 			<div class="tutor-accordion-item-body">
 				<div class="tutor-accordion-item-body-content">
-					Web Development broadly refers to the tasks associated with developing functional websites and applications
-					for the Internet. The web development process includes web design, web content development,
-					client-side/server-side scripting and network security configuration, among other tasks.
 					<ul className="tutor-courses-lession-list">
 						<li>
 							<div>
@@ -31,51 +110,102 @@ import '../docz-essential.css';
 							</div>
 							<div>
 								<span class="text-regular-caption color-text-hints">1m 10s</span>
-								<span className="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+								<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
 							</div>
 						</li>
 						<li>
 							<div>
-								<span class="ttr-youtube-brand"></span> <span>Introduction</span>
+								<span class="ttr-document-alt-filled tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">What is Exposure?</span>
 							</div>
 							<div>
-								<span>1m 10s</span> <span className="ttr-eye-filled"></span>
+								<span class="text-regular-caption color-text-hints">1m 10s</span>
+								<span class="ttr-lock-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
 							</div>
 						</li>
 						<li>
 							<div>
-								<span class="ttr-youtube-brand"></span> <span>Introduction</span>
+								<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">The Exposure Triangle</span>
 							</div>
 							<div>
-								<span>1m 10s</span> <span className="ttr-eye-filled"></span>
+								<span class="text-regular-caption color-text-hints">1m 10s</span>
+								<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
 							</div>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
+		{/* end of /.tutor-accordion-item" */}
 		<div class="tutor-accordion-item">
-			<div class="tutor-accordion-item-header">What is HTML?</div>
+			<div class="tutor-accordion-item-header">02. Putting It All Together</div>
 			<div class="tutor-accordion-item-body">
 				<div class="tutor-accordion-item-body-content">
-					HTML, aka HyperText Markup Language, is the dominant markup language for creating websites and anything that
-					can be viewed in a web browser.
+					<ul className="tutor-courses-lession-list">
+						<li>
+							<div>
+								<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">Introduction</span>
+							</div>
+							<div>
+								<span class="text-regular-caption color-text-hints">1m 10s</span>
+								<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<span class="ttr-document-alt-filled tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">What is Exposure?</span>
+							</div>
+							<div>
+								<span class="text-regular-caption color-text-hints">1m 10s</span>
+								<span class="ttr-lock-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+							</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
+		{/* end of /.tutor-accordion-item" */}
 		<div class="tutor-accordion-item">
-			<div class="tutor-accordion-item-header">What is React?</div>
+			<div class="tutor-accordion-item-header">03. Using ES6, NPM, Babel and Webpack</div>
 			<div class="tutor-accordion-item-body">
 				<div class="tutor-accordion-item-body-content">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa cumque in vero consectetur ab reprehenderit
-					laudantium hic voluptatibus delectus iste.
+					<ul className="tutor-courses-lession-list">
+						<li>
+							<div>
+								<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">Introduction</span>
+							</div>
+							<div>
+								<span class="text-regular-caption color-text-hints">1m 10s</span>
+								<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<span class="ttr-document-alt-filled tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">What is Exposure?</span>
+							</div>
+							<div>
+								<span class="text-regular-caption color-text-hints">1m 10s</span>
+								<span class="ttr-lock-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+							</div>
+						</li>
+						<li>
+							<div>
+								<span class="ttr-youtube-brand tutor-icon-24 color-black-30 tutor-mr-14"></span> <span class="text-regular-body color-text-primary">The Exposure Triangle</span>
+							</div>
+							<div>
+								<span class="text-regular-caption color-text-hints">1m 10s</span>
+								<span class="ttr-eye-filled tutor-icon-24 color-black-20 tutor-ml-20"></span>
+							</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
+		{/* end of /.tutor-accordion-item" */}
 	</div>
+	{/* end of /.tutor-accordion */}
 </Playground>
 
-## Course Details - Tab
+## Tab
 
 <Playground>
 	<div className="tutor-default-tab tutor-course-details-tab">
@@ -87,6 +217,7 @@ import '../docz-essential.css';
 				<span>Curriculum</span>
 			</div>
 		</div>
+		{/* end of /.tab-header */}
 		<div class="tab-body">
 			<div class="tab-body-item is-active" id="tutor-course-details-tab-1">
 				<div className="text-medium-h6 color-text-primary">About Course</div>
@@ -102,6 +233,7 @@ import '../docz-essential.css';
 					Guide" on Node.js after all. .
 				</div>
 			</div>
+			{/* end of /.tab-body-item */}
 			<div class="tab-body-item" id="tutor-course-details-tab-2">
 				<div className="text-medium-h6 color-text-primary">Curriculum</div>
 				<div className="text-regular-body color-text-subsued tutor-mt-12">
@@ -116,11 +248,14 @@ import '../docz-essential.css';
 					mention its applications in build workflows for projects of all sizes.
 				</div>
 			</div>
+			{/* end of /.tab-body-item */}
 		</div>
+		{/* end of /.tab-body */}
 	</div>
+	{/* end of /.tutor-default-tab */}
 </Playground>
 
-## Course Details - Header
+## Header
 
 `** remove the inline-style from the header`
 
@@ -161,7 +296,55 @@ import '../docz-essential.css';
 	</header>
 </Playground>
 
-## Course Details Sidebar - Widgets
+## Instructor card
+
+<Playground>
+	<div class="color-text-primary text-medium-h6 tutor-mb-24">About the instructors</div>
+	<div class="tutor-instructor-info-card">
+		<div class="tutor-instructor-info-card-body tutor-bs-d-sm-flex tutor-bs-align-items-start tutor-px-30 tutor-py-24">
+			<div class="tutor-ins-avatar tutor-mr-sm-15">
+				<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="instructor avatar" />
+			</div>
+			<div class="tutor-ins-rest">
+				<div class="tutor-ins-title text-medium-body color-text-primary">Joseph Robbins</div>
+				<div class="tutor-ins-designation text-regular-caption color-text-hints tutor-mt-3">
+					UX Engineer & Software Developer
+				</div>
+				<div class="tutor-ins-summary text-regular-body text-subsued tutor-mt-18">
+					Over 92% of computers are infected with Adware and spyware. Such software is rarely accompanied by uninstall
+					utility and even when it is it almost always leaves broken Windows Registry keys behind it. is used for
+					everything from traditional web apps with server-side rendered.
+				</div>
+			</div>
+		</div>
+		<div class="tutor-instructor-info-card-footer tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-px-30 tutor-py-15">
+			<div className="tutor-ratings tutor-is-sm flex-center">
+				<div className="tutor-rating-stars">
+					<span className="ttr-star-full-filled"></span>
+					<span className="ttr-star-full-filled"></span>
+					<span className="ttr-star-full-filled"></span>
+					<span className="ttr-star-half-filled"></span>
+					<span className="ttr-star-line-filled"></span>
+				</div>
+				<div className="tutor-rating-text text-medium-small color-text-primary">4.5</div>
+			</div>
+			<div className="tutor-ins-meta tutor-bs-d-flex">
+				<div className="tutor-ins-meta-item color-design-dark flex-center">
+					<span class="tutor-icon-30 ttr-user-filled"></span>
+					<span className="text-bold-body color-text-primary tutor-mr-4">2892</span>
+					<span className="text-regular-caption color-text-subsued">Students</span>
+				</div>
+				<div className="tutor-ins-meta-item color-design-dark flex-center ">
+					<span class="tutor-icon-30 ttr-mortarboard-line"></span>
+					<span className="text-bold-body color-text-primary tutor-mr-4">13</span>
+					<span className="text-regular-caption color-text-subsued">Courses</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</Playground>
+
+## Sidebar - Widgets
 
 <Playground>
 	<div class="tutor-course-details-widget">
@@ -246,55 +429,7 @@ import '../docz-essential.css';
 	</div>
 </Playground>
 
-## Course Details - Instructor card
-
-<Playground>
-	<div class="color-text-primary text-medium-h6 tutor-mb-16">About the instructors</div>
-	<div class="tutor-instructor-info-card">
-		<div class="tutor-instructor-info-card-body tutor-bs-d-sm-flex tutor-bs-align-items-start tutor-px-30 tutor-py-24">
-			<div class="tutor-ins-avatar tutor-mr-sm-15">
-				<img src="https://i.imgur.com/CckCKYQ.jpeg" alt="instructor avatar" />
-			</div>
-			<div class="tutor-ins-rest">
-				<div class="tutor-ins-title text-medium-body color-text-primary">Joseph Robbins</div>
-				<div class="tutor-ins-designation text-regular-caption color-text-hints tutor-mt-3">
-					UX Engineer & Software Developer
-				</div>
-				<div class="tutor-ins-summary text-regular-body text-subsued tutor-mt-18">
-					Over 92% of computers are infected with Adware and spyware. Such software is rarely accompanied by uninstall
-					utility and even when it is it almost always leaves broken Windows Registry keys behind it. is used for
-					everything from traditional web apps with server-side rendered.
-				</div>
-			</div>
-		</div>
-		<div class="tutor-instructor-info-card-footer tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-px-30 tutor-py-15">
-			<div className="tutor-ratings tutor-is-sm flex-center">
-				<div className="tutor-rating-stars">
-					<span className="ttr-star-full-filled"></span>
-					<span className="ttr-star-full-filled"></span>
-					<span className="ttr-star-full-filled"></span>
-					<span className="ttr-star-half-filled"></span>
-					<span className="ttr-star-line-filled"></span>
-				</div>
-				<div className="tutor-rating-text text-medium-small color-text-primary">4.5</div>
-			</div>
-			<div className="tutor-ins-meta tutor-bs-d-flex">
-				<div className="tutor-ins-meta-item color-design-dark flex-center">
-					<span class="tutor-icon-30 ttr-user-filled"></span>
-					<span className="text-bold-body color-text-primary tutor-mr-4">2892</span>
-					<span className="text-regular-caption color-text-subsued">Students</span>
-				</div>
-				<div className="tutor-ins-meta-item color-design-dark flex-center ">
-					<span class="tutor-icon-30 ttr-mortarboard-line"></span>
-					<span className="text-bold-body color-text-primary tutor-mr-4">13</span>
-					<span className="text-regular-caption color-text-subsued">Courses</span>
-				</div>
-			</div>
-		</div>
-	</div>
-</Playground>
-
-## Course Details Sidebar - Cards
+## Sidebar - Cards
 
 <Playground>
 	<div class="tutor-course-listing-card-demo">

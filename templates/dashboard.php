@@ -104,7 +104,7 @@ do_action('tutor_dashboard/before/wrap');
                                     } 
                                 ?>
                             </div>
-                            <div class="tutor-bs-col-12 tutor-bs-col-md-7 tutor-bs-d-flex tutor-bs-justify-content-end">
+                            <div class="tutor-bs-col-12 tutor-bs-col-md-7 tutor-bs-d-md-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
                                 <?php
                                     do_action( 'tutor_dashboard/before_header_button' );
                                     $instructor_status = tutor_utils()->instructor_status();

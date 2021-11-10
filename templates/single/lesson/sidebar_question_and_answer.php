@@ -56,7 +56,6 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course ) {
                         </div>
 
                         <div class="tutor_question_area">
-                            <p><strong><?php echo stripslashes($question->question_title); ?> </strong></p>
 							<?php echo wpautop(stripslashes($question->comment_content)); ?>
                         </div>
                     </div>

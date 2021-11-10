@@ -9,10 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if (isset($_GET['sub_page'])){
-    $page = sanitize_text_field($_GET['sub_page']);
-    include_once tutor()->path."views/pages/{$page}.php";
-    return;
+if ( isset( $_GET['sub_page'] ) ) {
+	$page = sanitize_text_field( $_GET['sub_page'] );
+	include_once tutor()->path . "views/pages/{$page}.php";
+	return;
 }
 
 use TUTOR\Instructors_List;
@@ -22,7 +22,7 @@ $instructors = new Instructors_List();
 /**
  * Short able params
  */
-$user_id = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
+$user_id   = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
 $course_id = isset( $_GET['course-id'] ) ? $_GET['course-id'] : '';
 $order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date      = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
@@ -40,18 +40,18 @@ $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$instructors_list = tutor_utils()->get_instructors($offset, $per_page, $search, $user_id, $date, $order, $course_id );
-$total            = tutor_utils()->get_total_instructors($active_tab, $search, $user_id, $date, $course_id);
+$instructors_list = tutor_utils()->get_instructors( $offset, $per_page, $search, $user_id, $date, $order, $course_id );
+$total            = tutor_utils()->get_total_instructors( $active_tab, $search, $user_id, $date, $course_id );
 
 /**
  * Navbar data to make nav menu
  */
-$url                = get_pagenum_link();
-$add_insructor_url  = $url . '&sub_page=add_new_instructor';
-$navbar_data = array(
-	'page_title' => $instructors->page_title,
-	'tabs'       => $instructors->tabs_key_value(  $user_id, $date, $search, $course_id ),
-	'active'     => $active_tab,
+$url               = get_pagenum_link();
+$add_insructor_url = $url . '&sub_page=add_new_instructor';
+$navbar_data       = array(
+	'page_title'   => $instructors->page_title,
+	'tabs'         => $instructors->tabs_key_value( $user_id, $date, $search, $course_id ),
+	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
 	'button_url'   => $add_insructor_url,
@@ -75,7 +75,7 @@ $filters = array(
 	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
-	
+
 ?>
 
 <div class="wrap">
@@ -125,13 +125,13 @@ $filters = array(
 				</td>
 				<td class="column-fullwidth">
 				<div class="td-avatar">
-					<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
-					<img src="<?php echo esc_url($avatar_url); ?>" alt="student avatar"/>
+					<?php $avatar_url = get_avatar_url( $list->ID ); ?>
+					<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
 					<p class="color-text-primary text-medium-body">
 						<?php esc_html_e( $list->display_name ); ?>
 					</p>
-					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
-					<a href="<?php echo esc_url($edit_link); ?>" class="btn-text btn-detail-link color-design-dark">
+					<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
+					<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
 						<span class="ttr-detail-link-filled tutor-mt-5"></span>
 					</a>
 				</div>
@@ -144,17 +144,17 @@ $filters = array(
 				</td>
 				<td data-th="Registration Date">
 				<span class="color-text-primary text-regular-caption">
-				<?php esc_html_e( $instructors->column_total_course( $list, 'total_course' )); ?>
+				<?php esc_html_e( $instructors->column_total_course( $list, 'total_course' ) ); ?>
 				</span>
 				</td>
 				<td data-th="Course Taklen">
 				<span class="color-text-primary text-medium-caption">
-				<?php echo wp_kses_post( $instructors->column_status( $list, 'status' )); ?>
+				<?php echo wp_kses_post( $instructors->column_status( $list, 'status' ) ); ?>
 				</span>
 				</td>
 				<td data-th="URL">
 				<div class="inline-flex-center td-action-btns">
-					<?php echo wp_kses_post( $instructors->column_action( $list, 'status' )); ?>
+					<?php echo wp_kses_post( $instructors->column_action( $list, 'status' ) ); ?>
 				</div>
 				</td>
 			</tr>
