@@ -2719,7 +2719,12 @@ class Utils {
 	}
 
 	/**
+	 * Get Total number of instructor
+	 *
 	 * @param string $search_term
+	 * @param string $status (approved | pending | blocked)
+	 * @param string $course_id
+	 * @param string $date, user_registered date
 	 *
 	 * @return int
 	 *
@@ -2727,30 +2732,61 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_total_instructors( $search_filter = '') {
+	public function get_total_instructors( $search_filter = '', $status = array(), $course_id = '', $date = '' ): int {
 		global $wpdb;
-
-		sanitize_text_field($search_filter);
+		$search_filter  = sanitize_text_field( $search_filter );
+		$course_id 		= sanitize_text_field( $course_id );
+		$date 			= sanitize_text_field( $date );
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 
-		$count = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT(user.ID)
-			FROM 	{$wpdb->users} as user
-					INNER JOIN {$wpdb->usermeta} as user_meta
-							ON ( user_meta.user_id = user.ID )
+		$status_query = '';
+		if ( is_array( $status ) && count( $status ) ) {
+			$status = array_map( function($str) {
+				return "'{$str}'";
+			}, $status);
 
-			WHERE 	user_meta.meta_key = %s
-					AND ( user.display_name LIKE %s OR user.user_email LIKE %s );
+			$status_query = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
+		}
+
+		$course_query = '';
+		if ( '' !== $course_id ) {
+			$course_query = "AND umeta.meta_value = $course_id ";
+		}
+
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date 		= tutor_get_formated_date( 'Y-m-d', $date ); 
+			$date_query = "AND  DATE(user.user_registered) = CAST('$date' AS DATE)";
+		}
+
+		$count = $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(DISTINCT user.ID )
+				FROM 	{$wpdb->users} user
+						INNER JOIN {$wpdb->usermeta} user_meta
+								ON ( user.ID = user_meta.user_id )
+						INNER JOIN {$wpdb->usermeta} inst_status
+								ON ( user.ID = inst_status.user_id )
+						LEFT JOIN {$wpdb->usermeta} AS umeta
+								ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+
+				WHERE 	user_meta.meta_key = %s
+						AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+						{$status_query}
+						{$course_query}
+						{$date_query}
 			",
 			'_is_tutor_instructor',
 			$search_filter,
 			$search_filter
 		) );
-		return $count;
+		return $count ? $count : 0;
 	}
 
 	/**
+	 * Get instructor with optional filters.
+	 * Available instructor status ( approved | blocked | pending )
+	 *
 	 * @param int $start
 	 * @param int $limit
 	 * @param string $search_term
@@ -2764,20 +2800,20 @@ class Utils {
 	public function get_instructors( $start = 0, $limit = 10, $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $status = null, $cat_ids = array(), $rating = '' ) {
 		global $wpdb;
 
-		$search_filter 	=  sanitize_text_field($search_filter);
-		$course_filter 	= sanitize_text_field($course_filter);
-		$date_filter 	= sanitize_text_field($date_filter);
-		$order_filter 	= sanitize_text_field($order_filter);
-		$rating 		= sanitize_text_field($rating);
+		$search_filter 	= sanitize_text_field( $search_filter );
+		$course_filter 	= sanitize_text_field( $course_filter );
+		$date_filter 	= sanitize_text_field( $date_filter );
+		$order_filter 	= sanitize_text_field( $order_filter );
+		$rating 		= sanitize_text_field( $rating );
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
-		$course_filter	= $course_filter != '' ? " AND inst_status.meta_key = '_tutor_instructor_course_id' AND inst_status.meta_value = $course_filter " : '' ;
+		$course_filter	= $course_filter != '' ? " AND umeta.meta_value = $course_filter " : '' ;
 
 		if ( '' != $date_filter ) {
 			$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
 		}
 
-		$date_filter	= $date_filter != '' ? " AND  DATE(user.user_registered) = '$date_filter' " : '' ;
+		$date_filter	= $date_filter != '' ? " AND  DATE(user.user_registered) = CAST('$date_filter' AS DATE) " : '' ;
 
 		$category_join = '';
 		$category_where = '';
@@ -2791,7 +2827,7 @@ class Utils {
 
 			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
-
+	
 		$cat_ids = array_filter( $cat_ids = array() , function($id) {
 			return is_numeric($id);
 		});
@@ -2835,30 +2871,30 @@ class Utils {
 		}
 
 		$instructors = $wpdb->get_results( $wpdb->prepare(
-			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating
-			FROM 	{$wpdb->users} user
-					INNER JOIN {$wpdb->usermeta} user_meta
-							ON ( user.ID = user_meta.user_id )
-					INNER JOIN {$wpdb->usermeta} inst_status
-							ON ( user.ID = inst_status.user_id )
-					{$category_join}
-					LEFT JOIN wp_usermeta AS umeta
-						ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
-					LEFT JOIN wp_comments AS c
-						ON c.comment_post_ID = umeta.meta_value
-					LEFT JOIN wp_commentmeta AS cmeta
-						ON cmeta.comment_id = c.comment_ID
-						AND cmeta.meta_key = 'tutor_rating'
-			WHERE 	user_meta.meta_key = %s
-					AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
-					{$status}
-					{$category_where}
-					{$course_filter}
-					{$date_filter}
-			GROUP BY user.ID
-			{$rating_having}
-			{$order_query}
-			LIMIT 	%d, %d;
+			"SELECT DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status
+				FROM 	{$wpdb->users} user
+						INNER JOIN {$wpdb->usermeta} user_meta
+								ON ( user.ID = user_meta.user_id )
+						INNER JOIN {$wpdb->usermeta} inst_status
+								ON ( user.ID = inst_status.user_id )
+						{$category_join}
+						LEFT JOIN {$wpdb->usermeta} AS umeta
+							ON umeta.user_id = user.ID AND umeta.meta_key = '_tutor_instructor_course_id'
+						LEFT JOIN {$wpdb->comments} AS c
+							ON c.comment_post_ID = umeta.meta_value
+						LEFT JOIN {$wpdb->commentmeta} AS cmeta
+							ON cmeta.comment_id = c.comment_ID
+							AND cmeta.meta_key = 'tutor_rating'
+				WHERE 	user_meta.meta_key = %s
+						AND ( user.display_name LIKE %s OR user.user_email LIKE %s )
+						{$status}
+						{$category_where}
+						{$course_filter}
+						{$date_filter}
+				GROUP BY user.ID
+				{$rating_having}
+				{$order_query}
+				LIMIT 	%d, %d;
 			",
 			'_is_tutor_instructor',
 			$search_filter,
@@ -2866,7 +2902,6 @@ class Utils {
 			$start,
 			$limit
 		) );
-
 		return $instructors;
 	}
 
@@ -8187,8 +8222,41 @@ class Utils {
 			'processing' 	=> __( 'Processing', 'tutor' ),
 			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
 			'canceled'  	=> __( 'Cancelled', 'tutor' ),
+			'blocked'		=> __( 'Blocked', 'tutor' )
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
 
+	/**
+	 * Show character as asterisk symbol for email
+	 * it will replace character with asterisk till @ symbol
+	 *
+	 * @param string $email | required.
+	 * @return string
+	 * @since v2.0.0
+	 */
+	function asterisks_email( string $email ): string {
+		if ( '' === $email ) {
+			return '';
+		}
+		$mail_part 		= explode( '@', $email );
+		$mail_part[0]	= str_repeat('*', strlen( $mail_part[0] ) );
+		return $mail_part[0] . $mail_part[1];
+	}
+
+	/**
+	 * Show some character as asterisk symbol
+	 * it will replace character with asterisk from the beginning and ending
+	 *
+	 * @param string $text | required.
+	 * @return string
+	 * @since v2.0.0
+	 */
+	function asterisks_center_text( string $str ): string {
+		if ( '' === $str ) {
+			return '';
+		}
+		$str_length = strlen($str);
+		return substr($str, 0, 2).str_repeat('*', $str_length - 2).substr($str, $str_length - 2, 2);
+	}
 }
