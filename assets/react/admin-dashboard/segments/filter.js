@@ -8,6 +8,7 @@
  * @since v2.0.0
  */
 const { __, _x, _n, _nx } = wp.i18n;
+
 document.addEventListener("DOMContentLoaded", function() {
   const filterCourse = document.getElementById("tutor-backend-filter-course");
   if (filterCourse) {
