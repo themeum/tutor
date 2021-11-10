@@ -19,6 +19,12 @@
             foreach($qna_list as $qna) {
                 $id_string_delete = 'tutor_delete_qna_' . $qna->comment_ID;
                 $row_id = 'tutor_qna_row_' . $qna->comment_ID;
+
+                $meta = $qna->meta;
+                $is_solved = (int)tutor_utils()->array_get('tutor_qna_solved', $meta, 0);
+                $is_important = (int)tutor_utils()->array_get('tutor_qna_important', $meta, 0);
+                $is_archived = (int)tutor_utils()->array_get('tutor_qna_archived', $meta, 0);
+                $is_read = (int)tutor_utils()->array_get('tutor_qna_read', $meta, 0);
                 ?>
                 <tr id="<?php echo $row_id; ?>">
                     <?php 
@@ -55,10 +61,10 @@
                                     ?>
                                     <td data-th="<?php echo $column; ?>" title="<?php echo $content; ?>">
                                         <span class="text-medium-caption color-text-primary tutor-bs-d-block">
-                                            <?php echo $qna->post_title;?>
+                                            <?php echo $content;?>
                                         </span>
                                         <small class="tutor-text-nowrap">
-                                            <?php _e('Course'); ?>: <?php echo $content; ?>
+                                            <?php _e('Course'); ?>: <?php echo $qna->post_title; ?>
                                         </small>
                                     </td>
                                     <?php
@@ -85,7 +91,12 @@
                                 case 'status' :
                                     ?>
                                     <td data-th="<?php echo $column; ?>">
-                                        &nbsp;
+                                        <div class="tooltip-wrap">
+                                            <i class="ttr-tick-circle-outline-filled tutor-font-size-24 <?php echo $is_solved ? 'tutor-text-success' : ''; ?>"></i>
+                                            <span class="tooltip-txt tooltip-bottom">
+                                                <?php $is_solved ? _e('Solved', 'tutor') : _e('Unresolved Yet', 'tutor'); ?>
+                                            </span>
+                                        </div>
                                     </td>
                                     <?php
                                     break;
