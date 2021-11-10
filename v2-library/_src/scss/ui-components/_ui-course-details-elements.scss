@@ -75,6 +75,7 @@
 .tutor-course-sidebar-card {
 	border: 1px solid $stroke-light-30;
 	border-radius: 6px;
+	max-width: 400px;
 	&-body {
 	}
 	&-footer {
@@ -122,8 +123,11 @@
 	// border: 1px solid;
 	&-main {
 		display: grid;
-		grid-template-columns: 8fr 4fr;
-		grid-gap: 55px;
+		grid-gap: 30px;
+		@include breakpoint-min(desktop) {
+			grid-template-columns: 8fr 4fr;
+			grid-gap: 55px;
+		}
 
 		&-left {
 		}
@@ -271,60 +275,105 @@
 		grid-gap: 20px;
 		align-items: center;
 		padding: 30px;
-	}
 
-	&-ratings-avg {
-	}
-	&-ratings-all {
-		.rating-numbers {
-			display: grid;
-			grid-gap: 5px;
-			@include breakpoint-min(mobile) {
-				grid-gap: 30px;
-				grid-template-columns: 80% 20%;
-			}
-			@include breakpoint-max(mobile) {
-				.rating-num {
-					text-align: center;
+		&-avg {
+		}
+		&-all {
+			.rating-numbers {
+				display: grid;
+				grid-gap: 5px;
+				@include breakpoint-min(mobile) {
+					grid-gap: 30px;
+					grid-template-columns: 80% 20%;
+				}
+				@include breakpoint-max(mobile) {
+					.rating-num {
+						text-align: center;
+					}
+				}
+
+				.rating-progress {
+					display: flex;
+					grid-gap: 13px;
+				}
+
+				&:not(:first-child) {
+					margin-top: 10px;
 				}
 			}
-
 			.rating-progress {
-				display: flex;
-				grid-gap: 13px;
-			}
-
-			&:not(:first-child) {
-				margin-top: 10px;
+				.tutor-rating-text {
+					padding-left: 2px;
+				}
 			}
 		}
-		.rating-progress {
+
+		.progress-bar {
+			position: relative;
+			width: 100%;
+			display: block;
+			height: 8px;
+			background: #e3e5eb;
+			border-radius: 4px;
+			overflow: hidden;
+
+			.progress-value {
+				position: absolute;
+				width: var(--progress-value);
+				height: 100%;
+				background: #ed9700;
+				border-radius: 50px;
+			}
+		}
+		.progress-text {
+			margin-left: 10px;
+		}
+	}
+
+	&-reviews {
+		.review-list {
+			list-style: none;
+			> li {
+				--col: 11%;
+				display: grid;
+				@include breakpoint-min(450) {
+					grid-template-columns: auto 1fr;
+				}
+				grid-gap: 20px;
+				align-items: center;
+				border-top: 1px solid $stroke-light-30;
+				padding: 30px;
+				@include breakpoint-min(desktop) {
+					grid-template-columns: var(--col) calc(100% - var(--col));
+					padding-left: 35px;
+					padding-right: 40px;
+				}
+			}
 			.tutor-rating-text {
 				padding-left: 2px;
 			}
 		}
 	}
+}
 
-	.progress-bar {
-		position: relative;
-		width: 100%;
-		display: block;
-		height: 8px;
-		background: #e3e5eb;
-		border-radius: 4px;
-		overflow: hidden;
+// spacing
+$avatarSizes: 16, 20, 24, 28, 32, 40, 48, 50, 64, 120;
 
-		.progress-value {
-			position: absolute;
-			width: var(--progress-value);
-			height: 100%;
-			background: #ed9700;
-			border-radius: 50px;
+@each $size in $avatarSizes {
+	.tutor-avatar-circle {
+		&.tutor-#{$size} {
+			width: #{$size}px;
+			height: #{$size}px;
 		}
 	}
-	.progress-text {
-		margin-left: 10px;
-	}
-	.rating-num {
+}
+.tutor-avatar-circle {
+	border-radius: 50%;
+	overflow: hidden;
+	img {
+		/* display: flex; */
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 }

@@ -25422,6 +25422,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-course-sidebar-card {
   border: 1px solid #cdcfd5;
   border-radius: 6px;
+  max-width: 400px;
 }
 
 .tutor-course-sidebar-card-footer {
@@ -25453,8 +25454,14 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-course-details-page-main {
   display: grid;
-  grid-template-columns: 8fr 4fr;
-  grid-gap: 55px;
+  grid-gap: 30px;
+}
+
+@media (min-width: 992px) {
+  .tutor-course-details-page-main {
+    grid-template-columns: 8fr 4fr;
+    grid-gap: 55px;
+  }
 }
 
 .tutor-course-details-page .tutor-has-showmore .tutor-showmore-content {
@@ -25662,7 +25669,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   padding-left: 2px;
 }
 
-.tutor-ratingsreviews .progress-bar {
+.tutor-ratingsreviews-ratings .progress-bar {
   position: relative;
   width: 100%;
   display: block;
@@ -25672,7 +25679,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   overflow: hidden;
 }
 
-.tutor-ratingsreviews .progress-bar .progress-value {
+.tutor-ratingsreviews-ratings .progress-bar .progress-value {
   position: absolute;
   width: var(--progress-value);
   height: 100%;
@@ -25680,8 +25687,104 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border-radius: 50px;
 }
 
-.tutor-ratingsreviews .progress-text {
+.tutor-ratingsreviews-ratings .progress-text {
   margin-left: 10px;
+}
+
+.tutor-ratingsreviews-reviews .review-list {
+  list-style: none;
+}
+
+.tutor-ratingsreviews-reviews .review-list > li {
+  --col: 11%;
+  display: grid;
+  grid-gap: 20px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-top: 1px solid #cdcfd5;
+  padding: 30px;
+}
+
+@media (min-width: 450px) {
+  .tutor-ratingsreviews-reviews .review-list > li {
+    grid-template-columns: auto 1fr;
+  }
+}
+
+@media (min-width: 992px) {
+  .tutor-ratingsreviews-reviews .review-list > li {
+    grid-template-columns: var(--col) calc(100% - var(--col));
+    padding-left: 35px;
+    padding-right: 40px;
+  }
+}
+
+.tutor-ratingsreviews-reviews .review-list .tutor-rating-text {
+  padding-left: 2px;
+}
+
+.tutor-avatar-circle.tutor-16 {
+  width: 16px;
+  height: 16px;
+}
+
+.tutor-avatar-circle.tutor-20 {
+  width: 20px;
+  height: 20px;
+}
+
+.tutor-avatar-circle.tutor-24 {
+  width: 24px;
+  height: 24px;
+}
+
+.tutor-avatar-circle.tutor-28 {
+  width: 28px;
+  height: 28px;
+}
+
+.tutor-avatar-circle.tutor-32 {
+  width: 32px;
+  height: 32px;
+}
+
+.tutor-avatar-circle.tutor-40 {
+  width: 40px;
+  height: 40px;
+}
+
+.tutor-avatar-circle.tutor-48 {
+  width: 48px;
+  height: 48px;
+}
+
+.tutor-avatar-circle.tutor-50 {
+  width: 50px;
+  height: 50px;
+}
+
+.tutor-avatar-circle.tutor-64 {
+  width: 64px;
+  height: 64px;
+}
+
+.tutor-avatar-circle.tutor-120 {
+  width: 120px;
+  height: 120px;
+}
+
+.tutor-avatar-circle {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.tutor-avatar-circle img {
+  /* display: flex; */
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .tutor-course-listing-grid {
