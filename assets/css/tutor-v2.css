@@ -5483,266 +5483,266 @@
 }
 
 .text-thin-h1 {
-  font-weight: 100;
-  font-size: 80px;
+  font-weight: 100 !important;
+  font-size: 80px !important;
   line-height: 101%;
 }
 
 .text-thin-h2 {
-  font-weight: 100;
-  font-size: 60px;
+  font-weight: 100 !important;
+  font-size: 60px !important;
   line-height: 117%;
 }
 
 .text-thin-h3 {
-  font-weight: 100;
-  font-size: 40px;
+  font-weight: 100 !important;
+  font-size: 40px !important;
   line-height: 120%;
 }
 
 .text-thin-h4 {
-  font-weight: 100;
-  font-size: 30px;
+  font-weight: 100 !important;
+  font-size: 30px !important;
   line-height: 133%;
 }
 
 .text-thin-h5 {
-  font-weight: 100;
-  font-size: 24px;
+  font-weight: 100 !important;
+  font-size: 24px !important;
   line-height: 142%;
 }
 
 .text-thin-h6 {
-  font-weight: 100;
-  font-size: 20px;
+  font-weight: 100 !important;
+  font-size: 20px !important;
   line-height: 150%;
 }
 
 .text-thin-body {
-  font-weight: 100;
-  font-size: 16px;
+  font-weight: 100 !important;
+  font-size: 16px !important;
   line-height: 162%;
 }
 
 .text-thin-caption {
-  font-weight: 100;
-  font-size: 15px;
+  font-weight: 100 !important;
+  font-size: 15px !important;
   line-height: 160%;
 }
 
 .text-thin-small {
-  font-weight: 100;
-  font-size: 13px;
+  font-weight: 100 !important;
+  font-size: 13px !important;
   line-height: 138%;
 }
 
 .text-thin-tiny {
-  font-weight: 100;
-  font-size: 11px;
+  font-weight: 100 !important;
+  font-size: 11px !important;
   line-height: 145%;
 }
 
 .text-regular-h1 {
-  font-weight: 400;
-  font-size: 80px;
+  font-weight: 400 !important;
+  font-size: 80px !important;
   line-height: 101%;
 }
 
 .text-regular-h2 {
-  font-weight: 400;
-  font-size: 60px;
+  font-weight: 400 !important;
+  font-size: 60px !important;
   line-height: 117%;
 }
 
 .text-regular-h3 {
-  font-weight: 400;
-  font-size: 40px;
+  font-weight: 400 !important;
+  font-size: 40px !important;
   line-height: 120%;
 }
 
 .text-regular-h4 {
-  font-weight: 400;
-  font-size: 30px;
+  font-weight: 400 !important;
+  font-size: 30px !important;
   line-height: 133%;
 }
 
 .text-regular-h5 {
-  font-weight: 400;
-  font-size: 24px;
+  font-weight: 400 !important;
+  font-size: 24px !important;
   line-height: 142%;
 }
 
 .text-regular-h6 {
-  font-weight: 400;
-  font-size: 20px;
+  font-weight: 400 !important;
+  font-size: 20px !important;
   line-height: 150%;
 }
 
 .text-regular-body, .tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label {
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: 400 !important;
+  font-size: 16px !important;
   line-height: 162%;
 }
 
 .text-regular-caption, .tutor-alert, .tutor-alert .tutor-alert-text, table.tutor-ui-table .td-list-item .tutor-form-check label {
-  font-weight: 400;
-  font-size: 15px;
+  font-weight: 400 !important;
+  font-size: 15px !important;
   line-height: 160%;
 }
 
 .text-regular-small, .text-body, .tooltip-wrap .tooltip-txt {
-  font-weight: 400;
-  font-size: 13px;
+  font-weight: 400 !important;
+  font-size: 13px !important;
   line-height: 138%;
 }
 
 .text-regular-tiny {
-  font-weight: 400;
-  font-size: 11px;
+  font-weight: 400 !important;
+  font-size: 11px !important;
   line-height: 145%;
 }
 
 .text-medium-h1 {
-  font-weight: 500;
-  font-size: 80px;
+  font-weight: 500 !important;
+  font-size: 80px !important;
   line-height: 101%;
 }
 
 .text-medium-h2 {
-  font-weight: 500;
-  font-size: 60px;
+  font-weight: 500 !important;
+  font-size: 60px !important;
   line-height: 117%;
 }
 
 .text-medium-h3 {
-  font-weight: 500;
-  font-size: 40px;
+  font-weight: 500 !important;
+  font-size: 40px !important;
   line-height: 120%;
 }
 
 .text-medium-h4 {
-  font-weight: 500;
-  font-size: 30px;
+  font-weight: 500 !important;
+  font-size: 30px !important;
   line-height: 123%;
 }
 
 .text-medium-h5 {
-  font-weight: 500;
-  font-size: 24px;
+  font-weight: 500 !important;
+  font-size: 24px !important;
   line-height: 142%;
 }
 
 .text-medium-h6, .tutor-accordion-item-header {
-  font-weight: 500;
-  font-size: 20px;
+  font-weight: 500 !important;
+  font-size: 20px !important;
   line-height: 140%;
 }
 
 .text-medium-body, select.tutor-form-select {
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: 500 !important;
+  font-size: 16px !important;
   line-height: 162%;
 }
 
 .text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-default-tab .tab-header-item, .tutor-wp-dashboard-filter-items .tutor-form-label {
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: 500 !important;
+  font-size: 15px !important;
   line-height: 160%;
 }
 
 .text-medium-small, .tutor-badge-label, .tutor-course-listing-item-sm .tutor-ratings .tutor-rating-text {
-  font-weight: 500;
-  font-size: 13px;
+  font-weight: 500 !important;
+  font-size: 13px !important;
   line-height: 162%;
 }
 
 .text-medium-tiny {
-  font-weight: 500;
-  font-size: 11px;
+  font-weight: 500 !important;
+  font-size: 11px !important;
   line-height: 145%;
 }
 
 .text-bold-h1 {
-  font-weight: 700;
-  font-size: 80px;
+  font-weight: 700 !important;
+  font-size: 80px !important;
   line-height: 101%;
 }
 
 .text-bold-h2 {
-  font-weight: 700;
-  font-size: 60px;
+  font-weight: 700 !important;
+  font-size: 60px !important;
   line-height: 117%;
 }
 
 .text-bold-h3 {
-  font-weight: 700;
-  font-size: 40px;
+  font-weight: 700 !important;
+  font-size: 40px !important;
   line-height: 120%;
 }
 
 .text-bold-h4 {
-  font-weight: 700;
-  font-size: 30px;
+  font-weight: 700 !important;
+  font-size: 30px !important;
   line-height: 123%;
 }
 
 .text-bold-h5 {
-  font-weight: 700;
-  font-size: 24px;
+  font-weight: 700 !important;
+  font-size: 24px !important;
   line-height: 142%;
 }
 
 .text-bold-h6 {
-  font-weight: 700;
-  font-size: 20px;
+  font-weight: 700 !important;
+  font-size: 20px !important;
   line-height: 150%;
 }
 
 .text-bold-body {
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 700 !important;
+  font-size: 16px !important;
   line-height: 162%;
 }
 
 .text-bold-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current {
-  font-weight: 700;
-  font-size: 15px;
+  font-weight: 700 !important;
+  font-size: 15px !important;
   line-height: 160%;
 }
 
 .text-bold-small {
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 700 !important;
+  font-size: 13px !important;
   line-height: 162%;
 }
 
 .text-bold-tiny {
-  font-weight: 700;
-  font-size: 11px;
+  font-weight: 700 !important;
+  font-size: 11px !important;
   line-height: 145%;
 }
 
 .text-btn-xlarge, .tutor-btn.tutor-btn-xl, .tutor-btn.tutor-btn-icon.tutor-btn-xl {
-  font-weight: 500;
-  font-size: 18px;
+  font-weight: 500 !important;
+  font-size: 18px !important;
   line-height: 178%;
 }
 
 .text-btn-large, .tutor-btn.tutor-btn-lg, .tutor-btn.tutor-btn-icon.tutor-btn-lg {
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: 500 !important;
+  font-size: 16px !important;
   line-height: 200%;
 }
 
 .text-btn-medium, .tutor-btn.tutor-btn-md, .tutor-btn.tutor-btn-icon.tutor-btn-md {
-  font-weight: 500;
-  font-size: 15px;
+  font-weight: 500 !important;
+  font-size: 15px !important;
   line-height: 160%;
 }
 
 .text-btn-small, .tutor-btn.tutor-btn-sm, .tutor-btn.tutor-btn-icon.tutor-btn-sm, table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn {
-  font-weight: 500;
-  font-size: 13px;
+  font-weight: 500 !important;
+  font-size: 13px !important;
   line-height: 123%;
 }
 
@@ -25611,27 +25611,55 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   background: #ffffff;
   border: 1px solid #cdcfd5;
   border-radius: 6px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-gap: 38px;
-  padding: 30px;
 }
 
-.tutor-ratingsreviews-reviews .review-numbers {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+.tutor-ratingsreviews-ratings {
+  display: grid;
+  grid-gap: 20px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  padding: 30px;
 }
 
-.tutor-ratingsreviews-reviews .review-numbers > div {
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  -ms-flex-negative: 0;
-      flex-shrink: 0;
+@media (min-width: 768px) {
+  .tutor-ratingsreviews-ratings {
+    grid-template-columns: auto 1fr;
+    grid-gap: 44px;
+  }
+}
+
+.tutor-ratingsreviews-ratings-all .rating-numbers {
+  display: grid;
+  grid-gap: 5px;
+}
+
+@media (min-width: 576px) {
+  .tutor-ratingsreviews-ratings-all .rating-numbers {
+    grid-gap: 30px;
+    grid-template-columns: 80% 20%;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .tutor-ratingsreviews-ratings-all .rating-numbers .rating-num {
+    text-align: center;
+  }
+}
+
+.tutor-ratingsreviews-ratings-all .rating-numbers .rating-progress {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  grid-gap: 13px;
+}
+
+.tutor-ratingsreviews-ratings-all .rating-numbers:not(:first-child) {
+  margin-top: 10px;
+}
+
+.tutor-ratingsreviews-ratings-all .rating-progress .tutor-rating-text {
+  padding-left: 2px;
 }
 
 .tutor-ratingsreviews .progress-bar {
@@ -25642,8 +25670,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   background: #e3e5eb;
   border-radius: 4px;
   overflow: hidden;
-  margin-right: 30px;
-  margin-left: 13px;
 }
 
 .tutor-ratingsreviews .progress-bar .progress-value {
