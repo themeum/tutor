@@ -3,14 +3,19 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { addMonths, getMonth, getYear } from 'date-fns';
 import range from 'lodash.range';
+import {moment} from 'moment';
 
 // import 'react-datepicker/dist/react-datepicker.css';
 // import './TutorDatepicker.scss';
 // import '../../../bundle/main.min.css';
 
 const TutorDatepicker = () => {
+
 	const dateFormat = window._tutorobject.wp_date_format;
-	const [startDate, setStartDate] = useState(new Date());
+	const url = new URL(window.location.href);
+	const params = url.searchParams;
+
+	const [startDate, setStartDate] = useState();
 	const [dropdownMonth, setDropdownMonth] = useState(false);
 	const [dropdownYear, setDropdownYear] = useState(false);
 
@@ -54,10 +59,11 @@ const TutorDatepicker = () => {
 		params.set("paged", 1);
 		return url;
 	}
-	// useEffect(() => {
-		
-	// 	console.log(startDate)
-	// }, [startDate]);
+	useEffect(() => {
+		if (params.has('date')) {
+			setStartDate(new Date(params.get('date')))
+		}
+	}, []);
 
 	return (
 		<div className="tutor-react-datepicker">
