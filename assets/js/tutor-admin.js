@@ -878,14 +878,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  var filterDate = document.getElementById("tutor-backend-filter-date");
-
-  if (filterDate) {
-    filterDate.onchange = function (e) {
-      window.location = urlPrams("date", e.target.value);
-    };
-  }
-
   var filterSearch = document.getElementById("tutor-admin-search-filter-form");
 
   if (filterSearch) {
