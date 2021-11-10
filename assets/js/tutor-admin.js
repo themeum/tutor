@@ -2281,6 +2281,41 @@ var popupToggle = function popupToggle() {
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/reset.js":
+/*!********************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/reset.js ***!
+  \********************************************************/
+/***/ (() => {
+
+/*
+Reset to default for settings individual page
+*/
+console.log("reset-to-default");
+var resetDefaultBtn = document.querySelectorAll(".reset_to_default");
+
+resetDefaultBtn.forEach = function (item) {
+  item.onclick = function (e) {
+    console.log("reset");
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("action", "tutor_option_default_save");
+    formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", _tutorobject.ajaxurl, true);
+    xhttp.send(formData);
+
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4) {
+        setTimeout(function () {
+          notice_message("Reset all settings to default successfully!");
+        }, 200);
+      }
+    };
+  };
+};
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/withdraw.js":
 /*!***********************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/withdraw.js ***!
@@ -31160,12 +31195,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
 /* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 
