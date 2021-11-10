@@ -8,6 +8,23 @@ import "./addons-list/addons-list-main";
 import "./segments/filter";
 import "./segments/withdraw";
 
+const toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
+toggleChange.forEach((element) => {
+  element.addEventListener("change", (e) => {
+    let check_value = element.previousElementSibling.value;
+    // console.log(check_value);
+    if (check_value == "on") {
+      element.previousElementSibling.value = "off";
+    } else {
+      element.previousElementSibling.value = "on";
+    }
+  });
+});
+// $(".tutor-form-toggle-input").on("change", function(e) {
+//   var toggleInput = $(this).siblings("input");
+//   console.log("jquery checkbox");
+//   $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
+// });
 jQuery(document).ready(function($) {
   "use strict";
 
@@ -42,10 +59,11 @@ jQuery(document).ready(function($) {
     window.history.pushState("obj", "", $(this).attr("href"));
   });
 
-  $(".tutor-form-toggle-input").on("change", function(e) {
-    var toggleInput = $(this).siblings("input");
-    $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
-  });
+  // $(".tutor-form-toggle-input").on("change", function(e) {
+  //   var toggleInput = $(this).siblings("input");
+  //   console.log("jquery checkbox");
+  //   $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
+  // });
 
   /**
    * End Withdraw nav tabs
