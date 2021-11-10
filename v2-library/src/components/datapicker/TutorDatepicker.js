@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { addMonths, getMonth, getYear } from 'date-fns';
 import range from 'lodash.range';
-import {moment} from 'moment';
 
 // import 'react-datepicker/dist/react-datepicker.css';
 // import './TutorDatepicker.scss';
