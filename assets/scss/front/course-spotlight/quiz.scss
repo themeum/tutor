@@ -214,7 +214,13 @@
                     }
                 }
                 .quiz-image-box {
-                    .quiz-image {}
+                    .quiz-image {
+                        img {
+                            max-width: 162px;
+                            max-height: 162px;
+                            object-fit: cover;
+                        }
+                    }
                     .tutor-quiz-dotted-box {
                         overflow-y: auto;
                         width: 163px;

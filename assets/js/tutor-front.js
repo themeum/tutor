@@ -779,7 +779,7 @@ jQuery(document).ready(function ($) {
   /**
    * wp.i18n translateable functions 
    * @since 1.9.0
-   */
+  */
 
   var _wp$i18n = wp.i18n,
       __ = _wp$i18n.__,
@@ -1076,9 +1076,9 @@ jQuery(document).ready(function ($) {
   }); // tutor course content accordion
 
   /**
-   * Toggle topic summery
-   * @since v.1.6.9
-   */
+  * Toggle topic summery
+  * @since v.1.6.9
+  */
 
   $('.tutor-course-title h4 .toggle-information-icon').on('click', function (e) {
     $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
@@ -1284,7 +1284,7 @@ jQuery(document).ready(function ($) {
          * check if reveal mode wait for 500ms then
          * hide question so that correct answer reveal
          * @since 1.8.10
-         */
+        */
         var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
 
         if (feedBackMode === 'reveal') {
@@ -2025,7 +2025,7 @@ jQuery(document).ready(function ($) {
    * Show hide is course public checkbox (frontend dashboard editor)
    * 
    * @since  v.1.7.2
-   */
+  */
 
   var price_type = $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]');
 
@@ -2043,7 +2043,7 @@ jQuery(document).ready(function ($) {
    * Withdrawal page tooltip
    * 
    * @since  v.1.7.4
-   */
+  */
   // Fully accessible tooltip jQuery plugin with delegation.
   // Ideal for view containers that may re-render content.
 
@@ -2080,7 +2080,7 @@ jQuery(document).ready(function ($) {
    * Manage course filter
    * 
    * @since  v.1.7.2
-   */
+  */
 
   var filter_container = $('.tutor-course-filter-container form');
   var loop_container = $('.tutor-course-filter-loop-container');
