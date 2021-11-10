@@ -70,6 +70,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 					</div>
 				<?php
 			}
+
 			if ( 'color_fields' === $fields_group['type'] ) {
 				?>
 					<div class="color-picker-wrapper">
