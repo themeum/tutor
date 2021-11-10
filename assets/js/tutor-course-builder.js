@@ -390,7 +390,7 @@ window.jQuery(document).ready(function ($) {
         $('.tutor-lesson-modal-wrap').attr({
           'data-lesson-id': lesson_id,
           'data-topic-id': topic_id
-        }).addClass('show');
+        });
         $('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
         var tinymceConfig = tinyMCEPreInit.mceInit.tutor_editor_config;
 
@@ -834,7 +834,7 @@ window.jQuery(document).ready(function ($) {
       success: function success(data) {
         $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
         $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
-        $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('data-topic-id-of-quiz', topic_id).addClass('show');
+        $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('data-topic-id-of-quiz', topic_id);
         modal.removeClass('tutor-has-question-from');
 
         if (step_1) {

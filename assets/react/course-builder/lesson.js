@@ -76,7 +76,7 @@ window.jQuery(document).ready(function($){
             },
             success: function (data) {
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id}).addClass('show');
+                $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id});
                 $('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
 
                 var tinymceConfig = tinyMCEPreInit.mceInit.tutor_editor_config;

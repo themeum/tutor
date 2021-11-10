@@ -8,7 +8,7 @@ if (!defined('ABSPATH'))
 class Q_and_A {
 
 	public function __construct() {
-		add_action('wp_ajax_tutor_place_answer', array($this, 'place_answer'));
+		add_action('wp_ajax_tutor_qna_create_update', array($this, 'tutor_qna_create_update'));
 
 		/**
 		 * Delete question
@@ -23,45 +23,52 @@ class Q_and_A {
 		add_action('wp_ajax_tutor_qna_single_action', array($this, 'tutor_qna_single_action'));
 	}
 
-	public function place_answer() {
+	public function tutor_qna_create_update() {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
 
-		$answer = wp_kses_post($_POST['answer']);
-		if (!empty($answer)) {
-			$question_id = (int) sanitize_text_field($_POST['question_id']);
-			$question = tutor_utils()->get_qa_question($question_id);
-
-			$user_id = get_current_user_id();
-			$user = get_userdata($user_id);
-			$date = date("Y-m-d H:i:s", tutor_time());
-
-			do_action('tutor_before_answer_to_question');
-
-			$data = apply_filters('tutor_answer_to_question_data', array(
-				'comment_post_ID'   => $question->comment_post_ID,
-				'comment_author'    => $user->user_login,
-				'comment_date'      => $date,
-				'comment_date_gmt'  => get_gmt_from_date($date),
-				'comment_content'   => $answer,
-				'comment_approved'  => 'approved',
-				'comment_agent'     => 'TutorLMSPlugin',
-				'comment_type'      => 'tutor_q_and_a',
-				'comment_parent'    => $question_id,
-				'user_id'           => $user_id,
-			));
-
-			$wpdb->insert($wpdb->comments, $data);
-			$answer_id = (int) $wpdb->insert_id;
-
-			if ($answer_id) {
-				$wpdb->update($wpdb->comments, array('comment_approved' => 'answered'), array('comment_ID' => $question_id));
-				do_action('tutor_after_answer_to_question', $answer_id);
-			}
+		$qna_text = wp_kses_post($_POST['answer']);
+		if(!$qna_text) {
+			// Content validation
+			wp_send_json_error( array('message' => __('Empty Cotent Not Allowed!', 'tutor')) );
 		}
+
+		// Prepare course, question info
+		$course_id = (int) sanitize_text_field($_POST['course_id']);
+		$question_id = (int) sanitize_text_field($_POST['question_id']);
+		$context = sanitize_text_field($_POST['context']);
+
+		// Prepare user info
+		$user_id = get_current_user_id();
+		$user = get_userdata($user_id);
+		$date = date("Y-m-d H:i:s", tutor_time());
+
+		// Insert data prepare
+		$data = apply_filters('tutor_qna_insert_data', array(
+			'comment_post_ID'   => $course_id,
+			'comment_author'    => $user->user_login,
+			'comment_date'      => $date,
+			'comment_date_gmt'  => get_gmt_from_date($date),
+			'comment_content'   => $qna_text,
+			'comment_approved'  => 'approved',
+			'comment_agent'     => 'TutorLMSPlugin',
+			'comment_type'      => 'tutor_q_and_a',
+			'comment_parent'    => $question_id,
+			'user_id'           => $user_id,
+		));
+
+		// Insert new question/answer
+		$wpdb->insert($wpdb->comments, $data);
+		!$question_id ? $question_id = (int) $wpdb->insert_id : 0;
 		
-		wp_send_json_success();
+		// Provide the html now
+		ob_start();
+		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
+			'question_id' => $question_id,
+			'context' => $context
+		));
+		wp_send_json_success(array('html' => ob_get_clean()));
 	}
 
 	/**

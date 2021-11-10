@@ -1011,7 +1011,7 @@ jQuery(document).ready(function ($) {
                 var attemptAllowed = $("#tutor-quiz-time-expire-wrapper").data('attempt-allowed');
                 var attemptRemaining = $("#tutor-quiz-time-expire-wrapper").data('attempt-remaining');
                 var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
-                $(alertDiv).addClass('show');
+                $(alertDiv).addClass('tutor-alert-show');
 
                 if (att > 0) {
                   $("".concat(alertDiv, " .text")).html(__('Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor'));

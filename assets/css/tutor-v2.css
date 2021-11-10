@@ -20234,7 +20234,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-updating-message i, .tutor-updating-message [class^='ttr-'], .tutor-updating-message [class*=' ttr-'], .tutor-updating-message [class^='tutor-icon-'], .tutor-updating-message [class*=' tutor-icon-'] {
-  display: none;
+  display: none !important;
 }
 
 .tutor-updating-message:before {
