@@ -4196,7 +4196,11 @@ window.jQuery(document).ready(function ($) {
 /*!********************************!*\
   !*** ./assets/react/v2/qna.js ***!
   \********************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helper/response */ "./assets/react/helper/response.js");
 
 window.jQuery(document).ready(function ($) {
   var __ = wp.i18n.__;
@@ -4216,10 +4220,28 @@ window.jQuery(document).ready(function ($) {
         button.addClass('tutor-updating-message');
       },
       success: function success(resp) {
-        console.log(resp);
+        if (!resp.success) {
+          tutor_toast('Error!', (0,_helper_response__WEBPACK_IMPORTED_MODULE_0__.get_response_message)(resp), 'error');
+          return;
+        }
+
+        button.attr('data-value', resp.data.new_value).data('value', new_value);
       },
       complete: function complete() {
         button.removeClass('tutor-updating-message');
+      }
+    });
+  });
+  $(document).on('click', '.tutor-qa-reply button', function () {
+    var question_id = $(this).closest('[data-question_id]').data('question_id');
+    var answer = $(this).parent().find('textarea').val();
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        question_id: question_id,
+        answer: answer,
+        action: 'tutor_place_answer'
       }
     });
   });
@@ -4332,10 +4354,10 @@ document.addEventListener('click', function (e) {
 var accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
 accordionItemHeaders.forEach(function (accordionItemHeader) {
   accordionItemHeader.addEventListener('click', function () {
-    accordionItemHeader.classList.toggle('active');
+    accordionItemHeader.classList.toggle('is-active');
     var accordionItemBody = accordionItemHeader.nextElementSibling;
 
-    if (accordionItemHeader.classList.contains('active')) {
+    if (accordionItemHeader.classList.contains('is-active')) {
       accordionItemBody.style.maxHeight = accordionItemBody.scrollHeight + 'px';
     } else {
       accordionItemBody.style.maxHeight = 0;
@@ -44414,7 +44436,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutor_date_picker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tutor-date-picker */ "./assets/react/v2/tutor-date-picker.js");
 /* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
 /* harmony import */ var _qna__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./qna */ "./assets/react/v2/qna.js");
-/* harmony import */ var _qna__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_qna__WEBPACK_IMPORTED_MODULE_2__);
 
 
 

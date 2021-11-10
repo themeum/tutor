@@ -716,189 +716,6 @@ class Options_V2 {
 				'template' => 'design',
 				'icon'     => __( 'design', 'tutor' ),
 				'blocks'   => array(
-					'colors'          => array(
-						'label'        => __( 'Colors', 'tutor' ),
-						'slug'         => 'colors',
-						'block_type'   => 'color_picker',
-						'fields_group' => array(
-							array(
-								'key'     => 'color_preset_type',
-								'type'    => 'color_preset',
-								'label'   => __( 'Preset Colors', 'tutor' ),
-								'desc'    => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
-								'default' => 'default',
-								'fields'  => array(
-									array(
-										'key'    => 'default',
-										'label'  => 'Default',
-										'colors' => array(
-											array(
-												'slug'  => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value' => '#1973AA',
-											),
-											array(
-												'slug'  => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value' => '#5B616F',
-											),
-											array(
-												'slug'  => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value' => '#CDCFD5',
-											),
-											array(
-												'slug'  => 'tutor_light_color',
-												'preset_name' => 'light',
-												'value' => '#EFF1F6',
-											),
-										),
-									),
-									array(
-										'key'    => 'landscape',
-										'label'  => 'Landscape',
-										'colors' => array(
-											array(
-												'slug'  => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value' => '#43AA8B',
-											),
-											array(
-												'slug'  => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value' => '#4D908E',
-											),
-											array(
-												'slug'  => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value' => '#90BE6D',
-											),
-											array(
-												'slug'  => 'tutor_light_color',
-												'preset_name' => 'light',
-												'value' => '#F9C74F',
-											),
-										),
-									),
-									array(
-										'key'    => 'ocean',
-										'label'  => 'Ocean',
-										'colors' => array(
-											array(
-												'slug'  => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value' => '#4EA8DE',
-											),
-											array(
-												'slug'  => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value' => '#5A18C2',
-											),
-											array(
-												'slug'  => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value' => '#5E60CE',
-											),
-											array(
-												'slug'  => 'tutor_light_color',
-												'preset_name' => 'light',
-												'value' => '#64DFDF',
-											),
-										),
-									),
-									array(
-										'key'    => 'custom',
-										'label'  => 'Custom',
-										'colors' => array(
-											array(
-												'slug'  => 'tutor_primary_color',
-												'preset_name' => 'primary',
-												'value' => '#000000',
-											),
-											array(
-												'slug'  => 'tutor_primary_hover_color',
-												'preset_name' => 'hover',
-												'value' => '#5d5d5d',
-											),
-											array(
-												'slug'  => 'tutor_text_color',
-												'preset_name' => 'text',
-												'value' => '#a2a2a2',
-											),
-											array(
-												'slug'  => 'tutor_light_color',
-												'preset_name' => 'light',
-												'value' => '#d8d8d8',
-											),
-										),
-									),
-								),
-							),
-							array(
-								'key'    => 'tutor_color_presets',
-								'type'   => 'color_fields',
-								'label'  => __( 'Preset Colors', 'tutor' ),
-								'fields' => array(
-									array(
-										'key'         => 'tutor_primary_color',
-										'type'        => 'color_field',
-										'preset_name' => 'primary',
-										'label'       => __( 'Primary Color', 'tutor' ),
-										'default'     => '#000000',
-										'desc'        => __( 'Choose a custom primary color', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_primary_hover_color',
-										'type'        => 'color_field',
-										'preset_name' => 'hover',
-										'label'       => __( 'Primary Hover color', 'tutor' ),
-										'default'     => '#5d5d5d',
-										'desc'        => __( 'Choose a custom primary hover color', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_text_color',
-										'type'        => 'color_field',
-										'preset_name' => 'text',
-										'label'       => __( 'Text Color', 'tutor' ),
-										'default'     => '#a2a2a2',
-										'desc'        => __( 'Choose a custom color for your website text', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_light_color',
-										'type'        => 'color_field',
-										'preset_name' => 'light',
-										'label'       => __( 'Light color', 'tutor' ),
-										'default'     => '#d8d8d8',
-										'desc'        => __( 'Choose a  light color for your website ', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_light_one',
-										'type'        => 'color_field',
-										'preset_name' => 'other',
-										'label'       => __( 'Light one', 'tutor' ),
-										'default'     => '#d8d8d8',
-										'desc'        => __( 'Choose a  light color for your website ', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_light_two',
-										'type'        => 'color_field',
-										'preset_name' => 'other',
-										'label'       => __( 'Light two', 'tutor' ),
-										'default'     => '#d8d8d8',
-										'desc'        => __( 'Choose a  light color for your website ', 'tutor' ),
-									),
-									array(
-										'key'         => 'tutor_light_three',
-										'type'        => 'color_field',
-										'preset_name' => 'other',
-										'label'       => __( 'Light three', 'tutor' ),
-										'default'     => '#d8d8d8',
-										'desc'        => __( 'Choose a  light color for your website ', 'tutor' ),
-									),
-								),
-							),
-						),
-					),
 					'block_course'    => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
@@ -1033,7 +850,7 @@ class Options_V2 {
 									array(
 										'key'     => 'enable_q_and_a_on_course',
 										'type'    => 'toggle_single',
-										'label'   => __( 'Question and Answer', 'tutor' ),
+										'label'   => __( 'Q&A', 'tutor' ),
 										'default' => 'on',
 										'desc'    => __( 'Enabling this feature will add a Q&amp;A section on every course.', 'tutor' ),
 									),
@@ -1048,7 +865,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_level',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Disable Course Level', 'tutor' ),
+										'label'       => __( 'Disable Level', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => 'off',
 										'desc'        => __( 'Disabling this feature will be removed course level from the course page.', 'tutor' ),
@@ -1056,7 +873,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_share',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Disbale Course Share', 'tutor' ),
+										'label'       => __( 'Disable Share', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => 'off',
 										'desc'        => __( 'Disabling this feature will be removed course share option from the course page.', 'tutor' ),
@@ -1064,7 +881,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_duration',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Duration', 'tutor' ),
+										'label'       => __( 'Duration', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course duration from the course page.', 'tutor' ),
@@ -1072,7 +889,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_total_enrolled',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Total Enrolled', 'tutor' ),
+										'label'       => __( 'Enrolled Students', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course total enrolled from the course page.', 'tutor' ),
@@ -1080,7 +897,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_update_date',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Update Date', 'tutor' ),
+										'label'       => __( 'Update Date', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course update date from the course page.', 'tutor' ),
@@ -1088,7 +905,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_progress_bar',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Progress Bar', 'tutor' ),
+										'label'       => __( 'Progress Bar', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed completing progress bar from the course page.', 'tutor' ),
@@ -1096,7 +913,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_material',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Material', 'tutor' ),
+										'label'       => __( 'Material', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course material from the course page.', 'tutor' ),
@@ -1104,7 +921,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_about',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course About', 'tutor' ),
+										'label'       => __( 'About', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course about from the course page.', 'tutor' ),
@@ -1112,7 +929,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_description',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Description', 'tutor' ),
+										'label'       => __( 'Description', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course description from the course page.', 'tutor' ),
@@ -1120,7 +937,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_benefits',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Benefits', 'tutor' ),
+										'label'       => __( 'Benefits', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course benefits from the course page.', 'tutor' ),
@@ -1128,7 +945,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_requirements',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Requirements', 'tutor' ),
+										'label'       => __( 'Pre-requirements', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course requirements from the course page.', 'tutor' ),
@@ -1136,7 +953,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_target_audience',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Target Audience', 'tutor' ),
+										'label'       => __( 'Target Audience', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course target audience from the course page.', 'tutor' ),
@@ -1144,7 +961,7 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_announcements',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Announcements', 'tutor' ),
+										'label'       => __( 'Announcements', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course announcements from the course page.', 'tutor' ),
@@ -1152,13 +969,231 @@ class Options_V2 {
 									array(
 										'key'         => 'disable_course_review',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Review', 'tutor' ),
+										'label'       => __( 'Review', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
 										'desc'        => __( 'Disabling this feature will be removed course review system from the course page.', 'tutor' ),
 									),
 								),
 								'desc'          => __( 'Content Needed Here...', 'tutor' ),
+							),
+						),
+					),
+					'colors'          => array(
+						'label'        => __( 'Colors', 'tutor' ),
+						'slug'         => 'colors',
+						'block_type'   => 'color_picker',
+						'fields_group' => array(
+							array(
+								'key'     => 'color_preset_type',
+								'type'    => 'color_preset',
+								'label'   => __( 'Preset Colors', 'tutor' ),
+								'desc'    => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
+								'default' => 'custom',
+								'fields'  => array(
+									/* First 4 preset_name should be same as color_fields */
+									array(
+										'key'    => 'default',
+										'label'  => 'Default',
+										'colors' => array(
+											array(
+												'slug'  => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value' => '#3E64DE',
+											),
+											array(
+												'slug'  => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value' => '#395BCA',
+											),
+											array(
+												'slug'  => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value' => '#212327',
+											),
+											array(
+												'slug'  => 'tutor_background_color',
+												'preset_name' => 'background',
+												'value' => '#F6F8FD',
+											),
+										),
+									),
+									array(
+										'key'    => 'landscape',
+										'label'  => 'Landscape',
+										'colors' => array(
+											array(
+												'slug'  => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value' => '#239371',
+											),
+											array(
+												'slug'  => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value' => '#117D5D',
+											),
+											array(
+												'slug'  => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value' => '#212327',
+											),
+											array(
+												'slug'  => 'tutor_background_color',
+												'preset_name' => 'background',
+												'value' => '#ECF7F3',
+											),
+										),
+									),
+									array(
+										'key'    => 'ocean',
+										'label'  => 'Ocean',
+										'colors' => array(
+											array(
+												'slug'  => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value' => '#5A18C2',
+											),
+											array(
+												'slug'  => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value' => '#3F02A0',
+											),
+											array(
+												'slug'  => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value' => '#212327',
+											),
+											array(
+												'slug'  => 'tutor_background_color',
+												'preset_name' => 'background',
+												'value' => '#FAF6FF',
+											),
+										),
+									),
+									array(
+										'key'    => 'custom',
+										'label'  => 'Custom',
+										'colors' => array(
+											array(
+												'slug'  => 'tutor_primary_color',
+												'preset_name' => 'primary',
+												'value' => '#3E64DE',
+											),
+											array(
+												'slug'  => 'tutor_primary_hover_color',
+												'preset_name' => 'hover',
+												'value' => '#28408E',
+											),
+											array(
+												'slug'  => 'tutor_text_color',
+												'preset_name' => 'text',
+												'value' => '#1A1B1E',
+											),
+											array(
+												'slug'  => 'tutor_background_color',
+												'preset_name' => 'background',
+												'value' => '#F6F8FD',
+											),
+										),
+									),
+								),
+							),
+							array(
+								'key'    => 'tutor_color_presets',
+								'type'   => 'color_fields',
+								'label'  => __( 'Preset Colors', 'tutor' ),
+								'fields' => array(
+									array(
+										'key'          => 'tutor_primary_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'primary',
+										'preset_exist' => true,
+										'label'        => __( 'Primary Color', 'tutor' ),
+										'default'      => '#3E64DE',
+										'desc'         => __( 'Choose a custom primary color', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_primary_hover_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'hover',
+										'preset_exist' => true,
+										'label'        => __( 'Primary Hover color', 'tutor' ),
+										'default'      => '#395BCA',
+										'desc'         => __( 'Choose a custom primary hover color', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_text_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'text',
+										'preset_exist' => true,
+										'label'        => __( 'Text Color', 'tutor' ),
+										'default'      => '#212327',
+										'desc'         => __( 'Choose a custom color for your website text', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_background_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'background',
+										'preset_exist' => true,
+										'label'        => __( 'Background', 'tutor' ),
+										'default'      => '#FFFFFF',
+										'desc'         => __( 'Choose a  light color for your website', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_border_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'border',
+										'preset_exist' => false,
+										'label'        => __( 'Border', 'tutor' ),
+										'default'      => '#CDCFD5',
+										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_success_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'success',
+										'preset_exist' => false,
+										'label'        => __( 'Success', 'tutor' ),
+										'default'      => '#24A148',
+										'desc'         => __( 'Choose a  light color for your website ', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_warning_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'warning',
+										'preset_exist' => false,
+										'label'        => __( 'Warning', 'tutor' ),
+										'default'      => '#ED9700',
+										'desc'         => __( 'Choose a  light color for your website ', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_danger_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'danger',
+										'preset_exist' => false,
+										'label'        => __( 'Danger', 'tutor' ),
+										'default'      => '#d8d8d8',
+										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_disable_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'disable',
+										'preset_exist' => false,
+										'label'        => __( 'Disable', 'tutor' ),
+										'default'      => '#E3E6EB',
+										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+									),
+									array(
+										'key'          => 'tutor_table_background_color',
+										'type'         => 'color_field',
+										'preset_name'  => 'table_background',
+										'preset_exist' => false,
+										'label'        => __( 'Table Background', 'tutor' ),
+										'default'      => '#EFF1F6',
+										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+									),
+								),
 							),
 						),
 					),

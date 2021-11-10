@@ -19,7 +19,7 @@
 		<div class="search-field">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
 				<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
-				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search ... ', 'tutor' ); ?>" />
+				<input type="search" accesskey="s" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search ...⌃⌥ + S or Alt+S for shortcut', 'tutor' ); ?>" />
 				<div class="search-popup-opener search_result">
 					<a href="#">
 						<div class="search_result_title">
@@ -59,7 +59,7 @@
 			<div class="tutor-input-group tutor-form-control-has-icon">
 				<!-- <span class="tutor-input-group-icon ttr-search-filled"></span>
 				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" /> -->
-				
+
 			</div>
 		</div>
 		<div class="save-button">
