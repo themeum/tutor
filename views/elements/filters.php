@@ -107,6 +107,7 @@
 				placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>"
 				/>
 			</div>
+			<div class="tutor-v2-date-picker"></div>
 			</div>
 			<div class="">
 				<form action="" method="get" id="tutor-admin-search-filter-form">

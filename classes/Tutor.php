@@ -65,6 +65,7 @@ final class Tutor {
 	private $reviews;
 	private $withdraw_list;
 	private $student_list;
+	private $instructor_list;
 
 	/**
 	 * Course List
@@ -169,11 +170,12 @@ final class Tutor {
 		 *
 		 * @since v2.0.0
 		 */
-		$this->announcements = new Announcements();
-		$this->course_list   = new Course_List();
-		$this->reviews   	 = new Reviews();
-		$this->withdraw_list = new Withdraw_Requests_List();
-		$this->student_list  = new Students_List();
+		$this->announcements   = new Announcements();
+		$this->course_list     = new Course_List();
+		$this->reviews         = new Reviews();
+		$this->withdraw_list   = new Withdraw_Requests_List();
+		$this->student_list    = new Students_List();
+		$this->instructor_list = new Instructors_List();
 
 		/**
 		 * Run Method
