@@ -255,42 +255,64 @@
 	}
 }
 
+// Course Details - Rating and Review
 .tutor-ratingsreviews {
 	/* stroke/light30 */
 	background: #ffffff;
 	border: 1px solid #cdcfd5;
 	border-radius: 6px;
-	display: grid;
-	grid-template-columns: auto 1fr;
-	grid-gap: 38px;
-	padding: 30px;
 
 	&-ratings {
+		display: grid;
+		@include breakpoint-min(tablet) {
+			grid-template-columns: auto 1fr;
+			grid-gap: 44px;
+		}
+		grid-gap: 20px;
+		align-items: center;
+		padding: 30px;
 	}
-	&-reviews {
-		.review-numbers {
-			display: flex;
-			align-items: center;
-			> div {
-				flex-grow: 1;
-				flex-shrink: 0;
+
+	&-ratings-avg {
+	}
+	&-ratings-all {
+		.rating-numbers {
+			display: grid;
+			grid-gap: 5px;
+			@include breakpoint-min(mobile) {
+				grid-gap: 30px;
+				grid-template-columns: 80% 20%;
+			}
+			@include breakpoint-max(mobile) {
+				.rating-num {
+					text-align: center;
+				}
+			}
+
+			.rating-progress {
+				display: flex;
+				grid-gap: 13px;
+			}
+
+			&:not(:first-child) {
+				margin-top: 10px;
+			}
+		}
+		.rating-progress {
+			.tutor-rating-text {
+				padding-left: 2px;
 			}
 		}
 	}
 
 	.progress-bar {
 		position: relative;
-		// max-width: 100%;
-		// width: 313px;
 		width: 100%;
 		display: block;
 		height: 8px;
 		background: #e3e5eb;
 		border-radius: 4px;
 		overflow: hidden;
-
-		margin-right: 30px;
-		margin-left: 13px;
 
 		.progress-value {
 			position: absolute;
