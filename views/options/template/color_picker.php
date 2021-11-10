@@ -30,7 +30,9 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 						<?php
 						foreach ( $preset_color_fields as $fields ) {
 							$option_value  = $this->get( $fields_group['key'], tutils()->array_get( 'default', $fields_group ) );
+							$option_value  = ! isset( $option_value ) || empty( $option_value ) ? 'custom' : $option_value;
 							$preset_colors = tutils()->sanitize_array( $fields['colors'] );
+
 							?>
 							<label for="<?php echo esc_attr( $fields['key'] ); ?>" class="color-preset-input">
 								<input type="radio" name="tutor_option[<?php echo esc_attr( $fields_group['key'] ); ?>]" id="<?php echo esc_attr( $fields['key'] ); ?>" value="<?php echo esc_attr( $fields['key'] ); ?>" <?php esc_attr( checked( $option_value, $fields['key'] ) ); ?> >
