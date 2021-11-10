@@ -1529,23 +1529,27 @@ var getFilesAndUpdateDOM = function getFilesAndUpdateDOM(files, inputEl, dropZon
 
 
 function toolTipOnWindowResize() {
-  var mediaQuery = window.matchMedia('(max-width: 992px)');
+  const mediaQuery = window.matchMedia('(max-width: 992px)');
+  const hasClass = document.querySelectorAll('.tooltip-responsive');
 
-  if (mediaQuery.matches) {
-    var toolTips = document.querySelectorAll('.tooltip-right');
-    toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-right', 'tooltip-left');
-    });
-  } else {
-    var _toolTips = document.querySelectorAll('.tooltip-left');
-
-    _toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-left', 'tooltip-right');
-    });
+  if (hasClass.length) {
+      if (mediaQuery.matches) {
+          const toolTips = document.querySelectorAll('.tooltip-right');
+          toolTips.forEach((toolTip) => {
+              toolTip.classList.replace('tooltip-right', 'tooltip-left');
+          });
+      } else {
+          const toolTips = document.querySelectorAll('.tooltip-left');
+          toolTips.forEach((toolTip) => {
+              toolTip.classList.replace('tooltip-left', 'tooltip-right');
+          });
+      }
   }
 }
 
 window.addEventListener('resize', toolTipOnWindowResize);
+
+
 /**
  * Search Suggestion box
  */
