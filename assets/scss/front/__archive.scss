@@ -2607,16 +2607,15 @@ table.course-single-gradebooks a {
 
 #tutor-quiz-time-expire-wrapper {
     margin-bottom: 40px;
+    
     .tutor-alert {
         display: none;
-    }
-    .tutor-alert.show {
-        @include valueWithPrefix(display,
-        flex);
-        @include propertyWithPrefix(justify-content,
-        space-between);
-        @include propertyWithPrefix(align-items,
-        center);
+
+        &.tutor-alert-show {
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(justify-content, space-between);
+            @include propertyWithPrefix(align-items, center);
+        }
     }
 }
 

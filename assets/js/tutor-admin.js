@@ -726,7 +726,7 @@ var colorPickerInputs = document.querySelectorAll("label.color-picker-input inpu
 var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]");
 var moreButton = document.querySelector(".more_button");
 var otherColors = document.querySelector(".other_colors");
-var otherColorRows = otherColors.querySelectorAll(".tutor-option-field-row");
+var otherColorRows = otherColors ? otherColors.querySelectorAll(".tutor-option-field-row") : null;
 var otherColorsExpanded = document.querySelector(".other_colors.expanded");
 document.addEventListener("readystatechange", function (event) {
   if (event.target.readyState === "interactive") {}

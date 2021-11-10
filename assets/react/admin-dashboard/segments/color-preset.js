@@ -13,7 +13,7 @@ const pickerView = document.querySelectorAll(
 );
 const moreButton = document.querySelector(".more_button");
 const otherColors = document.querySelector(".other_colors");
-const otherColorRows = otherColors.querySelectorAll(".tutor-option-field-row");
+const otherColorRows = otherColors ? otherColors.querySelectorAll(".tutor-option-field-row") : null;
 const otherColorsExpanded = document.querySelector(".other_colors.expanded");
 
 document.addEventListener("readystatechange", (event) => {

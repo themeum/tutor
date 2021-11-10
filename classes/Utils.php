@@ -3890,56 +3890,6 @@ class Utils {
 	}
 
 	/**
-	 * @param int $course_id
-	 * @param int $user_id
-	 * @param int $offset
-	 * @param int $limit
-	 *
-	 * @return array|null|object
-	 *
-	 * Get top question
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_top_question( $course_id = 0, $user_id = 0, $offset = 0, $limit = 20, $is_author = false ) {
-		global $wpdb;
-
-		$course_id  = $this->get_post_id( $course_id );
-		$user_id    = $this->get_user_id( $user_id );
-
-		$author_sql = $is_author ? "" : "AND {$wpdb->comments}.user_id = {$user_id}";
-
-		$questions = $wpdb->get_results( $wpdb->prepare(
-			"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_author,
-					{$wpdb->comments}.comment_date,
-					{$wpdb->comments}.comment_date_gmt,
-					{$wpdb->comments}.comment_content,
-					{$wpdb->comments}.user_id,
-					{$wpdb->commentmeta}.meta_value as question_title,
-					{$wpdb->users}.display_name
-			FROM  	{$wpdb->comments}
-						INNER JOIN {$wpdb->commentmeta}
-								ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-						INNER JOIN {$wpdb->users}
-								ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE 	{$wpdb->comments}.comment_post_ID = {$course_id} {$author_sql}
-					AND {$wpdb->comments}.comment_type = %s
-					AND meta_key = %s
-			ORDER BY comment_ID DESC
-			LIMIT %d, %d;
-			",
-			'tutor_q_and_a',
-			'tutor_question_title',
-			$offset,
-			$limit
-		) );
-
-		return $questions;
-	}
-
-	/**
 	 * @param string $search_term
 	 *
 	 * @return int
@@ -4171,8 +4121,7 @@ class Utils {
 					_chat.user_id,
 					{$wpdb->users}.display_name
 			FROM	{$wpdb->comments} _chat
-					INNER JOIN {$wpdb->users}
-							ON _chat.user_id = {$wpdb->users}.ID
+					INNER JOIN {$wpdb->users} ON _chat.user_id = {$wpdb->users}.ID
 			WHERE 	comment_type = 'tutor_q_and_a'
 					AND ( _chat.comment_ID=%d OR _chat.comment_parent = %d)
 			ORDER BY _chat.comment_ID ASC;",

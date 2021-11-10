@@ -246,7 +246,7 @@ window.jQuery(document).ready(function($){
             success: function (data) {
                 $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
                 $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('data-topic-id-of-quiz', topic_id).addClass('show');
+                $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('data-topic-id-of-quiz', topic_id);
                 
                 modal.removeClass('tutor-has-question-from');
 
