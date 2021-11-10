@@ -5,16 +5,14 @@
  * @package Tutor LMS
  * @since 2.0
  */
-
 $field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
 $field_id  = esc_attr( 'field_' . $field_key );
-$value     = $this->get( $field['key'] );
+$value     = $this->get( $field['key'], $field['default'] );
 if ( isset( $field['default'] ) && empty( $value ) ) {
 	$value = $field['default'];
 }
 $if_other_color = isset( $field['preset_name'] ) && 'other' == $field['preset_name'] ? ' other_color' : '';
 ?>
-
 <div class="tutor-option-field-row">
 	<div class="tutor-option-field-label">
 		<h5 class="label"><?php echo esc_attr( $field['label'] ); ?></h5>

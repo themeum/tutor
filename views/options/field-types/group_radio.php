@@ -25,7 +25,7 @@ $field_id = esc_attr( 'field_' . $field_key );
 							<?php
 							foreach ( $options as $option_key => $option ) :
 								$option_value = $this->get( $field['key'], tutils()->array_get( 'default', $field ) );
-								$field_key    = esc_attr( $group_option_key . '_' . $option_key );
+								// $field_key    = esc_attr( $group_option_key . '_' . $option_key );
 								?>
 								<label for="<?php echo esc_attr( $option_key ); ?>">
 									<input type="radio" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" id="<?php echo esc_attr( $option_key ); ?>" <?php echo esc_attr( checked( $option_value, $option_key ) ); ?> value="<?php echo esc_attr( $option_key ); ?>" />

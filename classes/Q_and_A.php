@@ -8,13 +8,19 @@ if (!defined('ABSPATH'))
 class Q_and_A {
 
 	public function __construct() {
-		add_action('admin_post_tutor_place_answer', array($this, 'place_answer'));
+		add_action('wp_ajax_tutor_place_answer', array($this, 'place_answer'));
 
 		/**
-		 * Delete question [frontend dashboard]
+		 * Delete question
 		 * @since  v.1.6.4
 		 */
 		add_action('wp_ajax_tutor_delete_dashboard_question', array($this, 'tutor_delete_dashboard_question'));
+
+		/**
+		 * Take action against single qna
+		 * @since v2.0.0
+		 */
+		add_action('wp_ajax_tutor_qna_single_action', array($this, 'tutor_qna_single_action'));
 	}
 
 	public function place_answer() {
@@ -54,7 +60,8 @@ class Q_and_A {
 				do_action('tutor_after_answer_to_question', $answer_id);
 			}
 		}
-		wp_redirect(wp_get_referer());
+		
+		wp_send_json_success();
 	}
 
 	/**
@@ -79,6 +86,24 @@ class Q_and_A {
 		wp_send_json_success();
 	}
 
+	public function tutor_qna_single_action() {
+		tutor_utils()->checking_nonce();
+
+		$question_id = intval(sanitize_text_field($_POST['question_id']));
+		$action = sanitize_text_field( $_POST['qna_action'] );
+		$current_value = intval(sanitize_text_field($_POST['current_value']));
+		$new_value = $current_value==1 ? 0 : 1;
+
+		if(!tutor_utils()->can_user_manage('qa_question', $question_id)) {
+			wp_send_json_error( array('message' => __('Permission Denied!', 'tutor') ) );
+		}
+
+		$meta_key = 'tutor_qna_' . $action;
+		update_comment_meta( $question_id, $meta_key, $new_value );
+
+		wp_send_json_success( array('new_value' => $new_value) );
+	}
+
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 * @return array
@@ -86,39 +111,30 @@ class Q_and_A {
 	 */
 	public static function tabs_key_value() {
 		$url = get_pagenum_link();
-		
-		$tabs = array(
-			array(
-				'key'   => 'all',
-				'title' => __( 'All', 'tutor' ),
-				'value' => 0,
-				'url'   => $url . '&data=all',
-			),
-			array(
-				'key'   => 'unread',
-				'title' => __( 'Unread', 'tutor' ),
-				'value' => 0,
-				'url'   => $url . '&data=unread',
-			),
-			array(
-				'key'   => 'followup',
-				'title' => __( 'Follow up', 'tutor' ),
-				'value' => 0,
-				'url'   => $url . '&data=followup',
-			),
-			array(
-				'key'   => 'archive',
-				'title' => __( 'Archive', 'tutor' ),
-				'value' => 0,
-				'url'   => $url . '&data=archive',
-			),
-			array(
-				'key'   => 'draft',
-				'title' => __( 'Draft', 'tutor' ),
-				'value' => 0,
-				'url'   => $url . '&data=draft',
-			),
+		$stats = array(
+			'all' => $all = count( tutor_utils()->get_qa_questions(0, 99999) ),
+			'read' => $read = count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_read'=>1))),
+			'unread' => $all-$read,
+			'important' => count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_important'=>1))),
+			'archived' => count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_archived'=>1)))
 		);
+
+		$tabs = array(
+			'all',
+			'read',
+			'unread',
+			'important',
+			'archived',
+		);
+
+		$tabs = array_map(function($tab) use($stats, $url) {
+			return array(
+				'key'   => $tab,
+				'title' => __( ucwords( $tab ), 'tutor' ),
+				'value' => $stats[$tab],
+				'url'   => $url . '&data='.$tab,
+			);
+		}, $tabs);
 		
 		return $tabs;
 	}

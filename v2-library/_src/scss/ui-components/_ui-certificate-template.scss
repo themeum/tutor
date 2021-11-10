@@ -83,7 +83,9 @@
 		position: relative;
 		border-radius: 6px;
 
-		&, &>span, &>span>img {
+		&,
+		& > span,
+		& > span > img {
 			width: 100%;
 		}
 
@@ -221,3 +223,14 @@
 		}
 	}
 } // end /.tutor-certificate-template
+
+.tutor-certificate-template-tab {
+	&.tutor-default-tab {
+		.tab-header {
+			border-bottom: none;
+		}
+		.tab-header-item:before {
+			display: none;
+		}
+	}
+}

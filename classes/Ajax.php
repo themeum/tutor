@@ -12,9 +12,6 @@ class Ajax{
 		add_action('wp_ajax_tutor_place_rating', array($this, 'tutor_place_rating'));
 		add_action('wp_ajax_delete_tutor_review', array($this, 'delete_tutor_review'));
 
-		add_action('wp_ajax_tutor_ask_question', array($this, 'tutor_ask_question'));
-		add_action('wp_ajax_tutor_add_answer', array($this, 'tutor_add_answer'));
-
 		add_action('wp_ajax_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
 		add_action('wp_ajax_nopriv_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
 
@@ -192,100 +189,6 @@ class Ajax{
 
 		wp_send_json_success();
 	}
-
-	public function tutor_ask_question(){
-		tutor_utils()->checking_nonce();
-
-		global $wpdb;
-
-		$course_id = (int) sanitize_text_field($_POST['tutor_course_id']);
-		$question_title = sanitize_text_field($_POST['question_title']);
-		$question = wp_kses_post($_POST['question']);
-
-		if(!tutor_utils()->has_enrolled_content_access('course', $course_id)) {
-			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
-			exit;
-		}
-
-		if (empty($question) || empty($question_title)){
-			wp_send_json_error(__('Empty question title or body', 'tutor'));
-		}
-
-		$user_id = get_current_user_id();
-		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s", tutor_time());
-
-		do_action('tutor_before_add_question', $course_id);
-		$data = apply_filters('tutor_add_question_data', array(
-			'comment_post_ID'   => $course_id,
-			'comment_author'    => $user->user_login,
-			'comment_date'      => $date,
-			'comment_date_gmt'  => get_gmt_from_date($date),
-			'comment_content'   => $question,
-			'comment_approved'  => 'waiting_for_answer',
-			'comment_agent'     => 'TutorLMSPlugin',
-			'comment_type'      => 'tutor_q_and_a',
-			'user_id'           => $user_id,
-		));
-
-		$wpdb->insert($wpdb->comments, $data);
-		$comment_id = (int) $wpdb->insert_id;
-
-		if ($comment_id){
-			$result = $wpdb->insert( $wpdb->commentmeta, array(
-				'comment_id' => $comment_id,
-				'meta_key' => 'tutor_question_title',
-				'meta_value' => $question_title
-			) );
-		}
-		do_action('tutor_after_add_question', $course_id, $comment_id);
-
-		wp_send_json_success(__('Question has been added successfully', 'tutor'));
-	}
-
-
-	public function tutor_add_answer(){
-		tutor_utils()->checking_nonce();
-		global $wpdb;
-
-		$answer = wp_kses_post($_POST['answer']);
-		if ( ! $answer){
-			wp_send_json_error(__('Please write answer', 'tutor'));
-		}
-
-		$question_id = (int) sanitize_text_field($_POST['question_id']);
-		$question = tutor_utils()->get_qa_question($question_id);
-
-		$user_id = get_current_user_id();
-		$user = get_userdata($user_id);
-		$date = date("Y-m-d H:i:s", tutor_time());
-
-		if(!tutor_utils()->has_enrolled_content_access('qa_question', $question_id)) {
-			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
-			exit;
-		}
-
-		do_action('tutor_before_answer_to_question');
-		$data = apply_filters('tutor_add_answer_data', array(
-			'comment_post_ID'   => $question->comment_post_ID,
-			'comment_author'    => $user->user_login,
-			'comment_date'      => $date,
-			'comment_date_gmt'  => get_gmt_from_date($date),
-			'comment_content'   => $answer,
-			'comment_approved'  => 'approved',
-			'comment_agent'     => 'TutorLMSPlugin',
-			'comment_type'      => 'tutor_q_and_a',
-			'comment_parent'    => $question_id,
-			'user_id'           => $user_id,
-		));
-
-		$wpdb->insert($wpdb->comments, $data);
-		$comment_id = (int) $wpdb->insert_id;
-		do_action('tutor_after_answer_to_question', $comment_id);
-
-		wp_send_json_success(__('Answer has been added successfully', 'tutor'));
-	}
-
 
 	public function tutor_course_add_to_wishlist(){
 		tutor_utils()->checking_nonce();

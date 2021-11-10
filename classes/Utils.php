@@ -4030,51 +4030,110 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '' ) {
+	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '', $question_id=null, $meta_query=null, $asker_id=null ) {
 		global $wpdb;
 
-		$user_id     = get_current_user_id();
-		$course_type = tutor()->course_post_type;
-		$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
-
+		$user_id     		  = get_current_user_id();
+		$course_type 		  = tutor()->course_post_type;
+		$search_term 		  = '%' . $wpdb->esc_like( $search_term ) . '%';
+		$question_clause 	  = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
+		$meta_clause 		  = '';
+		$user_caluse 		  = '';
 		$in_question_id_query = '';
+
 		/**
 		 * Get only assinged  courses questions if current user is not admin
 		 */
-		if ( !current_user_can( 'administrator' ) && current_user_can( tutor()->instructor_role ) ) {
+		if (!$this->has_user_role('administrator', $user_id) && current_user_can( tutor()->instructor_role ) ) {
 			$my_course_ids = $this->get_course_id_by('instructor', $user_id) ;
 			$in_ids = count($my_course_ids) ? implode( ',', $my_course_ids ) : '0';
 			$in_question_id_query = " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
 		}
 
+		// Meta query
+		if($meta_query) {
+			$meta_array = array();
+			foreach($meta_query as $key=>$value) {
+				$meta_array[] = "_meta.meta_key='{$key}' AND _meta.meta_value='{$value}'";
+			}
+
+			$meta_clause = ' AND ' . implode(' AND ', $meta_array);
+		}
+
+		// User query
+		if($asker_id) {
+			$user_caluse = ' AND _question.user_id='. $asker_id;
+		}
+
 		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT _question.comment_ID,
+			"SELECT DISTINCT _question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
+					_question.comment_date_gmt,
 					_question.comment_content,
 					_question.user_id,
-					{$wpdb->users}.display_name,
-					{$wpdb->posts}.post_title,
+					_user.user_email,
+					_user.display_name,
+					_course.ID as course_id,
+					_course.post_title,
 					(	SELECT  COUNT(answers_t.comment_ID)
 						FROM 	{$wpdb->comments} answers_t
 						WHERE 	answers_t.comment_parent = _question.comment_ID
 					) AS answer_count
 			FROM 	{$wpdb->comments} _question
-					INNER JOIN {$wpdb->posts}
-							ON _question.comment_post_ID = {$wpdb->posts}.ID
-					INNER JOIN {$wpdb->users}
-							ON _question.user_id = {$wpdb->users}.ID
+					INNER JOIN {$wpdb->posts} _course
+							ON _question.comment_post_ID = _course.ID
+					INNER JOIN {$wpdb->users} _user
+							ON _question.user_id = _user.ID
+					LEFT JOIN {$wpdb->commentmeta} _meta
+							ON _question.comment_ID = _meta.comment_id
 			WHERE  	_question.comment_type = 'tutor_q_and_a'
 					AND _question.comment_parent = 0
 					AND _question.comment_content LIKE %s
 					{$in_question_id_query}
+					{$question_clause}
+					{$meta_clause}
 			ORDER BY _question.comment_ID DESC
 			LIMIT %d, %d;",
 			$search_term,
 			$start,
 			$limit
 		) );
+
+		// Collect question IDs
+		$question_ids = array_map(function($q) {
+			return $q->comment_ID;
+		}, $query);
+		
+		// Assign meta data
+		if(count($question_ids)) {
+			$q_ids = implode(',', $question_ids);
+			$meta_array = $wpdb->get_results(
+				"SELECT comment_id, meta_key, meta_value 
+				FROM {$wpdb->commentmeta}
+				WHERE comment_id IN ({$q_ids})");
+
+			// Loop through meta array
+			foreach($meta_array as $meta) {
+				// Loop through questions
+				foreach($query as $index=>$question) {
+
+					// Register meta array if not already
+					if(!array_key_exists('meta', $query[$index])) {
+						$query[$index]->meta = array();
+					}
+
+					if($query[$index]->comment_ID==$meta->comment_id) {
+						$query[$index]->meta[$meta->meta_key] = $meta->meta_value;
+					}
+				}
+			}
+		}
+
+		if($question_id) {
+			return isset($query[0]) ? $query[0] : null;
+		}
 
 		return $query;
 	}
@@ -4089,33 +4148,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function get_qa_question( $question_id ) {
-		global $wpdb;
-		$query = $wpdb->get_row( $wpdb->prepare(
-			"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_author,
-					{$wpdb->comments}.comment_date,
-					{$wpdb->comments}.comment_date_gmt,
-					{$wpdb->comments}.comment_content,
-					{$wpdb->comments}.user_id,
-					{$wpdb->commentmeta}.meta_value as question_title,
-					{$wpdb->users}.display_name,
-					{$wpdb->posts}.post_title
-			FROM  	{$wpdb->comments}
-					INNER JOIN {$wpdb->commentmeta}
-							ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-					INNER JOIN {$wpdb->posts}
-							ON {$wpdb->comments}.comment_post_ID = {$wpdb->posts}.ID
-					INNER JOIN {$wpdb->users}
-							ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE  	comment_type = %s
-					AND {$wpdb->comments}.comment_ID = %d;
-			",
-			'tutor_q_and_a',
-			$question_id
-		) );
-
-		return $query;
+		return $this->get_qa_questions(0, 1, '', $question_id);
 	}
 
 	/**
@@ -5011,64 +5044,6 @@ class Utils {
 		) );
 
 		return $query;
-	}
-
-	/**
-	 * @param int context $instructor_id 
-	 *
-	 * @return array
-	 *
-	 *
-	 * Get the attempts stat from specific instructor context
-	 *
-	 * @since 2.0.0
-	 */
-	public function get_quiz_attempts_stat($instructor_id) {
-		global $wpdb;
-
-		$where_clause = '';
-		if(!$this->has_user_role('administrator', $instructor_id)){
-			$course_ids = $this->get_course_id_by('instructor', $instructor_id);
-			$courses_ids = count($courses_ids) ? implode(',', $courses_ids) : '0';
-			$where_clause.=' AND course.ID IN('.$cours_ids.')';
-		}
-		
-		$attempts = $wpdb->get_results(
-			"SELECT attempt.total_marks, attempt.earned_marks, attempt.attempt_info
-			FROM {$wpdb->prefix}tutor_quiz_attempts attempt
-				INNER JOIN {$wpdb->posts} course ON attempt.course_id=course.ID
-			WHERE 1=1 " . $where_clause
-		);
-
-		!is_array($attempts) ? $attempts=array() : 0;
-
-		$stats = array(
-			'all' => count($attempts),
-			'pass' => 0,
-			'fail' => 0,
-			'pending' => 0
-		);
-
-		foreach($attempts as $attempt) {
-			$info = @unserialize($attempt->attempt_info);
-			$passing_grade = (is_array($info) && $info['passing_grade']) ? (int)$info['passing_grade'] : 0;
-
-			// Pending count
-			if($attempt->earned_marks===null || $attempt->total_marks===null) {
-				$stats['pending']+=1;
-				continue;
-			}
-
-			// Pass/fail
-			$pass_mark = !$passing_grade ? 0 : ($passing_grade/100)*$attempt->total_marks;
-			if($pass_mark>=$attempt->earned_marks) {
-				$stats['pass']+=1;
-			} else {
-				$stats['fail']+=1;
-			}
-		}
-
-		return $stats;
 	}
 
 	/**
@@ -7890,14 +7865,16 @@ class Utils {
 	 */
 	public function has_user_role($roles, $user_id = 0) {
 
+		// Prepare the user ID and roles array
 		!$user_id ? $user_id = get_current_user_id() : 0;
 		!is_array($roles) ? $roles = array($roles) : 0;
 
+		// Get the user data and it's role array
 		$user = get_userdata($user_id);
 		$role_list = (is_object($user) && is_array($user->roles)) ? $user->roles : array();
 
+		// Check if at least one role exists
 		$without_roles = array_diff($roles, $role_list);
-
 		return count($roles) > count($without_roles);
 	}
 

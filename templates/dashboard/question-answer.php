@@ -5,6 +5,17 @@
  * @version 1.6.4
  */
 
+if(isset($_GET['question_id'])) {
+    ?>
+    <h2><?php _e('Answer', 'tutor'); ?></h2>
+    <?php 
+        tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
+            'context' => 'frontend-dashboard-qna-single'
+        ));
+    ?>
+    <?php
+    return;
+}
 ?>
 
 <h2><?php _e('Question & Answer', 'tutor'); ?></h2>
