@@ -11,13 +11,6 @@ $settings = maybe_unserialize($question->question_settings);
     </div>
     <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>"/>
     <div class="tutor-mb-30">
-        <label class="tutor-form-label"><?php _e('Write your question here', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
-            <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" class="tutor-form-control tutor-mb-10" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($question->question_title) ); ?>">
-        </div>
-    </div>
-
-    <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Select your question type', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
             <div class="tutor-bs-row tutor-bs-align-items-center">

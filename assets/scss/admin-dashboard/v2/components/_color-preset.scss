@@ -1,16 +1,4 @@
 .item-wrapper.color-preset-picker {
-<<<<<<< HEAD
-  > .tutor-option-field-row {
-    border-bottom: none !important;
-  }
-  .color-picker-wrapper {
-    .tutor-option-field-row {
-      &:not(:last-child) {
-        border-bottom: 1px solid #e8e8e8;
-      }
-    }
-    .tutor-option-field-row.other_color {
-=======
 	> .tutor-option-field-row {
 		border-bottom: none !important;
 	}
@@ -21,20 +9,13 @@
 			}
 		}
 		/* .tutor-option-field-row.other_color {
->>>>>>> 3c3f093458e301945fb7733d1f8ca27aaadae2f5
       height: 0;
       overflow: hidden;
       opacity: 0;
       visibility: hidden;
-<<<<<<< HEAD
-    }
-  }
-  position: relative;
-=======
     } */
 	}
 	position: relative;
->>>>>>> 3c3f093458e301945fb7733d1f8ca27aaadae2f5
 }
 .other_colors {
 	height: 0;

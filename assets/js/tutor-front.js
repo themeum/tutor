@@ -933,82 +933,9 @@ jQuery(document).ready(function ($) {
     .replace(/-+$/, ''); // Trim - from end of text
   }
 
-  $(document).on('click', '.tutor-ask-question-btn', function (e) {
-    e.preventDefault();
-    $('.tutor-add-question-wrap').slideToggle();
-  });
   $(document).on('click', '.tutor_question_cancel', function (e) {
     e.preventDefault();
     $('.tutor-add-question-wrap').toggle();
-  });
-  $(document).on('submit', '#tutor-ask-question-form', function (e) {
-    e.preventDefault();
-    var $form = $(this);
-    var data = $(this).serializeObject();
-    data.action = 'tutor_ask_question';
-    $.ajax({
-      url: _tutorobject.ajaxurl,
-      type: 'POST',
-      data: data,
-      beforeSend: function beforeSend() {
-        $form.find('.tutor_ask_question_btn').addClass('updating-icon');
-      },
-      success: function success(data) {
-        if (data.success) {
-          $('.tutor-add-question-wrap').hide();
-          window.location.reload();
-        }
-      },
-      complete: function complete() {
-        $form.find('.tutor_ask_question_btn').removeClass('updating-icon');
-      }
-    });
-  });
-  $(document).on('submit', '.tutor-add-answer-form', function (e) {
-    e.preventDefault();
-    var $form = $(this);
-    var data = $(this).serializeObject();
-    data.action = 'tutor_add_answer';
-    $.ajax({
-      url: _tutorobject.ajaxurl,
-      type: 'POST',
-      data: data,
-      beforeSend: function beforeSend() {
-        $form.find('.tutor_add_answer_btn').addClass('updating-icon');
-      },
-      success: function success(data) {
-        if (data.success) {
-          window.location.reload();
-        }
-      },
-      complete: function complete() {
-        $form.find('.tutor_add_answer_btn').removeClass('updating-icon');
-      }
-    });
-  });
-  $(document).on('focus', '.tutor_add_answer_textarea', function (e) {
-    e.preventDefault();
-    var question_id = $(this).closest('.tutor_add_answer_wrap').attr('data-question-id');
-    var conf = {
-      tinymce: {
-        wpautop: true,
-        //plugins : 'charmap colorpicker compat3x directionality fullscreen hr image lists media paste tabfocus textcolor wordpress wpautoresize wpdialogs wpeditimage wpemoji wpgallery wplink wptextpattern wpview',
-        toolbar1: 'bold italic underline bullist strikethrough numlist  blockquote  alignleft aligncenter alignright undo redo link unlink spellchecker fullscreen'
-      }
-    };
-    wp.editor.initialize('tutor_answer_' + question_id, conf);
-  });
-  $(document).on('click', '.tutor_cancel_wp_editor', function (e) {
-    e.preventDefault();
-    $(this).closest('.tutor_wp_editor_wrap').toggle();
-    $(this).closest('.tutor_add_answer_wrap').find('.tutor_wp_editor_show_btn_wrap').toggle();
-    var question_id = $(this).closest('.tutor_add_answer_wrap').attr('data-question-id');
-    wp.editor.remove('tutor_answer_' + question_id);
-  });
-  $(document).on('click', '.tutor_wp_editor_show_btn', function (e) {
-    e.preventDefault();
-    $(this).closest('.tutor_add_answer_wrap').find('.tutor_wp_editor_wrap').toggle();
-    $(this).closest('.tutor_wp_editor_show_btn_wrap').toggle();
   });
   /**
    * Quiz attempt
