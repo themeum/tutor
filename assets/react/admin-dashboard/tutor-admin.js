@@ -3,6 +3,7 @@ import "./segments/options";
 import "./segments/import-export";
 import "./segments/addonlist";
 import "./segments/color-preset";
+import "./segments/reset";
 import "./addons-list/addons-list-main";
 import "./segments/filter";
 import "./segments/withdraw";
