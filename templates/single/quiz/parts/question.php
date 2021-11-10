@@ -116,6 +116,12 @@
                             if ($question_type === 'fill_in_the_blank'){
                                 include 'fill-in-the-blank.php';
                             }
+
+                            // Ordering
+                            if ($question_type === 'ordering'){
+                                include 'ordering.php';
+                            }
+
                         ?>
                         
 
