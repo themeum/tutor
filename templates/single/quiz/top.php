@@ -82,6 +82,10 @@ do_action('tutor_quiz/single/before/top');
         </div>
 		<?php } ?>
     </div>
+	<?php
+		if ($attempt_remaining > 0 || $attempts_allowed == 0) {
+		do_action('tuotr_quiz/start_form/before', $quiz_id);
+	?>
     <div class="tutor-quiz-btn-grp">
 		<form id="tutor-start-quiz" method="post">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
@@ -98,6 +102,7 @@ do_action('tutor_quiz/single/before/top');
 			<?php _e( 'Skip Quiz', 'tutor' ); ?>
         </button>
     </div>
+	<?php } ?>
 </div>
 <?php
 		} ?>
