@@ -1530,18 +1530,21 @@ var getFilesAndUpdateDOM = function getFilesAndUpdateDOM(files, inputEl, dropZon
 
 function toolTipOnWindowResize() {
   var mediaQuery = window.matchMedia('(max-width: 992px)');
+  var hasClass = document.querySelectorAll('.tooltip-responsive');
 
-  if (mediaQuery.matches) {
-    var toolTips = document.querySelectorAll('.tooltip-right');
-    toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-right', 'tooltip-left');
-    });
-  } else {
-    var _toolTips = document.querySelectorAll('.tooltip-left');
+  if (hasClass.length) {
+    if (mediaQuery.matches) {
+      var toolTips = document.querySelectorAll('.tooltip-right');
+      toolTips.forEach(function (toolTip) {
+        toolTip.classList.replace('tooltip-right', 'tooltip-left');
+      });
+    } else {
+      var _toolTips = document.querySelectorAll('.tooltip-left');
 
-    _toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-left', 'tooltip-right');
-    });
+      _toolTips.forEach(function (toolTip) {
+        toolTip.classList.replace('tooltip-left', 'tooltip-right');
+      });
+    }
   }
 }
 
