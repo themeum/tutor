@@ -1,6 +1,17 @@
-<?php $field_id = 'field_' . $field['key']; ?>
+<?php
+/**
+ * Radio thumbnail grid for settings.
+ *
+ * @package Tutor LMS
+ * @since 2.0
+ */
 
-<div class="tutor-option-field-row d-block" id="<?php echo $field_id; ?>"
+$field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
+
+$field_id = esc_attr( 'field_' . $field_key );
+?>
+
+<div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>"
 >
 <?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
 
@@ -10,10 +21,10 @@
 			$i = 1;
 			foreach ( $field['options'] as $key => $option ) :
 				?>
-				<label for="<?php echo $option['slug']; ?>">
-					<input type="radio" name="certificate-template" id="<?php echo $option['slug']; ?>">
+				<label for="<?php echo esc_attr( $option['slug'] ); ?>">
+					<input type="radio" name="certificate-template" id="<?php echo esc_attr( $option['slug'] ); ?>">
 					<span class="icon-wrapper">
-						<img src="<?php echo tutor()->url; ?>assets/images/images-v2/<?php echo $option['thumb_url']; ?>" alt="<?php echo $option['title']; ?>">
+						<img src="<?php echo esc_url( tutor()->url . 'assets/images/images-v2/' . esc_attr( $option['thumb_url'] ) ); ?>" alt="<?php echo esc_attr( $option['title'] ); ?>">
 					</span>
 				</label>
 			<?php endforeach; ?>

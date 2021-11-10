@@ -1,0 +1,126 @@
+.tutor-details-pricing {
+	max-width: 920px;
+	margin: auto;
+}
+
+.tutor-details-pricing-plan {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	padding: 28px 20px;
+	border: none;
+	box-shadow: 0px 0px 0px 1px #cdcfd5;
+	transition: 300ms;
+	@include breakpoint-max(576) {
+		padding: 20px 15px;
+		grid-template-columns: auto;
+	}
+}
+
+.tutor-plan-title {
+	display: flex;
+	align-items: center;
+	width: 200px;
+	@include breakpoint-minmax(577, 767) {
+		width: 220px;
+		margin-bottom: 15px;
+		grid-area: 1 / span 3;
+	}
+	@include breakpoint-max(576) {
+		width: auto;
+		margin-bottom: 15px;
+	}
+}
+
+.tutor-radio-icon {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	position: relative;
+	border: 2px solid #c0c3cb;
+	border-radius: 50%;
+	transition: 100ms;
+}
+
+.tutor-membership-plans {
+	input[type='radio'] {
+		appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		position: absolute;
+	}
+}
+
+.tutor-membership-plans-group {
+	input:checked ~ .tutor-details-pricing-plan {
+		background-color: $primary-30;
+		//border: 2px solid $primary-main;
+		box-shadow: 0px 0px 0px 2px $primary-main;
+		.tutor-plan-title {
+			.tutor-radio-icon {
+				border: 6px solid $primary-main;
+			}
+		}
+	}
+}
+
+.tutor-plan-btn-group {
+	display: grid;
+	grid-template-columns: repeat(2, auto);
+}
+
+@include breakpoint-max(576) {
+	.text-regular-body.color-text-subsued {
+		font-size: 15px;
+	}
+	.text-medium-body {
+		font-size: 15px;
+	}
+	.text-bold-h4 {
+		font-size: 24px;
+	}
+	.text-regular-h6 {
+		font-size: 17px;
+	}
+	.text-bold-h3 {
+		font-size: 34px;
+	}
+	.tutor-plan-btn-group {
+		grid-template-columns: auto;
+	}
+	.tutor-plan-btn-group > button:last-child {
+		margin-top: 12px;
+	}
+	.tutor-plan-pricing {
+		margin-top: 15px;
+	}
+}
+@include breakpoint-min(992) {
+	.tutor-btn-group .tutor-btn {
+		margin-left: 35px !important;
+	}
+}
+
+.tutor-dp-plan-switch {
+	input {
+		&:checked ~ .tutor-form-toggle-control {
+			background-color: var(--tutor-success);
+			background-color: var(--tutor-design-brand);
+		}
+		~ .tutor-form-toggle-label {
+			&.tutor-form-toggle-checked {
+				color: var(--tutor-border-color);
+				color: var(--tutor-design-brand);
+			}
+		}
+
+		&:checked {
+			~ .tutor-form-toggle-checked {
+				color: inherit;
+			}
+			~ .tutor-form-toggle-unchecked {
+				color: var(--tutor-border-color);
+				color: var(--tutor-design-brand);
+			}
+		}
+	}
+}

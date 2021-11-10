@@ -4,11 +4,7 @@ namespace TUTOR;
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-if (! class_exists('Tutor_List_Table')){
-	include_once tutor()->path.'classes/Tutor_List_Table.php';
-}
-
-class Quiz_Attempts_List extends \Tutor_List_Table {
+class Quiz_Attempts_List {
 
 	const QUIZ_ATTEMPT_PAGE = 'tutor_quiz_attempts';
 
@@ -47,6 +43,64 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	}
 
 	/**
+	 * @param int context $instructor_id 
+	 *
+	 * @return array
+	 *
+	 *
+	 * Get the attempts stat from specific instructor context
+	 *
+	 * @since 2.0.0
+	 */
+	public function get_quiz_attempts_stat($instructor_id) {
+		global $wpdb;
+
+		$where_clause = '';
+		if(!tutor_utils()->has_user_role('administrator', $instructor_id)){
+			$course_ids = tutor_utils()->get_course_id_by('instructor', $instructor_id);
+			$courses_ids = count($courses_ids) ? implode(',', $courses_ids) : '0';
+			$where_clause.=' AND course.ID IN('.$cours_ids.')';
+		}
+		
+		$attempts = $wpdb->get_results(
+			"SELECT attempt.total_marks, attempt.earned_marks, attempt.attempt_info
+			FROM {$wpdb->prefix}tutor_quiz_attempts attempt
+				INNER JOIN {$wpdb->posts} course ON attempt.course_id=course.ID
+			WHERE 1=1 " . $where_clause
+		);
+
+		!is_array($attempts) ? $attempts=array() : 0;
+
+		$stats = array(
+			'all' => count($attempts),
+			'pass' => 0,
+			'fail' => 0,
+			'pending' => 0
+		);
+
+		foreach($attempts as $attempt) {
+			$info = @unserialize($attempt->attempt_info);
+			$passing_grade = (is_array($info) && $info['passing_grade']) ? (int)$info['passing_grade'] : 0;
+
+			// Pending count
+			if($attempt->earned_marks===null || $attempt->total_marks===null) {
+				$stats['pending']+=1;
+				continue;
+			}
+
+			// Pass/fail
+			$pass_mark = !$passing_grade ? 0 : ($passing_grade/100)*$attempt->total_marks;
+			if($pass_mark>=$attempt->earned_marks) {
+				$stats['pass']+=1;
+			} else {
+				$stats['fail']+=1;
+			}
+		}
+
+		return $stats;
+	}
+
+	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
 	 * @param string $user_id selected quiz_attempts id | optional.
@@ -57,7 +111,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
 		$url     = get_pagenum_link();
-		$stats 	 = tutor_utils()->get_quiz_attempts_stat(get_current_user_id());
+		$stats 	 = $this->get_quiz_attempts_stat(get_current_user_id());
 		
 		$tabs      = array(
 			array(

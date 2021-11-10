@@ -1,6 +1,14 @@
-<?php $field_id = 'field_' . $field['key'];
+<?php
+/**
+ * Select & input type number for settings.
+ *
+ * @package Tutor LMS
+ * @since 2.0
+ */
+$field_key = sanitize_key( $field['key'] );
+$field_id  = sanitize_key( 'field_' . $field_key );
 ?>
-<div class="tutor-option-field-row" id="<?php echo $field_id; ?>">
+<div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input d-flex tutor-justify-content-end">
