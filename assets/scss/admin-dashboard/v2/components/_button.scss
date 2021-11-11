@@ -71,5 +71,16 @@
 		.tutor-btn-icon {
 			font-size: 24px;
 		}
+
+		&:disabled {
+			cursor: not-allowed;
+		}
+
+		&:disabled,
+		&:disabled:hover {
+			background: #e3e6eb !important;
+			color: #7a7a7a !important;
+			border-color: #e3e6eb !important;
+		}
 	}
 }

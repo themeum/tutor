@@ -173,8 +173,8 @@ window.jQuery(document).ready(function ($) {
       }
 
       var shortlisted = [];
-      shortlist_container.find('input[name="tutor-instructor-short-list"]').each(function () {
-        shortlisted.push($(this).val());
+      shortlist_container.find('[data-instructor-id]').each(function () {
+        shortlisted.push($(this).data('instructor-id'));
       });
       user_id && !isNaN(user_id) ? shortlisted.push(user_id) : 0; // Ajax request
 
@@ -236,8 +236,8 @@ window.jQuery(document).ready(function ($) {
     var $that = $(this);
     var course_id = $('#tutor_course_instructor_modal').data('course_id');
     var shortlisted = [];
-    shortlist_container.find('input[name="tutor-instructor-short-list"]').each(function () {
-      shortlisted.push($(this).val());
+    shortlist_container.find('[data-instructor-id]').each(function () {
+      shortlisted.push($(this).data('instructor-id'));
     });
     $.ajax({
       url: window._tutorobject.ajaxurl,
@@ -390,7 +390,7 @@ window.jQuery(document).ready(function ($) {
         $('.tutor-lesson-modal-wrap').attr({
           'data-lesson-id': lesson_id,
           'data-topic-id': topic_id
-        }).addClass('show');
+        });
         $('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
         var tinymceConfig = tinyMCEPreInit.mceInit.tutor_editor_config;
 
@@ -408,10 +408,10 @@ window.jQuery(document).ready(function ($) {
         });
       },
       complete: function complete() {
+        $that.removeClass('tutor-updating-message');
         quicktags({
           id: "tutor_lesson_modal_editor"
         });
-        $that.removeClass('tutor-updating-message');
       }
     });
   }); // Video source 
@@ -584,19 +584,24 @@ window.jQuery(document).ready(function ($) {
 /*!*********************************************!*\
   !*** ./assets/react/course-builder/quiz.js ***!
   \*********************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helper/response */ "./assets/react/helper/response.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+
 /**
  * Add option disable when don't need to add an option
  * 
  * @since 1.9.7
  */
+
 var disableAddoption = function disableAddoption() {
   var selected_question_type = document.querySelector(".tutor_select_value_holder").value;
   var question_answers = document.getElementById("tutor_quiz_question_answers");
@@ -832,9 +837,14 @@ window.jQuery(document).ready(function ($) {
         $that.addClass('tutor-updating-message');
       },
       success: function success(data) {
+        if (!data.success) {
+          tutor_toast('Error', (0,_helper_response__WEBPACK_IMPORTED_MODULE_0__.get_response_message)(data), 'error');
+          return;
+        }
+
         $('.tutor-quiz-builder-modal-wrap').addClass('tutor-is-active');
         $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
-        $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('data-topic-id-of-quiz', topic_id).addClass('show');
+        $('.tutor-quiz-builder-modal-wrap').attr('data-quiz-id', quiz_id).attr('data-topic-id-of-quiz', topic_id);
         modal.removeClass('tutor-has-question-from');
 
         if (step_1) {
@@ -1271,6 +1281,33 @@ window.jQuery(document).ready(function ($) {
   }); // Remove video
 });
 
+/***/ }),
+
+/***/ "./assets/react/helper/response.js":
+/*!*****************************************!*\
+  !*** ./assets/react/helper/response.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "get_response_message": () => (/* binding */ get_response_message)
+/* harmony export */ });
+var get_response_message = function get_response_message(response, def_message) {
+  var __ = wp.i18n.__;
+
+  var _ref = response || {},
+      _ref$data = _ref.data,
+      data = _ref$data === void 0 ? {} : _ref$data;
+
+  var _data$message = data.message,
+      message = _data$message === void 0 ? def_message || __('Something Went Wrong!', 'tutor') : _data$message;
+  return message;
+};
+
+
+
 /***/ })
 
 /******/ 	});
@@ -1354,7 +1391,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lesson__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lesson */ "./assets/react/course-builder/lesson.js");
 /* harmony import */ var _lesson__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_lesson__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _quiz__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./quiz */ "./assets/react/course-builder/quiz.js");
-/* harmony import */ var _quiz__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_quiz__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _assignment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./assignment */ "./assets/react/course-builder/assignment.js");
 /* harmony import */ var _assignment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_assignment__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _attachment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./attachment */ "./assets/react/course-builder/attachment.js");
