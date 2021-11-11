@@ -46,7 +46,10 @@ $course = tutor_utils()->get_course_by_quiz(get_the_ID());
     </div>
 
     <div class="tutor-topbar-cross-icon flex-center">
-        <span class="ttr-line-cross-line color-text-white flex-center"></span>
+        <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
+        <a href="<?php echo get_the_permalink($course_id); ?>">
+            <span class="ttr-line-cross-line color-text-white flex-center"></span>
+        </a>
     </div>
 
 </div>
