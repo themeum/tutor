@@ -1,9 +1,26 @@
 .tutor-course-details-elements {
 }
 
-.tutor-course-details-header {
-	a {
-		text-decoration: none;
+// Course Details Page
+.tutor-course-details {
+	&-page {
+		.tutor-course-details-tab {
+			.tab-header {
+				position: sticky;
+				top: 0;
+				background: #fff;
+				z-index: 999;
+			}
+		}
+	}
+	&-header {
+		a {
+			text-decoration: none;
+		}
+	}
+	&-page-main {
+	}
+	&-page-main-left {
 	}
 }
 
@@ -21,6 +38,7 @@
 	}
 }
 
+// Course Details - Widgets
 .tutor-course-details-widget {
 	.widget-title {
 	}
@@ -47,6 +65,7 @@
 	}
 }
 
+// Course Details - Instructor Cards
 .tutor-instructor-info-card {
 	/* stroke/light30 */
 	border: 1px solid $stroke-light-30;
@@ -72,6 +91,7 @@
 	}
 }
 
+// Course Details - Sidebar Cards
 .tutor-course-sidebar-card {
 	border: 1px solid $stroke-light-30;
 	border-radius: 6px;
@@ -119,6 +139,7 @@
 	}
 }
 
+// Course Details Page
 .tutor-course-details-page {
 	// border: 1px solid;
 	&-main {
@@ -187,7 +208,7 @@
 	}
 }
 
-// Tutor Accordion
+// Course Details - Accordion
 .tutor-accordion {
 	&-item {
 		background-color: #fff;
@@ -260,7 +281,6 @@
 }
 
 // Course Details - Rating and Review
-
 .tutor-ratingsreviews {
 	/* stroke/light30 */
 	background: #ffffff;
@@ -358,7 +378,7 @@
 }
 
 // spacing
-$avatarSizes: 16, 20, 24, 28, 32, 40, 48, 50, 64, 120;
+$avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 
 @each $size in $avatarSizes {
 	.tutor-avatar-circle {
@@ -432,4 +452,11 @@ $avatarSizes: 16, 20, 24, 28, 32, 40, 48, 50, 64, 120;
 			}
 		}
 	}
+}
+
+// Course Details - Announcement
+.tutor-announcement {
+	border: 1px solid $stroke-light-30;
+	overflow: hidden;
+	border-radius: 6px;
 }
