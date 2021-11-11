@@ -103,7 +103,7 @@ if ( '' !== $course_id ) {
 	$args['p'] = $course_id;
 }
 // Add author param.
-if ( 'mine' === $active_tab ) {
+if ( 'mine' === $active_tab || ! current_user_can( 'administrator' ) ) {
 	$args['author'] = get_current_user_id();
 }
 // Search filter.

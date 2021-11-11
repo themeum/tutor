@@ -163,7 +163,7 @@ class Course_List {
 		}
 
 		// Author query.
-		if ( 'mine' === $status ) {
+		if ( 'mine' === $status || ! current_user_can( 'administrator' ) ) {
 			$args['author'] = $user_id;
 		}
 
