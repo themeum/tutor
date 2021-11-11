@@ -1348,6 +1348,10 @@ body.tutor-screen-course-builder .tutor-course-available-instructors .added-inst
 
 body.tutor-screen-course-builder .tutor-course-available-instructors .added-instructor-item .instructor-name {
   position: relative;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  color: #212327;
 }
 
 body.tutor-screen-course-builder .tutor-course-available-instructors .added-instructor-item .instructor-name i.instructor-name-tooltip {
@@ -1389,6 +1393,14 @@ body.tutor-screen-course-builder .tutor-course-available-instructors .added-inst
 
 body.tutor-screen-course-builder .tutor-course-available-instructors .added-instructor-item .instructor-name img:hover + i.instructor-name-tooltip {
   opacity: 1;
+}
+
+body.tutor-screen-course-builder .tutor-course-available-instructors .added-instructor-item .instructor-name span {
+  display: block;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: #5B616F;
 }
 
 body.tutor-screen-course-builder #tutor_course_instructor_modal .tutor-search-result {

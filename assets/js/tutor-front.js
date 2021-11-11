@@ -1083,9 +1083,9 @@ jQuery(document).ready(function ($) {
       success: function success(data) {
         if (data.success) {
           if (data.data.status === 'added') {
-            $that.addClass('has-wish-listed');
+            $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
           } else {
-            $that.removeClass('has-wish-listed');
+            $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
           }
         } else {
           window.location = data.data.redirect_to;
