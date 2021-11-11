@@ -13,14 +13,14 @@ $_tutor_course_price_type = tutils()->price_type();
 
 ?>
 
-<div class="tutor-bs-row tutor-mb-30">
-    <div class="tutor-bs-col-12 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
-        <label for="">
+<div class="tutor-bs-row tutor-mt-15 tutor-mb-15">
+    <div class="tutor-bs-col-12 tutor-bs-col-md-5 tutor-bs-col-lg-4">
+        <label class="text-medium-body">
 			<?php _e('Select product', 'tutor'); ?> <br />
             <p class="text-muted">(<?php _e('When selling the course', 'tutor'); ?>)</p>
         </label>
     </div>
-    <div class="tutor-bs-col-12 tutor-bs-col-sm-7 tutor-bs-col-lg-8">
+    <div class="tutor-bs-col-12 tutor-bs-col-md-7 tutor-bs-col-lg-8">
 		<?php
 		$products = tutor_utils()->get_wc_products_db();
 		$product_id = tutor_utils()->get_course_product_id();
@@ -49,7 +49,7 @@ $_tutor_course_price_type = tutils()->price_type();
 </div>
 
 
-<div class="tutor-bs-row">
+<div class="tutor-bs-row tutor-mt-15 tutor-mb-15">
     <div class="tutor-bs-col-12 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
         <label for="">
 			<?php _e('Course Type', 'tutor'); ?> <br />
