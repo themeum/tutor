@@ -8,6 +8,7 @@
  * @since v2.0.0
  */
 const { __, _x, _n, _nx } = wp.i18n;
+
 document.addEventListener("DOMContentLoaded", function() {
   const filterCourse = document.getElementById("tutor-backend-filter-course");
   if (filterCourse) {
@@ -27,12 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
       window.location = urlPrams("order", e.target.value);
     };
   }
-  const filterDate = document.getElementById("tutor-backend-filter-date");
-  if (filterDate) {
-    filterDate.onchange = (e) => {
-      window.location = urlPrams("date", e.target.value);
-    };
-  }
+
   const filterSearch = document.getElementById("tutor-admin-search-filter-form");
   if (filterSearch) {
     filterSearch.onsubmit = (e) => {

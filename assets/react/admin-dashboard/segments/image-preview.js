@@ -273,19 +273,22 @@ const getFilesAndUpdateDOM = (files, inputEl, dropZone) => {
  * Tooltip direction change on smaller devices -> .tooltip-right
  */
 function toolTipOnWindowResize() {
-	const mediaQuery = window.matchMedia('(max-width: 992px)');
+    const mediaQuery = window.matchMedia('(max-width: 992px)');
+    const hasClass = document.querySelectorAll('.tooltip-responsive');
 
-	if (mediaQuery.matches) {
-		const toolTips = document.querySelectorAll('.tooltip-right');
-		toolTips.forEach((toolTip) => {
-			toolTip.classList.replace('tooltip-right', 'tooltip-left');
-		});
-	} else {
-		const toolTips = document.querySelectorAll('.tooltip-left');
-		toolTips.forEach((toolTip) => {
-			toolTip.classList.replace('tooltip-left', 'tooltip-right');
-		});
-	}
+    if (hasClass.length) {
+        if (mediaQuery.matches) {
+            const toolTips = document.querySelectorAll('.tooltip-right');
+            toolTips.forEach((toolTip) => {
+                toolTip.classList.replace('tooltip-right', 'tooltip-left');
+            });
+        } else {
+            const toolTips = document.querySelectorAll('.tooltip-left');
+            toolTips.forEach((toolTip) => {
+                toolTip.classList.replace('tooltip-left', 'tooltip-right');
+            });
+        }
+    }
 }
 window.addEventListener('resize', toolTipOnWindowResize);
 

@@ -148,8 +148,6 @@ document.addEventListener("DOMContentLoaded", function(){
     if(withDrawCopyBtns) {
         for (let withDrawCopyBtn of withDrawCopyBtns) {
             withDrawCopyBtn.addEventListener('click', (event) => {
-                // console.log(withDrawCopyBtn.previousSibling);
-                console.log(event.currentTarget.dataset.textCopy);
                 copyToClipboard(event.currentTarget.dataset.textCopy).then(text => {
                     let html = withDrawCopyBtn.innerHTML;
                     withDrawCopyBtn.innerHTML = `${__('Copied', 'tutor')}`;

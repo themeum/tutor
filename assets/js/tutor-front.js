@@ -1572,11 +1572,21 @@ jQuery(document).ready(function ($) {
       type: 'POST',
       data: data,
       beforeSend: function beforeSend() {
+        $form.find('.tutor-success-msg').remove();
         $btn.addClass('updating-icon');
       },
       success: function success(data) {
         if (data.success) {
-          tutor_toast('Success!', __(data.data.msg, 'tutor'), 'success', false);
+          var successMsg = '<div class="tutor-success-msg" style="display: none;"><i class="tutor-icon-mark"></i> ' + data.data.msg + ' </div>';
+          $btn.closest('.withdraw-account-save-btn-wrap').append(successMsg);
+
+          if ($form.find('.tutor-success-msg').length) {
+            $form.find('.tutor-success-msg').slideDown();
+          }
+
+          setTimeout(function () {
+            $form.find('.tutor-success-msg').slideUp();
+          }, 5000);
         }
       },
       complete: function complete() {
