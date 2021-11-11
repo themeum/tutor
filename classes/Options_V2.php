@@ -845,14 +845,14 @@ class Options_V2 {
 										'type'    => 'toggle_single',
 										'label'   => __( 'Instructor Info', 'tutor' ),
 										'default' => 'on',
-										'desc'    => __( 'Show instructor bio on each page', 'tutor' ),
+										'desc'    => __( 'Toggle to show instructor info', 'tutor' ),
 									),
 									array(
 										'key'     => 'enable_q_and_a_on_course',
 										'type'    => 'toggle_single',
 										'label'   => __( 'Q&A', 'tutor' ),
 										'default' => 'on',
-										'desc'    => __( 'Enabling this feature will add a Q&amp;A section on every course.', 'tutor' ),
+										'desc'    => __( 'Enable to add a Q&A section', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_author',
@@ -860,7 +860,7 @@ class Options_V2 {
 										'label'       => __( 'Disable Author', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => 'off',
-										'desc'        => __( 'Disabling this feature will be removed course author name from the course page.', 'tutor' ),
+										'desc'        => __( 'Enabling to remove course author name', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_level',
@@ -868,7 +868,7 @@ class Options_V2 {
 										'label'       => __( 'Disable Level', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => 'off',
-										'desc'        => __( 'Disabling this feature will be removed course level from the course page.', 'tutor' ),
+										'desc'        => __( 'Toggle to remove course level', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_share',
@@ -876,7 +876,7 @@ class Options_V2 {
 										'label'       => __( 'Disable Share', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => 'off',
-										'desc'        => __( 'Disabling this feature will be removed course share option from the course page.', 'tutor' ),
+										'desc'        => __( 'Toggle to hide course share', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_duration',
@@ -884,7 +884,7 @@ class Options_V2 {
 										'label'       => __( 'Duration', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course duration from the course page.', 'tutor' ),
+										'desc'        => __( 'Enable to show course duration', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_total_enrolled',
@@ -892,7 +892,7 @@ class Options_V2 {
 										'label'       => __( 'Enrolled Students', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course total enrolled from the course page.', 'tutor' ),
+										'desc'        => __( 'Enable to show total enrolled students', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_update_date',
@@ -900,7 +900,7 @@ class Options_V2 {
 										'label'       => __( 'Update Date', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course update date from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide course update infromation', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_progress_bar',
@@ -908,7 +908,7 @@ class Options_V2 {
 										'label'       => __( 'Progress Bar', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed completing progress bar from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide course progress for Students', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_material',
@@ -916,7 +916,7 @@ class Options_V2 {
 										'label'       => __( 'Material', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course material from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide course materials', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_about',
@@ -924,7 +924,7 @@ class Options_V2 {
 										'label'       => __( 'About', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course about from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide course about section', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_description',
@@ -932,7 +932,7 @@ class Options_V2 {
 										'label'       => __( 'Description', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course description from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide course description', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_benefits',
@@ -940,15 +940,15 @@ class Options_V2 {
 										'label'       => __( 'Benefits', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course benefits from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide course benefits section', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_requirements',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Pre-requirements', 'tutor' ),
+										'label'       => __( 'Pre-Requirements', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course requirements from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide courses requirements setion', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_target_audience',
@@ -956,7 +956,7 @@ class Options_V2 {
 										'label'       => __( 'Target Audience', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course target audience from the course page.', 'tutor' ),
+										'desc'        => __( 'Enable to show course target audience setion', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_announcements',
@@ -964,7 +964,7 @@ class Options_V2 {
 										'label'       => __( 'Announcements', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course announcements from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide course announcements settion', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_review',
@@ -972,7 +972,7 @@ class Options_V2 {
 										'label'       => __( 'Review', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => '0',
-										'desc'        => __( 'Disabling this feature will be removed course review system from the course page.', 'tutor' ),
+										'desc'        => __( 'Disable to hide course review section', 'tutor' ),
 									),
 								),
 								'desc'          => __( 'Content Needed Here...', 'tutor' ),
