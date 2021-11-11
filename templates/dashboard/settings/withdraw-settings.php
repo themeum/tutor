@@ -69,7 +69,7 @@ $col_classes = array(
                                 <div class="<?php echo esc_attr( $field_count ) > 1 ? 'tutor-bs-col-12 tutor-bs-col-sm-6' : 'tutor-bs-col-12'; ?> tutor-mb-30">
                                     <?php
                                     if ( ! empty( $field['label'] ) ) {
-                                        echo wp_kses_post( "<label for='field_{$method_id}_$field_name'>{$field['label']}</label>" );
+                                        echo wp_kses_post( "<label class='color-text-subsued' for='field_{$method_id}_$field_name'>{$field['label']}</label>" );
                                     }
 
                                     $passing_data = apply_filters( 'tutor_withdraw_account_field_type_data', array(
@@ -86,18 +86,18 @@ $col_classes = array(
 
                                     if ( in_array( $field['type'], array( 'text', 'number', 'email' ) ) ) {
                                         ?>
-                                            <input class="tutor-form-control" type="<?php echo esc_attr( $field['type'] ); ?>" name="withdraw_method_field[<?php echo esc_attr( $method_id ) ?>][<?php echo esc_attr( $field_name ) ?>]" value="<?php echo esc_attr( $old_value ); ?>" >
+                                            <input class="tutor-form-control tutor-mt-5" type="<?php echo esc_attr( $field['type'] ); ?>" name="withdraw_method_field[<?php echo esc_attr( $method_id ) ?>][<?php echo esc_attr( $field_name ) ?>]" value="<?php echo esc_attr( $old_value ); ?>" >
                                         <?php
                                     } else if ( $field['type']=='textarea' ) {
                                         ?>
-                                            <textarea class="tutor-form-control" name="withdraw_method_field[<?php echo esc_attr( $method_id ) ?>][<?php echo esc_attr( $field_name ) ?>]">
+                                            <textarea class="tutor-form-control tutor-mt-5" name="withdraw_method_field[<?php echo esc_attr( $method_id ) ?>][<?php echo esc_attr( $field_name ) ?>]">
                                                 <?php echo wp_kses_post( $old_value ); ?>
                                             </textarea>
                                         <?php
                                     }
 
                                     if ( ! empty( $field['desc'] ) ) {
-                                        echo wp_kses_post("<p class='withdraw-field-desc'>{$field['desc']}</p>");
+                                        echo wp_kses_post("<p class='withdraw-field-desc color-text-subsued'>{$field['desc']}</p>");
                                     }
                                     ?>
                                 </div>
