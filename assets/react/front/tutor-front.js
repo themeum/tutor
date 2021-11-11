@@ -793,19 +793,11 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: data,
             beforeSend: function () {
-                $form.find('.tutor-success-msg').remove();
                 $btn.addClass('updating-icon');
             },
             success: function (data) {
                 if (data.success) {
-                    var successMsg = '<div class="tutor-success-msg" style="display: none;"><i class="tutor-icon-mark"></i> ' + data.data.msg + ' </div>';
-                    $btn.closest('.withdraw-account-save-btn-wrap').append(successMsg);
-                    if ($form.find('.tutor-success-msg').length) {
-                        $form.find('.tutor-success-msg').slideDown();
-                    }
-                    setTimeout(function () {
-                        $form.find('.tutor-success-msg').slideUp();
-                    }, 5000)
+                    tutor_toast( 'Success!', data.data.msg, 'success', false );
                 }
             },
             complete: function () {
