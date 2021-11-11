@@ -37,6 +37,7 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
 		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
 		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
+		add_action( 'wp_ajax_reset_settings_data', array( $this, 'reset_settings_data' ) );
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -164,6 +165,20 @@ class Options_V2 {
 	public function load_saved_data() {
 		tutor_utils()->checking_nonce();
 		wp_send_json_success( get_option( 'tutor_settings_log' ) );
+	}
+	public function reset_settings_data() {
+		tutor_utils()->checking_nonce();
+		$block_fields = array();
+		$reset_page   = isset( $_POST['reset_page'] ) ? sanitize_key( $_POST['reset_page'] ) : null;
+		$setting_data = $this->get_setting_fields()['option_fields'][ $reset_page ]['blocks'];
+
+		foreach ( $setting_data as $blocks ) {
+			foreach ( $blocks['fields'] as $fields ) {
+				$block_fields[] = $fields;
+			}
+		}
+
+		wp_send_json_success( $block_fields );
 	}
 
 	public function tutor_import_settings() {
@@ -696,6 +711,7 @@ class Options_V2 {
 								'type'        => 'checkbox_horizontal',
 								'label'       => __( 'Enable withdraw method', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
+								'default' => 'bank_transfer_withdraw',
 								'options'     => $methods_array,
 								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
 							),

@@ -723,11 +723,11 @@ displayAddons(freeAddonsList);
  */
 var colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
 var colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
-var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]");
-var moreButton = document.querySelector(".more_button");
-var otherColors = document.querySelector(".other_colors");
-var otherColorRows = otherColors && otherColors.querySelectorAll(".tutor-option-field-row");
-var otherColorsExpanded = document.querySelector(".other_colors.expanded");
+var pickerView = document.querySelectorAll('.color-picker-wrapper [data-key]');
+var moreButton = document.querySelector('.more_button');
+var otherColors = document.querySelector('.other_colors');
+var otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-option-field-row');
+var otherColorsExpanded = document.querySelector('.other_colors.expanded');
 document.addEventListener('readystatechange', function (event) {
   if (event.target.readyState === 'interactive') {}
 
@@ -755,7 +755,7 @@ var otherColorsPreview = function otherColorsPreview() {
     });
   }
 
-  if (moreButton) {
+  if (moreButton && otherColors) {
     var toggleHeight = itemsHeight + moreButton.offsetHeight + 'px';
 
     moreButton.onclick = function () {
@@ -2278,6 +2278,62 @@ var popupToggle = function popupToggle() {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (popupToggle);
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/segments/reset.js":
+/*!********************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/reset.js ***!
+  \********************************************************/
+/***/ (() => {
+
+/*
+Reset to default for settings individual page
+*/
+console.log("reset-to-default");
+var resetDefaultBtn = document.querySelectorAll(".reset_to_default");
+resetDefaultBtn.forEach(function (resetBtn, index) {
+  resetBtn.onclick = function (e) {
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("action", "reset_settings_data");
+    formData.append("reset_page", resetBtn.dataset.reset);
+    formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", _tutorobject.ajaxurl, true);
+    xhttp.send(formData);
+
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4) {
+        var pageData = JSON.parse(xhttp.response).data;
+        pageData.forEach(function (item) {
+          var field_types = ["toggle_switch", "text", "textarea", "email", "select", "number"];
+
+          if (field_types.includes(item.type)) {
+            var itemName = "tutor_option[" + item.key + "]";
+            var itemElem = fieldByName(itemName)[0];
+
+            if (item.type == "select") {
+              var sOptions = itemElem.options;
+
+              for (var i = 0; i < sOptions.length; i++) {
+                sOptions[i].selected = false;
+              }
+            } else {
+              itemElem.value = item["default"];
+              itemElem.nextElementSibling.value = item["default"];
+              itemElem.nextElementSibling.checked = false;
+            }
+          }
+        });
+      }
+    };
+  };
+});
+
+var fieldByName = function fieldByName(key) {
+  return document.getElementsByName(key);
+};
 
 /***/ }),
 
@@ -31160,11 +31216,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
 /* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
@@ -31175,6 +31233,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
 
+
+var toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
+toggleChange.forEach(function (element) {
+  element.addEventListener("change", function (e) {
+    var check_value = element.previousElementSibling.value; // console.log(check_value);
+
+    if (check_value == "on") {
+      element.previousElementSibling.value = "off";
+    } else {
+      element.previousElementSibling.value = "on";
+    }
+  });
+});
 jQuery(document).ready(function ($) {
   "use strict";
 
@@ -31211,10 +31282,6 @@ jQuery(document).ready(function ($) {
     $(".tutor-option-nav-page").hide();
     $(tab_page_id).addClass("current-page").show();
     window.history.pushState("obj", "", $(this).attr("href"));
-  });
-  $(".tutor-form-toggle-input").on("change", function (e) {
-    var toggleInput = $(this).siblings("input");
-    $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
   });
   /**
    * End Withdraw nav tabs

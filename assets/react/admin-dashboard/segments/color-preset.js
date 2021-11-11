@@ -1,20 +1,14 @@
 /**
  * Color PRESET and PICKER manipulation
  */
-const colorPresetInputs = document.querySelectorAll(
-  "label.color-preset-input input[type='radio']"
-);
-const colorPickerInputs = document.querySelectorAll(
-  "label.color-picker-input input[type='color']"
-);
-const pickerView = document.querySelectorAll(
-  ".color-picker-wrapper [data-key]"
-);
-const moreButton = document.querySelector(".more_button");
-const otherColors = document.querySelector(".other_colors");
-const otherColorRows =
-  otherColors && otherColors.querySelectorAll(".tutor-option-field-row");
-const otherColorsExpanded = document.querySelector(".other_colors.expanded");
+
+const colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
+const colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
+const pickerView = document.querySelectorAll('.color-picker-wrapper [data-key]');
+const moreButton = document.querySelector('.more_button');
+const otherColors = document.querySelector('.other_colors');
+const otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-option-field-row');
+const otherColorsExpanded = document.querySelector('.other_colors.expanded');
 
 document.addEventListener('readystatechange', (event) => {
 	if (event.target.readyState === 'interactive') {
@@ -39,7 +33,7 @@ const otherColorsPreview = () => {
 			itemsHeight = itemsHeight + item.offsetHeight;
 		});
 	}
-	if (moreButton) {
+	if (moreButton && otherColors) {
 		const toggleHeight = itemsHeight + moreButton.offsetHeight + 'px';
 		moreButton.onclick = () => {
 			otherColors.classList.toggle('expanded');
