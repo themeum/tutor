@@ -7795,21 +7795,11 @@ Instructor customize filters styles
 }
 
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-quiz-wrapper .tutor-quiz-wrap .tutor-quiz-dotted-box {
-  width: 230px;
-  background-image: url("data:image/svg+xml,%3Csvg width='234' height='48' viewBox='0 0 234 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='232' height='46' rx='5' stroke='%23C0C3CB' stroke-width='2' stroke-dasharray='6 6'/%3E%3C/svg%3E%0A");
-  padding: 0px 20px 0px 20px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  height: 48px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  min-width: 230px;
+  padding: 5px 20px 5px 20px;
+  min-height: 48px;
+  border: 2px dashed #ddd;
+  border-radius: 5px;
 }
 
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-quiz-wrapper .tutor-quiz-wrap .quiz-flash-message .tutor-quiz-warning-box {
@@ -7955,21 +7945,13 @@ Instructor customize filters styles
   }
 }
 
-.tutor-single-lesson-wraper .tutor-single-entry-content .tutor-quiz-wrapper .tutor-quiz-wrap #quiz-image-matching-ans-area .quiz-image-matching-ans .quiz-image-box .quiz-image img {
-  max-width: 162px;
-  max-height: 162px;
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-quiz-wrapper .tutor-quiz-wrap #quiz-image-matching-ans-area .quiz-image-matching-ans .quiz-image-box .tutor-quiz-dotted-box {
   overflow-y: auto;
+  min-width: 163px;
   width: 163px;
-  background-image: url("data:image/svg+xml,%3Csvg width='162' height='48' viewBox='0 0 162 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='160' height='46' rx='5' stroke='%23C0C3CB' stroke-width='2' stroke-dasharray='6 6'/%3E%3C/svg%3E%0A");
-  background-size: contain;
-  background-position: center center;
-  background-repeat: no-repeat;
-  height: 48px;
+  min-height: 48px;
+  border: 2px dashed #ddd;
+  border-radius: 5px;
 }
 
 @media (max-width: 1380px) {

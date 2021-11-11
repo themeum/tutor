@@ -66,7 +66,7 @@ if ($best_watch_time > 0){
         ?>
     </div>
 
-    <div class="tutor-topbar-item flex-center">
+    <div class="tutor-topbar-item tutor-topbar-mark-to-done flex-center">
         <?php tutor_lesson_mark_complete_html(); ?>
     </div>
     <div class="tutor-topbar-cross-icon flex-center">
