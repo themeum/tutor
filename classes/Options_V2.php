@@ -90,7 +90,7 @@ class Options_V2 {
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
 			if ( isset( $sections ) && ! empty( $sections ) ) {
-				foreach ( tutils()->sanitize_recursively( $sections) as $section ) {
+				foreach ( tutils()->sanitize_recursively( $sections ) as $section ) {
 					foreach ( $section['blocks'] as $blocks ) {
 						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
 							foreach ( $blocks['fields'] as $fields ) {
