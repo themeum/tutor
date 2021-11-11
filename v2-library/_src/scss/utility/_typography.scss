@@ -53,8 +53,8 @@ $typographyUtils: (
 
 @each $classSuffix, $fWeight, $fSize, $lHeight in $typographyUtils {
 	.text-#{$classSuffix} {
-		font-weight: #{$fWeight};
-		font-size: #{$fSize};
+		font-weight: #{$fWeight} !important;
+		font-size: #{$fSize} !important;
 		line-height: #{$lHeight};
 	}
 }

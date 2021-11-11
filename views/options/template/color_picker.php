@@ -70,6 +70,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 					</div>
 				<?php
 			}
+
 			if ( 'color_fields' === $fields_group['type'] ) {
 				?>
 					<div class="color-picker-wrapper">
@@ -81,7 +82,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 						}
 						?>
 						<div class="other_colors">
-					   <?php
+						<?php
 						foreach ( $fields_group['fields'] as $key => $field ) {
 							if ( false === $field['preset_exist'] ) {
 								echo $this->generate_field( tutils()->sanitize_array( $field ) );

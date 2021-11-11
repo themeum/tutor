@@ -728,11 +728,11 @@ var moreButton = document.querySelector(".more_button");
 var otherColors = document.querySelector(".other_colors");
 var otherColorRows = otherColors ? otherColors.querySelectorAll(".tutor-option-field-row") : null;
 var otherColorsExpanded = document.querySelector(".other_colors.expanded");
-document.addEventListener("readystatechange", function (event) {
-  if (event.target.readyState === "interactive") {}
+document.addEventListener('readystatechange', function (event) {
+  if (event.target.readyState === 'interactive') {}
 
-  if (event.target.readyState === "complete") {
-    if (typeof otherColorsPreview === "function") {
+  if (event.target.readyState === 'complete') {
+    if (typeof otherColorsPreview === 'function') {
       otherColorsPreview();
     }
   }
@@ -741,13 +741,13 @@ document.addEventListener("readystatechange", function (event) {
 var otherColorsPreview = function otherColorsPreview() {
   var itemsHeight = initHeight = 0;
 
-  if (otherColorRows) {
+  if (otherColors && otherColorRows) {
     otherColorRows.forEach(function (item, index) {
       if (0 == index) {
         initHeight = item.offsetHeight;
 
         if (otherColors) {
-          otherColors.style.height = initHeight - 10 + "px";
+          otherColors.style.height = initHeight - 10 + 'px';
         }
       }
 
@@ -756,28 +756,28 @@ var otherColorsPreview = function otherColorsPreview() {
   }
 
   if (moreButton) {
-    var toggleHeight = itemsHeight + moreButton.offsetHeight + "px";
+    var toggleHeight = itemsHeight + moreButton.offsetHeight + 'px';
 
     moreButton.onclick = function () {
-      otherColors.classList.toggle("expanded");
+      otherColors.classList.toggle('expanded');
 
-      if (otherColors.classList.contains("expanded")) {
+      if (otherColors.classList.contains('expanded')) {
         otherColors.style.height = toggleHeight;
-        moreButton.querySelector("i").classList.remove("ttr-plus-filled");
-        moreButton.querySelector("i").classList.add("ttr-minus-filled");
-        moreButton.querySelector("span").innerText = "Show Less";
+        moreButton.querySelector('i').classList.remove('ttr-plus-filled');
+        moreButton.querySelector('i').classList.add('ttr-minus-filled');
+        moreButton.querySelector('span').innerText = 'Show Less';
       } else {
-        otherColors.style.height = initHeight - 10 + "px";
-        moreButton.querySelector("i").classList.remove("ttr-minus-filled");
-        moreButton.querySelector("i").classList.add("ttr-plus-filled");
-        moreButton.querySelector("span").innerText = "Show More";
+        otherColors.style.height = initHeight - 10 + 'px';
+        moreButton.querySelector('i').classList.remove('ttr-minus-filled');
+        moreButton.querySelector('i').classList.add('ttr-plus-filled');
+        moreButton.querySelector('span').innerText = 'Show More';
       }
     };
   }
 }; // Color PRESET Slecetion (color inputs)
 
 
-if (null !== colorPresetInputs) {
+if (colorPresetInputs) {
   colorPresetInputs.forEach(function (preset) {
     var presetItem = preset.parentElement.querySelector(".preset-item");
     var presetColors = presetItem.querySelectorAll(".header span");
@@ -796,13 +796,13 @@ if (null !== colorPresetInputs) {
           var pickerInput = toPicker.dataset.key;
 
           if (pickerInput == presetKey) {
-            toPicker.querySelector("input").value = presetColor;
-            toPicker.querySelector(".picker-value").innerHTML = presetColor;
+            toPicker.querySelector('input').value = presetColor;
+            toPicker.querySelector('.picker-value').innerHTML = presetColor;
             toPicker.style.borderColor = presetColor;
             toPicker.style.boxShadow = "inset 0 0 0 1px ".concat(presetColor);
             setTimeout(function () {
-              toPicker.style.borderColor = "#cdcfd5";
-              toPicker.style.boxShadow = "none";
+              toPicker.style.borderColor = '#cdcfd5';
+              toPicker.style.boxShadow = 'none';
             }, 5000);
           }
         });
@@ -816,8 +816,8 @@ var updateCustomPreset = function updateCustomPreset(picker) {
   var customPresetEl = document.querySelector("label.color-preset-input[for='custom']"); // listening picker input events
 
   picker.addEventListener("input", function (e) {
-    var presetColors = customPresetEl.querySelectorAll(".header span");
-    var presetItem = customPresetEl.querySelector('input[type="radio"]');
+    var presetColors = customPresetEl && customPresetEl.querySelectorAll(".header span");
+    var presetItem = customPresetEl && customPresetEl.querySelector('input[type="radio"]');
     var pickerCode = picker.nextElementSibling;
     pickerCode.innerText = picker.value;
     colorPickerInputs.forEach(function (picker) {
@@ -834,7 +834,7 @@ var updateCustomPreset = function updateCustomPreset(picker) {
 }; // listening color pickers input event
 
 
-if (null !== colorPickerInputs) {
+if (colorPickerInputs) {
   colorPickerInputs.forEach(function (picker) {
     updateCustomPreset(picker);
   });
@@ -1941,43 +1941,43 @@ var tutorIconsV2 = {
 var angleRight = tutorIconsV2.angleRight,
     magnifyingGlass = tutorIconsV2.magnifyingGlass,
     warning = tutorIconsV2.warning;
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
   var $ = window.jQuery;
   var __ = wp.i18n.__;
-  var image_uploader = document.querySelectorAll(".image_upload_button"); // let image_input = document.getElementById("image_url_field");
+  var image_uploader = document.querySelectorAll('.image_upload_button'); // let image_input = document.getElementById("image_url_field");
 
   var _loop = function _loop(i) {
-    var image_upload_wrap = image_uploader[i].closest(".image-previewer");
-    var input_file = image_upload_wrap.querySelector(".input_file");
-    var upload_preview = image_upload_wrap.querySelector(".upload_preview");
+    var image_upload_wrap = image_uploader[i].closest('.image-previewer');
+    var input_file = image_upload_wrap.querySelector('.input_file');
+    var upload_preview = image_upload_wrap.querySelector('.upload_preview');
     var email_title_logo = document.querySelector('[data-source="email-title-logo"]'); // document.querySelector(
     //   "[data-source='email-title-logo']"
     // );
 
-    var image_delete = image_upload_wrap.querySelector(".delete-btn");
+    var image_delete = image_upload_wrap.querySelector('.delete-btn');
 
     image_uploader[i].onclick = function (e) {
       e.preventDefault();
       var image_frame = wp.media({
-        title: "Upload Image",
+        title: 'Upload Image',
         library: {
-          type: "image"
+          type: 'image'
         },
         multiple: false,
-        frame: "post",
-        state: "insert"
+        frame: 'post',
+        state: 'insert'
       });
       image_frame.open();
       /* image_frame.on("select", function (e) {
-      console.log("image size");
-      console.log(image.state().get("selection").first().toJSON());
-      var image_url = image_frame.state().get("selection").first().toJSON().url;
-      upload_previewer.src = image_input.value = image_url;
+      	console.log("image size");
+      	console.log(image.state().get("selection").first().toJSON());
+      		var image_url = image_frame.state().get("selection").first().toJSON().url;
+      		upload_previewer.src = image_input.value = image_url;
       }); */
 
-      image_frame.on("insert", function (selection) {
+      image_frame.on('insert', function (selection) {
         var state = image_frame.state();
-        selection = selection || state.get("selection");
+        selection = selection || state.get('selection');
         if (!selection) return; // We set multiple to false so only get one image from the uploader
 
         var attachment = selection.first();
@@ -1998,8 +1998,8 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     image_delete.onclick = function () {
-      input_file.value = "";
-      email_title_logo.src = "https://via.placeholder.com/108x26?text=Upload";
+      input_file.value = '';
+      email_title_logo.src = 'https://via.placeholder.com/108x26?text=Upload';
     };
   };
 
@@ -2007,24 +2007,24 @@ document.addEventListener("DOMContentLoaded", function () {
     _loop(i);
   }
 
-  $(window).on("click", function (e) {
-    $(".tutor-notification, .search_result").removeClass("show");
+  $(window).on('click', function (e) {
+    $('.tutor-notification, .search_result').removeClass('show');
   });
-  $(".tutor-notification-close").click(function (e) {
-    $(".tutor-notification").removeClass("show");
+  $('.tutor-notification-close').click(function (e) {
+    $('.tutor-notification').removeClass('show');
   });
-  $("#save_tutor_option").click(function (e) {
+  $('#save_tutor_option').click(function (e) {
     e.preventDefault();
-    $("#tutor-option-form").submit();
+    $('#tutor-option-form').submit();
   });
-  $("#tutor-option-form").submit(function (e) {
+  $('#tutor-option-form').submit(function (e) {
     e.preventDefault();
-    var button = $("#save_tutor_option");
+    var button = $('#save_tutor_option');
     var $form = $(this);
     var data = $form.serializeObject();
     $.ajax({
       url: window._tutorobject.ajaxurl,
-      type: "POST",
+      type: 'POST',
       data: data,
       beforeSend: function beforeSend() {
         button.addClass('tutor-updating-message');
@@ -2052,7 +2052,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function titleCase(str) {
-    var splitStr = str.toLowerCase().split(" ");
+    var splitStr = str.toLowerCase().split(' ');
 
     for (var i = 0; i < splitStr.length; i++) {
       // You do not need to check if i is larger than splitStr length, as your for does that for you
@@ -2061,41 +2061,41 @@ document.addEventListener("DOMContentLoaded", function () {
     } // Directly return the joined string
 
 
-    return splitStr.join(" ");
+    return splitStr.join(' ');
   }
 
   function view_item(text, section_slug, section, block, field_key) {
-    var navTrack = block ? "".concat(angleRight, " ").concat(block) : "";
+    var navTrack = block ? "".concat(angleRight, " ").concat(block) : '';
     var output = "\n\t\t<a data-tab=\"".concat(section_slug, "\" data-key=\"field_").concat(field_key, "\">\n\t\t\t<div class=\"search_result_title\">\n\t\t\t").concat(magnifyingGlass, "\n\t\t\t<span class=\"text-regular-caption\">").concat(text, "</span>\n\t\t\t</div>\n\t\t\t<div class=\"search_navigation\">\n\t\t\t<div class=\"nav-track text-regular-small\">\n\t\t\t\t<span>").concat(section, "</span>\n\t\t\t\t<span>").concat(navTrack, "</span>\n\t\t\t</div>\n\t\t\t</div>\n\t\t</a>");
     return output;
   }
 
-  $("#search_settings").on("input", function (e) {
+  $('#search_settings').on('input', function (e) {
     e.preventDefault();
 
     if (e.target.value) {
       var searchKey = this.value;
       $.ajax({
         url: window._tutorobject.ajaxurl,
-        type: "POST",
+        type: 'POST',
         data: {
-          action: "tutor_option_search",
+          action: 'tutor_option_search',
           keyword: searchKey
         },
         // beforeSend: function () {},
         success: function success(data) {
           // console.log(data.data);
           // return false;
-          var output = "",
-              wrapped_item = "",
+          var output = '',
+              wrapped_item = '',
               notfound = true,
-              item_text = "",
-              section_slug = "",
-              section_label = "",
-              block_label = "",
-              matchedText = "",
-              searchKeyRegex = "",
-              field_key = "",
+              item_text = '',
+              section_slug = '',
+              section_label = '',
+              block_label = '',
+              matchedText = '',
+              searchKeyRegex = '',
+              field_key = '',
               result = data.data.fields;
           Object.values(result).forEach(function (item, index, arr) {
             var _item_text$match;
@@ -2105,7 +2105,7 @@ document.addEventListener("DOMContentLoaded", function () {
             section_label = item.section_label;
             block_label = item.block_label;
             field_key = item.key;
-            searchKeyRegex = new RegExp(searchKey, "ig"); // console.log(item_text.match(searchKeyRegex));
+            searchKeyRegex = new RegExp(searchKey, 'ig'); // console.log(item_text.match(searchKeyRegex));
 
             matchedText = (_item_text$match = item_text.match(searchKeyRegex)) === null || _item_text$match === void 0 ? void 0 : _item_text$match[0];
 
@@ -2120,8 +2120,8 @@ document.addEventListener("DOMContentLoaded", function () {
             output += "<div class=\"no_item\"> ".concat(warning, " No Results Found</div>");
           }
 
-          $(".search_result").html(output).addClass("show");
-          output = ""; // console.log("working");
+          $('.search_result').html(output).addClass('show');
+          output = ''; // console.log("working");
         },
         complete: function complete() {
           // Active navigation element
@@ -2129,7 +2129,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     } else {
-      document.querySelector(".search-popup-opener").classList.remove("show");
+      document.querySelector('.search-popup-opener').classList.remove('show');
     }
   });
   /**
@@ -2137,36 +2137,36 @@ document.addEventListener("DOMContentLoaded", function () {
    */
 
   function navigationTrigger() {
-    var suggestionLinks = document.querySelectorAll(".search-field .search-popup-opener a");
-    var navTabItems = document.querySelectorAll("li.tutor-option-nav-item a");
-    var navPages = document.querySelectorAll(".tutor-option-nav-page");
+    var suggestionLinks = document.querySelectorAll('.search-field .search-popup-opener a');
+    var navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
+    var navPages = document.querySelectorAll('.tutor-option-nav-page');
     suggestionLinks.forEach(function (link) {
-      link.addEventListener("click", function (e) {
-        var dataTab = e.target.closest("[data-tab]").dataset.tab;
-        var dataKey = e.target.closest("[data-key]").dataset.key;
+      link.addEventListener('click', function (e) {
+        var dataTab = e.target.closest('[data-tab]').dataset.tab;
+        var dataKey = e.target.closest('[data-key]').dataset.key;
 
         if (dataTab) {
           // remove active from other buttons
           navTabItems.forEach(function (item) {
-            item.classList.remove("active");
+            item.classList.remove('active');
           }); // add active to the current nav item
 
-          document.querySelector(".tutor-option-tabs [data-tab=".concat(dataTab, "]")).classList.add("active"); // hide other tab contents
+          document.querySelector(".tutor-option-tabs [data-tab=".concat(dataTab, "]")).classList.add('active'); // hide other tab contents
 
           navPages.forEach(function (content) {
-            content.classList.remove("active");
+            content.classList.remove('active');
           }); // add active to the current content
 
-          document.querySelector(".tutor-option-tab-pages #".concat(dataTab)).classList.add("active"); // History push
+          document.querySelector(".tutor-option-tab-pages #".concat(dataTab)).classList.add('active'); // History push
 
           var url = new URL(window.location);
-          url.searchParams.set("tab_page", dataTab);
-          window.history.pushState({}, "", url);
+          url.searchParams.set('tab_page', dataTab);
+          window.history.pushState({}, '', url);
         } // Reset + Hide Suggestion box
 
 
-        document.querySelector(".search-popup-opener").classList.remove("visible");
-        document.querySelector('.search-field input[type="search"]').value = ""; // Highlight selected element
+        document.querySelector('.search-popup-opener').classList.remove('visible');
+        document.querySelector('.search-field input[type="search"]').value = ''; // Highlight selected element
 
         highlightSearchedItem(dataKey);
       });
@@ -2180,46 +2180,46 @@ document.addEventListener("DOMContentLoaded", function () {
   function highlightSearchedItem(dataKey) {
     var target = document.querySelector("#".concat(dataKey));
     var targetEl = target && target.querySelector(".tutor-option-field-label h5.label");
-    var scrollTargetEl = target && target.parentNode.querySelector(".tutor-option-field-row"); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
+    var scrollTargetEl = target && target.parentNode.querySelector('.tutor-option-field-row'); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
     if (scrollTargetEl) {
-      targetEl.classList.add("isHighlighted");
-      setTimeout(function () {
-        targetEl.classList.remove("isHighlighted");
-      }, 6000);
+      targetEl.classList.add('isHighlighted'); // setTimeout(() => {
+      //   targetEl.classList.remove("isHighlighted");
+      // }, 6000);
+
       scrollTargetEl.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "nearest"
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
       });
     } else {
       console.warn("scrollTargetEl Not found!");
     }
   }
 
-  var exporter = document.querySelector("#export_settings");
-  !exporter ? 0 : exporter.addEventListener("click", function (e) {
+  var exporter = document.querySelector('#export_settings');
+  !exporter ? 0 : exporter.addEventListener('click', function (e) {
     e.preventDefault();
     fetch(_tutorobject.ajaxurl, {
-      method: "POST",
-      credentials: "same-origin",
+      method: 'POST',
+      credentials: 'same-origin',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Cache-Control": "no-cache"
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cache-Control': 'no-cache'
       },
       body: new URLSearchParams({
-        action: "tutor_export_settings"
+        action: 'tutor_export_settings'
       })
     }).then(function (response) {
       return response.json();
     }).then(function (response) {
       var file = new Blob([JSON.stringify(response)], {
-        type: "application/json"
+        type: 'application/json'
       });
       var url = URL.createObjectURL(file);
-      var element = document.createElement("a");
-      element.setAttribute("href", url);
-      element.setAttribute("download", "tutor_options");
+      var element = document.createElement('a');
+      element.setAttribute('href', url);
+      element.setAttribute('download', 'tutor_options');
       element.click();
       document.body.removeChild(element);
     })["catch"](function (err) {
