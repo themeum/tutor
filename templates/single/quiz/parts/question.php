@@ -93,12 +93,13 @@
                         </div>
                         <!-- Quiz Answer -->
                         <?php
-                        
+
                             // True False
                             if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
                                 include 'true-false.php';
                             }
 
+                            // Single Choice Image
                             if ( $question_type === 'single_choice' && $answer->answer_view_format == 'image' ) {
                                 include 'true-false-image.php';
                             }
@@ -128,12 +129,32 @@
                                 include 'matching.php';
                             }
 
+                            // Image Matching
+                            if ($question_type === 'image_matching'){
+                                include 'image-matching.php';
+                            }
+
+                            // Image Answer
+                            if ($question_type === 'image_answering'){
+                                include 'image-answer.php';
+                            }
+
+                            // Open Ended
+                            if ($question_type === 'open_ended'){
+                                include 'open-ended.php';
+                            }
+
+                            // Short Answer
+                            if ($question_type === 'short_answer'){
+                                include 'short-answer.php';
+                            }
+
                         ?>
                         
 
                         <?php
-                        if ($question_layout_view !== 'question_below_each_other'){
-                            ?>
+                            if ($question_layout_view !== 'question_below_each_other'){
+                        ?>
                             <div class="tutor-quiz-btn-grp tutor-quiz-btn-grp tutor-mt-60">
                                 <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
                                     <?php $next_question ? _e( 'Submit &amp; Next', 'tutor' ) : _e( 'Submit Quiz', 'tutor' ); ?>
@@ -142,8 +163,8 @@
                                     <?php _e( "Skip Quiz", "tutor" ); ?>
                                 </a>
                             </div>
-                            <?php
-                        }
+                        <?php
+                            }
                         ?>
                     </div>
 

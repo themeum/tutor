@@ -17,32 +17,23 @@
         </div>
         <?php } ?>
     </div>
-    
-    <?php
-        if ( is_array($answers) && count($answers) ) {
-        $answer_i = 0;
-            foreach ($answers as $answer){
-                $answer_i++;
-    ?>
-    <div class="quiz-matching-ans">
-        <div class="tutor-quiz-ans-no text-medium-body color-text-primary">
-            <?php 
-                if($answer_i < 9){
-                    echo 0;
-                }
-                echo $answer_i.'. '; 
-
-                echo stripslashes($answer->answer_title);
-            ?> 
-        </div>
-        <div class="quiz-matching-ans-item">
-            <span class="text-medium-body color-text-primary">-</span>
+    <div class="quiz-image-matching-ans d-flex align-items-start">
+        <?php
+            if ( is_array($answers) && count($answers) ) {
+            $answer_i = 0;
+                foreach ($answers as $answer){
+                    $answer_i++;
+        ?>
+        <div class="quiz-image-box">
+            <div class="quiz-image d-flex tutor-mb-15">
+                <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
+            </div>
             <div class="tutor-quiz-dotted-box">
                 <span class="text-regular-body color-text-primary">
                     <?php _e('Drag your ans', 'tutor'); ?>
                 </span>
             </div>
         </div>
+        <?php } } ?>
     </div>
-    <?php } } ?>
 </div>
