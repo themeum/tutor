@@ -20233,19 +20233,24 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
     */
 }
 
-.tutor-updating-message i, .tutor-updating-message [class^='ttr-'], .tutor-updating-message [class*=' ttr-'], .tutor-updating-message [class^='tutor-icon-'], .tutor-updating-message [class*=' tutor-icon-'] {
+.tutor-updating-message i,
+.tutor-updating-message [class^='ttr-'],
+.tutor-updating-message [class*=' ttr-'],
+.tutor-updating-message [class^='tutor-icon-'],
+.tutor-updating-message [class*=' tutor-icon-'] {
   display: none;
 }
 
 .tutor-updating-message:before {
   display: inline-block;
-  font-family: "tutor";
+  font-family: 'tutor';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   vertical-align: top;
-  content: "\e91d" !important;
+  content: '\e91d' !important;
   -webkit-animation: spin 2s infinite linear;
   animation: spinner 2s infinite linear;
+  margin-right: 10px;
 }
 
 .tutor-updating-message:before + * {
