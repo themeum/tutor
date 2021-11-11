@@ -8,12 +8,22 @@ import { Playground } from 'docz';
 import '../../bundle/main.min.css';
 import '../../bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css';
 import '../docz-essential.css';
+import emptyStateImg from '../../../assets/images/emptystate.svg'
 
 # Course Detail Elements
 
 `** Replace "className" with "class" while using with html` <br />
 
-## Question & Answer
+## Empty State
+
+<Playground>
+	<div className="tutor-emptystate tutor-p-30 tutor-text-center">
+		<img src={emptyStateImg} alt="empty state image" />
+		<div className="text-regular-h5 color-text-subsued">Kichu Khuje Pawa Jay Nai.</div>
+	</div>
+</Playground>
+
+## Announcements
 
 <Playground>
 	<div class="tutor-announcement bg-white">
