@@ -89,17 +89,23 @@ class Options_V2 {
 
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
-			foreach ( $sections as $section ) {
-				foreach ( $section['blocks'] as $blocks ) {
-					foreach ( $blocks['fields'] as $fields ) {
-						$fields['section_label'] = $section['label'];
-						$fields['section_slug']  = $section['slug'];
-						$fields['block_label']   = $blocks['label'];
-						$data_array['fields'][]  = $fields;
+			if ( isset( $sections ) && ! empty( $sections ) ) {
+				foreach ( tutils()->sanitize_recursively( $sections) as $section ) {
+					foreach ( $section['blocks'] as $blocks ) {
+						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
+							foreach ( $blocks['fields'] as $fields ) {
+								$fields['section_label'] = isset( $section['label'] ) ? $section['label'] : '';
+								$fields['section_slug']  = isset( $section['slug'] ) ? $section['slug'] : '';
+								$fields['block_label']   = isset( $blocks['label'] ) ? $blocks['label'] : '';
+								$data_array['fields'][]  = $fields;
+							}
+						}
 					}
 				}
 			}
 		}
+
+
 		wp_send_json_success( $data_array );
 
 	}
@@ -1143,7 +1149,7 @@ class Options_V2 {
 										'preset_exist' => true,
 										'label'        => __( 'Text Color', 'tutor' ),
 										'default'      => '#212327',
-										'desc'         => __( 'Choose a custom color for your website text', 'tutor' ),
+										'desc'         => __( 'Choose a Text Color for your website text', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_background_color',
@@ -1152,7 +1158,7 @@ class Options_V2 {
 										'preset_exist' => true,
 										'label'        => __( 'Background', 'tutor' ),
 										'default'      => '#FFFFFF',
-										'desc'         => __( 'Choose a  light color for your website', 'tutor' ),
+										'desc'         => __( 'Choose a background color for your website', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_border_color',
@@ -1170,7 +1176,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Success', 'tutor' ),
 										'default'      => '#24A148',
-										'desc'         => __( 'Choose a  light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for an operation success message', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_warning_color',
@@ -1179,7 +1185,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Warning', 'tutor' ),
 										'default'      => '#ED9700',
-										'desc'         => __( 'Choose a  light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for an operation pending message ', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_danger_color',
@@ -1188,7 +1194,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Danger', 'tutor' ),
 										'default'      => '#d8d8d8',
-										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for an operation error message ', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_disable_color',
@@ -1197,7 +1203,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Disable', 'tutor' ),
 										'default'      => '#E3E6EB',
-										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for disabled elements ', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_table_background_color',
@@ -1206,7 +1212,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Table Background', 'tutor' ),
 										'default'      => '#EFF1F6',
-										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for the background of table elements ', 'tutor' ),
 									),
 								),
 							),
