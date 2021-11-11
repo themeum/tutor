@@ -726,7 +726,7 @@ var colorPickerInputs = document.querySelectorAll("label.color-picker-input inpu
 var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]");
 var moreButton = document.querySelector(".more_button");
 var otherColors = document.querySelector(".other_colors");
-var otherColorRows = otherColors && otherColors.querySelectorAll(".tutor-option-field-row");
+var otherColorRows = otherColors ? otherColors.querySelectorAll(".tutor-option-field-row") : null;
 var otherColorsExpanded = document.querySelector(".other_colors.expanded");
 document.addEventListener('readystatechange', function (event) {
   if (event.target.readyState === 'interactive') {}
@@ -894,14 +894,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (filterOrder) {
     filterOrder.onchange = function (e) {
       window.location = urlPrams("order", e.target.value);
-    };
-  }
-
-  var filterDate = document.getElementById("tutor-backend-filter-date");
-
-  if (filterDate) {
-    filterDate.onchange = function (e) {
-      window.location = urlPrams("date", e.target.value);
     };
   }
 
@@ -1538,18 +1530,21 @@ var getFilesAndUpdateDOM = function getFilesAndUpdateDOM(files, inputEl, dropZon
 
 function toolTipOnWindowResize() {
   var mediaQuery = window.matchMedia('(max-width: 992px)');
+  var hasClass = document.querySelectorAll('.tooltip-responsive');
 
-  if (mediaQuery.matches) {
-    var toolTips = document.querySelectorAll('.tooltip-right');
-    toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-right', 'tooltip-left');
-    });
-  } else {
-    var _toolTips = document.querySelectorAll('.tooltip-left');
+  if (hasClass.length) {
+    if (mediaQuery.matches) {
+      var toolTips = document.querySelectorAll('.tooltip-right');
+      toolTips.forEach(function (toolTip) {
+        toolTip.classList.replace('tooltip-right', 'tooltip-left');
+      });
+    } else {
+      var _toolTips = document.querySelectorAll('.tooltip-left');
 
-    _toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-left', 'tooltip-right');
-    });
+      _toolTips.forEach(function (toolTip) {
+        toolTip.classList.replace('tooltip-left', 'tooltip-right');
+      });
+    }
   }
 }
 
@@ -2546,8 +2541,6 @@ document.addEventListener("DOMContentLoaded", function () {
       var _loop = function _loop() {
         var withDrawCopyBtn = _step3.value;
         withDrawCopyBtn.addEventListener('click', function (event) {
-          // console.log(withDrawCopyBtn.previousSibling);
-          console.log(event.currentTarget.dataset.textCopy);
           copyToClipboard(event.currentTarget.dataset.textCopy).then(function (text) {
             var html = withDrawCopyBtn.innerHTML;
             withDrawCopyBtn.innerHTML = "".concat(__('Copied', 'tutor'));

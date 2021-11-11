@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import DatePicker from 'react-datepicker';
 import { addMonths, getMonth, getYear } from 'date-fns';
@@ -9,7 +9,12 @@ import range from 'lodash.range';
 // import '../../../bundle/main.min.css';
 
 const TutorDatepicker = () => {
-	const [startDate, setStartDate] = useState(new Date());
+
+	const dateFormat = window._tutorobject.wp_date_format;
+	const url = new URL(window.location.href);
+	const params = url.searchParams;
+
+	const [startDate, setStartDate] = useState();
 	const [dropdownMonth, setDropdownMonth] = useState(false);
 	const [dropdownYear, setDropdownYear] = useState(false);
 
@@ -18,10 +23,15 @@ const TutorDatepicker = () => {
 		setDropdownMonth(false);
 	};
 
-	const handleCalendarChange = (date) => {
+	const handleCalendarChange = (date) => {	
 		setStartDate(date);
 		setDropdownYear(false);
 		setDropdownMonth(false);
+
+		let year = date.getFullYear();
+		let month = date.getMonth();
+		let day = date.getDate();
+		window.location =  urlPrams('date', `${year}-${month + 1}-${day}`);
 	};
 
 	const years = range(2000, getYear(new Date()) + 5, 1);
@@ -41,17 +51,30 @@ const TutorDatepicker = () => {
 		'December',
 	];
 
+	const urlPrams = (type, val) =>  {
+		const url = new URL(window.location.href);
+		const params = url.searchParams;
+		params.set(type, val);
+		params.set("paged", 1);
+		return url;
+	}
+	useEffect(() => {
+		if (params.has('date')) {
+			setStartDate(new Date(params.get('date')))
+		}
+	}, []);
+
 	return (
 		<div className="tutor-react-datepicker">
 			<DatePicker
-				placeholderText="DD-MM-YYYY"
+				placeholderText={dateFormat}
 				selected={startDate}
 				onChange={(date) => handleCalendarChange(date)}
 				showPopperArrow={false}
 				shouldCloseOnSelect={false}
 				onCalendarClose={handleCalendarClose}
 				onClick={handleCalendarClose}
-				dateFormat="dd/MM/yyyy"
+				dateFormat={dateFormat}
 				renderCustomHeader={({
 					date,
 					changeYear,
