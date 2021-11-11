@@ -402,25 +402,18 @@ if( ! function_exists('tutor_widget_course_loop_classes')) {
 if ( ! function_exists('get_tutor_course_thumbnail')) {
     function get_tutor_course_thumbnail($size = 'post-thumbnail', $url = false) {
         $post_id           = get_the_ID();
+        $size              = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
         $post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
+        $placeHolderUrl    = tutor()->url . 'assets/images/placeholder.jpg';
+        $thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url($post_thumbnail_id, $size) : $placeHolderUrl;
 
-        if ( $post_thumbnail_id ) {
-            //$size = apply_filters( 'post_thumbnail_size', $size, $post_id );
-            $size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
-            if ($url){
-                return wp_get_attachment_image_url($post_thumbnail_id, $size);
-            }
-
-            $html = wp_get_attachment_image( $post_thumbnail_id, $size, false );
-        } else {
-            $placeHolderUrl = tutor()->url . 'assets/images/placeholder.jpg';
-            if ($url){
-                return $placeHolderUrl;
-            }
-            $html = sprintf('<img alt="%s" src="' . $placeHolderUrl . '" />', __('Placeholder', 'tutor'));
+        if($url) {
+            return $thumb_url;
         }
 
-        echo $html;
+        echo '<div class="tutor-course-thumbnail-bg" style="background-image:url('.$thumb_url.'); background-size:cover;">
+            <img src="'.$placeHolderUrl .'" style="visibility:hidden"/>
+        </div>';
     }
 }
 /**

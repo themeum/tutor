@@ -100,13 +100,6 @@
 			<label class="tutor-form-label">
 			<?php esc_html_e( 'Date', 'tutor' ); ?>
 			</label>
-			<div class="tutor-input-group tutor-form-control-sm">
-				<input
-				type="date" id="tutor-backend-filter-date"
-				class="tutor-form-control"
-				placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>"
-				/>
-			</div>
 			<div class="tutor-v2-date-picker"></div>
 			</div>
 			<div class="">

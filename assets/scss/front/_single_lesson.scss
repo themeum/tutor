@@ -432,35 +432,6 @@ span.toggle-information-icon {
 #tutor-lesson-sidebar-qa-tab-content .tutor-add-question-wrap h3 {
 	color: var(--tutor-primary-color);
 }
-#tutor-lesson-sidebar-qa-tab-content
-	.tutor-add-question-wrap
-	button.tutor_ask_question_btn {
-	display: block;
-	width: 100%;
-	background-color: var(--tutor-primary-color);
-	border-color: var(--tutor-primary-color);
-}
-#tutor-lesson-sidebar-qa-tab-content
-	.tutor_question_answer_wrap
-	.tutor_original_question {
-	margin-bottom: 20px;
-	margin-top: 20px;
-}
-
-.tutor-lesson-sidebar-emptyqa-wrap {
-	text-align: center;
-	padding: 50px 20px;
-	color: var(--tutor-text-color);
-}
-.tutor-lesson-sidebar-emptyqa-wrap h3 {
-	margin: 0;
-	padding: 0 0 25px;
-}
-.tutor-lesson-sidebar-emptyqa-wrap i {
-	font-size: 150px;
-	color: #e8eff1;
-	line-height: 0.8;
-}
 
 /*attachment*/
 .tutor-attachments-wrap {
@@ -775,9 +746,6 @@ ul.tutor-required-fields {
 	}
 }
 
-.tutor-queston-and-answer-wrap {
-	margin: 20px 0;
-}
 .tutor-question-top {
 	display: flex;
 	justify-content: space-between;
@@ -848,105 +816,6 @@ ul.tutor-required-fields {
 
 .tutor-lesson-video-wrap {
 	position: relative;
-}
-
-/**
-Course question and answer
- */
-
-/* ********************* */
-/* Question and Answer */
-/* ********************* */
-
-/*.tutor-question-wrap{*/
-
-/*}*/
-
-.tutor_question_area {
-	padding: 25px 20px;
-	background: #f4f7f8;
-	border-radius: 4px;
-}
-
-.tutor_question_area p:last-child {
-	margin-bottom: 0;
-}
-
-.tutor_add_answer_row {
-	text-align: right;
-	margin-top: 20px;
-}
-
-.tutor_add_answer_row .tutor-form-group:last-child {
-	margin-top: 20px;
-}
-
-.tutor_admin_answers_list_wrap + .tutor_add_answer_row,
-.tutor_admin_answers_list_wrap {
-	margin-left: 100px;
-}
-
-@media (max-width: 991px) {
-	.tutor_admin_answers_list_wrap + .tutor_add_answer_row,
-	.tutor_admin_answers_list_wrap {
-		margin-left: 30px;
-	}
-}
-
-.tutor_original_question {
-	margin-bottom: 30px;
-}
-.tutor_admin_answers_list_wrap .tutor_individual_answer {
-	margin-bottom: 40px;
-}
-
-.tutor_admin_answers_list_wrap .tutor_question_area {
-	background: #edf9f1;
-}
-
-.question-top-meta .tutor-question-avater a {
-	display: inline-block;
-}
-.question-top-meta .tutor-question-avater a span {
-	height: 50px;
-	width: 50px;
-	border-radius: 50%;
-	display: block;
-	line-height: 50px;
-	text-align: center;
-	font-size: 17px;
-}
-.question-top-meta .tutor-question-avater a img {
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
-}
-.question-top-meta {
-	overflow: hidden;
-	margin-bottom: 20px;
-}
-.question-top-meta .tutor-question-avater {
-	float: left;
-}
-.question-top-meta .review-meta {
-	float: left;
-	margin-bottom: 0;
-	margin-left: 10px;
-}
-.question-top-meta .review-meta a {
-	display: block;
-	font-size: 18px;
-	color: var(--tutor-text-color);
-	line-height: 20px;
-}
-.question-top-meta .review-meta span {
-	color: var(--tutor-light-color);
-	//font-size: var(--tutor-text-size);
-	vertical-align: text-top;
-	display: block;
-}
-.tutor_wp_editor_wrap .tutor-form-group a.tutor-button {
-	margin-right: 6px;
 }
 
 /*anouncement*/
