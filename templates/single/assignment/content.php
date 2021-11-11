@@ -7,6 +7,7 @@
 
 if (!defined('ABSPATH'))
 	exit;
+global $post;
 global $wpdb;
 $is_submitted = false;
 $is_submitting = tutor_utils()->is_assignment_submitting(get_the_ID());
@@ -23,19 +24,54 @@ if ($assignment_comment != false) {
 
 <?php do_action('tutor_assignment/single/before/content'); ?>
 
-<div class="tutor-single-page-top-bar">
-	<div class="tutor-topbar-item tutor-hide-sidebar-bar">
-		<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
-		<?php $course_id = tutor_utils()->get_course_id_by('assignment', get_the_ID()); ?>
-		<a href="<?php echo get_the_permalink($course_id); ?>" class="tutor-topbar-home-btn">
-			<i class="tutor-icon-home"></i> <?php echo __('Go to Course Home', 'tutor'); ?>
-		</a>
-	</div>
-	<div class="tutor-topbar-item tutor-topbar-content-title-wrap">
-		<?php
-		tutor_utils()->get_lesson_type_icon(get_the_ID(), true, true);
-		the_title(); ?>
-	</div>
+<div class="tutor-single-page-top-bar d-flex justify-content-between">
+    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
+        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
+            <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
+        </a>
+    </div>
+    <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
+        <?php
+
+        if ($post->post_type === 'tutor_quiz') {
+            echo wp_kses_post( '<span class="ttr-quiz-filled color-text-white tutor-mr-5"></span>' );
+            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
+            esc_html_e( 'Quiz: ', 'tutor' );
+            the_title(); 
+            echo wp_kses_post( '</span>' );
+        } elseif ($post->post_type === 'tutor_assignments'){
+            echo wp_kses_post( '<span class="ttr-assignment-filled color-text-white tutor-mr-5"></span>' );
+            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
+            esc_html_e( 'Assignment: ', 'tutor' );
+            the_title(); 
+            echo wp_kses_post( '</span>' );
+        } elseif ($post->post_type === 'tutor_zoom_meeting'){
+            echo wp_kses_post( '<span class="ttr-zoom-brand color-text-white tutor-mr-5"></span>' );
+            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
+            esc_html_e( 'Zoom Meeting: ', 'tutor' );
+            the_title(); 
+            echo wp_kses_post( '</span>' );
+        } else{
+            echo wp_kses_post( '<span class="ttr-youtube-brand color-text-white tutor-mr-5"></span>' );
+            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
+            esc_html_e( 'Lesson: ', 'tutor' );
+            the_title(); 
+            echo wp_kses_post( '</span>' );
+        }
+
+        ?>
+    </div>
+
+    <div class="tutor-topbar-item flex-center">
+        <?php tutor_lesson_mark_complete_html(); ?>
+    </div>
+    <div class="tutor-topbar-cross-icon flex-center">
+        <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
+        <a href="<?php echo get_the_permalink($course_id); ?>">
+            <span class="ttr-line-cross-line color-text-white flex-center"></span>
+        </a>
+    </div>
+
 </div>
 
 <div class="tutor-lesson-content-area">
