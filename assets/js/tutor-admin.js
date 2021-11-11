@@ -2295,9 +2295,10 @@ var resetDefaultBtn = document.querySelectorAll(".reset_to_default");
 resetDefaultBtn.forEach(function (resetBtn, index) {
   resetBtn.onclick = function (e) {
     e.preventDefault();
+    var resetPage = resetBtn.dataset.reset;
     var formData = new FormData();
     formData.append("action", "reset_settings_data");
-    formData.append("reset_page", resetBtn.dataset.reset);
+    formData.append("reset_page", resetPage);
     formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", _tutorobject.ajaxurl, true);
@@ -2311,27 +2312,30 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
 
           if (field_types.includes(item.type)) {
             var itemName = "tutor_option[" + item.key + "]";
-            var itemElem = fieldByName(itemName)[0];
+            var itemElement = elementByName(itemName)[0];
 
             if (item.type == "select") {
-              var sOptions = itemElem.options;
+              var sOptions = itemElement.options;
 
               for (var i = 0; i < sOptions.length; i++) {
                 sOptions[i].selected = false;
               }
+            } else if (item.type == "toggle_switch") {
+              itemElement.value = item["default"];
+              itemElement.nextElementSibling.value = item["default"];
+              itemElement.nextElementSibling.checked = false;
             } else {
-              itemElem.value = item["default"];
-              itemElem.nextElementSibling.value = item["default"];
-              itemElem.nextElementSibling.checked = false;
+              itemElement.value = item["default"];
             }
           }
         });
+        tutor_toast("Reset to Default", "Default data for " + resetPage.toUpperCase() + " successfully!", "success");
       }
     };
   };
 });
 
-var fieldByName = function fieldByName(key) {
+var elementByName = function elementByName(key) {
   return document.getElementsByName(key);
 };
 
