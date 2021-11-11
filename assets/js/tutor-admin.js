@@ -723,11 +723,11 @@ displayAddons(freeAddonsList);
  */
 var colorPresetInputs = document.querySelectorAll("label.color-preset-input input[type='radio']");
 var colorPickerInputs = document.querySelectorAll("label.color-picker-input input[type='color']");
-var pickerView = document.querySelectorAll(".color-picker-wrapper [data-key]");
-var moreButton = document.querySelector(".more_button");
-var otherColors = document.querySelector(".other_colors");
-var otherColorRows = otherColors ? otherColors.querySelectorAll(".tutor-option-field-row") : null;
-var otherColorsExpanded = document.querySelector(".other_colors.expanded");
+var pickerView = document.querySelectorAll('.color-picker-wrapper [data-key]');
+var moreButton = document.querySelector('.more_button');
+var otherColors = document.querySelector('.other_colors');
+var otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-option-field-row');
+var otherColorsExpanded = document.querySelector('.other_colors.expanded');
 document.addEventListener('readystatechange', function (event) {
   if (event.target.readyState === 'interactive') {}
 
@@ -755,7 +755,7 @@ var otherColorsPreview = function otherColorsPreview() {
     });
   }
 
-  if (moreButton) {
+  if (moreButton && otherColors) {
     var toggleHeight = itemsHeight + moreButton.offsetHeight + 'px';
 
     moreButton.onclick = function () {
@@ -2036,6 +2036,8 @@ document.addEventListener('DOMContentLoaded', function () {
             message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
 
         if (success) {
+          // Disableing save btn after saved successfully
+          document.getElementById('save_tutor_option').disabled = true;
           tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
           return;
         }
@@ -2270,6 +2272,115 @@ var popupToggle = function popupToggle() {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (popupToggle);
+
+/***/ }),
+
+/***/ "./assets/react/admin-dashboard/segments/reset.js":
+/*!********************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/reset.js ***!
+  \********************************************************/
+/***/ (() => {
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+/*
+Reset to default for settings individual page
+*/
+console.log('reset-to-default');
+var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
+resetDefaultBtn.forEach(function (resetBtn, index) {
+  resetBtn.onclick = function (e) {
+    e.preventDefault();
+    var resetPage = resetBtn.dataset.reset;
+    var formData = new FormData();
+    formData.append('action', 'reset_settings_data');
+    formData.append('reset_page', resetPage);
+    formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open('POST', _tutorobject.ajaxurl, true);
+    xhttp.send(formData);
+
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4) {
+        var pageData = JSON.parse(xhttp.response).data;
+        pageData.forEach(function (item) {
+          var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+
+          if (field_types_associate.includes(item.type)) {
+            var itemName = 'tutor_option[' + item.key + ']';
+            var itemElement = elementByName(itemName)[0];
+
+            if (item.type == 'select') {
+              var sOptions = itemElement.options;
+
+              _toConsumableArray(sOptions).forEach(function (item) {
+                item.selected = false;
+              });
+            } else if (item.type == 'toggle_switch') {
+              itemElement.value = item["default"];
+              itemElement.nextElementSibling.value = item["default"];
+              itemElement.nextElementSibling.checked = false;
+            } else {
+              itemElement.value = item["default"];
+            }
+          }
+
+          var field_types_multi = ['group_fields'];
+
+          if (field_types_multi.includes(item.type)) {
+            console.log(item.group_fields);
+            item.group_fields.forEach(function (item) {
+              var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+
+              if (field_types_associate.includes(item.type)) {
+                var _itemName = 'tutor_option[' + item.key + ']';
+
+                var _itemElement = elementByName(_itemName)[0];
+
+                if (item.type == 'select') {
+                  var _sOptions = _itemElement.options;
+
+                  _toConsumableArray(_sOptions).forEach(function (item) {
+                    item.selected = false;
+                  });
+                } else if (item.type == 'toggle_switch') {
+                  _itemElement.value = item["default"];
+                  _itemElement.nextElementSibling.value = item["default"];
+                  _itemElement.nextElementSibling.checked = false;
+                } else {
+                  _itemElement.value = item["default"];
+                }
+              }
+            });
+          }
+        });
+        tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+      }
+    };
+  };
+});
+
+var elementByName = function elementByName(key) {
+  return document.getElementsByName(key);
+};
+
+var optionForm = document.querySelector('#tutor-option-form');
+
+if (null !== optionForm) {
+  optionForm.addEventListener('change', function (event) {
+    document.getElementById('save_tutor_option').disabled = false;
+  });
+}
 
 /***/ }),
 
@@ -31150,11 +31261,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
 /* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
@@ -31165,6 +31278,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
 
+
+var toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
+toggleChange.forEach(function (element) {
+  element.addEventListener("change", function (e) {
+    var check_value = element.previousElementSibling;
+    check_value.value == "on" ? check_value.value = "off" : check_value.value = "on";
+  });
+});
 jQuery(document).ready(function ($) {
   "use strict";
 
@@ -31201,10 +31322,6 @@ jQuery(document).ready(function ($) {
     $(".tutor-option-nav-page").hide();
     $(tab_page_id).addClass("current-page").show();
     window.history.pushState("obj", "", $(this).attr("href"));
-  });
-  $(".tutor-form-toggle-input").on("change", function (e) {
-    var toggleInput = $(this).siblings("input");
-    $(this).prop("checked") ? toggleInput.val("on") : toggleInput.val("off");
   });
   /**
    * End Withdraw nav tabs

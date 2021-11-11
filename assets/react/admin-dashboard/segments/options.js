@@ -15,7 +15,7 @@ const tutorIconsV2 = {
 // Tutor v2 icons
 const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	var $ = window.jQuery;
 	const { __ } = wp.i18n;
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		// );
 		let image_delete = image_upload_wrap.querySelector('.delete-btn');
 
-		image_uploader[i].onclick = function(e) {
+		image_uploader[i].onclick = function (e) {
 			e.preventDefault();
 
 			var image_frame = wp.media({
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				upload_previewer.src = image_input.value = image_url;
 			}); */
 
-			image_frame.on('insert', function(selection) {
+			image_frame.on('insert', function (selection) {
 				var state = image_frame.state();
 				selection = selection || state.get('selection');
 				if (!selection) return;
@@ -76,26 +76,26 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		};
 
-		image_delete.onclick = function() {
+		image_delete.onclick = function () {
 			input_file.value = '';
 			email_title_logo.src = 'https://via.placeholder.com/108x26?text=Upload';
 		};
 	}
 
-	$(window).on('click', function(e) {
+	$(window).on('click', function (e) {
 		$('.tutor-notification, .search_result').removeClass('show');
 	});
 
-	$('.tutor-notification-close').click(function(e) {
+	$('.tutor-notification-close').click(function (e) {
 		$('.tutor-notification').removeClass('show');
 	});
 
-	$('#save_tutor_option').click(function(e) {
+	$('#save_tutor_option').click(function (e) {
 		e.preventDefault();
 		$('#tutor-option-form').submit();
 	});
 
-	$('#tutor-option-form').submit(function(e) {
+	$('#tutor-option-form').submit(function (e) {
 		e.preventDefault();
 
 		var button = $('#save_tutor_option');
@@ -106,21 +106,23 @@ document.addEventListener('DOMContentLoaded', function() {
 			url: window._tutorobject.ajaxurl,
 			type: 'POST',
 			data: data,
-			beforeSend: function() {
+			beforeSend: function () {
 				button.addClass('tutor-updating-message');
 			},
-			success: function(resp) {
+			success: function (resp) {
 				const { data = {}, success } = resp || {};
 				const { message = __('Something Went Wrong!', 'tutor') } = data;
 
 				if (success) {
+					// Disableing save btn after saved successfully
+					document.getElementById('save_tutor_option').disabled = true;
 					tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
 					return;
 				}
 
 				tutor_toast('Error!', message, 'tutor', true);
 			},
-			complete: function() {
+			complete: function () {
 				button.removeClass('tutor-updating-message');
 			},
 		});
@@ -157,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return output;
 	}
 
-	$('#search_settings').on('input', function(e) {
+	$('#search_settings').on('input', function (e) {
 		e.preventDefault();
 
 		if (e.target.value) {
@@ -170,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					keyword: searchKey,
 				},
 				// beforeSend: function () {},
-				success: function(data) {
+				success: function (data) {
 					// console.log(data.data);
 					// return false;
 					var output = '',
@@ -185,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						field_key = '',
 						result = data.data.fields;
 
-					Object.values(result).forEach(function(item, index, arr) {
+					Object.values(result).forEach(function (item, index, arr) {
 						item_text = item.label;
 						section_slug = item.section_slug;
 						section_label = item.section_label;
@@ -214,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					output = '';
 					// console.log("working");
 				},
-				complete: function() {
+				complete: function () {
 					// Active navigation element
 					navigationTrigger();
 				},
@@ -298,31 +300,31 @@ document.addEventListener('DOMContentLoaded', function() {
 	!exporter
 		? 0
 		: exporter.addEventListener('click', (e) => {
-				e.preventDefault();
-				fetch(_tutorobject.ajaxurl, {
-					method: 'POST',
-					credentials: 'same-origin',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-						'Cache-Control': 'no-cache',
-					},
-					body: new URLSearchParams({
-						action: 'tutor_export_settings',
-					}),
-				})
-					.then((response) => response.json())
-					.then((response) => {
-						const file = new Blob([JSON.stringify(response)], {
-							type: 'application/json',
-						});
+			e.preventDefault();
+			fetch(_tutorobject.ajaxurl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Cache-Control': 'no-cache',
+				},
+				body: new URLSearchParams({
+					action: 'tutor_export_settings',
+				}),
+			})
+				.then((response) => response.json())
+				.then((response) => {
+					const file = new Blob([JSON.stringify(response)], {
+						type: 'application/json',
+					});
 
-						let url = URL.createObjectURL(file);
-						let element = document.createElement('a');
-						element.setAttribute('href', url);
-						element.setAttribute('download', 'tutor_options');
-						element.click();
-						document.body.removeChild(element);
-					})
-					.catch((err) => console.log(err));
-		  });
+					let url = URL.createObjectURL(file);
+					let element = document.createElement('a');
+					element.setAttribute('href', url);
+					element.setAttribute('download', 'tutor_options');
+					element.click();
+					document.body.removeChild(element);
+				})
+				.catch((err) => console.log(err));
+		});
 });

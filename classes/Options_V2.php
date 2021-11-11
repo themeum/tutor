@@ -37,6 +37,7 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_import_settings', array( $this, 'tutor_import_settings' ) );
 		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
 		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
+		add_action( 'wp_ajax_reset_settings_data', array( $this, 'reset_settings_data' ) );
 	}
 
 	private function get( $key = null, $default = false ) {
@@ -88,17 +89,23 @@ class Options_V2 {
 
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
-			foreach ( $sections as $section ) {
-				foreach ( $section['blocks'] as $blocks ) {
-					foreach ( $blocks['fields'] as $fields ) {
-						$fields['section_label'] = $section['label'];
-						$fields['section_slug']  = $section['slug'];
-						$fields['block_label']   = $blocks['label'];
-						$data_array['fields'][]  = $fields;
+			if ( isset( $sections ) && ! empty( $sections ) ) {
+				foreach ( tutils()->sanitize_recursively( $sections ) as $section ) {
+					foreach ( $section['blocks'] as $blocks ) {
+						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
+							foreach ( $blocks['fields'] as $fields ) {
+								$fields['section_label'] = isset( $section['label'] ) ? $section['label'] : '';
+								$fields['section_slug']  = isset( $section['slug'] ) ? $section['slug'] : '';
+								$fields['block_label']   = isset( $blocks['label'] ) ? $blocks['label'] : '';
+								$data_array['fields'][]  = $fields;
+							}
+						}
 					}
 				}
 			}
 		}
+
+
 		wp_send_json_success( $data_array );
 
 	}
@@ -165,6 +172,20 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 		wp_send_json_success( get_option( 'tutor_settings_log' ) );
 	}
+	public function reset_settings_data() {
+		tutor_utils()->checking_nonce();
+		$block_fields = array();
+		$reset_page   = isset( $_POST['reset_page'] ) ? sanitize_key( $_POST['reset_page'] ) : null;
+		$setting_data = $this->get_setting_fields()['option_fields'][ $reset_page ]['blocks'];
+
+		foreach ( $setting_data as $blocks ) {
+			foreach ( $blocks['fields'] as $fields ) {
+				$block_fields[] = $fields;
+			}
+		}
+
+		wp_send_json_success( $block_fields );
+	}
 
 	public function tutor_import_settings() {
 		tutor_utils()->checking_nonce();
@@ -173,11 +194,10 @@ class Options_V2 {
 		$time    = $this->get_request_data( 'time' );
 		$request = json_decode( str_replace( '\"', '"', $request ), true );
 
-		$save_import_data['datetime']     = $time;
-		$save_import_data['history_date'] = date( 'j M, Y, g:i a', $time );
-		$save_import_data['datatype']     = 'imported';
-		$save_import_data['dataset']      = $request['data'];
-
+		$save_import_data['datetime']             = $time;
+		$save_import_data['history_date']         = date( 'j M, Y, g:i a', $time );
+		$save_import_data['datatype']             = 'imported';
+		$save_import_data['dataset']              = $request['data'];
 		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
 
 		// update_option( 'tutor_settings_log', array() );
@@ -191,7 +211,6 @@ class Options_V2 {
 
 			$update_option = tutor_utils()->sanitize_recursively( $update_option );
 
-			// $update_option = array();
 			if ( ! empty( $update_option ) ) {
 				update_option( 'tutor_settings_log', $update_option );
 			}
@@ -696,14 +715,16 @@ class Options_V2 {
 								'type'        => 'checkbox_horizontal',
 								'label'       => __( 'Enable withdraw method', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
+								'default'     => 'bank_transfer_withdraw',
 								'options'     => $methods_array,
 								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
 							),
 							array(
-								'key'   => 'tutor_bank_transfer_withdraw_instruction',
-								'type'  => 'textarea',
-								'label' => __( 'Bank Instructions', 'tutor' ),
-								'desc'  => __( 'Write instruction for the instructor to fill bank information', 'tutor' ),
+								'key'     => 'tutor_bank_transfer_withdraw_instruction',
+								'type'    => 'textarea',
+								'label'   => __( 'Bank Instructions', 'tutor' ),
+								'default' => __( 'Write the up to date bank informations of your instructor here.', 'tutor' ),
+								'desc'    => __( 'Write instruction for the instructor to fill bank information', 'tutor' ),
 							),
 						),
 					),
@@ -1128,7 +1149,7 @@ class Options_V2 {
 										'preset_exist' => true,
 										'label'        => __( 'Text Color', 'tutor' ),
 										'default'      => '#212327',
-										'desc'         => __( 'Choose a custom color for your website text', 'tutor' ),
+										'desc'         => __( 'Choose a Text Color for your website text', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_background_color',
@@ -1137,7 +1158,7 @@ class Options_V2 {
 										'preset_exist' => true,
 										'label'        => __( 'Background', 'tutor' ),
 										'default'      => '#FFFFFF',
-										'desc'         => __( 'Choose a  light color for your website', 'tutor' ),
+										'desc'         => __( 'Choose a background color for your website', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_border_color',
@@ -1155,7 +1176,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Success', 'tutor' ),
 										'default'      => '#24A148',
-										'desc'         => __( 'Choose a  light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for an operation success message', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_warning_color',
@@ -1164,7 +1185,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Warning', 'tutor' ),
 										'default'      => '#ED9700',
-										'desc'         => __( 'Choose a  light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for an operation pending message ', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_danger_color',
@@ -1173,7 +1194,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Danger', 'tutor' ),
 										'default'      => '#d8d8d8',
-										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for an operation error message ', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_disable_color',
@@ -1182,7 +1203,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Disable', 'tutor' ),
 										'default'      => '#E3E6EB',
-										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for disabled elements ', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_table_background_color',
@@ -1191,7 +1212,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Table Background', 'tutor' ),
 										'default'      => '#EFF1F6',
-										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a color for the background of table elements ', 'tutor' ),
 									),
 								),
 							),
