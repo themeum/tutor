@@ -2287,40 +2287,52 @@ var popupToggle = function popupToggle() {
   \********************************************************/
 /***/ (() => {
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*
 Reset to default for settings individual page
 */
-console.log("reset-to-default");
-var resetDefaultBtn = document.querySelectorAll(".reset_to_default");
+console.log('reset-to-default');
+var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 resetDefaultBtn.forEach(function (resetBtn, index) {
   resetBtn.onclick = function (e) {
     e.preventDefault();
     var resetPage = resetBtn.dataset.reset;
     var formData = new FormData();
-    formData.append("action", "reset_settings_data");
-    formData.append("reset_page", resetPage);
+    formData.append('action', 'reset_settings_data');
+    formData.append('reset_page', resetPage);
     formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", _tutorobject.ajaxurl, true);
+    xhttp.open('POST', _tutorobject.ajaxurl, true);
     xhttp.send(formData);
 
     xhttp.onreadystatechange = function () {
       if (xhttp.readyState === 4) {
         var pageData = JSON.parse(xhttp.response).data;
         pageData.forEach(function (item) {
-          var field_types = ["toggle_switch", "text", "textarea", "email", "select", "number"];
+          var field_types = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
 
           if (field_types.includes(item.type)) {
-            var itemName = "tutor_option[" + item.key + "]";
+            var itemName = 'tutor_option[' + item.key + ']';
             var itemElement = elementByName(itemName)[0];
 
-            if (item.type == "select") {
+            if (item.type == 'select') {
               var sOptions = itemElement.options;
 
-              for (var i = 0; i < sOptions.length; i++) {
-                sOptions[i].selected = false;
-              }
-            } else if (item.type == "toggle_switch") {
+              _toConsumableArray(sOptions).forEach(function (item) {
+                item.selected = false;
+              });
+            } else if (item.type == 'toggle_switch') {
               itemElement.value = item["default"];
               itemElement.nextElementSibling.value = item["default"];
               itemElement.nextElementSibling.checked = false;
@@ -2329,7 +2341,7 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
             }
           }
         });
-        tutor_toast("Reset to Default", "Default data for " + resetPage.toUpperCase() + " successfully!", "success");
+        tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
       }
     };
   };
