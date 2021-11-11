@@ -25787,6 +25787,10 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
      object-fit: cover;
 }
 
+.tutor-quesanswer-askquestion textarea.tutor-form-control {
+  min-height: 72px;
+}
+
 .tutor-course-listing-grid {
   display: grid;
   grid-gap: 30px;

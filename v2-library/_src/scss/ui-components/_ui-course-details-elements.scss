@@ -260,7 +260,7 @@
 }
 
 // Course Details - Rating and Review
-// Course Details - Ques and Answer
+
 .tutor-ratingsreviews {
 	/* stroke/light30 */
 	background: #ffffff;
@@ -376,5 +376,14 @@ $avatarSizes: 16, 20, 24, 28, 32, 40, 48, 50, 64, 120;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+}
+
+// Course Details - Ques and Answer
+.tutor-quesanswer {
+	&-askquestion {
+		textarea.tutor-form-control {
+			min-height: 72px;
+		}
 	}
 }
