@@ -386,4 +386,22 @@ $avatarSizes: 16, 20, 24, 28, 32, 40, 48, 50, 64, 120;
 			min-height: 72px;
 		}
 	}
+
+	&-commentlist {
+		list-style: none;
+		.commentlist-meta {
+		}
+		.commentlist-comment {
+			border-radius: 6px;
+			position: relative;
+			&:before {
+				content: '';
+				position: absolute;
+				width: 20px;
+				height: 20px;
+				background: inherit;
+				clip-path: polygon(50% 0%, 100% 50%, 48% 100%, 0 50%);
+			}
+		}
+	}
 }
