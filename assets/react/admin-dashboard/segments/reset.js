@@ -18,8 +18,8 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 			if (xhttp.readyState === 4) {
 				let pageData = JSON.parse(xhttp.response).data;
 				pageData.forEach((item) => {
-					const field_types = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
-					if (field_types.includes(item.type)) {
+					const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+					if (field_types_associate.includes(item.type)) {
 						let itemName = 'tutor_option[' + item.key + ']';
 						let itemElement = elementByName(itemName)[0];
 						if (item.type == 'select') {
@@ -35,6 +35,32 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 							itemElement.value = item.default;
 						}
 					}
+
+
+					const field_types_multi = ['group_fields'];
+					if (field_types_multi.includes(item.type)) {
+						console.log(item.group_fields);
+
+						item.group_fields.forEach((item) => {
+							const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+							if (field_types_associate.includes(item.type)) {
+								let itemName = 'tutor_option[' + item.key + ']';
+								let itemElement = elementByName(itemName)[0];
+								if (item.type == 'select') {
+									let sOptions = itemElement.options;
+									[...sOptions].forEach((item) => {
+										item.selected = false;
+									});
+								} else if (item.type == 'toggle_switch') {
+									itemElement.value = item.default;
+									itemElement.nextElementSibling.value = item.default;
+									itemElement.nextElementSibling.checked = false;
+								} else {
+									itemElement.value = item.default;
+								}
+							}
+						})
+					}
 				});
 				tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
 			}
@@ -44,10 +70,10 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 const elementByName = (key) => {
 	return document.getElementsByName(key);
 };
+
 const optionForm = document.querySelector('#tutor-option-form');
-const saveTutorBtn = document.querySelector('#save_tutor_option');
-optionForm.addEventListener('change', (event) => {
-	console.log('changed');
-	console.log(saveTutorBtn);
-	saveTutorBtn.disabled = false;
-});
+if (null !== optionForm) {
+	optionForm.addEventListener('change', (event) => {
+		document.getElementById('save_tutor_option').disabled = false;
+	});
+}

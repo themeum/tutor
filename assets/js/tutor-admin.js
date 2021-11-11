@@ -2322,9 +2322,9 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
       if (xhttp.readyState === 4) {
         var pageData = JSON.parse(xhttp.response).data;
         pageData.forEach(function (item) {
-          var field_types = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+          var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
 
-          if (field_types.includes(item.type)) {
+          if (field_types_associate.includes(item.type)) {
             var itemName = 'tutor_option[' + item.key + ']';
             var itemElement = elementByName(itemName)[0];
 
@@ -2342,6 +2342,35 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
               itemElement.value = item["default"];
             }
           }
+
+          var field_types_multi = ['group_fields'];
+
+          if (field_types_multi.includes(item.type)) {
+            console.log(item.group_fields);
+            item.group_fields.forEach(function (item) {
+              var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+
+              if (field_types_associate.includes(item.type)) {
+                var _itemName = 'tutor_option[' + item.key + ']';
+
+                var _itemElement = elementByName(_itemName)[0];
+
+                if (item.type == 'select') {
+                  var _sOptions = _itemElement.options;
+
+                  _toConsumableArray(_sOptions).forEach(function (item) {
+                    item.selected = false;
+                  });
+                } else if (item.type == 'toggle_switch') {
+                  _itemElement.value = item["default"];
+                  _itemElement.nextElementSibling.value = item["default"];
+                  _itemElement.nextElementSibling.checked = false;
+                } else {
+                  _itemElement.value = item["default"];
+                }
+              }
+            });
+          }
         });
         tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
       }
@@ -2354,12 +2383,12 @@ var elementByName = function elementByName(key) {
 };
 
 var optionForm = document.querySelector('#tutor-option-form');
-var saveTutorBtn = document.querySelector('#save_tutor_option');
-optionForm.addEventListener('change', function (event) {
-  console.log('changed');
-  console.log(saveTutorBtn);
-  saveTutorBtn.disabled = false;
-});
+
+if (null !== optionForm) {
+  optionForm.addEventListener('change', function (event) {
+    document.getElementById('save_tutor_option').disabled = false;
+  });
+}
 
 /***/ }),
 
