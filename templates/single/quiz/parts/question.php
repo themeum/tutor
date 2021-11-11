@@ -93,6 +93,7 @@
                         </div>
                         <!-- Quiz Answer -->
                         <?php
+                        
                             // True False
                             if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
                                 include 'true-false.php';
@@ -120,6 +121,11 @@
                             // Ordering
                             if ($question_type === 'ordering'){
                                 include 'ordering.php';
+                            }
+
+                            // Matching
+                            if ($question_type === 'matching'){
+                                include 'matching.php';
                             }
 
                         ?>
