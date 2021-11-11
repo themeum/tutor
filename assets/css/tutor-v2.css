@@ -25805,14 +25805,40 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   position: relative;
 }
 
+.tutor-quesanswer-commentlist .commentlist-comment > * {
+  position: relative;
+  z-index: 1;
+}
+
 .tutor-quesanswer-commentlist .commentlist-comment:before {
   content: '';
   position: absolute;
   width: 20px;
   height: 20px;
+  top: -5px;
+  left: 15px;
   background: inherit;
-  -webkit-clip-path: polygon(50% 0%, 100% 50%, 48% 100%, 0 50%);
-          clip-path: polygon(50% 0%, 100% 50%, 48% 100%, 0 50%);
+  -webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+          clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  border-radius: 3px;
+}
+
+.tutor-quesanswer-commentlist .commentlist-comment:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+}
+
+.tutor-quesanswer-commentlist .commentlist-comment:before, .tutor-quesanswer-commentlist .commentlist-comment:after {
+  opacity: 0.5;
+}
+
+.tutor-quesanswer-commentlist-item-reply .commentlist-comment:before {
+  left: unset;
+  right: 15px;
 }
 
 .tutor-course-listing-grid {

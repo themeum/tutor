@@ -394,13 +394,41 @@ $avatarSizes: 16, 20, 24, 28, 32, 40, 48, 50, 64, 120;
 		.commentlist-comment {
 			border-radius: 6px;
 			position: relative;
+			> * {
+				position: relative;
+				z-index: 1;
+			}
+
 			&:before {
 				content: '';
 				position: absolute;
 				width: 20px;
 				height: 20px;
+				top: -5px;
+				left: 15px;
 				background: inherit;
-				clip-path: polygon(50% 0%, 100% 50%, 48% 100%, 0 50%);
+				clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+				transform: rotate(45deg);
+				border-radius: 3px;
+			}
+			&:after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: white;
+			}
+			&:before,
+			&:after {
+				opacity: 0.5;
+			}
+		}
+		&-item {
+			// background: #000;
+			&-reply {
+				.commentlist-comment:before {
+					left: unset;
+					right: 15px;
+				}
 			}
 		}
 	}
