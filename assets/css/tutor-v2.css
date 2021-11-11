@@ -21249,12 +21249,7 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   font-size: 13px;
   padding-right: 10px;
   line-height: 42px;
-}
-
-.tutor-quiz-item .tutor-quiz-item-action .tutor-quiz-item-type img {
-  width: 22px;
-  height: 22px;
-  margin-right: 6px;
+  width: 165px;
 }
 
 .tutor-quiz-item .tutor-quiz-item-action button {
@@ -21329,6 +21324,36 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   width: 90px;
   border-radius: 50%;
   overflow: hidden;
+}
+
+.tutor-avatar a, .tutor-avatar a > span {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+.tutor-avatar a > span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
 }
 
 .tutor-avatar img {
@@ -26774,6 +26799,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-react-datepicker .react-datepicker__day {
+  cursor: pointer;
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;

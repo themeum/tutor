@@ -3116,10 +3116,6 @@ div[class*="tutor-course-col"] {
   transition: 300ms;
 }
 
-.tutor-course-loop-header-meta .tutor-course-wishlist a.has-wish-listed:before {
-  content: "\e908";
-}
-
 .tutor-course-loop-header-meta .tutor-course-wishlist a.updating-icon:before {
   content: "\e91d";
   margin-right: 0;
@@ -5723,11 +5719,6 @@ table.course-single-gradebooks a {
 
 .list-item-button.booking-available button:hover span {
   color: #fff;
-}
-
-.has-wish-listed {
-  color: #fff !important;
-  background-color: #3e64de !important;
 }
 
 @media only screen and (min-width: 1200px) {

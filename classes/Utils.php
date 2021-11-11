@@ -4377,16 +4377,16 @@ class Utils {
 	 */
 	public function get_question_types( $type = null ) {
 		$types = array(
-			'true_false'        	=> array( 'name' => __('True/False', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no"></i></span>', 'is_pro' => false ),
-			'single_choice'     	=> array( 'name' => __('Single Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark"></i></span>', 'is_pro' => false ),
-			'multiple_choice'   	=> array( 'name' => __('Multiple Choice', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>', 'is_pro' => false ),
-			'open_ended'        	=> array( 'name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>', 'is_pro' => false ),
-			'fill_in_the_blank'  	=> array( 'name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-fill-gaps"></i></span>', 'is_pro' => false ),
-			'short_answer'          => array( 'name' => __('Short Answer', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Short Answer"><i class="tutor-icon-block tutor-icon-short-ans"></i></span>', 'is_pro' => true ),
-			'matching'              => array( 'name' => __('Matching', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Matching"><i class="tutor-icon-block tutor-icon-matching"></i></span>', 'is_pro' => true ),
-			'image_matching'        => array( 'name' => __('Image Matching', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching"></i></span>', 'is_pro' => true ),
-			'image_answering'       => array( 'name' => __('Image Answering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Image Answering"><i class="tutor-icon-block tutor-icon-image-ans"></i></span>', 'is_pro' => true ),
-			'ordering'          	=> array( 'name' => __('Ordering', 'tutor'), 'icon' => '<span class="tooltip-btn" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>', 'is_pro' => true ),
+			'true_false'        	=> array( 'name' => __('True/False', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no"></i></span>', 'is_pro' => false ),
+			'single_choice'     	=> array( 'name' => __('Single Choice', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark"></i></span>', 'is_pro' => false ),
+			'multiple_choice'   	=> array( 'name' => __('Multiple Choice', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>', 'is_pro' => false ),
+			'open_ended'        	=> array( 'name' => __('Open Ended/Essay', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>', 'is_pro' => false ),
+			'fill_in_the_blank'  	=> array( 'name' => __('Fill In The Blanks', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-fill-gaps"></i></span>', 'is_pro' => false ),
+			'short_answer'          => array( 'name' => __('Short Answer', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Short Answer"><i class="tutor-icon-block tutor-icon-short-ans"></i></span>', 'is_pro' => true ),
+			'matching'              => array( 'name' => __('Matching', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Matching"><i class="tutor-icon-block tutor-icon-matching"></i></span>', 'is_pro' => true ),
+			'image_matching'        => array( 'name' => __('Image Matching', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching"></i></span>', 'is_pro' => true ),
+			'image_answering'       => array( 'name' => __('Image Answering', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Answering"><i class="tutor-icon-block tutor-icon-image-ans"></i></span>', 'is_pro' => true ),
+			'ordering'          	=> array( 'name' => __('Ordering', 'tutor'), 'icon' => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>', 'is_pro' => true ),
 		);
 
 		if ( isset( $types[ $type ] ) ) {
@@ -7952,6 +7952,50 @@ class Utils {
 					case tutor()->course_post_type :
 						$content_ids = $wpdb->get_col($wpdb->prepare(
 							"SELECT content.ID FROM {$wpdb->posts} course
+								INNER JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
+								INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
+							WHERE course.ID IN ({$ancestor_ids}) AND content.post_type=%s",
+							$content_type
+						));
+
+						// Assign id array to the variable
+						is_array($content_ids) ? $ids=$content_ids : 0;
+						break 2;
+				}
+		}
+
+		return $ids;
+	}
+
+	/**
+	 * Get course element list
+	 *
+	 * @param string $content_type, content type like: lesson, assignment, quiz
+	 * @param string $ancestor_type, content type like: lesson, assignment, quiz
+	 * @param int $ancestor_ids, post_parent id
+	 * @return array
+	 * @since v2.0.0 
+	 */
+	public function get_course_content_list($content_type, $ancestor_type, $ancestor_ids) {
+		global $wpdb;
+		$ids = array();
+
+		// Convert single id to array
+		!is_array($ancestor_ids) ? $ancestor_ids=array($ancestor_ids) : 0;
+		$ancestor_ids = implode(',', $ancestor_ids);
+
+		switch($content_type) {
+
+			// Get lesson, quiz, assignment IDs
+			case tutor()->lesson_post_type :
+			case 'tutor_quiz' :
+			case 'tutor_assignments' :
+				switch($ancestor_type) {
+
+					// Get lesson, quiz, assignment IDs by course ID
+					case tutor()->course_post_type :
+						$content_ids = $wpdb->get_results($wpdb->prepare(
+							"SELECT content.ID, content.post_title FROM {$wpdb->posts} course
 								INNER JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
 								INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
 							WHERE course.ID IN ({$ancestor_ids}) AND content.post_type=%s",

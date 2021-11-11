@@ -15,11 +15,9 @@ if (get_the_ID())
 			$attachments = tutor_utils()->get_attachments($post->ID);
 			tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/attachments.php', array(
 				'name' => 'tutor_attachments[]',
-				'attachments' => $attachments
+				'attachments' => $attachments,
+				'add_button' => true,
 			));
 		?>
-		<button type="button" class="tutor-btn tutorUploadAttachmentBtn bordered-btn" data-name="tutor_attachments[]">
-			<?php _e('Upload Attachment', 'tutor'); ?>
-		</button>
 	</div>
 </div>
