@@ -31237,13 +31237,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 var toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
 toggleChange.forEach(function (element) {
   element.addEventListener("change", function (e) {
-    var check_value = element.previousElementSibling.value; // console.log(check_value);
-
-    if (check_value == "on") {
-      element.previousElementSibling.value = "off";
-    } else {
-      element.previousElementSibling.value = "on";
-    }
+    var check_value = element.previousElementSibling;
+    check_value.value == "on" ? check_value.value = "off" : check_value.value = "on";
   });
 });
 jQuery(document).ready(function ($) {

@@ -11,13 +11,10 @@ import "./segments/withdraw";
 const toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
 toggleChange.forEach((element) => {
   element.addEventListener("change", (e) => {
-    let check_value = element.previousElementSibling.value;
-    // console.log(check_value);
-    if (check_value == "on") {
-      element.previousElementSibling.value = "off";
-    } else {
-      element.previousElementSibling.value = "on";
-    }
+    let check_value = element.previousElementSibling;
+    check_value.value == "on"
+      ? (check_value.value = "off")
+      : (check_value.value = "on");
   });
 });
 
