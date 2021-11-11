@@ -62,6 +62,7 @@ $navbar_data       = array(
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
 	'button_url'   => $add_insructor_url,
+	'modal_target' => 'tutor-instructor-add-new',
 );
 
 $filters = array(
@@ -198,4 +199,141 @@ $filters = array(
 			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
 			?>
 	</div>
+</div>
+
+<div id="tutor-instructor-add-new" class="tutor-modal">
+  <span class="tutor-modal-overlay"></span>
+  <button data-tutor-modal-close class="tutor-modal-close">
+	<span class="las la-times"></span>
+  </button>
+  <div class="tutor-modal-root">
+	<div class="tutor-modal-inner">
+	  <div class="tutor-modal-header">
+		<h3 class="tutor-modal-title">
+			<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
+		</h3>
+	  </div>
+	  <div class="tutor-modal-body-alt tutor-bg-gray-10">
+		<div class="tutor-bs-row">
+			<div class="tutor-bs-col">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'First Name', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-mb-15">
+					<input
+					type="text"
+					class="tutor-form-control tutor-mb-10"
+					placeholder="Installing linux on local machine"
+					/>
+				</div>
+			</div>
+			<div class="tutor-bs-col">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'Last Name', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-mb-15">
+					<input
+					type="text"
+					class="tutor-form-control tutor-mb-10"
+					placeholder="Installing linux on local machine"
+					/>
+				</div>
+			</div>
+		</div>
+		<div class="tutor-bs-row">
+			<div class="tutor-bs-col">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'User Name', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-mb-15">
+					<input
+					type="text"
+					class="tutor-form-control tutor-mb-10"
+					placeholder="Installing linux on local machine"
+					/>
+				</div>
+			</div>
+			<div class="tutor-bs-col">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-mb-15">
+					<input
+					type="text"
+					class="tutor-form-control tutor-mb-10"
+					placeholder="Installing linux on local machine"
+					/>
+				</div>
+			</div>
+		</div>
+		<div class="tutor-bs-row">
+			<div class="tutor-bs-col">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'Email', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-mb-15">
+					<input
+					type="text"
+					class="tutor-form-control tutor-mb-10"
+					placeholder="Installing linux on local machine"
+					/>
+				</div>
+			</div>
+		</div>
+		<div class="tutor-bs-row">
+			<div class="tutor-bs-col">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'Password', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-mb-15">
+					<input
+					type="text"
+					class="tutor-form-control tutor-mb-10"
+					placeholder="Installing linux on local machine"
+					/>
+				</div>
+			</div>
+			<div class="tutor-bs-col">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-mb-15">
+					<input
+					type="text"
+					class="tutor-form-control tutor-mb-10"
+					placeholder="Installing linux on local machine"
+					/>
+				</div>
+			</div>
+		</div>		
+		<div class="tutor-bs-row">
+			<div class="tutor-bs-col">
+				<label class="tutor-form-label">
+					<?php esc_html_e( 'Bio(Optional)', 'tutor' ); ?>
+				</label>
+				<div class="tutor-input-group tutor-mb-15">
+					<textarea name="" id="" rows="3" style="width: 100%;"></textarea>
+				</div>
+			</div>
+		</div>
+	  </div>
+	  <div class="tutor-modal-footer">
+		<div class="tutor-bs-d-flex tutor-bs-justify-content-between">
+		  <div class="col">
+			<button class="tutor-btn tutor-is-primary">
+			  Update Lesson
+			</button>
+		  </div>
+		  <div class="col-auto">
+			<button
+			  data-tutor-modal-close
+			  class="tutor-btn tutor-is-default"
+			>
+			  Cancel
+			</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
 </div>
