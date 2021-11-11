@@ -54,19 +54,19 @@ const otherColorsPreview = () => {
 
 // Color PRESET Slecetion (color inputs)
 if (colorPresetInputs) {
-  colorPresetInputs.forEach((preset) => {
-    const presetItem = preset.parentElement.querySelector(".preset-item");
-    const presetColors = presetItem.querySelectorAll(".header span");
-    const presetInput = preset.closest(".color-preset-input");
-    // listening preset input events
-    if (true === preset.checked) {
-      presetInput.classList.add("is-checked");
-    }
-    preset.addEventListener("input", (e) => {
-      presetInput.classList.add("is-checked");
-      presetColors.forEach((color) => {
-        let presetKey = color.dataset.preset;
-        let presetColor = color.dataset.color;
+	colorPresetInputs.forEach((preset) => {
+		const presetItem = preset.parentElement.querySelector(".preset-item");
+		const presetColors = presetItem.querySelectorAll(".header span");
+		const presetInput = preset.closest(".color-preset-input");
+		// listening preset input events
+		if (true === preset.checked) {
+			presetInput.classList.add("is-checked");
+		}
+		preset.addEventListener("input", (e) => {
+			presetInput.classList.add("is-checked");
+			presetColors.forEach((color) => {
+				let presetKey = color.dataset.preset;
+				let presetColor = color.dataset.color;
 
 				pickerView.forEach((toPicker) => {
 					let pickerInput = toPicker.dataset.key;
@@ -91,14 +91,14 @@ if (colorPresetInputs) {
 const updateCustomPreset = (picker) => {
 	const customPresetEl = document.querySelector("label.color-preset-input[for='custom']");
 
-  // listening picker input events
-  picker.addEventListener("input", function(e) {
-    const presetColors =
-      customPresetEl && customPresetEl.querySelectorAll(".header span");
-    const presetItem =
-      customPresetEl && customPresetEl.querySelector('input[type="radio"]');
-    const pickerCode = picker.nextElementSibling;
-    pickerCode.innerText = picker.value;
+	// listening picker input events
+	picker.addEventListener("input", function (e) {
+		const presetColors =
+			customPresetEl && customPresetEl.querySelectorAll(".header span");
+		const presetItem =
+			customPresetEl && customPresetEl.querySelector('input[type="radio"]');
+		const pickerCode = picker.nextElementSibling;
+		pickerCode.innerText = picker.value;
 
 		colorPickerInputs.forEach((picker) => {
 			let preset = picker.dataset.picker;
@@ -114,7 +114,7 @@ const updateCustomPreset = (picker) => {
 };
 // listening color pickers input event
 if (colorPickerInputs) {
-  colorPickerInputs.forEach((picker) => {
-    updateCustomPreset(picker);
-  });
+	colorPickerInputs.forEach((picker) => {
+		updateCustomPreset(picker);
+	});
 }

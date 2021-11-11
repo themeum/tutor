@@ -2351,6 +2351,11 @@ var elementByName = function elementByName(key) {
   return document.getElementsByName(key);
 };
 
+var optionForm = document.querySelector('#tutor-option-form');
+optionForm.addEventListener('change', function (event) {
+  console.log('changed');
+});
+
 /***/ }),
 
 /***/ "./assets/react/admin-dashboard/segments/withdraw.js":
