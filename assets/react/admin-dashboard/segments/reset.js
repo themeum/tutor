@@ -44,3 +44,7 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 const elementByName = (key) => {
 	return document.getElementsByName(key);
 };
+const optionForm = document.querySelector('#tutor-option-form');
+optionForm.addEventListener('change', (event) => {
+	console.log('changed');
+});

@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		<div class="save-button">
-			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap">
+			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap tutor-btn-disable  tutor-no-hover">
 				<?php _e( 'Save Changes', 'tutor' ); ?>
 			</button>
 		</div>
