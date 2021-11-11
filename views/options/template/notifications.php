@@ -1,7 +1,10 @@
 
 <div class="tutor-option-main-title">
     <h2><?php echo __( $section['label'], 'tutor' ); ?></h2>
-    <a href="#"><i class="las la-undo-alt"></i> <?php _e( 'Reset to Default', 'tutor' ); ?></a>
+	<button class="reset-btn reset_to_default" data-reset="<?php echo esc_attr( $section['slug'] ); ?>">
+		<i class="btn-icon ttr-refresh-1-filled"></i>
+		<?php echo esc_attr( 'Reset to Default', 'tutor' ); ?>
+	</button>
 </div>
 
 <?php
