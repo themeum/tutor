@@ -24,12 +24,12 @@
 			</div>
 			<div class="tutor-input-group tutor-form-control-has-icon">
 				<!-- <span class="tutor-input-group-icon ttr-search-filled"></span>
-				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" /> -->
+				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php //esc_html_e( 'Search', 'tutor' ); ?>" /> -->
 
 			</div>
 		</div>
 		<div class="save-button">
-			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap tutor-btn-disable  tutor-no-hover">
+			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap tutor-btn-disable  tutor-no-hover" disabled>
 				<?php _e( 'Save Changes', 'tutor' ); ?>
 			</button>
 		</div>

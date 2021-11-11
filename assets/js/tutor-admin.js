@@ -2352,8 +2352,11 @@ var elementByName = function elementByName(key) {
 };
 
 var optionForm = document.querySelector('#tutor-option-form');
+var saveTutorBtn = document.querySelector('#save_tutor_option');
 optionForm.addEventListener('change', function (event) {
   console.log('changed');
+  console.log(saveTutorBtn);
+  saveTutorBtn.disabled = false;
 });
 
 /***/ }),

@@ -45,6 +45,9 @@ const elementByName = (key) => {
 	return document.getElementsByName(key);
 };
 const optionForm = document.querySelector('#tutor-option-form');
+const saveTutorBtn = document.querySelector('#save_tutor_option');
 optionForm.addEventListener('change', (event) => {
 	console.log('changed');
+	console.log(saveTutorBtn);
+	saveTutorBtn.disabled = false;
 });
