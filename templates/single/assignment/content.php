@@ -61,10 +61,7 @@ if ($assignment_comment != false) {
 
         ?>
     </div>
-
-    <div class="tutor-topbar-item flex-center">
-        <?php tutor_lesson_mark_complete_html(); ?>
-    </div>
+	
     <div class="tutor-topbar-cross-icon flex-center">
         <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
         <a href="<?php echo get_the_permalink($course_id); ?>">
