@@ -18,7 +18,7 @@ toggleChange.forEach((element) => {
   });
 });
 
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
   "use strict";
 
   const { __, _x, _n, _nx } = wp.i18n;
@@ -38,7 +38,7 @@ jQuery(document).ready(function($) {
   /**
    * Option Settings Nav Tab
    */
-  $(".tutor-option-nav-tabs li a").click(function(e) {
+  $(".tutor-option-nav-tabs li a").click(function (e) {
     e.preventDefault();
     var tab_page_id = $(this).attr("data-tab");
     $(".option-nav-item").removeClass("current");
@@ -73,7 +73,7 @@ jQuery(document).ready(function($) {
       .addClass("wp-has-current-submenu");
   }
 
-  $(document).on("click", ".tutor-option-media-upload-btn", function(e) {
+  $(document).on("click", ".tutor-option-media-upload-btn", function (e) {
     e.preventDefault();
 
     var $that = $(this);
@@ -89,7 +89,7 @@ jQuery(document).ready(function($) {
       },
       multiple: false,
     });
-    frame.on("select", function() {
+    frame.on("select", function () {
       var attachment = frame
         .state()
         .get("selection")
@@ -115,7 +115,7 @@ jQuery(document).ready(function($) {
    * Remove option media
    * @since v.1.4.3
    */
-  $(document).on("click", ".tutor-media-option-trash-btn", function(e) {
+  $(document).on("click", ".tutor-media-option-trash-btn", function (e) {
     e.preventDefault();
 
     var $that = $(this);
@@ -159,7 +159,7 @@ jQuery(document).ready(function($) {
    * Add instructor
    * @since v.1.0.3
    */
-  $(document).on("submit", "#new-instructor-form", function(e) {
+  $(document).on("submit", "#new-instructor-form", function (e) {
     e.preventDefault();
 
     var $that = $(this);
@@ -170,7 +170,7 @@ jQuery(document).ready(function($) {
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: formData,
-      success: function(data) {
+      success: function (data) {
         if (data.success) {
           $that.trigger("reset");
           $("#form-response").html(
@@ -181,13 +181,13 @@ jQuery(document).ready(function($) {
 
           var errors = data.data.errors;
           if (errors && Object.keys(errors).length) {
-            $.each(data.data.errors, function(index, value) {
+            $.each(data.data.errors, function (index, value) {
               if (
                 value &&
                 typeof value === "object" &&
                 value.constructor === Object
               ) {
-                $.each(value, function(key, value1) {
+                $.each(value, function (key, value1) {
                   errorMsg +=
                     '<p class="tutor-required-fields">' + value1[0] + "</p>";
                 });
@@ -208,7 +208,7 @@ jQuery(document).ready(function($) {
    * @since v.1.5.3
    */
 
-  $(document).on("click", "a.instructor-action", function(e) {
+  $(document).on("click", "a.instructor-action", function (e) {
     e.preventDefault();
 
     var $that = $(this);
@@ -233,13 +233,13 @@ jQuery(document).ready(function($) {
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: json_data,
-      beforeSend: function() {
+      beforeSend: function () {
         $that.addClass("tutor-updating-message");
       },
-      success: function(data) {
+      success: function (data) {
         location.reload(true);
       },
-      complete: function() {
+      complete: function () {
         $that.removeClass("tutor-updating-message");
       },
     });
@@ -248,7 +248,7 @@ jQuery(document).ready(function($) {
   /**
    * Add Assignment
    */
-  $(document).on("click", ".add-assignment-attachments", function(event) {
+  $(document).on("click", ".add-assignment-attachments", function (event) {
     event.preventDefault();
 
     var $that = $(this);
@@ -269,7 +269,7 @@ jQuery(document).ready(function($) {
     });
 
     // When an image is selected in the media frame...
-    frame.on("select", function() {
+    frame.on("select", function () {
       // Get media attachment details from the frame state
       var attachment = frame
         .state()
@@ -294,7 +294,7 @@ jQuery(document).ready(function($) {
     frame.open();
   });
 
-  $(document).on("click", ".remove-assignment-attachment-a", function(event) {
+  $(document).on("click", ".remove-assignment-attachment-a", function (event) {
     event.preventDefault();
     $(this)
       .closest(".tutor-individual-attachment-file")
@@ -306,7 +306,7 @@ jQuery(document).ready(function($) {
    */
 
   //tutor_video_poster_upload_btn
-  $(document).on("click", ".tutor_video_poster_upload_btn", function(event) {
+  $(document).on("click", ".tutor_video_poster_upload_btn", function (event) {
     event.preventDefault();
 
     var $that = $(this);
@@ -327,7 +327,7 @@ jQuery(document).ready(function($) {
     });
 
     // When an image is selected in the media frame...
-    frame.on("select", function() {
+    frame.on("select", function () {
       // Get media attachment details from the frame state
       var attachment = frame
         .state()
@@ -352,7 +352,7 @@ jQuery(document).ready(function($) {
    * @since v.1.3.6
    */
 
-  $(document).on("change", "#tutor_pmpro_membership_model_select", function(e) {
+  $(document).on("change", "#tutor_pmpro_membership_model_select", function (e) {
     e.preventDefault();
 
     var $that = $(this);
@@ -364,7 +364,7 @@ jQuery(document).ready(function($) {
     }
   });
 
-  $(document).on("change", "#tutor_pmpro_membership_model_select", function(e) {
+  $(document).on("change", "#tutor_pmpro_membership_model_select", function (e) {
     e.preventDefault();
 
     var $that = $(this);
@@ -377,7 +377,7 @@ jQuery(document).ready(function($) {
   });
 
   // Require category selection
-  $(document).on("submit", ".pmpro_admin form", function(e) {
+  $(document).on("submit", ".pmpro_admin form", function (e) {
     var form = $(this);
 
     if (!form.find('input[name="tutor_action"]').length) {
@@ -387,7 +387,7 @@ jQuery(document).ready(function($) {
 
     if (
       form.find('[name="tutor_pmpro_membership_model"]').val() ==
-        "category_wise_membership" &&
+      "category_wise_membership" &&
       !form.find(".membership_course_categories input:checked").length
     ) {
       if (!confirm(__("Do you want to save without any category?", "tutor"))) {
@@ -406,11 +406,11 @@ jQuery(document).ready(function($) {
     minimumInputLength: 1,
     placeholder: search_student_placeholder,
     language: {
-      inputTooShort: function() {
+      inputTooShort: function () {
         return __("Please add 1 or more character", "tutor");
       },
     },
-    escapeMarkup: function(m) {
+    escapeMarkup: function (m) {
       return m;
     },
     ajax: {
@@ -418,16 +418,16 @@ jQuery(document).ready(function($) {
       type: "POST",
       dataType: "json",
       delay: 1000,
-      data: function(params) {
+      data: function (params) {
         return {
           term: params.term,
           action: "tutor_json_search_students",
         };
       },
-      processResults: function(data) {
+      processResults: function (data) {
         var terms = [];
         if (data) {
-          $.each(data, function(id, text) {
+          $.each(data, function (id, text) {
             terms.push({
               id: id,
               text: text,
@@ -447,7 +447,7 @@ jQuery(document).ready(function($) {
    *
    * @since v.1.4.0
    */
-  $(document).on("click", "table.enrolments .delete a", function(e) {
+  $(document).on("click", "table.enrolments .delete a", function (e) {
     e.preventDefault();
 
     var url = $(this).attr("href");
@@ -464,14 +464,14 @@ jQuery(document).ready(function($) {
           title: __("Cancel", "tutor"),
           class: "tutor-btn tutor-is-outline tutor-is-default",
 
-          callback: function() {
+          callback: function () {
             popup.remove();
           },
         },
         keep: {
           title: __("Yes, Delete This", "tutor"),
           class: "tutor-btn",
-          callback: function() {
+          callback: function () {
             window.location.replace(url);
           },
         },
@@ -491,7 +491,7 @@ jQuery(document).ready(function($) {
     $("#_tutor_is_course_public_meta_checkbox").show();
   } else {
     price_type
-      .change(function() {
+      .change(function () {
         if ($(this).prop("checked")) {
           var method = $(this).val() == "paid" ? "hide" : "show";
           $("#_tutor_is_course_public_meta_checkbox")[method]();
@@ -505,7 +505,7 @@ jQuery(document).ready(function($) {
    *
    * @since  v.1.7.5
    */
-  $(document).on("click", ".instructor-layout-template", function() {
+  $(document).on("click", ".instructor-layout-template", function () {
     $(".instructor-layout-template").removeClass("selected-template");
     $(this).addClass("selected-template");
   });
@@ -515,7 +515,7 @@ jQuery(document).ready(function($) {
    *
    * @since  v.1.7.9
    */
-  $("#preview-action a.preview").click(function(e) {
+  $("#preview-action a.preview").click(function (e) {
     var href = $(this).attr("href");
 
     if (href) {
