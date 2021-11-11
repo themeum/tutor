@@ -5042,6 +5042,10 @@
   color: #eff1f7;
 }
 
+.color-black-03 {
+  color: #f4f6f9;
+}
+
 .color-danger-main {
   color: #f44337;
 }
@@ -5376,6 +5380,10 @@
 
 .bg-black-05 {
   background-color: #eff1f7;
+}
+
+.bg-black-03 {
+  background-color: #f4f6f9;
 }
 
 .bg-danger-main {
@@ -25363,6 +25371,13 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           box-shadow: unset;
 }
 
+.tutor-course-details-page .tutor-course-details-tab .tab-header {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 999;
+}
+
 .tutor-course-details-header a {
   text-decoration: none;
 }
@@ -25744,6 +25759,11 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   height: 24px;
 }
 
+.tutor-avatar-circle.tutor-26 {
+  width: 26px;
+  height: 26px;
+}
+
 .tutor-avatar-circle.tutor-28 {
   width: 28px;
   height: 28px;
@@ -25839,6 +25859,12 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-quesanswer-commentlist-item-reply .commentlist-comment:before {
   left: unset;
   right: 15px;
+}
+
+.tutor-announcement {
+  border: 1px solid #cdcfd5;
+  overflow: hidden;
+  border-radius: 6px;
 }
 
 .tutor-course-listing-grid {

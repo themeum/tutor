@@ -231,6 +231,10 @@
   color: #eff1f7;
 }
 
+.color-black-03 {
+  color: #f4f6f9;
+}
+
 .color-danger-main {
   color: #f44337;
 }
@@ -565,6 +569,10 @@
 
 .bg-black-05 {
   background-color: #eff1f7;
+}
+
+.bg-black-03 {
+  background-color: #f4f6f9;
 }
 
 .bg-danger-main {
