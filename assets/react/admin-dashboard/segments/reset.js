@@ -14,7 +14,7 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 		const xhttp = new XMLHttpRequest();
 		xhttp.open('POST', _tutorobject.ajaxurl, true);
 		xhttp.send(formData);
-		xhttp.onreadystatechange = function() {
+		xhttp.onreadystatechange = function () {
 			if (xhttp.readyState === 4) {
 				let pageData = JSON.parse(xhttp.response).data;
 				pageData.forEach((item) => {
@@ -36,7 +36,6 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 						}
 					}
 				});
-
 				tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
 			}
 		};
