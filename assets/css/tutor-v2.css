@@ -26771,6 +26771,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-react-datepicker .react-datepicker__day {
+  cursor: pointer;
   font-weight: 500;
   font-size: 15px;
   line-height: 160%;

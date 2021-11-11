@@ -13,7 +13,7 @@ $col_classes = array(
 <div class="tutor-dashboard-setting-withdraw tutor-dashboard-content-inner">
     <div class="tutor-dashboard-inline-links">
         <?php
-            tutor_load_template('dashboard.settings.nav-bar', ['active_setting_nav'=>'withdrawal']);
+            tutor_load_template( 'dashboard.settings.nav-bar', ['active_setting_nav'=>'withdrawal'] );
         ?>
         <h3><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></h3>
     </div>
@@ -33,12 +33,12 @@ $col_classes = array(
                 $method_count = count( $tutor_withdrawal_methods );
                 foreach ( $tutor_withdrawal_methods as $method_id => $method ) {
                     ?>
-                    <div class="<?php esc_attr_e( $col_classes[ $method_count ] ); ?>" data-withdraw-method="<?php esc_attr_e( $method_id ); ?>">
+                    <div class="<?php echo esc_attr( $col_classes[ $method_count ] ); ?>" data-withdraw-method="<?php echo esc_attr( $method_id ); ?>">
                         <label class="tutor-radio-select tutor-bs-align-items-center tutor-mb-10">
-                            <input class="tutor-form-check-input" type="radio" name="tutor_selected_withdraw_method" value="<?php esc_attr_e( $method_id ); ?>" <?php checked( $method_id, $old_method_key ) ?>/>
+                            <input class="tutor-form-check-input" type="radio" name="tutor_selected_withdraw_method" value="<?php echo esc_attr( $method_id ); ?>" <?php checked( $method_id, $old_method_key ) ?>/>
                             <div class="tutor-radio-select-content">
                                 <span class="tutor-radio-select-title">
-                                    <?php esc_html_e( tutor_utils()->avalue_dot( 'method_name', $method ) );  ?>
+                                    <?php echo esc_html( tutor_utils()->avalue_dot( 'method_name', $method ) );  ?>
                                 </span>
                                 <?php esc_html_e( 'Min withdraw', 'tutor' ); ?> <?php echo wp_kses_post( tutor_utils()->tutor_price( $min_withdraw_amount ) );?>
                             </div>
@@ -58,7 +58,7 @@ $col_classes = array(
                     $form_fields = tutor_utils()->avalue_dot( 'form_fields', $method );
                     ?>
 
-                    <div data-withdraw-form="<?php esc_attr_e( $method_id ); ?>" class="tutor-bs-row withdraw-method-form" style="<?php echo esc_attr( $old_method_key != $method_id ? 'display: none;' : '' ); ?>">
+                    <div data-withdraw-form="<?php echo esc_attr( $method_id ); ?>" class="tutor-bs-row withdraw-method-form" style="<?php echo esc_attr( $old_method_key != $method_id ? 'display: none;' : '' ); ?>">
                         <?php 
                         do_action( "tutor_withdraw_set_account_{$method_id}_before" );
                         
@@ -66,10 +66,10 @@ $col_classes = array(
                         if ( $field_count ) {
                             foreach ( $form_fields as $field_name => $field ) {
                                 ?>
-                                <div class="<?php echo esc_attr( $field_count > 1 ? 'tutor-bs-col-12 tutor-bs-col-sm-6' : 'tutor-bs-col-12' ); ?> tutor-mb-30">
+                                <div class="<?php echo esc_attr( $field_count ) > 1 ? 'tutor-bs-col-12 tutor-bs-col-sm-6' : 'tutor-bs-col-12'; ?> tutor-mb-30">
                                     <?php
                                     if ( ! empty( $field['label'] ) ) {
-                                        echo wp_kses_post("<label for='field_{$method_id}_$field_name'>{$field['label']}</label>");
+                                        echo wp_kses_post( "<label class='color-text-subsued' for='field_{$method_id}_$field_name'>{$field['label']}</label>" );
                                     }
 
                                     $passing_data = apply_filters( 'tutor_withdraw_account_field_type_data', array(
@@ -86,18 +86,18 @@ $col_classes = array(
 
                                     if ( in_array( $field['type'], array( 'text', 'number', 'email' ) ) ) {
                                         ?>
-                                            <input class="tutor-form-control" type="<?php esc_attr_e( $field['type'] ); ?>" name="withdraw_method_field[<?php esc_attr_e( $method_id ) ?>][<?php esc_attr_e( $field_name ) ?>]" value="<?php esc_attr_e( $old_value ); ?>" >
+                                            <input class="tutor-form-control tutor-mt-5" type="<?php echo esc_attr( $field['type'] ); ?>" name="withdraw_method_field[<?php echo esc_attr( $method_id ) ?>][<?php echo esc_attr( $field_name ) ?>]" value="<?php echo esc_attr( $old_value ); ?>" >
                                         <?php
                                     } else if ( $field['type']=='textarea' ) {
                                         ?>
-                                            <textarea class="tutor-form-control" name="withdraw_method_field[<?php esc_attr_e( $method_id ) ?>][<?php esc_attr_e( $field_name ) ?>]">
+                                            <textarea class="tutor-form-control tutor-mt-5" name="withdraw_method_field[<?php echo esc_attr( $method_id ) ?>][<?php echo esc_attr( $field_name ) ?>]">
                                                 <?php echo wp_kses_post( $old_value ); ?>
                                             </textarea>
                                         <?php
                                     }
 
                                     if ( ! empty( $field['desc'] ) ) {
-                                        echo wp_kses_post("<p class='withdraw-field-desc'>{$field['desc']}</p>");
+                                        echo wp_kses_post("<p class='withdraw-field-desc color-text-subsued'>{$field['desc']}</p>");
                                     }
                                     ?>
                                 </div>

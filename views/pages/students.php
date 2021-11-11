@@ -101,51 +101,59 @@ $filters = array(
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $students_list as $list ) : ?>
-			<tr>
-				<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
-					<div class="td-checkbox d-flex ">
-						<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
-					</div>
-				</td>
-				<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
-					<div class="td-avatar">
-						<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
-						<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-						<p class="color-text-primary text-medium-body">
-							<?php esc_html_e( $list->display_name ); ?>
-						</p>
-						<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
-						<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
-							<span class="ttr-detail-link-filled tutor-mt-5"></span>
-						</a>
-					</div>
-				</td>
-				<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-					<span class="color-text-primary text-regular-caption">
-					<?php echo esc_html( $list->user_email ); ?>
-					</span>
-				</td>
-				</td>
-				<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
-					<span class="color-text-primary text-regular-caption">
-					<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ). ', ' . get_option( 'time_format' ), $list->user_registered ) ); ?>
-					</span>
-				</td>
-				<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
-				<?php $course_taken = tutor_utils()->get_enrolled_courses_ids_by_user( $list->ID ); ?>
-					<span class="color-text-primary text-medium-caption"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
-				</td>
-				<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
-					<div class="inline-flex-center td-action-btns">
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
-						class="btn-outline tutor-btn" target="_blank">
-						<?php esc_html_e( 'Details', 'tutor' ); ?>
-						</a>
-					</div>
-				</td>
-			</tr>
-			<?php endforeach; ?>
+				<?php if ( is_array( $students_list ) && count( $students_list ) ) : ?>
+					<?php foreach ( $students_list as $list ) : ?>
+					<tr>
+						<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
+							<div class="td-checkbox d-flex ">
+								<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
+							</div>
+						</td>
+						<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
+							<div class="td-avatar">
+								<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
+								<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
+								<p class="color-text-primary text-medium-body">
+									<?php esc_html_e( $list->display_name ); ?>
+								</p>
+								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
+								<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
+									<span class="ttr-detail-link-filled tutor-mt-5"></span>
+								</a>
+							</div>
+						</td>
+						<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
+							<span class="color-text-primary text-regular-caption">
+							<?php echo esc_html( $list->user_email ); ?>
+							</span>
+						</td>
+						</td>
+						<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
+							<span class="color-text-primary text-regular-caption">
+							<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ). ', ' . get_option( 'time_format' ), $list->user_registered ) ); ?>
+							</span>
+						</td>
+						<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
+						<?php $course_taken = tutor_utils()->get_enrolled_courses_ids_by_user( $list->ID ); ?>
+							<span class="color-text-primary text-medium-caption"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
+						</td>
+						<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
+							<div class="inline-flex-center td-action-btns">
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
+								class="btn-outline tutor-btn" target="_blank">
+								<?php esc_html_e( 'Details', 'tutor' ); ?>
+								</a>
+							</div>
+						</td>
+					</tr>
+					<?php endforeach; ?>
+				<?php else : ?>
+					<tr>
+						<td colspan="100%">
+							<?php tutor_utils()->tutor_empty_state(); ?>
+						</td>
+					</tr>
+				<?php endif; ?>	
 			</tbody>
 		</table>
 		</div>

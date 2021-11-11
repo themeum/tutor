@@ -897,14 +897,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  var filterDate = document.getElementById("tutor-backend-filter-date");
-
-  if (filterDate) {
-    filterDate.onchange = function (e) {
-      window.location = urlPrams("date", e.target.value);
-    };
-  }
-
   var filterSearch = document.getElementById("tutor-admin-search-filter-form");
 
   if (filterSearch) {
@@ -1538,18 +1530,21 @@ var getFilesAndUpdateDOM = function getFilesAndUpdateDOM(files, inputEl, dropZon
 
 function toolTipOnWindowResize() {
   var mediaQuery = window.matchMedia('(max-width: 992px)');
+  var hasClass = document.querySelectorAll('.tooltip-responsive');
 
-  if (mediaQuery.matches) {
-    var toolTips = document.querySelectorAll('.tooltip-right');
-    toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-right', 'tooltip-left');
-    });
-  } else {
-    var _toolTips = document.querySelectorAll('.tooltip-left');
+  if (hasClass.length) {
+    if (mediaQuery.matches) {
+      var toolTips = document.querySelectorAll('.tooltip-right');
+      toolTips.forEach(function (toolTip) {
+        toolTip.classList.replace('tooltip-right', 'tooltip-left');
+      });
+    } else {
+      var _toolTips = document.querySelectorAll('.tooltip-left');
 
-    _toolTips.forEach(function (toolTip) {
-      toolTip.classList.replace('tooltip-left', 'tooltip-right');
-    });
+      _toolTips.forEach(function (toolTip) {
+        toolTip.classList.replace('tooltip-left', 'tooltip-right');
+      });
+    }
   }
 }
 
@@ -2657,8 +2652,6 @@ document.addEventListener("DOMContentLoaded", function () {
       var _loop = function _loop() {
         var withDrawCopyBtn = _step3.value;
         withDrawCopyBtn.addEventListener('click', function (event) {
-          // console.log(withDrawCopyBtn.previousSibling);
-          console.log(event.currentTarget.dataset.textCopy);
           copyToClipboard(event.currentTarget.dataset.textCopy).then(function (text) {
             var html = withDrawCopyBtn.innerHTML;
             withDrawCopyBtn.innerHTML = "".concat(__('Copied', 'tutor'));
