@@ -2044,7 +2044,8 @@ document.addEventListener('DOMContentLoaded', function () {
             message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
 
         if (success) {
-          button.disabled = true;
+          // Disableing save btn after saved successfully
+          document.getElementById('save_tutor_option').disabled = true;
           tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
           return;
         }
