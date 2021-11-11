@@ -12,13 +12,26 @@ if ( isset( $data ) && count( $data ) ) : ?>
 		<span class="text-primary-h5">
 			<?php echo esc_html( $data['page_title'] ); ?>
 		</span>
-		<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
-			<a class="tutor-pl-10" href="<?php echo esc_url( $data['button_url'] ); ?>">
-				<button class="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+		<!--modal button or url button -->
+		<?php
+		// If modal target set then button will be set as modal button otherwise url button.
+		if ( isset( $data['modal_target'] ) && '' !== $data['modal_target'] ) :
+		?>
+			<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
+				<button  data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>"  class="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
 					<span class="btn-icon ttr-plus-bold-filled"></span>
 					<span><?php echo esc_html( $data['button_title'] ); ?></span>
 				</button>
-			</a>
+			<?php endif; ?>
+		<?php else : ?>
+			<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
+				<a class="tutor-pl-10" href="<?php echo esc_url( $data['button_url'] ); ?>">
+					<button class="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
+						<span class="btn-icon ttr-plus-bold-filled"></span>
+						<span><?php echo esc_html( $data['button_title'] ); ?></span>
+					</button>
+				</a>
+			<?php endif; ?>
 		<?php endif; ?>
   </div>
   <div class="filter-btns text-regular-body color-text-subsued">
