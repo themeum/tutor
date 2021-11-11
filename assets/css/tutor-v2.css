@@ -25791,6 +25791,25 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   min-height: 72px;
 }
 
+.tutor-quesanswer-commentlist {
+  list-style: none;
+}
+
+.tutor-quesanswer-commentlist .commentlist-comment {
+  border-radius: 6px;
+  position: relative;
+}
+
+.tutor-quesanswer-commentlist .commentlist-comment:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: inherit;
+  -webkit-clip-path: polygon(50% 0%, 100% 50%, 48% 100%, 0 50%);
+          clip-path: polygon(50% 0%, 100% 50%, 48% 100%, 0 50%);
+}
+
 .tutor-course-listing-grid {
   display: grid;
   grid-gap: 30px;
