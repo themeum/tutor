@@ -188,11 +188,10 @@ class Options_V2 {
 		$time    = $this->get_request_data( 'time' );
 		$request = json_decode( str_replace( '\"', '"', $request ), true );
 
-		$save_import_data['datetime']     = $time;
-		$save_import_data['history_date'] = date( 'j M, Y, g:i a', $time );
-		$save_import_data['datatype']     = 'imported';
-		$save_import_data['dataset']      = $request['data'];
-
+		$save_import_data['datetime']             = $time;
+		$save_import_data['history_date']         = date( 'j M, Y, g:i a', $time );
+		$save_import_data['datatype']             = 'imported';
+		$save_import_data['dataset']              = $request['data'];
 		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
 
 		// update_option( 'tutor_settings_log', array() );
@@ -206,7 +205,6 @@ class Options_V2 {
 
 			$update_option = tutor_utils()->sanitize_recursively( $update_option );
 
-			// $update_option = array();
 			if ( ! empty( $update_option ) ) {
 				update_option( 'tutor_settings_log', $update_option );
 			}
