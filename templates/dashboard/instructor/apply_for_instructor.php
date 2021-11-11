@@ -21,10 +21,10 @@
 			</div>
 		</div>
 		</div>
-		<div class="tutor-app-process-image tutor-bs-m-auto tutor-pt-30 tutor-pb-45">
+		<div class="tutor-app-process-image tutor-bs-m-auto tutor-pt-30 tutor-pb-45 tutor-bs-d-flex tutor-bs-justify-content-center tutor-bs-align-items-center">
 		<span class="tutor-app-process-img">
 			<img
-			src="<?php echo esc_url( tutor()->url . 'assets/images/new-user.png' ); ?>"
+			src="<?php echo esc_url( tutor()->url . 'assets/images/instructor-application-received.png' ); ?>"
 			alt="<?php esc_attr_e( 'Instructor Application', 'tutor' ); ?>"
 			/>
 		</span>
