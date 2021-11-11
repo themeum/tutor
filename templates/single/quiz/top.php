@@ -23,7 +23,7 @@ do_action('tutor_quiz/single/before/top');
 
 ?>
 <?php
-	if (!$is_started_quiz && $attempted_count !== 0) {
+	if (!$is_started_quiz && $attempted_count == 0) {
 ?>
 
 <div class="tutor-start-quiz-wrapper mr-auto tutor-p-50">
@@ -39,7 +39,9 @@ do_action('tutor_quiz/single/before/top');
 		?>
         <div class="tutor-quiz-info">
             <span class="text-regular-body color-text-hints"><?php _e('Questions', 'tutor'); ?>:</span>
-            <span class="text-regular-body color-text-primary"><?php echo $total_questions; ?></span>
+            <span class="text-regular-body color-text-primary">
+				<?php echo $total_questions; ?>
+			</span>
         </div>
 		<?php 
 			
