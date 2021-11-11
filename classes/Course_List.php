@@ -73,9 +73,15 @@ class Course_List {
 			$this->bulk_action_publish(),
 			$this->bulk_action_pending(),
 			$this->bulk_action_draft(),
-			$this->bulk_action_delete(),
 		);
-		return $actions;
+		$active_tab = isset( $_GET['data'] ) ? $_GET['data'] : '';
+		if ( 'trash' === $active_tab ) {
+			array_push( $actions, $this->bulk_action_delete() );
+		}
+		if ( 'trash' !== $active_tab ) {
+			array_push( $actions, $this->bulk_action_trash() );
+		}
+		return apply_filters( 'tutor_course_bulk_actions', $actions );
 	}
 
 	/**
@@ -95,6 +101,7 @@ class Course_List {
 		$published = self::count_course( 'publish', $course_id, $date, $search );
 		$draft     = self::count_course( 'draft', $course_id, $date, $search );
 		$pending   = self::count_course( 'pending', $course_id, $date, $search );
+		$trash     = self::count_course( 'trash', $course_id, $date, $search );
 
 		$tabs = array(
 			array(
@@ -127,6 +134,12 @@ class Course_List {
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
 			),
+			array(
+				'key'   => 'trash',
+				'title' => __( 'Trash', 'tutor' ),
+				'value' => $trash,
+				'url'   => $url . '&data=trash',
+			),
 		);
 		return $tabs;
 	}
@@ -156,7 +169,7 @@ class Course_List {
 		);
 
 		if ( 'all' === $status || 'mine' === $status ) {
-			$args['post_status'] = array( 'publish', 'pending', 'draft' );
+			$args['post_status'] = array( 'publish', 'pending', 'draft', 'trash' );
 		} else {
 			$status              = $status === 'published' ? 'publish' : $status;
 			$args['post_status'] = array( $status );
