@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function() {
    * On change status
    * update course status
    */
-  const availableStatus = ["publish", "pending", "draft"];
+  const availableStatus = ["publish", "pending", "trash", "draft"];
   const courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
   for (let status of courseStatusUpdate) {
     status.onchange = async (e) => {
@@ -152,15 +152,18 @@ document.addEventListener("DOMContentLoaded", function() {
       const response = await post.json();
       if (response) {
         target.dataset.status = newStatus;
-        let putStatus = "";
+        let putStatus = "select-default";
         newStatus === "publish"
           ? (putStatus = "select-success")
           : newStatus === "pending"
           ? (putStatus = "select-warning")
+          : newStatus === 'trash'
+          ? (putStatus = "select-danger" )
           : "select-default";
-        if (!target.closest(".tutor-form-select-with-icon").classList.contains(putStatus)) {
-          target.closest(".tutor-form-select-with-icon").classList.add(putStatus);
-        }
+
+        // add new status class
+        target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}` );
+  
         tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
       } else {
         tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");

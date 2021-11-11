@@ -1058,7 +1058,7 @@ document.addEventListener("DOMContentLoaded", function () {
    */
 
 
-  var availableStatus = ["publish", "pending", "draft"];
+  var availableStatus = ["publish", "pending", "trash", "draft"];
   var courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
 
   var _iterator2 = _createForOfIteratorHelper(courseStatusUpdate),
@@ -1105,13 +1105,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                   if (response) {
                     target.dataset.status = newStatus;
-                    putStatus = "";
-                    newStatus === "publish" ? putStatus = "select-success" : newStatus === "pending" ? putStatus = "select-warning" : "select-default";
+                    putStatus = "select-default";
+                    newStatus === "publish" ? putStatus = "select-success" : newStatus === "pending" ? putStatus = "select-warning" : newStatus === 'trash' ? putStatus = "select-danger" : "select-default"; // add new status class
 
-                    if (!target.closest(".tutor-form-select-with-icon").classList.contains(putStatus)) {
-                      target.closest(".tutor-form-select-with-icon").classList.add(putStatus);
-                    }
-
+                    target.closest(".tutor-form-select-with-icon").setAttribute('class', "tutor-form-select-with-icon ".concat(putStatus));
                     tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
                   } else {
                     tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
