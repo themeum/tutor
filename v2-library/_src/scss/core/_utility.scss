@@ -94,6 +94,14 @@
 	text-overflow: ellipsis;
 }
 
+.tutor-text-hover-underline{
+	cursor: pointer;
+	
+	&:hover{
+		text-decoration: underline;
+	}
+}
+
 .tutor-text-center {
 	text-align: center;
 }

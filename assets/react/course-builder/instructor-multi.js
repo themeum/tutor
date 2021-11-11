@@ -20,8 +20,8 @@ window.jQuery(document).ready($=>{
             }
 
             var shortlisted = []; 
-            shortlist_container.find('input[name="tutor-instructor-short-list"]').each(function(){
-                shortlisted.push($(this).val());
+            shortlist_container.find('[data-instructor-id]').each(function(){
+                shortlisted.push($(this).data('instructor-id'));
             });
             (user_id && !isNaN(user_id)) ? shortlisted.push(user_id) : 0;
             
@@ -87,10 +87,10 @@ window.jQuery(document).ready($=>{
         var course_id = $('#tutor_course_instructor_modal').data('course_id');
         
         var shortlisted = []; 
-        shortlist_container.find('input[name="tutor-instructor-short-list"]').each(function(){
-            shortlisted.push($(this).val());
+        shortlist_container.find('[data-instructor-id]').each(function(){
+            shortlisted.push($(this).data('instructor-id'));
         });
-        
+
         $.ajax({
             url : window._tutorobject.ajaxurl,
             type : 'POST',
