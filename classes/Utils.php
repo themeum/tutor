@@ -8019,6 +8019,50 @@ class Utils {
 	}
 
 	/**
+	 * Get course element list
+	 *
+	 * @param string $content_type, content type like: lesson, assignment, quiz
+	 * @param string $ancestor_type, content type like: lesson, assignment, quiz
+	 * @param int $ancestor_ids, post_parent id
+	 * @return array
+	 * @since v2.0.0 
+	 */
+	public function get_course_content_list($content_type, $ancestor_type, $ancestor_ids) {
+		global $wpdb;
+		$ids = array();
+
+		// Convert single id to array
+		!is_array($ancestor_ids) ? $ancestor_ids=array($ancestor_ids) : 0;
+		$ancestor_ids = implode(',', $ancestor_ids);
+
+		switch($content_type) {
+
+			// Get lesson, quiz, assignment IDs
+			case tutor()->lesson_post_type :
+			case 'tutor_quiz' :
+			case 'tutor_assignments' :
+				switch($ancestor_type) {
+
+					// Get lesson, quiz, assignment IDs by course ID
+					case tutor()->course_post_type :
+						$content_ids = $wpdb->get_results($wpdb->prepare(
+							"SELECT content.ID, content.post_title FROM {$wpdb->posts} course
+								INNER JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
+								INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
+							WHERE course.ID IN ({$ancestor_ids}) AND content.post_type=%s",
+							$content_type
+						));
+
+						// Assign id array to the variable
+						is_array($content_ids) ? $ids=$content_ids : 0;
+						break 2;
+				}
+		}
+
+		return $ids;
+	}
+
+	/**
      * @return array
      *
      * Sanitize array key abd values recursively
