@@ -122,13 +122,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				tutor_toast('Error!', message, 'tutor', true);
 			},
-<<<<<<< HEAD
-			complete: function() {
-				// button.removeClass('tutor-updating-message');
-=======
 			complete: function () {
-				button.removeClass('tutor-updating-message');
->>>>>>> 387a574dfc7150b1f155c58b7631107ffb91ffa6
+				// button.removeClass('tutor-updating-message');
 			},
 		});
 	});

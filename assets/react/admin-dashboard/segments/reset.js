@@ -6,6 +6,9 @@ const resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 resetDefaultBtn.forEach((resetBtn, index) => {
 	resetBtn.onclick = (e) => {
 		e.preventDefault();
+		let spinReset = resetBtn.getElementsByClassName('btn-icon')[0];
+		spinReset.style.animation = 'spinner 1s infinite linear';
+
 		var resetPage = resetBtn.dataset.reset;
 		var formData = new FormData();
 		formData.append('action', 'reset_settings_data');
@@ -62,7 +65,10 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 						})
 					}
 				});
-				tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+				setTimeout(() => {
+					spinReset.style.animation = '';
+					tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+				}, 600)
 			}
 		};
 	};
