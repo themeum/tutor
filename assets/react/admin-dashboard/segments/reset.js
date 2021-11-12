@@ -4,6 +4,7 @@ Reset to default for settings individual page
 console.log('reset-to-default');
 const resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 resetDefaultBtn.forEach((resetBtn, index) => {
+
 	resetBtn.onclick = (e) => {
 		e.preventDefault();
 		let spinReset = resetBtn.getElementsByClassName('btn-icon')[0];
