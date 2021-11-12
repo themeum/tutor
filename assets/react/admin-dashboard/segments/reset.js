@@ -7,8 +7,8 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 
 	resetBtn.onclick = (e) => {
 		e.preventDefault();
-		let spinReset = resetBtn.getElementsByClassName('btn-icon')[0];
-		spinReset.style.animation = 'spinner 1s infinite linear';
+		/* let spinReset = resetBtn.getElementsByClassName('btn-icon')[0];
+		spinReset.style.animation = 'spinner 1s infinite linear'; */
 
 		var resetPage = resetBtn.dataset.reset;
 		var formData = new FormData();
@@ -69,8 +69,9 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 					}
 				});
 				setTimeout(() => {
-					spinReset.style.animation = '';
-					tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+					// spinReset.style.animation = '';
+					tutor_toast('Reset Successful', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+					document.querySelector('[data-tutor-modal-close]').trigger = true;
 				}, 600)
 			}
 		};
