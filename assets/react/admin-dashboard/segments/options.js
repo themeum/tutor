@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				tutor_toast('Error!', message, 'tutor', true);
 			},
 			complete: function () {
-				// button.removeClass('tutor-updating-message');
+				button.removeClass('tutor-updating-message');
 			},
 		});
 	});
