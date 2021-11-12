@@ -55,6 +55,17 @@
             }
         }
         /* tutor-single-page-top-bar */
+        .course-players {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 250px);
+            background: black;
+            iframe {
+                width: calc(100% - 150px);
+                height: 100%;
+                position: absolute;
+            }
+        }
         @import './quiz.scss';
     }
 }
@@ -75,4 +86,4 @@
     }
 }
 
-@import './spotlight.scss'
+@import './spotlight';

@@ -107,7 +107,35 @@
                     }
                 }
             }
-            #tutor-lesåson-sidebar-qa-tab-content {}
+            #sideabr-qna-tab-content {
+                // height: calc(100vh - 135px);
+                // display: flex;
+                // flex-direction: column;
+                // justify-content: space-between;
+                // > div {
+                // 	padding: 18px 18px;
+                // }
+                // .tutor-sidebar-no-qna {
+                // 	svg {
+                // 		path {
+                // 		}
+                // 	}
+                // 	.text-regular-h5 {
+                // 	}
+                // 	.text-regular-caption {
+                // 	}
+                // }
+                // .tutor-sidebar-qna-add-new {
+                // 	background: #f4f6f9;
+                // 	.text-regular-h6 {
+                // 	}
+                // 	.tutor-form-control {
+                // 	}
+                // 	.tutor-btn {
+                // 		width: 100%;
+                // 	}
+                // }
+            }
         }
     }
 }

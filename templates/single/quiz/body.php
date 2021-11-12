@@ -112,7 +112,7 @@ $quiz_answers = array();
 	}
 
 
-	tutor_next_previous_pagination();
+	//tutor_next_previous_pagination();
 
     do_action('tutor_quiz/body/after', $quiz_id);
 	?>
