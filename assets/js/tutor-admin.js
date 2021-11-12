@@ -2044,7 +2044,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         tutor_toast('Error!', message, 'tutor', true);
       },
-      complete: function complete() {// button.removeClass('tutor-updating-message');
+      complete: function complete() {
+        button.removeClass('tutor-updating-message');
       }
     });
   });
