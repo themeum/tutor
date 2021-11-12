@@ -1,4 +1,4 @@
-<div class="tutor-attachment-cards tutor-course-builder-attachments is-lesson <?php echo (isset($data['no_control']) && $data['no_control']) ? 'tutor-no-control' : ''; ?>">
+<div class="tutor-attachment-cards tutor-course-builder-attachments <?php echo (isset($data['no_control']) && $data['no_control']) ? 'tutor-no-control' : ''; ?>">
     <?php 
     $attachments = $data['attachments'];
     $size_below = isset($data['size_below']) && $data['size_below']==true;
@@ -26,3 +26,13 @@
     }
     ?>
 </div>
+
+<?php 
+    if(isset($data['add_button']) && $data['add_button']==true) {
+        ?>
+            <button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutorUploadAttachmentBtn" data-name="<?php echo isset($data['name']) ? $data['name'] : ''; ?>">
+                <?php _e('Add Attachment', 'tutor'); ?>
+            </button>
+        <?php
+    }
+?>

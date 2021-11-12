@@ -1,9 +1,26 @@
 .tutor-course-details-elements {
 }
 
-.tutor-course-details-header {
-	a {
-		text-decoration: none;
+// Course Details Page
+.tutor-course-details {
+	&-page {
+		.tutor-course-details-tab {
+			.tab-header {
+				position: sticky;
+				top: 0;
+				background: #fff;
+				z-index: 999;
+			}
+		}
+	}
+	&-header {
+		a {
+			text-decoration: none;
+		}
+	}
+	&-page-main {
+	}
+	&-page-main-left {
 	}
 }
 
@@ -21,6 +38,7 @@
 	}
 }
 
+// Course Details - Widgets
 .tutor-course-details-widget {
 	.widget-title {
 	}
@@ -47,6 +65,7 @@
 	}
 }
 
+// Course Details - Instructor Cards
 .tutor-instructor-info-card {
 	/* stroke/light30 */
 	border: 1px solid $stroke-light-30;
@@ -72,6 +91,7 @@
 	}
 }
 
+// Course Details - Sidebar Cards
 .tutor-course-sidebar-card {
 	border: 1px solid $stroke-light-30;
 	border-radius: 6px;
@@ -119,6 +139,7 @@
 	}
 }
 
+// Course Details Page
 .tutor-course-details-page {
 	// border: 1px solid;
 	&-main {
@@ -187,7 +208,7 @@
 	}
 }
 
-// Tutor Accordion
+// Course Details - Accordion
 .tutor-accordion {
 	&-item {
 		background-color: #fff;
@@ -357,7 +378,7 @@
 }
 
 // spacing
-$avatarSizes: 16, 20, 24, 28, 32, 40, 48, 50, 64, 120;
+$avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 
 @each $size in $avatarSizes {
 	.tutor-avatar-circle {
@@ -376,4 +397,70 @@ $avatarSizes: 16, 20, 24, 28, 32, 40, 48, 50, 64, 120;
 		height: 100%;
 		object-fit: cover;
 	}
+}
+
+// Course Details - Ques and Answer
+.tutor-quesanswer {
+	&-askquestion {
+		textarea.tutor-form-control {
+			min-height: 72px;
+		}
+	}
+
+	&-commentlist {
+		list-style: none;
+		.commentlist-meta {
+		}
+		.commentlist-comment {
+			border-radius: 6px;
+			position: relative;
+			> * {
+				position: relative;
+				z-index: 1;
+			}
+
+			&:before {
+				content: '';
+				position: absolute;
+				width: 20px;
+				height: 20px;
+				top: -5px;
+				left: 15px;
+				background: inherit;
+				clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+				transform: rotate(45deg);
+				border-radius: 3px;
+			}
+			&:after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: white;
+			}
+			&:before,
+			&:after {
+				opacity: 0.5;
+			}
+		}
+		&-item {
+			// background: #000;
+			&-reply {
+				.commentlist-comment:before {
+					left: unset;
+					right: 15px;
+				}
+			}
+		}
+	}
+}
+
+// Course Details - Announcement
+.tutor-announcement {
+	border: 1px solid $stroke-light-30;
+	overflow: hidden;
+	border-radius: 6px;
+}
+
+// Course Details - Emptystate
+.tutor-emptystate {
 }

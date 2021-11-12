@@ -1,25 +1,29 @@
-.tutor-updating-message{
-    i, [class^='ttr-'], [class*=' ttr-'], [class^='tutor-icon-'], [class*=' tutor-icon-']  {
-        display: none;
-    }
-    
+.tutor-updating-message {
+	i,
+	[class^='ttr-'],
+	[class*=' ttr-'],
+	[class^='tutor-icon-'],
+	[class*=' tutor-icon-'] {
+		display: none;
+	}
 
-    /* 
+	/* 
         position: relative;
         @include spinner($design-brand, #f1f1f1, 20px);
     */
-    &:before {
-        &+*{
-            margin-left: 8px;
-        }
-        
-        display: inline-block;
-        font-family: "tutor";
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        vertical-align: top;
-        content: "\e91d" !important;
-        -webkit-animation: spin 2s infinite linear;
-        animation: spinner 2s infinite linear;
-    }
+	&:before {
+		& + * {
+			margin-left: 8px;
+		}
+
+		display: inline-block;
+		font-family: 'tutor';
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		vertical-align: top;
+		content: '\e91d' !important;
+		-webkit-animation: spin 2s infinite linear;
+		animation: spinner 2s infinite linear;
+		margin-right: 10px;
+	}
 }

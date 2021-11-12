@@ -1,6 +1,5 @@
 $sidebar_width: 360px;
-
-.tutor-qna-single-wrapper {
+.tutor-qna-single-question{
     @at-root{
         body.wp-admin {
             .tutor-qna-single-wrapper {
@@ -9,10 +8,38 @@ $sidebar_width: 360px;
         }
     }
 
+    // Badges class
+    .tutor-qna-badges {
+        &>span{
+            @include valueWithPrefix(display, inline-flex);
+            @include propertyWithPrefix(align-items, center);
+            margin-left: 15px;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            color: #5B616F;
+            cursor: pointer;
+
+            &:hover {
+                color: #393a3d;
+            }
+
+            i{
+                display: inline-block;
+                margin-right: 5px;
+                
+                &[class^='ttr-'], &[class*=' ttr-']{
+                    font-size: 24px;
+                }
+            }
+        }
+    }
+
+    // Top Sticky bar for badges
     .tutor-qa-sticky-bar{
         @include valueWithPrefix(display, flex);
         background: white;
-        padding: 10px;
+        padding: 21px 15px;
         position: sticky;
         top: 32px;
         margin-left: -19px;
@@ -21,11 +48,119 @@ $sidebar_width: 360px;
             &:last-child{
                 @include valueWithPrefix(flex, 1);
                 text-align: right;
+            }
+        }
+    }
 
-                &>span{
-                    display: inline-block;
-                    margin-left: 7px;
+    // Regular chatlist style 
+    .tutor-qa-chatlist{
+        overflow: auto;
+
+        .tutor-qna-chat {
+            width: auto;
+            max-width: 80%;
+            margin-bottom: 30px;
+            clear: both;
+
+            .tutor-qna-user {
+                @include valueWithPrefix(display, flex);
+                @include propertyWithPrefix(align-items, center);
+                margin-bottom: 15px;
+
+                img{
+                    width: 50px;
+                    height: 50px;
+                    overflow: hidden;
+                    border-radius: 50%;
                 }
+
+                &>div{
+                    @include propertyWithPrefix(flex, 1);
+                    padding-left: 15px;
+
+                    strong{
+                        display: block;
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 20px;
+                        color: #212327;
+                    }
+
+                    small{
+                        font-style: normal;
+                        font-weight: normal;
+                        font-size: 15px;
+                        color: #757C8E;
+                    }
+                }
+            }
+
+            .tutor-qna-text{
+                padding: 15px;
+                background: white;
+                border-radius: 6px;
+                margin: 0;
+            }
+
+            &.tutor-qna-left {
+                
+            }
+
+            &.tutor-qna-right {
+                float: right;
+
+                .tutor-qna-user{
+                    @include propertyWithPrefix(flex-flow, row-reverse);
+                    text-align: right;
+
+                    &>div{
+                        padding-left: 0;
+                        padding-right: 15px;
+                    }
+                }
+            }
+        }
+    }
+
+    &[data-context="course-single-qna-single"], &[data-context="course-single-qna-sidebar"] {
+        .tutor-qna-left {
+            .tutor-qna-text {
+                background: #FEECEB;
+            }
+        }
+
+        .tutor-qna-right {
+            .tutor-qna-text {
+                background: #E9EDFB;
+            }
+        }
+    }
+
+    .tutor-toggle-reply {
+        text-align: right;
+        span{
+            cursor: pointer;
+
+            &:hover{
+                text-decoration: underline;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 15px;
+                color: #41454F;
+            }
+        }
+    }
+
+    .tutor-qa-reply{
+        margin-right: 15px;
+        textarea {
+            height: 80px;
+            min-height: auto;
+        }
+        
+        .tutor-qna-badges {
+            &>span>span{
+                display: none;
             }
         }
     }
@@ -35,18 +170,6 @@ $sidebar_width: 360px;
             .tutor-qa-chatlist{
                 margin-right: 15px;
                 margin-top: 15px;
-
-                &>div{
-                    
-                }
-            }
-
-            .tutor-qa-reply {
-                margin-right: 15px;
-                textarea {
-                    height: 100px;
-                    min-height: auto;
-                }
             }
         }
     }
