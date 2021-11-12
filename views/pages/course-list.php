@@ -66,15 +66,16 @@ $filters = array(
 
 
 $args = array(
-	'post_type' => tutor()->course_post_type,
-	'orderby'   => 'ID',
-	'order'     => $order_filter,
-	'paged'     => $paged_filter,
-	'offset'    => $offset,
+	'post_type'      => tutor()->course_post_type,
+	'orderby'        => 'ID',
+	'order'          => $order_filter,
+	'paged'          => $paged_filter,
+	'offset'         => $offset,
+	'posts_per_page' => tutor_utils()->get_option( 'pagination_per_page' ),
 );
 
 if ( 'all' === $active_tab || 'mine' === $active_tab ) {
-	$args['post_status'] = array( 'publish', 'pending', 'draft' );
+	$args['post_status'] = array( 'publish', 'pending', 'draft', 'trash' );
 } else {
 	$status              = $active_tab === 'published' ? 'publish' : $active_tab;
 	$args['post_status'] = array( $status );
@@ -103,7 +104,7 @@ if ( '' !== $course_id ) {
 	$args['p'] = $course_id;
 }
 // Add author param.
-if ( 'mine' === $active_tab ) {
+if ( 'mine' === $active_tab || ! current_user_can( 'administrator' ) ) {
 	$args['author'] = get_current_user_id();
 }
 // Search filter.
@@ -126,6 +127,7 @@ $the_query = new WP_Query( $args );
 $available_status = array(
 	'publish' => __( 'Publish', 'tutor' ),
 	'pending' => __( 'Pending', 'tutor' ),
+	'trash'   => __( 'Trash', 'tutor' ),
 	'draft'   => __( 'Draft', 'tutor' ),
 );
 
@@ -193,7 +195,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 					<?php if ( $the_query->have_posts() ) : ?>
 						<?php
 						foreach ( $the_query->posts as $key => $post ) :
-							$the_query->the_post();
+
 							$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
 							$count_quiz       = $courses->get_all_quiz_by_course( $post->ID );
 							$topics           = tutor_utils()->get_topics( $post->ID );
@@ -289,7 +291,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											echo wp_kses_post( wc_price( $price ) );
 										}
 										// Alert class for course status.
-										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : 'select-default' ) );
+										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : 'select-default' ) ) );
 										?>
 									</div>
 								</td>
@@ -317,7 +319,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										>
 											<span class="toggle-icon"></span>
 										</button>
-										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="popup-menu">
+										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="popup-menu" style="width: 220px;">
 										<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
@@ -332,7 +334,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 												<a href="#" class="tutor-admin-course-delete" data-id="<?php echo esc_attr( $post->ID ); ?>">
 													<i class="ttr-delete-fill-filled color-design-white"></i>
 													<span class="text-regular-body color-text-white">
-													<?php esc_html_e( 'Delete', 'tutor' ); ?>
+													<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
 													</span>
 												</a>
 											</li>

@@ -6,6 +6,7 @@
 
 if (isset($_GET['question_id'])){
 	tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
+		'question_id' => $_GET['question_id'],
 		'context' => 'backend-dashboard-qna-single'
 	));
     return;

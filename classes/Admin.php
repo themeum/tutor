@@ -62,7 +62,7 @@ class Admin {
 			2
 		);
 		// @since v2.0.0
-		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor', 'tutor', array( $this, 'tutor_course_list' ) );
+		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
 		add_submenu_page('tutor', __('Categories', 'tutor'), __('Categories', 'tutor'), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null);
 
@@ -90,15 +90,15 @@ class Admin {
 
 		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_settings_page_content'));
 
+		// add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools'));
 		add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools'));
-		add_submenu_page('tutor', __('Tools v2', 'tutor'), __('Tools v2', 'tutor'), 'manage_tutor', 'tutor-tools-v2', array($this, 'tutor_tools_v2'));
 
 		if (!$hasPro) {
 			add_submenu_page('tutor', __('Get Pro', 'tutor'), __('<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor'), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro'));
 		}
 	}
 
-	public function tutor_tools_v2() {
+	public function tutor_tools() {
 		(new Tools_V2)->load_tools_page();
 	}
 
@@ -144,7 +144,7 @@ class Admin {
 		}
 	}
 
-	public function tutor_tools() {
+	public function tutor_tools_old() {
 		$tutor_admin_tools_page = tutor_utils()->array_get('tutor_admin_tools_page', $_GET);
 		if ($tutor_admin_tools_page) {
 			include apply_filters('tutor_admin_tools_page', tutor()->path . "views/pages/{$tutor_admin_tools_page}.php", $tutor_admin_tools_page);
@@ -471,7 +471,7 @@ class Admin {
 
 	/**
 	 * Tutor Course List
-	 * 
+	 *
 	 * @package Course List
 	 * @since v2.0.0
 	 */

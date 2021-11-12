@@ -124,7 +124,7 @@ trait Backend_Page_Trait {
 	public function bulk_action_delete(): array {
 		return array(
 			'value'  => 'delete',
-			'option' => __( 'Delete', 'tutor' ),
+			'option' => __( 'Delete Permanently', 'tutor' ),
 		);
 	}
 
@@ -163,6 +163,18 @@ trait Backend_Page_Trait {
 		return array(
 			'value'  => 'blocked',
 			'option' => __( 'Block', 'tutor' ),
+		);
+	}
+	/**
+	 * Bulk action trash
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function bulk_action_trash(): array {
+		return array(
+			'value'  => 'trash',
+			'option' => __( 'Trash', 'tutor' ),
 		);
 	}
 }

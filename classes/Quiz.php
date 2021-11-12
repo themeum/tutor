@@ -725,8 +725,8 @@ class Quiz {
 		$topic_id 	= sanitize_text_field( $data['topic_id'] ); 
 		$quiz 		= $quiz_id ? get_post($quiz_id) : null;
 		
-		if(!tutor_utils()->can_user_manage('quiz', $quiz_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
+		if($quiz_id && !tutor_utils()->can_user_manage('quiz', $quiz_id)) {
+			wp_send_json_error( array('message'=>__('Quiz Permission Denied', 'tutor')) );
 		}
 		
 		ob_start();

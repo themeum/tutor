@@ -4015,7 +4015,7 @@ jQuery(document).ready(function ($) {
       $('.tutor-dropdown').removeClass('show');
     }
 
-    $(this).addClass('show');
+    $(this).addClass('tutor-dropdown-show');
   });
   /**
    * @since v.1.8.6
@@ -4203,8 +4203,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helper/response */ "./assets/react/helper/response.js");
 
 window.jQuery(document).ready(function ($) {
-  var __ = wp.i18n.__;
-  $(document).on('click', '.tutor-qna-single-wrapper .tutor-qa-sticky-bar [data-action]', function () {
+  var __ = wp.i18n.__; // Change badge
+
+  $(document).on('click', '.tutor-qna-badges [data-action]', function () {
     var qna_action = $(this).data('action');
     var question_id = $(this).closest('[data-question_id]').data('question_id');
     var button = $(this);
@@ -4231,19 +4232,49 @@ window.jQuery(document).ready(function ($) {
         button.removeClass('tutor-updating-message');
       }
     });
-  });
+  }); // Save/update question/reply
+
   $(document).on('click', '.tutor-qa-reply button', function () {
-    var question_id = $(this).closest('[data-question_id]').data('question_id');
-    var answer = $(this).parent().find('textarea').val();
+    var button = $(this);
+    var form = button.closest('.tutor-qa-reply');
+    var question_id = button.closest('[data-question_id]').data('question_id');
+    var course_id = button.closest('[data-course_id]').data('course_id');
+    var context = button.closest('[data-context]').data('context');
+    var answer = form.find('textarea').val();
     $.ajax({
       url: _tutorobject.ajaxurl,
       type: 'POST',
       data: {
+        course_id: course_id,
         question_id: question_id,
+        context: context,
         answer: answer,
-        action: 'tutor_place_answer'
+        action: 'tutor_qna_create_update'
+      },
+      beforeSend: function beforeSend() {
+        button.addClass('tutor-updating-message');
+      },
+      success: function success(resp) {
+        if (!resp.success) {
+          tutor_toast('Error!', (0,_helper_response__WEBPACK_IMPORTED_MODULE_0__.get_response_message)(resp), 'error');
+          return;
+        } // Append content
+
+
+        if (question_id) {
+          $('.tutor-qna-single-question').filter('[data-question_id="' + question_id + '"]').replaceWith(resp.data.html);
+        } else {
+          $('.tutor-qna-single-question').eq(0).before(resp.data.html);
+        }
+      },
+      complete: function complete() {
+        button.removeClass('tutor-updating-message');
       }
     });
+  });
+  $(document).on('click', '.tutor-toggle-reply span', function () {
+    $(this).closest('.tutor-qna-chat').nextAll().toggle();
+    $(this).closest('.tutor-qna-single-wrapper').find('.tutor-qa-reply').toggle();
   });
 });
 
@@ -4805,7 +4836,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 // import '../../../bundle/main.min.css';
 
 var TutorDatepicker = function TutorDatepicker() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(new Date()),
+  var dateFormat = window._tutorobject.wp_date_format;
+  var url = new URL(window.location.href);
+  var params = url.searchParams;
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(),
       _useState2 = _slicedToArray(_useState, 2),
       startDate = _useState2[0],
       setStartDate = _useState2[1];
@@ -4829,14 +4864,32 @@ var TutorDatepicker = function TutorDatepicker() {
     setStartDate(date);
     setDropdownYear(false);
     setDropdownMonth(false);
+    var year = date.getFullYear();
+    var month = date.getMonth();
+    var day = date.getDate();
+    window.location = urlPrams('date', "".concat(year, "-").concat(month + 1, "-").concat(day));
   };
 
   var years = lodash_range__WEBPACK_IMPORTED_MODULE_1___default()(2000, (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(new Date()) + 5, 1);
   var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  var urlPrams = function urlPrams(type, val) {
+    var url = new URL(window.location.href);
+    var params = url.searchParams;
+    params.set(type, val);
+    params.set("paged", 1);
+    return url;
+  };
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    if (params.has('date')) {
+      setStartDate(new Date(params.get('date')));
+    }
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "tutor-react-datepicker"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_datepicker__WEBPACK_IMPORTED_MODULE_3___default()), {
-    placeholderText: "DD-MM-YYYY",
+    placeholderText: dateFormat,
     selected: startDate,
     onChange: function onChange(date) {
       return handleCalendarChange(date);
@@ -4845,7 +4898,7 @@ var TutorDatepicker = function TutorDatepicker() {
     shouldCloseOnSelect: false,
     onCalendarClose: handleCalendarClose,
     onClick: handleCalendarClose,
-    dateFormat: "dd/MM/yyyy",
+    dateFormat: dateFormat,
     renderCustomHeader: function renderCustomHeader(_ref) {
       var date = _ref.date,
           changeYear = _ref.changeYear,

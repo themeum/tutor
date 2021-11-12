@@ -674,9 +674,8 @@ if ( ! function_exists( 'is_single_course' ) ) {
 }
 
 	/**
-	 * Require wp_date form return js date format
-	 *
-	 * this is helpfull for date picker
+	 * Require wp_date form return js date format.
+	 * this is helpful for date picker
 	 *
 	 * @return string
 	 *
@@ -688,10 +687,10 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 		$default_format = 'yy-mm-dd';
 
 		$formats = array(
-			'Y-m-d'  => 'yy-mm-dd',
-			'm/d/Y'  => 'mm-dd-yy',
-			'd/m/Y'  => 'dd-mm-yy',
-			'F j, Y' => 'MM dd, yy',
+			'Y-m-d'  => 'Y-M-d',//'yy-mm-dd',
+			'm/d/Y'  => 'M-d-Y',//'mm-dd-yy',
+			'd/m/Y'  => 'd-M-Y',//'dd-mm-yy',
+			'F j, Y' => 'Y-M-d',
 		);
 		return isset( $formats[ $wp_date_format ] ) ? $formats[ $wp_date_format ] : $default_format;
 	}
