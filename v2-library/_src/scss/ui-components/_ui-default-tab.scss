@@ -72,8 +72,13 @@
 				@extend .color-text-subsued;
 				display: flex;
 				align-items: center;
+				cursor: pointer;
 				.icon-seemore {
 					transform: rotate(-45deg);
+					transition: 100ms;
+				}
+				> * {
+					pointer-events: none;
 				}
 			}
 			&-popup {
@@ -85,15 +90,16 @@
 				max-height: 250px;
 				overflow-y: auto;
 				padding: 4px 0;
-				top: calc(100% - 5px);
+				top: calc(100% - 7px);
 				right: 0;
 				.tab-header-item {
 					@extend .text-regular-caption;
 					@extend .color-design-dark;
 					@extend .tutor-px-15;
-					@extend .tutor-py-9;
+					@extend .tutor-py-6;
 					display: flex;
 					align-items: center;
+					transition: 200ms;
 					&.is-active {
 						/* color/primary/fill/40 */
 						background: #e9edfb;
@@ -102,6 +108,28 @@
 						/* color/primary/fill/40 */
 						background: #e9edfb;
 					}
+
+					&:not(:last-child) {
+						margin-bottom: 4px;
+					}
+				}
+			}
+
+			// Toggle Popup
+			.tab-header-item-seemore-popup {
+				opacity: 0;
+				visibility: hidden;
+				transition: 100ms;
+			}
+			&.is-active {
+				.tab-header-item-seemore-toggle {
+					.icon-seemore {
+						transform: rotate(0deg);
+					}
+				}
+				.tab-header-item-seemore-popup {
+					opacity: 1;
+					visibility: visible;
 				}
 			}
 		} // .tab-header-item-seemore
