@@ -1011,11 +1011,7 @@ jQuery(document).ready(function ($) {
                 var attemptAllowed = $("#tutor-quiz-time-expire-wrapper").data('attempt-allowed');
                 var attemptRemaining = $("#tutor-quiz-time-expire-wrapper").data('attempt-remaining');
                 var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
-<<<<<<< HEAD
-                $(alertDiv).addClass('show');
-=======
                 $(alertDiv).addClass('tutor-alert-show');
->>>>>>> c626124ff6834770d43a63facd359b6ae90a5b17
 
                 if (att > 0) {
                   $("".concat(alertDiv, " .text")).html(__('Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor'));
@@ -1087,15 +1083,9 @@ jQuery(document).ready(function ($) {
       success: function success(data) {
         if (data.success) {
           if (data.data.status === 'added') {
-<<<<<<< HEAD
-            $that.addClass('has-wish-listed');
-          } else {
-            $that.removeClass('has-wish-listed');
-=======
             $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
           } else {
             $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
->>>>>>> c626124ff6834770d43a63facd359b6ae90a5b17
           }
         } else {
           window.location = data.data.redirect_to;
