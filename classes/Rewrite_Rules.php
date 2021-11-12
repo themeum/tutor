@@ -65,10 +65,8 @@ class Rewrite_Rules extends Tutor_Base {
 		);
 
 		//Nav Items
-		$course_nav_items = tutor_utils()->course_sub_pages();
-		$course_nav_items = apply_filters('tutor_course/single/enrolled/nav_items_rewrite', $course_nav_items);
-		//$course_nav_items = array_keys($course_nav_items);
-
+		$course_nav_items = tutor_utils()->course_sub_pages(true);
+		
 		if (is_array($course_nav_items) && count($course_nav_items)) {
 			foreach ($course_nav_items as $nav_key => $nav_item) {
 				$new_rules[$this->course_post_type . "/(.+?)/{$nav_key}/?$"] = "index.php?post_type={$this->course_post_type}&name=" . $wp_rewrite->preg_index(1) . '&course_subpage=' . $nav_key;

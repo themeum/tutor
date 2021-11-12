@@ -46,6 +46,4 @@ global $wp_query;
     </div>
 
     <?php tutor_course_price(); ?>
-    <?php tutor_course_material_includes_html(); ?>
-
 </div> <!-- tutor-price-preview-box -->

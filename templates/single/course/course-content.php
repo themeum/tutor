@@ -23,7 +23,7 @@ global $post;
 		if ( ! empty(get_the_content())){
 			?>
             <div class="course-content-title">
-                <h4  class="tutor-segment-title"><?php _e('Description', 'tutor'); ?></h4>
+                <h4  class="tutor-segment-title"><?php _e('About Course', 'tutor'); ?></h4>
             </div>
 			<?php
 		}
