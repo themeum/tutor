@@ -4846,7 +4846,7 @@
   color: #41454f;
 }
 
-.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item {
+.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle {
   color: #5b616f;
 }
 
@@ -4874,7 +4874,7 @@
   color: #f44337;
 }
 
-.color-design-dark {
+.color-design-dark, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
   color: #1a1b1e;
 }
 
@@ -5118,7 +5118,7 @@
   color: #ed9700;
 }
 
-.color-warning-100 {
+.color-warning-100, .tutor-modal .tutor-alert.tutor-warning {
   color: #895800;
 }
 
@@ -5486,7 +5486,7 @@
   background-color: #fdf4e3;
 }
 
-.bg-warning-30 {
+.bg-warning-30, .tutor-modal .tutor-alert.tutor-warning {
   background-color: #fefbf4;
 }
 
@@ -5592,7 +5592,7 @@
   line-height: 162%;
 }
 
-.text-regular-caption, .tutor-alert, .tutor-alert .tutor-alert-text, table.tutor-ui-table .td-list-item .tutor-form-check label {
+.text-regular-caption, .tutor-alert, .tutor-alert .tutor-alert-text, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
   font-weight: 400 !important;
   font-size: 15px !important;
   line-height: 160%;
@@ -5652,7 +5652,7 @@
   line-height: 162%;
 }
 
-.text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-default-tab .tab-header-item, .tutor-wp-dashboard-filter-items .tutor-form-label {
+.text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-default-tab .tab-header-item, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle, .tutor-wp-dashboard-filter-items .tutor-form-label {
   font-weight: 500 !important;
   font-size: 15px !important;
   line-height: 160%;
@@ -9305,7 +9305,7 @@
   padding-right: 9px;
 }
 
-.tutor-py-9 {
+.tutor-py-9, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
   padding-top: 9px;
   padding-bottom: 9px;
 }
@@ -10364,7 +10364,7 @@
   padding-left: 15px;
 }
 
-.tutor-px-15 {
+.tutor-px-15, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -21319,6 +21319,15 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   color: var(--tutor-primary-hover);
 }
 
+.tutor-modal .tutor-alert {
+  padding: 6px 10px;
+}
+
+.tutor-modal .tutor-alert.tutor-warning {
+  border-color: #f9d093;
+  text-align: left;
+}
+
 .tutor-check-icon {
   height: 15px;
   width: 15px;
@@ -24798,12 +24807,81 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           transform: scaleY(1);
 }
 
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item:before {
+  display: none !important;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item.is-active {
+  color: #3e64de;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item.is-active:before {
+  display: none;
+}
+
 .tutor-default-tab .tab-body-item {
   display: none;
 }
 
 .tutor-default-tab .tab-body-item.is-active {
   display: block;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle .icon-seemore {
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup {
+  position: absolute;
+  background: #ffffff;
+  -webkit-box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
+          box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
+  border-radius: 6px;
+  width: 180px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 4px 0;
+  top: calc(100% - 5px);
+  right: 0;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item.is-active {
+  /* color/primary/fill/40 */
+  background: #e9edfb;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item:hover {
+  /* color/primary/fill/40 */
+  background: #e9edfb;
 }
 
 .tutor-certificate-template-tab {
@@ -26452,7 +26530,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (max-width: 576px) {
-  .text-regular-body.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label.text-regular-body, table.tutor-ui-table .td-list-item .tutor-form-check label.tutor-accordion-item-body-content, table.tutor-ui-table .td-list-item .tutor-form-check .tutor-course-listing-filter .filter-widget-checkboxes label, .tutor-course-listing-filter .filter-widget-checkboxes table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .text-regular-body.tab-header-item, .tutor-default-tab .tab-header-item.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item, .color-text-subsued.tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label.color-text-subsued {
+  .text-regular-body.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label.text-regular-body, table.tutor-ui-table .td-list-item .tutor-form-check label.tutor-accordion-item-body-content, table.tutor-ui-table .td-list-item .tutor-form-check .tutor-course-listing-filter .filter-widget-checkboxes label, .tutor-course-listing-filter .filter-widget-checkboxes table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .text-regular-body.tab-header-item, .tutor-default-tab .tab-header-item.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item, .tutor-default-tab.tutor-tab-has-seemore .text-regular-body.tab-header-item-seemore-toggle, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle.tutor-accordion-item-body-content, .tutor-default-tab.tutor-tab-has-seemore .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item-seemore-toggle, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab.tutor-tab-has-seemore label.tab-header-item-seemore-toggle, .color-text-subsued.tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label.color-text-subsued {
     font-size: 15px;
   }
   .text-medium-body, select.tutor-form-select {
