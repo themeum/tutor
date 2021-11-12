@@ -7480,6 +7480,15 @@ class Utils {
 					$object_id
 				) );
 				break;
+			case 'assignment_submission' :
+				$course_id = $wpdb->get_var( $wpdb->prepare(
+					"SELECT comment_post_ID
+					FROM 	{$wpdb->comments}
+				    WHERE comment_ID = %d;
+					",
+					$object_id
+				) );
+				break;
 
 			case 'question' :
 				$course_id = $wpdb->get_var( $wpdb->prepare(
