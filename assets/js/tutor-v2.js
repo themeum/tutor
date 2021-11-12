@@ -4433,8 +4433,7 @@ accordionItemHeaders.forEach(function (accordionItemHeader) {
     var seeMoreAttr = 'data-seemore-target';
 
     if (e.target.hasAttribute(seeMoreAttr)) {
-      var _id = e.target.getAttribute(seeMoreAttr); // document.getElementById(`${id}`).classList.toggle('is-active');
-
+      var _id = e.target.getAttribute(seeMoreAttr);
 
       document.getElementById("".concat(_id)).closest('.tab-header-item-seemore').classList.toggle('is-active');
     } else {

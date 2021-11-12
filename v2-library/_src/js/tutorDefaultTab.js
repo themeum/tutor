@@ -30,7 +30,6 @@
 		const seeMoreAttr = 'data-seemore-target';
 		if (e.target.hasAttribute(seeMoreAttr)) {
 			const id = e.target.getAttribute(seeMoreAttr);
-			// document.getElementById(`${id}`).classList.toggle('is-active');
 			document
 				.getElementById(`${id}`)
 				.closest('.tab-header-item-seemore')

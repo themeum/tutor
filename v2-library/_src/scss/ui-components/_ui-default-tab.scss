@@ -37,7 +37,7 @@
 		}
 	}
 
-	&.tutor-tab-has-seemore {
+	.tab-header-item-seemore {
 		.tab-header-item {
 			&:before {
 				display: none !important;
@@ -86,12 +86,28 @@
 				background: #ffffff;
 				box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
 				border-radius: 6px;
-				width: 180px;
-				max-height: 250px;
-				overflow-y: auto;
 				padding: 4px 0;
-				top: calc(100% - 7px);
-				right: 0;
+				top: calc(100% - 8px);
+				right: -3px;
+
+				ul {
+					width: 180px;
+					max-height: 190px;
+					overflow-y: auto;
+				}
+
+				&:before {
+					content: '';
+					position: absolute;
+					width: 10px;
+					height: 10px;
+					top: -6px;
+					right: 8px;
+					background: #fff;
+					clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+					transform: rotate(45deg);
+					border-radius: 3px 0 0 0px;
+				}
 				.tab-header-item {
 					@extend .text-regular-caption;
 					@extend .color-design-dark;
