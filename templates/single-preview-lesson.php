@@ -11,30 +11,6 @@
  * @version 1.4.3
  */
 
-/*
-get_header();
-
-global $post;
-$currentPost = $post;
-*/?><!--
-<?php /*do_action('tutor_lesson/single/before/wrap'); */?>
-    <div <?php /*tutor_post_class('tutor-single-lesson-wrap tutor-page-wrap'); */?>>
-        <div class="tutor-bs-container">
-            <div class="tutor-bs-row">
-                <div class="tutor-bs-col-12">
-                    <?php /*tutor_lesson_video(); */?>
-                    <?php /*the_content(); */?>
-                    <?php /*get_tutor_posts_attachments(); */?>
-                </div>
-            </div>
-        </div>
-    </div>
---><?php /*do_action('tutor_lesson/single/after/wrap');
-
-get_footer();*/
-
-
-
 get_tutor_header();
 
 global $post;

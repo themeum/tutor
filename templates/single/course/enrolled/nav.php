@@ -15,7 +15,7 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-$course_nav_item = tutor_utils()->course_sub_pages();
+$course_nav_item = tutor_utils()->course_sub_pages(get_the_ID());
 ?>
 
 <?php do_action('tutor_course/single/enrolled/nav/before'); ?>
@@ -23,12 +23,16 @@ $course_nav_item = tutor_utils()->course_sub_pages();
 <div id="course-enrolled-nav-wrap-<?php echo get_the_ID(); ?>" class="course-enrolled-nav-wrap course-enrolled-nav-wrap-<?php the_ID(); ?>">
 	<nav id="course-enrolled-nav-<?php echo get_the_ID(); ?>" class="course-enrolled-nav course-enrolled-nav-<?php the_ID(); ?>">
 		<ul>
-			<li class="<?php echo get_query_var('course_subpage') === '' ? 'active' : ''; ?>"><a href="<?php echo get_permalink(); ?>"><?php _e('Course Page', 'tutor'); ?></a> </li>
 			<?php
+			$sub_page = get_query_var('course_subpage');
+			!$sub_page ? $sub_page='info' : 0;
+
 			foreach ($course_nav_item as $nav_key => $nav_item){
-				$active_class = get_query_var('course_subpage') === $nav_key? 'active' : '';
-				$url = trailingslashit(get_permalink()).$nav_key;
-				echo "<li class='{$active_class}'><a href='{$url}'>{$nav_item}</a> </li>";
+				$active_class = $sub_page === $nav_key? 'active' : '';
+				$url = trailingslashit(get_permalink()).($nav_key=='info' ? '' : $nav_key);
+				echo "<li class='{$active_class}'>
+						<a href='{$url}'>{$nav_item['title']}</a> 
+					</li>";
 			}
 			?>
 		</ul>
