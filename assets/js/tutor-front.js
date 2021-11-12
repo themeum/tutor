@@ -1039,7 +1039,7 @@ jQuery(document).ready(function ($) {
                 var attemptAllowed = $("#tutor-quiz-time-expire-wrapper").data('attempt-allowed');
                 var attemptRemaining = $("#tutor-quiz-time-expire-wrapper").data('attempt-remaining');
                 var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
-                $(alertDiv).addClass('show');
+                $(alertDiv).addClass('tutor-alert-show');
 
                 if (att > 0) {
                   $("".concat(alertDiv, " .text")).html(__('Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor'));
@@ -1111,9 +1111,9 @@ jQuery(document).ready(function ($) {
       success: function success(data) {
         if (data.success) {
           if (data.data.status === 'added') {
-            $that.addClass('has-wish-listed');
+            $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
           } else {
-            $that.removeClass('has-wish-listed');
+            $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
           }
         } else {
           window.location = data.data.redirect_to;
@@ -1600,21 +1600,11 @@ jQuery(document).ready(function ($) {
       type: 'POST',
       data: data,
       beforeSend: function beforeSend() {
-        $form.find('.tutor-success-msg').remove();
         $btn.addClass('updating-icon');
       },
       success: function success(data) {
         if (data.success) {
-          var successMsg = '<div class="tutor-success-msg" style="display: none;"><i class="tutor-icon-mark"></i> ' + data.data.msg + ' </div>';
-          $btn.closest('.withdraw-account-save-btn-wrap').append(successMsg);
-
-          if ($form.find('.tutor-success-msg').length) {
-            $form.find('.tutor-success-msg').slideDown();
-          }
-
-          setTimeout(function () {
-            $form.find('.tutor-success-msg').slideUp();
-          }, 5000);
+          tutor_toast('Success!', data.data.msg, 'success', false);
         }
       },
       complete: function complete() {

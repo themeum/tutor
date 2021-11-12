@@ -76,7 +76,7 @@ window.jQuery(document).ready(function($){
             },
             success: function (data) {
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id}).addClass('show');
+                $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id});
                 $('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
 
                 var tinymceConfig = tinyMCEPreInit.mceInit.tutor_editor_config;
@@ -87,11 +87,11 @@ window.jQuery(document).ready(function($){
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");
 
-                $(document).trigger('lesson_modal_loaded', {lesson_id : lesson_id, topic_id : topic_id, course_id : course_id});
+                $(document).trigger('lesson_modal_loaded', {lesson_id, topic_id, course_id});
             },
             complete: function () {
-                quicktags({id : "tutor_lesson_modal_editor"});
                 $that.removeClass('tutor-updating-message');
+                quicktags({id : "tutor_lesson_modal_editor"});
             }
         });
     });

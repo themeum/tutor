@@ -20,50 +20,11 @@
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
 				<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
 				<input type="search" accesskey="s" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search ...⌃⌥ + S or Alt+S for shortcut', 'tutor' ); ?>" />
-				<div class="search-popup-opener search_result">
-					<a href="#">
-						<div class="search_result_title">
-							<i class="ttr-search-filled"></i>›
-							<span>Result results one</span>
-						</div>
-						<div class="search_navigation">
-							<span>General</span>
-							<i class="las la-angle-right"></i>
-							<span>Instructor</span>
-						</div>
-					</a>
-					<a href="#">
-						<div class="search_result_title">
-							<i class="ttr-search-filled"></i>
-							<span>Result results tow</span>
-						</div>
-						<div class="search_navigation">
-							<span>Design</span>
-							<i class="las la-angle-right"></i>
-							<span>Instructor</span>
-						</div>
-					</a>
-					<a href="#">
-						<div class="search_result_title">
-							<i class="ttr-search-filled"></i>
-							<span>Result results three</span>
-						</div>
-						<div class="search_navigation">
-							<span>General</span>
-							<i class="las la-angle-right"></i>
-							<span>Instructor</span>
-						</div>
-					</a>
-				</div>
-			</div>
-			<div class="tutor-input-group tutor-form-control-has-icon">
-				<!-- <span class="tutor-input-group-icon ttr-search-filled"></span>
-				<input type="search" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search', 'tutor' ); ?>" /> -->
-
+				<div class="search-popup-opener search_result"></div>
 			</div>
 		</div>
 		<div class="save-button">
-			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap">
+			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap" disabled>
 				<?php _e( 'Save Changes', 'tutor' ); ?>
 			</button>
 		</div>

@@ -7,18 +7,21 @@
  */
 
 if ( ! empty( $field['group_options'] ) ) {
-	$field_id = 'field_' . $field['key'];
+	$field_key = esc_attr( $field['key'] );
+	$field_id  = esc_attr( 'field_' . $field_key );
 	?>
 	<div class="tutor-option-field-input" id="<?php echo esc_attr( $field_id ); ?>">
 		<div class="type-toggle-grid">
 			<?php
 			foreach ( $field['group_options'] as $key => $option ) :
+				// pr( $option );
 				$default      = $option['default'] ?? '';
 				$option_value = $this->get( $option['key'], $default );
 				?>
 				<div class="toggle-item">
 					<label class="tutor-form-toggle">
-						<input type="checkbox" class="tutor-form-toggle-input" name="tutor_option[<?php echo esc_attr( $option ['key'] ); ?>]" value="1" <?php checked( $option_value, '1' ); ?>>
+						<input type="hidden" name="tutor_option[<?php echo esc_attr( $option['key'] ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
+						<input type="checkbox" value="on" <?php checked( esc_attr( $option_value ), 'on' ); ?> class="tutor-form-toggle-input">
 						<span class="tutor-form-toggle-control"></span>
 						<span class="label-after"> <?php echo esc_attr( $option ['label'] ); ?> </span>
 					</label>
