@@ -71,7 +71,7 @@ if ($assignment_comment != false) {
 
 </div>
 
-<div class="tutor-lesson-content-area">
+<div class="tutor-quiz-wrapper tutor-quiz-wrapper justify-content-center tutor-mt-100 tutor-pb-100">
 	<div class="tutor-assignment-title">
 		<h2><?php the_title(); ?></h2>
 	</div>
