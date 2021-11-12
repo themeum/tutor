@@ -496,3 +496,15 @@
 		}
 	}
 }
+
+.tutor-modal {
+	.tutor-alert {
+		padding: 6px 10px;
+		&.tutor-warning {
+			@extend .bg-warning-30;
+			@extend .color-warning-100;
+			border-color: $warning-60;
+			text-align: left;
+		}
+	}
+}
