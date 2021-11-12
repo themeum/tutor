@@ -1,4 +1,4 @@
-<div id="tutor-page-reset-modal" class="tutor-modal">
+<div id="tutor-page-reset-modal" class="tutor-modal tutor-modal-confirmation">
 	<span class="tutor-modal-overlay"></span>
 	<button data-tutor-modal-close class="tutor-modal-close">
 		<span class="las la-times"></span>
