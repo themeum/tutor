@@ -14,11 +14,7 @@
 	?>
     <?php
         $is_wishlisted = tutor_utils()->is_wishlisted($course_id);
-        $has_wish_list = '';
-        if ($is_wishlisted){
-	        $has_wish_list = 'has-wish-listed';
-        }
-
+        
         $action_class = '';
         if ( is_user_logged_in()){
             $action_class = apply_filters('tutor_wishlist_btn_class', 'tutor-course-wishlist-btn');
@@ -26,8 +22,8 @@
             $action_class = apply_filters('tutor_popup_login_class', 'cart-required-login');
         }
         
-		echo wp_kses_post('<a href="javascript:;" class="'.$action_class.' '.$has_wish_list.' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'.$course_id.'">
-            <i class="ttr-fav-line-filled"></i>
+		echo wp_kses_post('<a href="javascript:;" class="'.$action_class.' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'.$course_id.'">
+            <i class="'.($is_wishlisted ? 'ttr-fav-full-filled' : 'ttr-fav-line-filled').'"></i>
         </a>');
 	?>
 </div>

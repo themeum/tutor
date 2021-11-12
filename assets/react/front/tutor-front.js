@@ -216,7 +216,7 @@ jQuery(document).ready(function ($) {
                                 var attemptRemaining = $("#tutor-quiz-time-expire-wrapper").data('attempt-remaining');
 
                                 var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
-                                $(alertDiv).addClass('show');
+                                $(alertDiv).addClass('tutor-alert-show');
                                 if ( att > 0 ) {
                                     $(`${alertDiv} .text`).html(
                                         __( 'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: '+ attemptRemaining+'/'+attemptAllowed, 'tutor' )
@@ -296,9 +296,9 @@ jQuery(document).ready(function ($) {
             success: function (data) {
                 if (data.success) {
                     if (data.data.status === 'added') {
-                        $that.addClass('has-wish-listed');
+                        $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
                     } else {
-                        $that.removeClass('has-wish-listed');
+                        $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
                     }
                 } else {
                     window.location = data.data.redirect_to;

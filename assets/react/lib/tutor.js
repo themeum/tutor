@@ -522,15 +522,15 @@ jQuery(document).ready(function($){
     //dropdown toggle
     $(document).click(function(){
         $(".tutor-dropdown").removeClass('show');
-      });
+    });
 
-      $(".tutor-dropdown").click(function(e){
+    $(".tutor-dropdown").click(function(e){
         e.stopPropagation();
         if ( $('.tutor-dropdown').hasClass('show') ) {
             $('.tutor-dropdown').removeClass('show')
         }
-        $(this).addClass('show');
-      });
+        $(this).addClass('tutor-dropdown-show');
+    });
 
    /**
     * @since v.1.8.6

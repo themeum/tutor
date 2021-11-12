@@ -77,6 +77,10 @@
         
         .instructor-name {
             position: relative;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 18px;
+            color: #212327;
 
             i.instructor-name-tooltip {
                 -webkit-transition: 300ms;
@@ -117,6 +121,15 @@
                 &:hover + i.instructor-name-tooltip {
                 opacity: 1;
                 }
+            }
+
+            span{
+                // Email address
+                display: block;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 13px;
+                color: #5B616F;
             }
         }
     }

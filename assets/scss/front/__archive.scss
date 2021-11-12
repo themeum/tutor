@@ -55,9 +55,7 @@ div[class*="tutor-course-col"] {
             color: var(--tutor-primary-color);
             -webkit-transition: 300ms;
             transition: 300ms;
-            &.has-wish-listed:before {
-                content: "\e908";
-            }
+            
             &.updating-icon:before {
                 content: "\e91d";
                 margin-right: 0;
@@ -2607,16 +2605,15 @@ table.course-single-gradebooks a {
 
 #tutor-quiz-time-expire-wrapper {
     margin-bottom: 40px;
+    
     .tutor-alert {
         display: none;
-    }
-    .tutor-alert.show {
-        @include valueWithPrefix(display,
-        flex);
-        @include propertyWithPrefix(justify-content,
-        space-between);
-        @include propertyWithPrefix(align-items,
-        center);
+
+        &.tutor-alert-show {
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(justify-content, space-between);
+            @include propertyWithPrefix(align-items, center);
+        }
     }
 }
 
@@ -2661,11 +2658,6 @@ table.course-single-gradebooks a {
     button:hover span {
         color: #fff;
     }
-}
-
-.has-wish-listed {
-    color: #fff !important;
-    background-color: #3e64de !important;
 }
 
 @media only screen and (min-width: 1200px) {
