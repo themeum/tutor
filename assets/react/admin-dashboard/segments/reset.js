@@ -43,26 +43,27 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 					const field_types_multi = ['group_fields'];
 					if (field_types_multi.includes(item.type)) {
 						console.log(item.group_fields);
-
-						item.group_fields.forEach((item) => {
-							const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
-							if (field_types_associate.includes(item.type)) {
-								let itemName = 'tutor_option[' + item.key + ']';
-								let itemElement = elementByName(itemName)[0];
-								if (item.type == 'select') {
-									let sOptions = itemElement.options;
-									[...sOptions].forEach((item) => {
-										item.selected = false;
-									});
-								} else if (item.type == 'toggle_switch') {
-									itemElement.value = item.default;
-									itemElement.nextElementSibling.value = item.default;
-									itemElement.nextElementSibling.checked = false;
-								} else {
-									itemElement.value = item.default;
+						if (item.group_fields) {
+							item.group_fields.forEach((item) => {
+								const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+								if (field_types_associate.includes(item.type)) {
+									let itemName = 'tutor_option[' + item.key + ']';
+									let itemElement = elementByName(itemName)[0];
+									if (item.type == 'select') {
+										let sOptions = itemElement.options;
+										[...sOptions].forEach((item) => {
+											item.selected = false;
+										});
+									} else if (item.type == 'toggle_switch') {
+										itemElement.value = item.default;
+										itemElement.nextElementSibling.value = item.default;
+										itemElement.nextElementSibling.checked = false;
+									} else {
+										itemElement.value = item.default;
+									}
 								}
-							}
-						})
+							})
+						}
 					}
 				});
 				setTimeout(() => {
