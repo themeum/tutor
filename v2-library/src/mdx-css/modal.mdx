@@ -132,7 +132,13 @@ Use `className="tutor-modal modal-sticky-header-footer"`
                         <h3 className="tutor-modal-title">Delete This Course?</h3>
                         <p>Are you sure you want to delete this course permanently from the site? Please confirm your choice.</p>
                     </div>
-                    <div className="tutor-modal-btns tutor-btn-group">
+                    <div class="tutor-alert tutor-warning tutor-mt-30">
+                        <div class="tutor-alert-text">
+                            <span class="tutor-alert-icon tutor-icon-34  ttr-warning-filled tutor-mr-10"></span>
+                            <span class="color-warning-100">WARNING! This will overwrite all existing settings, please proceed with caution.</span>
+                        </div>
+                    </div>
+                    <div className="tutor-modal-btns tutor-btn-group tutor-mt-40">
                         <button data-tutor-modal-close className="tutor-btn tutor-is-outline tutor-is-default">
                             Cancel
                         </button>
