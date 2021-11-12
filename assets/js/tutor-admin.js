@@ -2300,6 +2300,8 @@ var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 resetDefaultBtn.forEach(function (resetBtn, index) {
   resetBtn.onclick = function (e) {
     e.preventDefault();
+    var spinReset = resetBtn.getElementsByClassName('btn-icon')[0];
+    spinReset.style.animation = 'spinner 1s infinite linear';
     var resetPage = resetBtn.dataset.reset;
     var formData = new FormData();
     formData.append('action', 'reset_settings_data');
@@ -2363,7 +2365,10 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
             });
           }
         });
-        tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+        setTimeout(function () {
+          spinReset.style.animation = '';
+          tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+        }, 600);
       }
     };
   };
