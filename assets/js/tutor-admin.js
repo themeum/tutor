@@ -2340,29 +2340,32 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
 
           if (field_types_multi.includes(item.type)) {
             console.log(item.group_fields);
-            item.group_fields.forEach(function (item) {
-              var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
 
-              if (field_types_associate.includes(item.type)) {
-                var _itemName = 'tutor_option[' + item.key + ']';
+            if (item.group_fields) {
+              item.group_fields.forEach(function (item) {
+                var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
 
-                var _itemElement = elementByName(_itemName)[0];
+                if (field_types_associate.includes(item.type)) {
+                  var _itemName = 'tutor_option[' + item.key + ']';
 
-                if (item.type == 'select') {
-                  var _sOptions = _itemElement.options;
+                  var _itemElement = elementByName(_itemName)[0];
 
-                  _toConsumableArray(_sOptions).forEach(function (item) {
-                    item.selected = false;
-                  });
-                } else if (item.type == 'toggle_switch') {
-                  _itemElement.value = item["default"];
-                  _itemElement.nextElementSibling.value = item["default"];
-                  _itemElement.nextElementSibling.checked = false;
-                } else {
-                  _itemElement.value = item["default"];
+                  if (item.type == 'select') {
+                    var _sOptions = _itemElement.options;
+
+                    _toConsumableArray(_sOptions).forEach(function (item) {
+                      item.selected = false;
+                    });
+                  } else if (item.type == 'toggle_switch') {
+                    _itemElement.value = item["default"];
+                    _itemElement.nextElementSibling.value = item["default"];
+                    _itemElement.nextElementSibling.checked = false;
+                  } else {
+                    _itemElement.value = item["default"];
+                  }
                 }
-              }
-            });
+              });
+            }
           }
         });
         setTimeout(function () {
