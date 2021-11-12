@@ -12,10 +12,10 @@
 		</div>
 		<div class="tutor-modal-text-wrap">
 		  <h3 class="tutor-modal-title">
-			  <?php esc_html_e( 'Are you sure?', 'tutor' ); ?>
+			  <?php esc_html_e( 'Wait!', 'tutor' ); ?>
 		  </h3>
 		  <p>
-			<?php esc_html_e( 'This action can not be undone.' ); ?>
+			<?php esc_html_e( 'Are you sure you would like perform this action? We suggest you proceed with caution.', 'tutor' ); ?>
 		  </p>
 		</div>
 		<div class="tutor-modal-btns tutor-btn-group">
