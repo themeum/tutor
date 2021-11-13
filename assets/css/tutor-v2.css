@@ -8507,7 +8507,7 @@
   padding-right: 6px;
 }
 
-.tutor-py-6 {
+.tutor-py-6, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
   padding-top: 6px;
   padding-bottom: 6px;
 }
@@ -9305,7 +9305,7 @@
   padding-right: 9px;
 }
 
-.tutor-py-9, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
+.tutor-py-9 {
   padding-top: 9px;
   padding-bottom: 9px;
 }
@@ -19474,6 +19474,18 @@
   border-radius: 50px;
 }
 
+.tutor-border-p40 {
+  border: 1px solid #e9edfb;
+}
+
+.tutor-border-p50 {
+  border: 1px solid #d2dbf5;
+}
+
+.tutor-border-p60 {
+  border: 1px solid #bdcaf1;
+}
+
 /* This is a legacy directory pulled from inside the tutor as it is sort of old design library  */
 /* Common libraries. This file will be loaded in both of admin and frontend main scss file once */
 .tutor-switch {
@@ -23369,6 +23381,10 @@ select.tutor-form-select:focus {
   border: none !important;
 }
 
+.tutor-btn.tutor-is-outline {
+  background: transparent;
+}
+
 .tutor-btn.tutor-btn-loading:not(.tutor-btn-icon) {
   padding-top: 5px;
 }
@@ -24807,15 +24823,15 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           transform: scaleY(1);
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item:before {
+.tutor-default-tab .tab-header-item-seemore .tab-header-item:before {
   display: none !important;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item.is-active {
+.tutor-default-tab .tab-header-item-seemore .tab-header-item.is-active {
   color: #3e64de;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item.is-active:before {
+.tutor-default-tab .tab-header-item-seemore .tab-header-item.is-active:before {
   display: none;
 }
 
@@ -24844,11 +24860,18 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  cursor: pointer;
 }
 
 .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle .icon-seemore {
   -webkit-transform: rotate(-45deg);
           transform: rotate(-45deg);
+  -webkit-transition: 100ms;
+  transition: 100ms;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle > * {
+  pointer-events: none;
 }
 
 .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup {
@@ -24857,12 +24880,30 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   -webkit-box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
           box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
   border-radius: 6px;
-  width: 180px;
-  max-height: 250px;
-  overflow-y: auto;
   padding: 4px 0;
-  top: calc(100% - 5px);
-  right: 0;
+  top: calc(100% - 8px);
+  right: -3px;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup ul {
+  width: 180px;
+  max-height: 190px;
+  overflow-y: auto;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup:before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -6px;
+  right: 8px;
+  background: #fff;
+  -webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+          clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  border-radius: 3px 0 0 0px;
 }
 
 .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
@@ -24872,6 +24913,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-transition: 200ms;
+  transition: 200ms;
 }
 
 .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item.is-active {
@@ -24882,6 +24925,27 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item:hover {
   /* color/primary/fill/40 */
   background: #e9edfb;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore .tab-header-item-seemore-popup {
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: 100ms;
+  transition: 100ms;
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore.is-active .tab-header-item-seemore-toggle .icon-seemore {
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
+
+.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore.is-active .tab-header-item-seemore-popup {
+  opacity: 1;
+  visibility: visible;
 }
 
 .tutor-certificate-template-tab {
@@ -25976,6 +26040,26 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border: 1px solid #cdcfd5;
   overflow: hidden;
   border-radius: 6px;
+}
+
+.tutor-gradebook-finalgrade {
+  padding: 24px 30px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  grid-gap: 20px;
+}
+
+.tutor-gradebook-finalgrade .tutor-btn-circle.tutor-is-lg, .tutor-gradebook-finalgrade .tutor-text-card .tutor-is-lg.tutor-card-icon, .tutor-text-card .tutor-gradebook-finalgrade .tutor-is-lg.tutor-card-icon {
+  margin: 0;
+  height: 54px;
+  width: 54px;
+  min-width: 54px;
+  background: #00abfa;
+  border-color: #00abfa;
+  color: #fff;
 }
 
 .tutor-course-listing-grid {

@@ -820,7 +820,7 @@ class Course extends Tutor_Base {
 		add_filter('tutor_course/single/benefits_html', array($this, 'enable_disable_course_benefits') );
 		add_filter('tutor_course/single/requirements_html', array($this, 'enable_disable_course_requirements') );
 		add_filter('tutor_course/single/audience_html', array($this, 'enable_disable_course_target_audience') );
-		add_filter('tutor_course/single/enrolled/nav_items', array($this, 'enable_disable_course_nav_items') );
+		add_filter('tutor_course/single/nav_items', array($this, 'enable_disable_course_nav_items'), 999, 2 );
 	}
 
 	/**
@@ -899,24 +899,40 @@ class Course extends Tutor_Base {
 	 * Enable disable course nav items
 	 * @since v.1.4.8
 	 */
-	public function enable_disable_course_nav_items($items){
+	public function enable_disable_course_nav_items($items, $course_id){
+		if($course_id===true) {
+			// For rewrite rule
+			return $items;
+		}
+
 		global $wp_query, $post;
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
-
 		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_enable_qa', true)!='yes' : false;
 
+		// Whether Q&A enabled
 		if(!$enable_q_and_a_on_course || $disable_qa_for_this_course) {
 			if(tutor_utils()->array_get('questions', $items)) {
 				unset($items['questions']);
 			}
 		}
+
+		// Whether announcment enabled
 		if($disable_course_announcements){
 			if(tutor_utils()->array_get('announcements', $items)) {
 				unset($items['announcements']);
 			}
 		}
-		return $items;
+
+		// Whether enrolment require
+		$is_enrolled = tutor_utils()->is_enrolled();
+		
+		return array_filter($items, function($item) use($is_enrolled) {
+			if(isset($item['require_enrolment']) && $item['require_enrolment']) {
+				return $is_enrolled;
+			}
+			return true;
+		});
 	}
 
 	/**

@@ -6512,7 +6512,7 @@ li.tutor-option-nav-item h4 {
   width: 100%;
   height: 3px;
   background: #1973aa;
-  bottom: calc(0% - 23px);
+  bottom: calc(0% - 18px);
   -webkit-transition: -webkit-transform 200ms linear;
   transition: -webkit-transform 200ms linear;
   transition: transform 200ms linear;
