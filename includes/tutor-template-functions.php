@@ -714,6 +714,7 @@ if ( ! function_exists('tutor_course_requirements')) {
 if ( ! function_exists('tutor_course_requirements_html')) {
     function tutor_course_requirements_html($echo = true) {
         ob_start();
+        tutor_course_material_includes_html();
         tutor_load_template( 'single.course.course-requirements' );
         $output = apply_filters( 'tutor_course/single/requirements_html', ob_get_clean() );
 
@@ -829,6 +830,11 @@ if ( ! function_exists('tutor_course_target_reviews_html')) {
     function tutor_course_target_reviews_html($echo = true) {
         ob_start();
         tutor_load_template( 'single.course.reviews' );
+        
+        if(tutor_utils()->is_enrolled()) {
+            tutor_course_target_review_form_html();
+        }
+        
         $output = apply_filters( 'tutor_course/single/reviews_html', ob_get_clean() );
 
         if ($echo){
@@ -931,7 +937,7 @@ if ( ! function_exists('tutor_course_enrolled_lead_info')) {
         if ( $queryCourse->have_posts() ) {
             while ( $queryCourse->have_posts() ) {
                 $queryCourse->the_post();
-                tutor_load_template( 'single.course.enrolled.lead-info' );
+                tutor_load_template( 'single.course.lead-info' );
             }
             wp_reset_postdata();
         }
@@ -960,7 +966,7 @@ if ( ! function_exists('tutor_lesson_lead_info')) {
         if ( $queryCourse->have_posts() ) {
             while ( $queryCourse->have_posts() ) {
                 $queryCourse->the_post();
-                tutor_load_template( 'single.course.enrolled.lead-info' );
+                tutor_load_template( 'single.course.lead-info' );
             }
             wp_reset_postdata();
         }
@@ -1238,6 +1244,22 @@ function tutor_course_question_and_answer($echo = true){
     }
 
     return $output;
+}
+
+/**
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * @show progress bar about course complete
+ *
+ * @since v.2.0.0
+ */
+
+function tutor_course_info_tab() {
+    tutor_course_content();
+    tutor_course_benefits_html();
+    tutor_course_instructors_html();
 }
 
 

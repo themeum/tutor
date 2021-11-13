@@ -1355,13 +1355,33 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function course_sub_pages() {
+	public function course_sub_pages($course_id) {
 		$nav_items = array(
-			'questions'     => __('Q&A', 'tutor'),
-			'announcements' => __('Announcements', 'tutor'),
+			'info' => array( 
+				'title' => __('Course Info', 'tutor'), 
+				'method' => 'tutor_course_info_tab'
+			),
+			'curriculum' => array( 
+				'title' => __('Curriculum', 'tutor'), 
+				'method' => 'tutor_course_topics' 
+			),
+			'reviews' => array( 
+				'title' => __('Reviews', 'tutor'), 
+				'method' => 'tutor_course_target_reviews_html' 
+			),
+			'questions' => array( 
+				'title' => __('Q&A', 'tutor'), 
+				'method' => 'tutor_course_question_and_answer',
+				'require_enrolment' => true
+			),
+			'announcements' => array( 
+				'title' => __('Announcements', 'tutor'), 
+				'method' => 'tutor_course_announcements',
+				'require_enrolment' => true
+			),
 		);
 
-		return apply_filters( 'tutor_course/single/enrolled/nav_items', $nav_items );
+		return apply_filters( 'tutor_course/single/nav_items', $nav_items, $course_id );
 	}
 
 	/**
@@ -7476,6 +7496,15 @@ class Utils {
 					"SELECT post_parent
 					FROM 	{$wpdb->posts}
 					WHERE 	ID = (SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d);
+					",
+					$object_id
+				) );
+				break;
+			case 'assignment_submission' :
+				$course_id = $wpdb->get_var( $wpdb->prepare(
+					"SELECT comment_post_ID
+					FROM 	{$wpdb->comments}
+				    WHERE comment_ID = %d;
 					",
 					$object_id
 				) );
