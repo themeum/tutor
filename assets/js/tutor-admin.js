@@ -31268,8 +31268,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 
 
 
@@ -31398,36 +31396,36 @@ jQuery(document).ready(function ($) {
    * @since v.1.0.3
    */
 
-  $(document).on("submit", "#new-instructor-form", function (e) {
+  $(document).on("submit", "#tutor-new-instructor-form", function (e) {
     e.preventDefault();
     var $that = $(this);
     var formData = $that.serializeObject();
+    var loadingButton = $("#tutor-new-instructor-form .tutor-btn-loading");
+    var prevText = loadingButton.html();
+    var responseContainer = $("#tutor-new-instructor-form-response");
     formData.action = "tutor_add_instructor";
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: formData,
+      beforeSend: function beforeSend() {
+        responseContainer.html('');
+        loadingButton.html("<div class=\"ball\"></div>\n        <div class=\"ball\"></div>\n        <div class=\"ball\"></div>\n        <div class=\"ball\"></div>");
+      },
       success: function success(data) {
-        if (data.success) {
-          $that.trigger("reset");
-          $("#form-response").html('<p class="tutor-status-approved-context">' + data.data.msg + "</p>");
-        } else {
-          var errorMsg = "";
-          var errors = data.data.errors;
-
-          if (errors && Object.keys(errors).length) {
-            $.each(data.data.errors, function (index, value) {
-              if (value && _typeof(value) === "object" && value.constructor === Object) {
-                $.each(value, function (key, value1) {
-                  errorMsg += '<p class="tutor-required-fields">' + value1[0] + "</p>";
-                });
-              } else {
-                errorMsg += '<p class="tutor-required-fields">' + value + "</p>";
-              }
-            });
-            $("#form-response").html(errorMsg);
+        if (!data.success) {
+          for (var _i = 0, _Object$values = Object.values(data.data.errors); _i < _Object$values.length; _i++) {
+            var v = _Object$values[_i];
+            responseContainer.append("<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>".concat(v, "</li></div>"));
           }
+        } else {
+          $that.reset();
+          tutor_toast(__("Success", "tutor"), __("New Instructor Added", "tutor"), "success");
+          location.reload();
         }
+      },
+      complete: function complete() {
+        loadingButton.html(prevText);
       }
     });
   });

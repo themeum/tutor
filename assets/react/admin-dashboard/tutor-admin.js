@@ -159,47 +159,39 @@ jQuery(document).ready(function ($) {
    * Add instructor
    * @since v.1.0.3
    */
-  $(document).on("submit", "#new-instructor-form", function (e) {
+   $(document).on("submit", "#tutor-new-instructor-form", function (e) {
     e.preventDefault();
-
     var $that = $(this);
     var formData = $that.serializeObject();
+    var loadingButton = $("#tutor-new-instructor-form .tutor-btn-loading");
+    var prevText = loadingButton.html();
+    var responseContainer = $("#tutor-new-instructor-form-response");
     formData.action = "tutor_add_instructor";
-
     $.ajax({
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: formData,
-      success: function (data) {
-        if (data.success) {
-          $that.trigger("reset");
-          $("#form-response").html(
-            '<p class="tutor-status-approved-context">' + data.data.msg + "</p>"
-          );
-        } else {
-          var errorMsg = "";
-
-          var errors = data.data.errors;
-          if (errors && Object.keys(errors).length) {
-            $.each(data.data.errors, function (index, value) {
-              if (
-                value &&
-                typeof value === "object" &&
-                value.constructor === Object
-              ) {
-                $.each(value, function (key, value1) {
-                  errorMsg +=
-                    '<p class="tutor-required-fields">' + value1[0] + "</p>";
-                });
-              } else {
-                errorMsg +=
-                  '<p class="tutor-required-fields">' + value + "</p>";
-              }
-            });
-            $("#form-response").html(errorMsg);
+      beforeSend: function() {
+        responseContainer.html('');
+        loadingButton.html(`<div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>`);
+      },
+      success: function success(data) {
+        if (!data.success) {
+          for(let v of Object.values(data.data.errors)) {
+            responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
           }
+        } else {
+          $that.reset();
+          tutor_toast(__("Success", "tutor"), __("New Instructor Added", "tutor"), "success");
+          location.reload();
         }
       },
+      complete: function() {
+        loadingButton.html(prevText);
+      }
     });
   });
 

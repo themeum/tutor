@@ -189,7 +189,7 @@
     }
 
     &:last-child {
-      @media (min-width: 768px) {
+      @media (min-width: 1024px) {
         padding: 0 51px;
         width: calc(100% - 250px);
       }
@@ -249,7 +249,7 @@
         display: none;
       }
 
-      @media (min-width: 768px) {
+      @media (min-width: 1024px) {
         .is-opened {
           display: none;
         }
@@ -417,14 +417,14 @@
     }
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 1023px) {
     .tutor-instructor-filter-sidebar,
     .filter-pc {
       display: none;
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
 
     .filter-mobile {
       display: none;
