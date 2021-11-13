@@ -84,7 +84,7 @@ ul.tutor-setup-content li.active {
 		overflow: hidden;
 		box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
 		background-color: #ffffff;
-		
+
 		.tutor-setup-content-heading {
 			.setup-section-title {
 				font-style: normal;
@@ -248,7 +248,7 @@ ul.tutor-setup-content li.active {
 				opacity: 0.7;
 				cursor: pointer;
 			}
-			
+
 			&:last-child{
 				font-style: normal;
 				font-weight: 500;
@@ -262,8 +262,8 @@ ul.tutor-setup-content li.active {
 				}
 			}
 		}
-	} 
-	
+	}
+
 	.greetings {
 		display: block;
 		text-align: center;
@@ -331,7 +331,7 @@ ul.tutor-setup-content li.active {
 			display: grid;
 			grid-gap: 20px;
 			padding: 65px 120px 73px;
-			
+
 			h2 {
 				font-stretch: normal;
 				letter-spacing: normal;
@@ -341,7 +341,7 @@ ul.tutor-setup-content li.active {
 				font-size: 30px;
 				color: #212327;
 			}
-			
+
 			p {
 				font-style: normal;
 				font-weight: normal;
@@ -350,7 +350,7 @@ ul.tutor-setup-content li.active {
 				color: #5B616F;
 			}
 		}
-	} 
+	}
 }
 
 /* Lesson Permalink Input */
@@ -412,19 +412,19 @@ ul.tutor-setup-content li.active {
 		.tooltip-btn {
 			position: relative;
 			margin-left: 10px;
-			
+
 			span {
 				position: absolute;
 				left: -1px;
 				top: -1px;
-				
+
 				&:after {
 					content: url(../images/info-icon.svg);
 				}
 			}
 		}
-	} 
-} 
+	}
+}
 
 /* ********************* */
 /**
@@ -862,7 +862,7 @@ input[type="checkbox"].input-switchbox{
 .input-switch-label {
 	.label-on {
 		color: #c8c8c8;
-		
+
 		&.active {
 			color: #969696;
 		}
@@ -870,12 +870,12 @@ input[type="checkbox"].input-switchbox{
 	.label-off {
 		padding-right: 2px;
 		color: #c8c8c8;
-		
+
 		&.active {
 			color: #969696;
 		}
 	}
-} 
+}
 
 button.previous span,
 button.previous svg,
@@ -1371,8 +1371,8 @@ input.checkbox {
 			width: 110px;
 			height: 110px;
 		}
-	} 
-} 
+	}
+}
 
 .payment-setting input.payment {
   width: 110px;
@@ -1442,7 +1442,7 @@ input.checkbox {
 	display: grid;
 	place-items: center;
 	grid-gap: 30px;
-	
+
 	div {
 		line-height: 1.21;
 		letter-spacing: -0.4px;
@@ -1628,7 +1628,7 @@ input.checkbox {
 		font-size: 20px;
 		color: #5B616F;
 	}
-} 
+}
 
 .wizard-type-body {
   display: grid;
@@ -1671,7 +1671,7 @@ input.checkbox {
 			text-align: center;
 			padding: 0 25px;
 		}
-		
+
 		.title {
 			font-size: 20px;
 			line-height: 1;
@@ -1679,7 +1679,7 @@ input.checkbox {
 			text-align: center;
 			color: #1f2949;
 		}
-		
+
 		.subtitle {
 			font-size: 14px;
 			line-height: 1.64;
@@ -1687,7 +1687,7 @@ input.checkbox {
 			text-align: center;
 			color: #686d73;
 		}
-		
+
 		input, .icon {
 			display: none;
 		}
@@ -1703,8 +1703,8 @@ input.checkbox {
 				}
 			}
 		}
-	} 
-} 
+	}
+}
 
 /* Setting > time-expires */
 .settings .time-expires {
@@ -1869,7 +1869,7 @@ input.checkbox {
     transform: translateX(-50%);
     bottom: -28px;
   }
-  
+
   .wizard-boarding-body .slide-title,
   .wizard-boarding-footer,
   .wizard-boarding-footer a,
@@ -2000,7 +2000,7 @@ input.checkbox {
   .checkbox-wrapper .payment-setting h4 {
     margin-top: 6px;
   }
-  
+
   .checkbox-wrapper .check-icon.square {
     width: 15px;
     height: 15px;
