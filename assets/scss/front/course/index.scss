@@ -1,5 +1,6 @@
 .tutor-single-lesson-wrap {
-    @import './single-quiz.scss';
+    @import './single-quiz';
 }
 
-@import './archive.scss';
+@import './archive';
+@import './single-course-details';
