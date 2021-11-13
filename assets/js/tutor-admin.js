@@ -2281,6 +2281,8 @@ var popupToggle = function popupToggle() {
   \********************************************************/
 /***/ (() => {
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -2301,6 +2303,9 @@ var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 resetDefaultBtn.forEach(function (resetBtn, index) {
   resetBtn.onclick = function (e) {
     e.preventDefault();
+    /* let spinReset = resetBtn.getElementsByClassName('btn-icon')[0];
+    spinReset.style.animation = 'spinner 1s infinite linear'; */
+
     var resetPage = resetBtn.dataset.reset;
     var formData = new FormData();
     formData.append('action', 'reset_settings_data');
@@ -2338,33 +2343,41 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
           var field_types_multi = ['group_fields'];
 
           if (field_types_multi.includes(item.type)) {
-            console.log(item.group_fields);
-            item.group_fields.forEach(function (item) {
-              var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+            var groupFields = item.group_fields;
+            console.log(_typeof(groupFields) === 'object' && groupFields !== null);
 
-              if (field_types_associate.includes(item.type)) {
-                var _itemName = 'tutor_option[' + item.key + ']';
+            if (_typeof(groupFields) === 'object' && groupFields !== null) {
+              Object.keys(groupFields).forEach(function (item) {
+                var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
 
-                var _itemElement = elementByName(_itemName)[0];
+                if (field_types_associate.includes(item.type)) {
+                  var _itemName = 'tutor_option[' + item.key + ']';
 
-                if (item.type == 'select') {
-                  var _sOptions = _itemElement.options;
+                  var _itemElement = elementByName(_itemName)[0];
 
-                  _toConsumableArray(_sOptions).forEach(function (item) {
-                    item.selected = false;
-                  });
-                } else if (item.type == 'toggle_switch') {
-                  _itemElement.value = item["default"];
-                  _itemElement.nextElementSibling.value = item["default"];
-                  _itemElement.nextElementSibling.checked = false;
-                } else {
-                  _itemElement.value = item["default"];
+                  if (item.type == 'select') {
+                    var _sOptions = _itemElement.options;
+
+                    _toConsumableArray(_sOptions).forEach(function (item) {
+                      item.selected = false;
+                    });
+                  } else if (item.type == 'toggle_switch') {
+                    _itemElement.value = item["default"];
+                    _itemElement.nextElementSibling.value = item["default"];
+                    _itemElement.nextElementSibling.checked = false;
+                  } else {
+                    _itemElement.value = item["default"];
+                  }
                 }
-              }
-            });
+              });
+            }
           }
         });
-        tutor_toast('Reset to Default', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+        setTimeout(function () {
+          // spinReset.style.animation = '';
+          tutor_toast('Reset Successful', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
+          document.querySelector('[data-tutor-modal-close]').trigger = true;
+        }, 600);
       }
     };
   };

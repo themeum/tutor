@@ -49,7 +49,11 @@
 					$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
 					?>
 						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
-						<?php echo $this->template( $section ); ?>
+						<?php
+						if ( isset( $section['template'] ) && ! empty( $section['template'] ) ) {
+							echo $this->template( $section );
+						}
+						?>
 						</div>
 					<?php
 				}
