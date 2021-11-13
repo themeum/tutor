@@ -7500,12 +7500,15 @@ class Utils {
 					$object_id
 				) );
 				break;
+
 			case 'assignment_submission' :
 				$course_id = $wpdb->get_var( $wpdb->prepare(
-					"SELECT comment_post_ID
-					FROM 	{$wpdb->comments}
-				    WHERE comment_ID = %d;
-					",
+					"SELECT DISTINCT _course.ID 
+					FROM {$wpdb->posts} _course
+						INNER JOIN {$wpdb->posts} _topic ON _topic.post_parent=_course.ID
+						INNER JOIN {$wpdb->posts} _assignment ON _assignment.post_parent=_topic.ID
+						INNER JOIN {$wpdb->comments} _submission ON _submission.comment_post_ID=_assignment.ID
+					WHERE _submission.comment_ID=%d;",
 					$object_id
 				) );
 				break;

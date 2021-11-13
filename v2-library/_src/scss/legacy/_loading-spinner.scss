@@ -12,10 +12,6 @@
         @include spinner($design-brand, #f1f1f1, 20px);
     */
 	&:before {
-		& + * {
-			margin-left: 8px;
-		}
-
 		display: inline-block;
 		font-family: 'tutor';
 		-webkit-font-smoothing: antialiased;
@@ -25,5 +21,11 @@
 		-webkit-animation: spin 2s infinite linear;
 		animation: spinner 2s infinite linear;
 		margin-right: 10px;
+	}
+	
+	&:not(.tutor-no-margin) {
+		&:before{
+			margin-right: 8px;
+		}
 	}
 }
