@@ -88,6 +88,11 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 	}
 	&.tutor-btn-disable-outline {
 	}
+
+	&.tutor-is-outline {
+		background: transparent;
+	}
+
 	&.tutor-btn-loading:not(.tutor-btn-icon) {
 		padding-top: 5px;
 		&.tutor-btn-xl {

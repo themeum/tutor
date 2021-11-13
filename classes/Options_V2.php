@@ -1444,4 +1444,10 @@ class Options_V2 {
 		include tutor()->path . "views/options/template/{$section['template']}.php";
 		return ob_get_clean();
 	}
+
+	public function this_confirmation( $modal = array() ) {
+		ob_start();
+		require tutor()->path . 'views/options/template/modal-confirm.php';
+		return ob_get_clean();
+	}
 }

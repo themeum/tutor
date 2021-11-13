@@ -163,32 +163,9 @@ class Template extends Tutor_Base {
 			}
 
 			wp_reset_query();
-			if (empty( $wp_query->query_vars['course_subpage'])) {
-				$template = tutor_get_template( 'single-course' );
-				if ( is_user_logged_in() ) {
-					$is_administrator = current_user_can('administrator');
-					$is_instructor = tutor_utils()->is_instructor_of_this_course();
-					$course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
-					if ( tutor_utils()->is_enrolled() ) {
-						$template = tutor_get_template( 'single-course-enrolled' );
-					} else if ( $course_content_access && ($is_administrator || $is_instructor) ) {
-						$template = tutor_get_template( 'single-course-instructor' );
-					}
-				}
-			}else{
-				//If Course Subpage Exists
-				if ( is_user_logged_in() ) {
-					$course_subpage = $wp_query->query_vars['course_subpage'];
-					$template = tutor_get_template_path( 'single-course-enrolled-' . $course_subpage );
-					if ( ! file_exists( $template ) ) {
-						$template = tutor_get_template( 'single-course-enrolled-subpage' );
-					}
-				}else{
-					$template = tutor_get_template('login');
-				}
-			}
-			return $template;
+			return tutor_get_template( 'single-course' );
 		}
+		
 		return $template;
 	}
 
