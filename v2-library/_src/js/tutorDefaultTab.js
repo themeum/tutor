@@ -1,8 +1,8 @@
-/**
- * Tutor Default Tab
- */
 (function tutorDefaultTab() {
 	document.addEventListener('click', (e) => {
+		/**
+		 * Tutor Default Tab
+		 */
 		const attr = 'data-tutor-tab-target';
 		const activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active');
 
@@ -22,6 +22,25 @@
 				e.target.classList.add('is-active');
 				tabBodyItem.classList.add('is-active');
 			}
+		}
+
+		/**
+		 * Tutor Default Tab - see more
+		 */
+		const seeMoreAttr = 'data-seemore-target';
+		if (e.target.hasAttribute(seeMoreAttr)) {
+			const id = e.target.getAttribute(seeMoreAttr);
+			document
+				.getElementById(`${id}`)
+				.closest('.tab-header-item-seemore')
+				.classList.toggle('is-active');
+		} else {
+			document.querySelectorAll('.tab-header-item-seemore').forEach((item) => {
+				console.log(item.classList.contains('is-active'));
+				if (item.classList.contains('is-active')) {
+					item.classList.remove('is-active');
+				}
+			});
 		}
 	});
 })();

@@ -60,7 +60,7 @@ import '../docz-essential.css';
 					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 					allowfullscreen
 				></iframe>
-				<div className="tutor-default-tab tutor-course-details-tab tutor-mt-30">
+				<div className="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-30">
 					<div class="tab-header tutor-bs-d-flex">
 						<div class="tab-header-item is-active" data-tutor-tab-target="tutor-course-details-tab-1">
 							<span>Course Info</span>
@@ -76,6 +76,23 @@ import '../docz-essential.css';
 						</div>
 						<div class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-5">
 							<span>Announcement</span>
+						</div>
+						<div class="tab-header-item-seemore tutor-bs-ml-auto">
+							<div class="tab-header-item-seemore-toggle" data-seemore-target="course-details-tab-seemore-1">
+								More <span className="icon-seemore ttr-line-cross-line tutor-icon-20 color-text-brand"></span>
+							</div>
+							<div id="course-details-tab-seemore-1" class="tab-header-item-seemore-popup">
+								<ul>
+									<li class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-6">
+										<span className="ttr-github-logo-brand tutor-icon-18 tutor-mr-7"></span>
+										<span>Gradebook</span>
+									</li>
+									<li class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-7">
+										<span className="ttr-github-logo-brand tutor-icon-18 tutor-mr-7"></span>
+										<span>Google Classroom</span>
+									</li>
+								</ul>
+							</div>
 						</div>
 					</div>
 					<div class="tab-body">
@@ -594,7 +611,7 @@ import '../docz-essential.css';
 						<div class="tab-body-item" id="tutor-course-details-tab-5">
 							<div className="tab-item-content">
 								<div className="text-medium-h6 color-text-primary">Announcements</div>
-								<div className="text-regular-body color-text-subsued tutor-mt-7">Over 92% of computers are infected with Adware and spyware. </div>
+								<div className="text-regular-body color-text-subsued tutor-mt-7">Over 92% of computers are infected with Adware and spyware.</div>
 								<div class="tutor-announcement bg-white tutor-mt-24">
 									<div class="tutor-announcement-head color-text-primary bg-black-03 tutor-px-28 tutor-py-20">
 										<div class="text-medium-h6">Upcomming Exam Notice & Schedule</div>
@@ -617,6 +634,20 @@ import '../docz-essential.css';
 									</div>
 								</div>
 								{/* /.tutor-announcement */}
+							</div>
+						</div>
+						{/* end of /.tab-body-item */}
+						<div class="tab-body-item" id="tutor-course-details-tab-6">
+							<div className="tab-item-content">
+								<div className="text-medium-h6 color-text-primary">Gradebook</div>
+								<div className="text-regular-body color-text-subsued tutor-mt-7">View results of all your submitted tasks from this course. Last Updated 10 Nov, 2020 </div>
+								
+							</div>
+						</div>
+						{/* end of /.tab-body-item */}
+						<div class="tab-body-item" id="tutor-course-details-tab-7">
+							<div className="tab-item-content">
+								tab 77777
 							</div>
 						</div>
 						{/* end of /.tab-body-item */}
