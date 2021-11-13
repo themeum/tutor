@@ -19,16 +19,6 @@ global $wp_query;
 ?>
 
 <div class="tutor-price-preview-box">
-    <div class="tutor-price-box-thumbnail">
-        <?php
-        if(tutor_utils()->has_video_in_single()){
-            tutor_course_video();
-        } else{
-            get_tutor_course_thumbnail();
-        }
-        ?>
-    </div>
-
     <div class="tutor-lead-info-btn-group">
 	    <?php do_action('tutor_course/single/actions_btn_group/before'); ?>
 
@@ -41,7 +31,7 @@ global $wp_query;
             $retake_course = tutor_utils()->get_option('course_retake_feature', false) && ($is_completed_course || $completed_percent >= 100);
 
             if ( $lesson_url ) { 
-                $button_class = 'tutor-course-entry-button tutor-btn tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ($retake_course ? ' tutor-course-retake-button' : '');
+                $button_class = 'tutor-mt-5 tutor-mb-5 tutor-is-fullwidth tutor-btn '.($retake_course ? 'tutor-btn-wordpress-outline tutor-btn-lg' : '').' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ($retake_course ? ' tutor-course-retake-button' : '');
                 ?>
                 <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
                     <?php
@@ -65,8 +55,6 @@ global $wp_query;
 
 
 	<?php tutor_course_price(); ?>
-    <?php tutor_course_material_includes_html(); ?>
-
     <div class="tutor-single-course-segment  tutor-course-enrolled-wrap">
         <p>
             <i class="tutor-icon-purchase"></i>
