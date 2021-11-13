@@ -4404,11 +4404,11 @@ accordionItemHeaders.forEach(function (accordionItemHeader) {
   \***********************************************/
 /***/ (() => {
 
-/**
- * Tutor Default Tab
- */
 (function tutorDefaultTab() {
   document.addEventListener('click', function (e) {
+    /**
+     * Tutor Default Tab
+     */
     var attr = 'data-tutor-tab-target';
     var activeItems = document.querySelectorAll('.tab-header-item.is-active, .tab-body-item.is-active');
 
@@ -4424,6 +4424,26 @@ accordionItemHeaders.forEach(function (accordionItemHeader) {
         e.target.classList.add('is-active');
         tabBodyItem.classList.add('is-active');
       }
+    }
+    /**
+     * Tutor Default Tab - see more
+     */
+
+
+    var seeMoreAttr = 'data-seemore-target';
+
+    if (e.target.hasAttribute(seeMoreAttr)) {
+      var _id = e.target.getAttribute(seeMoreAttr);
+
+      document.getElementById("".concat(_id)).closest('.tab-header-item-seemore').classList.toggle('is-active');
+    } else {
+      document.querySelectorAll('.tab-header-item-seemore').forEach(function (item) {
+        console.log(item.classList.contains('is-active'));
+
+        if (item.classList.contains('is-active')) {
+          item.classList.remove('is-active');
+        }
+      });
     }
   });
 })();
