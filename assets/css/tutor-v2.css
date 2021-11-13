@@ -20281,8 +20281,8 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   margin-right: 10px;
 }
 
-.tutor-updating-message:before + * {
-  margin-left: 8px;
+.tutor-updating-message:not(.tutor-no-margin):before {
+  margin-right: 8px;
 }
 
 body.tutor-screen-course-builder .select2-container--default .select2-selection--single .select2-selection__rendered {

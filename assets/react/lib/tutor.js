@@ -1,5 +1,4 @@
 import '../../../v2-library/_src/js/main';
-import { get_response_message } from '../helper/response';
 
 window.tutor_get_nonce_data=function(send_key_value) {
 
