@@ -1,15 +1,11 @@
 /*
 Reset to default for settings individual page
 */
-console.log('reset-to-default');
 const resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 resetDefaultBtn.forEach((resetBtn, index) => {
 
 	resetBtn.onclick = (e) => {
 		e.preventDefault();
-		/* let spinReset = resetBtn.getElementsByClassName('btn-icon')[0];
-		spinReset.style.animation = 'spinner 1s infinite linear'; */
-
 		var resetPage = resetBtn.dataset.reset;
 		var formData = new FormData();
 		formData.append('action', 'reset_settings_data');
@@ -20,6 +16,7 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 		xhttp.send(formData);
 		xhttp.onreadystatechange = function () {
 			if (xhttp.readyState === 4) {
+				document.querySelector('#tutor-page-reset-modal').classList.remove('tutor-is-active');
 				let pageData = JSON.parse(xhttp.response).data;
 				pageData.forEach((item) => {
 					const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
@@ -69,10 +66,8 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 					}
 				});
 				setTimeout(() => {
-					// spinReset.style.animation = '';
 					tutor_toast('Reset Successful', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
-					document.querySelector('#tutor-page-reset-modal').classList.remove('tutor-is-active');
-				}, 600)
+				}, 300)
 			}
 		};
 	};

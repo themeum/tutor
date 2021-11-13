@@ -2298,14 +2298,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 /*
 Reset to default for settings individual page
 */
-console.log('reset-to-default');
 var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 resetDefaultBtn.forEach(function (resetBtn, index) {
   resetBtn.onclick = function (e) {
     e.preventDefault();
-    /* let spinReset = resetBtn.getElementsByClassName('btn-icon')[0];
-    spinReset.style.animation = 'spinner 1s infinite linear'; */
-
     var resetPage = resetBtn.dataset.reset;
     var formData = new FormData();
     formData.append('action', 'reset_settings_data');
@@ -2317,6 +2313,7 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
 
     xhttp.onreadystatechange = function () {
       if (xhttp.readyState === 4) {
+        document.querySelector('#tutor-page-reset-modal').classList.remove('tutor-is-active');
         var pageData = JSON.parse(xhttp.response).data;
         pageData.forEach(function (item) {
           var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
@@ -2374,10 +2371,8 @@ resetDefaultBtn.forEach(function (resetBtn, index) {
           }
         });
         setTimeout(function () {
-          // spinReset.style.animation = '';
           tutor_toast('Reset Successful', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
-          document.querySelector('#tutor-page-reset-modal').classList.remove('tutor-is-active');
-        }, 600);
+        }, 300);
       }
     };
   };
