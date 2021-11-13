@@ -71,7 +71,7 @@ resetDefaultBtn.forEach((resetBtn, index) => {
 				setTimeout(() => {
 					// spinReset.style.animation = '';
 					tutor_toast('Reset Successful', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
-					document.querySelector('[data-tutor-modal-close]').trigger = true;
+					document.querySelector('#tutor-page-reset-modal').classList.remove('tutor-is-active');
 				}, 600)
 			}
 		};
