@@ -256,7 +256,7 @@ var Header = function Header() {
     return sum + Number(addon.hasOwnProperty('depend_plugins') || 0);
   }, 0);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("header", {
-    className: "tutor-addons-list-header tutor-bs-d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20"
+    className: "tutor-addons-list-header tutor-bs-d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-15"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "title text-medium-h5 color-text-primary tutor-bs-mb-lg-0 tutor-bs-mb-3"
   }, __('Addons List', 'tutor')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
