@@ -14,7 +14,7 @@
                 if($answer_i < 9){
                     echo 0;
                 }
-                echo $answer_i.'.'; 
+                echo $answer_i.'.';
             ?>
         </div>
         <div class="quiz-image-ordering-ans-item d-flex tutor-ml-20">
@@ -37,7 +37,7 @@
                 if($answer_i < 9){
                     echo 0;
                 }
-                echo $answer_i.'.'; 
+                echo $answer_i.'.';
             ?>
         </div>
         <div class="quiz-ordering-ans-item tutor-ml-30">
