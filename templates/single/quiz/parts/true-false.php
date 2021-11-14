@@ -4,7 +4,7 @@
             foreach ($answers as $answer){
                 $answer_title = stripslashes($answer->answer_title);
                 $answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0;
-                if ($answer->answer_view_format !== 'image'){
+                if ($answer->answer_view_format !== 'image' &&  $answer->answer_view_format !== 'text_image'){
                 ?>
         <div class="quiz-question-ans-choice">
             <label for="<?php echo $answer->answer_id; ?>">
