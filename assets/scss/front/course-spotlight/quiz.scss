@@ -4,6 +4,9 @@
         border: 1px solid #c0c3cb;
         border-radius: 10px;
         padding: 65px 95px;
+        form {
+            display: inline-block;
+        }
         .tutor-start-quiz-title {
             border-bottom: 1px solid $black-20;
         }

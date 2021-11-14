@@ -5,7 +5,12 @@
  */
 
 global $post;
-global $previous_id;
+global $next_id;
+
+$content_id = tutor_utils()->get_post_id($course_content_id);
+$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
+$previous_id = $contents->previous_id;
+$next_id = $contents->next_id;
 $currentPost = $post;
 $quiz_id = get_the_ID();
 $is_started_quiz = tutor_utils()->is_started_quiz();
@@ -99,7 +104,7 @@ do_action('tutor_quiz/single/before/top');
 				<?php _e( 'Start Quiz', 'tutor' ); ?>
 			</button>
 		</form>
-        <button class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md skip-quiz-btn" href="<?php echo get_the_permalink($previous_id);
+        <button class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md skip-quiz-btn" href="<?php echo get_the_permalink($next_id);
 		?>">
 			<?php _e( 'Skip Quiz', 'tutor' ); ?>
         </button>

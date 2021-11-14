@@ -7,16 +7,30 @@
   \******************************************************/
 /***/ (() => {
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 document.addEventListener('DOMContentLoaded', function (event) {
+  /* sidetab tab position */
   var topBar = document.querySelector('.tutor-single-page-top-bar');
   var sideBar = document.querySelector('.tutor-lesson-sidebar');
   sideBar.style.top = topBar.clientHeight + 'px';
-});
-document.addEventListener('DOMContentLoaded', function (event) {
+  /* sidetab tab position */
+
+  /* sidetab tab */
+
   var sideBarTabs = document.querySelectorAll('.tutor-sidebar-tab-item');
   sideBarTabs.forEach(function (tab) {
     tab.addEventListener('click', function (event) {
-      console.log('tab activate');
       clearActiveClass();
       event.currentTarget.classList.add('active');
       var id = event.currentTarget.getAttribute('data-sidebar-tab');
@@ -35,6 +49,43 @@ document.addEventListener('DOMContentLoaded', function (event) {
       sidebarTabItems[_i].classList.remove('active');
     }
   };
+  /* end of sidetab tab */
+
+  /* comment text-area focus arrow style */
+
+
+  var commentTextarea = document.querySelectorAll('.tutor-comment-textarea textarea');
+
+  if (commentTextarea) {
+    commentTextarea.forEach(function (item) {
+      item.addEventListener('focus', function () {
+        item.parentElement.classList.add('is-focused');
+      });
+      item.addEventListener('blur', function () {
+        item.parentElement.classList.remove('is-focused');
+      });
+    });
+  }
+  /* comment text-area focus arrow style */
+
+  /* commenting */
+
+
+  var parentComments = document.querySelectorAll('.tutor-comments-list.tutor-parent-comment');
+  var replyComment = document.querySelector('.tutor-comment-box.tutor-reply-box');
+
+  if (parentComments) {
+    _toConsumableArray(parentComments).forEach(function (parentComment) {
+      var childComments = parentComment.querySelectorAll('.tutor-comments-list.tutor-child-comment');
+      var commentLine = parentComment.querySelector('.tutor-comment-line');
+      var childCommentCount = childComments.length;
+      var lastCommentHeight = childComments[childCommentCount - 1].clientHeight;
+      var heightOfLine = lastCommentHeight + replyComment.clientHeight + 20 - 25 + 50;
+      commentLine.style.setProperty('height', "calc(100% - ".concat(heightOfLine, "px)"));
+    });
+  }
+  /* commenting */
+
 });
 
 /***/ }),
