@@ -4856,7 +4856,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 // import '../../../bundle/main.min.css';
 
 var TutorDatepicker = function TutorDatepicker() {
-  var dateFormat = window._tutorobject.wp_date_format;
+  var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : "Y-M-d";
   var url = new URL(window.location.href);
   var params = url.searchParams;
 
@@ -4887,11 +4887,11 @@ var TutorDatepicker = function TutorDatepicker() {
     var year = date.getFullYear();
     var month = date.getMonth();
     var day = date.getDate();
-    window.location = urlPrams('date', "".concat(year, "-").concat(month + 1, "-").concat(day));
+    window.location = urlPrams("date", "".concat(year, "-").concat(month + 1, "-").concat(day));
   };
 
   var years = lodash_range__WEBPACK_IMPORTED_MODULE_1___default()(2000, (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(new Date()) + 5, 1);
-  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   var urlPrams = function urlPrams(type, val) {
     var url = new URL(window.location.href);
@@ -4902,8 +4902,8 @@ var TutorDatepicker = function TutorDatepicker() {
   };
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    if (params.has('date')) {
-      setStartDate(new Date(params.get('date')));
+    if (params.has("date")) {
+      setStartDate(new Date(params.get("date")));
     }
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -4930,13 +4930,13 @@ var TutorDatepicker = function TutorDatepicker() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "datepicker-header-custom"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "dropdown-container dropdown-months ".concat(dropdownMonth ? 'is-active' : '')
+        className: "dropdown-container dropdown-months ".concat(dropdownMonth ? "is-active" : "")
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "dropdown-label",
         onClick: function onClick() {
           return setDropdownMonth(!dropdownMonth);
         }
-      }, months[(0,date_fns__WEBPACK_IMPORTED_MODULE_4__["default"])(date)], ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
+      }, months[(0,date_fns__WEBPACK_IMPORTED_MODULE_4__["default"])(date)], " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
         width: "25",
         height: "24",
         viewBox: "0 0 25 24",
@@ -4954,7 +4954,7 @@ var TutorDatepicker = function TutorDatepicker() {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
           key: option,
           "data-value": option,
-          className: "".concat(option === months[(0,date_fns__WEBPACK_IMPORTED_MODULE_4__["default"])(date)] ? 'is-current' : ''),
+          className: "".concat(option === months[(0,date_fns__WEBPACK_IMPORTED_MODULE_4__["default"])(date)] ? "is-current" : ""),
           onClick: function onClick(e) {
             var value = e.target.dataset.value;
             changeMonth(months.indexOf(value));
@@ -4962,13 +4962,13 @@ var TutorDatepicker = function TutorDatepicker() {
           }
         }, option);
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "dropdown-container dropdown-years ".concat(dropdownYear ? 'is-active' : '')
+        className: "dropdown-container dropdown-years ".concat(dropdownYear ? "is-active" : "")
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "dropdown-label",
         onClick: function onClick() {
           return setDropdownYear(!dropdownYear);
         }
-      }, (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(date), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
+      }, (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(date), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
         width: "25",
         height: "24",
         viewBox: "0 0 25 24",
@@ -4986,7 +4986,7 @@ var TutorDatepicker = function TutorDatepicker() {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
           key: option,
           "data-value": option,
-          className: "".concat(option === (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(date) ? 'is-current' : ''),
+          className: "".concat(option === (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(date) ? "is-current" : ""),
           onClick: function onClick(e) {
             var value = e.target.dataset.value;
             changeYear(value);
