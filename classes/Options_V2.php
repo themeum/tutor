@@ -488,7 +488,6 @@ class Options_V2 {
 									'value' => array(
 										'type'    => 'text',
 										'default' => '0',
-
 									),
 									'time'  => array(
 										'type'           => 'select',
@@ -555,6 +554,7 @@ class Options_V2 {
 							array(
 								'key'         => 'supported_video_sources',
 								'type'        => 'checkbox_vertical',
+								'default'        => array( 'youtube', 'vimeo' ),
 								'label'       => __( 'Preferred Video Source', 'tutor' ),
 								'label_title' => __( 'Preferred Video Source', 'tutor' ),
 								'options'     => array(

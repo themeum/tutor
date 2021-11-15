@@ -1558,7 +1558,6 @@ window.addEventListener('resize', toolTipOnWindowResize);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib */ "./assets/react/admin-dashboard/segments/lib.js");
-/* harmony import */ var _popupToggle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./popupToggle */ "./assets/react/admin-dashboard/segments/popupToggle.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1571,7 +1570,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-
+ // import popupToggle from "./popupToggle";
 
 document.addEventListener("readystatechange", function (event) {
   if (event.target.readyState === "interactive") {
@@ -1648,8 +1647,8 @@ function tutor_option_history_load(history_data) {
 
   var heading = "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p>Date</p></div></div>";
   (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".history_data").innerHTML = heading + output;
-  export_single_settings();
-  (0,_popupToggle__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  export_single_settings(); // popupToggle();
+
   apply_single_settings();
 }
 /* import and list dom */
@@ -2213,52 +2212,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /***/ }),
 
-/***/ "./assets/react/admin-dashboard/segments/popupToggle.js":
-/*!**************************************************************!*\
-  !*** ./assets/react/admin-dashboard/segments/popupToggle.js ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/**
- * Popup Menu Toggle -> Import/Export > .settings-history
- */
-var popupToggle = function popupToggle() {
-  var popupToggleBtns = document.querySelectorAll(".popup-opener .popup-btn");
-  var popupMenus = document.querySelectorAll(".popup-opener .popup-menu");
-
-  if (popupToggleBtns && popupMenus) {
-    popupToggleBtns.forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        var popupClosest = e.target.closest(".popup-opener").querySelector(".popup-menu");
-        popupClosest.classList.toggle("visible");
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu !== popupClosest) {
-            popupMenu.classList.remove("visible");
-          }
-        });
-      });
-    });
-    window.addEventListener("click", function (e) {
-      if (!e.target.matches(".popup-opener .popup-btn")) {
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu.classList.contains("visible")) {
-            popupMenu.classList.remove("visible");
-          }
-        });
-      }
-    });
-  }
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (popupToggle);
-
-/***/ }),
-
 /***/ "./assets/react/admin-dashboard/segments/reset.js":
 /*!********************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/reset.js ***!
@@ -2307,6 +2260,13 @@ var modalResetOpen = function modalResetOpen() {
   });
 };
 
+var titleReseter = document.querySelectorAll('.tutor-option-single-item');
+titleReseter.forEach(function (item) {
+  item.querySelector('h4').onclick = function (e) {
+    item.parentElement.querySelector('.modal-reset-open').click();
+  };
+});
+
 var resetConfirmation = function resetConfirmation() {
   var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
   resetDefaultBtn.forEach(function (resetBtn, index) {
@@ -2314,7 +2274,6 @@ var resetConfirmation = function resetConfirmation() {
       e.preventDefault();
       var resetPage = resetBtn.dataset.reset;
       var resetTitle = resetBtn.dataset.resetFor.replace('_', ' ').toUpperCase();
-      console.log(resetTitle);
       var formData = new FormData();
       formData.append('action', 'reset_settings_data');
       formData.append('reset_page', resetPage);
@@ -2328,7 +2287,7 @@ var resetConfirmation = function resetConfirmation() {
           modalConfirmation.classList.remove('tutor-is-active');
           var pageData = JSON.parse(xhttp.response).data;
           pageData.forEach(function (item) {
-            var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+            var field_types_associate = ['checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
             if (field_types_associate.includes(item.type)) {
               var itemName = 'tutor_option[' + item.key + ']';
@@ -2337,8 +2296,14 @@ var resetConfirmation = function resetConfirmation() {
               if (item.type == 'select') {
                 var sOptions = itemElement.options;
 
-                _toConsumableArray(sOptions).forEach(function (item) {
-                  item.selected = false;
+                _toConsumableArray(sOptions).forEach(function (optElem) {
+                  optElem.selected = false;
+                });
+              } else if (item.type == 'checkbox_vertical') {
+                var checkElements = elementByName("".concat(itemName));
+
+                _toConsumableArray(checkElements).forEach(function (checkElem) {
+                  checkElem.checked = item["default"].includes(checkElem.value) ? true : false;
                 });
               } else if (item.type == 'toggle_switch') {
                 itemElement.value = item["default"];
@@ -2352,30 +2317,33 @@ var resetConfirmation = function resetConfirmation() {
             var field_types_multi = ['group_fields'];
 
             if (field_types_multi.includes(item.type)) {
+              var parentKey = item.key;
               var groupFields = item.group_fields;
-              console.log(_typeof(groupFields) === 'object' && groupFields !== null);
 
               if (_typeof(groupFields) === 'object' && groupFields !== null) {
-                Object.keys(groupFields).forEach(function (item) {
+                Object.keys(groupFields).forEach(function (elemKey, index) {
+                  var itemChild = groupFields[elemKey];
                   var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
-                  if (field_types_associate.includes(item.type)) {
-                    var _itemName = 'tutor_option[' + item.key + ']';
+                  if (field_types_associate.includes(itemChild.type)) {
+                    var _itemName = "tutor_option[".concat(parentKey, "][").concat(elemKey, "]"); // console.log(itemName);
 
-                    var _itemElement = elementByName(_itemName)[0];
 
-                    if (item.type == 'select') {
-                      var _sOptions = _itemElement.options;
+                    var itemElementChild = elementByName(_itemName)[0];
 
-                      _toConsumableArray(_sOptions).forEach(function (item) {
-                        item.selected = false;
+                    if (itemChild.type == 'select') {
+                      var _sOptions = itemElementChild.options;
+
+                      _toConsumableArray(_sOptions).forEach(function (optElem) {
+                        optElem.selected = itemChild["default"] === optElem.value ? true : false;
                       });
-                    } else if (item.type == 'toggle_switch') {
-                      _itemElement.value = item["default"];
-                      _itemElement.nextElementSibling.value = item["default"];
-                      _itemElement.nextElementSibling.checked = false;
+                    } else if (itemChild.type == 'toggle_switch') {
+                      itemElementChild.value = itemChild["default"];
+                      itemElementChild.nextElementSibling.value = itemChild["default"];
+                      itemElementChild.nextElementSibling.checked = false;
                     } else {
-                      _itemElement.value = item["default"];
+                      // console.log(itemChild);
+                      itemElementChild.value = itemChild["default"];
                     }
                   }
                 });
@@ -2383,7 +2351,7 @@ var resetConfirmation = function resetConfirmation() {
             }
           });
           setTimeout(function () {
-            tutor_toast('Reset Successful', 'Default data for ' + resetTitle + ' successfully!', 'success');
+            tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success'); // tutor_toast('Reset Successful', 'Default data for ' + resetTitle + ' successfully!', 'success');
           }, 300);
         }
       };

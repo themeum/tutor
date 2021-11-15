@@ -1,5 +1,5 @@
 import { element, elements, notice_message, json_download } from "./lib";
-import popupToggle from "./popupToggle";
+// import popupToggle from "./popupToggle";
 
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "interactive") {
@@ -85,7 +85,7 @@ function tutor_option_history_load(history_data) {
 
   element(".history_data").innerHTML = heading + output;
   export_single_settings();
-  popupToggle();
+  // popupToggle();
   apply_single_settings();
 }
 /* import and list dom */
