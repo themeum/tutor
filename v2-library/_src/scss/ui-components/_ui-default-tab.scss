@@ -62,92 +62,90 @@
 	}
 
 	// Tab Header See More Popup
-	&.tutor-tab-has-seemore {
-		.tab-header-item-seemore {
-			position: relative;
+	.tab-header-item-seemore {
+		position: relative;
+		display: flex;
+		align-items: center;
+		&-toggle {
+			@extend .text-medium-caption;
+			@extend .color-text-subsued;
 			display: flex;
 			align-items: center;
-			&-toggle {
-				@extend .text-medium-caption;
-				@extend .color-text-subsued;
-				display: flex;
-				align-items: center;
-				cursor: pointer;
-				.icon-seemore {
-					transform: rotate(-45deg);
-					transition: 100ms;
-				}
-				> * {
-					pointer-events: none;
-				}
-			}
-			&-popup {
-				position: absolute;
-				background: #ffffff;
-				box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
-				border-radius: 6px;
-				padding: 4px 0;
-				top: calc(100% - 8px);
-				right: -3px;
-
-				ul {
-					width: 180px;
-					max-height: 190px;
-					overflow-y: auto;
-				}
-
-				&:before {
-					content: '';
-					position: absolute;
-					width: 10px;
-					height: 10px;
-					top: -6px;
-					right: 8px;
-					background: #fff;
-					clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
-					transform: rotate(45deg);
-					border-radius: 3px 0 0 0px;
-				}
-				.tab-header-item {
-					@extend .text-regular-caption;
-					@extend .color-design-dark;
-					@extend .tutor-px-15;
-					@extend .tutor-py-6;
-					display: flex;
-					align-items: center;
-					transition: 200ms;
-					&.is-active {
-						/* color/primary/fill/40 */
-						background: #e9edfb;
-					}
-					&:hover {
-						/* color/primary/fill/40 */
-						background: #e9edfb;
-					}
-
-					&:not(:last-child) {
-						margin-bottom: 4px;
-					}
-				}
-			}
-
-			// Toggle Popup
-			.tab-header-item-seemore-popup {
-				opacity: 0;
-				visibility: hidden;
+			cursor: pointer;
+			.icon-seemore {
+				transform: rotate(-45deg);
 				transition: 100ms;
 			}
-			&.is-active {
-				.tab-header-item-seemore-toggle {
-					.icon-seemore {
-						transform: rotate(0deg);
-					}
+			> * {
+				pointer-events: none;
+			}
+		}
+		&-popup {
+			position: absolute;
+			background: #ffffff;
+			box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
+			border-radius: 6px;
+			padding: 4px 0;
+			top: calc(100% - 8px);
+			right: -3px;
+
+			ul {
+				width: 180px;
+				max-height: 190px;
+				overflow-y: auto;
+			}
+
+			&:before {
+				content: '';
+				position: absolute;
+				width: 10px;
+				height: 10px;
+				top: -5px;
+				right: 8px;
+				background: #fff;
+				clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+				transform: rotate(45deg);
+				border-radius: 3px 0 0 0px;
+			}
+			.tab-header-item {
+				@extend .text-regular-caption;
+				@extend .color-design-dark;
+				@extend .tutor-px-15;
+				@extend .tutor-py-6;
+				display: flex;
+				align-items: center;
+				transition: 200ms;
+				&.is-active {
+					/* color/primary/fill/40 */
+					background: #e9edfb;
 				}
-				.tab-header-item-seemore-popup {
-					opacity: 1;
-					visibility: visible;
+				&:hover {
+					/* color/primary/fill/40 */
+					background: #e9edfb;
+				}
+
+				&:not(:last-child) {
+					margin-bottom: 4px;
 				}
 			}
-		} // .tab-header-item-seemore
-	}
+		}
+
+		// Toggle Popup
+		.tab-header-item-seemore-popup {
+			opacity: 0;
+			visibility: hidden;
+			transition: 100ms;
+		}
+		&.is-active {
+			.tab-header-item-seemore-toggle {
+				.icon-seemore {
+					transform: rotate(0deg);
+				}
+			}
+			.tab-header-item-seemore-popup {
+				opacity: 1;
+				visibility: visible;
+			}
+		}
+	} // .tab-header-item-seemore
 } // .tutor-default-tab
