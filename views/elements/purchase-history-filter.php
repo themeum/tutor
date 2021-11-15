@@ -20,6 +20,6 @@
     <?php endif; ?>
     
     <?php if ( $data['filter_calendar'] ) : ?>
-        <div class="tutor-v2-date-range-picker tutor-bs-d-lg-flex"></div>
+        <div class="tutor-v2-date-range-picker " style="flex-basis:40%;"></div>
     <?php endif; ?>
 </div>
