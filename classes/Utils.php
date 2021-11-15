@@ -8252,7 +8252,8 @@ class Utils {
 			'processing' 	=> __( 'Processing', 'tutor' ),
 			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
 			'canceled'  	=> __( 'Cancelled', 'tutor' ),
-			'blocked'		=> __( 'Blocked', 'tutor' )
+			'blocked'		=> __( 'Blocked', 'tutor' ),
+			'cancel'		=> __( 'Cancelled', 'tutor' )
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
