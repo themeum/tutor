@@ -25643,6 +25643,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border: 1px solid #cdcfd5;
   border-radius: 6px;
   max-width: 400px;
+  position: relative;
 }
 
 .tutor-course-sidebar-card-footer {
@@ -25674,6 +25675,16 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-course-sidebar-card-footer-only .tutor-course-sidebar-card-footer {
   border-top: none;
+}
+
+.tutor-course-sidebar-card-membership-plan {
+  border-color: #d2dbf5;
+}
+
+.tutor-course-sidebar-card-membership-plan-badge {
+  position: absolute;
+  top: -1px;
+  right: 30px;
 }
 
 .tutor-course-details-page-main {
@@ -26014,6 +26025,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 .tutor-quesanswer-askquestion textarea.tutor-form-control {

@@ -101,6 +101,7 @@
 	border: 1px solid $stroke-light-30;
 	border-radius: 6px;
 	max-width: 400px;
+	position: relative;
 	&-body {
 	}
 	&-footer {
@@ -151,7 +152,27 @@
 			border-top: none;
 		}
 	}
-}
+	// .tutor-course-sidebar-card-membership-plan
+	&-membership-plan {
+		border-color: $primary-50;
+		&-badge {
+			position: absolute;
+			top: -1px;
+			right: 30px;
+		}
+	}
+
+	// .tutor-course-sidebar-card-pick-plan
+	&-pick-plan {
+		&-label {
+			input[type='radio'] {
+				// @include appearNone;
+			}
+		}
+		&-input {
+		}
+	}
+} // end /.tutor-course-sidebar-card
 
 // Course Details Page
 .tutor-course-details-page {
@@ -410,6 +431,7 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		flex-shrink: 0;
 	}
 }
 
