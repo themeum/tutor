@@ -37,7 +37,7 @@ do_action('tutor_lesson/single/before/video/vimeo');
 			<?php
 		}else{
 			?>
-            <div class="plyr__video-embed" id="tutorPlayer">
+            <div class="plyr__video-embed tutorPlayer">
                 <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media" allowfullscreen allowtransparency allow="autoplay"></iframe>
             </div>
 		<?php } ?>

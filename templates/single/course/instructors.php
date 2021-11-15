@@ -31,7 +31,7 @@ if($instructors && count($instructors)) {
 					</div>
 					<div class="tutor-ins-rest">
 						<div class="tutor-ins-title text-medium-body color-text-primary">
-							<a href="<?php echo $profile_url; ?>"><?php echo $instructor->display_name; ?></a>
+							<a href="<?php echo tutor_utils()->profile_url($instructor->ID); ?>"><?php echo $instructor->display_name; ?></a>
 						</div>
 						<?php if ( ! empty($instructor->tutor_profile_job_title)): ?>
 							<div class="tutor-ins-designation text-regular-caption color-text-hints tutor-mt-3">
@@ -44,30 +44,10 @@ if($instructors && count($instructors)) {
 					</div>
 				</div>
 				<div class="tutor-instructor-info-card-footer tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-px-30 tutor-py-15">
-					<!-- <div class="tutor-ratings flex-center">
-						<div class="tutor-rating-stars">
-							<span class="ttr-star-full-filled"></span>
-							<span class="ttr-star-full-filled"></span>
-							<span class="ttr-star-full-filled"></span>
-							<span class="ttr-star-half-filled"></span>
-							<span class="ttr-star-line-filled"></span>
-						</div>
-						<div class="tutor-rating-text text-medium-small color-text-primary tutor-mt-3">
-							4.5
-						</div>
-					</div> -->
-
-					<div class="tutor-ratings flex-center ratings">
-						<span class="rating-generated">
-							<?php tutor_utils()->star_rating_generator($instructor_rating->rating_avg); ?>
-						</span>
-
-						<?php
-						echo " <span class='rating-digits'>{$instructor_rating->rating_avg}</span> ";
-						echo " <span class='rating-total-meta'>({$instructor_rating->rating_count} ".__('ratings', 'tutor').")</span> ";
-						?>
-					</div>
-
+					<?php 
+						$instructor_rating = tutor_utils()->get_instructor_ratings($instructor->ID);
+						tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 
+					?>
 					<div class="tutor-ins-meta tutor-bs-d-flex">
 						<div class="tutor-ins-meta-item color-design-dark flex-center">
 							<span class="tutor-icon-30 ttr-user-filled"></span>

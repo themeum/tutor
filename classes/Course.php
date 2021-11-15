@@ -900,11 +900,6 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_nav_items($items, $course_id){
-		if($course_id===true) {
-			// For rewrite rule
-			return $items;
-		}
-
 		global $wp_query, $post;
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
 		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');

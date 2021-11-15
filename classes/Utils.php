@@ -1350,41 +1350,6 @@ class Utils {
 	}
 
 	/**
-	 *
-	 * Get course sub pages in course dashboard
-	 *
-	 * @since v.1.0.0
-	 */
-	public function course_sub_pages($course_id) {
-		$nav_items = array(
-			'info' => array( 
-				'title' => __('Course Info', 'tutor'), 
-				'method' => 'tutor_course_info_tab'
-			),
-			'curriculum' => array( 
-				'title' => __('Curriculum', 'tutor'), 
-				'method' => 'tutor_course_topics' 
-			),
-			'reviews' => array( 
-				'title' => __('Reviews', 'tutor'), 
-				'method' => 'tutor_course_target_reviews_html' 
-			),
-			'questions' => array( 
-				'title' => __('Q&A', 'tutor'), 
-				'method' => 'tutor_course_question_and_answer',
-				'require_enrolment' => true
-			),
-			'announcements' => array( 
-				'title' => __('Announcements', 'tutor'), 
-				'method' => 'tutor_course_announcements',
-				'require_enrolment' => true
-			),
-		);
-
-		return apply_filters( 'tutor_course/single/nav_items', $nav_items, $course_id );
-	}
-
-	/**
 	 * @param int $post_id
 	 *
 	 * @return bool|array
@@ -1428,19 +1393,6 @@ class Utils {
 		$attachments     = maybe_unserialize( get_post_meta( $post_id, $meta_key, true ) );
 		$attachments_arr = array();
 
-		$font_icons = apply_filters( 'tutor_file_types_icon', array(
-			'archive',
-			'audio',
-			'code',
-			'default',
-			'document',
-			'interactive',
-			'spreadsheet',
-			'text',
-			'video',
-			'image',
-		));
-
 		if ( is_array( $attachments ) && count( $attachments ) ) {
 			foreach ( $attachments as $attachment ) {
 				$data = (array)$this->get_attachment_data($attachment);
@@ -1463,12 +1415,25 @@ class Utils {
 		$type       = wp_ext2type( $ext );
 
 		$icon = 'default';
+		$font_icons = apply_filters( 'tutor_file_types_icon', array(
+			'archive',
+			'audio',
+			'code',
+			'default',
+			'document',
+			'interactive',
+			'spreadsheet',
+			'text',
+			'video',
+			'image',
+		));
+
 		if ( $type && in_array( $type, $font_icons ) ) {
 			$icon = $type;
 		}
 
 		$data = array(
-			'post_id'    => $post_id,
+			'post_id'    => $attachment_id,
 			'id'         => $attachment_id,
 			'url'        => $url,
 			'name'       => $title . '.' . $ext,
@@ -3307,6 +3272,43 @@ class Utils {
 		return $output;
 	}
 
+	public function star_rating_generator_v2($current_rating, $total_count=null, $show_avg_rate=false, $parent_class = '') {
+		$current_rating = round($current_rating);
+		?>
+		<div class="tutor-ratings <?php echo $parent_class; ?>">
+			<div class="tutor-rating-stars">
+				<?php
+					for($i=1; $i<=5; $i++) {
+						$class = 'ttr-star-line-filled';
+
+						if($i<=$current_rating) {
+							$class = 'ttr-star-full-filled';
+						}
+
+						// ToDo: Add half start later. ttr-star-half-filled
+						echo '<span class="'.$class.'"></span>';
+					}
+				?>
+			</div>
+			<?php 
+				if($show_avg_rate) {
+					?>
+					<div class="tutor-rating-text text-regular-body color-text-subsued tutor-pl-0">
+						<?php 
+							echo $current_rating; 
+						
+							if(!($total_count===null)) {
+								echo '('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor'));
+							}
+						?> 
+					</div>
+					<?php
+				}
+			?>
+		</div>
+		<?php
+	}
+
 	public function star_rating_generator_course( $current_rating = 0.00, $echo = true ) {
 		$output = '';
 		for ( $i = 1; $i <=5 ; $i++ ) {
@@ -4071,10 +4073,12 @@ class Utils {
 			$limit
 		) );
 
-		// Collect question IDs
-		$question_ids = array_map(function($q) {
-			return $q->comment_ID;
-		}, $query);
+		// Collect question IDs and create empty meta array placeholder
+		$question_ids = array();
+		foreach($query as $index => $q) {
+			$question_ids[] = $q->comment_ID;
+			$query[$index]->meta = array();
+		}
 		
 		// Assign meta data
 		if(count($question_ids)) {
@@ -4088,11 +4092,6 @@ class Utils {
 			foreach($meta_array as $meta) {
 				// Loop through questions
 				foreach($query as $index=>$question) {
-
-					// Register meta array if not already
-					if(!array_key_exists('meta', $query[$index])) {
-						$query[$index]->meta = array();
-					}
 
 					if($query[$index]->comment_ID==$meta->comment_id) {
 						$query[$index]->meta[$meta->meta_key] = $meta->meta_value;

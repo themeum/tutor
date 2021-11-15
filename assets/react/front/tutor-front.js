@@ -51,7 +51,7 @@ jQuery(document).ready(function ($) {
         track_player: function () {
             const that = this;
             if (typeof Plyr !== 'undefined') {
-                const player = new Plyr('#tutorPlayer');
+                const player = new Plyr(this.player_DOM);
                 const video_data = that.video_data();
                 player.on('ready', function (event) {
                     const instance = event.detail.plyr;
@@ -106,7 +106,8 @@ jQuery(document).ready(function ($) {
                 }
             });
         },
-        init: function () {
+        init: function (element) {
+            this.player_DOM = element;
             this.track_player();
         }
     };
@@ -115,9 +116,9 @@ jQuery(document).ready(function ($) {
      * Fire TUTOR video
      * @since v.1.0.0
      */
-    if ($('#tutorPlayer').length) {
-        videoPlayer.init();
-    }
+    $('.tutorPlayer').each(function(){
+        videoPlayer.init(this);
+    });
 
     $(document).on('change keyup paste', '.tutor_user_name', function () {
         $(this).val(tutor_slugify($(this).val()));

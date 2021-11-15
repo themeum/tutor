@@ -10,7 +10,7 @@ $isLoggedIn = is_user_logged_in();
 $rating = $isLoggedIn ? tutor_utils()->get_reviews_by_user(0, 0, 150, false, get_the_ID()) : '';
 ?>
 
-<div class="tutor-course-enrolled-review-wrap" id>
+<div class="tutor-course-enrolled-review-wrap tutor-mt-15">
     <a href="javascript:;" class="write-course-review-link-btn">
 		<?php
 		if($isLoggedIn && $rating && (!empty($rating->rating) || !empty($rating->comment_content))){

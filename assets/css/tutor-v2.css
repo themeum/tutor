@@ -20384,6 +20384,11 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   min-width: 1em !important;
 }
 
+.tutorPlayer, .tutorPlayer iframe {
+  max-width: 100%;
+  height: auto;
+}
+
 /**
  * Add option disabled
  * @since 1.9.7
