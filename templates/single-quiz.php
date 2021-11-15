@@ -35,35 +35,13 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                     </a>
                 </div>
                 <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-                    <?php
-
-                    if ($post->post_type === 'tutor_quiz') {
-                        echo wp_kses_post( '<span class="ttr-quiz-filled color-text-white tutor-mr-5"></span>' );
-                        echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-                        esc_html_e( 'Quiz: ', 'tutor' );
-                        the_title(); 
-                        echo wp_kses_post( '</span>' );
-                    } elseif ($post->post_type === 'tutor_assignments'){
-                        echo wp_kses_post( '<span class="ttr-assignment-filled color-text-white tutor-mr-5"></span>' );
-                        echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-                        esc_html_e( 'Assignment: ', 'tutor' );
-                        the_title(); 
-                        echo wp_kses_post( '</span>' );
-                    } elseif ($post->post_type === 'tutor_zoom_meeting'){
-                        echo wp_kses_post( '<span class="ttr-zoom-brand color-text-white tutor-mr-5"></span>' );
-                        echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-                        esc_html_e( 'Zoom Meeting: ', 'tutor' );
-                        the_title(); 
-                        echo wp_kses_post( '</span>' );
-                    } else{
-                        echo wp_kses_post( '<span class="ttr-youtube-brand color-text-white tutor-mr-5"></span>' );
-                        echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-                        esc_html_e( 'Lesson: ', 'tutor' );
-                        the_title(); 
-                        echo wp_kses_post( '</span>' );
-                    }
-
-                    ?>
+                    <span class="ttr-quiz-filled color-text-white tutor-mr-5"></span>
+                    <span class="text-regular-caption color-design-white">
+                        <?php 
+                            esc_html_e( 'Quiz: ', 'tutor' );
+                            the_title();
+                        ?>
+                    </span>
                 </div>
 
                 <div class="tutor-topbar-cross-icon flex-center">

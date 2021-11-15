@@ -14,9 +14,12 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 global $post;
-
+$post_id = get_the_ID();
+if ( ! empty($_POST['lesson_id'])){
+	$post_id = sanitize_text_field($_POST['lesson_id']);
+}
 $currentPost = $post;
-
+$_is_preview = get_post_meta($post_id, '_is_preview', true);
 $course_id = 0;
 if ($post->post_type === 'tutor_quiz'){
 	$course = tutor_utils()->get_course_by_quiz(get_the_ID());
@@ -44,13 +47,15 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 					<?php esc_html_e('Lesson List', 'tutor'); ?>
 				</span>
 			</div>
-			<?php if($enable_q_and_a_on_course) { ?>
-			<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
-				<span class="ttr-question-filled"></span>
-				<span class="text-medium-caption color-text-title">
-					<?php esc_html_e('Question & Answer', 'tutor'); ?>
-				</span>
-			</div>
+			<?php if(!$_is_preview){ ?>
+				<?php if($enable_q_and_a_on_course) { ?>
+				<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
+					<span class="ttr-question-filled"></span>
+					<span class="text-medium-caption color-text-title">
+						<?php esc_html_e('Question & Answer', 'tutor'); ?>
+					</span>
+				</div>
+				<?php } ?>
 			<?php } ?>
 		</div>
 

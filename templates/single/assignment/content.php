@@ -33,35 +33,13 @@ if ($assignment_comment != false) {
         </a>
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-        <?php
-
-        if ($post->post_type === 'tutor_quiz') {
-            echo wp_kses_post( '<span class="ttr-quiz-filled color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-            esc_html_e( 'Quiz: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } elseif ($post->post_type === 'tutor_assignments'){
-            echo wp_kses_post( '<span class="ttr-assignment-filled color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-            esc_html_e( 'Assignment: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } elseif ($post->post_type === 'tutor_zoom_meeting'){
-            echo wp_kses_post( '<span class="ttr-zoom-brand color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-            esc_html_e( 'Zoom Meeting: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } else{
-            echo wp_kses_post( '<span class="ttr-youtube-brand color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-            esc_html_e( 'Lesson: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        }
-
-        ?>
+		<span class="ttr-assignment-filled color-text-white tutor-mr-5"></span>
+		<span class="text-regular-caption color-design-white">
+			<?php 
+				esc_html_e( 'Assignment: ', 'tutor' );
+				the_title();
+			?>
+		</span>
     </div>
 	
     <div class="tutor-topbar-cross-icon flex-center">
@@ -105,9 +83,11 @@ if ($assignment_comment != false) {
 						break;
 				}
 			}
+
 			$time_duration_in_sec = $time_duration_in_sec * $time_duration['value'];
 			$remaining_time = $assignment_created_time + $time_duration_in_sec;
 			$now = time();
+			$remaining= $now - $remaining_time;
 
 		?>
 
@@ -128,7 +108,12 @@ if ($assignment_comment != false) {
 						<?php _e('Expired', 'tutor'); ?>
 						<?php
 								} else {
-									echo $remaining_time;
+									function convert_seconds($seconds){
+										$dt1 = new DateTime("@0");
+										$dt2 = new DateTime("@$seconds");
+										return $dt1->diff($dt2)->format('%a Days, %h Hours');
+									}
+									echo convert_seconds($remaining)."\n";
 								}
 							}
 						?>
@@ -519,8 +504,6 @@ if ($assignment_comment != false) {
 			}
 		}
 		?>
-
-		<?php tutor_next_previous_pagination(); ?>
 	</div>
 </div>
 

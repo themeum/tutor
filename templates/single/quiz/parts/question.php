@@ -158,13 +158,13 @@
                 <?php
                     if ($question_layout_view !== 'question_below_each_other'){
                 ?>
-                    <div class="tutor-quiz-btn-grp tutor-quiz-btn-grp tutor-mt-60">
+                    <div class="tutor-quiz-btn-grp tutor-mt-60">
                         <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
                             <?php $next_question ? _e( 'Submit &amp; Next', 'tutor' ) : _e( 'Submit Quiz', 'tutor' ); ?>
                         </button>
-                        <a href="#" class="tutor-ml-30">
+                        <button type="submit" class="tutor-ml-30 tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>" style="border:0px;padding:0px;">
                             <?php _e( "Skip Quiz", "tutor" ); ?>
-                        </a>
+                        </button>
                     </div>
                 <?php
                     }

@@ -7,6 +7,9 @@
         form {
             display: inline-block;
         }
+        .tutor-next-btn {
+            border: 0px !important;
+        }
         .tutor-start-quiz-title {
             border-bottom: 1px solid $black-20;
         }
@@ -293,9 +296,8 @@
                 }
             }
         }
-
         .quiz-image-ordering-ans-area {
-            > div {
+            >div {
                 &:not(:last-child) {
                     margin-bottom: 20px;
                 }
@@ -383,9 +385,9 @@
                     }
                 }
             }
-            > input {
+            >input {
                 &:checked {
-                    & + .tutor-multiple-checkbox {
+                    &+.tutor-multiple-checkbox {
                         box-shadow: 0px 0px 0px 2px #3057d5;
                         span.tutor-icon-checkbox {
                             background-color: $design-brand;

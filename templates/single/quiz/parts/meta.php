@@ -17,8 +17,10 @@
             <?php _e('Attempted', 'tutor'); ?>:</p>
             <span class="text-bold-body color-text-title">
             <?php
-                if($attempted_count){
-                    echo $attempted_count . '/';
+                if($attempts_allowed != 0){
+                    if($attempted_count){
+                        echo $attempted_count . '/';
+                    }
                 }
                 echo $attempts_allowed == 0 ? __('No limit', 'tutor') : $attempts_allowed;
             ?>

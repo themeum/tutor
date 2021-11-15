@@ -6,7 +6,7 @@
 
 global $post;
 global $next_id;
-
+$course_content_id = '';
 $content_id = tutor_utils()->get_post_id($course_content_id);
 $contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
 $previous_id = $contents->previous_id;
@@ -73,8 +73,10 @@ do_action('tutor_quiz/single/before/top');
             <span class="text-regular-body color-text-hints"><?php _e('Total Attempted', 'tutor'); ?>:</span>
             <span class="text-regular-body color-text-primary">
 				<?php
-					if($attempted_count){
-						echo $attempted_count . '/';
+					if($attempts_allowed != 0){
+						if($attempted_count){
+							echo $attempted_count . '/';
+						}
 					}
 					echo $attempts_allowed == 0 ? __('No limit', 'tutor') : $attempts_allowed;
 				?>
