@@ -164,12 +164,45 @@
 
 	// .tutor-course-sidebar-card-pick-plan
 	&-pick-plan {
+		&-fields {
+		}
 		&-label {
+			cursor: pointer;
+			display: grid;
 			input[type='radio'] {
 				// @include appearNone;
+
+				&:checked {
+					~ .tutor-course-sidebar-card-pick-plan-input {
+						background: $primary-30;
+						border-color: $primary-main;
+
+						.radio-icon {
+							background-color: $primary-main;
+							border-color: $primary-main;
+							background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+						}
+					}
+				}
 			}
 		}
 		&-input {
+			padding: 16px 20px;
+			display: grid;
+			align-items: center;
+			grid-template-columns: auto 1fr auto;
+			grid-gap: 10px;
+			transition: 300ms;
+			.radio-icon {
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				border-radius: 50%;
+				border: 2px solid $stroke-gray;
+				background-position: center;
+				background-repeat: no-repeat;
+				transition: 300ms;
+			}
 		}
 	}
 } // end /.tutor-course-sidebar-card
@@ -220,7 +253,7 @@
 	}
 	&.is-active {
 		.showmore-text {
-			display: flex !important;
+			display: block;
 		}
 		.btn-showmore {
 			display: none !important;
