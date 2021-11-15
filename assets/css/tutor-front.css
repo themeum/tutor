@@ -7685,10 +7685,38 @@ Instructor customize filters styles
   background: #3e64de;
 }
 
+@media (max-width: 575.98px) {
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar {
+    display: none;
+  }
+}
+
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-lesson-sidebar-hide-bar,
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-content-title-wrap,
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-cross-icon {
   padding: 15px 12px;
+}
+
+@media (min-width: 1200px) and (max-width: 1350px) {
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-lesson-sidebar-hide-bar .tutor-topbar-title,
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-content-title-wrap .tutor-topbar-title,
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-cross-icon .tutor-topbar-title {
+    white-space: nowrap;
+    width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 991px) {
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-lesson-sidebar-hide-bar .tutor-topbar-title,
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-content-title-wrap .tutor-topbar-title,
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-cross-icon .tutor-topbar-title {
+    white-space: nowrap;
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-sidebar-toggle {
@@ -7719,20 +7747,35 @@ Instructor customize filters styles
   font-size: 30px;
 }
 
+@media (min-width: 576px) and (max-width: 991px) {
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-right-item .tutor-topbar-assignment-details .tutor-progress-content {
+    display: none;
+  }
+}
+
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-right-item .tutor-topbar-assignment-details .tutor-topbar-complete-btn .tutor-topbar-mark-btn {
   background-color: transparent;
   color: #ffffff;
   border-color: #ffffff;
 }
 
+.tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-right-item .tutor-topbar-assignment-details .tutor-topbar-complete-btn .tutor-topbar-mark-btn:hover {
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+
+.tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-right-item .tutor-topbar-assignment-details .tutor-topbar-complete-btn .tutor-topbar-mark-btn:hover span {
+  color: #3e64de;
+}
+
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-right-item .tutor-topbar-assignment-details .tutor-topbar-complete-btn .tutor-topbar-mark-btn span.tutor-btn-content {
   line-height: 100%;
 }
 
-.tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-right-item .tutor-topbar-assignment-details .tutor-topbar-complete-btn :hover {
-  background-color: #ffffff;
-  color: #3e64de;
-  border-color: #ffffff;
+@media (min-width: 576px) and (max-width: 991px) {
+  .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-single-page-top-bar .tutor-topbar-right-item .tutor-topbar-assignment-details .tutor-topbar-complete-btn .tutor-topbar-mark-btn span.tutor-content-responsive {
+    display: none;
+  }
 }
 
 .tutor-single-lesson-wraper .tutor-single-entry-content .course-players {
@@ -7787,6 +7830,10 @@ Instructor customize filters styles
 
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-quiz-wrapper .tutor-start-quiz-wrapper form {
   display: inline-block;
+}
+
+.tutor-single-lesson-wraper .tutor-single-entry-content .tutor-quiz-wrapper .tutor-start-quiz-wrapper .tutor-next-btn {
+  border: 0px !important;
 }
 
 .tutor-single-lesson-wraper .tutor-single-entry-content .tutor-quiz-wrapper .tutor-start-quiz-wrapper .tutor-start-quiz-title {

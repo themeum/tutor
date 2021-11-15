@@ -17,11 +17,17 @@ global $post;
 global $previous_id;
 global $next_id;
 $course_content_id = '';
+$completedCount = '';
+$totalContents = '';
+$post_id = get_the_ID();
+$_is_preview = get_post_meta($post_id, '_is_preview', true);
 $content_id = tutor_utils()->get_post_id($course_content_id);
 $contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
 $previous_id = $contents->previous_id;
 $next_id = $contents->next_id;
-
+$completed_count = tutor_utils()->get_course_completed_percent();
+$complete = tutor_utils()->get_course_completed_percent($completedCount);
+$total = tutor_utils()->get_course_completed_percent($totalContents);
 $jsonData = array();
 $jsonData['post_id'] = get_the_ID();
 $jsonData['best_watch_time'] = 0;
@@ -34,7 +40,59 @@ if ($best_watch_time > 0){
 ?>
 
 <?php do_action('tutor_lesson/single/before/content'); ?>
+<?php if(!$_is_preview){ ?>
+<div class="tutor-single-page-top-bar d-flex justify-content-between">
+    <div class="tutor-topbar-left-item d-flex"> 
+        <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
+            <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
+                <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
+            </a>
+        </div>
+        <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
+            <span class="ttr-youtube-brand color-text-white tutor-mr-5"></span>
+            <span class="text-regular-caption color-design-white">
+                <?php 
+                    esc_html_e( 'Lesson: ', 'tutor' );
+                    the_title();
+                ?>
+            </span>
+        </div>
+    </div>
+    <div class="tutor-topbar-right-item d-flex align-items-center">
+        <div class="tutor-topbar-assignment-details d-flex align-items-center">
+            <?php
+                do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
+            ?>
+            <div class="text-regular-caption color-design-white">
+                <span class="tutor-progress-content color-primary-60">
+                    <?php _e('Your Progress:', 'tutor'); ?>
+                </span>
+                <span class="text-bold-caption">
+                    <?php echo $complete; ?>
+                </span> 
+                <?php _e('of ', 'tutor'); ?>
+                <span class="text-bold-caption">
+                    <?php echo $total; ?>
+                </span>
+                (<?php echo $completed_count.'%'; ?>)
+            </div>
+            <?php
+                do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
+            ?>
+            <div class="tutor-topbar-complete-btn tutor-ml-30 tutor-mr-15">
+                <?php tutor_lesson_mark_complete_html(); ?>
+            </div>
+        </div>
+        <div class="tutor-topbar-cross-icon flex-center">
+            <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
+            <a href="<?php echo get_the_permalink($course_id); ?>">
+                <span class="ttr-line-cross-line color-text-white flex-center"></span>
+            </a>
+        </div>
+    </div>
 
+</div>
+<?php } else { ?>
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
     <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
@@ -42,40 +100,15 @@ if ($best_watch_time > 0){
         </a>
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-        <?php
-
-        if ($post->post_type === 'tutor_quiz') {
-            echo wp_kses_post( '<span class="ttr-quiz-filled color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-            esc_html_e( 'Quiz: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } elseif ($post->post_type === 'tutor_assignments'){
-            echo wp_kses_post( '<span class="ttr-assignment-filled color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-            esc_html_e( 'Assignment: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } elseif ($post->post_type === 'tutor_zoom_meeting'){
-            echo wp_kses_post( '<span class="ttr-zoom-brand color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-            esc_html_e( 'Zoom Meeting: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } else{
-            echo wp_kses_post( '<span class="ttr-youtube-brand color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption color-design-white">' );
-            esc_html_e( 'Lesson: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        }
-
-        ?>
+        <span class="ttr-youtube-brand color-text-white tutor-mr-5"></span>
+		<span class="text-regular-caption color-design-white">
+			<?php 
+				esc_html_e( 'Lesson: ', 'tutor' );
+				the_title();
+			?>
+		</span>
     </div>
 
-    <div class="tutor-topbar-item tutor-topbar-mark-to-done flex-center">
-        <?php tutor_lesson_mark_complete_html(); ?>
-    </div>
     <div class="tutor-topbar-cross-icon flex-center">
         <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
         <a href="<?php echo get_the_permalink($course_id); ?>">
@@ -84,6 +117,7 @@ if ($best_watch_time > 0){
     </div>
 
 </div>
+<?php } ?>
 
 <div class="course-players flex-center">
     <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData)); ?>">
@@ -129,11 +163,8 @@ if ($best_watch_time > 0){
             </div>
             <div class="tab-body-item" id="tutor-course-details-tab-3">
                 <div class="text-medium-h6 color-text-primary"><?php _e('Join the conversation', 'tutor'); ?></div>
-                
                 <?php
-                    if(!post_password_required()){
-                        comments_template();
-                    }
+                    comments_template();
                 ?>
             </div>
         </div>
