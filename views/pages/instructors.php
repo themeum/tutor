@@ -62,6 +62,7 @@ $navbar_data       = array(
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
 	'button_url'   => $add_insructor_url,
+	'modal_target' => 'tutor-instructor-add-new',
 );
 
 $filters = array(
@@ -198,4 +199,117 @@ $filters = array(
 			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
 			?>
 	</div>
+</div>
+
+<div id="tutor-instructor-add-new" class="tutor-modal">
+  <span class="tutor-modal-overlay"></span>
+  <button data-tutor-modal-close class="tutor-modal-close">
+	<span class="las la-times"></span>
+  </button>
+  <div class="tutor-modal-root">
+	<div class="tutor-modal-inner">
+	<form action="" method="post" id="tutor-new-instructor-form" autocomplete="off">
+	  <div class="tutor-modal-header">
+		<h3 class="tutor-modal-title">
+			<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
+		</h3>
+	  </div>
+	  	<div class="tutor-modal-body-alt tutor-bg-gray-10">
+			
+				<?php tutor_nonce_field(); ?>
+				<?php do_action( 'tutor_add_new_instructor_form_fields_before' ); ?>
+				<div class="tutor-bs-row tutor-mx-0">
+					<div class="tutor-bs-col">
+						<label class="tutor-form-label">
+							<?php esc_html_e( 'First Name', 'tutor' ); ?>
+						</label>
+						<div class="tutor-input-group tutor-mb-15">
+							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" required/>
+						</div>
+					</div>
+					<div class="tutor-bs-col">
+						<label class="tutor-form-label">
+							<?php esc_html_e( 'Last Name', 'tutor' ); ?>
+						</label>
+						<div class="tutor-input-group tutor-mb-15">
+							<input type="text" name="last_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" required/>
+						</div>
+					</div>
+				</div>
+				<div class="tutor-bs-row tutor-mx-0">
+					<div class="tutor-bs-col">
+						<label class="tutor-form-label">
+							<?php esc_html_e( 'User Name', 'tutor' ); ?>
+						</label>
+						<div class="tutor-input-group tutor-mb-15">
+							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>"/>
+						</div>
+					</div>
+					<div class="tutor-bs-col">
+						<label class="tutor-form-label">
+							<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
+						</label>
+						<div class="tutor-input-group tutor-mb-15">
+							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>"/>
+						</div>
+					</div>
+				</div>
+				<div class="tutor-bs-row tutor-mx-0">
+					<div class="tutor-bs-col">
+						<label class="tutor-form-label">
+							<?php esc_html_e( 'Email', 'tutor' ); ?>
+						</label>
+						<div class="tutor-input-group tutor-mb-15">
+							<input type="email" name="email"  class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Email', 'tutor' ); ?>" required/>
+						</div>
+					</div>
+				</div>
+				<div class="tutor-bs-row tutor-mx-0">
+					<div class="tutor-bs-col">
+						<label class="tutor-form-label">
+							<?php esc_html_e( 'Password', 'tutor' ); ?>
+						</label>
+						<div class="tutor-input-group tutor-mb-15">
+							<input type="password" name="password"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="new-password" required/>
+						</div>
+					</div>
+					<div class="tutor-bs-col">
+						<label class="tutor-form-label">
+							<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
+						</label>
+						<div class="tutor-input-group tutor-mb-15">
+							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" required/>
+						</div>
+					</div>
+				</div>	
+				<?php do_action( 'tutor_add_new_instructor_form_fields_after' ); ?>
+				<div class="tutor-bs-row tutor-mx-0">
+					<div class="tutor-bs-col">
+						<label class="tutor-form-label">
+							<?php esc_html_e( 'Bio(Optional)', 'tutor' ); ?>
+						</label>
+						<div class="tutor-input-group tutor-mb-15">
+							<textarea  name="tutor_profile_bio" rows="3" style="width: 100%;" placeholder="<?php esc_html_e( 'Write Your Bio...', 'tutor' ); ?>"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="tutor-bs-row tutor-mx-0" id="tutor-new-instructor-form-response"></div>
+	  	</div>
+	  <div class="tutor-modal-footer">
+		<div class="tutor-bs-d-flex tutor-bs-justify-content-between">
+		  <div class="col">
+			<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn-loading" name="tutor_register_instructor_btn">
+			<?php esc_html_e( 'Add Instructor', 'tutor' ); ?>
+			</button>
+		  </div>
+		  <div class="col-auto">
+			<button data-tutor-modal-close class="tutor-btn tutor-is-default">
+			  <?php esc_html_e( 'Cancel', 'tutor' ); ?>
+			</button>
+		  </div>
+		</div>
+	  </div>
+	</form>
+	</div>
+  </div>
 </div>

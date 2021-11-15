@@ -94,10 +94,10 @@
 	text-overflow: ellipsis;
 }
 
-.tutor-text-hover-underline{
+.tutor-text-hover-underline {
 	cursor: pointer;
-	
-	&:hover{
+
+	&:hover {
 		text-decoration: underline;
 	}
 }
@@ -473,5 +473,19 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 @each $r in $radius {
 	.tutor-radius-#{$r} {
 		border-radius: #{$r}px;
+	}
+}
+
+$border: (
+	'p40' $primary-40,
+	'p50' $primary-50,
+	'p60' $primary-60,
+	'sl10' $stroke-light-10,
+	'sl20' $stroke-light-20,
+	'sl30' $stroke-light-30
+);
+@each $pre, $b in $border {
+	.tutor-border-#{$pre} {
+		border: 1px solid #{$b};
 	}
 }
