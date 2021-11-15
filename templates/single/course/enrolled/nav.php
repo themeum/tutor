@@ -15,28 +15,51 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-$course_nav_item = tutor_utils()->course_sub_pages(get_the_ID());
 ?>
 
 <?php do_action('tutor_course/single/enrolled/nav/before'); ?>
+<div class="tab-header tutor-bs-d-flex">
+	<?php
+		$counter = 0;
+		$more_items = array();
 
-<div class="course-enrolled-nav-wrap course-enrolled-nav-wrap-<?php the_ID(); ?>">
-	<nav id="course-enrolled-nav-<?php echo get_the_ID(); ?>" class="course-enrolled-nav course-enrolled-nav-<?php the_ID(); ?>">
-		<ul>
-			<?php
-			$sub_page = get_query_var('course_subpage');
-			!$sub_page ? $sub_page='info' : 0;
-
-			foreach ($course_nav_item as $nav_key => $nav_item){
-				$active_class = $sub_page === $nav_key? 'active' : '';
-				$url = trailingslashit(get_permalink()).($nav_key=='info' ? '' : $nav_key);
-				echo "<li class='{$active_class}'>
-						<a href='{$url}'>{$nav_item['title']}</a> 
-					</li>";
+		foreach ($course_nav_item as $nav_key => $nav_item){
+			if($counter>=4) {
+				$more_items[$nav_key] = $nav_item;
+				continue;
 			}
-			?>
-		</ul>
-	</nav>
-</div>
+			$counter++;
 
+			?>
+				<div class="tab-header-item <?php echo $nav_key=='info' ? 'is-active' : ''; ?>" data-tutor-tab-target="tutor-course-details-tab-<?php echo $nav_key; ?>">
+					<span><?php echo $nav_item['title']; ?></span>
+				</div>
+			<?php
+		}
+
+		if(count($more_items)) {
+			?>
+			<div class="tab-header-item-seemore tutor-bs-ml-auto">
+				<div class="tab-header-item-seemore-toggle" data-seemore-target="course-details-tab-seemore-1">
+					<?php _e('More', 'tutor'); ?> <span class="icon-seemore ttr-line-cross-line tutor-icon-20 color-text-brand"></span>
+				</div>
+				<div id="course-details-tab-seemore-1" class="tab-header-item-seemore-popup">
+					<ul class="tutor-m-0">
+						<?php
+							foreach($more_items as $key=>$item) {
+								?>
+								<li class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-<?php echo $key; ?>">
+									<!-- <span class="ttr-github-logo-brand tutor-icon-18 tutor-mr-7"></span> -->
+									<span><?php echo $item['title']; ?></span>
+								</li>
+								<?php
+							}
+						?>
+					</ul>
+				</div>
+			</div>
+			<?php
+		}
+	?>
+</div>
 <?php do_action('tutor_course/single/enrolled/nav/after'); ?>

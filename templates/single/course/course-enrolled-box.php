@@ -20,39 +20,38 @@ global $wp_query;
 
 <div class="tutor-price-preview-box">
     <div class="tutor-lead-info-btn-group">
-	    <?php do_action('tutor_course/single/actions_btn_group/before'); ?>
+	    <?php 
+            do_action('tutor_course/single/actions_btn_group/before');
+        
+            if ( $wp_query->query['post_type'] !== 'lesson') {
+                $lesson_url = tutor_utils()->get_course_first_lesson();
+                $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
+                $completed_percent = tutor_utils()->get_course_completed_percent();
+                $is_completed_course = tutor_utils()->is_completed_course();
+                $retake_course = tutor_utils()->get_option('course_retake_feature', false) && ($is_completed_course || $completed_percent >= 100);
 
-        <?php
-        if ( $wp_query->query['post_type'] !== 'lesson') {
-            $lesson_url = tutor_utils()->get_course_first_lesson();
-            $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
-            $completed_percent = tutor_utils()->get_course_completed_percent();
-            $is_completed_course = tutor_utils()->is_completed_course();
-            $retake_course = tutor_utils()->get_option('course_retake_feature', false) && ($is_completed_course || $completed_percent >= 100);
-
-            if ( $lesson_url ) { 
-                $button_class = 'tutor-mt-5 tutor-mb-5 tutor-is-fullwidth tutor-btn '.($retake_course ? 'tutor-btn-wordpress-outline tutor-btn-lg' : '').' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ($retake_course ? ' tutor-course-retake-button' : '');
-                ?>
-                <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
-                    <?php
-                        if(is_single_course() && $retake_course) {
-                            _e( 'Retake This Course', 'tutor' );
-                        } else if( $completed_percent <= 0 ){
-                            _e( 'Start Learning', 'tutor' );
-                        } else {
-                            _e( 'Continue Learning', 'tutor' );
-                        }
+                if ( $lesson_url ) { 
+                    $button_class = 'tutor-mt-5 tutor-mb-5 tutor-is-fullwidth tutor-btn '.($retake_course ? 'tutor-btn-wordpress-outline tutor-btn-lg' : '').' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ($retake_course ? ' tutor-course-retake-button' : '');
                     ?>
-                </a>
-                <?php 
+                    <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
+                        <?php
+                            if(is_single_course() && $retake_course) {
+                                _e( 'Retake This Course', 'tutor' );
+                            } else if( $completed_percent <= 0 ){
+                                _e( 'Start Learning', 'tutor' );
+                            } else {
+                                _e( 'Continue Learning', 'tutor' );
+                            }
+                        ?>
+                    </a>
+                    <?php 
+                }
             }
-        }
+        
+            tutor_course_mark_complete_html();
+            do_action('tutor_course/single/actions_btn_group/after'); 
         ?>
-        <?php tutor_course_mark_complete_html(); ?>
-
-        <?php do_action('tutor_course/single/actions_btn_group/after'); ?>
     </div>
-
 
 	<?php tutor_course_price(); ?>
     <div class="tutor-single-course-segment  tutor-course-enrolled-wrap">
