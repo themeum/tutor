@@ -188,7 +188,7 @@ $courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : 
 ?>
 
 <!-- Now Load The View -->
-<?php if(count($announcements)): ?>
+
     <table class="tutor-ui-table tutor-ui-table-responsive tutor-bg-white">
         <thead>
             <tr>
@@ -224,81 +224,89 @@ $courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : 
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($announcements as $announcement) : ?>
-                <?php
-                    $course = get_post($announcement->post_parent);
-                    $date_format = tutor_get_formated_date( get_option( 'date_format' ), $announcement->post_date ); 
+            <?php if( is_array( $announcements ) && count( $announcements ) ) : ?>
+                <?php foreach ($announcements as $announcement) : ?>
+                    <?php
+                        $course = get_post($announcement->post_parent);
+                        $date_format = tutor_get_formated_date( get_option( 'date_format' ), $announcement->post_date ); 
 
-                    $update_modal_id = 'tutor_announcement_' . $announcement->ID;
-                    $details_modal_id = $update_modal_id . '_details';
-                    $delete_modal_id = $update_modal_id . '_delete';
-                    $row_id = 'tutor-announcement-tr-' . $announcement->ID;
-                ?>
-                <tr id="<?php echo $row_id; ?>">
-                    <?php if ( is_admin() ) : ?>
-                        <td>
-                            <div class="tutor-form-check tutor-mb-15">
-                                <input
-                                    id="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>"
-                                    type="checkbox"
-                                    class="tutor-form-check-input tutor-bulk-checkbox"
-                                    name="tutor-bulk-checkbox-all"
-                                    value="<?php esc_attr_e( $announcement->ID ); ?>"
-                                />
-                                <label for="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>">
-                                    <?php esc_html_e( $date_format ); ?>
-                                </label>
+                        $update_modal_id = 'tutor_announcement_' . $announcement->ID;
+                        $details_modal_id = $update_modal_id . '_details';
+                        $delete_modal_id = $update_modal_id . '_delete';
+                        $row_id = 'tutor-announcement-tr-' . $announcement->ID;
+                    ?>
+                    <tr id="<?php echo $row_id; ?>">
+                        <?php if ( is_admin() ) : ?>
+                            <td>
+                                <div class="tutor-form-check tutor-mb-15">
+                                    <input
+                                        id="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>"
+                                        type="checkbox"
+                                        class="tutor-form-check-input tutor-bulk-checkbox"
+                                        name="tutor-bulk-checkbox-all"
+                                        value="<?php esc_attr_e( $announcement->ID ); ?>"
+                                    />
+                                    <label for="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>">
+                                        <?php esc_html_e( $date_format ); ?>
+                                    </label>
+                                </div>
+                            </td>
+                        <?php else: ?>
+                            <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-text-nowrap">
+                                <?php esc_html_e( $date_format ); ?>
+                            </td>                    
+                        <?php endif; ?>
+
+                        <td data-th="<?php _e('Announcement', 'tutor'); ?>" class="column-fullwidth">
+                            <div class="tutor-announcement-content">
+                                <h4><?php echo esc_html($announcement->post_title); ?></h4>
+                                <p><?php echo $course ? $course->post_title : ''; ?></p>
                             </div>
                         </td>
-                    <?php else: ?>
-                        <td data-th="<?php _e('Date', 'tutor'); ?>" class="tutor-text-nowrap">
-                            <?php esc_html_e( $date_format ); ?>
-                        </td>                    
-                    <?php endif; ?>
-
-                    <td data-th="<?php _e('Announcement', 'tutor'); ?>" class="column-fullwidth">
-                        <div class="tutor-announcement-content">
-                            <h4><?php echo esc_html($announcement->post_title); ?></h4>
-                            <p><?php echo $course ? $course->post_title : ''; ?></p>
-                        </div>
-                    </td>
-                    <td data-th="<?php _e('Action', 'tutor'); ?>">
-                        <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                            <div class="inline-flex-center td-action-btns">
-                                <button class="btn-outline tutor-btn tutor-is-default tutor-is-xs tutor-mr-10 tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
-                                    <?php _e('Details', 'tutor'); ?>
-                                </button>
+                        <td data-th="<?php _e('Action', 'tutor'); ?>">
+                            <div class="tutor-bs-d-flex tutor-bs-align-items-center">
+                                <div class="inline-flex-center td-action-btns">
+                                    <button class="btn-outline tutor-btn tutor-is-default tutor-is-xs tutor-mr-10 tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
+                                        <?php _e('Details', 'tutor'); ?>
+                                    </button>
+                                </div>
+                                
+                                <div class="tutor-popup-opener">
+                                    <button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
+                                        <span class="toggle-icon"></span>
+                                    </button>
+                                    <ul class="popup-menu" id="<?php echo $update_modal_id; ?>_action">
+                                        <li>
+                                            <a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
+                                                <i class="ttr-edit-filled color-design-white"></i>
+                                                <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="tutor-quiz-question-trash" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
+                                                <i class="ttr-delete-fill-filled color-design-white"></i>
+                                                <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             
-                            <div class="tutor-popup-opener">
-                                <button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
-                                    <span class="toggle-icon"></span>
-                                </button>
-                                <ul class="popup-menu" id="<?php echo $update_modal_id; ?>_action">
-                                    <li>
-                                        <a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
-                                            <span class="ttr-edit-filled color-design-white"></span>
-                                            <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="tutor-quiz-question-trash" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
-                                            <span class="ttr-delete-fill-filled color-design-white"></span>
-                                            <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <?php 
-                            tutor_announcement_modal($update_modal_id, __('Edit Announcment', 'tutor'), $courses, $announcement); 
-                            tutor_announcement_modal_details($details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course->post_title, $date_format);
-                            tutor_announcement_modal_delete($delete_modal_id, $announcement->ID, $row_id);
-                        ?>
+                            <?php 
+                                tutor_announcement_modal($update_modal_id, __('Edit Announcment', 'tutor'), $courses, $announcement); 
+                                tutor_announcement_modal_details($details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course->post_title, $date_format);
+                                tutor_announcement_modal_delete($delete_modal_id, $announcement->ID, $row_id);
+                            ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <tr>
+                    <td colspan="100%">
+                        <?php tutor_utils()->tutor_empty_state( __( 'No announcement found', 'tutor' ) ); ?>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
     
@@ -337,9 +345,7 @@ $courses = (current_user_can('administrator')) ? tutor_utils()->get_courses() : 
     ?>
     </div>
  
-<?php else: ?>
-    <span><?php _e('No Announcment', 'tutor'); ?></span>
-<?php endif; ?>
+
 
 <?php 
     tutor_announcement_modal('tutor_announcement_new', __('Create Announcement'), $courses);

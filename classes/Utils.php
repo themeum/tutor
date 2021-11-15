@@ -5971,12 +5971,20 @@ class Utils {
 
 		$count = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(withdraw_id)
-			FROM 	{$wpdb->prefix}tutor_withdraws
+			FROM 	{$wpdb->prefix}tutor_withdraws  withdraw_tbl
+					INNER JOIN {$wpdb->users} user_tbl
+						ON withdraw_tbl.user_id = user_tbl.ID
 			WHERE 	1 = %d
 					{$query_by_user_sql}
 					{$query_by_status_sql}
+					{$date_query}
+					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
 			",
-			1
+			1,
+			$search_query,
+			$search_query,
+			$search_query,
+			$search_query
 		) );
 
 		$results = $wpdb->get_results( $wpdb->prepare(
@@ -8246,7 +8254,8 @@ class Utils {
 			'processing' 	=> __( 'Processing', 'tutor' ),
 			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
 			'canceled'  	=> __( 'Cancelled', 'tutor' ),
-			'blocked'		=> __( 'Blocked', 'tutor' )
+			'blocked'		=> __( 'Blocked', 'tutor' ),
+			'cancel'		=> __( 'Cancelled', 'tutor' )
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}

@@ -68,7 +68,7 @@ class Course_List {
 	 * @since v2.0.0
 	 */
 	public function prepare_bulk_actions(): array {
-		$actions = array(
+		$actions    = array(
 			$this->bulk_action_default(),
 			$this->bulk_action_publish(),
 			$this->bulk_action_pending(),
@@ -141,7 +141,7 @@ class Course_List {
 				'url'   => $url . '&data=trash',
 			),
 		);
-		return $tabs;
+		return apply_filters( 'tutor_course_tabs', $tabs );
 	}
 
 	/**
@@ -238,10 +238,26 @@ class Course_List {
 		if ( '' === $action || '' === $bulk_ids ) {
 			return wp_send_json_error();
 		} elseif ( 'delete' === $action ) {
+			// Do action before delete.
+			do_action( 'before_tutor_course_bulk_action_delete', $bulk_ids );
+
 			$delete_courses = self::delete_course( $bulk_ids );
+
+			do_action( 'after_tutor_course_bulk_action_delete', $bulk_ids );
 			return $delete_courses ? wp_send_json_success() : wp_send_json_error();
 		} else {
+			/**
+			 * Do action before course update
+			 *
+			 * @param string $action (publish | pending | draft | trash).
+			 * @param array $bulk_ids, course id.
+			 */
+			do_action( 'before_tutor_course_bulk_action_update', $action, $bulk_ids );
+
 			$update_status = self::update_course_status( $action, $bulk_ids );
+
+			do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
+
 			return $update_status ? wp_send_json_success() : wp_send_json_error();
 		}
 		exit;
@@ -325,43 +341,38 @@ class Course_List {
 	/**
 	 * Count quiz for a course
 	 *
-	 * @param $course_id | required.
+	 * @param int $course_id | required.
 	 */
-	public static function get_all_quiz_by_course( int $course_id): int {
+	public static function get_all_quiz_by_course( int $course_id ): int {
 		global $wpdb;
-		$quiz_number = $wpdb->get_var($wpdb->prepare(
-			"SELECT COUNT(ID) FROM {$wpdb->posts}
+		$quiz_number = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(ID) FROM {$wpdb->posts}
 			WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type ='topics' AND post_parent = %d AND post_status = 'publish')
 			AND post_type ='tutor_quiz' 
-			AND post_status = 'publish'", $course_id));
+			AND post_status = 'publish'",
+				$course_id
+			)
+		);
 		return $quiz_number ? $quiz_number : 0;
 	}
 
-    /**
-     * Get course enrollments with student info
-     * 
-     * @param $course_id int | required
-     * 
-     * @period string | optional ( today | monthly | yearly ) if not provide then it will 
-     * 
-     * retrieve all records
-     * 
-     * @param $start_date string | optional 
-     * 
-     * @param $end_date string | optional
-     * 
-     * @return array
-     * 
-     * @since v2.0.0
-     */
-    public static function course_enrollments_with_student_details( int $course_id ) {
+	/**
+	 * Get course enrollments with student info
+	 *
+	 * @param  int $course_id int | required.
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public static function course_enrollments_with_student_details( int $course_id ) {
 		global $wpdb;
-        $course_id          = sanitize_text_field( $course_id );
-        $course_completed   = 0;
-        $course_inprogress  = 0;
+		$course_id         = sanitize_text_field( $course_id );
+		$course_completed  = 0;
+		$course_inprogress = 0;
 
-		$enrollments = $wpdb->get_results($wpdb->prepare(
-			"SELECT enroll.ID AS enroll_id, enroll.post_author AS enroll_author, user.*, course.ID AS course_id
+		$enrollments = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT enroll.ID AS enroll_id, enroll.post_author AS enroll_author, user.*, course.ID AS course_id
                 FROM {$wpdb->posts} AS enroll
                 LEFT JOIN {$wpdb->users} AS user ON user.ID = enroll.post_author
                 LEFT JOIN {$wpdb->posts} AS course ON course.ID = enroll.post_parent
@@ -369,25 +380,26 @@ class Course_List {
                     AND enroll.post_status = %s
                     AND enroll.post_parent = %d
 			",
-			'tutor_enrolled',
-			'completed',
-			$course_id
-		) );
+				'tutor_enrolled',
+				'completed',
+				$course_id
+			)
+		);
 
-        foreach( $enrollments as $enrollment ) {
-            $course_progress = tutor_utils()->get_course_completed_percent( $course_id, $enrollment->enroll_author);
-            if ( $course_progress == 100 ) {
-                $course_completed++;
-            } else {
-                $course_inprogress++;
-            }
-        }
+		foreach ( $enrollments as $enrollment ) {
+			$course_progress = tutor_utils()->get_course_completed_percent( $course_id, $enrollment->enroll_author );
+			if ( $course_progress == 100 ) {
+				$course_completed++;
+			} else {
+				$course_inprogress++;
+			}
+		}
 
-        return array(
-            'enrollments'       => $enrollments,
-            'total_completed'   => $course_completed,
-            'total_inprogress'  => $course_inprogress,
-            'total_enrollments' => count( $enrollments )
-        );
-    } 
+		return array(
+			'enrollments'       => $enrollments,
+			'total_completed'   => $course_completed,
+			'total_inprogress'  => $course_inprogress,
+			'total_enrollments' => count( $enrollments ),
+		);
+	}
 }

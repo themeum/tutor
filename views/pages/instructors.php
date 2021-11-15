@@ -178,7 +178,7 @@ $filters = array(
 					<?php else : ?>
 						<tr>
 							<td colspan="100%">
-								<?php tutor_utils()->tutor_empty_state(); ?>
+								<?php tutor_utils()->tutor_empty_state( __( 'No instructor found', 'tutor' ) ); ?>
 							</td>
 						</tr>
 				<?php endif; ?>	
