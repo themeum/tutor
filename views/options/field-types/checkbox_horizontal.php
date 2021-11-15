@@ -13,7 +13,7 @@ if ( ! empty( $field['options'] ) ) {
 	! is_array( $saved_data ) ? $saved_data = array() : 0;
 	?>
 	<div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>">
-		<?php include tutor()->path . 'views/options/template/field_heading.php'; ?>
+		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 		<div class="tutor-option-field-input d-flex">
 			<div class="type-check d-flex">
 				<?php

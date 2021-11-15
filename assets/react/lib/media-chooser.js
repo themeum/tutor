@@ -1,16 +1,17 @@
-window.jQuery(document).ready(function($){
+window.jQuery(document).ready(function ($) {
 
-    const {__} = window.wp.i18n;
+    const { __ } = window.wp.i18n;
 
     /**
      * upload thumbnail
+     * @since v.1.5.6
      */
-     $(document).on( 'click', '.tutor-thumbnail-uploader .tutor-thumbnail-upload-button',  function( event ){
+    $(document).on('click', '.tutor-thumbnail-uploader .tutor-thumbnail-upload-button', function (event) {
         event.preventDefault();
 
         var wrapper = $(this).closest('.tutor-thumbnail-uploader');
         var frame;
-        if ( frame ) {
+        if (frame) {
             frame.open();
             return;
         }
@@ -22,12 +23,13 @@ window.jQuery(document).ready(function($){
             library: { type: "image" },
             multiple: false, // Set to true to allow multiple files to be selected
         });
-        frame.on( 'select', function() {
+        frame.on('select', function () {
             var attachment = frame.state().get('selection').first().toJSON();
 
             wrapper.find('img').attr('src', attachment.url);
             wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
             wrapper.find('.delete-btn').show();
+            document.getElementById('save_tutor_option').disabled = false;
         });
         frame.open();
     });
@@ -36,7 +38,7 @@ window.jQuery(document).ready(function($){
      * Thumbnail Delete
      * @since v.1.5.6
      */
-     $(document).on('click', '.tutor-thumbnail-uploader .delete-btn', function(e){
+    $(document).on('click', '.tutor-thumbnail-uploader .delete-btn', function (e) {
         e.preventDefault();
 
         var $that = $(this);
@@ -44,7 +46,7 @@ window.jQuery(document).ready(function($){
 
         wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
         wrapper.find('img').attr('src', '');
-        
+
         $that.hide();
     });
 });

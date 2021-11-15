@@ -12,7 +12,7 @@ $field_id = 'field_' . $field['key'];
 	<div class="certificate-thumb">
 		<img src="<?php echo tutor()->url; ?>assets/images/images-v2/<?php echo $field['thumbs_url']; ?>" alt="">
 	</div>
-	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
+	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input d-flex has-btn-after">
 		<label class="tutor-form-toggle">
