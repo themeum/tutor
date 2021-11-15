@@ -476,7 +476,14 @@ $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
 	}
 }
 
-$border: ('p40' $primary-40, 'p50' $primary-50, 'p60' $primary-60);
+$border: (
+	'p40' $primary-40,
+	'p50' $primary-50,
+	'p60' $primary-60,
+	'sl10' $stroke-light-10,
+	'sl20' $stroke-light-20,
+	'sl30' $stroke-light-30
+);
 @each $pre, $b in $border {
 	.tutor-border-#{$pre} {
 		border: 1px solid #{$b};
