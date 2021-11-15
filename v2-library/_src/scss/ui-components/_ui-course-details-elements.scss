@@ -40,16 +40,21 @@
 
 // Course Details - Widgets
 .tutor-course-details-widget {
-	.widget-title {
+	ul {
+		margin: 0;
+		padding: 0;
 	}
-	.widget-list {
+	&-title {
+	}
+	&-list {
+		margin-top: 16px;
 		li [class^='ttr-'] {
 			font-size: 26px;
 		}
 	}
-	.widget-tags {
+	&-tags {
+		margin-left: -15px;
 		.tutor-tag-list li {
-			// margin-bottom: -15px;
 			a {
 				margin-bottom: 15px;
 			}
@@ -137,6 +142,15 @@
 			margin-top: -5px;
 		}
 	}
+
+	&-header-only {
+	}
+	&-footer-only {
+		// background: #000;
+		.tutor-course-sidebar-card-footer {
+			border-top: none;
+		}
+	}
 }
 
 // Course Details Page
@@ -155,55 +169,55 @@
 		&-right {
 		}
 	}
+}
 
-	.tutor-has-showmore {
+.tutor-has-showmore {
+	.tutor-showmore-content {
+		position: relative;
+		&:before {
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 62px;
+			bottom: 0;
+			background: linear-gradient(
+				180deg,
+				rgba(255, 255, 255, 0.0001) 1.31%,
+				rgba(255, 255, 255, 0.721372) 15.41%,
+				#ffffff 100%
+			);
+		}
+	}
+	.showmore-text {
+		display: none;
+	}
+	.btn-showmore {
+		display: flex !important;
+	}
+	.btn-showless {
+		display: none !important;
+	}
+	&.is-active {
+		.showmore-text {
+			display: flex !important;
+		}
+		.btn-showmore {
+			display: none !important;
+		}
+		.btn-showless {
+			display: flex !important;
+		}
 		.tutor-showmore-content {
 			position: relative;
 			&:before {
-				content: '';
-				position: absolute;
-				width: 100%;
-				height: 62px;
-				bottom: 0;
-				background: linear-gradient(
-					180deg,
-					rgba(255, 255, 255, 0.0001) 1.31%,
-					rgba(255, 255, 255, 0.721372) 15.41%,
-					#ffffff 100%
-				);
+				display: none;
 			}
 		}
-		.showmore-text {
-			display: none;
-		}
-		.btn-showmore {
-			display: flex !important;
-		}
-		.btn-showless {
-			display: none !important;
-		}
-		&.is-active {
-			.showmore-text {
-				display: flex !important;
-			}
-			.btn-showmore {
-				display: none !important;
-			}
-			.btn-showless {
-				display: flex !important;
-			}
-			.tutor-showmore-content {
-				position: relative;
-				&:before {
-					display: none;
-				}
-			}
-		}
-		.tutor-showmore-btn {
-			cursor: pointer;
-			> * {
-				pointer-events: none;
-			}
+	}
+	.tutor-showmore-btn {
+		cursor: pointer;
+		> * {
+			pointer-events: none;
 		}
 	}
 }
