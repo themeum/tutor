@@ -25,7 +25,7 @@ if ( empty($course_benefits)){
 
 <?php if (is_array($course_benefits) && count($course_benefits)): ?>
 	<div class="tutor-course-details-widget tutor-course-details-widget-col-2 tutor-mt-30">
-		<div class="widget-title">
+		<div class="widget-title tutor-m-0">
 			<span class="color-text-primary text-medium-h6">
 				<?php _e('What Will I Learn?', 'tutor'); ?>
 			</span>
