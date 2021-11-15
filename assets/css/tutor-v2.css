@@ -19486,6 +19486,18 @@
   border: 1px solid #bdcaf1;
 }
 
+.tutor-border-sl10 {
+  border: 1px solid #eff1f6;
+}
+
+.tutor-border-sl20 {
+  border: 1px solid #e0e2ea;
+}
+
+.tutor-border-sl30 {
+  border: 1px solid #cdcfd5;
+}
+
 /* This is a legacy directory pulled from inside the tutor as it is sort of old design library  */
 /* Common libraries. This file will be loaded in both of admin and frontend main scss file once */
 .tutor-switch {
@@ -26042,14 +26054,39 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border-radius: 6px;
 }
 
+.tutor-emptystate img {
+  max-width: 100%;
+}
+
+@media (max-width: 450px) {
+  .tutor-emptystate .text-regular-h5 {
+    font-size: 15px !important;
+  }
+}
+
+.tutor-gradebook .tutor-btn-circle, .tutor-gradebook .tutor-text-card .tutor-card-icon, .tutor-text-card .tutor-gradebook .tutor-card-icon {
+  margin: 0;
+}
+
 .tutor-gradebook-finalgrade {
   padding: 24px 30px;
   display: grid;
-  grid-template-columns: auto 1fr auto;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   grid-gap: 20px;
+}
+
+@media (min-width: 550px) {
+  .tutor-gradebook-finalgrade {
+    grid-template-columns: auto 1fr auto;
+  }
+}
+
+@media (max-width: 550px) {
+  .tutor-gradebook-finalgrade {
+    text-align: center;
+  }
 }
 
 .tutor-gradebook-finalgrade .tutor-btn-circle.tutor-is-lg, .tutor-gradebook-finalgrade .tutor-text-card .tutor-is-lg.tutor-card-icon, .tutor-text-card .tutor-gradebook-finalgrade .tutor-is-lg.tutor-card-icon {
@@ -26060,6 +26097,82 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   background: #00abfa;
   border-color: #00abfa;
   color: #fff;
+}
+
+.tutor-gradebook-allgrades-head, .tutor-gradebook-allgrades-item {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 15px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+@media (min-width: 768px) {
+  .tutor-gradebook-allgrades-head, .tutor-gradebook-allgrades-item {
+    grid-template-columns: 1.75fr repeat(3, 1fr);
+  }
+}
+
+.tutor-gradebook-allgrades-head > *, .tutor-gradebook-allgrades-item > * {
+  display: block;
+}
+
+@media (min-width: 550px) {
+  .tutor-gradebook-allgrades-head > *:last-child, .tutor-gradebook-allgrades-item > *:last-child {
+    text-align: right;
+  }
+}
+
+@media (max-width: 550px) {
+  .tutor-gradebook-allgrades-head {
+    display: none;
+  }
+}
+
+.tutor-gradebook-allgrades-item .tutor-btn-circle.tutor-is-outline, .tutor-gradebook-allgrades-item .tutor-text-card .tutor-is-outline.tutor-card-icon, .tutor-text-card .tutor-gradebook-allgrades-item .tutor-is-outline.tutor-card-icon {
+  color: #1b3185;
+  border-color: #1b3185;
+}
+
+.tutor-gradebook-allgrades-item:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.tutor-gradebook-allgrades-item > *:last-child {
+  padding-right: 5px;
+}
+
+@media (max-width: 550px) {
+  .tutor-gradebook-allgrades-item {
+    display: block;
+    padding: 15px;
+  }
+  .tutor-gradebook-allgrades-item > * {
+    position: relative;
+    padding-left: 40%;
+  }
+  .tutor-gradebook-allgrades-item > *:before {
+    position: absolute;
+    content: attr(data-grade-title);
+    top: 0;
+    left: 0;
+    width: 35%;
+    height: 100%;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 400;
+    color: #5b616f;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .tutor-gradebook-allgrades-item > *:not(:last-child) {
+    margin-bottom: 10px;
+  }
 }
 
 .tutor-course-listing-grid {
