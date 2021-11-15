@@ -4977,7 +4977,7 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
       width: '100%'
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_datepicker__WEBPACK_IMPORTED_MODULE_2___default()), {
-    placeholderText: "".concat(dateFormat, "-").concat(dateFormat),
+    placeholderText: " ".concat(dateFormat, " - ").concat(dateFormat, " "),
     showPopperArrow: false,
     shouldCloseOnSelect: false,
     selectsRange: true,
