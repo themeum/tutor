@@ -11,32 +11,24 @@
  * @version 1.4.3
  */
 
-
-
+global $post;
 do_action('tutor_course/single/before/content');
 
-global $post;
 ?>
-
-    <div class="tutor-single-course-segment tutor-course-content-wrap">
-		<?php
+<div class="tutor-single-course-segment tutor-course-content-wrap">
+	<?php
 		if ( ! empty(get_the_content())){
 			?>
-            <div class="course-content-title">
-                <h4  class="tutor-segment-title"><?php _e('About Course', 'tutor'); ?></h4>
-            </div>
+			<div class="course-content-title">
+				<h4>
+					<?php _e('About Course', 'tutor'); ?>
+				</h4>
+			</div>
 			<?php
 		}
-		?>
-
-
-        <div class="tutor-course-content-content">
-			<?php
-			the_content();
-			//echo wpautop($content);
-			?>
-        </div>
-    </div>
-
-
+	?>
+	<div class="tutor-course-content-content">
+		<?php the_content(); ?>
+	</div>
+</div>
 <?php do_action('tutor_course/single/after/content'); ?>
