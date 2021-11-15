@@ -4440,6 +4440,22 @@ accordionItemHeaders.forEach(function (accordionItemHeader) {
     }
   });
 });
+var hasExpandableCardInputs = document.querySelectorAll('.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-form-check-input');
+hasExpandableCardInputs.forEach(function (el) {
+  console.log('input checked ->> ', el.checked);
+  console.dir(el.closest('.tutor-course-sidebar-card-pick-plan-label').querySelector('.input-plan-details'));
+  el.addEventListener('change', function (e) {
+    el.classList.toggle('is-checked');
+    var inputDetails = e.target.closest('.tutor-course-sidebar-card-pick-plan-label').querySelector('.input-plan-details');
+    console.log('input checked -> ', e.target.checked);
+
+    if (e.target.checked) {
+      inputDetails.style.maxHeight = inputDetails.scrollHeight + 'px';
+    } else {
+      inputDetails.style.maxHeight = 0;
+    }
+  });
+});
 
 /***/ }),
 

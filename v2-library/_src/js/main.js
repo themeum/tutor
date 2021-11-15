@@ -39,3 +39,27 @@ accordionItemHeaders.forEach((accordionItemHeader) => {
 		}
 	});
 });
+
+const hasExpandableCardInputs = document.querySelectorAll(
+	'.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-form-check-input'
+);
+
+hasExpandableCardInputs.forEach((el) => {
+	console.log('input checked ->> ', el.checked);
+	console.dir(el.closest('.tutor-course-sidebar-card-pick-plan-label').querySelector('.input-plan-details'));
+
+	el.addEventListener('change', (e) => {
+		el.classList.toggle('is-checked');
+		const inputDetails = e.target
+			.closest('.tutor-course-sidebar-card-pick-plan-label')
+			.querySelector('.input-plan-details');
+
+		console.log('input checked -> ', e.target.checked);
+
+		if (e.target.checked) {
+			inputDetails.style.maxHeight = inputDetails.scrollHeight + 'px';
+		} else {
+			inputDetails.style.maxHeight = 0;
+		}
+	});
+});
