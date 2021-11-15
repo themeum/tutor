@@ -5350,7 +5350,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-main-title a,
-.tutor-option-main-title .reset-btn {
+.tutor-option-main-title .modal-reset-open {
   font-weight: 500;
   font-size: 15px;
   line-height: 1.6;
@@ -5368,7 +5368,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-main-title a i,
-.tutor-option-main-title .reset-btn i {
+.tutor-option-main-title .modal-reset-open i {
   margin-right: 5px;
   font-size: 17px;
 }

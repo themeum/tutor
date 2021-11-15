@@ -4,7 +4,8 @@ window.jQuery(document).ready(function ($) {
 
     /**
      * upload thumbnail
-     * /
+     * @since v.1.5.6
+     */
     $(document).on('click', '.tutor-thumbnail-uploader .tutor-thumbnail-upload-button', function (event) {
         event.preventDefault();
 
@@ -28,43 +29,11 @@ window.jQuery(document).ready(function ($) {
             wrapper.find('img').attr('src', attachment.url);
             wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
             wrapper.find('.delete-btn').show();
+            document.getElementById('save_tutor_option').disabled = false;
         });
         frame.open();
     });
-*/
 
-    const uploaderButton = document.querySelector('.tutor-thumbnail-uploader .tutor-thumbnail-upload-button');
-    uploaderButton.onclick = (event) => {
-        event.preventDefault();
-        var wrapper = uploaderButton.closest('.tutor-thumbnail-uploader');
-        var frame;
-        if (frame) {
-            frame.open();
-            return;
-        }
-
-
-        frame = wp.media({
-            title: wrapper.dataset.mediaHeading,
-            button: {
-                text: wrapper.dataset.buttonText
-            },
-            library: { type: "image" },
-            multiple: false, // Set to true to allow multiple files to be selected
-        });
-        console.log(wrapper);
-
-        frame.on('select', () => {
-            var attachment = frame.state().get('selection').first().toJSON();
-            wrapper.querySelector('img').setAttribute('src', attachment.url);
-            wrapper.querySelector('input[type="hidden"].tutor-tumbnail-id-input').value = attachment.id;
-            wrapper.querySelector('.delete-btn').style.display = "block";
-            document.getElementById('save_tutor_option').disabled = false;
-        })
-
-        frame.open();
-
-    }
     /**
      * Thumbnail Delete
      * @since v.1.5.6
