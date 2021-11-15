@@ -7,7 +7,7 @@
  */
 if ( ! empty( $field['options'] ) ) { ?>
 	<div class="tutor-option-field-row">
-		<?php include tutor()->path . 'views/options/template/field_heading.php'; ?>
+		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 		<div class="type-check d-flex">
 			<?php foreach ( $field['options'] as $option_key => $option ) : ?>
 				<div class="tutor-form-check">

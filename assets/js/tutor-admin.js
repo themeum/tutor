@@ -1546,20 +1546,6 @@ function toolTipOnWindowResize() {
 }
 
 window.addEventListener('resize', toolTipOnWindowResize);
-/**
- * Search Suggestion box
- */
-
-/* const searchInput = document.querySelector('.search-field input[type=search]');
-const searchPopupOpener = document.querySelector('.search-popup-opener');
-
-searchInput.addEventListener('input', (e) => {
-	if (e.target.value) {
-		searchPopupOpener.classList.add('visible');
-	} else {
-		searchPopupOpener.classList.remove('visible');
-	}
-}); */
 
 /***/ }),
 
@@ -2298,85 +2284,114 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 /*
 Reset to default for settings individual page
 */
-var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
-resetDefaultBtn.forEach(function (resetBtn, index) {
-  resetBtn.onclick = function (e) {
-    e.preventDefault();
-    var resetPage = resetBtn.dataset.reset;
-    var formData = new FormData();
-    formData.append('action', 'reset_settings_data');
-    formData.append('reset_page', resetPage);
-    formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-    var xhttp = new XMLHttpRequest();
-    xhttp.open('POST', _tutorobject.ajaxurl, true);
-    xhttp.send(formData);
+document.addEventListener('readystatechange', function (event) {
+  if (event.target.readyState === 'interactive') {}
 
-    xhttp.onreadystatechange = function () {
-      if (xhttp.readyState === 4) {
-        document.querySelector('#tutor-page-reset-modal').classList.remove('tutor-is-active');
-        var pageData = JSON.parse(xhttp.response).data;
-        pageData.forEach(function (item) {
-          var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
-
-          if (field_types_associate.includes(item.type)) {
-            var itemName = 'tutor_option[' + item.key + ']';
-            var itemElement = elementByName(itemName)[0];
-
-            if (item.type == 'select') {
-              var sOptions = itemElement.options;
-
-              _toConsumableArray(sOptions).forEach(function (item) {
-                item.selected = false;
-              });
-            } else if (item.type == 'toggle_switch') {
-              itemElement.value = item["default"];
-              itemElement.nextElementSibling.value = item["default"];
-              itemElement.nextElementSibling.checked = false;
-            } else {
-              itemElement.value = item["default"];
-            }
-          }
-
-          var field_types_multi = ['group_fields'];
-
-          if (field_types_multi.includes(item.type)) {
-            var groupFields = item.group_fields;
-            console.log(_typeof(groupFields) === 'object' && groupFields !== null);
-
-            if (_typeof(groupFields) === 'object' && groupFields !== null) {
-              Object.keys(groupFields).forEach(function (item) {
-                var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
-
-                if (field_types_associate.includes(item.type)) {
-                  var _itemName = 'tutor_option[' + item.key + ']';
-
-                  var _itemElement = elementByName(_itemName)[0];
-
-                  if (item.type == 'select') {
-                    var _sOptions = _itemElement.options;
-
-                    _toConsumableArray(_sOptions).forEach(function (item) {
-                      item.selected = false;
-                    });
-                  } else if (item.type == 'toggle_switch') {
-                    _itemElement.value = item["default"];
-                    _itemElement.nextElementSibling.value = item["default"];
-                    _itemElement.nextElementSibling.checked = false;
-                  } else {
-                    _itemElement.value = item["default"];
-                  }
-                }
-              });
-            }
-          }
-        });
-        setTimeout(function () {
-          tutor_toast('Reset Successful', 'Default data for ' + resetPage.toUpperCase() + ' successfully!', 'success');
-        }, 300);
-      }
-    };
-  };
+  if (event.target.readyState === 'complete') {
+    typeof resetConfirmation === 'function' ? resetConfirmation() : '';
+    typeof modalResetOpen === 'function' ? modalResetOpen() : '';
+  }
 });
+var modalConfirmation = document.getElementById('tutor-modal-bulk-action');
+
+var modalResetOpen = function modalResetOpen() {
+  var modalResetOpen = document.querySelectorAll('.modal-reset-open');
+  var resetButton = modalConfirmation.querySelector('.reset_to_default');
+  var modalHeading = modalConfirmation.querySelector('.tutor-modal-title');
+  var modalMessage = modalConfirmation.querySelector('.tutor-modal-message');
+  modalResetOpen.forEach(function (modalOpen, index) {
+    modalOpen.onclick = function (e) {
+      resetButton.dataset.reset = modalOpen.dataset.reset;
+      modalHeading.innerText = modalOpen.dataset.heading;
+      resetButton.dataset.resetFor = modalOpen.previousElementSibling.innerText;
+      modalMessage.innerText = modalOpen.dataset.message;
+    };
+  });
+};
+
+var resetConfirmation = function resetConfirmation() {
+  var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
+  resetDefaultBtn.forEach(function (resetBtn, index) {
+    resetBtn.onclick = function (e) {
+      e.preventDefault();
+      var resetPage = resetBtn.dataset.reset;
+      var resetTitle = resetBtn.dataset.resetFor.replace('_', ' ').toUpperCase();
+      console.log(resetTitle);
+      var formData = new FormData();
+      formData.append('action', 'reset_settings_data');
+      formData.append('reset_page', resetPage);
+      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+      var xhttp = new XMLHttpRequest();
+      xhttp.open('POST', _tutorobject.ajaxurl, true);
+      xhttp.send(formData);
+
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4) {
+          modalConfirmation.classList.remove('tutor-is-active');
+          var pageData = JSON.parse(xhttp.response).data;
+          pageData.forEach(function (item) {
+            var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+
+            if (field_types_associate.includes(item.type)) {
+              var itemName = 'tutor_option[' + item.key + ']';
+              var itemElement = elementByName(itemName)[0];
+
+              if (item.type == 'select') {
+                var sOptions = itemElement.options;
+
+                _toConsumableArray(sOptions).forEach(function (item) {
+                  item.selected = false;
+                });
+              } else if (item.type == 'toggle_switch') {
+                itemElement.value = item["default"];
+                itemElement.nextElementSibling.value = item["default"];
+                itemElement.nextElementSibling.checked = false;
+              } else {
+                itemElement.value = item["default"];
+              }
+            }
+
+            var field_types_multi = ['group_fields'];
+
+            if (field_types_multi.includes(item.type)) {
+              var groupFields = item.group_fields;
+              console.log(_typeof(groupFields) === 'object' && groupFields !== null);
+
+              if (_typeof(groupFields) === 'object' && groupFields !== null) {
+                Object.keys(groupFields).forEach(function (item) {
+                  var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+
+                  if (field_types_associate.includes(item.type)) {
+                    var _itemName = 'tutor_option[' + item.key + ']';
+
+                    var _itemElement = elementByName(_itemName)[0];
+
+                    if (item.type == 'select') {
+                      var _sOptions = _itemElement.options;
+
+                      _toConsumableArray(_sOptions).forEach(function (item) {
+                        item.selected = false;
+                      });
+                    } else if (item.type == 'toggle_switch') {
+                      _itemElement.value = item["default"];
+                      _itemElement.nextElementSibling.value = item["default"];
+                      _itemElement.nextElementSibling.checked = false;
+                    } else {
+                      _itemElement.value = item["default"];
+                    }
+                  }
+                });
+              }
+            }
+          });
+          setTimeout(function () {
+            tutor_toast('Reset Successful', 'Default data for ' + resetTitle + ' successfully!', 'success');
+          }, 300);
+        }
+      };
+    };
+  });
+};
 
 var elementByName = function elementByName(key) {
   return document.getElementsByName(key);
@@ -2385,7 +2400,7 @@ var elementByName = function elementByName(key) {
 var optionForm = document.querySelector('#tutor-option-form');
 
 if (null !== optionForm) {
-  optionForm.addEventListener('change', function (event) {
+  optionForm.addEventListener('input', function (event) {
     document.getElementById('save_tutor_option').disabled = false;
   });
 }
