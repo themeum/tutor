@@ -29,19 +29,21 @@ $sub_page_method = tutor_utils()->course_sub_pages(get_the_ID());
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
                 <?php tutor_course_enrolled_nav(); ?>
-                <?php
-                    if(isset($sub_page_method[$sub_page])){
-                        $method = $sub_page_method[$sub_page]['method'];
-                        
-                        if(is_string($method)) {
-                            $method();
-                        } else {
-                            $_object = $method[0];
-                            $_method = $method[1];
-                            $_object->$_method(get_the_ID());
-                        }
-                    } 
-                ?>
+                <div class="tutor-course-tab-<?php echo $sub_page; ?>">
+                    <?php
+                        if(isset($sub_page_method[$sub_page])){
+                            $method = $sub_page_method[$sub_page]['method'];
+                            
+                            if(is_string($method)) {
+                                $method();
+                            } else {
+                                $_object = $method[0];
+                                $_method = $method[1];
+                                $_object->$_method(get_the_ID());
+                            }
+                        } 
+                    ?>
+                </div>
 	            <?php do_action('tutor_course/single/after/inner-wrap'); ?>
             </div> <!-- .tutor-bs-col-8 -->
 
