@@ -4,7 +4,7 @@ import DatePicker, { CalendarContainer } from 'react-datepicker';
 import { addMonths, getMonth, getYear } from 'date-fns';
 import range from 'lodash.range';
 
-// import 'react-datepicker/dist/react-datepicker.css';
+import 'react-datepicker/dist/react-datepicker.css';
 // import './TutorDatepicker.scss';
 // import '../../../bundle/main.min.css';
 

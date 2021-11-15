@@ -25687,6 +25687,46 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   right: 30px;
 }
 
+.tutor-course-sidebar-card-pick-plan-label {
+  cursor: pointer;
+  display: grid;
+}
+
+.tutor-course-sidebar-card-pick-plan-label input[type='radio']:checked ~ .tutor-course-sidebar-card-pick-plan-input {
+  background: #f6f8fd;
+  border-color: #3e64de;
+}
+
+.tutor-course-sidebar-card-pick-plan-label input[type='radio']:checked ~ .tutor-course-sidebar-card-pick-plan-input .radio-icon {
+  background-color: #3e64de;
+  border-color: #3e64de;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+.tutor-course-sidebar-card-pick-plan-input {
+  padding: 16px 20px;
+  display: grid;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  grid-template-columns: auto 1fr auto;
+  grid-gap: 10px;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+.tutor-course-sidebar-card-pick-plan-input .radio-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #c0c3cb;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
 .tutor-course-details-page-main {
   display: grid;
   grid-gap: 30px;
@@ -25728,9 +25768,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-has-showmore.is-active .showmore-text {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
+  display: block;
 }
 
 .tutor-has-showmore.is-active .btn-showmore {

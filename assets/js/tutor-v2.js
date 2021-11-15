@@ -4483,8 +4483,6 @@ accordionItemHeaders.forEach(function (accordionItemHeader) {
       document.getElementById("".concat(_id)).closest('.tab-header-item-seemore').classList.toggle('is-active');
     } else {
       document.querySelectorAll('.tab-header-item-seemore').forEach(function (item) {
-        console.log(item.classList.contains('is-active'));
-
         if (item.classList.contains('is-active')) {
           item.classList.remove('is-active');
         }
