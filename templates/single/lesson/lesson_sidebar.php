@@ -47,15 +47,13 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 					<?php esc_html_e('Lesson List', 'tutor'); ?>
 				</span>
 			</div>
-			<?php if(!$_is_preview){ ?>
-				<?php if($enable_q_and_a_on_course) { ?>
-				<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
-					<span class="ttr-question-filled"></span>
-					<span class="text-medium-caption color-text-title">
-						<?php esc_html_e('Question & Answer', 'tutor'); ?>
-					</span>
-				</div>
-				<?php } ?>
+			<?php if($enable_q_and_a_on_course && !$_is_preview) { ?>
+			<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
+				<span class="ttr-question-filled"></span>
+				<span class="text-medium-caption color-text-title">
+					<?php esc_html_e('Question & Answer', 'tutor'); ?>
+				</span>
+			</div>
 			<?php } ?>
 		</div>
 
@@ -96,7 +94,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 									while ($lessons->have_posts()){
 										$lessons->the_post();
 
-										if ($post->post_type === 'tutor_quiz') {
+										if ($post->post_type === 'tutor_quiz' && !$_is_preview) {
 											$quiz = $post;
 											?>
 											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active color-design-brand' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
@@ -125,7 +123,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 												</div>
 											</div>
 											<?php
-										}elseif($post->post_type === 'tutor_assignments'){
+										}elseif($post->post_type === 'tutor_assignments' && !$_is_preview){
 											/**
 											 * Assignments
 											 * @since this block v.1.3.3
@@ -149,7 +147,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 											</div>
 											<?php
 
-										}elseif($post->post_type === 'tutor_zoom_meeting'){
+										}elseif($post->post_type === 'tutor_zoom_meeting' && !$_is_preview){
 											/**
 											 * Zoom Meeting
 											 * @since this block v.1.7.1
