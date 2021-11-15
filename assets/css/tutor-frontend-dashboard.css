@@ -2868,6 +2868,12 @@
   margin-bottom: 100px;
 }
 
+.tutor-dashboard .tutor-announcement-order-sorting,
+.tutor-dashboard .tutor-announcement-course-sorting {
+  height: 40px;
+  line-height: 40px;
+}
+
 .tutor-dashboard .tutor-dashboard-header {
   padding-bottom: 30px;
   border-bottom: 1px solid #dcdfe5;
