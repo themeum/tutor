@@ -1815,7 +1815,6 @@ var apply_single_settings = function apply_single_settings() {
 };
 
 var delete_history_data = function delete_history_data() {
-  var noticeMessage = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".tutor-notification");
   var delete_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".delete_single_settings");
 
   var _loop3 = function _loop3(i) {
@@ -1826,7 +1825,6 @@ var delete_history_data = function delete_history_data() {
       formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
       formData.append("time", Date.now());
       formData.append("delete_id", delete_id);
-      noticeMessage.classList.add("show");
       var xhttp = new XMLHttpRequest();
       xhttp.open("POST", _tutorobject.ajaxurl, true);
       xhttp.send(formData);
@@ -1836,7 +1834,7 @@ var delete_history_data = function delete_history_data() {
           tutor_option_history_load(xhttp.responseText);
           delete_history_data();
           setTimeout(function () {
-            (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Data deleted successfully!");
+            tutor_toast('Success', "Data deleted successfully!", 'success');
           }, 200);
         }
       };
@@ -2296,9 +2294,9 @@ var modalConfirmation = document.getElementById('tutor-modal-bulk-action');
 
 var modalResetOpen = function modalResetOpen() {
   var modalResetOpen = document.querySelectorAll('.modal-reset-open');
-  var resetButton = modalConfirmation.querySelector('.reset_to_default');
-  var modalHeading = modalConfirmation.querySelector('.tutor-modal-title');
-  var modalMessage = modalConfirmation.querySelector('.tutor-modal-message');
+  var resetButton = modalConfirmation && modalConfirmation.querySelector('.reset_to_default');
+  var modalHeading = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-title');
+  var modalMessage = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-message');
   modalResetOpen.forEach(function (modalOpen, index) {
     modalOpen.onclick = function (e) {
       resetButton.dataset.reset = modalOpen.dataset.reset;
@@ -2330,7 +2328,7 @@ var resetConfirmation = function resetConfirmation() {
           modalConfirmation.classList.remove('tutor-is-active');
           var pageData = JSON.parse(xhttp.response).data;
           pageData.forEach(function (item) {
-            var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+            var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
             if (field_types_associate.includes(item.type)) {
               var itemName = 'tutor_option[' + item.key + ']';
@@ -2359,7 +2357,7 @@ var resetConfirmation = function resetConfirmation() {
 
               if (_typeof(groupFields) === 'object' && groupFields !== null) {
                 Object.keys(groupFields).forEach(function (item) {
-                  var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+                  var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
                   if (field_types_associate.includes(item.type)) {
                     var _itemName = 'tutor_option[' + item.key + ']';
