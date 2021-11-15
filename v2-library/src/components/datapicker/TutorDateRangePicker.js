@@ -73,7 +73,7 @@ const TutorDateRangePicker = () => {
 	return (
 		<div className="tutor-react-datepicker tutor-react-datepicker__selects-range" style={{width: '100%'}}>
 			<DatePicker
-				placeholderText={`${dateFormat}-${dateFormat}`}
+				placeholderText={` ${dateFormat} - ${dateFormat} `}
 				showPopperArrow={false}
 				shouldCloseOnSelect={false}
 				selectsRange={true}

@@ -11,16 +11,35 @@
  * @version 1.4.3
  */
 
+// Prepare the nav items
+$course_nav_item = apply_filters( 'tutor_course/single/nav_items', array(
+    'info' => array( 
+        'title' => __('Course Info', 'tutor'), 
+        'method' => 'tutor_course_info_tab'
+    ),
+    'curriculum' => array( 
+        'title' => __('Curriculum', 'tutor'), 
+        'method' => 'tutor_course_topics' 
+    ),
+    'reviews' => array( 
+        'title' => __('Reviews', 'tutor'), 
+        'method' => 'tutor_course_target_reviews_html' 
+    ),
+    'questions' => array( 
+        'title' => __('Q&A', 'tutor'), 
+        'method' => 'tutor_course_question_and_answer',
+        'require_enrolment' => true
+    ),
+    'announcements' => array( 
+        'title' => __('Announcements', 'tutor'), 
+        'method' => 'tutor_course_announcements',
+        'require_enrolment' => true
+    ),
+), get_the_ID());
+
 get_header();
-
 do_action('tutor_course/single/before/wrap'); 
-
-$sub_page = get_query_var('course_subpage'); 
-!$sub_page ? $sub_page='info' : 0;
-
-$sub_page_method = tutor_utils()->course_sub_pages(get_the_ID());
 ?>
-
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
     <div class="tutor-course-details-page tutor-bs-container">
         <?php (isset($is_enrolled) && $is_enrolled) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
@@ -28,23 +47,31 @@ $sub_page_method = tutor_utils()->course_sub_pages(get_the_ID());
             <div class="tutor-bs-col-8 tutor-bs-col-md-100">
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
-                <?php tutor_course_enrolled_nav(); ?>
-                <?php
-                    if(isset($sub_page_method[$sub_page])){
-                        $method = $sub_page_method[$sub_page]['method'];
-                        
-                        if(is_string($method)) {
-                            $method();
-                        } else {
-                            $_object = $method[0];
-                            $_method = $method[1];
-                            $_object->$_method(get_the_ID());
-                        }
-                    } 
-                ?>
+                <div class="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-30">
+                    <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
+                    <div class="tab-body">
+                        <?php 
+                            foreach($course_nav_item as $key=>$subpage) {
+                                ?>
+                                <div class="tab-body-item <?php echo $key=='info' ? 'is-active' : ''; ?>" id="tutor-course-details-tab-<?php echo $key; ?>">
+                                    <?php
+                                        $method = $subpage['method'];
+                                        if(is_string($method)) {
+                                            $method();
+                                        } else {
+                                            $_object = $method[0];
+                                            $_method = $method[1];
+                                            $_object->$_method(get_the_ID());
+                                        }
+                                    ?>
+                                </div>
+                                <?php
+                            }
+                        ?>
+                    </div>
+                </div>
 	            <?php do_action('tutor_course/single/after/inner-wrap'); ?>
-            </div> <!-- .tutor-bs-col-8 -->
-
+            </div>
             <div class="tutor-bs-col-4">
                 <div class="tutor-single-course-sidebar">
                     <?php do_action('tutor_course/single/before/sidebar'); ?>

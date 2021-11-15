@@ -1053,40 +1053,6 @@ function tutor_single_course_add_to_cart($echo = true){
     return $output;
 }
 
-if ( ! function_exists('tutor_course_enrolled_nav')) {
-    function tutor_course_enrolled_nav($echo = true) {
-        $course_post_type = tutor()->course_post_type;
-        $lesson_post_type = tutor()->lesson_post_type;
-
-        ob_start();
-        global $post;
-
-        if ( ! empty($post->post_type) && $post->post_type === $course_post_type){
-            tutor_load_template( 'single.course.enrolled.nav' );
-        }elseif(! empty($post->post_type) && $post->post_type === $lesson_post_type){
-            $lesson_id = get_the_ID();
-            $course_id = tutor_utils()->get_course_id_by('lesson', $lesson_id);
-
-            $course_post_type = tutor()->course_post_type;
-            $queryCourse = new WP_Query(array('p' => $course_id, 'post_type' => $course_post_type));
-
-            if ($queryCourse->have_posts()){
-                while ($queryCourse->have_posts()){
-                    $queryCourse->the_post();
-                    tutor_load_template( 'single.course.enrolled.nav' );
-                }
-                wp_reset_postdata();
-            }
-        }
-        $output = apply_filters( 'tutor_course/single/enrolled/nav', ob_get_clean() );
-
-        if ( $echo ) {
-            echo $output;
-        }
-        return $output;
-    }
-}
-
 if ( ! function_exists('tutor_course_video')){
     function tutor_course_video($echo = true){
         ob_start();

@@ -837,7 +837,7 @@ jQuery(document).ready(function ($) {
       var that = this;
 
       if (typeof Plyr !== 'undefined') {
-        var player = new Plyr('#tutorPlayer');
+        var player = new Plyr(this.player_DOM);
         var video_data = that.video_data();
         player.on('ready', function (event) {
           var instance = event.detail.plyr;
@@ -908,7 +908,8 @@ jQuery(document).ready(function ($) {
         }
       });
     },
-    init: function init() {
+    init: function init(element) {
+      this.player_DOM = element;
       this.track_player();
     }
   };
@@ -917,10 +918,9 @@ jQuery(document).ready(function ($) {
    * @since v.1.0.0
    */
 
-  if ($('#tutorPlayer').length) {
-    videoPlayer.init();
-  }
-
+  $('.tutorPlayer').each(function () {
+    videoPlayer.init(this);
+  });
   $(document).on('change keyup paste', '.tutor_user_name', function () {
     $(this).val(tutor_slugify($(this).val()));
   });
