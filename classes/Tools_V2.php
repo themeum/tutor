@@ -74,7 +74,7 @@ class Tools_V2 {
 
 	public function load_tools_page() {
 		$tools_fields = $this->get_tools_fields();
-		$active_tab = tutor_utils()->array_get( 'sub_page', $_GET, 'status' );
+		$active_tab   = tutor_utils()->array_get( 'sub_page', $_GET, 'status' );
 		include tutor()->path . '/views/options/tools.php';
 	}
 
@@ -85,10 +85,10 @@ class Tools_V2 {
 	 */
 	private function get_tools_fields() {
 
-        if($this->tools_fields) {
-            // Return fields if already prepared
-            return $this->tools_fields;
-        }
+		if ( $this->tools_fields ) {
+			// Return fields if already prepared
+			return $this->tools_fields;
+		}
 
 		$attr_tools = array(
 			'status'        => array(
@@ -334,13 +334,12 @@ class Tools_V2 {
 				),
 			),
 			'tutor-setup'   => array(
-				'label'    => __( 'Setup Wizard', 'tutor' ),
-				'slug'     => 'tutor-setup',
-				'icon'     => 'icon-chart-filled',
-				'desc'     => __( 'Setup Wizard Settings', 'tutor' ),
-				'template' => 'tutor-setup',
-				'icon'     => 'icon-earth-filled',
-				'blocks'   => array(
+				'label'  => __( 'Setup Wizard', 'tutor' ),
+				'slug'   => 'tutor-setup',
+				'icon'   => 'icon-chart-filled',
+				'desc'   => __( 'Setup Wizard Settings', 'tutor' ),
+				'icon'   => 'icon-earth-filled',
+				'blocks' => array(
 					'block' => array(),
 				),
 			),
@@ -348,61 +347,60 @@ class Tools_V2 {
 
 		$attr_tools = apply_filters( 'tutor/tools/extend/attr', apply_filters( 'tutor/tools/attr', $attr_tools ) );
 
-        $this->tools_fields = $attr_tools;
+		$this->tools_fields = $attr_tools;
 
 		return $this->tools_fields;
 	}
 
 	private function get_environment_info() {
 
-		if($this->environment_status) {
+		if ( $this->environment_status ) {
 			// Use runtime cache for repetitve call
 			return $this->environment_status;
 		}
 
 		// Figure out cURL version, if installed.
 		$curl_version = '';
-		if (function_exists('curl_version')) {
+		if ( function_exists( 'curl_version' ) ) {
 			$curl_version = curl_version();
 			$curl_version = $curl_version['version'] . ', ' . $curl_version['ssl_version'];
 		}
 
-
 		// WP memory limit.
-		$wp_memory_limit = tutor_utils()->let_to_num(WP_MEMORY_LIMIT);
-		if (function_exists('memory_get_usage')) {
-			$wp_memory_limit = max($wp_memory_limit, tutor_utils()->let_to_num(@ini_get('memory_limit')));
+		$wp_memory_limit = tutor_utils()->let_to_num( WP_MEMORY_LIMIT );
+		if ( function_exists( 'memory_get_usage' ) ) {
+			$wp_memory_limit = max( $wp_memory_limit, tutor_utils()->let_to_num( @ini_get( 'memory_limit' ) ) );
 		}
 
 		$database_version = tutor_utils()->get_db_version();
 
 		$this->environment_status = array(
-			'home_url'                  => get_option('home'),
-			'site_url'                  => get_option('siteurl'),
+			'home_url'                  => get_option( 'home' ),
+			'site_url'                  => get_option( 'siteurl' ),
 			'version'                   => TUTOR_VERSION,
-			'wp_version'                => get_bloginfo('version'),
+			'wp_version'                => get_bloginfo( 'version' ),
 			'wp_multisite'              => is_multisite(),
 			'wp_memory_limit'           => $wp_memory_limit,
-			'wp_debug_mode'             => (defined('WP_DEBUG') && WP_DEBUG),
-			'wp_cron'                   => !(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON),
+			'wp_debug_mode'             => ( defined( 'WP_DEBUG' ) && WP_DEBUG ),
+			'wp_cron'                   => ! ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ),
 			'language'                  => get_locale(),
 			'external_object_cache'     => wp_using_ext_object_cache(),
-			'server_info'               => isset($_SERVER['SERVER_SOFTWARE']) ? wp_unslash($_SERVER['SERVER_SOFTWARE']) : '',
+			'server_info'               => isset( $_SERVER['SERVER_SOFTWARE'] ) ? wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) : '',
 			'php_version'               => phpversion(),
-			'php_post_max_size'         => tutor_utils()->let_to_num(ini_get('post_max_size')),
-			'php_max_execution_time'    => ini_get('max_execution_time'),
-			'php_max_input_vars'        => ini_get('max_input_vars'),
+			'php_post_max_size'         => tutor_utils()->let_to_num( ini_get( 'post_max_size' ) ),
+			'php_max_execution_time'    => ini_get( 'max_execution_time' ),
+			'php_max_input_vars'        => ini_get( 'max_input_vars' ),
 			'curl_version'              => $curl_version,
-			'suhosin_installed'         => extension_loaded('suhosin'),
+			'suhosin_installed'         => extension_loaded( 'suhosin' ),
 			'max_upload_size'           => wp_max_upload_size(),
 			'mysql_version'             => $database_version['number'],
 			'mysql_version_string'      => $database_version['string'],
 			'default_timezone'          => date_default_timezone_get(),
-			'fsockopen_or_curl_enabled' => (function_exists('fsockopen') || function_exists('curl_init')),
-			'soapclient_enabled'        => class_exists('SoapClient'),
-			'domdocument_enabled'       => class_exists('DOMDocument'),
-			'gzip_enabled'              => is_callable('gzopen'),
-			'mbstring_enabled'          => extension_loaded('mbstring'),
+			'fsockopen_or_curl_enabled' => ( function_exists( 'fsockopen' ) || function_exists( 'curl_init' ) ),
+			'soapclient_enabled'        => class_exists( 'SoapClient' ),
+			'domdocument_enabled'       => class_exists( 'DOMDocument' ),
+			'gzip_enabled'              => is_callable( 'gzopen' ),
+			'mbstring_enabled'          => extension_loaded( 'mbstring' ),
 		);
 
 		return $this->environment_status;
