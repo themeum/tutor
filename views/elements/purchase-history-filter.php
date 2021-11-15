@@ -20,6 +20,7 @@
     <?php endif; ?>
     
     <?php if ( $data['filter_calendar'] ) : ?>
+        
         <form action="" type="get">
             <?php if ( isset( $_GET['course_id']) && '' !== $_GET['course_id'] ): ?>
                 <input type="hidden" name="course_id" value="<?php esc_html_e( $_GET['course_id']); ?>">
@@ -52,6 +53,7 @@
                     <span style="vertical-align:middle" class="ttr-search-filled color-primary-main text-regular-h4"></span>
                 </button>
             </div>
+            <div class="tutor-v2-date-range-picker"></div>
         </form>
     <?php endif; ?>
 </div>
