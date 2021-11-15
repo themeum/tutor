@@ -7,7 +7,7 @@
  */
 
 ?><div class="tutor-option-field-row d-block">
-<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
+<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input image-previewer">
 		<div class="d-flex logo-upload">

@@ -12,7 +12,7 @@ $field_id = esc_attr( 'field_' . $field_key );
 ?>
 <div class="tutor-option-field-row col-1x2 col-per-row" id="<?php echo esc_attr( $field_id ); ?>"
 >
-	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
+	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input">
 		<div class="d-flex radio-thumbnail items-per-row">

@@ -488,7 +488,6 @@ class Options_V2 {
 									'value' => array(
 										'type'    => 'text',
 										'default' => '0',
-
 									),
 									'time'  => array(
 										'type'           => 'select',
@@ -555,6 +554,7 @@ class Options_V2 {
 							array(
 								'key'         => 'supported_video_sources',
 								'type'        => 'checkbox_vertical',
+								'default'        => array( 'youtube', 'vimeo' ),
 								'label'       => __( 'Preferred Video Source', 'tutor' ),
 								'label_title' => __( 'Preferred Video Source', 'tutor' ),
 								'options'     => array(
@@ -1445,9 +1445,18 @@ class Options_V2 {
 		return ob_get_clean();
 	}
 
-	public function this_confirmation( $modal = array() ) {
+	/* public function this_confirmation( $modal = array() ) {
 		ob_start();
 		require tutor()->path . 'views/options/template/modal-confirm.php';
+		return ob_get_clean();
+	} */
+
+	// load template inside template dirctory
+	public function view_template( $template_slug, $section = array() ) {
+		ob_start();
+		$section_label = $section['label'];
+		$section_slug = $section['slug'];
+		require tutor()->path . "views/options/template/{$template_slug}";
 		return ob_get_clean();
 	}
 }
