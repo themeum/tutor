@@ -4972,7 +4972,10 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     }
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "tutor-react-datepicker tutor-react-datepicker__selects-range"
+    className: "tutor-react-datepicker tutor-react-datepicker__selects-range",
+    style: {
+      width: '100%'
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_datepicker__WEBPACK_IMPORTED_MODULE_2___default()), {
     placeholderText: "".concat(dateFormat, "-").concat(dateFormat),
     showPopperArrow: false,
