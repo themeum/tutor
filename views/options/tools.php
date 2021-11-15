@@ -12,10 +12,10 @@
 	<header class="tutor-option-header tutor-bs-px-3 tutor-bs-py-2">
 		<div class="title"><?php _e( 'Tools', 'tutor' ); ?></div>
 		<div class="search-field">
-			<div class="tutor-input-group tutor-form-control-has-icon">
+			<!-- <div class="tutor-input-group tutor-form-control-has-icon">
 				<span class="tutor-input-group-icon ttr-search-filled"></span>
-				<input type="search" autocomplete="off" class="tutor-form-control" placeholder="<?php _e( 'Search', 'tutor' ); ?>" />
-			</div>
+				<input type="search" autocomplete="off" class="tutor-form-control" placeholder="<?php // _e( 'Search', 'tutor' ); ?>" />
+			</div> -->
 		</div>
 	</header>
 	<div class="tutor-option-body">
@@ -27,7 +27,7 @@
 					foreach ( $tools_fields as $key => $section ) {
 						$icon         = tutor()->icon_dir . $key . '.svg';
 						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
-						$page_url     = add_query_arg( 'sub_page', $section['slug'], admin_url( 'admin.php?page=tutor-tools' ) );
+						$page_url     = add_query_arg( 'sub_page', esc_attr( $section['slug'] ), admin_url( 'admin.php?page=tutor-tools' ) );
 						?>
 							<li class="tutor-option-nav-item">
 								<a href="<?php echo esc_url( $page_url ); ?>" class="<?php echo esc_attr( $active_class ); ?>">

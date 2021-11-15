@@ -15,9 +15,9 @@ const modalConfirmation = document.getElementById('tutor-modal-bulk-action');
 
 const modalResetOpen = () => {
 	const modalResetOpen = document.querySelectorAll('.modal-reset-open');
-	let resetButton = modalConfirmation.querySelector('.reset_to_default');
-	let modalHeading = modalConfirmation.querySelector('.tutor-modal-title');
-	let modalMessage = modalConfirmation.querySelector('.tutor-modal-message');
+	let resetButton = modalConfirmation && modalConfirmation.querySelector('.reset_to_default');
+	let modalHeading = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-title');
+	let modalMessage = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-message');
 	modalResetOpen.forEach((modalOpen, index) => {
 		modalOpen.onclick = (e) => {
 			resetButton.dataset.reset = modalOpen.dataset.reset;
@@ -49,7 +49,7 @@ const resetConfirmation = () => {
 					modalConfirmation.classList.remove('tutor-is-active');
 					let pageData = JSON.parse(xhttp.response).data;
 					pageData.forEach((item) => {
-						const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+						const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 						if (field_types_associate.includes(item.type)) {
 							let itemName = 'tutor_option[' + item.key + ']';
 							let itemElement = elementByName(itemName)[0];
@@ -73,7 +73,7 @@ const resetConfirmation = () => {
 							console.log(typeof groupFields === 'object' && groupFields !== null);
 							if (typeof groupFields === 'object' && groupFields !== null) {
 								Object.keys(groupFields).forEach((item) => {
-									const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'select', 'number'];
+									const field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 									if (field_types_associate.includes(item.type)) {
 										let itemName = 'tutor_option[' + item.key + ']';
 										let itemElement = elementByName(itemName)[0];
