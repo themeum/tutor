@@ -8,7 +8,7 @@
 $field_key = sanitize_key( $field['key'] );
 $field_id  = sanitize_key( 'field_' . $field_key );?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
-	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
+	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
 		<select name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" class="tutor-form-select">
 			<?php

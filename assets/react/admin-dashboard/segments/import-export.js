@@ -1,5 +1,5 @@
 import { element, elements, notice_message, json_download } from "./lib";
-import popupToggle from "./popupToggle";
+// import popupToggle from "./popupToggle";
 
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "interactive") {
@@ -54,7 +54,7 @@ const load_saved_data = () => {
   const xhttp = new XMLHttpRequest();
   xhttp.open("POST", _tutorobject.ajaxurl, true);
   xhttp.send(formData);
-  xhttp.onreadystatechange = function() {
+  xhttp.onreadystatechange = function () {
     if (xhttp.readyState === 4) {
       tutor_option_history_load(xhttp.response);
     }
@@ -85,7 +85,7 @@ function tutor_option_history_load(history_data) {
 
   element(".history_data").innerHTML = heading + output;
   export_single_settings();
-  popupToggle();
+  // popupToggle();
   apply_single_settings();
 }
 /* import and list dom */
@@ -126,16 +126,16 @@ const time_now = () => {
 const reset_default_options = () => {
   const reset_options = element("#reset_options");
   if (reset_options) {
-    reset_options.onclick = function() {
+    reset_options.onclick = function () {
       var formData = new FormData();
       formData.append("action", "tutor_option_default_save");
       formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
       const xhttp = new XMLHttpRequest();
       xhttp.open("POST", _tutorobject.ajaxurl, true);
       xhttp.send(formData);
-      xhttp.onreadystatechange = function() {
+      xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
-          setTimeout(function() {
+          setTimeout(function () {
             notice_message("Reset all settings to default successfully!");
           }, 200);
         }
@@ -147,14 +147,14 @@ const reset_default_options = () => {
 const import_history_data = () => {
   const import_options = element("#import_options");
   if (import_options) {
-    import_options.onclick = function() {
+    import_options.onclick = function () {
       var files = element("#drag-drop-input").files;
       if (files.length <= 0) {
         return false;
       }
       var fr = new FileReader();
       fr.readAsText(files.item(0));
-      fr.onload = function(e) {
+      fr.onload = function (e) {
         var tutor_options = e.target.result;
         var formData = new FormData();
         formData.append("action", "tutor_import_settings");
@@ -164,12 +164,12 @@ const import_history_data = () => {
         const xhttp = new XMLHttpRequest();
         xhttp.open("POST", _tutorobject.ajaxurl);
         xhttp.send(formData);
-        xhttp.onreadystatechange = function() {
+        xhttp.onreadystatechange = function () {
           if (xhttp.readyState === 4) {
             tutor_option_history_load(xhttp.responseText);
             delete_history_data();
             import_history_data();
-            setTimeout(function() {
+            setTimeout(function () {
               notice_message("Data imported successfully!");
             }, 200);
           }
@@ -182,7 +182,7 @@ const import_history_data = () => {
 const export_single_settings = () => {
   const single_settings = elements(".export_single_settings");
   for (let i = 0; i < single_settings.length; i++) {
-    single_settings[i].onclick = function() {
+    single_settings[i].onclick = function () {
       let export_id = single_settings[i].dataset.id;
       var formData = new FormData();
       formData.append("action", "tutor_export_single_settings");
@@ -194,7 +194,7 @@ const export_single_settings = () => {
       xhttp.open("POST", _tutorobject.ajaxurl, true);
       xhttp.send(formData);
 
-      xhttp.onreadystatechange = function() {
+      xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
           console.log(xhttp.response);
           // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
@@ -209,7 +209,7 @@ const export_single_settings = () => {
 const apply_single_settings = () => {
   const apply_settings = elements(".apply_settings");
   for (let i = 0; i < apply_settings.length; i++) {
-    apply_settings[i].onclick = function() {
+    apply_settings[i].onclick = function () {
       let apply_id = apply_settings[i].dataset.id;
       var formData = new FormData();
       formData.append("action", "tutor_apply_settings");
@@ -220,7 +220,7 @@ const apply_single_settings = () => {
       xhttp.open("POST", _tutorobject.ajaxurl, true);
       xhttp.send(formData);
 
-      xhttp.onreadystatechange = function() {
+      xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
           notice_message("Applied settings successfully!");
           console.log(xhttp.response);
@@ -231,10 +231,9 @@ const apply_single_settings = () => {
 };
 
 const delete_history_data = () => {
-  const noticeMessage = element(".tutor-notification");
   const delete_settings = elements(".delete_single_settings");
   for (let i = 0; i < delete_settings.length; i++) {
-    delete_settings[i].onclick = function() {
+    delete_settings[i].onclick = function () {
       let delete_id = delete_settings[i].dataset.id;
       var formData = new FormData();
       formData.append("action", "tutor_delete_single_settings");
@@ -242,17 +241,16 @@ const delete_history_data = () => {
       formData.append("time", Date.now());
       formData.append("delete_id", delete_id);
 
-      noticeMessage.classList.add("show");
       const xhttp = new XMLHttpRequest();
       xhttp.open("POST", _tutorobject.ajaxurl, true);
       xhttp.send(formData);
-      xhttp.onreadystatechange = function() {
+      xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
           tutor_option_history_load(xhttp.responseText);
           delete_history_data();
 
-          setTimeout(function() {
-            notice_message("Data deleted successfully!");
+          setTimeout(function () {
+            tutor_toast('Success', "Data deleted successfully!", 'success');
           }, 200);
         }
       };
