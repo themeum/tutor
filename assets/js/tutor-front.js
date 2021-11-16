@@ -86,6 +86,33 @@ document.addEventListener('DOMContentLoaded', function (event) {
   }
   /* commenting */
 
+  /* Show More Text */
+
+
+  var showMoreBtn = document.querySelector('.tutor-show-more-btn button');
+  showMoreBtn.addEventListener('click', showMore);
+
+  function showMore() {
+    var lessText = document.getElementById("short-text");
+    var dots = document.getElementById("dots");
+    var moreText = document.getElementById("full-text");
+    var btnText = document.getElementById("showBtn");
+    var contSect = document.getElementById("content-section");
+    console.log(lessText, dots, moreText, btnText);
+
+    if (dots.style.display === "none") {
+      lessText.style.display = "block";
+      dots.style.display = "inline";
+      btnText.innerHTML = "<span class='btn-icon ttr-plus-filled color-design-brand'></span><span class='color-text-primary'>Show More</span>";
+      moreText.style.display = "none";
+    } else {
+      lessText.style.display = "none";
+      dots.style.display = "none";
+      btnText.innerHTML = "<span class='btn-icon ttr-minus-filled color-design-brand'></span><span class='color-text-primary'>Show Less</span>";
+      moreText.style.display = "block";
+      contSect.classList.add('no-before');
+    }
+  }
 });
 
 /***/ }),

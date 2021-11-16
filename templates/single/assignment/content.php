@@ -272,16 +272,26 @@ if ($assignment_comment != false) {
 				</form>
 			</div> <!-- assignment-submission -->
 			<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-30 tutor-pb-sm-45">
-				<div class="tutor-ad-body tutor-pt-40 tutor-pt-sm-60 has-show-more">
+				<div class="tutor-ad-body tutor-pt-40 tutor-pt-sm-60 has-show-more" id="content-section">
 					<div class="text-medium-h6 color-text-primary">
 						<?php _e('Description', 'tutor'); ?>
 					</div>
-					<div class="text-regular-body color-text-subsued tutor-pt-12">
-						<?php the_content(); ?>
+					<div class="text-regular-body color-text-subsued tutor-pt-12" id="short-text">
+						<?php
+							$content = get_the_content();
+							$s_content = $content;
+							echo substr_replace($s_content, "..." , 500);
+						?>
+						<span id="dots"></span>
+					</div>
+					<div class="text-regular-body color-text-subsued tutor-pt-12" id="full-text">
+						<?php
+							the_content();
+						?>
 					</div>
 					<div class="tutor-show-more-btn tutor-pt-12">
-						<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg">
-							<span class="btn-icon ttr-plus-filled color-design-brand"></span>
+						<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
+							<span class="btn-icon ttr-plus-filled color-design-brand" id="no-icon"></span>
 							<span class="color-text-primary"><?php _e('Show More', 'tutot'); ?></span>
 						</button>
 					</div>
@@ -461,16 +471,26 @@ if ($assignment_comment != false) {
 				</div>
 
 				<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-30 tutor-pb-sm-45">
-					<div class="tutor-ad-body tutor-pt-40 tutor-pt-sm-60 has-show-more">
+					<div class="tutor-ad-body tutor-pt-40 tutor-pt-sm-60 has-show-more" id="content-section">
 						<div class="text-medium-h6 color-text-primary">
 							<?php _e('Description', 'tutor'); ?>
 						</div>
-						<div class="text-regular-body color-text-subsued tutor-pt-12">
-							<?php the_content(); ?>
+						<div class="text-regular-body color-text-subsued tutor-pt-12" id="short-text">
+							<?php
+								$content = get_the_content();
+								$s_content = $content;
+								echo substr_replace($s_content, "..." , 500);
+							?>
+							<span id="dots"></span>
+						</div>
+						<div class="text-regular-body color-text-subsued tutor-pt-12" id="full-text">
+							<?php
+								the_content();
+							?>
 						</div>
 						<div class="tutor-show-more-btn tutor-pt-12">
-							<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg">
-								<span class="btn-icon ttr-plus-filled color-design-brand"></span>
+							<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
+								<span class="btn-icon ttr-plus-filled color-design-brand" id="no-icon"></span>
 								<span class="color-text-primary"><?php _e('Show More', 'tutot'); ?></span>
 							</button>
 						</div>
