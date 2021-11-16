@@ -20,7 +20,7 @@ do_action('tutor_lesson/single/before/video/embedded');
 ?>
     <div class="tutor-single-lesson-segment tutor-lesson-video-wrap">
         <div class="tutor-video-embeded-wrap">
-            <?php echo tutor_utils()->array_get('source_embedded', $video_info); ?>
+            <?php echo do_shortcode(tutor_utils()->array_get('source_embedded', $video_info)); ?>
         </div>
     </div>
 <?php
