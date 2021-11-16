@@ -1,3 +1,20 @@
+.tutor-single-course-wrapper {
+    overflow: auto;
+    &>div{
+        float: left;
+
+        @media(min-width:992px) {
+            &:first-child{
+                width: calc(100% - 370px);
+            }
+
+            &:last-child{
+                width: 350px;
+                float: right;
+            }
+        }
+    }
+}
 
 .course-enrolled-nav-wrap {
     border-bottom: 1px solid #dedfe0;

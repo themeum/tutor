@@ -996,9 +996,9 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function is_course_purchasable( $course_id = 0 ) {
+
 		$course_id  = $this->get_post_id( $course_id );
 		$price_type = $this->price_type( $course_id );
-
 		if ( $price_type === 'free' ) {
 			$is_paid = apply_filters( 'is_course_paid', false, $course_id );
 			if ( ! $is_paid ) {
@@ -1021,8 +1021,7 @@ class Utils {
 	public function get_course_price( $course_id = 0 ) {
 		$price     = null;
 		$course_id = $this->get_post_id( $course_id );
-
-		if ( $this->is_course_purchasable() ) {
+		if ( $this->is_course_purchasable( $course_id ) ) {
 			$monetize_by = $this->get_option('monetize_by');
 
 			if ( $this->has_wc() && $monetize_by === 'wc' ) {
@@ -1086,6 +1085,7 @@ class Utils {
 	 */
 	public function price_type( $course_id = 0 ) {
 		$course_id  = $this->get_post_id( $course_id );
+
 		$price_type = get_post_meta( $course_id, '_tutor_course_price_type', true );
 		return $price_type;
 	}
@@ -6819,6 +6819,7 @@ class Utils {
 					enrol.post_status AS status,
 					enrol.post_parent AS course_id,
 					course.post_title AS course_title,
+					course.guid,
 					student.user_nicename,
 					student.user_email,
 					student.display_name
