@@ -6819,6 +6819,7 @@ class Utils {
 					enrol.post_status AS status,
 					enrol.post_parent AS course_id,
 					course.post_title AS course_title,
+					course.guid,
 					student.user_nicename,
 					student.user_email,
 					student.display_name
