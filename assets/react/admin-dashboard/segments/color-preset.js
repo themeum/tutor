@@ -33,7 +33,6 @@ document.addEventListener('readystatechange', (event) => {
 });
 
 const otherColorsPreview = () => {
-	console.log('color preset');
 	let itemsHeight = (initHeight = 0);
 	if (otherColors && otherColorRows) {
 		otherColorRows.forEach((item, index) => {

@@ -750,7 +750,6 @@ document.addEventListener('readystatechange', function (event) {
 });
 
 var otherColorsPreview = function otherColorsPreview() {
-  console.log('color preset');
   var itemsHeight = initHeight = 0;
 
   if (otherColors && otherColorRows) {
@@ -2300,7 +2299,7 @@ var resetConfirmation = function resetConfirmation() {
             modalConfirmation.classList.remove('tutor-is-active');
             var pageData = JSON.parse(xhttp.response).data;
             pageData.forEach(function (item) {
-              var field_types_associate = ['upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+              var field_types_associate = ['color_preset', 'upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
               if (field_types_associate.includes(item.type)) {
                 var itemName = 'tutor_option[' + item.key + ']';
@@ -2329,12 +2328,13 @@ var resetConfirmation = function resetConfirmation() {
                       elemCheck.checked = item["default"].includes(elemCheck.value) ? true : false;
                     });
                   }
+                } else if (item.type == 'color_preset') {
+                  console.log(item);
                 } else if (item.type == 'upload_full') {
                   elementItem.value = '';
                   elementItem.nextElementSibling.src = '';
                   elementItem.parentNode.querySelector('.delete-btn').style.display = 'none';
                 } else if (item.type == 'checkbox_notification') {
-                  // console.log(item.options);
                   Object.keys(item.options).forEach(function (optionKeys) {
                     itemName = 'tutor_option' + optionKeys;
                     checkElements = elementByName("".concat(itemName));
