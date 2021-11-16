@@ -981,46 +981,6 @@ if ( ! function_exists('tutor_lesson_lead_info')) {
     }
 }
 
-/**
- * @param bool $echo
- *
- * @return string
- *
- * Get Only add to cart form
- */
-
-function tutor_single_course_add_to_cart($echo = true){
-    ob_start();
-
-    $isLoggedIn = is_user_logged_in();
-    $output = '';
-
-    $template = tutor_utils()->is_course_fully_booked(null) ? 'closed-enrollment' : 'add-to-cart';
-
-    tutor_load_template( 'single.course.'.$template );
-    $output .= apply_filters( 'tutor_course/single/'.$template, ob_get_clean() );
-
-    if (!$isLoggedIn) {
-        ob_start();
-        tutor_load_template( 'single.course.login' );
-        $login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
-
-        $output .= "<div class='tutor-cart-box-login-form' style='display: none;'>
-                        <span class='login-overlay-close'></span>
-                        <div class='tutor-cart-box-login-form-inner'>
-                            <button class='tutor-popup-form-close tutor-icon-line-cross'></button>
-                            {$login_form}
-                        </div>
-                    </div>";
-    }
-
-    if ( $echo ) {
-        echo $output;
-    }
-
-    return $output;
-}
-
 if ( ! function_exists('tutor_course_video')){
     function tutor_course_video($echo = true){
         ob_start();
@@ -1508,32 +1468,6 @@ function tutor_archive_course_add_to_cart($echo = true){
         echo $output;
     }
     return $output;
-}
-
-/**
- * @param bool $echo
- * @return string
- *
- * Display login form in popup where necessary
- *
- * @since v.1.5.8
- */
-
-if ( ! function_exists('tutor_login_form_popup')) {
-    function tutor_login_form_popup($echo = true){
-        $output = '';
-        ob_start();
-        tutor_load_template('single.course.login');
-        $login_form = apply_filters('tutor_course/global/login', ob_get_clean());
-        $output .= "<div class='tutor-cart-box-login-form' style='display: none;'><span class='login-overlay-close'></span><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
-
-        $output = apply_filters('tutor_login_form_popup_html', $output);
-
-        if ($echo) {
-            echo $output;
-        }
-        return $output;
-    }
 }
 
 /**
