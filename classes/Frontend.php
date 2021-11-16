@@ -18,8 +18,6 @@ class Frontend {
 
 	public function __construct() {
 		add_action('after_setup_theme', array($this, 'remove_admin_bar'));
-
-		add_action('wp_footer', array($this, 'tutor_login_form_popup'));
 	}
 
 	/**
@@ -31,13 +29,4 @@ class Frontend {
 			show_admin_bar(false);
 		}
 	}
-
-	public function tutor_login_form_popup(){
-        if (!is_user_logged_in()) {
-            tutor_login_form_popup();
-        }
-    }
-
-
-
 }
