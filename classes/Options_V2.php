@@ -92,7 +92,7 @@ class Options_V2 {
 			if ( is_array( $sections ) && ! empty( $sections ) ) {
 				foreach ( tutils()->sanitize_recursively( $sections ) as $section ) {
 					foreach ( $section['blocks'] as $blocks ) {
-						if ( is_array( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
+						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
 							foreach ( $blocks['fields'] as $fields ) {
 								$fields['section_label'] = isset( $section['label'] ) ? $section['label'] : '';
 								$fields['section_slug']  = isset( $section['slug'] ) ? $section['slug'] : '';
