@@ -153,7 +153,7 @@ if ($assignment_comment != false) {
 			endif;
 		endif;
 		?>
-		<?php if (!$is_submitting){ ?>
+		<?php if (!$is_submitting && !submitted_assignment){ ?>
 		<div class="tutor-time-out-assignment-details tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
 			<div class="tutor-to-assignment tutor-pt-30 tutor-pt-sm-40 has-show-more">
 
@@ -203,69 +203,46 @@ if ($assignment_comment != false) {
 					<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
 					<?php $allowd_upload_files = (int) tutor_utils()->get_assignment_option(get_the_ID(), 'upload_files_limit'); ?>
-					<div class="tutor-as-body tutor-pt-30 tutor-pt-sm-40 has-show-more">
+					<div class="tutor-assignment-body tutor-pt-30 tutor-pt-sm-40 has-show-more">
 						<div class="tutor-to-title text-medium-h6 color-text-primary">
 							<?php _e('Assignment Submission', 'tutor'); ?>
 						</div>
 						<div class="text-regular-caption color-text-subsued tutor-pt-15 tutor-pt-sm-30">
 						<?php _e('Assignment answer form', 'tutor'); ?>
 						</div>
-						<div class="tutor-as-text-area tutor-pt-20">
+						<div class="tutor-assignment-text-area tutor-pt-20">
 							<textarea  name="assignment_answer" class="tutor-form-control"></textarea>
 						</div>
 
 						<?php if ($allowd_upload_files) { ?>
-							<div class="tutor-as-attachment tutor-mt-30 tutor-py-20 tutor-px-15 tutor-py-sm-30 tutor-px-sm-30">
+							<div class="tutor-assignment-attachment tutor-mt-30 tutor-py-20 tutor-px-15 tutor-py-sm-30 tutor-px-sm-30">
 								<div class="text-regular-caption color-text-subsued">
 									<?php _e('Attach assignment files', 'tutor'); ?>
 								</div>
-
-								<?php
-									for ($item = 1; $item <= $allowd_upload_files; $item++) {
-								?>
-								<div class="tutor-attachment-files d-flex tutor-mt-12">
-									<div class="tutor-browse-input tutor-input-group tutor-form-control-sm">
-										<input type="text" class="tutor-form-control" placeholder="Browse your folder" />
+								<div class="tutor-attachment-files tutor-mt-12">
+									<div class="tutor-assignment-upload-btn tutor-mt-10 tutor-mt-md-0">
+										<label for="tutor-assignment-file-upload">
+											<input type="file" id="tutor-assignment-file-upload" name="attached_assignment_files[]" multiple>
+											<a class="tutor-btn tutor-btn-primary tutor-btn-md">
+												<?php _e('Choose file', 'tutor'); ?>
+											</a>
+										</label>
 									</div>
-									<div class="tutor-as-upload-btn tutor-mt-10 tutor-mt-md-0">
-									<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-ml-md-15 tutor-ml-0"><?php _e('Upload file', 'tutor'); ?></button>
+									<div class="tutor-input-type-size">
+										<p class="text-regular-small color-text-subsued">
+										<?php _e('File Support:', 'tutor'); ?> <span class="color-text-primary">jpg, .jpeg,. gif, or .png.</span> no text on the image.
+										</p>
+										<p class="text-regular-small color-text-subsued tutor-mt-7">
+										<?php _e('Total File Size: Max', 'tutor'); ?> <span class="color-text-primary"><?php echo $file_upload_limit; ?>MB</span>
+										</p>
 									</div>
 								</div>
-								<?php } ?>
-
-								<div class="tutor-input-type-size text-regular-small color-text-subsued tutor-mt-12">
-								<?php _e('File Support:', 'tutor'); ?> <span class="color-text-primary">jpg, .jpeg,. gif, or .png.</span> no text on the image.
-								</div>
-								<div class="tutor-input-type-size text-regular-small color-text-subsued tutor-mt-12">
-								<?php _e('Total File Size: Max', 'tutor'); ?> <span class="color-text-primary"><?php echo $file_upload_limit; ?>MB</span>
-								</div>
-								<div class="tutor-input-files d-flex tutor-mt-20 tutor-mt-sm-30">
-									<div class="tutor-instructor-card">
-										<div class="tutor-icard-content">
-											<div class="text-regular-body color-text-title">
-												My assignment.zip
-											</div>
-											<div class="text-regular-small">Size: 15.56 KB</div>
-										</div>
-										<div class="tutor-avatar tutor-is-xs flex-center">
-											<span class="ttr-cross-filled color-design-brand"></span>
-										</div>
-									</div>
-									<div class="tutor-instructor-card">
-										<div class="tutor-icard-content">
-											<div class="text-regular-body color-text-title">
-												My assignment 2.zip
-											</div>
-											<div class="text-regular-small">Size: 15.56 KB</div>
-										</div>
-										<div class="tutor-avatar tutor-is-xs flex-center">
-											<span class="ttr-cross-filled color-design-brand"></span>
-										</div>
-									</div>
+								<div class="tutor-asisgnment-upload-file-preview d-flex tutor-mt-20 tutor-mt-sm-30">
+									
 								</div>
 							</div>
 						<?php } ?>
-						<div class="tutor-as-submit-btn tutor-mt-60">
+						<div class="tutor-assignment-submit-btn tutor-mt-60">
 							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg" id="tutor_assignment_submit_btn">Submit Assignment</button>
 						</div>
 					</div>
@@ -453,15 +430,9 @@ if ($assignment_comment != false) {
 									<div class="text-regular-small">Size: 15.56 KB</div>
 								</div>
 								<div class="tutor-avatar tutor-is-xs flex-center">
-									<span class="ttr-cross-filled color-design-brand"></span>
-
-									<?php
-										if ($is_reviewed_by_instructor) {
-									?>
 									<a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
 										<span class="ttr-download-line color-design-brand"></span>
 									</a>
-									<?php } ?>
 								</div>
 							</div>
 							<?php }  ?>
