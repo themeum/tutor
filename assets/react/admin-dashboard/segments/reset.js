@@ -56,7 +56,7 @@ const resetConfirmation = () => {
 						let pageData = JSON.parse(xhttp.response).data;
 
 						pageData.forEach((item) => {
-							const field_types_associate = ['upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+							const field_types_associate = ['color_preset', 'upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 							if (field_types_associate.includes(item.type)) {
 								let itemName = 'tutor_option[' + item.key + ']';
 								let elementItem = elementByName(itemName)[0];
@@ -85,21 +85,20 @@ const resetConfirmation = () => {
 										});
 									}
 
+								} else if (item.type == 'color_preset') {
+									console.log(item);
 								} else if (item.type == 'upload_full') {
 									elementItem.value = '';
 									elementItem.nextElementSibling.src = '';
 									elementItem.parentNode.querySelector('.delete-btn').style.display = 'none';
 								} else if (item.type == 'checkbox_notification') {
-									// console.log(item.options);
 									Object.keys(item.options).forEach((optionKeys) => {
-
 										itemName = 'tutor_option' + optionKeys;
 										checkElements = elementByName(`${itemName}`);
 										[...checkElements].forEach((elemCheck) => {
 											elemCheck.checked = false;
 										});
 									});
-
 								} else if (item.type == 'checkgroup') {
 
 									Object.values(item.group_options).forEach((optionKeys) => {
