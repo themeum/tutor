@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       dots.style.display = "inline";
       btnText.innerHTML = "<span class='btn-icon ttr-plus-filled color-design-brand'></span><span class='color-text-primary'>Show More</span>";
       moreText.style.display = "none";
+      contSect.classList.remove('no-before');
     } else {
       lessText.style.display = "none";
       dots.style.display = "none";
