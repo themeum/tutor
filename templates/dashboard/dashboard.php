@@ -29,7 +29,7 @@ if(tutor_utils()->get_option('enable_profile_completion')) {
                                             'tutor-btn tutor-btn-sm tutor-btn-full'
                                 ?>
                                 <li>
-                                    <button class="<?php echo $class; ?>"></button>
+                                    <span class="<?php echo $class; ?>"></span>
                                 </li>
                                 <?php
                             }
@@ -48,7 +48,7 @@ if(tutor_utils()->get_option('enable_profile_completion')) {
                     </div>
                 </div>
                 <div class="tutor-bs-col-md-4 warning">
-                    <ul>
+                    <ul class="tutor-m-0 tutor-p-0">
                         <?php 
                             foreach ($profile_completion as $key => $data) {
                                 $is_set = $data['is_set']; // Whether the step is done or not

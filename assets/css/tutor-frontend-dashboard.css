@@ -3419,6 +3419,10 @@
   padding: 0px;
 }
 
+.tutor-dashboard .tutor-dashboard-content .profile-completion .tutor-bs-row {
+  margin-left: 0px;
+}
+
 .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content {
   padding: 35px;
 }
@@ -3435,7 +3439,9 @@
 }
 
 .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content .tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
-  padding: 4px 6px;
+  padding: 0px 6px;
+  height: 8px;
+  border-radius: 8px;
 }
 
 .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content .tutor-round-icon {
@@ -3484,7 +3490,9 @@
   .tutor-dashboard .tutor-dashboard-content .profile-completion {
     margin-right: 0px;
     margin-left: 0px;
-    padding-left: 20px;
+  }
+  .tutor-dashboard .tutor-dashboard-content .profile-completion .tutor-bs-row {
+    margin-left: 0px;
   }
   .tutor-dashboard .tutor-dashboard-content .profile-completion .profile-completion-content {
     padding: 25px 15px;
@@ -3502,6 +3510,21 @@
     padding: 15px !important;
     border-left: 0px;
   }
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-details-wrapper .back {
+  position: relative;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-details-wrapper .back a {
+  font-size: 16px;
+  color: #5B616F;
+}
+
+.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-details-wrapper .back a .ttr-previous-line {
+  font-size: 20px;
+  line-height: 0px;
+  color: #1A1B1E;
 }
 
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile-data > div {
