@@ -89,10 +89,10 @@ class Options_V2 {
 
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
-			if ( isset( $sections ) && ! empty( $sections ) ) {
+			if ( is_array( $sections ) && ! empty( $sections ) ) {
 				foreach ( tutils()->sanitize_recursively( $sections ) as $section ) {
 					foreach ( $section['blocks'] as $blocks ) {
-						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
+						if ( is_array( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
 							foreach ( $blocks['fields'] as $fields ) {
 								$fields['section_label'] = isset( $section['label'] ) ? $section['label'] : '';
 								$fields['section_slug']  = isset( $section['slug'] ) ? $section['slug'] : '';
@@ -105,22 +105,28 @@ class Options_V2 {
 			}
 		}
 
-
 		wp_send_json_success( $data_array );
-
 	}
 
+	/**
+	 * Export settings
+	 */
 	public function tutor_export_settings() {
 		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
 	}
 
+	/**
+	 * Export single settings
+	 */
 	public function tutor_export_single_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$export_id          = $this->get_request_data( 'export_id' );
 		wp_send_json_success( $tutor_settings_log[ $export_id ] );
 	}
 
-
+	/**
+	 * Apply settings
+	 */
 	public function tutor_apply_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$apply_id           = $this->get_request_data( 'apply_id' );
@@ -130,6 +136,9 @@ class Options_V2 {
 		wp_send_json_success( $tutor_settings_log[ $apply_id ] );
 	}
 
+	/**
+	 * Delete single setting
+	 */
 	public function tutor_delete_single_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$delete_id          = $this->get_request_data( 'delete_id' );
@@ -140,6 +149,11 @@ class Options_V2 {
 		wp_send_json_success( $tutor_settings_log );
 	}
 
+	/**
+	 * Get request data
+	 * 
+	 * @return mixed
+	 */
 	public function get_request_data( $var ) {
 		return isset( $_REQUEST[ $var ] ) ? $_REQUEST[ $var ] : null;
 	}
