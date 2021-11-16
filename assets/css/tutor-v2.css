@@ -25787,10 +25787,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   top: 25px;
 }
 
-.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-label input[type='radio']:checked ~ .tutor-course-sidebar-card-pick-plan-input .input-plans-details {
-  max-height: 162px;
-}
-
 .tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-input {
   display: block;
   padding-left: 16px;
@@ -25811,11 +25807,14 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-input .input-plan-details {
-  margin-top: 17px;
   max-height: 0;
   overflow: hidden;
   -webkit-transition: max-height 0.25s linear;
   transition: max-height 0.25s linear;
+}
+
+.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-input .input-plan-details > *:first-child {
+  margin-top: 17px;
 }
 
 .tutor-course-details-page-main {
