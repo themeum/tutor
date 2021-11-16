@@ -195,7 +195,6 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 					<?php if ( $the_query->have_posts() ) : ?>
 						<?php
 						foreach ( $the_query->posts as $key => $post ) :
-
 							$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
 							$count_quiz       = $courses->get_all_quiz_by_course( $post->ID );
 							$topics           = tutor_utils()->get_topics( $post->ID );
