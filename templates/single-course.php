@@ -43,8 +43,8 @@ do_action('tutor_course/single/before/wrap');
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
     <div class="tutor-course-details-page tutor-bs-container">
         <?php (isset($is_enrolled) && $is_enrolled) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
-        <div class="tutor-bs-row">
-            <div class="tutor-bs-col-8 tutor-bs-col-md-100">
+        <div class="tutor-single-course-wrapper">
+            <div>
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
                 <div class="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-30">
@@ -72,10 +72,10 @@ do_action('tutor_course/single/before/wrap');
                 </div>
 	            <?php do_action('tutor_course/single/after/inner-wrap'); ?>
             </div>
-            <div class="tutor-bs-col-4">
+            <div>
                 <div class="tutor-single-course-sidebar">
                     <?php do_action('tutor_course/single/before/sidebar'); ?>
-                    <?php tutor_course_enroll_box(); ?>
+                    <?php tutor_load_template('single.course.course-entry-box'); ?>
                     <?php tutor_course_requirements_html(); ?>
                     <?php tutor_course_tags_html(); ?>
                     <?php tutor_course_target_audience_html(); ?>

@@ -29,15 +29,11 @@ $_tutor_course_price_type = tutils()->price_type();
         <select name="_tutor_course_product_id" class="tutor-form-select tutor_select2">
             <option value="-1"><?php _e('Select a Product'); ?></option>
 			<?php
-			foreach ($products as $product){
-			    if ($product->ID == $product_id){
-				    echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
-			    }
-			    $usedProduct = tutor_utils()->product_belongs_with_course($product->ID);
-			    if ( ! $usedProduct){
-				    echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
-			    }
-			}
+                foreach ($products as $product){
+                    echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >
+                            {$product->post_title}
+                        </option>";
+                }
 			?>
         </select>
         <p class="tutor-input-feedback tutor-has-icon">

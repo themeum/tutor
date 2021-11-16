@@ -238,6 +238,17 @@ jQuery(document).ready(function ($) {
   });
 
   /**
+   * Password Reveal
+   */
+  $(document).on('click', ".tutor-password-reveal", function(e) {
+    //toggle icon
+    $(this).toggleClass('ttr-eye-filled ttr-eye-fill-filled');
+    //toggle attr
+    $(this).next().attr('type', function(index, attr) {
+      return attr == 'password' ? 'text' : 'password';
+    });
+  });
+  /**
    * Add Assignment
    */
   $(document).on("click", ".add-assignment-attachments", function (event) {
