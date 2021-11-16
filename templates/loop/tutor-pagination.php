@@ -20,11 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	global $wp_query;
 
-	global $paged;
+	
 
 	function course_listing_pagination( $pages = '', $range = 4 ) {  
 		$showitems = ( $range * 2 )+1;  
-		
+		global $paged;
 		if(empty( $paged )) $paged = 1;
 	 
 		 if( $pages == '' ){

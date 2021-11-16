@@ -95,5 +95,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             contSect.classList.add('no-before');
         }
     }
+    /* Show More Text */
 
 });
