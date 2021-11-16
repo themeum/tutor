@@ -85,6 +85,12 @@
                 }
             }
         }
+        .no-before::before {
+            display: none;
+        }
+        #full-text {
+            display: none;
+        }
     }
     /* end assignment details page */
     /*start tutor-time-out-assignment*/

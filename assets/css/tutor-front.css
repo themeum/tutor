@@ -8700,6 +8700,14 @@ Instructor customize filters styles
   }
 }
 
+#tutor-assignment-wrap.tutor-course-assignment-details .no-before::before {
+  display: none;
+}
+
+#tutor-assignment-wrap.tutor-course-assignment-details #full-text {
+  display: none;
+}
+
 #tutor-assignment-wrap.tutor-time-out-assignment .quiz-flash-message .tutor-quiz-warning-box {
   background-color: #fff7f7;
   border: 1px solid #fdd9d7;
