@@ -20,8 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	global $wp_query;
 
-	
-
 	function course_listing_pagination( $pages = '', $range = 4 ) {  
 		$showitems = ( $range * 2 )+1;  
 		global $paged;
@@ -75,7 +73,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	
 	<?php 
 		if (function_exists("course_listing_pagination")) {
-		course_listing_pagination( $wp_query->max_num_pages );
+			course_listing_pagination( $wp_query->max_num_pages );
 		} 
 	?>
 
