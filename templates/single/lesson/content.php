@@ -37,6 +37,7 @@ $best_watch_time = tutor_utils()->get_lesson_reading_info(get_the_ID(), 0, 'vide
 if ($best_watch_time > 0){
 	$jsonData['best_watch_time'] = $best_watch_time;
 }
+
 ?>
 
 <?php do_action('tutor_lesson/single/before/content'); ?>
