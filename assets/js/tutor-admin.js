@@ -728,6 +728,7 @@ var moreButton = document.querySelector('.more_button');
 var otherColors = document.querySelector('.other_colors');
 var otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-option-field-row');
 var otherColorsExpanded = document.querySelector('.other_colors.expanded');
+var designNav = document.querySelectorAll('.tutor-option-nav-item');
 document.addEventListener('readystatechange', function (event) {
   if (event.target.readyState === 'interactive') {}
 
@@ -735,10 +736,21 @@ document.addEventListener('readystatechange', function (event) {
     if (typeof otherColorsPreview === 'function') {
       otherColorsPreview();
     }
+
+    designNav.forEach(function (item) {
+      item.onclick = function () {
+        setTimeout(function () {
+          if ('design' === item.children[0].dataset.tab) {
+            otherColorsPreview();
+          }
+        });
+      };
+    });
   }
 });
 
 var otherColorsPreview = function otherColorsPreview() {
+  console.log('color preset');
   var itemsHeight = initHeight = 0;
 
   if (otherColors && otherColorRows) {
@@ -2270,110 +2282,135 @@ titleReseter.forEach(function (item) {
 var resetConfirmation = function resetConfirmation() {
   var resetDefaultBtn = document.querySelectorAll('.reset_to_default');
   resetDefaultBtn.forEach(function (resetBtn, index) {
-    resetBtn.onclick = function (e) {
-      e.preventDefault();
-      var resetPage = resetBtn.dataset.reset;
-      var resetTitle = resetBtn.dataset.resetFor.replace('_', ' ').toUpperCase();
-      var formData = new FormData();
-      formData.append('action', 'reset_settings_data');
-      formData.append('reset_page', resetPage);
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      var xhttp = new XMLHttpRequest();
-      xhttp.open('POST', _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
+    resetBtn.onclick = function (event) {
+      if (!event.detail || event.detail == 1) {
+        event.preventDefault();
+        var resetPage = resetBtn.dataset.reset;
+        var resetTitle = resetBtn.dataset.resetFor.replace('_', ' ').toUpperCase();
+        var formData = new FormData();
+        formData.append('action', 'reset_settings_data');
+        formData.append('reset_page', resetPage);
+        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+        var xhttp = new XMLHttpRequest();
+        xhttp.open('POST', _tutorobject.ajaxurl, true);
+        xhttp.send(formData);
 
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          modalConfirmation.classList.remove('tutor-is-active');
-          var pageData = JSON.parse(xhttp.response).data;
-          pageData.forEach(function (item) {
-            var field_types_associate = ['checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState === 4) {
+            modalConfirmation.classList.remove('tutor-is-active');
+            var pageData = JSON.parse(xhttp.response).data;
+            pageData.forEach(function (item) {
+              var field_types_associate = ['upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
-            if (field_types_associate.includes(item.type)) {
-              var itemName = 'tutor_option[' + item.key + ']';
-              var elementItem = elementByName(itemName)[0];
+              if (field_types_associate.includes(item.type)) {
+                var itemName = 'tutor_option[' + item.key + ']';
+                var elementItem = elementByName(itemName)[0];
 
-              if (item.type == 'select') {
-                var elementOptions = elementItem.options;
+                if (item.type == 'select') {
+                  var elementOptions = elementItem.options;
 
-                _toConsumableArray(elementOptions).forEach(function (elementOption) {
-                  elementOption.selected = item["default"].includes(elementOption.value) ? true : false;
-                });
-              } else if (item.type == 'checkbox_horizontal' || item.type == 'checkbox_vertical' || item.type == 'radio_horizontal' || item.type == 'radio_horizontal_full' || item.type == 'radio_vertical' || item.type == 'group_radio' || item.type == 'group_radio_full_3') {
-                if (item.type == 'checkbox_horizontal') {
+                  _toConsumableArray(elementOptions).forEach(function (elementOption) {
+                    elementOption.selected = item["default"].includes(elementOption.value) ? true : false;
+                  });
+                } else if (item.type == 'checkbox_horizontal' || item.type == 'checkbox_vertical' || item.type == 'radio_horizontal' || item.type == 'radio_horizontal_full' || item.type == 'radio_vertical' || item.type == 'group_radio' || item.type == 'group_radio_full_3') {
+                  if (item.type == 'checkbox_horizontal') {
+                    Object.keys(item.options).forEach(function (optionKeys) {
+                      itemName = 'tutor_option[' + item.key + '][' + optionKeys + ']';
+                      checkElements = elementByName("".concat(itemName));
+
+                      _toConsumableArray(checkElements).forEach(function (elemCheck) {
+                        elemCheck.checked = item["default"].includes(elemCheck.value) ? true : false;
+                      });
+                    });
+                  } else {
+                    var _checkElements = elementByName("".concat(itemName));
+
+                    _toConsumableArray(_checkElements).forEach(function (elemCheck) {
+                      elemCheck.checked = item["default"].includes(elemCheck.value) ? true : false;
+                    });
+                  }
+                } else if (item.type == 'upload_full') {
+                  elementItem.value = '';
+                  elementItem.nextElementSibling.src = '';
+                  elementItem.parentNode.querySelector('.delete-btn').style.display = 'none';
+                } else if (item.type == 'checkbox_notification') {
+                  // console.log(item.options);
                   Object.keys(item.options).forEach(function (optionKeys) {
-                    itemName = 'tutor_option[' + item.key + '][' + optionKeys + ']';
+                    itemName = 'tutor_option' + optionKeys;
                     checkElements = elementByName("".concat(itemName));
 
                     _toConsumableArray(checkElements).forEach(function (elemCheck) {
-                      elemCheck.checked = item["default"].includes(elemCheck.value) ? true : false;
+                      elemCheck.checked = false;
                     });
                   });
-                } else {
-                  var _checkElements = elementByName("".concat(itemName));
+                } else if (item.type == 'checkgroup') {
+                  Object.values(item.group_options).forEach(function (optionKeys) {
+                    itemName = 'tutor_option[' + optionKeys.key + ']';
+                    checkElements = elementByName("".concat(itemName));
 
-                  _toConsumableArray(_checkElements).forEach(function (elemCheck) {
-                    elemCheck.checked = item["default"].includes(elemCheck.value) ? true : false;
+                    _toConsumableArray(checkElements).forEach(function (elemCheck) {
+                      elemCheck.nextElementSibling.checked = 'on' === optionKeys["default"] ? true : false;
+                    });
                   });
-                }
-              } else if (item.type == 'checkgroup') {
-                Object.values(item.group_options).forEach(function (optionKeys) {
-                  itemName = 'tutor_option[' + optionKeys.key + ']';
+                } else if (item.type == 'toggle_switch_button') {
+                  itemName = 'tutor_option[' + item.key + '][' + item.event + ']';
                   checkElements = elementByName("".concat(itemName));
 
                   _toConsumableArray(checkElements).forEach(function (elemCheck) {
-                    elemCheck.nextElementSibling.checked = 'on' === optionKeys["default"] ? true : false;
+                    elemCheck.nextElementSibling.checked = 'on' === item["default"] ? true : false;
                   });
-                }); // console.log(Object.values(item.group_options));
-              } else if (item.type == 'toggle_switch') {
-                elementItem.value = elementItem.nextElementSibling.value = item["default"];
-                elementItem.nextElementSibling.checked = false;
-              } else {
-                elementItem.value = item["default"];
+                } else if (item.type == 'toggle_switch') {
+                  elementItem.value = elementItem.nextElementSibling.value = item["default"];
+                  elementItem.nextElementSibling.checked = false;
+                } else {
+                  elementItem.value = item["default"];
+                }
               }
-            }
 
-            var field_types_multi = ['group_fields'];
+              var field_types_multi = ['group_fields'];
 
-            if (field_types_multi.includes(item.type)) {
-              var parentKey = item.key;
-              var groupFields = item.group_fields;
+              if (field_types_multi.includes(item.type)) {
+                var parentKey = item.key;
+                var groupFields = item.group_fields;
 
-              if (_typeof(groupFields) === 'object' && groupFields !== null) {
-                Object.keys(groupFields).forEach(function (elemKey, index) {
-                  var itemChild = groupFields[elemKey];
-                  var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+                if (_typeof(groupFields) === 'object' && groupFields !== null) {
+                  Object.keys(groupFields).forEach(function (elemKey, index) {
+                    var itemChild = groupFields[elemKey];
+                    var field_types_associate = ['toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
-                  if (field_types_associate.includes(itemChild.type)) {
-                    var _itemName = "tutor_option[".concat(parentKey, "][").concat(elemKey, "]"); // console.log(itemName);
+                    if (field_types_associate.includes(itemChild.type)) {
+                      var _itemName = "tutor_option[".concat(parentKey, "][").concat(elemKey, "]"); // console.log(itemName);
 
 
-                    var itemElementChild = elementByName(_itemName)[0];
+                      var itemElementChild = elementByName(_itemName)[0];
 
-                    if (itemChild.type == 'select') {
-                      var sOptions = itemElementChild.options;
+                      if (itemChild.type == 'select') {
+                        var sOptions = itemElementChild.options;
 
-                      _toConsumableArray(sOptions).forEach(function (optElem) {
-                        optElem.selected = itemChild["default"] === optElem.value ? true : false;
-                      });
-                    } else if (itemChild.type == 'toggle_switch') {
-                      itemElementChild.value = itemChild["default"];
-                      itemElementChild.nextElementSibling.value = itemChild["default"];
-                      itemElementChild.nextElementSibling.checked = false;
-                    } else {
-                      // console.log(itemChild);
-                      itemElementChild.value = itemChild["default"];
+                        _toConsumableArray(sOptions).forEach(function (optElem) {
+                          optElem.selected = itemChild["default"] === optElem.value ? true : false;
+                        });
+                      } else if (itemChild.type == 'toggle_switch') {
+                        itemElementChild.value = itemChild["default"];
+                        itemElementChild.nextElementSibling.value = itemChild["default"];
+                        itemElementChild.nextElementSibling.checked = false;
+                      } else {
+                        // console.log(itemChild);
+                        itemElementChild.value = itemChild["default"];
+                      }
                     }
-                  }
-                });
+                  });
+                }
               }
-            }
-          });
-          setTimeout(function () {
-            tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success'); // tutor_toast('Reset Successful', 'Default data for ' + resetTitle + ' successfully!', 'success');
-          }, 300);
-        }
-      };
+            });
+            setTimeout(function () {
+              tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success'); // tutor_toast('Reset Successful', 'Default data for ' + resetTitle + ' successfully!', 'success');
+            }, 300);
+          }
+        };
+      }
+
+      ;
     };
   });
 };
