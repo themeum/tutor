@@ -337,10 +337,8 @@ window.jQuery(document).ready(function ($) {
 
   $('.tutor-course-retake-button').click(function (e) {
     e.preventDefault();
-    var button = $(this);
-    var url = button.attr('href');
-    var course_id = button.data('course_id');
-    var popup;
+    var url = $(this).attr('href');
+    var course_id = $(this).data('course_id');
     var data = {
       title: __('Override Previous Progress', 'tutor'),
       description: __('Before continue, please decide whether to keep progress or reset.', 'tutor'),
@@ -348,15 +346,16 @@ window.jQuery(document).ready(function ($) {
         reset: {
           title: __('Reset Data', 'tutor'),
           "class": 'tutor-btn tutor-is-outline tutor-is-default',
-          callback: function callback() {
-            var button = popup.find('.tutor-button-secondary');
-            button.prop('disabled', true).append('<img style="margin-left: 7px" src="' + window._tutorobject.loading_icon_url + '"/>');
+          callback: function callback(button) {
             $.ajax({
               url: window._tutorobject.ajaxurl,
               type: 'POST',
               data: {
                 action: 'tutor_reset_course_progress',
                 course_id: course_id
+              },
+              beforeSend: function beforeSend() {
+                button.prop('disabled', true).addClass('tutor-updating-message');
               },
               success: function success(response) {
                 if (response.success) {
@@ -366,7 +365,7 @@ window.jQuery(document).ready(function ($) {
                 }
               },
               complete: function complete() {
-                button.prop('disabled', false).find('img').remove();
+                button.prop('disabled', false).removeClass('tutor-updating-message');
               }
             });
           }
@@ -380,7 +379,7 @@ window.jQuery(document).ready(function ($) {
         }
       }
     };
-    popup = new window.tutor_popup($, 'icon-gear', 40).popup(data);
+    new window.tutor_popup($, 'icon-gear', 40).popup(data);
   });
 });
 

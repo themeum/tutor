@@ -37,7 +37,9 @@ window.tutor_popup = function($, icon, padding) {
         var buttons = Object.keys(data.buttons || {}).map(function(key) {
             var button = data.buttons[key];
             var button_id = button.id ? 'tutor-popup-'+button.id : ''; 
-            return $('<button id="'+button_id+'" class="'+button.class+'">'+button.title+'</button>').click(button.callback);
+            return $('<button id="'+button_id+'" class="'+button.class+'">'+button.title+'</button>').click(function(){
+                button.callback($(this));
+            });
         });
 
         element = $($this.popup_wrapper(data.wrapper_tag || 'div'));

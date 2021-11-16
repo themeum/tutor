@@ -45,7 +45,7 @@ $rating = tutor_utils()->get_course_rating();
                                 <span class="ttr-star-line-filled"></span>
                             </div>
                             <div class="tutor-rating-text text-medium-body color-text-primary">
-                                <?php echo $i; ?>
+                                <?php echo $key; ?>
                             </div>
                         </div>
                         <div class="progress-bar tutor-mt-10" style="--progress-value: <?php echo $rating_count_percent; ?>%">

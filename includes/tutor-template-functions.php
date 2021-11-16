@@ -980,44 +980,6 @@ if ( ! function_exists('tutor_lesson_lead_info')) {
 
     }
 }
-/**
- * @param bool $echo
- *
- * @return mixed
- *
- * Return enroll box in single course
- *
- * @since: v.1.0.0
- */
-
-if ( ! function_exists('tutor_course_enroll_box')) {
-    function tutor_course_enroll_box( $echo = true ) {
-        $isLoggedIn = is_user_logged_in();
-        $enrolled = tutor_utils()->is_enrolled();
-
-        $is_administrator = current_user_can('administrator');
-        $is_instructor = tutor_utils()->is_instructor_of_this_course();
-        $course_content_access = (bool) get_tutor_option('course_content_access_for_ia');
-        ob_start();
-
-        if ( $enrolled ) {
-            tutor_load_template( 'single.course.course-enrolled-box' );
-            $output = apply_filters( 'tutor_course/single/enrolled', ob_get_clean() );
-        } else if ( $course_content_access && ($is_administrator || $is_instructor) ) {
-            tutor_load_template( 'single.course.continue-lesson' );
-            $output = apply_filters( 'tutor_course/single/continue_lesson', ob_get_clean() );
-        } else {
-            tutor_load_template( 'single.course.course-enroll-box' );
-            $output = apply_filters( 'tutor_course/single/enroll', ob_get_clean() );
-        }
-
-        if ( $echo ) {
-            echo $output;
-        }
-
-        return $output;
-    }
-}
 
 /**
  * @param bool $echo
@@ -1043,7 +1005,13 @@ function tutor_single_course_add_to_cart($echo = true){
         tutor_load_template( 'single.course.login' );
         $login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
 
-        $output .= "<div class='tutor-cart-box-login-form' style='display: none;'><span class='login-overlay-close'></span><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
+        $output .= "<div class='tutor-cart-box-login-form' style='display: none;'>
+                        <span class='login-overlay-close'></span>
+                        <div class='tutor-cart-box-login-form-inner'>
+                            <button class='tutor-popup-form-close tutor-icon-line-cross'></button>
+                            {$login_form}
+                        </div>
+                    </div>";
     }
 
     if ( $echo ) {
@@ -1160,21 +1128,6 @@ if ( ! function_exists('tutor_lesson_mark_complete_html')) {
         return $output;
     }
 }
-
-if ( ! function_exists('tutor_course_mark_complete_html')) {
-    function tutor_course_mark_complete_html( $echo = true ) {
-        ob_start();
-        tutor_load_template( 'single.course.complete_form' );
-        $output = apply_filters( 'tutor_course/single/complete_form', ob_get_clean() );
-
-        if ( $echo ) {
-            echo $output;
-        }
-
-        return $output;
-    }
-}
-
 
 /**
  * @param bool $echo
@@ -1337,15 +1290,15 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         if ( $duration ) {
             $output = '';
             if ( $durationHours > 0 ) {
-                $output .= $durationHours . "h ";
+                $output .= '<span class="text-medium-caption color-text-primary">'.$durationHours.'</span> <span class="text-medium-caption color-text-subsued">'.__('hour', 'tutor').'</span>';
             }
 
             if ( $durationMinutes > 0 ) {
-                $output .= $durationMinutes . "m ";
+                $output .= '<span class="text-medium-caption color-text-primary">'.$durationMinutes.'</span> <span class="text-medium-caption color-text-subsued">'.__('minute', 'tutor').'</span>';
             }
 
             if ( $durationSeconds > 0 ) {
-                $output .= $durationSeconds  ."s ";
+                $output .= '<span class="text-medium-caption color-text-primary">'.$durationSeconds.'</span> <span class="text-medium-caption color-text-subsued">'.__('Second', 'tutor').'</span>';
             }
 
             return $output;
