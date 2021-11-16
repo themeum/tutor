@@ -269,7 +269,8 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Password', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-mb-15">
+						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
+							<span class="ttr-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
 							<input type="password" name="password"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="new-password" required/>
 						</div>
 					</div>
@@ -277,7 +278,8 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-mb-15">
+						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
+							<span class="ttr-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
 							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" required/>
 						</div>
 					</div>

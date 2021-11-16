@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 const amount = e.currentTarget.dataset.amount;
                 const accountName = e.currentTarget.dataset.name;
                 const content = document.getElementById('tutor-admin-withdraw-approve-content');
-                content.innerHTML = `${__( 'You are approving '+ `<strong>${accountName}</strong>` + ' withdrawal request for '+ `<strong>${amount}</strong>` +'. Are you sure you want to approve?', 'tutor')}`;
+                content.innerHTML = `${__( 'You are approving '+ `<strong style="color:#000;">${accountName}</strong>` + ' withdrawal request for '+ `<strong  style="color:#000;">${amount}</strong>` +'. Are you sure you want to approve?', 'tutor')}`;
             }
        }
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 const amount = e.currentTarget.dataset.amount;
                 const accountName = e.currentTarget.dataset.name;
                 const content = document.getElementById('tutor-admin-withdraw-reject-content');
-                content.innerHTML = `${__( 'You are rejecting '+ `<strong>${accountName}</strong>` + ' withdrawal request for '+ `<strong>${amount}</strong>` +'. Are you sure you want to reject?', 'tutor')}`;
+                content.innerHTML = `${__( 'You are rejecting '+ `<strong   style="color:#000;">${accountName}</strong>` + ' withdrawal request for '+ `<strong   style="color:#000;">${amount}</strong>` +'. Are you sure you want to reject?', 'tutor')}`;
             }
         }
    }
