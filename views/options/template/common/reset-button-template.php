@@ -9,6 +9,7 @@
 
 $section_label = isset( $section['label'] ) && ! empty( $section['label'] ) ? esc_attr( $section['label'] ) : '';
 $section_slug  = isset( $section['slug'] ) && ! empty( $section['slug'] ) ? esc_attr( $section['slug'] ) : '';
+// pr( $section );
 ?>
 <div class="tutor-option-main-title">
 	<h2><?php echo esc_attr( $section_label ); ?></h2>
