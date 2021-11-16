@@ -14,10 +14,11 @@ if ( ! empty( $field['group_options'] ) ) {
 		<div class="type-toggle-grid">
 			<?php
 			foreach ( $field['group_options'] as $key => $option ) :
-				// pr( $option );
-				$default      = $option['default'] ?? '';
+				$default      = isset( $option['default'] ) && 0 !== $option['default'] ? esc_attr( $option['default'] ) : 'off';
 				$option_value = $this->get( $option['key'], $default );
+				// $option_value = 0 != $option_value || 'on' != $option_value ? $option_value : 'off';
 				?>
+
 				<div class="toggle-item">
 					<label class="tutor-form-toggle">
 						<input type="hidden" name="tutor_option[<?php echo esc_attr( $option['key'] ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">

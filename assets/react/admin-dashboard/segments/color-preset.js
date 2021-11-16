@@ -9,6 +9,7 @@ const moreButton = document.querySelector('.more_button');
 const otherColors = document.querySelector('.other_colors');
 const otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-option-field-row');
 const otherColorsExpanded = document.querySelector('.other_colors.expanded');
+const designNav = document.querySelectorAll('.tutor-option-nav-item');
 
 document.addEventListener('readystatechange', (event) => {
 	if (event.target.readyState === 'interactive') {
@@ -17,6 +18,17 @@ document.addEventListener('readystatechange', (event) => {
 		if (typeof otherColorsPreview === 'function') {
 			otherColorsPreview();
 		}
+
+		designNav.forEach((item) => {
+			item.onclick = () => {
+				setTimeout(() => {
+					if ('design' === item.children[0].dataset.tab) {
+						otherColorsPreview();
+					}
+				})
+			}
+		})
+
 	}
 });
 

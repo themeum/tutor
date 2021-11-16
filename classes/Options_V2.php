@@ -151,7 +151,7 @@ class Options_V2 {
 
 	/**
 	 * Get request data
-	 * 
+	 *
 	 * @return mixed
 	 */
 	public function get_request_data( $var ) {
@@ -334,6 +334,7 @@ class Options_V2 {
 
 		$methods_array     = array();
 		$withdrawl_methods = apply_filters( 'tutor_withdrawal_methods_all', array() );
+
 		foreach ( $withdrawl_methods as $key => $method ) {
 			$methods_array[ $key ] = $method['method_name'];
 		}
@@ -521,8 +522,7 @@ class Options_V2 {
 								'key'            => 'quiz_when_time_expires',
 								'type'           => 'radio_vertical',
 								'label'          => __( 'When time expires', 'tutor' ),
-								'default'        => 'minutes',
-
+								'default'        => 'grace_period',
 								'select_options' => false,
 								'options'        => array(
 									'auto_submit'  => __( 'The current quiz answers are submitted automatically.', 'tutor' ),
@@ -568,7 +568,7 @@ class Options_V2 {
 							array(
 								'key'         => 'supported_video_sources',
 								'type'        => 'checkbox_vertical',
-								'default'        => array( 'youtube', 'vimeo' ),
+								'default'     => array( 'youtube', 'vimeo' ),
 								'label'       => __( 'Preferred Video Source', 'tutor' ),
 								'label_title' => __( 'Preferred Video Source', 'tutor' ),
 								'options'     => array(
@@ -691,7 +691,7 @@ class Options_V2 {
 								'group_fields' => array(
 									'fees_type'   => array(
 										'type'    => 'select',
-										'default' => 'minutes',
+										'default' => 'fixed',
 										'options' => array(
 											'percent' => __( 'Percent', 'tutor' ),
 											'fixed'   => __( 'Fixed', 'tutor' ),
@@ -728,8 +728,7 @@ class Options_V2 {
 								'key'         => 'tutor_withdrawal_methods',
 								'type'        => 'checkbox_horizontal',
 								'label'       => __( 'Enable withdraw method', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'bank_transfer_withdraw',
+								'default'     => array( 'bank_transfer_withdraw' ),
 								'options'     => $methods_array,
 								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
 							),
@@ -788,7 +787,7 @@ class Options_V2 {
 								'key'         => 'supported_course_filters',
 								'type'        => 'checkbox_horizontal',
 								'label'       => __( 'Preferred Course Filters', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
+								'default'     => array( 'search' ,'category' ),
 								'options'     => array(
 									'search'           => __( 'Keyword Search', 'tutor' ),
 									'category'         => __( 'Category', 'tutor' ),
@@ -879,7 +878,7 @@ class Options_V2 {
 										'key'     => 'display_course_instructors',
 										'type'    => 'toggle_single',
 										'label'   => __( 'Instructor Info', 'tutor' ),
-										'default' => 'on',
+										'default' => 'off',
 										'desc'    => __( 'Toggle to show instructor info', 'tutor' ),
 									),
 									array(
@@ -918,7 +917,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Duration', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default' => 'off',
 										'desc'        => __( 'Enable to show course duration', 'tutor' ),
 									),
 									array(
@@ -926,7 +925,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Enrolled Students', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Enable to show total enrolled students', 'tutor' ),
 									),
 									array(
@@ -934,7 +933,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Update Date', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Disable to hide course update infromation', 'tutor' ),
 									),
 									array(
@@ -942,7 +941,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Progress Bar', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Disable to hide course progress for Students', 'tutor' ),
 									),
 									array(
@@ -950,7 +949,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Material', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Disable to hide course materials', 'tutor' ),
 									),
 									array(
@@ -958,7 +957,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'About', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Disable to hide course about section', 'tutor' ),
 									),
 									array(
@@ -966,7 +965,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Description', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Disable to hide course description', 'tutor' ),
 									),
 									array(
@@ -974,7 +973,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Benefits', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Disable to hide course benefits section', 'tutor' ),
 									),
 									array(
@@ -982,7 +981,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Pre-Requirements', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Disable to hide courses requirements setion', 'tutor' ),
 									),
 									array(
@@ -990,7 +989,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Target Audience', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Enable to show course target audience setion', 'tutor' ),
 									),
 									array(
@@ -998,7 +997,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Announcements', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'off',
 										'desc'        => __( 'Disable to hide course announcements settion', 'tutor' ),
 									),
 									array(
@@ -1006,7 +1005,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Review', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => '0',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide course review section', 'tutor' ),
 									),
 								),
@@ -1459,18 +1458,24 @@ class Options_V2 {
 		return ob_get_clean();
 	}
 
-	/* public function this_confirmation( $modal = array() ) {
+	/*
+	 public function this_confirmation( $modal = array() ) {
 		ob_start();
 		require tutor()->path . 'views/options/template/modal-confirm.php';
 		return ob_get_clean();
 	} */
 
-	// load template inside template dirctory
+	/**
+	 * Load template inside template dirctory
+	 *
+	 * @param  mixed $template_slug
+	 * @param  mixed $section
+	 * @return void
+	 */
 	public function view_template( $template_slug, $section = array() ) {
 		ob_start();
-		$section_label = $section['label'];
-		$section_slug = $section['slug'];
 		require tutor()->path . "views/options/template/{$template_slug}";
 		return ob_get_clean();
 	}
+
 }
