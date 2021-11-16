@@ -2413,7 +2413,7 @@ document.addEventListener("DOMContentLoaded", function () {
           var amount = e.currentTarget.dataset.amount;
           var accountName = e.currentTarget.dataset.name;
           var content = document.getElementById('tutor-admin-withdraw-approve-content');
-          content.innerHTML = "".concat(__('You are approving ' + "<strong>".concat(accountName, "</strong>") + ' withdrawal request for ' + "<strong>".concat(amount, "</strong>") + '. Are you sure you want to approve?', 'tutor'));
+          content.innerHTML = "".concat(__('You are approving ' + "<strong style=\"color:#000;\">".concat(accountName, "</strong>") + ' withdrawal request for ' + "<strong  style=\"color:#000;\">".concat(amount, "</strong>") + '. Are you sure you want to approve?', 'tutor'));
         };
       }
     } catch (err) {
@@ -2437,7 +2437,7 @@ document.addEventListener("DOMContentLoaded", function () {
           var amount = e.currentTarget.dataset.amount;
           var accountName = e.currentTarget.dataset.name;
           var content = document.getElementById('tutor-admin-withdraw-reject-content');
-          content.innerHTML = "".concat(__('You are rejecting ' + "<strong>".concat(accountName, "</strong>") + ' withdrawal request for ' + "<strong>".concat(amount, "</strong>") + '. Are you sure you want to reject?', 'tutor'));
+          content.innerHTML = "".concat(__('You are rejecting ' + "<strong   style=\"color:#000;\">".concat(accountName, "</strong>") + ' withdrawal request for ' + "<strong   style=\"color:#000;\">".concat(amount, "</strong>") + '. Are you sure you want to reject?', 'tutor'));
         };
       }
     } catch (err) {
