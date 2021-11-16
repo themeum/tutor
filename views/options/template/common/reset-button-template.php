@@ -1,3 +1,15 @@
+<?php
+/**
+ * Template: Settings reset for each section.
+ *
+ * @package TutorLMS
+ * @subpackage Settings
+ * @since 2.0.0
+ */
+
+$section_label = isset( $section['label'] ) && ! empty( $section['label'] ) ? esc_attr( $section['label'] ) : '';
+$section_slug  = isset( $section['slug'] ) && ! empty( $section['slug'] ) ? esc_attr( $section['slug'] ) : '';
+?>
 <div class="tutor-option-main-title">
 	<h2><?php echo esc_attr( $section_label ); ?></h2>
 	<button data-tutor-modal-target="tutor-modal-bulk-action"

@@ -54,32 +54,54 @@ const resetConfirmation = () => {
 					modalConfirmation.classList.remove('tutor-is-active');
 					let pageData = JSON.parse(xhttp.response).data;
 					pageData.forEach((item) => {
-						const field_types_associate = ['radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+						const field_types_associate = ['checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 						if (field_types_associate.includes(item.type)) {
 							let itemName = 'tutor_option[' + item.key + ']';
-							let itemElement = elementByName(itemName)[0];
+
+							let elementItem = elementByName(itemName)[0];
+
 							if (item.type == 'select') {
-								let sOptions = itemElement.options;
-								[...sOptions].forEach((optElem) => {
-									optElem.selected = false;
+
+								let elementOptions = elementItem.options;
+								[...elementOptions].forEach((elementOption) => {
+									elementOption.selected = item.default.includes(elementOption.value) ? true : false;
 								});
-							} else if (item.type == 'checkbox_vertical') {
-								let checkElements = elementByName(`${itemName}`);
-								[...checkElements].forEach((checkElem) => {
-									checkElem.checked = item.default.includes(checkElem.value) ? true : false;
+
+							} else if (item.type == 'checkbox_horizontal' || item.type == 'checkbox_vertical' || item.type == 'radio_horizontal' || item.type == 'radio_horizontal_full' || item.type == 'radio_vertical' || item.type == 'group_radio' || item.type == 'group_radio_full_3') {
+
+								if (item.type == 'checkbox_horizontal') {
+									Object.keys(item.options).forEach((optionKeys) => {
+										itemName = 'tutor_option[' + item.key + '][' + optionKeys + ']';
+										checkElements = elementByName(`${itemName}`);
+										[...checkElements].forEach((elemCheck) => {
+											elemCheck.checked = item.default.includes(elemCheck.value) ? true : false;
+										});
+									});
+								} else {
+									let checkElements = elementByName(`${itemName}`);
+									[...checkElements].forEach((elemCheck) => {
+										elemCheck.checked = item.default.includes(elemCheck.value) ? true : false;
+									});
+								}
+
+							} else if (item.type == 'checkgroup') {
+
+								Object.values(item.group_options).forEach((optionKeys) => {
+									itemName = 'tutor_option[' + optionKeys.key + ']';
+									checkElements = elementByName(`${itemName}`);
+									[...checkElements].forEach((elemCheck) => {
+										elemCheck.nextElementSibling.checked = 'on' === optionKeys.default ? true : false;
+									});
 								});
-							} else if (item.type == 'radio_horizontal_full') {
-								let checkElements = elementByName(`${itemName}`);
-								console.log(checkElements);
-								[...checkElements].forEach((checkElem) => {
-									checkElem.checked = item.default.includes(checkElem.value) ? true : false;
-								});
+
+								// console.log(Object.values(item.group_options));
 							} else if (item.type == 'toggle_switch') {
-								itemElement.value = item.default;
-								itemElement.nextElementSibling.value = item.default;
-								itemElement.nextElementSibling.checked = false;
+
+								elementItem.value = elementItem.nextElementSibling.value = item.default;
+								elementItem.nextElementSibling.checked = false;
+
 							} else {
-								itemElement.value = item.default;
+								elementItem.value = item.default;
 							}
 						}
 
