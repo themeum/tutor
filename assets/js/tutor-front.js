@@ -1,11 +1,135 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./assets/react/front/course/_spotlight.js":
+/*!*************************************************!*\
+  !*** ./assets/react/front/course/_spotlight.js ***!
+  \*************************************************/
+/***/ (() => {
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+document.addEventListener('DOMContentLoaded', function (event) {
+  /* sidetab tab position */
+  var topBar = document.querySelector('.tutor-single-page-top-bar');
+  var sideBar = document.querySelector('.tutor-lesson-sidebar');
+  sideBar.style.top = topBar.clientHeight + 'px';
+  /* sidetab tab position */
+
+  /* sidetab tab */
+
+  var sideBarTabs = document.querySelectorAll('.tutor-sidebar-tab-item');
+  sideBarTabs.forEach(function (tab) {
+    tab.addEventListener('click', function (event) {
+      clearActiveClass();
+      event.currentTarget.classList.add('active');
+      var id = event.currentTarget.getAttribute('data-sidebar-tab');
+      document.getElementById(id).classList.add('active');
+    });
+  });
+
+  var clearActiveClass = function clearActiveClass() {
+    for (var i = 0; i < sideBarTabs.length; i++) {
+      sideBarTabs[i].classList.remove('active');
+    }
+
+    var sidebarTabItems = document.querySelectorAll('.tutor-lesson-sidebar-tab-item');
+
+    for (var _i = 0; _i < sidebarTabItems.length; _i++) {
+      sidebarTabItems[_i].classList.remove('active');
+    }
+  };
+  /* end of sidetab tab */
+
+  /* comment text-area focus arrow style */
+
+
+  var commentTextarea = document.querySelectorAll('.tutor-comment-textarea textarea');
+
+  if (commentTextarea) {
+    commentTextarea.forEach(function (item) {
+      item.addEventListener('focus', function () {
+        item.parentElement.classList.add('is-focused');
+      });
+      item.addEventListener('blur', function () {
+        item.parentElement.classList.remove('is-focused');
+      });
+    });
+  }
+  /* comment text-area focus arrow style */
+
+  /* commenting */
+
+
+  var parentComments = document.querySelectorAll('.tutor-comments-list.tutor-parent-comment');
+  var replyComment = document.querySelector('.tutor-comment-box.tutor-reply-box');
+
+  if (parentComments) {
+    _toConsumableArray(parentComments).forEach(function (parentComment) {
+      var childComments = parentComment.querySelectorAll('.tutor-comments-list.tutor-child-comment');
+      var commentLine = parentComment.querySelector('.tutor-comment-line');
+      var childCommentCount = childComments.length;
+      var lastCommentHeight = childComments[childCommentCount - 1].clientHeight;
+      var heightOfLine = lastCommentHeight + replyComment.clientHeight + 20 - 25 + 50;
+      commentLine.style.setProperty('height', "calc(100% - ".concat(heightOfLine, "px)"));
+    });
+  }
+  /* commenting */
+
+  /* Show More Text */
+
+
+  var showMoreBtn = document.querySelector('.tutor-show-more-btn button');
+  showMoreBtn.addEventListener('click', showMore);
+
+  function showMore() {
+    var lessText = document.getElementById("short-text");
+    var dots = document.getElementById("dots");
+    var moreText = document.getElementById("full-text");
+    var btnText = document.getElementById("showBtn");
+    var contSect = document.getElementById("content-section");
+    console.log(lessText, dots, moreText, btnText);
+
+    if (dots.style.display === "none") {
+      lessText.style.display = "block";
+      dots.style.display = "inline";
+      btnText.innerHTML = "<span class='btn-icon ttr-plus-filled color-design-brand'></span><span class='color-text-primary'>Show More</span>";
+      moreText.style.display = "none";
+      contSect.classList.remove('no-before');
+    } else {
+      lessText.style.display = "none";
+      dots.style.display = "none";
+      btnText.innerHTML = "<span class='btn-icon ttr-minus-filled color-design-brand'></span><span class='color-text-primary'>Show Less</span>";
+      moreText.style.display = "block";
+      contSect.classList.add('no-before');
+    }
+  }
+  /* Show More Text */
+
+});
+
+/***/ }),
+
 /***/ "./assets/react/front/course/index.js":
 /*!********************************************!*\
   !*** ./assets/react/front/course/index.js ***!
   \********************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_spotlight */ "./assets/react/front/course/_spotlight.js");
+/* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_spotlight__WEBPACK_IMPORTED_MODULE_0__);
 
 window.jQuery(document).ready(function ($) {
   // Login require on enrol purchase click
@@ -743,7 +867,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/course-landing */ "./assets/react/front/pages/course-landing.js");
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_pages_course_landing__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _course_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./course/index */ "./assets/react/front/course/index.js");
-/* harmony import */ var _course_index__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_course_index__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _dashboard_export_csv__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dashboard/export-csv */ "./assets/react/front/dashboard/export-csv.js");
 /* harmony import */ var _dashboard_export_csv__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_dashboard_export_csv__WEBPACK_IMPORTED_MODULE_4__);
 
