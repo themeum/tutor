@@ -54,7 +54,7 @@ const resetConfirmation = () => {
 					modalConfirmation.classList.remove('tutor-is-active');
 					let pageData = JSON.parse(xhttp.response).data;
 					pageData.forEach((item) => {
-						const field_types_associate = ['checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+						const field_types_associate = ['radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 						if (field_types_associate.includes(item.type)) {
 							let itemName = 'tutor_option[' + item.key + ']';
 							let itemElement = elementByName(itemName)[0];
@@ -68,7 +68,12 @@ const resetConfirmation = () => {
 								[...checkElements].forEach((checkElem) => {
 									checkElem.checked = item.default.includes(checkElem.value) ? true : false;
 								});
-
+							} else if (item.type == 'radio_horizontal_full') {
+								let checkElements = elementByName(`${itemName}`);
+								console.log(checkElements);
+								[...checkElements].forEach((checkElem) => {
+									checkElem.checked = item.default.includes(checkElem.value) ? true : false;
+								});
 							} else if (item.type == 'toggle_switch') {
 								itemElement.value = item.default;
 								itemElement.nextElementSibling.value = item.default;

@@ -2287,7 +2287,7 @@ var resetConfirmation = function resetConfirmation() {
           modalConfirmation.classList.remove('tutor-is-active');
           var pageData = JSON.parse(xhttp.response).data;
           pageData.forEach(function (item) {
-            var field_types_associate = ['checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+            var field_types_associate = ['radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
             if (field_types_associate.includes(item.type)) {
               var itemName = 'tutor_option[' + item.key + ']';
@@ -2303,6 +2303,14 @@ var resetConfirmation = function resetConfirmation() {
                 var checkElements = elementByName("".concat(itemName));
 
                 _toConsumableArray(checkElements).forEach(function (checkElem) {
+                  checkElem.checked = item["default"].includes(checkElem.value) ? true : false;
+                });
+              } else if (item.type == 'radio_horizontal_full') {
+                var _checkElements = elementByName("".concat(itemName));
+
+                console.log(_checkElements);
+
+                _toConsumableArray(_checkElements).forEach(function (checkElem) {
                   checkElem.checked = item["default"].includes(checkElem.value) ? true : false;
                 });
               } else if (item.type == 'toggle_switch') {
