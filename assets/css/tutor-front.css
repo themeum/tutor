@@ -8493,6 +8493,11 @@ Withdraw Method
   padding: 30px 20px;
 }
 
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle img {
+  width: 96px;
+  height: 96px;
+}
+
 .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
   margin: 0;
 }
