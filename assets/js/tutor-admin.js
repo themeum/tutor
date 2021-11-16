@@ -2287,38 +2287,49 @@ var resetConfirmation = function resetConfirmation() {
           modalConfirmation.classList.remove('tutor-is-active');
           var pageData = JSON.parse(xhttp.response).data;
           pageData.forEach(function (item) {
-            var field_types_associate = ['radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
+            var field_types_associate = ['checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
             if (field_types_associate.includes(item.type)) {
               var itemName = 'tutor_option[' + item.key + ']';
-              var itemElement = elementByName(itemName)[0];
+              var elementItem = elementByName(itemName)[0];
 
               if (item.type == 'select') {
-                var sOptions = itemElement.options;
+                var elementOptions = elementItem.options;
 
-                _toConsumableArray(sOptions).forEach(function (optElem) {
-                  optElem.selected = false;
+                _toConsumableArray(elementOptions).forEach(function (elementOption) {
+                  elementOption.selected = item["default"].includes(elementOption.value) ? true : false;
                 });
-              } else if (item.type == 'checkbox_vertical') {
-                var checkElements = elementByName("".concat(itemName));
+              } else if (item.type == 'checkbox_horizontal' || item.type == 'checkbox_vertical' || item.type == 'radio_horizontal' || item.type == 'radio_horizontal_full' || item.type == 'radio_vertical' || item.type == 'group_radio' || item.type == 'group_radio_full_3') {
+                if (item.type == 'checkbox_horizontal') {
+                  Object.keys(item.options).forEach(function (optionKeys) {
+                    itemName = 'tutor_option[' + item.key + '][' + optionKeys + ']';
+                    checkElements = elementByName("".concat(itemName));
 
-                _toConsumableArray(checkElements).forEach(function (checkElem) {
-                  checkElem.checked = item["default"].includes(checkElem.value) ? true : false;
-                });
-              } else if (item.type == 'radio_horizontal_full') {
-                var _checkElements = elementByName("".concat(itemName));
+                    _toConsumableArray(checkElements).forEach(function (elemCheck) {
+                      elemCheck.checked = item["default"].includes(elemCheck.value) ? true : false;
+                    });
+                  });
+                } else {
+                  var _checkElements = elementByName("".concat(itemName));
 
-                console.log(_checkElements);
+                  _toConsumableArray(_checkElements).forEach(function (elemCheck) {
+                    elemCheck.checked = item["default"].includes(elemCheck.value) ? true : false;
+                  });
+                }
+              } else if (item.type == 'checkgroup') {
+                Object.values(item.group_options).forEach(function (optionKeys) {
+                  itemName = 'tutor_option[' + optionKeys.key + ']';
+                  checkElements = elementByName("".concat(itemName));
 
-                _toConsumableArray(_checkElements).forEach(function (checkElem) {
-                  checkElem.checked = item["default"].includes(checkElem.value) ? true : false;
-                });
+                  _toConsumableArray(checkElements).forEach(function (elemCheck) {
+                    elemCheck.nextElementSibling.checked = 'on' === optionKeys["default"] ? true : false;
+                  });
+                }); // console.log(Object.values(item.group_options));
               } else if (item.type == 'toggle_switch') {
-                itemElement.value = item["default"];
-                itemElement.nextElementSibling.value = item["default"];
-                itemElement.nextElementSibling.checked = false;
+                elementItem.value = elementItem.nextElementSibling.value = item["default"];
+                elementItem.nextElementSibling.checked = false;
               } else {
-                itemElement.value = item["default"];
+                elementItem.value = item["default"];
               }
             }
 
@@ -2340,9 +2351,9 @@ var resetConfirmation = function resetConfirmation() {
                     var itemElementChild = elementByName(_itemName)[0];
 
                     if (itemChild.type == 'select') {
-                      var _sOptions = itemElementChild.options;
+                      var sOptions = itemElementChild.options;
 
-                      _toConsumableArray(_sOptions).forEach(function (optElem) {
+                      _toConsumableArray(sOptions).forEach(function (optElem) {
                         optElem.selected = itemChild["default"] === optElem.value ? true : false;
                       });
                     } else if (itemChild.type == 'toggle_switch') {
