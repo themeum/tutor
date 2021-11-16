@@ -114,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function (event) {
       contSect.classList.add('no-before');
     }
   }
+  /* Show More Text */
+
 });
 
 /***/ }),
