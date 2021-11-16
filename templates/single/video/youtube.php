@@ -19,8 +19,14 @@ $youtube_video_id = tutor_utils()->get_youtube_video_id(tutor_utils()->avalue_do
 
 do_action('tutor_lesson/single/before/video/youtube');
 ?>
-    <iframe src="https://www.youtube.com/embed/<?php echo $youtube_video_id; ?>" title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
+    <?php
+        if ($disable_default_player_youtube){
+    ?>
+        <iframe src="https://www.youtube.com/embed/<?php echo $youtube_video_id; ?>" frameborder="0" allowfullscreen allowtransparency allow="autoplay"></iframe>
+    <?php 
+        } else { 
+    ?>
+        <iframe src="https://www.youtube.com/embed/<?php echo $youtube_video_id; ?>?&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+    <?php } ?>
 <?php
 do_action('tutor_lesson/single/after/video/youtube'); ?>
