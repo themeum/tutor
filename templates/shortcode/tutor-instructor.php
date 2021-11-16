@@ -30,18 +30,20 @@
 				</a>
 			</div>
 			<?php else : ?>
-			<div  class="tutor-course-col-<?php esc_html_e( $column_count ); ?>">
-				<div class="tutor-instructor-left-middle">
-					<div class="tutor-instructor-profile-photo">
-						<img src="<?php echo esc_url( get_avatar_url( $instructor->ID ) ); ?>" alt="instructor-image">
-					</div>
-					<div class="tutor-instructor-content">
-						<h4 class="tutor-instructor-name"><?php esc_html_e( $instructor->display_name ); ?></h4>
-						<span class="tutor-ins-course-count"><?php esc_html_e( $course_count ); ?></span>
-						<span class="tutor-ins-course-text"><?php $course_count > 1 ? esc_html_e( 'Courses', 'tutor' ) : esc_html_e( 'Course', 'tutor' ); ?></span>
-					</div>
+				<div  class="tutor-course-col-<?php esc_html_e( $column_count ); ?>">
+					<a href="<?php echo esc_url( tutor_utils()->profile_url( $instructor->ID ) ); ?>" style="text-decoration: none;">
+						<div class="tutor-instructor-left-middle">
+							<div class="tutor-instructor-profile-photo">
+								<img src="<?php echo esc_url( get_avatar_url( $instructor->ID ) ); ?>" alt="instructor-image">
+							</div>
+							<div class="tutor-instructor-content">
+								<h4 class="tutor-instructor-name"><?php esc_html_e( $instructor->display_name ); ?></h4>
+								<span class="tutor-ins-course-count" style="color:#161616;"><?php esc_html_e( $course_count ); ?></span>
+								<span class="tutor-ins-course-text" style="color:#7A7A7A;"><?php $course_count > 1 ? esc_html_e( 'Courses', 'tutor' ) : esc_html_e( 'Course', 'tutor' ); ?></span>
+							</div>
+						</div>
+					</a>
 				</div>
-			</div>
 			<?php endif; ?>
 		<?php endforeach; ?>
 	<?php else : ?>
