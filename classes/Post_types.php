@@ -197,7 +197,7 @@ class Post_types{
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor'),
+			'supports'           => array( 'title', 'editor', 'comments'),
 			'exclude_from_search' => apply_filters('tutor_lesson_exclude_from_search', true),
 			'capabilities' => array(
 				'edit_post'          => 'edit_tutor_lesson',

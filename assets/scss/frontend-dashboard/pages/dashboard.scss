@@ -89,6 +89,9 @@
     margin-right: 25px;
     margin-bottom: 20px;
     padding: 0px;
+    .tutor-bs-row {
+        margin-left: 0px;
+    }
     .profile-completion-content {
         padding: 35px;
         li {
@@ -101,7 +104,9 @@
             padding-left: 20px;
         }
         .tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
-            padding: 4px 6px;
+            padding: 0px 6px;
+            height: 8px;
+            border-radius: 8px;
         }
         .tutor-round-icon {
             background: #3e64de;
@@ -142,7 +147,9 @@
     @media only screen and (max-width: 600px) {
         margin-right: 0px;
         margin-left: 0px;
-        padding-left: 20px;
+        .tutor-bs-row {
+            margin-left: 0px;
+        }
         .profile-completion-content {
             padding: 25px 15px;
             border-bottom: 1px solid #cdcfd5;
@@ -158,6 +165,21 @@
         .warning {
             padding: 15px !important;
             border-left: 0px;
+        }
+    }
+}
+
+.tutor-quiz-attempt-details-wrapper {
+    .back {
+        position: relative;
+        a {
+            font-size: 16px;
+            color: #5B616F;
+            .ttr-previous-line {
+                font-size: 20px;
+                line-height: 0px;
+                color: #1A1B1E;
+            }
         }
     }
 }
