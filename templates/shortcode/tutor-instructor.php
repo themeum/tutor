@@ -33,7 +33,7 @@
 			<div  class="tutor-course-col-<?php esc_html_e( $column_count ); ?>">
 				<div class="tutor-instructor-left-middle">
 					<div class="tutor-instructor-profile-photo">
-						<img src="<?php echo esc_url( get_avatar_url( $instructor->ID ) ); ?> alt="instructor-image">
+						<img src="<?php echo esc_url( get_avatar_url( $instructor->ID ) ); ?>" alt="instructor-image">
 					</div>
 					<div class="tutor-instructor-content">
 						<h4 class="tutor-instructor-name"><?php esc_html_e( $instructor->display_name ); ?></h4>
