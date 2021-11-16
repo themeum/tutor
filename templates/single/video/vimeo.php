@@ -26,16 +26,14 @@ if ( preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\
 
 do_action('tutor_lesson/single/before/video/vimeo');
 ?>
-    <div class="tutor-single-lesson-segment tutor-lesson-video-wrap">
-
-		<?php
-		    if ($disable_default_player_vimeo){
-		?>
-            <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-        <?php
-            } else {
-        ?>
-            <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media" allowfullscreen allowtransparency allow="autoplay"></iframe>
-		<?php } ?>
+    <?php
+        if ($disable_default_player_vimeo){
+    ?>
+        <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    <?php
+        } else {
+    ?>
+        <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media" allowfullscreen allowtransparency allow="autoplay"></iframe>
+    <?php } ?>
 <?php
 do_action('tutor_lesson/single/after/video/vimeo'); ?>

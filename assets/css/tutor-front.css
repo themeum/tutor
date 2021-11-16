@@ -7789,6 +7789,7 @@ Instructor customize filters styles
   width: calc(100% - 150px);
   height: 100%;
   position: absolute;
+  border: 0px;
 }
 
 .tutor-single-lesson-wraper .tutor-single-entry-content .course-players .tutor-lesson-prev,
