@@ -359,6 +359,10 @@
     }
     .tutor-courses.pp-left-middle {
       .tutor-instructor-left-middle {
+        img {
+          width: 96px;
+          height: 96px;
+        }
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
