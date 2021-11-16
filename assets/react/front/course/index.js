@@ -1,3 +1,5 @@
+import './_spotlight';
+
 window.jQuery(document).ready($=>{
 
     // Login require on enrol purchase click
