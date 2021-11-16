@@ -8432,6 +8432,7 @@ Instructor customize filters styles
   padding: 15px 20px;
 }
 
+<<<<<<< HEAD
 .tutor-course-spotlight-wrapper .tutor-default-tab .tab-body .tab-body-item .tutor-conversation .tutor-comments-list .tutor-single-comment .tutor-actual-comment:before {
   content: '';
   display: block;
@@ -8447,6 +8448,15 @@ Instructor customize filters styles
   -webkit-transform: rotate(45deg);
           transform: rotate(45deg);
   border-radius: 0 0 0 3px;
+=======
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle img {
+  width: 96px;
+  height: 96px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {
+  margin: 0;
+>>>>>>> v2
 }
 
 .tutor-course-spotlight-wrapper .tutor-default-tab .tab-body .tab-body-item .tutor-conversation .tutor-comments-list .tutor-single-comment .tutor-actual-comment .tutor-comment-author span:first-child {

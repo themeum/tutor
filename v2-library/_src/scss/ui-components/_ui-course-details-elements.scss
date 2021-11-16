@@ -220,14 +220,6 @@
 			.tutor-course-sidebar-card-pick-plan-label {
 				input[type='radio'] {
 					top: 25px;
-					&:checked {
-						~ .tutor-course-sidebar-card-pick-plan-input {
-							.input-plans-details {
-								max-height: 162px;
-								// display: block;
-							}
-						}
-					}
 				}
 			}
 			.tutor-course-sidebar-card-pick-plan-input {
@@ -244,11 +236,12 @@
 					padding-left: 40px;
 				}
 				.input-plan-details {
-					margin-top: 17px;
 					max-height: 0;
-					// display: none;
 					overflow: hidden;
 					transition: max-height 0.25s linear;
+					> *:first-child {
+						margin-top: 17px;
+					}
 				}
 			}
 		}
