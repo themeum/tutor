@@ -45,7 +45,7 @@
 
 <div class="tutor-course-sidebar-card">
     <!-- Course Entry -->
-    <div class="tutor-course-sidebar-card-body tutor-p-30">
+    <div class="tutor-course-sidebar-card-body tutor-p-30 <?php echo !is_user_logged_in() ? 'tutor-course-entry-box-login' : ''; ?>">
         <?php 
             if($is_enrolled) {
                 // The user is enrolled anyway. No matter manual, free, purchased, woocommerce, edd, membership
@@ -129,7 +129,7 @@
                 } else if ($is_purchasable && $price) {
                     if ($tutor_course_sell_by){
                         // Load template based on monetization option
-                        tutor_load_template('single.course.add-to-cart-'.$tutor_course_sell_by, array('button_class' => ''));
+                        tutor_load_template('single.course.add-to-cart-'.$tutor_course_sell_by);
                     } else if ($is_public) {
                         // Get the first content url
                         $first_lesson_url = tutor_utils()->get_course_first_lesson(get_the_ID(), tutor()->lesson_post_type);
@@ -142,6 +142,7 @@
                         <?php
                     } 
                 } else {
+                    ob_start();
                     ?>
                     <div class="tutor-course-sidebar-card-pricing tutor-bs-d-flex align-items-end tutor-bs-justify-content-between">
                         <div>
@@ -162,6 +163,7 @@
                         <?php _e('Free acess this course', 'tutor'); ?>
                     </div>
                     <?php
+                    echo apply_filters( 'tutor/course/single/entry-box/free', ob_get_clean(), get_the_ID() );
                 }
             }
         ?>
@@ -190,43 +192,8 @@
     </div>
 </div>
 
-<?php if(!is_user_logged_in()): ?>
-    <div class="tutor-login-modal tutor-modal tutor-is-sm">
-        <span class="tutor-modal-overlay"></span>
-        <button data-tutor-modal-close class="tutor-modal-close">
-            <span class="las la-times"></span>
-        </button>
-        <div class="tutor-modal-root">
-            <div class="tutor-modal-inner">
-                <div class="tutor-modal-body">
-                    <h3 class="tutor-modal-title tutor-mb-30">Hi, Welcome back!</h3>
-                    <form action="#">
-                        <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-20">
-                            <input type="text" class="tutor-form-control" placeholder="Username or Email Id"/>
-                        </div>
-                        <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-30">
-                            <input type="password" class="tutor-form-control" placeholder="Password"/>
-                        </div>
-                        <div class="row align-items-center tutor-mb-30">
-                            <div class="col">
-                            <div class="tutor-form-check">
-                                <input id="login-agmnt-1" type="checkbox" class="tutor-form-check-input" name="login-agmnt-1" />
-                                <label htmlFor="login-agmnt-1">Keep me signed in</label>
-                            </div>
-                            </div>
-                            <div class="col-auto">
-                                <a href="#">Forgot?</a>
-                            </div>
-                        </div>
-                        <button type="submit" class="tutor-btn is-primary tutor-is-block">
-                            Sign In
-                        </button>
-                        <div class="tutor-text-center tutor-mt-15">
-                            Don’t have an account? <a href="#">Registration Now</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
+<?php 
+    if(!is_user_logged_in()){
+        tutor_load_template_from_custom_path(tutor()->path . '/views/modal/login.php');
+    }
+?>
