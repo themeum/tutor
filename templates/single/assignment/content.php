@@ -17,7 +17,8 @@ $is_submitting = tutor_utils()->is_assignment_submitting(get_the_ID());
 $post_id = get_the_ID();
 $user_id = get_current_user_id();
 $assignment_comment = tutor_utils()->get_single_comment_user_post_id($post_id, $user_id);
-$submitted_assignment = tutor_utils()->get_assignment_submit_info( $assignment_submitted_id );
+//$submitted_assignment = tutor_utils()->get_assignment_submit_info( $assignment_submitted_id );
+$submitted_assignment = tutor_utils()->is_assignment_submitted(get_the_ID());
 if ($assignment_comment != false) {
 	$submitted = $assignment_comment->comment_approved;
 	$submitted == 'submitted' ? $is_submitted = true : '';
@@ -90,7 +91,7 @@ if ($assignment_comment != false) {
 			$remaining= $now - $remaining_time;
 
 		?>
-
+		<?php if (!$submitted_assignment) { ?>
 		<div class="tutor-assignment-meta-info d-flex justify-content-between tutor-mt-25 tutor-mt-sm-35 tutor-py-15 tutor-py-sm-22">
 			<div class="tutor-assignment-detail-info d-flex">
 				<div class="tutor-assignment-duration">
@@ -131,6 +132,7 @@ if ($assignment_comment != false) {
 				</div>
 			</div>
 		</div>
+		<?php } ?>
 		<?php
 		/*
 		*time_duration[value]==0 means no limit
@@ -153,7 +155,7 @@ if ($assignment_comment != false) {
 			endif;
 		endif;
 		?>
-		<?php if (!$is_submitting && !submitted_assignment){ ?>
+		<?php if (!$is_submitting && !$submitted_assignment){ ?>
 		<div class="tutor-time-out-assignment-details tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
 			<div class="tutor-to-assignment tutor-pt-30 tutor-pt-sm-40 has-show-more">
 
@@ -221,19 +223,21 @@ if ($assignment_comment != false) {
 								</div>
 								<div class="tutor-attachment-files tutor-mt-12">
 									<div class="tutor-assignment-upload-btn tutor-mt-10 tutor-mt-md-0">
-										<label for="tutor-assignment-file-upload">
-											<input type="file" id="tutor-assignment-file-upload" name="attached_assignment_files[]" multiple>
-											<a class="tutor-btn tutor-btn-primary tutor-btn-md">
-												<?php _e('Choose file', 'tutor'); ?>
-											</a>
-										</label>
+										<form>
+											<label for="tutor-assignment-file-upload">
+												<input type="file" id="tutor-assignment-file-upload" name="attached_assignment_files[]" multiple>
+												<a class="tutor-btn tutor-btn-primary tutor-btn-md">
+													<?php _e('Choose file', 'tutor'); ?>
+												</a>
+											</label>
+										</form>
 									</div>
 									<div class="tutor-input-type-size">
 										<p class="text-regular-small color-text-subsued">
-										<?php _e('File Support:', 'tutor'); ?> <span class="color-text-primary">jpg, .jpeg,. gif, or .png.</span> no text on the image.
+											<?php _e('File Support: ', 'tutor'); ?><span class="color-text-primary"><?php _e('jpg, .jpeg,. gif, or .png.', 'tutor'); ?></span><?php _e(' no text on the image.', 'tutor'); ?>
 										</p>
 										<p class="text-regular-small color-text-subsued tutor-mt-7">
-										<?php _e('Total File Size: Max', 'tutor'); ?> <span class="color-text-primary"><?php echo $file_upload_limit; ?>MB</span>
+											<?php _e('Total File Size: Max', 'tutor'); ?> <span class="color-text-primary"><?php echo $file_upload_limit; ?><?php _e('MB', 'tutor'); ?></span>
 										</p>
 									</div>
 								</div>
@@ -284,11 +288,11 @@ if ($assignment_comment != false) {
 			<?php
 		} else {
 
-			$submitted_assignment = tutor_utils()->is_assignment_submitted(get_the_ID());
+			
 			if ($submitted_assignment) {
 				$is_reviewed_by_instructor = get_comment_meta($submitted_assignment->comment_ID, 'evaluate_time', true);
 
-				if ($is_reviewed_by_instructor) {
+				
 					$assignment_id = $submitted_assignment->comment_post_ID;
 					$submit_id = $submitted_assignment->comment_ID;
 
@@ -296,11 +300,6 @@ if ($assignment_comment != false) {
 					$pass_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'pass_mark');
 					$given_mark = get_comment_meta($submitted_assignment->comment_ID, 'assignment_mark', true);
 			?>
-
-					<?php ob_start(); ?>
-					<div class="tutor-assignment-title text-medium-h4 color-text-primary">
-						<?php the_title(); ?>
-					</div>
 					<div class="tutor-assignment-result-table tutor-mt-30 tutor-mb-40">
 						<div class="tutor-ui-table-wrapper">
 							<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
@@ -358,19 +357,27 @@ if ($assignment_comment != false) {
 											</span>
 										</td>
 										<td data-th="Result" class="result">
-											<?php if ($given_mark >= $pass_mark) {
+											<?php 
+												if ($is_reviewed_by_instructor) {
+												if ($given_mark >= $pass_mark) {
 											?>
-												<span class="tutor-badge-label label-warning">
+												<span class="tutor-badge-label label-success">
 													<?php _e('Passed', 'tutor'); ?>
 												</span>
 											<?php
-											} else {
+												} else {
 											?>
 												<span class="tutor-badge-label label-warning">
 													<?php _e('Failed', 'tutor'); ?>
 												</span>
-											<?php
-											} ?>
+											<?php } } ?>
+											<?php 
+												if (!$is_reviewed_by_instructor) { 
+											?>
+											<span class="tutor-badge-label label-danger">
+												<?php _e('Pending', 'tutor'); ?>
+											</span>
+											<?php } ?>
 										</td>
 									</tr>
 								</tbody>
@@ -378,9 +385,7 @@ if ($assignment_comment != false) {
 						</div>
 					</div> <!-- assignment-result-table -->
 
-					<?php echo apply_filters('tutor_assignment/single/results/after', ob_get_clean(), $submit_id, $assignment_id); ?>
-
-				<?php } ?>
+				
 
 				<?php 
 					if ($is_reviewed_by_instructor) {
@@ -415,26 +420,25 @@ if ($assignment_comment != false) {
 		
 								if (tutor_utils()->count($attached_files)) {
 						?>
-						<div class="tutor-input-files tutor-mt-20 tutor-mt-sm-40">
+						<div class="tutor-attachment-files submited-files d-flex tutor-mt-20 tutor-mt-sm-40">
 							<?php
 								$upload_dir = wp_get_upload_dir();
 								$upload_baseurl = trailingslashit(tutor_utils()->array_get('baseurl', $upload_dir));
-								foreach ($attached_files as $attached_file) {
-			
-							?>
-							<div class="tutor-instructor-card">
-								<div class="tutor-icard-content">
-									<div class="text-regular-body color-text-title">
-										<?php echo tutor_utils()->array_get('name', $attached_file); ?>
-									</div>
-									<div class="text-regular-small">Size: 15.56 KB</div>
-								</div>
-								<div class="tutor-avatar tutor-is-xs flex-center">
-									<a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
-										<span class="ttr-download-line color-design-brand"></span>
-									</a>
-								</div>
-							</div>
+									foreach ($attached_files as $attached_file) {
+								?>
+										<div class="tutor-instructor-card">
+											<div class="tutor-icard-content">
+												<div class="text-regular-body color-text-title">
+													<?php echo tutor_utils()->array_get('name', $attached_file); ?>
+												</div>
+												<div class="text-regular-small">Size: <?php echo tutor_utils()->array_get('size', $attached_file); ?></div>
+											</div>
+											<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
+												<a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
+													<span class="ttr-download-line color-design-brand"></span>
+												</a>
+											</div>
+										</div>
 							<?php }  ?>
 						</div>
 						<?php } } ?>
@@ -459,12 +463,17 @@ if ($assignment_comment != false) {
 								the_content();
 							?>
 						</div>
+						<?php
+							$content = get_the_content();
+							if (strlen($content) !== 0){
+						?>
 						<div class="tutor-show-more-btn tutor-pt-12">
 							<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
 								<span class="btn-icon ttr-plus-filled color-design-brand" id="no-icon"></span>
 								<span class="color-text-primary"><?php _e('Show More', 'tutot'); ?></span>
 							</button>
 						</div>
+						<?php } ?>
 					</div>
 				</div>
 

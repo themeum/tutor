@@ -8651,6 +8651,8 @@ Instructor customize filters styles
   border-radius: 6px;
   cursor: pointer;
   min-width: unset;
+  display: grid;
+  grid-template-columns: auto 40px;
 }
 
 #tutor-assignment-wrap .tutor-instructor-card:hover .tutor-avatar {
@@ -8792,6 +8794,12 @@ Instructor customize filters styles
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
 }
 
+#tutor-assignment-wrap .tutor-instructor-note {
+  background-color: #e9edfb;
+  border: 1px solid #95aaed;
+  border-radius: 6px;
+}
+
 #tutor-assignment-wrap.tutor-assignment-results .tutor-instructor-note {
   background-color: #e9edfb;
   border: 1px solid #95aaed;
@@ -8821,6 +8829,18 @@ Instructor customize filters styles
   bottom: 0px;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0)), color-stop(15.41%, rgba(255, 255, 255, 0)), to(#ffffff));
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
+}
+
+.submited-files > div:not(:last-child) {
+  margin-right: 15px;
+}
+
+.submited-files .tutor-instructor-card {
+  width: 100%;
+}
+
+.submited-files .tutor-instructor-card .tutor-icard-content {
+  padding-right: 10px;
 }
 
 body.wp-admin .tutor-qna-single-wrapper {
