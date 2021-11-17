@@ -44,7 +44,7 @@ if (is_array($attachments) && count($attachments)){
     </div>
 <?php } else {
     tutor_utils()->tutor_empty_state();
-    echo "<p class='text-center tutor-text-danger'>"."No Attchment Found"."</p>";
+    echo "<p class='text-center color-text-primary'>"."No Attchment Found"."</p>";
 }
 
 do_action('tutor_global/after/attachments'); ?>
