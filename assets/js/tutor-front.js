@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
   /* sidetab tab position */
   var topBar = document.querySelector('.tutor-single-page-top-bar');
   var sideBar = document.querySelector('.tutor-lesson-sidebar');
-  sideBar.style.top = topBar.clientHeight + 'px';
+  sideBar ? sideBar.style.top = topBar.clientHeight + 'px' : 0;
   /* sidetab tab position */
 
   /* sidetab tab */
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 
   var showMoreBtn = document.querySelector('.tutor-show-more-btn button');
-  showMoreBtn.addEventListener('click', showMore);
+  showMoreBtn ? showMoreBtn.addEventListener('click', showMore) : 0;
 
   function showMore() {
     var lessText = document.getElementById("short-text");
@@ -120,6 +120,48 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 /***/ }),
 
+/***/ "./assets/react/front/course/_wishlist.js":
+/*!************************************************!*\
+  !*** ./assets/react/front/course/_wishlist.js ***!
+  \************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  $(document).on('click', '.tutor-course-wishlist-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var course_id = $that.attr('data-course-id');
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        course_id: course_id,
+        'action': 'tutor_course_add_to_wishlist'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message tutor-m-0');
+      },
+      success: function success(data) {
+        if (data.success) {
+          if (data.data.status === 'added') {
+            $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
+          } else {
+            $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
+          }
+        } else {
+          window.location = data.data.redirect_to;
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message tutor-m-0');
+      }
+    });
+  });
+});
+
+/***/ }),
+
 /***/ "./assets/react/front/course/index.js":
 /*!********************************************!*\
   !*** ./assets/react/front/course/index.js ***!
@@ -130,10 +172,14 @@ document.addEventListener('DOMContentLoaded', function (event) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_spotlight */ "./assets/react/front/course/_spotlight.js");
 /* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_spotlight__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wishlist__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_wishlist */ "./assets/react/front/course/_wishlist.js");
+/* harmony import */ var _wishlist__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wishlist__WEBPACK_IMPORTED_MODULE_1__);
+
 
 window.jQuery(document).ready(function ($) {
   // Login require on enrol purchase click
-  $(document).on('click', '.tutor-enrol-require-auth', function (e) {
+  $(document).on('click', '.tutor-course-entry-box-login button, .tutor-course-entry-box-login a', function (e) {
+    console.log('Clicked');
     e.preventDefault();
     $('.tutor-login-modal').addClass('tutor-is-active');
   });
@@ -1193,36 +1239,6 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-topics-title h3 .toggle-information-icon', function (e) {
     $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
     e.stopPropagation();
-  });
-  $(document).on('click', '.tutor-course-wishlist-btn', function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var course_id = $that.attr('data-course-id');
-    $.ajax({
-      url: _tutorobject.ajaxurl,
-      type: 'POST',
-      data: {
-        course_id: course_id,
-        'action': 'tutor_course_add_to_wishlist'
-      },
-      beforeSend: function beforeSend() {
-        $that.addClass('updating-icon');
-      },
-      success: function success(data) {
-        if (data.success) {
-          if (data.data.status === 'added') {
-            $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
-          } else {
-            $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
-          }
-        } else {
-          window.location = data.data.redirect_to;
-        }
-      },
-      complete: function complete() {
-        $that.removeClass('updating-icon');
-      }
-    });
   });
   /**
    * Check if lesson has classic editor support

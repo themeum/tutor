@@ -3298,7 +3298,7 @@ class Utils {
 							echo $current_rating; 
 						
 							if(!($total_count===null)) {
-								echo '('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor'));
+								echo '&nbsp;('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor')).')';
 							}
 						?> 
 					</div>

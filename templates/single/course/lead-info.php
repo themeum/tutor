@@ -24,18 +24,10 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
         if ( ! $disable){
             ?>
             <div class="tutor-course-details-ratings">
-                <div class="tutor-ratings">
-                    <?php
+                <?php 
                     $course_rating = tutor_utils()->get_course_rating();
-                    tutor_utils()->star_rating_generator($course_rating->rating_avg);
-                    ?>
-                    <span class="tutor-single-rating-count">
-                        <?php
-                            echo $course_rating->rating_avg;
-                            echo '<i>('.$course_rating->rating_count.')</i>';
-                        ?>
-                    </span>
-                </span>
+                    tutor_utils()->star_rating_generator_v2($course_rating->rating_avg, $course_rating->rating_count, true); 
+                ?>
             </div>
             <?php 
         } 
@@ -69,11 +61,11 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
             </span>
         </div>
         <div class="tutor-course-details-action-btns tutor-mt-10 tutor-mt-sm-0">
-            <a href="#" class="action-btn text-regular-body color-text-primary">
-                <span class="ttr-fav-line-filled"></span>Wishlist
+            <a href="#" class="action-btn text-regular-body color-text-primary tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
+                <i class="ttr-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
             <a href="#" class="action-btn text-regular-body color-text-primary">
-                <span class="ttr-share-filled"></span>Share
+                <span class="ttr-share-filled"></span> <?php _e('Share', 'tutor'); ?>
             </a>
         </div>
     </div>
