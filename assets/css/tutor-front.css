@@ -1100,16 +1100,12 @@ body {
   line-height: 21px;
 }
 */
-.tutor-segment-title, .tutor-single-course-segment .tutor-segment-title {
+.tutor-segment-title {
   font-size: 18px;
   line-height: 23px;
   font-weight: 500;
   margin-bottom: 13px;
   color: #000;
-}
-
-.tutor-single-course-segment {
-  margin-bottom: 45px;
 }
 
 .tutor-full-width-course-top h4,
@@ -4430,6 +4426,7 @@ table.course-single-gradebooks a {
 
 .tutor-single-course-wrapper > div {
   float: left;
+  width: 100%;
 }
 
 @media (min-width: 992px) {
@@ -8598,6 +8595,9 @@ Instructor customize filters styles
   background-color: #ffffff;
   border-radius: 6px;
   cursor: pointer;
+  min-width: unset;
+  display: grid;
+  grid-template-columns: auto 40px;
 }
 
 #tutor-assignment-wrap .tutor-instructor-card:hover .tutor-avatar {
@@ -8616,23 +8616,6 @@ Instructor customize filters styles
 
 #tutor-assignment-wrap .tutor-instructor-card .tutor-avatar span {
   font-size: 30px;
-}
-
-#tutor-assignment-wrap .tutor-input-files > div:not(:last-child) {
-  margin-right: 15px;
-}
-
-@media (max-width: 1199px) {
-  #tutor-assignment-wrap .tutor-input-files {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-  }
-  #tutor-assignment-wrap .tutor-input-files > div:not(:last-child) {
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
 }
 
 #tutor-assignment-wrap.tutor-course-assignment-details {
@@ -8666,7 +8649,7 @@ Instructor customize filters styles
 }
 
 #tutor-assignment-wrap.tutor-time-out-assignment .tutor-time-out-assignment-details .tutor-to-assignment:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 120px;
@@ -8675,30 +8658,46 @@ Instructor customize filters styles
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
 }
 
-#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-as-body {
+#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body {
   max-width: 730px;
 }
 
-#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-as-body .tutor-as-attachment {
+#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body .tutor-assignment-attachment {
   background-color: #eff1f7;
   border-radius: 6px;
 }
 
-#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-as-body .tutor-as-attachment .tutor-input-type-size span {
+#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body .tutor-assignment-attachment .tutor-input-type-size span {
   font-weight: 500;
 }
 
-@media (max-width: 767px) {
-  #tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-as-body .tutor-as-attachment .tutor-attachment-files {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
+#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body .tutor-assignment-attachment .tutor-attachment-files {
+  display: grid;
+  grid-template-columns: 180px auto;
+}
+
+@media (max-width: 767.98px) {
+  #tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body .tutor-assignment-attachment .tutor-attachment-files {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
 
-#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-as-body .tutor-as-attachment .tutor-attachment-files .tutor-browse-input {
-  max-width: 325px;
+#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body .tutor-assignment-attachment .tutor-attachment-files .tutor-assignment-upload-btn input,
+#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body .tutor-assignment-attachment .tutor-attachment-files .tutor-assignment-upload-btn input#tutor-assignment-file-upload {
+  display: none;
+}
+
+#tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body .tutor-assignment-attachment .tutor-asisgnment-upload-file-preview {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  #tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-submission .tutor-assignment-body .tutor-assignment-attachment .tutor-asisgnment-upload-file-preview {
+    grid-template-columns: 1fr;
+  }
 }
 
 #tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-description-details .tutor-ad-body {
@@ -8706,7 +8705,7 @@ Instructor customize filters styles
 }
 
 #tutor-assignment-wrap.tutor-submit-assignment .tutor-assignment-description-details .tutor-ad-body:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 120px;
@@ -8731,13 +8730,19 @@ Instructor customize filters styles
 }
 
 #tutor-assignment-wrap.tutor-assignment-result-pending .tutor-assignment-description-details .tutor-ad-body:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 120px;
   bottom: 0px;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0)), color-stop(15.41%, rgba(255, 255, 255, 0)), to(#ffffff));
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
+}
+
+#tutor-assignment-wrap .tutor-instructor-note {
+  background-color: #e9edfb;
+  border: 1px solid #95aaed;
+  border-radius: 6px;
 }
 
 #tutor-assignment-wrap.tutor-assignment-results .tutor-instructor-note {
@@ -8762,13 +8767,25 @@ Instructor customize filters styles
 }
 
 #tutor-assignment-wrap.tutor-assignment-results .tutor-assignment-description-details .tutor-ad-body:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 120px;
   bottom: 0px;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(1.31%, rgba(255, 255, 255, 0)), color-stop(15.41%, rgba(255, 255, 255, 0)), to(#ffffff));
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 1.31%, rgba(255, 255, 255, 0) 15.41%, #ffffff 100%);
+}
+
+.submited-files > div:not(:last-child) {
+  margin-right: 15px;
+}
+
+.submited-files .tutor-instructor-card {
+  width: 100%;
+}
+
+.submited-files .tutor-instructor-card .tutor-icard-content {
+  padding-right: 10px;
 }
 
 body.wp-admin .tutor-qna-single-wrapper {

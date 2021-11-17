@@ -23,7 +23,7 @@ if ( empty($target_audience)){
 if (is_array($target_audience) && count($target_audience)){
 	?>
 
-	<div class="tutor-single-course-segment  tutor-course-target-audience-wrap">
+	<div class="tutor-mt-40">
 
         <h4 class="tutor-segment-title"><?php _e('Target Audience', 'tutor'); ?></h4>
 
