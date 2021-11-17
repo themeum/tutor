@@ -20,6 +20,7 @@ $feedback_mode = tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode', 0);
 
 $attempt_remaining = $attempts_allowed - $attempted_count;
 $quiz_answers = array();
+if ($attempted_count !== 0) {
 ?>
 
 <div id="tutor-quiz-image-matching-choice" class="tutor-quiz-wrap tutor-quiz-wrap-<?php the_ID(); ?>">
@@ -87,28 +88,11 @@ $quiz_answers = array();
 			ob_start();
 			tutor_load_template('single.quiz.previous-attempts', compact('previous_attempts', 'quiz_id'));
 			$previous_attempts_html = ob_get_clean();
-            echo apply_filters('tutor_quiz/previous_attempts_html', $previous_attempts_html, $previous_attempts, $quiz_id);
+			echo $previous_attempts_html;
+           // echo apply_filters('tutor_quiz/previous_attempts_html', $previous_attempts_html, $previous_attempts, $quiz_id);
 
 			do_action('tutor_quiz/previous_attempts/after', $previous_attempts, $quiz_id);
-		} ?>
-	<?php
-		if ($attempt_remaining > 0 || $attempts_allowed == 0 && $previous_attempts) {
-		do_action('tuotr_quiz/start_form/before', $quiz_id);
-	?>
-	<div class="tutor-quiz-btn-grp tutor-mt-30">
-		<form id="tutor-start-quiz" method="post">
-			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-
-			<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-			<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
-
-			<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn" name="start_quiz_btn" value="start_quiz">
-				<?php _e( 'Start Quiz', 'tutor' ); ?>
-			</button>
-		</form>
-	</div>
-	<?php } ?>
-	<?php
+		} 
 	}
 
 
@@ -117,6 +101,7 @@ $quiz_answers = array();
     do_action('tutor_quiz/body/after', $quiz_id);
 	?>
 </div>
+<?php } ?>
 
 <script>
 	window.tutor_quiz_context = '<?php echo strrev(base64_encode(json_encode($quiz_answers))); ?>';

@@ -31,7 +31,7 @@ do_action('tutor_quiz/single/before/top');
 	if (!$is_started_quiz && $attempted_count == 0) {
 ?>
 
-<div class="tutor-start-quiz-wrapper mr-auto tutor-p-50">
+<div class="tutor-start-quiz-wrapper tutor-p-50">
     <div class="tutor-start-quiz-title tutor-pb-28">
         <p class="text-regular-body color-text-primary tutor-pb-6"><?php _e('Quiz', 'tutor'); ?></p>
         <h6 class="text-medium-h4 color-text-primary"><?php echo get_the_title(); ?></h6>
