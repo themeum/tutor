@@ -231,9 +231,12 @@ $table_2_columns = include __DIR__ . '/contexts.php';
                             ?>
                             <td data-th="<?php echo $column; ?>">
                                 <span class="text-medium-caption color-text-primary">
-                                    <?php 
+                                    <?php
+                                        $pass_marks = ($total_marks * $passing_grade) / 100;
+                                        echo number_format_i18n($pass_marks, 2);
+
                                         $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
-                                        echo $pass_mark_percent.'%';
+                                        echo '('.$pass_mark_percent.'%)';
                                     ?>
                                 </span>
                             </td>
