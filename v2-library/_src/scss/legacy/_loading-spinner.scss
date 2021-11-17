@@ -23,7 +23,7 @@
 		margin-right: 10px;
 	}
 	
-	&:not(.tutor-no-margin) {
+	&:not(.tutor-m-0):not(.tutor-mr-0) {
 		&:before{
 			margin-right: 8px;
 		}

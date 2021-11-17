@@ -13,7 +13,7 @@
         <div class="tutor-modal-inner">
             <div class="tutor-modal-body tutor-text-center">
                 <input type="hidden" name="course_id" value="<?php echo $course_id; ?>"> 
-                <input type="hidden" name="review_id" value=""/>
+                <input type="hidden" name="review_id" value="<?php echo isset($review_id) ? $review_id : ''; ?>"/>
                 <input type="hidden" name="action" value="tutor_place_rating"/>   
 
                 <div class="tutor-star-rating-container">

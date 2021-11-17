@@ -24,20 +24,9 @@ do_action('tutor_course/single/before/topics');
 
 <div class="tutor-course-topics-header">
 	<div class="tutor-course-topics-header-left">
-		<h4 class="tutor-segment-title"><?php _e('Topics for this course', 'tutor'); ?></h4>
-	</div>
-	<div class="tutor-course-topics-header-right">
-		<?php
-		$tutor_lesson_count = tutor_utils()->get_lesson_count_by_course($course_id);
-		$tutor_course_duration = get_tutor_course_duration_context($course_id);
-
-		if($tutor_lesson_count) {
-			echo '<span>' . $tutor_lesson_count . ' ' . __('Lessons', 'tutor') . '</span>';
-		}
-		if($tutor_course_duration){
-			echo "<span>$tutor_course_duration</span>";
-		}
-		?>
+		<h4 class="tutor-segment-title">
+			<?php _e('Topics for this course', 'tutor'); ?>
+		</h4>
 	</div>
 </div>
 

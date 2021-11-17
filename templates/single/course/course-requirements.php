@@ -22,19 +22,16 @@ if ( empty($course_requirements)){
 
 if (is_array($course_requirements) && count($course_requirements)){
 	?>
-
-	<div class="tutor-single-course-segment  tutor-course-requirements-wrap">
-
+	<div class="tutor-mt-40">
 		<div class="course-requirements-title">
 			<h4 class="tutor-segment-title"><?php _e('Requirements', 'tutor'); ?></h4>
 		</div>
-
 		<div class="tutor-course-requirements-content">
 			<ul class="tutor-course-requirements-items tutor-custom-list-style">
 				<?php
-				foreach ($course_requirements as $requirement){
-					echo "<li>{$requirement}</li>";
-				}
+					foreach ($course_requirements as $requirement){
+						echo "<li>{$requirement}</li>";
+					}
 				?>
 			</ul>
 		</div>

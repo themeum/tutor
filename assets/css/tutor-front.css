@@ -1100,16 +1100,12 @@ body {
   line-height: 21px;
 }
 */
-.tutor-segment-title, .tutor-single-course-segment .tutor-segment-title {
+.tutor-segment-title {
   font-size: 18px;
   line-height: 23px;
   font-weight: 500;
   margin-bottom: 13px;
   color: #000;
-}
-
-.tutor-single-course-segment {
-  margin-bottom: 45px;
 }
 
 .tutor-full-width-course-top h4,
@@ -4430,6 +4426,7 @@ table.course-single-gradebooks a {
 
 .tutor-single-course-wrapper > div {
   float: left;
+  width: 100%;
 }
 
 @media (min-width: 992px) {

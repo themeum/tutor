@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     /* sidetab tab position */
     const topBar = document.querySelector('.tutor-single-page-top-bar');
     const sideBar = document.querySelector('.tutor-lesson-sidebar');
-    sideBar.style.top = topBar.clientHeight + 'px';
+    sideBar ? sideBar.style.top = topBar.clientHeight + 'px' : 0;
     /* sidetab tab position */
 
     /* sidetab tab */
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     /* Show More Text */
     const showMoreBtn = document.querySelector('.tutor-show-more-btn button');
-    showMoreBtn.addEventListener('click', showMore)
+    showMoreBtn ? showMoreBtn.addEventListener('click', showMore) : 0;
 
     function showMore() {
         let lessText = document.getElementById("short-text");
