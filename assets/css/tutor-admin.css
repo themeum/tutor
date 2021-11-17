@@ -6826,6 +6826,31 @@ li.tutor-option-nav-item h4 {
   max-width: 100%;
 }
 
+.post-type-courses.taxonomy-course-tag .button,
+.post-type-courses.taxonomy-course-tag select {
+  border-radius: 6px;
+}
+
+.post-type-courses.taxonomy-course-tag input[type='text'],
+.post-type-courses.taxonomy-course-tag input[type='search'],
+.post-type-courses.taxonomy-course-tag textarea {
+  border-radius: 6px;
+}
+
+.post-type-courses.taxonomy-course-tag input[type='text']:not(:focus),
+.post-type-courses.taxonomy-course-tag input[type='search']:not(:focus),
+.post-type-courses.taxonomy-course-tag textarea:not(:focus) {
+  border-color: #c0c3cb;
+}
+
+.post-type-courses.taxonomy-course-tag .form-wrap p {
+  margin-top: 16px;
+}
+
+.post-type-courses.taxonomy-course-tag table.wp-list-table {
+  border-radius: 6px;
+}
+
 .monetization-fees.is-disable .tutor-option-field-row:nth-child(2), .monetization-fees.is-disable .tutor-option-field-row:nth-child(3) {
   position: relative;
   cursor: not-allowed;
