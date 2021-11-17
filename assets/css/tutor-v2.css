@@ -4846,7 +4846,7 @@
   color: #41454f;
 }
 
-.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle {
+.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item, .tutor-default-tab .tab-header-item-seemore-toggle {
   color: #5b616f;
 }
 
@@ -4874,7 +4874,7 @@
   color: #f44337;
 }
 
-.color-design-dark, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
+.color-design-dark, .tutor-default-tab .tab-header-item-seemore-popup .tab-header-item {
   color: #1a1b1e;
 }
 
@@ -5592,7 +5592,7 @@
   line-height: 162%;
 }
 
-.text-regular-caption, .tutor-alert, .tutor-alert .tutor-alert-text, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
+.text-regular-caption, .tutor-alert, .tutor-alert .tutor-alert-text, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item-seemore-popup .tab-header-item {
   font-weight: 400 !important;
   font-size: 15px !important;
   line-height: 160%;
@@ -5652,7 +5652,7 @@
   line-height: 162%;
 }
 
-.text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-default-tab .tab-header-item, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle, .tutor-wp-dashboard-filter-items .tutor-form-label {
+.text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-default-tab .tab-header-item, .tutor-default-tab .tab-header-item-seemore-toggle, .tutor-wp-dashboard-filter-items .tutor-form-label {
   font-weight: 500 !important;
   font-size: 15px !important;
   line-height: 160%;
@@ -8507,7 +8507,7 @@
   padding-right: 6px;
 }
 
-.tutor-py-6, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
+.tutor-py-6, .tutor-default-tab .tab-header-item-seemore-popup .tab-header-item {
   padding-top: 6px;
   padding-bottom: 6px;
 }
@@ -10364,7 +10364,7 @@
   padding-left: 15px;
 }
 
-.tutor-px-15, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
+.tutor-px-15, .tutor-default-tab .tab-header-item-seemore-popup .tab-header-item {
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -20293,8 +20293,8 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   margin-right: 10px;
 }
 
-.tutor-updating-message:before + * {
-  margin-left: 8px;
+.tutor-updating-message:not(.tutor-no-margin):before {
+  margin-right: 8px;
 }
 
 body.tutor-screen-course-builder .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -20382,6 +20382,11 @@ body.tutor-screen-course-builder .select2-container.select2-container--focus .se
 
 body.tutor-screen-course-builder .select2-container .select2-search__field {
   min-width: 1em !important;
+}
+
+.tutorPlayer, .tutorPlayer iframe {
+  max-width: 100%;
+  height: auto;
 }
 
 /**
@@ -24855,7 +24860,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   display: block;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore {
+.tutor-default-tab .tab-header-item-seemore {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -24865,7 +24870,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           align-items: center;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle {
+.tutor-default-tab .tab-header-item-seemore-toggle {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -24875,18 +24880,18 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   cursor: pointer;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle .icon-seemore {
+.tutor-default-tab .tab-header-item-seemore-toggle .icon-seemore {
   -webkit-transform: rotate(-45deg);
           transform: rotate(-45deg);
   -webkit-transition: 100ms;
   transition: 100ms;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle > * {
+.tutor-default-tab .tab-header-item-seemore-toggle > * {
   pointer-events: none;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup {
+.tutor-default-tab .tab-header-item-seemore-popup {
   position: absolute;
   background: #ffffff;
   -webkit-box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
@@ -24897,18 +24902,18 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   right: -3px;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup ul {
+.tutor-default-tab .tab-header-item-seemore-popup ul {
   width: 180px;
   max-height: 190px;
   overflow-y: auto;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup:before {
+.tutor-default-tab .tab-header-item-seemore-popup:before {
   content: '';
   position: absolute;
   width: 10px;
   height: 10px;
-  top: -6px;
+  top: -5px;
   right: 8px;
   background: #fff;
   -webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
@@ -24918,7 +24923,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border-radius: 3px 0 0 0px;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item {
+.tutor-default-tab .tab-header-item-seemore-popup .tab-header-item {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -24929,33 +24934,33 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   transition: 200ms;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item.is-active {
+.tutor-default-tab .tab-header-item-seemore-popup .tab-header-item.is-active {
   /* color/primary/fill/40 */
   background: #e9edfb;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item:hover {
+.tutor-default-tab .tab-header-item-seemore-popup .tab-header-item:hover {
   /* color/primary/fill/40 */
   background: #e9edfb;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-popup .tab-header-item:not(:last-child) {
+.tutor-default-tab .tab-header-item-seemore-popup .tab-header-item:not(:last-child) {
   margin-bottom: 4px;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore .tab-header-item-seemore-popup {
+.tutor-default-tab .tab-header-item-seemore .tab-header-item-seemore-popup {
   opacity: 0;
   visibility: hidden;
   -webkit-transition: 100ms;
   transition: 100ms;
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore.is-active .tab-header-item-seemore-toggle .icon-seemore {
+.tutor-default-tab .tab-header-item-seemore.is-active .tab-header-item-seemore-toggle .icon-seemore {
   -webkit-transform: rotate(0deg);
           transform: rotate(0deg);
 }
 
-.tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore.is-active .tab-header-item-seemore-popup {
+.tutor-default-tab .tab-header-item-seemore.is-active .tab-header-item-seemore-popup {
   opacity: 1;
   visibility: visible;
 }
@@ -25590,11 +25595,24 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   font-size: 21px;
 }
 
-.tutor-course-details-widget .widget-list li [class^='ttr-'] {
+.tutor-course-details-widget ul {
+  margin: 0;
+  padding: 0;
+}
+
+.tutor-course-details-widget-list {
+  margin-top: 16px;
+}
+
+.tutor-course-details-widget-list li [class^='ttr-'] {
   font-size: 26px;
 }
 
-.tutor-course-details-widget .widget-tags .tutor-tag-list li a {
+.tutor-course-details-widget-tags {
+  margin-left: -15px;
+}
+
+.tutor-course-details-widget-tags .tutor-tag-list li a {
   margin-bottom: 15px;
 }
 
@@ -25630,6 +25648,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border: 1px solid #cdcfd5;
   border-radius: 6px;
   max-width: 400px;
+  position: relative;
 }
 
 .tutor-course-sidebar-card-footer {
@@ -25659,6 +25678,145 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   margin-top: -5px;
 }
 
+.tutor-course-sidebar-card-footer-only .tutor-course-sidebar-card-footer {
+  border-top: none;
+}
+
+.tutor-course-sidebar-card-membership-plan {
+  border-color: #d2dbf5;
+}
+
+.tutor-course-sidebar-card-membership-plan-badge {
+  position: absolute;
+  top: -1px;
+  right: 30px;
+}
+
+.tutor-course-sidebar-card-membership-plan-badge.badge-left {
+  right: unset;
+  left: 30px;
+}
+
+.tutor-course-sidebar-card-membership-plan.badge-triangle-ribbon {
+  position: relative;
+}
+
+.tutor-course-sidebar-card-membership-plan.badge-triangle-ribbon::before {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 26px;
+  height: 26px;
+  background: #3e64de;
+  color: #fff;
+  -webkit-clip-path: polygon(100% 0, 0 0, 100% 100%);
+          clip-path: polygon(100% 0, 0 0, 100% 100%);
+  border-radius: 0px 5px 0px 0px;
+  -webkit-transition: 200ms;
+  transition: 200ms;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.91728 2.33301C6.98861 2.33348 7.05929 2.34669 7.12598 2.37202C7.19764 2.39504 7.26396 2.43218 7.32103 2.48125C7.37943 2.53622 7.4259 2.60261 7.45756 2.6763L8.63177 5.06371L11.2884 5.45381C11.3645 5.46335 11.4377 5.4893 11.5029 5.52988C11.565 5.56953 11.6214 5.61743 11.6707 5.67227C11.7124 5.7317 11.744 5.7976 11.7643 5.86732C11.7833 5.93195 11.7931 5.99891 11.7935 6.06627C11.7945 6.13854 11.7784 6.21002 11.7467 6.27497C11.7144 6.33838 11.6722 6.3963 11.6219 6.44662L9.68894 8.33276L10.1454 10.9893C10.1601 11.0601 10.1601 11.1331 10.1454 11.2039C10.1292 11.2731 10.1015 11.339 10.0634 11.3989C10.0277 11.4611 9.97919 11.515 9.92105 11.5569C9.80242 11.6419 9.65634 11.6795 9.51144 11.6623C9.4421 11.6521 9.37565 11.6275 9.31639 11.5901L6.91728 10.3515L4.52596 11.5901C4.4667 11.6275 4.40025 11.6521 4.33091 11.6623C4.18602 11.6795 4.03993 11.6419 3.9213 11.5569C3.86317 11.515 3.81463 11.4611 3.77892 11.3989C3.74081 11.339 3.71311 11.2731 3.69699 11.2039C3.68227 11.1331 3.68227 11.0601 3.69699 10.9893L4.15341 8.33276L2.21266 6.45637C2.16394 6.40236 2.12381 6.34118 2.09368 6.27497C2.06362 6.20917 2.04578 6.13846 2.04102 6.06627C2.04088 5.99695 2.05074 5.92798 2.07027 5.86147C2.09099 5.79005 2.12618 5.72366 2.17365 5.66642C2.21755 5.61005 2.27103 5.56185 2.33164 5.52403C2.39717 5.48522 2.4704 5.46125 2.5462 5.45381L5.20278 5.06371L6.39259 2.66459C6.42351 2.59437 6.46945 2.53179 6.52717 2.48125C6.58425 2.43218 6.65057 2.39504 6.72223 2.37202C6.78461 2.34823 6.85054 2.33505 6.91728 2.33301V2.33301Z' fill='white'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: 90% 10%;
+  background-size: 12px;
+}
+
+.tutor-course-sidebar-card-pick-plan-label {
+  cursor: pointer;
+  display: grid;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+}
+
+.tutor-course-sidebar-card-pick-plan-label input[type='radio'] {
+  position: absolute;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #c0c3cb;
+  z-index: 1;
+}
+
+.tutor-course-sidebar-card-pick-plan-label input[type='radio']:checked ~ .tutor-course-sidebar-card-pick-plan-input {
+  background: #f6f8fd;
+  border-color: #3e64de;
+}
+
+.tutor-course-sidebar-card-pick-plan-label input[type='radio']:checked ~ .tutor-course-sidebar-card-pick-plan-input:before {
+  opacity: 1;
+}
+
+.tutor-course-sidebar-card-pick-plan-input {
+  padding: 16px 20px;
+  display: grid;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  grid-template-columns: 1fr auto;
+  grid-gap: 10px;
+  -webkit-transition: 400ms;
+  transition: 400ms;
+  padding-left: 48px;
+  position: relative;
+}
+
+.tutor-course-sidebar-card-pick-plan-input:before {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 26px;
+  height: 26px;
+  background: #3e64de;
+  color: #fff;
+  -webkit-clip-path: polygon(100% 0, 0 0, 100% 100%);
+          clip-path: polygon(100% 0, 0 0, 100% 100%);
+  border-radius: 0px 5px 0px 0px;
+  -webkit-transition: 200ms;
+  transition: 200ms;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.91728 2.33301C6.98861 2.33348 7.05929 2.34669 7.12598 2.37202C7.19764 2.39504 7.26396 2.43218 7.32103 2.48125C7.37943 2.53622 7.4259 2.60261 7.45756 2.6763L8.63177 5.06371L11.2884 5.45381C11.3645 5.46335 11.4377 5.4893 11.5029 5.52988C11.565 5.56953 11.6214 5.61743 11.6707 5.67227C11.7124 5.7317 11.744 5.7976 11.7643 5.86732C11.7833 5.93195 11.7931 5.99891 11.7935 6.06627C11.7945 6.13854 11.7784 6.21002 11.7467 6.27497C11.7144 6.33838 11.6722 6.3963 11.6219 6.44662L9.68894 8.33276L10.1454 10.9893C10.1601 11.0601 10.1601 11.1331 10.1454 11.2039C10.1292 11.2731 10.1015 11.339 10.0634 11.3989C10.0277 11.4611 9.97919 11.515 9.92105 11.5569C9.80242 11.6419 9.65634 11.6795 9.51144 11.6623C9.4421 11.6521 9.37565 11.6275 9.31639 11.5901L6.91728 10.3515L4.52596 11.5901C4.4667 11.6275 4.40025 11.6521 4.33091 11.6623C4.18602 11.6795 4.03993 11.6419 3.9213 11.5569C3.86317 11.515 3.81463 11.4611 3.77892 11.3989C3.74081 11.339 3.71311 11.2731 3.69699 11.2039C3.68227 11.1331 3.68227 11.0601 3.69699 10.9893L4.15341 8.33276L2.21266 6.45637C2.16394 6.40236 2.12381 6.34118 2.09368 6.27497C2.06362 6.20917 2.04578 6.13846 2.04102 6.06627C2.04088 5.99695 2.05074 5.92798 2.07027 5.86147C2.09099 5.79005 2.12618 5.72366 2.17365 5.66642C2.21755 5.61005 2.27103 5.56185 2.33164 5.52403C2.39717 5.48522 2.4704 5.46125 2.5462 5.45381L5.20278 5.06371L6.39259 2.66459C6.42351 2.59437 6.46945 2.53179 6.52717 2.48125C6.58425 2.43218 6.65057 2.39504 6.72223 2.37202C6.78461 2.34823 6.85054 2.33505 6.91728 2.33301V2.33301Z' fill='white'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: 90% 10%;
+  background-size: 12px;
+  opacity: 0;
+}
+
+.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-label input[type='radio'] {
+  top: 25px;
+}
+
+.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-input {
+  display: block;
+  padding-left: 16px;
+}
+
+.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-input .input-plan {
+  padding: 0 16px;
+  display: grid;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  grid-template-columns: 1fr auto;
+  grid-gap: 10px;
+  -webkit-transition: 400ms;
+  transition: 400ms;
+  position: relative;
+  padding-left: 40px;
+}
+
+.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-input .input-plan-details {
+  max-height: 0;
+  overflow: hidden;
+  -webkit-transition: max-height 0.25s linear;
+  transition: max-height 0.25s linear;
+}
+
+.tutor-course-sidebar-card-pick-plan.has-input-expandable .tutor-course-sidebar-card-pick-plan-input .input-plan-details > *:first-child {
+  margin-top: 17px;
+}
+
 .tutor-course-details-page-main {
   display: grid;
   grid-gap: 30px;
@@ -25671,11 +25829,11 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   }
 }
 
-.tutor-course-details-page .tutor-has-showmore .tutor-showmore-content {
+.tutor-has-showmore .tutor-showmore-content {
   position: relative;
 }
 
-.tutor-course-details-page .tutor-has-showmore .tutor-showmore-content:before {
+.tutor-has-showmore .tutor-showmore-content:before {
   content: '';
   position: absolute;
   width: 100%;
@@ -25685,49 +25843,47 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.0001) 1.31%, rgba(255, 255, 255, 0.721372) 15.41%, #ffffff 100%);
 }
 
-.tutor-course-details-page .tutor-has-showmore .showmore-text {
+.tutor-has-showmore .showmore-text {
   display: none;
 }
 
-.tutor-course-details-page .tutor-has-showmore .btn-showmore {
+.tutor-has-showmore .btn-showmore {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: flex !important;
 }
 
-.tutor-course-details-page .tutor-has-showmore .btn-showless {
+.tutor-has-showmore .btn-showless {
   display: none !important;
 }
 
-.tutor-course-details-page .tutor-has-showmore.is-active .showmore-text {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
+.tutor-has-showmore.is-active .showmore-text {
+  display: block;
 }
 
-.tutor-course-details-page .tutor-has-showmore.is-active .btn-showmore {
+.tutor-has-showmore.is-active .btn-showmore {
   display: none !important;
 }
 
-.tutor-course-details-page .tutor-has-showmore.is-active .btn-showless {
+.tutor-has-showmore.is-active .btn-showless {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: flex !important;
 }
 
-.tutor-course-details-page .tutor-has-showmore.is-active .tutor-showmore-content {
+.tutor-has-showmore.is-active .tutor-showmore-content {
   position: relative;
 }
 
-.tutor-course-details-page .tutor-has-showmore.is-active .tutor-showmore-content:before {
+.tutor-has-showmore.is-active .tutor-showmore-content:before {
   display: none;
 }
 
-.tutor-course-details-page .tutor-has-showmore .tutor-showmore-btn {
+.tutor-has-showmore .tutor-showmore-btn {
   cursor: pointer;
 }
 
-.tutor-course-details-page .tutor-has-showmore .tutor-showmore-btn > * {
+.tutor-has-showmore .tutor-showmore-btn > * {
   pointer-events: none;
 }
 
@@ -25997,6 +26153,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 .tutor-quesanswer-askquestion textarea.tutor-form-control {
@@ -26727,7 +26885,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (max-width: 576px) {
-  .text-regular-body.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label.text-regular-body, table.tutor-ui-table .td-list-item .tutor-form-check label.tutor-accordion-item-body-content, table.tutor-ui-table .td-list-item .tutor-form-check .tutor-course-listing-filter .filter-widget-checkboxes label, .tutor-course-listing-filter .filter-widget-checkboxes table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .text-regular-body.tab-header-item, .tutor-default-tab .tab-header-item.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item, .tutor-default-tab.tutor-tab-has-seemore .text-regular-body.tab-header-item-seemore-toggle, .tutor-default-tab.tutor-tab-has-seemore .tab-header-item-seemore-toggle.tutor-accordion-item-body-content, .tutor-default-tab.tutor-tab-has-seemore .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item-seemore-toggle, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab.tutor-tab-has-seemore label.tab-header-item-seemore-toggle, .color-text-subsued.tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label.color-text-subsued {
+  .text-regular-body.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label.text-regular-body, table.tutor-ui-table .td-list-item .tutor-form-check label.tutor-accordion-item-body-content, table.tutor-ui-table .td-list-item .tutor-form-check .tutor-course-listing-filter .filter-widget-checkboxes label, .tutor-course-listing-filter .filter-widget-checkboxes table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .text-regular-body.tab-header-item, .tutor-default-tab .tab-header-item.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item, .tutor-default-tab .text-regular-body.tab-header-item-seemore-toggle, .tutor-default-tab .tab-header-item-seemore-toggle.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item-seemore-toggle, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item-seemore-toggle, .color-text-subsued.tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label.color-text-subsued {
     font-size: 15px;
   }
   .text-medium-body, select.tutor-form-select {
@@ -26919,6 +27077,293 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   }
 }
 
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow,
+.react-datepicker__navigation-icon::before {
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 3px 3px 0 0;
+  content: "";
+  display: block;
+  height: 9px;
+  position: absolute;
+  top: 6px;
+  width: 9px;
+}
+
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle,
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle {
+  margin-left: -4px;
+  position: absolute;
+  width: 0;
+}
+
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::after,
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::after {
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  position: absolute;
+  border: 8px solid transparent;
+  height: 0;
+  width: 1px;
+  content: "";
+  z-index: -1;
+  border-width: 8px;
+  left: -8px;
+}
+
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::before {
+  border-bottom-color: #aeaeae;
+}
+
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle {
+  top: 0;
+  margin-top: -8px;
+}
+
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::after {
+  border-top: none;
+  border-bottom-color: #f0f0f0;
+}
+
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::after {
+  top: 0;
+}
+
+.react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle::before {
+  top: -1px;
+  border-bottom-color: #aeaeae;
+}
+
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle {
+  bottom: 0;
+  margin-bottom: -8px;
+}
+
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::after {
+  border-bottom: none;
+  border-top-color: #fff;
+}
+
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::after {
+  bottom: 0;
+}
+
+.react-datepicker-popper[data-placement^="top"] .react-datepicker__triangle::before {
+  bottom: -1px;
+  border-top-color: #aeaeae;
+}
+
+.react-datepicker-wrapper {
+  display: inline-block;
+  padding: 0;
+  border: 0;
+  width: 100%;
+}
+
+.react-datepicker {
+  font-family: "Helvetica Neue", helvetica, arial, sans-serif;
+  font-size: 0.8rem;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #aeaeae;
+  border-radius: 0.3rem;
+  display: inline-block;
+  position: relative;
+}
+
+.react-datepicker--time-only .react-datepicker__triangle {
+  left: 35px;
+}
+
+.react-datepicker--time-only .react-datepicker__time-container {
+  border-left: 0;
+}
+
+.react-datepicker--time-only .react-datepicker__time,
+.react-datepicker--time-only .react-datepicker__time-box {
+  border-bottom-left-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}
+
+.react-datepicker__triangle {
+  position: absolute;
+  left: 50px;
+}
+
+.react-datepicker-popper {
+  z-index: 1;
+}
+
+.react-datepicker-popper[data-placement^="bottom"] {
+  padding-top: 10px;
+}
+
+.react-datepicker-popper[data-placement="bottom-end"] .react-datepicker__triangle,
+.react-datepicker-popper[data-placement="top-end"] .react-datepicker__triangle {
+  left: auto;
+  right: 50px;
+}
+
+.react-datepicker-popper[data-placement^="top"] {
+  padding-bottom: 10px;
+}
+
+.react-datepicker-popper[data-placement^="right"] {
+  padding-left: 8px;
+}
+
+.react-datepicker-popper[data-placement^="right"] .react-datepicker__triangle {
+  left: auto;
+  right: 42px;
+}
+
+.react-datepicker-popper[data-placement^="left"] {
+  padding-right: 8px;
+}
+
+.react-datepicker-popper[data-placement^="left"] .react-datepicker__triangle {
+  left: 42px;
+  right: auto;
+}
+
+.react-datepicker__header {
+  text-align: center;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #aeaeae;
+  border-top-left-radius: 0.3rem;
+  padding: 8px 0;
+  position: relative;
+}
+
+.react-datepicker__header--time {
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.react-datepicker__header--time:not(.react-datepicker__header--time--only) {
+  border-top-left-radius: 0;
+}
+
+.react-datepicker__header:not(.react-datepicker__header--has-time-select) {
+  border-top-right-radius: 0.3rem;
+}
+
+.react-datepicker__year-dropdown-container--select,
+.react-datepicker__month-dropdown-container--select,
+.react-datepicker__month-year-dropdown-container--select,
+.react-datepicker__year-dropdown-container--scroll,
+.react-datepicker__month-dropdown-container--scroll,
+.react-datepicker__month-year-dropdown-container--scroll {
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  margin-top: 0;
+  color: #000;
+  font-weight: bold;
+  font-size: 0.944rem;
+}
+
+.react-datepicker-time__header {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.react-datepicker__navigation {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  top: 2px;
+  padding: 0;
+  border: none;
+  z-index: 1;
+  height: 32px;
+  width: 32px;
+  text-indent: -999em;
+  overflow: hidden;
+}
+
+.react-datepicker__navigation--previous {
+  left: 2px;
+}
+
+.react-datepicker__navigation--next {
+  right: 2px;
+}
+
+.react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
+  right: 85px;
+}
+
+.react-datepicker__navigation--years {
+  position: relative;
+  top: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.react-datepicker__navigation--years-previous {
+  top: 4px;
+}
+
+.react-datepicker__navigation--years-upcoming {
+  top: -4px;
+}
+
+.react-datepicker__navigation:hover *::before {
+  border-color: #a6a6a6;
+}
+
+.react-datepicker__navigation-icon {
+  position: relative;
+  top: -1px;
+  font-size: 20px;
+  width: 0;
+}
+
+.react-datepicker__navigation-icon--next {
+  left: -2px;
+}
+
+.react-datepicker__navigation-icon--next::before {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  left: -7px;
+}
+
+.react-datepicker__navigation-icon--previous {
+  right: -2px;
+}
+
+.react-datepicker__navigation-icon--previous::before {
+  -webkit-transform: rotate(225deg);
+          transform: rotate(225deg);
+  right: -7px;
+}
+
 .tutor-react-datepicker .react-datepicker-popper {
   z-index: 99999;
 }
@@ -27104,7 +27549,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   width: 100%;
   height: 40px;
   /* text/medium/body-16px */
-  font-family: 'SF Pro Display', sans-serif;
+  font-family: "SF Pro Display", sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -27302,7 +27747,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-react-datepicker__selects-range .react-datepicker__day:before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0 -50%;
   -webkit-box-shadow: 0px 1px 0px 0px #d2dbf5, 0px -1px 0px 0px #d2dbf5;
@@ -27330,7 +27775,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-react-datepicker__selects-range .react-datepicker__day--range-start::after, .tutor-react-datepicker__selects-range .react-datepicker__day--range-end::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: -1;

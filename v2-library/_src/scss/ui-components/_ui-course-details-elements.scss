@@ -40,16 +40,21 @@
 
 // Course Details - Widgets
 .tutor-course-details-widget {
-	.widget-title {
+	ul {
+		margin: 0;
+		padding: 0;
 	}
-	.widget-list {
+	&-title {
+	}
+	&-list {
+		margin-top: 16px;
 		li [class^='ttr-'] {
 			font-size: 26px;
 		}
 	}
-	.widget-tags {
+	&-tags {
+		margin-left: -15px;
 		.tutor-tag-list li {
-			// margin-bottom: -15px;
 			a {
 				margin-bottom: 15px;
 			}
@@ -96,6 +101,7 @@
 	border: 1px solid $stroke-light-30;
 	border-radius: 6px;
 	max-width: 400px;
+	position: relative;
 	&-body {
 	}
 	&-footer {
@@ -137,7 +143,110 @@
 			margin-top: -5px;
 		}
 	}
-}
+
+	&-header-only {
+	}
+	&-footer-only {
+		// background: #000;
+		.tutor-course-sidebar-card-footer {
+			border-top: none;
+		}
+	}
+	// .tutor-course-sidebar-card-membership-plan
+	&-membership-plan {
+		border-color: $primary-50;
+		&-badge {
+			position: absolute;
+			top: -1px;
+			right: 30px;
+
+			&.badge-left {
+				right: unset;
+				left: 30px;
+			}
+		}
+
+		&.badge-triangle-ribbon {
+			position: relative;
+			&::before {
+				@include triangleRibbonStar;
+			}
+		}
+	}
+
+	// .tutor-course-sidebar-card-pick-plan
+	&-pick-plan {
+		&-fields {
+		}
+		&-label {
+			cursor: pointer;
+			display: grid;
+			align-items: center;
+			position: relative;
+			input[type='radio'] {
+				position: absolute;
+				left: 20px;
+				width: 20px;
+				height: 20px;
+				border: 2px solid $stroke-gray;
+				z-index: 1;
+				&:checked {
+					~ .tutor-course-sidebar-card-pick-plan-input {
+						background: $primary-30;
+						border-color: $primary-main;
+						&:before {
+							opacity: 1;
+						}
+					}
+				}
+			}
+		}
+		&-input {
+			padding: 16px 20px;
+			display: grid;
+			align-items: center;
+			grid-template-columns: 1fr auto;
+			grid-gap: 10px;
+			transition: 400ms;
+			padding-left: 48px;
+			position: relative;
+			&:before {
+				@include triangleRibbonStar;
+				opacity: 0;
+			}
+		}
+		// has-input-expandable
+		&.has-input-expandable {
+			.tutor-course-sidebar-card-pick-plan-label {
+				input[type='radio'] {
+					top: 25px;
+				}
+			}
+			.tutor-course-sidebar-card-pick-plan-input {
+				display: block;
+				padding-left: 16px;
+				.input-plan {
+					padding: 0 16px;
+					display: grid;
+					align-items: center;
+					grid-template-columns: 1fr auto;
+					grid-gap: 10px;
+					transition: 400ms;
+					position: relative;
+					padding-left: 40px;
+				}
+				.input-plan-details {
+					max-height: 0;
+					overflow: hidden;
+					transition: max-height 0.25s linear;
+					> *:first-child {
+						margin-top: 17px;
+					}
+				}
+			}
+		}
+	}
+} // end /.tutor-course-sidebar-card
 
 // Course Details Page
 .tutor-course-details-page {
@@ -155,55 +264,55 @@
 		&-right {
 		}
 	}
+}
 
-	.tutor-has-showmore {
+.tutor-has-showmore {
+	.tutor-showmore-content {
+		position: relative;
+		&:before {
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 62px;
+			bottom: 0;
+			background: linear-gradient(
+				180deg,
+				rgba(255, 255, 255, 0.0001) 1.31%,
+				rgba(255, 255, 255, 0.721372) 15.41%,
+				#ffffff 100%
+			);
+		}
+	}
+	.showmore-text {
+		display: none;
+	}
+	.btn-showmore {
+		display: flex !important;
+	}
+	.btn-showless {
+		display: none !important;
+	}
+	&.is-active {
+		.showmore-text {
+			display: block;
+		}
+		.btn-showmore {
+			display: none !important;
+		}
+		.btn-showless {
+			display: flex !important;
+		}
 		.tutor-showmore-content {
 			position: relative;
 			&:before {
-				content: '';
-				position: absolute;
-				width: 100%;
-				height: 62px;
-				bottom: 0;
-				background: linear-gradient(
-					180deg,
-					rgba(255, 255, 255, 0.0001) 1.31%,
-					rgba(255, 255, 255, 0.721372) 15.41%,
-					#ffffff 100%
-				);
+				display: none;
 			}
 		}
-		.showmore-text {
-			display: none;
-		}
-		.btn-showmore {
-			display: flex !important;
-		}
-		.btn-showless {
-			display: none !important;
-		}
-		&.is-active {
-			.showmore-text {
-				display: flex !important;
-			}
-			.btn-showmore {
-				display: none !important;
-			}
-			.btn-showless {
-				display: flex !important;
-			}
-			.tutor-showmore-content {
-				position: relative;
-				&:before {
-					display: none;
-				}
-			}
-		}
-		.tutor-showmore-btn {
-			cursor: pointer;
-			> * {
-				pointer-events: none;
-			}
+	}
+	.tutor-showmore-btn {
+		cursor: pointer;
+		> * {
+			pointer-events: none;
 		}
 	}
 }
@@ -396,6 +505,7 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		flex-shrink: 0;
 	}
 }
 

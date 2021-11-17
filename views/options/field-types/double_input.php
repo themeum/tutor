@@ -11,7 +11,7 @@ if ( ! isset( $field['fields'] ) || ! is_array( $field['fields'] ) || ! count( $
 }
 ?>
 <div class="tutor-option-field-row">
-	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
+	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input">
 		<div class="d-flex flex-column double-input">

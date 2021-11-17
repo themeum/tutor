@@ -687,10 +687,10 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 		$default_format = 'yy-mm-dd';
 
 		$formats = array(
-			'Y-m-d'  => 'Y-M-d',//'yy-mm-dd',
-			'm/d/Y'  => 'M-d-Y',//'mm-dd-yy',
-			'd/m/Y'  => 'd-M-Y',//'dd-mm-yy',
-			'F j, Y' => 'Y-M-d',
+			'Y-m-d'  => 'Y-M-d',
+			'm/d/Y'  => 'M-d-Y',
+			'd/m/Y'  => 'd-M-Y',
+			'F j, Y' => 'MMMM d, yyyy',
 		);
 		return isset( $formats[ $wp_date_format ] ) ? $formats[ $wp_date_format ] : $default_format;
 	}

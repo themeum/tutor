@@ -10,11 +10,8 @@ window.jQuery(document).ready($ => {
      $('.tutor-course-retake-button').click(function(e) {
         e.preventDefault();
 
-        var button = $(this);
-        var url = button.attr('href');
-        var course_id = button.data('course_id');
-
-        var popup;
+        var url = $(this).attr('href');
+        var course_id = $(this).data('course_id');
 
         var data = {
             title: __('Override Previous Progress', 'tutor'),
@@ -24,15 +21,18 @@ window.jQuery(document).ready($ => {
                     title: __('Reset Data', 'tutor'),
                     class: 'tutor-btn tutor-is-outline tutor-is-default',
 
-                    callback: function() {
-
-                        var button = popup.find('.tutor-button-secondary');
-                        button.prop('disabled', true).append('<img style="margin-left: 7px" src="'+ window._tutorobject.loading_icon_url +'"/>');
+                    callback: function(button) {
 
                         $.ajax({
                             url: window._tutorobject.ajaxurl,
                             type: 'POST',
-                            data: {action: 'tutor_reset_course_progress', course_id: course_id},
+                            data: {
+                                action: 'tutor_reset_course_progress', 
+                                course_id: course_id,
+                            },
+                            beforeSend: ()=>{
+                                button.prop('disabled', true).addClass('tutor-updating-message');
+                            },
                             success: function(response) {
                                 if(response.success) {
                                     window.location.assign(response.data.redirect_to);
@@ -41,7 +41,7 @@ window.jQuery(document).ready($ => {
                                 }
                             },
                             complete: function() {
-                                button.prop('disabled', false).find('img').remove();
+                                button.prop('disabled', false).removeClass('tutor-updating-message');
                             }
                         });
                     }
@@ -55,7 +55,7 @@ window.jQuery(document).ready($ => {
                 }
             } 
         };
-
-        popup = new window.tutor_popup($, 'icon-gear', 40).popup(data);
+        
+        new window.tutor_popup($, 'icon-gear', 40).popup(data);
     });
 });

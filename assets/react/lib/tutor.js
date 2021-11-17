@@ -1,5 +1,4 @@
 import '../../../v2-library/_src/js/main';
-import { get_response_message } from '../helper/response';
 
 window.tutor_get_nonce_data=function(send_key_value) {
 
@@ -38,7 +37,9 @@ window.tutor_popup = function($, icon, padding) {
         var buttons = Object.keys(data.buttons || {}).map(function(key) {
             var button = data.buttons[key];
             var button_id = button.id ? 'tutor-popup-'+button.id : ''; 
-            return $('<button id="'+button_id+'" class="'+button.class+'">'+button.title+'</button>').click(button.callback);
+            return $('<button id="'+button_id+'" class="'+button.class+'">'+button.title+'</button>').click(function(){
+                button.callback($(this));
+            });
         });
 
         element = $($this.popup_wrapper(data.wrapper_tag || 'div'));

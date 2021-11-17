@@ -11,7 +11,7 @@ $option_value = $this->get( $field['key'], $default );
 $field_id     = 'field_' . $field['key'];
 ?>
 <div class="tutor-option-field-row d-block" id="<?php echo esc_url( $field_id ); ?>">
-	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
+	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
 		<div class="type-check d-flex">
 			<?php
