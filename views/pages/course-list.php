@@ -195,7 +195,6 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 					<?php if ( $the_query->have_posts() ) : ?>
 						<?php
 						foreach ( $the_query->posts as $key => $post ) :
-
 							$count_lesson     = tutor_utils()->get_lesson_count_by_course( $post->ID );
 							$count_quiz       = $courses->get_all_quiz_by_course( $post->ID );
 							$topics           = tutor_utils()->get_topics( $post->ID );
@@ -213,7 +212,8 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								</td>
 								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
 									<div class="td-datetime text-regular-caption color-text-primary">
-										<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
+										<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>,<br>
+										<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
 									</div>
 								</td>
 
@@ -348,7 +348,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 					<?php else : ?>
 						<tr>
 							<td colspan="100%">
-								<?php tutor_utils()->tutor_empty_state(); ?>
+								<?php tutor_utils()->tutor_empty_state( __( 'No course found', 'tutor' )); ?>
 							</td>
 						</tr>
 					<?php endif; ?>

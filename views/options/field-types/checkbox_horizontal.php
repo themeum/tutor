@@ -13,7 +13,7 @@ if ( ! empty( $field['options'] ) ) {
 	! is_array( $saved_data ) ? $saved_data = array() : 0;
 	?>
 	<div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>">
-		<?php include tutor()->path . 'views/options/template/field_heading.php'; ?>
+		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 		<div class="tutor-option-field-input d-flex">
 			<div class="type-check d-flex">
 				<?php
@@ -22,7 +22,7 @@ if ( ! empty( $field['options'] ) ) {
 						$_checked = in_array( $option_key, $saved_data ) ? 'checked="checked"' : '';
 					?>
 					<div class="tutor-form-check">
-						<input type="checkbox" id="<?php echo esc_attr( $input_id ); ?>" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][]" value="<?php echo esc_attr( $option_key ); ?>" <?php echo wp_kses_post( $_checked ); ?> class="tutor-form-check-input" />
+						<input type="checkbox" id="<?php echo esc_attr( $input_id ); ?>" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo $option_key; ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php echo wp_kses_post( $_checked ); ?> class="tutor-form-check-input" />
 						<label for="<?php echo esc_attr( $input_id ); ?>"> <?php echo esc_attr( $option ); ?> </label>
 					</div>
 				<?php endforeach; ?>

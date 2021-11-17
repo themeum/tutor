@@ -1992,56 +1992,8 @@ End Alert box css
   cursor: pointer;
 }
 
-.course-enrolled-nav-wrap {
-  border-bottom: 1px solid #dedfe0;
-  margin-bottom: 45px;
-}
-
 .tutor-wrap {
   width: 100%;
-}
-
-.tutor-wrap nav.course-enrolled-nav ul {
-  list-style: none;
-  margin: 0 0 -1px;
-  padding: 0;
-}
-
-.tutor-wrap nav.course-enrolled-nav ul li {
-  display: inline-block;
-}
-
-.tutor-wrap nav.course-enrolled-nav ul li a {
-  display: block;
-  font-size: 16px;
-  padding: 5px 0 20px;
-  margin-right: 20px;
-  color: var(--tutor-light-color);
-  border-bottom: 2px solid transparent;
-}
-
-.tutor-wrap nav.course-enrolled-nav ul li:not(:first-child) a {
-  margin-left: 20px;
-}
-
-.tutor-wrap nav.course-enrolled-nav ul li.active a {
-  border-bottom: 2px solid var(--tutor-primary-color);
-  color: var(--tutor-text-color);
-}
-
-@media (max-width: 575px) {
-  .tutor-wrap nav.course-enrolled-nav ul li {
-    display: inline-block;
-  }
-  .tutor-wrap nav.course-enrolled-nav ul li:not(:first-child) a,
-  .tutor-wrap nav.course-enrolled-nav ul li a {
-    padding: 8px;
-    margin: 0;
-  }
-  .tutor-wrap nav.course-enrolled-nav ul li.active a {
-    border: none;
-    color: var(--tutor-primary-color);
-  }
 }
 
 .tutor-profile-photo-upload-wrap {
@@ -2370,25 +2322,6 @@ Instructor
   color: var(--tutor-text-color);
 }
 
-.tutor-cart-box-login-form {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 99;
-  top: 0;
-  left: 0;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
 .login-overlay-close {
   position: absolute;
   background: transparent;
@@ -2399,37 +2332,6 @@ Instructor
 
 .course-login-title {
   margin-bottom: 50px;
-}
-
-.tutor-cart-box-login-form .tutor-cart-box-login-form-inner {
-  background: #fff;
-  padding: 50px 40px;
-  position: relative;
-  width: 400px;
-  font-size: 16px;
-  font-weight: 400;
-  max-height: 90%;
-  overflow: auto;
-}
-
-.tutor-cart-box-login-form-inner button.tutor-popup-form-close {
-  position: absolute;
-  padding: 0;
-  margin: 0;
-  border: none;
-  background-color: transparent;
-  top: 14px;
-  right: 20px;
-  opacity: 0.4;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-  cursor: pointer;
-  -webkit-transition: 300ms;
-  transition: 300ms;
-  color: var(--tutor-text-color);
-}
-
-.tutor-cart-box-login-form-inner button.tutor-popup-form-close:hover {
-  color: red;
 }
 
 /* ********************* */
@@ -3012,11 +2914,6 @@ social share
   margin-left: 40px;
 }
 
-.rtl .tutor-wrap nav.course-enrolled-nav ul li a {
-  margin-right: 0;
-  margin-left: 20px;
-}
-
 .rtl .tutor-progress-bar .tutor-progress-filled:after {
   left: auto;
   right: var(--tutor-progress-left);
@@ -3106,11 +3003,6 @@ social share
   .rtl .tutor-topbar-home-btn {
     margin-right: 10px;
   }
-}
-
-.rtl .tutor-single-page-top-bar .tutor-single-lesson-segment button.course-complete-button {
-  margin-left: 15px;
-  margin-right: 0;
 }
 
 /**
@@ -4530,6 +4422,57 @@ table.course-single-gradebooks a {
   background: transparent;
   margin-left: 0;
   text-decoration: none;
+}
+
+.tutor-single-course-wrapper {
+  overflow: auto;
+}
+
+.tutor-single-course-wrapper > div {
+  float: left;
+}
+
+@media (min-width: 992px) {
+  .tutor-single-course-wrapper > div:first-child {
+    width: calc(100% - 370px);
+  }
+  .tutor-single-course-wrapper > div:last-child {
+    width: 350px;
+    float: right;
+  }
+}
+
+.course-enrolled-nav-wrap {
+  border-bottom: 1px solid #dedfe0;
+  margin-bottom: 45px;
+}
+
+.course-enrolled-nav-wrap .course-enrolled-nav ul {
+  list-style: none;
+  margin: 0 0 -1px;
+  padding: 0;
+}
+
+.course-enrolled-nav-wrap .course-enrolled-nav ul li {
+  display: inline-block;
+}
+
+.course-enrolled-nav-wrap .course-enrolled-nav ul li a {
+  display: block;
+  font-size: 16px;
+  padding: 5px 0 20px;
+  margin-right: 20px;
+  color: var(--tutor-light-color);
+  border-bottom: 2px solid transparent;
+}
+
+.course-enrolled-nav-wrap .course-enrolled-nav ul li:not(:first-child) a {
+  margin-left: 20px;
+}
+
+.course-enrolled-nav-wrap .course-enrolled-nav ul li.active a {
+  border-bottom: 2px solid var(--tutor-primary-color);
+  color: var(--tutor-text-color);
 }
 
 /* *********************** */
@@ -7119,6 +7062,11 @@ Withdraw Method
   box-sizing: border-box;
   border-radius: 6px;
   padding: 30px 20px;
+}
+
+.tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle img {
+  width: 96px;
+  height: 96px;
 }
 
 .tutor-instructor-filter .tutor-instructor-filter-result .tutor-courses.pp-left-middle .tutor-instructor-left-middle h4 {

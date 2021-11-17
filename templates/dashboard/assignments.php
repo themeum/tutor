@@ -58,8 +58,7 @@ $courses            = (current_user_can('administrator')) ? tutor_utils()->get_c
         </div>
         <div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-announcement-datepicker">
             <label><?php esc_html_e('Create Date', 'tutor'); ?></label>
-            <input type="text" class="tutor-form-control tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo $date_filter !== '' ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
-            <i class="tutor-icon-calendar"></i>
+            <div class="tutor-v2-date-picker"></div>
         </div>
     </div>
     <br/>

@@ -15,7 +15,7 @@ $default           = isset( $field_default ) ? esc_attr( $field_default ) : esc_
 $option_value      = $this->get( esc_attr( $field_key ), $default );
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
-	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
+	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
 		<label class="tutor-form-toggle">
 			<?php printf( "<span class='label-before'>%s</span>", esc_attr( $field_label_title ) ); ?>

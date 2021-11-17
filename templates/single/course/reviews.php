@@ -23,91 +23,77 @@ $reviews = tutor_utils()->get_course_reviews();
 if ( ! is_array($reviews) || ! count($reviews)){
 	return;
 }
+
+$rating = tutor_utils()->get_course_rating();
 ?>
-
-<div class="tutor-single-course-segment">
-    <div class="course-student-rating-title">
-        <h4 class="tutor-segment-title"><?php _e('Student Feedback', 'tutor'); ?></h4>
-    </div>
-    <div class="tutor-course-reviews-wrap">
-        <div class="tutor-course-student-rating-wrap">
-            <div class="course-avg-rating-wrap">
-                <div class="tutor-bs-row tutor-bs-align-items-center">
-                    <div class="tutor-bs-col-auto">
-                        <p class="course-avg-rating">
-							<?php
-							$rating = tutor_utils()->get_course_rating();
-							echo number_format($rating->rating_avg, 1);
-							?>
-                        </p>
-                        <p class="course-avg-rating-html">
-		                    <?php tutor_utils()->star_rating_generator($rating->rating_avg);?>
-                        </p>
-                        <p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count;?></span> Ratings</p>
-
-                    </div>
-                    <div class="tutor-bs-col">
-                        <div class="course-ratings-count-meter-wrap">
-							<?php
-							foreach ($rating->count_by_value as $key => $value){
-							    $rating_count_percent = ($value > 0) ? ($value  * 100 ) / $rating->rating_count : 0;
-							    ?>
-                                <div class="course-rating-meter">
-                                    <div class="rating-meter-col"><i class="tutor-icon-star-full"></i></div>
-                                    <div class="rating-meter-col"><?php echo $key; ?></div>
-                                    <div class="rating-meter-col rating-meter-bar-wrap">
-                                        <div class="rating-meter-bar">
-                                            <div class="rating-meter-fill-bar" style="width: <?php echo $rating_count_percent; ?>%;"></div>
-                                        </div>
-                                    </div>
-                                    <div class="rating-meter-col rating-text-col">
-                                        <?php
-                                        echo $value.' ';
-                                        echo $value > 1 ? __('ratings', 'tutor') : __('rating', 'tutor'); ?>
-                                    </div>
-                                </div>
-							<?php } ?>
-                        </div>
-                    </div>
-
-                </div>
-
+<div class="tutor-ratingsreviews tutor-mt-30">
+    <div class="tutor-ratingsreviews-ratings">
+        <div class="tutor-ratingsreviews-ratings-avg">
+            <div class="text-medium-h1 color-text-primary">
+                <?php echo number_format($rating->rating_avg, 1); ?>
             </div>
+            <?php tutor_utils()->star_rating_generator_v2($rating->rating_avg, null, false, 'tutor-bs-d-block'); ?>
         </div>
-
-
-        <div class="tutor-course-reviews-list">
-			<?php
-			foreach ($reviews as $review){
-				$profile_url = tutor_utils()->profile_url($review->user_id);
-				?>
-                <div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
-                    <div class="review-left">
-                        <div class="review-avatar">
-                            <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($review->user_id); ?> </a>
-                        </div>
-                        <div class="tutor-review-user-info">
-                            <div class="review-time-name">
-                                <p> <a href="<?php echo $profile_url; ?>">  <?php echo $review->display_name; ?> </a> </p>
-                                <p class="review-meta">
-                                    <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($review->comment_date))); ?>
-                                </p>
+        
+        <div class="tutor-ratingsreviews-ratings-all">
+            <?php foreach($rating->count_by_value as $key => $value): ?>
+                <?php $rating_count_percent = ($value > 0) ? ($value  * 100 ) / $rating->rating_count : 0; ?>
+                <div class="rating-numbers">
+                    <div class="rating-progress">
+                        <div class="tutor-ratings tutor-is-sm">
+                            <div class="tutor-rating-stars">
+                                <span class="ttr-star-line-filled"></span>
                             </div>
-                            <div class="individual-review-rating-wrap">
-								<?php tutor_utils()->star_rating_generator($review->rating); ?>
+                            <div class="tutor-rating-text text-medium-body color-text-primary">
+                                <?php echo $key; ?>
                             </div>
                         </div>
-
+                        <div class="progress-bar tutor-mt-10" style="--progress-value: <?php echo $rating_count_percent; ?>%">
+                            <span class="progress-value"></span>
+                        </div>
                     </div>
-
-                    <div class="review-content review-right">
-						<?php echo wpautop(stripslashes($review->comment_content)); ?>
+                    <div class="rating-num text-regular-caption color-text-subsued">
+                        <?php
+                            echo $value.' ';
+                            echo $value > 1 ? __('ratings', 'tutor') : __('rating', 'tutor'); 
+                        ?>
                     </div>
                 </div>
-				<?php
-			}
-			?>
+            <?php endforeach; ?>
         </div>
+    </div>
+    
+    <div class="tutor-ratingsreviews-reviews">
+        <ul class="review-list tutor-m-0">
+            <?php 
+                foreach ($reviews as $review){
+                    $profile_url = tutor_utils()->profile_url($review->user_id);
+                    ?>
+                    <li>
+                        <div>
+                            <div class="tutor-avatar-circle tutor-50">
+                                <img src="<?php echo get_avatar_url( $review->user_id ) ?>" alt="student avatar" />
+                            </div>
+                            <div class="text-regular-body color-text-primary tutor-mt-16">
+                                <a href="<?php echo $profile_url; ?>">
+                                    <?php echo $review->display_name; ?>
+                                </a>
+                            </div>
+                            <div class="text-regular-small color-text-hints">
+                                <?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($review->comment_date))); ?>
+                            </div>
+                        </div>
+                        <div>
+                            <?php tutor_utils()->star_rating_generator_v2($review->rating, null, true, 'tutor-is-sm'); ?>
+                            <div class="text-regular-caption color-text-subsued tutor-mt-10">
+                                <?php echo htmlspecialchars($review->comment_content); ?>
+                            </div>
+                        </div>
+                    </li>
+                    <?php
+                }
+            ?>
+        </ul>
     </div>
 </div>
 

@@ -1,7 +1,7 @@
 import './dashboard';
 import './pages/instructor-list-filter';
 import './pages/course-landing';
-import './course-spotlight/index';
+import './course/index';
 import './dashboard/export-csv';
 
 jQuery(document).ready(function ($) {
@@ -51,7 +51,7 @@ jQuery(document).ready(function ($) {
         track_player: function () {
             const that = this;
             if (typeof Plyr !== 'undefined') {
-                const player = new Plyr('#tutorPlayer');
+                const player = new Plyr(this.player_DOM);
                 const video_data = that.video_data();
                 player.on('ready', function (event) {
                     const instance = event.detail.plyr;
@@ -106,7 +106,8 @@ jQuery(document).ready(function ($) {
                 }
             });
         },
-        init: function () {
+        init: function (element) {
+            this.player_DOM = element;
             this.track_player();
         }
     };
@@ -115,9 +116,9 @@ jQuery(document).ready(function ($) {
      * Fire TUTOR video
      * @since v.1.0.0
      */
-    if ($('#tutorPlayer').length) {
-        videoPlayer.init();
-    }
+    $('.tutorPlayer').each(function(){
+        videoPlayer.init(this);
+    });
 
     $(document).on('change keyup paste', '.tutor_user_name', function () {
         $(this).val(tutor_slugify($(this).val()));
@@ -723,29 +724,6 @@ jQuery(document).ready(function ($) {
         return goNext;
     }
 
-
-    /**
-     * Add to cart in guest mode, show login form
-     *
-     * @since v.1.0.4
-     */
-
-    $(document).on('submit click', '.cart-required-login, .cart-required-login a, .cart-required-login form', function (e) {
-        e.preventDefault();
-
-        var login_url = $(this).data('login_page_url');
-        login_url ? window.location.assign(login_url) : $('.tutor-cart-box-login-form').fadeIn(100);
-    });
-
-    $('.tutor-popup-form-close, .login-overlay-close').on('click', function () {
-        $('.tutor-cart-box-login-form').fadeOut(100);
-    });
-
-    $(document).on('keyup', function (e) {
-        if (e.keyCode === 27) {
-            $('.tutor-cart-box-login-form').fadeOut(100);
-        }
-    });
     /**
      * Share Link enable
      *

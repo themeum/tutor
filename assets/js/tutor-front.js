@@ -1,10 +1,10 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./assets/react/front/course-spotlight/index.js":
-/*!******************************************************!*\
-  !*** ./assets/react/front/course-spotlight/index.js ***!
-  \******************************************************/
+/***/ "./assets/react/front/course/_spotlight.js":
+/*!*************************************************!*\
+  !*** ./assets/react/front/course/_spotlight.js ***!
+  \*************************************************/
 /***/ (() => {
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -190,6 +190,27 @@ document.addEventListener('DOMContentLoaded', function (event) {
       contSect.classList.add('no-before');
     }
   }
+});
+
+/***/ }),
+
+/***/ "./assets/react/front/course/index.js":
+/*!********************************************!*\
+  !*** ./assets/react/front/course/index.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_spotlight */ "./assets/react/front/course/_spotlight.js");
+/* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_spotlight__WEBPACK_IMPORTED_MODULE_0__);
+
+window.jQuery(document).ready(function ($) {
+  // Login require on enrol purchase click
+  $(document).on('click', '.tutor-enrol-require-auth', function (e) {
+    e.preventDefault();
+    $('.tutor-login-modal').addClass('tutor-is-active');
+  });
 });
 
 /***/ }),
@@ -520,10 +541,8 @@ window.jQuery(document).ready(function ($) {
 
   $('.tutor-course-retake-button').click(function (e) {
     e.preventDefault();
-    var button = $(this);
-    var url = button.attr('href');
-    var course_id = button.data('course_id');
-    var popup;
+    var url = $(this).attr('href');
+    var course_id = $(this).data('course_id');
     var data = {
       title: __('Override Previous Progress', 'tutor'),
       description: __('Before continue, please decide whether to keep progress or reset.', 'tutor'),
@@ -531,15 +550,16 @@ window.jQuery(document).ready(function ($) {
         reset: {
           title: __('Reset Data', 'tutor'),
           "class": 'tutor-btn tutor-is-outline tutor-is-default',
-          callback: function callback() {
-            var button = popup.find('.tutor-button-secondary');
-            button.prop('disabled', true).append('<img style="margin-left: 7px" src="' + window._tutorobject.loading_icon_url + '"/>');
+          callback: function callback(button) {
             $.ajax({
               url: window._tutorobject.ajaxurl,
               type: 'POST',
               data: {
                 action: 'tutor_reset_course_progress',
                 course_id: course_id
+              },
+              beforeSend: function beforeSend() {
+                button.prop('disabled', true).addClass('tutor-updating-message');
               },
               success: function success(response) {
                 if (response.success) {
@@ -549,7 +569,7 @@ window.jQuery(document).ready(function ($) {
                 }
               },
               complete: function complete() {
-                button.prop('disabled', false).find('img').remove();
+                button.prop('disabled', false).removeClass('tutor-updating-message');
               }
             });
           }
@@ -563,7 +583,7 @@ window.jQuery(document).ready(function ($) {
         }
       }
     };
-    popup = new window.tutor_popup($, 'icon-gear', 40).popup(data);
+    new window.tutor_popup($, 'icon-gear', 40).popup(data);
   });
 });
 
@@ -920,8 +940,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_pages_instructor_list_filter__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/course-landing */ "./assets/react/front/pages/course-landing.js");
 /* harmony import */ var _pages_course_landing__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_pages_course_landing__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./course-spotlight/index */ "./assets/react/front/course-spotlight/index.js");
-/* harmony import */ var _course_spotlight_index__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_course_spotlight_index__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _course_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./course/index */ "./assets/react/front/course/index.js");
 /* harmony import */ var _dashboard_export_csv__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dashboard/export-csv */ "./assets/react/front/dashboard/export-csv.js");
 /* harmony import */ var _dashboard_export_csv__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_dashboard_export_csv__WEBPACK_IMPORTED_MODULE_4__);
 
@@ -1020,7 +1039,7 @@ jQuery(document).ready(function ($) {
       var that = this;
 
       if (typeof Plyr !== 'undefined') {
-        var player = new Plyr('#tutorPlayer');
+        var player = new Plyr(this.player_DOM);
         var video_data = that.video_data();
         player.on('ready', function (event) {
           var instance = event.detail.plyr;
@@ -1091,7 +1110,8 @@ jQuery(document).ready(function ($) {
         }
       });
     },
-    init: function init() {
+    init: function init(element) {
+      this.player_DOM = element;
       this.track_player();
     }
   };
@@ -1100,10 +1120,9 @@ jQuery(document).ready(function ($) {
    * @since v.1.0.0
    */
 
-  if ($('#tutorPlayer').length) {
-    videoPlayer.init();
-  }
-
+  $('.tutorPlayer').each(function () {
+    videoPlayer.init(this);
+  });
   $(document).on('change keyup paste', '.tutor_user_name', function () {
     $(this).val(tutor_slugify($(this).val()));
   });
@@ -1686,30 +1705,11 @@ jQuery(document).ready(function ($) {
     return goNext;
   }
   /**
-   * Add to cart in guest mode, show login form
-   *
-   * @since v.1.0.4
-   */
-
-
-  $(document).on('submit click', '.cart-required-login, .cart-required-login a, .cart-required-login form', function (e) {
-    e.preventDefault();
-    var login_url = $(this).data('login_page_url');
-    login_url ? window.location.assign(login_url) : $('.tutor-cart-box-login-form').fadeIn(100);
-  });
-  $('.tutor-popup-form-close, .login-overlay-close').on('click', function () {
-    $('.tutor-cart-box-login-form').fadeOut(100);
-  });
-  $(document).on('keyup', function (e) {
-    if (e.keyCode === 27) {
-      $('.tutor-cart-box-login-form').fadeOut(100);
-    }
-  });
-  /**
    * Share Link enable
    *
    * @since v.1.0.4
    */
+
 
   if ($.fn.ShareLink) {
     var $social_share_wrap = $('.tutor-social-share-wrap');

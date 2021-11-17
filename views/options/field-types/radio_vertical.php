@@ -10,7 +10,7 @@ $field_id  = sanitize_key( 'field_' . $field_key );
 ?>
 <div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>"
 >
-	<?php require tutor()->path . 'views/options/template/field_heading.php'; ?>
+	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input d-block">
 		<div class="type-check d-block has-desc">
