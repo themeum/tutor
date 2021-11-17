@@ -43,6 +43,8 @@
         border-radius: 6px;
         cursor: pointer;
         min-width: unset;
+        display: grid;
+        grid-template-columns: auto 40px;
         &:hover {
             .tutor-avatar {
                 background: $design-brand;
@@ -189,6 +191,11 @@
     }
     /* end tutor-assignment-result-pending*/
     /* start tutor-assignment-results*/
+    .tutor-instructor-note {
+        background-color: $primary-40;
+        border: 1px solid $primary-70;
+        border-radius: 6px;
+    }
     &.tutor-assignment-results {
         .tutor-instructor-note {
             background-color: $primary-40;
@@ -220,4 +227,18 @@
         }
     }
     /* end tutor-assignment-results*/
+}
+
+.submited-files {
+    >div {
+        &:not(:last-child) {
+            margin-right: 15px;
+        }
+    }
+    .tutor-instructor-card {
+        width: 100%;
+        .tutor-icard-content {
+            padding-right: 10px;
+        }
+    }
 }
