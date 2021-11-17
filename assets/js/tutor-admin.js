@@ -2318,9 +2318,8 @@ var resetConfirmation = function resetConfirmation() {
                     item["default"].includes(presetItem.value) ? labelClasses.add('is-checked') : labelClasses.remove('is-checked');
                     presetItem.checked = item["default"].includes(presetItem.value) ? true : false;
                   });
-                  console.log(item);
                   item.fields.forEach(function (fields) {
-                    if (fields.key == item["default"]) {
+                    if (fields.key === item["default"]) {
                       fields.colors.forEach(function (picker) {
                         var pickerName = 'tutor_option[' + picker.slug + ']';
                         var pickerItem = elementByName(pickerName)[0];

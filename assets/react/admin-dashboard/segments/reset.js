@@ -71,15 +71,16 @@ const resetConfirmation = () => {
 									});
 
 								} else if (item.type == 'color_preset') {
+
 									let presetItems = elementByName(itemName);
 									presetItems.forEach((presetItem) => {
 										let labelClasses = presetItem.parentElement.classList;
 										item.default.includes(presetItem.value) ? labelClasses.add('is-checked') : labelClasses.remove('is-checked');
 										presetItem.checked = item.default.includes(presetItem.value) ? true : false;
 									})
-									console.log(item);
+
 									item.fields.forEach((fields) => {
-										if (fields.key == item.default) {
+										if (fields.key === item.default) {
 											fields.colors.forEach((picker) => {
 												let pickerName = 'tutor_option[' + picker.slug + ']';
 												let pickerItem = elementByName(pickerName)[0];
