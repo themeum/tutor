@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
   /* sidetab tab position */
   var topBar = document.querySelector('.tutor-single-page-top-bar');
   var sideBar = document.querySelector('.tutor-lesson-sidebar');
-  sideBar.style.top = topBar.clientHeight + 'px';
+  sideBar ? sideBar.style.top = topBar.clientHeight + 'px' : 0;
   /* sidetab tab position */
 
   /* sidetab tab */
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 
   var showMoreBtn = document.querySelector('.tutor-show-more-btn button');
-  showMoreBtn.addEventListener('click', showMore);
+  showMoreBtn ? showMoreBtn.addEventListener('click', showMore) : 0;
 
   function showMore() {
     var lessText = document.getElementById("short-text");
@@ -178,7 +178,8 @@ __webpack_require__.r(__webpack_exports__);
 
 window.jQuery(document).ready(function ($) {
   // Login require on enrol purchase click
-  $(document).on('click', '.tutor-enrol-require-auth', function (e) {
+  $(document).on('click', '.tutor-course-entry-box-login button, .tutor-course-entry-box-login a', function (e) {
+    console.log('Clicked');
     e.preventDefault();
     $('.tutor-login-modal').addClass('tutor-is-active');
   });
