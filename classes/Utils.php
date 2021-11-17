@@ -8292,4 +8292,21 @@ class Utils {
 		$str_length = strlen($str);
 		return substr($str, 0, 2).str_repeat('*', $str_length - 2).substr($str, $str_length - 2, 2);
 	}
+
+	/**
+	 * Report frequencies that will be shown on the dropdown
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function report_frequencies() {
+		$frequencies = array(
+			'alltime'    => __( 'All Time', 'tutor-pro' ),
+			'today'      => __( 'Today', 'tutor-pro' ),
+			'last30days' => __( 'Last 30 Days', 'tutor-pro' ),
+			'last60days' => __( 'Last 60 Days', 'tutor-pro' ),
+			'last90days' => __( 'Last 90 Days', 'tutor-pro' ),
+		);
+		return $frequencies;
+	}
 }
