@@ -193,21 +193,42 @@ class Ajax{
 	public function tutor_course_add_to_wishlist(){
 		tutor_utils()->checking_nonce();
 
-		$course_id = (int) sanitize_text_field($_POST['course_id']);
+		// Redirect login since only logged in user can add courses to wishlist
 		if ( ! is_user_logged_in()){
-			wp_send_json_error(array('redirect_to' => wp_login_url( wp_get_referer() ) ) );
+			wp_send_json_error(array(
+				'redirect_to' => wp_login_url( wp_get_referer() ) 
+			) );
 		}
+			
 		global $wpdb;
-
 		$user_id = get_current_user_id();
-		$if_added_to_list = $wpdb->get_row($wpdb->prepare("SELECT * from {$wpdb->usermeta} WHERE user_id = %d AND meta_key = '_tutor_course_wishlist' AND meta_value = %d;", $user_id, $course_id));
+		$course_id = (int) sanitize_text_field($_POST['course_id']);
+
+		$if_added_to_list = $wpdb->get_row($wpdb->prepare(
+			"SELECT * from {$wpdb->usermeta} 
+			WHERE user_id = %d 
+				AND meta_key = '_tutor_course_wishlist' 
+				AND meta_value = %d;", 
+				$user_id, 
+				$course_id
+		));
 
 		if ( $if_added_to_list){
-			$wpdb->delete($wpdb->usermeta, array('user_id' => $user_id, 'meta_key' => '_tutor_course_wishlist', 'meta_value' => $course_id ));
-			wp_send_json_success(array('status' => 'removed', 'msg' => __('Course removed from wish list', 'tutor')));
-		}else{
+			$wpdb->delete($wpdb->usermeta, array(
+				'user_id' => $user_id, 
+				'meta_key' => '_tutor_course_wishlist', 
+				'meta_value' => $course_id 
+			));
+			wp_send_json_success(array(
+				'status' => 'removed', 
+				'message' => __('Course removed from wish list', 'tutor')
+			));
+		} else {
 			add_user_meta($user_id, '_tutor_course_wishlist', $course_id);
-			wp_send_json_success(array('status' => 'added', 'msg' => __('Course added to wish list', 'tutor')));
+			wp_send_json_success(array(
+				'status' => 'added', 
+				'message' => __('Course added to wish list', 'tutor')
+			));
 		}
 	}
 

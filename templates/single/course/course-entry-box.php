@@ -127,11 +127,9 @@
                     </div>
                     <?php
                 } else if ($is_purchasable && $price) {
-                    $btn_class = is_user_logged_in() ? '' : 'tutor-enrol-require-auth';
-
                     if ($tutor_course_sell_by){
                         // Load template based on monetization option
-                        tutor_load_template('single.course.add-to-cart-'.$tutor_course_sell_by, array('button_class' => $btn_class));
+                        tutor_load_template('single.course.add-to-cart-'.$tutor_course_sell_by, array('button_class' => ''));
                     } else if ($is_public) {
                         // Get the first content url
                         $first_lesson_url = tutor_utils()->get_course_first_lesson(get_the_ID(), tutor()->lesson_post_type);
@@ -155,7 +153,7 @@
                             <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                             <input type="hidden" name="tutor_course_id" value="<?php echo get_the_ID(); ?>">
                             <input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
-                            <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24 <?php echo $btn_class; ?>">
+                            <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24">
                                 <?php _e('Enroll Course', 'tutor'); ?>
                             </button>
                         </form>

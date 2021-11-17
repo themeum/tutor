@@ -1,4 +1,5 @@
 import './_spotlight';
+import './_wishlist';
 
 window.jQuery(document).ready($=>{
 

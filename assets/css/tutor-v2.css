@@ -20293,7 +20293,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   margin-right: 10px;
 }
 
-.tutor-updating-message:not(.tutor-no-margin):before {
+.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
   margin-right: 8px;
 }
 
@@ -25647,7 +25647,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-course-sidebar-card {
   border: 1px solid #cdcfd5;
   border-radius: 6px;
-  max-width: 400px;
   position: relative;
 }
 
