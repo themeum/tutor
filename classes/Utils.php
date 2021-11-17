@@ -3298,7 +3298,7 @@ class Utils {
 							echo $current_rating; 
 						
 							if(!($total_count===null)) {
-								echo '('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor'));
+								echo '&nbsp;('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor')).')';
 							}
 						?> 
 					</div>
@@ -8016,34 +8016,31 @@ class Utils {
 	 * @return array
 	 * @since v2.0.0 
 	 */
-	public function get_course_content_list($content_type, $ancestor_type, $ancestor_ids) {
+	public function get_course_content_list( string $content_type, string $ancestor_type, string $ancestor_ids ) {
 		global $wpdb;
 		$ids = array();
-
 		// Convert single id to array
-		!is_array($ancestor_ids) ? $ancestor_ids=array($ancestor_ids) : 0;
+		!is_array($ancestor_ids) ? $ancestor_ids = array($ancestor_ids) : 0;
 		$ancestor_ids = implode(',', $ancestor_ids);
-
 		switch($content_type) {
-
 			// Get lesson, quiz, assignment IDs
 			case tutor()->lesson_post_type :
 			case 'tutor_quiz' :
 			case 'tutor_assignments' :
-				switch($ancestor_type) {
-
+				switch( $ancestor_type ) {
 					// Get lesson, quiz, assignment IDs by course ID
 					case tutor()->course_post_type :
 						$content_ids = $wpdb->get_results($wpdb->prepare(
-							"SELECT content.ID, content.post_title FROM {$wpdb->posts} course
-								INNER JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
-								INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
-							WHERE course.ID IN ({$ancestor_ids}) AND content.post_type=%s",
+							"SELECT content.* FROM {$wpdb->posts} course
+									INNER JOIN {$wpdb->posts} topic ON course.ID = topic.post_parent
+									INNER JOIN {$wpdb->posts} content ON topic.ID = content.post_parent AND content.post_type = %s
+								WHERE course.ID IN ({$ancestor_ids}) 
+							",
 							$content_type
 						));
 
 						// Assign id array to the variable
-						is_array($content_ids) ? $ids=$content_ids : 0;
+						$ids = $content_ids;
 						break 2;
 				}
 		}
@@ -8294,5 +8291,22 @@ class Utils {
 		}
 		$str_length = strlen($str);
 		return substr($str, 0, 2).str_repeat('*', $str_length - 2).substr($str, $str_length - 2, 2);
+	}
+
+	/**
+	 * Report frequencies that will be shown on the dropdown
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function report_frequencies() {
+		$frequencies = array(
+			'alltime'    => __( 'All Time', 'tutor-pro' ),
+			'today'      => __( 'Today', 'tutor-pro' ),
+			'last30days' => __( 'Last 30 Days', 'tutor-pro' ),
+			'last60days' => __( 'Last 60 Days', 'tutor-pro' ),
+			'last90days' => __( 'Last 90 Days', 'tutor-pro' ),
+		);
+		return $frequencies;
 	}
 }

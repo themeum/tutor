@@ -23,36 +23,42 @@ document.addEventListener('DOMContentLoaded', function (event) {
   /* sidetab tab position */
   var topBar = document.querySelector('.tutor-single-page-top-bar');
   var sideBar = document.querySelector('.tutor-lesson-sidebar');
-  sideBar.style.top = topBar.clientHeight + 'px';
+  sideBar ? sideBar.style.top = topBar.clientHeight + 'px' : 0;
   /* sidetab tab position */
 
-  /* sidetab tab */
+  var sidebarParent = function sidebarParent(sideBarTabs) {
+    sideBarTabs.forEach(function (tab) {
+      tab.addEventListener('click', function (event) {
+        var tabConent = event.currentTarget.parentNode.nextElementSibling; // console.log(tabConent, tabConent);
 
-  var sideBarTabs = document.querySelectorAll('.tutor-sidebar-tab-item');
-  sideBarTabs.forEach(function (tab) {
-    tab.addEventListener('click', function (event) {
-      clearActiveClass();
-      event.currentTarget.classList.add('active');
-      var id = event.currentTarget.getAttribute('data-sidebar-tab');
-      document.getElementById(id).classList.add('active');
+        clearActiveClass(tabConent); // console.log(event.currentTarget.parentNode);
+        // console.log(event.currentTarget.parentNode.nextElementSibling);
+
+        event.currentTarget.classList.add('active');
+        var id = event.currentTarget.getAttribute('data-sidebar-tab');
+        console.log(tabConent.querySelector('#' + id));
+        tabConent.querySelector('#' + id).classList.add('active');
+      });
     });
-  });
 
-  var clearActiveClass = function clearActiveClass() {
-    for (var i = 0; i < sideBarTabs.length; i++) {
-      sideBarTabs[i].classList.remove('active');
-    }
+    var clearActiveClass = function clearActiveClass(tabConent) {
+      for (var i = 0; i < sideBarTabs.length; i++) {
+        sideBarTabs[i].classList.remove('active');
+      }
 
-    var sidebarTabItems = document.querySelectorAll('.tutor-lesson-sidebar-tab-item');
+      var sidebarTabItems = tabConent.querySelectorAll('.tutor-lesson-sidebar-tab-item');
 
-    for (var _i = 0; _i < sidebarTabItems.length; _i++) {
-      sidebarTabItems[_i].classList.remove('active');
-    }
+      for (var _i = 0; _i < sidebarTabItems.length; _i++) {
+        sidebarTabItems[_i].classList.remove('active');
+      }
+    };
   };
+
+  sidebarParent(document.querySelectorAll('.tutor-desktop-sidebar .tutor-sidebar-tab-item'));
+  sidebarParent(document.querySelectorAll('.tutor-mobile-sidebar .tutor-sidebar-tab-item'));
   /* end of sidetab tab */
 
   /* comment text-area focus arrow style */
-
 
   var commentTextarea = document.querySelectorAll('.tutor-comment-textarea textarea');
 
@@ -85,37 +91,147 @@ document.addEventListener('DOMContentLoaded', function (event) {
     });
   }
   /* commenting */
+  // quize drag n drop functionality
 
-  /* Show More Text */
+
+  var quizBoxs = document.querySelectorAll('.tutor-quiz-border-box');
+  var quizImageBoxs = document.querySelectorAll('.tutor-quiz-dotted-box'); // const quizImageBoxs = document.querySelectorAll('.quiz-image-box');
+
+  quizBoxs.forEach(function (quizBox) {
+    quizBox.addEventListener('dragstart', dragStart);
+    quizBox.addEventListener('dragend', dragEnd); // console.log(quizBox);
+  });
+  quizImageBoxs.forEach(function (quizImageBox) {
+    quizImageBox.addEventListener('dragover', dragOver);
+    quizImageBox.addEventListener('dragenter', dragEnter);
+    quizImageBox.addEventListener('dragleave', dragLeave);
+    quizImageBox.addEventListener('drop', dragDrop);
+  });
+
+  function dragStart() {
+    this.classList.add('dragging');
+    console.log('start ', this);
+  }
+
+  function dragEnd() {
+    this.classList.remove('dragging');
+    console.log('end ', this);
+  }
+
+  function dragOver(event) {
+    this.classList.add('dragover');
+    console.log('dragOver ', this);
+    event.preventDefault();
+  }
+
+  function dragEnter() {
+    console.log('dragEnter ', this);
+  }
+
+  function dragLeave() {
+    this.classList.remove('dragover');
+    console.log('dragLeave ', this);
+  }
+
+  function dragDrop() {
+    var copyElement = document.querySelector('.tutor-quiz-border-box.dragging span');
+    this.textContent = copyElement.textContent;
+    console.log('drop ', copyElement.textContent, this.textContent);
+    this.classList.remove('dragover');
+  } // tutor assignment file upload
 
 
-  var showMoreBtn = document.querySelector('.tutor-show-more-btn button');
-  showMoreBtn.addEventListener('click', showMore);
+  var fileUploadField = document.getElementById('tutor-assignment-file-upload');
+  fileUploadField.addEventListener('change', tutorAssignmentFileHandler);
 
-  function showMore() {
-    var lessText = document.getElementById("short-text");
-    var dots = document.getElementById("dots");
-    var moreText = document.getElementById("full-text");
-    var btnText = document.getElementById("showBtn");
-    var contSect = document.getElementById("content-section");
-    console.log(lessText, dots, moreText, btnText);
+  function tutorAssignmentFileHandler() {
+    var message = '';
 
-    if (dots.style.display === "none") {
-      lessText.style.display = "block";
-      dots.style.display = "inline";
-      btnText.innerHTML = "<span class='btn-icon ttr-plus-filled color-design-brand'></span><span class='color-text-primary'>Show More</span>";
-      moreText.style.display = "none";
-      contSect.classList.remove('no-before');
-    } else {
-      lessText.style.display = "none";
-      dots.style.display = "none";
-      btnText.innerHTML = "<span class='btn-icon ttr-minus-filled color-design-brand'></span><span class='color-text-primary'>Show Less</span>";
-      moreText.style.display = "block";
-      contSect.classList.add('no-before');
+    if ('files' in fileUploadField) {
+      if (fileUploadField.files.length == 0) {
+        message = 'Select one or more files.';
+        console.log(message);
+      } else {
+        var fileCard = '';
+
+        for (var i = 0; i < fileUploadField.files.length; i++) {
+          var file = fileUploadField.files[i];
+          fileCard += "<div class=\"tutor-instructor-card\">\n                                    <div class=\"tutor-icard-content\">\n                                        <div class=\"text-regular-body color-text-title\">\n                                            ".concat(file.name, "\n                                        </div>\n                                        <div class=\"text-regular-small\">Size: ").concat(file.size, "</div>\n                                    </div>\n                                    <div onclick=\"(() => {\n                                        this.closest('.tutor-instructor-card').remove();\n                                    })()\" class=\"tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center\">\n                                        <span class=\"ttr-cross-filled color-design-brand\"></span>\n                                    </div>\n                                </div>");
+        }
+
+        document.querySelector('.tutor-asisgnment-upload-file-preview').innerHTML = fileCard;
+      }
     }
   }
   /* Show More Text */
 
+
+  var showMoreBtn = document.querySelector('.tutor-show-more-btn button');
+  showMoreBtn ? showMoreBtn.addEventListener('click', showMore) : 0;
+
+  function showMore() {
+    var lessText = document.getElementById('short-text');
+    var dots = document.getElementById('dots');
+    var moreText = document.getElementById('full-text');
+    var btnText = document.getElementById('showBtn');
+    var contSect = document.getElementById('content-section');
+    console.log(lessText, dots, moreText, btnText);
+
+    if (dots.style.display === 'none') {
+      lessText.style.display = 'block';
+      dots.style.display = 'inline';
+      btnText.innerHTML = "<span class='btn-icon ttr-plus-filled color-design-brand'></span><span class='color-text-primary'>Show More</span>";
+      moreText.style.display = 'none';
+    } else {
+      lessText.style.display = 'none';
+      dots.style.display = 'none';
+      btnText.innerHTML = "<span class='btn-icon ttr-minus-filled color-design-brand'></span><span class='color-text-primary'>Show Less</span>";
+      moreText.style.display = 'block';
+      contSect.classList.add('no-before');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./assets/react/front/course/_wishlist.js":
+/*!************************************************!*\
+  !*** ./assets/react/front/course/_wishlist.js ***!
+  \************************************************/
+/***/ (() => {
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  $(document).on('click', '.tutor-course-wishlist-btn', function (e) {
+    e.preventDefault();
+    var $that = $(this);
+    var course_id = $that.attr('data-course-id');
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: {
+        course_id: course_id,
+        'action': 'tutor_course_add_to_wishlist'
+      },
+      beforeSend: function beforeSend() {
+        $that.addClass('tutor-updating-message tutor-m-0');
+      },
+      success: function success(data) {
+        if (data.success) {
+          if (data.data.status === 'added') {
+            $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
+          } else {
+            $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
+          }
+        } else {
+          window.location = data.data.redirect_to;
+        }
+      },
+      complete: function complete() {
+        $that.removeClass('tutor-updating-message tutor-m-0');
+      }
+    });
+  });
 });
 
 /***/ }),
@@ -130,10 +246,14 @@ document.addEventListener('DOMContentLoaded', function (event) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_spotlight */ "./assets/react/front/course/_spotlight.js");
 /* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_spotlight__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wishlist__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_wishlist */ "./assets/react/front/course/_wishlist.js");
+/* harmony import */ var _wishlist__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wishlist__WEBPACK_IMPORTED_MODULE_1__);
+
 
 window.jQuery(document).ready(function ($) {
   // Login require on enrol purchase click
-  $(document).on('click', '.tutor-enrol-require-auth', function (e) {
+  $(document).on('click', '.tutor-course-entry-box-login button, .tutor-course-entry-box-login a', function (e) {
+    console.log('Clicked');
     e.preventDefault();
     $('.tutor-login-modal').addClass('tutor-is-active');
   });
@@ -1193,36 +1313,6 @@ jQuery(document).ready(function ($) {
   $(document).on('click', '.tutor-topics-title h3 .toggle-information-icon', function (e) {
     $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
     e.stopPropagation();
-  });
-  $(document).on('click', '.tutor-course-wishlist-btn', function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var course_id = $that.attr('data-course-id');
-    $.ajax({
-      url: _tutorobject.ajaxurl,
-      type: 'POST',
-      data: {
-        course_id: course_id,
-        'action': 'tutor_course_add_to_wishlist'
-      },
-      beforeSend: function beforeSend() {
-        $that.addClass('updating-icon');
-      },
-      success: function success(data) {
-        if (data.success) {
-          if (data.data.status === 'added') {
-            $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
-          } else {
-            $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
-          }
-        } else {
-          window.location = data.data.redirect_to;
-        }
-      },
-      complete: function complete() {
-        $that.removeClass('updating-icon');
-      }
-    });
   });
   /**
    * Check if lesson has classic editor support

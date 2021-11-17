@@ -19,7 +19,7 @@ if(is_array($course_tags) && count($course_tags)){ ?>
         <div class="widget-title tutor-m-0">
             <span class="color-text-primary text-medium-h6"><?php _e('Tags', 'tutor'); ?></span>
         </div>
-        <div class="widget-tags tutor-pt-16">
+        <div class="tutor-course-details-widget-tags tutor-pt-16">
           <ul class="tutor-tag-list">
                 <?php
                     foreach ($course_tags as $course_tag){
