@@ -186,19 +186,29 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 		wp_send_json_success( get_option( 'tutor_settings_log' ) );
 	}
+
 	public function reset_settings_data() {
 		tutor_utils()->checking_nonce();
-		$block_fields = array();
+		$reset_fields = $return_fields = $return_fields_group = array();
 		$reset_page   = isset( $_POST['reset_page'] ) ? sanitize_key( $_POST['reset_page'] ) : null;
 		$setting_data = $this->get_setting_fields()['option_fields'][ $reset_page ]['blocks'];
 
 		foreach ( $setting_data as $blocks ) {
-			foreach ( $blocks['fields'] as $fields ) {
-				$block_fields[] = $fields;
+
+			$block_fields = isset( $blocks['fields'] ) ? $blocks['fields'] : array();
+			foreach ( $block_fields as $fields ) {
+				$return_fields[] = $fields;
+			}
+
+			$block_fields_group = isset( $blocks['fields_group'] ) ? $blocks['fields_group'] : array();
+			foreach ( $block_fields_group as $fields ) {
+				$return_fields_group[] = $fields;
 			}
 		}
 
-		wp_send_json_success( $block_fields );
+		$reset_fields = array_merge( $return_fields, $return_fields_group );
+
+		wp_send_json_success( $reset_fields );
 	}
 
 	public function tutor_import_settings() {
@@ -725,12 +735,12 @@ class Options_V2 {
 								'desc'    => __( 'Instructors should earn equal or above this amount to make a withdraw request.', 'tutor' ),
 							),
 							array(
-								'key'         => 'tutor_withdrawal_methods',
-								'type'        => 'checkbox_horizontal',
-								'label'       => __( 'Enable withdraw method', 'tutor' ),
-								'default'     => array( 'bank_transfer_withdraw' ),
-								'options'     => $methods_array,
-								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
+								'key'     => 'tutor_withdrawal_methods',
+								'type'    => 'checkbox_horizontal',
+								'label'   => __( 'Enable withdraw method', 'tutor' ),
+								'default' => array( 'bank_transfer_withdraw' ),
+								'options' => $methods_array,
+								'desc'    => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
 							),
 							array(
 								'key'     => 'tutor_bank_transfer_withdraw_instruction',
@@ -750,269 +760,6 @@ class Options_V2 {
 				'template' => 'design',
 				'icon'     => __( 'design', 'tutor' ),
 				'blocks'   => array(
-					'block_course'    => array(
-						'label'      => __( 'Course', 'tutor' ),
-						'slug'       => 'course',
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'     => 'courses_col_per_row',
-								'type'    => 'radio_horizontal',
-								'label'   => __( 'Column Per Row', 'tutor' ),
-								'default' => '4',
-								'options' => array(
-									'1' => 'One',
-									'2' => 'Two',
-									'3' => 'Three',
-									'4' => 'Four',
-								),
-								'desc'    => __( 'Define how many column you want to use to display courses.', 'tutor' ),
-							),
-							array(
-								'key'         => 'course_archive_filter',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Course Filter', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
-							),
-							array(
-								'key'     => 'courses_per_page',
-								'type'    => 'number',
-								'label'   => __( 'Pagination', 'tutor' ),
-								'default' => '12',
-								'desc'    => __( 'Number of items you want to be displayed "per page" in the pagination', 'tutor' ),
-							),
-							array(
-								'key'         => 'supported_course_filters',
-								'type'        => 'checkbox_horizontal',
-								'label'       => __( 'Preferred Course Filters', 'tutor' ),
-								'default'     => array( 'search' ,'category' ),
-								'options'     => array(
-									'search'           => __( 'Keyword Search', 'tutor' ),
-									'category'         => __( 'Category', 'tutor' ),
-									'tag'              => __( 'Tag', 'tutor' ),
-									'difficulty_level' => __( 'Difficulty Level', 'tutor' ),
-									'price_type'       => __( 'Price Type', 'tutor' ),
-								),
-								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
-							),
-						),
-					),
-					'layout'          => array(
-						'label'      => __( 'Layout', 'tutor' ),
-						'slug'       => 'layout',
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'           => 'instructor_list_layout',
-								'type'          => 'group_radio',
-								'label'         => __( 'Instructor List Layout', 'tutor' ),
-								'desc'          => __( 'Choose a layout for the list of instructor inside a course page. You can change this any time.', 'tutor' ),
-								'default'       => 'pp-top-full',
-								'group_options' => array(
-									'vertical'   => array(
-										'pp-top-full' => array(
-											'title' => 'Portrait',
-											'image' => 'instructor-layout/intructor-portrait.svg',
-										),
-										'pp-cp'       => array(
-											'title' => 'Cover',
-											'image' => 'instructor-layout/instructor-cover.svg',
-										),
-										'pp-top-left' => array(
-											'title' => 'Minimal',
-											'image' => 'instructor-layout/instructor-minimal.svg',
-										),
-									),
-									'horizontal' => array(
-										'pp-left-full'   => array(
-											'title' => 'Horizontal Portrait',
-											'image' => 'instructor-layout/instructor-horizontal-portrait.svg',
-										),
-										'pp-left-middle' => array(
-											'title' => 'Horizontal Minimal',
-											'image' => 'instructor-layout/instructor-horizontal-minimal.svg',
-										),
-									),
-								),
-							),
-							array(
-								'key'           => 'public_profile_layout',
-								'type'          => 'group_radio_full_3',
-								'label'         => __( 'Public Profile Layout', 'tutor' ),
-								'desc'          => __( 'Choose a layout design for a user’s public profile', 'tutor' ),
-								'default'       => 'pp-rectangle',
-								'group_options' => array(
-									'private'      => array(
-										'title' => 'Private',
-										'image' => 'profile-layout/profile-private.svg',
-									),
-									'pp-circle'    => array(
-										'title' => 'Modern',
-										'image' => 'profile-layout/profile-modern.svg',
-									),
-									'no-cp'        => array(
-										'title' => 'Minimal',
-										'image' => 'profile-layout/profile-minimal.svg',
-									),
-									'pp-rectangle' => array(
-										'title' => 'Classic',
-										'image' => 'profile-layout/profile-classic.svg',
-									),
-								),
-							),
-						),
-					),
-					'course-details'  => array(
-						'label'      => __( 'Course Details', 'tutor' ),
-						'slug'       => 'course-details',
-						'block_type' => 'isolate',
-						'fields'     => array(
-							array(
-								'key'           => 'Public Profile Layout',
-								'type'          => 'checkgroup',
-								'label'         => __( 'Public Profile Layout', 'tutor' ),
-								'group_options' => array(
-									array(
-										'key'     => 'display_course_instructors',
-										'type'    => 'toggle_single',
-										'label'   => __( 'Instructor Info', 'tutor' ),
-										'default' => 'off',
-										'desc'    => __( 'Toggle to show instructor info', 'tutor' ),
-									),
-									array(
-										'key'     => 'enable_q_and_a_on_course',
-										'type'    => 'toggle_single',
-										'label'   => __( 'Q&A', 'tutor' ),
-										'default' => 'on',
-										'desc'    => __( 'Enable to add a Q&A section', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_author',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Disable Author', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Enabling to remove course author name', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_level',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Disable Level', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Toggle to remove course level', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_share',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Disable Share', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Toggle to hide course share', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_duration',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Duration', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default' => 'off',
-										'desc'        => __( 'Enable to show course duration', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_total_enrolled',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Enrolled Students', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Enable to show total enrolled students', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_update_date',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Update Date', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Disable to hide course update infromation', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_progress_bar',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Progress Bar', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Disable to hide course progress for Students', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_material',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Material', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Disable to hide course materials', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_about',
-										'type'        => 'toggle_single',
-										'label'       => __( 'About', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Disable to hide course about section', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_description',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Description', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Disable to hide course description', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_benefits',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Benefits', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Disable to hide course benefits section', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_requirements',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Pre-Requirements', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Disable to hide courses requirements setion', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_target_audience',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Target Audience', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Enable to show course target audience setion', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_announcements',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Announcements', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Disable to hide course announcements settion', 'tutor' ),
-									),
-									array(
-										'key'         => 'disable_course_review',
-										'type'        => 'toggle_single',
-										'label'       => __( 'Review', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'on',
-										'desc'        => __( 'Disable to hide course review section', 'tutor' ),
-									),
-								),
-								'desc'          => __( 'Content Needed Here...', 'tutor' ),
-							),
-						),
-					),
 					'colors'          => array(
 						'label'        => __( 'Colors', 'tutor' ),
 						'slug'         => 'colors',
@@ -1023,7 +770,7 @@ class Options_V2 {
 								'type'    => 'color_preset',
 								'label'   => __( 'Preset Colors', 'tutor' ),
 								'desc'    => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
-								'default' => 'custom',
+								'default' => 'default',
 								'fields'  => array(
 									/* First 4 preset_name should be same as color_fields */
 									array(
@@ -1049,6 +796,36 @@ class Options_V2 {
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#F6F8FD',
+											),
+											array(
+												'slug'  => 'tutor_border_color',
+												'preset_name' => 'border',
+												'value' => '#CDCFD5',
+											),
+											array(
+												'slug'  => 'tutor_success_color',
+												'preset_name' => 'success',
+												'value' => '#24A148',
+											),
+											array(
+												'slug'  => 'tutor_warning_color',
+												'preset_name' => 'warning',
+												'value' => '#ED9700',
+											),
+											array(
+												'slug'  => 'tutor_danger_color',
+												'preset_name' => 'danger',
+												'value' => '#F44337',
+											),
+											array(
+												'slug'  => 'tutor_disable_color',
+												'preset_name' => 'disable',
+												'value' => '#E3E6EB',
+											),
+											array(
+												'slug'  => 'tutor_table_background_color',
+												'preset_name' => 'table_background',
+												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1076,6 +853,36 @@ class Options_V2 {
 												'preset_name' => 'background',
 												'value' => '#ECF7F3',
 											),
+											array(
+												'slug'  => 'tutor_border_color',
+												'preset_name' => 'border',
+												'value' => '#CDCFD5',
+											),
+											array(
+												'slug'  => 'tutor_success_color',
+												'preset_name' => 'success',
+												'value' => '#24A148',
+											),
+											array(
+												'slug'  => 'tutor_warning_color',
+												'preset_name' => 'warning',
+												'value' => '#ED9700',
+											),
+											array(
+												'slug'  => 'tutor_danger_color',
+												'preset_name' => 'danger',
+												'value' => '#F44337',
+											),
+											array(
+												'slug'  => 'tutor_disable_color',
+												'preset_name' => 'disable',
+												'value' => '#E3E6EB',
+											),
+											array(
+												'slug'  => 'tutor_table_background_color',
+												'preset_name' => 'table_background',
+												'value' => '#EFF1F6',
+											),
 										),
 									),
 									array(
@@ -1101,6 +908,36 @@ class Options_V2 {
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#FAF6FF',
+											),
+											array(
+												'slug'  => 'tutor_border_color',
+												'preset_name' => 'border',
+												'value' => '#CDCFD5',
+											),
+											array(
+												'slug'  => 'tutor_success_color',
+												'preset_name' => 'success',
+												'value' => '#24A148',
+											),
+											array(
+												'slug'  => 'tutor_warning_color',
+												'preset_name' => 'warning',
+												'value' => '#ED9700',
+											),
+											array(
+												'slug'  => 'tutor_danger_color',
+												'preset_name' => 'danger',
+												'value' => '#F44337',
+											),
+											array(
+												'slug'  => 'tutor_disable_color',
+												'preset_name' => 'disable',
+												'value' => '#E3E6EB',
+											),
+											array(
+												'slug'  => 'tutor_table_background_color',
+												'preset_name' => 'table_background',
+												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1228,6 +1065,269 @@ class Options_V2 {
 										'desc'         => __( 'Choose a color for the background of table elements ', 'tutor' ),
 									),
 								),
+							),
+						),
+					),
+					'block_course'    => array(
+						'label'      => __( 'Course', 'tutor' ),
+						'slug'       => 'course',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'     => 'courses_col_per_row',
+								'type'    => 'radio_horizontal',
+								'label'   => __( 'Column Per Row', 'tutor' ),
+								'default' => '4',
+								'options' => array(
+									'1' => 'One',
+									'2' => 'Two',
+									'3' => 'Three',
+									'4' => 'Four',
+								),
+								'desc'    => __( 'Define how many column you want to use to display courses.', 'tutor' ),
+							),
+							array(
+								'key'         => 'course_archive_filter',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Course Filter', 'tutor' ),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
+							),
+							array(
+								'key'     => 'courses_per_page',
+								'type'    => 'number',
+								'label'   => __( 'Pagination', 'tutor' ),
+								'default' => '12',
+								'desc'    => __( 'Number of items you want to be displayed "per page" in the pagination', 'tutor' ),
+							),
+							array(
+								'key'     => 'supported_course_filters',
+								'type'    => 'checkbox_horizontal',
+								'label'   => __( 'Preferred Course Filters', 'tutor' ),
+								'default' => array( 'search', 'category' ),
+								'options' => array(
+									'search'           => __( 'Keyword Search', 'tutor' ),
+									'category'         => __( 'Category', 'tutor' ),
+									'tag'              => __( 'Tag', 'tutor' ),
+									'difficulty_level' => __( 'Difficulty Level', 'tutor' ),
+									'price_type'       => __( 'Price Type', 'tutor' ),
+								),
+								'desc'    => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
+							),
+						),
+					),
+					'layout'          => array(
+						'label'      => __( 'Layout', 'tutor' ),
+						'slug'       => 'layout',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'           => 'instructor_list_layout',
+								'type'          => 'group_radio',
+								'label'         => __( 'Instructor List Layout', 'tutor' ),
+								'desc'          => __( 'Choose a layout for the list of instructor inside a course page. You can change this any time.', 'tutor' ),
+								'default'       => 'pp-top-full',
+								'group_options' => array(
+									'vertical'   => array(
+										'pp-top-full' => array(
+											'title' => 'Portrait',
+											'image' => 'instructor-layout/intructor-portrait.svg',
+										),
+										'pp-cp'       => array(
+											'title' => 'Cover',
+											'image' => 'instructor-layout/instructor-cover.svg',
+										),
+										'pp-top-left' => array(
+											'title' => 'Minimal',
+											'image' => 'instructor-layout/instructor-minimal.svg',
+										),
+									),
+									'horizontal' => array(
+										'pp-left-full'   => array(
+											'title' => 'Horizontal Portrait',
+											'image' => 'instructor-layout/instructor-horizontal-portrait.svg',
+										),
+										'pp-left-middle' => array(
+											'title' => 'Horizontal Minimal',
+											'image' => 'instructor-layout/instructor-horizontal-minimal.svg',
+										),
+									),
+								),
+							),
+							array(
+								'key'           => 'public_profile_layout',
+								'type'          => 'group_radio_full_3',
+								'label'         => __( 'Public Profile Layout', 'tutor' ),
+								'desc'          => __( 'Choose a layout design for a user’s public profile', 'tutor' ),
+								'default'       => 'pp-rectangle',
+								'group_options' => array(
+									'private'      => array(
+										'title' => 'Private',
+										'image' => 'profile-layout/profile-private.svg',
+									),
+									'pp-circle'    => array(
+										'title' => 'Modern',
+										'image' => 'profile-layout/profile-modern.svg',
+									),
+									'no-cp'        => array(
+										'title' => 'Minimal',
+										'image' => 'profile-layout/profile-minimal.svg',
+									),
+									'pp-rectangle' => array(
+										'title' => 'Classic',
+										'image' => 'profile-layout/profile-classic.svg',
+									),
+								),
+							),
+						),
+					),
+					'course-details'  => array(
+						'label'      => __( 'Course Details', 'tutor' ),
+						'slug'       => 'course-details',
+						'block_type' => 'isolate',
+						'fields'     => array(
+							array(
+								'key'           => 'course_details_adjustments',
+								'type'          => 'checkgroup',
+								'label'         => __( 'Course Details Adjustments', 'tutor' ),
+								'group_options' => array(
+									array(
+										'key'     => 'display_course_instructors',
+										'type'    => 'toggle_single',
+										'label'   => __( 'Instructor Info', 'tutor' ),
+										'default' => 'off',
+										'desc'    => __( 'Toggle to show instructor info', 'tutor' ),
+									),
+									array(
+										'key'     => 'enable_q_and_a_on_course',
+										'type'    => 'toggle_single',
+										'label'   => __( 'Q&A', 'tutor' ),
+										'default' => 'on',
+										'desc'    => __( 'Enable to add a Q&A section', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_author',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Disable Author', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Enabling to remove course author name', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_level',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Disable Level', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Toggle to remove course level', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_share',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Disable Share', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Toggle to hide course share', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_duration',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Duration', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Enable to show course duration', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_total_enrolled',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Enrolled Students', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Enable to show total enrolled students', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_update_date',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Update Date', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Disable to hide course update infromation', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_progress_bar',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Progress Bar', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Disable to hide course progress for Students', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_material',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Material', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Disable to hide course materials', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_about',
+										'type'        => 'toggle_single',
+										'label'       => __( 'About', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Disable to hide course about section', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_description',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Description', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Disable to hide course description', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_benefits',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Benefits', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Disable to hide course benefits section', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_requirements',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Pre-Requirements', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Disable to hide courses requirements setion', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_target_audience',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Target Audience', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Enable to show course target audience setion', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_announcements',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Announcements', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'off',
+										'desc'        => __( 'Disable to hide course announcements settion', 'tutor' ),
+									),
+									array(
+										'key'         => 'disable_course_review',
+										'type'        => 'toggle_single',
+										'label'       => __( 'Review', 'tutor' ),
+										'label_title' => __( 'Disable', 'tutor' ),
+										'default'     => 'on',
+										'desc'        => __( 'Disable to hide course review section', 'tutor' ),
+									),
+								),
+								'desc'          => __( 'Content Needed Here...', 'tutor' ),
 							),
 						),
 					),

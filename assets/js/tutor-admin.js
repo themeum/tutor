@@ -2311,6 +2311,31 @@ var resetConfirmation = function resetConfirmation() {
                   _toConsumableArray(elementOptions).forEach(function (elementOption) {
                     elementOption.selected = item["default"].includes(elementOption.value) ? true : false;
                   });
+                } else if (item.type == 'color_preset') {
+                  var presetItems = elementByName(itemName);
+                  presetItems.forEach(function (presetItem) {
+                    var labelClasses = presetItem.parentElement.classList;
+                    item["default"].includes(presetItem.value) ? labelClasses.add('is-checked') : labelClasses.remove('is-checked');
+                    presetItem.checked = item["default"].includes(presetItem.value) ? true : false;
+                  });
+                  console.log(item);
+                  item.fields.forEach(function (fields) {
+                    if (fields.key == item["default"]) {
+                      fields.colors.forEach(function (picker) {
+                        var pickerName = 'tutor_option[' + picker.slug + ']';
+                        var pickerItem = elementByName(pickerName)[0];
+                        var pickerItemParent = pickerItem.parentElement;
+                        pickerItem.value = picker.value;
+                        pickerItem.nextElementSibling.innerText = picker.value;
+                        pickerItemParent.style.borderColor = picker.value;
+                        pickerItemParent.style.boxShadow = "inset 0 0 0 1px ".concat(picker.value);
+                        setTimeout(function () {
+                          pickerItemParent.style.borderColor = '#cdcfd5';
+                          pickerItemParent.style.boxShadow = 'none';
+                        }, 5000);
+                      });
+                    }
+                  });
                 } else if (item.type == 'checkbox_horizontal' || item.type == 'checkbox_vertical' || item.type == 'radio_horizontal' || item.type == 'radio_horizontal_full' || item.type == 'radio_vertical' || item.type == 'group_radio' || item.type == 'group_radio_full_3') {
                   if (item.type == 'checkbox_horizontal') {
                     Object.keys(item.options).forEach(function (optionKeys) {
@@ -2328,8 +2353,6 @@ var resetConfirmation = function resetConfirmation() {
                       elemCheck.checked = item["default"].includes(elemCheck.value) ? true : false;
                     });
                   }
-                } else if (item.type == 'color_preset') {
-                  console.log(item);
                 } else if (item.type == 'upload_full') {
                   elementItem.value = '';
                   elementItem.nextElementSibling.src = '';
