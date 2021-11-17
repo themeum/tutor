@@ -10,7 +10,9 @@ if (hasExpandableCardInputs) {
 	hasExpandableCardInputs.forEach((el) => {
 		const detailItems = document.querySelectorAll('.tutor-course-sidebar-card-pick-plan-label .input-plan-details');
 
-		console.log(el.checked);
+		if (el.checked) {
+			el.parentElement.querySelector('.input-plan-details').style.maxHeight = 'max-content';
+		}
 
 		el.addEventListener('change', (e) => {
 			const inputDetails = e.target

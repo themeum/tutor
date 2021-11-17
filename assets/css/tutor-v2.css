@@ -27549,7 +27549,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   width: 100%;
   height: 40px;
   /* text/medium/body-16px */
-  font-family: "SF Pro Display", sans-serif;
+  font-family: 'SF Pro Display', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -27561,7 +27561,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 26px;
-  padding: 10px 30px 10px 10px;
+  padding: 10px 30px 10px 20px;
   -webkit-transition: 200ms ease-out;
   transition: 200ms ease-out;
 }
@@ -27569,6 +27569,12 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-react-datepicker .react-datepicker__input-container input:focus-visible {
   outline: none;
   border-color: #3d64de;
+}
+
+.tutor-react-datepicker .react-datepicker__input-container input:focus {
+  border-color: #1973aa;
+  -webkit-box-shadow: unset;
+          box-shadow: unset;
 }
 
 .tutor-react-datepicker .react-datepicker__header {
@@ -27747,7 +27753,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-react-datepicker__selects-range .react-datepicker__day:before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0 -50%;
   -webkit-box-shadow: 0px 1px 0px 0px #d2dbf5, 0px -1px 0px 0px #d2dbf5;
@@ -27775,7 +27781,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-react-datepicker__selects-range .react-datepicker__day--range-start::after, .tutor-react-datepicker__selects-range .react-datepicker__day--range-end::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
