@@ -2427,7 +2427,8 @@ var resetConfirmation = function resetConfirmation() {
               }
             });
             setTimeout(function () {
-              tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success'); // tutor_toast('Reset Successful', 'Default data for ' + resetTitle + ' successfully!', 'success');
+              tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success');
+              document.getElementById('save_tutor_option').disabled = false;
             }, 300);
           }
         };
