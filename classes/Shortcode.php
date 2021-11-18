@@ -81,7 +81,7 @@ class Shortcode {
 				tutor_load_template( 'dashboard', array( 'is_shortcode' => true ) );
 			}
 		} else {
-			tutor_load_template( 'global.login' );
+			echo sprintf( __('Please %sSign-In%s to view this page', 'tutor'), '<a href="#" class="tutor-open-login-modal">', '</a>');
 		}
 		return apply_filters( 'tutor_dashboard/index', ob_get_clean() );
 	}
