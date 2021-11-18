@@ -3,6 +3,8 @@ node_modules
 vendor/
 test/
 build/
+assets/
+css/
 .idea/
 .vscode/
 .docz/
