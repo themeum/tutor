@@ -1152,39 +1152,6 @@ jQuery(document).ready(function ($) {
     });
 
     /**
-     * Tutor ajax login
-     *
-     * @since v.1.6.3
-     */
-    $(document).on('submit', '.tutor-login-form-wrap #loginform', function (e) {
-        e.preventDefault();
-        
-        var $that = $(this);
-        var $form_wrapper = $('.tutor-login-form-wrap');
-
-        var form_data = $that.serializeObject();
-        form_data.action = 'tutor_user_login';
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: form_data,
-            success: function (response) {
-                if (response.success) {
-                    location.assign(response.data.redirect);
-                    location.reload();
-                } else {
-                    var error_message = response.data || __('Invalid username or password!', 'tutor');
-                    if ($form_wrapper.find('.tutor-alert').length) {
-                        $form_wrapper.find('.tutor-alert').html(error_message);
-                    } else {
-                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">' + error_message + '</div>');
-                    }
-                }
-            },
-        });
-    });
-
-    /**
      * Show hide is course public checkbox (frontend dashboard editor)
      * 
      * @since  v.1.7.2
