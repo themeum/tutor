@@ -93,6 +93,18 @@ if ($best_watch_time > 0){
     </div>
 
 </div>
+<div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
+    <div class="tutor-mobile-top-nav d-grid">
+        <a href="<?php echo get_the_permalink($previous_id); ?>">
+            <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
+        </a>
+        <div class="tutor-top-nav-title text-regular-body color-text-primary">
+            <?php 
+                the_title();
+            ?>
+        </div>
+    </div>
+</div>
 <?php } else { ?>
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
     <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
