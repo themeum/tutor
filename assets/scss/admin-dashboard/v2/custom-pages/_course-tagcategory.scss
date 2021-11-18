@@ -5,21 +5,15 @@
 
 	&.taxonomy-course-category,
 	&.taxonomy-course-tag {
-		// :not(.tablenav-pages) {
-		// 	select {
-		// 		padding-left: 20px;
-		// 		padding-right: 30px;
-		// 	}
-		// 	.button,
-		// 	select {
-		// 		border-radius: 6px;
-		// 		min-height: 40px;
-		// 	}
-		// 	.button {
-		// 		padding-left: 20px;
-		// 		padding-right: 20px;
-		// 	}
-		// }
+		.button {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+		select {
+			padding-left: 20px;
+			padding-right: 40px;
+			background-position: right 10px top 55%;
+		}
 		.button,
 		select {
 			border-radius: 6px;
@@ -29,6 +23,7 @@
 		.tablenav-pages {
 			.button {
 				min-height: 30px;
+				padding: 0 4px;
 			}
 		}
 
@@ -75,27 +70,23 @@
 				}
 			}
 			tbody {
-				tr:nth-child(odd) th,
-				tr:nth-child(odd) td {
-					background: #fff;
-				}
-				tr:nth-child(even) th,
-				tr:nth-child(even) td {
-					background: #fcfcfd;
-				}
+				tr {
+					&:nth-child(odd) th,
+					&:nth-child(odd) td {
+						background: #fff;
+					}
+					&:nth-child(even) th,
+					&:nth-child(even) td {
+						background: #fcfcfd;
+					}
 
-				tr:not(:last-child) {
-					th,
-					td {
-						border-bottom: 1px solid #cdcfd5;
+					&:not(:last-child) {
+						th,
+						td {
+							border-bottom: 1px solid #cdcfd5;
+						}
 					}
 				}
-			}
-			tr {
-			}
-			th {
-			}
-			td {
 			}
 		}
 
