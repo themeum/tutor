@@ -2801,7 +2801,7 @@ table.tutor-table p {
 /* /.report-course-list - end */
 
 //page reset style
-#tutor-admin-page-refresh {
+.tutor-admin-page-refresh {
 	display: flex;
 	align-items: center;
 	font-style: normal;
@@ -2810,7 +2810,7 @@ table.tutor-table p {
 	color: #5B616F;
 	cursor: pointer;
 	align-self: center;
-	margin-top: 48px;
+	margin-top: 43px;
 		i {
 			color: #1973AA;
 			font-size: 18px;

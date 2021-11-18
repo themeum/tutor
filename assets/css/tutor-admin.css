@@ -3811,7 +3811,7 @@ table.tutor-table p {
 }
 
 /* /.report-course-list - end */
-#tutor-admin-page-refresh {
+.tutor-admin-page-refresh {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3825,10 +3825,10 @@ table.tutor-table p {
   cursor: pointer;
   -ms-flex-item-align: center;
       align-self: center;
-  margin-top: 48px;
+  margin-top: 43px;
 }
 
-#tutor-admin-page-refresh i {
+.tutor-admin-page-refresh i {
   color: #1973AA;
   font-size: 18px;
 }

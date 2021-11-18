@@ -37,9 +37,15 @@
 			<div class="">
 				<label class="tutor-form-label">
 				</label>
-				<div id="tutor-admin-page-refresh">
+					<?php
+						$page     = isset( $_GET['page'] ) ? $_GET['page'] : '';
+						$sub_page = isset( $_GET['sub_page'] ) ? $_GET['sub_page'] : '';
+						$url      = '' === $sub_page ? "?page=$page" : "?page=$page&sub_page=$sub_page";
+
+					?>
+				<a href="<?php echo esc_url( $url ); ?>" class="tutor-admin-page-refresh">
 					<i class="color-wordpress ttr-refresh-1-filled"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
-				</div>
+				</a>
 			</div>
 			<?php
 				$course_id     = isset( $_GET['course-id'] ) ? esc_html__( $_GET['course-id'] ) : '';
