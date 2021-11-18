@@ -12,6 +12,7 @@ body {}
     }
 }
 
+@import './sidebar';
 .tutor-single-lesson-wraper {
     display: flex;
     position: relative;
@@ -32,10 +33,10 @@ body {}
             border: none;
         }
     }
-    @import './sidebar';
     .tutor-single-entry-content {
         flex: 100%;
         padding-bottom: 90px;
+        // topbar
         .tutor-single-page-top-bar {
             background: $design-brand;
             @include breakpoint-max(mobile) {
@@ -119,42 +120,41 @@ body {}
             }
         }
         /* tutor-single-page-top-bar */
-        .course-players {
-            position: relative;
+        .tutor-mobile-footer-navigation {
+            height: 90px;
+            border: 1px solid $black-05;
+            box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+            background: $color-white;
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            height: calc(100vh - 250px);
-            background: black;
-            iframe {
-                width: calc(100% - 150px);
-                height: 100%;
-                position: absolute;
-                border: 0px;
+            z-index: 1;
+            @include breakpoint-min(576) {
+                display: none;
             }
-            .tutor-lesson-prev,
-            .tutor-lesson-next {
-                cursor: pointer;
-                width: 31px;
-                height: 215px;
-                background: rgba(255, 255, 255, 0.1);
-                top: 50%;
-                transform: translateY(-50%);
-                position: absolute;
-                backdrop-filter: blur(94px);
-                span {
-                    font-size: 40px;
-                    color: #ffffff8c;
+            .tutor-footer-content {
+                flex-basis: 70%;
+                .tutor-footer-progress-bar {
+                    // border-bottom: 4px solid $primary-main;
+                    // border-radius: 2px;
                 }
             }
-            .tutor-lesson-prev {
-                left: 0;
-                border-radius: 0px 6px 6px 0px;
+            .tutor-quiz-skip-button {
+                flex-basis: 50%;
+                button {
+                    padding: 0;
+                    border: 0;
+                }
             }
-            .tutor-lesson-next {
-                right: 0;
-                border-radius: 6px 0px 0px 6px;
+            .tutor-footer-complete-btn {
+                button {
+                    padding: 8px 20px;
+                }
             }
         }
-        @import './quiz.scss';
+        @import './players';
+        @import './quiz';
     }
 }
 
@@ -164,5 +164,5 @@ body {}
     }
 }
 
-@import './spotlight.scss';
+@import './spotlight';
 @import './course-assignment.scss';
