@@ -854,28 +854,6 @@ jQuery(document).ready(function ($) {
     });
 
     /**
-     * Frontend Profile
-     */
-
-    if (!$('#tutor_profile_photo_id').val()) {
-        $('.tutor-profile-photo-delete-btn').hide();
-    }
-
-    $(document).on('click', '.tutor-profile-photo-delete-btn', function () {
-        $('.tutor-profile-photo-upload-wrap').find('img').attr('src', _tutorobject.placeholder_img_src);
-        $('#tutor_profile_photo_id').val('');
-        $('.tutor-profile-photo-delete-btn').hide();
-
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: { 'action': 'tutor_profile_photo_remove' },
-        });
-
-        return false;
-    });
-
-    /**
      * Assignment
      *
      * @since v.1.3.3

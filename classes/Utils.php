@@ -8309,4 +8309,24 @@ class Utils {
 		);
 		return $frequencies;
 	}
+
+	public function get_table_columns_from_context($page_key, $context, $contexts, $filter_hook=null) {
+
+		$fields = array();
+		$columns = $contexts[$page_key]['columns'];
+		$filter_hook ? $columns = apply_filters( $filter_hook, $contexts[$page_key]['columns'] ) : 0;
+
+		$allowed = $contexts[$page_key]['contexts'][$context];
+		is_string($allowed) ? $allowed=$contexts[$page_key]['contexts'][$allowed] : 0; // By reference
+		
+		if($allowed===true) {
+			$fields=$columns;
+		} else {
+			foreach($columns as $key=>$column) {
+				in_array($key, $allowed) ? $fields[$key]=$column : 0;
+			}
+		}		
+
+		return $fields;
+	}
 }
