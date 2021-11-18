@@ -2246,6 +2246,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 /*
 Reset to default for settings individual page
 */
+var optionForm = document.querySelector('#tutor-option-form');
 document.addEventListener('readystatechange', function (event) {
   if (event.target.readyState === 'interactive') {}
 
@@ -2440,8 +2441,6 @@ var resetConfirmation = function resetConfirmation() {
 var elementByName = function elementByName(key) {
   return document.getElementsByName(key);
 };
-
-var optionForm = document.querySelector('#tutor-option-form');
 
 if (null !== optionForm) {
   optionForm.addEventListener('input', function (event) {
