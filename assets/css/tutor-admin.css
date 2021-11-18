@@ -3053,7 +3053,6 @@ h2.tutor-page-heading {
 }
 
 .tutor-alert::before {
-  content: '\e95f';
   position: absolute;
   font-size: 30px;
   font-family: 'tutor' !important;
@@ -7272,19 +7271,6 @@ body.wp-admin .tutor-qna-single-wrapper {
   font-weight: normal;
   font-size: 15px;
   color: #41454F;
-}
-
-.tutor-qna-single-question .tutor-qa-reply {
-  margin-right: 15px;
-}
-
-.tutor-qna-single-question .tutor-qa-reply textarea {
-  height: 80px;
-  min-height: auto;
-}
-
-.tutor-qna-single-question .tutor-qa-reply .tutor-qna-badges > span > span {
-  display: none;
 }
 
 body.wp-admin .tutor-qa-chatlist {
