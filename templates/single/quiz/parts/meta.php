@@ -56,7 +56,7 @@
 
 <div class="quiz-flash-message">
     <?php if ($remaining_time_context < 0) { ?>
-    <div class="tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between">
+    <div class="tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between" data-attempt-allowed="<?php esc_attr_e( $attempts_allowed );?>" data-attempt-remaining="<?php esc_attr_e( $attempt_remaining );?>">
         <div class="flash-info d-flex align-items-center">
             <span class="ttr-warning-outline-circle-filled color-design-warning tutor-mr-7"></span>
             <span class="text-regular-caption color-text-title">
@@ -76,11 +76,13 @@
         </div>
         <div class="flash-action">
             <form id="tutor-start-quiz" method="post">
-			    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-			    <input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-			    <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
-                <button type="submit" class="tutor-btn tutor-btn-md reattempt-btn" name="start_quiz_btn">
-                    <?php _e('Reattempt', 'tutor'); ?>
+                <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+
+                <input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
+                <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+
+                <button type="submit" class="tutor-btn tutor-btn-md reattempt-btn" name="start_quiz_btn" value="start_quiz">
+                    <?php _e( 'Reattempt', 'tutor' ); ?>
                 </button>
             </form>
         </div>
