@@ -18,26 +18,6 @@
     }
     ?>
 
-    <div id="tutor-quiz-time-expire-wrapper" data-attempt-allowed="<?php esc_attr_e( $attempts_allowed );?>" data-attempt-remaining="<?php esc_attr_e( $attempt_remaining );?>">
-        <div class="tutor-alert">
-            <div class="text">
-
-            </div>
-            <div>
-                <form id="tutor-start-quiz" method="post">
-                    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-
-                    <input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-                    <input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
-
-                    <button type="submit" class="tutor-btn tutor-is-warning" name="start_quiz_btn" value="start_quiz">
-                        <?php _e( 'Reattempt', 'tutor' ); ?>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <form id="tutor-answering-quiz" method="post">
         <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
         <input type="hidden" value="<?php echo $is_started_quiz->attempt_id; ?>" name="attempt_id"/>
