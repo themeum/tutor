@@ -1,6 +1,61 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./assets/react/front/course/_login-reg.js":
+/*!*************************************************!*\
+  !*** ./assets/react/front/course/_login-reg.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helper/response */ "./assets/react/helper/response.js");
+
+window.jQuery(document).ready(function ($) {
+  var __ = wp.i18n.__;
+  /**
+   * Tutor ajax login
+   *
+   * @since v.1.6.3
+   */
+
+  $(document).on('submit', '.tutor-login-modal form', function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var button = form.find('button');
+    var error_container = form.find('.tutor-login-error');
+    var form_data = $(this).serializeObject();
+    form_data.action = 'tutor_user_login';
+    $.ajax({
+      url: _tutorobject.ajaxurl,
+      type: 'POST',
+      data: form_data,
+      beforeSend: function beforeSend() {
+        button.addClass('tutor-updating-message');
+        error_container.empty();
+      },
+      success: function success(response) {
+        if (response.success) {
+          location.assign(response.data.redirect_to);
+          return;
+        }
+
+        var error_message = (response.data || {}).message || __('Invalid username or password!', 'tutor');
+
+        error_container.html("\n                    <div class=\"tutor-alert tutor-warning tutor-mt-28\">\n                        <div class=\"tutor-alert-text\">\n                            <span class=\"tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10\"></span>\n                            <span>\n                                ".concat(error_message, "\n                            </span>\n                        </div>\n                    </div>\n                "));
+      },
+      error: function error() {
+        tutor_toast(__('Error!', 'tutor'), (0,_helper_response__WEBPACK_IMPORTED_MODULE_0__.get_response_message)(), 'error');
+      },
+      complete: function complete() {
+        button.removeClass('tutor-updating-message');
+      }
+    });
+  });
+});
+
+/***/ }),
+
 /***/ "./assets/react/front/course/_spotlight.js":
 /*!*************************************************!*\
   !*** ./assets/react/front/course/_spotlight.js ***!
@@ -27,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
   /* sidetab tab position */
 
   var sidebarParent = function sidebarParent(sideBarTabs) {
+    console.log(sideBarTabs);
     sideBarTabs.forEach(function (tab) {
       tab.addEventListener('click', function (event) {
         var tabConent = event.currentTarget.parentNode.nextElementSibling; // console.log(tabConent, tabConent);
@@ -244,16 +300,17 @@ window.jQuery(document).ready(function ($) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_spotlight */ "./assets/react/front/course/_spotlight.js");
-/* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_spotlight__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wishlist__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_wishlist */ "./assets/react/front/course/_wishlist.js");
-/* harmony import */ var _wishlist__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wishlist__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _login_reg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_login-reg */ "./assets/react/front/course/_login-reg.js");
+/* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_spotlight */ "./assets/react/front/course/_spotlight.js");
+/* harmony import */ var _spotlight__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_spotlight__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wishlist__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_wishlist */ "./assets/react/front/course/_wishlist.js");
+/* harmony import */ var _wishlist__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wishlist__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 window.jQuery(document).ready(function ($) {
   // Login require on enrol purchase click
-  $(document).on('click', '.tutor-course-entry-box-login button, .tutor-course-entry-box-login a', function (e) {
-    console.log('Clicked');
+  $(document).on('click', '.tutor-course-entry-box-login button, .tutor-course-entry-box-login a, .tutor-open-login-modal', function (e) {
     e.preventDefault();
     $('.tutor-login-modal').addClass('tutor-is-active');
   });
@@ -902,6 +959,33 @@ jQuery(document).ready(function ($) {
     _iterator3.f();
   }
 });
+
+/***/ }),
+
+/***/ "./assets/react/helper/response.js":
+/*!*****************************************!*\
+  !*** ./assets/react/helper/response.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "get_response_message": () => (/* binding */ get_response_message)
+/* harmony export */ });
+var get_response_message = function get_response_message(response, def_message) {
+  var __ = wp.i18n.__;
+
+  var _ref = response || {},
+      _ref$data = _ref.data,
+      data = _ref$data === void 0 ? {} : _ref$data;
+
+  var _data$message = data.message,
+      message = _data$message === void 0 ? def_message || __('Something Went Wrong!', 'tutor') : _data$message;
+  return message;
+};
+
+
 
 /***/ })
 
@@ -2149,38 +2233,6 @@ jQuery(document).ready(function ($) {
     if (!container.is(e.target) && container.has(e.target).length === 0) {
       $content.slideUp(100);
     }
-  });
-  /**
-   * Tutor ajax login
-   *
-   * @since v.1.6.3
-   */
-
-  $(document).on('submit', '.tutor-login-form-wrap #loginform', function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var $form_wrapper = $('.tutor-login-form-wrap');
-    var form_data = $that.serializeObject();
-    form_data.action = 'tutor_user_login';
-    $.ajax({
-      url: _tutorobject.ajaxurl,
-      type: 'POST',
-      data: form_data,
-      success: function success(response) {
-        if (response.success) {
-          location.assign(response.data.redirect);
-          location.reload();
-        } else {
-          var error_message = response.data || __('Invalid username or password!', 'tutor');
-
-          if ($form_wrapper.find('.tutor-alert').length) {
-            $form_wrapper.find('.tutor-alert').html(error_message);
-          } else {
-            $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">' + error_message + '</div>');
-          }
-        }
-      }
-    });
   });
   /**
    * Show hide is course public checkbox (frontend dashboard editor)
