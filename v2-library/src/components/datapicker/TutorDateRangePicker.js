@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import DatePicker, { CalendarContainer } from 'react-datepicker';
 import { differenceInDays } from 'date-fns';
+import { element } from 'prop-types';
 
 const TutorDateRangePicker = () => {
 	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : "Y-M-d";
@@ -35,8 +36,12 @@ const TutorDateRangePicker = () => {
 			let startFormateDate = `${startYear}-${startMonth}-${startDay}`;
 			let endFormateDate = `${endYear}-${endMonth}-${endDay}`;
 			// Update url
+			if (params.has('period')) {
+				params.delete('period');
+			} 
 			params.set('start_date', startFormateDate);
 			params.set('end_date', endFormateDate);
+			
 			window.location = url;
 		}
 	}

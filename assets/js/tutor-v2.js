@@ -4547,7 +4547,16 @@ if (tutorDropdownSelect) {
     optionsContainer.classList.toggle('is-active');
   });
   optionsList.forEach(function (option) {
-    option.addEventListener('click', function () {
+    option.addEventListener('click', function (e) {
+      var key = e.target.dataset.key;
+
+      if (key === 'custom') {
+        document.querySelector(".tutor-v2-date-range-picker.inactive").classList.add('active');
+        document.querySelector(".tutor-v2-date-range-picker.inactive input").click();
+        document.querySelector(".tutor-v2-date-range-picker.inactive input").style.display = "none";
+        document.querySelector(".tutor-v2-date-range-picker.inactive .react-datepicker-popper").style.marginTop = "-40px";
+      }
+
       selected.innerHTML = option.querySelector('label').innerHTML;
       optionsContainer.classList.remove('is-active');
     });
@@ -4935,9 +4944,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-datepicker */ "./node_modules/react-datepicker/dist/react-datepicker.min.js");
-/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_datepicker__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/differenceInDays/index.js");
+/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-datepicker */ "./node_modules/react-datepicker/dist/react-datepicker.min.js");
+/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_datepicker__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/differenceInDays/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -4949,6 +4960,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -4966,7 +4978,7 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
       startDate = _dateRange[0],
       endDate = _dateRange[1];
 
-  var dayCount = (0,date_fns__WEBPACK_IMPORTED_MODULE_1__["default"])(endDate, startDate);
+  var dayCount = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(endDate, startDate);
 
   var handleCalenderChange = function handleCalenderChange(update) {
     setDateRange(update);
@@ -4992,6 +5004,10 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
       var startFormateDate = "".concat(startYear, "-").concat(startMonth, "-").concat(startDay);
       var endFormateDate = "".concat(endYear, "-").concat(endMonth, "-").concat(endDay); // Update url
 
+      if (params.has('period')) {
+        params["delete"]('period');
+      }
+
       params.set('start_date', startFormateDate);
       params.set('end_date', endFormateDate);
       window.location = url;
@@ -5001,7 +5017,7 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
   var ContainerWrapper = function ContainerWrapper(_ref) {
     var className = _ref.className,
         children = _ref.children;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_datepicker__WEBPACK_IMPORTED_MODULE_2__.CalendarContainer, {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_datepicker__WEBPACK_IMPORTED_MODULE_3__.CalendarContainer, {
       className: className
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       style: {
@@ -5036,7 +5052,7 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     style: {
       width: '100%'
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_datepicker__WEBPACK_IMPORTED_MODULE_2___default()), {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_datepicker__WEBPACK_IMPORTED_MODULE_3___default()), {
     placeholderText: " ".concat(dateFormat, " - ").concat(dateFormat, " "),
     showPopperArrow: false,
     shouldCloseOnSelect: false,
