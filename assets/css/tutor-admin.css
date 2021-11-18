@@ -6826,29 +6826,90 @@ li.tutor-option-nav-item h4 {
   max-width: 100%;
 }
 
-.post-type-courses.taxonomy-course-tag .button,
+.post-type-courses.taxonomy-course-category .button,
+.post-type-courses.taxonomy-course-category select, .post-type-courses.taxonomy-course-tag .button,
 .post-type-courses.taxonomy-course-tag select {
   border-radius: 6px;
+  min-height: 40px;
 }
 
-.post-type-courses.taxonomy-course-tag input[type='text'],
+.post-type-courses.taxonomy-course-category .tablenav-pages .button, .post-type-courses.taxonomy-course-tag .tablenav-pages .button {
+  min-height: 30px;
+}
+
+.post-type-courses.taxonomy-course-category input[type='text']:not(.current-page),
+.post-type-courses.taxonomy-course-category input[type='search'],
+.post-type-courses.taxonomy-course-category textarea,
+.post-type-courses.taxonomy-course-category select, .post-type-courses.taxonomy-course-tag input[type='text']:not(.current-page),
 .post-type-courses.taxonomy-course-tag input[type='search'],
-.post-type-courses.taxonomy-course-tag textarea {
+.post-type-courses.taxonomy-course-tag textarea,
+.post-type-courses.taxonomy-course-tag select {
   border-radius: 6px;
+  min-height: 40px;
 }
 
-.post-type-courses.taxonomy-course-tag input[type='text']:not(:focus),
+.post-type-courses.taxonomy-course-category input[type='text']:not(.current-page):not(:focus),
+.post-type-courses.taxonomy-course-category input[type='search']:not(:focus),
+.post-type-courses.taxonomy-course-category textarea:not(:focus),
+.post-type-courses.taxonomy-course-category select:not(:focus), .post-type-courses.taxonomy-course-tag input[type='text']:not(.current-page):not(:focus),
 .post-type-courses.taxonomy-course-tag input[type='search']:not(:focus),
-.post-type-courses.taxonomy-course-tag textarea:not(:focus) {
+.post-type-courses.taxonomy-course-tag textarea:not(:focus),
+.post-type-courses.taxonomy-course-tag select:not(:focus) {
   border-color: #c0c3cb;
 }
 
-.post-type-courses.taxonomy-course-tag .form-wrap p {
+.post-type-courses.taxonomy-course-category .form-wrap p, .post-type-courses.taxonomy-course-tag .form-wrap p {
   margin-top: 16px;
 }
 
-.post-type-courses.taxonomy-course-tag table.wp-list-table {
+.post-type-courses.taxonomy-course-category p.search-box,
+.post-type-courses.taxonomy-course-category .actions.bulkactions, .post-type-courses.taxonomy-course-tag p.search-box,
+.post-type-courses.taxonomy-course-tag .actions.bulkactions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table, .post-type-courses.taxonomy-course-tag table.wp-list-table {
   border-radius: 6px;
+  margin-top: 24px;
+  border-color: #cdcfd5;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table thead th,
+.post-type-courses.taxonomy-course-category table.wp-list-table thead td, .post-type-courses.taxonomy-course-tag table.wp-list-table thead th,
+.post-type-courses.taxonomy-course-tag table.wp-list-table thead td {
+  background: #f4f6f9;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table thead tr > *:first-child, .post-type-courses.taxonomy-course-tag table.wp-list-table thead tr > *:first-child {
+  border-top-left-radius: 6px;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table thead tr > *:last-child, .post-type-courses.taxonomy-course-tag table.wp-list-table thead tr > *:last-child {
+  border-top-right-radius: 6px;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:nth-child(odd) th,
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:nth-child(odd) td, .post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:nth-child(odd) th,
+.post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:nth-child(odd) td {
+  background: #fff;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:nth-child(even) th,
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:nth-child(even) td, .post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:nth-child(even) th,
+.post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:nth-child(even) td {
+  background: #fcfcfd;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:not(:last-child) th,
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:not(:last-child) td, .post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:not(:last-child) th,
+.post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid #cdcfd5;
+}
+
+.post-type-courses.taxonomy-course-category .tablenav.top, .post-type-courses.taxonomy-course-tag .tablenav.top {
+  margin-top: 20px;
 }
 
 .monetization-fees.is-disable .tutor-option-field-row:nth-child(2), .monetization-fees.is-disable .tutor-option-field-row:nth-child(3) {
