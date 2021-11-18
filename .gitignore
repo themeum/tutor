@@ -3,6 +3,8 @@ assets/css/*
 !assets/css/.gitkeep
 assets/js/*
 !assets/js/lib/
+languages/*
+!languages/.gitkeep
 vendor/
 test/
 build/
