@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     sideBar ? sideBar.style.top = topBar.clientHeight + 'px' : 0;
     /* sidetab tab position */
     const sidebarParent = function(sideBarTabs) {
+        console.log(sideBarTabs);
+        
         sideBarTabs.forEach((tab) => {
             tab.addEventListener('click', (event) => {
                 const tabConent =
