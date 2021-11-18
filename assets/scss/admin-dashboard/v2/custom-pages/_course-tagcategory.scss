@@ -3,16 +3,41 @@
 		// background: red !important;
 	}
 
+	&.taxonomy-course-category,
 	&.taxonomy-course-tag {
+		// :not(.tablenav-pages) {
+		// 	select {
+		// 		padding-left: 20px;
+		// 		padding-right: 30px;
+		// 	}
+		// 	.button,
+		// 	select {
+		// 		border-radius: 6px;
+		// 		min-height: 40px;
+		// 	}
+		// 	.button {
+		// 		padding-left: 20px;
+		// 		padding-right: 20px;
+		// 	}
+		// }
 		.button,
 		select {
 			border-radius: 6px;
+			min-height: 40px;
 		}
 
-		input[type='text'],
+		.tablenav-pages {
+			.button {
+				min-height: 30px;
+			}
+		}
+
+		input[type='text']:not(.current-page),
 		input[type='search'],
-		textarea {
+		textarea,
+		select {
 			border-radius: 6px;
+			min-height: 40px;
 
 			&:not(:focus) {
 				border-color: #c0c3cb;
@@ -23,15 +48,48 @@
 			margin-top: 16px;
 		}
 
+		p.search-box,
+		.actions.bulkactions {
+			display: flex;
+		}
+
 		table.wp-list-table {
 			border-radius: 6px;
+			margin-top: 24px;
+			border-color: #cdcfd5;
 
 			thead {
 				th,
 				td {
+					background: #f4f6f9;
+				}
+				tr {
+					> * {
+						&:first-child {
+							border-top-left-radius: 6px;
+						}
+						&:last-child {
+							border-top-right-radius: 6px;
+						}
+					}
 				}
 			}
 			tbody {
+				tr:nth-child(odd) th,
+				tr:nth-child(odd) td {
+					background: #fff;
+				}
+				tr:nth-child(even) th,
+				tr:nth-child(even) td {
+					background: #fcfcfd;
+				}
+
+				tr:not(:last-child) {
+					th,
+					td {
+						border-bottom: 1px solid #cdcfd5;
+					}
+				}
 			}
 			tr {
 			}
@@ -39,6 +97,10 @@
 			}
 			td {
 			}
+		}
+
+		.tablenav.top {
+			margin-top: 20px;
 		}
 	}
 }
