@@ -2799,3 +2799,20 @@ table.tutor-table p {
 }
 
 /* /.report-course-list - end */
+
+//page reset style
+#tutor-admin-page-refresh {
+	display: flex;
+	align-items: center;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 15px;
+	color: #5B616F;
+	cursor: pointer;
+	align-self: center;
+	margin-top: 48px;
+		i {
+			color: #1973AA;
+			font-size: 18px;
+		}
+}
