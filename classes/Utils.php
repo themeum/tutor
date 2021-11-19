@@ -3160,9 +3160,9 @@ class Utils {
 		$course_id 	= sanitize_text_field( $course_id );
 		$student_id = sanitize_text_field( $student_id );
 		$count = $wpdb->get_var($wpdb->prepare(
-			"SELECT COUNT(ID) FROM wp_posts
-				INNER JOIN wp_comments c ON c.comment_post_ID = wp_posts.ID  AND c.user_id = %d AND c.comment_approved = %s
-				WHERE post_parent IN (SELECT ID FROM wp_posts WHERE post_type = %s AND post_parent = %d AND post_status = %s)
+			"SELECT COUNT(ID) FROM {$wpdb->posts}
+				INNER JOIN {$wpdb->comments} c ON c.comment_post_ID = ID  AND c.user_id = %d AND c.comment_approved = %s
+				WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d AND post_status = %s)
 					AND post_type =%s
 					AND post_status = %s
 			",
