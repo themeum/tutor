@@ -180,11 +180,17 @@ jQuery(document).ready(function ($) {
       },
       success: function success(data) {
         if (!data.success) {
-          for(let v of Object.values(data.data.errors)) {
-            responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+          if (data.data.errors.errors) {
+            responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${_("Sorry, that username already exists or something wrong!", 'tutor')}</li></div>`);
+            return;
+          } else {
+            for(let v of Object.values(data.data.errors)) {
+              responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+            }
           }
+
         } else {
-          $that.reset();
+         $('#tutor-new-instructor-form').trigger("reset");
           tutor_toast(__("Success", "tutor"), __("New Instructor Added", "tutor"), "success");
           location.reload();
         }

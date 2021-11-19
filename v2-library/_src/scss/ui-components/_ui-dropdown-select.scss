@@ -2,7 +2,7 @@
 	--h: 58px;
 	width: 305px;
 	display: flex;
-	flex-direction: column;
+	// flex-direction: column;
 	position: relative;
 
 	label {
@@ -65,6 +65,7 @@
 		position: relative;
 		width: 100%;
 		// min-height: var(--h);
+		background: #fff;
 		/* stroke/gray40 */
 		border: 1px solid #c0c3cb;
 		border-radius: 6px;
