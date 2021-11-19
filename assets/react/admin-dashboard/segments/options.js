@@ -282,9 +282,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		if (scrollTargetEl) {
 			targetEl.classList.add('isHighlighted');
-			// setTimeout(() => {
-			//   targetEl.classList.remove("isHighlighted");
-			// }, 6000);
+			setTimeout(() => {
+				targetEl.classList.remove("isHighlighted");
+			}, 6000);
 
 			scrollTargetEl.scrollIntoView({
 				behavior: 'smooth',

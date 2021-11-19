@@ -2176,10 +2176,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var scrollTargetEl = target && target.parentNode.querySelector('.tutor-option-field-row'); // console.log(`target -> ${target} scrollTarget -> ${scrollTargetEl}`);
 
     if (scrollTargetEl) {
-      targetEl.classList.add('isHighlighted'); // setTimeout(() => {
-      //   targetEl.classList.remove("isHighlighted");
-      // }, 6000);
-
+      targetEl.classList.add('isHighlighted');
+      setTimeout(function () {
+        targetEl.classList.remove("isHighlighted");
+      }, 6000);
       scrollTargetEl.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
