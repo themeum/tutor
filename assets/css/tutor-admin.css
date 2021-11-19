@@ -861,6 +861,12 @@
   line-height: 145%;
 }
 
+.text-semi-caption {
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  line-height: 165%;
+}
+
 .text-bold-h1 {
   font-weight: 700 !important;
   font-size: 80px !important;

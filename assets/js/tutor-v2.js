@@ -4971,10 +4971,6 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
   var handleCalenderChange = function handleCalenderChange(update) {
     setDateRange(update);
   };
-
-  var handleCalendarClose = function handleCalendarClose() {
-    console.log('asldkjfalk');
-  };
   /**
    * On apply get formatted date from startDate & endDate
    * update url & reload
@@ -5002,6 +4998,10 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     }
   };
 
+  var handleCalendarClose = function handleCalendarClose() {
+    console.log('adlkjaslkdf');
+  };
+
   var ContainerWrapper = function ContainerWrapper(_ref) {
     var className = _ref.className,
         children = _ref.children;
@@ -5020,7 +5020,9 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
       className: "tutor-btns"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md",
-      onClick: handleCalendarClose
+      onClick: function onClick() {
+        return handleCalendarClose();
+      }
     }, "Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
       className: "tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md",
