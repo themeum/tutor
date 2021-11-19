@@ -128,7 +128,7 @@
                         <?php _e('Quiz', 'tutor'); ?>
                     </button>
 
-                    <?php do_action('tutor_course_builder_after_btn_group', $topic->ID); ?>
+                    <?php do_action('tutor_course_builder_after_btn_group', $topic->ID, $course_id); ?>
                 </div>
             </div>
         </div>
