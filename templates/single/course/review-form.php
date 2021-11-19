@@ -38,16 +38,13 @@ $rating = $isLoggedIn ? tutor_utils()->get_reviews_by_user(0, 0, 150, false, get
                         <textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($rating ? $rating->comment_content : ''); ?></textarea>
                     </div>
                     <div class="tutor-form-group">
-                        <button type="submit" class="tutor_submit_review_btn tutor-btn"><?php _e('Submit Review', 'tutor'); ?></button>
+                        <button type="submit" class="tutor_submit_review_btn tutor-btn">
+							<?php _e('Submit Review', 'tutor'); ?>
+						</button>
                     </div>
                 </div>
             </form>
 			<?php
-		} else {
-			ob_start();
-			tutor_load_template( 'single.course.login' );
-			
-			echo apply_filters( 'tutor_course/global/login', ob_get_clean());
 		}
 		?>
     </div>

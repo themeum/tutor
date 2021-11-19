@@ -67,6 +67,7 @@ const otherColorsPreview = () => {
 // Color PRESET Slecetion (color inputs)
 if (colorPresetInputs) {
 	colorPresetInputs.forEach((preset) => {
+		
 		const presetItem = preset.parentElement.querySelector(".preset-item");
 		const presetColors = presetItem.querySelectorAll(".header span");
 		const presetInput = preset.closest(".color-preset-input");

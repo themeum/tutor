@@ -281,36 +281,6 @@ jQuery(document).ready(function ($) {
         e.stopPropagation();
     });
 
-    $(document).on('click', '.tutor-course-wishlist-btn', function (e) {
-        e.preventDefault();
-
-        var $that = $(this);
-        var course_id = $that.attr('data-course-id');
-
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: { course_id: course_id, 'action': 'tutor_course_add_to_wishlist' },
-            beforeSend: function () {
-                $that.addClass('updating-icon');
-            },
-            success: function (data) {
-                if (data.success) {
-                    if (data.data.status === 'added') {
-                        $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
-                    } else {
-                        $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
-                    }
-                } else {
-                    window.location = data.data.redirect_to;
-                }
-            },
-            complete: function () {
-                $that.removeClass('updating-icon');
-            }
-        });
-    });
-
     /**
      * Check if lesson has classic editor support
      * If classic editor support, stop ajax load on the lesson page.
@@ -1179,39 +1149,6 @@ jQuery(document).ready(function ($) {
         if (!container.is(e.target) && container.has(e.target).length === 0) {
             $content.slideUp(100);
         }
-    });
-
-    /**
-     * Tutor ajax login
-     *
-     * @since v.1.6.3
-     */
-    $(document).on('submit', '.tutor-login-form-wrap #loginform', function (e) {
-        e.preventDefault();
-        
-        var $that = $(this);
-        var $form_wrapper = $('.tutor-login-form-wrap');
-
-        var form_data = $that.serializeObject();
-        form_data.action = 'tutor_user_login';
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: form_data,
-            success: function (response) {
-                if (response.success) {
-                    location.assign(response.data.redirect);
-                    location.reload();
-                } else {
-                    var error_message = response.data || __('Invalid username or password!', 'tutor');
-                    if ($form_wrapper.find('.tutor-alert').length) {
-                        $form_wrapper.find('.tutor-alert').html(error_message);
-                    } else {
-                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">' + error_message + '</div>');
-                    }
-                }
-            },
-        });
     });
 
     /**

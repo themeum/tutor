@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     /* sidetab tab position */
     const topBar = document.querySelector('.tutor-single-page-top-bar');
     const sideBar = document.querySelector('.tutor-lesson-sidebar');
-    sideBar.style.top = topBar.clientHeight + 'px';
+    sideBar ? sideBar.style.top = topBar.clientHeight + 'px' : 0;
     /* sidetab tab position */
 
     const sidebarTabeHandler = function(sideBarTabs) {
