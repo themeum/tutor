@@ -8255,7 +8255,10 @@ class Utils {
 			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
 			'canceled'  	=> __( 'Cancelled', 'tutor' ),
 			'blocked'		=> __( 'Blocked', 'tutor' ),
-			'cancel'		=> __( 'Cancelled', 'tutor' )
+			'cancel'		=> __( 'Cancelled', 'tutor' ),
+			'on-hold'		=> __( 'On Hold', 'tutor' ),
+			'onhold'		=> __( 'On Hold', 'tutor' ),
+			'wc-on-hold'	=> __( 'On Hold', 'tutor' ),
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
