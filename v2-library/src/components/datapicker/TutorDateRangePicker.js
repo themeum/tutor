@@ -15,10 +15,6 @@ const TutorDateRangePicker = () => {
 		setDateRange(update);
 	};
 
-	const handleCalendarClose = () => {
-		console.log('asldkjfalk');
-	};
-
 	/**
 	 * On apply get formatted date from startDate & endDate
 	 * update url & reload
@@ -49,6 +45,10 @@ const TutorDateRangePicker = () => {
 		}
 	};
 
+	const handleCalendarClose = () => {
+		console.log('adlkjaslkdf');
+	};
+
 	const ContainerWrapper = ({ className, children }) => {
 		return (
 			<CalendarContainer className={className}>
@@ -61,7 +61,7 @@ const TutorDateRangePicker = () => {
 						<div className="tutor-btns">
 							<button
 								className="tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"
-								onClick={handleCalendarClose}
+								onClick={() => handleCalendarClose()}
 							>
 								Cancel
 							</button>
