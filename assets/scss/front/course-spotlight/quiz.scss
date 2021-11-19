@@ -2,14 +2,17 @@
     min-height: 48px;
     border: 2px dashed #ddd;
     border-radius: 5px;
+    span[class^='ttr-'],
+    span[class*=' ttr-'] {
+        display: none;
+    }
+}
+
+.tutor-dropzone {
     &.tutor-drop-over {
         border: 2px dashed rgb(160, 42, 42) !important;
     }
-    >input {
-        display: none;
-    }
-    span[class^='ttr-'],
-    span[class*=' ttr-'] {
+    input {
         display: none;
     }
 }
