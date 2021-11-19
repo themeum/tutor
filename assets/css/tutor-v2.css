@@ -4838,7 +4838,7 @@
   color: #f44337;
 }
 
-.color-text-primary, select.tutor-form-select, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-accordion-item-body-content {
+.color-text-primary, select.tutor-form-select, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-accordion-item-body-content, .tutor-dropdown-select-selected > div:first-child {
   color: #212327;
 }
 
@@ -5646,7 +5646,7 @@
   line-height: 140%;
 }
 
-.text-medium-body, select.tutor-form-select {
+.text-medium-body, select.tutor-form-select, .tutor-dropdown-select-selected > div:first-child {
   font-weight: 500 !important;
   font-size: 16px !important;
   line-height: 162%;
@@ -20293,7 +20293,7 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
   margin-right: 10px;
 }
 
-.tutor-updating-message:not(.tutor-no-margin):before {
+.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
   margin-right: 8px;
 }
 
@@ -20949,7 +20949,7 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 }
 
 .tutor-modal.tutor-is-sm .tutor-modal-root {
-  width: 425px;
+  width: 470px;
 }
 
 .tutor-modal.tutor-is-sm .tutor-modal-root .tutor-modal-body {
@@ -21350,6 +21350,10 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 
 .tutor-modal .tutor-alert {
   padding: 6px 10px;
+}
+
+.tutor-modal .tutor-alert::before {
+  content: none !important;
 }
 
 .tutor-modal .tutor-alert.tutor-warning {
@@ -23530,9 +23534,18 @@ select.tutor-form-select:focus {
   }
 }
 
-.tutor-ui-table-wrapper {
-  background: #fff;
-  border-radius: 6px;
+@media (min-width: 1200px) {
+  .tutor-ui-table-wrapper {
+    background: #fff;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 1200px) {
+  table.tutor-ui-table tr {
+    background: #fff;
+    border-radius: 6px;
+  }
 }
 
 table.tutor-ui-table {
@@ -23948,6 +23961,7 @@ table.tutor-ui-table .td-list-item .list-item-checklist input.tutor-form-check-i
 }
 
 table.tutor-ui-table .column-empty-state {
+  width: 100% !important;
   padding: 0 !important;
 }
 
@@ -25647,7 +25661,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-course-sidebar-card {
   border: 1px solid #cdcfd5;
   border-radius: 6px;
-  max-width: 400px;
   position: relative;
 }
 
@@ -26888,7 +26901,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   .text-regular-body.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label.text-regular-body, table.tutor-ui-table .td-list-item .tutor-form-check label.tutor-accordion-item-body-content, table.tutor-ui-table .td-list-item .tutor-form-check .tutor-course-listing-filter .filter-widget-checkboxes label, .tutor-course-listing-filter .filter-widget-checkboxes table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .text-regular-body.tab-header-item, .tutor-default-tab .tab-header-item.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item, .tutor-default-tab .text-regular-body.tab-header-item-seemore-toggle, .tutor-default-tab .tab-header-item-seemore-toggle.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item-seemore-toggle, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item-seemore-toggle, .color-text-subsued.tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label.color-text-subsued {
     font-size: 15px;
   }
-  .text-medium-body, select.tutor-form-select {
+  .text-medium-body, select.tutor-form-select, .tutor-dropdown-select-selected > div:first-child {
     font-size: 15px;
   }
   .text-bold-h4 {
@@ -27549,7 +27562,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   width: 100%;
   height: 40px;
   /* text/medium/body-16px */
-  font-family: "SF Pro Display", sans-serif;
+  font-family: 'SF Pro Display', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -27561,7 +27574,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 26px;
-  padding: 10px 30px 10px 10px;
+  padding: 10px 30px 10px 20px;
   -webkit-transition: 200ms ease-out;
   transition: 200ms ease-out;
 }
@@ -27569,6 +27582,12 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-react-datepicker .react-datepicker__input-container input:focus-visible {
   outline: none;
   border-color: #3d64de;
+}
+
+.tutor-react-datepicker .react-datepicker__input-container input:focus {
+  border-color: #1973aa;
+  -webkit-box-shadow: unset;
+          box-shadow: unset;
 }
 
 .tutor-react-datepicker .react-datepicker__header {
@@ -27747,7 +27766,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-react-datepicker__selects-range .react-datepicker__day:before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0 -50%;
   -webkit-box-shadow: 0px 1px 0px 0px #d2dbf5, 0px -1px 0px 0px #d2dbf5;
@@ -27775,7 +27794,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-react-datepicker__selects-range .react-datepicker__day--range-start::after, .tutor-react-datepicker__selects-range .react-datepicker__day--range-end::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -27851,6 +27870,115 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-react-datepicker__selects-range .react-datepicker__custom-footer .tutor-btn:not(.tutor-btn-icon).tutor-btn-md {
   padding: 7px 16.8px;
+}
+
+.tutor-dropdown-select {
+  --h: 58px;
+  width: 305px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: relative;
+}
+
+.tutor-dropdown-select label {
+  cursor: pointer;
+}
+
+.tutor-dropdown-select input[type='radio'] {
+  display: none;
+}
+
+.tutor-dropdown-select h3,
+.tutor-dropdown-select h5 {
+  margin: 0 !important;
+}
+
+.tutor-dropdown-select-options-container {
+  width: 100%;
+  max-height: 285px;
+  overflow-y: auto;
+  -webkit-transition: all 100ms;
+  transition: all 100ms;
+  -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+          order: 1;
+  position: absolute;
+  top: 100%;
+  z-index: 10;
+  opacity: 0;
+  background: #ffffff;
+  /* stroke/light30 */
+  border: 1px solid #cdcfd5;
+  -webkit-box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
+          box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
+  border-radius: 6px;
+}
+
+.tutor-dropdown-select-options-container.is-active {
+  opacity: 1;
+}
+
+.tutor-dropdown-select-options-container.is-active + .tutor-dropdown-select-selected::after {
+  -webkit-transform: translateY(-50%) rotateX(180deg);
+          transform: translateY(-50%) rotateX(180deg);
+  -webkit-transform: translateY(-50%) rotate(-180deg);
+          transform: translateY(-50%) rotate(-180deg);
+  color: #3e64de;
+}
+
+.tutor-dropdown-select-selected {
+  margin-bottom: 12px;
+  position: relative;
+  width: 100%;
+  /* stroke/gray40 */
+  border: 1px solid #c0c3cb;
+  border-radius: 6px;
+  -webkit-box-ordinal-group: 1;
+      -ms-flex-order: 0;
+          order: 0;
+}
+
+.tutor-dropdown-select-selected::after {
+  -webkit-font-smoothing: antialiased;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  -webkit-transition: -webkit-transform 300ms linear;
+  transition: -webkit-transform 300ms linear;
+  transition: transform 300ms linear;
+  transition: transform 300ms linear, -webkit-transform 300ms linear;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  content: '\e93e';
+  font-family: 'tutor-v2-iconpack' !important;
+  font-size: 30px;
+}
+
+.tutor-dropdown-select-option {
+  padding: 8px 19px;
+  cursor: pointer;
+}
+
+.tutor-dropdown-select-option:hover {
+  background: #dcdfe5;
+  /* color/black/fill/05 */
+  background: #eff1f7;
+  background: #eff1f7;
+}
+
+.tutor-dropdown-select-option:last-child {
+  /* stroke/light30 */
+  border-top: 1px solid #cdcfd5;
+}
+
+.tutor-dropdown-select-selected {
+  padding: 7px 20px;
+  cursor: pointer;
 }
 
 .d-grid {

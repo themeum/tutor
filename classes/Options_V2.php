@@ -186,19 +186,29 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 		wp_send_json_success( get_option( 'tutor_settings_log' ) );
 	}
+
 	public function reset_settings_data() {
 		tutor_utils()->checking_nonce();
-		$block_fields = array();
+		$reset_fields = $return_fields = $return_fields_group = array();
 		$reset_page   = isset( $_POST['reset_page'] ) ? sanitize_key( $_POST['reset_page'] ) : null;
 		$setting_data = $this->get_setting_fields()['option_fields'][ $reset_page ]['blocks'];
 
 		foreach ( $setting_data as $blocks ) {
-			foreach ( $blocks['fields'] as $fields ) {
-				$block_fields[] = $fields;
+
+			$block_fields = isset( $blocks['fields'] ) ? $blocks['fields'] : array();
+			foreach ( $block_fields as $fields ) {
+				$return_fields[] = $fields;
+			}
+
+			$block_fields_group = isset( $blocks['fields_group'] ) ? $blocks['fields_group'] : array();
+			foreach ( $block_fields_group as $fields ) {
+				$return_fields_group[] = $fields;
 			}
 		}
 
-		wp_send_json_success( $block_fields );
+		$reset_fields = array_merge( $return_fields, $return_fields_group );
+
+		wp_send_json_success( $reset_fields );
 	}
 
 	public function tutor_import_settings() {
@@ -725,12 +735,12 @@ class Options_V2 {
 								'desc'    => __( 'Instructors should earn equal or above this amount to make a withdraw request.', 'tutor' ),
 							),
 							array(
-								'key'         => 'tutor_withdrawal_methods',
-								'type'        => 'checkbox_horizontal',
-								'label'       => __( 'Enable withdraw method', 'tutor' ),
-								'default'     => array( 'bank_transfer_withdraw' ),
-								'options'     => $methods_array,
-								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
+								'key'     => 'tutor_withdrawal_methods',
+								'type'    => 'checkbox_horizontal',
+								'label'   => __( 'Enable withdraw method', 'tutor' ),
+								'default' => array( 'bank_transfer_withdraw' ),
+								'options' => $methods_array,
+								'desc'    => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
 							),
 							array(
 								'key'     => 'tutor_bank_transfer_withdraw_instruction',
@@ -784,18 +794,18 @@ class Options_V2 {
 								'desc'    => __( 'Number of items you want to be displayed "per page" in the pagination', 'tutor' ),
 							),
 							array(
-								'key'         => 'supported_course_filters',
-								'type'        => 'checkbox_horizontal',
-								'label'       => __( 'Preferred Course Filters', 'tutor' ),
-								'default'     => array( 'search' ,'category' ),
-								'options'     => array(
+								'key'     => 'supported_course_filters',
+								'type'    => 'checkbox_horizontal',
+								'label'   => __( 'Preferred Course Filters', 'tutor' ),
+								'default' => array( 'search', 'category' ),
+								'options' => array(
 									'search'           => __( 'Keyword Search', 'tutor' ),
 									'category'         => __( 'Category', 'tutor' ),
 									'tag'              => __( 'Tag', 'tutor' ),
 									'difficulty_level' => __( 'Difficulty Level', 'tutor' ),
 									'price_type'       => __( 'Price Type', 'tutor' ),
 								),
-								'desc'        => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
+								'desc'    => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
 							),
 						),
 					),
@@ -870,9 +880,9 @@ class Options_V2 {
 						'block_type' => 'isolate',
 						'fields'     => array(
 							array(
-								'key'           => 'Public Profile Layout',
+								'key'           => 'course_details_adjustments',
 								'type'          => 'checkgroup',
-								'label'         => __( 'Public Profile Layout', 'tutor' ),
+								'label'         => __( 'Course Details Adjustments', 'tutor' ),
 								'group_options' => array(
 									array(
 										'key'     => 'display_course_instructors',
@@ -917,7 +927,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Duration', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default' => 'off',
+										'default'     => 'off',
 										'desc'        => __( 'Enable to show course duration', 'tutor' ),
 									),
 									array(
@@ -1023,7 +1033,7 @@ class Options_V2 {
 								'type'    => 'color_preset',
 								'label'   => __( 'Preset Colors', 'tutor' ),
 								'desc'    => __( 'These colors will be used throughout your website. Choose between these presets or create your own custom palette.', 'tutor' ),
-								'default' => 'custom',
+								'default' => 'default',
 								'fields'  => array(
 									/* First 4 preset_name should be same as color_fields */
 									array(
@@ -1049,6 +1059,36 @@ class Options_V2 {
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#F6F8FD',
+											),
+											array(
+												'slug'  => 'tutor_border_color',
+												'preset_name' => 'border',
+												'value' => '#CDCFD5',
+											),
+											array(
+												'slug'  => 'tutor_success_color',
+												'preset_name' => 'success',
+												'value' => '#24A148',
+											),
+											array(
+												'slug'  => 'tutor_warning_color',
+												'preset_name' => 'warning',
+												'value' => '#ED9700',
+											),
+											array(
+												'slug'  => 'tutor_danger_color',
+												'preset_name' => 'danger',
+												'value' => '#F44337',
+											),
+											array(
+												'slug'  => 'tutor_disable_color',
+												'preset_name' => 'disable',
+												'value' => '#E3E6EB',
+											),
+											array(
+												'slug'  => 'tutor_table_background_color',
+												'preset_name' => 'table_background',
+												'value' => '#EFF1F6',
 											),
 										),
 									),
@@ -1076,6 +1116,36 @@ class Options_V2 {
 												'preset_name' => 'background',
 												'value' => '#ECF7F3',
 											),
+											array(
+												'slug'  => 'tutor_border_color',
+												'preset_name' => 'border',
+												'value' => '#CDCFD5',
+											),
+											array(
+												'slug'  => 'tutor_success_color',
+												'preset_name' => 'success',
+												'value' => '#24A148',
+											),
+											array(
+												'slug'  => 'tutor_warning_color',
+												'preset_name' => 'warning',
+												'value' => '#ED9700',
+											),
+											array(
+												'slug'  => 'tutor_danger_color',
+												'preset_name' => 'danger',
+												'value' => '#F44337',
+											),
+											array(
+												'slug'  => 'tutor_disable_color',
+												'preset_name' => 'disable',
+												'value' => '#E3E6EB',
+											),
+											array(
+												'slug'  => 'tutor_table_background_color',
+												'preset_name' => 'table_background',
+												'value' => '#EFF1F6',
+											),
 										),
 									),
 									array(
@@ -1101,6 +1171,36 @@ class Options_V2 {
 												'slug'  => 'tutor_background_color',
 												'preset_name' => 'background',
 												'value' => '#FAF6FF',
+											),
+											array(
+												'slug'  => 'tutor_border_color',
+												'preset_name' => 'border',
+												'value' => '#CDCFD5',
+											),
+											array(
+												'slug'  => 'tutor_success_color',
+												'preset_name' => 'success',
+												'value' => '#24A148',
+											),
+											array(
+												'slug'  => 'tutor_warning_color',
+												'preset_name' => 'warning',
+												'value' => '#ED9700',
+											),
+											array(
+												'slug'  => 'tutor_danger_color',
+												'preset_name' => 'danger',
+												'value' => '#F44337',
+											),
+											array(
+												'slug'  => 'tutor_disable_color',
+												'preset_name' => 'disable',
+												'value' => '#E3E6EB',
+											),
+											array(
+												'slug'  => 'tutor_table_background_color',
+												'preset_name' => 'table_background',
+												'value' => '#EFF1F6',
 											),
 										),
 									),

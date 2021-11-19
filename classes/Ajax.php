@@ -193,21 +193,42 @@ class Ajax{
 	public function tutor_course_add_to_wishlist(){
 		tutor_utils()->checking_nonce();
 
-		$course_id = (int) sanitize_text_field($_POST['course_id']);
+		// Redirect login since only logged in user can add courses to wishlist
 		if ( ! is_user_logged_in()){
-			wp_send_json_error(array('redirect_to' => wp_login_url( wp_get_referer() ) ) );
+			wp_send_json_error(array(
+				'redirect_to' => wp_login_url( wp_get_referer() ) 
+			) );
 		}
+			
 		global $wpdb;
-
 		$user_id = get_current_user_id();
-		$if_added_to_list = $wpdb->get_row($wpdb->prepare("SELECT * from {$wpdb->usermeta} WHERE user_id = %d AND meta_key = '_tutor_course_wishlist' AND meta_value = %d;", $user_id, $course_id));
+		$course_id = (int) sanitize_text_field($_POST['course_id']);
+
+		$if_added_to_list = $wpdb->get_row($wpdb->prepare(
+			"SELECT * from {$wpdb->usermeta} 
+			WHERE user_id = %d 
+				AND meta_key = '_tutor_course_wishlist' 
+				AND meta_value = %d;", 
+				$user_id, 
+				$course_id
+		));
 
 		if ( $if_added_to_list){
-			$wpdb->delete($wpdb->usermeta, array('user_id' => $user_id, 'meta_key' => '_tutor_course_wishlist', 'meta_value' => $course_id ));
-			wp_send_json_success(array('status' => 'removed', 'msg' => __('Course removed from wish list', 'tutor')));
-		}else{
+			$wpdb->delete($wpdb->usermeta, array(
+				'user_id' => $user_id, 
+				'meta_key' => '_tutor_course_wishlist', 
+				'meta_value' => $course_id 
+			));
+			wp_send_json_success(array(
+				'status' => 'removed', 
+				'message' => __('Course removed from wish list', 'tutor')
+			));
+		} else {
 			add_user_meta($user_id, '_tutor_course_wishlist', $course_id);
-			wp_send_json_success(array('status' => 'added', 'msg' => __('Course added to wish list', 'tutor')));
+			wp_send_json_success(array(
+				'status' => 'added', 
+				'message' => __('Course added to wish list', 'tutor')
+			));
 		}
 	}
 
@@ -355,11 +376,15 @@ class Ajax{
 			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
 
 			if ( $validation_error->get_error_code() ) {
-				wp_send_json_error( '<strong>' . __( 'ERROR:', 'tutor' ) . '</strong> ' . $validation_error->get_error_message() );
+				wp_send_json_error(array(
+					'message' => $validation_error->get_error_message() 
+				));
 			}
 
 			if ( empty( $creds['user_login'] ) ) {
-				wp_send_json_error( '<strong>' . __( 'ERROR:', 'tutor' ) . '</strong> ' . __( 'Username is required.', 'tutor' ) );
+				wp_send_json_error(array( 
+					'message' => __( 'Username is required.', 'tutor' )
+				) );
 			}
 
 			// On multisite, ensure user exists on current site, if not add them before allowing login.
@@ -375,23 +400,20 @@ class Ajax{
 			$user = wp_signon( apply_filters( 'tutor_login_credentials', $creds ), is_ssl() );
 
 			if ( is_wp_error( $user ) ) {
-				$message = $user->get_error_message();
-				$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', $message );
-				
-				wp_send_json_error( $message );
+				wp_send_json_error( array(
+					'message' => $user->get_error_message()
+				) );
 			} else {
 				//since 1.9.8 do enroll if guest attempt to enroll
 				do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
 				
-				wp_send_json_success([
-					'redirect' => apply_filters('tutor_login_redirect_url', $redirect_to)
-				]);
-
-
+				wp_send_json_success(array(
+					'redirect_to' => apply_filters('tutor_login_redirect_url', $redirect_to)
+				));
 			}
 		} catch ( \Exception $e ) {
-			wp_send_json_error( apply_filters( 'login_errors', $e->getMessage()) );
 			do_action( 'tutor_login_failed' );
+			wp_send_json_error( apply_filters( 'login_errors', $e->getMessage()) );
 		}
 	}
 

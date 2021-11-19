@@ -2,6 +2,7 @@
     overflow: auto;
     &>div{
         float: left;
+        width: 100%;
 
         @media(min-width:992px) {
             &:first-child{

@@ -347,7 +347,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 						<?php endforeach; ?>
 					<?php else : ?>
 						<tr>
-							<td colspan="100%">
+							<td colspan="100%" class="column-empty-state">
 								<?php tutor_utils()->tutor_empty_state( __( 'No course found', 'tutor' )); ?>
 							</td>
 						</tr>

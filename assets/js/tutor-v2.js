@@ -4403,6 +4403,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutorAccordion__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_tutorAccordion__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _tutorAccordionRadioFields__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./tutorAccordionRadioFields */ "./v2-library/_src/js/tutorAccordionRadioFields.js");
 /* harmony import */ var _tutorAccordionRadioFields__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_tutorAccordionRadioFields__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _tutorDropdownSelect__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./tutorDropdownSelect */ "./v2-library/_src/js/tutorDropdownSelect.js");
+/* harmony import */ var _tutorDropdownSelect__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_tutorDropdownSelect__WEBPACK_IMPORTED_MODULE_10__);
+
 
 
 
@@ -4458,7 +4461,11 @@ var hasExpandableCardInputs = document.querySelectorAll('.tutor-course-sidebar-c
 if (hasExpandableCardInputs) {
   hasExpandableCardInputs.forEach(function (el) {
     var detailItems = document.querySelectorAll('.tutor-course-sidebar-card-pick-plan-label .input-plan-details');
-    console.log(el.checked);
+
+    if (el.checked) {
+      el.parentElement.querySelector('.input-plan-details').style.maxHeight = 'max-content';
+    }
+
     el.addEventListener('change', function (e) {
       var inputDetails = e.target.closest('.tutor-course-sidebar-card-pick-plan-label').querySelector('.input-plan-details');
       detailItems.forEach(function (item) {
@@ -4521,6 +4528,31 @@ if (hasExpandableCardInputs) {
     }
   });
 })();
+
+/***/ }),
+
+/***/ "./v2-library/_src/js/tutorDropdownSelect.js":
+/*!***************************************************!*\
+  !*** ./v2-library/_src/js/tutorDropdownSelect.js ***!
+  \***************************************************/
+/***/ (() => {
+
+var tutorDropdownSelect = document.querySelector('.tutor-dropdown-select');
+
+if (tutorDropdownSelect) {
+  var selected = document.querySelector('.tutor-dropdown-select-selected');
+  var optionsContainer = document.querySelector('.tutor-dropdown-select-options-container');
+  var optionsList = document.querySelectorAll('.tutor-dropdown-select-option');
+  selected.addEventListener('click', function () {
+    optionsContainer.classList.toggle('is-active');
+  });
+  optionsList.forEach(function (option) {
+    option.addEventListener('click', function () {
+      selected.innerHTML = option.querySelector('label').innerHTML;
+      optionsContainer.classList.remove('is-active');
+    });
+  });
+}
 
 /***/ }),
 
@@ -4923,7 +4955,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var TutorDateRangePicker = function TutorDateRangePicker() {
-  var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : "Y-M-d";
+  var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'Y-M-d';
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([null, null]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -4938,6 +4970,10 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
 
   var handleCalenderChange = function handleCalenderChange(update) {
     setDateRange(update);
+  };
+
+  var handleCalendarClose = function handleCalendarClose() {
+    console.log('asldkjfalk');
   };
   /**
    * On apply get formatted date from startDate & endDate
@@ -4983,7 +5019,8 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     }, dayCount ? dayCount > 1 ? "".concat(dayCount, " days selected") : "".concat(dayCount, " day selected") : '0 day selected'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       className: "tutor-btns"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-      className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"
+      className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md",
+      onClick: handleCalendarClose
     }, "Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
       className: "tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md",

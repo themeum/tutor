@@ -8,9 +8,19 @@
 		overflow-x: auto;
 	}
 }
-.tutor-ui-table-wrapper {
-	background: #fff;
-	border-radius: 6px;
+@include breakpoint-min(desktop-lg) {
+	.tutor-ui-table-wrapper {
+		background: #fff;
+		border-radius: 6px;
+	}
+}
+@include breakpoint-max(1199.999999) {
+	table.tutor-ui-table {
+		tr {
+			background: #fff;
+			border-radius: 6px;
+		}
+	}
 }
 
 // Table Base Structure
@@ -490,6 +500,7 @@ table.tutor-ui-table {
 		}
 	}
 	.column-empty-state {
+		width: 100% !important;
 		padding: 0 !important;
 		&:before {
 			display: none;
