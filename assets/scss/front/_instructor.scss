@@ -15,7 +15,43 @@
   column-gap: $gap;
 }
 
+.entry-content {
+  .tutor-courses.pp-left-middle {
+    .tutor-instructor-left-middle {
+      img {
+        width: 96px;
+        height: 96px;
+      }
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+              align-items: center;
+      -webkit-column-gap: 30px;
+      -moz-column-gap: 30px;
+              column-gap: 30px;
+      border: 1px solid $stroke-light-30;
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      border-radius: 6px;
+      padding: 30px 20px;
+      h4 {
+        @extend .color-text-primary;
+        @extend .text-medium-h5;
+        margin: 0;
+      }
 
+    }
+    .tutor-instructor-profile-photo img {
+      border-radius: 100%;
+      -webkit-border-radius: 100%;
+      -moz-border-radius: 100%;
+      -ms-border-radius: 100%;
+      -o-border-radius: 100%;
+    }
+  }
+}
 .tutor-instructor-list {
   &,
   &:focus,
