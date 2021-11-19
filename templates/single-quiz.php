@@ -13,6 +13,11 @@
 
 get_tutor_header();
 
+global $previous_id;
+$course_content_id = '';
+$content_id = tutor_utils()->get_post_id($course_content_id);
+$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
+$previous_id = $contents->previous_id;
 $course = tutor_utils()->get_course_by_quiz(get_the_ID());
 
 $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
