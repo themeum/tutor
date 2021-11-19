@@ -5670,6 +5670,12 @@
   line-height: 145%;
 }
 
+.text-semi-caption {
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  line-height: 165%;
+}
+
 .text-bold-h1 {
   font-weight: 700 !important;
   font-size: 80px !important;
@@ -23523,6 +23529,22 @@ select.tutor-form-select:focus {
   }
 }
 
+.tutor-btn.tutor-is-circle {
+  border-radius: 50%;
+  padding: 4px !important;
+}
+
+.tutor-btn.tutor-is-circle.tutor-btn-ghost {
+  border: none !important;
+  background: transparent;
+  color: #41454f;
+}
+
+.tutor-btn.tutor-is-circle.tutor-btn-ghost:hover {
+  background: #eff1f7;
+  color: inherit;
+}
+
 .tutor-ui-table-responsive {
   position: relative;
   overflow-x: auto;
@@ -25575,6 +25597,13 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   border-color: #1973aa;
   -webkit-box-shadow: unset;
           box-shadow: unset;
+}
+
+.tutor-zoom-integration-card-body {
+  border-top: 1px solid #cdcfd5;
+  border-bottom: 1px solid #cdcfd5;
+  display: grid;
+  grid-auto-flow: column;
 }
 
 .tutor-course-details-page .tutor-course-details-tab .tab-header {
