@@ -14,6 +14,48 @@
   -moz-column-gap: $gap;
   column-gap: $gap;
 }
+.tutor-user-public-profile-pp-circle, 
+.tutor-user-public-profile-pp-rectangle {
+  .profile-rating-media.content-for-desktop {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  .tutor-rating-container {
+    -ms-flex-item-align: end;
+    align-self: flex-end;
+  }
+  .ratings {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: end;
+        -ms-flex-align: end;
+            align-items: flex-end;
+    .tutor-star-rating-group {
+      i {
+        padding-right: 6px;
+        color: #ED9700 !important;
+      }
+    }
+    .text-regular-caption {
+      color: #C0C3CB !important;
+    }
+  }
+
+}
+.tutor-user-public-profile-pp-circle {
+  .profile-rating-media.content-for-desktop {
+    row-gap: 15px;
+  }
+}
+.tutor-user-public-profile-pp-rectangle {
+  row-gap: 3px;
+}
 
 .tutor-instructor-list {
   &,
