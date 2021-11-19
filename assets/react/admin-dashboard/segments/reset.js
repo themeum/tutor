@@ -2,6 +2,7 @@
 Reset to default for settings individual page
 */
 
+const optionForm = document.querySelector('#tutor-option-form');
 
 document.addEventListener('readystatechange', (event) => {
 	if (event.target.readyState === 'interactive') {
@@ -31,7 +32,7 @@ const modalResetOpen = () => {
 const titleReseter = document.querySelectorAll('.tutor-option-single-item');
 titleReseter.forEach((item) => {
 	item.querySelector('h4').onclick = (e) => {
-		item.parentElement.querySelector('.modal-reset-open').click()
+		//item.parentElement.querySelector('.modal-reset-open').click()
 	}
 })
 
@@ -190,22 +191,23 @@ const resetConfirmation = () => {
 						});
 						setTimeout(() => {
 							tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success');
-							// tutor_toast('Reset Successful', 'Default data for ' + resetTitle + ' successfully!', 'success');
+							document.getElementById('save_tutor_option').disabled = false;
 						}, 300)
 					}
 
 				};
 			};
+
 		};
 	});
 }
+
 
 
 const elementByName = (key) => {
 	return document.getElementsByName(key);
 };
 
-const optionForm = document.querySelector('#tutor-option-form');
 if (null !== optionForm) {
 	optionForm.addEventListener('input', (event) => {
 		document.getElementById('save_tutor_option').disabled = false;
