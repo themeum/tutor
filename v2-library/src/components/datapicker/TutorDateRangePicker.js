@@ -5,8 +5,7 @@ import { differenceInDays } from 'date-fns';
 import { element } from 'prop-types';
 
 const TutorDateRangePicker = () => {
-	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : "Y-M-d";
-
+	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'Y-M-d';
 
 	const [dateRange, setDateRange] = useState([null, null]);
 	const [startDate, endDate] = dateRange;
@@ -14,6 +13,10 @@ const TutorDateRangePicker = () => {
 
 	const handleCalenderChange = (update) => {
 		setDateRange(update);
+	};
+
+	const handleCalendarClose = () => {
+		console.log('asldkjfalk');
 	};
 
 	/**
@@ -28,7 +31,7 @@ const TutorDateRangePicker = () => {
 			let startYear = startDate.getFullYear();
 			let startMonth = startDate.getMonth() + 1;
 			let startDay = startDate.getDate();
-	
+
 			let endYear = endDate.getFullYear();
 			let endMonth = endDate.getMonth() + 1;
 			let endDay = endDate.getDate();
@@ -44,7 +47,7 @@ const TutorDateRangePicker = () => {
 			
 			window.location = url;
 		}
-	}
+	};
 
 	const ContainerWrapper = ({ className, children }) => {
 		return (
@@ -56,10 +59,19 @@ const TutorDateRangePicker = () => {
 							{dayCount ? (dayCount > 1 ? `${dayCount} days selected` : `${dayCount} day selected`) : '0 day selected'}
 						</div>
 						<div className="tutor-btns">
-							<button className="tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md">
+							<button
+								className="tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"
+								onClick={handleCalendarClose}
+							>
 								Cancel
 							</button>
-							<button type="button" className="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" onClick={applyDateRange}>Apply</button>
+							<button
+								type="button"
+								className="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md"
+								onClick={applyDateRange}
+							>
+								Apply
+							</button>
 						</div>
 					</div>
 				</div>
@@ -71,12 +83,12 @@ const TutorDateRangePicker = () => {
 		const url = new URL(window.location.href);
 		const params = url.searchParams;
 		if (params.has('start_date') && params.has('end_date')) {
-			setDateRange([new Date(params.get('start_date')), new Date(params.get('end_date'))])
+			setDateRange([new Date(params.get('start_date')), new Date(params.get('end_date'))]);
 		}
-	},[]);
+	}, []);
 
 	return (
-		<div className="tutor-react-datepicker tutor-react-datepicker__selects-range" style={{width: '100%'}}>
+		<div className="tutor-react-datepicker tutor-react-datepicker__selects-range" style={{ width: '100%' }}>
 			<DatePicker
 				placeholderText={` ${dateFormat} - ${dateFormat} `}
 				showPopperArrow={false}
