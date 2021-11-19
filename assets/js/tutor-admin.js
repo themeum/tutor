@@ -2274,8 +2274,7 @@ var modalResetOpen = function modalResetOpen() {
 
 var titleReseter = document.querySelectorAll('.tutor-option-single-item');
 titleReseter.forEach(function (item) {
-  item.querySelector('h4').onclick = function (e) {
-    item.parentElement.querySelector('.modal-reset-open').click();
+  item.querySelector('h4').onclick = function (e) {//item.parentElement.querySelector('.modal-reset-open').click()
   };
 });
 

@@ -32,7 +32,7 @@ const modalResetOpen = () => {
 const titleReseter = document.querySelectorAll('.tutor-option-single-item');
 titleReseter.forEach((item) => {
 	item.querySelector('h4').onclick = (e) => {
-		item.parentElement.querySelector('.modal-reset-open').click()
+		//item.parentElement.querySelector('.modal-reset-open').click()
 	}
 })
 
