@@ -85,37 +85,40 @@ $filters = array(
 					<tr>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Request Date', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Request Date', 'tutor' ); ?>
+							</div>
+						</th>
+						<th class="tutor-table-rows-sorting">
+							<div class="text-regular-small color-text-subsued">
+								<span>
+									<?php esc_html_e( 'Request By', 'tutor' ); ?>
+								</span>
+								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon color-text-subsued"></span>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Request By', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Withdraw Method', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Withdraw Method', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Withdraw Details', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Withdraw Details', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Amount', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Amount', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Status', 'tutor-pro' ); ?>
-							</div>
-						</th>
-						<th>
-							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Update', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Update', 'tutor' ); ?>
 							</div>
 						</th>
 					</tr>
@@ -133,12 +136,13 @@ $filters = array(
 								}
 							?>
 						<tr>
-							<td data-th="<?php esc_html_e( 'Request Date', 'tutor-pro' ); ?>">
+							<td data-th="<?php esc_html_e( 'Request Date', 'tutor' ); ?>">
 								<div class="text-medium-caption color-text-primary">
-									<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $list->created_at ) ); ?>
+									<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ), $list->created_at ) ); ?>,<br>
+									<?php esc_html_e( tutor_get_formated_date( get_option( 'time_format' ), $list->created_at ) ); ?>
 								</div>
 							</td>
-							<td data-th="<?php esc_html_e( 'Request By', 'tutor-pro' ); ?>">
+							<td data-th="<?php esc_html_e( 'Request By', 'tutor' ); ?>">
 								<div class="td-avatar">
 									<?php echo get_avatar( $user_data->ID, 50 ); ?>					
 									<div class="td-avatar-detials">
@@ -147,21 +151,21 @@ $filters = array(
 													<?php echo esc_html( $user_data->display_name ); ?>												
 												</span>
 												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID ) ); ?>" class="tutor-ml-10 d-flex" target="_blank">
-													<span class="ttr-detail-link-filled color-text-primary"></span>
+													<span class="ttr-detail-link-filled color-text-primary" style="font-size:18px;"></span>
 												</a>
 											</div>
 											<span class="color-text-title text-regular-small">
-												<?php echo esc_html( $user_data->user_email ); ?>										
+												<?php echo esc_html( $user_data->user_email ); ?>		
 											</span>
 									</div>
 								</div>
 							</td>
-							<td data-th="<?php esc_html_e( 'Withdraw Method', 'tutor-pro' ); ?>">
+							<td data-th="<?php esc_html_e( 'Withdraw Method', 'tutor' ); ?>">
 								<div class="text-medium-caption color-text-primary" style=""> 
 									<?php echo esc_html( $details['withdraw_method_name'] ); ?>
 								</div>
 							</td>
-							<td data-th="<?php esc_html_e( 'Withdraw Details', 'tutor-pro' ); ?>">
+							<td data-th="<?php esc_html_e( 'Withdraw Details', 'tutor' ); ?>">
 								<?php if ( 'bank_transfer_withdraw' === $details['withdraw_method_key'] ) : ?>
 									<ul class="tutor-table-inside-table">
 										<li>
@@ -248,19 +252,19 @@ $filters = array(
 									</div>
 								<?php endif; ?>
 							</td>
-							<td data-th="<?php esc_html_e( 'Amount', 'tutor-pro' ); ?>">
+							<td data-th="<?php esc_html_e( 'Amount', 'tutor' ); ?>">
 								<div class="text-medium-caption color-text-primary"> 
 									<?php echo wp_kses_post( tutor_utils()->tutor_price( $list->amount ) ); ?>
 								</div>
 							</td>
-							<td data-th="<?php esc_html_e( 'Status', 'tutor-pro' ); ?>">
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
 								<div>
 									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-5 justify-content-center">
 										<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
 									</span>
 								</div>
 							</td>
-							<td data-th="<?php esc_html_e( 'Update', 'tutor-pro' ); ?>" class="tutor-withdraw-btns">
+							<td data-th="<?php esc_html_e( 'Update', 'tutor' ); ?>" class="tutor-withdraw-btns">
 								<?php if ( 'pending' === $list->status ) : ?>
 								<div class="d-flex justify-content-center align-items-center">
 									<button data-tutor-modal-target="tutor-admin-withdraw-approve" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>" class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-mr-20 tutor-admin-open-withdraw-approve-modal">
