@@ -4967,7 +4967,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var TutorDateRangePicker = function TutorDateRangePicker() {
-  var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : "Y-M-d";
+  var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'Y-M-d';
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([null, null]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -4982,6 +4982,10 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
 
   var handleCalenderChange = function handleCalenderChange(update) {
     setDateRange(update);
+  };
+
+  var handleCalendarClose = function handleCalendarClose() {
+    console.log('asldkjfalk');
   };
   /**
    * On apply get formatted date from startDate & endDate
@@ -5031,7 +5035,8 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     }, dayCount ? dayCount > 1 ? "".concat(dayCount, " days selected") : "".concat(dayCount, " day selected") : '0 day selected'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       className: "tutor-btns"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-      className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"
+      className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md",
+      onClick: handleCalendarClose
     }, "Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
       className: "tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md",

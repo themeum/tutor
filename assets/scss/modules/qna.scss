@@ -151,20 +151,6 @@ $sidebar_width: 360px;
         }
     }
 
-    .tutor-qa-reply{
-        margin-right: 15px;
-        textarea {
-            height: 80px;
-            min-height: auto;
-        }
-        
-        .tutor-qna-badges {
-            &>span>span{
-                display: none;
-            }
-        }
-    }
-
     @at-root{
         body.wp-admin {
             .tutor-qa-chatlist{

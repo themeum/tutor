@@ -51,7 +51,18 @@ if ($assignment_comment != false) {
     </div>
 
 </div>
-
+<div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
+    <div class="tutor-mobile-top-nav d-grid">
+        <a href="<?php echo get_the_permalink($previous_id); ?>">
+            <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
+        </a>
+        <div class="tutor-top-nav-title text-regular-body color-text-primary">
+            <?php 
+                the_title();
+            ?>
+        </div>
+    </div>
+</div>
 <div class="tutor-quiz-wrapper tutor-quiz-wrapper d-flex justify-content-center tutor-mt-100 tutor-pb-100">
 	<div id="tutor-assignment-wrap" class="tutor-quiz-wrap tutor-course-assignment-details tutor-submit-assignment  tutor-assignment-result-pending">	
 		<div class="tutor-assignment-title text-medium-h4 color-text-primary">

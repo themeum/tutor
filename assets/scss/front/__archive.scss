@@ -655,69 +655,6 @@ Instructor
     text-align: center;
 }
 
-.tutor-login-form-wrap {
-    max-width: 450px;
-    margin: auto;
-}
-
-.tutor-login-form-wrap p {
-    margin-bottom: 0;
-}
-
-.tutor-login-form-wrap label {
-    display: block !important;
-    //font-size: 13px;
-    margin-bottom: 4px;
-}
-
-.tutor-login-form-wrap .tutor-alert {
-    margin-bottom: 20px;
-}
-
-.tutor-login-form-wrap input[type="password"],
-.tutor-login-form-wrap input[type="text"] {
-    width: 100%;
-    display: block;
-    border: 1px solid #e8eff1;
-    box-shadow: none;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    background: #eceef4;
-    line-height: 48px;
-    padding: 0;
-    text-indent: 15px;
-}
-
-.tutor-login-form-wrap input[type="password"]:focus,
-.tutor-login-form-wrap input[type="text"]:focus {
-    background: #ffffff;
-    border-color: var(--tutor-primary-color);
-}
-
-.tutor-login-form-wrap input::-webkit-input-placeholder {
-    color: #b0b6c8;
-    opacity: 1;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-}
-
-.tutor-login-form-wrap input::-moz-placeholder {
-    color: #b0b6c8;
-    opacity: 1;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-}
-
-.tutor-login-form-wrap input:-ms-input-placeholder {
-    color: #b0b6c8;
-    opacity: 1;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-}
-
-.tutor-login-form-wrap input:-moz-placeholder {
-    color: #b0b6c8;
-    opacity: 1;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-}
-
 .tutor-login-rememeber-wrap {
     overflow: hidden;
     text-align: right;
@@ -751,30 +688,6 @@ Instructor
 .tutor-login-rememeber-wrap label:hover {
     opacity: 1;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-}
-
-.tutor-login-form-wrap input[type="submit"] {
-    color: #fff;
-    background-color: var(--tutor-primary-button-color);
-    border-color: var(--tutor-primary-button-color);
-    padding: 15px 30px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    line-height: 1;
-    //font-size: var(--tutor-text-size);
-    display: block;
-    width: 100%;
-    -webkit-transition: 300ms;
-    transition: 300ms;
-}
-
-// .tutor-login-form-wrap input[type="submit"]:hover {
-// 	color: #fff;
-// 	background-color: var(--tutor-success-button-color);
-// 	border-color: var(--tutor-success-button-color);
-// }
-.tutor-login-form-wrap input[type="checkbox"] {
-    margin-right: 4px;
 }
 
 .tutor-form-register-wrap {

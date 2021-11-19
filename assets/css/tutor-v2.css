@@ -20949,7 +20949,7 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 }
 
 .tutor-modal.tutor-is-sm .tutor-modal-root {
-  width: 425px;
+  width: 470px;
 }
 
 .tutor-modal.tutor-is-sm .tutor-modal-root .tutor-modal-body {
@@ -21350,6 +21350,10 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 
 .tutor-modal .tutor-alert {
   padding: 6px 10px;
+}
+
+.tutor-modal .tutor-alert::before {
+  content: none !important;
 }
 
 .tutor-modal .tutor-alert.tutor-warning {
@@ -23530,9 +23534,18 @@ select.tutor-form-select:focus {
   }
 }
 
-.tutor-ui-table-wrapper {
-  background: #fff;
-  border-radius: 6px;
+@media (min-width: 1200px) {
+  .tutor-ui-table-wrapper {
+    background: #fff;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 1200px) {
+  table.tutor-ui-table tr {
+    background: #fff;
+    border-radius: 6px;
+  }
 }
 
 table.tutor-ui-table {
@@ -23948,6 +23961,7 @@ table.tutor-ui-table .td-list-item .list-item-checklist input.tutor-form-check-i
 }
 
 table.tutor-ui-table .column-empty-state {
+  width: 100% !important;
   padding: 0 !important;
 }
 
