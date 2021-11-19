@@ -94,17 +94,4 @@ $contexts =  array(
     )
 );
 
-$fields = array();
-$columns = apply_filters( 'tutor/quiz/attempts/table/column', $contexts[$page_key]['columns'] );
-$allowed = $contexts[$page_key]['contexts'][$context];
-is_string($allowed) ? $allowed=$contexts[$page_key]['contexts'][$allowed] : 0; // By reference
-
-if($allowed===true) {
-    $fields=$columns;
-} else {
-    foreach($columns as $key=>$column) {
-        in_array($key, $allowed) ? $fields[$key]=$column : 0;
-    }
-}
-
-return $fields;
+return tutor_utils()->get_table_columns_from_context($page_key, $context, $contexts, 'tutor/quiz/attempts/table/column');
