@@ -3426,7 +3426,7 @@ window.jQuery(document).ready(function ($) {
   \*************************************/
 /***/ (() => {
 
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener("DOMContentLoaded", function () {
   var _this = this;
 
   var getCellValue = function getCellValue(tr, idx) {
@@ -3436,21 +3436,21 @@ window.addEventListener('DOMContentLoaded', function () {
   var comparer = function comparer(idx, asc) {
     return function (a, b) {
       return function (v1, v2) {
-        return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
+        return v1 !== "" && v2 !== "" && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
       }(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
     };
   };
 
   document.querySelectorAll(".tutor-table-rows-sorting").forEach(function (th) {
-    return th.addEventListener('click', function (e) {
-      var table = th.closest('table');
-      var tbody = table.querySelector('tbody');
+    return th.addEventListener("click", function (e) {
+      var table = th.closest("table");
+      var tbody = table.querySelector("tbody");
       var currentTarget = e.currentTarget;
       var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // If a-to-z icon
 
       if (icon) {
         // swap class name to change icon
-        if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
+        if (icon.classList.contains("ttr-ordering-a-to-z-filled")) {
           icon.classList.remove("ttr-ordering-a-to-z-filled");
           icon.classList.add("ttr-ordering-z-to-a-filled");
         } else {
@@ -3462,7 +3462,7 @@ window.addEventListener('DOMContentLoaded', function () {
         // Order up-down-icon
         var _icon = currentTarget.querySelector(".up-down-icon");
 
-        if (_icon.classList.contains('ttr-order-down-filled')) {
+        if (_icon.classList.contains("ttr-order-down-filled")) {
           _icon.classList.remove("ttr-order-down-filled");
 
           _icon.classList.add("ttr-order-up-filled");
@@ -3473,7 +3473,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
+      Array.from(tbody.querySelectorAll("tr:not(.tutor-do-not-sort)")).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
         return tbody.appendChild(tr);
       });
     });
