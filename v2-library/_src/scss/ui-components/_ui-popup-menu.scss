@@ -121,3 +121,81 @@
 		opacity: 1;
 	}
 }
+
+// tutor-popover
+.tutor-popover {
+	&-wrapper {
+		position: relative;
+		display: inline-block;
+
+		.tutor-popover-toggle-btn .btn-icon {
+			transition: 250ms;
+		}
+
+		&.is-active {
+			.tutor-popover-toggle-btn .btn-icon {
+				transform: rotate(-180deg);
+				color: $color-brand;
+			}
+		}
+	}
+
+	position: absolute;
+	top: calc(100% + 10px);
+	right: -55px;
+	z-index: 99999;
+
+	opacity: 0;
+	visibility: hidden;
+	&.is-active {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	&-backdrop {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0);
+		z-index: -1;
+	}
+}
+.tutor-meeting-list {
+	margin: 0;
+	padding: 0;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
+	background: #fff;
+	width: 273px;
+
+	li {
+		list-style: none;
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		padding: 3px 24px;
+		&:last-child {
+			border-top: 1px solid $stroke-light-30;
+			margin-top: 20px;
+		}
+	}
+
+	.tutor-btn.tutor-is-circle {
+		padding: 7px !important;
+		color: $text-hints;
+		&:hover {
+			background: $primary-30;
+			color: $design-brand;
+		}
+	}
+}
+
+.tutor-popover-toggle-btn {
+	> * {
+		pointer-events: none;
+	}
+	&.tutor-btn.tutor-btn-icon.tutor-btn-sm {
+		padding-left: 12px;
+		padding-right: 9px;
+	}
+}
