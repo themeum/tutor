@@ -25599,11 +25599,70 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           box-shadow: unset;
 }
 
+.tutor-zoom-integration-card {
+  max-width: 1367px;
+}
+
 .tutor-zoom-integration-card-body {
   border-top: 1px solid #cdcfd5;
   border-bottom: 1px solid #cdcfd5;
   display: grid;
-  grid-auto-flow: column;
+  grid-gap: 15px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+@media (min-width: 1500px) {
+  .tutor-zoom-integration-card-body {
+    grid-template-columns: 275px 410px 195px 228px auto;
+  }
+}
+
+@media (min-width: 1200px) {
+  .tutor-zoom-integration-card-body {
+    grid-auto-flow: column;
+  }
+  .tutor-zoom-integration-card-body .list-item:last-child {
+    justify-self: flex-end;
+  }
+}
+
+@media (max-width: 1200px) {
+  .tutor-zoom-integration-card-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+.tutor-zoom-integration-card .tutor-btn:not(.tutor-is-outline) {
+  border-color: #2d8cff;
+  background: #2d8cff;
+}
+
+.tutor-zoom-integration-card .tutor-btn:not(.tutor-is-outline):hover {
+  background: #147eff;
+  border-color: #147eff;
+}
+
+.tutor-zoom-integration-card .tutor-btn.tutor-is-outline {
+  padding: 6px 12px;
+  border-color: #2d8cff;
+  color: #2d8cff;
+}
+
+.tutor-zoom-integration-card .tutor-btn.tutor-is-outline:hover {
+  border-color: #2d8cff;
+  background: #2d8cff;
+}
+
+.tutor-zoom-integration-card .tutor-btn.tutor-is-circle {
+  color: #41454f;
+  background: transparent;
+}
+
+.tutor-zoom-integration-card .tutor-btn.tutor-is-circle:hover {
+  background: #eff1f7;
 }
 
 .tutor-course-details-page .tutor-course-details-tab .tab-header {
