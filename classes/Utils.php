@@ -7487,6 +7487,7 @@ class Utils {
 				$course_id = $object_id;
 				break;
 
+			case 'zoom_meeting' :
 			case 'topic' :
 			case 'announcement' :
 				$course_id = $wpdb->get_var( $wpdb->prepare(
@@ -7497,6 +7498,7 @@ class Utils {
 				$object_id ) );
 				break;
 
+			case 'zoom_lesson' :
 			case 'lesson' :
 			case 'quiz' :
 			case 'assignment' :

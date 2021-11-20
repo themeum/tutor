@@ -609,7 +609,7 @@ class Quiz {
 
 
 	/**
-	 * Save quiz into database and send html response
+	 * Save single quiz into database and send html response
 	 */
 	public function tutor_quiz_save(){
 
