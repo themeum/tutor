@@ -8362,4 +8362,28 @@ class Utils {
 
 		return $fields;
 	}
+
+	/**
+	 * Check a user has attempted a quiz
+	 *
+	 * @param string $user_id | user that taken course.
+	 * @param string $quiz_id | quiz id that need to check wheather attempted or not.
+	 * @return bool | true if attempted otherwise false.
+	 */
+	public function has_attempted_quiz( $user_id, $quiz_id ): bool {
+		global $wpdb;
+		// Sanitize data
+		$user_id = sanitize_text_field( $user_id );
+		$quiz_id = sanitize_text_field( $quiz_id );
+		$attempted = $wpdb->get_var( $wpdb->prepare(
+			"SELECT quiz_id 
+				FROM {$wpdb->tutor_quiz_attempts}
+				WHERE user_id = %d
+					AND quiz_id = %d
+			",
+			$user_id,
+			$quiz_id
+		) );
+		return $attempted ? true : false;
+	}
 }
