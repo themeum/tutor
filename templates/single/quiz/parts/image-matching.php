@@ -1,10 +1,10 @@
-<div id="quiz-image-matching-ans-area" class="quiz-question-ans-choice-area tutor-mt-50 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
-    <div class="matching-quiz-question-desc tutor-mb-70">
+<div id="quiz-image-matching-ans-area" class="quiz-question-ans-choice-area tutor-mt-50 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> "">
+    <div class="matching-quiz-question-desc tutor-draggable tutor-mb-70">
         <?php
             $rand_answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, true);
             foreach ($rand_answers as $rand_answer){
         ?>
-        <div class="tutor-quiz-border-box tutor-dragging" draggable="true">
+        <div class="tutor-quiz-border-box" draggable="true">
             <?php
                 if ($question_type === 'matching'){
                     echo '<span class="tutor-dragging-text-conent text-regular-body color-text-primary">'.stripslashes($rand_answer->answer_two_gap_match).'</span>';
