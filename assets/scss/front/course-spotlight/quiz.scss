@@ -1,3 +1,7 @@
+#tutor-start-quiz {
+    display: inline-block;
+}
+
 .tutor-quiz-dotted-box {
     min-height: 48px;
     border: 2px dashed #ddd;
@@ -504,8 +508,4 @@
     .tutor-topbar-content-title-wrap {
         align-items: flex-start;
     }
-}
-
-#tutor-start-quiz {
-    display: inline-block;
 }

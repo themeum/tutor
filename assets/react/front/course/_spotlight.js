@@ -1,8 +1,12 @@
+jQuery(document).ready(function($) {
+    $('.tutor-sortable-list').sortable();
+});
+
 document.addEventListener('DOMContentLoaded', (event) => {
     /* sidetab tab position */
     const topBar = document.querySelector('.tutor-single-page-top-bar');
     const sideBar = document.querySelector('.tutor-lesson-sidebar');
-    sideBar ? sideBar.style.top = topBar.clientHeight + 'px' : 0;
+    sideBar.style.top = topBar.clientHeight + 'px';
     /* sidetab tab position */
 
     const sidebarTabeHandler = function(sideBarTabs) {
@@ -63,11 +67,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const parentComments = document.querySelectorAll(
         '.tutor-comments-list.tutor-parent-comment'
     );
-    console.log('sdfa  s   ', parentComments);
+
     const replyComment = document.querySelector(
         '.tutor-comment-box.tutor-reply-box'
     );
-    console.log('sdfa  s   ', replyComment);
+
     if (parentComments) {
         [...parentComments].forEach((parentComment) => {
             const childComments = parentComment.querySelectorAll(
@@ -127,7 +131,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             '.tutor-quiz-border-box.tutor-dragging'
         );
         if (this.querySelector('input')) {
-            console.log(this.querySelector('input'));
             this.querySelector('input').remove();
         }
         const input = copyElement.querySelector('input');
