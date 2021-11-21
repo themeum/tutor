@@ -188,6 +188,42 @@
 			color: $design-brand;
 		}
 	}
+	.tutor-btn > * {
+		pointer-events: none;
+	}
+
+	.tooltip {
+		display: inline-block;
+		position: absolute;
+		color: #2a2d35;
+		color: $text-hints;
+		border: 1px solid;
+		width: max-content;
+		height: auto;
+		font-size: 12px;
+		top: calc(-50% - 10px);
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 2px 4px;
+		border-radius: 6px;
+
+		&:before {
+			--bw: 4px;
+			content: '';
+			position: absolute;
+			bottom: calc(-2 * var(--bw));
+			left: 50%;
+			transform: translateX(-50%);
+			border-width: var(--bw);
+			border-style: solid;
+			border-color: transparent;
+			border-top-color: inherit;
+		}
+	}
+
+	li div {
+		position: relative;
+	}
 }
 
 .tutor-popover-toggle-btn {
