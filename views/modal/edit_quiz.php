@@ -26,8 +26,10 @@
                 ?>
                 <div class="tutor-quiz-item tutor-mb-15 quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
                     <div class="tutor-quiz-item-label">
-                        <span class="tutor-quiz-item-draggable fas fa-bars question-sorting"></span>
-                        <h6 class="tutor-quiz-item-name"><?php echo stripslashes($question->question_title); ?></h6>
+                        <span class="tutor-quiz-item-draggable ttr-menu-line tutor-icon-24 question-sorting"></span>
+                        <h6 class="tutor-quiz-item-name">
+                            <?php echo stripslashes($question->question_title); ?>
+                        </h6>
                     </div>
                     <div class="tutor-quiz-item-action tutor-bs-align-items-center">
                         <div class="tutor-quiz-item-type">
