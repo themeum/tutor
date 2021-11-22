@@ -14,7 +14,7 @@
                 $input_data = array();
                 for($i=1; $i <=$count_dash_fields; $i ++){
                     $dash_string[] = '{dash}';
-                    $input_data[] = "<div class='blank'><input type='text' name='attempt[{$is_started_quiz->attempt_id}][quiz_question][{$question->question_id}][]' class='tutor-form-control' /></div>";
+                    $input_data[] = "<div class='fill-blank'><input type='text' name='attempt[{$is_started_quiz->attempt_id}][quiz_question][{$question->question_id}][]' class='tutor-form-control' /></div>";
                 }
                 echo str_replace($dash_string, $input_data, $answer_title);
             }
