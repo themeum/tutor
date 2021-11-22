@@ -5,7 +5,41 @@ $sidebar_width: 360px;
         body.wp-admin {
             .tutor-qna-single-wrapper {
                 width: calc(100% - #{$sidebar_width});
+
+                .tutor-qa-reply{
+                    border-top-left-radius: 6px;
+                    border-top-right-radius: 6px;
+                    overflow: hidden;
+                }
             }
+        }
+    }
+
+    .tutor-qa-reply{
+        bottom: 20px;
+        position: sticky;
+        bottom: 0;
+        background: white;
+        z-index: 10;
+
+        textarea{
+            min-height: initial !important;
+            height: 80px !important;
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #CDCFD5;
+            border-radius: 0 !important;
+            padding: 15px;
+            resize: none;
+
+            &, &:focus, &:active {
+                outline: none !important;
+                box-shadow: none;
+            }
+        }
+
+        div{
+            padding: 15px;
         }
     }
 
@@ -123,7 +157,7 @@ $sidebar_width: 360px;
         }
     }
 
-    &[data-context="course-single-qna-single"], &[data-context="course-single-qna-sidebar"] {
+    &:not([data-context="backend-dashboard-qna-single"]){
         .tutor-qna-left {
             .tutor-qna-text {
                 background: #FEECEB;
@@ -134,6 +168,13 @@ $sidebar_width: 360px;
             .tutor-qna-text {
                 background: #E9EDFB;
             }
+        }
+
+        .tutor-qa-reply {
+            border: 1px solid #CDCFD5;
+            border-radius: 6px;
+            bottom: 20px;
+            overflow: hidden;
         }
     }
 
@@ -154,7 +195,7 @@ $sidebar_width: 360px;
 
     @at-root{
         body.wp-admin {
-            .tutor-qa-chatlist{
+            .tutor-qa-chatlist, .tutor-qa-reply{
                 margin-right: 15px;
                 margin-top: 15px;
             }
@@ -289,5 +330,23 @@ table.qna-list-table {
                 color: #212327;
             }
         }
+    }
+}
+
+.tutor-qna-sptolight-sidebar {
+    padding: 15px;
+
+    .tutor-qa-new {
+        &[data-context="course-single-qna-sidebar"] {
+            background: #F4F6F9;
+            padding: 15px;
+            position: sticky;
+            bottom: 0;
+            margin: -15px;
+        }
+    }
+
+    .tutor-qa-reply {
+        position: initial !important;
     }
 }
