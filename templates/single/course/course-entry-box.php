@@ -38,7 +38,7 @@
         array(
             'icon_class' => 'ttr-student-line-1', 
             'label' => __('Last Updated', 'tutor'), 
-            'value' => !get_tutor_option('disable_course_update_date') ? get_tutor_course_duration_context() : null
+            'value' => !get_tutor_option('disable_course_update_date') ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null
         ),
     ), get_the_ID());
 ?>
@@ -171,7 +171,7 @@
 
     <!-- Course Info -->
     <div class="tutor-course-sidebar-card-footer tutor-p-30">
-        <ul class="tutor-course-sidebar-card-meta-list tutor-m-0">
+        <ul class="tutor-course-sidebar-card-meta-list tutor-m-0 tutor-pl-0">
             <?php foreach($sidebar_meta as $meta): ?>
                 <?php if(!$meta['value']) continue; ?>
                 <li class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">

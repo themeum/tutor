@@ -3,35 +3,6 @@
 	 * Popup Menu Toggle .tutor-popup-opener
 	 */
 
-	/*
-	const popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
-	const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-
-	 if (popupToggleBtns && popupMenus) {
-		popupToggleBtns.forEach((btn) => {
-			btn.addEventListener('click', (e) => {
-				const popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
-				popupClosest.classList.toggle('visible');
-
-				popupMenus.forEach((popupMenu) => {
-					if (popupMenu !== popupClosest) {
-						popupMenu.classList.remove('visible');
-					}
-				});
-			});
-		});
-
-		document.addEventListener('click', (e) => {
-			if (!e.target.matches('.tutor-popup-opener .popup-btn')) {
-				popupMenus.forEach((popupMenu) => {
-					if (popupMenu.classList.contains('visible')) {
-						popupMenu.classList.remove('visible');
-					}
-				});
-			}
-		});
-	} */
-
 	document.addEventListener('click', (e) => {
 		const attr = 'data-tutor-popup-target';
 
@@ -56,5 +27,54 @@
 				popupMenu.classList.remove('visible');
 			});
 		}
+
+		/**
+		 * Popupover Menu Toggle .tutor-popover
+		 */
+		const popoverAttr = 'data-tutor-popover-target';
+		if (e.target.hasAttribute(popoverAttr)) {
+			e.preventDefault();
+			const id = e.target.getAttribute(popoverAttr);
+			const popoverMenu = document.getElementById(id);
+			const popoverWrapper = popoverMenu.closest('.tutor-popover-wrapper');
+			popoverMenu.classList.toggle('is-active');
+			popoverWrapper.classList.toggle('is-active');
+		} else {
+			const backdropAttr = 'data-tutor-popover-backdrop';
+			if (e.target.hasAttribute(backdropAttr)) {
+				const activePopover = document.querySelectorAll('.tutor-popover.is-active, .tutor-popover-wrapper.is-active');
+				activePopover.forEach((item) => {
+					item.classList.remove('is-active');
+				});
+			}
+		}
 	});
 })();
+
+/**
+ * Popupover - Copy to clipboard
+ */
+document.addEventListener('click', async (e) => {
+	const btnTargetAttr = 'data-tutor-copy-target';
+	if (e.target.hasAttribute(btnTargetAttr)) {
+		const id = e.target.getAttribute(btnTargetAttr);
+
+		/* Get the text field */
+		const content = document.getElementById(id).textContent;
+
+		/* Copy the text inside the text field */
+		await navigator.clipboard.writeText(content);
+		const copiedTxt = await navigator.clipboard.readText();
+
+		showToolTip(e.target);
+	}
+});
+// Showing tooltip
+const showToolTip = (targetEl) => {
+	const toolTip = `<span class="tooltip">Copied!</span>`;
+	targetEl.insertAdjacentHTML('beforebegin', toolTip);
+
+	setTimeout(() => {
+		document.querySelector('.tooltip').remove();
+	}, 500);
+};

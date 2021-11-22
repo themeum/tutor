@@ -43,13 +43,13 @@
                             <ul class="popup-menu" id="<?php echo $id_target; ?>">
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="ttr-edit-filled color-design-white"></span>
+                                        <span class="ttr-edit-filled tutor-icon-24 tutor-mr-5 color-design-white"></span>
                                         <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="ttr-delete-fill-filled color-design-white"></span>
+                                        <span class="ttr-delete-fill-filled tutor-icon-24 tutor-mr-5 color-design-white"></span>
                                         <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>

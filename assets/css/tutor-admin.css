@@ -861,6 +861,12 @@
   line-height: 145%;
 }
 
+.text-semi-caption {
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  line-height: 165%;
+}
+
 .text-bold-h1 {
   font-weight: 700 !important;
   font-size: 80px !important;
@@ -3279,58 +3285,7 @@ table.tutor-table p {
   border: 6px solid #3057d6;
 }
 
-/*
-   * Since 1.7.9
-   * announcements style
-   */
-.tutor-announcement-content-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.tutor-announcement-buttons :nth-child(1) {
-  margin-right: 20px;
-}
-
-.tutor-announcements-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 10px;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.tutor-announcement-date,
-.tutor-announcement-content > span {
-  font-weight: bold !important;
-}
-
-.tutor-announcement-date {
-  width: 100px !important;
-}
-
-.tutor-announcements-modal-wrap .tutor-modal-content {
-  max-width: 660px !important;
-}
-
-.tutor-announcements-modal-wrap button {
-  padding: 10px 20px !important;
-}
-
-.tutor-announcement-content {
-  line-height: 10px;
-}
-
-/*over ride default modal on announcement*/
+/*override default modal on announcement*/
 .tutor-accouncement-update-modal .modal-header,
 .tutor-announcement-create-modal .modal-header {
   padding-right: 15px !important;
@@ -3810,6 +3765,28 @@ table.tutor-table p {
 }
 
 /* /.report-course-list - end */
+.tutor-admin-page-refresh {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: #5B616F;
+  cursor: pointer;
+  -ms-flex-item-align: center;
+      align-self: center;
+  margin-top: 43px;
+}
+
+.tutor-admin-page-refresh i {
+  color: #1973AA;
+  font-size: 18px;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
