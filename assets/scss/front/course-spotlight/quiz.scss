@@ -344,6 +344,7 @@
             }
         }
         #quiz-ordering-ans-area {
+            counter-reset: serial-number;
             >div:not(:last-child) {
                 margin-bottom: 25px;
             }
@@ -351,6 +352,10 @@
                 .tutor-quiz-border-box {
                     width: 250px;
                 }
+            }
+            .snum:before {
+                counter-increment: serial-number;
+                content: counter(serial-number);
             }
         }
         // #quiz-image-ordering-ans-area {
