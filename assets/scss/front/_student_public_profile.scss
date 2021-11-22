@@ -1,4 +1,60 @@
+
+
 .tutor-user-public-profile {
+
+    //rating style as per layout
+  &.tutor-user-public-profile-pp-circle, 
+  &.tutor-user-public-profile-pp-rectangle {
+      .profile-rating-media.content-for-desktop {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+      }
+      .tutor-rating-container {
+        -ms-flex-item-align: end;
+        align-self: flex-end;
+      }
+      .ratings {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: end;
+            -ms-flex-align: end;
+                align-items: flex-end;
+        .text-regular-caption {
+          color: #C0C3CB !important;
+        }
+      }
+  }
+  &.tutor-user-public-profile-pp-circle {
+    .profile-rating-media.content-for-desktop {
+      row-gap: 15px;
+    }
+  }
+  &.tutor-user-public-profile-pp-rectangle {
+    row-gap: 3px;
+  }
+  &.tutor-user-public-profile-no-cp {
+    .ratings {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+    }
+    .profile-name h3 {
+      margin-bottom: 15px;
+    }
+  }
+  //rating style end
+  .tutor-star-rating-group {
+    i {
+      padding-right: 6px;
+      color: #ED9700 !important;
+    }
+  }
   &.tutor-user-public-profile-no-cp {
     .profile-name {
       padding-left: 60px;
@@ -263,9 +319,13 @@
       display: block;
       margin: 22px 0 0 0;
       padding: 0 !important;
+      .ratings {
+        justify-content: center;
+        align-items: center;
+      }
     }
     .content-for-desktop {
-      display: none;
+      display: none !important;
     }
 
     &.tutor-user-public-profile-pp-circle,

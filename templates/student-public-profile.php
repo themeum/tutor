@@ -53,20 +53,19 @@ if ( $is_instructor ) {
 		<div class="tutor-rating-container">      
 			<div class="ratings">
 				<span class="rating-generated">
-				<?php tutor_utils()->star_rating_generator( $instructor_rating->rating_avg ); ?>
+					<?php tutor_utils()->star_rating_generator( $instructor_rating->rating_avg ); ?>
 				</span>
-
-			<?php
-			echo " <span class='rating-digits'>{$instructor_rating->rating_avg}</span> ";
-			echo " <span class='rating-total-meta text-hints text-regular-caption'>({$instructor_rating->rating_count})</span> ";
-			?>
+				<span class='rating-digits'>
+					<?php echo esc_html( number_format( $instructor_rating->rating_avg, 2 ) ); ?>
+				</span> 
+				<span class='rating-total-meta text-hints text-regular-caption'>
+					(<?php echo esc_html( number_format( $instructor_rating->rating_count, 2 ) ); ?>)
+				</span>
 			</div>
 		</div>
 		<?php
 }
 	$rating_content = ob_get_clean();
-
-
 	// Social media content
 	ob_start();
 foreach ( $tutor_user_social_icons as $key => $social_icon ) {
@@ -77,8 +76,8 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 ?>
 
 <?php do_action( 'tutor_student/before/wrap' ); ?>
-
-	<div <?php tutor_post_class( 'tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-' . $profile_layout ); ?>>
+<?php $user_identifier = $is_instructor ? 'tutor-instructor' : 'tutor-student'; ?>
+	<div <?php tutor_post_class( 'tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-' . $profile_layout . ' ' . $user_identifier ); ?> >
 		<div class="tutor-bs-container photo-area">
 			<div class="cover-area">
 				<div style="background-image:url(<?php echo tutor_utils()->get_cover_photo_url( $user_id ); ?>)"></div>
@@ -178,8 +177,10 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 				}
 				?>
 			</div>
+
 		</div>
 	</div>
+
 <?php do_action( 'tutor_student/after/wrap' ); ?>
 
 <?php
