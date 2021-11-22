@@ -29,29 +29,29 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<input type="hidden" name="action" value="tutor_announcement_create"/>
 					<input type="hidden" name="action_type" value="<?php echo $announcement ? 'update' : 'create'; ?>"/>
 					<div class="tutor-form-group">
-						<label>
+						<label class="tutor-form-label">
 							<?php _e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select" name="tutor_announcement_course" id="" required>
+						<select class="tutor-form-select" name="tutor_announcement_course" required>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>
-										<?php echo $course->post_title; ?>
+										<?php echo esc_html( $course->post_title ); ?>
 									</option>
 								<?php endforeach; ?>
 							<?php else : ?>
-								<option value=""><?php _e( 'No course found', 'tutor' ); ?></option>
+								<option><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
 							<?php endif; ?>
 						</select>
 					</div>
 					<div class="tutor-form-group">
-						<label>
+						<label class="tutor-form-label">
 							<?php _e( 'Announcement Title', 'tutor' ); ?>
 						</label>
 						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php _e( 'Announcement title', 'tutor' ); ?>" required>
 					</div>
 					<div class="tutor-form-group">
-						<label for="tutor_announcement_course">
+						<label class="tutor-form-label" for="tutor_announcement_course">
 							<?php _e( 'Summary', 'tutor' ); ?>
 						</label>
 						<textarea class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php echo $summary; ?></textarea>
@@ -126,12 +126,12 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						</div>
 					</div>
 					<div class="footer-bottom tutor-mt-60">
-						<div class="footer-btns tutor-btn-group">
+						<div class="footer-btns">
 							<button data-tutor-modal-close class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md">
 								<?php _e( 'Cancel', 'tutor' ); ?>
 							</button>
 						</div>
-						<div class="footer-btns tutor-btn-group">
+						<div class="footer-btns announcement-action-button tutor-bs-flex-sm-wrap tutor-bs-flex-md-nowrap">
 							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md">
 								<?php _e( 'Delete', 'tutor' ); ?>
 							</button>
