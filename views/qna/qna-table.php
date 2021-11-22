@@ -26,15 +26,16 @@
                 $is_archived = (int)tutor_utils()->array_get('tutor_qna_archived', $meta, 0);
                 $is_read = (int)tutor_utils()->array_get('tutor_qna_read', $meta, 0);
                 ?>
-                <tr id="<?php echo $row_id; ?>">
+                <tr id="<?php echo $row_id; ?>" data-question_id="<?php echo $qna->comment_ID; ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
                     <?php 
                         foreach($table_columns as $key => $column) {
                             switch($key) {
                                 case 'checkbox' :
                                     ?>
-                                    <td data-th="<?php _e('Mark', 'tutor'); ?>">
-                                        <div class="td-checkbox d-flex ">
-                                            <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" />
+                                    <td data-th="<?php _e('Mark', 'tutor'); ?>" class="tutor-shrink">
+                                        <div class="td-checkbox tutor-bs-d-flex tutor-bs-align-items-center tutor-qna-badges">
+                                            <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" style="margin-top:0;"/>
+                                            <i data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled" class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?> tutor-icon-20 tutor-ml-24 tutor-cursor-pointer" data-action="important"></i>
                                         </div>
                                     </td>
                                     <?php
@@ -60,7 +61,7 @@
                                     $content = htmlspecialchars( strip_tags($qna->comment_content) );
                                     ?>
                                     <td data-th="<?php echo $column; ?>" title="<?php echo $content; ?>">
-                                        <span class="text-medium-caption color-text-primary tutor-bs-d-block">
+                                        <span class="tutor-qna-title">
                                             <?php echo $content;?>
                                         </span>
                                         <small class="tutor-text-nowrap">
@@ -115,16 +116,20 @@
                                                     <span class="toggle-icon"></span>
                                                 </button>
                                                 <ul id="popup-menu-1" class="popup-menu">
-                                                    <li>
-                                                        <a href="#">
+                                                    <li class="tutor-qna-badges">
+                                                        <a href="#" data-action="archived" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white"  data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
                                                             <span class="ttr-msg-archive-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                            <span class="text-regular-body color-text-white"><?php _e('Archive', 'tutor'); ?></span>
+                                                            <span class="text-regular-body color-text-white">
+                                                                <?php $is_archived ?  _e('Un-archive', 'tutor') : _e('Archive', 'tutor'); ?>
+                                                            </span>
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a href="#">
+                                                    <li class="tutor-qna-badges">
+                                                        <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
                                                             <span class="ttr-envelope-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                            <span class="text-regular-body color-text-white"><?php _e('Mark as Unread', 'tutor'); ?></span>
+                                                            <span class="text-regular-body color-text-white" >
+                                                                <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
+                                                            </span>
                                                         </a>
                                                     </li>
                                                     <li>
