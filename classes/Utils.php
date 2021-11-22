@@ -4010,16 +4010,18 @@ class Utils {
 		$search_term 		  = '%' . $wpdb->esc_like( $search_term ) . '%';
 		$question_clause 	  = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
 		$meta_clause 		  = '';
-		$user_caluse 		  = '';
 		$in_question_id_query = '';
 
 		/**
 		 * Get only assinged  courses questions if current user is not admin
 		 */
-		if (!$this->has_user_role('administrator', $user_id) && current_user_can( tutor()->instructor_role ) ) {
+		// User query
+		if($asker_id) {
+			$question_clause .= ' AND _question.user_id='. $asker_id;
+		} else if (!$this->has_user_role('administrator', $user_id) && current_user_can( tutor()->instructor_role ) ) {
 			$my_course_ids = $this->get_course_id_by('instructor', $user_id) ;
 			$in_ids = count($my_course_ids) ? implode( ',', $my_course_ids ) : '0';
-			$in_question_id_query = " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
+			$in_question_id_query .= " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
 		}
 
 		// Meta query
@@ -4029,12 +4031,7 @@ class Utils {
 				$meta_array[] = "_meta.meta_key='{$key}' AND _meta.meta_value='{$value}'";
 			}
 
-			$meta_clause = ' AND ' . implode(' AND ', $meta_array);
-		}
-
-		// User query
-		if($asker_id) {
-			$user_caluse = ' AND _question.user_id='. $asker_id;
+			$meta_clause .= ' AND ' . implode(' AND ', $meta_array);
 		}
 
 		$query = $wpdb->get_results( $wpdb->prepare(

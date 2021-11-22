@@ -4205,13 +4205,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helper/response */ "./assets/react/helper/response.js");
 
 window.jQuery(document).ready(function ($) {
-  var __ = wp.i18n.__; // Change badge
+  var __ = wp.i18n.__; // Change view as mode at frontend dashboard
+
+  $('.tutor-dashboard-qna-vew-as input[type="checkbox"]').prop('disabled', false);
+  $(document).on('change', '.tutor-dashboard-qna-vew-as input[type="checkbox"]', function () {
+    var is_instructor = $(this).prop('checked');
+    $(this).prop('disabled', true);
+    window.location.replace($(this).data(is_instructor ? 'as_instructor_url' : 'as_student_url'));
+  }); // Change badge
 
   $(document).on('click', '.tutor-qna-badges [data-action]', function (e) {
     e.preventDefault();
     var qna_action = $(this).data('action');
     var question_id = $(this).closest('[data-question_id]').data('question_id');
     var button = $(this);
+    console.log('Clicked here');
     $.ajax({
       url: _tutorobject.ajaxurl,
       type: 'POST',
@@ -4235,6 +4243,7 @@ window.jQuery(document).ready(function ($) {
           // Get toggle class
           var remove_class = button.data(new_value == 1 ? 'state-class-0' : 'state-class-1');
           var add_class = button.data(new_value == 1 ? 'state-class-1' : 'state-class-0');
+          console.log(remove_class, add_class);
           var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
           class_element.addClass(add_class).removeClass(remove_class);
         } // Toggle text if togglable text defined
@@ -4253,9 +4262,9 @@ window.jQuery(document).ready(function ($) {
     });
   }); // Save/update question/reply
 
-  $(document).on('click', '.tutor-qa-reply button', function () {
+  $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button', function () {
     var button = $(this);
-    var form = button.closest('.tutor-qa-reply');
+    var form = button.closest('[data-question_id]');
     var question_id = button.closest('[data-question_id]').data('question_id');
     var course_id = button.closest('[data-course_id]').data('course_id');
     var context = button.closest('[data-context]').data('context');
