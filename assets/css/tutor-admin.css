@@ -6964,6 +6964,7 @@ li.tutor-option-nav-item h4 {
   -webkit-column-gap: 20px;
   -moz-column-gap: 20px;
   column-gap: 20px;
+  margin-right: -25px;
 }
 
 @media only screen and (max-width: 767px) {
