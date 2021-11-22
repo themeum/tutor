@@ -97,15 +97,18 @@ class Q_and_A {
 		tutor_utils()->checking_nonce();
 
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
-		$action = sanitize_text_field( $_POST['qna_action'] );
-		$current_value = intval(sanitize_text_field($_POST['current_value']));
-		$new_value = $current_value==1 ? 0 : 1;
 
 		if(!tutor_utils()->can_user_manage('qa_question', $question_id)) {
 			wp_send_json_error( array('message' => __('Permission Denied!', 'tutor') ) );
 		}
 
+		// Get the existing value from meta
+		$action = sanitize_text_field( $_POST['qna_action'] );
 		$meta_key = 'tutor_qna_' . $action;
+		$current_value = (int)get_comment_meta( $question_id, $meta_key, true );
+		$new_value = $current_value==1 ? 0 : 1;
+
+		// Update the reverted value
 		update_comment_meta( $question_id, $meta_key, $new_value );
 
 		wp_send_json_success( array('new_value' => $new_value) );

@@ -2550,6 +2550,7 @@ class Utils {
 			'reviews'           => __( 'Reviews', 'tutor' ),
 			'my-quiz-attempts'  => __( 'My Quiz Attempts', 'tutor' ),
 			'purchase_history'  => __( 'Order History', 'tutor' ),
+			'question-answer'   => array( 'title' => __( 'Question & Answer', 'tutor')),
 		));
 
 		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', array(
@@ -2559,7 +2560,6 @@ class Utils {
 			'announcements'     => array( 'title' => __( 'Announcements', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'withdraw'          => array( 'title' => __( 'Withdrawals', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'quiz-attempts'     => array( 'title' => __( 'Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
-			'question-answer'   => array( 'title' => __( 'Question & Answer', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 		));
 
 		$disable = get_tutor_option( 'disable_course_review' );
@@ -7487,6 +7487,7 @@ class Utils {
 				$course_id = $object_id;
 				break;
 
+			case 'zoom_meeting' :
 			case 'topic' :
 			case 'announcement' :
 				$course_id = $wpdb->get_var( $wpdb->prepare(
@@ -7497,6 +7498,7 @@ class Utils {
 				$object_id ) );
 				break;
 
+			case 'zoom_lesson' :
 			case 'lesson' :
 			case 'quiz' :
 			case 'assignment' :

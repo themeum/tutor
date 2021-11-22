@@ -154,6 +154,7 @@ class Lesson extends Tutor_Base {
 		
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 		$topic_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('current_topic_id', $_POST));
+		$current_topic_id = $topic_id;
 		$course_id = tutor_utils()->get_course_id_by('topic', $topic_id);
 		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
 		
