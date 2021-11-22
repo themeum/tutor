@@ -58,7 +58,6 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 		</div>
 
         <div class="tutor-sidebar-tabs-content">
-
 			<div id="tutor-lesson-sidebar-tab-content" class="tutor-lesson-sidebar-tab-item active">
 				<?php
 				$topics = tutor_utils()->get_topics($course_id);
