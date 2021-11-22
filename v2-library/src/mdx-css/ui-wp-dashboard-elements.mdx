@@ -17,10 +17,54 @@ import '../docz-essential.css';
 
 `** remove the inline-style from the header`
 
+## Zoom Integration
+
 <Playground>
-	<header class="tutor-wp-dashboard-header d-lg-flex justify-content-between align-items-center tutor-px-30 tutor-py-20" style={{border: '1px solid #fdfcfc'}}>
-		<div class="header-title-wrap d-flex align-items-center tutor-bs-mb-lg-0 tutor-bs-mb-4">
-			<div className="d-flex align-items-end header-title">
+	<div class="tutor-zoom-integration-card tutor-radius-6 tutor-border-sl30">
+		<div class="tutor-zoom-integration-card-header tutor-py-10 tutor-px-15">
+			<div class="text-">Zoom Meeting</div>
+		</div>
+		<div class="tutor-zoom-integration-card-body tutor-py-26 tutor-px-15">
+			<div class="list-item">
+				<div class="text-regular-small color-text-subsued">Start Time</div>
+				<div class="text-semi-caption color-text-primary tutor-mt-6">20 July, 2020, <span class="text-regular-caption">12:00 pm</span></div>
+			</div>
+			<div class="list-item">
+				<div class="text-regular-small color-text-subsued">Meeting Name</div>
+				<div class="text-regular-caption color-text-primary tutor-mt-6">How To Start A Business With No Money</div>
+			</div>
+			<div class="list-item">
+				<div class="text-regular-small color-text-subsued">Meeting Token</div>
+				<div class="text-regular-caption color-text-primary tutor-mt-6">8689423323</div>
+			</div>
+			<div class="list-item">
+				<div class="text-regular-small color-text-subsued">Password</div>
+				<div class="text-regular-caption color-text-primary tutor-mt-6">7AHJKGD67</div>
+			</div>
+			<div class="list-item list-item-buttons">
+				<button class="tutor-btn tutor-btn-icon tutor-btn-primary tutor-is-outline tutor-btn-sm tutor-mr-20">
+					<span class="btn-icon ttr-youtube-brand"></span><span>Start Meeting</span>
+				</button>
+				<button class="tutor-btn tutor-is-circle tutor-is-outline tutor-btn-ghost tutor-mr-10">
+					<span class="btn-icon tutor-icon-28 ttr-pencil-line"></span>
+				</button>
+				<button class="tutor-btn tutor-is-circle tutor-is-outline tutor-btn-ghost">
+					<span class="btn-icon tutor-icon-28 ttr-garbage-line"></span>
+				</button>
+			</div>
+		</div>
+		<div class="tutor-zoom-integration-card-footer tutor-py-20 tutor-px-15">
+			<button class="tutor-btn tutor-btn-icon tutor-btn-primary tutor-btn-md">
+				<span class="btn-icon ttr-youtube-brand"></span><span>Create a Zoom Meeting</span>
+			</button>
+		</div>
+	</div>
+</Playground>
+
+<Playground>
+	<header class="tutor-wp-dashboard-header tutor-bs-d-lg-flex tutor-bs-justify-content-between tutor-bs-align-items-center tutor-px-30 tutor-py-20" style={{border: '1px solid #fdfcfc'}}>
+		<div class="header-title-wrap tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-mb-lg-0 tutor-bs-mb-4">
+			<div className="tutor-bs-d-flex tutor-bs-align-items-end header-title">
 				<span className="text-medium-h5 color-text-primary">Addons List</span>
 				<span className="text-regular-caption color-text-primary">/ Habijabi</span>
 			</div>
@@ -46,7 +90,7 @@ import '../docz-essential.css';
 ## WP Dashboard Filter 
 
 <Playground>
-	<div class="tutor-wp-dashboard-filter tutor-bs-d-flex d-flex- flex-xl-nowrap flex-wrap align-items-end justify-content-between">
+	<div class="tutor-wp-dashboard-filter tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap tutor-bs-align-items-end tutor-bs-justify-content-between">
 		<div class="tutor-wp-dashboard-filter-items d-flex flex-xl-nowrap flex-wrap">
 			<div className="tutor-form-select-with-btn">
 				<select

@@ -2550,6 +2550,7 @@ class Utils {
 			'reviews'           => __( 'Reviews', 'tutor' ),
 			'my-quiz-attempts'  => __( 'My Quiz Attempts', 'tutor' ),
 			'purchase_history'  => __( 'Order History', 'tutor' ),
+			'question-answer'   => array( 'title' => __( 'Question & Answer', 'tutor')),
 		));
 
 		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', array(
@@ -2559,7 +2560,6 @@ class Utils {
 			'announcements'     => array( 'title' => __( 'Announcements', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'withdraw'          => array( 'title' => __( 'Withdrawals', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 			'quiz-attempts'     => array( 'title' => __( 'Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
-			'question-answer'   => array( 'title' => __( 'Question & Answer', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 		));
 
 		$disable = get_tutor_option( 'disable_course_review' );
@@ -7487,6 +7487,7 @@ class Utils {
 				$course_id = $object_id;
 				break;
 
+			case 'zoom_meeting' :
 			case 'topic' :
 			case 'announcement' :
 				$course_id = $wpdb->get_var( $wpdb->prepare(
@@ -7497,6 +7498,7 @@ class Utils {
 				$object_id ) );
 				break;
 
+			case 'zoom_lesson' :
 			case 'lesson' :
 			case 'quiz' :
 			case 'assignment' :
@@ -8231,9 +8233,9 @@ class Utils {
 	 */
 	public function tutor_empty_state( string $title = '' ) { 
 		$page_title = $title ? $title : ''; ?>
-		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center">
+		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center td-empty-state tutor-p-20">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" />
-			<p><?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?></p>
+			<div class="text-regular-h5 color-text-primary tutor-mt-20"><?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?></div>
 		</div>
 	<?php }
 
@@ -8255,7 +8257,10 @@ class Utils {
 			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
 			'canceled'  	=> __( 'Cancelled', 'tutor' ),
 			'blocked'		=> __( 'Blocked', 'tutor' ),
-			'cancel'		=> __( 'Cancelled', 'tutor' )
+			'cancel'		=> __( 'Cancelled', 'tutor' ),
+			'on-hold'		=> __( 'On Hold', 'tutor' ),
+			'onhold'		=> __( 'On Hold', 'tutor' ),
+			'wc-on-hold'	=> __( 'On Hold', 'tutor' ),
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
@@ -8301,12 +8306,62 @@ class Utils {
 	 */
 	public function report_frequencies() {
 		$frequencies = array(
-			'alltime'    => __( 'All Time', 'tutor-pro' ),
-			'today'      => __( 'Today', 'tutor-pro' ),
-			'last30days' => __( 'Last 30 Days', 'tutor-pro' ),
-			'last60days' => __( 'Last 60 Days', 'tutor-pro' ),
-			'last90days' => __( 'Last 90 Days', 'tutor-pro' ),
+			'alltime'     => __( 'All Time', 'tutor-pro' ),
+			'today'       => __( 'Today', 'tutor-pro' ),
+			'last30days'  => __( 'Last 30 Days', 'tutor-pro' ),
+			'last90days'  => __( 'Last 90 Days', 'tutor-pro' ),
+			'last365days' => __( 'Last 365 Days', 'tutor-pro' ),
+			'custom' 	  => __( 'Custom', 'tutor-pro' )
 		);
 		return $frequencies;
+	}
+
+	/**
+	 * Add interval days with today date. For ex: 10 days add with today
+	 * 
+	 * @param string $interval | required.
+	 * @since v2.0.0
+	 */
+	public function add_days_with_today( $interval ) {
+		$today		= date_create( date( 'Y-m-d' ) );
+		$add_days 	= date_add( $today, date_interval_create_from_date_string( $interval ) );
+		return $add_days;
+	}
+
+	/**
+	 * Subtract interval days from today date. For ex: 10 days back from today
+	 * 
+	 * @param string $interval | required.
+	 * @since v2.0.0
+	 */
+	public function sub_days_with_today( $interval ) {
+		$today		= date_create( date( 'Y-m-d' ) );
+		$add_days 	= date_sub( $today, date_interval_create_from_date_string( $interval ) );
+		return $add_days;
+	}
+
+	/**
+	 * Get renderable column list for tables based on context
+	 * 
+	 * @since v2.0.0
+	 */
+	public function get_table_columns_from_context($page_key, $context, $contexts, $filter_hook=null) {
+
+		$fields = array();
+		$columns = $contexts[$page_key]['columns'];
+		$filter_hook ? $columns = apply_filters( $filter_hook, $contexts[$page_key]['columns'] ) : 0;
+
+		$allowed = $contexts[$page_key]['contexts'][$context];
+		is_string($allowed) ? $allowed=$contexts[$page_key]['contexts'][$allowed] : 0; // By reference
+		
+		if($allowed===true) {
+			$fields=$columns;
+		} else {
+			foreach($columns as $key=>$column) {
+				in_array($key, $allowed) ? $fields[$key]=$column : 0;
+			}
+		}		
+
+		return $fields;
 	}
 }

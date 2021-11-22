@@ -26,8 +26,10 @@
                 ?>
                 <div class="tutor-quiz-item tutor-mb-15 quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
                     <div class="tutor-quiz-item-label">
-                        <span class="tutor-quiz-item-draggable fas fa-bars question-sorting"></span>
-                        <h6 class="tutor-quiz-item-name"><?php echo stripslashes($question->question_title); ?></h6>
+                        <span class="tutor-quiz-item-draggable ttr-menu-line tutor-icon-24 question-sorting"></span>
+                        <h6 class="tutor-quiz-item-name">
+                            <?php echo stripslashes($question->question_title); ?>
+                        </h6>
                     </div>
                     <div class="tutor-quiz-item-action tutor-bs-align-items-center">
                         <div class="tutor-quiz-item-type">
@@ -43,13 +45,13 @@
                             <ul class="popup-menu" id="<?php echo $id_target; ?>">
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="ttr-edit-filled color-design-white"></span>
+                                        <span class="ttr-edit-filled tutor-icon-24 tutor-mr-5 color-design-white"></span>
                                         <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="ttr-delete-fill-filled color-design-white"></span>
+                                        <span class="ttr-delete-fill-filled tutor-icon-24 tutor-mr-5 color-design-white"></span>
                                         <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>

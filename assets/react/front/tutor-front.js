@@ -854,28 +854,6 @@ jQuery(document).ready(function ($) {
     });
 
     /**
-     * Frontend Profile
-     */
-
-    if (!$('#tutor_profile_photo_id').val()) {
-        $('.tutor-profile-photo-delete-btn').hide();
-    }
-
-    $(document).on('click', '.tutor-profile-photo-delete-btn', function () {
-        $('.tutor-profile-photo-upload-wrap').find('img').attr('src', _tutorobject.placeholder_img_src);
-        $('#tutor_profile_photo_id').val('');
-        $('.tutor-profile-photo-delete-btn').hide();
-
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: { 'action': 'tutor_profile_photo_remove' },
-        });
-
-        return false;
-    });
-
-    /**
      * Assignment
      *
      * @since v.1.3.3
@@ -1149,39 +1127,6 @@ jQuery(document).ready(function ($) {
         if (!container.is(e.target) && container.has(e.target).length === 0) {
             $content.slideUp(100);
         }
-    });
-
-    /**
-     * Tutor ajax login
-     *
-     * @since v.1.6.3
-     */
-    $(document).on('submit', '.tutor-login-form-wrap #loginform', function (e) {
-        e.preventDefault();
-        
-        var $that = $(this);
-        var $form_wrapper = $('.tutor-login-form-wrap');
-
-        var form_data = $that.serializeObject();
-        form_data.action = 'tutor_user_login';
-        $.ajax({
-            url: _tutorobject.ajaxurl,
-            type: 'POST',
-            data: form_data,
-            success: function (response) {
-                if (response.success) {
-                    location.assign(response.data.redirect);
-                    location.reload();
-                } else {
-                    var error_message = response.data || __('Invalid username or password!', 'tutor');
-                    if ($form_wrapper.find('.tutor-alert').length) {
-                        $form_wrapper.find('.tutor-alert').html(error_message);
-                    } else {
-                        $form_wrapper.prepend('<div class="tutor-alert tutor-alert-warning">' + error_message + '</div>');
-                    }
-                }
-            },
-        });
     });
 
     /**

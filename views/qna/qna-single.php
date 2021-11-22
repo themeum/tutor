@@ -23,33 +23,6 @@
     $reply_hidden = !wp_doing_ajax() ? 'display:none;' : 0;
 ?>
 
-<?php 
-    ob_start();
-    ?>
-        <span data-action="solved" data-value="<?php echo $is_solved ? 1 : 0; ?>">
-            <i class="ttr-tick-circle-outline-filled"></i> 
-            <span><?php _e('Solved', 'tutor'); ?></span>
-        </span>
-        <span data-action="important" data-value="<?php echo $is_important ? 1 : 0; ?>">
-            <i class="ttr-msg-important-filled"></i> 
-            <span><?php _e('Important', 'tutor'); ?></span>
-        </span>
-        <span data-action="archived" data-value="<?php echo $is_archived ? 1 : 0; ?>">
-            <i class="ttr-msg-archive-filled"></i> 
-            <span><?php _e('Archive', 'tutor'); ?></span>
-        </span>
-        <span data-action="unread" data-value="<?php echo $is_read ? 1 : 0; ?>">
-            <i class="ttr-msg-unread-filled"></i> 
-            <span><?php _e('Mark as Unread', 'tutor'); ?></span>
-        </span>
-        <span data-tutor-modal-target="<?php echo $modal_id; ?>">
-            <i class="ttr-delete-fill-filled"></i> 
-            <span><?php _e('Delete', 'tutor'); ?></span>
-        </span>
-    <?php
-    $badges = ob_get_clean();
-?>
-
 <div class="tutor-qna-single-question" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
     <!-- Delete modal -->
     <div id="<?php echo $modal_id; ?>" class="tutor-modal">
@@ -93,7 +66,26 @@
                     </a>
                 </div>
                 <div class="tutor-qna-badges">
-                    <?php echo $badges; ?>
+                    <span data-action="solved" data-state-class-selector="i" data-state-class-0="ttr-tick-circle-outline-filled" data-state-class-1="ttr-tick-circle-outline-filled tutor-text-success">
+                        <i class="<?php echo $is_solved ? 'ttr-tick-circle-outline-filled tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
+                        <span><?php _e('Solved', 'tutor'); ?></span>
+                    </span>
+                    <span data-action="important" data-state-class-selector="i" data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled">
+                        <i class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?>"></i> 
+                        <span><?php _e('Important', 'tutor'); ?></span>
+                    </span>
+                    <span data-action="archived" data-state-class-selector="i" data-state-class-0="ttr-msg-archive-filled" data-state-class-1="ttr-msg-important-fill-filled">
+                        <i class="<?php echo $is_archived ? 'ttr-msg-archive-filled' : 'ttr-msg-archive-filled'; ?>"></i> 
+                        <span><?php _e('Archive', 'tutor'); ?></span>
+                    </span>
+                    <span data-action="unread" data-state-class-selector="i" data-state-class-0="ttr-msg-unread-filled" data-state-class-1="ttr-msg-read-filled">
+                        <i class="<?php echo $is_read ? 'ttr-msg-read-filled' : 'ttr-msg-unread-filled'; ?>"></i> 
+                        <span><?php _e('Mark as Unread', 'tutor'); ?></span>
+                    </span>
+                    <span data-tutor-modal-target="<?php echo $modal_id; ?>">
+                        <i class="ttr-delete-fill-filled"></i> 
+                        <span><?php _e('Delete', 'tutor'); ?></span>
+                    </span>
                 </div>
             </div>
         <?php endif; ?>
@@ -144,11 +136,6 @@
         <div class="tutor-qa-reply" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
             <textarea class="tutor-form-control"></textarea>
             <div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center tutor-mt-10">
-                <?php 
-                    if(in_array($context, array('course-single-qna-single', 'course-single-qna-sidebar'))){
-                        echo '<div class="tutor-qna-badges">'.$badges.'</div>';
-                    }
-                ?>
                 <button type="submit" class="tutor-btn tutor-is-xs tutor-ml-15">
                     <?php esc_html_e('Reply', 'tutor'); ?> 
                 </button>

@@ -1,10 +1,10 @@
-<div id="quiz-image-matching-ans-area" class="quiz-question-ans-choice-area tutor-mt-70 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
-    <div class="matching-quiz-question-desc d-flex align-items-start">
+<div id="quiz-image-matching-ans-area" class="quiz-question-ans-choice-area tutor-mt-50 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
+    <div class="matching-quiz-question-desc tutor-mb-70">
         <?php
             $rand_answers = tutor_utils()->get_answers_by_quiz_question($question->question_id, true);
             foreach ($rand_answers as $rand_answer){
         ?>
-        <div class="tutor-quiz-border-box">
+        <div class="tutor-quiz-border-box" draggable="true">
             <?php
                 if ($question_type === 'matching'){
                     echo '<span class="text-regular-body color-text-primary">'.stripslashes($rand_answer->answer_two_gap_match).'</span>';
@@ -20,15 +20,13 @@
     <div class="quiz-image-matching-ans d-flex align-items-start">
         <?php
             if ( is_array($answers) && count($answers) ) {
-            $answer_i = 0;
                 foreach ($answers as $answer){
-                    $answer_i++;
         ?>
         <div class="quiz-image-box">
             <div class="quiz-image d-flex tutor-mb-15">
                 <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
             </div>
-            <div class="tutor-quiz-dotted-box">
+            <div class="tutor-quiz-dotted-box flex-center">
                 <span class="text-regular-body color-text-primary">
                     <?php _e('Drag your ans', 'tutor'); ?>
                 </span>

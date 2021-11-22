@@ -34,6 +34,19 @@
 				?>
 
 		<div class="tutor-wp-dashboard-filter-items tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap">
+			<div class="">
+				<label class="tutor-form-label">
+				</label>
+					<?php
+						$page     = isset( $_GET['page'] ) ? $_GET['page'] : '';
+						$sub_page = isset( $_GET['sub_page'] ) ? $_GET['sub_page'] : '';
+						$url      = '' === $sub_page ? "?page=$page" : "?page=$page&sub_page=$sub_page";
+
+					?>
+				<a href="<?php echo esc_url( $url ); ?>" class="tutor-admin-page-refresh">
+					<i class="color-wordpress ttr-refresh-1-filled"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
+				</a>
+			</div>
 			<?php
 				$course_id     = isset( $_GET['course-id'] ) ? esc_html__( $_GET['course-id'] ) : '';
 				$order         = isset( $_GET['order'] ) ? esc_html__( $_GET['order'] ) : '';

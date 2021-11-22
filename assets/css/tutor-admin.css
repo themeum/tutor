@@ -861,6 +861,12 @@
   line-height: 145%;
 }
 
+.text-semi-caption {
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  line-height: 165%;
+}
+
 .text-bold-h1 {
   font-weight: 700 !important;
   font-size: 80px !important;
@@ -3053,7 +3059,6 @@ h2.tutor-page-heading {
 }
 
 .tutor-alert::before {
-  content: '\e95f';
   position: absolute;
   font-size: 30px;
   font-family: 'tutor' !important;
@@ -3280,58 +3285,7 @@ table.tutor-table p {
   border: 6px solid #3057d6;
 }
 
-/*
-   * Since 1.7.9
-   * announcements style
-   */
-.tutor-announcement-content-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.tutor-announcement-buttons :nth-child(1) {
-  margin-right: 20px;
-}
-
-.tutor-announcements-header {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 10px;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.tutor-announcement-date,
-.tutor-announcement-content > span {
-  font-weight: bold !important;
-}
-
-.tutor-announcement-date {
-  width: 100px !important;
-}
-
-.tutor-announcements-modal-wrap .tutor-modal-content {
-  max-width: 660px !important;
-}
-
-.tutor-announcements-modal-wrap button {
-  padding: 10px 20px !important;
-}
-
-.tutor-announcement-content {
-  line-height: 10px;
-}
-
-/*over ride default modal on announcement*/
+/*override default modal on announcement*/
 .tutor-accouncement-update-modal .modal-header,
 .tutor-announcement-create-modal .modal-header {
   padding-right: 15px !important;
@@ -3811,6 +3765,28 @@ table.tutor-table p {
 }
 
 /* /.report-course-list - end */
+.tutor-admin-page-refresh {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  color: #5B616F;
+  cursor: pointer;
+  -ms-flex-item-align: center;
+      align-self: center;
+  margin-top: 43px;
+}
+
+.tutor-admin-page-refresh i {
+  color: #1973AA;
+  font-size: 18px;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -4388,149 +4364,6 @@ li.tutor-option-nav-item h4 {
 .tooltip-wrap .arrow-center.tooltip-left {
   -webkit-transform: translateY(-50%) translateX(-2px);
           transform: translateY(-50%) translateX(-2px);
-}
-
-.popup-opener {
-  position: relative;
-  padding: 0;
-}
-
-.popup-btn {
-  display: inline-block;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  background: transparent;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  border-radius: 3px;
-}
-
-.popup-btn > * {
-  pointer-events: none;
-  font-size: 20px;
-}
-
-.popup-btn:hover, .popup-btn:focus {
-  -webkit-box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
-          box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
-}
-
-.popup-btn .toggle-icon {
-  width: 20px;
-  height: 20px;
-  background-image: url("data:image/svg+xml;charset=UTF-8, <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48' fill='none'><path fill-rule='evenodd' clip-rule='evenodd' d='M24 12C26.2091 12 28 10.2091 28 8C28 5.79086 26.2091 4 24 4C21.7909 4 20 5.79086 20 8C20 10.2091 21.7909 12 24 12ZM24 28C26.2091 28 28 26.2091 28 24C28 21.7909 26.2091 20 24 20C21.7909 20 20 21.7909 20 24C20 26.2091 21.7909 28 24 28ZM28 40C28 42.2091 26.2091 44 24 44C21.7909 44 20 42.2091 20 40C20 37.7909 21.7909 36 24 36C26.2091 36 28 37.7909 28 40Z' fill='%231a1b1e'/></svg>");
-  background-repeat: no-repeat;
-  background-size: 20px;
-  background-position: center;
-}
-
-.popup-menu {
-  background: #212327;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  top: calc(100% + 1.5px);
-  min-width: 170px;
-  right: -6px;
-  -webkit-transition: 200ms ease-out;
-  transition: 200ms ease-out;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.popup-menu:before {
-  content: '';
-  position: absolute;
-  border: 6px solid transparent;
-  border-bottom-color: #212327;
-  top: -12px;
-  right: 10px;
-}
-
-.popup-menu li {
-  list-style: none;
-}
-
-.popup-menu li:not(:last-child) a {
-  margin-bottom: 2px;
-}
-
-.popup-menu li a {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  color: #ffffff;
-  text-decoration: none;
-  padding: 5px 12px;
-  -webkit-transition: 200ms;
-  transition: 200ms;
-}
-
-.popup-menu li a:hover {
-  background: #41454f;
-}
-
-.popup-menu li a i,
-.popup-menu li a .icon {
-  font-size: 26px;
-  margin-right: 8px;
-}
-
-.popup-menu.visible {
-  opacity: 1;
-  visibility: visible;
-  -webkit-animation-name: fadeIn;
-          animation-name: fadeIn;
-  -webkit-animation-duration: 500ms;
-          animation-duration: 500ms;
-  -webkit-animation-timing-function: cubic-bezier(0.74, 0.49, 0.24, 0.96);
-          animation-timing-function: cubic-bezier(0.74, 0.49, 0.24, 0.96);
-}
-
-@-webkit-keyframes fadeIn {
-  from {
-    -webkit-transform: translateY(2px);
-            transform: translateY(2px);
-    -webkit-filter: blur(2px);
-            filter: blur(2px);
-    opacity: 0;
-  }
-  to {
-    -webkit-transform: translateY(0px);
-            transform: translateY(0px);
-    -webkit-filter: blur(0);
-            filter: blur(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    -webkit-transform: translateY(2px);
-            transform: translateY(2px);
-    -webkit-filter: blur(2px);
-            filter: blur(2px);
-    opacity: 0;
-  }
-  to {
-    -webkit-transform: translateY(0px);
-            transform: translateY(0px);
-    -webkit-filter: blur(0);
-            filter: blur(0);
-    opacity: 1;
-  }
 }
 
 .tutor-backend-alert.alert-primary {
@@ -6837,29 +6670,102 @@ li.tutor-option-nav-item h4 {
   max-width: 100%;
 }
 
-.post-type-courses.taxonomy-course-tag .button,
+.post-type-courses.taxonomy-course-category .button, .post-type-courses.taxonomy-course-tag .button {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.post-type-courses.taxonomy-course-category select, .post-type-courses.taxonomy-course-tag select {
+  padding-left: 20px;
+  padding-right: 40px;
+  background-position: right 10px top 55%;
+}
+
+.post-type-courses.taxonomy-course-category .button,
+.post-type-courses.taxonomy-course-category select, .post-type-courses.taxonomy-course-tag .button,
 .post-type-courses.taxonomy-course-tag select {
   border-radius: 6px;
+  min-height: 40px;
 }
 
-.post-type-courses.taxonomy-course-tag input[type='text'],
+.post-type-courses.taxonomy-course-category .tablenav-pages .button, .post-type-courses.taxonomy-course-tag .tablenav-pages .button {
+  min-height: 30px;
+  padding: 0 4px;
+}
+
+.post-type-courses.taxonomy-course-category input[type='text']:not(.current-page),
+.post-type-courses.taxonomy-course-category input[type='search'],
+.post-type-courses.taxonomy-course-category textarea,
+.post-type-courses.taxonomy-course-category select, .post-type-courses.taxonomy-course-tag input[type='text']:not(.current-page),
 .post-type-courses.taxonomy-course-tag input[type='search'],
-.post-type-courses.taxonomy-course-tag textarea {
+.post-type-courses.taxonomy-course-tag textarea,
+.post-type-courses.taxonomy-course-tag select {
   border-radius: 6px;
+  min-height: 40px;
 }
 
-.post-type-courses.taxonomy-course-tag input[type='text']:not(:focus),
+.post-type-courses.taxonomy-course-category input[type='text']:not(.current-page):not(:focus),
+.post-type-courses.taxonomy-course-category input[type='search']:not(:focus),
+.post-type-courses.taxonomy-course-category textarea:not(:focus),
+.post-type-courses.taxonomy-course-category select:not(:focus), .post-type-courses.taxonomy-course-tag input[type='text']:not(.current-page):not(:focus),
 .post-type-courses.taxonomy-course-tag input[type='search']:not(:focus),
-.post-type-courses.taxonomy-course-tag textarea:not(:focus) {
+.post-type-courses.taxonomy-course-tag textarea:not(:focus),
+.post-type-courses.taxonomy-course-tag select:not(:focus) {
   border-color: #c0c3cb;
 }
 
-.post-type-courses.taxonomy-course-tag .form-wrap p {
+.post-type-courses.taxonomy-course-category .form-wrap p, .post-type-courses.taxonomy-course-tag .form-wrap p {
   margin-top: 16px;
 }
 
-.post-type-courses.taxonomy-course-tag table.wp-list-table {
+.post-type-courses.taxonomy-course-category p.search-box,
+.post-type-courses.taxonomy-course-category .actions.bulkactions, .post-type-courses.taxonomy-course-tag p.search-box,
+.post-type-courses.taxonomy-course-tag .actions.bulkactions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table, .post-type-courses.taxonomy-course-tag table.wp-list-table {
   border-radius: 6px;
+  margin-top: 24px;
+  border-color: #cdcfd5;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table thead th,
+.post-type-courses.taxonomy-course-category table.wp-list-table thead td, .post-type-courses.taxonomy-course-tag table.wp-list-table thead th,
+.post-type-courses.taxonomy-course-tag table.wp-list-table thead td {
+  background: #f4f6f9;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table thead tr > *:first-child, .post-type-courses.taxonomy-course-tag table.wp-list-table thead tr > *:first-child {
+  border-top-left-radius: 6px;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table thead tr > *:last-child, .post-type-courses.taxonomy-course-tag table.wp-list-table thead tr > *:last-child {
+  border-top-right-radius: 6px;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:nth-child(odd) th,
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:nth-child(odd) td, .post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:nth-child(odd) th,
+.post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:nth-child(odd) td {
+  background: #fff;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:nth-child(even) th,
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:nth-child(even) td, .post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:nth-child(even) th,
+.post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:nth-child(even) td {
+  background: #fcfcfd;
+}
+
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:not(:last-child) th,
+.post-type-courses.taxonomy-course-category table.wp-list-table tbody tr:not(:last-child) td, .post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:not(:last-child) th,
+.post-type-courses.taxonomy-course-tag table.wp-list-table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid #cdcfd5;
+}
+
+.post-type-courses.taxonomy-course-category .tablenav.top, .post-type-courses.taxonomy-course-tag .tablenav.top {
+  margin-top: 20px;
 }
 
 .monetization-fees.is-disable .tutor-option-field-row:nth-child(2), .monetization-fees.is-disable .tutor-option-field-row:nth-child(3) {
@@ -7355,19 +7261,6 @@ body.wp-admin .tutor-qna-single-wrapper {
   color: #41454F;
 }
 
-.tutor-qna-single-question .tutor-qa-reply {
-  margin-right: 15px;
-}
-
-.tutor-qna-single-question .tutor-qa-reply textarea {
-  height: 80px;
-  min-height: auto;
-}
-
-.tutor-qna-single-question .tutor-qa-reply .tutor-qna-badges > span > span {
-  display: none;
-}
-
 body.wp-admin .tutor-qa-chatlist {
   margin-right: 15px;
   margin-top: 15px;
@@ -7466,6 +7359,28 @@ body.wp-admin .tutor-qa-chatlist {
   font-weight: 500;
   font-size: 13px;
   color: #525252;
+}
+
+table.qna-list-table .ttr-msg-important-filled {
+  color: #9CA0AC;
+}
+
+table.qna-list-table .ttr-msg-important-fill-filled {
+  color: #ED9700;
+}
+
+table.qna-list-table tr .tutor-qna-title {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
+  display: block;
+}
+
+table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
+  font-weight: bold;
+  font-size: 16px;
+  color: #212327;
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */

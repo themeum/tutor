@@ -13,6 +13,11 @@
 
 get_tutor_header();
 
+global $previous_id;
+$course_content_id = '';
+$content_id = tutor_utils()->get_post_id($course_content_id);
+$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
+$previous_id = $contents->previous_id;
 $course = tutor_utils()->get_course_by_quiz(get_the_ID());
 
 $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
@@ -23,7 +28,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 
     <div class="tutor-single-lesson-wraper <?php echo $enable_spotlight_mode ? "tutor-spotlight-mode" : ""; ?>">
 
-        <div class="tutor-lesson-sidebar">
+        <div class="tutor-lesson-sidebar tutor-desktop-sidebar">
 		    <?php tutor_lessons_sidebar(); ?>
         </div>
         <div id="tutor-single-entry-content" class="tutor-quiz-single-entry-wrap tutor-single-entry-content sidebar-hidden">
@@ -52,6 +57,18 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                 </div>
 
             </div>
+            <div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
+                <div class="tutor-mobile-top-nav d-grid">
+                    <a href="<?php echo get_the_permalink($previous_id); ?>">
+                        <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
+                    </a>
+                    <div class="tutor-top-nav-title text-regular-body color-text-primary">
+                        <?php 
+                            the_title();
+                        ?>
+                    </div>
+                </div>
+            </div>
             <div class="tutor-quiz-wrapper tutor-quiz-wrapper d-flex justify-content-center tutor-mt-100 tutor-pb-100">
                 <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
@@ -65,6 +82,11 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 		        }
 		        ?>
             </div>
+            <div class="tutor-lesson-sidebar tutor-mobile-sidebar">
+                <?php 
+                    include 'single/lesson/mobile-sidebar.php';
+                ?>
+            </div> 
 
         </div>
     </div><!-- .wrap -->

@@ -33,8 +33,8 @@ window.jQuery(document).ready(function($){
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
             },
             complete: function () {
-                quicktags({ id: "tutor_assignments_modal_editor" });
                 $that.removeClass('tutor-updating-message');
+                quicktags({ id: "tutor_assignments_modal_editor" });
             }
         });
     });

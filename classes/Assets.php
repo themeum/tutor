@@ -157,7 +157,7 @@ class Assets {
 			wp_enqueue_script('tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array('jquery'), TUTOR_VERSION, true);
 
 			if ($wp_query->query_vars['tutor_dashboard_page'] === 'earning') {
-				wp_enqueue_script('tutor-front-chart-js', tutor()->url . 'assets/js/Chart.bundle.min.js', array(), TUTOR_VERSION);
+				wp_enqueue_script('tutor-front-chart-js', tutor()->url . 'assets/js/lib/Chart.bundle.min.js', array(), TUTOR_VERSION);
 				wp_enqueue_script('jquery-ui-datepicker');
 			}
 		}
@@ -299,7 +299,7 @@ class Assets {
 	}
 	// Declare script for new button
 	function tutor_add_tinymce_js($plugin_array) {
-		$plugin_array['tutor_button'] = tutor()->url . 'assets/js/mce-button.js';
+		$plugin_array['tutor_button'] = tutor()->url . 'assets/js/lib/mce-button.js';
 		return $plugin_array;
 	}
 	// Register new button in the editor

@@ -40,7 +40,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 <?php do_action('tutor_lesson/single/before/lesson_sidebar'); ?>
 
     <div class="tutor-sidebar-tabs-wrap">
-		<div class="tutor-lessons-tab-area tutor-desktop-sidebar-area">
+		<div class="tutor-lessons-tab-area tutor-mobile-sidebar-area">
 			<div data-sidebar-tab="tutor-lesson-sidebar-tab-content" class="tutor-sidebar-tab-item tutor-lessons-tab <?php echo $enable_q_and_a_on_course ? "active" : ""; ?> flex-center">
 				<span class="ttr-education-filled"></span>
 				<span class="text-medium-caption color-text-title">
