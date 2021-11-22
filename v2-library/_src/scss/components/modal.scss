@@ -187,7 +187,7 @@
 		}
 	}
 	&.tutor-is-sm .tutor-modal-root {
-		width: 425px;
+		width: 470px;
 		.tutor-modal-body {
 			padding: 50px 60px;
 			.tutor-modal-title {
@@ -499,6 +499,9 @@
 
 .tutor-modal {
 	.tutor-alert {
+		&::before{
+			content: none !important;
+		}
 		padding: 6px 10px;
 		&.tutor-warning {
 			@extend .bg-warning-30;

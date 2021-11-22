@@ -31530,12 +31530,17 @@ jQuery(document).ready(function ($) {
       },
       success: function success(data) {
         if (!data.success) {
-          for (var _i = 0, _Object$values = Object.values(data.data.errors); _i < _Object$values.length; _i++) {
-            var v = _Object$values[_i];
-            responseContainer.append("<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>".concat(v, "</li></div>"));
+          if (data.data.errors.errors) {
+            responseContainer.append("<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>".concat(_("Sorry, that username already exists or something wrong!", 'tutor'), "</li></div>"));
+            return;
+          } else {
+            for (var _i = 0, _Object$values = Object.values(data.data.errors); _i < _Object$values.length; _i++) {
+              var v = _Object$values[_i];
+              responseContainer.append("<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>".concat(v, "</li></div>"));
+            }
           }
         } else {
-          $that.reset();
+          $('#tutor-new-instructor-form').trigger("reset");
           tutor_toast(__("Success", "tutor"), __("New Instructor Added", "tutor"), "success");
           location.reload();
         }

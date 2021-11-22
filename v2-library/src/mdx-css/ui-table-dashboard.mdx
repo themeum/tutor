@@ -14,6 +14,139 @@ import '../docz-essential.css';
 `** Replace "className" with "class" while using with html` <br />
 `** Add the th content to the tds as data-th="TH_CONTENT"`
 
+## Announcements List Table
+
+<Playground>
+	<div className="tutor-ui-table-wrapper">
+		<table className="tutor-ui-table tutor-ui-table-responsive table-dashboard-announcements-list td-align-middle">
+			<thead>
+				<tr>
+					<th>
+						<div className="d-flex">
+							<input type="checkbox" className="tutor-form-check-input" />
+						</div>
+					</th>
+					<th>
+						<div className="text-regular-small color-text-subsued">Date</div>
+					</th>
+					<th>
+						<div className="text-regular-small color-text-subsued">Title</div>
+					</th>
+					<th className="tutor-shrink"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td data-th="Checkbox">
+						<div className="td-checkbox d-flex ">
+							<input type="checkbox" className="tutor-form-check-input" />
+						</div>
+					</td>
+					<td data-th="Date">
+						<div className="td-datetime text-regular-caption color-text-primary">
+							20 July, 2020, <br /> 12:47 pm
+						</div>
+					</td>
+					<td data-th="Announcements" className="column-fullwidth">
+						<div className="td-course color-text-primary text-medium-body">
+							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
+							<div className="tutor-mt-0">
+								<span className="color-text-subsued text-medium-small">
+									<strong className="color-text-subsued">Course: </strong>Write PHP Like a Pro: Build a PHP MVC
+									Framework From Scratch
+								</span>
+							</div>
+						</div>
+					</td>
+					<td data-th="Actions">
+						<div className="inline-flex-center td-action-btns">
+							<a href="#" className="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm">
+								Edit
+							</a>
+							<div className="tutor-popup-opener">
+								<button
+									type="button"
+									className="popup-btn"
+									data-tutor-popup-target="table-dashboard-announcements-list-1"
+								>
+									<span className="toggle-icon"></span>
+								</button>
+								<ul id="table-dashboard-announcements-list-1" className="popup-menu">
+									<li>
+										<a href="#">
+											<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+											<span className="text-regular-body color-text-white">Download</span>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+											<span className="text-regular-body color-text-white">Delete</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td data-th="Checkbox">
+						<div className="td-checkbox d-flex ">
+							<input type="checkbox" className="tutor-form-check-input" />
+						</div>
+					</td>
+					<td data-th="Date">
+						<div className="td-datetime text-regular-caption color-text-primary">
+							20 July, 2020, <br /> 12:47 pm
+						</div>
+					</td>
+					<td data-th="Announcements" className="column-fullwidth">
+						<div className="td-course color-text-primary text-medium-body">
+							<a href="#">The Complete Drawing MasterclassName: From Beginner to Advanced</a>
+							<div className="tutor-mt-0">
+								<span className="color-text-subsued text-medium-small">
+									<strong className="color-text-subsued">Course: </strong>Write PHP Like a Pro: Build a PHP MVC
+									Framework From Scratch
+								</span>
+							</div>
+						</div>
+					</td>
+					<td data-th="Actions">
+						<div className="inline-flex-center td-action-btns">
+							<a href="#" className="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm">
+								Edit
+							</a>
+							<div className="tutor-popup-opener">
+								<button
+									type="button"
+									className="popup-btn"
+									data-tutor-popup-target="table-dashboard-announcements-list-2"
+								>
+									<span className="toggle-icon"></span>
+								</button>
+								<ul id="table-dashboard-announcements-list-2" className="popup-menu">
+									<li>
+										<a href="#">
+											<span className="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+											<span className="text-regular-body color-text-white">Download</span>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<span className="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+											<span className="text-regular-body color-text-white">Delete</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Playground>
+
 ## Course Listing UI
 
 <Playground>
@@ -137,7 +270,6 @@ import '../docz-essential.css';
 					</td>
 					<td data-th="Collapse" data-td-target="target-td-1">
 						<div className="d-flex has-data-td-target">
-							{/* <span className="text-regular-small">target-td-1</span> */}
 							<span className="ttr-angle-down-filled"></span>
 						</div>
 					</td>
@@ -355,7 +487,6 @@ import '../docz-essential.css';
 					</td>
 					<td data-th="Collapse" data-td-target="target-td-2">
 						<div className="d-flex has-data-td-target">
-							{/* <span className="text-regular-small">target-td-2</span> */}
 							<span className="ttr-angle-down-filled"></span>
 						</div>
 					</td>

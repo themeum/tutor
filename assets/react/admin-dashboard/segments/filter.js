@@ -194,6 +194,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     };
   }
+
   /**
    * Handle ajax request show toast message on success | failure
    *

@@ -4207,7 +4207,8 @@ __webpack_require__.r(__webpack_exports__);
 window.jQuery(document).ready(function ($) {
   var __ = wp.i18n.__; // Change badge
 
-  $(document).on('click', '.tutor-qna-badges [data-action]', function () {
+  $(document).on('click', '.tutor-qna-badges [data-action]', function (e) {
+    e.preventDefault();
     var qna_action = $(this).data('action');
     var question_id = $(this).closest('[data-question_id]').data('question_id');
     var button = $(this);
@@ -4228,7 +4229,23 @@ window.jQuery(document).ready(function ($) {
           return;
         }
 
-        button.attr('data-value', resp.data.new_value).data('value', new_value);
+        var new_value = resp.data.new_value; // Toggle class if togglable defined
+
+        if (button.data('state-class-0')) {
+          // Get toggle class
+          var remove_class = button.data(new_value == 1 ? 'state-class-0' : 'state-class-1');
+          var add_class = button.data(new_value == 1 ? 'state-class-1' : 'state-class-0');
+          var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
+          class_element.addClass(add_class).removeClass(remove_class);
+        } // Toggle text if togglable text defined
+
+
+        if (button.data('state-text-0')) {
+          // Get toggle text
+          var new_text = button.data(new_value == 1 ? 'state-text-1' : 'state-text-0');
+          var text_element = button.data('state-text-selector') ? button.find(button.data('state-text-selector')) : button;
+          text_element.text(new_text);
+        }
       },
       complete: function complete() {
         button.removeClass('tutor-updating-message');
@@ -4547,7 +4564,16 @@ if (tutorDropdownSelect) {
     optionsContainer.classList.toggle('is-active');
   });
   optionsList.forEach(function (option) {
-    option.addEventListener('click', function () {
+    option.addEventListener('click', function (e) {
+      var key = e.target.dataset.key;
+
+      if (key === 'custom') {
+        document.querySelector(".tutor-v2-date-range-picker.inactive").classList.add('active');
+        document.querySelector(".tutor-v2-date-range-picker.inactive input").click();
+        document.querySelector(".tutor-v2-date-range-picker.inactive input").style.display = "none";
+        document.querySelector(".tutor-v2-date-range-picker.inactive .react-datepicker-popper").style.marginTop = "-40px";
+      }
+
       selected.innerHTML = option.querySelector('label').innerHTML;
       optionsContainer.classList.remove('is-active');
     });
@@ -4790,36 +4816,14 @@ document.addEventListener('click', function (e) {
   \**********************************************/
 /***/ (() => {
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 (function tutorPopupMenu() {
   /**
    * Popup Menu Toggle .tutor-popup-opener
    */
-
-  /*
-  const popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
-  const popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-  	 if (popupToggleBtns && popupMenus) {
-  	popupToggleBtns.forEach((btn) => {
-  		btn.addEventListener('click', (e) => {
-  			const popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
-  			popupClosest.classList.toggle('visible');
-  				popupMenus.forEach((popupMenu) => {
-  				if (popupMenu !== popupClosest) {
-  					popupMenu.classList.remove('visible');
-  				}
-  			});
-  		});
-  	});
-  		document.addEventListener('click', (e) => {
-  		if (!e.target.matches('.tutor-popup-opener .popup-btn')) {
-  			popupMenus.forEach((popupMenu) => {
-  				if (popupMenu.classList.contains('visible')) {
-  					popupMenu.classList.remove('visible');
-  				}
-  			});
-  		}
-  	});
-  } */
   document.addEventListener('click', function (e) {
     var attr = 'data-tutor-popup-target';
 
@@ -4841,8 +4845,90 @@ document.addEventListener('click', function (e) {
         popupMenu.classList.remove('visible');
       });
     }
+    /**
+     * Popupover Menu Toggle .tutor-popover
+     */
+
+
+    var popoverAttr = 'data-tutor-popover-target';
+
+    if (e.target.hasAttribute(popoverAttr)) {
+      e.preventDefault();
+
+      var _id = e.target.getAttribute(popoverAttr);
+
+      var popoverMenu = document.getElementById(_id);
+      var popoverWrapper = popoverMenu.closest('.tutor-popover-wrapper');
+      popoverMenu.classList.toggle('is-active');
+      popoverWrapper.classList.toggle('is-active');
+    } else {
+      var backdropAttr = 'data-tutor-popover-backdrop';
+
+      if (e.target.hasAttribute(backdropAttr)) {
+        var activePopover = document.querySelectorAll('.tutor-popover.is-active, .tutor-popover-wrapper.is-active');
+        activePopover.forEach(function (item) {
+          item.classList.remove('is-active');
+        });
+      }
+    }
   });
 })();
+/**
+ * Popupover - Copy to clipboard
+ */
+
+
+document.addEventListener('click', /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+    var btnTargetAttr, id, content, copiedTxt;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            btnTargetAttr = 'data-tutor-copy-target';
+
+            if (!e.target.hasAttribute(btnTargetAttr)) {
+              _context.next = 10;
+              break;
+            }
+
+            id = e.target.getAttribute(btnTargetAttr);
+            /* Get the text field */
+
+            content = document.getElementById(id).textContent;
+            /* Copy the text inside the text field */
+
+            _context.next = 6;
+            return navigator.clipboard.writeText(content);
+
+          case 6:
+            _context.next = 8;
+            return navigator.clipboard.readText();
+
+          case 8:
+            copiedTxt = _context.sent;
+            showToolTip(e.target);
+
+          case 10:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function (_x) {
+    return _ref.apply(this, arguments);
+  };
+}()); // Showing tooltip
+
+var showToolTip = function showToolTip(targetEl) {
+  var toolTip = "<span class=\"tooltip\">Copied!</span>";
+  targetEl.insertAdjacentHTML('beforebegin', toolTip);
+  setTimeout(function () {
+    document.querySelector('.tooltip').remove();
+  }, 500);
+};
 
 /***/ }),
 
@@ -4935,9 +5021,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-datepicker */ "./node_modules/react-datepicker/dist/react-datepicker.min.js");
-/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_datepicker__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/differenceInDays/index.js");
+/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-datepicker */ "./node_modules/react-datepicker/dist/react-datepicker.min.js");
+/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_datepicker__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/differenceInDays/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -4954,8 +5042,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var TutorDateRangePicker = function TutorDateRangePicker() {
-  var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : "Y-M-d";
+  var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'Y-M-d';
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([null, null]),
       _useState2 = _slicedToArray(_useState, 2),
@@ -4966,7 +5055,7 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
       startDate = _dateRange[0],
       endDate = _dateRange[1];
 
-  var dayCount = (0,date_fns__WEBPACK_IMPORTED_MODULE_1__["default"])(endDate, startDate);
+  var dayCount = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(endDate, startDate);
 
   var handleCalenderChange = function handleCalenderChange(update) {
     setDateRange(update);
@@ -4992,16 +5081,24 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
       var startFormateDate = "".concat(startYear, "-").concat(startMonth, "-").concat(startDay);
       var endFormateDate = "".concat(endYear, "-").concat(endMonth, "-").concat(endDay); // Update url
 
+      if (params.has('period')) {
+        params["delete"]('period');
+      }
+
       params.set('start_date', startFormateDate);
       params.set('end_date', endFormateDate);
       window.location = url;
     }
   };
 
+  var handleCalendarClose = function handleCalendarClose() {
+    console.log('adlkjaslkdf');
+  };
+
   var ContainerWrapper = function ContainerWrapper(_ref) {
     var className = _ref.className,
         children = _ref.children;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_datepicker__WEBPACK_IMPORTED_MODULE_2__.CalendarContainer, {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_datepicker__WEBPACK_IMPORTED_MODULE_3__.CalendarContainer, {
       className: className
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       style: {
@@ -5015,7 +5112,10 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     }, dayCount ? dayCount > 1 ? "".concat(dayCount, " days selected") : "".concat(dayCount, " day selected") : '0 day selected'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       className: "tutor-btns"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-      className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"
+      className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md",
+      onClick: function onClick() {
+        return handleCalendarClose();
+      }
     }, "Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
       className: "tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md",
@@ -5036,7 +5136,7 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     style: {
       width: '100%'
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_datepicker__WEBPACK_IMPORTED_MODULE_2___default()), {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_datepicker__WEBPACK_IMPORTED_MODULE_3___default()), {
     placeholderText: " ".concat(dateFormat, " - ").concat(dateFormat, " "),
     showPopperArrow: false,
     shouldCloseOnSelect: false,
