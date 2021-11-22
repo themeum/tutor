@@ -12,11 +12,16 @@ $contexts =  array(
             'action'        => __('Action', 'tutor'),
         ),
         'contexts' => array(
-            'frontend-dashboard-qna-table' => array(
+            'frontend-dashboard-qna-table-instructor' => array(
                 'student',
                 'question',
                 'reply',
                 'status',
+                'action'
+            ),
+            'frontend-dashboard-qna-table-student' =>  array(
+                'question',
+                'reply',
                 'action'
             ),
             'backend-dashboard-qna-table' => true,

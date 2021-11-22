@@ -19,6 +19,7 @@
             foreach($qna_list as $qna) {
                 $id_string_delete = 'tutor_delete_qna_' . $qna->comment_ID;
                 $row_id = 'tutor_qna_row_' . $qna->comment_ID;
+                $menu_id =  'tutor_qna_menu_id_' . $qna->comment_ID;
 
                 $meta = $qna->meta;
                 $is_solved = (int)tutor_utils()->array_get('tutor_qna_solved', $meta, 0);
@@ -33,18 +34,18 @@
                                 case 'checkbox' :
                                     ?>
                                     <td data-th="<?php _e('Mark', 'tutor'); ?>" class="tutor-shrink">
-                                        <div class="td-checkbox tutor-bs-d-flex tutor-bs-align-items-center tutor-qna-badges">
-                                            <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" style="margin-top:0;"/>
-                                            <i data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled" class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?> tutor-icon-20 tutor-ml-24 tutor-cursor-pointer" data-action="important"></i>
+                                        <div class="td-checkbox tutor-bs-d-flex tutor-bs-align-items-center">
+                                            <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" style="margin-top:0"/>
                                         </div>
                                     </td>
                                     <?php
                                     break;
-
+                                    
                                 case 'student' :
                                     ?>
-                                    <td data-th="<?php echo $column; ?>">
+                                    <td data-th="<?php echo $column; ?>" class="tutor-qna-badges">
                                         <div class="td-avatar">
+                                            <i data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled" class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?> tutor-icon-20 tutor-mr-10 tutor-cursor-pointer" data-action="important"></i>
                                             <img src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
                                             <span class="text-medium-body color-text-primary">
                                                 <?php echo $qna->display_name; ?>
@@ -112,26 +113,28 @@
 
                                             <!-- ToolTip Action -->
                                             <div class="tutor-popup-opener">
-                                                <button type="button" class="popup-btn" data-tutor-popup-target="popup-menu-1">
+                                                <button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $menu_id; ?>">
                                                     <span class="toggle-icon"></span>
                                                 </button>
-                                                <ul id="popup-menu-1" class="popup-menu">
-                                                    <li class="tutor-qna-badges">
-                                                        <a href="#" data-action="archived" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white"  data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
-                                                            <span class="ttr-msg-archive-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                            <span class="text-regular-body color-text-white">
-                                                                <?php $is_archived ?  _e('Un-archive', 'tutor') : _e('Archive', 'tutor'); ?>
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="tutor-qna-badges">
-                                                        <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
-                                                            <span class="ttr-envelope-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                            <span class="text-regular-body color-text-white" >
-                                                                <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
-                                                            </span>
-                                                        </a>
-                                                    </li>
+                                                <ul id="<?php echo $menu_id; ?>" class="popup-menu">
+                                                    <?php if($context!='frontend-dashboard-qna-table-student'): ?>
+                                                        <li class="tutor-qna-badges">
+                                                            <a href="#" data-action="archived" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white"  data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
+                                                                <span class="ttr-msg-archive-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                                <span class="text-regular-body color-text-white">
+                                                                    <?php $is_archived ?  _e('Un-archive', 'tutor') : _e('Archive', 'tutor'); ?>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="tutor-qna-badges">
+                                                            <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
+                                                                <span class="ttr-envelope-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                                <span class="text-regular-body color-text-white" >
+                                                                    <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    <?php endif; ?>
                                                     <li>
                                                         <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>">
                                                             <span class="ttr-delete-fill-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>

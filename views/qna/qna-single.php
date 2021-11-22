@@ -8,19 +8,20 @@
     }
 
     // QNA data
-    $question = tutor_utils()->get_qa_question($question_id);
-    $meta = $question->meta;
-    $answers = tutor_utils()->get_qa_answer_by_question($question_id);
-    $back_url = remove_query_arg( 'question_id', tutor()->current_url );
+    $question       = tutor_utils()->get_qa_question($question_id);
+    $meta           = $question->meta;
+    $answers        = tutor_utils()->get_qa_answer_by_question($question_id);
+    $back_url       = remove_query_arg( 'question_id', tutor()->current_url );
 
     // Badges data
-    $is_solved = (int)tutor_utils()->array_get('tutor_qna_solved', $meta, 0);
-    $is_important = (int)tutor_utils()->array_get('tutor_qna_important', $meta, 0);
-    $is_archived = (int)tutor_utils()->array_get('tutor_qna_archived', $meta, 0);
-    $is_read = (int)tutor_utils()->array_get('tutor_qna_read', $meta, 0);
+    $is_solved      = (int)tutor_utils()->array_get('tutor_qna_solved', $meta, 0);
+    $is_important   = (int)tutor_utils()->array_get('tutor_qna_important', $meta, 0);
+    $is_archived    = (int)tutor_utils()->array_get('tutor_qna_archived', $meta, 0);
+    $is_read        = (int)tutor_utils()->array_get('tutor_qna_read', $meta, 0);
+    $is_user_asker  = $question->user_id==get_current_user_id();
 
-    $modal_id = 'tutor_qna_delete_single_' . $question_id;
-    $reply_hidden = !wp_doing_ajax() ? 'display:none;' : 0;
+    $modal_id       = 'tutor_qna_delete_single_' . $question_id;
+    $reply_hidden   = !wp_doing_ajax() ? 'display:none;' : 0;
 ?>
 
 <div class="tutor-qna-single-question" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
@@ -66,22 +67,24 @@
                     </a>
                 </div>
                 <div class="tutor-qna-badges">
-                    <span data-action="solved" data-state-class-selector="i" data-state-class-0="ttr-tick-circle-outline-filled" data-state-class-1="ttr-tick-circle-outline-filled tutor-text-success">
-                        <i class="<?php echo $is_solved ? 'ttr-tick-circle-outline-filled tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
-                        <span><?php _e('Solved', 'tutor'); ?></span>
-                    </span>
-                    <span data-action="important" data-state-class-selector="i" data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled">
-                        <i class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?>"></i> 
-                        <span><?php _e('Important', 'tutor'); ?></span>
-                    </span>
-                    <span data-action="archived" data-state-class-selector="i" data-state-class-0="ttr-msg-archive-filled" data-state-class-1="ttr-msg-important-fill-filled">
-                        <i class="<?php echo $is_archived ? 'ttr-msg-archive-filled' : 'ttr-msg-archive-filled'; ?>"></i> 
-                        <span><?php _e('Archive', 'tutor'); ?></span>
-                    </span>
-                    <span data-action="unread" data-state-class-selector="i" data-state-class-0="ttr-msg-unread-filled" data-state-class-1="ttr-msg-read-filled">
-                        <i class="<?php echo $is_read ? 'ttr-msg-read-filled' : 'ttr-msg-unread-filled'; ?>"></i> 
-                        <span><?php _e('Mark as Unread', 'tutor'); ?></span>
-                    </span>
+                    <?php if(!$is_user_asker): ?>
+                        <span data-action="solved" data-state-class-selector="i" data-state-class-0="ttr-tick-circle-outline-filled" data-state-class-1="ttr-tick-circle-outline-filled tutor-text-success">
+                            <i class="<?php echo $is_solved ? 'ttr-tick-circle-outline-filled tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
+                            <span><?php _e('Solved', 'tutor'); ?></span>
+                        </span>
+                        <span data-action="important" data-state-class-selector="i" data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled">
+                            <i class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?>"></i> 
+                            <span><?php _e('Important', 'tutor'); ?></span>
+                        </span>
+                        <span data-action="archived" data-state-class-selector="i" data-state-class-0="ttr-msg-archive-filled" data-state-class-1="ttr-msg-important-fill-filled">
+                            <i class="<?php echo $is_archived ? 'ttr-msg-archive-filled' : 'ttr-msg-archive-filled'; ?>"></i> 
+                            <span><?php _e('Archive', 'tutor'); ?></span>
+                        </span>
+                        <span data-action="unread" data-state-class-selector="i" data-state-class-0="ttr-msg-unread-filled" data-state-class-1="ttr-msg-read-filled">
+                            <i class="<?php echo $is_read ? 'ttr-msg-read-filled' : 'ttr-msg-unread-filled'; ?>"></i> 
+                            <span><?php _e('Mark as Unread', 'tutor'); ?></span>
+                        </span>
+                    <?php endif; ?>
                     <span data-tutor-modal-target="<?php echo $modal_id; ?>">
                         <i class="ttr-delete-fill-filled"></i> 
                         <span><?php _e('Delete', 'tutor'); ?></span>
@@ -134,9 +137,9 @@
             ?>
         </div>
         <div class="tutor-qa-reply" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
-            <textarea class="tutor-form-control"></textarea>
-            <div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center tutor-mt-10">
-                <button type="submit" class="tutor-btn tutor-is-xs tutor-ml-15">
+            <textarea class="tutor-form-control" placeholder="<?php _e('Write here...', 'tutor'); ?>"></textarea>
+            <div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center">
+                <button type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-is-xs tutor-ml-15">
                     <?php esc_html_e('Reply', 'tutor'); ?> 
                 </button>
             </div>
