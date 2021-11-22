@@ -8255,7 +8255,10 @@ class Utils {
 			'cancelled'  	=> __( 'Cancelled', 'tutor' ),
 			'canceled'  	=> __( 'Cancelled', 'tutor' ),
 			'blocked'		=> __( 'Blocked', 'tutor' ),
-			'cancel'		=> __( 'Cancelled', 'tutor' )
+			'cancel'		=> __( 'Cancelled', 'tutor' ),
+			'on-hold'		=> __( 'On Hold', 'tutor' ),
+			'onhold'		=> __( 'On Hold', 'tutor' ),
+			'wc-on-hold'	=> __( 'On Hold', 'tutor' ),
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
@@ -8301,15 +8304,45 @@ class Utils {
 	 */
 	public function report_frequencies() {
 		$frequencies = array(
-			'alltime'    => __( 'All Time', 'tutor-pro' ),
-			'today'      => __( 'Today', 'tutor-pro' ),
-			'last30days' => __( 'Last 30 Days', 'tutor-pro' ),
-			'last60days' => __( 'Last 60 Days', 'tutor-pro' ),
-			'last90days' => __( 'Last 90 Days', 'tutor-pro' ),
+			'alltime'     => __( 'All Time', 'tutor-pro' ),
+			'today'       => __( 'Today', 'tutor-pro' ),
+			'last30days'  => __( 'Last 30 Days', 'tutor-pro' ),
+			'last90days'  => __( 'Last 90 Days', 'tutor-pro' ),
+			'last365days' => __( 'Last 365 Days', 'tutor-pro' ),
+			'custom' 	  => __( 'Custom', 'tutor-pro' )
 		);
 		return $frequencies;
 	}
 
+	/**
+	 * Add interval days with today date. For ex: 10 days add with today
+	 * 
+	 * @param string $interval | required.
+	 * @since v2.0.0
+	 */
+	public function add_days_with_today( $interval ) {
+		$today		= date_create( date( 'Y-m-d' ) );
+		$add_days 	= date_add( $today, date_interval_create_from_date_string( $interval ) );
+		return $add_days;
+	}
+
+	/**
+	 * Subtract interval days from today date. For ex: 10 days back from today
+	 * 
+	 * @param string $interval | required.
+	 * @since v2.0.0
+	 */
+	public function sub_days_with_today( $interval ) {
+		$today		= date_create( date( 'Y-m-d' ) );
+		$add_days 	= date_sub( $today, date_interval_create_from_date_string( $interval ) );
+		return $add_days;
+	}
+
+	/**
+	 * Get renderable column list for tables based on context
+	 * 
+	 * @since v2.0.0
+	 */
 	public function get_table_columns_from_context($page_key, $context, $contexts, $filter_hook=null) {
 
 		$fields = array();

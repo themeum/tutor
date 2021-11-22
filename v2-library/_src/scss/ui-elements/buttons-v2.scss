@@ -187,3 +187,19 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 	// For custom call this with position: relative;
 	// spinner($lineColor: #ababab, $lineBgColor: #f1f1f1, $size: 20px)
 }
+
+.tutor-btn.tutor-is-circle {
+	border-radius: 50%;
+	padding: 4px !important;
+
+	&.tutor-btn-ghost {
+		border: none !important;
+		background: transparent;
+		color: $design-grey;
+
+		&:hover {
+			background: $black-05;
+			color: inherit;
+		}
+	}
+}
