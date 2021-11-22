@@ -7093,6 +7093,41 @@ body.wp-admin .tutor-qna-single-wrapper {
   width: calc(100% - 360px);
 }
 
+body.wp-admin .tutor-qna-single-wrapper .tutor-qa-reply {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  overflow: hidden;
+}
+
+.tutor-qna-single-question .tutor-qa-reply {
+  bottom: 20px;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  z-index: 10;
+}
+
+.tutor-qna-single-question .tutor-qa-reply textarea {
+  min-height: initial !important;
+  height: 80px !important;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #CDCFD5;
+  border-radius: 0 !important;
+  padding: 15px;
+  resize: none;
+}
+
+.tutor-qna-single-question .tutor-qa-reply textarea, .tutor-qna-single-question .tutor-qa-reply textarea:focus, .tutor-qna-single-question .tutor-qa-reply textarea:active {
+  outline: none !important;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.tutor-qna-single-question .tutor-qa-reply div {
+  padding: 15px;
+}
+
 .tutor-qna-single-question .tutor-qna-badges > span {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -7242,12 +7277,19 @@ body.wp-admin .tutor-qna-single-wrapper {
   padding-right: 15px;
 }
 
-.tutor-qna-single-question[data-context="course-single-qna-single"] .tutor-qna-left .tutor-qna-text, .tutor-qna-single-question[data-context="course-single-qna-sidebar"] .tutor-qna-left .tutor-qna-text {
+.tutor-qna-single-question:not([data-context="backend-dashboard-qna-single"]) .tutor-qna-left .tutor-qna-text {
   background: #FEECEB;
 }
 
-.tutor-qna-single-question[data-context="course-single-qna-single"] .tutor-qna-right .tutor-qna-text, .tutor-qna-single-question[data-context="course-single-qna-sidebar"] .tutor-qna-right .tutor-qna-text {
+.tutor-qna-single-question:not([data-context="backend-dashboard-qna-single"]) .tutor-qna-right .tutor-qna-text {
   background: #E9EDFB;
+}
+
+.tutor-qna-single-question:not([data-context="backend-dashboard-qna-single"]) .tutor-qa-reply {
+  border: 1px solid #CDCFD5;
+  border-radius: 6px;
+  bottom: 20px;
+  overflow: hidden;
 }
 
 .tutor-qna-single-question .tutor-toggle-reply {
@@ -7266,7 +7308,7 @@ body.wp-admin .tutor-qna-single-wrapper {
   color: #41454F;
 }
 
-body.wp-admin .tutor-qa-chatlist {
+body.wp-admin .tutor-qa-chatlist, body.wp-admin .tutor-qa-reply {
   margin-right: 15px;
   margin-top: 15px;
 }
@@ -7386,6 +7428,22 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   font-weight: bold;
   font-size: 16px;
   color: #212327;
+}
+
+.tutor-qna-sptolight-sidebar {
+  padding: 15px;
+}
+
+.tutor-qna-sptolight-sidebar .tutor-qa-new[data-context="course-single-qna-sidebar"] {
+  background: #F4F6F9;
+  padding: 15px;
+  position: sticky;
+  bottom: 0;
+  margin: -15px;
+}
+
+.tutor-qna-sptolight-sidebar .tutor-qa-reply {
+  position: initial !important;
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */
