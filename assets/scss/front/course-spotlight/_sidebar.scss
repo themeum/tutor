@@ -1,5 +1,5 @@
 .tutor-mobile-sidebar {
-    display: none;
+    display: none !important;
 }
 
 @include breakpoint-max(1200) {
@@ -7,7 +7,7 @@
         display: none;
     }
     .tutor-mobile-sidebar {
-        display: block;
+        display: block !important;
     }
 }
 

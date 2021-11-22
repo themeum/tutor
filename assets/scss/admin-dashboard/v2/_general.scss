@@ -341,13 +341,21 @@
   grid-gap: 30px;
   .tutor-option-field-input {
     // min-width: 200px;
-
     &.d-flex {
       margin-top: 0px;
     }
   }
   &:not(.d-block) {
     .tutor-option-field-input {
+      input[type="email"] + span {
+        position: absolute;
+        width: 100%;
+        right: 0;
+      }
+      input[type="email"] + span.danger {
+        color: red;
+      }
+      position: relative;
       text-align: right;
       justify-self: flex-end;
     }

@@ -1,15 +1,22 @@
+#tutor-start-quiz {
+    display: inline-block;
+}
+
 .tutor-quiz-dotted-box {
     min-height: 48px;
     border: 2px dashed #ddd;
     border-radius: 5px;
+    span[class^='ttr-'],
+    span[class*=' ttr-'] {
+        display: none;
+    }
+}
+
+.tutor-dropzone {
     &.tutor-drop-over {
         border: 2px dashed rgb(160, 42, 42) !important;
     }
-    >input {
-        display: none;
-    }
-    span[class^='ttr-'],
-    span[class*=' ttr-'] {
+    input {
         display: none;
     }
 }
@@ -337,6 +344,7 @@
             }
         }
         #quiz-ordering-ans-area {
+            counter-reset: serial-number;
             >div:not(:last-child) {
                 margin-bottom: 25px;
             }
@@ -344,6 +352,10 @@
                 .tutor-quiz-border-box {
                     width: 250px;
                 }
+            }
+            .snum:before {
+                counter-increment: serial-number;
+                content: counter(serial-number);
             }
         }
         // #quiz-image-ordering-ans-area {
@@ -501,8 +513,4 @@
     .tutor-topbar-content-title-wrap {
         align-items: flex-start;
     }
-}
-
-#tutor-start-quiz {
-    display: inline-block;
 }

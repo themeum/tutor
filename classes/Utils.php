@@ -3160,9 +3160,9 @@ class Utils {
 		$course_id 	= sanitize_text_field( $course_id );
 		$student_id = sanitize_text_field( $student_id );
 		$count = $wpdb->get_var($wpdb->prepare(
-			"SELECT COUNT(ID) FROM wp_posts
-				INNER JOIN wp_comments c ON c.comment_post_ID = wp_posts.ID  AND c.user_id = %d AND c.comment_approved = %s
-				WHERE post_parent IN (SELECT ID FROM wp_posts WHERE post_type = %s AND post_parent = %d AND post_status = %s)
+			"SELECT COUNT(ID) FROM {$wpdb->posts}
+				INNER JOIN {$wpdb->comments} c ON c.comment_post_ID = ID  AND c.user_id = %d AND c.comment_approved = %s
+				WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d AND post_status = %s)
 					AND post_type =%s
 					AND post_status = %s
 			",
@@ -4010,16 +4010,18 @@ class Utils {
 		$search_term 		  = '%' . $wpdb->esc_like( $search_term ) . '%';
 		$question_clause 	  = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
 		$meta_clause 		  = '';
-		$user_caluse 		  = '';
 		$in_question_id_query = '';
 
 		/**
 		 * Get only assinged  courses questions if current user is not admin
 		 */
-		if (!$this->has_user_role('administrator', $user_id) && current_user_can( tutor()->instructor_role ) ) {
+		// User query
+		if($asker_id) {
+			$question_clause .= ' AND _question.user_id='. $asker_id;
+		} else if (!$this->has_user_role('administrator', $user_id) && current_user_can( tutor()->instructor_role ) ) {
 			$my_course_ids = $this->get_course_id_by('instructor', $user_id) ;
 			$in_ids = count($my_course_ids) ? implode( ',', $my_course_ids ) : '0';
-			$in_question_id_query = " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
+			$in_question_id_query .= " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
 		}
 
 		// Meta query
@@ -4029,12 +4031,7 @@ class Utils {
 				$meta_array[] = "_meta.meta_key='{$key}' AND _meta.meta_value='{$value}'";
 			}
 
-			$meta_clause = ' AND ' . implode(' AND ', $meta_array);
-		}
-
-		// User query
-		if($asker_id) {
-			$user_caluse = ' AND _question.user_id='. $asker_id;
+			$meta_clause .= ' AND ' . implode(' AND ', $meta_array);
 		}
 
 		$query = $wpdb->get_results( $wpdb->prepare(
@@ -8234,7 +8231,7 @@ class Utils {
 	public function tutor_empty_state( string $title = '' ) { 
 		$page_title = $title ? $title : ''; ?>
 		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center td-empty-state tutor-p-20">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" />
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
 			<div class="text-regular-h5 color-text-primary tutor-mt-20"><?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?></div>
 		</div>
 	<?php }
@@ -8261,6 +8258,10 @@ class Utils {
 			'on-hold'		=> __( 'On Hold', 'tutor' ),
 			'onhold'		=> __( 'On Hold', 'tutor' ),
 			'wc-on-hold'	=> __( 'On Hold', 'tutor' ),
+			'publish' 		=> __( 'Publish', 'tutor' ),
+			'trash'   		=> __( 'Trash', 'tutor' ),
+			'draft'   		=> __( 'Draft', 'tutor' ),
+			'private' 		=> __( 'Private', 'tutor' )
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
@@ -8363,5 +8364,29 @@ class Utils {
 		}		
 
 		return $fields;
+	}
+
+	/**
+	 * Check a user has attempted a quiz
+	 *
+	 * @param string $user_id | user that taken course.
+	 * @param string $quiz_id | quiz id that need to check wheather attempted or not.
+	 * @return bool | true if attempted otherwise false.
+	 */
+	public function has_attempted_quiz( $user_id, $quiz_id ): bool {
+		global $wpdb;
+		// Sanitize data
+		$user_id = sanitize_text_field( $user_id );
+		$quiz_id = sanitize_text_field( $quiz_id );
+		$attempted = $wpdb->get_var( $wpdb->prepare(
+			"SELECT quiz_id 
+				FROM {$wpdb->tutor_quiz_attempts}
+				WHERE user_id = %d
+					AND quiz_id = %d
+			",
+			$user_id,
+			$quiz_id
+		) );
+		return $attempted ? true : false;
 	}
 }
