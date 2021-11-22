@@ -24,6 +24,7 @@
 ?>
 
 <?php 
+    // Prepare badge html
     ob_start();
     ?>
         <span data-action="solved" data-value="<?php echo $is_solved ? 1 : 0; ?>">
