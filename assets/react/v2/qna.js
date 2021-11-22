@@ -4,7 +4,9 @@ window.jQuery(document).ready($=>{
     const {__} = wp.i18n;
 
     // Change badge
-    $(document).on('click', '.tutor-qna-badges [data-action]', function(){
+    $(document).on('click', '.tutor-qna-badges [data-action]', function(e){
+        e.preventDefault();
+
         let qna_action = $(this).data('action');
         let question_id = $(this).closest('[data-question_id]').data('question_id');
         let button = $(this);
@@ -26,7 +28,28 @@ window.jQuery(document).ready($=>{
                     return;
                 }
 
-                button.attr('data-value', resp.data.new_value).data('value', new_value);
+                const {new_value} = resp.data;
+
+                // Toggle class if togglable defined
+                if(button.data('state-class-0')) {
+
+                    // Get toggle class
+                    var remove_class = button.data( new_value==1 ? 'state-class-0' : 'state-class-1' );
+                    var add_class = button.data( new_value==1 ? 'state-class-1' : 'state-class-0' );
+
+                    var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
+                    class_element.addClass(add_class).removeClass(remove_class);
+                }
+                
+                // Toggle text if togglable text defined
+                if(button.data('state-text-0')) {
+                        
+                    // Get toggle text
+                    var new_text = button.data( new_value==1 ? 'state-text-1' : 'state-text-0' );
+                
+                    var text_element = button.data('state-text-selector') ? button.find(button.data('state-text-selector')) : button;
+                    text_element.text(new_text);
+                }
             },
             complete:()=>{
                 button.removeClass('tutor-updating-message');
