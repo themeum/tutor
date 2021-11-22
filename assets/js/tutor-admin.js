@@ -2013,14 +2013,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var checkEmailFields = function checkEmailFields(inputFields) {
     inputFields.forEach(function (emailField) {
-      var invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
-      var invalidMessage = invalidLabel + ' email is invalid!';
+      var invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText; // let invalidMessage = invalidLabel + ' email is invalid!';
 
       emailField.onchange = function (e) {
         if (false === validateEmail(emailField.value)) {
           emailField.style.borderColor = 'red';
           emailField.focus();
-          tutor_toast('Warning', invalidMessage, 'error');
           formSubmit = false;
         } else {
           emailField.style.borderColor = '#ddd';
@@ -2036,10 +2034,11 @@ document.addEventListener('DOMContentLoaded', function () {
       var invalidMessage = invalidLabel + ' email is invalid!';
 
       if (false === validateEmail(emailField.value)) {
-        console.log(invalidLabel);
         emailField.style.borderColor = 'red';
         emailField.focus();
         tutor_toast('Warning', invalidMessage, 'error');
+      } else {
+        formSubmit = true;
       }
     });
   };
@@ -2055,9 +2054,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var button = $('#save_tutor_option');
     var $form = $(this);
     var data = $form.serializeObject(); // console.log(document.querySelector('[type="email"]').checkValidity());
+    // const inputEmailFields = document.querySelectorAll('[type="email"]');
 
-    var inputEmailF = document.querySelectorAll('[type="email"]');
-    checkEmailFieldsOnSubmit(inputEmailF);
+    if (typeof inputEmailFields !== 'undefined') {
+      checkEmailFieldsOnSubmit(inputEmailFields);
+    }
 
     if (true === formSubmit) {
       if (!e.detail || e.detail == 1) {
@@ -2080,11 +2081,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (success) {
               // Disableing save btn after saved successfully
               document.getElementById('save_tutor_option').disabled = true;
-              tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
+              tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
               return;
             }
 
-            tutor_toast('Error!', message, 'tutor', true);
+            tutor_toast('Error!', message, 'error');
           },
           complete: function complete() {
             button.removeClass('tutor-updating-message');

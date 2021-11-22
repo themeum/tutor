@@ -3561,7 +3561,7 @@ window.tutor_popup = function ($, icon, padding) {
 };
 
 window.tutorDotLoader = function (loaderType) {
-  return "    \n    <div class=\"tutor-dot-loader ".concat(loaderType ? loaderType : '', "\">\n        <span class=\"dot dot-1\"></span>\n        <span class=\"dot dot-2\"></span>\n        <span class=\"dot dot-3\"></span>\n        <span class=\"dot dot-4\"></span>\n    </div>");
+  return "\n    <div class=\"tutor-dot-loader ".concat(loaderType ? loaderType : '', "\">\n        <span class=\"dot dot-1\"></span>\n        <span class=\"dot dot-2\"></span>\n        <span class=\"dot dot-3\"></span>\n        <span class=\"dot dot-4\"></span>\n    </div>");
 };
 
 window.tutor_date_picker = function () {
@@ -3587,8 +3587,8 @@ jQuery(document).ready(function ($) {
       _n = _wp$i18n._n,
       _nx = _wp$i18n._nx;
   /**
-   * Global date_picker selector 
-   * 
+   * Global date_picker selector
+   *
    * @since 1.9.7
    */
 
@@ -3978,7 +3978,7 @@ jQuery(document).ready(function ($) {
   });
   /*
   * @since v.1.6.4
-  * Quiz Attempts Instructor Feedback 
+  * Quiz Attempts Instructor Feedback
   */
 
   $(document).on('click', '.tutor-instructor-feedback', function (e) {
@@ -4070,12 +4070,13 @@ jQuery.fn.serializeObject = function () {
   return values;
 };
 
-window.tutor_toast = function (title, description, type, is_left) {
+window.tutor_toast = function (title, description, type) {
+  var is_right = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
   var tutor_ob = window._tutorobject || {};
   var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
   if (!jQuery('.tutor-toast-parent').length) {
-    jQuery('body').append('<div class="tutor-toast-parent ' + (is_left ? 'tutor-toast-left' : '') + '"></div>');
+    jQuery('body').append('<div class="tutor-toast-parent ' + (is_right ? 'tutor-toast-right' : 'tutor-toast-left') + '"></div>');
   }
 
   var icons = {
