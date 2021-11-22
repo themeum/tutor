@@ -193,18 +193,16 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 		<thead>
 			<tr>
 				<?php if ( is_admin() ) : ?>
-					<th style="width: 2%;">
+					<th width="2%">
 						<div class="d-flex">
 							<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input">
 						</div>
 					</th>
-					<th>
+					<th width="15%">
 						<div class="text-regular-small color-text-subsued">
 								<?php esc_html_e( 'Date', 'tutor-pro' ); ?>
 						</div>
 					</th>
-
-
 				<?php else : ?>
 					<th class="tutor-shrink">
 						<span class="text-regular-small color-text-subsued">
@@ -236,7 +234,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 					?>
 					<tr id="<?php echo $row_id; ?>">
 						<?php if ( is_admin() ) : ?>
-							<td>
+							<td data-th="<?php esc_html_e( 'Select', 'tutor' ); ?>">
 								<div class="tutor-form-check tutor-mb-15">
 									<input
 										id="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>"
@@ -247,7 +245,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									/>
 								</div>
 							</td>
-							<td>
+							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
 								<div class="td-datetime text-regular-caption color-text-primary">
 									<?php echo esc_html( $date_format ); ?>,<br>
 									<?php echo esc_html( $time_format ); ?>
