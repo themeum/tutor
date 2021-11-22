@@ -75,7 +75,7 @@ $args = array(
 );
 
 if ( 'all' === $active_tab || 'mine' === $active_tab ) {
-	$args['post_status'] = array( 'publish', 'pending', 'draft', 'trash' );
+	$args['post_status'] = array( 'publish', 'pending', 'draft', 'trash', 'private' );
 } else {
 	$status              = $active_tab === 'published' ? 'publish' : $active_tab;
 	$args['post_status'] = array( $status );
@@ -129,6 +129,7 @@ $available_status = array(
 	'pending' => __( 'Pending', 'tutor' ),
 	'trash'   => __( 'Trash', 'tutor' ),
 	'draft'   => __( 'Draft', 'tutor' ),
+	'private' => __( 'Private', 'tutor' )
 );
 
 ?>
@@ -291,7 +292,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											echo wp_kses_post( wc_price( $price ) );
 										}
 										// Alert class for course status.
-										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : 'select-default' ) ) );
+										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : ( 'private' === $post->post_status ? 'select-default' : 'select-default' ) ) ) );
 										?>
 									</div>
 								</td>
