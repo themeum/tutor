@@ -7350,4 +7350,26 @@ body.wp-admin .tutor-qa-chatlist {
   color: #525252;
 }
 
+table.qna-list-table .ttr-msg-important-filled {
+  color: #9CA0AC;
+}
+
+table.qna-list-table .ttr-msg-important-fill-filled {
+  color: #ED9700;
+}
+
+table.qna-list-table tr .tutor-qna-title {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
+  display: block;
+}
+
+table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
+  font-weight: bold;
+  font-size: 16px;
+  color: #212327;
+}
+
 /*# sourceMappingURL=tutor-admin.css.map */
