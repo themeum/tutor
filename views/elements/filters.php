@@ -91,7 +91,7 @@
 						</option>
 					<?php endforeach; ?>
 				<?php else : ?>
-					<option value=""><?php esc_html_e( 'No category found', 'tutor' ); ?></option>
+					<option value=""><?php esc_html_e( 'No record found', 'tutor' ); ?></option>
 				<?php endif; ?>
 			</select>
 			</div>
