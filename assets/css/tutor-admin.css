@@ -6938,23 +6938,38 @@ li.tutor-option-nav-item h4 {
   font-size: 16px;
   line-height: 32px;
   text-align: center;
-  color: #FFFFFF;
-  background: #1973AA;
+  color: #ffffff;
+  background: #1973aa;
   border-radius: 6px;
 }
 
 .tutor-admin-announcements-list .new-announcement-wrap .new-announcement-button button:hover {
-  background: #1973AA;
+  background: #1973aa;
 }
 
 .tutor-admin-announcements-list .tutor-announcement-big-icon i {
-  background: #E9EDFB;
+  background: #e9edfb;
   border-radius: 100%;
   width: 56px;
   height: 56px;
-  color: #1973AA;
+  color: #1973aa;
   padding: 20px;
   font-size: 24px;
+}
+
+.tutor-admin-announcements-list .announcement-action-button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-column-gap: 20px;
+  -moz-column-gap: 20px;
+  column-gap: 20px;
+}
+
+@media only screen and (max-width: 767px) {
+  .tutor-admin-announcements-list .announcement-action-button button:last-child {
+    margin-top: 10px;
+  }
 }
 
 @media screen and (min-width: 1200px) {
