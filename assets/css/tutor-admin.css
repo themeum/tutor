@@ -5642,8 +5642,19 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-field-row:not(.d-block) .tutor-option-field-input {
+  position: relative;
   text-align: right;
   justify-self: flex-end;
+}
+
+.tutor-option-field-row:not(.d-block) .tutor-option-field-input input[type="email"] + span {
+  position: absolute;
+  width: 100%;
+  right: 0;
+}
+
+.tutor-option-field-row:not(.d-block) .tutor-option-field-input input[type="email"] + span.danger {
+  color: red;
 }
 
 .tutor-option-field-row:first-child {

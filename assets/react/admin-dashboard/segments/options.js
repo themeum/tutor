@@ -82,6 +82,15 @@ document.addEventListener('DOMContentLoaded', function () {
 		};
 	}
 
+
+
+
+	const validateEmail = (email) => {
+		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(String(email).toLowerCase());
+	}
+
+
 	$(window).on('click', function (e) {
 		$('.tutor-notification, .search_result').removeClass('show');
 	});
@@ -90,6 +99,45 @@ document.addEventListener('DOMContentLoaded', function () {
 		$('.tutor-notification').removeClass('show');
 	});
 
+
+	var formSubmit = false;
+	const checkEmailFields = (inputFields) => {
+		inputFields.forEach((emailField) => {
+			let invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
+			let invalidMessage = invalidLabel + ' email is invalid!';
+			emailField.onchange = (e) => {
+				if (false === validateEmail(emailField.value)) {
+					emailField.style.borderColor = 'red';
+					emailField.focus();
+					tutor_toast('Warning', invalidMessage, 'error');
+					formSubmit = false;
+				} else {
+					emailField.style.borderColor = '#ddd';
+					formSubmit = true;
+				}
+			}
+		})
+	}
+
+	const checkEmailFieldsOnSubmit = (inputFields) => {
+		inputFields.forEach((emailField) => {
+			let invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
+			let invalidMessage = invalidLabel + ' email is invalid!';
+			if (false === validateEmail(emailField.value)) {
+				console.log(invalidLabel);
+				emailField.style.borderColor = 'red';
+				emailField.focus();
+				tutor_toast('Warning', invalidMessage, 'error');
+			}
+		})
+	}
+
+
+
+	const inputEmailFields = document.querySelectorAll('[type="email"]');
+	checkEmailFields(inputEmailFields);
+
+
 	$('#save_tutor_option').click(function (e) {
 		e.preventDefault();
 		$('#tutor-option-form').submit();
@@ -97,35 +145,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	$('#tutor-option-form').submit(function (e) {
 		e.preventDefault();
-
 		var button = $('#save_tutor_option');
 		var $form = $(this);
 		var data = $form.serializeObject();
+		// console.log(document.querySelector('[type="email"]').checkValidity());
+		const inputEmailF = document.querySelectorAll('[type="email"]');
+		checkEmailFieldsOnSubmit(inputEmailF)
+		if (true === formSubmit) {
+			if (!e.detail || e.detail == 1) {
+				$.ajax({
+					url: window._tutorobject.ajaxurl,
+					type: 'POST',
+					data: data,
+					beforeSend: function () {
+						button.addClass('tutor-updating-message');
+					},
+					success: function (resp) {
+						const { data = {}, success } = resp || {};
+						const { message = __('Something Went Wrong!', 'tutor') } = data;
 
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: data,
-			beforeSend: function () {
-				button.addClass('tutor-updating-message');
-			},
-			success: function (resp) {
-				const { data = {}, success } = resp || {};
-				const { message = __('Something Went Wrong!', 'tutor') } = data;
+						if (success) {
+							// Disableing save btn after saved successfully
+							document.getElementById('save_tutor_option').disabled = true;
+							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
+							return;
+						}
 
-				if (success) {
-					// Disableing save btn after saved successfully
-					document.getElementById('save_tutor_option').disabled = true;
-					tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
-					return;
-				}
-
-				tutor_toast('Error!', message, 'tutor', true);
-			},
-			complete: function () {
-				button.removeClass('tutor-updating-message');
-			},
-		});
+						tutor_toast('Error!', message, 'tutor', true);
+					},
+					complete: function () {
+						button.removeClass('tutor-updating-message');
+					},
+				});
+			}
+		}
 	});
 
 	function titleCase(str) {

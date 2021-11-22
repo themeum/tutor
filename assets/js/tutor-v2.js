@@ -4194,29 +4194,6 @@ window.jQuery(document).ready(function ($) {
 
 /***/ }),
 
-/***/ "./assets/react/v2/general.js":
-/*!************************************!*\
-  !*** ./assets/react/v2/general.js ***!
-  \************************************/
-/***/ (() => {
-
-// Select your input element.
-var numbers = document.querySelectorAll('input[type="number"]'); // Listen for input event on numInput.
-
-numbers.forEach(function (number) {
-  number.value = number.value <= 0 ? 0 : number.value;
-
-  number.onkeydown = function (e) {
-    if (e.keyCode === 109 || e.keyCode === 189) {
-      return false;
-    }
-
-    number.value = number.value <= 0 ? 0 : number.value;
-  };
-});
-
-/***/ }),
-
 /***/ "./assets/react/v2/qna.js":
 /*!********************************!*\
   !*** ./assets/react/v2/qna.js ***!
@@ -44852,13 +44829,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tutor_date_range_picker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tutor-date-range-picker */ "./assets/react/v2/tutor-date-range-picker.js");
 /* harmony import */ var _lib_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/common */ "./assets/react/lib/common.js");
 /* harmony import */ var _qna__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./qna */ "./assets/react/v2/qna.js");
-/* harmony import */ var _general__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./general */ "./assets/react/v2/general.js");
-/* harmony import */ var _general__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_general__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
+ // import './general';
+// Select your input element.
 
+var numbers = document.querySelectorAll('input[type="number"]'); // Listen for input event on numInput.
 
+numbers.forEach(function (number) {
+  number.value = number.value <= 0 ? 0 : number.value;
+
+  number.onkeydown = function (e) {
+    if (e.keyCode === 109 || e.keyCode === 189) {
+      return false;
+    }
+
+    number.value = number.value <= 0 ? 0 : number.value;
+  };
+});
 })();
 
 /******/ })()

@@ -1998,12 +1998,54 @@ document.addEventListener('DOMContentLoaded', function () {
     _loop(i);
   }
 
+  var validateEmail = function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   $(window).on('click', function (e) {
     $('.tutor-notification, .search_result').removeClass('show');
   });
   $('.tutor-notification-close').click(function (e) {
     $('.tutor-notification').removeClass('show');
   });
+  var formSubmit = false;
+
+  var checkEmailFields = function checkEmailFields(inputFields) {
+    inputFields.forEach(function (emailField) {
+      var invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
+      var invalidMessage = invalidLabel + ' email is invalid!';
+
+      emailField.onchange = function (e) {
+        if (false === validateEmail(emailField.value)) {
+          emailField.style.borderColor = 'red';
+          emailField.focus();
+          tutor_toast('Warning', invalidMessage, 'error');
+          formSubmit = false;
+        } else {
+          emailField.style.borderColor = '#ddd';
+          formSubmit = true;
+        }
+      };
+    });
+  };
+
+  var checkEmailFieldsOnSubmit = function checkEmailFieldsOnSubmit(inputFields) {
+    inputFields.forEach(function (emailField) {
+      var invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
+      var invalidMessage = invalidLabel + ' email is invalid!';
+
+      if (false === validateEmail(emailField.value)) {
+        console.log(invalidLabel);
+        emailField.style.borderColor = 'red';
+        emailField.focus();
+        tutor_toast('Warning', invalidMessage, 'error');
+      }
+    });
+  };
+
+  var inputEmailFields = document.querySelectorAll('[type="email"]');
+  checkEmailFields(inputEmailFields);
   $('#save_tutor_option').click(function (e) {
     e.preventDefault();
     $('#tutor-option-form').submit();
@@ -2012,36 +2054,44 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     var button = $('#save_tutor_option');
     var $form = $(this);
-    var data = $form.serializeObject();
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: 'POST',
-      data: data,
-      beforeSend: function beforeSend() {
-        button.addClass('tutor-updating-message');
-      },
-      success: function success(resp) {
-        var _ref = resp || {},
-            _ref$data = _ref.data,
-            data = _ref$data === void 0 ? {} : _ref$data,
-            success = _ref.success;
+    var data = $form.serializeObject(); // console.log(document.querySelector('[type="email"]').checkValidity());
 
-        var _data$message = data.message,
-            message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
+    var inputEmailF = document.querySelectorAll('[type="email"]');
+    checkEmailFieldsOnSubmit(inputEmailF);
 
-        if (success) {
-          // Disableing save btn after saved successfully
-          document.getElementById('save_tutor_option').disabled = true;
-          tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
-          return;
-        }
+    if (true === formSubmit) {
+      if (!e.detail || e.detail == 1) {
+        $.ajax({
+          url: window._tutorobject.ajaxurl,
+          type: 'POST',
+          data: data,
+          beforeSend: function beforeSend() {
+            button.addClass('tutor-updating-message');
+          },
+          success: function success(resp) {
+            var _ref = resp || {},
+                _ref$data = _ref.data,
+                data = _ref$data === void 0 ? {} : _ref$data,
+                success = _ref.success;
 
-        tutor_toast('Error!', message, 'tutor', true);
-      },
-      complete: function complete() {
-        button.removeClass('tutor-updating-message');
+            var _data$message = data.message,
+                message = _data$message === void 0 ? __('Something Went Wrong!', 'tutor') : _data$message;
+
+            if (success) {
+              // Disableing save btn after saved successfully
+              document.getElementById('save_tutor_option').disabled = true;
+              tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
+              return;
+            }
+
+            tutor_toast('Error!', message, 'tutor', true);
+          },
+          complete: function complete() {
+            button.removeClass('tutor-updating-message');
+          }
+        });
       }
-    });
+    }
   });
 
   function titleCase(str) {
