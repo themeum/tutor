@@ -104,12 +104,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	const checkEmailFields = (inputFields) => {
 		inputFields.forEach((emailField) => {
 			let invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
-			let invalidMessage = invalidLabel + ' email is invalid!';
+			// let invalidMessage = invalidLabel + ' email is invalid!';
 			emailField.onchange = (e) => {
 				if (false === validateEmail(emailField.value)) {
 					emailField.style.borderColor = 'red';
 					emailField.focus();
-					tutor_toast('Warning', invalidMessage, 'error');
 					formSubmit = false;
 				} else {
 					emailField.style.borderColor = '#ddd';
@@ -124,10 +123,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			let invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
 			let invalidMessage = invalidLabel + ' email is invalid!';
 			if (false === validateEmail(emailField.value)) {
-				console.log(invalidLabel);
 				emailField.style.borderColor = 'red';
 				emailField.focus();
 				tutor_toast('Warning', invalidMessage, 'error');
+			} else {
+				formSubmit = true;
 			}
 		})
 	}
@@ -149,8 +149,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		var $form = $(this);
 		var data = $form.serializeObject();
 		// console.log(document.querySelector('[type="email"]').checkValidity());
-		const inputEmailF = document.querySelectorAll('[type="email"]');
-		checkEmailFieldsOnSubmit(inputEmailF)
+		// const inputEmailFields = document.querySelectorAll('[type="email"]');
+		if (typeof inputEmailFields !== 'undefined') {
+			checkEmailFieldsOnSubmit(inputEmailFields)
+		}
 		if (true === formSubmit) {
 			if (!e.detail || e.detail == 1) {
 				$.ajax({
@@ -167,11 +169,11 @@ document.addEventListener('DOMContentLoaded', function () {
 						if (success) {
 							// Disableing save btn after saved successfully
 							document.getElementById('save_tutor_option').disabled = true;
-							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success', true);
+							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
 							return;
 						}
 
-						tutor_toast('Error!', message, 'tutor', true);
+						tutor_toast('Error!', message, 'error');
 					},
 					complete: function () {
 						button.removeClass('tutor-updating-message');
