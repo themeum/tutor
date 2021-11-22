@@ -1462,13 +1462,13 @@ if (copyBtn && codeTexarea) {
 
 
 var popupToggle = function popupToggle() {
-  var popupToggleBtns = document.querySelectorAll('.popup-opener .popup-btn');
-  var popupMenus = document.querySelectorAll('.popup-opener .popup-menu');
+  var popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
+  var popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
 
   if (popupToggleBtns && popupMenus) {
     popupToggleBtns.forEach(function (btn) {
       btn.addEventListener('click', function (e) {
-        var popupClosest = e.target.closest('.popup-opener').querySelector('.popup-menu');
+        var popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
         popupClosest.classList.toggle('visible');
         popupMenus.forEach(function (popupMenu) {
           if (popupMenu !== popupClosest) {
@@ -1478,7 +1478,7 @@ var popupToggle = function popupToggle() {
       });
     });
     window.addEventListener('click', function (e) {
-      if (!e.target.matches('.popup-opener .popup-btn')) {
+      if (!e.target.matches('.tutor-popup-opener .popup-btn')) {
         popupMenus.forEach(function (popupMenu) {
           if (popupMenu.classList.contains('visible')) {
             popupMenu.classList.remove('visible');
@@ -1650,7 +1650,7 @@ function tutor_option_history_load(history_data) {
           value = _ref2[1];
 
       var badgeStatus = value.datatype == "saved" ? " label-primary-wp" : " label-refund";
-      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"popup-opener\"><button type=\"button\" class=\"popup-btn\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
+      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"tutor-popup-opener\"><button type=\"button\" class=\"popup-btn\" data-tutor-popup-target=\"popup-").concat(key, "\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
@@ -1670,25 +1670,29 @@ var export_settings_all = function export_settings_all() {
 
   if (export_settings) {
     export_settings.onclick = function (e) {
-      e.preventDefault();
-      fetch(_tutorobject.ajaxurl, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no-cache"
-        },
-        body: new URLSearchParams({
-          action: "tutor_export_settings"
-        })
-      }).then(function (response) {
-        return response.json();
-      }).then(function (response) {
-        var fileName = "tutor_options_" + time_now();
-        (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(JSON.stringify(response), fileName);
-      })["catch"](function (err) {
-        return console.log(err);
-      });
+      if (!e.detail || e.detail == 1) {
+        e.preventDefault();
+        fetch(_tutorobject.ajaxurl, {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Cache-Control": "no-cache"
+          },
+          body: new URLSearchParams({
+            action: "tutor_export_settings"
+          })
+        }).then(function (response) {
+          return response.json();
+        }).then(function (response) {
+          var fileName = "tutor_options_" + time_now();
+          (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(JSON.stringify(response), fileName);
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      }
+
+      ;
     };
   }
 };
@@ -1717,7 +1721,7 @@ var reset_default_options = function reset_default_options() {
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
           setTimeout(function () {
-            (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Reset all settings to default successfully!");
+            tutor_toast("Success", "Reset all settings to default successfully!", "success");
           }, 200);
         }
       };
@@ -1756,7 +1760,7 @@ var import_history_data = function import_history_data() {
             delete_history_data();
             import_history_data();
             setTimeout(function () {
-              (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Data imported successfully!");
+              tutor_toast("Success", "Data imported successfully!", "success");
             }, 200);
           }
         };
@@ -1812,7 +1816,7 @@ var apply_single_settings = function apply_single_settings() {
 
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
-          (0,_lib__WEBPACK_IMPORTED_MODULE_0__.notice_message)("Applied settings successfully!");
+          tutor_toast("Success", "Applied settings successfully!", "success");
           console.log(xhttp.response);
         }
       };
@@ -1869,7 +1873,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "element": () => (/* binding */ element),
 /* harmony export */   "elements": () => (/* binding */ elements),
-/* harmony export */   "notice_message": () => (/* binding */ notice_message),
 /* harmony export */   "json_download": () => (/* binding */ json_download)
 /* harmony export */ });
 var element = function element(selector) {
@@ -1878,20 +1881,6 @@ var element = function element(selector) {
 
 var elements = function elements(selector) {
   return document.querySelectorAll(selector);
-};
-
-var notice_message = function notice_message() {
-  var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
-  var noticeElement = element(".tutor-notification");
-  noticeElement.classList.add("show");
-
-  if (message) {
-    noticeElement.querySelector(".tutor-notification-content p").innerText = message;
-  }
-
-  setTimeout(function () {
-    noticeElement.classList.remove("show");
-  }, 4000);
 };
 /**
  * Function to download json file

@@ -1,4 +1,4 @@
-import { element, elements, notice_message, json_download } from "./lib";
+import { element, elements, json_download } from "./lib";
 // import popupToggle from "./popupToggle";
 
 document.addEventListener("readystatechange", (event) => {
@@ -75,7 +75,7 @@ function tutor_option_history_load(history_data) {
             </p>
           </div>
           <div class="tutor-option-field-input"><button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="${key}">Apply</button>
-            <div class="popup-opener"><button type="button" class="popup-btn"><span class="toggle-icon"></span></button><ul class="popup-menu"><li><a class="export_single_settings" data-id="${key}"><span class="ttr-msg-archive-filled"></span><span>Download</span></a></li><li><a class="delete_single_settings" data-id="${key}"><span class="ttr-delete-fill-filled"></span><span>Delete</span></a></li></ul></div></div>
+            <div class="tutor-popup-opener"><button type="button" class="popup-btn" data-tutor-popup-target="popup-${key}"><span class="toggle-icon"></span></button><ul class="popup-menu"><li><a class="export_single_settings" data-id="${key}"><span class="ttr-msg-archive-filled"></span><span>Download</span></a></li><li><a class="delete_single_settings" data-id="${key}"><span class="ttr-delete-fill-filled"></span><span>Delete</span></a></li></ul></div></div>
         </div>`;
     });
   } else {
@@ -94,25 +94,27 @@ const export_settings_all = () => {
   const export_settings = element("#export_settings"); //document.querySelector("#export_settings");
   if (export_settings) {
     export_settings.onclick = (e) => {
-      e.preventDefault();
-      fetch(_tutorobject.ajaxurl, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no-cache",
-        },
-        body: new URLSearchParams({
-          action: "tutor_export_settings",
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          let fileName = "tutor_options_" + time_now();
-          json_download(JSON.stringify(response), fileName);
+      if (!e.detail || e.detail == 1) {
+        e.preventDefault();
+        fetch(_tutorobject.ajaxurl, {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Cache-Control": "no-cache",
+          },
+          body: new URLSearchParams({
+            action: "tutor_export_settings",
+          }),
         })
-        .catch((err) => console.log(err));
-    };
+          .then((response) => response.json())
+          .then((response) => {
+            let fileName = "tutor_options_" + time_now();
+            json_download(JSON.stringify(response), fileName);
+          })
+          .catch((err) => console.log(err));
+      };
+    }
   }
 };
 /**
@@ -136,7 +138,7 @@ const reset_default_options = () => {
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
           setTimeout(function () {
-            notice_message("Reset all settings to default successfully!");
+            tutor_toast("Success", "Reset all settings to default successfully!", "success");
           }, 200);
         }
       };
@@ -170,7 +172,7 @@ const import_history_data = () => {
             delete_history_data();
             import_history_data();
             setTimeout(function () {
-              notice_message("Data imported successfully!");
+              tutor_toast("Success", "Data imported successfully!", "success");
             }, 200);
           }
         };
@@ -222,7 +224,7 @@ const apply_single_settings = () => {
 
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
-          notice_message("Applied settings successfully!");
+          tutor_toast("Success", "Applied settings successfully!", "success");
           console.log(xhttp.response);
         }
       };
