@@ -34,7 +34,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
         <div id="tutor-single-entry-content" class="tutor-quiz-single-entry-wrap tutor-single-entry-content sidebar-hidden">
             <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
             <div class="tutor-single-page-top-bar d-flex justify-content-between">
-                <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
+                <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
                     <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
                         <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
                     </a>
