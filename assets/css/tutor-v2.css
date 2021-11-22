@@ -5854,8 +5854,24 @@
   font-size: 50px;
 }
 
+.tutor-icon-55 {
+  font-size: 55px;
+}
+
+.tutor-icon-56 {
+  font-size: 56px;
+}
+
 .tutor-icon-60 {
   font-size: 60px;
+}
+
+.tutor-icon-65 {
+  font-size: 65px;
+}
+
+.tutor-icon-66 {
+  font-size: 66px;
 }
 
 .tutor-icon-70 {
@@ -21365,6 +21381,33 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   text-align: left;
 }
 
+.tutor-modal.tutor-modal-is-close-beside {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.tutor-modal.tutor-modal-is-close-beside .tutor-modal-root {
+  position: relative;
+  overflow: unset;
+  max-height: calc(100% - 100px);
+  min-height: -webkit-min-content;
+  min-height: -moz-min-content;
+  min-height: min-content;
+}
+
+.tutor-modal.tutor-modal-is-close-beside .tutor-modal-close {
+  position: absolute !important;
+  top: 22px !important;
+  right: -67px !important;
+}
+
 .tutor-check-icon {
   height: 15px;
   width: 15px;
@@ -28087,7 +28130,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-dropdown-select {
   --h: 58px;
-  width: 305px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

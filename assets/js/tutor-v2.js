@@ -5112,11 +5112,6 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     }, dayCount ? dayCount > 1 ? "".concat(dayCount, " days selected") : "".concat(dayCount, " day selected") : '0 day selected'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       className: "tutor-btns"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-      className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md",
-      onClick: function onClick() {
-        return handleCalendarClose();
-      }
-    }, "Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
       className: "tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md",
       onClick: applyDateRange
