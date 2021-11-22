@@ -8261,6 +8261,10 @@ class Utils {
 			'on-hold'		=> __( 'On Hold', 'tutor' ),
 			'onhold'		=> __( 'On Hold', 'tutor' ),
 			'wc-on-hold'	=> __( 'On Hold', 'tutor' ),
+			'publish' 		=> __( 'Publish', 'tutor' ),
+			'trash'   		=> __( 'Trash', 'tutor' ),
+			'draft'   		=> __( 'Draft', 'tutor' ),
+			'private' 		=> __( 'Private', 'tutor' )
 		);
 		return isset( $key_value[ $key ] ) ? $key_value[ $key ] : $key;
 	}
