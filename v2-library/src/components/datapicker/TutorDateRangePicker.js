@@ -37,10 +37,10 @@ const TutorDateRangePicker = () => {
 			// Update url
 			if (params.has('period')) {
 				params.delete('period');
-			} 
+			}
 			params.set('start_date', startFormateDate);
 			params.set('end_date', endFormateDate);
-			
+
 			window.location = url;
 		}
 	};
@@ -59,12 +59,12 @@ const TutorDateRangePicker = () => {
 							{dayCount ? (dayCount > 1 ? `${dayCount} days selected` : `${dayCount} day selected`) : '0 day selected'}
 						</div>
 						<div className="tutor-btns">
-							<button
+							{/* <button
 								className="tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"
 								onClick={() => handleCalendarClose()}
 							>
 								Cancel
-							</button>
+							</button> */}
 							<button
 								type="button"
 								className="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md"
