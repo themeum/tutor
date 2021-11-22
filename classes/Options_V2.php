@@ -301,7 +301,7 @@ class Options_V2 {
 		do_action( 'tutor_option_save_after' );
 
 		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
-		wp_send_json_success( $_POST );
+		wp_send_json_success( $option );
 	}
 
 	/**
@@ -339,7 +339,8 @@ class Options_V2 {
 		}
 
 		$pages       = tutor_utils()->get_pages();
-		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>lessons</code>/sample-lesson/';
+		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
+		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url();
 
 		$methods_array     = array();
@@ -1557,13 +1558,6 @@ class Options_V2 {
 		include tutor()->path . "views/options/template/{$section['template']}.php";
 		return ob_get_clean();
 	}
-
-	/*
-	 public function this_confirmation( $modal = array() ) {
-		ob_start();
-		require tutor()->path . 'views/options/template/modal-confirm.php';
-		return ob_get_clean();
-	} */
 
 	/**
 	 * Load template inside template dirctory
