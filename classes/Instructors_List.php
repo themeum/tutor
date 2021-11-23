@@ -133,9 +133,13 @@ class Instructors_List extends \Tutor_List_Table {
 		}
 		if ( 'delete' === $action ) {
 			// Delete user from student_list class.
+			do_action( 'tutor_before_instructor_delete', $bulk_ids );
 			$response = Students_List::delete_students( $bulk_ids );
+			do_action( 'tutor_after_instructor_delete', $bulk_ids );
 		} else {
+			do_action( 'tutor_before_instructor_update', $bulk_ids );
 			$response = self::update_instructors( $action, $bulk_ids );
+			do_action( 'tutor_after_instructor_delete', $bulk_ids );
 		}
 
 		return true === $response ? wp_send_json_success() : wp_send_json_error();
@@ -165,6 +169,22 @@ class Instructors_List extends \Tutor_List_Table {
 				'_tutor_instructor_status'
 			)
 		);
+		// Remove role.
+		if ( 'pending' === $status || 'blocked' === $status ) {
+			$arr = explode( ',', $user_ids );
+			foreach ( $arr as $instructor_id ) {
+				$instructor_id = (int) sanitize_text_field( $instructor_id );
+				self::remove_instructor_role( $instructor_id, $status );
+			}
+		}
+
+		if ( 'approved' === $status ) {
+			$arr = explode( ',', $user_ids );
+			foreach ( $arr as $instructor_id ) {
+				$instructor_id = (int) sanitize_text_field( $instructor_id );
+				self::add_instructor_role( $instructor_id, $status );
+			}
+		}
 		return false === $update ? false : true;
 	}
 
@@ -267,7 +287,7 @@ class Instructors_List extends \Tutor_List_Table {
 				$actions['blocked'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Un Block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Unblock', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Un Block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 		}
 
@@ -311,50 +331,17 @@ class Instructors_List extends \Tutor_List_Table {
 		return $sortable_columns;
 	}
 
-
+	/**
+	 * Handle single instructor approve | block action
+	 */
 	function process_bulk_action() {
+		$instructor_id = (int) sanitize_text_field( $_GET['instructor'] );
 		if ( 'approve' === $this->current_action() ) {
-			$instructor_id = (int) sanitize_text_field( $_GET['instructor'] );
-
-			do_action( 'tutor_before_approved_instructor', $instructor_id );
-
-			update_user_meta( $instructor_id, '_tutor_instructor_status', 'approved' );
-			update_user_meta( $instructor_id, '_tutor_instructor_approved', tutor_time() );
-
-			$instructor = new \WP_User( $instructor_id );
-			$instructor->add_role( tutor()->instructor_role );
-
-			// TODO: send E-Mail to this user about instructor approval, should via hook
-			do_action( 'tutor_after_approved_instructor', $instructor_id );
+			self::add_instructor_role( $instructor_id, 'approved' );
 		}
 
 		if ( 'blocked' === $this->current_action() ) {
-			$instructor_id = (int) sanitize_text_field( $_GET['instructor'] );
-
-			do_action( 'tutor_before_blocked_instructor', $instructor_id );
-			update_user_meta( $instructor_id, '_tutor_instructor_status', 'blocked' );
-
-			$instructor = new \WP_User( $instructor_id );
-			$instructor->remove_role( tutor()->instructor_role );
-			do_action( 'tutor_after_blocked_instructor', $instructor_id );
-
-			// TODO: send E-Mail to this user about instructor blocked, should via hook
-		}
-
-		// Detect when a bulk action is being triggered...
-		if ( 'delete' === $this->current_action() ) {
-
-			$delete_instructors = $_GET['instructor'];
-			if ( count( $delete_instructors ) ) {
-				foreach ( $delete_instructors as $instructor ) {
-					do_action( 'tutor_insctructor_before_delete', $instructor );
-
-					wp_delete_user( $instructor );
-
-					do_action( 'tutor_insctructor_after_delete', $instructor );
-
-				}
-			}
+			self::add_instructor_role( $instructor_id, 'blocked' );
 		}
 	}
 
@@ -391,5 +378,47 @@ class Instructors_List extends \Tutor_List_Table {
 				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
+	}
+
+	/**
+	 * Initialize instructor_role to a user
+	 *
+	 * @param int    $instructor_id | user id that need to add role.
+	 * @param string $status | status that will added with role (approved).
+	 * @return void
+	 */
+	protected static function add_instructor_role( int $instructor_id, string $status ) {
+		$instructor_id = sanitize_text_field( $instructor_id );
+		$status        = sanitize_text_field( $status );
+
+		do_action( 'tutor_before_approved_instructor', $instructor_id );
+
+		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
+		update_user_meta( $instructor_id, '_tutor_instructor_approved', tutor_time() );
+
+		$instructor = new \WP_User( $instructor_id );
+		$instructor->add_role( tutor()->instructor_role );
+
+		// TODO: send E-Mail to this user about instructor approval, should via hook.
+		do_action( 'tutor_after_approved_instructor', $instructor_id );
+	}
+
+	/**
+	 * Initialize instructor_role to a user
+	 *
+	 * @param int    $instructor_id | user id that need to add role.
+	 * @param string $status | status that will added with role (approved).
+	 * @return void
+	 */
+	protected static function remove_instructor_role( int $instructor_id, string $status ) {
+		$instructor_id = sanitize_text_field( $instructor_id );
+		$status        = sanitize_text_field( $status );
+
+		do_action( 'tutor_before_blocked_instructor', $instructor_id );
+		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
+
+		$instructor = new \WP_User( $instructor_id );
+		$instructor->remove_role( tutor()->instructor_role );
+		do_action( 'tutor_after_blocked_instructor', $instructor_id );
 	}
 }

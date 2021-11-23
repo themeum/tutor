@@ -4,18 +4,6 @@ const element = (selector) => {
 const elements = (selector) => {
   return document.querySelectorAll(selector);
 };
-const notice_message = (message = "") => {
-  let noticeElement = element(".tutor-notification");
-  noticeElement.classList.add("show");
-  if (message) {
-    noticeElement.querySelector(
-      ".tutor-notification-content p"
-    ).innerText = message;
-  }
-  setTimeout(() => {
-    noticeElement.classList.remove("show");
-  }, 4000);
-};
 
 /**
  * Function to download json file
@@ -32,4 +20,4 @@ const json_download = (response, fileName) => {
   el.click();
 };
 
-export { element, elements, notice_message, json_download };
+export { element, elements, json_download };
