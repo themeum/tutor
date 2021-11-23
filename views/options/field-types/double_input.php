@@ -9,8 +9,11 @@
 if ( ! isset( $field['fields'] ) || ! is_array( $field['fields'] ) || ! count( $field['fields'] ) ) {
 	return;
 }
+
+$field_key = esc_attr( $field['key'] );
+$field_id  = esc_attr( 'field_' . $field_key );
 ?>
-<div class="tutor-option-field-row">
+<div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input">
