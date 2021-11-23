@@ -262,6 +262,20 @@ table.tutor-ui-table {
 				vertical-align: top;
 			}
 		}
+
+		.td-checkbox {
+			input[type='checkbox'] {
+				margin-top: 7px;
+			}
+		}
+	}
+
+	&:not(.td-align-middle) {
+		.td-checkbox {
+			input[type='checkbox'] {
+				margin-top: 7px;
+			}
+		}
 	}
 
 	.td-tutor-rating {
@@ -465,12 +479,6 @@ table.tutor-ui-table {
 		background-size: 10px;
 		&:focus {
 			box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
-		}
-	}
-
-	.td-checkbox {
-		input[type='checkbox'] {
-			margin-top: 7px;
 		}
 	}
 

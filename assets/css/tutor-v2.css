@@ -23826,6 +23826,14 @@ table.tutor-ui-table.table-dashboard-course-list td:nth-child(1), table.tutor-ui
   vertical-align: top;
 }
 
+table.tutor-ui-table.table-dashboard-course-list .td-checkbox input[type='checkbox'] {
+  margin-top: 7px;
+}
+
+table.tutor-ui-table:not(.td-align-middle) .td-checkbox input[type='checkbox'] {
+  margin-top: 7px;
+}
+
 table.tutor-ui-table .td-tutor-rating .tutor-rating-stars {
   -webkit-box-align: start;
       -ms-flex-align: start;
@@ -24030,10 +24038,6 @@ table.tutor-ui-table input.tutor-form-check-input[type='checkbox'] {
 table.tutor-ui-table input.tutor-form-check-input[type='checkbox']:focus {
   -webkit-box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
           box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
-}
-
-table.tutor-ui-table .td-checkbox input[type='checkbox'] {
-  margin-top: 7px;
 }
 
 table.tutor-ui-table .td-list-item .list-item-checklist input.tutor-form-check-input[type='checkbox'] {
