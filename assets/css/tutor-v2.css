@@ -20965,7 +20965,13 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 }
 
 .tutor-modal .tutor-modal-root .tutor-modal-body {
-  padding: 60px 70px;
+  padding: 40px 30px;
+}
+
+@media (min-width: 768px) {
+  .tutor-modal .tutor-modal-root .tutor-modal-body {
+    padding: 60px 70px;
+  }
 }
 
 .tutor-modal.tutor-is-sm .tutor-modal-root {
@@ -21404,8 +21410,28 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 
 .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close {
   position: absolute !important;
-  top: 22px !important;
-  right: -67px !important;
+  top: 20px !important;
+  right: -20px !important;
+}
+
+@media (min-width: 768px) {
+  .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close {
+    position: absolute !important;
+    top: 22px !important;
+    right: -67px !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    color: gray !important;
+  }
+  .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close > * {
+    font-size: 30px;
+  }
 }
 
 .tutor-check-icon {
