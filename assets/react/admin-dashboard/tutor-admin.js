@@ -533,4 +533,10 @@ jQuery(document).ready(function ($) {
       window.open(href, "_blank");
     }
   });
+
+  //add checkbox class for style
+  var tutorCheckbox = $(".tutor-form-check-input");
+  if (tutorCheckbox) {
+    tutorCheckbox.parent().addClass('tutor-option-field-row');
+  }
 });
