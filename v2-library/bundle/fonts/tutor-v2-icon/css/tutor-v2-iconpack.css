@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'tutor-v2-iconpack';
-	src: url('../fonts/tutor-v2-iconpack.eot?ltmimu');
-	src: url('../fonts/tutor-v2-iconpack.eot?ltmimu#iefix') format('embedded-opentype'),
-		url('../fonts/tutor-v2-iconpack.ttf?ltmimu') format('truetype'),
-		url('../fonts/tutor-v2-iconpack.woff?ltmimu') format('woff'),
-		url('../fonts/tutor-v2-iconpack.svg?ltmimu#tutor-v2-iconpack') format('svg');
+	src: url('../fonts/tutor-v2-iconpack.eot?u5m2ii');
+	src: url('../fonts/tutor-v2-iconpack.eot?u5m2ii#iefix') format('embedded-opentype'),
+		url('../fonts/tutor-v2-iconpack.ttf?u5m2ii') format('truetype'),
+		url('../fonts/tutor-v2-iconpack.woff?u5m2ii') format('woff'),
+		url('../fonts/tutor-v2-iconpack.svg?u5m2ii#tutor-v2-iconpack') format('svg');
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -26,6 +26,36 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.ttr-mark-cricle:before {
+	content: '\e905';
+}
+.ttr-portrait:before {
+	content: '\e906';
+}
+.ttr-zoom:before {
+	content: '\e907';
+}
+.ttr-certificate-l:before {
+	content: '\e99b';
+}
+.ttr-eye-close-f:before {
+	content: '\e9c8';
+}
+.ttr-grade-f:before {
+	content: '\ea10';
+}
+.ttr-info-f:before {
+	content: '\ea33';
+}
+.ttr-refresh-f:before {
+	content: '\ea34';
+}
+.ttr-refresh-l:before {
+	content: '\ea35';
+}
+.ttr-warning-f:before {
+	content: '\ea36';
+}
 .ttr-action-line:before {
 	content: '\e900';
 }
@@ -40,20 +70,6 @@
 }
 .ttr-calender-line:before {
 	content: '\e904';
-}
-.ttr-certificate-line .path1:before {
-	content: '\e905';
-	color: rgb(26, 27, 30);
-}
-.ttr-certificate-line .path2:before {
-	content: '\e906';
-	margin-left: -1em;
-	color: rgb(26, 27, 30);
-}
-.ttr-certificate-line .path3:before {
-	content: '\e907';
-	margin-left: -1em;
-	color: rgb(33, 35, 39);
 }
 .ttr-clipboard-line:before {
 	content: '\e908';
@@ -503,14 +519,8 @@
 .ttr-info-circle-outline-filled:before {
 	content: '\e99a';
 }
-.ttr-info-filled:before {
-	content: '\e99b';
-}
 .ttr-instructor-filled:before {
 	content: '\e99c';
-}
-.ttr-invisible-fill-filled:before {
-	content: '\e99d';
 }
 .ttr-invisible-filled:before {
 	content: '\e99e';
@@ -637,9 +647,6 @@
 }
 .ttr-plus-square-filled:before {
 	content: '\e9c7';
-}
-.ttr-portrait-filled:before {
-	content: '\e9c8';
 }
 .ttr-print-filled:before {
 	content: '\e9c9';
@@ -773,12 +780,6 @@
 .ttr-wallet-filled:before {
 	content: '\e9f3';
 }
-.ttr-warning-1-filled:before {
-	content: '\e9f4';
-}
-.ttr-warning-filled:before {
-	content: '\e9f5';
-}
 .ttr-warning-outline-circle-filled:before {
 	content: '\e9f6';
 }
@@ -856,9 +857,6 @@
 }
 .ttr-youtube-stroke-brand:before {
 	content: '\ea0f';
-}
-.ttr-zoom-brand:before {
-	content: '\ea10';
 }
 .ttr-ai-file:before {
 	content: '\ea11';
