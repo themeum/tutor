@@ -103,8 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	var formSubmit = false;
 	const checkEmailFields = (inputFields) => {
 		inputFields.forEach((emailField) => {
-			let invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
-			// let invalidMessage = invalidLabel + ' email is invalid!';
 			emailField.onchange = (e) => {
 				if (false === validateEmail(emailField.value)) {
 					emailField.style.borderColor = 'red';
@@ -121,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const checkEmailFieldsOnSubmit = (inputFields) => {
 		inputFields.forEach((emailField) => {
 			let pageNeedsValidation = emailField.closest('.tutor-option-nav-page');
-			let invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
+			let invalidLabel = emailField && emailField.parentNode.parentNode.querySelector('h5').innerText;
 			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('h2').innerText;
 
 			let invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
