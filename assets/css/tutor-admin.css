@@ -6955,6 +6955,10 @@ li.tutor-option-nav-item h4 {
   margin-bottom: 34px;
 }
 
+.tutor-admin-announcements-list p {
+  margin: 0;
+}
+
 .tutor-admin-announcements-list .new-announcement-wrap {
   background-color: #fff;
 }
@@ -7001,9 +7005,6 @@ li.tutor-option-nav-item h4 {
 }
 
 @media screen and (min-width: 1200px) {
-  .tutor-admin-announcements-list table.tutor-ui-table td {
-    padding: 0 10px !important;
-  }
   .tutor-admin-announcements-list table.tutor-ui-table td:first-child {
     padding-left: 20px !important;
   }
@@ -7471,6 +7472,10 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
 
 .tutor-qna-sptolight-sidebar .tutor-qa-reply {
   position: initial !important;
+}
+
+table.tutor-ui-table.tutor-table-with-checkbox .td-checkbox input[type='checkbox'] {
+  margin: 0;
 }
 
 /*# sourceMappingURL=tutor-admin.css.map */

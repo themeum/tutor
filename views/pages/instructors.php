@@ -88,7 +88,7 @@ $filters = array(
 
 <div class="wrap">
 	<div class="tutor-ui-table-responsive tutor-mt-30">
-		<table class="tutor-ui-table tutor-ui-table-responsive table-instructors">
+		<table class="tutor-ui-table tutor-ui-table-responsive table-instructors tutor-table-with-checkbox">
 			<thead>
 			<tr>
 				<th width="3%">
