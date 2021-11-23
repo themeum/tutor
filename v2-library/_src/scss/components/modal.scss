@@ -499,7 +499,7 @@
 
 .tutor-modal {
 	.tutor-alert {
-		&::before{
+		&::before {
 			content: none !important;
 		}
 		padding: 6px 10px;
@@ -508,6 +508,26 @@
 			@extend .color-warning-100;
 			border-color: $warning-60;
 			text-align: left;
+		}
+	}
+}
+
+.tutor-modal {
+	&.tutor-modal-is-close-beside {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.tutor-modal-root {
+			position: relative;
+			overflow: unset;
+			max-height: calc(100% - 100px);
+			min-height: min-content;
+		}
+
+		.tutor-modal-close {
+			position: absolute !important;
+			top: 22px !important;
+			right: -67px !important;
 		}
 	}
 }
