@@ -780,7 +780,7 @@ class Options_V2 {
 								'key'     => 'courses_col_per_row',
 								'type'    => 'radio_horizontal',
 								'label'   => __( 'Column Per Row', 'tutor' ),
-								'default' => '4',
+								'default' => '3',
 								'options' => array(
 									'1' => 'One',
 									'2' => 'Two',
