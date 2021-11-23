@@ -1,5 +1,4 @@
-import { element, elements, notice_message, json_download } from "./lib";
-// import popupToggle from "./popupToggle";
+import { element, elements, json_download } from "./lib";
 
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "interactive") {
@@ -12,9 +11,9 @@ document.addEventListener("readystatechange", (event) => {
     reset_default_options();
     apply_single_settings();
 
-    // load_saved_data();
     // setInterval(function () {
-    //   console.log("working");
+    // load_saved_data();
+    // console.log("working");
     // }, 10000);
   }
 });
@@ -68,15 +67,39 @@ function tutor_option_history_load(history_data) {
     Object.entries(dataset).forEach(([key, value]) => {
       let badgeStatus =
         value.datatype == "saved" ? " label-primary-wp" : " label-refund";
-      output += `<div class="tutor-option-field-row">
-          <div class="tutor-option-field-label">
-            <p class="text-medium-small">${value.history_date}
-            <span class="tutor-badge-label tutor-ml-15${badgeStatus}">${value.datatype}</span>
-            </p>
+      output = `<div class="tutor-option-field-row">
+					<div class="tutor-option-field-label">
+						<p class="text-medium-small">${value.history_date}
+						<span class="tutor-badge-label tutor-ml-15${badgeStatus}"> ${value.datatype}</span> </p>
+					</div>
+					<div class="tutor-option-field-input">
+						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="${key}">Apply</button>
+
+          <div class="tutor-popup-opener">
+            <button
+            type="button"
+            class="popup-btn"
+            data-tutor-popup-target="popup-${key}"
+            >
+            <span class="toggle-icon"></span>
+            </button>
+            <ul id="popup-${key}" class="popup-menu">
+            <li>
+              <a class="export_single_settings" data-id="${key}">
+                <span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+                <span class="text-regular-body color-text-white">Download</span>
+              </a>
+            </li>
+            <li>
+              <a class="delete_single_settings" data-id="${key}">
+                <span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+                <span class="text-regular-body color-text-white">Delete</span>
+              </a>
+            </li>
+            </ul>
           </div>
-          <div class="tutor-option-field-input"><button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="${key}">Apply</button>
-            <div class="popup-opener"><button type="button" class="popup-btn"><span class="toggle-icon"></span></button><ul class="popup-menu"><li><a class="export_single_settings" data-id="${key}"><span class="ttr-msg-archive-filled"></span><span>Download</span></a></li><li><a class="delete_single_settings" data-id="${key}"><span class="ttr-delete-fill-filled"></span><span>Delete</span></a></li></ul></div></div>
-        </div>`;
+          </div>
+        </div>`+ output;
     });
   } else {
     output += `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p class="text-medium-small">No settings data found.</p></div></div>`;
@@ -94,25 +117,27 @@ const export_settings_all = () => {
   const export_settings = element("#export_settings"); //document.querySelector("#export_settings");
   if (export_settings) {
     export_settings.onclick = (e) => {
-      e.preventDefault();
-      fetch(_tutorobject.ajaxurl, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no-cache",
-        },
-        body: new URLSearchParams({
-          action: "tutor_export_settings",
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          let fileName = "tutor_options_" + time_now();
-          json_download(JSON.stringify(response), fileName);
+      if (!e.detail || e.detail == 1) {
+        e.preventDefault();
+        fetch(_tutorobject.ajaxurl, {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Cache-Control": "no-cache",
+          },
+          body: new URLSearchParams({
+            action: "tutor_export_settings",
+          }),
         })
-        .catch((err) => console.log(err));
-    };
+          .then((response) => response.json())
+          .then((response) => {
+            let fileName = "tutor_options_" + time_now();
+            json_download(JSON.stringify(response), fileName);
+          })
+          .catch((err) => console.log(err));
+      };
+    }
   }
 };
 /**
@@ -136,7 +161,7 @@ const reset_default_options = () => {
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
           setTimeout(function () {
-            notice_message("Reset all settings to default successfully!");
+            tutor_toast("Success", "Reset all settings to default successfully!", "success");
           }, 200);
         }
       };
@@ -147,32 +172,38 @@ const reset_default_options = () => {
 const import_history_data = () => {
   const import_options = element("#import_options");
   if (import_options) {
-    import_options.onclick = function () {
-      var files = element("#drag-drop-input").files;
-      if (files.length <= 0) {
-        return false;
-      }
-      var fr = new FileReader();
-      fr.readAsText(files.item(0));
-      fr.onload = function (e) {
-        var tutor_options = e.target.result;
-        var formData = new FormData();
-        formData.append("action", "tutor_import_settings");
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-        formData.append("time", time_now());
-        formData.append("tutor_options", tutor_options);
-        const xhttp = new XMLHttpRequest();
-        xhttp.open("POST", _tutorobject.ajaxurl);
-        xhttp.send(formData);
-        xhttp.onreadystatechange = function () {
-          if (xhttp.readyState === 4) {
-            tutor_option_history_load(xhttp.responseText);
-            delete_history_data();
-            import_history_data();
-            setTimeout(function () {
-              notice_message("Data imported successfully!");
-            }, 200);
-          }
+    import_options.onclick = (e) => {
+      if (!e.detail || e.detail == 1) {
+        var fileElem = element("#drag-drop-input");
+        var files = fileElem.files;
+        if (files.length <= 0) {
+          tutor_toast('Failed', 'Please add a correctly formated json file', 'error');
+          return false;
+        }
+        var fr = new FileReader();
+        fr.readAsText(files.item(0));
+        fr.onload = function (e) {
+          var tutor_options = e.target.result;
+          var formData = new FormData();
+          formData.append("action", "tutor_import_settings");
+          formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+          formData.append("time", time_now());
+          formData.append("tutor_options", tutor_options);
+          const xhttp = new XMLHttpRequest();
+          xhttp.open("POST", _tutorobject.ajaxurl);
+          xhttp.send(formData);
+          xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4) {
+              tutor_option_history_load(xhttp.responseText);
+              delete_history_data();
+              // import_history_data();
+              setTimeout(function () {
+                tutor_toast("Success", "Data imported successfully!", "success");
+                fileElem.parentNode.parentNode.querySelector('.file-info').innerText = '';
+                fileElem.value = '';
+              }, 200);
+            }
+          };
         };
       };
     };
@@ -222,7 +253,7 @@ const apply_single_settings = () => {
 
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
-          notice_message("Applied settings successfully!");
+          tutor_toast("Success", "Applied settings successfully!", "success");
           console.log(xhttp.response);
         }
       };
