@@ -28,7 +28,7 @@ window.jQuery(document).ready(function($){
                 $('.tutor-assignment-modal-wrap').addClass('tutor-is-active');
                 $(document).trigger('assignment_modal_loaded');
 
-                tinymce.init(tinyMCEPreInit.mceInit.course_description);
+                tinymce.init(tinyMCEPreInit.mceInit.tutor_assignment_editor_config);
                 tinymce.execCommand('mceRemoveEditor', false, 'tutor_assignments_modal_editor');
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
             },
