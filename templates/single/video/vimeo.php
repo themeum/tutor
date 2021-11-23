@@ -26,7 +26,10 @@ if ( preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\
 
 do_action('tutor_lesson/single/before/video/vimeo');
 ?>
-    <?php
+<?php if($video_id ) { ?>
+<div class="course-players flex-center">
+    <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData)); ?>">
+	<?php
         if ($disable_default_player_vimeo){
     ?>
         <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
@@ -35,5 +38,26 @@ do_action('tutor_lesson/single/before/video/vimeo');
     ?>
         <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media" allowfullscreen allowtransparency allow="autoplay"></iframe>
     <?php } ?>
+    <?php
+        if($previous_id){ 
+    ?>
+    <div class="tutor-lesson-prev flex-center">
+        <a href="<?php echo get_the_permalink($previous_id); ?>">
+            <span class="ttr-angle-left-filled"></span>
+        </a>
+    </div>
+    <?php } ?>
+
+    <?php
+        if($next_id){ 
+    ?>
+    <div class="tutor-lesson-next flex-center">
+        <a href="<?php echo get_the_permalink($next_id); ?>">
+            <span class="ttr-angle-right-filled"></span>
+        </a>
+    </div>
+    <?php } ?>
+</div>
+<?php } ?>
 <?php
 do_action('tutor_lesson/single/after/video/vimeo'); ?>

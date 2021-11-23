@@ -17,9 +17,33 @@ if ( ! defined( 'ABSPATH' ) )
 $video_info = tutor_utils()->get_video_info();
 
 do_action('tutor_lesson/single/before/video/embedded');
+?>
+<?php if($video_info ) { ?>
+<div class="course-players flex-center">
+    <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData)); ?>">
+	<?php echo tutor_utils()->array_get('source_embedded', $video_info); ?>
+    <?php
+        if($previous_id){ 
+    ?>
+    <div class="tutor-lesson-prev flex-center">
+        <a href="<?php echo get_the_permalink($previous_id); ?>">
+            <span class="ttr-angle-left-filled"></span>
+        </a>
+    </div>
+    <?php } ?>
 
-echo tutor_utils()->array_get('source_embedded', $video_info);
-
+    <?php
+        if($next_id){ 
+    ?>
+    <div class="tutor-lesson-next flex-center">
+        <a href="<?php echo get_the_permalink($next_id); ?>">
+            <span class="ttr-angle-right-filled"></span>
+        </a>
+    </div>
+    <?php } ?>
+</div>
+<?php } ?>
+<?php
 do_action('tutor_lesson/single/after/video/embedded');
 
 ?>
