@@ -585,12 +585,12 @@ jQuery.fn.serializeObject = function () {
     return values;
 };
 
-window.tutor_toast = function (title, description, type, is_right = false) {
+window.tutor_toast = function (title, description, type) {
     var tutor_ob = window._tutorobject || {};
     var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
     if (!jQuery('.tutor-toast-parent').length) {
-        jQuery('body').append('<div class="tutor-toast-parent ' + (is_right ? 'tutor-toast-right' : 'tutor-toast-left') + '"></div>');
+        jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
     }
 
     var icons = {

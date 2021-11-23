@@ -1993,8 +1993,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var checkEmailFieldsOnSubmit = function checkEmailFieldsOnSubmit(inputFields) {
     inputFields.forEach(function (emailField) {
+      var pageNeedsValidation = emailField.closest('.tutor-option-nav-page');
       var invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
-      var invalidMessage = invalidLabel + ' email is invalid!';
+      var pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('h2').innerText;
+      var invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
 
       if (false === validateEmail(emailField.value)) {
         emailField.style.borderColor = 'red';
@@ -2016,8 +2018,7 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     var button = $('#save_tutor_option');
     var $form = $(this);
-    var data = $form.serializeObject(); // console.log(document.querySelector('[type="email"]').checkValidity());
-    // const inputEmailFields = document.querySelectorAll('[type="email"]');
+    var data = $form.serializeObject();
 
     if (typeof inputEmailFields !== 'undefined') {
       checkEmailFieldsOnSubmit(inputEmailFields);
@@ -2111,7 +2112,7 @@ document.addEventListener('DOMContentLoaded', function () {
             section_slug = item.section_slug;
             section_label = item.section_label;
             block_label = item.block_label;
-            field_key = item.key;
+            field_key = item.event ? item.key + '_' + item.event : item.key;
             searchKeyRegex = new RegExp(searchKey, 'ig'); // console.log(item_text.match(searchKeyRegex));
 
             matchedText = (_item_text$match = item_text.match(searchKeyRegex)) === null || _item_text$match === void 0 ? void 0 : _item_text$match[0];
