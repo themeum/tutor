@@ -65,7 +65,7 @@ $filters = array(
 
 <div class="wrap">
 	<div class="tutor-ui-table-responsive tutor-mt-30">
-		<table class="tutor-ui-table tutor-ui-table-responsive">
+		<table class="tutor-ui-table tutor-ui-table-responsive tutor-table-with-checkbox">
 			<thead>
 			<tr>
 				<th width="3%">
@@ -113,9 +113,9 @@ $filters = array(
 							<div class="td-avatar">
 								<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
 								<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-								<p class="color-text-primary text-medium-body tutor-m-0">
+								<span class="color-text-primary text-medium-body tutor-m-0">
 									<?php esc_html_e( $list->display_name ); ?>
-								</p>
+								</span>
 								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
 								<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
 									<span class="ttr-detail-link-filled tutor-mt-5"></span>
