@@ -17,9 +17,36 @@ if(isset($_GET['question_id'])) {
     <?php
     return;
 }
+
+if(isset($_GET['view_as']) && in_array($_GET['view_as'], array('student', 'instructor'))) {
+    update_user_meta( get_current_user_id(), 'tutor_qa_view_as', $_GET['view_as'] );
+}
+
+$is_instructor      = tutor_utils()->is_instructor();
+$view_option        = get_user_meta( get_current_user_id(), 'tutor_qa_view_as', true );
+$view_as            = $is_instructor ? ($view_option ? $view_option : 'instructor') : 'student';
+$as_instructor_url  = add_query_arg( array('view_as'=>'instructor'), tutor()->current_url );
+$as_student_url     = add_query_arg( array('view_as'=>'student'), tutor()->current_url );
 ?>
 
-<h2><?php _e('Question & Answer', 'tutor'); ?></h2>
+<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-15">
+    <div class="tutor-bs-col">
+        <h2><?php _e('Question & Answer', 'tutor'); ?></h2>
+    </div>
+    <?php if($is_instructor): ?>
+        <div class="tutor-bs-col-auto">
+            <?php _e('View as', 'tutor'); ?>:
+        </div>
+        <div class="tutor-bs-col-auto">
+            <label class="tutor-form-toggle tutor-dashboard-qna-vew-as">
+                <input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as=='instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo $as_instructor_url; ?>" data-as_student_url="<?php echo $as_student_url; ?>" disabled="disabled"/>
+                <span class="tutor-form-toggle-label tutor-form-toggle-checked"><?php _e('Student', 'tutor'); ?></span>
+                <span class="tutor-form-toggle-control"></span>
+                <span class="tutor-form-toggle-label tutor-form-toggle-unchecked"><?php _e('Instructor', 'tutor'); ?></span>
+            </label>
+        </div>
+    <?php endif; ?>
+</div>
 
 <?php
 $per_page = 10;
@@ -27,12 +54,12 @@ $current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
 $offset = ($current_page-1)*$per_page;
 
 $total_items = tutor_utils()->get_total_qa_question();
-$questions = tutor_utils()->get_qa_questions($offset, $per_page);
+$questions = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id() );
 
 if (tutor_utils()->count($questions)) {
     tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
         'qna_list' => $questions,
-        'context' => 'frontend-dashboard-qna-table'
+        'context' => 'frontend-dashboard-qna-table-'.$view_as
     ));
 } else {
     echo 'No Question Yet';
