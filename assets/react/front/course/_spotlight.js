@@ -1,8 +1,12 @@
+jQuery(document).ready(function($) {
+    $('.tutor-sortable-list').sortable();
+});
+
 document.addEventListener('DOMContentLoaded', (event) => {
     /* sidetab tab position */
     const topBar = document.querySelector('.tutor-single-page-top-bar');
     const sideBar = document.querySelector('.tutor-lesson-sidebar');
-    sideBar ? sideBar.style.top = topBar.clientHeight + 'px' : 0;
+    sideBar.style.top = topBar.clientHeight + 'px';
     /* sidetab tab position */
 
     const sidebarTabeHandler = function(sideBarTabs) {
@@ -63,11 +67,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const parentComments = document.querySelectorAll(
         '.tutor-comments-list.tutor-parent-comment'
     );
-    console.log('sdfa  s   ', parentComments);
+
     const replyComment = document.querySelector(
         '.tutor-comment-box.tutor-reply-box'
     );
-    console.log('sdfa  s   ', replyComment);
+
     if (parentComments) {
         [...parentComments].forEach((parentComment) => {
             const childComments = parentComment.querySelectorAll(
@@ -90,15 +94,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     /* commenting */
 
     // quize drag n drop functionality
-    const quizBoxs = document.querySelectorAll('.tutor-quiz-border-box');
-    const quizImageBoxs = document.querySelectorAll('.tutor-quiz-dotted-box');
-    // const quizImageBoxs = document.querySelectorAll('.quiz-image-box');
-    quizBoxs.forEach((quizBox) => {
+    const tutorDraggables = document.querySelectorAll('.tutor-draggable > div');
+    const tutorDropzone = document.querySelectorAll('.tutor-dropzone');
+    tutorDraggables.forEach((quizBox) => {
         quizBox.addEventListener('dragstart', dragStart);
         quizBox.addEventListener('dragend', dragEnd);
-        // console.log(quizBox);
     });
-    quizImageBoxs.forEach((quizImageBox) => {
+    tutorDropzone.forEach((quizImageBox) => {
         quizImageBox.addEventListener('dragover', dragOver);
         quizImageBox.addEventListener('dragenter', dragEnter);
         quizImageBox.addEventListener('dragleave', dragLeave);
@@ -107,36 +109,44 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     function dragStart() {
         this.classList.add('tutor-dragging');
-        console.log('start ', this);
     }
 
     function dragEnd() {
         this.classList.remove('tutor-dragging');
-        console.log('end ', this);
     }
 
     function dragOver(event) {
         this.classList.add('tutor-drop-over');
-        console.log('dragOver ', this);
         event.preventDefault();
     }
 
-    function dragEnter() {
-        console.log('dragEnter', this);
-    }
+    function dragEnter() {}
 
     function dragLeave() {
         this.classList.remove('tutor-drop-over');
-        console.log('dragLeave', this);
     }
 
     function dragDrop() {
         const copyElement = document.querySelector(
             '.tutor-quiz-border-box.tutor-dragging'
         );
-        // this.textContent = copyElement.textContent;
-        this.innerHTML = copyElement.innerHTML;
-        console.log('drop ', copyElement.textContent, this.textContent);
+        if (this.querySelector('input')) {
+            this.querySelector('input').remove();
+        }
+        const input = copyElement.querySelector('input');
+        const inputValue = input.value;
+        const inputName = input.dataset.name;
+        const newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.setAttribute('value', input.value);
+        newInput.setAttribute('name', inputName);
+        this.appendChild(newInput);
+        const copyContent = copyElement.querySelector(
+            '.tutor-dragging-text-conent'
+        ).textContent;
+        this.querySelector(
+            '.tutor-dragging-text-conent'
+        ).textContent = copyContent;
         this.classList.remove('tutor-drop-over');
     }
 

@@ -1,39 +1,52 @@
-
 .tutor-admin-announcements-list {
-    .new-announcement-wrap {
-        background-color: #fff;
-        .new-announcement-button button {
-            font-style: normal;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 32px;
-            text-align: center;
-            color: #FFFFFF;
-            background: #1973AA;
-            border-radius: 6px;
-            &:hover {
-                background: #1973AA;
-            }
-        }
+  .new-announcement-wrap {
+    background-color: #fff;
+    .new-announcement-button button {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 32px;
+      text-align: center;
+      color: #ffffff;
+      background: #1973aa;
+      border-radius: 6px;
+      &:hover {
+        background: #1973aa;
+      }
     }
-    .tutor-announcement-big-icon {
-        i {
-            background: #E9EDFB;
-            border-radius: 100%;
-            width: 56px;
-            height: 56px;
-            color: #1973AA;
-            padding: 20px;
-            font-size: 24px;
-        }
+  }
+  .tutor-announcement-big-icon {
+    i {
+      background: #e9edfb;
+      border-radius: 100%;
+      width: 56px;
+      height: 56px;
+      color: #1973aa;
+      padding: 20px;
+      font-size: 24px;
     }
-    //large device
-    @media screen and (min-width: 1200px) {
-        table.tutor-ui-table td {
-            padding: 0 10px !important;
-        }
-        table.tutor-ui-table td:first-child {
-            padding-left: 20px !important;
-        }
+  }
+  .announcement-action-button {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-column-gap: 20px;
+    -moz-column-gap: 20px;
+    column-gap: 20px;
+    margin-right: -25px;
+    @media only screen and (max-width: 767px) {
+      button:last-child {
+        margin-top: 10px;
+      }
     }
+  }
+  //large device
+  @media screen and (min-width: 1200px) {
+    table.tutor-ui-table td {
+      padding: 0 10px !important;
+    }
+    table.tutor-ui-table td:first-child {
+      padding-left: 20px !important;
+    }
+  }
 }

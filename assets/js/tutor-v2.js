@@ -3426,7 +3426,7 @@ window.jQuery(document).ready(function ($) {
   \*************************************/
 /***/ (() => {
 
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener("DOMContentLoaded", function () {
   var _this = this;
 
   var getCellValue = function getCellValue(tr, idx) {
@@ -3436,21 +3436,21 @@ window.addEventListener('DOMContentLoaded', function () {
   var comparer = function comparer(idx, asc) {
     return function (a, b) {
       return function (v1, v2) {
-        return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
+        return v1 !== "" && v2 !== "" && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
       }(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
     };
   };
 
   document.querySelectorAll(".tutor-table-rows-sorting").forEach(function (th) {
-    return th.addEventListener('click', function (e) {
-      var table = th.closest('table');
-      var tbody = table.querySelector('tbody');
+    return th.addEventListener("click", function (e) {
+      var table = th.closest("table");
+      var tbody = table.querySelector("tbody");
       var currentTarget = e.currentTarget;
       var icon = currentTarget.querySelector(".a-to-z-sort-icon"); // If a-to-z icon
 
       if (icon) {
         // swap class name to change icon
-        if (icon.classList.contains('ttr-ordering-a-to-z-filled')) {
+        if (icon.classList.contains("ttr-ordering-a-to-z-filled")) {
           icon.classList.remove("ttr-ordering-a-to-z-filled");
           icon.classList.add("ttr-ordering-z-to-a-filled");
         } else {
@@ -3462,7 +3462,7 @@ window.addEventListener('DOMContentLoaded', function () {
         // Order up-down-icon
         var _icon = currentTarget.querySelector(".up-down-icon");
 
-        if (_icon.classList.contains('ttr-order-down-filled')) {
+        if (_icon.classList.contains("ttr-order-down-filled")) {
           _icon.classList.remove("ttr-order-down-filled");
 
           _icon.classList.add("ttr-order-up-filled");
@@ -3473,7 +3473,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      Array.from(tbody.querySelectorAll('tr')).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
+      Array.from(tbody.querySelectorAll("tr:not(.tutor-do-not-sort)")).sort(comparer(Array.from(th.parentNode.children).indexOf(th), _this.asc = !_this.asc)).forEach(function (tr) {
         return tbody.appendChild(tr);
       });
     });
@@ -4206,13 +4206,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helper_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helper/response */ "./assets/react/helper/response.js");
 
 window.jQuery(document).ready(function ($) {
-  var __ = wp.i18n.__; // Change badge
+  var __ = wp.i18n.__; // Change view as mode at frontend dashboard
+
+  $('.tutor-dashboard-qna-vew-as input[type="checkbox"]').prop('disabled', false);
+  $(document).on('change', '.tutor-dashboard-qna-vew-as input[type="checkbox"]', function () {
+    var is_instructor = $(this).prop('checked');
+    $(this).prop('disabled', true);
+    window.location.replace($(this).data(is_instructor ? 'as_instructor_url' : 'as_student_url'));
+  }); // Change badge
 
   $(document).on('click', '.tutor-qna-badges [data-action]', function (e) {
     e.preventDefault();
     var qna_action = $(this).data('action');
     var question_id = $(this).closest('[data-question_id]').data('question_id');
     var button = $(this);
+    console.log('Clicked here');
     $.ajax({
       url: _tutorobject.ajaxurl,
       type: 'POST',
@@ -4236,6 +4244,7 @@ window.jQuery(document).ready(function ($) {
           // Get toggle class
           var remove_class = button.data(new_value == 1 ? 'state-class-0' : 'state-class-1');
           var add_class = button.data(new_value == 1 ? 'state-class-1' : 'state-class-0');
+          console.log(remove_class, add_class);
           var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
           class_element.addClass(add_class).removeClass(remove_class);
         } // Toggle text if togglable text defined
@@ -4254,9 +4263,9 @@ window.jQuery(document).ready(function ($) {
     });
   }); // Save/update question/reply
 
-  $(document).on('click', '.tutor-qa-reply button', function () {
+  $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button', function () {
     var button = $(this);
-    var form = button.closest('.tutor-qa-reply');
+    var form = button.closest('[data-question_id]');
     var question_id = button.closest('[data-question_id]').data('question_id');
     var course_id = button.closest('[data-course_id]').data('course_id');
     var context = button.closest('[data-context]').data('context');
@@ -5113,11 +5122,6 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
     }, dayCount ? dayCount > 1 ? "".concat(dayCount, " days selected") : "".concat(dayCount, " day selected") : '0 day selected'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       className: "tutor-btns"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-      className: "tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md",
-      onClick: function onClick() {
-        return handleCalendarClose();
-      }
-    }, "Cancel"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
       type: "button",
       className: "tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md",
       onClick: applyDateRange

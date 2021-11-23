@@ -250,14 +250,14 @@ $filters = array(
 							<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>"/>
+							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>"/>
 						</div>
 					</div>
 				</div>
 				<div class="tutor-bs-row tutor-mx-0">
 					<div class="tutor-bs-col">
 						<label class="tutor-form-label">
-							<?php esc_html_e( 'Email', 'tutor' ); ?>
+							<?php esc_html_e( 'Email Address', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
 							<input type="email" name="email"  class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Email', 'tutor' ); ?>" required/>
@@ -288,7 +288,10 @@ $filters = array(
 				<div class="tutor-bs-row tutor-mx-0">
 					<div class="tutor-bs-col">
 						<label class="tutor-form-label">
-							<?php esc_html_e( 'Bio(Optional)', 'tutor' ); ?>
+							<?php esc_html_e( 'Bio', 'tutor' ); ?>
+							<span class="text-medium-caption" style="color: #999ead;">
+								<?php esc_html_e( '(Optional)', 'tutor' ); ?>
+							</span>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
 							<textarea  name="tutor_profile_bio" rows="3" style="width: 100%;" placeholder="<?php esc_html_e( 'Write Your Bio...', 'tutor' ); ?>"></textarea>
