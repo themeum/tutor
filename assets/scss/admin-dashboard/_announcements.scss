@@ -1,4 +1,7 @@
 .tutor-admin-announcements-list {
+  p {
+    margin: 0;
+  }
   .new-announcement-wrap {
     background-color: #fff;
     .new-announcement-button button {
@@ -42,9 +45,6 @@
   }
   //large device
   @media screen and (min-width: 1200px) {
-    table.tutor-ui-table td {
-      padding: 0 10px !important;
-    }
     table.tutor-ui-table td:first-child {
       padding-left: 20px !important;
     }

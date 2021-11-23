@@ -8,7 +8,6 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 
 	// Assign fallback course id
 	( ! $course_id && count( $courses ) ) ? $course_id = $courses[0]->ID : 0;
-
 	?>
 	<form class="tutor-modal modal-sticky-header-footer tutor-announcements-form" id="<?php echo $id; ?>">
 		<span class="tutor-modal-overlay"></span>
@@ -235,7 +234,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 					<tr id="<?php echo $row_id; ?>">
 						<?php if ( is_admin() ) : ?>
 							<td data-th="<?php esc_html_e( 'Select', 'tutor' ); ?>">
-								<div class="tutor-form-check tutor-mb-15">
+								<div class="tutor-form-check">
 									<input
 										id="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>"
 										type="checkbox"
