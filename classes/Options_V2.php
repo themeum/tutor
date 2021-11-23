@@ -462,10 +462,10 @@ class Options_V2 {
 								'default'        => 'flexible',
 								'select_options' => false,
 								'options'        => array(
-									'flexible' => __( 'Flexible', 'tutor' ),
-									'strict'   => __( 'Strict Mode', 'tutor' ),
+									'flexible' => __( 'Students can complete courses anytime in the Flexible mode', 'tutor' ),
+									'strict'   => __( 'Students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
 								),
-								'desc'           => __( 'Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
+								'desc'           => __( 'Choose when a user can click on the <strong>“Complete Course”</strong> button', 'tutor' ),
 							),
 							array(
 								'key'         => 'course_retake_feature',
@@ -663,7 +663,7 @@ class Options_V2 {
 								'label'       => __( 'Enable Revenue Sharing', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Content description', 'tutor' ),
+								'desc'        => __( 'Allow to share revenue generated from courses with course creators.', 'tutor' ),
 							),
 							array(
 								'key'     => 'statement_show_per_page',
@@ -690,15 +690,17 @@ class Options_V2 {
 							),
 							array(
 								'key'         => 'fees_name',
-								'type'        => 'text',
+								'type'        => 'textarea',
 								'label'       => __( 'Fee Description', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
+								'placeholder' => __( 'Fee Description', 'tutor' ),
+								'desc'        => __( 'Set a description for the fee that you are deducting. Make sure to give a reasonable explanation to maintain transparency with your site’s instructors', 'tutor' ),
 								'default'     => 'free',
 							),
 							array(
 								'key'          => 'fee_amount_type',
 								'type'         => 'group_fields',
 								'label'        => __( 'Fee Amount & Type', 'tutor' ),
+								'desc'         => __( 'Select the fee type and add fee amount/percentage', 'tutor' ),
 								'group_fields' => array(
 									'fees_type'   => array(
 										'type'    => 'select',
@@ -733,22 +735,22 @@ class Options_V2 {
 								'type'    => 'number',
 								'label'   => __( 'Minimum Days for Balance to be Available', 'tutor' ),
 								'default' => '80',
-								'desc'    => __( 'Instructors should earn equal or above this amount to make a withdraw request.', 'tutor' ),
+								'desc'    => __( 'Any income has to stay this amount of days in the platform before it is available for withdrawal.', 'tutor' ),
 							),
 							array(
 								'key'     => 'tutor_withdrawal_methods',
 								'type'    => 'checkbox_horizontal',
-								'label'   => __( 'Enable withdraw method', 'tutor' ),
+								'label'   => __( 'Enable Withdraw Method', 'tutor' ),
 								'default' => array( 'bank_transfer_withdraw' ),
 								'options' => $methods_array,
-								'desc'    => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
+								'desc'    => __( 'Set how you would like to withdraw money from the website.', 'tutor' ),
 							),
 							array(
 								'key'     => 'tutor_bank_transfer_withdraw_instruction',
 								'type'    => 'textarea',
 								'label'   => __( 'Bank Instructions', 'tutor' ),
 								'default' => __( 'Write the up to date bank informations of your instructor here.', 'tutor' ),
-								'desc'    => __( 'Write instruction for the instructor to fill bank information', 'tutor' ),
+								'desc'    => __( 'Allow to get bank instructions to conduct the withdrawal', 'tutor' ),
 							),
 						),
 					),
@@ -1396,7 +1398,7 @@ class Options_V2 {
 								'label'       => __( 'Gutenberg Editor', 'tutor' ),
 								'default'     => 'off',
 								'label_title' => __( '', 'tutor' ),
-								'desc'        => __( 'Use Gutenberg editor on course description area.', 'tutor' ),
+								'desc'        => __( 'Allow to create your courses using the Glutenberg Editor.', 'tutor' ),
 							),
 							array(
 								'key'         => 'hide_course_from_shop_page',
@@ -1462,7 +1464,7 @@ class Options_V2 {
 							array(
 								'key'         => 'disable_tutor_native_login',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Disbale Tutor Login', 'tutor' ),
+								'label'       => __( 'Disable Tutor Login', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'on',
 								'desc'        => __( 'Disable to use the default WordPress login page', 'tutor' ),

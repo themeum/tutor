@@ -11,7 +11,7 @@ $field_key     = sanitize_key( $field['key'] );
 $field_event   = sanitize_key( $field['event'] );
 $default       = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
 $option_value  = $this->get( esc_attr( $field_key . '.' . $field_event ), $default );
-$field_id      = sanitize_key( 'field_' . $field_key );
+$field_id      = sanitize_key( 'field_' . $field_key . '_' . $field_event );
 $tooltip_desc  = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
