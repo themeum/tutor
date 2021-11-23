@@ -25,7 +25,7 @@ $is_instructor = tutor_utils()->is_instructor( $user_id );
 
 $profile_layout = tutor_utils()->get_option( 'public_profile_layout', 'private' );
 
-if ( 'private' === $profile_layout ) {
+if ( 'private' === $profile_layout && $is_instructor ) {
 	// Disable profile access then.
 	wp_redirect( get_home_url() );
 	exit;

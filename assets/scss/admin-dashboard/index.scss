@@ -7,3 +7,9 @@
 @import "./v2/dashborad-custom.scss";
 @import "./segments/withdraw";
 @import '../modules/qna.scss';
+
+table.tutor-ui-table.tutor-table-with-checkbox {
+    .td-checkbox input[type='checkbox'] {
+        margin: 0;
+    }
+}
