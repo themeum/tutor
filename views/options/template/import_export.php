@@ -67,23 +67,27 @@
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>
-						<div class="popup-opener">
-							<button type="button" class="popup-btn">
-								<span class="toggle-icon"></span>
+						<div class="tutor-popup-opener">
+							<button
+							type="button"
+							class="popup-btn"
+							data-tutor-popup-target="popup-<?php echo esc_attr( $key ); ?>"
+							>
+							<span class="toggle-icon"></span>
 							</button>
-							<ul class="popup-menu">
-								<li>
-									<a class="export_single_settings" data-id="<?php echo $key; ?>">
-										<span class="ttr-msg-archive-filled"></span>
-										<span>Download</span>
-									</a>
-								</li>
-								<li>
-									<a class="delete_single_settings" data-id="<?php echo $key; ?>">
-										<span class="ttr-delete-fill-filled"></span>
-										<span>Delete</span>
-									</a>
-								</li>
+							<ul id="popup-<?php echo esc_attr( $key ); ?>" class="popup-menu">
+							<li>
+								<a class="export_single_settings" data-id="<?php echo $key; ?>">
+									<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+									<span class="text-regular-body color-text-white">Download</span>
+								</a>
+							</li>
+							<li>
+								<a class="delete_single_settings" data-id="<?php echo $key; ?>">
+									<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+									<span class="text-regular-body color-text-white">Delete</span>
+								</a>
+							</li>
 							</ul>
 						</div>
 					</div>

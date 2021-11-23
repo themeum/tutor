@@ -219,7 +219,7 @@ class Options_V2 {
 		$request = json_decode( str_replace( '\"', '"', $request ), true );
 
 		$save_import_data['datetime']             = $time;
-		$save_import_data['history_date']         = date( 'j M, Y, g:i a', $time );
+		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
 		$save_import_data['datatype']             = 'imported';
 		$save_import_data['dataset']              = $request['data'];
 		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
@@ -231,7 +231,7 @@ class Options_V2 {
 		}
 		if ( ! empty( $get_option_data ) && null !== $save_import_data['dataset'] ) {
 
-			$update_option = array_merge( $get_option_data, $import_data );
+			$update_option = array_merge( $import_data, $get_option_data );
 
 			$update_option = tutor_utils()->sanitize_recursively( $update_option );
 
