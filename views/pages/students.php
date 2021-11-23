@@ -113,7 +113,7 @@ $filters = array(
 							<div class="td-avatar">
 								<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
 								<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-								<p class="color-text-primary text-medium-body">
+								<p class="color-text-primary text-medium-body tutor-m-0">
 									<?php esc_html_e( $list->display_name ); ?>
 								</p>
 								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>

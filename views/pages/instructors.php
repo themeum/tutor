@@ -141,9 +141,9 @@ $filters = array(
 								<div class="td-avatar">
 								<?php $avatar_url = get_avatar_url( $list->ID ); ?>
 									<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-									<p class="color-text-primary text-medium-body">
-									<?php echo esc_html( $list->display_name ); ?>
-									</p>
+									<span class="color-text-primary text-medium-body">
+										<?php echo esc_html( $list->display_name ); ?>
+									</span>
 								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
 									<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
 										<span class="ttr-detail-link-filled tutor-mt-5"></span>
@@ -224,7 +224,7 @@ $filters = array(
 							<?php esc_html_e( 'First Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" required/>
+							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 					<div class="tutor-bs-col">
@@ -232,7 +232,7 @@ $filters = array(
 							<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="last_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" required/>
+							<input type="text" name="last_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
@@ -242,7 +242,7 @@ $filters = array(
 							<?php esc_html_e( 'User Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>"/>
+							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 					<div class="tutor-bs-col">
@@ -250,7 +250,7 @@ $filters = array(
 							<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>"/>
+							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
