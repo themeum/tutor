@@ -5,8 +5,10 @@
  * @package Tutor LMS
  * @since 2.0
  */
+$field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
+$field_id  = esc_attr( 'field_' . $field_key );
 if ( ! empty( $field['options'] ) ) { ?>
-	<div class="tutor-option-field-row">
+	<div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 		<div class="type-check d-flex">
 			<?php foreach ( $field['options'] as $option_key => $option ) : ?>

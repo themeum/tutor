@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						section_slug = item.section_slug;
 						section_label = item.section_label;
 						block_label = item.block_label;
-						field_key = item.key;
+						field_key = item.event ? item.key + '_' + item.event : item.key;
 						searchKeyRegex = new RegExp(searchKey, 'ig');
 						// console.log(item_text.match(searchKeyRegex));
 						matchedText = item_text.match(searchKeyRegex)?.[0];

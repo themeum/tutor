@@ -7,7 +7,7 @@ import './dashboard/export-csv';
 jQuery(document).ready(function ($) {
     'use strict';
     /**
-     * wp.i18n translateable functions 
+     * wp.i18n translateable functions
      * @since 1.9.0
     */
     const { __, _x, _n, _nx } = wp.i18n;
@@ -187,7 +187,7 @@ jQuery(document).ready(function ($) {
                         $('form#tutor-answering-quiz').submit();
 
                     } else if (_tutorobject.quiz_options.quiz_when_time_expires === 'autoabandon') {
-                       
+
                         /**
                          *
                          * @type {jQuery}
@@ -198,7 +198,7 @@ jQuery(document).ready(function ($) {
                         var quiz_id = $('#tutor_quiz_id').val();
                         var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
                         var quiz_timeout_data = { quiz_id: quiz_id, action: 'tutor_quiz_timeout' };
-        
+
                         var att = $("#tutor-quiz-time-expire-wrapper").attr('data-attempt-remaining');
 
                         //disable buttons
@@ -206,7 +206,7 @@ jQuery(document).ready(function ($) {
 
                         //add alert text
                         $(".time-remaining span").css('color', '#F44337');
-                        
+
                         $.ajax({
                             url: _tutorobject.ajaxurl,
                             type: 'POST',
@@ -221,7 +221,7 @@ jQuery(document).ready(function ($) {
                                 if ( att > 0 ) {
                                     $(`${alertDiv} .text`).html(
                                         __( 'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: '+ attemptRemaining+'/'+attemptAllowed, 'tutor' )
-                                    );                            
+                                    );
                                 } else {
                                     $(alertDiv).addClass('tutor-alert-danger');
                                     $("#tutor-start-quiz").hide();
@@ -450,14 +450,14 @@ jQuery(document).ready(function ($) {
                     setTimeout(()=>{
                         $('.quiz-attempt-single-question').hide();
                          $nextQuestion.show();
-                    }, 
-                    800);  
+                    },
+                    800);
                 } else {
                     $('.quiz-attempt-single-question').hide();
                      $nextQuestion.show();
                 }
-                
-               
+
+
 
                 /**
                  * If pagination exists, set active class
@@ -610,10 +610,10 @@ jQuery(document).ready(function ($) {
     function feedback_response($question_wrap) {
         var goNext = false;
 
-        // Prepare answer array            
+        // Prepare answer array
         var quiz_answers = JSON.parse(atob(window.tutor_quiz_context.split('').reverse().join('')));
         !Array.isArray(quiz_answers) ? quiz_answers=[] : 0;
-        
+
         // Evaluate result
         var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
         $('.wrong-right-text').remove();
@@ -645,7 +645,7 @@ jQuery(document).ready(function ($) {
                 if ($type === 'checkbox') {
                     var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
                     var checked = $input.is(':checked');
-                
+
                     if (isTrue && !checked) {
                         $question_wrap.find('.answer-help-block').html(`<p style="color: #dc3545">${__('More answer for this question is required', 'tutor')}</p>`);
                         validatedTrue = false;
@@ -686,7 +686,7 @@ jQuery(document).ready(function ($) {
                 }
             });
         }
-        
+
         if (validatedTrue) {
             goNext = true;
         }
@@ -745,7 +745,7 @@ jQuery(document).ready(function ($) {
             },
             success: function (data) {
                 if (data.success) {
-                    tutor_toast( 'Success!', data.data.msg, 'success', false );
+                    tutor_toast( 'Success!', data.data.msg, 'success' );
                 }
             },
             complete: function () {
@@ -952,7 +952,7 @@ jQuery(document).ready(function ($) {
             $('#assignment-attached-file').append(field_markup);
             $that.closest('.video_source_upload_wrap_html5').find('input').val(attachment.id);
         });
-        
+
         // Finally, open the modal on click
         frame.open();
     });
@@ -977,7 +977,7 @@ jQuery(document).ready(function ($) {
     }
 
     function auto_draft_save_course_builder() {
-        
+
         var form_data = $('form#tutor-frontend-course-builder').serializeObject();
         form_data.tutor_ajax_action = 'tutor_course_builder_draft_save';
 
@@ -1115,7 +1115,7 @@ jQuery(document).ready(function ($) {
      */
     //$(document).on('click', '.tutor-dropbtn', function (e) {
     $('.tutor-dropbtn').click(function(){
-       
+
         var $content = $(this).parent().find(".tutor-dropdown-content");
         $content.slideToggle(100);
     })
@@ -1131,7 +1131,7 @@ jQuery(document).ready(function ($) {
 
     /**
      * Show hide is course public checkbox (frontend dashboard editor)
-     * 
+     *
      * @since  v.1.7.2
     */
     var price_type = $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]');
@@ -1146,10 +1146,10 @@ jQuery(document).ready(function ($) {
             }
         }).trigger('change');
     }
-    
+
     /**
      * Withdrawal page tooltip
-     * 
+     *
      * @since  v.1.7.4
     */
     // Fully accessible tooltip jQuery plugin with delegation.
@@ -1157,7 +1157,7 @@ jQuery(document).ready(function ($) {
     (function ($) {
         $.fn.tutor_tooltip = function () {
         this
-    
+
         // Delegate to tooltip, Hide if tooltip receives mouse or is clicked (tooltip may stick if parent has focus)
             .on('mouseenter click', '.tooltip', function (e) {
             e.stopPropagation();
@@ -1188,27 +1188,27 @@ jQuery(document).ready(function ($) {
         return this;
         };
     }(jQuery));
-    
+
     // Bind event listener to container element
     jQuery('.tutor-tooltip-inside').tutor_tooltip();
-    
 
-    
+
+
     /**
      * Manage course filter
-     * 
+     *
      * @since  v.1.7.2
     */
     var filter_container = $('.tutor-course-filter-container form');
     var loop_container = $('.tutor-course-filter-loop-container');
     var filter_modifier = {};
-    
+
     // Sidebar checkbox value change
     filter_container.on('submit', function(e) {
         e.preventDefault();
     })
     .find('input').change(function(e){
-        
+
         var filter_criteria = Object.assign( filter_container.serializeObject(), filter_modifier);
         filter_criteria.action = 'tutor_course_filter_ajax';
 
@@ -1234,7 +1234,7 @@ jQuery(document).ready(function ($) {
         if(url){
             url = new URL(url);
             var page = url.searchParams.get("paged");
-            
+
             if(page){
                 e.preventDefault();
                 filter_modifier.page = page;
@@ -1258,11 +1258,11 @@ jQuery(document).ready(function ($) {
             window.sessionStorage.setItem('tutor_refresh_archive', 'yes');
         });
     }
-    
+
     //warn user before leave page if quiz is running
     document.body.addEventListener('click', function(event){
         const target      = event.target;
-        const targetTag   = target.tagName 
+        const targetTag   = target.tagName
         const parentTag   = target.parentElement.tagName;
 
         if ( $tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED' ) {
@@ -1287,7 +1287,7 @@ jQuery(document).ready(function ($) {
                                     type: 'POST',
                                     data: formData,
                                     beforeSend: function() {
-                                       document.querySelector("#tutor-popup-leave").innerHTML = __( 'Leaving...', 'tutor' ); 
+                                       document.querySelector("#tutor-popup-leave").innerHTML = __( 'Leaving...', 'tutor' );
                                     },
                                     success: function(response) {
                                         if(response.success) {
@@ -1315,9 +1315,9 @@ jQuery(document).ready(function ($) {
                                 popup.remove();
                             }
                         },
-                    } 
+                    }
                 };
-        
+
                 popup = new window.tutor_popup($, '', 40).popup(data);
             }
         }
