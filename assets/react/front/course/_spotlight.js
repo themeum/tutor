@@ -3,12 +3,6 @@ jQuery(document).ready(function($) {
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    /* sidetab tab position */
-    const topBar = document.querySelector('.tutor-single-page-top-bar');
-    const sideBar = document.querySelector('.tutor-lesson-sidebar');
-    sideBar.style.top = topBar.clientHeight + 'px';
-    /* sidetab tab position */
-
     const sidebarTabeHandler = function(sideBarTabs) {
         sideBarTabs.forEach((tab) => {
             tab.addEventListener('click', (event) => {
@@ -17,7 +11,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 clearActiveClass(tabConent);
                 event.currentTarget.classList.add('active');
                 let id = event.currentTarget.getAttribute('data-sidebar-tab');
-                console.log(tabConent.querySelector('#' + id));
                 tabConent.querySelector('#' + id).classList.add('active');
             });
         });
@@ -64,33 +57,40 @@ document.addEventListener('DOMContentLoaded', (event) => {
     /* comment text-area focus arrow style */
 
     /* commenting */
-    const parentComments = document.querySelectorAll(
-        '.tutor-comments-list.tutor-parent-comment'
-    );
 
-    const replyComment = document.querySelector(
-        '.tutor-comment-box.tutor-reply-box'
-    );
+    setTimeout(() => {
+        const parentComments = document.querySelectorAll(
+            '.tutor-comments-list.tutor-parent-comment'
+        );
 
-    if (parentComments) {
-        [...parentComments].forEach((parentComment) => {
-            const childComments = parentComment.querySelectorAll(
-                '.tutor-comments-list.tutor-child-comment'
-            );
-            const commentLine = parentComment.querySelector(
-                '.tutor-comment-line'
-            );
-            const childCommentCount = childComments.length;
-            const lastCommentHeight =
-                childComments[childCommentCount - 1].clientHeight;
-            let heightOfLine =
-                lastCommentHeight + replyComment.clientHeight + 20 - 25 + 50;
-            commentLine.style.setProperty(
-                'height',
-                `calc(100% - ${heightOfLine}px)`
-            );
-        });
-    }
+        const replyComment = document.querySelector(
+            '.tutor-comment-box.tutor-reply-box'
+        );
+
+        if (parentComments) {
+            [...parentComments].forEach((parentComment) => {
+                const childComments = parentComment.querySelectorAll(
+                    '.tutor-comments-list.tutor-child-comment'
+                );
+                const commentLine = parentComment.querySelector(
+                    '.tutor-comment-line'
+                );
+                const childCommentCount = childComments.length;
+                const lastCommentHeight =
+                    childComments[childCommentCount - 1].clientHeight;
+                let heightOfLine =
+                    lastCommentHeight +
+                    replyComment.clientHeight +
+                    20 -
+                    25 +
+                    50;
+                commentLine.style.setProperty(
+                    'height',
+                    `calc(100% - ${heightOfLine}px)`
+                );
+            });
+        }
+    }, 2000);
     /* commenting */
 
     // quize drag n drop functionality
@@ -163,7 +163,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         if ('files' in fileUploadField) {
             if (fileUploadField.files.length == 0) {
                 message = 'Select one or more files.';
-                console.log(message);
             } else {
                 let fileCard = '';
                 for (let i = 0; i < fileUploadField.files.length; i++) {
