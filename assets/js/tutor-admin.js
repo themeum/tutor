@@ -1457,42 +1457,9 @@ if (copyBtn && codeTexarea) {
   });
 }
 /**
- * Popup Menu Toggle -> Import/Export > .settings-history
- */
-
-
-var popupToggle = function popupToggle() {
-  var popupToggleBtns = document.querySelectorAll('.tutor-popup-opener .popup-btn');
-  var popupMenus = document.querySelectorAll('.tutor-popup-opener .popup-menu');
-
-  if (popupToggleBtns && popupMenus) {
-    popupToggleBtns.forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        var popupClosest = e.target.closest('.tutor-popup-opener').querySelector('.popup-menu');
-        popupClosest.classList.toggle('visible');
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu !== popupClosest) {
-            popupMenu.classList.remove('visible');
-          }
-        });
-      });
-    });
-    window.addEventListener('click', function (e) {
-      if (!e.target.matches('.tutor-popup-opener .popup-btn')) {
-        popupMenus.forEach(function (popupMenu) {
-          if (popupMenu.classList.contains('visible')) {
-            popupMenu.classList.remove('visible');
-          }
-        });
-      }
-    });
-  }
-};
-
-popupToggle();
-/**
  * Drag and Drop files -> Import/Export > .import-setting
  */
+
 
 var dropZoneInputs = document.querySelectorAll('.drag-drop-zone input[type=file]');
 dropZoneInputs.forEach(function (inputEl) {
@@ -1581,7 +1548,6 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
- // import popupToggle from "./popupToggle";
 
 document.addEventListener("readystatechange", function (event) {
   if (event.target.readyState === "interactive") {
@@ -1593,9 +1559,9 @@ document.addEventListener("readystatechange", function (event) {
     import_history_data();
     export_single_settings();
     reset_default_options();
-    apply_single_settings(); // load_saved_data();
-    // setInterval(function () {
-    //   console.log("working");
+    apply_single_settings(); // setInterval(function () {
+    // load_saved_data();
+    // console.log("working");
     // }, 10000);
   }
 });
@@ -1650,7 +1616,7 @@ function tutor_option_history_load(history_data) {
           value = _ref2[1];
 
       var badgeStatus = value.datatype == "saved" ? " label-primary-wp" : " label-refund";
-      output += "<div class=\"tutor-option-field-row\">\n          <div class=\"tutor-option-field-label\">\n            <p class=\"text-medium-small\">".concat(value.history_date, "\n            <span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\">").concat(value.datatype, "</span>\n            </p>\n          </div>\n          <div class=\"tutor-option-field-input\"><button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n            <div class=\"tutor-popup-opener\"><button type=\"button\" class=\"popup-btn\" data-tutor-popup-target=\"popup-").concat(key, "\"><span class=\"toggle-icon\"></span></button><ul class=\"popup-menu\"><li><a class=\"export_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-msg-archive-filled\"></span><span>Download</span></a></li><li><a class=\"delete_single_settings\" data-id=\"").concat(key, "\"><span class=\"ttr-delete-fill-filled\"></span><span>Delete</span></a></li></ul></div></div>\n        </div>");
+      output = "<div class=\"tutor-option-field-row\">\n\t\t\t\t\t<div class=\"tutor-option-field-label\">\n\t\t\t\t\t\t<p class=\"text-medium-small\">".concat(value.history_date, "\n\t\t\t\t\t\t<span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\"> ").concat(value.datatype, "</span> </p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"tutor-option-field-input\">\n\t\t\t\t\t\t<button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n\n          <div class=\"tutor-popup-opener\">\n            <button\n            type=\"button\"\n            class=\"popup-btn\"\n            data-tutor-popup-target=\"popup-").concat(key, "\"\n            >\n            <span class=\"toggle-icon\"></span>\n            </button>\n            <ul id=\"popup-").concat(key, "\" class=\"popup-menu\">\n            <li>\n              <a class=\"export_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon tutor-v2-icon-test icon-msg-archive-filled color-design-white\"></span>\n                <span class=\"text-regular-body color-text-white\">Download</span>\n              </a>\n            </li>\n            <li>\n              <a class=\"delete_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon tutor-v2-icon-test icon-delete-fill-filled color-design-white\"></span>\n                <span class=\"text-regular-body color-text-white\">Delete</span>\n              </a>\n            </li>\n            </ul>\n          </div>\n          </div>\n        </div>") + output;
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
@@ -1733,38 +1699,46 @@ var import_history_data = function import_history_data() {
   var import_options = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#import_options");
 
   if (import_options) {
-    import_options.onclick = function () {
-      var files = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#drag-drop-input").files;
+    import_options.onclick = function (e) {
+      if (!e.detail || e.detail == 1) {
+        var fileElem = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#drag-drop-input");
+        var files = fileElem.files;
 
-      if (files.length <= 0) {
-        return false;
+        if (files.length <= 0) {
+          tutor_toast('Failed', 'Please add a correctly formated json file', 'error');
+          return false;
+        }
+
+        var fr = new FileReader();
+        fr.readAsText(files.item(0));
+
+        fr.onload = function (e) {
+          var tutor_options = e.target.result;
+          var formData = new FormData();
+          formData.append("action", "tutor_import_settings");
+          formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+          formData.append("time", time_now());
+          formData.append("tutor_options", tutor_options);
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("POST", _tutorobject.ajaxurl);
+          xhttp.send(formData);
+
+          xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4) {
+              tutor_option_history_load(xhttp.responseText);
+              delete_history_data(); // import_history_data();
+
+              setTimeout(function () {
+                tutor_toast("Success", "Data imported successfully!", "success");
+                fileElem.parentNode.parentNode.querySelector('.file-info').innerText = '';
+                fileElem.value = '';
+              }, 200);
+            }
+          };
+        };
       }
 
-      var fr = new FileReader();
-      fr.readAsText(files.item(0));
-
-      fr.onload = function (e) {
-        var tutor_options = e.target.result;
-        var formData = new FormData();
-        formData.append("action", "tutor_import_settings");
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-        formData.append("time", time_now());
-        formData.append("tutor_options", tutor_options);
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", _tutorobject.ajaxurl);
-        xhttp.send(formData);
-
-        xhttp.onreadystatechange = function () {
-          if (xhttp.readyState === 4) {
-            tutor_option_history_load(xhttp.responseText);
-            delete_history_data();
-            import_history_data();
-            setTimeout(function () {
-              tutor_toast("Success", "Data imported successfully!", "success");
-            }, 200);
-          }
-        };
-      };
+      ;
     };
   }
 };

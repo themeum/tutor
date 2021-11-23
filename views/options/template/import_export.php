@@ -67,26 +67,6 @@
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>
-						<!-- <div class="tutor-popup-opener">
-							<button type="button" class="popup-btn">
-								<span class="toggle-icon"></span>
-							</button>
-							<ul class="popup-menu">
-								<li>
-									<a class="export_single_settings" data-id="<?php echo $key; ?>">
-										<span class="ttr-msg-archive-filled"></span>
-										<span>Download</span>
-									</a>
-								</li>
-								<li>
-									<a class="delete_single_settings" data-id="<?php echo $key; ?>">
-										<span class="ttr-delete-fill-filled"></span>
-										<span>Delete</span>
-									</a>
-								</li>
-							</ul>
-						</div> -->
-
 						<div class="tutor-popup-opener">
 							<button
 							type="button"
