@@ -12,7 +12,7 @@
             </div>
             <?php } ?>
             <div class="quiz-question-ans-choice">
-                <input type="text" class="tutor-form-control" placeholder="Write your answer here" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answer_id][<?php echo $answer->answer_id; ?>]" />
+                <input type="text" class="tutor-form-control" placeholder="<?php _e('Write your answer here', 'tutor'); ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answer_id][<?php echo $answer->answer_id; ?>]" />
             </div>
         </div>
     <?php } } ?>
