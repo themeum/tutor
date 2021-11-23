@@ -462,10 +462,10 @@ class Options_V2 {
 								'default'        => 'flexible',
 								'select_options' => false,
 								'options'        => array(
-									'flexible' => __( 'Flexible', 'tutor' ),
-									'strict'   => __( 'Strict Mode', 'tutor' ),
+									'flexible' => __( 'Students can complete courses anytime in the Flexible mode', 'tutor' ),
+									'strict'   => __( 'Students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
 								),
-								'desc'           => __( 'Students can complete courses anytime in the Flexible mode. In the Strict mode, students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
+								'desc'           => __( 'Choose when a user can click on the <strong>“Complete Course”</strong> button', 'tutor' ),
 							),
 							array(
 								'key'         => 'course_retake_feature',

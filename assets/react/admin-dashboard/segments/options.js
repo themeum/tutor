@@ -120,8 +120,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const checkEmailFieldsOnSubmit = (inputFields) => {
 		inputFields.forEach((emailField) => {
+			let pageNeedsValidation = emailField.closest('.tutor-option-nav-page');
 			let invalidLabel = emailField.parentNode.parentNode.querySelector('h5').innerText;
-			let invalidMessage = invalidLabel + ' email is invalid!';
+			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('h2').innerText;
+
+			let invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
 			if (false === validateEmail(emailField.value)) {
 				emailField.style.borderColor = 'red';
 				emailField.focus();
@@ -148,8 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		var button = $('#save_tutor_option');
 		var $form = $(this);
 		var data = $form.serializeObject();
-		// console.log(document.querySelector('[type="email"]').checkValidity());
-		// const inputEmailFields = document.querySelectorAll('[type="email"]');
+
 		if (typeof inputEmailFields !== 'undefined') {
 			checkEmailFieldsOnSubmit(inputEmailFields)
 		}
