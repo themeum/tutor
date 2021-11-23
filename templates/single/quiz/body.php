@@ -78,10 +78,6 @@ if ($attempted_count !== 0) {
 		}
 	}else{
 
-		
-
-
-
 		if ($previous_attempts){
 			do_action('tutor_quiz/previous_attempts_html/before', $previous_attempts, $quiz_id);
 
