@@ -22701,6 +22701,18 @@ input.tutor-form-check-input[type='radio']:checked {
   color: var(--tutor-border-color);
 }
 
+.tutor-dashboard-page input.tutor-form-check-input[type='checkbox']:checked,
+.tutor-dashboard-page input.tutor-form-check-input[type='radio']:checked {
+  border-color: #1973aa;
+  background-color: #1973aa;
+}
+
+.tutor-dashboard-page input.tutor-form-check-input[type='checkbox']:focus,
+.tutor-dashboard-page input.tutor-form-check-input[type='radio']:focus {
+  -webkit-box-shadow: 0 0 0 2px #e1f1fb;
+          box-shadow: 0 0 0 2px #e1f1fb;
+}
+
 select.tutor-form-select {
   width: 100%;
   background-color: #fff;
