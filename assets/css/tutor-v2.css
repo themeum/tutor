@@ -1,6 +1,4 @@
 @charset "UTF-8";
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 .tutor-prefix {
   /*!
  * Bootstrap Grid v5.0.0-beta1 (https://getbootstrap.com/)
@@ -5856,8 +5854,24 @@
   font-size: 50px;
 }
 
+.tutor-icon-55 {
+  font-size: 55px;
+}
+
+.tutor-icon-56 {
+  font-size: 56px;
+}
+
 .tutor-icon-60 {
   font-size: 60px;
+}
+
+.tutor-icon-65 {
+  font-size: 65px;
+}
+
+.tutor-icon-66 {
+  font-size: 66px;
 }
 
 .tutor-icon-70 {
@@ -21367,6 +21381,33 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   text-align: left;
 }
 
+.tutor-modal.tutor-modal-is-close-beside {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.tutor-modal.tutor-modal-is-close-beside .tutor-modal-root {
+  position: relative;
+  overflow: unset;
+  max-height: calc(100% - 100px);
+  min-height: -webkit-min-content;
+  min-height: -moz-min-content;
+  min-height: min-content;
+}
+
+.tutor-modal.tutor-modal-is-close-beside .tutor-modal-close {
+  position: absolute !important;
+  top: 22px !important;
+  right: -67px !important;
+}
+
 .tutor-check-icon {
   height: 15px;
   width: 15px;
@@ -28089,7 +28130,6 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-dropdown-select {
   --h: 58px;
-  width: 305px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

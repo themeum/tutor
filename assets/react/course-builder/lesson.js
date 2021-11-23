@@ -47,7 +47,7 @@
 
 window.jQuery(document).ready(function($){
     
-    const { __, _x, _n, _nx } = wp.i18n;
+    const { __ } = wp.i18n;
     
     enable_sorting_topic_lesson();
     
@@ -79,7 +79,7 @@ window.jQuery(document).ready(function($){
                 $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id});
                 $('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
 
-                var tinymceConfig = tinyMCEPreInit.mceInit.tutor_editor_config;
+                var tinymceConfig = tinyMCEPreInit.mceInit.tutor_lesson_editor_config;
                 if ( ! tinymceConfig){
                     tinymceConfig = tinyMCEPreInit.mceInit.course_description;
                 }
@@ -90,6 +90,7 @@ window.jQuery(document).ready(function($){
                 $(document).trigger('lesson_modal_loaded', {lesson_id, topic_id, course_id});
             },
             complete: function () {
+                console.log('ajax completed');
                 $that.removeClass('tutor-updating-message');
                 quicktags({id : "tutor_lesson_modal_editor"});
             }

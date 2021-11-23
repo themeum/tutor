@@ -29,7 +29,6 @@ Use `className="tutor-modal modal-sticky-header-footer"`
 
     <div id="modal-sticky-1" className="tutor-modal modal-sticky-header-footer">
        <span className="tutor-modal-overlay"></span>
-        
         <div className="tutor-modal-root">
             <div className="tutor-modal-inner">
                 <div className="tutor-modal-header">
@@ -112,21 +111,21 @@ Use `className="tutor-modal modal-sticky-header-footer"`
     </div>
 </Playground>
 
-## Basic Modal
+## Basic Modal - is close beside
 
 <Playground>
     <button data-tutor-modal-target="modal-05" className="tutor-btn">Open modal</button>
 
-    <div id="modal-05" className="tutor-modal">
+    <div id="modal-05" className="tutor-modal tutor-modal-is-close-beside">
         <span className="tutor-modal-overlay"></span>
-        <button data-tutor-modal-close className="tutor-modal-close">
-            <span className="las la-times"></span>
-        </button>
         <div className="tutor-modal-root">
+            <button data-tutor-modal-close className="tutor-modal-close">
+                <span className="tutor-icon-56 ttr-line-cross-line"></span>
+            </button>
             <div className="tutor-modal-inner">
                 <div className="tutor-modal-body tutor-text-center">
                     <div className="tutor-modal-icon">
-                        <img src="https://i.imgur.com/Nx6U2u7.png" alt=""/>
+                        <img src="https://i.imgur.com/Nx6U2u7.png" alt="" />
                     </div>
                     <div className="tutor-modal-text-wrap">
                         <h3 className="tutor-modal-title">Delete This Course?</h3>

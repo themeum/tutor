@@ -219,7 +219,7 @@ class Options_V2 {
 		$request = json_decode( str_replace( '\"', '"', $request ), true );
 
 		$save_import_data['datetime']             = $time;
-		$save_import_data['history_date']         = date( 'j M, Y, g:i a', $time );
+		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
 		$save_import_data['datatype']             = 'imported';
 		$save_import_data['dataset']              = $request['data'];
 		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
@@ -231,7 +231,7 @@ class Options_V2 {
 		}
 		if ( ! empty( $get_option_data ) && null !== $save_import_data['dataset'] ) {
 
-			$update_option = array_merge( $get_option_data, $import_data );
+			$update_option = array_merge( $import_data, $get_option_data );
 
 			$update_option = tutor_utils()->sanitize_recursively( $update_option );
 
@@ -301,7 +301,7 @@ class Options_V2 {
 		do_action( 'tutor_option_save_after' );
 
 		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
-		wp_send_json_success( $_POST );
+		wp_send_json_success( $option );
 	}
 
 	/**
@@ -339,7 +339,8 @@ class Options_V2 {
 		}
 
 		$pages       = tutor_utils()->get_pages();
-		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>lessons</code>/sample-lesson/';
+		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
+		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url();
 
 		$methods_array     = array();
@@ -1557,13 +1558,6 @@ class Options_V2 {
 		include tutor()->path . "views/options/template/{$section['template']}.php";
 		return ob_get_clean();
 	}
-
-	/*
-	 public function this_confirmation( $modal = array() ) {
-		ob_start();
-		require tutor()->path . 'views/options/template/modal-confirm.php';
-		return ob_get_clean();
-	} */
 
 	/**
 	 * Load template inside template dirctory
