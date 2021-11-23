@@ -131,21 +131,7 @@ if ($best_watch_time > 0){
 
 </div>
 <?php } ?>
-
-<div class="course-players flex-center">
-    <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData)); ?>">
-	<?php tutor_lesson_video(); ?>
-    <div class="tutor-lesson-prev flex-center">
-        <a href="<?php echo get_the_permalink($previous_id); ?>">
-            <span class="ttr-angle-left-filled"></span>
-        </a>
-    </div>
-    <div class="tutor-lesson-next flex-center">
-        <a href="<?php echo get_the_permalink($next_id); ?>">
-            <span class="ttr-angle-right-filled"></span>
-        </a>
-    </div>
-</div>
+<?php tutor_lesson_video(); ?>
 
 <div class="tutor-course-spotlight-wrapper">
     <div class="tutor-default-tab tutor-course-details-tab">
