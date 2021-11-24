@@ -9,7 +9,7 @@
  */
 const { __, _x, _n, _nx } = wp.i18n;
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const filterCourse = document.getElementById("tutor-backend-filter-course");
   if (filterCourse) {
     filterCourse.onchange = (e) => {
@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
   }
-
   /**
    * Onsubmit bulk form handle ajax request then reload page
    */
@@ -80,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       }
       if (!bulkIds.length) {
-        alert( __('Select checkbox for action', 'tutor') );
+        alert(__('Select checkbox for action', 'tutor'));
         return;
       }
       formData.set("bulk-ids", bulkIds);
@@ -104,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
           } else {
             tutor_toast(__("Failed", "tutor"), __("Something went wrong, please try again ", "tutor"), "error");
           }
-          
+
         }
       } catch (error) {
         alert(error);
@@ -182,14 +181,14 @@ document.addEventListener("DOMContentLoaded", function() {
         newStatus === "publish"
           ? (putStatus = "select-success")
           : newStatus === "pending"
-          ? (putStatus = "select-warning")
-          : newStatus === 'trash'
-          ? (putStatus = "select-danger" )
-          : "select-default";
+            ? (putStatus = "select-warning")
+            : newStatus === 'trash'
+              ? (putStatus = "select-danger")
+              : "select-default";
 
         // add new status class
-        target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}` );
-  
+        target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
+
         tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
       } else {
         tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
