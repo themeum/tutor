@@ -5117,6 +5117,64 @@ li.tutor-option-nav-item h4 {
   display: block;
 }
 
+.tutor-backend-settings-page .mce-path {
+  display: none !important;
+}
+
+.tutor-backend-settings-page .mce-top-part {
+  border-bottom: 1px solid #c0c3cb;
+}
+
+.tutor-backend-settings-page .mce-top-part::before {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.tutor-backend-settings-page .wp-editor-container {
+  border: 1px solid #c0c3cb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.tutor-backend-settings-page div.mce-toolbar-grp {
+  border-bottom: none;
+  background: none;
+}
+
+.tutor-backend-settings-page div.mce-statusbar {
+  border-top: none;
+}
+
+.tutor-backend-settings-page .image-previewer {
+  width: 100%;
+  overflow: hidden;
+}
+
+.tutor-backend-settings-page .mce-container-body .mce-resizehandle i.mce-i-resize {
+  display: none;
+}
+
+.tutor-backend-settings-page .mce-container-body .mce-resizehandle {
+  margin: auto;
+  left: 0;
+  height: 4px;
+  width: 40px;
+  border-radius: 6px;
+  bottom: 0;
+  background: #c0c3cb;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tutor-backend-settings-page .wp-editor-container .mce-container-body .mce-resizehandle:active,
+.tutor-backend-settings-page .wp-editor-container:hover .mce-container-body .mce-resizehandle {
+  visibility: visible;
+  opacity: 1;
+  bottom: 10px;
+}
+
 .tutor-option-header {
   -webkit-box-align: center;
       -ms-flex-align: center;

@@ -7,6 +7,7 @@ import "./segments/reset";
 import "./addons-list/addons-list-main";
 import "./segments/filter";
 import "./segments/withdraw";
+import "./segments/editor_full";
 
 const toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
 toggleChange.forEach((element) => {

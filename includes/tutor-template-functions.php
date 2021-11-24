@@ -830,11 +830,11 @@ if ( ! function_exists('tutor_course_target_reviews_html')) {
     function tutor_course_target_reviews_html($echo = true) {
         ob_start();
         tutor_load_template( 'single.course.reviews' );
-        
+
         if(tutor_utils()->is_enrolled()) {
             tutor_course_target_review_form_html();
         }
-        
+
         $output = apply_filters( 'tutor_course/single/reviews_html', ob_get_clean() );
 
         if ($echo){

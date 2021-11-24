@@ -853,6 +853,16 @@ if (colorPickerInputs) {
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/editor_full.js":
+/*!**************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/editor_full.js ***!
+  \**************************************************************/
+/***/ (() => {
+
+console.log('editor full');
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/filter.js":
 /*!*********************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/filter.js ***!
@@ -31391,6 +31401,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_9__);
+
 
 
 
