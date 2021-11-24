@@ -20965,7 +20965,13 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 }
 
 .tutor-modal .tutor-modal-root .tutor-modal-body {
-  padding: 60px 70px;
+  padding: 40px 30px;
+}
+
+@media (min-width: 768px) {
+  .tutor-modal .tutor-modal-root .tutor-modal-body {
+    padding: 60px 70px;
+  }
 }
 
 .tutor-modal.tutor-is-sm .tutor-modal-root {
@@ -21404,8 +21410,28 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 
 .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close {
   position: absolute !important;
-  top: 22px !important;
-  right: -67px !important;
+  top: 20px !important;
+  right: -20px !important;
+}
+
+@media (min-width: 768px) {
+  .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close {
+    position: absolute !important;
+    top: 22px !important;
+    right: -67px !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    color: gray !important;
+  }
+  .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close > * {
+    font-size: 30px;
+  }
 }
 
 .tutor-check-icon {
@@ -22675,6 +22701,18 @@ input.tutor-form-check-input[type='radio']:checked {
   color: var(--tutor-border-color);
 }
 
+.tutor-dashboard-page input.tutor-form-check-input[type='checkbox']:checked,
+.tutor-dashboard-page input.tutor-form-check-input[type='radio']:checked {
+  border-color: #1973aa;
+  background-color: #1973aa;
+}
+
+.tutor-dashboard-page input.tutor-form-check-input[type='checkbox']:focus,
+.tutor-dashboard-page input.tutor-form-check-input[type='radio']:focus {
+  -webkit-box-shadow: 0 0 0 2px #e1f1fb;
+          box-shadow: 0 0 0 2px #e1f1fb;
+}
+
 select.tutor-form-select {
   width: 100%;
   background-color: #fff;
@@ -23800,6 +23838,14 @@ table.tutor-ui-table.table-dashboard-course-list td:nth-child(1), table.tutor-ui
   vertical-align: top;
 }
 
+table.tutor-ui-table.table-dashboard-course-list .td-checkbox input[type='checkbox'] {
+  margin-top: 7px;
+}
+
+table.tutor-ui-table:not(.td-align-middle) .td-checkbox input[type='checkbox'] {
+  margin-top: 7px;
+}
+
 table.tutor-ui-table .td-tutor-rating .tutor-rating-stars {
   -webkit-box-align: start;
       -ms-flex-align: start;
@@ -24004,10 +24050,6 @@ table.tutor-ui-table input.tutor-form-check-input[type='checkbox'] {
 table.tutor-ui-table input.tutor-form-check-input[type='checkbox']:focus {
   -webkit-box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
           box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
-}
-
-table.tutor-ui-table .td-checkbox input[type='checkbox'] {
-  margin-top: 7px;
 }
 
 table.tutor-ui-table .td-list-item .list-item-checklist input.tutor-form-check-input[type='checkbox'] {

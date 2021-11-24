@@ -186,6 +186,17 @@
                                 top: 25px;
                                 background: $stroke-light-30;
                             }
+                            &:before {
+                                content: '';
+                                position: absolute;
+                                width: 45px;
+                                height: 1px;
+                                left: -68px;
+                                top: 3px;
+                                background: $stroke-light-30;
+                                transform: rotate(90deg);
+                                z-index: 9;
+                            }
                             .tutor-single-comment {
                                 .tutor-actual-comment {
                                     .tutor-comment-author {

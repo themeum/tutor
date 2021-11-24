@@ -39,6 +39,30 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   /**
+   * onclick apply button show checkbox select message
+   * if not selected
+   */
+  const applyButton = document.getElementById('tutor-admin-bulk-action-btn');
+  const modal = document.querySelector('.tutor-bulk-modal-disabled');
+  applyButton.onclick = () => {
+    const bulkIds = [];
+    const bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+    for (let field of bulkFields) {
+      if (field.checked) {
+        bulkIds.push(field.value);
+      }
+    }
+    if (bulkIds.length) {
+      modal.setAttribute('id', 'tutor-bulk-confirm-popup');
+    } else {
+      tutor_toast(__("Warning", "tutor"), __("Nothing was selected for bulk action.", "tutor"), "error");
+      if (modal.hasAttribute('id')) {
+        modal.removeAttribute('id');
+      };
+    }
+  }
+
+  /**
    * Onsubmit bulk form handle ajax request then reload page
    */
   const bulkForm = document.getElementById("tutor-admin-bulk-action-form");
