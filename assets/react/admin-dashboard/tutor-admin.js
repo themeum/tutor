@@ -8,6 +8,7 @@ import "./addons-list/addons-list-main";
 import "./segments/filter";
 import "./segments/withdraw";
 import ajaxHandler from './segments/filter';
+import "./segments/editor_full";
 
 const toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
 toggleChange.forEach((element) => {
@@ -160,7 +161,7 @@ jQuery(document).ready(function ($) {
    * Add instructor
    * @since v.1.0.3
    */
-   $(document).on("submit", "#tutor-new-instructor-form", function (e) {
+  $(document).on("submit", "#tutor-new-instructor-form", function (e) {
     e.preventDefault();
     var $that = $(this);
     var formData = $that.serializeObject();
@@ -172,7 +173,7 @@ jQuery(document).ready(function ($) {
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: formData,
-      beforeSend: function() {
+      beforeSend: function () {
         responseContainer.html('');
         loadingButton.html(`<div class="ball"></div>
         <div class="ball"></div>
@@ -182,22 +183,22 @@ jQuery(document).ready(function ($) {
       success: function success(data) {
         if (!data.success) {
           if (data.data.errors.errors) {
-            for(let v of Object.values(data.data.errors.errors)) {
+            for (let v of Object.values(data.data.errors.errors)) {
               responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
             }
           } else {
-            for(let v of Object.values(data.data.errors)) {
+            for (let v of Object.values(data.data.errors)) {
               responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
             }
           }
 
         } else {
-         $('#tutor-new-instructor-form').trigger("reset");
+          $('#tutor-new-instructor-form').trigger("reset");
           tutor_toast(__("Success", "tutor"), __("New Instructor Added", "tutor"), "success");
           location.reload();
         }
       },
-      complete: function() {
+      complete: function () {
         loadingButton.html(prevText);
       }
     });
@@ -260,11 +261,11 @@ jQuery(document).ready(function ($) {
   /**
    * Password Reveal
    */
-  $(document).on('click', ".tutor-password-reveal", function(e) {
+  $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon
     $(this).toggleClass('ttr-eye-filled ttr-eye-fill-filled');
     //toggle attr
-    $(this).next().attr('type', function(index, attr) {
+    $(this).next().attr('type', function (index, attr) {
       return attr == 'password' ? 'text' : 'password';
     });
   });
