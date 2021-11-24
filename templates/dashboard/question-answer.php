@@ -56,14 +56,10 @@ $offset = ($current_page-1)*$per_page;
 $total_items = tutor_utils()->get_total_qa_question();
 $questions = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id() );
 
-if (tutor_utils()->count($questions)) {
-    tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
-        'qna_list' => $questions,
-        'context' => 'frontend-dashboard-qna-table-'.$view_as
-    ));
-} else {
-    echo 'No Question Yet';
-}
+tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
+    'qna_list' => $questions,
+    'context' => 'frontend-dashboard-qna-table-'.$view_as
+));
 ?>
 <div class="tutor-dashboard-info-table-wrap tutor-dashboard-q-and-a">
     <div class="tutor-pagination">

@@ -8,7 +8,7 @@ import range from "lodash.range";
 // import './TutorDatepicker.scss';
 // import '../../../bundle/main.min.css';
 
-const TutorDatepicker = () => {
+const TutorDatepicker = (data) => {
   const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : "Y-M-d";
   const url = new URL(window.location.href);
   const params = url.searchParams;
@@ -68,9 +68,10 @@ const TutorDatepicker = () => {
       <DatePicker
         placeholderText={dateFormat}
         selected={startDate}
-        onChange={(date) => handleCalendarChange(date)}
+        name={data.input_name || ''}
+        onChange={(date) => data.prevent_redirect ? setStartDate(date) : handleCalendarChange(date)}
         showPopperArrow={false}
-        shouldCloseOnSelect={false}
+        shouldCloseOnSelect={true}
         onCalendarClose={handleCalendarClose}
         onClick={handleCalendarClose}
         dateFormat={dateFormat}

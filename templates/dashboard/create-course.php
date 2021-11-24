@@ -210,7 +210,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 												<span class="tutor-input-prepand">
 												<?php echo $currency_symbol; ?>
 												</span>
-												<input type="number" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e( 'Set course price', 'tutor' ); ?>">
+												<input type="number" class="tutor-form-number-verify" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e( 'Set course price', 'tutor' ); ?>" min="0">
 											</label>
 										</div>
 									</div>

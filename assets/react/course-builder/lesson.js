@@ -87,7 +87,7 @@ window.jQuery(document).ready(function($){
                 tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_lesson_modal_editor' );
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_lesson_modal_editor");
 
-                $(document).trigger('lesson_modal_loaded', {lesson_id, topic_id, course_id});
+                window.dispatchEvent(new Event(_tutorobject.content_change_event));
             },
             complete: function () {
                 console.log('ajax completed');
@@ -150,7 +150,14 @@ window.jQuery(document).ready(function($){
     */
     var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
     var autofill_url_timeout;
-    $('body').on('paste', video_url_input, function(e) {
+    $(document).on('blur', video_url_input, function() {
+        var url = $(this).val();
+        var regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+        if(url && regex.test(url)==false) {
+            $(this).val('');
+            tutor_toast('Error!', __('Invalid Video URL', 'tutor'), 'error');
+        }
+    }).on('paste', video_url_input, function(e) {
         e.stopImmediatePropagation();
 
         var root = $(this).closest('.tutor-lesson-modal-wrap').find('.tutor-option-field-video-duration');

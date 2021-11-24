@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
    */
   const applyButton = document.getElementById('tutor-admin-bulk-action-btn');
   const modal = document.querySelector('.tutor-bulk-modal-disabled');
-  applyButton.onclick = () => {
+  !applyButton ? 0 : applyButton.onclick = () => {
     const bulkIds = [];
     const bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
     for (let field of bulkFields) {

@@ -925,8 +925,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var applyButton = document.getElementById('tutor-admin-bulk-action-btn');
   var modal = document.querySelector('.tutor-bulk-modal-disabled');
-
-  applyButton.onclick = function () {
+  !applyButton ? 0 : applyButton.onclick = function () {
     var bulkIds = [];
     var bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
 
@@ -962,7 +961,6 @@ document.addEventListener("DOMContentLoaded", function () {
   /**
    * Onsubmit bulk form handle ajax request then reload page
    */
-
 
   var bulkForm = document.getElementById("tutor-admin-bulk-action-form");
 
@@ -31607,44 +31605,6 @@ jQuery(document).ready(function ($) {
     $(this).next().attr('type', function (index, attr) {
       return attr == 'password' ? 'text' : 'password';
     });
-  });
-  /**
-   * Add Assignment
-   */
-
-  $(document).on("click", ".add-assignment-attachments", function (event) {
-    event.preventDefault();
-    var $that = $(this);
-    var frame; // If the media frame already exists, reopen it.
-
-    if (frame) {
-      frame.open();
-      return;
-    } // Create a new media frame
-
-
-    frame = wp.media({
-      title: __("Select or Upload Media Of Your Choice", "tutor"),
-      button: {
-        text: __("Upload media", "tutor")
-      },
-      multiple: false // Set to true to allow multiple files to be selected
-
-    }); // When an image is selected in the media frame...
-
-    frame.on("select", function () {
-      // Get media attachment details from the frame state
-      var attachment = frame.state().get("selection").first().toJSON();
-      var field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">' + attachment.filename + '</p><input type="hidden" name="tutor_assignment_attachments[]" value="' + attachment.id + '"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
-      $("#assignment-attached-file").append(field_markup);
-      $that.closest(".video_source_wrap_html5").find("input").val(attachment.id);
-    }); // Finally, open the modal on click
-
-    frame.open();
-  });
-  $(document).on("click", ".remove-assignment-attachment-a", function (event) {
-    event.preventDefault();
-    $(this).closest(".tutor-individual-attachment-file").remove();
   });
   /**
    * Used for backend profile photo upload.
