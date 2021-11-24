@@ -926,39 +926,41 @@ document.addEventListener("DOMContentLoaded", function () {
   var applyButton = document.getElementById('tutor-admin-bulk-action-btn');
   var modal = document.querySelector('.tutor-bulk-modal-disabled');
 
-  applyButton.onclick = function () {
-    var bulkIds = [];
-    var bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+  if (applyButton) {
+    applyButton.onclick = function () {
+      var bulkIds = [];
+      var bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
 
-    var _iterator = _createForOfIteratorHelper(bulkFields),
-        _step;
+      var _iterator = _createForOfIteratorHelper(bulkFields),
+          _step;
 
-    try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var field = _step.value;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var field = _step.value;
 
-        if (field.checked) {
-          bulkIds.push(field.value);
+          if (field.checked) {
+            bulkIds.push(field.value);
+          }
         }
-      }
-    } catch (err) {
-      _iterator.e(err);
-    } finally {
-      _iterator.f();
-    }
-
-    if (bulkIds.length) {
-      modal.setAttribute('id', 'tutor-bulk-confirm-popup');
-    } else {
-      tutor_toast(__("Warning", "tutor"), __("Nothing was selected for bulk action.", "tutor"), "error");
-
-      if (modal.hasAttribute('id')) {
-        modal.removeAttribute('id');
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
       }
 
-      ;
-    }
-  };
+      if (bulkIds.length) {
+        modal.setAttribute('id', 'tutor-bulk-confirm-popup');
+      } else {
+        tutor_toast(__("Warning", "tutor"), __("Nothing was selected for bulk action.", "tutor"), "error");
+
+        if (modal.hasAttribute('id')) {
+          modal.removeAttribute('id');
+        }
+
+        ;
+      }
+    };
+  }
   /**
    * Onsubmit bulk form handle ajax request then reload page
    */
