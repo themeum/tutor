@@ -156,14 +156,20 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
 							</div>
 						</th>
-						<th>
+						<th class="tutor-table-rows-sorting">
 							<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Date', 'tutor' ); ?>
+								<span class="text-regular-small">
+									<?php esc_html_e( 'Date', 'tutor' ); ?>
+								</span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
 							</div>
 						</th>
-						<th>
+						<th class="tutor-table-rows-sorting">
 							<div class="text-regular-small color-text-subsued">
-							<?php esc_html_e( 'Title', 'tutor' ); ?>
+								<span class="text-regular-small">
+									<?php esc_html_e( 'Title', 'tutor' ); ?>
+								</span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
@@ -220,7 +226,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 
 								<td data-th="<?php esc_html_e( 'Course Name', 'tutor' ); ?>" class="column-fullwidth">
 									<div class="td-course color-text-primary text-medium-body">
-										<a href="#">
+										<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
 											<?php echo esc_html( $post->post_title ); ?>
 										</a>
 										<div class="course-meta">
