@@ -11693,7 +11693,7 @@
   }
 }
 
-.tutor-p-24,
+.tutor-p-24, .tutor-large-notification,
 .tutor-padding-24 {
   padding: 24px;
 }
@@ -19470,7 +19470,7 @@
   border-radius: 9px;
 }
 
-.tutor-radius-10 {
+.tutor-radius-10, .tutor-large-notification {
   border-radius: 10px;
 }
 
@@ -19510,7 +19510,7 @@
   border: 1px solid #eff1f6;
 }
 
-.tutor-border-sl20 {
+.tutor-border-sl20, .tutor-large-notification {
   border: 1px solid #e0e2ea;
 }
 
@@ -20734,6 +20734,80 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   .tutor-alert .tutor-alert-close {
     display: none;
   }
+}
+
+.tutor-large-notification-primary .tutor-large-notification-icon {
+  color: #3e64de;
+}
+
+.tutor-large-notification-primary .tutor-large-notification-title {
+  color: #3e64de;
+}
+
+.tutor-large-notification-primary .tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  border-color: #bdcaf1;
+  background: #e9edfb;
+  color: #3e64de;
+}
+
+.tutor-large-notification-warning .tutor-large-notification-icon {
+  color: #ed9700;
+}
+
+.tutor-large-notification-warning .tutor-large-notification-title {
+  color: #895800;
+}
+
+.tutor-large-notification-warning .tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  border-color: #f9d093;
+  background: #fdf4e3;
+  color: #ed9700;
+}
+
+.tutor-large-notification-danger .tutor-large-notification-icon {
+  color: #f44337;
+}
+
+.tutor-large-notification-danger .tutor-large-notification-title {
+  color: #c62828;
+}
+
+.tutor-large-notification-danger .tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  border-color: #fbb4af;
+  background: #feeceb;
+  color: #f44337;
+}
+
+.tutor-large-notification-success .tutor-large-notification-icon {
+  color: #24a148;
+}
+
+.tutor-large-notification-success .tutor-large-notification-title {
+  color: #075a2a;
+}
+
+.tutor-large-notification-success .tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  border-color: #99d4ae;
+  background: #e5f5eb;
+  color: #24a148;
+}
+
+.tutor-large-notification {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  -webkit-backdrop-filter: blur(24px);
+          backdrop-filter: blur(24px);
+  position: relative;
+}
+
+.tutor-large-notification .tutor-noti-close {
+  position: absolute;
+  top: 16px;
+  right: 13px;
+  cursor: pointer;
 }
 
 .tutor-modal {

@@ -11,8 +11,6 @@ const TutorDateRangePicker = () => {
 	const [startDate, endDate] = dateRange;
 	const dayCount = differenceInDays(endDate, startDate) + 1;
 
-	console.log(dayCount);
-
 	const handleCalenderChange = (update) => {
 		setDateRange(update);
 	};
