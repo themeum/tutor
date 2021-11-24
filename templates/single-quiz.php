@@ -24,10 +24,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 ?>
 
 <?php do_action('tutor_quiz/single/before/wrap'); ?>
-
-
     <div class="tutor-single-lesson-wraper <?php echo $enable_spotlight_mode ? "tutor-spotlight-mode" : ""; ?>">
-
         <div class="tutor-lesson-sidebar tutor-desktop-sidebar">
 		    <?php tutor_lessons_sidebar(); ?>
         </div>

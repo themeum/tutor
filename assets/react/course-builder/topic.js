@@ -47,6 +47,8 @@ window.jQuery(document).ready(function($){
                 } else {
                     // It's new topic creation
                     $('#tutor-course-content-wrap').html(course_contents);
+                    modal.find('[name="topic_title"]').val('');
+                    modal.find('[name="topic_summery"]').val('');
                 }
             },
             complete: function () {

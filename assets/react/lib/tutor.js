@@ -94,29 +94,6 @@ window.tutor_date_picker = () => {
 jQuery(document).ready(function ($) {
     'use strict';
     const { __, _x, _n, _nx } = wp.i18n;
-    /**
-     * Global date_picker selector
-     *
-     * @since 1.9.7
-     */
-    function load_date_picker() {
-        if (jQuery.datepicker) {
-            var format = _tutorobject.wp_date_format;
-            if (!format) {
-                format = "yy-mm-dd";
-            }
-            $(".tutor_date_picker").datepicker({ "dateFormat": format });
-        }
-
-        /** Disable typing on datePicker field */
-        $(document).on('keydown', '.hasDatepicker, .tutor_date_picker', function (e) {
-            if (e.keyCode !== 8) {
-                e.preventDefault();
-            }
-        });
-    };
-    load_date_picker();
-
 
     /**
      * Video source tabs
@@ -455,20 +432,6 @@ jQuery(document).ready(function ($) {
         $(data_target).addClass('active').show();
 
         window.history.pushState({}, '', url);
-    });
-
-    /**
-     * Re init required
-     * Modal Loaded...
-     */
-
-    $(document).on('lesson_modal_loaded quiz_modal_loaded assignment_modal_loaded', function (e, obj) {
-        if (jQuery().select2) {
-            $('.select2_multiselect').select2({
-                dropdownCssClass: 'increasezindex'
-            });
-        }
-        load_date_picker();
     });
 
     /**

@@ -43,13 +43,11 @@ $qna_pagination = $qna['pagination'];
 
 <div class="wrap">
 	<?php 
-		if (tutor_utils()->count($qna_list)) {
-			tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
-				'qna_list' => $qna_list,
-				'context' => 'backend-dashboard-qna-table'
-			));
+		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
+			'qna_list' => $qna_list,
+			'context' => 'backend-dashboard-qna-table'
+		));
 
-			echo paginate_links( $qna_pagination );
-		}
+		echo paginate_links( $qna_pagination );
 	?>
 </div>

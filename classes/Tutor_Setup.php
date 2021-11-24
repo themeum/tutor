@@ -311,7 +311,7 @@ if ( ! defined( 'ABSPATH' ) )
                                                                 $html .= '<input type="radio" value="single" name="attempts-allowed" class="course-p" id="attempts-allowed-1" '.( isset($options[$key]) && $options[$key] ? 'checked' : '' ).'>';
                                                                 $html .= '<span class="radio-icon"></span>';
                                                                 $html .= '<span class="label-text label-text-2">';
-                                                                    $html .= '<input type="number" value="'.$options[$key].'" name="attempts-allowed-number" class="attempts" id="attempts-allowed-1" min="'.(isset($field['min']) ? $field['min'] : 0).'" max="'.(isset($field['max']) ? $field['max'] : 30 ).'">';
+                                                                    $html .= '<input type="number" value="'.$options[$key].'" name="attempts-allowed-number" class="attempts tutor-form-number-verify" id="attempts-allowed-1" min="'.(isset($field['min']) ? $field['min'] : 0).'" max="'.(isset($field['max']) ? $field['max'] : 30 ).'">';
                                                                 $html .= '</span>';
                                                             $html .= '</label>';
                                                         $html .= '</div>';

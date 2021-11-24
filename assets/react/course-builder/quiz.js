@@ -260,12 +260,8 @@ window.jQuery(document).ready(function($){
                     step_switch(modal, false, true); // Back to second from third
                     step_switch(modal, false, true); // Back to first from second
                 }
-                
-                $(document).trigger('quiz_modal_loaded', {
-                    quiz_id : quiz_id, 
-                    topic_id : topic_id, 
-                    course_id : course_id
-                });
+
+                window.dispatchEvent(new Event(_tutorobject.content_change_event));
 
                 tutor_slider_init();
                 enable_quiz_questions_sorting();
@@ -314,7 +310,10 @@ window.jQuery(document).ready(function($){
             for(let k in quiz_info_required) {
                 if(!quiz_info_required[k]) {
                     console.log(quiz_info_required);
-                    tutor_toast('Error!', k+' not found', 'error');
+
+                    if(k=='quiz_title') {
+                        tutor_toast('Error!', __('Quiz title required', 'tutor'), 'error');
+                    }
                     return;
                 }
             }
@@ -346,12 +345,11 @@ window.jQuery(document).ready(function($){
 
                     // Update modal content
                     $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
-                    $(document).trigger('quiz_modal_loaded', {topic_id : topic_id, course_id : course_id});
-
+                    
                     tutor_slider_init();
                     step_switch(modal, true);
 
-                enable_quiz_questions_sorting();
+                    enable_quiz_questions_sorting();
                 },
                 complete: function () {
                     btn.removeClass('tutor-updating-message');
