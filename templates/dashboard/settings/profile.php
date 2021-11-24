@@ -144,7 +144,7 @@ $public_display = array_unique( $public_display );
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
 				<label>
 					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
-					<input class="tutor-form-control" type="tel" name="phone_number" value="<?php esc_attr_e( get_user_meta( $user->ID, 'phone_number', true ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
+					<input class="tutor-form-control" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_number" value="<?php esc_attr_e( get_user_meta( $user->ID, 'phone_number', true ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
 				</label>
 			</div>
 		</div>

@@ -17,7 +17,7 @@ if (get_the_ID())
 				'name' => 'tutor_attachments[]',
 				'attachments' => $attachments,
 				'add_button' => true,
-			));
+			), false);
 		?>
 	</div>
 </div>

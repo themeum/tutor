@@ -7,6 +7,8 @@ import "./segments/reset";
 import "./addons-list/addons-list-main";
 import "./segments/filter";
 import "./segments/withdraw";
+import ajaxHandler from './segments/filter';
+import "./segments/editor_full";
 
 const toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
 toggleChange.forEach((element) => {
@@ -159,7 +161,7 @@ jQuery(document).ready(function ($) {
    * Add instructor
    * @since v.1.0.3
    */
-   $(document).on("submit", "#tutor-new-instructor-form", function (e) {
+  $(document).on("submit", "#tutor-new-instructor-form", function (e) {
     e.preventDefault();
     var $that = $(this);
     var formData = $that.serializeObject();
@@ -171,7 +173,7 @@ jQuery(document).ready(function ($) {
       url: window._tutorobject.ajaxurl,
       type: "POST",
       data: formData,
-      beforeSend: function() {
+      beforeSend: function () {
         responseContainer.html('');
         loadingButton.html(`<div class="ball"></div>
         <div class="ball"></div>
@@ -181,22 +183,22 @@ jQuery(document).ready(function ($) {
       success: function success(data) {
         if (!data.success) {
           if (data.data.errors.errors) {
-            for(let v of Object.values(data.data.errors.errors)) {
+            for (let v of Object.values(data.data.errors.errors)) {
               responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
             }
           } else {
-            for(let v of Object.values(data.data.errors)) {
+            for (let v of Object.values(data.data.errors)) {
               responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
             }
           }
 
         } else {
-         $('#tutor-new-instructor-form').trigger("reset");
+          $('#tutor-new-instructor-form').trigger("reset");
           tutor_toast(__("Success", "tutor"), __("New Instructor Added", "tutor"), "success");
           location.reload();
         }
       },
-      complete: function() {
+      complete: function () {
         loadingButton.html(prevText);
       }
     });
@@ -206,111 +208,68 @@ jQuery(document).ready(function ($) {
    * Instructor block unblock action
    * @since v.1.5.3
    */
-
+  const instructorActionForm = document.getElementById('tutor-instructor-confirm-form');
   $(document).on("click", "a.instructor-action", function (e) {
     e.preventDefault();
-
-    var $that = $(this);
-    var action = $that.attr("data-action");
-    var instructor_id = $that.attr("data-instructor-id");
-
-    var prompt_message = $that.attr("data-prompt-message");
-    if (prompt_message && !confirm(prompt_message)) {
-      // Avoid Accidental CLick
-      return;
+   
+    const $that = $(this);
+    const action = $that.attr("data-action");
+    const instructorId = $that.attr("data-instructor-id");
+    const promptMessage = $that.attr("data-prompt-message");
+    const messageWrapper = document.getElementById('tutor-instructor-confirm-message');
+    if (messageWrapper) {
+      messageWrapper.innerHTML = `<h3>${promptMessage}</h3>`;
     }
-
-    var nonce_key = _tutorobject.nonce_key;
-    var json_data = {
-      instructor_id: instructor_id,
-      action_name: action,
-      action: "instructor_approval_action",
-    };
-    json_data[nonce_key] = _tutorobject[nonce_key];
-
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: json_data,
-      beforeSend: function () {
-        $that.addClass("tutor-updating-message");
-      },
-      success: function (data) {
-        location.reload(true);
-      },
-      complete: function () {
-        $that.removeClass("tutor-updating-message");
-      },
-    });
+    if (instructorActionForm) {
+      instructorActionForm.elements.action.value = `instructor_approval_action`;
+      instructorActionForm.elements.action_name.value = action;
+      instructorActionForm.elements.instructor_id.value = instructorId;
+    }
   });
+  
+  /**
+   * On form submit block | approve instructor
+   * 
+   * @since v.2.0.0
+   */
+  if (instructorActionForm) {
+    instructorActionForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(instructorActionForm);
+      const loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
+      const prevHtml = loadingButton.innerHTML;
+      loadingButton.innerHTML = `<div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>`;
+      try {
+        const post = await ajaxHandler(formData);
+        const response = await post.json();
+        loadingButton.innerHTML = prevHtml;
+        if (post.ok && response.success) {
+          location.reload();
+        } else {
+          tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+        }
+      } catch(error) {
+        loadingButton.innerHTML = prevHtml;
+        tutor_toast(__("Operation failed", "tutor"), error, "error");
+      }
+    }
+  }
 
   /**
    * Password Reveal
    */
-  $(document).on('click', ".tutor-password-reveal", function(e) {
+  $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon
     $(this).toggleClass('ttr-eye-filled ttr-eye-fill-filled');
     //toggle attr
-    $(this).next().attr('type', function(index, attr) {
+    $(this).next().attr('type', function (index, attr) {
       return attr == 'password' ? 'text' : 'password';
     });
   });
-  /**
-   * Add Assignment
-   */
-  $(document).on("click", ".add-assignment-attachments", function (event) {
-    event.preventDefault();
-
-    var $that = $(this);
-    var frame;
-    // If the media frame already exists, reopen it.
-    if (frame) {
-      frame.open();
-      return;
-    }
-
-    // Create a new media frame
-    frame = wp.media({
-      title: __("Select or Upload Media Of Your Choice", "tutor"),
-      button: {
-        text: __("Upload media", "tutor"),
-      },
-      multiple: false, // Set to true to allow multiple files to be selected
-    });
-
-    // When an image is selected in the media frame...
-    frame.on("select", function () {
-      // Get media attachment details from the frame state
-      var attachment = frame
-        .state()
-        .get("selection")
-        .first()
-        .toJSON();
-
-      var field_markup =
-        '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">' +
-        attachment.filename +
-        '</p><input type="hidden" name="tutor_assignment_attachments[]" value="' +
-        attachment.id +
-        '"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
-
-      $("#assignment-attached-file").append(field_markup);
-      $that
-        .closest(".video_source_wrap_html5")
-        .find("input")
-        .val(attachment.id);
-    });
-    // Finally, open the modal on click
-    frame.open();
-  });
-
-  $(document).on("click", ".remove-assignment-attachment-a", function (event) {
-    event.preventDefault();
-    $(this)
-      .closest(".tutor-individual-attachment-file")
-      .remove();
-  });
-
+  
   /**
    * Used for backend profile photo upload.
    */
@@ -535,7 +494,7 @@ jQuery(document).ready(function ($) {
   });
 
   //add checkbox class for style
-  var tutorCheckbox = $(".tutor-form-check-input");
+  var tutorCheckbox = $(".tutor-ui-table .tutor-form-check-input");
   if (tutorCheckbox) {
     tutorCheckbox.parent().addClass('tutor-option-field-row');
   }
