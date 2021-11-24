@@ -859,15 +859,15 @@ if (colorPickerInputs) {
   \*********************************************************/
 /***/ (() => {
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 /**
  * On click add filter value on the url
@@ -918,6 +918,48 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
   /**
+   * onclick apply button show checkbox select message
+   * if not selected
+   */
+
+
+  var applyButton = document.getElementById('tutor-admin-bulk-action-btn');
+  var modal = document.querySelector('.tutor-bulk-modal-disabled');
+
+  applyButton.onclick = function () {
+    var bulkIds = [];
+    var bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+
+    var _iterator = _createForOfIteratorHelper(bulkFields),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var field = _step.value;
+
+        if (field.checked) {
+          bulkIds.push(field.value);
+        }
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+
+    if (bulkIds.length) {
+      modal.setAttribute('id', 'tutor-bulk-confirm-popup');
+    } else {
+      tutor_toast(__("Warning", "tutor"), __("Nothing was selected for bulk action.", "tutor"), "error");
+
+      if (modal.hasAttribute('id')) {
+        modal.removeAttribute('id');
+      }
+
+      ;
+    }
+  };
+  /**
    * Onsubmit bulk form handle ajax request then reload page
    */
 
@@ -927,7 +969,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (bulkForm) {
     bulkForm.onsubmit = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var formData, bulkIds, bulkFields, _iterator, _step, field, loadingButton, prevHtml, post, response;
+        var formData, bulkIds, bulkFields, _iterator2, _step2, field, loadingButton, prevHtml, post, response;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -937,20 +979,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 formData = new FormData(bulkForm);
                 bulkIds = [];
                 bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
-                _iterator = _createForOfIteratorHelper(bulkFields);
+                _iterator2 = _createForOfIteratorHelper(bulkFields);
 
                 try {
-                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                    field = _step.value;
+                  for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                    field = _step2.value;
 
                     if (field.checked) {
                       bulkIds.push(field.value);
                     }
                   }
                 } catch (err) {
-                  _iterator.e(err);
+                  _iterator2.e(err);
                 } finally {
-                  _iterator.f();
+                  _iterator2.f();
                 }
 
                 if (bulkIds.length) {
@@ -1072,12 +1114,12 @@ document.addEventListener("DOMContentLoaded", function () {
   var availableStatus = ["publish", "pending", "trash", "draft"];
   var courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
 
-  var _iterator2 = _createForOfIteratorHelper(courseStatusUpdate),
-      _step2;
+  var _iterator3 = _createForOfIteratorHelper(courseStatusUpdate),
+      _step3;
 
   try {
-    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-      var status = _step2.value;
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var status = _step3.value;
 
       status.onchange = /*#__PURE__*/function () {
         var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
@@ -1143,19 +1185,19 @@ document.addEventListener("DOMContentLoaded", function () {
      */
 
   } catch (err) {
-    _iterator2.e(err);
+    _iterator3.e(err);
   } finally {
-    _iterator2.f();
+    _iterator3.f();
   }
 
   var deleteCourse = document.querySelectorAll(".tutor-admin-course-delete");
 
-  var _iterator3 = _createForOfIteratorHelper(deleteCourse),
-      _step3;
+  var _iterator4 = _createForOfIteratorHelper(deleteCourse),
+      _step4;
 
   try {
-    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-      var course = _step3.value;
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+      var course = _step4.value;
 
       course.onclick = /*#__PURE__*/function () {
         var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
@@ -1212,9 +1254,9 @@ document.addEventListener("DOMContentLoaded", function () {
      */
 
   } catch (err) {
-    _iterator3.e(err);
+    _iterator4.e(err);
   } finally {
-    _iterator3.f();
+    _iterator4.f();
   }
 
   function ajaxHandler(_x3) {
@@ -31494,12 +31536,14 @@ jQuery(document).ready(function ($) {
       success: function success(data) {
         if (!data.success) {
           if (data.data.errors.errors) {
-            responseContainer.append("<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>".concat(_("Sorry, that username already exists or something wrong!", 'tutor'), "</li></div>"));
-            return;
-          } else {
-            for (var _i = 0, _Object$values = Object.values(data.data.errors); _i < _Object$values.length; _i++) {
+            for (var _i = 0, _Object$values = Object.values(data.data.errors.errors); _i < _Object$values.length; _i++) {
               var v = _Object$values[_i];
               responseContainer.append("<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>".concat(v, "</li></div>"));
+            }
+          } else {
+            for (var _i2 = 0, _Object$values2 = Object.values(data.data.errors); _i2 < _Object$values2.length; _i2++) {
+              var _v = _Object$values2[_i2];
+              responseContainer.append("<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>".concat(_v, "</li></div>"));
             }
           }
         } else {
@@ -31797,7 +31841,13 @@ jQuery(document).ready(function ($) {
       e.preventDefault();
       window.open(href, "_blank");
     }
-  });
+  }); //add checkbox class for style
+
+  var tutorCheckbox = $(".tutor-form-check-input");
+
+  if (tutorCheckbox) {
+    tutorCheckbox.parent().addClass('tutor-option-field-row');
+  }
 });
 })();
 

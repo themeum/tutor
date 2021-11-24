@@ -21,6 +21,21 @@
     }
 }
 
+.question-type-image_answering {
+    >div {
+        &:not(:last-child) {
+            margin-bottom: 70px;
+        }
+    }
+    .tutor-image-answer {
+        max-width: 500px;
+        img {
+            width: 100%;
+            border-radius: 6px;
+        }
+    }
+}
+
 .tutor-quiz-wrapper {
     .tutor-start-quiz-wrapper {
         width: 560px;
@@ -279,6 +294,11 @@
             }
         }
         .quiz-question-ans-choice-area {
+            .quiz-short-ans-image {
+                max-width: 445px;
+                width: 100%;
+                height: auto;
+            }
             .quiz-question-ans-choice {
                 &:not(:first-child) {
                     margin-top: 25px;

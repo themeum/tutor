@@ -183,7 +183,10 @@
 		align-items: center;
 		justify-content: center;
 		.tutor-modal-body {
-			padding: 60px 70px;
+			padding: 40px 30px;
+			@include breakpoint-min(tablet) {
+				padding: 60px 70px;
+			}
 		}
 	}
 	&.tutor-is-sm .tutor-modal-root {
@@ -526,8 +529,28 @@
 
 		.tutor-modal-close {
 			position: absolute !important;
-			top: 22px !important;
-			right: -67px !important;
+			top: 20px !important;
+			right: -20px !important;
+		}
+
+		@include breakpoint-min(tablet) {
+			.tutor-modal-close {
+				position: absolute !important;
+				top: 22px !important;
+				right: -67px !important;
+			}
+		}
+
+		@include breakpoint-max(tablet) {
+			.tutor-modal-close {
+				position: absolute !important;
+				top: 10px !important;
+				right: 10px !important;
+				color: gray !important;
+				> * {
+					font-size: 30px;
+				}
+			}
 		}
 	}
 }
