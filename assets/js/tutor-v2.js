@@ -5065,7 +5065,6 @@ var TutorDateRangePicker = function TutorDateRangePicker() {
       endDate = _dateRange[1];
 
   var dayCount = (0,date_fns__WEBPACK_IMPORTED_MODULE_2__["default"])(endDate, startDate) + 1;
-  console.log(dayCount);
 
   var handleCalenderChange = function handleCalenderChange(update) {
     setDateRange(update);
