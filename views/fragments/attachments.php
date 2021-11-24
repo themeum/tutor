@@ -4,6 +4,7 @@
     $size_below = isset($data['size_below']) && $data['size_below']==true;
     if ( is_array($attachments) && count($attachments)) {
         foreach ( $attachments as $attachment ) {
+            if(!is_object($attachment) || !property_exists($attachment, 'id')){ continue; }
             ?>
             <div data-attachment_id="<?php echo $attachment->id; ?>">
                 <div>
@@ -22,7 +23,8 @@
                     <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross"></span>
                 </div>
             </div>
-        <?php }
+            <?php 
+        }
     }
     ?>
 </div>

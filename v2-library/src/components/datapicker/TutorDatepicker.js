@@ -18,7 +18,7 @@ function stringToDate(_date, _format, _delimiter) {
 	return formatedDate;
 }
 
-const TutorDatepicker = () => {
+const TutorDatepicker = (data) => {
 	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'd-M-Y';
 	const url = new URL(window.location.href);
 	const params = url.searchParams;
@@ -73,62 +73,63 @@ const TutorDatepicker = () => {
 		}
 	}, []);
 
-	return (
-		<div className="tutor-react-datepicker">
-			<DatePicker
-				placeholderText={dateFormat}
-				selected={startDate}
-				onChange={(date) => handleCalendarChange(date)}
-				showPopperArrow={false}
-				shouldCloseOnSelect={false}
-				onCalendarClose={handleCalendarClose}
-				onClick={handleCalendarClose}
-				dateFormat={dateFormat}
-				renderCustomHeader={({
-					date,
-					changeYear,
-					changeMonth,
-					decreaseMonth,
-					increaseMonth,
-					prevMonthButtonDisabled,
-					nextMonthButtonDisabled,
-				}) => {
-					return (
-						<div className="datepicker-header-custom">
-							<div className={`dropdown-container dropdown-months ${dropdownMonth ? 'is-active' : ''}`}>
-								<div className="dropdown-label" onClick={() => setDropdownMonth(!dropdownMonth)}>
-									{months[getMonth(date)]}{' '}
-									<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<path
-											d="M8.25 9.75L12.5 14.25L16.75 9.75"
-											stroke="#212327"
-											strokeWidth="1.5"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										/>
-									</svg>
-								</div>
-								<ul className="dropdown-list">
-									{months.map((option) => (
-										<li
-											key={option}
-											data-value={option}
-											className={`${option === months[getMonth(date)] ? 'is-current' : ''}`}
-											onClick={(e) => {
-												const {
-													target: {
-														dataset: { value },
-													},
-												} = e;
-												changeMonth(months.indexOf(value));
-												setDropdownMonth(false);
-											}}
-										>
-											{option}
-										</li>
-									))}
-								</ul>
-							</div>
+  return (
+    <div className="tutor-react-datepicker">
+      <DatePicker
+        placeholderText={dateFormat}
+        selected={startDate}
+        name={data.input_name || ''}
+        onChange={(date) => data.prevent_redirect ? setStartDate(date) : handleCalendarChange(date)}
+        showPopperArrow={false}
+        shouldCloseOnSelect={true}
+        onCalendarClose={handleCalendarClose}
+        onClick={handleCalendarClose}
+        dateFormat={dateFormat}
+        renderCustomHeader={({
+          date,
+          changeYear,
+          changeMonth,
+          decreaseMonth,
+          increaseMonth,
+          prevMonthButtonDisabled,
+          nextMonthButtonDisabled,
+        }) => {
+          return (
+            <div className="datepicker-header-custom">
+              <div className={`dropdown-container dropdown-months ${dropdownMonth ? "is-active" : ""}`}>
+                <div className="dropdown-label" onClick={() => setDropdownMonth(!dropdownMonth)}>
+                  {months[getMonth(date)]}{" "}
+                  <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M8.25 9.75L12.5 14.25L16.75 9.75"
+                      stroke="#212327"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <ul className="dropdown-list">
+                  {months.map((option) => (
+                    <li
+                      key={option}
+                      data-value={option}
+                      className={`${option === months[getMonth(date)] ? "is-current" : ""}`}
+                      onClick={(e) => {
+                        const {
+                          target: {
+                            dataset: { value },
+                          },
+                        } = e;
+                        changeMonth(months.indexOf(value));
+                        setDropdownMonth(false);
+                      }}
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
 							<div className={`dropdown-container dropdown-years ${dropdownYear ? 'is-active' : ''}`}>
 								<div className="dropdown-label" onClick={() => setDropdownYear(!dropdownYear)}>

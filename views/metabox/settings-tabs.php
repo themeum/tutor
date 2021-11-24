@@ -88,7 +88,7 @@ $current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 									<?php
 										switch($field['type']) {
 											case 'number' :
-												echo '<input class="tutor-form-control" type="number" name="' . $field_key . '" value="' . $value . '" >';
+												echo '<input class="tutor-form-control" type="number" name="' . $field_key . '" value="' . $value . '"  min="0">';
 												break;
 
 												case 'radio' :

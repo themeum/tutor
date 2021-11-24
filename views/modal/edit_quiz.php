@@ -79,7 +79,7 @@
         <div class="tutor-input-group tutor-mb-15">
             <div class="tutor-bs-row tutor-bs-align-items-center">
                 <div class="tutor-bs-col-sm-4 tutor-bs-col-md-3">
-                    <input type="text" class="tutor-form-control" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
+                    <input type="number" class="tutor-form-control" min="0" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
                 </div>
                 <div class="tutor-bs-col-sm-5 tutor-bs-col-md-4">
                     <?php $limit_time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type', 'minutes') ?>
@@ -158,7 +158,7 @@
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Passing Grade (%)', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
-            <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10"/>
+            <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
             <p class="tutor-input-feedback">
                 <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
             </p>
@@ -166,9 +166,11 @@
     </div>
 
     <div>
-        <label class="tutor-form-label"><?php _e('Max questions allowed to answer', 'tutor'); ?></label>
+        <label class="tutor-form-label">
+            <?php _e('Max questions allowed to answer', 'tutor'); ?>
+        </label>
         <div class="tutor-input-group tutor-mb-15">
-            <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>"/>
+            <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
             <p class="tutor-input-feedback">
                 <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
             </p>
@@ -236,13 +238,13 @@
 
                 <div class="tutor-bs-col-12 tutor-mb-30">
                     <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
-                    <input class="tutor-form-control" type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>">
+                    <input class="tutor-form-control" type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>" min="0">
                     <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
                 </div>
 
                 <div class="tutor-bs-col-12">
                     <h4><?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?></h4>
-                    <input class="tutor-form-control" type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>">
+                    <input class="tutor-form-control" type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>" min="0">
                     <p class="help"><?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?></p>
                 </div>
             </div>

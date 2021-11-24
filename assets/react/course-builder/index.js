@@ -16,3 +16,18 @@ window.jQuery(document).ready(function($) {
         $(this).siblings().filter('tutor-certificate-collapsible')
     }); */
 });
+
+
+/**
+ * Re init required
+ * Modal Loaded...
+ */
+const load_select2 = function() {
+    if (jQuery().select2) {
+        $('.select2_multiselect').select2({
+            dropdownCssClass: 'increasezindex'
+        });
+    }
+}
+window.addEventListener('DOMContentLoaded', load_select2)
+window.addEventListener(_tutorobject.content_change_event, load_select2);

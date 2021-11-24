@@ -10,7 +10,7 @@ if ( empty( $media_url ) ) {
 		<div class="thumbnail-preview image-previewer">
 			<span class="preview-loading"></span>
 			<input type="hidden" class="tutor-tumbnail-id-input" name="<?php echo $input_name; ?>" value="<?php echo ! empty( $media_id ) ? $media_id : ''; ?>">
-			<img src="<?php echo $media_url; ?>" alt="media"/>
+			<img src="<?php echo $media_url; ?>"/>
 			<span class="delete-btn" style="<?php echo ! $media_url ? 'display:none' : ''; ?>"></span>
 		</div>
 		<div class="thumbnail-input">
