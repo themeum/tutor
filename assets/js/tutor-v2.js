@@ -3587,36 +3587,6 @@ jQuery(document).ready(function ($) {
       _n = _wp$i18n._n,
       _nx = _wp$i18n._nx;
   /**
-   * Global date_picker selector
-   *
-   * @since 1.9.7
-   */
-
-  function load_date_picker() {
-    if (jQuery.datepicker) {
-      var format = _tutorobject.wp_date_format;
-
-      if (!format) {
-        format = "yy-mm-dd";
-      }
-
-      $(".tutor_date_picker").datepicker({
-        "dateFormat": format
-      });
-    }
-    /** Disable typing on datePicker field */
-
-
-    $(document).on('keydown', '.hasDatepicker, .tutor_date_picker', function (e) {
-      if (e.keyCode !== 8) {
-        e.preventDefault();
-      }
-    });
-  }
-
-  ;
-  load_date_picker();
-  /**
    * Video source tabs
    */
 
@@ -3945,20 +3915,6 @@ jQuery(document).ready(function ($) {
     window.history.pushState({}, '', url);
   });
   /**
-   * Re init required
-   * Modal Loaded...
-   */
-
-  $(document).on('lesson_modal_loaded quiz_modal_loaded assignment_modal_loaded', function (e, obj) {
-    if (jQuery().select2) {
-      $('.select2_multiselect').select2({
-        dropdownCssClass: 'increasezindex'
-      });
-    }
-
-    load_date_picker();
-  });
-  /**
    * Tutor number validation
    *
    * @since v.1.6.3
@@ -4189,7 +4145,23 @@ window.jQuery(document).ready(function ($) {
     this.style.height = "auto";
     this.style.height = this.scrollHeight + "px";
   });
-  $('.tutor-textarea-auto-height').trigger('input');
+  $('.tutor-textarea-auto-height').trigger('input'); // Prevent number input out of range
+
+  $(document).on('input', 'input.tutor-form-control[type="number"], input.tutor-form-number-verify[type="number"]', function () {
+    var min = $(this).attr('min');
+    var max = $(this).attr('max');
+    var val = parseInt($(this).val() || 0);
+    console.log(min, max); // Prevent number smaller than min
+
+    if (!(min === undefined)) {
+      val < parseInt(min) ? $(this).val(min) : 0;
+    } // Prevent numbers greater than max
+
+
+    if (!(max === undefined)) {
+      val > max ? $(this).val(max) : 0;
+    }
+  });
 });
 
 /***/ }),
@@ -4328,31 +4300,32 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 
-window.addEventListener('DOMContentLoaded', function () {
-  function DatePicker() {
-    var element = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_v2_library_src_components_datapicker_TutorDatepicker__WEBPACK_IMPORTED_MODULE_2__["default"], null);
-    var wrappers = document.querySelectorAll('.tutor-v2-date-picker');
 
-    var _iterator = _createForOfIteratorHelper(wrappers),
-        _step;
+function DatePicker() {
+  var wrappers = document.querySelectorAll('.tutor-v2-date-picker');
 
-    try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var wrapper = _step.value;
+  var _iterator = _createForOfIteratorHelper(wrappers),
+      _step;
 
-        if (wrapper) {
-          react_dom__WEBPACK_IMPORTED_MODULE_1__.render(element, wrapper);
-        }
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var wrapper = _step.value;
+
+      if (wrapper) {
+        var _wrapper$dataset = wrapper.dataset,
+            dataset = _wrapper$dataset === void 0 ? {} : _wrapper$dataset;
+        react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_v2_library_src_components_datapicker_TutorDatepicker__WEBPACK_IMPORTED_MODULE_2__["default"], dataset), wrapper);
       }
-    } catch (err) {
-      _iterator.e(err);
-    } finally {
-      _iterator.f();
     }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
   }
+}
 
-  DatePicker();
-});
+window.addEventListener('DOMContentLoaded', DatePicker);
+window.addEventListener(_tutorobject.content_change_event, DatePicker);
 
 /***/ }),
 
@@ -5196,7 +5169,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 // import './TutorDatepicker.scss';
 // import '../../../bundle/main.min.css';
 
-var TutorDatepicker = function TutorDatepicker() {
+var TutorDatepicker = function TutorDatepicker(data) {
   var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : "Y-M-d";
   var url = new URL(window.location.href);
   var params = url.searchParams;
@@ -5252,11 +5225,12 @@ var TutorDatepicker = function TutorDatepicker() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement((react_datepicker__WEBPACK_IMPORTED_MODULE_3___default()), {
     placeholderText: dateFormat,
     selected: startDate,
+    name: data.input_name || '',
     onChange: function onChange(date) {
-      return handleCalendarChange(date);
+      return data.prevent_redirect ? setStartDate(date) : handleCalendarChange(date);
     },
     showPopperArrow: false,
-    shouldCloseOnSelect: false,
+    shouldCloseOnSelect: true,
     onCalendarClose: handleCalendarClose,
     onClick: handleCalendarClose,
     dateFormat: dateFormat,
@@ -44936,22 +44910,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
- // import './general';
-// Select your input element.
 
-var numbers = document.querySelectorAll('input[type="number"]'); // Listen for input event on numInput.
-
-numbers.forEach(function (number) {
-  number.value = number.value <= 0 ? 0 : number.value;
-
-  number.onkeydown = function (e) {
-    if (e.keyCode === 109 || e.keyCode === 189) {
-      return false;
-    }
-
-    number.value = number.value <= 0 ? 0 : number.value;
-  };
-});
 })();
 
 /******/ })()

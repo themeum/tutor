@@ -253,6 +253,7 @@ class Assets {
 		wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
 		wp_localize_script('tutor-admin', '_tutorobject', $localize_data);
 		wp_localize_script('tutor-course-builder', '_tutorobject', $localize_data);
+		wp_localize_script('tutor-v2-script', '_tutorobject', $localize_data);
 
 		// Inline styles
 		wp_add_inline_style('tutor-frontend', $this->load_color_palette() );

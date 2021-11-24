@@ -20,17 +20,12 @@ if(isset($_GET['view_quiz_attempt_id'])) {
 }
 
 $previous_attempts = tutor_utils()->get_all_quiz_attempts_by_user();
-$attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 ?>
 
 <h3><?php _e('My Quiz Attempts', 'tutor'); ?></h3>
 <?php
-    if ($attempted_count){
-        tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
-            'attempt_list' => $previous_attempts,
-            'context' => 'frontend-dashboard-my-attempts'
-        ));
-    } else {
-        echo __('You have not attempted any quiz yet', 'tutor');
-    } 
+    tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
+        'attempt_list' => $previous_attempts,
+        'context' => 'frontend-dashboard-my-attempts'
+    ));
 ?>
