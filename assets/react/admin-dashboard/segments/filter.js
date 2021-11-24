@@ -44,21 +44,23 @@ document.addEventListener("DOMContentLoaded", function() {
    */
   const applyButton = document.getElementById('tutor-admin-bulk-action-btn');
   const modal = document.querySelector('.tutor-bulk-modal-disabled');
-  !applyButton ? 0 : applyButton.onclick = () => {
-    const bulkIds = [];
-    const bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
-    for (let field of bulkFields) {
-      if (field.checked) {
-        bulkIds.push(field.value);
+  if (applyButton) {
+    applyButton.onclick = () => {
+      const bulkIds = [];
+      const bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+      for (let field of bulkFields) {
+        if (field.checked) {
+          bulkIds.push(field.value);
+        }
       }
-    }
-    if (bulkIds.length) {
-      modal.setAttribute('id', 'tutor-bulk-confirm-popup');
-    } else {
-      tutor_toast(__("Warning", "tutor"), __("Nothing was selected for bulk action.", "tutor"), "error");
-      if (modal.hasAttribute('id')) {
-        modal.removeAttribute('id');
-      };
+      if (bulkIds.length) {
+        modal.setAttribute('id', 'tutor-bulk-confirm-popup');
+      } else {
+        tutor_toast(__("Warning", "tutor"), __("Nothing was selected for bulk action.", "tutor"), "error");
+        if (modal.hasAttribute('id')) {
+          modal.removeAttribute('id');
+        };
+      }
     }
   }
 
@@ -236,3 +238,16 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 });
+
+export default async function ajaxHandler(formData) {
+  try {
+    const post = await fetch(window._tutorobject.ajaxurl, {
+      method: "POST",
+      body: formData,
+    });
+    return post;
+  } catch (error) {
+    tutor_toast(__("Operation failed", "tutor"), error, "error");
+  }
+}
+

@@ -16,6 +16,11 @@
 }
 
 .entry-content {
+  .tutor-courses.pp-left-full {
+    .tutor-instructor-profile-photo {
+      height: 100%;
+    }
+  }
   .tutor-courses.pp-left-middle {
     .tutor-instructor-left-middle {
       img {
@@ -518,11 +523,6 @@ Instructor customize filters styles
 .tutor-instructor-filter {
   * {
     box-sizing: border-box;
-  }
-  .tutor-instructor-list-pp-left-full {
-    .tutor-instructor-profile-photo {
-      height: 100%;
-    }
   }
   .course-category-filter {
     .tutor-form-check {
