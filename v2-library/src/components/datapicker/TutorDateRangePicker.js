@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import DatePicker, { CalendarContainer } from 'react-datepicker';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, differenceInHours } from 'date-fns';
 import { element } from 'prop-types';
 
 const TutorDateRangePicker = () => {
@@ -9,7 +9,9 @@ const TutorDateRangePicker = () => {
 
 	const [dateRange, setDateRange] = useState([null, null]);
 	const [startDate, endDate] = dateRange;
-	const dayCount = differenceInDays(endDate, startDate);
+	const dayCount = differenceInDays(endDate, startDate) + 1;
+
+	console.log(dayCount);
 
 	const handleCalenderChange = (update) => {
 		setDateRange(update);
