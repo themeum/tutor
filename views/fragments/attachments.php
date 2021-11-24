@@ -4,6 +4,7 @@
     $size_below = isset($data['size_below']) && $data['size_below']==true;
     if ( is_array($attachments) && count($attachments)) {
         foreach ( $attachments as $attachment ) {
+            if(!is_object($attachment) || !property_exists($attachment, 'id')){ continue; }
             ?>
             <div data-attachment_id="<?php echo $attachment->id; ?>">
                 <div>
@@ -22,17 +23,18 @@
                     <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross"></span>
                 </div>
             </div>
-        <?php }
+            <?php 
+        }
     }
     ?>
 </div>
 
-<?php 
-    if(isset($data['add_button']) && $data['add_button']==true) {
-        ?>
-            <button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutorUploadAttachmentBtn" data-name="<?php echo isset($data['name']) ? $data['name'] : ''; ?>">
-                <?php _e('Add Attachment', 'tutor'); ?>
-            </button>
-        <?php
-    }
+<?php
+if ( isset( $data['add_button'] ) && true === $data['add_button'] ) {
+	?>
+			<button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutorUploadAttachmentBtn" data-name="<?php echo isset( $data['name'] ) ? esc_attr( $data['name'] ) : ''; ?>">
+				<?php esc_html_e( 'Add Attachment', 'tutor' ); ?>
+			</button>
+		<?php
+}
 ?>

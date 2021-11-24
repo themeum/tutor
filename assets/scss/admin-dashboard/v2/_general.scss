@@ -32,6 +32,53 @@
   .d-block {
     display: block;
   }
+
+  .mce-path {
+    display: none !important;
+  }
+  .mce-top-part {
+    border-bottom: 1px solid #c0c3cb;
+  }
+  .mce-top-part::before {
+    box-shadow: none;
+  }
+  .wp-editor-container {
+    border: 1px solid #c0c3cb;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  div.mce-toolbar-grp {
+    border-bottom: none;
+    background: none;
+  }
+  div.mce-statusbar {
+    border-top: none;
+  }
+  .image-previewer {
+    width: 100%;
+    overflow: hidden;
+  }
+  .mce-container-body .mce-resizehandle i.mce-i-resize {
+    display: none;
+  }
+  .mce-container-body .mce-resizehandle {
+    margin: auto;
+    left: 0;
+    height: 4px;
+    width: 40px;
+    border-radius: 6px;
+    bottom: 0;
+    background: #c0c3cb;
+    transition: all 0.2s;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .wp-editor-container .mce-container-body .mce-resizehandle:active,
+  .wp-editor-container:hover .mce-container-body .mce-resizehandle {
+    visibility: visible;
+    opacity: 1;
+    bottom: 10px;
+  }
 }
 
 // .tutor-option-header .search-field,

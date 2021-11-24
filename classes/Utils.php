@@ -2741,7 +2741,7 @@ class Utils {
 
 		$date_query = '';
 		if ( '' !== $date ) {
-			$date 		= tutor_get_formated_date( 'Y-m-d', $date ); 
+			$date 		= tutor_get_formated_date( 'Y-m-d', $date );
 			$date_query = "AND  DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 
@@ -2812,7 +2812,7 @@ class Utils {
 
 			$status = " AND inst_status.meta_value IN (".implode( ',', $status ).")";
 		}
-	
+
 		$cat_ids = array_filter( $cat_ids = array() , function($id) {
 			return is_numeric($id);
 		});
@@ -3290,17 +3290,17 @@ class Utils {
 					}
 				?>
 			</div>
-			<?php 
+			<?php
 				if($show_avg_rate) {
 					?>
 					<div class="tutor-rating-text text-regular-body color-text-subsued tutor-pl-0">
-						<?php 
-							echo $current_rating; 
-						
+						<?php
+							echo $current_rating;
+
 							if(!($total_count===null)) {
 								echo '&nbsp;('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor')).')';
 							}
-						?> 
+						?>
 					</div>
 					<?php
 				}
@@ -4076,12 +4076,12 @@ class Utils {
 			$question_ids[] = $q->comment_ID;
 			$query[$index]->meta = array();
 		}
-		
+
 		// Assign meta data
 		if(count($question_ids)) {
 			$q_ids = implode(',', $question_ids);
 			$meta_array = $wpdb->get_results(
-				"SELECT comment_id, meta_key, meta_value 
+				"SELECT comment_id, meta_key, meta_value
 				FROM {$wpdb->commentmeta}
 				WHERE comment_id IN ({$q_ids})");
 
@@ -5912,7 +5912,7 @@ class Utils {
 
 	/**
 	 * @param int $user_id | optional.
-	 * @param array $filter | ex: 
+	 * @param array $filter | ex:
 	 * array('status' => '','date' => '', 'order' => '', 'start' => 10, 'per_page' => 10,'search' => '')
 	 * get withdrawal history
 	 *
@@ -5954,13 +5954,13 @@ class Utils {
 			$order_query = "ORDER BY  	created_at DESC";
 		}
 
-		// Date query @since v.2.0.0 
+		// Date query @since v.2.0.0
 		$date_query = '';
 		if ( isset( $date ) && '' !== $date ) {
 			$date_query = "AND DATE(created_at) = CAST( '$date' AS DATE )";
 		}
 
-		// Search query @since v.2.0.0 
+		// Search query @since v.2.0.0
 		$search_query = '%%';
 		if ( isset( $search ) && '' !== $search ) {
 			$search_query = '%' . $wpdb->esc_like( $search ) . '%';
@@ -5995,7 +5995,7 @@ class Utils {
 					{$query_by_user_sql}
 					{$query_by_status_sql}
 					{$date_query}
-					
+
 					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
 				{$order_query}
 				{$query_by_pagination}
@@ -6250,10 +6250,10 @@ class Utils {
 		global $wpdb;
 
 		$purchased_data = $wpdb->get_results( $wpdb->prepare(
-			"SELECT tutor_order.*, course.post_title 
+			"SELECT tutor_order.*, course.post_title
    			FROM {$wpdb->prefix}tutor_earnings AS tutor_order
-   			INNER JOIN {$wpdb->posts} AS course 
-     			ON course.ID = tutor_order.course_id 
+   			INNER JOIN {$wpdb->posts} AS course
+     			ON course.ID = tutor_order.course_id
   			WHERE tutor_order.order_id = %d",
 			  $order_id
 		) );
@@ -7510,7 +7510,7 @@ class Utils {
 
 			case 'assignment_submission' :
 				$course_id = $wpdb->get_var( $wpdb->prepare(
-					"SELECT DISTINCT _course.ID 
+					"SELECT DISTINCT _course.ID
 					FROM {$wpdb->posts} _course
 						INNER JOIN {$wpdb->posts} _topic ON _topic.post_parent=_course.ID
 						INNER JOIN {$wpdb->posts} _assignment ON _assignment.post_parent=_topic.ID
@@ -7581,7 +7581,7 @@ class Utils {
 				) );
 				break;
 
-			case 'instructor' : 
+			case 'instructor' :
 				$course_ids = $wpdb->get_col($wpdb->prepare(
 					"SELECT meta_value FROM {$wpdb->usermeta}
 					WHERE user_id=%d AND meta_key='_tutor_instructor_course_id'",
@@ -8013,7 +8013,7 @@ class Utils {
 	 * @param string $ancestor_type, content type like: lesson, assignment, quiz
 	 * @param int $ancestor_ids, post_parent id
 	 * @return array
-	 * @since v2.0.0 
+	 * @since v2.0.0
 	 */
 	public function get_course_content_list( string $content_type, string $ancestor_type, string $ancestor_ids ) {
 		global $wpdb;
@@ -8033,7 +8033,7 @@ class Utils {
 							"SELECT content.* FROM {$wpdb->posts} course
 									INNER JOIN {$wpdb->posts} topic ON course.ID = topic.post_parent
 									INNER JOIN {$wpdb->posts} content ON topic.ID = content.post_parent AND content.post_type = %s
-								WHERE course.ID IN ({$ancestor_ids}) 
+								WHERE course.ID IN ({$ancestor_ids})
 							",
 							$content_type
 						));
@@ -8054,12 +8054,15 @@ class Utils {
      *
      * @since v2.0.0
      */
-    public function sanitize_recursively( $array ) {
+    public function sanitize_recursively( $array, $skip = array() ) {
         $new_array = array();
 		if ( is_array( $array ) && ! empty( $array ) ) {
 			foreach ( $array as $key => $value ) {
 				$key = is_numeric( $key ) ? $key : sanitize_text_field( $key );
-				if ( is_array( $value ) ) {
+				if(in_array( $key, $skip )){
+					$new_array[ $key ] = wp_kses_post( $value );
+					continue;
+				} elseif ( is_array( $value ) ) {
 					$new_array[ $key ] = $this->sanitize_recursively( $value );
 					continue;
 				}
@@ -8203,13 +8206,13 @@ class Utils {
 	public function count_completed_assignment( int $course_id, int $student_id ): int {
 		global $wpdb;
 		$count = $wpdb->get_var( $wpdb->prepare(
-			" SELECT COUNT(*) FROM {$wpdb->posts} AS assignment 
+			" SELECT COUNT(*) FROM {$wpdb->posts} AS assignment
 				INNER JOIN {$wpdb->posts} AS topic
 					ON topic.ID = assignment.post_parent
 				INNER JOIN {$wpdb->posts} AS course
-					ON course.ID = topic.post_parent 
+					ON course.ID = topic.post_parent
 				INNER JOIN {$wpdb->comments} AS submit
-					ON submit.comment_post_ID = assignment.ID 
+					ON submit.comment_post_ID = assignment.ID
 				WHERE assignment.post_type = %s
 					AND course.ID = %d
 					AND submit.user_id = %d
@@ -8223,12 +8226,12 @@ class Utils {
 
 	/*
 	 * Empty state template
-	 * 
+	 *
 	 * @param string $title
-	 * 
+	 *
 	 * @return mixed|html
 	 */
-	public function tutor_empty_state( string $title = '' ) { 
+	public function tutor_empty_state( string $title = '' ) {
 		$page_title = $title ? $title : ''; ?>
 		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center td-empty-state tutor-p-20">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
@@ -8237,12 +8240,12 @@ class Utils {
 	<?php }
 
 	/**
-	 * Translate dynamic text, dynamic text is not translate while potting 
+	 * Translate dynamic text, dynamic text is not translate while potting
 	 * that's why define key here to make it translate able. It will put text in the pot file while compilling.
-	 * 
+	 *
 	 * @param string $key, pass key to get translate text | required.
 	 * @return string
-	 * @since v2.0.0 
+	 * @since v2.0.0
 	 */
 	public function translate_dynamic_text( $key ): string {
 		$key_value = array(
@@ -8319,7 +8322,7 @@ class Utils {
 
 	/**
 	 * Add interval days with today date. For ex: 10 days add with today
-	 * 
+	 *
 	 * @param string $interval | required.
 	 * @since v2.0.0
 	 */
@@ -8331,7 +8334,7 @@ class Utils {
 
 	/**
 	 * Subtract interval days from today date. For ex: 10 days back from today
-	 * 
+	 *
 	 * @param string $interval | required.
 	 * @since v2.0.0
 	 */
@@ -8343,7 +8346,7 @@ class Utils {
 
 	/**
 	 * Get renderable column list for tables based on context
-	 * 
+	 *
 	 * @since v2.0.0
 	 */
 	public function get_table_columns_from_context($page_key, $context, $contexts, $filter_hook=null) {
@@ -8354,14 +8357,14 @@ class Utils {
 
 		$allowed = $contexts[$page_key]['contexts'][$context];
 		is_string($allowed) ? $allowed=$contexts[$page_key]['contexts'][$allowed] : 0; // By reference
-		
+
 		if($allowed===true) {
 			$fields=$columns;
 		} else {
 			foreach($columns as $key=>$column) {
 				in_array($key, $allowed) ? $fields[$key]=$column : 0;
 			}
-		}		
+		}
 
 		return $fields;
 	}
@@ -8379,7 +8382,7 @@ class Utils {
 		$user_id = sanitize_text_field( $user_id );
 		$quiz_id = sanitize_text_field( $quiz_id );
 		$attempted = $wpdb->get_var( $wpdb->prepare(
-			"SELECT quiz_id 
+			"SELECT quiz_id
 				FROM {$wpdb->tutor_quiz_attempts}
 				WHERE user_id = %d
 					AND quiz_id = %d

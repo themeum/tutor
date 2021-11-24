@@ -18,16 +18,16 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <label class="text-medium-body"><?php _e('Total Course Durationd', 'tutor'); ?></label>
     </div>
     <div class="tutor-bs-col-sm-4">
-        <input class="tutor-form-control" type="number" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
+        <input class="tutor-form-control" type="number" min="0" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
         <span class="text-thin-caption"><?php _e('HH', 'tutor'); ?></span>
     </div>
     <div class="tutor-bs-col-sm-4">
-        <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
+        <input class="tutor-form-control" type="number" class="tutor-number-validation" min="0" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
         <span class="text-thin-caption"><?php _e('MM', 'tutor'); ?></span>
     </div>
 
     <div class="tutor-bs-col-sm-4">
-        <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
+        <input class="tutor-form-control" type="number" class="tutor-number-validation" min="0" data-min="0" data-max="59" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
         <span class="text-thin-caption"><?php _e('SS', 'tutor'); ?></span>
     </div>
 </div>

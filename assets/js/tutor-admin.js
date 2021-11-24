@@ -853,12 +853,27 @@ if (colorPickerInputs) {
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/editor_full.js":
+/*!**************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/editor_full.js ***!
+  \**************************************************************/
+/***/ (() => {
+
+console.log('editor full');
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/filter.js":
 /*!*********************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/filter.js ***!
   \*********************************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ajaxHandler)
+/* harmony export */ });
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -926,39 +941,41 @@ document.addEventListener("DOMContentLoaded", function () {
   var applyButton = document.getElementById('tutor-admin-bulk-action-btn');
   var modal = document.querySelector('.tutor-bulk-modal-disabled');
 
-  applyButton.onclick = function () {
-    var bulkIds = [];
-    var bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
+  if (applyButton) {
+    applyButton.onclick = function () {
+      var bulkIds = [];
+      var bulkFields = document.querySelectorAll(".tutor-bulk-checkbox");
 
-    var _iterator = _createForOfIteratorHelper(bulkFields),
-        _step;
+      var _iterator = _createForOfIteratorHelper(bulkFields),
+          _step;
 
-    try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var field = _step.value;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var field = _step.value;
 
-        if (field.checked) {
-          bulkIds.push(field.value);
+          if (field.checked) {
+            bulkIds.push(field.value);
+          }
         }
-      }
-    } catch (err) {
-      _iterator.e(err);
-    } finally {
-      _iterator.f();
-    }
-
-    if (bulkIds.length) {
-      modal.setAttribute('id', 'tutor-bulk-confirm-popup');
-    } else {
-      tutor_toast(__("Warning", "tutor"), __("Nothing was selected for bulk action.", "tutor"), "error");
-
-      if (modal.hasAttribute('id')) {
-        modal.removeAttribute('id');
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
       }
 
-      ;
-    }
-  };
+      if (bulkIds.length) {
+        modal.setAttribute('id', 'tutor-bulk-confirm-popup');
+      } else {
+        tutor_toast(__("Warning", "tutor"), __("Nothing was selected for bulk action.", "tutor"), "error");
+
+        if (modal.hasAttribute('id')) {
+          modal.removeAttribute('id');
+        }
+
+        ;
+      }
+    };
+  }
   /**
    * Onsubmit bulk form handle ajax request then reload page
    */
@@ -1296,6 +1313,42 @@ document.addEventListener("DOMContentLoaded", function () {
     return _ajaxHandler.apply(this, arguments);
   }
 });
+function ajaxHandler(_x6) {
+  return _ajaxHandler2.apply(this, arguments);
+}
+
+function _ajaxHandler2() {
+  _ajaxHandler2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(formData) {
+    var post;
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.prev = 0;
+            _context5.next = 3;
+            return fetch(window._tutorobject.ajaxurl, {
+              method: "POST",
+              body: formData
+            });
+
+          case 3:
+            post = _context5.sent;
+            return _context5.abrupt("return", post);
+
+          case 7:
+            _context5.prev = 7;
+            _context5.t0 = _context5["catch"](0);
+            tutor_toast(__("Operation failed", "tutor"), _context5.t0, "error");
+
+          case 10:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, null, [[0, 7]]);
+  }));
+  return _ajaxHandler2.apply(this, arguments);
+}
 
 /***/ }),
 
@@ -31386,9 +31439,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
 /* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_filter__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_9__);
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
 
 
 
@@ -31562,43 +31622,89 @@ jQuery(document).ready(function ($) {
    * @since v.1.5.3
    */
 
+  var instructorActionForm = document.getElementById('tutor-instructor-confirm-form');
   $(document).on("click", "a.instructor-action", function (e) {
     e.preventDefault();
     var $that = $(this);
     var action = $that.attr("data-action");
-    var instructor_id = $that.attr("data-instructor-id");
-    var prompt_message = $that.attr("data-prompt-message");
+    var instructorId = $that.attr("data-instructor-id");
+    var promptMessage = $that.attr("data-prompt-message");
+    var messageWrapper = document.getElementById('tutor-instructor-confirm-message');
 
-    if (prompt_message && !confirm(prompt_message)) {
-      // Avoid Accidental CLick
-      return;
+    if (messageWrapper) {
+      messageWrapper.innerHTML = "<h3>".concat(promptMessage, "</h3>");
     }
 
-    var nonce_key = _tutorobject.nonce_key;
-    var json_data = {
-      instructor_id: instructor_id,
-      action_name: action,
-      action: "instructor_approval_action"
-    };
-    json_data[nonce_key] = _tutorobject[nonce_key];
-    $.ajax({
-      url: window._tutorobject.ajaxurl,
-      type: "POST",
-      data: json_data,
-      beforeSend: function beforeSend() {
-        $that.addClass("tutor-updating-message");
-      },
-      success: function success(data) {
-        location.reload(true);
-      },
-      complete: function complete() {
-        $that.removeClass("tutor-updating-message");
-      }
-    });
+    if (instructorActionForm) {
+      instructorActionForm.elements.action.value = "instructor_approval_action";
+      instructorActionForm.elements.action_name.value = action;
+      instructorActionForm.elements.instructor_id.value = instructorId;
+    }
   });
+  /**
+   * On form submit block | approve instructor
+   * 
+   * @since v.2.0.0
+   */
+
+  if (instructorActionForm) {
+    instructorActionForm.onsubmit = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+        var formData, loadingButton, prevHtml, post, response;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(instructorActionForm);
+                loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
+                prevHtml = loadingButton.innerHTML;
+                loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
+                _context.prev = 5;
+                _context.next = 8;
+                return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_7__["default"])(formData);
+
+              case 8:
+                post = _context.sent;
+                _context.next = 11;
+                return post.json();
+
+              case 11:
+                response = _context.sent;
+                loadingButton.innerHTML = prevHtml;
+
+                if (post.ok && response.success) {
+                  location.reload();
+                } else {
+                  tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+                }
+
+                _context.next = 20;
+                break;
+
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context["catch"](5);
+                loadingButton.innerHTML = prevHtml;
+                tutor_toast(__("Operation failed", "tutor"), _context.t0, "error");
+
+              case 20:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[5, 16]]);
+      }));
+
+      return function (_x2) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+  }
   /**
    * Password Reveal
    */
+
 
   $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon
@@ -31607,44 +31713,6 @@ jQuery(document).ready(function ($) {
     $(this).next().attr('type', function (index, attr) {
       return attr == 'password' ? 'text' : 'password';
     });
-  });
-  /**
-   * Add Assignment
-   */
-
-  $(document).on("click", ".add-assignment-attachments", function (event) {
-    event.preventDefault();
-    var $that = $(this);
-    var frame; // If the media frame already exists, reopen it.
-
-    if (frame) {
-      frame.open();
-      return;
-    } // Create a new media frame
-
-
-    frame = wp.media({
-      title: __("Select or Upload Media Of Your Choice", "tutor"),
-      button: {
-        text: __("Upload media", "tutor")
-      },
-      multiple: false // Set to true to allow multiple files to be selected
-
-    }); // When an image is selected in the media frame...
-
-    frame.on("select", function () {
-      // Get media attachment details from the frame state
-      var attachment = frame.state().get("selection").first().toJSON();
-      var field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">' + attachment.filename + '</p><input type="hidden" name="tutor_assignment_attachments[]" value="' + attachment.id + '"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
-      $("#assignment-attached-file").append(field_markup);
-      $that.closest(".video_source_wrap_html5").find("input").val(attachment.id);
-    }); // Finally, open the modal on click
-
-    frame.open();
-  });
-  $(document).on("click", ".remove-assignment-attachment-a", function (event) {
-    event.preventDefault();
-    $(this).closest(".tutor-individual-attachment-file").remove();
   });
   /**
    * Used for backend profile photo upload.
@@ -31843,7 +31911,7 @@ jQuery(document).ready(function ($) {
     }
   }); //add checkbox class for style
 
-  var tutorCheckbox = $(".tutor-form-check-input");
+  var tutorCheckbox = $(".tutor-ui-table .tutor-form-check-input");
 
   if (tutorCheckbox) {
     tutorCheckbox.parent().addClass('tutor-option-field-row');
