@@ -224,3 +224,69 @@ $alertVariations: (
 		}
 	}
 }
+
+// icon---title---btnC---btnBg---btnBdr
+$largeNotiVariations: (
+	'primary' $design-brand $primary-main $text-brand $primary-40 $primary-60,
+	'warning' $design-warning $warning-100 $text-warning $warning-40 $warning-60,
+	'danger' $text-error $danger-100 $text-error $danger-40 $danger-60,
+	'success' $design-success $success-100 $text-success $success-40 $success-60
+);
+
+@each $suffix, $icon, $title, $btnC, $btnBg, $btnBdr in $largeNotiVariations {
+	.tutor-large-notification-#{$suffix} {
+		.tutor-large-notification-icon {
+			color: #{$icon};
+		}
+		.tutor-large-notification-title {
+			color: #{$title};
+		}
+
+		.tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+			border-color: #{$btnBdr};
+			background: #{$btnBg};
+			color: #{$btnC};
+		}
+	}
+}
+
+.tutor-large-notification {
+	display: flex;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+	backdrop-filter: blur(24px);
+	position: relative;
+	background: #fff;
+
+	@extend .tutor-radius-10;
+	@extend .tutor-border-sl20;
+	@extend .tutor-p-24;
+
+	@include breakpoint-min(desktop-lg) {
+		padding-right: 90px;
+	}
+
+	&-icon {
+	}
+	&-content {
+	}
+	&-btns {
+		.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
+			padding: 7px 12px;
+		}
+		> *:not(:last-child) {
+			margin-right: 10px;
+		}
+	}
+
+	.tutor-noti-close {
+		position: absolute;
+		top: 16px;
+		right: 13px;
+		cursor: pointer;
+	}
+}
+
+.tutor-notification-grid {
+	@include responsiveGrid(540px, 1fr);
+	grid-gap: 30px;
+}

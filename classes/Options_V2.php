@@ -274,7 +274,7 @@ class Options_V2 {
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
 
-		$option = tutor_utils()->sanitize_recursively( $option );
+		$option = tutor_utils()->sanitize_recursively( $option, array('email_footer_text') );
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
@@ -300,7 +300,6 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_after' );
 
-		// wp_send_json_success(array('msg' => __('Option Updated', 'tutor'), 'return' => $option));
 		wp_send_json_success( $option );
 	}
 
@@ -780,7 +779,7 @@ class Options_V2 {
 								'key'     => 'courses_col_per_row',
 								'type'    => 'radio_horizontal',
 								'label'   => __( 'Column Per Row', 'tutor' ),
-								'default' => '4',
+								'default' => '3',
 								'options' => array(
 									'1' => 'One',
 									'2' => 'Two',
