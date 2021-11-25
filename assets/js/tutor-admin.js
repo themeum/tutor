@@ -1253,7 +1253,8 @@ document.addEventListener("DOMContentLoaded", function () {
             switch (_context2.prev = _context2.next) {
               case 0:
                 e.preventDefault();
-                formData = new FormData(commonConfirmForm);
+                formData = new FormData(commonConfirmForm); //show loading
+
                 loadingButton = commonConfirmForm.querySelector('.tutor-btn-loading');
                 prevHtml = loadingButton.innerHTML;
                 loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
@@ -1262,7 +1263,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
               case 7:
                 post = _context2.sent;
-                loadingButton.innerHTML = prevHtml;
+                //after post back button text
+                loadingButton.innerHTML = prevHtml; //hide modal
 
                 if (commonConfirmModal.classList.contains('tutor-is-active')) {
                   commonConfirmModal.classList.remove('tutor-is-active');

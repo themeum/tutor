@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
     commonConfirmForm.onsubmit = async (e) => {
       e.preventDefault();
       const formData = new FormData(commonConfirmForm);
-
+      //show loading
       const loadingButton = commonConfirmForm.querySelector('.tutor-btn-loading');
       const prevHtml = loadingButton.innerHTML;
       loadingButton.innerHTML = `<div class="ball"></div>
@@ -246,7 +246,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="ball"></div>`;
 
       const post = await ajaxHandler(formData);
+      //after post back button text
       loadingButton.innerHTML = prevHtml;
+      //hide modal
       if (commonConfirmModal.classList.contains('tutor-is-active')) {
         commonConfirmModal.classList.remove('tutor-is-active');
       }
