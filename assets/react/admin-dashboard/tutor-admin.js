@@ -208,55 +208,51 @@ jQuery(document).ready(function ($) {
    * Instructor block unblock action
    * @since v.1.5.3
    */
-  const instructorActionForm = document.getElementById('tutor-instructor-confirm-form');
-  $(document).on("click", "a.instructor-action", function (e) {
+  $(document).on("click", "a.instructor-action", async function (e) {
     e.preventDefault();
    
     const $that = $(this);
     const action = $that.attr("data-action");
     const instructorId = $that.attr("data-instructor-id");
-    const promptMessage = $that.attr("data-prompt-message");
-    const messageWrapper = document.getElementById('tutor-instructor-confirm-message');
-    if (messageWrapper) {
-      messageWrapper.innerHTML = `<h3>${promptMessage}</h3>`;
-    }
-    if (instructorActionForm) {
-      instructorActionForm.elements.action.value = `instructor_approval_action`;
-      instructorActionForm.elements.action_name.value = action;
-      instructorActionForm.elements.instructor_id.value = instructorId;
+    const loadingButton = e.target;
+    const prevHtml = loadingButton.innerHTML;
+    loadingButton.innerHTML = '';
+    loadingButton.classList.add('tutor-updating-message');
+
+    // prepare form data
+    const formData = new FormData();
+    formData.set('action', 'instructor_approval_action');
+    formData.set('action_name', action);
+    formData.set('instructor_id', instructorId);
+    formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+
+    try {
+      const post = await ajaxHandler(formData);
+      const response = await post.json();
+      if (loadingButton.classList.contains('tutor-updating-message')) {
+        loadingButton.classList.remove('tutor-updating-message');
+        loadingButton.innerHTML = action.charAt(0).toUpperCase() + action.slice(1);;
+      }
+
+      if (post.ok && response.success) {
+        let message = '';
+        if (action == 'approve') {
+          message = 'Instructor approved!';
+        } 
+        if (action == 'blocked') {
+          message = 'Instructor blocked!';
+        } 
+        tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "error");
+        location.reload();
+      } else {
+        tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+      }
+    } catch(error) {
+      loadingButton.innerHTML = prevHtml;
+      tutor_toast(__("Operation failed", "tutor"), error, "error");
     }
   });
   
-  /**
-   * On form submit block | approve instructor
-   * 
-   * @since v.2.0.0
-   */
-  if (instructorActionForm) {
-    instructorActionForm.onsubmit = async (e) => {
-      e.preventDefault();
-      const formData = new FormData(instructorActionForm);
-      const loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
-      const prevHtml = loadingButton.innerHTML;
-      loadingButton.innerHTML = `<div class="ball"></div>
-      <div class="ball"></div>
-      <div class="ball"></div>
-      <div class="ball"></div>`;
-      try {
-        const post = await ajaxHandler(formData);
-        const response = await post.json();
-        loadingButton.innerHTML = prevHtml;
-        if (post.ok && response.success) {
-          location.reload();
-        } else {
-          tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
-        }
-      } catch(error) {
-        loadingButton.innerHTML = prevHtml;
-        tutor_toast(__("Operation failed", "tutor"), error, "error");
-      }
-    }
-  }
 
   /**
    * Password Reveal

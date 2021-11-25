@@ -31654,89 +31654,86 @@ jQuery(document).ready(function ($) {
    * @since v.1.5.3
    */
 
-  var instructorActionForm = document.getElementById('tutor-instructor-confirm-form');
-  $(document).on("click", "a.instructor-action", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var action = $that.attr("data-action");
-    var instructorId = $that.attr("data-instructor-id");
-    var promptMessage = $that.attr("data-prompt-message");
-    var messageWrapper = document.getElementById('tutor-instructor-confirm-message');
+  $(document).on("click", "a.instructor-action", /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var $that, action, instructorId, loadingButton, prevHtml, formData, post, response, message;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              e.preventDefault();
+              $that = $(this);
+              action = $that.attr("data-action");
+              instructorId = $that.attr("data-instructor-id");
+              loadingButton = e.target;
+              prevHtml = loadingButton.innerHTML;
+              loadingButton.innerHTML = '';
+              loadingButton.classList.add('tutor-updating-message'); // prepare form data
 
-    if (messageWrapper) {
-      messageWrapper.innerHTML = "<h3>".concat(promptMessage, "</h3>");
-    }
+              formData = new FormData();
+              formData.set('action', 'instructor_approval_action');
+              formData.set('action_name', action);
+              formData.set('instructor_id', instructorId);
+              formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+              _context.prev = 13;
+              _context.next = 16;
+              return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_7__["default"])(formData);
 
-    if (instructorActionForm) {
-      instructorActionForm.elements.action.value = "instructor_approval_action";
-      instructorActionForm.elements.action_name.value = action;
-      instructorActionForm.elements.instructor_id.value = instructorId;
-    }
-  });
-  /**
-   * On form submit block | approve instructor
-   * 
-   * @since v.2.0.0
-   */
+            case 16:
+              post = _context.sent;
+              _context.next = 19;
+              return post.json();
 
-  if (instructorActionForm) {
-    instructorActionForm.onsubmit = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var formData, loadingButton, prevHtml, post, response;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                e.preventDefault();
-                formData = new FormData(instructorActionForm);
-                loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
-                prevHtml = loadingButton.innerHTML;
-                loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
-                _context.prev = 5;
-                _context.next = 8;
-                return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_7__["default"])(formData);
+            case 19:
+              response = _context.sent;
 
-              case 8:
-                post = _context.sent;
-                _context.next = 11;
-                return post.json();
+              if (loadingButton.classList.contains('tutor-updating-message')) {
+                loadingButton.classList.remove('tutor-updating-message');
+                loadingButton.innerHTML = action.charAt(0).toUpperCase() + action.slice(1);
+                ;
+              }
 
-              case 11:
-                response = _context.sent;
-                loadingButton.innerHTML = prevHtml;
+              if (post.ok && response.success) {
+                message = '';
 
-                if (post.ok && response.success) {
-                  location.reload();
-                } else {
-                  tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+                if (action == 'approve') {
+                  message = 'Instructor approved!';
                 }
 
-                _context.next = 20;
-                break;
+                if (action == 'blocked') {
+                  message = 'Instructor blocked!';
+                }
 
-              case 16:
-                _context.prev = 16;
-                _context.t0 = _context["catch"](5);
-                loadingButton.innerHTML = prevHtml;
-                tutor_toast(__("Operation failed", "tutor"), _context.t0, "error");
+                tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "error");
+                location.reload();
+              } else {
+                tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+              }
 
-              case 20:
-              case "end":
-                return _context.stop();
-            }
+              _context.next = 28;
+              break;
+
+            case 24:
+              _context.prev = 24;
+              _context.t0 = _context["catch"](13);
+              loadingButton.innerHTML = prevHtml;
+              tutor_toast(__("Operation failed", "tutor"), _context.t0, "error");
+
+            case 28:
+            case "end":
+              return _context.stop();
           }
-        }, _callee, null, [[5, 16]]);
-      }));
+        }
+      }, _callee, this, [[13, 24]]);
+    }));
 
-      return function (_x2) {
-        return _ref.apply(this, arguments);
-      };
-    }();
-  }
+    return function (_x2) {
+      return _ref.apply(this, arguments);
+    };
+  }());
   /**
    * Password Reveal
    */
-
 
   $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon
