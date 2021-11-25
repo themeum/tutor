@@ -11693,7 +11693,7 @@
   }
 }
 
-.tutor-p-24,
+.tutor-p-24, .tutor-large-notification,
 .tutor-padding-24 {
   padding: 24px;
 }
@@ -19470,7 +19470,7 @@
   border-radius: 9px;
 }
 
-.tutor-radius-10 {
+.tutor-radius-10, .tutor-large-notification {
   border-radius: 10px;
 }
 
@@ -19510,7 +19510,7 @@
   border: 1px solid #eff1f6;
 }
 
-.tutor-border-sl20 {
+.tutor-border-sl20, .tutor-large-notification {
   border: 1px solid #e0e2ea;
 }
 
@@ -20734,6 +20734,101 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   .tutor-alert .tutor-alert-close {
     display: none;
   }
+}
+
+.tutor-large-notification-primary .tutor-large-notification-icon {
+  color: #3e64de;
+}
+
+.tutor-large-notification-primary .tutor-large-notification-title {
+  color: #3e64de;
+}
+
+.tutor-large-notification-primary .tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  border-color: #bdcaf1;
+  background: #e9edfb;
+  color: #3e64de;
+}
+
+.tutor-large-notification-warning .tutor-large-notification-icon {
+  color: #ed9700;
+}
+
+.tutor-large-notification-warning .tutor-large-notification-title {
+  color: #895800;
+}
+
+.tutor-large-notification-warning .tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  border-color: #f9d093;
+  background: #fdf4e3;
+  color: #ed9700;
+}
+
+.tutor-large-notification-danger .tutor-large-notification-icon {
+  color: #f44337;
+}
+
+.tutor-large-notification-danger .tutor-large-notification-title {
+  color: #c62828;
+}
+
+.tutor-large-notification-danger .tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  border-color: #fbb4af;
+  background: #feeceb;
+  color: #f44337;
+}
+
+.tutor-large-notification-success .tutor-large-notification-icon {
+  color: #24a148;
+}
+
+.tutor-large-notification-success .tutor-large-notification-title {
+  color: #075a2a;
+}
+
+.tutor-large-notification-success .tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+  border-color: #99d4ae;
+  background: #e5f5eb;
+  color: #24a148;
+}
+
+.tutor-large-notification {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  -webkit-backdrop-filter: blur(24px);
+          backdrop-filter: blur(24px);
+  position: relative;
+  background: #fff;
+}
+
+@media (min-width: 1200px) {
+  .tutor-large-notification {
+    padding-right: 90px;
+  }
+}
+
+.tutor-large-notification-btns .tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
+  padding: 7px 12px;
+}
+
+.tutor-large-notification-btns > *:not(:last-child) {
+  margin-right: 10px;
+}
+
+.tutor-large-notification .tutor-noti-close {
+  position: absolute;
+  top: 16px;
+  right: 13px;
+  cursor: pointer;
+}
+
+.tutor-notification-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
+  grid-gap: 30px;
 }
 
 .tutor-modal {
@@ -22725,11 +22820,12 @@ select.tutor-form-select {
   background-image: url("data:image/svg+xml,%3Csvg fill='none' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 10'%3E%3Cpath d='M.451754 2.72717c-.07906-.07753-.140684-.17103-.180765-.27426a.850847.850847 0 01-.062332-.3366c-.000769-.10706.020447-.21313.062332-.31166.039282-.10364.101013-.1973.180765-.27426L1.24338.73253a.9350014.9350014 0 01.27426-.190114.9536935.9536935 0 01.33348-.084149c.11432-.000612.22799.01728.3366.052983.10255.038495.19595.097935.27426.174531L8.00023 6.23961 13.5385.701364c.0746-.084705.1687-.149957.2742-.190114.1086-.035703.2223-.053595.3366-.052983.1153.008012.2282.036508.3335.084149.1018.046928.1946.111266.2743.190114l.7916.79162c.0787.07784.1403.17126.1808.27427.0421.10608.0633.21933.0623.33348-.0014.10684-.0225.2125-.0623.31166-.0412.10264-.1027.19592-.1808.27426L8.62355 9.66479c-.07205.09498-.16619.17094-.27426.22128a.7791146.7791146 0 01-.33348.06856c-.11589.00199-.23047-.02478-.33348-.07791-.10441-.05202-.19759-.12402-.27426-.21193L.451754 2.72717z' fill='%23161616'/%3E%3C/svg%3E");
   outline: none;
   font-family: inherit;
-  padding: 0 20px;
   line-height: 48px;
   height: 48px;
   background-size: 14px auto;
   background-position: right 17px center;
+  padding: 0 35px 0 20px;
+  text-overflow: ellipsis;
 }
 
 select.tutor-form-select.tutor-form-control-lg {

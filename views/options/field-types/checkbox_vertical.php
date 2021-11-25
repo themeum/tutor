@@ -10,8 +10,7 @@ if ( ! empty( $field['options'] ) ) {
 	$field_key  = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
 	$field_id   = esc_attr( 'field_' . $field_key );
 	$saved_data = $this->get( $field_key, array() );
-
-	! is_array( $saved_data ) ? $saved_data = array() : 0;
+	$saved_data = ! is_array( $saved_data ) ? array( $saved_data ) : $saved_data;
 	?>
 	<div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>">
 		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>

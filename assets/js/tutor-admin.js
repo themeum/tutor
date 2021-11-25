@@ -853,6 +853,16 @@ if (colorPickerInputs) {
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/editor_full.js":
+/*!**************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/editor_full.js ***!
+  \**************************************************************/
+/***/ (() => {
+
+console.log('editor full');
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/filter.js":
 /*!*********************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/filter.js ***!
@@ -31431,9 +31441,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_9__);
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -31700,44 +31713,6 @@ jQuery(document).ready(function ($) {
     $(this).next().attr('type', function (index, attr) {
       return attr == 'password' ? 'text' : 'password';
     });
-  });
-  /**
-   * Add Assignment
-   */
-
-  $(document).on("click", ".add-assignment-attachments", function (event) {
-    event.preventDefault();
-    var $that = $(this);
-    var frame; // If the media frame already exists, reopen it.
-
-    if (frame) {
-      frame.open();
-      return;
-    } // Create a new media frame
-
-
-    frame = wp.media({
-      title: __("Select or Upload Media Of Your Choice", "tutor"),
-      button: {
-        text: __("Upload media", "tutor")
-      },
-      multiple: false // Set to true to allow multiple files to be selected
-
-    }); // When an image is selected in the media frame...
-
-    frame.on("select", function () {
-      // Get media attachment details from the frame state
-      var attachment = frame.state().get("selection").first().toJSON();
-      var field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">' + attachment.filename + '</p><input type="hidden" name="tutor_assignment_attachments[]" value="' + attachment.id + '"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
-      $("#assignment-attached-file").append(field_markup);
-      $that.closest(".video_source_wrap_html5").find("input").val(attachment.id);
-    }); // Finally, open the modal on click
-
-    frame.open();
-  });
-  $(document).on("click", ".remove-assignment-attachment-a", function (event) {
-    event.preventDefault();
-    $(this).closest(".tutor-individual-attachment-file").remove();
   });
   /**
    * Used for backend profile photo upload.
