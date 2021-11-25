@@ -242,7 +242,7 @@ jQuery(document).ready(function ($) {
         if (action == 'blocked') {
           message = 'Instructor blocked!';
         } 
-        tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "error");
+        tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
         location.reload();
       } else {
         tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
