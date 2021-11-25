@@ -29,7 +29,6 @@ do_action('tutor_lesson/single/before/video/youtube');
 ?>
 
 <?php if($youtube_video_id ) { ?>
-<?php var_dump($disable_default_player_youtube);  ?>
 <div class="course-players flex-center">
     <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData)); ?>">
 	
