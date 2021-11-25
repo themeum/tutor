@@ -10,6 +10,10 @@
 const { __, _x, _n, _nx } = wp.i18n;
 
 document.addEventListener("DOMContentLoaded", function () {
+  const commonConfirmModal = document.getElementById('tutor-common-confirmation-modal');
+  const commonConfirmForm = document.getElementById('tutor-common-confirmation-form');
+  const commonConfirmContent = document.getElementById('tutor-common-confirmation-modal-content');
+
   const filterCourse = document.getElementById("tutor-backend-filter-course");
   if (filterCourse) {
     filterCourse.onchange = (e) => {
@@ -201,25 +205,63 @@ document.addEventListener("DOMContentLoaded", function () {
    */
   const deleteCourse = document.querySelectorAll(".tutor-admin-course-delete");
   for (let course of deleteCourse) {
-    course.onclick = async (e) => {
-      if (confirm("Do you want to delete this course?")) {
-        const id = e.currentTarget.dataset.id;
-        const formData = new FormData();
-        formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-        formData.set("id", id);
-        formData.set("action", "tutor_course_delete");
-        const post = await ajaxHandler(formData);
+    course.onclick = (e) => {
+      const id = e.currentTarget.dataset.id;
+      if (commonConfirmForm) {
+        commonConfirmForm.elements.action.value = 'tutor_course_delete';
+        commonConfirmForm.elements.id.value = id;
+      }
+      if (commonConfirmContent) {
+        commonConfirmContent.innerHTML = `
+          <div class="tutor-modal-icon">
+          <img src="https://i.imgur.com/Nx6U2u7.png" alt=""/>
+          </div>
+          <div class="tutor-modal-text-wrap">
+          <h3 class="tutor-modal-title">
+           ${__('Wait!', 'tutor')}
+          </h3>
+          <p>
+            ${__('Are you sure you would like perform this action? We suggest you proceed with caution.', 'tutor')}
+          </p>
+          </div>
+        `
+      }
+    };
+  }
+  /**
+   * Handle common confirmation form
+   * 
+   * @since v.2.0.0
+   */
+  if (commonConfirmForm) {
+    commonConfirmForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(commonConfirmForm);
+
+      const loadingButton = commonConfirmForm.querySelector('.tutor-btn-loading');
+      const prevHtml = loadingButton.innerHTML;
+      loadingButton.innerHTML = `<div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>`;
+
+      const post = await ajaxHandler(formData);
+      loadingButton.innerHTML = prevHtml;
+      if (commonConfirmModal.classList.contains('tutor-is-active')) {
+        commonConfirmModal.classList.remove('tutor-is-active');
+      }
+      if (post.ok) {
         const response = await post.json();
         if (response) {
           tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
-          e.target.closest("tr").remove();
+          location.reload();
         } else {
           tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
         }
       }
-    };
+      
+    }
   }
-
   /**
    * Handle ajax request show toast message on success | failure
    *
