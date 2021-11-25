@@ -596,7 +596,7 @@ class Course extends Tutor_Base {
 		$permalink = get_the_permalink($course_id);
 
 		// Set temporary identifier to show review pop up
-		if(!get_tutor_option( 'disable_course_review' )) {
+		if(get_tutor_option( 'enable_course_review' )) {
 			$rating = tutor_utils()->get_course_rating_by_user($course_id, $user_id);
 			if(!$rating || (empty($rating->rating) && empty($rating->review))) {
 				update_option( 'tutor_course_complete_popup_'.$user_id, array(
@@ -914,6 +914,11 @@ class Course extends Tutor_Base {
 			if(tutor_utils()->array_get('announcements', $items)) {
 				unset($items['announcements']);
 			}
+		}
+
+		// Hide review section if disabled
+		if(!get_tutor_option('enable_course_review')) {
+			unset($items['reviews']);
 		}
 
 		// Whether enrolment require

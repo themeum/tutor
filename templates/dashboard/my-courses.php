@@ -69,7 +69,6 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                                 <?php
                                 $course_duration = get_tutor_course_duration_context();
                                 $course_students = tutor_utils()->count_enrolled_users_by_course();
-                                $disable_total_enrolled = (int) tutor_utils()->get_option( 'disable_course_total_enrolled' );
                                 ?>
                                 <?php
                                 if(!empty($course_duration)) { ?>
@@ -77,9 +76,10 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                                     <span class="meta-icon ttr-clock-filled color-text-hints"></span><span><?php echo $course_duration; ?></span>
                                     </div>
                                 <?php } ?>
-                                <?php if ( ! $disable_total_enrolled ) : ?>
+                                <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
                                     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                                    <span class="meta-icon ttr-user-filled color-text-hints"></span><span><?php echo $course_students; ?></span>
+                                        <span class="meta-icon ttr-user-filled color-text-hints"></span>
+                                        <span><?php echo $course_students; ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
