@@ -26224,6 +26224,12 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   margin-top: 17px;
 }
 
+.tutor-course-details-page ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .tutor-course-details-page-main {
   display: grid;
   grid-gap: 30px;
@@ -26354,6 +26360,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 .tutor-courses-lession-list {
   list-style: none;
   margin: 0 -15px;
+  padding: 0;
 }
 
 .tutor-courses-lession-list li {
@@ -26463,6 +26470,8 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-ratingsreviews-reviews .review-list {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .tutor-ratingsreviews-reviews .review-list > li {
@@ -26948,13 +26957,13 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-course-listing-filter {
-  max-width: 1110px;
   display: grid;
 }
 
 @media (min-width: 1200px) {
   .tutor-course-listing-filter {
-    grid-template-columns: 1fr 2.5fr;
+    grid-template-columns: 25% 75%;
+    grid-template-columns: 1fr 3fr;
   }
   .tutor-course-listing-filter .filter-widget-input-wrapper {
     margin-top: 42px;
