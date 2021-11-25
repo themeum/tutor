@@ -28,7 +28,7 @@ $saved_data = $this->get( $field_key, array() );
 			$args    = array(
 				'textarea_name' => "tutor_option[{$field_key}]",
 				'tinymce'       => array(
-					'toolbar1' => 'bold,alignleft,aligncenter,alignright,separator,link,unlink,undo,redo,italic,underline,separator,pastetext,removeformat,charmap,outdent,indent,wp_help',
+					'toolbar1' => 'bold,italic,underline,forecolor,fontselect,fontsizeselect,formatselect,alignleft,aligncenter,alignright,bullist,numlist,link,unlink,removeformat',
 					'toolbar2' => '',
 					'toolbar3' => '',
 				),
