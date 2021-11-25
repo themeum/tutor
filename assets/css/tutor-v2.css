@@ -20801,6 +20801,21 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   -webkit-backdrop-filter: blur(24px);
           backdrop-filter: blur(24px);
   position: relative;
+  background: #fff;
+}
+
+@media (min-width: 1200px) {
+  .tutor-large-notification {
+    padding-right: 90px;
+  }
+}
+
+.tutor-large-notification-btns .tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
+  padding: 7px 12px;
+}
+
+.tutor-large-notification-btns > *:not(:last-child) {
+  margin-right: 10px;
 }
 
 .tutor-large-notification .tutor-noti-close {
@@ -20808,6 +20823,12 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   top: 16px;
   right: 13px;
   cursor: pointer;
+}
+
+.tutor-notification-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
+  grid-gap: 30px;
 }
 
 .tutor-modal {
