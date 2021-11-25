@@ -18,7 +18,19 @@
     </div>
 
     <div class="tutor-mb-30">
-        <label class="tutor-form-label"><?php _e('Lesson Content', 'tutor'); ?></label>
+        <label class="tutor-form-label">
+            <?php 
+                _e('Lesson Content', 'tutor'); 
+                
+                if (get_tutor_option('enable_lesson_classic_editor')){
+                    ?>
+                        <a class="tutor-ml-10" target="_blank" href="<?php echo esc_url(get_admin_url()); ?>post.php?post=<?php echo $post->ID; ?>&action=edit" >
+                            <i class="tutor-icon-classic-editor"></i> <?php echo __('WP Editor', 'tutor'); ?>
+                        </a>
+                    <?php
+                }
+            ?>
+        </label>
         <div class="tutor-input-group tutor-mb-15">
             <?php
             wp_editor(stripslashes($post->post_content), 'tutor_lesson_modal_editor', array( 'editor_height' => 150));

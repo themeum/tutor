@@ -6,26 +6,27 @@
 if (get_the_ID())
 	global $post;
 
-$video = maybe_unserialize(get_post_meta($post->ID, '_video', true));
-
-$videoSource = tutor_utils()->avalue_dot('source', $video);
-$runtimeHours = tutor_utils()->avalue_dot('runtime.hours', $video);
+$video          = maybe_unserialize(get_post_meta($post->ID, '_video', true));
+$videoSource    = tutor_utils()->avalue_dot('source', $video);
+$runtimeHours   = tutor_utils()->avalue_dot('runtime.hours', $video);
 $runtimeMinutes = tutor_utils()->avalue_dot('runtime.minutes', $video);
 $runtimeSeconds = tutor_utils()->avalue_dot('runtime.seconds', $video);
-$sourceVideoID = tutor_utils()->avalue_dot('source_video_id', $video);
-$poster = tutor_utils()->avalue_dot('poster', $video);
-$videoAttachment = $sourceVideoID ? tutor_utils()->get_attachment_data($sourceVideoID) : null;
+$sourceVideoID  = tutor_utils()->avalue_dot('source_video_id', $video);
+$poster         = tutor_utils()->avalue_dot('poster', $video);
+$videoAttachment= $sourceVideoID ? tutor_utils()->get_attachment_data($sourceVideoID) : null;
 
-$video_sources = array(
-    'html5' => array('title' => __('HTML 5 (mp4)', 'tutor'), 'icon' => 'html5'),
+$video_sources  = array(
+    'html5'     => array('title' => __('HTML 5 (mp4)', 'tutor'), 'icon' => 'html5'),
     'external_url' => array('title' => __('External URL', 'tutor'), 'icon' => 'link'),
-    'youtube' => array('title' => __('Youtube', 'tutor'), 'icon' => 'youtube'),
-    'vimeo' => array('title' => __('Vimeo', 'tutor'), 'icon' => 'vimeo'),
-    'embedded' => array('title' => __('Embedded', 'tutor'), 'icon' => 'code')
+    'youtube'   => array('title' => __('Youtube', 'tutor'), 'icon' => 'youtube'),
+    'vimeo'     => array('title' => __('Vimeo', 'tutor'), 'icon' => 'vimeo'),
+    'embedded'  => array('title' => __('Embedded', 'tutor'), 'icon' => 'code')
 );
 
-$supported_sources = tutor_utils()->get_option('supported_video_sources', $video_sources);
-$supported_sources = array_keys($supported_sources);
+$supported_sources = tutor_utils()->get_option('supported_video_sources', array());
+if(!is_array($supported_sources) || !count($supported_sources)) {
+    return;
+}
 ?>
 
 
@@ -46,7 +47,9 @@ $supported_sources = array_keys($supported_sources);
                 <?php
                     foreach($video_sources as $value=>$source){
                         if(in_array($value, $supported_sources)){
-                            echo '<option value="'.$value.'" '.selected($value, $videoSource).'  data-icon="'.$source['icon'].'" >'.$source['title'].'</option>';
+                            echo '<option value="'.$value.'" '.selected($value, $videoSource).'  data-icon="'.$source['icon'].'">
+                                    '.$source['title'].'
+                                </option>';
                         }
                     }
                 ?>
