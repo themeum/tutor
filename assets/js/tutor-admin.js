@@ -1979,6 +1979,10 @@ navTabLists.forEach(function (list) {
       if (loadingSpinner) {
         document.getElementById(dataTab).querySelector('.loading-spinner').remove();
       }
+
+      tinymce.activeEditor.on("change", function (e) {
+        document.getElementById('save_tutor_option').disabled = false;
+      });
     }
   });
 });
