@@ -484,7 +484,7 @@ class Options_V2 {
 							array(
 								'key'         => 'enable_lesson_classic_editor',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Classic Editor for Lesson', 'tutor' ),
+								'label'       => __( 'WP Editor for Lesson', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
 								'desc'        => __( 'Enable classic editor to edit lesson.', 'tutor' ),
@@ -898,7 +898,7 @@ class Options_V2 {
 										'key'     => 'display_course_instructors',
 										'type'    => 'toggle_single',
 										'label'   => __( 'Instructor Info', 'tutor' ),
-										'default' => 'off',
+										'default' => 'on',
 										'desc'    => __( 'Toggle to show instructor info', 'tutor' ),
 									),
 									array(
@@ -909,12 +909,12 @@ class Options_V2 {
 										'desc'    => __( 'Enable to add a Q&A section', 'tutor' ),
 									),
 									array(
-										'key'         => 'disable_course_author',
+										'key'         => 'enable_course_author',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Disable Author', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Enabling to remove course author name', 'tutor' ),
+										'label'       => __( 'Author', 'tutor' ),
+										'label_title' => __( 'Enable', 'tutor' ),
+										'default'     => 'on',
+										'desc'        => __( 'Show author in single course', 'tutor' ),
 									),
 									array(
 										'key'         => 'disable_course_level',
@@ -933,7 +933,7 @@ class Options_V2 {
 										'desc'        => __( 'Toggle to hide course share', 'tutor' ),
 									),
 									array(
-										'key'         => 'disable_course_duration',
+										'key'         => 'enable_course_duration',
 										'type'        => 'toggle_single',
 										'label'       => __( 'Duration', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
@@ -941,7 +941,7 @@ class Options_V2 {
 										'desc'        => __( 'Enable to show course duration', 'tutor' ),
 									),
 									array(
-										'key'         => 'disable_course_total_enrolled',
+										'key'         => 'enable_course_total_enrolled',
 										'type'        => 'toggle_single',
 										'label'       => __( 'Enrolled Students', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
@@ -949,7 +949,7 @@ class Options_V2 {
 										'desc'        => __( 'Enable to show total enrolled students', 'tutor' ),
 									),
 									array(
-										'key'         => 'disable_course_update_date',
+										'key'         => 'enable_course_update_date',
 										'type'        => 'toggle_single',
 										'label'       => __( 'Update Date', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
@@ -1021,7 +1021,7 @@ class Options_V2 {
 										'desc'        => __( 'Disable to hide course announcements settion', 'tutor' ),
 									),
 									array(
-										'key'         => 'disable_course_review',
+										'key'         => 'enable_course_review',
 										'type'        => 'toggle_single',
 										'label'       => __( 'Review', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),

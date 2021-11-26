@@ -171,14 +171,14 @@ else if(function_exists('edd_currency_symbol')){
     }
     ?>
 
-    <div class="withdraw-history-table-wrap tutor-tooltip-inside">
-        <div class="withdraw-history-table-title color-text-primary">
-            <h4> <?php esc_html_e('Withdrawal History', 'tutor'); ?></h4>
-        </div>
-
-        <?php
-        if (tutor_utils()->count($all_histories->results)) {
+    <?php
+    if (tutor_utils()->count($all_histories->results)) {
         ?>
+        <div class="withdraw-history-table-wrap tutor-tooltip-inside">
+            <div class="withdraw-history-table-title color-text-primary">
+                <h4> <?php esc_html_e('Withdrawal History', 'tutor'); ?></h4>
+            </div>
+
             <table class="tutor-ui-table tutor-ui-table-responsive">
                 <thead>
                     <tr>
@@ -279,12 +279,8 @@ else if(function_exists('edd_currency_symbol')){
                     ?>
                 </tbody>
             </table>
+        </div>
         <?php
-        } else {
-        ?>
-            <p><?php esc_html_e('No withdrawal yet', 'tutor'); ?></p>
-        <?php
-        }
-        ?>
-    </div>
+    }
+    ?>
 </div>
