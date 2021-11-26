@@ -6,13 +6,15 @@
  * @since 2.0.0
  */
 
-$field_default = sanitize_text_field( $field['default'] );
-$field_key     = sanitize_key( $field['key'] );
-$field_event   = sanitize_key( $field['event'] );
-$default       = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
-$option_value  = $this->get( esc_attr( $field_key . '.' . $field_event ), $default );
-$field_id      = sanitize_key( 'field_' . $field_key . '_' . $field_event );
-$tooltip_desc  = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
+$field_default   = sanitize_text_field( $field['default'] );
+$field_key       = sanitize_key( $field['key'] );
+$field_event     = sanitize_key( $field['event'] );
+$default         = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
+$option_value    = $this->get( esc_attr( $field_key . '.' . $field_event ), $default );
+$field_key_event = sanitize_key( $field_key . '_' . $field_event );
+$field_template  = sanitize_key( $field['template'] );
+$field_id        = sanitize_key( 'field_' . $field_key_event );
+$tooltip_desc    = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
@@ -35,6 +37,9 @@ $tooltip_desc  = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
 				if ( 'anchor' === $button['type'] ) {
 					?>
 					<a class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs" href="<?php echo esc_attr( $button['url'] ); ?>"><?php echo esc_attr( $button['text'] ); ?></a>
+					<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs send_test_email"
+					data-to="<?php echo esc_attr( $field_key_event ); ?>" data-template="<?php echo esc_attr( $field_template ); ?>"
+					><?php echo esc_attr( 'Send Test' ); ?></button>
 					<?php
 				}
 			}
