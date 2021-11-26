@@ -13,7 +13,7 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
 	if ($question_type === 'true_false'){
 		?>
         <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Select the correct option', 'tutor'); ?></h4>
+            <!-- <h4><?php _e('Select the correct option', 'tutor'); ?></h4> -->
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>

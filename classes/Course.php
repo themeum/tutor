@@ -1025,7 +1025,12 @@ class Course extends Tutor_Base {
         $lesson_count = tutor_utils()->get_lesson_count_by_course();
 
         if ($completed_lesson < $lesson_count){
-            return '<p class="suggestion-before-course-complete">'.__('complete all lessons to mark this course as complete', 'tutor').'</p>';
+            return '<div class="tutor-alert tutor-warning tutor-mt-28">
+						<div class="tutor-alert-text">
+							<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+							<span>'.__('Complete all lessons to mark this course as complete', 'tutor').'</span>
+						</div>
+					</div>';
         }
 
         $quizzes = array();
@@ -1062,7 +1067,12 @@ class Course extends Tutor_Base {
         }
 
         if ( ! $is_pass){
-            return '<p class="suggestion-before-course-complete">'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</p>';
+			return '<div class="tutor-alert tutor-warning tutor-mt-28">
+						<div class="tutor-alert-text">
+							<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+							<span>'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</span>
+						</div>
+					</div>';
         }
 
         return $html;
