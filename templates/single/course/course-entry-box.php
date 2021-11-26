@@ -36,7 +36,7 @@
             'value'      => ! get_tutor_option( 'disable_course_duration' ) ? get_tutor_course_duration_context() : null
         ),
         array(
-            'icon_class' => 'ttr-update-line', 
+            'icon_class' => 'ttr-refresh-l', 
             'label'      => __( 'Last Updated', 'tutor' ), 
             'value'      => ! get_tutor_option( 'disable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null
         ),

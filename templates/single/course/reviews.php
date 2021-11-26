@@ -26,7 +26,7 @@ if ( ! is_array($reviews) || ! count($reviews)){
 
 $rating = tutor_utils()->get_course_rating();
 ?>
-<div class="tutor-ratingsreviews tutor-mt-30">
+<div class="tutor-ratingsreviews">
     <div class="tutor-ratingsreviews-ratings">
         <div class="tutor-ratingsreviews-ratings-avg">
             <div class="text-medium-h1 color-text-primary">

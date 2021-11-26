@@ -115,6 +115,7 @@
 			border-radius: 6px;
 			transition: box-shadow 200ms ease;
 			position: relative;
+			display: flex;
 
 			&::before {
 				content: '';
