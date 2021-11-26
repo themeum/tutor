@@ -42,15 +42,15 @@
                     <ul>
                         <li class="tutor-is-completed" data-tab="quiz-builder-tab-quiz-info">
                             <span><?php _e('Quiz Info', 'tutor'); ?></span>
-                            <button class="tutor-modal-step-btn">1</button>
+                            <span class="tutor-modal-step-btn">1</span>
                         </li>
                         <li data-tab="quiz-builder-tab-questions">
                             <span><?php _e('Question', 'tutor'); ?></span>
-                            <button class="tutor-modal-step-btn">2</button>
+                            <span class="tutor-modal-step-btn">2</span>
                         </li>
                         <li data-tab="quiz-builder-tab-settings">
                             <span><?php _e('Settings', 'tutor'); ?></span>
-                            <button class="tutor-modal-step-btn">4</button>
+                            <span class="tutor-modal-step-btn">3</span>
                         </li>
                     </ul>
                 </div>

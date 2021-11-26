@@ -85,6 +85,7 @@
 
                 // Show Course Completion Button
                 if ( ! $is_completed_course ) {
+                    ob_start();
                     ?>
                     <form method="post">
                         <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
@@ -97,6 +98,7 @@
                         </button>
                     </form>
                     <?php
+                    echo apply_filters( 'tutor_course/single/complete_form', ob_get_clean() );
                 }
                 do_action( 'tutor_course/single/actions_btn_group/after' ); 
 

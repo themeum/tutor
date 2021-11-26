@@ -35,14 +35,15 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
     </div>
 
     <!-- Course list -->
-    <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
-	    <?php
-            $status = $active_tab=='my-courses' ? array('publish') : array('pending', 'draft');
-	        $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
+    <?php
+        $status = $active_tab=='my-courses' ? array('publish') : array('pending', 'draft');
+        $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
 
-	        if (is_array($my_courses) && count($my_courses)):
-                global $post;
-
+        if (is_array($my_courses) && count($my_courses)){
+            global $post;
+            ?>
+            <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
+                <?php
                 foreach ($my_courses as $post):
                     setup_postdata($post);
 
@@ -141,13 +142,10 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                         </div>
                     </div>
 		        <?php endforeach; wp_reset_postdata(); ?>
-            <?php else: ?>
-                <div>
-                    <h2><?php esc_html_e("Not Found" , 'tutor'); ?></h2>
-                    <p><?php esc_html_e("Sorry, you don't have any courses." , 'tutor'); ?></p>
-                </div>
-            <?php 
-            endif; 
-        ?>
-    </div>
+            </div>
+            <?php
+        } else {
+            tutor_utils()->tutor_empty_state();
+        }
+    ?>
 </div>
