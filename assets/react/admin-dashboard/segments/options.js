@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			link.addEventListener('click', (e) => {
 				const dataTab = e.target.closest('[data-tab]').dataset.tab;
 				const dataKey = e.target.closest('[data-key]').dataset.key;
-
+				console.log('clicked search');
 				if (dataTab) {
 					// remove active from other buttons
 					navTabItems.forEach((item) => {

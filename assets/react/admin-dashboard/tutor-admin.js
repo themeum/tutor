@@ -1,3 +1,4 @@
+import "./segments/navigation";
 import "./segments/image-preview";
 import "./segments/options";
 import "./segments/import-export";
@@ -39,7 +40,7 @@ jQuery(document).ready(function ($) {
 
   /**
    * Option Settings Nav Tab
-   */
+   * /
   $(".tutor-option-nav-tabs li a").click(function (e) {
     e.preventDefault();
     var tab_page_id = $(this).attr("data-tab");
@@ -210,7 +211,7 @@ jQuery(document).ready(function ($) {
    */
   $(document).on("click", "a.instructor-action", async function (e) {
     e.preventDefault();
-   
+
     const $that = $(this);
     const action = $that.attr("data-action");
     const instructorId = $that.attr("data-instructor-id");
@@ -252,7 +253,37 @@ jQuery(document).ready(function ($) {
       tutor_toast(__("Operation failed", "tutor"), error, "error");
     }
   });
-  
+
+  /**
+   * On form submit block | approve instructor
+   *
+   * @since v.2.0.0
+   */
+  if (instructorActionForm) {
+    instructorActionForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(instructorActionForm);
+      const loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
+      const prevHtml = loadingButton.innerHTML;
+      loadingButton.innerHTML = `<div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>`;
+      try {
+        const post = await ajaxHandler(formData);
+        const response = await post.json();
+        loadingButton.innerHTML = prevHtml;
+        if (post.ok && response.success) {
+          location.reload();
+        } else {
+          tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+        }
+      } catch (error) {
+        loadingButton.innerHTML = prevHtml;
+        tutor_toast(__("Operation failed", "tutor"), error, "error");
+      }
+    }
+  }
 
   /**
    * Password Reveal
@@ -265,7 +296,7 @@ jQuery(document).ready(function ($) {
       return attr == 'password' ? 'text' : 'password';
     });
   });
-  
+
   /**
    * Used for backend profile photo upload.
    */
