@@ -11,6 +11,12 @@
 				background: #fff;
 				z-index: 999;
 			}
+			.tab-item-content {
+				p {
+					@extend .text-regular-body;
+					@extend .color-text-subsued;
+				}
+			}
 		}
 	}
 	&-header {
@@ -259,10 +265,19 @@
 .tutor-course-details-page {
 	// border: 1px solid;
 	ul {
-		margin: 0;
+		// margin: 0;
 		padding: 0;
 		list-style: none;
 	}
+
+	iframe {
+		width: 100%;
+		height: 440px;
+		border: none;
+		background: #fff;
+		border-radius: 6px;
+	}
+
 	&-main {
 		display: grid;
 		grid-gap: 30px;
