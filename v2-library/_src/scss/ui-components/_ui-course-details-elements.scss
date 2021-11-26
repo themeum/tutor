@@ -69,7 +69,7 @@
 
 	&-col-2 {
 		@include breakpoint-min(tablet) {
-			.widget-list {
+			.tutor-course-details-widget-list {
 				column-count: 2;
 			}
 		}

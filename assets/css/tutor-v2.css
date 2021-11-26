@@ -26032,7 +26032,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (min-width: 768px) {
-  .tutor-course-details-widget-col-2 .widget-list {
+  .tutor-course-details-widget-col-2 .tutor-course-details-widget-list {
     -webkit-column-count: 2;
        -moz-column-count: 2;
             column-count: 2;
