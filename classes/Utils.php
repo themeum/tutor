@@ -8402,4 +8402,37 @@ class Utils {
 		) );
 		return $attempted ? true : false;
 	}
+
+	/**
+	 * Course nav items 
+	 *
+	 * @since v2.0.0
+	 */
+	public function course_nav_items() {
+		$array =  array(
+			'info' => array( 
+				'title' => __('Course Info', 'tutor'), 
+				'method' => 'tutor_course_info_tab'
+			),
+			'curriculum' => array( 
+				'title' => __('Curriculum', 'tutor'), 
+				'method' => 'tutor_course_topics' 
+			),
+			'reviews' => array( 
+				'title' => __('Reviews', 'tutor'), 
+				'method' => 'tutor_course_target_reviews_html' 
+			),
+			'questions' => array( 
+				'title' => __('Q&A', 'tutor'), 
+				'method' => 'tutor_course_question_and_answer',
+				'require_enrolment' => true
+			),
+			'announcements' => array( 
+				'title' => __('Announcements', 'tutor'), 
+				'method' => 'tutor_course_announcements',
+				'require_enrolment' => true
+			)
+		);
+		return $array;
+	}
 }

@@ -899,6 +899,9 @@ var _wp$i18n = wp.i18n,
     _n = _wp$i18n._n,
     _nx = _wp$i18n._nx;
 document.addEventListener("DOMContentLoaded", function () {
+  var commonConfirmModal = document.getElementById('tutor-common-confirmation-modal');
+  var commonConfirmForm = document.getElementById('tutor-common-confirmation-form');
+  var commonConfirmContent = document.getElementById('tutor-common-confirmation-modal-content');
   var filterCourse = document.getElementById("tutor-backend-filter-course");
 
   if (filterCourse) {
@@ -1139,22 +1142,22 @@ document.addEventListener("DOMContentLoaded", function () {
       var status = _step3.value;
 
       status.onchange = /*#__PURE__*/function () {
-        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
           var target, newStatus, prevStatus, formData, post, response, putStatus;
-          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
             while (1) {
-              switch (_context2.prev = _context2.next) {
+              switch (_context3.prev = _context3.next) {
                 case 0:
                   target = e.target;
                   newStatus = availableStatus[target.selectedIndex];
                   prevStatus = target.dataset.status;
 
                   if (!(newStatus === prevStatus)) {
-                    _context2.next = 5;
+                    _context3.next = 5;
                     break;
                   }
 
-                  return _context2.abrupt("return");
+                  return _context3.abrupt("return");
 
                 case 5:
                   formData = new FormData();
@@ -1162,16 +1165,16 @@ document.addEventListener("DOMContentLoaded", function () {
                   formData.set("id", target.dataset.id);
                   formData.set("status", newStatus);
                   formData.set("action", "tutor_change_course_status");
-                  _context2.next = 12;
+                  _context3.next = 12;
                   return ajaxHandler(formData);
 
                 case 12:
-                  post = _context2.sent;
-                  _context2.next = 15;
+                  post = _context3.sent;
+                  _context3.next = 15;
                   return post.json();
 
                 case 15:
-                  response = _context2.sent;
+                  response = _context3.sent;
 
                   if (response) {
                     target.dataset.status = newStatus;
@@ -1186,14 +1189,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 case 17:
                 case "end":
-                  return _context2.stop();
+                  return _context3.stop();
               }
             }
-          }, _callee2);
+          }, _callee3);
         }));
 
-        return function (_x4) {
-          return _ref2.apply(this, arguments);
+        return function (_x5) {
+          return _ref3.apply(this, arguments);
         };
       }();
     }
@@ -1216,58 +1219,23 @@ document.addEventListener("DOMContentLoaded", function () {
     for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
       var course = _step4.value;
 
-      course.onclick = /*#__PURE__*/function () {
-        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-          var id, formData, post, response;
-          return regeneratorRuntime.wrap(function _callee3$(_context3) {
-            while (1) {
-              switch (_context3.prev = _context3.next) {
-                case 0:
-                  if (!confirm("Do you want to delete this course?")) {
-                    _context3.next = 13;
-                    break;
-                  }
+      course.onclick = function (e) {
+        var id = e.currentTarget.dataset.id;
 
-                  id = e.currentTarget.dataset.id;
-                  formData = new FormData();
-                  formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                  formData.set("id", id);
-                  formData.set("action", "tutor_course_delete");
-                  _context3.next = 8;
-                  return ajaxHandler(formData);
+        if (commonConfirmForm) {
+          commonConfirmForm.elements.action.value = 'tutor_course_delete';
+          commonConfirmForm.elements.id.value = id;
+        }
 
-                case 8:
-                  post = _context3.sent;
-                  _context3.next = 11;
-                  return post.json();
-
-                case 11:
-                  response = _context3.sent;
-
-                  if (response) {
-                    tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
-                    e.target.closest("tr").remove();
-                  } else {
-                    tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
-                  }
-
-                case 13:
-                case "end":
-                  return _context3.stop();
-              }
-            }
-          }, _callee3);
-        }));
-
-        return function (_x5) {
-          return _ref3.apply(this, arguments);
-        };
-      }();
+        if (commonConfirmContent) {
+          commonConfirmContent.innerHTML = "\n          <div class=\"tutor-modal-icon\">\n          <img src=\"https://i.imgur.com/Nx6U2u7.png\" alt=\"\"/>\n          </div>\n          <div class=\"tutor-modal-text-wrap\">\n          <h3 class=\"tutor-modal-title\">\n           ".concat(__('Wait!', 'tutor'), "\n          </h3>\n          <p>\n            ").concat(__('Are you sure you would like perform this action? We suggest you proceed with caution.', 'tutor'), "\n          </p>\n          </div>\n        ");
+        }
+      };
     }
     /**
-     * Handle ajax request show toast message on success | failure
-     *
-     * @param {*} formData including action and all form fields
+     * Handle common confirmation form
+     * 
+     * @since v.2.0.0
      */
 
   } catch (err) {
@@ -1276,7 +1244,71 @@ document.addEventListener("DOMContentLoaded", function () {
     _iterator4.f();
   }
 
-  function ajaxHandler(_x3) {
+  if (commonConfirmForm) {
+    commonConfirmForm.onsubmit = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+        var formData, loadingButton, prevHtml, post, response;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(commonConfirmForm); //show loading
+
+                loadingButton = commonConfirmForm.querySelector('.tutor-btn-loading');
+                prevHtml = loadingButton.innerHTML;
+                loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
+                _context2.next = 7;
+                return ajaxHandler(formData);
+
+              case 7:
+                post = _context2.sent;
+                //after post back button text
+                loadingButton.innerHTML = prevHtml; //hide modal
+
+                if (commonConfirmModal.classList.contains('tutor-is-active')) {
+                  commonConfirmModal.classList.remove('tutor-is-active');
+                }
+
+                if (!post.ok) {
+                  _context2.next = 15;
+                  break;
+                }
+
+                _context2.next = 13;
+                return post.json();
+
+              case 13:
+                response = _context2.sent;
+
+                if (response) {
+                  tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
+                  location.reload();
+                } else {
+                  tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
+                }
+
+              case 15:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+  }
+  /**
+   * Handle ajax request show toast message on success | failure
+   *
+   * @param {*} formData including action and all form fields
+   */
+
+
+  function ajaxHandler(_x4) {
     return _ajaxHandler.apply(this, arguments);
   }
 
@@ -31623,89 +31655,86 @@ jQuery(document).ready(function ($) {
    * @since v.1.5.3
    */
 
-  var instructorActionForm = document.getElementById('tutor-instructor-confirm-form');
-  $(document).on("click", "a.instructor-action", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var action = $that.attr("data-action");
-    var instructorId = $that.attr("data-instructor-id");
-    var promptMessage = $that.attr("data-prompt-message");
-    var messageWrapper = document.getElementById('tutor-instructor-confirm-message');
+  $(document).on("click", "a.instructor-action", /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var $that, action, instructorId, loadingButton, prevHtml, formData, post, response, message;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              e.preventDefault();
+              $that = $(this);
+              action = $that.attr("data-action");
+              instructorId = $that.attr("data-instructor-id");
+              loadingButton = e.target;
+              prevHtml = loadingButton.innerHTML;
+              loadingButton.innerHTML = '';
+              loadingButton.classList.add('tutor-updating-message'); // prepare form data
 
-    if (messageWrapper) {
-      messageWrapper.innerHTML = "<h3>".concat(promptMessage, "</h3>");
-    }
+              formData = new FormData();
+              formData.set('action', 'instructor_approval_action');
+              formData.set('action_name', action);
+              formData.set('instructor_id', instructorId);
+              formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+              _context.prev = 13;
+              _context.next = 16;
+              return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_7__["default"])(formData);
 
-    if (instructorActionForm) {
-      instructorActionForm.elements.action.value = "instructor_approval_action";
-      instructorActionForm.elements.action_name.value = action;
-      instructorActionForm.elements.instructor_id.value = instructorId;
-    }
-  });
-  /**
-   * On form submit block | approve instructor
-   * 
-   * @since v.2.0.0
-   */
+            case 16:
+              post = _context.sent;
+              _context.next = 19;
+              return post.json();
 
-  if (instructorActionForm) {
-    instructorActionForm.onsubmit = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-        var formData, loadingButton, prevHtml, post, response;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                e.preventDefault();
-                formData = new FormData(instructorActionForm);
-                loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
-                prevHtml = loadingButton.innerHTML;
-                loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
-                _context.prev = 5;
-                _context.next = 8;
-                return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_7__["default"])(formData);
+            case 19:
+              response = _context.sent;
 
-              case 8:
-                post = _context.sent;
-                _context.next = 11;
-                return post.json();
+              if (loadingButton.classList.contains('tutor-updating-message')) {
+                loadingButton.classList.remove('tutor-updating-message');
+                loadingButton.innerHTML = action.charAt(0).toUpperCase() + action.slice(1);
+                ;
+              }
 
-              case 11:
-                response = _context.sent;
-                loadingButton.innerHTML = prevHtml;
+              if (post.ok && response.success) {
+                message = '';
 
-                if (post.ok && response.success) {
-                  location.reload();
-                } else {
-                  tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+                if (action == 'approve') {
+                  message = 'Instructor approved!';
                 }
 
-                _context.next = 20;
-                break;
+                if (action == 'blocked') {
+                  message = 'Instructor blocked!';
+                }
 
-              case 16:
-                _context.prev = 16;
-                _context.t0 = _context["catch"](5);
-                loadingButton.innerHTML = prevHtml;
-                tutor_toast(__("Operation failed", "tutor"), _context.t0, "error");
+                tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+                location.reload();
+              } else {
+                tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+              }
 
-              case 20:
-              case "end":
-                return _context.stop();
-            }
+              _context.next = 28;
+              break;
+
+            case 24:
+              _context.prev = 24;
+              _context.t0 = _context["catch"](13);
+              loadingButton.innerHTML = prevHtml;
+              tutor_toast(__("Operation failed", "tutor"), _context.t0, "error");
+
+            case 28:
+            case "end":
+              return _context.stop();
           }
-        }, _callee, null, [[5, 16]]);
-      }));
+        }
+      }, _callee, this, [[13, 24]]);
+    }));
 
-      return function (_x2) {
-        return _ref.apply(this, arguments);
-      };
-    }();
-  }
+    return function (_x2) {
+      return _ref.apply(this, arguments);
+    };
+  }());
   /**
    * Password Reveal
    */
-
 
   $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon
