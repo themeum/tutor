@@ -78,6 +78,7 @@ class Assets {
 			'is_admin'						=> is_admin(),
 			'is_admin_bar_showing'			=> is_admin_bar_showing(),
 			'addons_data'                   => tutor_utils()->prepare_free_addons_data(),
+			'content_change_event'			=> 'tutor_content_changed_event'
 		);
 	}
 

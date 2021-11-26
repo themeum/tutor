@@ -12,6 +12,10 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 class Utils {
+	public function get_option_default($key, $fallback) {
+		return $fallback;
+	}
+
 	/**
 	 * @param null $key
 	 * @param bool $default
@@ -27,11 +31,16 @@ class Utils {
 		$option = (array) maybe_unserialize(get_option('tutor_option'));
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
-			return $default;
+			// If the option array is not yet stored on database, then return default/fallback
+			return $this->get_option_default( $key, $default );
 		}
+
 		if ( ! $key ) {
+			// Return entire option array if no key specified
 			return $option;
 		}
+
+		// Get option value by option key
 		if ( array_key_exists( $key, $option ) ) {
 			// Convert off/on switch values to boolean
 			$value = $option[$key];
@@ -43,6 +52,7 @@ class Utils {
 
 			return apply_filters( $key, $value );
 		}
+
 		//Access array value via dot notation, such as option->get('value.subvalue')
 		if ( strpos($key, '.') ) {
 			$option_key_array = explode( '.', $key );
@@ -51,8 +61,8 @@ class Utils {
 			foreach ( $option_key_array as $dotKey ) {
 				if ( isset( $new_option[$dotKey] ) ) {
 					$new_option = $new_option[$dotKey];
-				}else{
-					return $default;
+				} else {
+					return $this->get_option_default( $key, $default );
 				}
 			}
 
@@ -68,7 +78,7 @@ class Utils {
 			return apply_filters( $key, $value );
 		}
 
-		return $default;
+		return $this->get_option_default( $key, $default );
 	}
 
 	/**
@@ -2562,7 +2572,7 @@ class Utils {
 			'quiz-attempts'     => array( 'title' => __( 'Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 		));
 
-		$disable = get_tutor_option( 'disable_course_review' );
+		$disable = !get_tutor_option( 'enable_course_review' );
 		if ( $disable && isset( $nav_items['reviews'] ) ) {
 			unset( $nav_items['reviews'] );
 		}

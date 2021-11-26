@@ -21903,6 +21903,10 @@ a, button {
     */
 }
 
+.tutor-btn:not(:disabled) {
+  cursor: pointer;
+}
+
 .tutor-btn.tutor-is-fullwidth, .tutor-btn.tutor-is-block {
   width: 100%;
 }

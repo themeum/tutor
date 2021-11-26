@@ -30,6 +30,8 @@ window.jQuery(document).ready(function($){
                 tinymce.init(tinyMCEPreInit.mceInit.tutor_assignment_editor_config);
                 tinymce.execCommand('mceRemoveEditor', false, 'tutor_assignments_modal_editor');
                 tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
+
+                window.dispatchEvent(new Event(_tutorobject.content_change_event));
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
