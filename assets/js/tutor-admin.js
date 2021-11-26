@@ -899,6 +899,9 @@ var _wp$i18n = wp.i18n,
     _n = _wp$i18n._n,
     _nx = _wp$i18n._nx;
 document.addEventListener("DOMContentLoaded", function () {
+  var commonConfirmModal = document.getElementById('tutor-common-confirmation-modal');
+  var commonConfirmForm = document.getElementById('tutor-common-confirmation-form');
+  var commonConfirmContent = document.getElementById('tutor-common-confirmation-modal-content');
   var filterCourse = document.getElementById("tutor-backend-filter-course");
 
   if (filterCourse) {
@@ -1139,22 +1142,22 @@ document.addEventListener("DOMContentLoaded", function () {
       var status = _step3.value;
 
       status.onchange = /*#__PURE__*/function () {
-        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
           var target, newStatus, prevStatus, formData, post, response, putStatus;
-          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
             while (1) {
-              switch (_context2.prev = _context2.next) {
+              switch (_context3.prev = _context3.next) {
                 case 0:
                   target = e.target;
                   newStatus = availableStatus[target.selectedIndex];
                   prevStatus = target.dataset.status;
 
                   if (!(newStatus === prevStatus)) {
-                    _context2.next = 5;
+                    _context3.next = 5;
                     break;
                   }
 
-                  return _context2.abrupt("return");
+                  return _context3.abrupt("return");
 
                 case 5:
                   formData = new FormData();
@@ -1162,16 +1165,16 @@ document.addEventListener("DOMContentLoaded", function () {
                   formData.set("id", target.dataset.id);
                   formData.set("status", newStatus);
                   formData.set("action", "tutor_change_course_status");
-                  _context2.next = 12;
+                  _context3.next = 12;
                   return ajaxHandler(formData);
 
                 case 12:
-                  post = _context2.sent;
-                  _context2.next = 15;
+                  post = _context3.sent;
+                  _context3.next = 15;
                   return post.json();
 
                 case 15:
-                  response = _context2.sent;
+                  response = _context3.sent;
 
                   if (response) {
                     target.dataset.status = newStatus;
@@ -1186,14 +1189,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 case 17:
                 case "end":
-                  return _context2.stop();
+                  return _context3.stop();
               }
             }
-          }, _callee2);
+          }, _callee3);
         }));
 
-        return function (_x4) {
-          return _ref2.apply(this, arguments);
+        return function (_x5) {
+          return _ref3.apply(this, arguments);
         };
       }();
     }
@@ -1216,58 +1219,23 @@ document.addEventListener("DOMContentLoaded", function () {
     for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
       var course = _step4.value;
 
-      course.onclick = /*#__PURE__*/function () {
-        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-          var id, formData, post, response;
-          return regeneratorRuntime.wrap(function _callee3$(_context3) {
-            while (1) {
-              switch (_context3.prev = _context3.next) {
-                case 0:
-                  if (!confirm("Do you want to delete this course?")) {
-                    _context3.next = 13;
-                    break;
-                  }
+      course.onclick = function (e) {
+        var id = e.currentTarget.dataset.id;
 
-                  id = e.currentTarget.dataset.id;
-                  formData = new FormData();
-                  formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-                  formData.set("id", id);
-                  formData.set("action", "tutor_course_delete");
-                  _context3.next = 8;
-                  return ajaxHandler(formData);
+        if (commonConfirmForm) {
+          commonConfirmForm.elements.action.value = 'tutor_course_delete';
+          commonConfirmForm.elements.id.value = id;
+        }
 
-                case 8:
-                  post = _context3.sent;
-                  _context3.next = 11;
-                  return post.json();
-
-                case 11:
-                  response = _context3.sent;
-
-                  if (response) {
-                    tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
-                    e.target.closest("tr").remove();
-                  } else {
-                    tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
-                  }
-
-                case 13:
-                case "end":
-                  return _context3.stop();
-              }
-            }
-          }, _callee3);
-        }));
-
-        return function (_x5) {
-          return _ref3.apply(this, arguments);
-        };
-      }();
+        if (commonConfirmContent) {
+          commonConfirmContent.innerHTML = "\n          <div class=\"tutor-modal-icon\">\n          <img src=\"https://i.imgur.com/Nx6U2u7.png\" alt=\"\"/>\n          </div>\n          <div class=\"tutor-modal-text-wrap\">\n          <h3 class=\"tutor-modal-title\">\n           ".concat(__('Wait!', 'tutor'), "\n          </h3>\n          <p>\n            ").concat(__('Are you sure you would like perform this action? We suggest you proceed with caution.', 'tutor'), "\n          </p>\n          </div>\n        ");
+        }
+      };
     }
     /**
-     * Handle ajax request show toast message on success | failure
-     *
-     * @param {*} formData including action and all form fields
+     * Handle common confirmation form
+     * 
+     * @since v.2.0.0
      */
 
   } catch (err) {
@@ -1276,7 +1244,71 @@ document.addEventListener("DOMContentLoaded", function () {
     _iterator4.f();
   }
 
-  function ajaxHandler(_x3) {
+  if (commonConfirmForm) {
+    commonConfirmForm.onsubmit = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+        var formData, loadingButton, prevHtml, post, response;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(commonConfirmForm); //show loading
+
+                loadingButton = commonConfirmForm.querySelector('.tutor-btn-loading');
+                prevHtml = loadingButton.innerHTML;
+                loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
+                _context2.next = 7;
+                return ajaxHandler(formData);
+
+              case 7:
+                post = _context2.sent;
+                //after post back button text
+                loadingButton.innerHTML = prevHtml; //hide modal
+
+                if (commonConfirmModal.classList.contains('tutor-is-active')) {
+                  commonConfirmModal.classList.remove('tutor-is-active');
+                }
+
+                if (!post.ok) {
+                  _context2.next = 15;
+                  break;
+                }
+
+                _context2.next = 13;
+                return post.json();
+
+              case 13:
+                response = _context2.sent;
+
+                if (response) {
+                  tutor_toast(__("Delete", "tutor"), __("Course has been deleted ", "tutor"), "success");
+                  location.reload();
+                } else {
+                  tutor_toast(__("Failed", "tutor"), __("Course delete failed ", "tutor"), "error");
+                }
+
+              case 15:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+  }
+  /**
+   * Handle ajax request show toast message on success | failure
+   *
+   * @param {*} formData including action and all form fields
+   */
+
+
+  function ajaxHandler(_x4) {
     return _ajaxHandler.apply(this, arguments);
   }
 
@@ -1364,51 +1396,10 @@ function _ajaxHandler2() {
   toolTipOnWindowResize();
 })();
 /**
- * Navigation tab
- */
-
-
-var navTabLists = document.querySelectorAll('ul.tutor-option-nav');
-var navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
-var navPages = document.querySelectorAll('.tutor-option-nav-page');
-navTabLists.forEach(function (list) {
-  list.addEventListener('click', function (e) {
-    var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
-    var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
-
-    if (dataTab) {
-      // remove active from other buttons
-      navTabItems.forEach(function (item) {
-        item.classList.remove('active');
-
-        if (e.target.dataset.tab) {
-          e.target.classList.add('active');
-        } else {
-          e.target.parentElement.classList.add('active');
-        }
-      }); // hide other tab contents
-
-      navPages.forEach(function (content) {
-        content.classList.remove('active');
-      }); // add active to the current content
-
-      var currentContent = document.querySelector("#".concat(dataTab));
-      currentContent.classList.add('active'); // History push
-
-      var url = new URL(window.location);
-      var params = new URLSearchParams({
-        page: pageSlug,
-        tab_page: dataTab
-      });
-      var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());
-      window.history.pushState({}, '', pushUrl);
-    }
-  });
-});
-/**
  * Toggle disable input fields
  * Selecetor -> .tutor-option-single-item.monetization-fees
  */
+
 
 var moniFees = document.querySelector('.monetization-fees');
 var feesToggle = document.querySelector('.monetization-fees input[name=deduct-fees]');
@@ -1972,6 +1963,64 @@ var json_download = function json_download(response, fileName) {
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/navigation.js":
+/*!*************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/navigation.js ***!
+  \*************************************************************/
+/***/ (() => {
+
+/**
+ * Navigation tab
+ */
+var navTabLists = document.querySelectorAll('ul.tutor-option-nav');
+var navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
+var navPages = document.querySelectorAll('.tutor-option-nav-page');
+navTabLists.forEach(function (list) {
+  list.addEventListener('click', function (e) {
+    var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
+    var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
+
+    if (dataTab) {
+      // remove active from other buttons
+      navTabItems.forEach(function (item) {
+        item.classList.remove('active');
+
+        if (e.target.dataset.tab) {
+          e.target.classList.add('active');
+        } else {
+          e.target.parentElement.classList.add('active');
+        }
+      }); // hide other tab contents
+
+      navPages.forEach(function (content) {
+        content.classList.remove('active');
+      }); // add active to the current content
+
+      var currentContent = document.querySelector("#".concat(dataTab));
+      currentContent.classList.add('active'); // History push
+
+      var url = new URL(window.location);
+      var params = new URLSearchParams({
+        page: pageSlug,
+        tab_page: dataTab
+      });
+      var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());
+      window.history.pushState({}, '', pushUrl);
+      var loadingSpinner = document.getElementById(dataTab).querySelector('.loading-spinner');
+
+      if (loadingSpinner) {
+        document.getElementById(dataTab).querySelector('.loading-spinner').remove();
+      }
+
+      tinymce.activeEditor.on("change", function (e) {
+        document.getElementById('save_tutor_option').disabled = false;
+      });
+    }
+  });
+});
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/options.js":
 /*!**********************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/options.js ***!
@@ -2245,6 +2294,7 @@ document.addEventListener('DOMContentLoaded', function () {
       link.addEventListener('click', function (e) {
         var dataTab = e.target.closest('[data-tab]').dataset.tab;
         var dataKey = e.target.closest('[data-key]').dataset.key;
+        console.log('clicked search');
 
         if (dataTab) {
           // remove active from other buttons
@@ -2382,7 +2432,8 @@ var modalResetOpen = function modalResetOpen() {
 
 var titleReseter = document.querySelectorAll('.tutor-option-single-item');
 titleReseter.forEach(function (item) {
-  item.querySelector('h4').onclick = function (e) {//item.parentElement.querySelector('.modal-reset-open').click()
+  var h4 = item.querySelector('h4');
+  !h4 ? 0 : h4.onclick = function (e) {//item.parentElement.querySelector('.modal-reset-open').click()
   };
 });
 
@@ -31426,26 +31477,29 @@ var __webpack_exports__ = {};
   !*** ./assets/react/admin-dashboard/tutor-admin.js ***!
   \*****************************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./segments/image-preview */ "./assets/react/admin-dashboard/segments/image-preview.js");
-/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_segments_image_preview__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
-/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
-/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
-/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
-/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
-/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
-/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./segments/navigation */ "./assets/react/admin-dashboard/segments/navigation.js");
+/* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_segments_navigation__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./segments/image-preview */ "./assets/react/admin-dashboard/segments/image-preview.js");
+/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_image_preview__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
+/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
+/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_10__);
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -31490,25 +31544,28 @@ jQuery(document).ready(function ($) {
   }
   /**
    * Option Settings Nav Tab
-   */
-
-
+   * /
   $(".tutor-option-nav-tabs li a").click(function (e) {
     e.preventDefault();
     var tab_page_id = $(this).attr("data-tab");
     $(".option-nav-item").removeClass("current");
-    $(this).closest("li").addClass("current");
+    $(this)
+      .closest("li")
+      .addClass("current");
     $(".tutor-option-nav-page").hide();
-    $(tab_page_id).addClass("current-page").show();
+    $(tab_page_id)
+      .addClass("current-page")
+      .show();
     window.history.pushState("obj", "", $(this).attr("href"));
   });
-  /**
+   /**
    * End Withdraw nav tabs
    */
 
   /**
    * Open Sidebar Menu
    */
+
 
   if (_tutorobject.open_tutor_admin_menu) {
     var $adminMenu = $("#adminmenu");
@@ -31622,55 +31679,113 @@ jQuery(document).ready(function ($) {
    * @since v.1.5.3
    */
 
-  var instructorActionForm = document.getElementById('tutor-instructor-confirm-form');
-  $(document).on("click", "a.instructor-action", function (e) {
-    e.preventDefault();
-    var $that = $(this);
-    var action = $that.attr("data-action");
-    var instructorId = $that.attr("data-instructor-id");
-    var promptMessage = $that.attr("data-prompt-message");
-    var messageWrapper = document.getElementById('tutor-instructor-confirm-message');
+  $(document).on("click", "a.instructor-action", /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var $that, action, instructorId, loadingButton, prevHtml, formData, post, response, message;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              e.preventDefault();
+              $that = $(this);
+              action = $that.attr("data-action");
+              instructorId = $that.attr("data-instructor-id");
+              loadingButton = e.target;
+              prevHtml = loadingButton.innerHTML;
+              loadingButton.innerHTML = '';
+              loadingButton.classList.add('tutor-updating-message'); // prepare form data
 
-    if (messageWrapper) {
-      messageWrapper.innerHTML = "<h3>".concat(promptMessage, "</h3>");
-    }
+              formData = new FormData();
+              formData.set('action', 'instructor_approval_action');
+              formData.set('action_name', action);
+              formData.set('instructor_id', instructorId);
+              formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+              _context.prev = 13;
+              _context.next = 16;
+              return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_8__["default"])(formData);
 
-    if (instructorActionForm) {
-      instructorActionForm.elements.action.value = "instructor_approval_action";
-      instructorActionForm.elements.action_name.value = action;
-      instructorActionForm.elements.instructor_id.value = instructorId;
-    }
-  });
+            case 16:
+              post = _context.sent;
+              _context.next = 19;
+              return post.json();
+
+            case 19:
+              response = _context.sent;
+
+              if (loadingButton.classList.contains('tutor-updating-message')) {
+                loadingButton.classList.remove('tutor-updating-message');
+                loadingButton.innerHTML = action.charAt(0).toUpperCase() + action.slice(1);
+                ;
+              }
+
+              if (post.ok && response.success) {
+                message = '';
+
+                if (action == 'approve') {
+                  message = 'Instructor approved!';
+                }
+
+                if (action == 'blocked') {
+                  message = 'Instructor blocked!';
+                }
+
+                tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+                location.reload();
+              } else {
+                tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+              }
+
+              _context.next = 28;
+              break;
+
+            case 24:
+              _context.prev = 24;
+              _context.t0 = _context["catch"](13);
+              loadingButton.innerHTML = prevHtml;
+              tutor_toast(__("Operation failed", "tutor"), _context.t0, "error");
+
+            case 28:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this, [[13, 24]]);
+    }));
+
+    return function (_x2) {
+      return _ref.apply(this, arguments);
+    };
+  }());
   /**
    * On form submit block | approve instructor
-   * 
+   *
    * @since v.2.0.0
    */
 
   if (instructorActionForm) {
     instructorActionForm.onsubmit = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
         var formData, loadingButton, prevHtml, post, response;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 e.preventDefault();
                 formData = new FormData(instructorActionForm);
                 loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
                 prevHtml = loadingButton.innerHTML;
                 loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
-                _context.prev = 5;
-                _context.next = 8;
-                return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_7__["default"])(formData);
+                _context2.prev = 5;
+                _context2.next = 8;
+                return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_8__["default"])(formData);
 
               case 8:
-                post = _context.sent;
-                _context.next = 11;
+                post = _context2.sent;
+                _context2.next = 11;
                 return post.json();
 
               case 11:
-                response = _context.sent;
+                response = _context2.sent;
                 loadingButton.innerHTML = prevHtml;
 
                 if (post.ok && response.success) {
@@ -31679,25 +31794,25 @@ jQuery(document).ready(function ($) {
                   tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
                 }
 
-                _context.next = 20;
+                _context2.next = 20;
                 break;
 
               case 16:
-                _context.prev = 16;
-                _context.t0 = _context["catch"](5);
+                _context2.prev = 16;
+                _context2.t0 = _context2["catch"](5);
                 loadingButton.innerHTML = prevHtml;
-                tutor_toast(__("Operation failed", "tutor"), _context.t0, "error");
+                tutor_toast(__("Operation failed", "tutor"), _context2.t0, "error");
 
               case 20:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[5, 16]]);
+        }, _callee2, null, [[5, 16]]);
       }));
 
-      return function (_x2) {
-        return _ref.apply(this, arguments);
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
       };
     }();
   }

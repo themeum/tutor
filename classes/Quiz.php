@@ -1074,14 +1074,14 @@ class Quiz {
 
 		ob_start();
 
-		switch ($question_type){
+		/* switch ($question_type){
 			case 'true_false':
 				echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
 				break;
 			case 'ordering':
 				echo '<label>'.__('Make sure you’re saving the answers in the right order. Students will have to match this order exactly.', 'tutor').'</label>';
 				break;
-		}
+		} */
 
 		if (is_array($answers) && count($answers)){
 			foreach ($answers as $answer){

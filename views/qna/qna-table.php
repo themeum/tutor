@@ -16,7 +16,7 @@
     </thead>
     <tbody>
         <?php 
-            if(is_array($qna_list) && count($qna)) {
+            if(is_array($qna_list) && count($qna_list)) {
                 foreach($qna_list as $qna) {
                     $id_string_delete = 'tutor_delete_qna_' . $qna->comment_ID;
                     $row_id = 'tutor_qna_row_' . $qna->comment_ID;
