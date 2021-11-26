@@ -14,7 +14,7 @@
 
 do_action('tutor_course/single/enrolled/before/reviews');
 
-$disable = get_tutor_option('disable_course_review');
+$disable = !get_tutor_option('enable_course_review');
 if ($disable){
     return;
 }

@@ -165,7 +165,7 @@
         </div>
     </div>
 
-    <div>
+    <div class="tutor-mb-30">
         <label class="tutor-form-label">
             <?php _e('Max questions allowed to answer', 'tutor'); ?>
         </label>
@@ -177,7 +177,7 @@
         </div>
     </div>
 
-    <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer">
+    <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer tutor-mb-30"">
         <!-- Header -->
         <div class="tutor-bs-row tutor-bs-align-items-center tutor-quiz-advance-header tutor-bs-g-0">
             <div class="tutor-bs-col">

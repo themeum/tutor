@@ -39,6 +39,10 @@ a, button {
   box-sizing: border-box;
   transition: 200ms;
 
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
   &.tutor-is-fullwidth,
   &.tutor-is-block {
     @extend .d-flex;
