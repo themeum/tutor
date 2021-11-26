@@ -1396,51 +1396,10 @@ function _ajaxHandler2() {
   toolTipOnWindowResize();
 })();
 /**
- * Navigation tab
- */
-
-
-var navTabLists = document.querySelectorAll('ul.tutor-option-nav');
-var navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
-var navPages = document.querySelectorAll('.tutor-option-nav-page');
-navTabLists.forEach(function (list) {
-  list.addEventListener('click', function (e) {
-    var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
-    var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
-
-    if (dataTab) {
-      // remove active from other buttons
-      navTabItems.forEach(function (item) {
-        item.classList.remove('active');
-
-        if (e.target.dataset.tab) {
-          e.target.classList.add('active');
-        } else {
-          e.target.parentElement.classList.add('active');
-        }
-      }); // hide other tab contents
-
-      navPages.forEach(function (content) {
-        content.classList.remove('active');
-      }); // add active to the current content
-
-      var currentContent = document.querySelector("#".concat(dataTab));
-      currentContent.classList.add('active'); // History push
-
-      var url = new URL(window.location);
-      var params = new URLSearchParams({
-        page: pageSlug,
-        tab_page: dataTab
-      });
-      var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());
-      window.history.pushState({}, '', pushUrl);
-    }
-  });
-});
-/**
  * Toggle disable input fields
  * Selecetor -> .tutor-option-single-item.monetization-fees
  */
+
 
 var moniFees = document.querySelector('.monetization-fees');
 var feesToggle = document.querySelector('.monetization-fees input[name=deduct-fees]');
@@ -2004,6 +1963,64 @@ var json_download = function json_download(response, fileName) {
 
 /***/ }),
 
+/***/ "./assets/react/admin-dashboard/segments/navigation.js":
+/*!*************************************************************!*\
+  !*** ./assets/react/admin-dashboard/segments/navigation.js ***!
+  \*************************************************************/
+/***/ (() => {
+
+/**
+ * Navigation tab
+ */
+var navTabLists = document.querySelectorAll('ul.tutor-option-nav');
+var navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
+var navPages = document.querySelectorAll('.tutor-option-nav-page');
+navTabLists.forEach(function (list) {
+  list.addEventListener('click', function (e) {
+    var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
+    var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
+
+    if (dataTab) {
+      // remove active from other buttons
+      navTabItems.forEach(function (item) {
+        item.classList.remove('active');
+
+        if (e.target.dataset.tab) {
+          e.target.classList.add('active');
+        } else {
+          e.target.parentElement.classList.add('active');
+        }
+      }); // hide other tab contents
+
+      navPages.forEach(function (content) {
+        content.classList.remove('active');
+      }); // add active to the current content
+
+      var currentContent = document.querySelector("#".concat(dataTab));
+      currentContent.classList.add('active'); // History push
+
+      var url = new URL(window.location);
+      var params = new URLSearchParams({
+        page: pageSlug,
+        tab_page: dataTab
+      });
+      var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());
+      window.history.pushState({}, '', pushUrl);
+      var loadingSpinner = document.getElementById(dataTab).querySelector('.loading-spinner');
+
+      if (loadingSpinner) {
+        document.getElementById(dataTab).querySelector('.loading-spinner').remove();
+      }
+
+      tinymce.activeEditor.on("change", function (e) {
+        document.getElementById('save_tutor_option').disabled = false;
+      });
+    }
+  });
+});
+
+/***/ }),
+
 /***/ "./assets/react/admin-dashboard/segments/options.js":
 /*!**********************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/options.js ***!
@@ -2277,6 +2294,7 @@ document.addEventListener('DOMContentLoaded', function () {
       link.addEventListener('click', function (e) {
         var dataTab = e.target.closest('[data-tab]').dataset.tab;
         var dataKey = e.target.closest('[data-key]').dataset.key;
+        console.log('clicked search');
 
         if (dataTab) {
           // remove active from other buttons
@@ -31459,26 +31477,29 @@ var __webpack_exports__ = {};
   !*** ./assets/react/admin-dashboard/tutor-admin.js ***!
   \*****************************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./segments/image-preview */ "./assets/react/admin-dashboard/segments/image-preview.js");
-/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_segments_image_preview__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
-/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
-/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
-/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
-/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
-/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
-/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./segments/navigation */ "./assets/react/admin-dashboard/segments/navigation.js");
+/* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_segments_navigation__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./segments/image-preview */ "./assets/react/admin-dashboard/segments/image-preview.js");
+/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_image_preview__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
+/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
+/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_10__);
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -31523,25 +31544,28 @@ jQuery(document).ready(function ($) {
   }
   /**
    * Option Settings Nav Tab
-   */
-
-
+   * /
   $(".tutor-option-nav-tabs li a").click(function (e) {
     e.preventDefault();
     var tab_page_id = $(this).attr("data-tab");
     $(".option-nav-item").removeClass("current");
-    $(this).closest("li").addClass("current");
+    $(this)
+      .closest("li")
+      .addClass("current");
     $(".tutor-option-nav-page").hide();
-    $(tab_page_id).addClass("current-page").show();
+    $(tab_page_id)
+      .addClass("current-page")
+      .show();
     window.history.pushState("obj", "", $(this).attr("href"));
   });
-  /**
+   /**
    * End Withdraw nav tabs
    */
 
   /**
    * Open Sidebar Menu
    */
+
 
   if (_tutorobject.open_tutor_admin_menu) {
     var $adminMenu = $("#adminmenu");
@@ -31678,7 +31702,7 @@ jQuery(document).ready(function ($) {
               formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
               _context.prev = 13;
               _context.next = 16;
-              return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_7__["default"])(formData);
+              return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_8__["default"])(formData);
 
             case 16:
               post = _context.sent;
@@ -31733,8 +31757,69 @@ jQuery(document).ready(function ($) {
     };
   }());
   /**
+   * On form submit block | approve instructor
+   *
+   * @since v.2.0.0
+   */
+
+  if (instructorActionForm) {
+    instructorActionForm.onsubmit = /*#__PURE__*/function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+        var formData, loadingButton, prevHtml, post, response;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                e.preventDefault();
+                formData = new FormData(instructorActionForm);
+                loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
+                prevHtml = loadingButton.innerHTML;
+                loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
+                _context2.prev = 5;
+                _context2.next = 8;
+                return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_8__["default"])(formData);
+
+              case 8:
+                post = _context2.sent;
+                _context2.next = 11;
+                return post.json();
+
+              case 11:
+                response = _context2.sent;
+                loadingButton.innerHTML = prevHtml;
+
+                if (post.ok && response.success) {
+                  location.reload();
+                } else {
+                  tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+                }
+
+                _context2.next = 20;
+                break;
+
+              case 16:
+                _context2.prev = 16;
+                _context2.t0 = _context2["catch"](5);
+                loadingButton.innerHTML = prevHtml;
+                tutor_toast(__("Operation failed", "tutor"), _context2.t0, "error");
+
+              case 20:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[5, 16]]);
+      }));
+
+      return function (_x3) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+  }
+  /**
    * Password Reveal
    */
+
 
   $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon
