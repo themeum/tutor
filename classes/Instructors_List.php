@@ -284,10 +284,10 @@ class Instructors_List extends \Tutor_List_Table {
 				$actions['approved'] = sprintf( '<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf( '<a data-title="' .('').'" data-prompt-message="' . __( 'Are you sure, want to block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s" data-tutor-modal-target="tutor-instructor-confirm-modal">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
+				$actions['blocked'] = sprintf( '<a data-title="' .('').'" data-prompt-message="' . __( 'Are you sure, want to block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf( '<a data-title="'.('').'" data-prompt-message="' . __( 'Are you sure, want to approve?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s" data-tutor-modal-target="tutor-instructor-confirm-modal">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a data-title="'.('').'" data-prompt-message="' . __( 'Are you sure, want to approve?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 		}
 

@@ -4032,27 +4032,28 @@ window.tutor_toast = function (title, description, type) {
 
   if (!jQuery('.tutor-toast-parent').length) {
     jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
-  }
+  } // var icons = {
+  //     success: asset + 'icon-check.svg',
+  //     error: asset + 'icon-cross.svg'
+  // }
 
-  var icons = {
-    success: asset + 'icon-check.svg',
-    error: asset + 'icon-cross.svg'
-  };
-  var content = jQuery('\
-        <div>\
-            <div>\
-                <img src="' + icons[type] + '"/>\
-            </div>\
-            <div>\
-                <div>\
-                    <b>' + title + '</b>\
-                    <span>' + description + '</span>\
-                </div>\
-            </div>\
-            <div>\
-                <i class="tutor-toast-close tutor-icon-line-cross"></i>\
-            </div>\
-        </div>');
+
+  var alert = type == 'success' ? 'success' : type == 'error' ? 'danger' : 'primary';
+  var icon = type == 'success' ? 'ttr-mark-cricle' : type == 'error' ? 'ttr-cross-cricle-filled' : 'ttr-circle-outline-info-filled'; // var content = jQuery(`
+  //     <div class="tutor-notification tutor-mb-15 ${alert}">
+  //         <div class="tutor-notification-icon">
+  //             <i class="${icon}"></i>
+  //         </div>
+  //         <div class="tutor-notification-content">
+  //             <h5>${title}</h5>
+  //             <p>${description}</p>
+  //         </div>
+  //         <span class="tutor-notification-close tutor-toast-close">
+  //             <i class="ttr-cross-filled"></i>
+  //         </span>
+  //     </div>`);
+
+  var content = jQuery("\n        <div class=\"tutor-large-notification tutor-large-notification-".concat(alert, "\">\n            <div class=\"tutor-large-notification-icon\">\n                <span class=\"tutor-icon-48 ").concat(icon, " tutor-mr-10\"></span>\n            </div>\n            <div class=\"tutor-large-notification-content tutor-ml-5\">\n                <div class=\"tutor-large-notification-title text-bold-h6 tutor-mt-10\">\n                    ").concat(title, "\n                </div>\n                <div class=\"text-regular-caption tutor-mt-8\">\n                    ").concat(description, "\n                </div>\n            </div>\n            <span class=\"tutor-toast-close tutor-notification-close tutor-icon-32 color-black-40 ttr-cross-filled\"></span>\n        </div>\n    "));
   content.find('.tutor-toast-close').click(function () {
     content.remove();
   });
