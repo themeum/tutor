@@ -31761,65 +31761,35 @@ jQuery(document).ready(function ($) {
    *
    * @since v.2.0.0
    */
+  // if (instructorActionForm) {
+  //   instructorActionForm.onsubmit = async (e) => {
+  //     e.preventDefault();
+  //     const formData = new FormData(instructorActionForm);
+  //     const loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
+  //     const prevHtml = loadingButton.innerHTML;
+  //     loadingButton.innerHTML = `<div class="ball"></div>
+  //     <div class="ball"></div>
+  //     <div class="ball"></div>
+  //     <div class="ball"></div>`;
+  //     try {
+  //       const post = await ajaxHandler(formData);
+  //       const response = await post.json();
+  //       loadingButton.innerHTML = prevHtml;
+  //       if (post.ok && response.success) {
+  //         location.reload();
+  //       } else {
+  //         tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+  //       }
+  //     } catch (error) {
+  //       loadingButton.innerHTML = prevHtml;
+  //       tutor_toast(__("Operation failed", "tutor"), error, "error");
+  //     }
+  //   }
+  // }
 
-  if (instructorActionForm) {
-    instructorActionForm.onsubmit = /*#__PURE__*/function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-        var formData, loadingButton, prevHtml, post, response;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                e.preventDefault();
-                formData = new FormData(instructorActionForm);
-                loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
-                prevHtml = loadingButton.innerHTML;
-                loadingButton.innerHTML = "<div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>\n      <div class=\"ball\"></div>";
-                _context2.prev = 5;
-                _context2.next = 8;
-                return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_8__["default"])(formData);
-
-              case 8:
-                post = _context2.sent;
-                _context2.next = 11;
-                return post.json();
-
-              case 11:
-                response = _context2.sent;
-                loadingButton.innerHTML = prevHtml;
-
-                if (post.ok && response.success) {
-                  location.reload();
-                } else {
-                  tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
-                }
-
-                _context2.next = 20;
-                break;
-
-              case 16:
-                _context2.prev = 16;
-                _context2.t0 = _context2["catch"](5);
-                loadingButton.innerHTML = prevHtml;
-                tutor_toast(__("Operation failed", "tutor"), _context2.t0, "error");
-
-              case 20:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, null, [[5, 16]]);
-      }));
-
-      return function (_x3) {
-        return _ref2.apply(this, arguments);
-      };
-    }();
-  }
   /**
    * Password Reveal
    */
-
 
   $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon
