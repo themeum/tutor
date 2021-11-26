@@ -202,10 +202,13 @@
 }
 
 .tutor-course-listing-filter {
-	max-width: 1110px;
+	// max-width: 1110px;
 	display: grid;
+	// border: 1px solid;
+	// background: palegreen;
 	@include breakpoint-min(desktop-lg) {
-		grid-template-columns: 1fr 2.5fr;
+		grid-template-columns: 25% 75%;
+		grid-template-columns: 1fr 3fr;
 		.filter-widget-input-wrapper {
 			margin-top: 42px;
 		}
