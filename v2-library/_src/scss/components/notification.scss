@@ -255,16 +255,27 @@ $largeNotiVariations: (
 	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 	backdrop-filter: blur(24px);
 	position: relative;
+	background: #fff;
 
 	@extend .tutor-radius-10;
 	@extend .tutor-border-sl20;
 	@extend .tutor-p-24;
+
+	@include breakpoint-min(desktop-lg) {
+		padding-right: 90px;
+	}
 
 	&-icon {
 	}
 	&-content {
 	}
 	&-btns {
+		.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
+			padding: 7px 12px;
+		}
+		> *:not(:last-child) {
+			margin-right: 10px;
+		}
 	}
 
 	.tutor-noti-close {
@@ -273,4 +284,9 @@ $largeNotiVariations: (
 		right: 13px;
 		cursor: pointer;
 	}
+}
+
+.tutor-notification-grid {
+	@include responsiveGrid(540px, 1fr);
+	grid-gap: 30px;
 }

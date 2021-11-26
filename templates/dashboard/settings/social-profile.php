@@ -37,7 +37,7 @@ $user = wp_get_current_user();
 						<?php echo esc_html( $social_icon['label'] ); ?>
 						</div>
 						<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-6">
-							<input class="tutor-form-control" type="text" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_html( get_user_meta( $user->ID, $key, true ) ); ?>" placeholder="<?php echo esc_html( $social_icon['placeholder'] ); ?>">
+							<input class="tutor-form-control" type="url" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_html( get_user_meta( $user->ID, $key, true ) ); ?>" placeholder="<?php echo esc_html( $social_icon['placeholder'] ); ?>">
 						</div>
 					</div>
 		<?php
