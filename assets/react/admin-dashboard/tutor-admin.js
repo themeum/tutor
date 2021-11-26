@@ -259,31 +259,31 @@ jQuery(document).ready(function ($) {
    *
    * @since v.2.0.0
    */
-  if (instructorActionForm) {
-    instructorActionForm.onsubmit = async (e) => {
-      e.preventDefault();
-      const formData = new FormData(instructorActionForm);
-      const loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
-      const prevHtml = loadingButton.innerHTML;
-      loadingButton.innerHTML = `<div class="ball"></div>
-      <div class="ball"></div>
-      <div class="ball"></div>
-      <div class="ball"></div>`;
-      try {
-        const post = await ajaxHandler(formData);
-        const response = await post.json();
-        loadingButton.innerHTML = prevHtml;
-        if (post.ok && response.success) {
-          location.reload();
-        } else {
-          tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
-        }
-      } catch (error) {
-        loadingButton.innerHTML = prevHtml;
-        tutor_toast(__("Operation failed", "tutor"), error, "error");
-      }
-    }
-  }
+  // if (instructorActionForm) {
+  //   instructorActionForm.onsubmit = async (e) => {
+  //     e.preventDefault();
+  //     const formData = new FormData(instructorActionForm);
+  //     const loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
+  //     const prevHtml = loadingButton.innerHTML;
+  //     loadingButton.innerHTML = `<div class="ball"></div>
+  //     <div class="ball"></div>
+  //     <div class="ball"></div>
+  //     <div class="ball"></div>`;
+  //     try {
+  //       const post = await ajaxHandler(formData);
+  //       const response = await post.json();
+  //       loadingButton.innerHTML = prevHtml;
+  //       if (post.ok && response.success) {
+  //         location.reload();
+  //       } else {
+  //         tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+  //       }
+  //     } catch (error) {
+  //       loadingButton.innerHTML = prevHtml;
+  //       tutor_toast(__("Operation failed", "tutor"), error, "error");
+  //     }
+  //   }
+  // }
 
   /**
    * Password Reveal
