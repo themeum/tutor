@@ -1,3 +1,4 @@
+import "./segments/navigation";
 import "./segments/image-preview";
 import "./segments/options";
 import "./segments/import-export";
@@ -39,7 +40,7 @@ jQuery(document).ready(function ($) {
 
   /**
    * Option Settings Nav Tab
-   */
+   * /
   $(".tutor-option-nav-tabs li a").click(function (e) {
     e.preventDefault();
     var tab_page_id = $(this).attr("data-tab");
@@ -211,7 +212,7 @@ jQuery(document).ready(function ($) {
   const instructorActionForm = document.getElementById('tutor-instructor-confirm-form');
   $(document).on("click", "a.instructor-action", function (e) {
     e.preventDefault();
-   
+
     const $that = $(this);
     const action = $that.attr("data-action");
     const instructorId = $that.attr("data-instructor-id");
@@ -226,10 +227,10 @@ jQuery(document).ready(function ($) {
       instructorActionForm.elements.instructor_id.value = instructorId;
     }
   });
-  
+
   /**
    * On form submit block | approve instructor
-   * 
+   *
    * @since v.2.0.0
    */
   if (instructorActionForm) {
@@ -251,7 +252,7 @@ jQuery(document).ready(function ($) {
         } else {
           tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
         }
-      } catch(error) {
+      } catch (error) {
         loadingButton.innerHTML = prevHtml;
         tutor_toast(__("Operation failed", "tutor"), error, "error");
       }
@@ -269,7 +270,7 @@ jQuery(document).ready(function ($) {
       return attr == 'password' ? 'text' : 'password';
     });
   });
-  
+
   /**
    * Used for backend profile photo upload.
    */
