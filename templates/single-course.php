@@ -12,30 +12,7 @@
  */
 
 // Prepare the nav items
-$course_nav_item = apply_filters( 'tutor_course/single/nav_items', array(
-    'info' => array( 
-        'title' => __('Course Info', 'tutor'), 
-        'method' => 'tutor_course_info_tab'
-    ),
-    'curriculum' => array( 
-        'title' => __('Curriculum', 'tutor'), 
-        'method' => 'tutor_course_topics' 
-    ),
-    'reviews' => array( 
-        'title' => __('Reviews', 'tutor'), 
-        'method' => 'tutor_course_target_reviews_html' 
-    ),
-    'questions' => array( 
-        'title' => __('Q&A', 'tutor'), 
-        'method' => 'tutor_course_question_and_answer',
-        'require_enrolment' => true
-    ),
-    'announcements' => array( 
-        'title' => __('Announcements', 'tutor'), 
-        'method' => 'tutor_course_announcements',
-        'require_enrolment' => true
-    ),
-), get_the_ID());
+$course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), get_the_ID() );
 
 get_header();
 do_action('tutor_course/single/before/wrap'); 

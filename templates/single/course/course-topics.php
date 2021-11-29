@@ -24,20 +24,23 @@ do_action('tutor_course/single/before/topics');
 
 <div class="tutor-course-topics-header">
 	<div class="tutor-course-topics-header-left">
-		<h4 class="tutor-segment-title">
-			<?php _e('Topics for this course', 'tutor'); ?>
-		</h4>
+		<div class="text-medium-h6 color-text-primary">
+			<?php _e('Course Curriculm', 'tutor'); ?>
+		</div>
+		<div class="text-regular-body color-text-subsued tutor-mt-12">
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quaerat fuga consectetur. Quia voluptatibus ullam beatae nesciunt provident voluptas est!
+		</div>
 	</div>
 </div>
 
 <?php if($topics->have_posts()): ?>
+	<div class="tutor-accordion tutor-mt-40">
 	<?php while($topics->have_posts()): ?>
 		<?php 
 			$topics->the_post(); 
 			$topic_summery = get_the_content();
 			$index++;
-		?>
-		<div class="tutor-accordion tutor-mb-15">
+			?>
 			<div class="tutor-accordion-item">
 				<div class="tutor-accordion-item-header">
 					<?php the_title(); ?>
@@ -119,8 +122,8 @@ do_action('tutor_course/single/before/topics');
 					}
 				?>
 			</div>
+			<?php endwhile; ?>
 		</div>
-	<?php endwhile; ?>
 <?php endif; ?>
 
 <?php do_action('tutor_course/single/after/topics'); ?>

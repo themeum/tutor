@@ -4844,7 +4844,7 @@
   color: #41454f;
 }
 
-.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item, .tutor-default-tab .tab-header-item-seemore-toggle {
+.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item, .tutor-default-tab .tab-header-item-seemore-toggle, .tutor-course-details-page .tutor-course-details-tab .tab-item-content p {
   color: #5b616f;
 }
 
@@ -5584,7 +5584,7 @@
   line-height: 150%;
 }
 
-.text-regular-body, .tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label {
+.text-regular-body, .tutor-course-details-page .tutor-course-details-tab .tab-item-content p, .tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label {
   font-weight: 400 !important;
   font-size: 16px !important;
   line-height: 162%;
@@ -21903,6 +21903,10 @@ a, button {
     */
 }
 
+.tutor-btn:not(:disabled) {
+  cursor: pointer;
+}
+
 .tutor-btn.tutor-is-fullwidth, .tutor-btn.tutor-is-block {
   width: 100%;
 }
@@ -25442,6 +25446,9 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   transition: box-shadow 200ms ease;
   transition: box-shadow 200ms ease, -webkit-box-shadow 200ms ease;
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .tutor-certificate-template label.template-radio-field span.icon-wrapper::before {
@@ -26025,7 +26032,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (min-width: 768px) {
-  .tutor-course-details-widget-col-2 .widget-list {
+  .tutor-course-details-widget-col-2 .tutor-course-details-widget-list {
     -webkit-column-count: 2;
        -moz-column-count: 2;
             column-count: 2;
@@ -26225,9 +26232,16 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-course-details-page ul {
-  margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.tutor-course-details-page iframe {
+  width: 100%;
+  height: 440px;
+  border: none;
+  background: #fff;
+  border-radius: 6px;
 }
 
 .tutor-course-details-page-main {
@@ -27301,7 +27315,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 @media (max-width: 576px) {
-  .text-regular-body.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label.text-regular-body, table.tutor-ui-table .td-list-item .tutor-form-check label.tutor-accordion-item-body-content, table.tutor-ui-table .td-list-item .tutor-form-check .tutor-course-listing-filter .filter-widget-checkboxes label, .tutor-course-listing-filter .filter-widget-checkboxes table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .text-regular-body.tab-header-item, .tutor-default-tab .tab-header-item.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item, .tutor-default-tab .text-regular-body.tab-header-item-seemore-toggle, .tutor-default-tab .tab-header-item-seemore-toggle.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item-seemore-toggle, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item-seemore-toggle, .color-text-subsued.tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label.color-text-subsued {
+  .text-regular-body.color-text-subsued, table.tutor-ui-table .td-list-item .tutor-form-check label.text-regular-body, table.tutor-ui-table .td-list-item .tutor-form-check label.tutor-accordion-item-body-content, table.tutor-ui-table .td-list-item .tutor-form-check .tutor-course-listing-filter .filter-widget-checkboxes label, .tutor-course-listing-filter .filter-widget-checkboxes table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .text-regular-body.tab-header-item, .tutor-default-tab .tab-header-item.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item, .tutor-default-tab .text-regular-body.tab-header-item-seemore-toggle, .tutor-default-tab .tab-header-item-seemore-toggle.tutor-accordion-item-body-content, .tutor-default-tab .tutor-course-listing-filter .filter-widget-checkboxes label.tab-header-item-seemore-toggle, .tutor-course-listing-filter .filter-widget-checkboxes .tutor-default-tab label.tab-header-item-seemore-toggle, .tutor-course-details-page .tutor-course-details-tab .tab-item-content p, .color-text-subsued.tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label.color-text-subsued {
     font-size: 15px;
   }
   .text-medium-body, select.tutor-form-select, .tutor-dropdown-select-selected > div:first-child {

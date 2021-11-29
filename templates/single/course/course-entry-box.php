@@ -28,17 +28,17 @@
         array(
             'icon_class' => 'ttr-student-line-1', 
             'label'      => __( 'Total Enrolled', 'tutor' ), 
-            'value'      => ! get_tutor_option( 'disable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() : null
+            'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() : null
         ),
         array(
             'icon_class' => 'ttr-clock-filled', 
             'label'      => __( 'Duration', 'tutor' ), 
-            'value'      => ! get_tutor_option( 'disable_course_duration' ) ? get_tutor_course_duration_context() : null
+            'value'      => get_tutor_option( 'enable_course_duration' ) ? get_tutor_course_duration_context() : null
         ),
         array(
-            'icon_class' => 'ttr-update-line', 
+            'icon_class' => 'ttr-refresh-l', 
             'label'      => __( 'Last Updated', 'tutor' ), 
-            'value'      => ! get_tutor_option( 'disable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null
+            'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null
         ),
     ), get_the_ID());
 ?>
@@ -85,6 +85,7 @@
 
                 // Show Course Completion Button
                 if ( ! $is_completed_course ) {
+                    ob_start();
                     ?>
                     <form method="post">
                         <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
@@ -97,6 +98,7 @@
                         </button>
                     </form>
                     <?php
+                    echo apply_filters( 'tutor_course/single/complete_form', ob_get_clean() );
                 }
                 do_action( 'tutor_course/single/actions_btn_group/after' ); 
 

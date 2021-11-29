@@ -412,7 +412,7 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
         }
 
         echo '<div class="tutor-course-thumbnail-bg" style="background-image:url('.$thumb_url.'); background-size:cover;">
-            <img src="'.$placeHolderUrl .'" style="visibility:hidden"/>
+            <img src="'.$placeHolderUrl .'" style="visibility:hidden-"/>
         </div>';
     }
 }
@@ -498,7 +498,7 @@ if ( ! function_exists('tutor_course_loop_price')) {
 if ( ! function_exists('tutor_course_loop_rating')) {
     function tutor_course_loop_rating() {
 
-        $disable = get_tutor_option('disable_course_review');
+        $disable = !get_tutor_option('enable_course_review');
         if ($disable){
             return;
         }
@@ -846,7 +846,7 @@ if ( ! function_exists('tutor_course_target_reviews_html')) {
 
 if ( ! function_exists('tutor_course_target_review_form_html')) {
     function tutor_course_target_review_form_html($echo = true) {
-        $isDisableReview = (bool) tutor_utils()->get_option('disable_course_review');
+        $isDisableReview = !tutor_utils()->get_option('enable_course_review');
         if ($isDisableReview){
             $output = apply_filters('tutor_review_disabled_text', '');
 

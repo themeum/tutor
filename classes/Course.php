@@ -596,7 +596,7 @@ class Course extends Tutor_Base {
 		$permalink = get_the_permalink($course_id);
 
 		// Set temporary identifier to show review pop up
-		if(!get_tutor_option( 'disable_course_review' )) {
+		if(get_tutor_option( 'enable_course_review' )) {
 			$rating = tutor_utils()->get_course_rating_by_user($course_id, $user_id);
 			if(!$rating || (empty($rating->rating) && empty($rating->review))) {
 				update_option( 'tutor_course_complete_popup_'.$user_id, array(
@@ -916,6 +916,11 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		// Hide review section if disabled
+		if(!get_tutor_option('enable_course_review')) {
+			unset($items['reviews']);
+		}
+
 		// Whether enrolment require
 		$is_enrolled = tutor_utils()->is_enrolled();
 		
@@ -1020,7 +1025,12 @@ class Course extends Tutor_Base {
         $lesson_count = tutor_utils()->get_lesson_count_by_course();
 
         if ($completed_lesson < $lesson_count){
-            return '<p class="suggestion-before-course-complete">'.__('complete all lessons to mark this course as complete', 'tutor').'</p>';
+            return '<div class="tutor-alert tutor-warning tutor-mt-28">
+						<div class="tutor-alert-text">
+							<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+							<span>'.__('Complete all lessons to mark this course as complete', 'tutor').'</span>
+						</div>
+					</div>';
         }
 
         $quizzes = array();
@@ -1057,7 +1067,12 @@ class Course extends Tutor_Base {
         }
 
         if ( ! $is_pass){
-            return '<p class="suggestion-before-course-complete">'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</p>';
+			return '<div class="tutor-alert tutor-warning tutor-mt-28">
+						<div class="tutor-alert-text">
+							<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+							<span>'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</span>
+						</div>
+					</div>';
         }
 
         return $html;

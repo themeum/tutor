@@ -20,7 +20,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 
 <header class="tutor-course-details-header tutor-mb-42">
 	<?php
-        $disable = get_tutor_option('disable_course_review');
+        $disable = !get_tutor_option('enable_course_review');
         if ( ! $disable){
             ?>
             <div class="tutor-course-details-ratings">

@@ -338,7 +338,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											</li>
 											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
-												<a href="#" class="tutor-admin-course-delete" data-id="<?php echo esc_attr( $post->ID ); ?>">
+												<a href="#" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
 													<i class="ttr-delete-fill-filled color-design-white"></i>
 													<span class="text-regular-body color-text-white">
 													<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
@@ -378,3 +378,6 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 		?>
 	</div>
 </div>
+<?php
+	tutor_load_template_from_custom_path( tutor()->path . 'views/elements/common-confirm-popup.php' );
+
