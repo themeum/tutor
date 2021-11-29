@@ -556,26 +556,42 @@ window.tutor_toast = function (title, description, type) {
         jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
     }
 
-    var icons = {
-        success: asset + 'icon-check.svg',
-        error: asset + 'icon-cross.svg'
-    }
+    // var icons = {
+    //     success: asset + 'icon-check.svg',
+    //     error: asset + 'icon-cross.svg'
+    // }
+    var alert = type == 'success' ? 'success' : type == 'error' ? 'danger' : 'primary';
+    var icon = type == 'success' ? 'ttr-mark-cricle' : type == 'error' ? 'ttr-cross-cricle-filled' : 'ttr-circle-outline-info-filled';
+    // var content = jQuery(`
+    //     <div class="tutor-notification tutor-mb-15 ${alert}">
+    //         <div class="tutor-notification-icon">
+    //             <i class="${icon}"></i>
+    //         </div>
+    //         <div class="tutor-notification-content">
+    //             <h5>${title}</h5>
+    //             <p>${description}</p>
+    //         </div>
+    //         <span class="tutor-notification-close tutor-toast-close">
+    //             <i class="ttr-cross-filled"></i>
+    //         </span>
+    //     </div>`);
 
-    var content = jQuery('\
-        <div>\
-            <div>\
-                <img src="'+ icons[type] + '"/>\
-            </div>\
-            <div>\
-                <div>\
-                    <b>'+ title + '</b>\
-                    <span>'+ description + '</span>\
-                </div>\
-            </div>\
-            <div>\
-                <i class="tutor-toast-close tutor-icon-line-cross"></i>\
-            </div>\
-        </div>');
+    var content = jQuery(`
+        <div class="tutor-large-notification tutor-large-notification-${alert}">
+            <div class="tutor-large-notification-icon">
+                <span class="tutor-icon-48 ${icon} tutor-mr-10"></span>
+            </div>
+            <div class="tutor-large-notification-content tutor-ml-5">
+                <div class="tutor-large-notification-title text-bold-h6 tutor-mt-10">
+                    ${title}
+                </div>
+                <div class="text-regular-caption tutor-mt-8">
+                    ${description}
+                </div>
+            </div>
+            <span class="tutor-toast-close tutor-notification-close tutor-icon-32 color-black-40 ttr-cross-filled"></span>
+        </div>
+    `);
 
     content.find('.tutor-toast-close').click(function () {
         content.remove();

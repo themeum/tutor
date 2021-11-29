@@ -12,6 +12,10 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 class Utils {
+	public function get_option_default($key, $fallback) {
+		return $fallback;
+	}
+
 	/**
 	 * @param null $key
 	 * @param bool $default
@@ -27,11 +31,16 @@ class Utils {
 		$option = (array) maybe_unserialize(get_option('tutor_option'));
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
-			return $default;
+			// If the option array is not yet stored on database, then return default/fallback
+			return $this->get_option_default( $key, $default );
 		}
+
 		if ( ! $key ) {
+			// Return entire option array if no key specified
 			return $option;
 		}
+
+		// Get option value by option key
 		if ( array_key_exists( $key, $option ) ) {
 			// Convert off/on switch values to boolean
 			$value = $option[$key];
@@ -43,6 +52,7 @@ class Utils {
 
 			return apply_filters( $key, $value );
 		}
+
 		//Access array value via dot notation, such as option->get('value.subvalue')
 		if ( strpos($key, '.') ) {
 			$option_key_array = explode( '.', $key );
@@ -51,8 +61,8 @@ class Utils {
 			foreach ( $option_key_array as $dotKey ) {
 				if ( isset( $new_option[$dotKey] ) ) {
 					$new_option = $new_option[$dotKey];
-				}else{
-					return $default;
+				} else {
+					return $this->get_option_default( $key, $default );
 				}
 			}
 
@@ -68,7 +78,7 @@ class Utils {
 			return apply_filters( $key, $value );
 		}
 
-		return $default;
+		return $this->get_option_default( $key, $default );
 	}
 
 	/**
@@ -2562,7 +2572,7 @@ class Utils {
 			'quiz-attempts'     => array( 'title' => __( 'Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role ),
 		));
 
-		$disable = get_tutor_option( 'disable_course_review' );
+		$disable = !get_tutor_option( 'enable_course_review' );
 		if ( $disable && isset( $nav_items['reviews'] ) ) {
 			unset( $nav_items['reviews'] );
 		}
@@ -8391,5 +8401,38 @@ class Utils {
 			$quiz_id
 		) );
 		return $attempted ? true : false;
+	}
+
+	/**
+	 * Course nav items 
+	 *
+	 * @since v2.0.0
+	 */
+	public function course_nav_items() {
+		$array =  array(
+			'info' => array( 
+				'title' => __('Course Info', 'tutor'), 
+				'method' => 'tutor_course_info_tab'
+			),
+			'curriculum' => array( 
+				'title' => __('Curriculum', 'tutor'), 
+				'method' => 'tutor_course_topics' 
+			),
+			'reviews' => array( 
+				'title' => __('Reviews', 'tutor'), 
+				'method' => 'tutor_course_target_reviews_html' 
+			),
+			'questions' => array( 
+				'title' => __('Q&A', 'tutor'), 
+				'method' => 'tutor_course_question_and_answer',
+				'require_enrolment' => true
+			),
+			'announcements' => array( 
+				'title' => __('Announcements', 'tutor'), 
+				'method' => 'tutor_course_announcements',
+				'require_enrolment' => true
+			)
+		);
+		return $array;
 	}
 }

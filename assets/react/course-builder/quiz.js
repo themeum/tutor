@@ -346,6 +346,8 @@ window.jQuery(document).ready(function($){
                     // Update modal content
                     $('.tutor-quiz-builder-modal-wrap .modal-container').html(data.data.output);
                     
+                    window.dispatchEvent(new Event(_tutorobject.content_change_event));
+
                     tutor_slider_init();
                     step_switch(modal, true);
 

@@ -319,36 +319,3 @@ $filters = array(
   </div>
 </div>
 
-<!-- instructor action confirm modal -->
-<div id="tutor-instructor-confirm-modal" class="tutor-modal">
-	  <span class="tutor-modal-overlay"></span>
-	  <button data-tutor-modal-close class="tutor-modal-close">
-		<span class="las la-times"></span>
-	  </button>
-	  <div class="tutor-modal-root">
-		<div class="tutor-modal-inner">
-		<div class="tutor-modal-body tutor-text-center">
-			<form action="" id="tutor-instructor-confirm-form">
-				<?php tutor_nonce_field(); ?>
-				<input type="hidden" name="action">
-				<input type="hidden" name="action_name">
-				<input type="hidden" name="instructor_id">
-				<div class="tutor-modal-text-wrap">
-					<div id="tutor-instructor-confirm-message">
-					</div>
-				</div>
-				<div class="tutor-modal-btns tutor-btn-group">
-				<button
-					data-tutor-modal-close
-					class="tutor-btn tutor-is-outline tutor-is-default">
-					<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-				</button>
-				<button class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn-loading" id="tutor-instructor-confirm-btn">
-					<?php esc_html_e( 'Confirm', 'tutor' ); ?>
-				</button>
-				</div>
-			</form>
-		</div>
-		</div>
-	  </div>
-</div>

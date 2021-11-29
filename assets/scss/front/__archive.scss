@@ -2129,98 +2129,6 @@ Content Drip (Pro)
 END Content Drip
  */
 
-
-/**
-* Alert CSS
-* since v.1.4.1
- */
-
-.tutor-alert {
-    border: 1px solid #f8a201;
-    background: #fffff2;
-    position: relative;
-    border-radius: 3px;
-    padding: 20px 25px 20px 95px;
-    color: #a86d00;
-    margin-bottom: 20px;
-}
-
-.tutor-alert p {
-    margin-bottom: 10px;
-}
-
-.tutor-alert p:last-child {
-    margin: 0;
-}
-
-.tutor-alert.tutor-alert-info {
-    border: 1px solid #13aaf6;
-    background: #eaf8ff;
-    color: #0586c7;
-}
-
-.tutor-alert.tutor-alert-info::before {
-    content: "\e96c";
-    background: #13aaf6;
-}
-
-.tutor-alert.tutor-alert-danger {
-    border: 1px solid #fe1a1a;
-    background: #fff2f2;
-    color: #a50000;
-}
-
-.tutor-alert.tutor-alert-success {
-    border: 1px solid #69bc0d;
-    background: #f6fff2;
-    color: #3d7400;
-}
-
-.tutor-alert::before {
-    content: "\e95f";
-    position: absolute;
-    font-size: 30px;
-    font-family: "tutor" !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    width: 70px;
-    top: 0;
-    left: 0;
-    text-align: center;
-    background: #f8a201;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #ffffff;
-}
-
-.tutor-alert.tutor-alert-danger::before {
-    content: "\e913";
-    background: #fe1a1a;
-}
-
-.tutor-alert.tutor-alert-success::before {
-    content: "\e90f";
-    background: #69bc0d;
-}
-
-.tutor-alert-content p {
-    margin: 0;
-}
-
-
-/**
-END Alert CSS
- */
-
-
 /**
 GradeBook
  */
@@ -2414,16 +2322,6 @@ table.course-single-gradebooks a {
 
 #tutor-quiz-time-expire-wrapper {
     margin-bottom: 40px;
-    
-    .tutor-alert {
-        display: none;
-
-        &.tutor-alert-show {
-            @include valueWithPrefix(display, flex);
-            @include propertyWithPrefix(justify-content, space-between);
-            @include propertyWithPrefix(align-items, center);
-        }
-    }
 }
 
 .tutor-course-listing-filter {

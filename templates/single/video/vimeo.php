@@ -36,13 +36,15 @@ do_action('tutor_lesson/single/before/video/vimeo');
     <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData)); ?>">
 	
     <?php
-        if ($disable_default_player_vimeo){
+        if (!$disable_default_player_vimeo){
     ?>
         <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
     <?php
         } else {
     ?>
-        <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media" allowfullscreen allowtransparency allow="autoplay"></iframe>
+        <div class="plyr__video-embed" id="tutorPlayer">
+            <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media" allowfullscreen allowtransparency allow="autoplay"></iframe>
+        </div>
     <?php } ?>
 
     <?php
