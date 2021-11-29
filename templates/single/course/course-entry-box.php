@@ -1,6 +1,6 @@
 <?php 
     // Utillity data
-    $is_enrolled           = tutor_utils()->is_enrolled();
+    $is_enrolled           = apply_filters( 'tutor_alter_enroll_status', tutor_utils()->is_enrolled() );
     $lesson_url            = tutor_utils()->get_course_first_lesson();
     $is_administrator      = tutor_utils()->has_user_role( 'administrator' );
     $is_instructor         = tutor_utils()->is_instructor_of_this_course();
