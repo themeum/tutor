@@ -136,4 +136,5 @@
 <?php endif; ?>
 <?php
 	tutor_load_template_from_custom_path( esc_url( tutor()->path . 'views/elements/bulk-confirm-popup.php' ) );
+	include tutor()->path.'views/elements/elements_style.php';
 ?>
