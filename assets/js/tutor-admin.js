@@ -1978,7 +1978,8 @@ navTabLists.forEach(function (list) {
 
       if (loadingSpinner) {
         document.getElementById(dataTab).querySelector('.loading-spinner').remove();
-      }
+      } //enable if tinymce content changed
+
 
       if (null !== tinymce) {
         tinymce.activeEditor.on("change", function (e) {
