@@ -141,6 +141,7 @@ class Options_V2 {
 	 */
 	public function tutor_delete_single_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
+
 		$delete_id          = $this->get_request_data( 'delete_id' );
 		unset( $tutor_settings_log[ $delete_id ] );
 
