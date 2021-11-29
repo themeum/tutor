@@ -23,7 +23,7 @@
 					<span class="file-info"></span>
 				</div>
 			</div>
-			<div class="tutor-option-field-input">
+			<div class="tutor-option-field-input tutor-mt-15">
 				<button class="tutor-btn tutor-is-sm" id="import_options">Update Settings</button>
 			</div>
 		</div>
