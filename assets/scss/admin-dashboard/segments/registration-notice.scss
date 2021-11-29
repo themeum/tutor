@@ -1,5 +1,5 @@
 #screen-meta-links+.tutor-user-registration-notice-wrapper {
-    margin-top: 45px;
+    margin-top: 80px;
 }
 
 .tutor-user-registration-notice {
@@ -39,7 +39,7 @@
             @include propertyWithPrefix(flex-direction, column);
             @include propertyWithPrefix(align-self, stretch);
             @include propertyWithPrefix(justify-content, space-around);
-            
+
             a{
                 display: block;
                 width: calc(100% - 40px);
@@ -63,7 +63,7 @@
                     box-shadow: none;
                 }
             }
-            
+
             hr{
                 display: block;
                 border: none;

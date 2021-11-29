@@ -2010,11 +2010,14 @@ navTabLists.forEach(function (list) {
 
       if (loadingSpinner) {
         document.getElementById(dataTab).querySelector('.loading-spinner').remove();
-      }
+      } //enable if tinymce content changed
 
-      tinymce.activeEditor.on("change", function (e) {
-        document.getElementById('save_tutor_option').disabled = false;
-      });
+
+      if (null !== tinymce) {
+        tinymce.activeEditor.on("change", function (e) {
+          document.getElementById('save_tutor_option').disabled = false;
+        });
+      }
     }
   });
 });
