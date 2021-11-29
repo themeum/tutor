@@ -190,7 +190,7 @@
             } else {
                 ?>
                 <tr>
-					<td colspan="100%">
+					<td colspan="100%" class="column-empty-state">
 						<?php tutor_utils()->tutor_empty_state( __( 'No Q&A found', 'tutor' ) ); ?>
 					</td>
                 </tr>
