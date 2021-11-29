@@ -42,7 +42,7 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . esc_attr( $field_label 
 					?>
 					<a class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs" href="<?php echo esc_attr( $button['url'] ); ?>"><?php echo esc_attr( $button['text'] ); ?></a>
 					<?php
-					// echo $send_test_button;
+					echo wp_kses_post( $send_test_button );
 				}
 			}
 		}
