@@ -56,6 +56,10 @@ $col_classes = array(
                 
                 foreach ( $tutor_withdrawal_methods as $method_id => $method ) {
                     $form_fields = tutor_utils()->avalue_dot( 'form_fields', $method );
+
+                    $method_values = get_user_meta( get_current_user_id(), '_tutor_withdraw_method_data_'.$method_id, true );
+                    $method_values = maybe_unserialize( $method_values );
+                    !is_array($method_values) ? $method_values=array() : 0;
                     ?>
 
                     <div data-withdraw-form="<?php echo esc_attr( $method_id ); ?>" class="tutor-bs-row withdraw-method-form" style="<?php echo esc_attr( $old_method_key != $method_id ? 'display: none;' : '' ); ?>">
@@ -79,11 +83,15 @@ $col_classes = array(
                                         'field' => $field,
                                         'old_value' => null,
                                     ) );
+                                    
                                     $old_value = tutor_utils()->avalue_dot( $field_name . ".value", $saved_account );
                                     if ( $old_value ) {
                                         $passing_data['old_value'] = $old_value;
+                                    } else if(isset($method_values[$field_name],$method_values[$field_name]['value'])) {
+                                        $passing_data['old_value'] = $method_values[$field_name]['value'];
+                                        $old_value = $passing_data['old_value'];
                                     }
-
+                                    
                                     if ( in_array( $field['type'], array( 'text', 'number', 'email' ) ) ) {
                                         ?>
                                             <input class="tutor-form-control tutor-mt-5" type="<?php echo esc_attr( $field['type'] ); ?>" name="withdraw_method_field[<?php echo esc_attr( $method_id ) ?>][<?php echo esc_attr( $field_name ) ?>]" value="<?php echo esc_attr( $old_value ); ?>" >
