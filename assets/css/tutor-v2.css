@@ -19712,7 +19712,8 @@ body.rtl .tutor-toast-parent {
   left: 50px;
 }
 
-html.tutor-component-popup-opened, body.tutor-component-popup-opened {
+html.tutor-component-popup-opened,
+body.tutor-component-popup-opened {
   overflow: hidden !important;
 }
 
@@ -19796,24 +19797,29 @@ html.tutor-component-popup-opened, body.tutor-component-popup-opened {
 }
 
 .tutor-component-three-col-action {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  display: -o-flex;
-  display: -ms-flex;
-  display: -moz-flex;
-  display: -webkit-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -o-align-items: center;
-  -ms-align-items: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  border: 1px solid #DCDBDC;
+  border: 1px solid #dcdbdc;
   border-radius: 6px;
   padding: 25px 35px 25px 30px;
   margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+  .tutor-component-three-col-action {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    display: -o-flex;
+    display: -ms-flex;
+    display: -moz-flex;
+    display: -webkit-flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -o-align-items: center;
+    -ms-align-items: center;
+    -moz-align-items: center;
+    -webkit-align-items: center;
+  }
 }
 
 .tutor-component-three-col-action > *:first-child {
@@ -23724,6 +23730,13 @@ select.tutor-form-select:focus {
   color: inherit;
 }
 
+button:focus,
+a:focus {
+  outline: none !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+
 .tutor-ui-table-responsive {
   position: relative;
   overflow-x: auto;
@@ -25806,7 +25819,15 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 }
 
 .tutor-wp-dashboard-header {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   background: #ffffff;
+}
+
+.tutor-wp-dashboard-header ol,
+.tutor-wp-dashboard-header ul {
+  padding: 0;
+  margin: 0;
 }
 
 .tutor-wp-dashboard-header .header-title-wrap {
@@ -25817,7 +25838,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   gap: 10px;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .tutor-wp-dashboard-header {
     height: 60px;
   }
@@ -25827,7 +25848,13 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  gap: 30px;
+  gap: 12px;
+}
+
+@media (min-width: 992px) {
+  .tutor-wp-dashboard-header .filter-btns {
+    gap: 30px;
+  }
 }
 
 .tutor-wp-dashboard-header .filter-btns .filter-btn {
@@ -25855,7 +25882,7 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   width: 100%;
   height: 3px;
   background: #1973aa;
-  bottom: calc(0% - 17px);
+  bottom: calc(0% - 18px);
   -webkit-transition: -webkit-transform 200ms linear;
   transition: -webkit-transform 200ms linear;
   transition: transform 200ms linear;
@@ -25866,9 +25893,9 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
           transform-origin: bottom;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1199px) {
   .tutor-wp-dashboard-header .filter-btns .filter-btn:before {
-    bottom: calc(0% - 20px);
+    bottom: calc(0% - 14px);
   }
 }
 
@@ -26057,6 +26084,10 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
 
 .tutor-instructor-info-card .tutor-ins-meta-item:not(:last-child) {
   margin-right: 16px;
+}
+
+.tutor-instructor-info-card a {
+  color: inherit;
 }
 
 .tutor-course-sidebar-card {
@@ -26861,6 +26892,9 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   width: 34px;
   height: 34px;
   border-radius: 50%;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
 }
 
 .tutor-course-listing-item-footer {

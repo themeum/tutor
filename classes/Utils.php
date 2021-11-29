@@ -8243,9 +8243,11 @@ class Utils {
 	 */
 	public function tutor_empty_state( string $title = '' ) {
 		$page_title = $title ? $title : ''; ?>
-		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center td-empty-state tutor-p-20">
+		<div class="td-empty-state tutor-p-30">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
-			<div class="text-regular-h5 color-text-primary tutor-mt-20"><?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?></div>
+			<div class="text-regular-h5 color-text-primary tutor-mt-20">
+				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
+			</div>
 		</div>
 	<?php }
 
