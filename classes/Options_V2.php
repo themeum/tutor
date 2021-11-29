@@ -142,12 +142,11 @@ class Options_V2 {
 	public function tutor_delete_single_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 
-		$delete_id          = $this->get_request_data( 'delete_id' );
+		$delete_id = $this->get_request_data( 'delete_id' );
 		unset( $tutor_settings_log[ $delete_id ] );
 
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
-		wp_send_json_success( $tutor_settings_log );
 	}
 
 	/**
@@ -275,7 +274,7 @@ class Options_V2 {
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
 
-		$option = tutor_utils()->sanitize_recursively( $option, array('email_footer_text') );
+		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
