@@ -171,6 +171,8 @@ class Withdraw {
 			}
 
 			update_user_meta( $user_id, '_tutor_withdraw_method_data', $saved_data );
+			update_user_meta( $user_id, '_tutor_withdraw_selected_method', $method );
+			update_user_meta( $user_id, '_tutor_withdraw_method_data_'.$method, $saved_data );
 		}
 
 		$msg = apply_filters( 'tutor_withdraw_method_set_success_msg', __( 'Withdrawal information saved!', 'tutor' ) );

@@ -1,7 +1,10 @@
-<div class="tutor-attachment-cards tutor-course-builder-attachments <?php echo (isset($data['no_control']) && $data['no_control']) ? 'tutor-no-control' : ''; ?>">
-    <?php 
+<?php 
     $attachments = $data['attachments'];
     $size_below = isset($data['size_below']) && $data['size_below']==true;
+?>
+
+<div class="tutor-attachment-cards tutor-attachment-size-<?php echo $size_below ? 'below' : 'aside'; ?> tutor-course-builder-attachments <?php echo (isset($data['no_control']) && $data['no_control']) ? 'tutor-no-control' : ''; ?>">
+    <?php 
     if ( is_array($attachments) && count($attachments)) {
         foreach ( $attachments as $attachment ) {
             if(!is_object($attachment) || !property_exists($attachment, 'id')){ continue; }
@@ -33,7 +36,8 @@
 if ( isset( $data['add_button'] ) && true === $data['add_button'] ) {
 	?>
 			<button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutorUploadAttachmentBtn" data-name="<?php echo isset( $data['name'] ) ? esc_attr( $data['name'] ) : ''; ?>">
-				<?php esc_html_e( 'Add Attachment', 'tutor' ); ?>
+				<span class="btn-icon ttr-attach-filled tutor-icon-24"></span>
+                <span><?php esc_html_e( 'Add Attachment', 'tutor' ); ?></span>
 			</button>
 		<?php
 }
