@@ -3283,7 +3283,7 @@ class Utils {
 	}
 
 	public function star_rating_generator_v2($current_rating, $total_count=null, $show_avg_rate=false, $parent_class = '') {
-		$current_rating = round($current_rating);
+		$current_rating = number_format($current_rating, 2, '.', '');
 		?>
 		<div class="tutor-ratings <?php echo $parent_class; ?>">
 			<div class="tutor-rating-stars">
@@ -3291,7 +3291,7 @@ class Utils {
 					for($i=1; $i<=5; $i++) {
 						$class = 'ttr-star-line-filled';
 
-						if($i<=$current_rating) {
+						if($i<=round($current_rating)) {
 							$class = 'ttr-star-full-filled';
 						}
 
@@ -3303,15 +3303,14 @@ class Utils {
 			<?php
 				if($show_avg_rate) {
 					?>
-					<div class="tutor-rating-text text-regular-body color-text-subsued tutor-pl-0">
+					<span class="tutor-rating-text text-regular-body color-text-subsued tutor-pl-0 tutor-ml-10">
 						<?php
 							echo $current_rating;
-
 							if(!($total_count===null)) {
 								echo '&nbsp;('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor')).')';
 							}
 						?>
-					</div>
+					</span>
 					<?php
 				}
 			?>

@@ -94,7 +94,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						<span class="ttr-line-cross-line"></span>
 					</button>
 				</div>
-				<div class="tutor-modal-body">
+				<div class="tutor-modal-body tutor-bs-align-items-start">
 					<div class="view-announcement-icon bg-primary-40 color-brand-wordpress">
 						<span class="ttr-speaker-filled"></span>
 					</div>
