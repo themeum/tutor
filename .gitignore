@@ -30,3 +30,4 @@ assets/**/*.map
 *.lock
 *.log
 *.map
+.history
