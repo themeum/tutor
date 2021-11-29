@@ -2425,6 +2425,8 @@ var modalResetOpen = function modalResetOpen() {
   var modalHeading = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-title');
   var modalMessage = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-message');
   modalResetOpen.forEach(function (modalOpen, index) {
+    modalOpen.disabled = false;
+
     modalOpen.onclick = function (e) {
       resetButton.dataset.reset = modalOpen.dataset.reset;
       modalHeading.innerText = modalOpen.dataset.heading;
