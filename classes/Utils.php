@@ -819,7 +819,7 @@ class Utils {
 	 * @since v.1.0.0
      * @updated v.1.6.1
 	 */
-	public function get_course_completed_percent( $course_id = 0, $user_id = 0 ) {
+	public function get_course_completed_percent( $course_id = 0, $user_id = 0, $get_stats=false ) {
 		$course_id 	      = $this->get_post_id($course_id);
 		$user_id          = $this->get_user_id($user_id);
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
@@ -844,11 +844,21 @@ class Utils {
             }
         }
 
+		$percent_complete = 0;
+
 		if ( $totalContents > 0 && $completedCount > 0 ) {
-			return number_format( ( $completedCount * 100 ) / $totalContents );
+			$percent_complete = number_format( ( $completedCount * 100 ) / $totalContents );
 		}
 
-		return 0;
+		if($get_stats) {
+			return array(
+				'completed_percent' => $percent_complete,
+				'completed_count' => $completedCount,
+				'total_count' => $totalContents
+			);
+		}
+
+		return $percent_complete;
 	}
 
 	/**
@@ -7605,6 +7615,27 @@ class Utils {
 		}
 
 		return $course_id;
+	}
+
+
+	/**
+	 * @return int
+	 *
+	 * @since v1.7.9
+	 *
+	 * Return the course ID(s) by lession, quiz, answer etc.
+	 */
+	public function get_course_id_by_subcontent( $content_id ) {
+		$mapping = array(
+			'tutor_assignments' => 'assignment',
+			'tutor_quiz' => 'quiz',
+			'lesson' => 'lesson',
+			'tutor_zoom_meeting' => 'zoom_meeting'
+		);
+		
+		$content_type = get_post_field( 'post_type', $content_id );
+
+		return $this->get_course_id_by($mapping[$content_type], $content_id);
 	}
 
 	/**
