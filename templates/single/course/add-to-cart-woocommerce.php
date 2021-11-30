@@ -20,7 +20,7 @@ if ($product) {
             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>"  class="tutor-btn tutor-btn-icon tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24">
                 <span class="btn-icon ttr-cart-filled"></span>
                 <span><?php echo esc_html( $product->single_add_to_cart_text() ); ?></span>
-            </a>
+            </button>
         </form>
         <?php
     }
