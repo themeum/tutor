@@ -3569,11 +3569,11 @@ window.tutor_date_picker = function () {
     var format = _tutorobject.wp_date_format;
 
     if (!format) {
-      format = "yy-mm-dd";
+      format = 'yy-mm-dd';
     }
 
-    $(".tutor_date_picker").datepicker({
-      "dateFormat": format
+    $('.tutor_date_picker').datepicker({
+      dateFormat: format
     });
   }
 };
@@ -3592,7 +3592,7 @@ jQuery(document).ready(function ($) {
 
   if (jQuery().select2) {
     $('.videosource_select2').select2({
-      width: "100%",
+      width: '100%',
       templateSelection: iformat,
       templateResult: iformat,
       allowHtml: true
@@ -3750,7 +3750,7 @@ jQuery(document).ready(function ($) {
       type: 'POST',
       data: $formInput,
       beforeSend: function beforeSend() {
-        $('#quiz_validation_msg_wrap').html("");
+        $('#quiz_validation_msg_wrap').html('');
         $that.addClass('tutor-updating-message');
       },
       success: function success(data) {
@@ -3933,9 +3933,9 @@ jQuery(document).ready(function ($) {
     }
   });
   /*
-  * @since v.1.6.4
-  * Quiz Attempts Instructor Feedback
-  */
+   * @since v.1.6.4
+   * Quiz Attempts Instructor Feedback
+   */
 
   $(document).on('click', '.tutor-instructor-feedback', function (e) {
     e.preventDefault();
@@ -3964,9 +3964,9 @@ jQuery(document).ready(function ($) {
   }); //dropdown toggle
 
   $(document).click(function () {
-    $(".tutor-dropdown").removeClass('show');
+    $('.tutor-dropdown').removeClass('show');
   });
-  $(".tutor-dropdown").click(function (e) {
+  $('.tutor-dropdown').click(function (e) {
     e.stopPropagation();
 
     if ($('.tutor-dropdown').hasClass('show')) {
@@ -4000,9 +4000,9 @@ jQuery(document).ready(function ($) {
     });
   });
   /*
-  * @since v.1.7.9
-  * Send wp nonce to every ajax request
-  */
+   * @since v.1.7.9
+   * Send wp nonce to every ajax request
+   */
 
   $.ajaxSetup({
     data: tutor_get_nonce_data()
@@ -4053,8 +4053,8 @@ window.tutor_toast = function (title, description, type) {
   //         </span>
   //     </div>`);
 
-  var content = jQuery("\n        <div class=\"tutor-large-notification tutor-large-notification-".concat(alert, "\">\n            <div class=\"tutor-large-notification-icon\">\n                <span class=\"tutor-icon-48 ").concat(icon, " tutor-mr-10\"></span>\n            </div>\n            <div class=\"tutor-large-notification-content tutor-ml-5\">\n                <div class=\"tutor-large-notification-title text-bold-h6 tutor-mt-10\">\n                    ").concat(title, "\n                </div>\n                <div class=\"text-regular-caption tutor-mt-8\">\n                    ").concat(description, "\n                </div>\n            </div>\n            <span class=\"tutor-toast-close tutor-notification-close tutor-icon-32 color-black-40 ttr-cross-filled\"></span>\n        </div>\n    "));
-  content.find('.tutor-toast-close').click(function () {
+  var content = jQuery("\n        <div class=\"tutor-large-notification tutor-large-notification-".concat(alert, "\">\n            <div class=\"tutor-large-notification-icon\">\n                <span class=\"tutor-icon-48 ").concat(icon, " tutor-mr-10\"></span>\n            </div>\n            <div class=\"tutor-large-notification-content tutor-ml-5\">\n                <div class=\"tutor-large-notification-title text-bold-h6 tutor-mt-10\">\n                    ").concat(title, "\n                </div>\n                <div class=\"text-regular-caption tutor-mt-8\">\n                    ").concat(description, "\n                </div>\n            </div>\n            <span class=\"tutor-toast-close tutor-noti-close tutor-icon-32 color-black-40 ttr-cross-filled\"></span>\n        </div>\n    "));
+  content.find('.tutor-noti-close').click(function () {
     content.remove();
   });
   jQuery('.tutor-toast-parent').append(content);
