@@ -11,7 +11,7 @@
 		grid-gap: 42px;
 		grid-auto-flow: column;
 
-		@include breakpoint-min(desktop) {
+		@include breakpoint-min(1400) {
 			grid-template-columns: 1fr 4fr 1fr;
 		}
 		@include breakpoint-min(1600) {
@@ -100,6 +100,8 @@
 	> div {
 		&:nth-child(3) {
 			justify-self: flex-end;
+			min-width: 200px;
+			text-align: right;
 		}
 	}
 	.title {
@@ -144,7 +146,7 @@
 .tutor-option-body {
 	position: relative;
 	z-index: 1;
-	overflow-y: hidden;
+	// overflow-y: hidden;
 }
 
 .tutor-option-nav-item h4,
@@ -724,7 +726,7 @@
 		}
 	}
 	.public-profile {
-		--imgWidth: 168px;
+		--imgWidth: 138px;
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(var(--imgWidth), 1fr));
 		grid-gap: 30px;
