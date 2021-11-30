@@ -55,8 +55,8 @@
 		border-top: none;
 	}
 	.image-previewer {
-		width: 100%;
-		overflow: hidden;
+		// width: 100%;
+		// overflow: hidden;
 	}
 	.mce-container-body .mce-resizehandle i.mce-i-resize {
 		display: none;
@@ -129,6 +129,7 @@
 	right: 0;
 	z-index: 99;
 	width: auto;
+	height: 60px;
 	top: 32px;
 	left: 36px;
 	@include breakpoint-min(960) {
