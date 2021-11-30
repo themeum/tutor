@@ -11,11 +11,16 @@
 		grid-gap: 42px;
 		grid-auto-flow: column;
 
-		@include breakpoint-min(1400) {
-			grid-template-columns: 1fr 4fr 1fr;
+		@include breakpoint-min(1300) {
+			grid-template-columns: 245px 4fr 1fr;
 		}
 		@include breakpoint-min(1600) {
 			grid-template-columns: 1fr 825px 1fr;
+		}
+	}
+	@include breakpoint-max(1300) {
+		.tutor-option-header {
+			grid-template-columns: 175px auto auto;
 		}
 	}
 	.tutor-form-control {
