@@ -94,7 +94,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						<span class="ttr-line-cross-line"></span>
 					</button>
 				</div>
-				<div class="tutor-modal-body">
+				<div class="tutor-modal-body tutor-bs-align-items-start">
 					<div class="view-announcement-icon bg-primary-40 color-brand-wordpress">
 						<span class="ttr-speaker-filled"></span>
 					</div>
@@ -306,7 +306,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 				<?php endforeach; ?>
 			<?php else : ?>
 				<tr>
-					<td colspan="100%">
+					<td colspan="100%" class="column-empty-state">
 						<?php tutor_utils()->tutor_empty_state( __( 'No announcement found', 'tutor' ) ); ?>
 					</td>
 				</tr>
