@@ -4365,6 +4365,7 @@ li.tutor-option-nav-item h4 {
   line-height: 1;
   text-align: left;
   color: #353535;
+  white-space: nowrap;
 }
 
 .tutor-option-field-row .tutor-form-check label > .desc,
@@ -4982,10 +4983,10 @@ li.tutor-option-nav-item h4 {
   grid-auto-flow: column;
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1300px) {
   .tutor-backend-settings-page .tutor-option-header,
   .tutor-backend-settings-page .tutor-option-form {
-    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-columns: 245px 4fr 1fr;
   }
 }
 
@@ -4993,6 +4994,12 @@ li.tutor-option-nav-item h4 {
   .tutor-backend-settings-page .tutor-option-header,
   .tutor-backend-settings-page .tutor-option-form {
     grid-template-columns: 1fr 825px 1fr;
+  }
+}
+
+@media (max-width: 1300px) {
+  .tutor-backend-settings-page .tutor-option-header {
+    grid-template-columns: 175px auto auto;
   }
 }
 
