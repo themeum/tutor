@@ -188,12 +188,16 @@ $settings = maybe_unserialize($question->question_settings);
             ?>
         </div>
 
-        <div id="tutor_quiz_question_answer_form"></div>
+        <div id="tutor_quiz_question_answer_form">
 
-        <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
-            <i class="tutor-icon-block tutor-icon-plus"></i>
-            <?php _e('Add An Option', 'tutor'); ?>
-        </a>
+        </div>
+
+        <div class="tutor-add-option-wrapper">
+            <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
+                <i class="tutor-icon-block tutor-icon-plus"></i>
+                <?php _e('Add An Option', 'tutor'); ?>
+            </a>
+        </div>
         
         <div id="quiz_validation_msg_wrap">
 
