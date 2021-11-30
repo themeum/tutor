@@ -60,8 +60,17 @@
                 // Show Start/Continue/Retake Button
                 if ( $lesson_url ) { 
                     $button_class = 'tutor-is-fullwidth tutor-btn ' . ( $retake_course ? 'tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full' : '' ) . ' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
+                    $button_identifier = '';
+                    if ( is_single_course() && $retake_course ) {
+                        $button_identifier = 'retake-button';
+                    } elseif ( $completed_percent <= 0 ) {
+                        $button_identifier = 'start-learning';
+                    } else {
+                        $button_identifier = 'continue-learning';
+                    }
+                ?>
                     ?>
-                    <a href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class ); ?>" data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
+                    <a href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class . ' ' . $button_identifier ); ?>" data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
                         <?php
                             if ( is_single_course() && $retake_course ) {
                                 esc_html_e( 'Retake This Course', 'tutor' );
