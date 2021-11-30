@@ -60,9 +60,10 @@
                 // Show Start/Continue/Retake Button
                 if ( $lesson_url ) { 
                     $button_class = 'tutor-is-fullwidth tutor-btn ' . ( $retake_course ? 'tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full' : '' ) . ' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
+                    // Button identifier class
                     $button_identifier = '';
                     if ( is_single_course() && $retake_course ) {
-                        $button_identifier = 'retake-button';
+                        $button_identifier = 'retake-course';
                     } elseif ( $completed_percent <= 0 ) {
                         $button_identifier = 'start-learning';
                     } else {
@@ -165,7 +166,7 @@
                             <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                             <input type="hidden" name="tutor_course_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
                             <input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
-                            <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24">
+                            <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24 tutor-enroll-course-button">
                                 <?php esc_html_e( 'Enroll Course', 'tutor' ); ?>
                             </button>
                         </form>
