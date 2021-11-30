@@ -31,7 +31,8 @@ $arrow: 5px;
 		background: $tooltip-bg;
 		color: $tooltip-txt;
 		padding: 10px 15px;
-		text-align: center;
+		text-align: left;
+		word-break: break-word;
 		border-radius: 10px;
 		z-index: 1;
 

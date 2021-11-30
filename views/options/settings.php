@@ -14,7 +14,7 @@
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page" style="margin-left: -20px;">
-	<header class="tutor-option-header tutor-bs-px-3 tutor-bs-py-2">
+	<header class="tutor-option-header tutor-pl-30 tutor-pr-25">
 		<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 		<div class="search-field">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
@@ -79,5 +79,16 @@
 	.color-preset-input [type="radio"]{position: absolute;opacity: 0;visibility: hidden;z-index: -1;}
 	#wpbody-content {
 		margin-top: 70px;
+	}
+	#wpcontent {
+		padding-left: 30px;
+		padding-right: 25px;
+	}
+	.notice, div.error, div.updated {
+		margin-right: 0;
+		margin-left: 0;
+	}
+	.notice.is-dismissible {
+		margin-bottom: 10px;
 	}
 </style>
