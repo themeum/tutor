@@ -63,7 +63,6 @@
                     // Button identifier class
                     $button_identifier = 'start-continue-retake-button';
                 ?>
-                    ?>
                     <a href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class . ' ' . $button_identifier ); ?>" data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
                         <?php
                             if ( is_single_course() && $retake_course ) {
