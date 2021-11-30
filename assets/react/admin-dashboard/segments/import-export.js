@@ -277,6 +277,7 @@ const delete_history_data = () => {
       xhttp.send(formData);
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
+          
           tutor_option_history_load(xhttp.responseText);
           delete_history_data();
 

@@ -40,9 +40,13 @@ navTabLists.forEach((list) => {
             if (loadingSpinner) {
                 document.getElementById(dataTab).querySelector('.loading-spinner').remove();
             }
-            tinymce.activeEditor.on("change", function (e) {
-                document.getElementById('save_tutor_option').disabled = false;
-            });
+
+            //enable if tinymce content changed
+            if (null !== tinymce) {
+                tinymce.activeEditor.on("change", function (e) {
+                    document.getElementById('save_tutor_option').disabled = false;
+                });
+            }
         }
 
     });

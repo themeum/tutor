@@ -516,10 +516,11 @@ table.tutor-ui-table {
 			display: none;
 		}
 		.td-empty-state {
+			text-align: center;
+			// width: 100%;
 			img {
 				max-width: 100%;
 			}
-			text-align: center;
 		}
 	}
 } // end Table th/td Content Styles

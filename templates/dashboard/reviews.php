@@ -25,7 +25,6 @@ $offset = ($current_page-1)*$per_page;
 $reviews = tutor_utils()->get_reviews_by_instructor(get_current_user_id(), $offset, $per_page);
 $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
 ?>
-
     <div class="tutor-dashboard-content-inner">
 		<?php
 		if (current_user_can(tutor()->instructor_role)){
@@ -82,22 +81,22 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                                 </td>
                                 <td data-th="<?php esc_html_e('Date', 'tutor'); ?>">
                                     <span class="text-medium-caption color-text-primary">
-                                        <?php echo  esc_attr(date( get_option( 'date_format'), strtotime($review->comment_date) )); ?>
+                                        <?php echo tutor_get_formated_date(null, $review->comment_date); ?>
                                     </span>
                                 </td>
                                 <td data-th="<?php esc_html_e('Feedback', 'tutor'); ?>">
                                     <div class="td-feedback">
                                         <div class="td-tutor-rating text-regular-body color-text-subsued">
-                                            <?php tutor_utils()->star_rating_generator($review->rating); ?>
+                                            <?php tutor_utils()->star_rating_generator_v2($review->rating, null, true); ?>
                                         </div>
                                         <p class="review-text color-text-subsued tutor-mb-0">
-                                            <?php echo htmlspecialchars($review->comment_content); ?>
+                                            <?php echo htmlspecialchars(stripslashes( $review->comment_content )); ?>
                                         </p>
                                         <p class="course-name text-medium-small color-text-title tutor-mb-0">
                                             <strong><?php esc_html_e('Course', 'tutor'); ?>:</strong>&nbsp;
-                                            <a href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
+                                            <span data-href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
                                                 <?php esc_html_e(get_the_title($review->comment_post_ID)); ?>
-                                            </a>
+                                            </span>
                                         </p>
                                     </div>
                                 </td>
@@ -107,7 +106,8 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
 					?>
                     </tbody>
                 </table>
-			<?php }else{
+			    <?php 
+            } else {
 				?>
                 <div class="tutor-dashboard-content-inner">
                     <p><?php esc_html_e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
@@ -116,7 +116,6 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
 			} 
         ?>
     </div>
-
 <?php
 if ($reviews->count){
 	?>
