@@ -5489,272 +5489,272 @@
 }
 
 .text-thin-h1 {
-  font-weight: 100 !important;
-  font-size: 80px !important;
+  font-weight: 100;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-thin-h2 {
-  font-weight: 100 !important;
-  font-size: 60px !important;
+  font-weight: 100;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-thin-h3 {
-  font-weight: 100 !important;
-  font-size: 40px !important;
+  font-weight: 100;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-thin-h4 {
-  font-weight: 100 !important;
-  font-size: 30px !important;
+  font-weight: 100;
+  font-size: 30px;
   line-height: 133%;
 }
 
 .text-thin-h5 {
-  font-weight: 100 !important;
-  font-size: 24px !important;
+  font-weight: 100;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-thin-h6 {
-  font-weight: 100 !important;
-  font-size: 20px !important;
+  font-weight: 100;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-thin-body {
-  font-weight: 100 !important;
-  font-size: 16px !important;
+  font-weight: 100;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-thin-caption {
-  font-weight: 100 !important;
-  font-size: 15px !important;
+  font-weight: 100;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-thin-small {
-  font-weight: 100 !important;
-  font-size: 13px !important;
+  font-weight: 100;
+  font-size: 13px;
   line-height: 138%;
 }
 
 .text-thin-tiny {
-  font-weight: 100 !important;
-  font-size: 11px !important;
+  font-weight: 100;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-regular-h1 {
-  font-weight: 400 !important;
-  font-size: 80px !important;
+  font-weight: 400;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-regular-h2 {
-  font-weight: 400 !important;
-  font-size: 60px !important;
+  font-weight: 400;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-regular-h3 {
-  font-weight: 400 !important;
-  font-size: 40px !important;
+  font-weight: 400;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-regular-h4 {
-  font-weight: 400 !important;
-  font-size: 30px !important;
+  font-weight: 400;
+  font-size: 30px;
   line-height: 133%;
 }
 
 .text-regular-h5 {
-  font-weight: 400 !important;
-  font-size: 24px !important;
+  font-weight: 400;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-regular-h6 {
-  font-weight: 400 !important;
-  font-size: 20px !important;
+  font-weight: 400;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-regular-body, .tutor-course-details-page .tutor-course-details-tab .tab-item-content p, .tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label {
-  font-weight: 400 !important;
-  font-size: 16px !important;
+  font-weight: 400;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-regular-caption, .tutor-alert, .tutor-alert .tutor-alert-text, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item-seemore-popup .tab-header-item {
-  font-weight: 400 !important;
-  font-size: 15px !important;
+  font-weight: 400;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-regular-small, .text-body, .tooltip-wrap .tooltip-txt {
-  font-weight: 400 !important;
-  font-size: 13px !important;
+  font-weight: 400;
+  font-size: 13px;
   line-height: 138%;
 }
 
 .text-regular-tiny {
-  font-weight: 400 !important;
-  font-size: 11px !important;
+  font-weight: 400;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-medium-h1 {
-  font-weight: 500 !important;
-  font-size: 80px !important;
+  font-weight: 500;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-medium-h2 {
-  font-weight: 500 !important;
-  font-size: 60px !important;
+  font-weight: 500;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-medium-h3 {
-  font-weight: 500 !important;
-  font-size: 40px !important;
+  font-weight: 500;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-medium-h4 {
-  font-weight: 500 !important;
-  font-size: 30px !important;
+  font-weight: 500;
+  font-size: 30px;
   line-height: 123%;
 }
 
 .text-medium-h5 {
-  font-weight: 500 !important;
-  font-size: 24px !important;
+  font-weight: 500;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-medium-h6, .tutor-accordion-item-header {
-  font-weight: 500 !important;
-  font-size: 20px !important;
+  font-weight: 500;
+  font-size: 20px;
   line-height: 140%;
 }
 
 .text-medium-body, select.tutor-form-select, .tutor-dropdown-select-selected > div:first-child {
-  font-weight: 500 !important;
-  font-size: 16px !important;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-default-tab .tab-header-item, .tutor-default-tab .tab-header-item-seemore-toggle, .tutor-wp-dashboard-filter-items .tutor-form-label {
-  font-weight: 500 !important;
-  font-size: 15px !important;
+  font-weight: 500;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-medium-small, .tutor-badge-label, .tutor-course-listing-item-sm .tutor-ratings .tutor-rating-text {
-  font-weight: 500 !important;
-  font-size: 13px !important;
+  font-weight: 500;
+  font-size: 13px;
   line-height: 162%;
 }
 
 .text-medium-tiny {
-  font-weight: 500 !important;
-  font-size: 11px !important;
+  font-weight: 500;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-semi-caption {
-  font-weight: 600 !important;
-  font-size: 15px !important;
+  font-weight: 600;
+  font-size: 15px;
   line-height: 165%;
 }
 
 .text-bold-h1 {
-  font-weight: 700 !important;
-  font-size: 80px !important;
+  font-weight: 700;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-bold-h2 {
-  font-weight: 700 !important;
-  font-size: 60px !important;
+  font-weight: 700;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-bold-h3 {
-  font-weight: 700 !important;
-  font-size: 40px !important;
+  font-weight: 700;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-bold-h4 {
-  font-weight: 700 !important;
-  font-size: 30px !important;
+  font-weight: 700;
+  font-size: 30px;
   line-height: 123%;
 }
 
 .text-bold-h5 {
-  font-weight: 700 !important;
-  font-size: 24px !important;
+  font-weight: 700;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-bold-h6 {
-  font-weight: 700 !important;
-  font-size: 20px !important;
+  font-weight: 700;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-bold-body {
-  font-weight: 700 !important;
-  font-size: 16px !important;
+  font-weight: 700;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-bold-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current {
-  font-weight: 700 !important;
-  font-size: 15px !important;
+  font-weight: 700;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-bold-small {
-  font-weight: 700 !important;
-  font-size: 13px !important;
+  font-weight: 700;
+  font-size: 13px;
   line-height: 162%;
 }
 
 .text-bold-tiny {
-  font-weight: 700 !important;
-  font-size: 11px !important;
+  font-weight: 700;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-btn-xlarge, .tutor-btn.tutor-btn-xl, .tutor-btn.tutor-btn-icon.tutor-btn-xl {
-  font-weight: 500 !important;
-  font-size: 18px !important;
+  font-weight: 500;
+  font-size: 18px;
   line-height: 178%;
 }
 
 .text-btn-large, .tutor-btn.tutor-btn-lg, .tutor-btn.tutor-btn-icon.tutor-btn-lg {
-  font-weight: 500 !important;
-  font-size: 16px !important;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 200%;
 }
 
 .text-btn-medium, .tutor-btn.tutor-btn-md, .tutor-btn.tutor-btn-icon.tutor-btn-md {
-  font-weight: 500 !important;
-  font-size: 15px !important;
+  font-weight: 500;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-btn-small, .tutor-btn.tutor-btn-sm, .tutor-btn.tutor-btn-icon.tutor-btn-sm, table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn {
-  font-weight: 500 !important;
-  font-size: 13px !important;
+  font-weight: 500;
+  font-size: 13px;
   line-height: 123%;
 }
 
