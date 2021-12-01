@@ -116,7 +116,7 @@ jQuery(document).ready(function ($) {
      * Fire TUTOR video
      * @since v.1.0.0
      */
-    $('.tutorPlayer').each(function(){
+    $('.tutorPlayer').each(function () {
         videoPlayer.init(this);
     });
 
@@ -218,15 +218,15 @@ jQuery(document).ready(function ($) {
 
                                 var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
                                 $(alertDiv).addClass('tutor-alert-show');
-                                if ( att > 0 ) {
+                                if (att > 0) {
                                     $(`${alertDiv} .text`).html(
-                                        __( 'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: '+ attemptRemaining+'/'+attemptAllowed, 'tutor' )
+                                        __('Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor')
                                     );
                                 } else {
                                     $(alertDiv).addClass('tutor-alert-danger');
                                     $("#tutor-start-quiz").hide();
                                     $(`${alertDiv} .text`).html(
-                                        `${__( 'Unfortunately, you are out of time and quiz attempts. ', 'tutor' )}`
+                                        `${__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')}`
                                     );
                                 }
 
@@ -261,9 +261,9 @@ jQuery(document).ready(function ($) {
     // tutor course content accordion
 
     /**
-	 * Toggle topic summery
-	 * @since v.1.6.9
-	 */
+     * Toggle topic summery
+     * @since v.1.6.9
+     */
     $('.tutor-course-title h4 .toggle-information-icon').on('click', function (e) {
         $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
         e.stopPropagation();
@@ -408,7 +408,7 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
 
         // Show previous quiz if press previous button
-        if($(this).hasClass('tutor-quiz-answer-previous-btn')) {
+        if ($(this).hasClass('tutor-quiz-answer-previous-btn')) {
             $(this).closest('.quiz-attempt-single-question').hide().prev().show();
             return;
         }
@@ -446,15 +446,15 @@ jQuery(document).ready(function ($) {
                 */
 
                 var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
-                if(feedBackMode === 'reveal') {
-                    setTimeout(()=>{
+                if (feedBackMode === 'reveal') {
+                    setTimeout(() => {
                         $('.quiz-attempt-single-question').hide();
-                         $nextQuestion.show();
+                        $nextQuestion.show();
                     },
-                    800);
+                        800);
                 } else {
                     $('.quiz-attempt-single-question').hide();
-                     $nextQuestion.show();
+                    $nextQuestion.show();
                 }
 
 
@@ -474,6 +474,8 @@ jQuery(document).ready(function ($) {
 
     $(document).on('submit', '#tutor-answering-quiz', function (e) {
         var $questions_wrap = $('.quiz-attempt-single-question');
+        const quizSubmitBtn = document.querySelector('.tutor-quiz-submit-btn');
+        quizSubmitBtn.disabled = true;
         var validated = true;
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
@@ -488,6 +490,10 @@ jQuery(document).ready(function ($) {
         if (!validated) {
             e.preventDefault();
         }
+
+        setTimeout(() => {
+            quizSubmitBtn.disabled = true;
+        }, 500);
     });
 
 
@@ -612,7 +618,7 @@ jQuery(document).ready(function ($) {
 
         // Prepare answer array
         var quiz_answers = JSON.parse(atob(window.tutor_quiz_context.split('').reverse().join('')));
-        !Array.isArray(quiz_answers) ? quiz_answers=[] : 0;
+        !Array.isArray(quiz_answers) ? quiz_answers = [] : 0;
 
         // Evaluate result
         var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
@@ -629,8 +635,8 @@ jQuery(document).ready(function ($) {
 
                 var $type = $input.attr('type');
                 if ($type === 'radio' || $type === 'checkbox') {
-                    var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
-                    if ( !isTrue) {
+                    var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
+                    if (!isTrue) {
                         if ($input.prop("checked")) {
                             $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-line-cross"></i> ${__('Incorrect, Please try again', 'tutor')}</span>`);
                         }
@@ -643,7 +649,7 @@ jQuery(document).ready(function ($) {
                 var $input = $(this);
                 var $type = $input.attr('type');
                 if ($type === 'checkbox') {
-                    var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
+                    var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
                     var checked = $input.is(':checked');
 
                     if (isTrue && !checked) {
@@ -656,7 +662,7 @@ jQuery(document).ready(function ($) {
         } else if (feedBackMode === 'reveal') {
             $checkedInputs.each(function () {
                 var $input = $(this);
-                var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
+                var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
                 if (!isTrue) {
                     validatedTrue = false;
                 }
@@ -667,7 +673,7 @@ jQuery(document).ready(function ($) {
 
                 var $type = $input.attr('type');
                 if ($type === 'radio' || $type === 'checkbox') {
-                    var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
+                    var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
                     var checked = $input.is(':checked');
 
                     if (isTrue) {
@@ -679,7 +685,7 @@ jQuery(document).ready(function ($) {
                     }
 
                     if (isTrue && !checked) {
-                        $input.attr('disabled','disabled');
+                        $input.attr('disabled', 'disabled');
                         validatedTrue = false;
                         goNext = true;
                     }
@@ -745,7 +751,7 @@ jQuery(document).ready(function ($) {
             },
             success: function (data) {
                 if (data.success) {
-                    tutor_toast( 'Success!', data.data.msg, 'success' );
+                    tutor_toast('Success!', data.data.msg, 'success');
                 }
             },
             complete: function () {
@@ -763,7 +769,7 @@ jQuery(document).ready(function ($) {
     $(document).on('click', '.open-withdraw-form-btn, .close-withdraw-form-btn', function (e) {
         e.preventDefault();
 
-        if($(this).data('reload')=='yes'){
+        if ($(this).data('reload') == 'yes') {
             window.location.reload();
             return;
         }
@@ -801,7 +807,7 @@ jQuery(document).ready(function ($) {
 
                 } else {
                     Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
-                            <img src="'+window._tutorobject.tutor_url+'assets/images/icon-cross.svg"/> \
+                            <img src="'+ window._tutorobject.tutor_url + 'assets/images/icon-cross.svg"/> \
                             <div>\
                                 <b>Error</b><br/>\
                                 <span>'+ data.data.msg + '</span>\
@@ -873,6 +879,7 @@ jQuery(document).ready(function ($) {
                 $('#tutor_assignment_start_btn').addClass('updating-icon');
             },
             success: function (data) {
+                console.log('success');
                 if (data.success) {
                     location.reload();
                 }
@@ -941,13 +948,13 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: form_data,
             beforeSend: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Saving...', 'tutor' ) );
+                $('.tutor-dashboard-builder-draft-btn span').text(__('Saving...', 'tutor'));
             },
             success: function (data) {
 
             },
             complete: function () {
-                $('.tutor-dashboard-builder-draft-btn span').text( __( 'Save', 'tutor' ) );
+                $('.tutor-dashboard-builder-draft-btn span').text(__('Save', 'tutor'));
             }
         });
     }
@@ -1069,7 +1076,7 @@ jQuery(document).ready(function ($) {
      * @since v.1.5.1
      */
     //$(document).on('click', '.tutor-dropbtn', function (e) {
-    $('.tutor-dropbtn').click(function(){
+    $('.tutor-dropbtn').click(function () {
 
         var $content = $(this).parent().find(".tutor-dropdown-content");
         $content.slideToggle(100);
@@ -1090,13 +1097,13 @@ jQuery(document).ready(function ($) {
      * @since  v.1.7.2
     */
     var price_type = $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]');
-    if(price_type.length==0){
+    if (price_type.length == 0) {
         $('#_tutor_is_course_public_meta_checkbox').show();
     }
-    else{
-        price_type.change(function(){
-            if($(this).prop('checked')){
-                var method = $(this).val()=='paid' ? 'hide' : 'show';
+    else {
+        price_type.change(function () {
+            if ($(this).prop('checked')) {
+                var method = $(this).val() == 'paid' ? 'hide' : 'show';
                 $('#_tutor_is_course_public_meta_checkbox')[method]();
             }
         }).trigger('change');
@@ -1111,36 +1118,36 @@ jQuery(document).ready(function ($) {
     // Ideal for view containers that may re-render content.
     (function ($) {
         $.fn.tutor_tooltip = function () {
-        this
+            this
 
-        // Delegate to tooltip, Hide if tooltip receives mouse or is clicked (tooltip may stick if parent has focus)
-            .on('mouseenter click', '.tooltip', function (e) {
-            e.stopPropagation();
-            $(this).removeClass('isVisible');
-            })
-            // Delegate to parent of tooltip, Show tooltip if parent receives mouse or focus
-            .on('mouseenter focus', ':has(>.tooltip)', function (e) {
-            if (!$(this).prop('disabled')) { // IE 8 fix to prevent tooltip on `disabled` elements
-                $(this)
-                .find('.tooltip')
-                .addClass('isVisible');
-            }
-            })
-            // Delegate to parent of tooltip, Hide tooltip if parent loses mouse or focus
-            .on('mouseleave blur keydown', ':has(>.tooltip)', function (e) {
-            if (e.type === 'keydown') {
-                if(e.which === 27) {
-                $(this)
-                    .find('.tooltip')
-                    .removeClass('isVisible');
-                }
-            } else {
-                $(this)
-                .find('.tooltip')
-                .removeClass('isVisible');
-            }
-            });
-        return this;
+                // Delegate to tooltip, Hide if tooltip receives mouse or is clicked (tooltip may stick if parent has focus)
+                .on('mouseenter click', '.tooltip', function (e) {
+                    e.stopPropagation();
+                    $(this).removeClass('isVisible');
+                })
+                // Delegate to parent of tooltip, Show tooltip if parent receives mouse or focus
+                .on('mouseenter focus', ':has(>.tooltip)', function (e) {
+                    if (!$(this).prop('disabled')) { // IE 8 fix to prevent tooltip on `disabled` elements
+                        $(this)
+                            .find('.tooltip')
+                            .addClass('isVisible');
+                    }
+                })
+                // Delegate to parent of tooltip, Hide tooltip if parent loses mouse or focus
+                .on('mouseleave blur keydown', ':has(>.tooltip)', function (e) {
+                    if (e.type === 'keydown') {
+                        if (e.which === 27) {
+                            $(this)
+                                .find('.tooltip')
+                                .removeClass('isVisible');
+                        }
+                    } else {
+                        $(this)
+                            .find('.tooltip')
+                            .removeClass('isVisible');
+                    }
+                });
+            return this;
         };
     }(jQuery));
 
@@ -1159,38 +1166,38 @@ jQuery(document).ready(function ($) {
     var filter_modifier = {};
 
     // Sidebar checkbox value change
-    filter_container.on('submit', function(e) {
+    filter_container.on('submit', function (e) {
         e.preventDefault();
     })
-    .find('input').change(function(e){
+        .find('input').change(function (e) {
 
-        var filter_criteria = Object.assign( filter_container.serializeObject(), filter_modifier);
-        filter_criteria.action = 'tutor_course_filter_ajax';
+            var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier);
+            filter_criteria.action = 'tutor_course_filter_ajax';
 
-        loop_container.html('<center><img src="'+window._tutorobject.loading_icon_url+'"/></center>');
-        $(this).closest('form').find('.tutor-clear-all-filter').show();
+            loop_container.html('<center><img src="' + window._tutorobject.loading_icon_url + '"/></center>');
+            $(this).closest('form').find('.tutor-clear-all-filter').show();
 
-        $.ajax({
-            url:window._tutorobject.ajaxurl,
-            type:'POST',
-            data:filter_criteria,
-            success:function(r) {
-                loop_container.html(r).find('.tutor-pagination-wrap a').each(function(){
-                    $(this).attr('data-href', $(this).attr('href')).attr('href', '#');
-                });
-            }
-        })
-    });
+            $.ajax({
+                url: window._tutorobject.ajaxurl,
+                type: 'POST',
+                data: filter_criteria,
+                success: function (r) {
+                    loop_container.html(r).find('.tutor-pagination-wrap a').each(function () {
+                        $(this).attr('data-href', $(this).attr('href')).attr('href', '#');
+                    });
+                }
+            })
+        });
 
     // Alter pagination
-    loop_container.on('click', '.tutor-pagination-wrap a', function(e){
+    loop_container.on('click', '.tutor-pagination-wrap a', function (e) {
         var url = $(this).data('href') || $(this).attr('href');
 
-        if(url){
+        if (url) {
             url = new URL(url);
             var page = url.searchParams.get("paged");
 
-            if(page){
+            if (page) {
                 e.preventDefault();
                 filter_modifier.page = page;
                 filter_container.find('input:first').trigger('change');
@@ -1199,64 +1206,64 @@ jQuery(document).ready(function ($) {
     });
 
     // Alter sort filter
-    loop_container.on('change', 'select[name="tutor_course_filter"]', function() {
+    loop_container.on('change', 'select[name="tutor_course_filter"]', function () {
         filter_modifier.tutor_course_filter = $(this).val();
         filter_container.find('input:first').trigger('change');
     });
 
     // Refresh page after coming back to course archive page from cart
     var archive_loop = $('.tutor-course-loop');
-    if(archive_loop.length>0){
-        window.sessionStorage.getItem('tutor_refresh_archive')==='yes' ? window.location.reload() : 0;
+    if (archive_loop.length > 0) {
+        window.sessionStorage.getItem('tutor_refresh_archive') === 'yes' ? window.location.reload() : 0;
         window.sessionStorage.removeItem('tutor_refresh_archive');
-        archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function(){
+        archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function () {
             window.sessionStorage.setItem('tutor_refresh_archive', 'yes');
         });
     }
 
     //warn user before leave page if quiz is running
-    document.body.addEventListener('click', function(event){
-        const target      = event.target;
-        const targetTag   = target.tagName
-        const parentTag   = target.parentElement.tagName;
+    document.body.addEventListener('click', function (event) {
+        const target = event.target;
+        const targetTag = target.tagName
+        const parentTag = target.parentElement.tagName;
 
-        if ( $tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED' ) {
-            if ( targetTag === 'A' || parentTag === 'A' ) {
+        if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED') {
+            if (targetTag === 'A' || parentTag === 'A') {
                 event.preventDefault();
                 event.stopImmediatePropagation();
                 let popup;
 
                 let data = {
-                    title: __( 'Abandon Quiz?', 'tutor' ),
-                    description : __( 'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor' ),
-                    buttons : {
+                    title: __('Abandon Quiz?', 'tutor'),
+                    description: __('Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor'),
+                    buttons: {
                         keep: {
-                            title: __( 'Yes, leave quiz', 'tutor' ),
+                            title: __('Yes, leave quiz', 'tutor'),
                             id: 'leave',
                             class: 'tutor-btn tutor-is-outline tutor-is-default',
-                            callback: function() {
+                            callback: function () {
 
-                                var formData = $('form#tutor-answering-quiz').serialize()+'&action='+'tutor_quiz_abandon';
+                                var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
                                 $.ajax({
                                     url: window._tutorobject.ajaxurl,
                                     type: 'POST',
                                     data: formData,
-                                    beforeSend: function() {
-                                       document.querySelector("#tutor-popup-leave").innerHTML = __( 'Leaving...', 'tutor' );
+                                    beforeSend: function () {
+                                        document.querySelector("#tutor-popup-leave").innerHTML = __('Leaving...', 'tutor');
                                     },
-                                    success: function(response) {
-                                        if(response.success) {
-                                            if ( target.href == undefined ) {
+                                    success: function (response) {
+                                        if (response.success) {
+                                            if (target.href == undefined) {
                                                 location.href = target.parentElement.href
                                             } else {
                                                 location.href = target.href
                                             }
                                         } else {
-                                            alert( __( 'Something went wrong', 'tutor' ) );
+                                            alert(__('Something went wrong', 'tutor'));
                                         }
                                     },
-                                    error: function() {
-                                        alert( __( 'Something went wrong', 'tutor' ) );
+                                    error: function () {
+                                        alert(__('Something went wrong', 'tutor'));
                                         popup.remove();
                                     }
                                 });
@@ -1266,7 +1273,7 @@ jQuery(document).ready(function ($) {
                             title: __('Stay here', 'tutor'),
                             id: 'reset',
                             class: 'tutor-btn',
-                            callback: function() {
+                            callback: function () {
                                 popup.remove();
                             }
                         },
@@ -1279,7 +1286,7 @@ jQuery(document).ready(function ($) {
     });
 
     /* Disable start quiz button  */
-    $('body').on('submit', 'form#tutor-start-quiz', function() {
+    $('body').on('submit', 'form#tutor-start-quiz', function () {
         $(this).find('button').prop('disabled', true);
     });
 });
