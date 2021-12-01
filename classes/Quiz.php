@@ -905,7 +905,7 @@ class Quiz {
 		$question_type = $old_answer->belongs_question_type;
 
 		ob_start();
-		include  tutor()->path.'views/modal/question_answer_edit_form.php';
+		include  tutor()->path.'views/modal/question_answer_form.php';
 		$output = ob_get_clean();
 
 		wp_send_json_success(array('output' => $output));

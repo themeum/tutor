@@ -29,9 +29,12 @@ if ( ! defined( 'ABSPATH' ) )
 				continue;
 			}
 			$counter++;
-
+			/**
+			 * Apply filters to show default active tab
+			 */
+			$default_active_key = apply_filters( 'tutor_default_topics_active_tab', 'info' );
 			?>
-				<div class="tab-header-item <?php echo $nav_key=='info' ? 'is-active' : ''; ?>" data-tutor-tab-target="tutor-course-details-tab-<?php echo $nav_key; ?>">
+				<div class="tab-header-item <?php echo $nav_key == $default_active_key ? 'is-active' : ''; ?>" data-tutor-tab-target="tutor-course-details-tab-<?php echo $nav_key; ?>">
 					<span><?php echo $nav_item['title']; ?></span>
 				</div>
 			<?php

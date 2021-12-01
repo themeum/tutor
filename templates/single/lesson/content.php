@@ -16,18 +16,20 @@ if ( ! defined( 'ABSPATH' ) )
 global $post;
 global $previous_id;
 global $next_id;
-$course_content_id = '';
-$completedCount = '';
-$totalContents = '';
-$post_id = get_the_ID();
-$_is_preview = get_post_meta($post_id, '_is_preview', true);
+
+// Get the ID of this content and the corresponding course
+$course_content_id = get_the_ID();
+$course_id = tutor_utils()->get_course_id_by_subcontent($course_content_id);
+
+$_is_preview = get_post_meta($course_content_id, '_is_preview', true);
 $content_id = tutor_utils()->get_post_id($course_content_id);
 $contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
 $previous_id = $contents->previous_id;
 $next_id = $contents->next_id;
-$completed_count = tutor_utils()->get_course_completed_percent();
-$complete = tutor_utils()->get_course_completed_percent($completedCount);
-$total = tutor_utils()->get_course_completed_percent($totalContents);
+
+// Get total content count
+$course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true);
+
 $jsonData = array();
 $jsonData['post_id'] = get_the_ID();
 $jsonData['best_watch_time'] = 0;
@@ -69,13 +71,13 @@ if ($best_watch_time > 0){
                     <?php _e('Your Progress:', 'tutor'); ?>
                 </span>
                 <span class="text-bold-caption">
-                    <?php echo $complete; ?>
+                    <?php echo $course_stats['completed_count']; ?>
                 </span> 
                 <?php _e('of ', 'tutor'); ?>
                 <span class="text-bold-caption">
-                    <?php echo $total; ?>
+                    <?php echo $course_stats['total_count']; ?>
                 </span>
-                (<?php echo $completed_count.'%'; ?>)
+                (<?php echo $course_stats['completed_percent'] .'%'; ?>)
             </div>
             <?php
                 do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
@@ -161,10 +163,7 @@ if ($best_watch_time > 0){
                 <?php get_tutor_posts_attachments(); ?>
             </div>
             <div class="tab-body-item" id="tutor-course-details-tab-3">
-                <div class="text-medium-h6 color-text-primary"><?php _e('Join the conversation', 'tutor'); ?></div>
-                <?php
-                    comments_template();
-                ?>
+                <?php require __DIR__ . '/comment.php'; ?>
             </div>
         </div>
     </div>

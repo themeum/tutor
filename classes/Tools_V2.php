@@ -94,10 +94,9 @@ class Tools_V2 {
 			'status'        => array(
 				'label'    => __( 'Status', 'tutor' ),
 				'slug'     => 'status',
-				'icon'     => 'icon-chart-filled',
 				'desc'     => __( 'Status Settings', 'tutor' ),
 				'template' => 'status',
-				'icon'     => 'icon-chart-filled',
+				'icon'     => 'ttr-chart-filled',
 				'blocks'   => array(
 					'wordpress_environment' => array(
 						'label'      => __( 'WordPress environment', 'tutor' ),
@@ -316,19 +315,18 @@ class Tools_V2 {
 			'import_export' => array(
 				'label'    => __( 'Import/Export', 'tutor' ),
 				'slug'     => 'import_export',
-				'icon'     => 'icon-chart-filled',
 				'desc'     => __( 'Import/Export Settings', 'tutor' ),
 				'template' => 'import_export',
-				'icon'     => 'icon-import-export-filled',
+				'icon'     => 'ttr-import-export-filled',
 				'blocks'   => array(),
 			),
 			'tutor_pages'   => array(
 				'label'    => __( 'Tutor Pages', 'tutor' ),
 				'slug'     => 'tutor_pages',
-				'icon'     => 'icon-chart-filled',
+				
 				'desc'     => __( 'Tutor Pages Settings', 'tutor' ),
 				'template' => 'tutor_pages',
-				'icon'     => 'icon-review-line',
+				'icon'     => 'ttr-review-line',
 				'blocks'   => array(
 					'block' => array(),
 				),
@@ -336,9 +334,8 @@ class Tools_V2 {
 			'tutor-setup'   => array(
 				'label'  => __( 'Setup Wizard', 'tutor' ),
 				'slug'   => 'tutor-setup',
-				'icon'   => 'icon-chart-filled',
 				'desc'   => __( 'Setup Wizard Settings', 'tutor' ),
-				'icon'   => 'icon-earth-filled',
+				'icon'   => 'ttr-earth-filled',
 				'blocks' => array(
 					'block' => array(),
 				),

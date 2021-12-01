@@ -27,9 +27,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
         <div id="tutor-single-entry-content" class="tutor-quiz-single-entry-wrap tutor-single-entry-content sidebar-hidden">
 		    <?php tutor_lesson_content(); ?>
             <div class="tutor-lesson-sidebar tutor-mobile-sidebar">
-                <?php 
-                    include 'single/lesson/mobile-sidebar.php';
-                ?>
+                <?php tutor_lessons_sidebar(true, 'mobile'); ?>
             </div> 
         </div>
     </div>
