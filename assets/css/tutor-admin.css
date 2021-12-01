@@ -4983,7 +4983,7 @@ li.tutor-option-nav-item h4 {
   grid-auto-flow: column;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1400px) {
   .tutor-backend-settings-page .tutor-option-header,
   .tutor-backend-settings-page .tutor-option-form {
     grid-template-columns: 245px 4fr 1fr;
