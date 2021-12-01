@@ -7,48 +7,48 @@
 
 global $wpdb;
 
-$order_filter  = isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'desc';
-$assignment_id = sanitize_text_field($_GET['assignment']);
-$assignments_submitted = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d ORDER BY comment_ID $order_filter", $assignment_id));
+$order_filter  = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'desc';
+$assignment_id = sanitize_text_field( $_GET['assignment'] );
+$assignments_submitted = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d ORDER BY comment_ID $order_filter", $assignment_id ) );
 
-$max_mark = tutor_utils()->get_assignment_option($assignment_id, 'total_mark');
-$pass_mark = tutor_utils()->get_assignment_option($assignment_id, 'pass_mark');
-$format = get_option('date_format').' '.get_option('time_format');
-$deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format, __('No Limit', 'tutor'));
+$max_mark = tutor_utils()->get_assignment_option( $assignment_id, 'total_mark' );
+$pass_mark = tutor_utils()->get_assignment_option( $assignment_id, 'pass_mark' );
+$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+$deadline = tutor_utils()->get_assignment_deadline_date( $assignment_id, $format, __( 'No Limit', 'tutor' ) );
 ?>
 
 <div class="submitted-assignment-title">
-    <a class="prev-btn" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('assignments'); ?>"><span>&leftarrow;</span><?php _e('Back', 'tutor'); ?></a>
+    <a class="prev-btn" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>"><span>&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?></a>
 </div>
 
 <?php
-if (tutor_utils()->count($assignments_submitted)) {
+if ( tutor_utils()->count( $assignments_submitted ) ) {
 ?>
 
     <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
         <p>
-            <?php _e('Course', 'tutor'); ?> :
-            <a href="<?php echo get_the_permalink($assignments_submitted[0]->comment_parent); ?>" target="_blank">
-                <?php echo get_the_title($assignments_submitted[0]->comment_parent); ?>
+            <?php esc_html_e( 'Course', 'tutor' ); ?> :
+            <a href="<?php echo esc_url( get_the_permalink( $assignments_submitted[0]->comment_parent ) ); ?>" target="_blank">
+                <?php echo esc_html( get_the_title( $assignments_submitted[0]->comment_parent ) ); ?>
             </a>
         </p>
         <h3>
-            <a href="<?php echo get_the_permalink($assignment_id); ?>" target="_blank">
-                <?php echo get_the_title($assignment_id); ?>
+            <a href="<?php echo esc_url( get_the_permalink( $assignment_id ) ); ?>" target="_blank">
+                <?php echo esc_html( get_the_title( $assignment_id ) ); ?>
             </a>
         </h3>
         <div class="assignment-info">
             <p>
-                <?php _e('Submission Deadline', 'tutor'); ?>:
-                <span><?php echo $deadline; ?></span>
+                <?php esc_html_e( 'Submission Deadline', 'tutor' ); ?>:
+                <span><?php echo esc_html( $deadline ); ?></span>
             </p>
             <p>
-                <?php _e('Total Points', 'tutor'); ?>:
-                <span><?php echo $max_mark; ?></span>
+                <?php esc_html_e( 'Total Points', 'tutor' ); ?>:
+                <span><?php echo esc_html( $max_mark ); ?></span>
             </p>
             <p>
-                <?php _e('Pass Points', 'tutor'); ?>:
-                <span><?php echo $pass_mark; ?></span>
+                <?php esc_html_e( 'Pass Points', 'tutor' ); ?>:
+                <span><?php echo esc_html( $pass_mark ); ?></span>
             </p>
         </div>
     </div>
@@ -57,10 +57,10 @@ if (tutor_utils()->count($assignments_submitted)) {
 
         <div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
             <div class="tutor-form-group">
-                <label><?php _e('Sort By:', 'tutor'); ?></label>
+                <label><?php esc_html_e( 'Sort By:', 'tutor' ); ?></label>
                 <select class="tutor-announcement-order-sorting ignore-nice-select">
-                    <option value="desc" <?php selected($order_filter, 'desc'); ?>><?php _e('Latest', 'tutor'); ?></option>
-                    <option value="asc" <?php selected($order_filter, 'asc'); ?>><?php _e('Oldest', 'tutor'); ?></option>
+                    <option value="desc" <?php selected( $order_filter, 'desc' ); ?>><?php esc_html_e( 'Latest', 'tutor' ); ?></option>
+                    <option value="asc" <?php selected( $order_filter, 'asc' ); ?>><?php esc_html_e( 'Oldest', 'tutor' ); ?></option>
                 </select>
             </div>
         </div>
@@ -69,7 +69,7 @@ if (tutor_utils()->count($assignments_submitted)) {
             <thead>
                 <tr>
                     <th style="width:25%;"><?php esc_attr_e('Date', 'tutor'); ?></td>
-                    <th><?php esc_attr_e('Student', 'tutor'); ?></td>
+                    <th><?php esc_attr_e( 'Student', 'tutor' ); ?></td>
                     <th style="width:15%;"><?php esc_attr_e('Total Points', 'tutor'); ?></td>
                     <th style="width:12%;"><?php esc_attr_e('Result', 'tutor'); ?></td>
                     <th style="width:10%;">&nbsp;</td>
