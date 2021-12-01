@@ -15,23 +15,23 @@ if ( is_string( $sub_page ) && in_array($sub_page, $allowed_sub_pages)){
  * 
  * @since 1.9.7
  */
-$search_filter	= isset( $_GET['search'] ) ? $_GET['search'] : '';
-$course_filter	= isset( $_GET['course-id'] ) ? $_GET['course-id'] : '';
-$date_filter	= isset( $_GET['date'] ) ? $_GET['date'] : '';
-$order_filter	= isset( $_GET['order'] ) ? $_GET['order'] : "ASC";
+$search_filter	= isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';
+$course_filter	= isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
+$date_filter	= isset( $_GET['date'] ) ? sanitize_text_field( $_GET['date'] ) : '';
+$order_filter	= isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : "ASC";
 
 $instructorList = new \TUTOR\Instructors_List();
-$instructorList->prepare_items($search_filter, $course_filter, $date_filter,$order_filter);
+$instructorList->prepare_items( $search_filter, $course_filter, $date_filter,$order_filter );
 ?>
 
 
 <div class="wrap">
-    <h1 class="wp-heading-inline"><?php _e('Instructors', 'tutor'); ?></h1>
+    <h1 class="wp-heading-inline"><?php esc_html_e( 'Instructors', 'tutor' ); ?></h1>
 	<?php 
-		if(get_option( 'users_can_register', false ) && current_user_can( 'manage_options' )) {
+		if ( get_option( 'users_can_register', false ) && current_user_can( 'manage_options' ) ) {
 			?>
-			<a href="<?php echo add_query_arg(array('sub_page' => 'add_new_instructor')); ?>" class="page-title-action">
-				<i class="tutor-icon-plus"></i> <?php _e('Add New Instructor', 'tutor'); ?>
+			<a href="<?php echo add_query_arg( array( 'sub_page' => 'add_new_instructor' ) ); ?>" class="page-title-action">
+				<i class="tutor-icon-plus"></i> <?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
 			</a>
 			<?php
 		}
@@ -42,7 +42,7 @@ $instructorList->prepare_items($search_filter, $course_filter, $date_filter,$ord
         <input type="hidden" name="page" value="<?php echo \TUTOR\Instructors_List::INSTRUCTOR_LIST_PAGE; ?>" />
 		<?php
 			//$instructorList->search_box(__('Search', 'tutor'), 'instructors');
-			$instructorList->display($enable_sorting_field_with_bulk_action = true); 
+			$instructorList->display( $enable_sorting_field_with_bulk_action = true ); 
 		?>
     </form>
 </div>

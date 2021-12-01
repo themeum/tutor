@@ -363,8 +363,8 @@ class Tutor_List_Table {
 			</div>
 			';
 		$options = '';
-		foreach($courses as $course){
-			$options .= '<option value="'.$course->ID.'" '.selected($selected,$course->ID,false).'> '.$course->post_title.' </option>';
+		foreach ( $courses as $course ) {
+			$options .= '<option value="' . esc_attr( $course->ID ) . '" ' . selected( $selected,$course->ID,false ) . '> ' . $course->post_title . ' </option>';
 		}
 		
 		$content = str_replace('OPTIONS_PLACEHOLDER', $options, $markup);
@@ -389,7 +389,7 @@ class Tutor_List_Table {
 			';
 		$options = '';
 		foreach($orders as $order){
-			$options .= '<option value="'.$order.'" '.selected($selected,$order,false).'> '.__( $order, 'tutor' ).' </option>';
+			$options .= '<option value="' . esc_attr( $order ) . '" '.selected($selected,$order,false).'> '.__( $order, 'tutor' ).' </option>';
 		}		
 		$content = str_replace('OPTION_PLACEHOLDER', $options, $markup);
 		echo $content;		

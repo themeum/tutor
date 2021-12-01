@@ -50,7 +50,7 @@ $the_query = new WP_Query($args);
     <div>
         <div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
         <div>
-            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?php echo $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor'); ?>" />
+            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?php echo esc_attr( $search_filter ); ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor'); ?>" />
             <button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
         </div>
     </div>

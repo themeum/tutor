@@ -16,21 +16,21 @@
 
                 <div class="tutor-detail-course-info-wrap">
                     <div class="tutor-announcement-detail-course-info">
-                        <label for=""><?php _e('Course', 'tutor') ?></label>
+                        <label for=""><?php esc_html_e( 'Course', 'tutor' ) ?></label>
                         <p></p>
                     </div>
                     <div class="tutor-announcement-detail-date-info">
-                        <label for=""><?php _e('Publish Date') ?></label>
+                        <label for=""><?php esc_html_e( 'Publish Date' ) ?></label>
                         <p></p>
                     </div>
                 </div>
                 <div class="tutor-announce-detail-popup-button-wrap">
                     <div class="announcement-detail-cancel-button">
-                        <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn tutor-announcement-cancel-btn"><?php _e('Cancel', 'tutor') ?></button>
+                        <button type="button" class="quiz-modal-tab-navigation-btn  quiz-modal-btn-cancel tutor-announcement-close-btn tutor-announcement-cancel-btn"><?php esc_html_e( 'Cancel', 'tutor' ) ?></button>
                     </div>
                     <div class="announcement-detail-edit-delete-button">
-                        <button class="tutor-btn tutor-announcement-delete tutor-border-none" id="tutor-announcement-delete-from-detail"><?php _e('Delete', 'tutor') ?></button>
-                        <button class="tutor-btn tutor-border-none tutor-announcement-edit" id="tutor-announcement-edit-from-detail"><?php _e('Edit', 'tutor') ?></button>
+                        <button class="tutor-btn tutor-announcement-delete tutor-border-none" id="tutor-announcement-delete-from-detail"><?php esc_html_e( 'Delete', 'tutor' ) ?></button>
+                        <button class="tutor-btn tutor-border-none tutor-announcement-edit" id="tutor-announcement-edit-from-detail"><?php esc_html_e( 'Edit', 'tutor' ) ?></button>
                     </div>
                 </div>
             </div>
