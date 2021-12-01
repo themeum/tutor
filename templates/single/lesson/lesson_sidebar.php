@@ -38,9 +38,8 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 ?>
 
 <?php do_action('tutor_lesson/single/before/lesson_sidebar'); ?>
-
     <div class="tutor-sidebar-tabs-wrap">
-		<div class="tutor-lessons-tab-area tutor-desktop-sidebar-area">
+		<div class="tutor-lessons-tab-area tutor-<?php echo isset($context) ? $context : 'desktop'; ?>-sidebar-area">
 			<div data-sidebar-tab="tutor-lesson-sidebar-tab-content" class="tutor-sidebar-tab-item tutor-lessons-tab <?php echo $enable_q_and_a_on_course ? "active" : ""; ?> flex-center">
 				<span class="ttr-education-filled"></span>
 				<span class="text-medium-caption color-text-title">
@@ -85,7 +84,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 									<p class="tutor-topic-subtitle text-regular-caption color-text-subsued">3/5</p>
 								</div>
 							</div>
-								<?php
+							<?php
 								do_action('tutor/lesson_list/before/topic', $topic_id);
 
 								$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID(), -1);
@@ -216,11 +215,9 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 									}
 									$lessons->reset_postdata();
 								}
-								?>
-
-								<?php do_action('tutor/lesson_list/after/topic', $topic_id); ?>
+								do_action('tutor/lesson_list/after/topic', $topic_id);
+							?>
                         </div>
-
 						<?php
 					}
 					$topics->reset_postdata();
@@ -234,9 +231,6 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 				 	tutor_lesson_sidebar_question_and_answer();
 				?>
             </div>
-
         </div>
-
     </div>
-
 <?php do_action('tutor_lesson/single/after/lesson_sidebar'); ?>
