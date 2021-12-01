@@ -137,7 +137,7 @@ jQuery(document).ready(function($) {
      * Fire TUTOR video
      * @since v.1.0.0
      */
-    $('.tutorPlayer').each(function() {
+    $('.tutorPlayer').each(function () {
         videoPlayer.init(this);
     });
 
@@ -247,7 +247,7 @@ jQuery(document).ready(function($) {
                                     $(alertDiv).addClass('tutor-alert-danger');
                                     $("#tutor-start-quiz").hide();
                                     $(`${alertDiv} .text`).html(
-                                        `${__( 'Unfortunately, you are out of time and quiz attempts. ', 'tutor' )}`
+                                        `${__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')}`
                                     );
                                 }
 
@@ -285,7 +285,7 @@ jQuery(document).ready(function($) {
      * Toggle topic summery
      * @since v.1.6.9
      */
-    $('.tutor-course-title h4 .toggle-information-icon').on('click', function(e) {
+    $('.tutor-course-title h4 .toggle-information-icon').on('click', function (e) {
         $(this).closest('.tutor-topics-in-single-lesson').find('.tutor-topics-summery').slideToggle();
         e.stopPropagation();
     });
@@ -469,9 +469,9 @@ jQuery(document).ready(function($) {
                 var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
                 if (feedBackMode === 'reveal') {
                     setTimeout(() => {
-                            $('.quiz-attempt-single-question').hide();
-                            $nextQuestion.show();
-                        },
+                        $('.quiz-attempt-single-question').hide();
+                        $nextQuestion.show();
+                    },
                         800);
                 } else {
                     $('.quiz-attempt-single-question').hide();
@@ -495,6 +495,8 @@ jQuery(document).ready(function($) {
 
     $(document).on('submit', '#tutor-answering-quiz', function(e) {
         var $questions_wrap = $('.quiz-attempt-single-question');
+        const quizSubmitBtn = document.querySelector('.tutor-quiz-submit-btn');
+        quizSubmitBtn.disabled = true;
         var validated = true;
         if ($questions_wrap.length) {
             $questions_wrap.each(function(index, question) {
@@ -509,6 +511,10 @@ jQuery(document).ready(function($) {
         if (!validated) {
             e.preventDefault();
         }
+
+        setTimeout(() => {
+            quizSubmitBtn.disabled = true;
+        }, 500);
     });
 
 
@@ -822,7 +828,7 @@ jQuery(document).ready(function($) {
 
                 } else {
                     Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
-                            <img src="' + window._tutorobject.tutor_url + 'assets/images/icon-cross.svg"/> \
+                            <img src="'+ window._tutorobject.tutor_url + 'assets/images/icon-cross.svg"/> \
                             <div>\
                                 <b>Error</b><br/>\
                                 <span>' + data.data.msg + '</span>\
@@ -893,7 +899,8 @@ jQuery(document).ready(function($) {
             beforeSend: function() {
                 $('#tutor_assignment_start_btn').addClass('updating-icon');
             },
-            success: function(data) {
+            success: function (data) {
+                console.log('success');
                 if (data.success) {
                     location.reload();
                 }
@@ -961,13 +968,13 @@ jQuery(document).ready(function($) {
             //url : _tutorobject.ajaxurl,
             type: 'POST',
             data: form_data,
-            beforeSend: function() {
+            beforeSend: function () {
                 $('.tutor-dashboard-builder-draft-btn span').text(__('Saving...', 'tutor'));
             },
             success: function(data) {
 
             },
-            complete: function() {
+            complete: function () {
                 $('.tutor-dashboard-builder-draft-btn span').text(__('Save', 'tutor'));
             }
         });
@@ -1090,7 +1097,7 @@ jQuery(document).ready(function($) {
      * @since v.1.5.1
      */
     //$(document).on('click', '.tutor-dropbtn', function (e) {
-    $('.tutor-dropbtn').click(function() {
+    $('.tutor-dropbtn').click(function () {
 
         var $content = $(this).parent().find(".tutor-dropdown-content");
         $content.slideToggle(100);
@@ -1113,8 +1120,9 @@ jQuery(document).ready(function($) {
     var price_type = $('.tutor-frontend-builder-course-price [name="tutor_course_price_type"]');
     if (price_type.length == 0) {
         $('#_tutor_is_course_public_meta_checkbox').show();
-    } else {
-        price_type.change(function() {
+    }
+    else {
+        price_type.change(function () {
             if ($(this).prop('checked')) {
                 var method = $(this).val() == 'paid' ? 'hide' : 'show';
                 $('#_tutor_is_course_public_meta_checkbox')[method]();
@@ -1129,17 +1137,17 @@ jQuery(document).ready(function($) {
      */
     // Fully accessible tooltip jQuery plugin with delegation.
     // Ideal for view containers that may re-render content.
-    (function($) {
-        $.fn.tutor_tooltip = function() {
+    (function ($) {
+        $.fn.tutor_tooltip = function () {
             this
 
-            // Delegate to tooltip, Hide if tooltip receives mouse or is clicked (tooltip may stick if parent has focus)
-                .on('mouseenter click', '.tooltip', function(e) {
+                // Delegate to tooltip, Hide if tooltip receives mouse or is clicked (tooltip may stick if parent has focus)
+                .on('mouseenter click', '.tooltip', function (e) {
                     e.stopPropagation();
                     $(this).removeClass('isVisible');
                 })
                 // Delegate to parent of tooltip, Show tooltip if parent receives mouse or focus
-                .on('mouseenter focus', ':has(>.tooltip)', function(e) {
+                .on('mouseenter focus', ':has(>.tooltip)', function (e) {
                     if (!$(this).prop('disabled')) { // IE 8 fix to prevent tooltip on `disabled` elements
                         $(this)
                             .find('.tooltip')
@@ -1147,7 +1155,7 @@ jQuery(document).ready(function($) {
                     }
                 })
                 // Delegate to parent of tooltip, Hide tooltip if parent loses mouse or focus
-                .on('mouseleave blur keydown', ':has(>.tooltip)', function(e) {
+                .on('mouseleave blur keydown', ':has(>.tooltip)', function (e) {
                     if (e.type === 'keydown') {
                         if (e.which === 27) {
                             $(this)
@@ -1179,10 +1187,10 @@ jQuery(document).ready(function($) {
     var filter_modifier = {};
 
     // Sidebar checkbox value change
-    filter_container.on('submit', function(e) {
-            e.preventDefault();
-        })
-        .find('input').change(function(e) {
+    filter_container.on('submit', function (e) {
+        e.preventDefault();
+    })
+        .find('input').change(function (e) {
 
             var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier);
             filter_criteria.action = 'tutor_course_filter_ajax';
@@ -1194,8 +1202,8 @@ jQuery(document).ready(function($) {
                 url: window._tutorobject.ajaxurl,
                 type: 'POST',
                 data: filter_criteria,
-                success: function(r) {
-                    loop_container.html(r).find('.tutor-pagination-wrap a').each(function() {
+                success: function (r) {
+                    loop_container.html(r).find('.tutor-pagination-wrap a').each(function () {
                         $(this).attr('data-href', $(this).attr('href')).attr('href', '#');
                     });
                 }
@@ -1203,7 +1211,7 @@ jQuery(document).ready(function($) {
         });
 
     // Alter pagination
-    loop_container.on('click', '.tutor-pagination-wrap a', function(e) {
+    loop_container.on('click', '.tutor-pagination-wrap a', function (e) {
         var url = $(this).data('href') || $(this).attr('href');
 
         if (url) {
@@ -1219,7 +1227,7 @@ jQuery(document).ready(function($) {
     });
 
     // Alter sort filter
-    loop_container.on('change', 'select[name="tutor_course_filter"]', function() {
+    loop_container.on('change', 'select[name="tutor_course_filter"]', function () {
         filter_modifier.tutor_course_filter = $(this).val();
         filter_container.find('input:first').trigger('change');
     });
@@ -1229,7 +1237,7 @@ jQuery(document).ready(function($) {
     if (archive_loop.length > 0) {
         window.sessionStorage.getItem('tutor_refresh_archive') === 'yes' ? window.location.reload() : 0;
         window.sessionStorage.removeItem('tutor_refresh_archive');
-        archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function() {
+        archive_loop.on('click', '.tutor-loop-cart-btn-wrap', function () {
             window.sessionStorage.setItem('tutor_refresh_archive', 'yes');
         });
     }
@@ -1255,17 +1263,17 @@ jQuery(document).ready(function($) {
                             title: __('Yes, leave quiz', 'tutor'),
                             id: 'leave',
                             class: 'tutor-btn tutor-is-outline tutor-is-default',
-                            callback: function() {
+                            callback: function () {
 
                                 var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
                                 $.ajax({
                                     url: window._tutorobject.ajaxurl,
                                     type: 'POST',
                                     data: formData,
-                                    beforeSend: function() {
+                                    beforeSend: function () {
                                         document.querySelector("#tutor-popup-leave").innerHTML = __('Leaving...', 'tutor');
                                     },
-                                    success: function(response) {
+                                    success: function (response) {
                                         if (response.success) {
                                             if (target.href == undefined) {
                                                 location.href = target.parentElement.href
@@ -1276,7 +1284,7 @@ jQuery(document).ready(function($) {
                                             alert(__('Something went wrong', 'tutor'));
                                         }
                                     },
-                                    error: function() {
+                                    error: function () {
                                         alert(__('Something went wrong', 'tutor'));
                                         popup.remove();
                                     }
@@ -1287,7 +1295,7 @@ jQuery(document).ready(function($) {
                             title: __('Stay here', 'tutor'),
                             id: 'reset',
                             class: 'tutor-btn',
-                            callback: function() {
+                            callback: function () {
                                 popup.remove();
                             }
                         },
@@ -1300,7 +1308,7 @@ jQuery(document).ready(function($) {
     });
 
     /* Disable start quiz button  */
-    $('body').on('submit', 'form#tutor-start-quiz', function() {
+    $('body').on('submit', 'form#tutor-start-quiz', function () {
         $(this).find('button').prop('disabled', true);
     });
 });

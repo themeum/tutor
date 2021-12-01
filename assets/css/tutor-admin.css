@@ -6414,12 +6414,12 @@ li.tutor-option-nav-item h4 {
 @media (min-width: 1600px) {
   .tutor-addons-list-items {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 390px));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   }
 }
 
 .tutor-addons-list-items.is-less-items {
-  grid-template-columns: repeat(auto-fit, minmax(350px, 390px));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 }
 
 .tutor-addons-list-items > .tutor-addons-card {
