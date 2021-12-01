@@ -93,7 +93,6 @@ if ($best_watch_time > 0){
             </a>
         </div>
     </div>
-
 </div>
 <div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
     <div class="tutor-mobile-top-nav d-grid">
