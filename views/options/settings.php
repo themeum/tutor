@@ -91,4 +91,12 @@
 	.notice.is-dismissible {
 		margin-bottom: 10px;
 	}
+	#wpfooter {
+		background: #f0f0f1;
+		z-index: 10;
+		box-shadow: 0 -1px 0px 0 rgb(220 219 220);
+	}
+	#wpwrap {
+		overflow-y: hidden;
+	}
 </style>
