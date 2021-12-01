@@ -25,7 +25,12 @@ do_action('tutor_course/single/before/topics');
 <div class="tutor-course-topics-header">
 	<div class="tutor-course-topics-header-left">
 		<div class="text-medium-h6 color-text-primary">
-			<?php _e('Course Curriculm', 'tutor'); ?>
+			<span>
+				<?php
+					$title = __( 'Course Curriculm', 'tutor' );
+					echo esc_html( apply_filters( 'tutor_course_topics_title', $title ) );
+				?>
+			</span>
 		</div>
 		<div class="text-regular-body color-text-subsued tutor-mt-12">
 			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quaerat fuga consectetur. Quia voluptatibus ullam beatae nesciunt provident voluptas est!
