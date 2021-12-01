@@ -80,11 +80,8 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 		        ?>
             </div>
             <div class="tutor-lesson-sidebar tutor-mobile-sidebar">
-                <?php 
-                    include 'single/lesson/mobile-sidebar.php';
-                ?>
+                <?php tutor_lessons_sidebar(true, 'mobile'); ?>
             </div> 
-
         </div>
     </div><!-- .wrap -->
 

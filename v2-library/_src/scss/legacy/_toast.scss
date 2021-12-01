@@ -15,52 +15,52 @@
 		display: none;
 	}
 
-	& > div {
-		background: white;
-		padding: 10px;
-		margin: 15px;
-		border-radius: 15px;
-		box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
-		border: 1px solid #e8e8e8;
-		background: white;
-		border: none;
+	// & > div {
+	// 	background: white;
+	// 	padding: 10px;
+	// 	margin: 15px;
+	// 	border-radius: 15px;
+	// 	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.363);
+	// 	border: 1px solid #e8e8e8;
+	// 	background: white;
+	// 	border: none;
 
-		@include valueWithPrefix(display, flex);
-		@include propertyWithPrefix(align-content, center);
-		@include propertyWithPrefix(align-items, center);
+	// 	@include valueWithPrefix(display, flex);
+	// 	@include propertyWithPrefix(align-content, center);
+	// 	@include propertyWithPrefix(align-items, center);
 
-		& > div {
-			padding: 8px;
+	// 	& > div {
+	// 		padding: 8px;
 
-			&:nth-child(1),
-			&:nth-child(3) {
-				@include propertyWithPrefix(justify-content, center);
-			}
+	// 		&:nth-child(1),
+	// 		&:nth-child(3) {
+	// 			@include propertyWithPrefix(justify-content, center);
+	// 		}
 
-			&:nth-child(2) {
-				@include propertyWithPrefix(flex, 1);
-			}
-		}
+	// 		&:nth-child(2) {
+	// 			@include propertyWithPrefix(flex, 1);
+	// 		}
+	// 	}
 
-		img {
-			width: 100%;
-			height: auto;
-		}
+	// 	img {
+	// 		width: 100%;
+	// 		height: auto;
+	// 	}
 
-		b {
-			font-weight: 600;
-			display: block;
-		}
+	// 	b {
+	// 		font-weight: 600;
+	// 		display: block;
+	// 	}
 
-		span {
-			color: rgba(51, 51, 51, 1);
-		}
+	// 	span {
+	// 		color: rgba(51, 51, 51, 1);
+	// 	}
 
-		i {
-			cursor: pointer;
-			font-size: 14px;
-		}
-	}
+	// 	i {
+	// 		cursor: pointer;
+	// 		font-size: 14px;
+	// 	}
+	// }
 
 	&.tutor-toast-left {
 		position: fixed;
@@ -68,14 +68,14 @@
 		left: calc(0% + 200px);
 		z-index: 999;
 
-		&>div>div:nth-child(3){
-			align-self: flex-start;
-			padding:8px;
-		}
+		// & > div > div:nth-child(3) {
+		// 	align-self: flex-start;
+		// 	padding: 8px;
+		// }
 
-		&>div>div{
-			padding:0;
-		}
+		// & > div > div {
+		// 	padding: 0;
+		// }
 	}
 }
 

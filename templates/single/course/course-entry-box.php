@@ -60,8 +60,10 @@
                 // Show Start/Continue/Retake Button
                 if ( $lesson_url ) { 
                     $button_class = 'tutor-is-fullwidth tutor-btn ' . ( $retake_course ? 'tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full' : '' ) . ' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
-                    ?>
-                    <a href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class ); ?>" data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
+                    // Button identifier class
+                    $button_identifier = 'start-continue-retake-button';
+                ?>
+                    <a href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class . ' ' . $button_identifier ); ?>" data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
                         <?php
                             if ( is_single_course() && $retake_course ) {
                                 esc_html_e( 'Retake This Course', 'tutor' );
@@ -156,7 +158,7 @@
                             <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                             <input type="hidden" name="tutor_course_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
                             <input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
-                            <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24">
+                            <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24 tutor-enroll-course-button">
                                 <?php esc_html_e( 'Enroll Course', 'tutor' ); ?>
                             </button>
                         </form>

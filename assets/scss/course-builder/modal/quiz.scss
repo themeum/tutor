@@ -15,6 +15,10 @@ a.back-to-quiz-questions-btn {
 
 // Show add to question button when quiz editor opened
 &.tutor-has-question-from {
+    .modal-container{
+        padding-bottom: 0;
+    }
+
     .tutor-modal-footer .tutor-bs-row>div{
         &:not(:last-child) {
             display: none !important;
@@ -113,8 +117,36 @@ a.back-to-quiz-questions-btn {
 
 #tutor-answer-builder {
     background: #E3E5EB;
-    margin: 0px -30px;
-    padding: 15px 30px;
+    margin-left: -30px;
+    margin-right: -30px;
+    
+    #tutor_quiz_question_answer_form {
+        padding: 15px;
+    }
+
+    .tutor-add-option-wrapper {
+        padding: 10px 15px;
+        background: #EFF1F7;
+        border-top: 1px solid #CDCFD5;
+    }
+
+    .tutor_quiz_question_answers {
+        padding: 15px;
+    }
+    
+    &>div:empty{
+        display: none;
+    }
+
+    .tutor-quiz-question-answers-form {
+        background-color: #fff;
+        padding: 20px;
+        -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border: 1px solid #dedede;
+        border-radius: 3px;
+    }
+
 }
 
 .quiz-builder-question-wrap {
