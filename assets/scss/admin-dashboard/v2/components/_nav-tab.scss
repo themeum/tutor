@@ -17,14 +17,14 @@
 
 .tutor-option-tab-pages {
 	position: relative;
-	
+
 	&:before {
 		content: '';
 		position: absolute;
 		left: -42px;
 		top: -30px;
 		width: 1px;
-		height: calc(100% + 60px);
+		height: calc(300% + 60px);
 		background: #dcdbdc;
 		z-index: -1;
 	}
@@ -81,14 +81,15 @@ li.tutor-option-nav-item {
 				filter: sepia(1) hue-rotate(169deg) contrast(2) brightness(0.6);
 			}
 		}
-		&.active > *, &:hover > * {
+		&.active > *,
+		&:hover > * {
 			color: $brand-wordpress;
 		}
 		> * {
 			transition: 0.2s linear;
 		}
 
-		img{
+		img {
 			max-width: 30px;
 			overflow: hidden;
 		}
