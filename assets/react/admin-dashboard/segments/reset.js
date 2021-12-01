@@ -20,6 +20,7 @@ const modalResetOpen = () => {
 	let modalHeading = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-title');
 	let modalMessage = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-message');
 	modalResetOpen.forEach((modalOpen, index) => {
+		modalOpen.disabled = false;
 		modalOpen.onclick = (e) => {
 			resetButton.dataset.reset = modalOpen.dataset.reset;
 			modalHeading.innerText = modalOpen.dataset.heading;

@@ -859,7 +859,7 @@ if (colorPickerInputs) {
   \**************************************************************/
 /***/ (() => {
 
-console.log('editor full');
+// console.log('editor full');
 
 /***/ }),
 
@@ -1905,6 +1905,7 @@ var delete_history_data = function delete_history_data() {
 
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4) {
+          // console.log(JSON.parse(xhttp.response));
           tutor_option_history_load(xhttp.responseText);
           delete_history_data();
           setTimeout(function () {
@@ -2424,6 +2425,8 @@ var modalResetOpen = function modalResetOpen() {
   var modalHeading = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-title');
   var modalMessage = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-message');
   modalResetOpen.forEach(function (modalOpen, index) {
+    modalOpen.disabled = false;
+
     modalOpen.onclick = function (e) {
       resetButton.dataset.reset = modalOpen.dataset.reset;
       modalHeading.innerText = modalOpen.dataset.heading;
