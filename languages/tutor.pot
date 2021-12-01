@@ -2552,7 +2552,7 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: classes/Utils.php:6935
+#: classes/Utils.php:6935, views/metabox/user-profile-fields.php:37
 msgid "Profile Photo"
 msgstr ""
 
@@ -2959,6 +2959,10 @@ msgstr ""
 
 #: templates/course-filter/filters.php:10, views/metabox/course-add-edd-product-metabox.php:55, views/metabox/course-add-product-metabox.php:62
 msgid "Paid"
+msgstr ""
+
+#: templates/course-filter/filters.php:22
+msgid "Search..."
 msgstr ""
 
 #: templates/course-filter/filters.php:54
@@ -3793,6 +3797,18 @@ msgstr ""
 
 #: views/metabox/user-profile-fields.php:1
 msgid "Tutor Fields"
+msgstr ""
+
+#: views/metabox/user-profile-fields.php:13
+msgid "Job Title"
+msgstr ""
+
+#: views/metabox/user-profile-fields.php:20
+msgid "Profile Bio"
+msgstr ""
+
+#: views/metabox/user-profile-fields.php:32
+msgid "Write a little bit more about you, it will show publicly."
 msgstr ""
 
 #: views/metabox/user-profile-fields.php:49
