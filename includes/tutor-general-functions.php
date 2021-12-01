@@ -706,8 +706,10 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
  * @return string ( date )
 */
 if ( ! function_exists( 'tutor_get_formated_date' ) ) {
-	function tutor_get_formated_date( string $require_format, string $user_date ) {
-		return date( $require_format, strtotime( $user_date ) );
+	function tutor_get_formated_date( $require_format, $user_date ) {
+		$require_format===null ? $require_format = get_option( 'date_format' ). ', ' . get_option( 'time_format' ) : 0;
+		!is_numeric($user_date) ? $user_date = strtotime($user_date) : 0;
+		return date( $require_format, $user_date );
 	}
 }
 

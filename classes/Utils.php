@@ -819,7 +819,7 @@ class Utils {
 	 * @since v.1.0.0
      * @updated v.1.6.1
 	 */
-	public function get_course_completed_percent( $course_id = 0, $user_id = 0 ) {
+	public function get_course_completed_percent( $course_id = 0, $user_id = 0, $get_stats=false ) {
 		$course_id 	      = $this->get_post_id($course_id);
 		$user_id          = $this->get_user_id($user_id);
 		$completed_lesson = $this->get_completed_lesson_count_by_course($course_id, $user_id);
@@ -844,11 +844,21 @@ class Utils {
             }
         }
 
+		$percent_complete = 0;
+
 		if ( $totalContents > 0 && $completedCount > 0 ) {
-			return number_format( ( $completedCount * 100 ) / $totalContents );
+			$percent_complete = number_format( ( $completedCount * 100 ) / $totalContents );
 		}
 
-		return 0;
+		if($get_stats) {
+			return array(
+				'completed_percent' => $percent_complete,
+				'completed_count' => $completedCount,
+				'total_count' => $totalContents
+			);
+		}
+
+		return $percent_complete;
 	}
 
 	/**
@@ -3283,7 +3293,7 @@ class Utils {
 	}
 
 	public function star_rating_generator_v2($current_rating, $total_count=null, $show_avg_rate=false, $parent_class = '') {
-		$current_rating = round($current_rating);
+		$current_rating = number_format($current_rating, 2, '.', '');
 		?>
 		<div class="tutor-ratings <?php echo $parent_class; ?>">
 			<div class="tutor-rating-stars">
@@ -3291,7 +3301,7 @@ class Utils {
 					for($i=1; $i<=5; $i++) {
 						$class = 'ttr-star-line-filled';
 
-						if($i<=$current_rating) {
+						if($i<=round($current_rating)) {
 							$class = 'ttr-star-full-filled';
 						}
 
@@ -3303,15 +3313,14 @@ class Utils {
 			<?php
 				if($show_avg_rate) {
 					?>
-					<div class="tutor-rating-text text-regular-body color-text-subsued tutor-pl-0">
+					<span class="tutor-rating-text text-regular-body color-text-subsued tutor-pl-0 tutor-ml-10">
 						<?php
 							echo $current_rating;
-
 							if(!($total_count===null)) {
 								echo '&nbsp;('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor')).')';
 							}
 						?>
-					</div>
+					</span>
 					<?php
 				}
 			?>
@@ -7608,6 +7617,27 @@ class Utils {
 		return $course_id;
 	}
 
+
+	/**
+	 * @return int
+	 *
+	 * @since v1.7.9
+	 *
+	 * Return the course ID(s) by lession, quiz, answer etc.
+	 */
+	public function get_course_id_by_subcontent( $content_id ) {
+		$mapping = array(
+			'tutor_assignments' => 'assignment',
+			'tutor_quiz' => 'quiz',
+			'lesson' => 'lesson',
+			'tutor_zoom_meeting' => 'zoom_meeting'
+		);
+		
+		$content_type = get_post_field( 'post_type', $content_id );
+
+		return $this->get_course_id_by($mapping[$content_type], $content_id);
+	}
+
 	/**
 	 * @return bool
 	 *
@@ -8243,9 +8273,11 @@ class Utils {
 	 */
 	public function tutor_empty_state( string $title = '' ) {
 		$page_title = $title ? $title : ''; ?>
-		<div class="tutor-bs-d-flex tutor-bs-d-md-flex tutor-bs-flex-column tutor-bs-justify-content-center tutor-bs-align-items-center td-empty-state tutor-p-20">
+		<div class="td-empty-state tutor-p-30">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
-			<div class="text-regular-h5 color-text-primary tutor-mt-20"><?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?></div>
+			<div class="text-regular-h5 color-text-primary tutor-mt-20">
+				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
+			</div>
 		</div>
 	<?php }
 

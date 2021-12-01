@@ -56,14 +56,16 @@ $received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
                         <div class="tutor-dashboard-review-heading">
                             <div class="tutor-dashboard-review-title">
 								<?php esc_html_e('Course: ', 'tutor'); ?>
-                                <a href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>"><?php esc_html_e(get_the_title($review->comment_post_ID)); ?></a>
+                                <span class="text-medium-h6" data-href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
+                                    <?php esc_html_e(get_the_title($review->comment_post_ID)); ?>
+                                </span>
                             </div>
                         </div>
                     </div>
                     <div class="individual-dashboard-review-body">
                         <div class="tutor-bs-d-flex tutor-bs-justify-content-between">
                             <div class="individual-star-rating-wrap">
-                                <?php tutor_utils()->star_rating_generator($review->rating);?> <span> <?php echo esc_attr(number_format($review->rating, 2, '.', '')); ?></span>
+                                <?php tutor_utils()->star_rating_generator_v2($review->rating, null, true);?> 
                             </div>
                             <div class="tutor-given-review-action">
                                 <span data-tutor-modal-target="<?php echo esc_html($update_id); ?>">
@@ -75,7 +77,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
                             </div>
                         </div>
                         <p class="tutor-mt-10 tutor-mb-10">
-                            <?php echo htmlspecialchars($review->comment_content); ?>
+                            <?php echo htmlspecialchars(stripslashes( $review->comment_content )); ?>
                         </p>
                     </div>
 

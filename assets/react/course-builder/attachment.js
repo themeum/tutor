@@ -13,12 +13,16 @@ window.jQuery(document).ready(function($){
 
         var $that = $(this);
         var name = $that.data('name');
+        var card_wrapper = $that.parent().find('.tutor-attachment-cards');
+        var size_placement_below = !card_wrapper.hasClass('tutor-attachment-size-aside');
         var frame;
+
         // If the media frame already exists, reopen it.
         if ( frame ) {
             frame.open();
             return;
         }
+
         // Create a new media frame
         frame = wp.media({
             title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
@@ -34,18 +38,20 @@ window.jQuery(document).ready(function($){
             if (attachments.length){
                 for (var i=0; i < attachments.length; i++){
                     var attachment = attachments[i];
-
+                    var size_info = `<span class="filesize">
+                                ${__('Size', 'tutor')}: ${attachment.filesizeHumanReadable}
+                            </span>`;
+                        
                     var inputHtml = `<div data-attachment_id="${attachment.id}">
                         <div>
                             <a href="${attachment.url}" target="_blank">
                                 ${attachment.filename}
                             </a>
-                            <span class="filesize">
-                                ${__('Size', 'tutor')}: ${attachment.filesizeHumanReadable}
-                            </span>
+                            ${size_placement_below ? size_info : ''}
                             <input type="hidden" name="${name}" value="${attachment.id}">
                         </div>
                         <div>
+                            ${!size_placement_below ? size_info : ''}
                             <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross"></span>
                         </div>
                     </div>`;

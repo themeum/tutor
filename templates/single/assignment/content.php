@@ -184,27 +184,27 @@ if ($assignment_comment != false) {
 		<?php
 		$assignment_attachments = maybe_unserialize(get_post_meta(get_the_ID(), '_tutor_assignment_attachments', true));
 		if (tutor_utils()->count($assignment_attachments)) {
-		?>
+			?>
 			<div class="tutor-assignment-attachments">
 				<h2><?php _e('Attachments', 'tutor'); ?></h2>
 				<?php
 				foreach ($assignment_attachments as $attachment_id) {
 					if ($attachment_id) {
-
 						$attachment_name =  get_post_meta($attachment_id, '_wp_attached_file', true);
 						$attachment_name = substr($attachment_name, strrpos($attachment_name, '/') + 1);
-				?>
+
+						?>
 						<p class="attachment-file-name">
 							<a href="<?php echo wp_get_attachment_url($attachment_id); ?>" target="_blank">
 								<i class="tutor-icon-attach"></i> <?php echo $attachment_name; ?>
 							</a>
 						</p>
-				<?php
+						<?php
 					}
 				}
 				?>
 			</div>
-		<?php
+			<?php
 		}
 
 		if ($is_submitting and ($remaining_time > $now or $time_duration['value'] == 0)) { ?>
