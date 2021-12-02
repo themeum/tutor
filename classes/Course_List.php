@@ -329,7 +329,7 @@ class Course_List {
 		$bulk_ids   = sanitize_text_field( $bulk_ids );
 		$update     = $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$post_table} 
+				"UPDATE {$post_table}
 				SET post_status = %s
 				WHERE ID IN ($bulk_ids)
 			",
@@ -349,7 +349,7 @@ class Course_List {
 			$wpdb->prepare(
 				"SELECT COUNT(ID) FROM {$wpdb->posts}
 			WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type ='topics' AND post_parent = %d AND post_status = 'publish')
-			AND post_type ='tutor_quiz' 
+			AND post_type ='tutor_quiz'
 			AND post_status = 'publish'",
 				$course_id
 			)
