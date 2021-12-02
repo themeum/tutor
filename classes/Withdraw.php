@@ -21,14 +21,14 @@ class Withdraw {
 		add_action( 'wp_ajax_tutor_save_withdraw_account', array( $this, 'tutor_save_withdraw_account' ) );
 		add_action( 'wp_ajax_tutor_make_an_withdraw', array( $this, 'tutor_make_an_withdraw' ) );
 
-		add_filter( 'tutor_withdrawal_methods_all', array( $this, 'withdraw_methods_all' ) );		
-		add_filter( 'tutor_withdrawal_methods_available', array( $this, 'withdraw_methods_available' ) );		
+		add_filter( 'tutor_withdrawal_methods_all', array( $this, 'withdraw_methods_all' ) );
+		add_filter( 'tutor_withdrawal_methods_available', array( $this, 'withdraw_methods_available' ) );
 	}
-	
+
 	public function withdraw_methods_all(){
 
 		$this->migrate_withdrawal_method_data();
-		
+
 		$methods = array(
 			'bank_transfer_withdraw' => array(
 				'method_name'  => __( 'Bank Transfer', 'tutor' ),
