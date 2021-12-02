@@ -105,7 +105,7 @@ $rating = tutor_utils()->get_course_rating();
 								</a>
 							</div>
 							<div class="text-regular-small color-text-hints">
-								<span class="review-time">
+								<span class="tutor-review-time">
 									<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
 								</span>
 							</div>
