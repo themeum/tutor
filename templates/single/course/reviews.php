@@ -28,7 +28,7 @@ $rating = tutor_utils()->get_course_rating();
 
 ?>
 <div class="tutor-course-topics-header">
-	<div class="tutor-course-topics-header-left tutor-mb-22">
+	<div class="tutor-course-topics-header-left tutor-mb-20">
 		<div class="text-primary text-medium-h6">
 			<span>
 				<?php
@@ -48,8 +48,14 @@ $rating = tutor_utils()->get_course_rating();
 			</div>
 			<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-bs-d-block' ); ?>
 			<div class="tutor-total-ratings-text text-regular-body text-subsued">
-				<span>
-					<?php echo esc_html( 'Total ' . count( $reviews ) . _n( ' Rating', ' Ratings', count( $reviews ), 'tutor' ), 'tutor' ); ?>
+				<span class="tutor-rating-text-part">
+					<?php esc_html_e( 'Total ', 'tutor' ); ?>
+				</span>
+				<span class="tutor-rating-count-part">
+					<?php echo esc_html( count( $reviews ) ); ?>
+				</span>
+				<span class="tutor-rating-text-part">
+					<?php echo esc_html( _n( ' Rating', ' Ratings', count( $reviews ), 'tutor' ) ); ?>
 				</span>
 			</div>
 		</div>
