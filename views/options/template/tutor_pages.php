@@ -29,22 +29,22 @@ $tutor_pages = tutor_utils()->tutor_pages();
 			</div>
 			<div class="tutor-option-field-label">
 				<?php
-					echo '<p class="text-medium-caption">';
+					echo '<div class="text-medium-caption tutor-bs-d-flex tutor-bs-align-items-center">';
 
 					echo $page['page_name'];
 
 				if ( $page['page_exists'] ) {
 					$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-					echo "<a href='{$edit_url}' target='_blank' class='icon-link'><span class=' ttr-detail-link-filled'></span></a>";
+					echo "<a href='{$edit_url}' target='_blank' class='icon-link color-design-dark tutor-bs-d-flex tutor-ml-4'><span class=' ttr-detail-link-filled tutor-icon-24'></span></a>";
 				}
-					echo '</p>';
+					echo '</div>';
 				?>
 			</div>
 			<div class="tutor-option-field-label">
 				<?php
 				if ( $page['page_exists'] && $page['page_visible'] ) {
 						$page = get_post( $page_id );
-						echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='text-medium-caption'> <span class='icon-check ttr-mark-filled'></span>/{$page->post_name} </a>";
+						echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='text-medium-caption color-text-primary tutor-bs-d-flex tutor-bs-align-items-center'><span class='icon-check ttr-mark-cricle tutor-icon-20 color-design-success'></span>/{$page->post_name}</a>";
 				}
 				?>
 			</div>
