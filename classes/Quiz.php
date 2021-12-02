@@ -62,11 +62,10 @@ class Quiz {
 		add_action('wp_ajax_tutor_quiz_builder_get_question_form', array($this, 'tutor_quiz_builder_get_question_form'));
 		add_action('wp_ajax_tutor_quiz_modal_update_question', array($this, 'tutor_quiz_modal_update_question'));
 		add_action('wp_ajax_tutor_quiz_builder_question_delete', array($this, 'tutor_quiz_builder_question_delete'));
-		add_action('wp_ajax_tutor_quiz_add_question_answers', array($this, 'tutor_quiz_add_question_answers'));
-		add_action('wp_ajax_tutor_quiz_edit_question_answer', array($this, 'tutor_quiz_edit_question_answer'));
-		add_action('wp_ajax_tutor_save_quiz_answer_options', array($this, 'tutor_save_quiz_answer_options'));
+		add_action('wp_ajax_tutor_quiz_question_answer_editor', array($this, 'tutor_quiz_question_answer_editor'));
+		add_action('wp_ajax_tutor_save_quiz_answer_options', array($this, 'tutor_save_quiz_answer_options'), 10, 0);
 		add_action('wp_ajax_tutor_update_quiz_answer_options', array($this, 'tutor_update_quiz_answer_options'));
-		add_action('wp_ajax_tutor_quiz_builder_get_answers_by_question', array($this, 'tutor_quiz_builder_get_answers_by_question'));
+		add_action('wp_ajax_tutor_quiz_builder_change_type', array($this, 'tutor_quiz_builder_change_type'));
 		add_action('wp_ajax_tutor_quiz_builder_delete_answer', array($this, 'tutor_quiz_builder_delete_answer'));
 		add_action('wp_ajax_tutor_quiz_question_sorting', array($this, 'tutor_quiz_question_sorting'));
 		add_action('wp_ajax_tutor_quiz_answer_sorting', array($this, 'tutor_quiz_answer_sorting'));
@@ -753,17 +752,20 @@ class Quiz {
 		$topic_id = sanitize_text_field( $_POST['topic_id'] );
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
 
+		// check if the user can manage the quiz
 		if(!tutor_utils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 		
+		// If question ID not provided, then create new before rendering the form
 		if ( ! $question_id){
 			$next_question_id = tutor_utils()->quiz_next_question_id();
 			$next_question_order = tutor_utils()->quiz_next_question_order_id($quiz_id);
+			$question_title = __('Question', 'tutor').' '.$next_question_id;
 
 			$new_question_data = array(
 				'quiz_id'               => $quiz_id,
-				'question_title'        => __('Question', 'tutor').' '.$next_question_id,
+				'question_title'        => $question_title,
 				'question_description'  => '',
 				'question_type'         => 'true_false',
 				'question_mark'         => 1,
@@ -773,14 +775,38 @@ class Quiz {
 
 			$wpdb->insert($wpdb->prefix.'tutor_quiz_questions', $new_question_data);
 			$question_id = $wpdb->insert_id;
+
+
+
+			// Add default true/false options for this question since it is by default true/false type.
+			$question_array = array(
+				$question_id => array(
+					'Question' => $question_title,
+					'question_type' => 'true_false',
+					'question_mark' => '1.00',
+					'question_description' => '',
+				)
+			);
+
+			$answer_array = array(
+				$question_id=>array(
+					'true_false' => true
+				)
+			);
+			
+			$this->tutor_save_quiz_answer_options($question_array, $answer_array, false);
 		}
 
+		// Now get all data by this question id
 		$question = $wpdb->get_row($wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions 
-			WHERE question_id = %d ", $question_id));
+			WHERE question_id = %d ", 
+			$question_id
+		));
 
+		// Render the question form finally
 		ob_start();
-		include  tutor()->path.'views/modal/question_form.php';
+		require tutor()->path.'views/modal/question_form.php';
 		$output = ob_get_clean();
 
 		wp_send_json_success(array('output' => $output));
@@ -830,13 +856,12 @@ class Quiz {
 				            $required_validate = false;
                         }
                     }
+
                     if ($required_validate){
-	                    $validation_msg = "<p class='tutor-error-msg'>".__('Please select the correct answer', 'tutor')."</p>";
-	                    wp_send_json_error(array('validation_msg' => $validation_msg ));
+	                    wp_send_json_error(array('message' => __('Please select the correct answer', 'tutor') ));
                     }
                 }else{
-			        $validation_msg = "<p class='tutor-error-msg'>".__('Please make sure you have added more than one option and saved them', 'tutor')."</p>";
-				    wp_send_json_error(array('validation_msg' => $validation_msg ));
+				    wp_send_json_error(array('message' => __('Please make sure you have added more than one option and saved them', 'tutor') ));
 			    }
             }
 		}
@@ -867,17 +892,23 @@ class Quiz {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function tutor_quiz_add_question_answers(){
+	public function tutor_quiz_question_answer_editor(){
 		tutor_utils()->checking_nonce();
 
-		$question_id = sanitize_text_field($_POST['question_id']);
-		$question = tutor_utils()->avalue_dot($question_id, $_POST['tutor_quiz_question']);
-		$question_type = $question['question_type'];
+		$question_id 	= sanitize_text_field($_POST['question_id']);
+		$answer_id 		= (int) sanitize_text_field(tutor_utils()->array_get('answer_id', $_POST));
+		$question 		= tutor_utils()->avalue_dot($question_id, $_POST['tutor_quiz_question']);
+		$question_type 	= $question['question_type'];
 
 		if(!tutor_utils()->can_user_manage('question', $question_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
+		if($answer_id) {
+			$old_answer = tutor_utils()->get_answer_by_id($answer_id);
+			foreach ($old_answer as $old_answer);
+		}
+		
 		ob_start();
 		include  tutor()->path.'views/modal/question_answer_form.php';
 		$output = ob_get_clean();
@@ -885,39 +916,13 @@ class Quiz {
 		wp_send_json_success(array('output' => $output));
 	}
 
-	/**
-	 * Edit Answer Form
-     *
-     * @since v.1.0.0
-	 */
-	public function tutor_quiz_edit_question_answer(){
-		tutor_utils()->checking_nonce();
-
-		$answer_id = (int) sanitize_text_field($_POST['answer_id']);
-
-		if(!tutor_utils()->can_user_manage('quiz_answer', $answer_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
-		}
-		
-		$old_answer = tutor_utils()->get_answer_by_id($answer_id);
-		foreach ($old_answer as $old_answer);
-		$question_id = $old_answer->belongs_question_id;
-		$question_type = $old_answer->belongs_question_type;
-
-		ob_start();
-		include  tutor()->path.'views/modal/question_answer_form.php';
-		$output = ob_get_clean();
-
-		wp_send_json_success(array('output' => $output));
-    }
-
-	public function tutor_save_quiz_answer_options(){
+	public function tutor_save_quiz_answer_options($questions=null, $answers=null, $response=true){
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
 
-		$questions = $_POST['tutor_quiz_question'];
-		$answers = $_POST['quiz_answer'];
+		$questions = $questions ? $questions : $_POST['tutor_quiz_question'];
+		$answers = $answers ? $answers : $_POST['quiz_answer'];
 
 		foreach ($answers as $question_id => $answer){
 
@@ -991,7 +996,8 @@ class Quiz {
 			}
 		}
 
-		wp_send_json_success();
+		// Send response to browser if not internal call
+		$response ? wp_send_json_success() : 0;
 	}
 
 	/**
@@ -1044,7 +1050,7 @@ class Quiz {
 		wp_send_json_success();
     }
 
-	public function tutor_quiz_builder_get_answers_by_question(){
+	public function tutor_quiz_builder_change_type(){
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
@@ -1073,68 +1079,7 @@ class Quiz {
 		));
 
 		ob_start();
-
-		/* switch ($question_type){
-			case 'true_false':
-				echo '<label>'.__('Answer options &amp; mark correct', 'tutor').'</label>';
-				break;
-			case 'ordering':
-				echo '<label>'.__('Make sure you’re saving the answers in the right order. Students will have to match this order exactly.', 'tutor').'</label>';
-				break;
-		} */
-
-		if (is_array($answers) && count($answers)){
-			foreach ($answers as $answer){
-				?>
-                <div class="tutor-quiz-answer-wrap" data-answer-id="<?php echo $answer->answer_id; ?>">
-                    <div class="tutor-quiz-answer">
-                        <span class="tutor-quiz-answer-title">
-                            <?php
-                            echo stripslashes($answer->answer_title);
-                            if ($answer->belongs_question_type === 'fill_in_the_blank'){
-                                echo ' ('.__('Answer', 'tutor').' : ';
-                                echo '<strong>'. stripslashes($answer->answer_two_gap_match). '</strong>)';
-                            }
-                            if ($answer->belongs_question_type === 'matching'){
-                                echo ' - '.stripslashes($answer->answer_two_gap_match);
-                            }
-                            ?>
-                        </span>
-
-						<?php
-						if ($answer->image_id){
-							echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
-						}
-						if ($question_type === 'true_false' || $question_type === 'single_choice'){
-							?>
-                            <span class="tutor-quiz-answers-mark-correct-wrap">
-                                <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
-                            </span>
-							<?php
-						}elseif ($question_type === 'multiple_choice'){
-							?>
-                            <span class="tutor-quiz-answers-mark-correct-wrap">
-                                <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
-                            </span>
-							<?php
-						}
-						?>
-						<?php if( "true_false" != $question_type ):?>
-							<span class="tutor-quiz-answer-edit">
-								<a href="javascript:;"><i class="tutor-icon-pencil"></i> </a>
-							</span>
-						<?php endif;?>
-                        <span class="tutor-quiz-answer-sort-icon"><i class="tutor-icon-menu-2"></i> </span>
-                    </div>
-					<?php if( "true_false" != $question_type ):?>
-						<div class="tutor-quiz-answer-trash-wrap">
-							<a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
-						</div>
-					<?php endif;?>
-                </div>
-				<?php
-			}
-		}
+		require tutor()->path . '/views/modal/question_answer_list.php';
 		$output = ob_get_clean();
 
 		wp_send_json_success(array('output' => $output));
