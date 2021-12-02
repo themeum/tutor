@@ -229,162 +229,6 @@ jQuery(document).ready(function ($) {
 	});
 
 	/**
-	 * Quiz Builder Modal Tabs
-	 */
-	$(document).on('click', '.tutor-quiz-modal-tab-item', function (e) {
-		e.preventDefault();
-
-		var $that = $(this);
-
-		var $quizTitle = $('[name="quiz_title"]');
-		var quiz_title = $quizTitle.val();
-		if (!quiz_title) {
-			$quizTitle
-				.closest('.tutor-quiz-builder-form-row')
-				.find('.quiz_form_msg')
-				.html('<p class="quiz-form-warning">Please save the quiz' + ' first</p>');
-			return;
-		} else {
-			$quizTitle
-				.closest('.tutor-quiz-builder-form-row')
-				.find('.quiz_form_msg')
-				.html('');
-		}
-
-		var tabSelector = $that.attr('href');
-		$('.quiz-builder-tab-container').hide();
-		$(tabSelector).show();
-
-		$('a.tutor-quiz-modal-tab-item').removeClass('active');
-		$that.addClass('active');
-	});
-
-	/**
-	 * Get question answers option edit form
-	 *
-	 * @since v.1.0.0
-	 */
-	$(document).on('click', '.tutor-quiz-answer-edit a', function (e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var answer_id = $that.closest('.tutor-quiz-answer-wrap').attr('data-answer-id');
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: { answer_id: answer_id, action: 'tutor_quiz_edit_question_answer' },
-			beforeSend: function () {
-				$that.addClass('tutor-updating-message');
-			},
-			success: function (data) {
-				$('#tutor_quiz_question_answer_form').html(data.data.output);
-			},
-			complete: function () {
-				$that.removeClass('tutor-updating-message');
-			},
-		});
-	});
-
-	/**
-	 * Saving question answers options
-	 * Student should select the right answer at quiz attempts
-	 *
-	 * @since v.1.0.0
-	 */
-
-	$(document).on('click', '#quiz-answer-save-btn', function (e) {
-		e.preventDefault();
-		var $that = $(this);
-		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
-		$formInput.action = 'tutor_save_quiz_answer_options';
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: $formInput,
-			beforeSend: function () {
-				$('#quiz_validation_msg_wrap').html('');
-				$that.addClass('tutor-updating-message');
-			},
-			success: function (data) {
-				$('#tutor_quiz_question_answers').trigger('refresh');
-			},
-			complete: function () {
-				$that.removeClass('tutor-updating-message');
-			},
-		});
-	});
-
-	/**
-	 * Updating Answer
-	 *
-	 * @since v.1.0.0
-	 */
-	$(document).on('click', '#quiz-answer-edit-btn', function (e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
-		$formInput.action = 'tutor_update_quiz_answer_options';
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: $formInput,
-			beforeSend: function () {
-				$that.addClass('tutor-updating-message');
-			},
-			success: function (data) {
-				$('#tutor_quiz_question_answers').trigger('refresh');
-			},
-			complete: function () {
-				$that.removeClass('tutor-updating-message');
-			},
-		});
-	});
-
-	$(document).on('change', '.tutor-quiz-answers-mark-correct-wrap input', function (e) {
-		e.preventDefault();
-
-		var $that = $(this);
-
-		var answer_id = $that.val();
-		var inputValue = 1;
-		if (!$that.prop('checked')) {
-			inputValue = 0;
-		}
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: { answer_id: answer_id, inputValue: inputValue, action: 'tutor_mark_answer_as_correct' },
-		});
-	});
-
-	/**
-	 * Delete answer for a question in quiz builder
-	 *
-	 * @since v.1.0.0
-	 */
-
-	$(document).on('click', '.tutor-quiz-answer-trash-wrap a.answer-trash-btn', function (e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var answer_id = $that.attr('data-answer-id');
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: { answer_id: answer_id, action: 'tutor_quiz_builder_delete_answer' },
-			beforeSend: function () {
-				$that.closest('.tutor-quiz-answer-wrap').remove();
-			},
-		});
-	});
-
-	/**
 	 * Delete Quiz
 	 * @since v.1.0.0
 	 */
@@ -424,51 +268,6 @@ jQuery(document).ready(function ($) {
 				$that.removeClass('tutor-updating-message');
 			},
 		});
-	});
-
-	$(document).on('click', '.tutor-media-upload-btn', function (e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var frame;
-		if (frame) {
-			frame.open();
-			return;
-		}
-		frame = wp.media({
-			title: __('Select or Upload Media Of Your Chosen Persuasion', 'tutor'),
-			button: {
-				text: __('Use this media', 'tutor'),
-			},
-			multiple: false,
-		});
-		frame.on('select', function () {
-			var attachment = frame
-				.state()
-				.get('selection')
-				.first()
-				.toJSON();
-			$that.html('<img src="' + attachment.url + '" alt="" />');
-			$that
-				.closest('.tutor-media-upload-wrap')
-				.find('input')
-				.val(attachment.id);
-		});
-		frame.open();
-	});
-
-	$(document).on('click', '.tutor-media-upload-trash', function (e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		$that
-			.closest('.tutor-media-upload-wrap')
-			.find('.tutor-media-upload-btn')
-			.html('<i class="tutor-icon-image1"></i>');
-		$that
-			.closest('.tutor-media-upload-wrap')
-			.find('input')
-			.val('');
 	});
 
 	$(document).on('click', '.settings-tabs-navs li', function (e) {
@@ -611,6 +410,7 @@ window.tutor_toast = function (title, description, type) {
 
 	if (!jQuery('.tutor-toast-parent').length) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
+		// jQuery('body').append('<div class="tutor-notification tutor-is-danger tutor-mb-15"></div>');
 	}
 
 	// var icons = {
@@ -620,25 +420,11 @@ window.tutor_toast = function (title, description, type) {
 	var alert = type == 'success' ? 'success' : type == 'error' ? 'danger' : 'primary';
 	var icon =
 		type == 'success'
-			? 'ttr-mark-cricle'
+			? 'ttr-mark-filled'
 			: type == 'error'
-				? 'ttr-cross-cricle-filled'
-				: 'ttr-circle-outline-info-filled';
-	// var content = jQuery(`
-	//     <div class="tutor-notification tutor-mb-15 ${alert}">
-	//         <div class="tutor-notification-icon">
-	//             <i class="${icon}"></i>
-	//         </div>
-	//         <div class="tutor-notification-content">
-	//             <h5>${title}</h5>
-	//             <p>${description}</p>
-	//         </div>
-	//         <span class="tutor-notification-close tutor-toast-close">
-	//             <i class="ttr-cross-filled"></i>
-	//         </span>
-	//     </div>`);
-
-	var content = jQuery(`
+				? 'ttr-line-cross-line'
+				: 'ttr-info-circle-outline-filled';
+	var contentS = jQuery(`
         <div class="tutor-large-notification tutor-large-notification-${alert}">
             <div class="tutor-large-notification-icon">
                 <span class="tutor-icon-48 ${icon} tutor-mr-10"></span>
@@ -653,6 +439,21 @@ window.tutor_toast = function (title, description, type) {
             </div>
             <span class="tutor-toast-close tutor-noti-close tutor-icon-32 color-black-40 ttr-cross-filled"></span>
         </div>
+    `);
+
+	var content = jQuery(`
+		<div class="tutor-notification tutor-is-${alert} tutor-mb-15">
+			<div class="tutor-notification-icon">
+				<i class="${icon}"></i>
+			</div>
+			<div class="tutor-notification-content">
+			<h5>${title}</h5>
+			<p>${description}</p>
+			</div>
+			<button class="tutor-notification-close">
+				<i class="fas fa-times"></i>
+			</button>
+		</div>
     `);
 
 	content.find('.tutor-noti-close').click(function () {

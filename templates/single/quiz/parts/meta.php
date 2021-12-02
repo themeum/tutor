@@ -6,15 +6,14 @@
             if($total_questions){
         ?>
         <div class="quiz-qno d-flex">
-            <p class="text-regular-body color-text-hints tutor-mr-10"><?php _e('Questions No', 'tutor'); ?>:</p>
+            <span class="text-regular-body color-text-hints tutor-mr-10"><?php _e('Questions No', 'tutor'); ?>:</span>
             <span class="text-bold-body color-text-title">
                 <?php echo $total_questions; ?>
             </span>
         </div>
         <?php } ?>
         <div class="quiz-total-attempt d-flex d-xs-none">
-            <p class="text-regular-body color-text-hints tutor-mr-10">Total
-            <?php _e('Attempted', 'tutor'); ?>:</p>
+            <span class="text-regular-body color-text-hints tutor-mr-10">Total <?php _e('Attempted', 'tutor'); ?>:</span>
             <span class="text-bold-body color-text-title">
             <?php
                 if($attempts_allowed != 0){
