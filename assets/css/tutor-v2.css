@@ -21451,6 +21451,24 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   }
 }
 
+.tutor-modal-ins-approval .tutor-modal-root {
+  max-width: 634px;
+}
+
+.tutor-modal-ins-approval .tutor-modal-buttons .tutor-btn {
+  max-width: 280px;
+}
+
+.tutor-modal-ins-approval .tutor-avatar {
+  width: 100px;
+  height: 100px;
+}
+
+.tutor-modal-ins-approval .tutor-avatar img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .tutor-check-icon {
   height: 15px;
   width: 15px;
