@@ -1,4 +1,8 @@
 <?php
+/**
+ * Template for single answer editor
+ */
+
 if ($question_type === 'open_ended' || $question_type === 'short_answer'){
 	echo '<p class="open-ended-notice" style="color: #ff0000;">'.
             __('No option is necessary for this answer type', 'tutor').
@@ -6,16 +10,17 @@ if ($question_type === 'open_ended' || $question_type === 'short_answer'){
 	return '';
 }
 
-empty($old_answer) ? $old_answer=(object)array() : 0;
-$answer_title = ! empty($old_answer->answer_title) ? stripslashes($old_answer->answer_title) : '';
-$image_id = ! empty($old_answer->image_id) ? $old_answer->image_id : '';
-$answer_view_format = ! empty($old_answer->answer_view_format) ? $old_answer->answer_view_format : 'text';
-$answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashes($old_answer->answer_two_gap_match) : '';
+empty($old_answer)      ? $old_answer=(object)array() : 0;
+$answer_title           = ! empty($old_answer->answer_title) ? stripslashes($old_answer->answer_title) : '';
+$image_id               = ! empty($old_answer->image_id) ? $old_answer->image_id : '';
+$answer_view_format     = ! empty($old_answer->answer_view_format) ? $old_answer->answer_view_format : 'text';
+$answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslashes($old_answer->answer_two_gap_match) : '';
 ?>
 
 <div class="tutor-quiz-question-answers-form">
+    <input type="hidden" name="tutor_quiz_answer_id" value="<?php echo !empty($old_answer->answer_id) ? $old_answer->answer_id : ''; ?>" />
 
-	<?php
+    <?php
 	if ($question_type === 'true_false'){
 		?>
         <div class="tutor-quiz-builder-group">
@@ -34,90 +39,85 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             </div>
         </div>
 		<?php
-	}elseif($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ){
+	} elseif ($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ){
 		?>
 
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Answer title', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <div class="quiz-modal-field-wrap">
-                        <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
-                    </div>
-                </div>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Answer title', 'tutor'); ?>
+            </label>
+            <div class="tutor-input-group tutor-mb-15">
+                <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
             </div>
         </div>
 
-
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Upload Image', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <div class="tutor-media-upload-wrap">
-                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="<?php echo $image_id; ?>">
-                        <div class="tutor-media-preview">
-                            <a href="javascript:;" class="tutor-media-upload-btn">
-                                <?php
-                                    if ($image_id){
-                                        echo '<img src="'.wp_get_attachment_image_url($image_id).'" />';
-                                    }else{
-                                        echo '<i class="tutor-icon-image1"></i>';
-                                    }
-                                ?>
-                            </a>
-                        </div>
-                        <div class="tutor-media-upload-trash-wrap">
-                            <a href="javascript:;" class="tutor-media-upload-trash">&times;</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Upload Image', 'tutor'); ?>
+            </label>
+            
+            <?php 
+                // Load thumbnail segment
+                tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
+                    'media_id' => $image_id,
+                    'input_name' => 'quiz_answer['.$question_id.'][image_id]'
+                ), false);
+            ?>
         </div>
 
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Display format for options', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col auto-width">
-                    <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>>
-                        <?php _e('Only text', 'tutor'); ?>
-                    </label>
+        <div class="tutor-bs-row tutor-mb-30">
+            <div class="tutor-bs-col-12">
+                <label class="tutor-form-label">
+                    <?php _e('Display format for options', 'tutor'); ?>
+                </label>
+            </div>
+            <div class="tutor-bs-col-auto">
+                <div class="tutor-form-check tutor-mb-15">
+                    <input type="radio" id="tutor_quiz_type_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>/>
+                    <label for="tutor_quiz_type_text"><?php _e('Only text', 'tutor'); ?></label>
                 </div>
-                <div class="tutor-quiz-builder-col auto-width">
-                    <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?>>
-                        <?php _e('Only Image', 'tutor'); ?>
-                    </label>
+            </div>
+            <div class="tutor-bs-col-auto">
+                <div class="tutor-form-check tutor-mb-15">
+                    <input type="radio" id="tutor_quiz_type_img" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?>/>
+                    <label for="tutor_quiz_type_img"><?php _e('Only Image', 'tutor'); ?></label>
                 </div>
-                <div class="tutor-quiz-builder-col auto-width">
-                    <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?>>
-                        <?php _e('Text &amp; Image both', 'tutor'); ?>
-                    </label>
+            </div>
+            <div class="tutor-bs-col-auto">
+                <div class="tutor-form-check tutor-mb-15">
+                    <input type="radio" id="tutor_quiz_type_img_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?>/>
+                    <label for="tutor_quiz_type_img_text"><?php _e('Text &amp; Image both', 'tutor'); ?></label>
                 </div>
             </div>
         </div>
 		<?php
-	}elseif($question_type === 'fill_in_the_blank'){ ?>
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Question Title', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
-                </div>
-            </div>
-            <p class="help"><?php _e( 'Please make sure to use the <strong>{dash}</strong> variable in your question title to show the blanks in your question. You can use multiple <strong>{dash}</strong> variables in one question.', 'tutor' ); ?></p>
-        </div> <!-- /.tutor-quiz-builder-group -->
+	} elseif ($question_type === 'fill_in_the_blank'){ ?>
 
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Correct Answer(s)', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="<?php echo $answer_two_gap_match; ?>">
-                </div>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Question Title', 'tutor'); ?>
+            </label>
+            <div class="tutor-input-group tutor-mb-15">
+                <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
+                <p class="tutor-input-feedback tutor-has-icon">
+                    <i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                    <?php _e( 'Please make sure to use the <strong>{dash}</strong> variable in your question title to show the blanks in your question. You can use multiple <strong>{dash}</strong> variables in one question.', 'tutor' ); ?>
+                </p>
             </div>
-            <p class="help"><?php _e( 'Separate multiple answers by a vertical bar <strong>|</strong>. 1 answer per <strong>{dash}</strong> variable is defined in the question. Example: Apple | Banana | Orange', 'tutor' ); ?></p>
-        </div> <!-- /.tutor-quiz-builder-group -->
+        </div>
+        
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Correct Answer(s)', 'tutor'); ?>
+            </label>
+            <div class="tutor-input-group tutor-mb-15">
+                <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="<?php echo $answer_two_gap_match; ?>"/>
+                <p class="tutor-input-feedback tutor-has-icon">
+                    <i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                    <?php _e( 'Separate multiple answers by a vertical bar <strong>|</strong>. 1 answer per <strong>{dash}</strong> variable is defined in the question. Example: Apple | Banana | Orange', 'tutor' ); ?>
+                </p>
+            </div>
+        </div>
 		<?php
 	}elseif ($question_type === 'answer_sorting'){ ?>
 
@@ -143,156 +143,123 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
 		<?php
 	}elseif($question_type === 'matching'){
 		?>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Answer title', 'tutor'); ?>
+            </label>
+            <div class="tutor-input-group tutor-mb-15">
+                <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>"/>
+            </div>
+        </div>
 
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Answer title', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
-                </div>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Matched Answer title', 'tutor'); ?>
+            </label>
+            <div class="tutor-input-group tutor-mb-15">
+                <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="<?php echo $answer_two_gap_match; ?>"/>
             </div>
-            <p class="help"></p>
-        </div> <!-- /.tutor-quiz-builder-group -->
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Matched Answer title', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="<?php echo $answer_two_gap_match; ?>">
-                </div>
-            </div>
-            <p class="help"></p>
-        </div> <!-- /.tutor-quiz-builder-group -->
+        </div>
 
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Upload Image', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <div class="tutor-media-upload-wrap">
-                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="<?php echo $image_id; ?>">
-                        <div class="tutor-media-preview">
-                            <a href="javascript:;" class="tutor-media-upload-btn">
-                                <?php
-                                    if ($image_id){
-                                        echo '<img src="'.wp_get_attachment_image_url($image_id).'" />';
-                                    }else{
-                                        echo '<i class="tutor-icon-image1"></i>';
-                                    }
-                                ?>
-                            </a>
-                        </div>
-                        <div class="tutor-media-upload-trash-wrap">
-                            <a href="javascript:;" class="tutor-media-upload-trash">&times;</a>
-                        </div>
-                    </div>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Upload Image', 'tutor'); ?>
+            </label>
+            
+            <?php 
+                // Load thumbnail segment
+                tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
+                    'media_id' => $image_id,
+                    'input_name' => 'quiz_answer['.$question_id.'][image_id]'
+                ), false);
+            ?>
+        </div> 
+        
+        <div class="tutor-bs-row tutor-mb-30">
+            <div class="tutor-bs-col-12">
+                <label class="tutor-form-label">
+                    <?php _e('Display format for options', 'tutor'); ?>
+                </label>
+            </div>
+            <div class="tutor-bs-col-auto">
+                <div class="tutor-form-check tutor-mb-15">
+                    <input type="radio" id="tutor_quiz_type_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>/>
+                    <label for="tutor_quiz_type_text"><?php _e('Only text', 'tutor'); ?></label>
                 </div>
             </div>
-        </div> <!-- /.tutor-quiz-builder-group -->
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Display format for options', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col auto-width">
-                    <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>>
-                        <?php _e('Only text', 'tutor'); ?>
-                    </label>
-                </div>
-                <div class="tutor-quiz-builder-col auto-width">
-                    <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?>>
-                        <?php _e('Only Image', 'tutor'); ?>
-                    </label>
-                </div>
-                <div class="tutor-quiz-builder-col auto-width">
-                    <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?>>
-                        <?php _e('Text &amp; Image both', 'tutor'); ?>
-                    </label>
+            <div class="tutor-bs-col-auto">
+                <div class="tutor-form-check tutor-mb-15">
+                    <input type="radio" id="tutor_quiz_type_img" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?>/>
+                    <label for="tutor_quiz_type_img"><?php _e('Only Image', 'tutor'); ?></label>
                 </div>
             </div>
-            <p class="help"></p>
-        </div> <!-- /.tutor-quiz-builder-group -->
+            <div class="tutor-bs-col-auto">
+                <div class="tutor-form-check tutor-mb-15">
+                    <input type="radio" id="tutor_quiz_type_img_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?>/>
+                    <label for="tutor_quiz_type_img_text"><?php _e('Text &amp; Image both', 'tutor'); ?></label>
+                </div>
+            </div>
+        </div>
 		<?php
 	} elseif ($question_type === 'image_matching'){ 
         ?>
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Upload Image', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <div class="tutor-media-upload-wrap">
-                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="<?php echo $image_id; ?>">
-                        <div class="tutor-media-preview">
-                            <a href="javascript:;" class="tutor-media-upload-btn">
-                                <?php
-                                    if ($image_id){
-                                        echo '<img src="'.wp_get_attachment_image_url($image_id).'" />';
-                                    }else{
-                                        echo '<i class="tutor-icon-image1"></i>';
-                                    }
-                                ?>
-                            </a>
-                        </div>
-                        <div class="tutor-media-upload-trash-wrap">
-                            <a href="javascript:;" class="tutor-media-upload-trash">&times;</a>
-                        </div>
-                    </div>
-                </div>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Upload Image', 'tutor'); ?>
+            </label>
+            
+            <?php 
+                // Load thumbnail segment
+                tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
+                    'media_id' => $image_id,
+                    'input_name' => 'quiz_answer['.$question_id.'][image_id]'
+                ), false);
+            ?>
+        </div> 
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Image matched text', 'tutor'); ?>
+            </label>
+            <div class="tutor-input-group tutor-mb-15">
+                <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]"  value="<?php echo $answer_title; ?>"/>
             </div>
-        </div> <!-- /.tutor-quiz-builder-group -->
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Image matched text', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]"  value="<?php echo $answer_title; ?>">
-                </div>
-            </div>
-        </div> <!-- /.tutor-quiz-builder-group -->
-
-
+        </div>
 		<?php
 	}elseif($question_type === 'image_answering'){ ?>
 
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Upload Image', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <div class="tutor-media-upload-wrap">
-                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="<?php echo $image_id; ?>">
-                        <div class="tutor-media-preview">
-                            <a href="javascript:;" class="tutor-media-upload-btn">
-                                <?php
-                                    if ($image_id){
-                                        echo '<img src="'.wp_get_attachment_image_url($image_id).'" />';
-                                    }else{
-                                        echo '<i class="tutor-icon-image1"></i>';
-                                    }
-                                ?>
-                            </a>
-                        </div>
-                        <div class="tutor-media-upload-trash-wrap">
-                            <a href="javascript:;" class="tutor-media-upload-trash">&times;</a>
-                        </div>
-                    </div>
-                </div>
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Upload Image', 'tutor'); ?>
+            </label>
+            
+            <?php 
+                // Load thumbnail segment
+                tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
+                    'media_id' => $image_id,
+                    'input_name' => 'quiz_answer['.$question_id.'][image_id]'
+                ), false);
+            ?>
+        </div> 
+        
+        <div class="tutor-mb-30">
+            <label class="tutor-form-label">
+                <?php _e('Answer input value', 'tutor'); ?>
+            </label>
+            <div class="tutor-input-group tutor-mb-15">
+                <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>"/>
+                <p class="tutor-input-feedback tutor-has-icon">
+                    <i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                    <?php _e('The answers that students enter should match with this text. Write in <strong>small caps</strong>','tutor'); ?>
+                </p>
             </div>
-            <p class="help"></p>
-        </div> <!-- /.tutor-quiz-builder-group -->
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Answer input value', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
-                </div>
-            </div>
-            <p class="help"><?php _e('The answers that students enter should match with this text. Write in <strong>small caps</strong>','tutor'); ?></p>
-        </div> <!-- /.tutor-quiz-builder-group -->
-
+        </div>
 		<?php
 	}
 	?>
 
-    <div class="tutor-quiz-answers-form-footer  tutor-quiz-builder-form-row">
-        <button type="button" id="quiz-answer-save-btn" class="tutor-answer-save-btn">
-            <i class="tutor-icon-add-line"></i> <?php _e('Save Answer', 'tutor'); ?>
+    <div class="tutor-quiz-answers-form-footer">
+        <button type="button" id="quiz-answer-save-btn" class="tutor-answer-save-btn tutor-btn tutor-btn-primary tutor-btn-sm">
+            <?php _e('Update Answer', 'tutor'); ?>
         </button>
     </div>
 </div>
