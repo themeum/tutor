@@ -1,44 +1,5 @@
 import { get_response_message } from "../helper/response";
 
-/**
- * Add option disable when don't need to add an option
- *
- * @since 1.9.7
- */
-var disableAddoption = function () {
-    const selected_question_type = document.querySelector(".tutor_select_value_holder").value;
-    const question_answers = document.getElementById("tutor_quiz_question_answers");
-    const question_answer_form = document.getElementById("tutor_quiz_question_answer_form");
-    const add_question_answer_option = document.querySelector(".add_question_answers_option");
-
-    const addDisabledClass = (elem) => {
-        if (!elem.classList.contains("disabled")) {
-            elem.classList.add('disabled');
-        }
-    }
-
-    const removeDisabledClass = (elem) => {
-        if (elem.classList.contains("disabled")) {
-            elem.classList.remove('disabled');
-        }
-    }
-
-    //dont need add option for open_ended & short_answer
-    if (selected_question_type === 'open_ended' || selected_question_type === 'short_answer') {
-        addDisabledClass(add_question_answer_option);
-    } else if (selected_question_type === 'true_false' || selected_question_type === 'fill_in_the_blank') {
-        //if already have options then dont need to show add option
-        if (question_answer_form.hasChildNodes() || question_answers.hasChildNodes()) {
-            addDisabledClass(add_question_answer_option);
-        } else {
-            removeDisabledClass(add_question_answer_option);
-        }
-    } else {
-        //if other question type then remove disabled
-        removeDisabledClass(add_question_answer_option);
-    }
-}
-
 window.jQuery(document).ready(function ($) {
 
     const { __ } = wp.i18n;
@@ -169,8 +130,6 @@ window.jQuery(document).ready(function ($) {
                         $that.closest('.question-type-select').find('.select-header .lead-option').html($html);
                         $that.closest('.question-type-select').find('.select-header input.tutor_select_value_holder').val($that.attr('data-value')).trigger('change');
                         $that.closest('.tutor-select-options').hide();
-
-                        disableAddoption();
                     } else {
                         alert('Tutor Pro version required');
                     }
@@ -363,27 +322,25 @@ window.jQuery(document).ready(function ($) {
         }
     });
 
-    // Add question
+    // Add new or edit question button click
     $(document).on('click', '.tutor-quiz-open-question-form', function (e) {
         e.preventDefault();
 
-        var $that = $(this);
-        var modal = $that.closest('.tutor-modal');
-        var quiz_id = modal.find('[name="quiz_id"]').val();
-        var topic_id = modal.find('[name="topic_id"]').val();
-        var course_id = $('#post_ID').val();
+        // Prepare related data for the question
+        var $that       = $(this);
+        var modal       = $that.closest('.tutor-modal');
+        var quiz_id     = modal.find('[name="quiz_id"]').val();
+        var topic_id    = modal.find('[name="topic_id"]').val();
+        var course_id   = $('#post_ID').val();
         var question_id = $that.attr('data-question-id');
 
         var params = {
-            quiz_id: quiz_id,
-            topic_id: topic_id,
-            course_id: course_id,
-            action: 'tutor_quiz_builder_get_question_form'
+            quiz_id,
+            topic_id,
+            course_id,
+            question_id,
+            action : 'tutor_quiz_builder_get_question_form'
         };
-
-        if (question_id) {
-            params.question_id = question_id;
-        }
 
         $.ajax({
             url: window._tutorobject.ajaxurl,
@@ -393,13 +350,12 @@ window.jQuery(document).ready(function ($) {
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
+                // Add the question form in modal
                 modal.find('.modal-container').html(data.data.output);
                 modal.addClass('tutor-has-question-from');
 
-                //Initializing Tutor Select
-                // tutor_select().reInit();
+                // Enable quiz answer sorting for multi/radio select
                 enable_quiz_answer_sorting();
-                // disableAddoption();
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
@@ -436,20 +392,22 @@ window.jQuery(document).ready(function ($) {
     });
 
     /**
-     * Get question answers option form to save multiple/single/true-false options
+     * Get question answers option form to save/edit multiple/single/true-false options
      *
      * @since v.1.0.0
      */
-    $(document).on('click', '.add_question_answers_option:not(.disabled)', function (e) {
+    $(document).on('click', '.add_question_answers_option, .tutor-quiz-answer-edit a', function (e) {
         e.preventDefault();
 
         var $that = $(this);
-        var question_id = $that.attr('data-question-id');
+        var question_id = $that.closest('[data-question-id]').attr('data-question-id');
+		var answer_id = $(this).hasClass('add_question_answers_option') ? null : $that.closest('.tutor-quiz-answer-wrap').attr('data-answer-id');
 
         var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
-
         $formInput.question_id = question_id;
-        $formInput.action = 'tutor_quiz_add_question_answers';
+        $formInput.answer_id = answer_id;
+        $formInput.action = 'tutor_quiz_question_answer_editor';
+
         $.ajax({
             url: window._tutorobject.ajaxurl,
             type: 'POST',
@@ -458,15 +416,13 @@ window.jQuery(document).ready(function ($) {
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
-                $('#tutor_quiz_question_answer_form').html(data.data.output);
-                disableAddoption();
+                $('#tutor_quiz_builder_answer_wrapper').html(data.data.output);
             },
             complete: function () {
                 $that.removeClass('tutor-updating-message');
             }
         });
     });
-
 
     /**
      * Quiz Question edit save and continue
@@ -488,44 +444,13 @@ window.jQuery(document).ready(function ($) {
             },
             success: function (data) {
                 if (data.success) {
-                    //ReOpen questions
                     modal.find('.back-to-quiz-questions-btn').trigger('click');
                 } else {
-                    if (typeof data.data !== 'undefined') {
-                        $('#quiz_validation_msg_wrap').html(data.data.validation_msg);
-                    }
+                    tutor_toast('Error', get_response_message(data), 'error');
                 }
             },
             complete: function () {
                 setTimeout(() => $that.removeClass('tutor-updating-message'), 2000);
-            }
-        });
-    });
-
-
-    // Quiz question answer refresh
-    $(document).on('refresh', '#tutor_quiz_question_answers', function (e) {
-        e.preventDefault();
-
-        var $that = $(this);
-        var question_id = $that.attr('data-question-id');
-        var question_type = $('.tutor_select_value_holder').val();
-
-        $.ajax({
-            url: window._tutorobject.ajaxurl,
-            type: 'POST',
-            data: { question_id: question_id, question_type: question_type, action: 'tutor_quiz_builder_get_answers_by_question' },
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-                $('#tutor_quiz_question_answer_form').html('');
-            },
-            success: function (data) {
-                if (data.success) {
-                    $that.html(data.data.output);
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
             }
         });
     });
@@ -536,9 +461,119 @@ window.jQuery(document).ready(function ($) {
      * @since v.1.0.0
      */
     $(document).on('change', 'input.tutor_select_value_holder', function (e) {
-        $('.add_question_answers_option').trigger('click');
-        $('#tutor_quiz_question_answers').trigger('refresh');
+        // Firstly remove older content and show loading spinner
+        var answer_wrapper = $('#tutor_quiz_builder_answer_wrapper');
+        answer_wrapper.html(
+            `<div style="text-align:center">
+                <i class="tutor-updating-message"></i>
+            </div>`
+        );
+
+        answer_wrapper.get(0).scrollIntoView({block: 'center', behavior:'smooth'});
+
+        var question_id = $(this).closest('[data-question-id]').attr('data-question-id');
+        var question_type = $(this).val();
+
+        $.ajax({
+            url: window._tutorobject.ajaxurl,
+            type: 'POST',
+            data: { 
+                question_id: question_id, 
+                question_type: question_type, 
+                action: 'tutor_quiz_builder_change_type' 
+            },
+            success: function (data) {
+                if (data.success) {
+                    $('#tutor_quiz_builder_answer_wrapper').html(data.data.output);
+                    answer_wrapper.get(0).scrollIntoView({block: 'center', behavior:'smooth'});
+                } else {
+                    tutor_toast('Error', get_response_message(data), 'error');
+                }
+            }
+        });
     });
+
+
+	/**
+	 * Saving question answers options
+	 * Student should select the right answer at quiz attempts
+	 *
+	 * @since v.1.0.0
+	 */
+	$(document).on('click', '#quiz-answer-save-btn', function (e) {
+		e.preventDefault();
+		var $that = $(this);
+		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
+		$formInput.action = $formInput.tutor_quiz_answer_id ? 'tutor_update_quiz_answer_options' : 'tutor_save_quiz_answer_options';
+
+		$.ajax({
+			url: window._tutorobject.ajaxurl,
+			type: 'POST',
+			data: $formInput,
+			beforeSend: function () {
+				$that.addClass('tutor-updating-message');
+			},
+			success: function (data) {
+                if(!data.success) {
+                    tutor_toast('Error', get_response_message(data), 'error');
+                    return;
+                }
+                
+                $('.tutor_select_value_holder').trigger('change');
+			},
+			complete: function () {
+				$that.removeClass('tutor-updating-message');
+			},
+		});
+	});
+
+	/**
+	 * Updating Answer
+	 *
+	 * @since v.1.0.0
+	 */
+	$(document).on('change', '.tutor-quiz-answers-mark-correct-wrap input', function (e) {
+		e.preventDefault();
+
+		var $that = $(this);
+
+		var answer_id = $that.val();
+		var inputValue = 1;
+		if (!$that.prop('checked')) {
+			inputValue = 0;
+		}
+
+		$.ajax({
+			url: window._tutorobject.ajaxurl,
+			type: 'POST',
+			data: { 
+                answer_id: answer_id, 
+                inputValue: inputValue, 
+                action: 'tutor_mark_answer_as_correct' 
+            },
+		});
+	});
+
+	/**
+	 * Delete answer for a question in quiz builder
+	 *
+	 * @since v.1.0.0
+	 */
+	$(document).on('click', '.tutor-quiz-answer-trash-wrap a.answer-trash-btn', function (e) {
+		e.preventDefault();
+
+		var $that = $(this);
+		var answer_id = $that.attr('data-answer-id');
+
+		$.ajax({
+			url: window._tutorobject.ajaxurl,
+			type: 'POST',
+			data: { answer_id: answer_id, action: 'tutor_quiz_builder_delete_answer' },
+			beforeSend: function () {
+				$that.closest('.tutor-quiz-answer-wrap').remove();
+			},
+		});
+	});
 
     // Collapse/expand advanced settings
     $(document).on('click', '.tutor-quiz-advance-settings .tutor-quiz-advance-header', function () {

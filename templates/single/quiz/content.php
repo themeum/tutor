@@ -21,7 +21,10 @@ $attempt_remaining = $attempts_allowed - $attempted_count;
 
     do_action('tutor_quiz/content/before', $quiz_id);
 
-    the_content();
+    echo '<div>';
+        the_content();
+    echo '</div>';
+    
     do_action('tutor_quiz/content/after', $quiz_id);
 	?>
 </div>
