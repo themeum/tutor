@@ -90,8 +90,8 @@ $rating = tutor_utils()->get_course_rating();
 				?>
 					<li>
 						<div>
-							<div class="tutor-avatar-circle tutor-50">
-								<img src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="student avatar" />
+							<div class="">
+								<img class="tutor-avatar-circle tutor-50" src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="student avatar" />
 							</div>
 							<div class="text-regular-body color-text-primary tutor-mt-16">
 								<a href="<?php echo $profile_url; ?>">
