@@ -100,17 +100,19 @@ $rating = tutor_utils()->get_course_rating();
 								<img class="tutor-avatar-circle tutor-50" src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="student avatar" />
 							</div>
 							<div class="text-regular-body color-text-primary tutor-mt-16">
-								<a href="<?php echo $profile_url; ?>">
-								<?php echo $review->display_name; ?>
+								<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-reviewer-name">
+								<?php echo esc_html( $review->display_name ); ?>
 								</a>
 							</div>
 							<div class="text-regular-small color-text-hints">
-							<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
+								<span class="review-time">
+									<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
+								</span>
 							</div>
 						</div>
 						<div>
 						<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
-							<div class="text-regular-caption color-text-subsued tutor-mt-10">
+							<div class="text-regular-caption color-text-subsued tutor-mt-10 tutor-review-comment">
 							<?php echo htmlspecialchars( $review->comment_content ); ?>
 							</div>
 						</div>
