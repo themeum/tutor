@@ -5656,7 +5656,7 @@
   line-height: 160%;
 }
 
-.text-medium-small, .tutor-badge-label, .tutor-course-listing-item-sm .tutor-ratings .tutor-rating-text {
+.text-medium-small, .tutor-badge-label, .tutor-form-select-with-icon select, .tutor-course-listing-item-sm .tutor-ratings .tutor-rating-text {
   font-weight: 500;
   font-size: 13px;
   line-height: 162%;
@@ -23340,7 +23340,7 @@ select.tutor-form-select:focus {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  height: 24px;
+  min-height: 24px !important;
   position: relative;
   z-index: 1;
   background: transparent;
