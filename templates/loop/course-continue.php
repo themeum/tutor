@@ -18,11 +18,11 @@
 <?php
     
     $course_id = get_the_ID();
-    $enroll_btn = '<div class="tutor-loop-cart-btn-wrap">
+    $enroll_btn = '
                     <a href="'. get_the_permalink(). '" class="tutor-btn tutor-pr-0 tutor-pl-0 tutor-btn-disable-outline tutor-btn-md tutor-btn-full">
                         ' . __( 'Start Learning', 'tutor' ) . '
                     </a>
-                </div>';
+                ';
 
     $lesson_url = tutor_utils()->get_course_first_lesson();
     $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
