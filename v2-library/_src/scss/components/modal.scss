@@ -552,5 +552,23 @@
 				}
 			}
 		}
-	}
-}
+	} // end of /.tutor-modal-is-close-beside
+
+	&-ins-approval {
+		.tutor-modal-root {
+			max-width: 634px;
+		}
+		.tutor-modal-buttons {
+			.tutor-btn {
+				max-width: 280px;
+			}
+		}
+		.tutor-avatar {
+			width: 100px;
+			height: 100px;
+			img {
+				object-fit: cover;
+			}
+		}
+	} // end of /.tutor-modal-ins- approval
+} //end of /.tutor-modal

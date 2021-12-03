@@ -8467,4 +8467,28 @@ class Utils {
 		);
 		return $array;
 	}
+
+	public function get_quiz_attempt_timing($attempt_data) {
+		$attempt_duration = '';
+		$attempt_duration_taken = '';
+		$attempt_info = @unserialize($attempt_data->attempt_info);
+		if(is_array($attempt_info)) {
+			// Allowed duration
+			if(isset($attempt_info['time_limit'])) {
+				$attempt_duration = $attempt_info['time_limit']['time_value'] . ' ' . __(ucwords($attempt_info['time_limit']['time_type']), 'tutor');
+			}
+
+			// Taken duration
+			$seconds = strtotime($attempt_data->attempt_ended_at) - strtotime($attempt_data->attempt_started_at);
+			$minutes = $seconds/60;
+
+			if($seconds<60) {
+				$attempt_duration_taken = $seconds . ' ' . ($seconds>1 ? __('Seconds', 'tutor') : __('Second', 'tutor'));
+			} else {
+				$attempt_duration_taken = $minutes>1 ? __('Minutes', 'tutor') : __('Minute', 'tutor');
+			}
+		}
+
+		return compact('attempt_duration', 'attempt_duration_taken');
+	}
 }

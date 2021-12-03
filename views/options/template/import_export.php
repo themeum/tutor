@@ -67,13 +67,13 @@
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>
-						<div class="tutor-popup-opener">
+						<div class="tutor-popup-opener tutor-ml-16">
 							<button
 							type="button"
 							class="popup-btn"
 							data-tutor-popup-target="popup-<?php echo esc_attr( $key ); ?>"
 							>
-							<span class="toggle-icon"></span>
+								<span class="toggle-icon"></span>
 							</button>
 							<ul id="popup-<?php echo esc_attr( $key ); ?>" class="popup-menu">
 							<li>

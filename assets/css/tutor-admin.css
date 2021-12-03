@@ -680,274 +680,274 @@
 }
 
 .text-thin-h1 {
-  font-weight: 100 !important;
-  font-size: 80px !important;
+  font-weight: 100;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-thin-h2 {
-  font-weight: 100 !important;
-  font-size: 60px !important;
+  font-weight: 100;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-thin-h3 {
-  font-weight: 100 !important;
-  font-size: 40px !important;
+  font-weight: 100;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-thin-h4 {
-  font-weight: 100 !important;
-  font-size: 30px !important;
+  font-weight: 100;
+  font-size: 30px;
   line-height: 133%;
 }
 
 .text-thin-h5 {
-  font-weight: 100 !important;
-  font-size: 24px !important;
+  font-weight: 100;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-thin-h6 {
-  font-weight: 100 !important;
-  font-size: 20px !important;
+  font-weight: 100;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-thin-body {
-  font-weight: 100 !important;
-  font-size: 16px !important;
+  font-weight: 100;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-thin-caption {
-  font-weight: 100 !important;
-  font-size: 15px !important;
+  font-weight: 100;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-thin-small {
-  font-weight: 100 !important;
-  font-size: 13px !important;
+  font-weight: 100;
+  font-size: 13px;
   line-height: 138%;
 }
 
 .text-thin-tiny {
-  font-weight: 100 !important;
-  font-size: 11px !important;
+  font-weight: 100;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-regular-h1 {
-  font-weight: 400 !important;
-  font-size: 80px !important;
+  font-weight: 400;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-regular-h2 {
-  font-weight: 400 !important;
-  font-size: 60px !important;
+  font-weight: 400;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-regular-h3 {
-  font-weight: 400 !important;
-  font-size: 40px !important;
+  font-weight: 400;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-regular-h4 {
-  font-weight: 400 !important;
-  font-size: 30px !important;
+  font-weight: 400;
+  font-size: 30px;
   line-height: 133%;
 }
 
 .text-regular-h5 {
-  font-weight: 400 !important;
-  font-size: 24px !important;
+  font-weight: 400;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-regular-h6 {
-  font-weight: 400 !important;
-  font-size: 20px !important;
+  font-weight: 400;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-regular-body, .tutor-option-nav-item h4,
 .tutor-option-single-item h4 {
-  font-weight: 400 !important;
-  font-size: 16px !important;
+  font-weight: 400;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-regular-caption, .tutor-backend-alert {
-  font-weight: 400 !important;
-  font-size: 15px !important;
+  font-weight: 400;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-regular-small, .text-body, .tutor-backend-settings-page, .tooltip-wrap .tooltip-txt, .item-wrapper > .color-picker-wrapper label.color-picker-input .picker-value, .tutor-option-field-label .desc, .tutor-option-nav-page .certificate-settings .tutor-option-field-label .desc {
-  font-weight: 400 !important;
-  font-size: 13px !important;
+  font-weight: 400;
+  font-size: 13px;
   line-height: 138%;
 }
 
 .text-regular-tiny {
-  font-weight: 400 !important;
-  font-size: 11px !important;
+  font-weight: 400;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-medium-h1 {
-  font-weight: 500 !important;
-  font-size: 80px !important;
+  font-weight: 500;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-medium-h2 {
-  font-weight: 500 !important;
-  font-size: 60px !important;
+  font-weight: 500;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-medium-h3 {
-  font-weight: 500 !important;
-  font-size: 40px !important;
+  font-weight: 500;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-medium-h4 {
-  font-weight: 500 !important;
-  font-size: 30px !important;
+  font-weight: 500;
+  font-size: 30px;
   line-height: 123%;
 }
 
 .text-medium-h5, .tutor-option-main-title h2 {
-  font-weight: 500 !important;
-  font-size: 24px !important;
+  font-weight: 500;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-medium-h6 {
-  font-weight: 500 !important;
-  font-size: 20px !important;
+  font-weight: 500;
+  font-size: 20px;
   line-height: 140%;
 }
 
 .text-medium-body, .tutor-option-field-label label,
 .tutor-option-field-label .label, .tutor-option-nav-page.import-export .popup-opener li {
-  font-weight: 500 !important;
-  font-size: 16px !important;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-medium-caption {
-  font-weight: 500 !important;
-  font-size: 15px !important;
+  font-weight: 500;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-medium-small {
-  font-weight: 500 !important;
-  font-size: 13px !important;
+  font-weight: 500;
+  font-size: 13px;
   line-height: 162%;
 }
 
 .text-medium-tiny {
-  font-weight: 500 !important;
-  font-size: 11px !important;
+  font-weight: 500;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-semi-caption {
-  font-weight: 600 !important;
-  font-size: 15px !important;
+  font-weight: 600;
+  font-size: 15px;
   line-height: 165%;
 }
 
 .text-bold-h1 {
-  font-weight: 700 !important;
-  font-size: 80px !important;
+  font-weight: 700;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-bold-h2 {
-  font-weight: 700 !important;
-  font-size: 60px !important;
+  font-weight: 700;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-bold-h3 {
-  font-weight: 700 !important;
-  font-size: 40px !important;
+  font-weight: 700;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-bold-h4 {
-  font-weight: 700 !important;
-  font-size: 30px !important;
+  font-weight: 700;
+  font-size: 30px;
   line-height: 123%;
 }
 
 .text-bold-h5 {
-  font-weight: 700 !important;
-  font-size: 24px !important;
+  font-weight: 700;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-bold-h6 {
-  font-weight: 700 !important;
-  font-size: 20px !important;
+  font-weight: 700;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-bold-body {
-  font-weight: 700 !important;
-  font-size: 16px !important;
+  font-weight: 700;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-bold-caption {
-  font-weight: 700 !important;
-  font-size: 15px !important;
+  font-weight: 700;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-bold-small {
-  font-weight: 700 !important;
-  font-size: 13px !important;
+  font-weight: 700;
+  font-size: 13px;
   line-height: 162%;
 }
 
 .text-bold-tiny {
-  font-weight: 700 !important;
-  font-size: 11px !important;
+  font-weight: 700;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-btn-xlarge {
-  font-weight: 500 !important;
-  font-size: 18px !important;
+  font-weight: 500;
+  font-size: 18px;
   line-height: 178%;
 }
 
 .text-btn-large {
-  font-weight: 500 !important;
-  font-size: 16px !important;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 200%;
 }
 
 .text-btn-medium, .tutor-backend-settings-page .tutor-btn.tutor-is-sm {
-  font-weight: 500 !important;
-  font-size: 15px !important;
+  font-weight: 500;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-btn-small, .tutor-backend-settings-page .tutor-btn.tutor-is-xs {
-  font-weight: 500 !important;
-  font-size: 13px !important;
+  font-weight: 500;
+  font-size: 13px;
   line-height: 123%;
 }
 
@@ -1843,10 +1843,6 @@ input:checked + .btn-slider:before {
   border: 1px solid #d4dadb;
 }
 
-.tutor-quiz-builder-form-row .quiz-form-warning {
-  color: #e88e06;
-}
-
 .assignment-modal-form-wrap .tutor-option-field.tutor-assignment-modal-title-wrap {
   margin: 0;
 }
@@ -2104,26 +2100,6 @@ i.tutor-icon-block.tutor-icon-plus {
   display: flex;
 }
 
-.tutor-quiz-answer {
-  background-color: #fff;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  padding: 10px 15px;
-  border: 1px solid #dedede;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  line-height: 22px;
-  border-radius: 3px;
-  margin-bottom: 15px;
-}
-
-.tutor-quiz-answer .tutor-quiz-answer-edit a {
-  display: block;
-  padding: 0px 9px;
-}
-
 .tutor-quiz-answer-trash-wrap a.answer-trash-btn {
   padding: 0 10px;
   display: inline-block;
@@ -2152,66 +2128,6 @@ span.tutor-quiz-answer-title {
 .tutor-question-answer-image img {
   max-height: 25px;
   width: auto;
-}
-
-button#quiz-answer-save-btn,
-button#quiz-answer-edit-btn {
-  background-color: var(--tutor-success-button-color);
-  color: #fff;
-  padding: 10px 15px;
-  border: none;
-  cursor: pointer;
-}
-
-button#quiz-answer-save-btn:hover,
-button#quiz-answer-edit-btn:hover {
-  background-color: var(--tutor-success-button-color);
-}
-
-/**
-  Tutor Media Upload
-   */
-.tutor-media-upload-wrap {
-  border: 1px solid #dedede;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 130px;
-}
-
-.tutor-media-upload-wrap img {
-  max-width: 100%;
-}
-
-.tutor-media-preview {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-
-.tutor-media-upload-btn {
-  display: block;
-  padding: 10px;
-  font-size: 50px;
-  line-height: 50px;
-  text-align: center;
-  color: #dedede;
-}
-
-.tutor-media-upload-trash-wrap {
-  border-left: 1px solid #dedede;
-}
-
-.tutor-media-upload-trash {
-  color: #dedede;
-  display: block;
-  line-height: 50px;
-  padding: 12px;
-}
-
-.tutor-quiz-answers-form-footer.tutor-quiz-builder-form-row {
-  margin-top: 40px;
-  margin-bottom: 10px;
 }
 
 /**
@@ -4983,7 +4899,7 @@ li.tutor-option-nav-item h4 {
   grid-auto-flow: column;
 }
 
-@media (min-width: 1300px) {
+@media (min-width: 1400px) {
   .tutor-backend-settings-page .tutor-option-header,
   .tutor-backend-settings-page .tutor-option-form {
     grid-template-columns: 245px 4fr 1fr;
@@ -5130,7 +5046,6 @@ li.tutor-option-nav-item h4 {
 
 .tutor-option-body {
   position: relative;
-  z-index: 1;
 }
 
 .tutor-option-nav-item h4,
@@ -5235,7 +5150,7 @@ li.tutor-option-nav-item h4 {
 .tutor-option-single-item.item-variation-table .tutor-option-field-row:first-child::before {
   content: '';
   position: absolute;
-  inset: -12px -16px -1px -16px;
+  inset: -13px -17px -1px -17px;
   z-index: -1;
   background: #eff1f7;
   border-radius: 6px 6px 0 0;
@@ -5253,7 +5168,7 @@ li.tutor-option-nav-item h4 {
 }
 
 .tutor-option-single-item.item-variation-table.table-col-3 .tutor-option-field-row {
-  grid-template-columns: 0.05fr 1fr 1fr;
+  grid-template-columns: 35px 1fr 1fr;
 }
 
 @media (min-width: 768px) {
@@ -6739,6 +6654,32 @@ li.tutor-option-nav-item h4 {
 
 .post-type-courses.taxonomy-course-category .tablenav.top, .post-type-courses.taxonomy-course-tag .tablenav.top {
   margin-top: 20px;
+}
+
+#wpbody-content {
+  margin-top: 70px;
+}
+
+.notice,
+div.error,
+div.updated {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.notice.is-dismissible {
+  margin-bottom: 10px;
+}
+
+#wpfooter {
+  background: #f0f0f1;
+  z-index: 10;
+  -webkit-box-shadow: 0 -1px 0px 0 #dcdbdc;
+          box-shadow: 0 -1px 0px 0 #dcdbdc;
+}
+
+#wpwrap {
+  overflow-y: hidden;
 }
 
 .monetization-fees.is-disable .tutor-option-field-row:nth-child(2), .monetization-fees.is-disable .tutor-option-field-row:nth-child(3) {

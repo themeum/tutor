@@ -380,7 +380,10 @@ class Assets {
 
 		if(is_admin()) {
 			if(isset($_GET['page']) && $_GET['page']=='tutor_settings') {
-				$to_add[] = 'tutor-screen-backend-settings';
+				$to_add[] = 'tutor-screen-backend-settings ';
+			}
+			if(isset($_GET['page'])) {
+				$to_add[] = 'tutor-backend-'.$_GET['page'];
 			}
 		}
 
