@@ -31,6 +31,11 @@ $course_id = tutor_utils()->get_course_id_by_subcontent($course_content_id);
 // Get total content count
 $course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true);
 
+function tutor_assignment_convert_seconds($seconds){
+	$dt1 = new DateTime("@0");
+	$dt2 = new DateTime("@$seconds");
+	return $dt1->diff($dt2)->format('%a Days, %h Hours');
+}
 ?>
 
 <?php do_action('tutor_assignment/single/before/content'); ?>
@@ -148,17 +153,13 @@ $course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true)
 					<span class="text-medium-body color-text-primary">
 						<?php
 							if ($time_duration['value'] != 0) {
-								if ($now > $remaining_time and $is_submitted == false) { ?>
-						<?php _e('Expired', 'tutor'); ?>
-						<?php
+								if ($now > $remaining_time and $is_submitted == false) { 
+									_e('Expired', 'tutor');
 								} else {
-									function convert_seconds($seconds){
-										$dt1 = new DateTime("@0");
-										$dt2 = new DateTime("@$seconds");
-										return $dt1->diff($dt2)->format('%a Days, %h Hours');
-									}
-									echo convert_seconds($remaining)."\n";
+									echo tutor_assignment_convert_seconds($remaining);
 								}
+							} else {
+								_e('N\\A', 'tutor'); 
 							}
 						?>
 					</span>
@@ -277,10 +278,18 @@ $course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true)
 									</div>
 									<div class="tutor-input-type-size">
 										<p class="text-regular-small color-text-subsued">
-											<?php _e('File Support: ', 'tutor'); ?><span class="color-text-primary"><?php _e('jpg, .jpeg,. gif, or .png.', 'tutor'); ?></span><?php _e(' no text on the image.', 'tutor'); ?>
+											<?php _e('File Support: ', 'tutor'); ?>
+											<span class="color-text-primary">
+												<?php _e('jpg, .jpeg,. gif, or .png.', 'tutor'); ?>
+											</span>
+											<?php _e(' no text on the image.', 'tutor'); ?>
 										</p>
 										<p class="text-regular-small color-text-subsued tutor-mt-7">
-											<?php _e('Total File Size: Max', 'tutor'); ?> <span class="color-text-primary"><?php echo $file_upload_limit; ?><?php _e('MB', 'tutor'); ?></span>
+											<?php _e('Total File Size: Max', 'tutor'); ?> 
+											<span class="color-text-primary">
+												<?php echo $file_upload_limit; ?>
+												<?php _e('MB', 'tutor'); ?>
+											</span>
 										</p>
 									</div>
 								</div>
