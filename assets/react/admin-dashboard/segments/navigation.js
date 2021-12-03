@@ -42,7 +42,7 @@ navTabLists.forEach((list) => {
             }
 
             //enable if tinymce content changed
-            if (null !== tinymce) {
+            if (null !== tinymce && typeof tinymce !== 'undefined') {
                 tinymce.activeEditor.on("change", function (e) {
                     document.getElementById('save_tutor_option').disabled = false;
                 });
