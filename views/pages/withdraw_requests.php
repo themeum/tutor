@@ -76,7 +76,6 @@ $filters = array(
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
 ?>
-
 <div class="wrap">
 	<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-50">
 		<div class="tutor-ui-table-wrapper">
@@ -131,9 +130,9 @@ $filters = array(
 								$details   = unserialize( $list->method_data );
 								$alert     = ( 'pending' == $list->status ? 'warning' : ( 'rejected' === $list->status ? 'danger' : ( 'approved' === $list->status ? 'success' : 'default' ) ) );
 								$data_name = isset( $details['account_name']['value'] ) ? $details['account_name']['value'] : $user_data->display_name;
-								if ( ! $details ) {
-									continue;
-								}
+							if ( ! $details ) {
+								continue;
+							}
 							?>
 						<tr>
 							<td data-th="<?php esc_html_e( 'Request Date', 'tutor' ); ?>">
@@ -144,24 +143,24 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Request By', 'tutor' ); ?>">
 								<div class="td-avatar">
-									<?php echo get_avatar( $user_data->ID, 50 ); ?>					
+									<?php echo get_avatar( $user_data->ID, 50 ); ?>
 									<div class="td-avatar-detials">
 											<div class="td-avatar-name d-flex align-items-center">
 												<span class="color-text-primary text-medium-body">
-													<?php echo esc_html( $user_data->display_name ); ?>												
+													<?php echo esc_html( $user_data->display_name ); ?>
 												</span>
 												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID ) ); ?>" class="tutor-ml-10 d-flex" target="_blank">
 													<span class="ttr-detail-link-filled color-text-primary" style="font-size:18px;"></span>
 												</a>
 											</div>
 											<span class="color-text-title text-regular-small">
-												<?php echo esc_html( $user_data->user_email ); ?>		
+												<?php echo esc_html( $user_data->user_email ); ?>
 											</span>
 									</div>
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Withdraw Method', 'tutor' ); ?>">
-								<div class="text-medium-caption color-text-primary" style=""> 
+								<div class="text-medium-caption color-text-primary" style="">
 									<?php echo esc_html( $details['withdraw_method_name'] ); ?>
 								</div>
 							</td>
@@ -195,15 +194,15 @@ $filters = array(
 												</div>
 											</div>
 										</li>
-										<li>        
+										<li>
 											<span class="text-regular-small color-text-hints">
 												<?php esc_html_e( 'Bank Name:', 'tutor' ); ?>
 											</span>
 											<span class="text-medium-small color-text-primary">
 												<?php echo esc_html( $details['bank_name']['value'] ); ?>
-											</span>										
+											</span>
 										</li>
-										<li>                    
+										<li>
 											<span class="text-regular-small color-text-hints">
 												<?php esc_html_e( 'IBAN:', 'tutor' ); ?>
 											</span>
@@ -219,16 +218,16 @@ $filters = array(
 														<span class="icon ttr-copy-filled"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
-												</div>		
-											</div>						
+												</div>
+											</div>
 										</li>
-										<li>        
+										<li>
 											<span class="text-regular-small color-text-hints">
 												<?php esc_html_e( 'BIC/SWIFT:', 'tutor' ); ?>
 											</span>
 											<span class="text-medium-small color-text-primary">
 												<?php echo esc_html( $details['swift']['value'] ); ?>
-											</span>	
+											</span>
 										</li>
 									</ul>
 								<?php elseif ( 'echeck_withdraw' === $details['withdraw_method_key'] ) : ?>
@@ -253,7 +252,7 @@ $filters = array(
 								<?php endif; ?>
 							</td>
 							<td data-th="<?php esc_html_e( 'Amount', 'tutor' ); ?>">
-								<div class="text-medium-caption color-text-primary"> 
+								<div class="text-medium-caption color-text-primary">
 									<?php echo wp_kses_post( tutor_utils()->tutor_price( $list->amount ) ); ?>
 								</div>
 							</td>
@@ -463,5 +462,21 @@ $filters = array(
 		</div>
 	</div>
 	<!-- withdraw approve modal end-->
-
 </div>
+<script>
+	let urlRaw = window.location;
+	var url = new URL(urlRaw);
+	var action = url.searchParams.get("action");
+	var withdraw_id = url.searchParams.get("withdraw_id");
+
+	document.addEventListener('readystatechange', (event) => {
+		if (event.target.readyState === 'complete') {
+			const approveTarget = document.querySelectorAll(`[data-tutor-modal-target="tutor-admin-withdraw-${action}"]`);
+			approveTarget.forEach((item)=>{
+			if(item.dataset.id == withdraw_id){
+				item.click();
+			}
+		})
+		}
+	});
+</script>

@@ -99,7 +99,7 @@ class Withdraw_Requests_List {
 			$wpdb->prepare(
 				"SELECT count(*) FROM {$withdraw_table} AS withdraw
 				INNER JOIN {$user_table} AS user
-					ON user.ID = withdraw.user_id 
+					ON user.ID = withdraw.user_id
 				WHERE  withdraw.status = %s
 					{$date_query}
 					AND ( user.user_login LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.display_name LIKE %s )
@@ -168,6 +168,9 @@ class Withdraw_Requests_List {
 					'reject_comment' => sanitize_text_field( $reject_comment ),
 				);
 				$data['method_data'] = maybe_serialize( $details );
+
+				// trigger email after rejecting withdraw
+				do_action( 'tutor_after_rejected_withdraw', $withdraw_id );
 			}
 		}
 

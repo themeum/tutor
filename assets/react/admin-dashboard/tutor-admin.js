@@ -26,7 +26,7 @@ jQuery(document).ready(function ($) {
 
   const { __, _x, _n, _nx } = wp.i18n;
   const search_student_placeholder = __("Search students", "tutor");
-  /**
+  /**i
    * Color Picker
    * @since v.1.2.21
    */
@@ -239,10 +239,10 @@ jQuery(document).ready(function ($) {
         let message = '';
         if (action == 'approve') {
           message = 'Instructor approved!';
-        } 
+        }
         if (action == 'blocked') {
           message = 'Instructor blocked!';
-        } 
+        }
         tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
         location.reload();
       } else {

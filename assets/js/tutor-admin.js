@@ -2014,7 +2014,7 @@ navTabLists.forEach(function (list) {
       } //enable if tinymce content changed
 
 
-      if (null !== tinymce) {
+      if (null !== tinymce && typeof tinymce !== 'undefined') {
         tinymce.activeEditor.on("change", function (e) {
           document.getElementById('save_tutor_option').disabled = false;
         });
@@ -31535,7 +31535,7 @@ jQuery(document).ready(function ($) {
       _nx = _wp$i18n._nx;
 
   var search_student_placeholder = __("Search students", "tutor");
-  /**
+  /**i
    * Color Picker
    * @since v.1.2.21
    */
