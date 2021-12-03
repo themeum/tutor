@@ -45,6 +45,7 @@ $variations: (
 	justify-content: space-between;
 
 	select {
+		@extend .text-medium-small;
 		display: block;
 		width: 100%;
 		margin: 0;
@@ -54,7 +55,7 @@ $variations: (
 		-webkit-appearance: none;
 		-moz-appearance: none;
 		appearance: none;
-		height: 24px;
+		min-height: 24px !important;
 		position: relative;
 		z-index: 1;
 		background: transparent;
