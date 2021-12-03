@@ -55,8 +55,8 @@ $typographyUtils: (
 
 @each $classSuffix, $fWeight, $fSize, $lHeight in $typographyUtils {
 	.text-#{$classSuffix} {
-		font-weight: #{$fWeight} !important;
-		font-size: #{$fSize} !important;
+		font-weight: #{$fWeight};
+		font-size: #{$fSize};
 		line-height: #{$lHeight};
 	}
 }
@@ -72,3 +72,4 @@ $iconSizes: 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30, 32, 34, 35, 36, 
 		font-size: #{$fSize}px;
 	}
 }
+

@@ -23,34 +23,71 @@ if ($assignment_comment != false) {
 	$submitted = $assignment_comment->comment_approved;
 	$submitted == 'submitted' ? $is_submitted = true : '';
 }
+
+// Get the ID of this content and the corresponding course
+$course_content_id = get_the_ID();
+$course_id = tutor_utils()->get_course_id_by_subcontent($course_content_id);
+
+// Get total content count
+$course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true);
+
+function tutor_assignment_convert_seconds($seconds){
+	$dt1 = new DateTime("@0");
+	$dt2 = new DateTime("@$seconds");
+	return $dt1->diff($dt2)->format('%a Days, %h Hours');
+}
 ?>
 
 <?php do_action('tutor_assignment/single/before/content'); ?>
 
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
-    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
-        <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-            <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
-        </a>
+    <div class="tutor-topbar-left-item d-flex"> 
+        <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
+            <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
+                <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
+            </a>
+        </div>
+        <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
+			<span class="ttr-assignment-filled color-text-white tutor-mr-5"></span>
+			<span class="text-regular-caption color-design-white">
+				<?php 
+					esc_html_e( 'Assignment: ', 'tutor' );
+					the_title();
+				?>
+			</span>
+        </div>
     </div>
-    <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-		<span class="ttr-assignment-filled color-text-white tutor-mr-5"></span>
-		<span class="text-regular-caption color-design-white">
-			<?php 
-				esc_html_e( 'Assignment: ', 'tutor' );
-				the_title();
-			?>
-		</span>
+    <div class="tutor-topbar-right-item d-flex align-items-center">
+        <div class="tutor-topbar-assignment-details d-flex align-items-center">
+            <?php
+                do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
+            ?>
+            <div class="text-regular-caption color-design-white">
+                <span class="tutor-progress-content color-primary-60">
+                    <?php _e('Your Progress:', 'tutor'); ?>
+                </span>
+                <span class="text-bold-caption">
+                    <?php echo $course_stats['completed_count']; ?>
+                </span> 
+                <?php _e('of ', 'tutor'); ?>
+                <span class="text-bold-caption">
+                    <?php echo $course_stats['total_count']; ?>
+                </span>
+                (<?php echo $course_stats['completed_percent'] .'%'; ?>)
+            </div>
+            <?php
+                do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
+            ?>
+        </div>
+        <div class="tutor-topbar-cross-icon flex-center">
+            <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
+            <a href="<?php echo get_the_permalink($course_id); ?>">
+                <span class="ttr-line-cross-line color-text-white flex-center"></span>
+            </a>
+        </div>
     </div>
-	
-    <div class="tutor-topbar-cross-icon flex-center">
-        <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
-        <a href="<?php echo get_the_permalink($course_id); ?>">
-            <span class="ttr-line-cross-line color-text-white flex-center"></span>
-        </a>
-    </div>
-
 </div>
+
 <div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
     <div class="tutor-mobile-top-nav d-grid">
         <a href="<?php echo get_the_permalink($previous_id); ?>">
@@ -116,17 +153,13 @@ if ($assignment_comment != false) {
 					<span class="text-medium-body color-text-primary">
 						<?php
 							if ($time_duration['value'] != 0) {
-								if ($now > $remaining_time and $is_submitted == false) { ?>
-						<?php _e('Expired', 'tutor'); ?>
-						<?php
+								if ($now > $remaining_time and $is_submitted == false) { 
+									_e('Expired', 'tutor');
 								} else {
-									function convert_seconds($seconds){
-										$dt1 = new DateTime("@0");
-										$dt2 = new DateTime("@$seconds");
-										return $dt1->diff($dt2)->format('%a Days, %h Hours');
-									}
-									echo convert_seconds($remaining)."\n";
+									echo tutor_assignment_convert_seconds($remaining);
 								}
+							} else {
+								_e('N\\A', 'tutor'); 
 							}
 						?>
 					</span>
@@ -245,10 +278,18 @@ if ($assignment_comment != false) {
 									</div>
 									<div class="tutor-input-type-size">
 										<p class="text-regular-small color-text-subsued">
-											<?php _e('File Support: ', 'tutor'); ?><span class="color-text-primary"><?php _e('jpg, .jpeg,. gif, or .png.', 'tutor'); ?></span><?php _e(' no text on the image.', 'tutor'); ?>
+											<?php _e('File Support: ', 'tutor'); ?>
+											<span class="color-text-primary">
+												<?php _e('jpg, .jpeg,. gif, or .png.', 'tutor'); ?>
+											</span>
+											<?php _e(' no text on the image.', 'tutor'); ?>
 										</p>
 										<p class="text-regular-small color-text-subsued tutor-mt-7">
-											<?php _e('Total File Size: Max', 'tutor'); ?> <span class="color-text-primary"><?php echo $file_upload_limit; ?><?php _e('MB', 'tutor'); ?></span>
+											<?php _e('Total File Size: Max', 'tutor'); ?> 
+											<span class="color-text-primary">
+												<?php echo $file_upload_limit; ?>
+												<?php _e('MB', 'tutor'); ?>
+											</span>
 										</p>
 									</div>
 								</div>
@@ -258,7 +299,9 @@ if ($assignment_comment != false) {
 							</div>
 						<?php } ?>
 						<div class="tutor-assignment-submit-btn tutor-mt-60">
-							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg" id="tutor_assignment_submit_btn">Submit Assignment</button>
+							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg" id="tutor_assignment_submit_btn">
+								<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
+							</button>
 						</div>
 					</div>
 				</form>
@@ -497,19 +540,19 @@ if ($assignment_comment != false) {
 			<?php
 			} else { ?>
 				<div class="tutor-assignment-footer tutor-pt-30 tutor-pt-sm-45">
-					<form action="" method="post" id="tutor_assignment_start_form">
+					<div class="tutor-assignment-footer-btn tutor-btn-group d-flex justify-content-between">
+						<form action="" method="post" id="tutor_assignment_start_form">
 						<?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
 						<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
 						<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
-						<div class="tutor-assignment-footer-btn tutor-btn-group d-flex justify-content-between">
 							<button type="submit" class="tutor-btn tutor-btn-primary <?php if ($time_duration['value'] != 0) { if ($now > $remaining_time) {echo "tutor-btn-disable tutor-no-hover"; } } ?> tutor-btn-lg" id="tutor_assignment_start_btn" <?php if ($time_duration['value'] != 0) { if ($now > $remaining_time) {echo "disabled"; } } ?>>
 								<?php _e('Start Assignment Submit', 'tutor'); ?>
 							</button>
-							<button class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-10">
-								<?php _e('Sorry I don’t Understand', 'tutor'); ?>
-							</button>
-						</div>
-					</form>
+						</form>
+						<button class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-10">
+							<?php _e('Sorry I don’t Understand', 'tutor'); ?>
+						</button>
+					</div>
                 </div>
 		<?php
 			}

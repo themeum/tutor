@@ -1,21 +1,28 @@
 <div id="tutor-quiz-attempt-questions-wrap" data-question-layout-view="<?php echo $question_layout_view; ?>">
 
     <?php
-    if ($question_layout_view === 'question_pagination'){
-        $question_i = 0;
-        ?>
-        <div class="tutor-quiz-questions-pagination">
-            <ul>
-                <?php
-                foreach ($questions as $question) {
-                    $question_i++;
-                    echo "<li><a href='#quiz-attempt-single-question-{$question->question_id}' class='tutor-quiz-question-paginate-item'>{$question_i}</a> </li>";
-                }
-                ?>
-            </ul>
-        </div>
-        <?php
-    }
+        $choice_contexts = array(
+            'true_false' => 'radio',
+            'single_choice' => 'radio',
+            'multiple_choice' => 'checkbox'
+        );
+        $show_previous_button = (bool)tutor_utils()->get_option('quiz_previous_button_enabled', true);
+
+        if ($question_layout_view === 'question_pagination'){
+            $question_i = 0;
+            ?>
+            <div class="tutor-quiz-questions-pagination">
+                <ul>
+                    <?php
+                    foreach ($questions as $question) {
+                        $question_i++;
+                        echo "<li><a href='#quiz-attempt-single-question-{$question->question_id}' class='tutor-quiz-question-paginate-item'>{$question_i}</a> </li>";
+                    }
+                    ?>
+                </ul>
+            </div>
+            <?php
+        }
     ?>
 
     <form id="tutor-answering-quiz" method="post">
@@ -73,84 +80,71 @@
                 </div>
                 <!-- Quiz Answer -->
                 <?php
-
-                    $answer = '';
-
-                    // True False
-                    if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
-                        include 'true-false.php';
-                    }
-
-                    // Single Choice Image
-                    if ( $question_type === 'single_choice' && $answer->answer_view_format == 'image' ||  $answer->answer_view_format === 'text_image' ) {
-                        include 'true-false-image.php';
-                    }
-
-                    // Multiple Choice
-                    if ($question_type === 'multiple_choice'){
-                        include 'multiple-choice.php';
-                    }
-
-                    // Multiple Choice Image
-                    if ($question_type === 'multiple_choice' && $answer->answer_view_format == 'image'){
-                        include 'multiple-choice-image.php';
-                    }
-
+                    if(array_key_exists($question_type, $choice_contexts)) {
+                        // Only checkbox and radio type content will be loaded here
+                        $choice_type = $choice_contexts[$question_type];
+                        require 'choice-box.php';
+                    } 
+                    
                     // Fill In The Blank
                     if ($question_type === 'fill_in_the_blank'){
-                        include 'fill-in-the-blank.php';
+                        require 'fill-in-the-blank.php';
                     }
 
                     // Ordering
                     if ($question_type === 'ordering'){
-                        include 'ordering.php';
+                        require 'ordering.php';
                     }
                     
 
                     // Matching
                     if ($question_type === 'matching'){
-                        include 'matching.php';
+                        require 'matching.php';
                     }
 
                     // Image Matching
                     if ($question_type === 'image_matching'){
-                        include 'image-matching.php';
+                        require 'image-matching.php';
                     }
 
                     // Image Answer
                     if ($question_type === 'image_answering'){
-                        include 'image-answer.php';
+                        require 'image-answer.php';
                     }
 
                     // Open Ended
                     if ($question_type === 'open_ended'){
-                        include 'open-ended.php';
+                        require 'open-ended.php';
                     }
 
                     // Short Answer
                     if ($question_type === 'short_answer'){
-                        include 'short-answer.php';
+                        require 'short-answer.php';
                     }
-
                 ?>
                 
-
-                <?php
-                    if ($question_layout_view !== 'question_below_each_other'){
-                ?>
+                <?php if ($question_layout_view !== 'question_below_each_other'): ?>
                     <div class="tutor-quiz-btn-grp tutor-mt-60">
+                        <?php
+                            if($show_previous_button && $previous_question) {
+                                ?>
+                                <button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-quiz-answer-previous-btn">
+                                    <?php _e( 'Back', 'tutor' ); ?>
+                                </button>
+                                <?php
+                            }
+                        ?>
                         <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
                             <?php $next_question ? _e( 'Submit &amp; Next', 'tutor' ) : _e( 'Submit Quiz', 'tutor' ); ?>
                         </button>
-                        <button type="submit" class="tutor-ml-30 tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>" style="border:0px;padding:0px;">
-                            <?php _e( "Skip Quiz", "tutor" ); ?>
-                        </button>
+                        <?php if($next_question): ?>
+                            <span class="tutor-ml-30 tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>" style="border:0px;padding:0px;">
+                                <?php _e( "Skip Quiz", "tutor" ); ?>
+                            </span>
+                        <?php endif; ?>
                     </div>
-                <?php
-                    }
-                ?>
+                <?php endif; ?>
             </div>
-
             <?php
         }
 

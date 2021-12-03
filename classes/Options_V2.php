@@ -549,10 +549,10 @@ class Options_V2 {
 								'desc'    => __( 'The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor' ),
 							),
 							array(
-								'key'     => 'quiz_previous_button_disabled',
+								'key'     => 'quiz_previous_button_enabled',
 								'type'    => 'toggle_switch',
-								'label'   => __( 'Hide Quiz Previous Button', 'tutor' ),
-								'default' => 'off',
+								'label'   => __( 'Show Quiz Previous Button', 'tutor' ),
+								'default' => 'on',
 								'desc'    => __( 'Choose whether to show or hide previous button for single question.', 'tutor' ),
 							),
 							array(
