@@ -428,9 +428,13 @@ jQuery(document).ready(function($) {
     $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function(e) {
         e.preventDefault();
 
+        let counter_el = $('.tutor-quiz-question-counter>span:first-child');
+        let current_question = parseInt( $(this).closest('[data-question_index]').data('question_index') );
+
         // Show previous quiz if press previous button
         if ($(this).hasClass('tutor-quiz-answer-previous-btn')) {
             $(this).closest('.quiz-attempt-single-question').hide().prev().show();
+            counter_el.text(current_question-1);
             return;
         }
 
@@ -454,7 +458,6 @@ jQuery(document).ready(function($) {
         }
 
         var question_id = parseInt($that.closest('.quiz-attempt-single-question').attr('id').match(/\d+/)[0], 10);
-
         var next_question_id = $that.closest('.quiz-attempt-single-question').attr('data-next-question-id');
 
         if (next_question_id) {
@@ -489,6 +492,8 @@ jQuery(document).ready(function($) {
                     $('.tutor-quiz-questions-pagination a[href="' + next_question_id + '"]').addClass('active');
                 }
 
+                // Increase counter
+                counter_el.text(current_question+1);
             }
         }
     });

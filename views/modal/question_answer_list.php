@@ -62,15 +62,15 @@
                         }
                     ?>
 
-                    <span class="tutor-quiz-answer-edit">
-                        <?php if ( $question_type !== 'true_false' ): ?>
+                    <?php if ( $question_type !== 'true_false' ): ?>
+                        <span class="tutor-quiz-answer-edit">
                             <a href="javascript:;">
                                 <i class="tutor-icon-pencil"></i> 
                             </a>
-                        <?php endif; ?>
-                    </span>
+                        </span>
+                    <?php endif; ?>
 
-                    <span class="tutor-quiz-answer-sort-icon">
+                    <span class="tutor-quiz-answer-sort-icon tutor-ml-10">
                         <i class="tutor-icon-menu-2"></i> 
                     </span>
                 </div>

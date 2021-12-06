@@ -57,6 +57,9 @@ a.back-to-quiz-questions-btn {
         
         .lead-option {
             @include valueWithPrefix(flex, 1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             
             .question-type-pro {
                 display: none;
