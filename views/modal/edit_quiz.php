@@ -177,6 +177,8 @@
         </div>
     </div>
 
+    <?php do_action('tutor_quiz_edit_modal_settings_tab_after_max_allowed_questions', $quiz); ?>
+
     <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer tutor-mb-30"">
         <!-- Header -->
         <div class="tutor-bs-row tutor-bs-align-items-center tutor-quiz-advance-header tutor-bs-g-0">
@@ -251,6 +253,6 @@
         </div>
     </div>
 
-    <?php do_action('tutor_quiz_edit_modal_settings_tab_after', $quiz) ?>
+    <?php do_action('tutor_quiz_edit_modal_settings_tab_after', $quiz); ?>
 </div>
 

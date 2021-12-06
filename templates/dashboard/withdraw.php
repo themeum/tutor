@@ -44,7 +44,7 @@ else if(function_exists('edd_currency_symbol')){
 
     <div class="tutor-component-three-col-action">
         <img src="<?php echo esc_url($image_base); ?>wallet.svg" />
-        
+
         <div>
             <small><?php esc_html_e('Current Balance', 'tutor'); ?></small>
             <p>
@@ -59,11 +59,11 @@ else if(function_exists('edd_currency_symbol')){
         </div>
 
         <?php
-            if ($is_balance_sufficient && $withdraw_method_name) { 
+            if ($is_balance_sufficient && $withdraw_method_name) {
                 ?>
                 <button class="tutor-btn open-withdraw-form-btn">
                     <?php esc_html_e('Withdrawal Request', 'tutor'); ?>
-                </button> 
+                </button>
                 <?php
             }
         ?>
@@ -131,7 +131,7 @@ else if(function_exists('edd_currency_symbol')){
                          * set min value for withdraw input field as per settings
                          * field req step .01
                          */
-                     
+
                     ?>
                         <form id="tutor-earning-withdraw-form" action="" method="post">
                             <?php wp_nonce_field(tutor()->nonce_action, tutor()->nonce); ?>
@@ -217,12 +217,12 @@ else if(function_exists('edd_currency_symbol')){
                                 $method_title = '';
 
                                 switch($method_key) {
-                                    case 'bank_transfer_withdraw': 
-                                        $method_title = $method_data['account_number']['value']; 
+                                    case 'bank_transfer_withdraw':
+                                        $method_title = $method_data['account_number']['value'];
                                         $method_title = substr_replace($method_title, '****', 2, strlen($method_title)-4);
                                         break;
-                                    case 'paypal_withdraw': 
-                                        $method_title = $method_data['paypal_email']['value']; 
+                                    case 'paypal_withdraw':
+                                        $method_title = $method_data['paypal_email']['value'];
                                         $email_base = substr($method_title, 0, strpos($method_title, '@'));
                                         $method_title = substr_replace($email_base, '****', 2, strlen($email_base)-3) . substr($method_title, strpos($method_title, '@'));
                                         break;
@@ -249,7 +249,7 @@ else if(function_exists('edd_currency_symbol')){
                             </td>
                             <td>
                                 <span class="inline-image-text is-inline-block">
-                                    <span class="tutor-badge-label 
+                                    <span class="tutor-badge-label
                                     <?php if($withdraw_history->status == 'approved'){ echo 'label-success'; } ?>
                                     <?php if($withdraw_history->status == 'pending'){ echo 'label-warning'; } ?>
                                     <?php if($withdraw_history->status == 'rejected'){ echo 'label-danger'; } ?>">
