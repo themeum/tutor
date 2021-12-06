@@ -3,15 +3,19 @@
         <?php
             $total_questions = tutor_utils()->total_questions_for_student_by_quiz(get_the_ID());
 
-            if($total_questions){
+            if($total_questions) {
+                ?>
+                <div class="quiz-qno d-flex">
+                    <span class="text-regular-body color-text-hints tutor-mr-10">
+                        <?php _e('Questions No', 'tutor'); ?>:
+                    </span>
+                    <span class="text-bold-body color-text-title tutor-quiz-question-counter" data-total_questions="<?php echo $total_questions; ?>">
+                        <?php echo $total_questions; ?>
+                    </span>
+                </div>
+                <?php 
+            }
         ?>
-        <div class="quiz-qno d-flex">
-            <span class="text-regular-body color-text-hints tutor-mr-10"><?php _e('Questions No', 'tutor'); ?>:</span>
-            <span class="text-bold-body color-text-title">
-                <?php echo $total_questions; ?>
-            </span>
-        </div>
-        <?php } ?>
         <div class="quiz-total-attempt d-flex d-xs-none">
             <span class="text-regular-body color-text-hints tutor-mr-10">Total <?php _e('Attempted', 'tutor'); ?>:</span>
             <span class="text-bold-body color-text-title">
