@@ -23500,6 +23500,8 @@ select.tutor-form-select:focus {
 
 .tutor-btn {
   border-radius: 6px;
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover).tutor-btn-wordpress:hover {
@@ -24246,66 +24248,82 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   width: 100%;
 }
 
-.tutor-ui-table-data-td-target [data-td-target] {
+table.tutor-ui-table-data-td-target [data-td-target] {
   cursor: pointer;
 }
 
 @media (min-width: 1200px) {
-  .tutor-ui-table-data-td-target [data-td-target] {
+  table.tutor-ui-table-data-td-target [data-td-target] {
     padding: 20px !important;
   }
 }
 
-.tutor-ui-table-data-td-target [data-td-target] > * {
+table.tutor-ui-table-data-td-target [data-td-target] > * {
   pointer-events: none;
 }
 
-.tutor-ui-table-data-td-target .is-active {
+table.tutor-ui-table-data-td-target .is-active {
   -webkit-box-shadow: -1px 0 0 #e7e8ef;
           box-shadow: -1px 0 0 #e7e8ef;
   background: #f4f6f9 !important;
 }
 
-.tutor-ui-table-data-td-target .is-active [class^='ttr-']:before {
+table.tutor-ui-table-data-td-target .is-active [class^='ttr-']:before {
   content: '\e941';
 }
 
-.tutor-ui-table-data-td-target td.data-td-content {
+table.tutor-ui-table-data-td-target td.data-td-content {
   padding: unset !important;
   border-top-color: transparent;
   background-color: #f4f6f9 !important;
 }
 
 @media (max-width: 1199.98px) {
-  .tutor-ui-table-data-td-target td.data-td-content {
+  table.tutor-ui-table-data-td-target td.data-td-content {
     border: none !important;
   }
-  .tutor-ui-table-data-td-target td.data-td-content.is-active {
+  table.tutor-ui-table-data-td-target td.data-td-content.is-active {
     -webkit-box-shadow: 0 0 0 1px #cdcfd5;
             box-shadow: 0 0 0 1px #cdcfd5;
   }
 }
 
-.tutor-ui-table-data-td-target td.data-td-content > * {
+table.tutor-ui-table-data-td-target td.data-td-content > * {
   display: none;
 }
 
-.tutor-ui-table-data-td-target td.data-td-content.is-active {
+table.tutor-ui-table-data-td-target td.data-td-content.is-active {
   padding: 20px 30px 30px 30px !important;
   border-top-color: #cdcfd5;
 }
 
-.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
+table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   display: block;
 }
 
 @media (min-width: 1200px) {
-  .tutor-ui-table-data-td-target td.data-td-content.is-active {
+  table.tutor-ui-table-data-td-target td.data-td-content.is-active {
     position: relative;
     border-top-color: transparent !important;
     -webkit-box-shadow: 0 2px 0 -1px #f4f6f9, 0 -2px 0 -1px #f4f6f9;
             box-shadow: 0 2px 0 -1px #f4f6f9, 0 -2px 0 -1px #f4f6f9;
   }
+}
+
+table.tutor-ui-table.table-dashboard-course-list td:nth-child(1), table.tutor-ui-table.table-dashboard-course-list td:nth-child(2) {
+  vertical-align: top;
+}
+
+table.tutor-ui-table.table-dashboard-course-list .td-checkbox input[type='checkbox'] {
+  margin-top: 7px;
+}
+
+table.tutor-ui-table.tutor-gradebooks-lists td {
+  border-color: #e0e2ea;
+}
+
+table.tutor-ui-table.tutor-gradebooks-lists tbody tr:first-child td {
+  border-top-color: #cdcfd5;
 }
 
 .tutor-thumbnail-uploader {

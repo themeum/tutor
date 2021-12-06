@@ -655,7 +655,7 @@ table.tutor-ui-table-no-border {
 }
 
 // Table toggle collapse td/tr
-.tutor-ui-table-data-td-target {
+table.tutor-ui-table-data-td-target {
 	[data-td-target] {
 		cursor: pointer;
 		@include breakpoint-min(desktop-lg) {
@@ -702,6 +702,37 @@ table.tutor-ui-table-no-border {
 				position: relative;
 				border-top-color: transparent !important;
 				box-shadow: 0 2px 0 -1px $black-03, 0 -2px 0 -1px $black-03;
+			}
+		}
+	}
+}
+
+// Table Custom Styles
+table.tutor-ui-table {
+	&.table-dashboard-course-list {
+		td {
+			&:nth-child(1),
+			&:nth-child(2) {
+				vertical-align: top;
+			}
+		}
+
+		.td-checkbox {
+			input[type='checkbox'] {
+				margin-top: 7px;
+			}
+		}
+	}
+
+	&.tutor-gradebooks-lists {
+		td {
+			border-color: #e0e2ea;
+		}
+		tbody {
+			tr:first-child {
+				td {
+					border-top-color: #cdcfd5;
+				}
 			}
 		}
 	}
