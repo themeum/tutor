@@ -129,7 +129,7 @@ class Withdraw_Requests_List {
 		if ( '' === $withdraw_id ) {
 			return false;
 		} else {
-			$update         = self::update( $status, $withdraw_id, $reject_type, $reject_comment );
+			$update = self::update( $status, $withdraw_id, $reject_type, $reject_comment );
 			return $update ? wp_send_json( true ) : false;
 		}
 		exit;
@@ -161,9 +161,9 @@ class Withdraw_Requests_List {
 		if ( 'rejected' === $status ) {
 			$withdraw = self::get_withdraw_by_id( $withdraw_id );
 			if ( $withdraw ) {
-				$details            = unserialize( $withdraw->method_data );
+				$details = unserialize( $withdraw->method_data );
 
-				$details['rejects'] = array(
+				$details['rejects']  = array(
 					'reject_type'    => sanitize_text_field( $reject_type ),
 					'reject_comment' => sanitize_text_field( $reject_comment ),
 				);
@@ -172,6 +172,8 @@ class Withdraw_Requests_List {
 				// trigger email after rejecting withdraw
 				do_action( 'tutor_after_rejected_withdraw', $withdraw_id );
 			}
+		} else {
+			do_action( 'tutor_after_approved_withdraw', $withdraw_id );
 		}
 
 		// Update.
