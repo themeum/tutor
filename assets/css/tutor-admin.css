@@ -6657,10 +6657,6 @@ li.tutor-option-nav-item h4 {
   margin-top: 20px;
 }
 
-#wpbody-content {
-  margin-top: 70px;
-}
-
 .notice,
 div.error,
 div.updated {
@@ -6672,15 +6668,26 @@ div.updated {
   margin-bottom: 10px;
 }
 
-#wpfooter {
+body.tutor-backend-tutor_settings #wpbody-content,
+body.tutor-backend-tutor-tools #wpbody-content {
+  margin-top: 70px;
+}
+
+body.tutor-backend-tutor_settings #wpfooter,
+body.tutor-backend-tutor-tools #wpfooter {
   background: #f0f0f1;
   z-index: 10;
   -webkit-box-shadow: 0 -1px 0px 0 #dcdbdc;
           box-shadow: 0 -1px 0px 0 #dcdbdc;
 }
 
-#wpwrap {
+body.tutor-backend-tutor_settings #wpwrap,
+body.tutor-backend-tutor-tools #wpwrap {
   overflow-y: hidden;
+}
+
+body.tutor-backend-tutor-google-classroom #wpbody-content {
+  margin-top: unset;
 }
 
 .monetization-fees.is-disable .tutor-option-field-row:nth-child(2), .monetization-fees.is-disable .tutor-option-field-row:nth-child(3) {
