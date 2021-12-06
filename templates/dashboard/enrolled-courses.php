@@ -49,10 +49,9 @@
         </ul>
     </div>
 
-    <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
-        <?php
-            // Loop through all the courses
-            if ( $courses_list && $courses_list->have_posts() ) {
+    <?php if ( $courses_list && $courses_list->have_posts() ): ?>
+        <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
+            <?php
                 while ( $courses_list->have_posts() ) {
 
                     $courses_list->the_post();
@@ -87,16 +86,9 @@
                 }
                 
                 wp_reset_postdata();
-
-            } else {
-                ?>
-                    <div class='tutor-mycourse-wrap'>
-                        <div class='tutor-mycourse-content'>
-                            <?php esc_html_e( 'You haven\'t purchased any course', 'tutor' ); ?>
-                        </div>
-                    </div>
-                <?php
-            }
-	    ?>
-    </div>
+	        ?>
+        </div>
+    <?php else: ?>
+        <?php tutor_utils()->tutor_empty_state(); ?>
+    <?php endif; ?>
 </div>
