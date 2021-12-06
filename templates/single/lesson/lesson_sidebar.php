@@ -81,13 +81,15 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 									</h3>
 								</div>
 								<div class="tutor-topics-title-right align-self-end">
-									<p class="tutor-topic-subtitle text-regular-caption color-text-subsued">3/5</p>
+									<p class="tutor-topic-subtitle text-regular-caption color-text-subsued">
+										<!-- 3/5 -->
+									</p>
 								</div>
 							</div>
 							<?php
 								do_action('tutor/lesson_list/before/topic', $topic_id);
-
 								$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID(), -1);
+								
 								if ($lessons->have_posts()){
 									while ($lessons->have_posts()){
 										$lessons->the_post();

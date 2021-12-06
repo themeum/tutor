@@ -57,7 +57,10 @@
 
     <?php
         include tutor()->path.'views/metabox/video-metabox.php';
+        do_action( 'tutor_lesson_edit_modal_after_video' );
+        
         include tutor()->path.'views/metabox/lesson-attachments-metabox.php';
+        do_action( 'tutor_lesson_edit_modal_after_attachment' );
     ?>
 
     <?php do_action('tutor_lesson_edit_modal_form_after', $post); ?>
