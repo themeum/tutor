@@ -53,12 +53,13 @@ if(tutor_utils()->get_option('enable_profile_completion')) {
                             foreach ($profile_completion as $key => $data) {
                                 $is_set = $data['is_set']; // Whether the step is done or not
                                 ?>
-                                <li>
-                                    <?php if($is_set){ ?>
-                                    <span class="icon ttr-tick-circle-outline-filled not-empty"></span>
-                                    <?php } else { ?>
-                                    <span class="ttr-cross-circle-outline-filled empty"></span>
-                                    <?php } ?>
+                                <li class="tutor-bs-d-flex tutor-bs-align-items-center">
+                                    <?php if($is_set): ?>
+                                        <span class="icon ttr-tick-circle-outline-filled not-empty tutor-mr-5"></span>
+                                    <?php else: ?>
+                                        <span class="ttr-cross-circle-outline-filled empty tutor-mr-5"></span>
+                                    <?php endif; ?>
+
                                     <span>
                                         <?php echo $data['label_html']; ?>
                                     </span>
