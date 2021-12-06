@@ -28,7 +28,7 @@ $rating = tutor_utils()->get_course_rating();
 
 ?>
 <div class="tutor-course-topics-header">
-	<div class="tutor-course-topics-header-left tutor-mb-22">
+	<div class="tutor-course-topics-header-left tutor-mb-20">
 		<div class="text-primary text-medium-h6">
 			<span>
 				<?php
@@ -48,8 +48,14 @@ $rating = tutor_utils()->get_course_rating();
 			</div>
 			<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-bs-d-block' ); ?>
 			<div class="tutor-total-ratings-text text-regular-body text-subsued">
-				<span>
-					<?php echo esc_html( 'Total ' . count( $reviews ) . _n( ' Rating', ' Ratings', count( $reviews ), 'tutor' ), 'tutor' ); ?>
+				<span class="tutor-rating-text-part">
+					<?php esc_html_e( 'Total ', 'tutor' ); ?>
+				</span>
+				<span class="tutor-rating-count-part">
+					<?php echo esc_html( count( $reviews ) ); ?>
+				</span>
+				<span class="tutor-rating-text-part">
+					<?php echo esc_html( _n( ' Rating', ' Ratings', count( $reviews ), 'tutor' ) ); ?>
 				</span>
 			</div>
 		</div>
@@ -90,21 +96,23 @@ $rating = tutor_utils()->get_course_rating();
 				?>
 					<li>
 						<div>
-							<div class="tutor-avatar-circle tutor-50">
-								<img src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="student avatar" />
+							<div class="">
+								<img class="tutor-avatar-circle tutor-50" src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="student avatar" />
 							</div>
 							<div class="text-regular-body color-text-primary tutor-mt-16">
-								<a href="<?php echo $profile_url; ?>">
-								<?php echo $review->display_name; ?>
+								<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-reviewer-name">
+								<?php echo esc_html( $review->display_name ); ?>
 								</a>
 							</div>
 							<div class="text-regular-small color-text-hints">
-							<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
+								<span class="tutor-review-time">
+									<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
+								</span>
 							</div>
 						</div>
 						<div>
 						<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
-							<div class="text-regular-caption color-text-subsued tutor-mt-10">
+							<div class="text-regular-caption color-text-subsued tutor-mt-10 tutor-review-comment">
 							<?php echo htmlspecialchars( $review->comment_content ); ?>
 							</div>
 						</div>
