@@ -23817,6 +23817,7 @@ table.tutor-ui-table.tutor-no-thead tr:first-child td:last-child {
     background: rgba(239, 241, 247, 0.8);
     text-align: left;
     padding: 15px 10px;
+    white-space: nowrap;
   }
   table.tutor-ui-table td {
     padding: 17px 10px;
