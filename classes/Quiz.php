@@ -522,10 +522,10 @@ class Quiz {
 
 		global $wpdb;
 
-		$attempt_id = (int) sanitize_text_field($_GET['attempt_id']);
-		$context = sanitize_text_field($_GET['context']);
-		$attempt_answer_id = (int) sanitize_text_field($_GET['attempt_answer_id']);
-		$mark_as = sanitize_text_field($_GET['mark_as']);
+		$attempt_id = (int) sanitize_text_field($_POST['attempt_id']);
+		$context = sanitize_text_field($_POST['context']);
+		$attempt_answer_id = (int) sanitize_text_field($_POST['attempt_answer_id']);
+		$mark_as = sanitize_text_field($_POST['mark_as']);
 
 		if(!tutor_utils()->can_user_manage('attempt', $attempt_id) || !tutor_utils()->can_user_manage('attempt_answer', $attempt_answer_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -601,11 +601,11 @@ class Quiz {
 		tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
             'attempt_id' => $attempt_id,
             'user_id' => $student_id,
-			'context' => $context
+			'context' => $context,
+			'back_url' => isset($_POST['back_url']) ? esc_url( $_POST['back_url'] )  : null 
         ));
 		wp_send_json_success( array('html' => ob_get_clean()) );
 	}
-
 
 	/**
 	 * Save single quiz into database and send html response

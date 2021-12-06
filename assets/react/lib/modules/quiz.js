@@ -15,15 +15,17 @@ window.jQuery(document).ready($=>{
         var attempt_answer_id = $that.attr('data-attempt-answer-id');
         var mark_as = $that.attr('data-mark-as');
         var context = $that.attr('data-context');
+        var back_url = $that.attr('data-back-url');
 
         $.ajax({
             url: _tutorobject.ajaxurl,
-            type: 'GET',
+            type: 'POST',
             data: { 
                 attempt_id,
                 attempt_answer_id,
                 mark_as,
                 context,
+                back_url,
                 action: 'review_quiz_answer', 
             },
             beforeSend: function () {

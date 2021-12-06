@@ -3390,14 +3390,16 @@ window.jQuery(document).ready(function ($) {
     var attempt_answer_id = $that.attr('data-attempt-answer-id');
     var mark_as = $that.attr('data-mark-as');
     var context = $that.attr('data-context');
+    var back_url = $that.attr('data-back-url');
     $.ajax({
       url: _tutorobject.ajaxurl,
-      type: 'GET',
+      type: 'POST',
       data: {
         attempt_id: attempt_id,
         attempt_answer_id: attempt_answer_id,
         mark_as: mark_as,
         context: context,
+        back_url: back_url,
         action: 'review_quiz_answer'
       },
       beforeSend: function beforeSend() {

@@ -411,8 +411,8 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
             return $thumb_url;
         }
 
-        echo '<div class="tutor-course-thumbnail-bg" style="background-image:url('.$thumb_url.'); background-size:cover;">
-            <img src="'.$placeHolderUrl .'" style="visibility:hidden-"/>
+        echo '<div class="tutor-course-thumbnail-bg">
+            <img src="'.$thumb_url.'"/>
         </div>';
     }
 }

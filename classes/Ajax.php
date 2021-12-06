@@ -178,7 +178,7 @@ class Ajax{
 
 		$review_id = sanitize_text_field( tutor_utils()->array_get('review_id', $_POST) );
 
-		if(!tutor_utils()->can_user_manage('review', $review_id)) {
+		if(!tutor_utils()->can_user_manage('review', $review_id, get_current_user_id())) {
 			wp_send_json_error( array('message' => __('Permissioned Denied!', 'tutor')) );
 			exit;
 		}
