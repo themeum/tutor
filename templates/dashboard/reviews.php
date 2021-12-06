@@ -26,95 +26,96 @@ $reviews = tutor_utils()->get_reviews_by_instructor(get_current_user_id(), $offs
 $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
 ?>
     <div class="tutor-dashboard-content-inner">
-		<?php
-		if (current_user_can(tutor()->instructor_role)){
-			?>
+        <h3><?php _e('Reviews', 'tutor'); ?></h3>
+		<?php if (current_user_can(tutor()->instructor_role)): ?>
             <div class="tutor-dashboard-inline-links">
                 <ul>
-                    <li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> <?php _e('Received', 'tutor'); ?> (<?php echo $reviews->count; ?>)</a> </li>
+                    <li class="active">
+                        <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews'); ?>"> 
+                            <?php _e('Received', 'tutor'); ?> (<?php echo $reviews->count; ?>)
+                        </a> 
+                    </li>
                     <?php if($given_count): ?>
-                        <li> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/given-reviews'); ?>"> <?php _e('Given', 'tutor'); ?> (<?php echo $given_count; ?>)</a> </li>
+                        <li> 
+                            <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink('reviews/given-reviews'); ?>"> 
+                                <?php _e('Given', 'tutor'); ?> (<?php echo $given_count; ?>)
+                            </a> 
+                        </li>
                     <?php endif; ?>
                 </ul>
             </div>
-		<?php } ?>
+		<?php endif; ?>
 
-        <?php
-			if ($reviews->count){
-				?>
-                <table class="tutor-ui-table tutor-ui-table-responsive table-reviews">
-                    <thead>
+        <?php if ($reviews->count): ?>
+            <table class="tutor-ui-table tutor-ui-table-responsive table-reviews">
+                <thead>
+                    <tr>
+                        <th>
+                            <span class="text-regular-small color-text-subsued">
+                                <?php esc_html_e('Student', 'tutor'); ?>
+                            </span>
+                        </th>
+                        <th>
+                            <span class="text-regular-small color-text-subsued">
+                                <?php esc_html_e('Date', 'tutor'); ?>
+                            </span>
+                        </th>
+                        <th>
+                            <span class="text-regular-small color-text-subsued">
+                                <?php esc_html_e('Feedback', 'tutor'); ?>
+                            </span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                    foreach ($reviews->results as $review){
+                        $user_data = get_userdata( $review->user_id );
+                        $profile_url = tutor_utils()->profile_url($review->user_id);
+                        $avatar_url = get_avatar_url($review->user_id);
+                        $student_name = $user_data->display_name;
+                        ?>
                         <tr>
-                            <th>
-                                <span class="text-regular-small color-text-subsued">
-                                    <?php esc_html_e('Student', 'tutor'); ?>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="text-regular-small color-text-subsued">
-                                    <?php esc_html_e('Date', 'tutor'); ?>
-                                </span>
-                            </th>
-                            <th>
-                                <span class="text-regular-small color-text-subsued">
-                                    <?php esc_html_e('Feedback', 'tutor'); ?>
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                        foreach ($reviews->results as $review){
-                            $user_data = get_userdata( $review->user_id );
-                            $profile_url = tutor_utils()->profile_url($review->user_id);
-                            $avatar_url = get_avatar_url($review->user_id);
-                            $student_name = $user_data->display_name;
-                            ?>
-                            <tr>
-                                <td data-th="<?php esc_html_e('Student', 'tutor'); ?>" class="column-fullwidth">
-                                    <div class="td-avatar">
-                                        <img src="<?php echo esc_url($avatar_url); ?>" alt="student avatar"/>
-                                        <span class="text-medium-body color-text-primary">
-                                            <?php esc_html_e($student_name); ?>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td data-th="<?php esc_html_e('Date', 'tutor'); ?>">
-                                    <span class="text-medium-caption color-text-primary">
-                                        <?php echo tutor_get_formated_date(null, $review->comment_date); ?>
+                            <td data-th="<?php esc_html_e('Student', 'tutor'); ?>" class="column-fullwidth">
+                                <div class="td-avatar">
+                                    <img src="<?php echo esc_url($avatar_url); ?>" alt="student avatar"/>
+                                    <span class="text-medium-body color-text-primary">
+                                        <?php esc_html_e($student_name); ?>
                                     </span>
-                                </td>
-                                <td data-th="<?php esc_html_e('Feedback', 'tutor'); ?>">
-                                    <div class="td-feedback">
-                                        <div class="td-tutor-rating text-regular-body color-text-subsued">
-                                            <?php tutor_utils()->star_rating_generator_v2($review->rating, null, true); ?>
-                                        </div>
-                                        <p class="review-text color-text-subsued tutor-mb-0">
-                                            <?php echo htmlspecialchars(stripslashes( $review->comment_content )); ?>
-                                        </p>
-                                        <p class="course-name text-medium-small color-text-title tutor-mb-0">
-                                            <strong><?php esc_html_e('Course', 'tutor'); ?>:</strong>&nbsp;
-                                            <span data-href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
-                                                <?php esc_html_e(get_the_title($review->comment_post_ID)); ?>
-                                            </span>
-                                        </p>
+                                </div>
+                            </td>
+                            <td data-th="<?php esc_html_e('Date', 'tutor'); ?>">
+                                <span class="text-medium-caption color-text-primary">
+                                    <?php echo tutor_get_formated_date(null, $review->comment_date); ?>
+                                </span>
+                            </td>
+                            <td data-th="<?php esc_html_e('Feedback', 'tutor'); ?>">
+                                <div class="td-feedback">
+                                    <div class="td-tutor-rating text-regular-body color-text-subsued">
+                                        <?php tutor_utils()->star_rating_generator_v2($review->rating, null, true); ?>
                                     </div>
-                                </td>
-                            </tr>
-                            <?php
-                        }
-					?>
-                    </tbody>
-                </table>
-			    <?php 
-            } else {
-				?>
-                <div class="tutor-dashboard-content-inner">
-                    <p><?php esc_html_e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
-                </div>
-				<?php
-			} 
-        ?>
+                                    <p class="review-text color-text-subsued tutor-mb-0">
+                                        <?php echo htmlspecialchars(stripslashes( $review->comment_content )); ?>
+                                    </p>
+                                    <p class="course-name text-medium-small color-text-title tutor-mb-0">
+                                        <strong><?php esc_html_e('Course', 'tutor'); ?>:</strong>&nbsp;
+                                        <span data-href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
+                                            <?php esc_html_e(get_the_title($review->comment_post_ID)); ?>
+                                        </span>
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <div class="tutor-dashboard-content-inner">
+                <?php tutor_utils()->tutor_empty_state(); ?>
+            </div>
+        <?php endif; ?>
     </div>
 <?php
 if ($reviews->count){

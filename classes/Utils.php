@@ -997,8 +997,9 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function checking_nonce( $request_method = null ) {
-		!$request_method ? $request_method = strtolower($_SERVER['REQUEST_METHOD']) : 0;
-		$data = $request_method === 'post' ? $_POST : $_GET;
+		!$request_method ? $request_method = $_SERVER['REQUEST_METHOD'] : 0;
+		
+		$data = strtolower($request_method) === 'post' ? $_POST : $_GET;
 		$nonce_value = sanitize_text_field(tutor_utils()->array_get(tutor()->nonce, $data, null));
 		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
 
@@ -7646,11 +7647,10 @@ class Utils {
 	 * Check if user can create, edit, delete various tutor contents such as lesson, quiz, answer etc.
 	 */
 	public function can_user_manage( $content, $object_id, $user_id=0, $allow_current_admin=true ) {
-
+		$user_id   = (int)$this->get_user_id( $user_id );
 		$course_id = $this->get_course_id_by( $content, $object_id );
 
 		if( $course_id ) {
-
 			if( $allow_current_admin && current_user_can( 'administrator' ) ) {
 				// Admin has access to everything
 				return true;
@@ -7661,10 +7661,11 @@ class Utils {
 				return (int)$instructor->ID;
 			}, $instructors) : array();
 
-			$user_id   = (int)$this->get_user_id( $user_id );
 			$is_listed = in_array( $user_id, $instructor_ids );
 
-			return $is_listed;
+			if($is_listed) {
+				return true;
+			}
 		}
 
 		global $wpdb;
@@ -7674,8 +7675,9 @@ class Utils {
 				// just check if own content. Instructor privilege already checked in the earlier blocks
 				$id = $wpdb->get_var($wpdb->prepare(
 					"SELECT comment_ID
-					FROM {$wpdb->comments} WHERE user_id %d",
-					$user_id
+					FROM {$wpdb->comments} WHERE user_id = %d AND comment_ID=%d",
+					$user_id,
+					$object_id
 				));
 
 				return $id ? true : false;
