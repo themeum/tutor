@@ -1,8 +1,10 @@
-<div class="color-text-primary back">
-    <a href="<?php echo $back_url; ?>">
-        <span class="ttr-previous-line"></span> <span class="text"><?php _e('Back', 'tutor'); ?></span>
-    </a>
-</div>
+<?php if(!empty($back_url)): ?>
+    <div class="color-text-primary back">
+        <a href="<?php echo $back_url; ?>">
+            <span class="ttr-previous-line"></span> <span class="text"><?php _e('Back', 'tutor'); ?></span>
+        </a>
+    </div>
+<?php endif; ?>
 
 <div class="text-regular-small color-text-subsued tutor-mt-30">
     <?php _e('Course', 'tutor'); ?>: <?php echo $course_title; ?>
