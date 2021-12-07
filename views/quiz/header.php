@@ -21,7 +21,7 @@
         $total_marks    = $attempt_data->total_marks;
         $pass_marks     = '';
         
-        $back_url       = isset($back_url) ? $back_url : remove_query_arg( 'view_quiz_attempt_id', tutor()->current_url );
+        $back_url       = isset($back_url) ? $back_url : (isset($_GET['view_quiz_attempt_id']) ? remove_query_arg( 'view_quiz_attempt_id', tutor()->current_url ) : null);
 
         include $file_path;
     }
