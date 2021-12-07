@@ -26,7 +26,7 @@
                                 </option>
                             <?php endforeach; ?>
                         <?php else : ?>
-                            <option value=""><?php esc_attr_e( 'No course found', 'tutor' ); ?></option>
+                            <option value=""><?php echo esc_attr( 'No course found', 'tutor' ); ?></option>
                         <?php endif; ?>
                     </select>
                 </div>
@@ -34,13 +34,13 @@
                     <label>
                         <?php esc_html_e( 'Announcement Title', 'tutor' ); ?>
                     </label>
-                    <input type="text" name="tutor_announcement_title" value="" placeholder="<?php esc_attr_e( 'Announcement title', 'tutor' ); ?>" required>
+                    <input type="text" name="tutor_announcement_title" value="" placeholder="<?php echo esc_attr( 'Announcement title', 'tutor' ); ?>" required>
                 </div>
                 <div class="tutor-form-group">
                     <label for="tutor_announcement_course">
                         <?php esc_html_e( 'Summary', 'tutor' ); ?>
                     </label>
-                    <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php esc_attr_e( 'Summary...', 'tutor' ); ?>" required></textarea>
+                    <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php echo esc_attr( 'Summary...', 'tutor' ); ?>" required></textarea>
                 </div>
                 
                 <?php do_action( 'tutor_announcement_editor/after' ); ?>
