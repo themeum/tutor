@@ -557,7 +557,7 @@
 
 	&-ins-approval {
 		.tutor-modal-root {
-			max-width: 634px;
+			width: 634px;
 		}
 		.tutor-modal-buttons {
 			.tutor-btn {
@@ -570,6 +570,11 @@
 			img {
 				object-fit: cover;
 			}
+		}
+		.tutor-modal-buttons {
+			max-width: 280px;
+			margin-left: auto;
+			margin-right: auto;
 		}
 	} // end of /.tutor-modal-ins-approval
 
