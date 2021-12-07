@@ -38,8 +38,8 @@ $paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['
 $per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$quiz_attempts_list = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $user_id, $date, $order, $course_id );
-$total = tutor_utils()->get_total_quiz_attempts($active_tab, $search, $user_id, $date, $course_id);
+$quiz_attempts_list = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab );
+$total = tutor_utils()->get_quiz_attempts($offset, $per_page, $search, $course_id, $date, $order, $active_tab, true );
 
 /**
  * Navbar data to make nav menu
@@ -77,7 +77,7 @@ $filters = array(
 			'context' => 'backend-dashboard-students-attempts'
 		));
 	?>
-	<div class="tutor-admin-page-pagination-wrapper">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-30">
 		<?php
 			/**
 			 * Prepare pagination data & load template
@@ -89,6 +89,6 @@ $filters = array(
 			);
 			$pagination_template = tutor()->path . 'views/elements/pagination.php';
 			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			?>
+		?>
 	</div>
 </div>

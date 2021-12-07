@@ -71,6 +71,19 @@
                                                     <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank">
                                                         <?php echo get_the_title($attempt->course_id); ?>
                                                     </a>
+
+                                                    <?php 
+                                                        if($context=='backend-dashboard-students-attempts') {
+                                                            $attempt_user = get_userdata( $attempt->user_id );
+                                                            $user_name = $attempt_user ? $attempt_user->display_name : '';
+
+                                                            ?>
+                                                            <div>
+                                                                <span class="text-regular-small"><?php _e('Student', 'tutor'); ?></span>: <span class="text-medium-small"><?php echo $user_name; ?></span>
+                                                            </div>
+                                                            <?php
+                                                        }
+                                                    ?>
                                                 </p>
                                                 <?php do_action('tutor_quiz/table/after/course_title', $attempt, $context); ?>
                                             </div>

@@ -4022,7 +4022,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '', $question_id=null, $meta_query=null, $asker_id=null ) {
+	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '', $question_id=null, $meta_query=null, $asker_id=null, $question_status=null, $count_only=false ) {
 		global $wpdb;
 
 		$user_id     		  = get_current_user_id();
@@ -4031,6 +4031,7 @@ class Utils {
 		$question_clause 	  = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
 		$meta_clause 		  = '';
 		$in_question_id_query = '';
+		$qna_types_caluse	  = '';
 
 		/**
 		 * Get only assinged  courses questions if current user is not admin
@@ -4050,12 +4051,30 @@ class Utils {
 			foreach($meta_query as $key=>$value) {
 				$meta_array[] = "_meta.meta_key='{$key}' AND _meta.meta_value='{$value}'";
 			}
-
 			$meta_clause .= ' AND ' . implode(' AND ', $meta_array);
 		}
 
-		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT DISTINCT _question.comment_ID,
+		// Assign read, unread, archived, important identifier
+		switch($question_status) {
+			case 'read' :
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value=1) ';
+				break;
+
+			case 'unread' :
+				$qna_types_caluse = ' AND (_meta.meta_key!=\'tutor_qna_read\' OR _meta.meta_value!=1) ';
+				break;
+
+			case 'archived' :
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_archived\' AND _meta.meta_value=1) ';
+				break;
+
+			case 'important' :
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value!=1) ';
+				break;
+		}
+
+		$columns_select = $count_only ? 'COUNT(_question.comment_ID)' :
+			"_question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
@@ -4069,8 +4088,13 @@ class Utils {
 					(	SELECT  COUNT(answers_t.comment_ID)
 						FROM 	{$wpdb->comments} answers_t
 						WHERE 	answers_t.comment_parent = _question.comment_ID
-					) AS answer_count
-			FROM 	{$wpdb->comments} _question
+					) AS answer_count";
+
+		$limit_offset = $count_only ? '' : ' LIMIT '.$limit.' OFFSET '.$start;
+
+		$query = $wpdb->prepare(
+			"SELECT DISTINCT {$columns_select}
+			FROM {$wpdb->comments} _question
 					INNER JOIN {$wpdb->posts} _course
 							ON _question.comment_post_ID = _course.ID
 					INNER JOIN {$wpdb->users} _user
@@ -4083,12 +4107,17 @@ class Utils {
 					{$in_question_id_query}
 					{$question_clause}
 					{$meta_clause}
+					{$qna_types_caluse}
 			ORDER BY _question.comment_ID DESC
-			LIMIT %d, %d;",
-			$search_term,
-			$start,
-			$limit
-		) );
+			{$limit_offset}",
+			$search_term
+		);
+
+		if($count_only) {
+			return $wpdb->get_var($query);
+		}
+
+		$query = $wpdb->get_results( $query );
 
 		// Collect question IDs and create empty meta array placeholder
 		$question_ids = array();
@@ -4995,40 +5024,58 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter='', $course_filter='', $date_filter='', $order_filter='' ) {
+	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter='', $course_filter='', $date_filter='', $order_filter='', $result_state=null, $count_only=false ) {
 		global $wpdb;
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
 		$date_filter	= $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
+		$result_clause	= '';
+		$select_columns = $count_only ? 'COUNT(quiz_attempts.attempt_id)' : 'quiz_attempts.*, quiz.*, users.*';
+		$limit_offset	= $count_only ? '' : ' LIMIT '.$limit.' OFFSET '.$start;
 
-		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT quiz_attempts.*, quiz.*, users.*
-		 	FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-					INNER JOIN {$wpdb->posts} quiz
-							ON quiz_attempts.quiz_id = quiz.ID
-					INNER JOIN {$wpdb->users} AS users
-							ON quiz_attempts.user_id = users.ID
-					INNER JOIN {$wpdb->posts} AS course
-							ON course.ID = quiz_attempts.course_id
+		switch($result_state) {
+			case 'pass' :
+				$result_clause = ' AND quiz_attempts.earned_marks>=quiz_attempts.total_marks ';
+				break;
+
+			case 'fail' :
+				$result_clause = ' AND quiz_attempts.earned_marks<quiz_attempts.total_marks ';
+				break;
+
+			case 'pending' :
+				$result_clause = ' AND quiz_attempts.attempt_status=\'review_required\'';
+				break;
+		}
+
+		$query = $wpdb->prepare(
+			"SELECT {$select_columns}
+		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+					INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
+					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
+					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
 			WHERE 	quiz_attempts.attempt_status != %s
-					AND ( users.user_email LIKE %s OR users.display_name LIKE %s OR quiz.post_title LIKE %s OR course.post_title LIKE %s )
+					AND ( 
+							users.user_email LIKE %s 
+							OR users.display_name LIKE %s 
+							OR quiz.post_title LIKE %s 
+							OR course.post_title LIKE %s 
+						)
+					AND quiz_attempts.attempt_ended_at IS NOT NULL
+					{$result_clause}
 					{$course_filter}
 					{$date_filter}
 			ORDER 	BY quiz_attempts.attempt_ended_at $order_filter
-			LIMIT 	%d, %d;
-			",
+			{$limit_offset}",
 			'attempt_started',
 			$search_filter,
 			$search_filter,
 			$search_filter,
-			$search_filter,
-			$start,
-			$limit
-		) );
+			$search_filter
+		);
 
-		return $query;
+		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query);
 	}
 
 	/**
