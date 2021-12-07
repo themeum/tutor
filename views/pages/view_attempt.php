@@ -35,18 +35,18 @@ $user = get_userdata($user_id);
 
 <div class="wrap">
     <div class="quiz-attempt-answers-wrap">
-        <div class="attempt-answers-header">
+        <div class="attempt-answers-header tutor-mb-5">
             <div class="attempt-header-quiz">
-                <?php _e('Instructor Feedback', 'tutor'); ?>
+                <strong><?php _e('Instructor Feedback', 'tutor'); ?></strong>
             </div>
         </div>
         <div class="tutor-instructor-feedback-wrap">
             <textarea class="tutor-form-control"><?php 
                 echo get_post_meta($attempt_id, 'instructor_feedback', true); 
             ?></textarea>
-            <a class="tutor-btn tutor-instructor-feedback" data-attemptid="<?php echo $attempt_id; ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>">
+            <button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-instructor-feedback tutor-mt-5" data-attemptid="<?php echo $attempt_id; ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>">
                 <?php _e('Update', 'tutor'); ?>
-            </a>
+            </button>
         </div>
     </div>
 </div>
