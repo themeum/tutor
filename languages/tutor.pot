@@ -2016,7 +2016,7 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:98, templates/dashboard/assignments.php:47, views/pages/announcements.php:77, templates/dashboard/announcements/create.php:29, templates/dashboard/announcements/update.php:30
+#: classes/Tutor_List_Table.php:1270, templates/dashboard/announcements.php:98, templates/dashboard/assignments.php:47, views/pages/announcements.php:77, templates/dashboard/announcements/update.php:30
 msgid "No course found"
 msgstr ""
 
@@ -2961,10 +2961,6 @@ msgstr ""
 msgid "Paid"
 msgstr ""
 
-#: templates/course-filter/filters.php:22
-msgid "Search..."
-msgstr ""
-
 #: templates/course-filter/filters.php:54
 msgid "Level"
 msgstr ""
@@ -3661,15 +3657,15 @@ msgstr ""
 msgid "Total Course Duration"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:26, views/metabox/video-metabox.php:152
+#: views/metabox/course-additional-data.php:26, views/metabox/video-metabox.php:147
 msgid "HH"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:30, views/metabox/video-metabox.php:157
+#: views/metabox/course-additional-data.php:30, views/metabox/video-metabox.php:152
 msgid "MM"
 msgstr ""
 
-#: views/metabox/course-additional-data.php:35, views/metabox/video-metabox.php:162
+#: views/metabox/course-additional-data.php:35, views/metabox/video-metabox.php:157
 msgid "SS"
 msgstr ""
 
@@ -3847,23 +3843,23 @@ msgstr ""
 msgid "Thumb Size: 700x430 pixels. File Support: jpg, jpeg, or png"
 msgstr ""
 
-#: views/metabox/video-metabox.php:119
+#: views/metabox/video-metabox.php:118
 msgid "External Video URL"
 msgstr ""
 
-#: views/metabox/video-metabox.php:124
+#: views/metabox/video-metabox.php:122
 msgid "YouTube Video URL"
 msgstr ""
 
-#: views/metabox/video-metabox.php:127
+#: views/metabox/video-metabox.php:125
 msgid "Vimeo Video URL"
 msgstr ""
 
-#: views/metabox/video-metabox.php:130
+#: views/metabox/video-metabox.php:128
 msgid "Place your embedded code here"
 msgstr ""
 
-#: views/metabox/video-metabox.php:145
+#: views/metabox/video-metabox.php:140
 msgid "Video playback time"
 msgstr ""
 
@@ -4267,7 +4263,7 @@ msgstr ""
 msgid "Announcement Title"
 msgstr ""
 
-#: views/pages/announcements.php:220, views/pages/announcements.php:302, templates/dashboard/announcements/create.php:37, templates/dashboard/announcements/update.php:38
+#: views/pages/announcements.php:220, views/pages/announcements.php:302, templates/dashboard/announcements/update.php:38
 msgid "Announcement title"
 msgstr ""
 
@@ -4275,7 +4271,7 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: views/pages/announcements.php:230, views/pages/announcements.php:312, templates/dashboard/announcements/create.php:43, templates/dashboard/announcements/update.php:44
+#: views/pages/announcements.php:230, views/pages/announcements.php:312, templates/dashboard/announcements/update.php:44
 msgid "Summary..."
 msgstr ""
 

@@ -18,7 +18,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date( $assignment_id, $format
 ?>
 
 <div class="submitted-assignment-title">
-    <a class="prev-btn" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>"><span>&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?></a>
+    <a class="prev-btn" href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ); ?>"><span>&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?></a>
 </div>
 
 <?php
@@ -28,12 +28,12 @@ if ( tutor_utils()->count( $assignments_submitted ) ) {
     <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
         <p>
             <?php esc_html_e( 'Course', 'tutor' ); ?> :
-            <a href="<?php echo esc_url( get_the_permalink( $assignments_submitted[0]->comment_parent ) ); ?>" target="_blank">
+            <a href="<?php echo get_the_permalink( $assignments_submitted[0]->comment_parent ); ?>" target="_blank">
                 <?php echo esc_html( get_the_title( $assignments_submitted[0]->comment_parent ) ); ?>
             </a>
         </p>
         <h3>
-            <a href="<?php echo esc_url( get_the_permalink( $assignment_id ) ); ?>" target="_blank">
+            <a href="<?php echo get_the_permalink( $assignment_id ); ?>" target="_blank">
                 <?php echo esc_html( get_the_title( $assignment_id ) ); ?>
             </a>
         </h3>

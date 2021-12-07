@@ -364,10 +364,10 @@ class Tutor_List_Table {
 			';
 		$options = '';
 		foreach ( $courses as $course ) {
-			$options .= '<option value="' . esc_attr( $course->ID ) . '" ' . selected( $selected,$course->ID,false ) . '> ' . $course->post_title . ' </option>';
+			$options .= '<option value="' . $course->ID . '" ' . selected( $selected,$course->ID, false ) . '> ' . $course->post_title . ' </option>';
 		}
 		
-		$content = str_replace('OPTIONS_PLACEHOLDER', $options, $markup);
+		$content = str_replace( 'OPTIONS_PLACEHOLDER', $options, $markup );
 		echo $content;
 	}
 
@@ -388,10 +388,10 @@ class Tutor_List_Table {
 			</div>
 			';
 		$options = '';
-		foreach($orders as $order){
-			$options .= '<option value="' . esc_attr( $order ) . '" '.selected($selected,$order,false).'> '.__( $order, 'tutor' ).' </option>';
+		foreach( $orders as $order ) {
+			$options .= '<option value="' . $order . '" '. selected( $selected, $order, false ) . '> '. __( $order, 'tutor' ) . ' </option>';
 		}		
-		$content = str_replace('OPTION_PLACEHOLDER', $options, $markup);
+		$content = str_replace( 'OPTION_PLACEHOLDER', $options, $markup );
 		echo $content;		
 	}
 	/**
@@ -400,14 +400,14 @@ class Tutor_List_Table {
 	 * @param $selected | optional
 	 */
 
-	public function sorting_date($selected = ''){
+	public function sorting_date( $selected = '' ) {
 		$placeholder = __( get_option( 'date_format' ), 'tutor' );
-		$date_filter = sanitize_text_field( tutor_utils()->array_get('date', $_GET, '') );
+		$date_filter = sanitize_text_field( tutor_utils()->array_get( 'date', $_GET, '' ) );
 		$date_input  = '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '';
 		$markup = '
 			<div class="alignright assignment-date-box">
 				<label>'.__('Date', 'tutor').'</label>
-				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="'.$placeholder.'" value="'. $date_input .'">
+				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="' . $placeholder . '" value="' . $date_input . '">
 				<i class="tutor-icon-calendar"></i>
 			</div>
 			';		

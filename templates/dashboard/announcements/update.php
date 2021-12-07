@@ -41,7 +41,7 @@
                     <label for="tutor_announcement_course">
                         <?php esc_html_e( 'Summary', 'tutor' ); ?>
                     </label>
-                    <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_announcement_summary" value="" placeholder="<?php esc_attr_e( 'Summary...', 'tutor' ); ?>" required></textarea>
+                    <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_announcement_summary" value="" placeholder="<?php echo esc_attr__( 'Summary...', 'tutor' ); ?>" required></textarea>
                 </div>
                 <?php do_action( 'tutor_announcement_editor/after' ); ?>
                 <div class="tutor-form-group">

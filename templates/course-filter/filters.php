@@ -19,7 +19,7 @@
         if ( in_array( 'search', $supported_filters ) ) {
             ?>
             <div class="tutor-course-search-field">
-                <input type="text" name="keyword" placeholder="<?php esc_attr_e( 'Search...', 'tutor' ); ?>"/>
+                <input type="text" name="keyword" placeholder="<?php echo esc_attr( 'Search...', 'tutor' ); ?>"/>
                 <i class="tutor-icon-magnifying-glass-1"></i>
             </div>
             <?php
