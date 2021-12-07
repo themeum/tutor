@@ -21453,7 +21453,7 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 }
 
 .tutor-modal-ins-approval .tutor-modal-root {
-  max-width: 634px;
+  width: 634px;
 }
 
 .tutor-modal-ins-approval .tutor-modal-buttons .tutor-btn {
@@ -21468,6 +21468,12 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
 .tutor-modal-ins-approval .tutor-avatar img {
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.tutor-modal-ins-approval .tutor-modal-buttons {
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .tutor-modal-gradebook .tutor-modal-footer .tutor-btn {
