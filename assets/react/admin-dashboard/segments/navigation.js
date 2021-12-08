@@ -6,10 +6,6 @@ const navTabLists = document.querySelectorAll('ul.tutor-option-nav');
 const navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
 const navPages = document.querySelectorAll('.tutor-option-nav-page');
 
-
-readyState_complete(() => {
-    console.log('this should work');
-})
 readyState_complete(() => {
     const loadNavItem = document.querySelector('li.tutor-option-nav-item a.active');
     if (null !== loadNavItem) {

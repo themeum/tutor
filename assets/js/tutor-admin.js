@@ -743,24 +743,7 @@ readyState_complete(function () {
       });
     };
   });
-}); // document.addEventListener('readystatechange', (event) => {
-// 	if (event.target.readyState === 'interactive') {
-// 	}
-// 	if (event.target.readyState === 'complete') {
-// 		if (typeof otherColorsPreview === 'function') {
-// 			otherColorsPreview();
-// 		}
-// 		designNav.forEach((item) => {
-// 			item.onclick = () => {
-// 				setTimeout(() => {
-// 					if ('design' === item.children[0].dataset.tab) {
-// 						otherColorsPreview();
-// 					}
-// 				})
-// 			}
-// 		})
-// 	}
-// });
+});
 
 var otherColorsPreview = function otherColorsPreview() {
   var itemsHeight = initHeight = 0;
@@ -1630,11 +1613,8 @@ window.addEventListener('resize', toolTipOnWindowResize);
 /*!****************************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/import-export.js ***!
   \****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib */ "./assets/react/admin-dashboard/segments/lib.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1646,7 +1626,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 
 document.addEventListener("readystatechange", function (event) {
   if (event.target.readyState === "interactive") {
@@ -1722,7 +1701,7 @@ function tutor_option_history_load(history_data) {
   }
 
   var heading = "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p>Date</p></div></div>";
-  (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)(".history_data").innerHTML = heading + output;
+  selectorElement(".history_data").innerHTML = heading + output;
   export_single_settings(); // popupToggle();
 
   apply_single_settings();
@@ -1731,7 +1710,7 @@ function tutor_option_history_load(history_data) {
 
 
 var export_settings_all = function export_settings_all() {
-  var export_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#export_settings"); //document.querySelector("#export_settings");
+  var export_settings = selectorElement("#export_settings"); //document.querySelector("#export_settings");
 
   if (export_settings) {
     export_settings.onclick = function (e) {
@@ -1751,7 +1730,7 @@ var export_settings_all = function export_settings_all() {
           return response.json();
         }).then(function (response) {
           var fileName = "tutor_options_" + time_now();
-          (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(JSON.stringify(response), fileName);
+          json_download(JSON.stringify(response), fileName);
         })["catch"](function (err) {
           return console.log(err);
         });
@@ -1772,7 +1751,7 @@ var time_now = function time_now() {
 };
 
 var reset_default_options = function reset_default_options() {
-  var reset_options = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#reset_options");
+  var reset_options = selectorElement("#reset_options");
 
   if (reset_options) {
     reset_options.onclick = function () {
@@ -1795,12 +1774,12 @@ var reset_default_options = function reset_default_options() {
 };
 
 var import_history_data = function import_history_data() {
-  var import_options = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#import_options");
+  var import_options = selectorElement("#import_options");
 
   if (import_options) {
     import_options.onclick = function (e) {
       if (!e.detail || e.detail == 1) {
-        var fileElem = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.element)("#drag-drop-input");
+        var fileElem = selectorElement("#drag-drop-input");
         var files = fileElem.files;
 
         if (files.length <= 0) {
@@ -1843,7 +1822,7 @@ var import_history_data = function import_history_data() {
 };
 
 var export_single_settings = function export_single_settings() {
-  var single_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".export_single_settings");
+  var single_settings = selectorElements(".export_single_settings");
 
   var _loop = function _loop(i) {
     single_settings[i].onclick = function () {
@@ -1862,7 +1841,7 @@ var export_single_settings = function export_single_settings() {
           console.log(xhttp.response); // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
 
           var fileName = export_id;
-          (0,_lib__WEBPACK_IMPORTED_MODULE_0__.json_download)(xhttp.response, fileName);
+          json_download(xhttp.response, fileName);
         }
       };
     };
@@ -1874,7 +1853,7 @@ var export_single_settings = function export_single_settings() {
 };
 
 var apply_single_settings = function apply_single_settings() {
-  var apply_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".apply_settings");
+  var apply_settings = selectorElements(".apply_settings");
 
   var _loop2 = function _loop2(i) {
     apply_settings[i].onclick = function () {
@@ -1902,7 +1881,7 @@ var apply_single_settings = function apply_single_settings() {
 };
 
 var delete_history_data = function delete_history_data() {
-  var delete_settings = (0,_lib__WEBPACK_IMPORTED_MODULE_0__.elements)(".delete_single_settings");
+  var delete_settings = selectorElements(".delete_single_settings");
 
   var _loop3 = function _loop3(i) {
     delete_settings[i].onclick = function () {
@@ -1940,34 +1919,39 @@ var delete_history_data = function delete_history_data() {
 /*!******************************************************!*\
   !*** ./assets/react/admin-dashboard/segments/lib.js ***!
   \******************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "element": () => (/* binding */ element),
-/* harmony export */   "elements": () => (/* binding */ elements),
-/* harmony export */   "json_download": () => (/* binding */ json_download)
-/* harmony export */ });
 // this function will load after document content load
 window.readyState_complete = function (func) {
-  var _funcCaller = function _funcCaller(f) {
+  var _caller = function _caller(f) {
     return f();
   };
 
-  document.addEventListener('readystatechange', function (event) {
-    if (event.target.readyState === 'complete') {
-      typeof func == 'function' ? _funcCaller(func) : '';
-    }
+  document.addEventListener('readystatechange', function (e) {
+    return e.target.readyState === 'complete' ? typeof func == 'function' ? setTimeout(function () {
+      return _caller(func);
+    }) : '' : '';
   });
 };
 
-var element = function element(selector) {
+window.selectorElement = function (selector) {
   return document.querySelector(selector);
 };
 
-var elements = function elements(selector) {
+window.selectorElements = function (selector) {
   return document.querySelectorAll(selector);
+};
+
+window.selectorsByName = function (selector) {
+  return document.getElementsByName(selector);
+};
+
+window.selectorById = function (selector) {
+  return document.getElementById(selector);
+};
+
+window.selectorByClass = function (selector) {
+  return document.getElementsByClassName(selector);
 };
 /**
  * Function to download json file
@@ -1986,8 +1970,6 @@ var json_download = function json_download(response, fileName) {
   el.click();
 };
 
-
-
 /***/ }),
 
 /***/ "./assets/react/admin-dashboard/segments/navigation.js":
@@ -2002,9 +1984,6 @@ var json_download = function json_download(response, fileName) {
 var navTabLists = document.querySelectorAll('ul.tutor-option-nav');
 var navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
 var navPages = document.querySelectorAll('.tutor-option-nav-page');
-readyState_complete(function () {
-  console.log('this should work');
-});
 readyState_complete(function () {
   var loadNavItem = document.querySelector('li.tutor-option-nav-item a.active');
 
@@ -2339,7 +2318,8 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('clicked search');
 
         if (dataTab) {
-          // remove active from other buttons
+          document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title; // remove active from other buttons
+
           navTabItems.forEach(function (item) {
             item.classList.remove('active');
           }); // add active to the current nav item
@@ -2354,7 +2334,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
           var url = new URL(window.location);
           url.searchParams.set('tab_page', dataTab);
-          document.title = "Hello World";
           window.history.pushState({}, '', url);
         } // Reset + Hide Suggestion box
 
@@ -2448,13 +2427,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 Reset to default for settings individual page
 */
 var optionForm = document.querySelector('#tutor-option-form');
-document.addEventListener('readystatechange', function (event) {
-  if (event.target.readyState === 'interactive') {}
-
-  if (event.target.readyState === 'complete') {
-    typeof resetConfirmation === 'function' ? resetConfirmation() : '';
-    typeof modalResetOpen === 'function' ? modalResetOpen() : '';
-  }
+readyState_complete(function () {
+  typeof resetConfirmation === 'function' ? resetConfirmation() : '';
+  typeof modalResetOpen === 'function' ? modalResetOpen() : '';
 });
 var modalConfirmation = document.getElementById('tutor-modal-bulk-action');
 
@@ -31523,6 +31498,7 @@ var __webpack_exports__ = {};
   \*****************************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./segments/lib */ "./assets/react/admin-dashboard/segments/lib.js");
+/* harmony import */ var _segments_lib__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_segments_lib__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./segments/navigation */ "./assets/react/admin-dashboard/segments/navigation.js");
 /* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_navigation__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/image-preview */ "./assets/react/admin-dashboard/segments/image-preview.js");
@@ -31530,6 +31506,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
 /* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
+/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_import_export__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
 /* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");

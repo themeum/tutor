@@ -29,27 +29,6 @@ readyState_complete(() => {
 	})
 })
 
-// document.addEventListener('readystatechange', (event) => {
-// 	if (event.target.readyState === 'interactive') {
-// 	}
-// 	if (event.target.readyState === 'complete') {
-// 		if (typeof otherColorsPreview === 'function') {
-// 			otherColorsPreview();
-// 		}
-
-// 		designNav.forEach((item) => {
-// 			item.onclick = () => {
-// 				setTimeout(() => {
-// 					if ('design' === item.children[0].dataset.tab) {
-// 						otherColorsPreview();
-// 					}
-// 				})
-// 			}
-// 		})
-
-// 	}
-// });
-
 const otherColorsPreview = () => {
 	let itemsHeight = (initHeight = 0);
 	if (otherColors && otherColorRows) {
