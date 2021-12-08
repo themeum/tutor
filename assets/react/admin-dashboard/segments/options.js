@@ -295,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				const dataKey = e.target.closest('[data-key]').dataset.key;
 				console.log('clicked search');
 				if (dataTab) {
+					document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title;
 					// remove active from other buttons
 					navTabItems.forEach((item) => {
 						item.classList.remove('active');
@@ -313,7 +314,6 @@ document.addEventListener('DOMContentLoaded', function () {
 					// History push
 					const url = new URL(window.location);
 					url.searchParams.set('tab_page', dataTab);
-					document.title = "Hello World";
 					window.history.pushState({}, '', url);
 				}
 
