@@ -131,6 +131,9 @@ ul.tutor-setup-content li.active {
 
 .tutor-setup-wizard-settings {
 	padding: 70px 0;
+	@include breakpoint-min(desktop-lg) {
+		padding: 120px 0;
+	}
 }
 
 .tutor-setup-wrapper {
@@ -242,6 +245,7 @@ ul.tutor-setup-content li.active {
 .tutor-setup-content-heading {
 	&.heading {
 		background: #fbfbfb;
+		background: rgba(205, 207, 213, 0.07);
 
 		div {
 			&:last-child {
@@ -300,6 +304,7 @@ ul.tutor-setup-content li.active {
 .tutor-setup-content-footer {
 	&.footer {
 		background: #fbfbfb;
+		background: rgba(239, 241, 247, 0.4);
 		display: grid;
 		padding: 20px;
 		grid-template-rows: auto;
@@ -404,12 +409,12 @@ ul.tutor-setup-content li.active {
 
 .tutor-setting {
 	.title {
-		font-weight: normal;
-		font-stretch: normal;
-		font-style: normal;
-		font-weight: normal;
-		font-size: 16px;
-		color: #212327;
+		// font-weight: normal;
+		// font-stretch: normal;
+		// font-style: normal;
+		// font-weight: normal;
+		// font-size: 16px;
+		// color: #212327;
 
 		.tooltip-btn {
 			position: relative;
@@ -458,6 +463,7 @@ ul.tutor-setup-content li.active {
 	margin-left: -60px;
 	padding: 7px;
 	width: 120px;
+	max-width: max-content;
 	border-radius: 3px;
 	background-color: #f0f3f6;
 	border: 1px solid #dcdfe5;
@@ -709,7 +715,6 @@ input[type='number'].attempts:focus {
 button.tutor-setup-previous {
 	display: inline-block;
 	padding: 0 50px;
-	text-transform: uppercase;
 }
 
 .tutor-setup-title li {
@@ -1585,6 +1590,9 @@ input.checkbox {
 	margin-top: 30px;
 }
 
+.tutor-type-skip {
+	text-decoration: underline;
+}
 .wizard-boarding-footer,
 .tutor-type-skip {
 	font-size: 16px;
@@ -1612,8 +1620,8 @@ input.checkbox {
 .tutor-setup-wizard-type.active {
 	display: grid !important;
 	place-items: center;
-	grid-gap: 56px;
-	padding: 46px 0 100px 0;
+	grid-gap: 64px;
+	padding: 100px 0;
 }
 
 .wizard-type-header {
@@ -1653,6 +1661,9 @@ input.checkbox {
 	grid-gap: 30px;
 	place-items: center;
 	margin-top: 26px;
+	@include breakpoint-min(desktop) {
+		margin-top: 130px;
+	}
 }
 
 .wizard-type-body {
@@ -1670,6 +1681,9 @@ input.checkbox {
 			background-color: #ffffff;
 			padding-bottom: 40px;
 			transition: 0.2s ease;
+			.tutor-btn {
+				transition: 0.2s background-color;
+			}
 		}
 
 		img {
@@ -1712,7 +1726,7 @@ input.checkbox {
 			}
 
 			&:not(:checked) ~ label {
-				button {
+				.action {
 					visibility: hidden;
 				}
 			}
