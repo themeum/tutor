@@ -46,7 +46,7 @@ if ($best_watch_time > 0){
 <?php if(!$_is_preview){ ?>
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
     <div class="tutor-topbar-left-item d-flex"> 
-        <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
+        <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
             <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
                 <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
             </a>
@@ -108,7 +108,7 @@ if ($best_watch_time > 0){
 </div>
 <?php } else { ?>
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
-    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
+    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex tutor-bs-d-none tutor-bs-d-xl-flex">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
             <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
         </a>
