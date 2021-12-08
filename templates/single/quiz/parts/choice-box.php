@@ -1,5 +1,6 @@
-<div class="quiz-question-ans-choice-area tutor-mt-70 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> "">
-    <div id="tutor-quiz-image-multiple-choice" class="tutor-quiz-wrap">
+<div class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> "">
+    <!-- <div id="tutor-quiz-image-multiple-choice" class="tutor-quiz-multiple-variation tutor-quiz-wrap"> -->
+    <div id="tutor-quiz-single-multiple-choice" class="tutor-quiz-multiple-variation tutor-quiz-wrap">
         <div class="tutor-image-checkbox">
             <?php
                 if ( is_array($answers) && count($answers) ) {
