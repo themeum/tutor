@@ -243,8 +243,23 @@ jQuery(document).ready(function ($) {
         if (action == 'blocked') {
           message = 'Instructor blocked!';
         }
-        tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
-        location.reload();
+        /**
+         * If it is instructor modal for approve or blocked
+         * hide modal then show toast then reload
+         * 
+         * @since v2.0.0
+         */
+        const instructorModal = document.querySelector('.tutor-modal-ins-approval');
+        if (instructorModal) {
+          if (instructorModal.classList.contains('tutor-is-active')) {
+            instructorModal.classList.remove('tutor-is-active');
+          }
+          tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+          location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
+        } else {
+          tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+          location.reload();
+        }
       } else {
         tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
       }
