@@ -138,6 +138,7 @@ jQuery(document).ready(function($) {
      * @since v.1.0.0
      */
     $('.tutorPlayer').each(function () {
+        console.log(this);
         videoPlayer.init(this);
     });
 

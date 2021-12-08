@@ -49,10 +49,10 @@ if ( ! defined( 'ABSPATH' ) )
 				<div id="course-details-tab-seemore-1" class="tab-header-item-seemore-popup">
 					<ul class="tutor-m-0">
 						<?php
+							$asset_base = tutor()->url . 'assets/images/';
 							foreach($more_items as $key=>$item) {
 								?>
 								<li class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-<?php echo $key; ?>">
-									<span class="ttr-zoom tutor-icon-18 tutor-mr-7"></span>
 									<span><?php echo $item['title']; ?></span>
 								</li>
 								<?php
