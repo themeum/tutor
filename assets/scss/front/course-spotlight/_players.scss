@@ -3,14 +3,16 @@
     width: 100%;
     height: calc(100vh - 250px);
     background: black;
+    display: block;
+
     iframe {
-        width: calc(100% - 150px);
+        width: 100%;
         height: 100%;
         position: absolute;
         border: none;
     }
-    .tutor-lesson-prev,
-    .tutor-lesson-next {
+
+    .tutor-lesson-prev, .tutor-lesson-next {
         cursor: pointer;
         width: 31px;
         height: 215px;
@@ -19,6 +21,7 @@
         transform: translateY(-50%);
         position: absolute;
         backdrop-filter: blur(94px);
+
         span {
             font-size: 40px;
             color: #ffffff8c;
@@ -32,17 +35,16 @@
         right: 0;
         border-radius: 6px 0px 0px 6px;
     }
-}
 
-@include breakpoint-max(768) {
-    .course-players {
+    @include breakpoint-max(768) {
         height: 500px;
         width: 100%;
+
         iframe {
             width: 100%;
         }
-        .tutor-lesson-prev,
-        .tutor-lesson-next {
+
+        .tutor-lesson-prev, .tutor-lesson-next {
             width: 31px;
             height: 120px;
             span {
@@ -51,10 +53,8 @@
             }
         }
     }
-}
 
-@include breakpoint-max(mobile) {
-    .course-players {
+    @include breakpoint-max(mobile) {
         height: 240px;
         width: 100%;
         iframe {

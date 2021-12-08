@@ -1,4 +1,4 @@
-body {}
+@import './players';
 
 .tutor-mobile-top-navigation {
     .tutor-mobile-top-nav {
@@ -153,7 +153,6 @@ body {}
                 }
             }
         }
-        @import './players';
         @import './quiz';
     }
 }

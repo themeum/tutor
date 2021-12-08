@@ -697,8 +697,8 @@ if ( ! defined( 'ABSPATH' ) )
                                 <?php _e('Let’s Start', 'tutor'); ?>
                             </button>
                         </div>
-                        <div class="">
-                            <a href="<?php echo admin_url(); ?>" class="tutor-boarding-skip text-btn-medium color-text-primary">
+                        <div>
+                            <a href="<?php echo admin_url(); ?>" class="text-bold-caption">
                                 <?php _e('I already know, skip it!', 'tutor'); ?>
                             </a>
                         </div>
