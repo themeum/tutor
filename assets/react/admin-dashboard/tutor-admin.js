@@ -1,3 +1,4 @@
+import "./segments/lib";
 import "./segments/navigation";
 import "./segments/image-preview";
 import "./segments/options";
@@ -248,7 +249,7 @@ jQuery(document).ready(function ($) {
       } else {
         tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
       }
-    } catch(error) {
+    } catch (error) {
       loadingButton.innerHTML = prevHtml;
       tutor_toast(__("Operation failed", "tutor"), error, "error");
     }

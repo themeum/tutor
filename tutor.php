@@ -45,7 +45,7 @@ if ( ! function_exists( 'tutor' ) ) {
 	 * @return object
 	 */
 	function tutor() {
-		if(isset($GLOBALS['tutor_plugin_info'])) {
+		if ( isset( $GLOBALS['tutor_plugin_info'] ) ) {
 			return $GLOBALS['tutor_plugin_info'];
 		}
 
@@ -101,11 +101,11 @@ if ( ! class_exists( '\TUTOR\Utils' ) ) {
 
 if ( ! function_exists( 'tutor_utils' ) ) {
 	function tutor_utils() {
-		if(!isset($GLOBALS['tutor_utils_object'])) {
+		if ( ! isset( $GLOBALS['tutor_utils_object'] ) ) {
 			// Use runtime cache
 			$GLOBALS['tutor_utils_object'] = new \TUTOR\Utils();
 		}
-		
+
 		return $GLOBALS['tutor_utils_object'];
 	}
 }
