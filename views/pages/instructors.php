@@ -318,4 +318,111 @@ $filters = array(
 	</div>
   </div>
 </div>
+<?php
+/**
+ * Instructor Approve, Reject popup
+ * that will be shown based on get params
+ *
+ * @since v2.0.0
+ */
+$instructor_id         = isset( $_GET['instructor'] ) ? sanitize_text_field( $_GET['instructor'] ) : '';
+$prompt_action         = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+	$instructor_data   = get_userdata( $instructor_id );
+if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) ) :
+	$instructor_status = tutor_utils()->instructor_status( $instructor_data->ID, false );
+	?>
+<div id="tutor-ins-approval-1" class="tutor-modal tutor-modal-is-close-beside tutor-modal-ins-approval tutor-is-active">
+	<span class="tutor-modal-overlay"></span>
+	<div class="tutor-modal-root">
+		<button data-tutor-modal-close="true" class="tutor-modal-close">
+			<span class="tutor-icon-56 ttr-line-cross-line"></span>
+		</button>
+		<div class="tutor-modal-inner">
+		<?php if ( $instructor_data ) : ?>
+				<div class="tutor-modal-body tutor-text-center">
+					<div class="tutor-modal-text-wrap">
+						<div class="text-regular-h4 color-text-primary">
+							<?php esc_html_e( 'A New Instructor Just Signed Up', 'tutor' ); ?>
+						</div>
+						<div class="text-regular-small color-text-subsued tutor-mt-10">
+							<?php esc_html_e( 'You can either accept or reject the application. The applicant will be notified via email either way.', 'tutor' ); ?>
+						</div>
+					</div>
+					<div class="tutor-modal-ins-meta tutor-mt-44">
+						<div class="flex-center">
+							<div class="tutor-avatar">
+								<?php echo get_avatar( $instructor_data->ID ); ?>
+							</div>
+						</div>
+						<div class="text-medium-h4 color-text-primay tutor-mt-20">
+							<?php
+							echo esc_html(
+								( '' !== $instructor_data->display_name ?
+								$instructor_data->display_name : ( '' !== $instructor_data->user_nicename ?
+								$instructor_data->user_nicename : '' ) )
+							);
+							?>
+						</div>
+						<div class="text-regular-body color-text-title tutor-mt-8">
+							<?php esc_html_e( 'Username:', 'tutor' ); ?> 
+							<span class="color-text-primary">
+								<?php echo esc_html( $instructor_data->user_login ); ?>
+							</span>
+						</div>
+						<div class="text-regular-body color-text-title tutor-mt-3">
+							<?php esc_html_e( 'Email:', 'tutor' ); ?> 
+							<span class="color-text-primary">
+								<?php echo esc_html( $instructor_data->user_email ); ?>
+							</span>
+						</div>
+					</div>
+					<div class="tutor-modal-buttons tutor-mt-35 tutor-mt-md-50">
+						<?php if ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) : ?>
+							<?php if ( 'pending' === $instructor_status ) : ?>
+								<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
+								</a>
+								<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-10" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>	
+								</a>
+								<?php elseif ( 'approved' === $instructor_status ) : ?>
+									<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-10" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>	
+									</a>
+								<?php elseif ( 'blocked' === $instructor_status ) : ?>
+									<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
+								</a>									
+							<?php endif; ?>
+						<?php else : ?>
+							<div class="tutor-alert tutor-danger">
+								<div class="tutor-alert-text">
+									<span class="tutor-alert-icon tutor-icon-34 ttr-cross-circle-outline-filled tutor-mr-10"></span>
+									<span>
+										<?php esc_html_e( 'Attempted invalid action', 'tutor' ); ?>
+									</span>
+								</div>
+							</div>
+						<?php endif; ?>
+					</div>
 
+				</div>
+			<?php endif; ?>
+			<?php if ( false === $instructor_data ) : ?>
+				<div class="tutor-modal-body tutor-text-center">
+					<div class="tutor-modal-text-wrap">
+						<div class="tutor-alert tutor-danger">
+								<div class="tutor-alert-text">
+									<span class="tutor-alert-icon tutor-icon-34 ttr-cross-circle-outline-filled tutor-mr-10"></span>
+									<span>
+									<?php esc_html_e( 'Invalid instructor', 'tutor' ); ?>
+									</span>
+								</div>
+							</div>
+						</div>
+				</div>	
+			<?php endif; ?>
+		</div>
+	</div>
+</div>
+<?php endif; ?>

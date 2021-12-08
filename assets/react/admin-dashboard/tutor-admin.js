@@ -244,8 +244,23 @@ jQuery(document).ready(function ($) {
         if (action == 'blocked') {
           message = 'Instructor blocked!';
         }
-        tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
-        location.reload();
+        /**
+         * If it is instructor modal for approve or blocked
+         * hide modal then show toast then reload
+         * 
+         * @since v2.0.0
+         */
+        const instructorModal = document.querySelector('.tutor-modal-ins-approval');
+        if (instructorModal) {
+          if (instructorModal.classList.contains('tutor-is-active')) {
+            instructorModal.classList.remove('tutor-is-active');
+          }
+          tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+          location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
+        } else {
+          tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+          location.reload();
+        }
       } else {
         tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
       }
@@ -254,6 +269,18 @@ jQuery(document).ready(function ($) {
       tutor_toast(__("Operation failed", "tutor"), error, "error");
     }
   });
+
+  /**
+   * If click on close instructor approve or modal then redirect to main URL
+   * if not redirect then it will not work with pagination.
+   */
+  const instructorModal =  document.querySelector('.tutor-modal-ins-approval .tutor-icon-56.ttr-line-cross-line');
+  if (instructorModal) {
+    instructorModal.addEventListener('click', function(){
+      console.log('ckk')
+      location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
+    })
+  }
 
   /**
    * On form submit block | approve instructor
