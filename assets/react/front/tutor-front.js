@@ -1249,68 +1249,70 @@ jQuery(document).ready(function($) {
 
     //warn user before leave page if quiz is running
     const crossQuiz = document.querySelector('.tutor-topbar-cross-icon');
-    crossQuiz.addEventListener('click', function(event) {
-        const target = event.target;
-        const targetTag = target.tagName
-        const parentTag = target.parentElement.tagName;
-
-        if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED') {
-            if (targetTag === 'A' || parentTag === 'A') {
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                let popup;
-
-                let data = {
-                    title: __('Abandon Quiz?', 'tutor'),
-                    description: __('Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor'),
-                    buttons: {
-                        keep: {
-                            title: __('Yes, leave quiz', 'tutor'),
-                            id: 'leave',
-                            class: 'tutor-btn tutor-is-outline tutor-is-default',
-                            callback: function () {
-
-                                var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
-                                $.ajax({
-                                    url: window._tutorobject.ajaxurl,
-                                    type: 'POST',
-                                    data: formData,
-                                    beforeSend: function () {
-                                        document.querySelector("#tutor-popup-leave").innerHTML = __('Leaving...', 'tutor');
-                                    },
-                                    success: function (response) {
-                                        if (response.success) {
-                                            if (target.href == undefined) {
-                                                location.href = target.parentElement.href
+    if (crossQuiz) {
+        crossQuiz.addEventListener('click', function(event) {
+            const target = event.target;
+            const targetTag = target.tagName
+            const parentTag = target.parentElement.tagName;
+    
+            if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED') {
+                if (targetTag === 'A' || parentTag === 'A') {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    let popup;
+    
+                    let data = {
+                        title: __('Abandon Quiz?', 'tutor'),
+                        description: __('Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor'),
+                        buttons: {
+                            keep: {
+                                title: __('Yes, leave quiz', 'tutor'),
+                                id: 'leave',
+                                class: 'tutor-btn tutor-is-outline tutor-is-default',
+                                callback: function () {
+    
+                                    var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
+                                    $.ajax({
+                                        url: window._tutorobject.ajaxurl,
+                                        type: 'POST',
+                                        data: formData,
+                                        beforeSend: function () {
+                                            document.querySelector("#tutor-popup-leave").innerHTML = __('Leaving...', 'tutor');
+                                        },
+                                        success: function (response) {
+                                            if (response.success) {
+                                                if (target.href == undefined) {
+                                                    location.href = target.parentElement.href
+                                                } else {
+                                                    location.href = target.href
+                                                }
                                             } else {
-                                                location.href = target.href
+                                                alert(__('Something went wrong', 'tutor'));
                                             }
-                                        } else {
+                                        },
+                                        error: function () {
                                             alert(__('Something went wrong', 'tutor'));
+                                            popup.remove();
                                         }
-                                    },
-                                    error: function () {
-                                        alert(__('Something went wrong', 'tutor'));
-                                        popup.remove();
-                                    }
-                                });
-                            }
-                        },
-                        reset: {
-                            title: __('Stay here', 'tutor'),
-                            id: 'reset',
-                            class: 'tutor-btn',
-                            callback: function () {
-                                popup.remove();
-                            }
-                        },
-                    }
-                };
-
-                popup = new window.tutor_popup($, '', 40).popup(data);
+                                    });
+                                }
+                            },
+                            reset: {
+                                title: __('Stay here', 'tutor'),
+                                id: 'reset',
+                                class: 'tutor-btn',
+                                callback: function () {
+                                    popup.remove();
+                                }
+                            },
+                        }
+                    };
+    
+                    popup = new window.tutor_popup($, '', 40).popup(data);
+                }
             }
-        }
-    });
+        });
+    }
 
     /* Disable start quiz button  */
     $('body').on('submit', 'form#tutor-start-quiz', function () {
