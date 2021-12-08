@@ -729,25 +729,38 @@ var otherColors = document.querySelector('.other_colors');
 var otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-option-field-row');
 var otherColorsExpanded = document.querySelector('.other_colors.expanded');
 var designNav = document.querySelectorAll('.tutor-option-nav-item');
-document.addEventListener('readystatechange', function (event) {
-  if (event.target.readyState === 'interactive') {}
-
-  if (event.target.readyState === 'complete') {
-    if (typeof otherColorsPreview === 'function') {
-      otherColorsPreview();
-    }
-
-    designNav.forEach(function (item) {
-      item.onclick = function () {
-        setTimeout(function () {
-          if ('design' === item.children[0].dataset.tab) {
-            otherColorsPreview();
-          }
-        });
-      };
-    });
+readyState_complete(function () {
+  if (typeof otherColorsPreview === 'function') {
+    otherColorsPreview();
   }
-});
+
+  designNav.forEach(function (item) {
+    item.onclick = function () {
+      setTimeout(function () {
+        if ('design' === item.children[0].dataset.tab) {
+          otherColorsPreview();
+        }
+      });
+    };
+  });
+}); // document.addEventListener('readystatechange', (event) => {
+// 	if (event.target.readyState === 'interactive') {
+// 	}
+// 	if (event.target.readyState === 'complete') {
+// 		if (typeof otherColorsPreview === 'function') {
+// 			otherColorsPreview();
+// 		}
+// 		designNav.forEach((item) => {
+// 			item.onclick = () => {
+// 				setTimeout(() => {
+// 					if ('design' === item.children[0].dataset.tab) {
+// 						otherColorsPreview();
+// 					}
+// 				})
+// 			}
+// 		})
+// 	}
+// });
 
 var otherColorsPreview = function otherColorsPreview() {
   var itemsHeight = initHeight = 0;
@@ -1936,6 +1949,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "elements": () => (/* binding */ elements),
 /* harmony export */   "json_download": () => (/* binding */ json_download)
 /* harmony export */ });
+// this function will load after document content load
+window.readyState_complete = function (func) {
+  var _funcCaller = function _funcCaller(f) {
+    return f();
+  };
+
+  document.addEventListener('readystatechange', function (event) {
+    if (event.target.readyState === 'complete') {
+      typeof func == 'function' ? _funcCaller(func) : '';
+    }
+  });
+};
+
 var element = function element(selector) {
   return document.querySelector(selector);
 };
@@ -1976,13 +2002,25 @@ var json_download = function json_download(response, fileName) {
 var navTabLists = document.querySelectorAll('ul.tutor-option-nav');
 var navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
 var navPages = document.querySelectorAll('.tutor-option-nav-page');
+readyState_complete(function () {
+  console.log('this should work');
+});
+readyState_complete(function () {
+  var loadNavItem = document.querySelector('li.tutor-option-nav-item a.active');
+
+  if (null !== loadNavItem) {
+    document.title = loadNavItem.querySelector('.nav-label').innerText + ' ‹ ' + _tutorobject.site_title;
+  }
+});
 navTabLists.forEach(function (list) {
   list.addEventListener('click', function (e) {
     var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
     var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
 
     if (dataTab) {
-      // remove active from other buttons
+      // Set page title on changing nav tabs
+      document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title; // remove active from other buttons
+
       navTabItems.forEach(function (item) {
         item.classList.remove('active');
 
@@ -2316,6 +2354,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           var url = new URL(window.location);
           url.searchParams.set('tab_page', dataTab);
+          document.title = "Hello World";
           window.history.pushState({}, '', url);
         } // Reset + Hide Suggestion box
 
@@ -31483,28 +31522,30 @@ var __webpack_exports__ = {};
   !*** ./assets/react/admin-dashboard/tutor-admin.js ***!
   \*****************************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./segments/navigation */ "./assets/react/admin-dashboard/segments/navigation.js");
-/* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_segments_navigation__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./segments/image-preview */ "./assets/react/admin-dashboard/segments/image-preview.js");
-/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_image_preview__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
-/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
-/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
-/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
-/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
-/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
-/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
-/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
-/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _segments_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./segments/lib */ "./assets/react/admin-dashboard/segments/lib.js");
+/* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./segments/navigation */ "./assets/react/admin-dashboard/segments/navigation.js");
+/* harmony import */ var _segments_navigation__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_segments_navigation__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./segments/image-preview */ "./assets/react/admin-dashboard/segments/image-preview.js");
+/* harmony import */ var _segments_image_preview__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_segments_image_preview__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./segments/options */ "./assets/react/admin-dashboard/segments/options.js");
+/* harmony import */ var _segments_options__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_segments_options__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _segments_import_export__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./segments/import-export */ "./assets/react/admin-dashboard/segments/import-export.js");
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./segments/addonlist */ "./assets/react/admin-dashboard/segments/addonlist.js");
+/* harmony import */ var _segments_addonlist__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_segments_addonlist__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./segments/color-preset */ "./assets/react/admin-dashboard/segments/color-preset.js");
+/* harmony import */ var _segments_color_preset__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_segments_color_preset__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./segments/reset */ "./assets/react/admin-dashboard/segments/reset.js");
+/* harmony import */ var _segments_reset__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_segments_reset__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _addons_list_addons_list_main__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./addons-list/addons-list-main */ "./assets/react/admin-dashboard/addons-list/addons-list-main.js");
+/* harmony import */ var _segments_filter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./segments/filter */ "./assets/react/admin-dashboard/segments/filter.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./segments/withdraw */ "./assets/react/admin-dashboard/segments/withdraw.js");
+/* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
+/* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_11__);
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -31687,7 +31728,8 @@ jQuery(document).ready(function ($) {
 
   $(document).on("click", "a.instructor-action", /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      var $that, action, instructorId, loadingButton, prevHtml, formData, post, response, message;
+      var $that, action, instructorId, loadingButton, prevHtml, formData, post, response, message, _instructorModal;
+
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -31708,7 +31750,7 @@ jQuery(document).ready(function ($) {
               formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
               _context.prev = 13;
               _context.next = 16;
-              return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_8__["default"])(formData);
+              return (0,_segments_filter__WEBPACK_IMPORTED_MODULE_9__["default"])(formData);
 
             case 16:
               post = _context.sent;
@@ -31734,9 +31776,27 @@ jQuery(document).ready(function ($) {
                 if (action == 'blocked') {
                   message = 'Instructor blocked!';
                 }
+                /**
+                 * If it is instructor modal for approve or blocked
+                 * hide modal then show toast then reload
+                 * 
+                 * @since v2.0.0
+                 */
 
-                tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
-                location.reload();
+
+                _instructorModal = document.querySelector('.tutor-modal-ins-approval');
+
+                if (_instructorModal) {
+                  if (_instructorModal.classList.contains('tutor-is-active')) {
+                    _instructorModal.classList.remove('tutor-is-active');
+                  }
+
+                  tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+                  location.href = "".concat(window._tutorobject.home_url, "/wp-admin/admin.php?page=tutor-instructors");
+                } else {
+                  tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+                  location.reload();
+                }
               } else {
                 tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
               }
@@ -31762,6 +31822,19 @@ jQuery(document).ready(function ($) {
       return _ref.apply(this, arguments);
     };
   }());
+  /**
+   * If click on close instructor approve or modal then redirect to main URL
+   * if not redirect then it will not work with pagination.
+   */
+
+  var instructorModal = document.querySelector('.tutor-modal-ins-approval .tutor-icon-56.ttr-line-cross-line');
+
+  if (instructorModal) {
+    instructorModal.addEventListener('click', function () {
+      console.log('ckk');
+      location.href = "".concat(window._tutorobject.home_url, "/wp-admin/admin.php?page=tutor-instructors");
+    });
+  }
   /**
    * On form submit block | approve instructor
    *
@@ -31796,6 +31869,7 @@ jQuery(document).ready(function ($) {
   /**
    * Password Reveal
    */
+
 
   $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon

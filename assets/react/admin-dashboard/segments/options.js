@@ -313,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					// History push
 					const url = new URL(window.location);
 					url.searchParams.set('tab_page', dataTab);
+					document.title = "Hello World";
 					window.history.pushState({}, '', url);
 				}
 

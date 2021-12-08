@@ -998,7 +998,7 @@ class Utils {
 	 */
 	public function checking_nonce( $request_method = null ) {
 		!$request_method ? $request_method = $_SERVER['REQUEST_METHOD'] : 0;
-		
+
 		$data = strtolower($request_method) === 'post' ? $_POST : $_GET;
 		$nonce_value = sanitize_text_field(tutor_utils()->array_get(tutor()->nonce, $data, null));
 		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
@@ -2344,7 +2344,7 @@ class Utils {
 	    $course_id = $this->get_post_id( $course_id );
 	    $user_id   = $this->get_user_id( $user_id );
 	    $enrolled  = $this->is_enrolled($course_id, $user_id);
-
+die($cancel_status);
 	    if ( $enrolled ) {
 	        global $wpdb;
 
@@ -2365,6 +2365,7 @@ class Utils {
 	            $wpdb->update( $wpdb->posts, array( 'post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id ) );
 
 				if ( $cancel_status === 'cancel' ) {
+					die($cancel_status);
 					do_action( 'tutor_enrollment/after/cancel', $enrolled->ID );
 				}
 			}
@@ -5056,11 +5057,11 @@ class Utils {
 					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
 			WHERE 	quiz_attempts.attempt_status != %s
-					AND ( 
-							users.user_email LIKE %s 
-							OR users.display_name LIKE %s 
-							OR quiz.post_title LIKE %s 
-							OR course.post_title LIKE %s 
+					AND (
+							users.user_email LIKE %s
+							OR users.display_name LIKE %s
+							OR quiz.post_title LIKE %s
+							OR course.post_title LIKE %s
 						)
 					AND quiz_attempts.attempt_ended_at IS NOT NULL
 					{$result_clause}
@@ -7680,7 +7681,7 @@ class Utils {
 			'lesson' => 'lesson',
 			'tutor_zoom_meeting' => 'zoom_meeting'
 		);
-		
+
 		$content_type = get_post_field( 'post_type', $content_id );
 
 		return $this->get_course_id_by($mapping[$content_type], $content_id);
@@ -8485,31 +8486,31 @@ class Utils {
 	}
 
 	/**
-	 * Course nav items 
+	 * Course nav items
 	 *
 	 * @since v2.0.0
 	 */
 	public function course_nav_items() {
 		$array =  array(
-			'info' => array( 
-				'title' => __('Course Info', 'tutor'), 
+			'info' => array(
+				'title' => __('Course Info', 'tutor'),
 				'method' => 'tutor_course_info_tab'
 			),
-			'curriculum' => array( 
-				'title' => __('Curriculum', 'tutor'), 
-				'method' => 'tutor_course_topics' 
+			'curriculum' => array(
+				'title' => __('Curriculum', 'tutor'),
+				'method' => 'tutor_course_topics'
 			),
-			'reviews' => array( 
-				'title' => __('Reviews', 'tutor'), 
-				'method' => 'tutor_course_target_reviews_html' 
+			'reviews' => array(
+				'title' => __('Reviews', 'tutor'),
+				'method' => 'tutor_course_target_reviews_html'
 			),
-			'questions' => array( 
-				'title' => __('Q&A', 'tutor'), 
+			'questions' => array(
+				'title' => __('Q&A', 'tutor'),
 				'method' => 'tutor_course_question_and_answer',
 				'require_enrolment' => true
 			),
-			'announcements' => array( 
-				'title' => __('Announcements', 'tutor'), 
+			'announcements' => array(
+				'title' => __('Announcements', 'tutor'),
 				'method' => 'tutor_course_announcements',
 				'require_enrolment' => true
 			)
