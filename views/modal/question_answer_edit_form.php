@@ -12,7 +12,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
 
 <div class="tutor-quiz-question-answers-form">
 
-    <input type="hidden" name="tutor_quiz_answer_id" value="<?php echo $old_answer->answer_id; ?>" />
+    <input type="hidden" name="tutor_quiz_answer_id" value="<?php echo esc_attr( $old_answer->answer_id ); ?>" />
 
 	<?php
 	if ($question_type === 'true_false'){
@@ -25,7 +25,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <h4><?php _e('Answer title', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
+                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="<?php echo esc_attr( $answer_title ); ?>">
                 </div>
             </div>
         </div>
@@ -35,12 +35,12 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
                     <div class="tutor-media-upload-wrap">
-                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="<?php echo $image_id; ?>">
+                        <input type="hidden" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][image_id]" value="<?php echo esc_attr( $image_id ); ?>">
                         <div class="tutor-media-preview">
                             <a href="javascript:;" class="tutor-media-upload-btn">
                                 <?php
                                 if ($image_id){
-                                    echo '<img src="'.wp_get_attachment_image_url($image_id).'" />';
+                                    echo '<img src="'. esc_url( wp_get_attachment_image_url( $image_id ) ) .'" />';
                                 }else{
                                     echo '<i class="tutor-icon-image1"></i>';
                                 }
@@ -59,19 +59,19 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php
+                        <input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text" <?php
                         echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>> <?php _e('Only text', 'tutor'); ?>
                     </label>
                 </div>
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo
+                        <input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="image" <?php echo
                         checked('image', $answer_view_format) ?> > <?php _e('Only Image', 'tutor'); ?>
                     </label>
                 </div>
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?> > <?php _e('Text &amp; Image both', 'tutor'); ?>
+                        <input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?> > <?php _e('Text &amp; Image both', 'tutor'); ?>
                     </label>
                 </div>
             </div>
@@ -83,7 +83,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <h4><?php _e('Question Title', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
+                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="<?php echo esc_attr( $answer_title ); ?>">
                 </div>
             </div>
             <p class="help"><?php _e( 'Please make sure that <b>{dash}</b> variable contains in your question title to show dash, You can use multiple variable', 'tutor' ); ?></p>
@@ -93,7 +93,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <h4><?php _e('Correct Answer(s)', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="<?php echo $answer_two_gap_match; ?>">
+                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_two_gap_match]" value="<?php echo esc_attr( $answer_two_gap_match ); ?>">
                 </div>
             </div>
             <p class="help"><?php _e( 'Separate multiple answer by pipe <b>( | )</b> , 1 answer per variable assigned in question', 'tutor' ); ?></p>
@@ -107,7 +107,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <h4><?php _e('Answer title', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
+                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="<?php echo esc_attr( $answer_title ); ?>">
                 </div>
             </div>
         </div>
@@ -115,7 +115,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <h4><?php _e('Matched Answer title', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="<?php echo $answer_two_gap_match; ?>">
+                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][matched_answer_title]" value="<?php echo esc_attr( $answer_two_gap_match ); ?>">
                 </div>
             </div>
         </div>
@@ -125,12 +125,12 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
                     <div class="tutor-media-upload-wrap">
-                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="<?php echo $image_id; ?>">
+                        <input type="hidden" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][image_id]" value="<?php echo esc_attr( $image_id ); ?>">
                         <div class="tutor-media-preview">
                             <a href="javascript:;" class="tutor-media-upload-btn">
                                 <?php
                                 if ($image_id){
-                                    echo '<img src="'.wp_get_attachment_image_url($image_id).'" />';
+                                    echo '<img src="'. esc_url( wp_get_attachment_image_url( $image_id ) ) .'" />';
                                 }else{
                                     echo '<i class="tutor-icon-image1"></i>';
                                 }
@@ -150,19 +150,19 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>>
+                        <input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>>
                         <?php _e('Only text', 'tutor'); ?>
                     </label>
                 </div>
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?> >
+                        <input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?> >
                         <?php _e('Only Image', 'tutor'); ?>
                     </label>
                 </div>
                 <div class="tutor-quiz-builder-col auto-width">
                     <label>
-                        <input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?> >
+                        <input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?> >
                         <?php _e('Text &amp; Image both', 'tutor'); ?>
                     </label>
                 </div>
@@ -178,12 +178,12 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
                     <div class="tutor-media-upload-wrap">
-                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="<?php echo $image_id; ?>">
+                        <input type="hidden" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][image_id]" value="<?php echo esc_attr( $image_id ); ?>">
                         <div class="tutor-media-preview">
                             <a href="javascript:;" class="tutor-media-upload-btn">
                                 <?php
                                 if ($image_id){
-                                    echo '<img src="'.wp_get_attachment_image_url($image_id).'" />';
+                                    echo '<img src="'. esc_url( wp_get_attachment_image_url( $image_id ) ) .'" />';
                                 }else{
                                     echo '<i class="tutor-icon-image1"></i>';
                                 }
@@ -202,7 +202,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <h4><?php _e('Image matched text', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
+                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="<?php echo esc_attr( $answer_title ); ?>">
                 </div>
             </div>
         </div>  <!-- /.tutor-quiz-builder-group -->
@@ -215,12 +215,12 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
                     <div class="tutor-media-upload-wrap">
-                        <input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="<?php echo $image_id; ?>">
+                        <input type="hidden" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][image_id]" value="<?php echo esc_attr( $image_id ); ?>">
                         <div class="tutor-media-preview">
                             <a href="javascript:;" class="tutor-media-upload-btn">
                                 <?php
                                 if ($image_id){
-                                    echo '<img src="'.wp_get_attachment_image_url($image_id).'" />';
+                                    echo '<img src="'. esc_url( wp_get_attachment_image_url( $image_id ) ) .'" />';
                                 }else{
                                     echo '<i class="tutor-icon-image1"></i>';
                                 }
@@ -239,7 +239,7 @@ $answer_two_gap_match = ! empty($old_answer->answer_two_gap_match) ? stripslashe
             <h4><?php _e('Answer input value', 'tutor'); ?></h4>
             <div class="tutor-quiz-builder-row">
                 <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
+                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="<?php echo esc_attr( $answer_title ); ?>">
                 </div>
             </div>
             <p class="help"><?php _e('The answers that students enter should match with this text. Write in <strong>small caps</strong>','tutor'); ?></p>

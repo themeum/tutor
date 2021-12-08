@@ -4,11 +4,11 @@ if (!empty($_POST['tutor_quiz_builder_quiz_id'])) {
     $quiz_id = sanitize_text_field($_POST['tutor_quiz_builder_quiz_id']);
     $quiz = get_post($quiz_id);
 
-    echo '<input type="hidden"  id="tutor_quiz_builder_quiz_id" value="' . $quiz_id . '" />';
+    echo '<input type="hidden"  id="tutor_quiz_builder_quiz_id" value="' . esc_attr( $quiz_id ) . '" />';
 } elseif (!empty($quiz_id)) {
     $quiz = get_post($quiz_id);
 
-    echo '<input type="hidden" id="tutor_quiz_builder_quiz_id" value="' . $quiz_id . '" />';
+    echo '<input type="hidden" id="tutor_quiz_builder_quiz_id" value="' . esc_attr( $quiz_id ) . '" />';
 }
 
 if (!$quiz) {
@@ -101,12 +101,12 @@ if ( $topic_id != '' ) {
                                     </span>
 
                                     <span class="question-edit-icon">
-                                        <a href="javascript:;" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>"><i class="tutor-icon-pencil"></i> </a>
+                                        <a href="javascript:;" class="tutor-quiz-open-question-form" data-question-id="<?php echo esc_attr( $question->question_id ); ?>"><i class="tutor-icon-pencil"></i> </a>
                                     </span>
                                 </div>
 
                                 <div class="quiz-builder-qustion-trash">
-                                    <a href="javascript:;" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>"><i class="tutor-icon-garbage"></i> </a>
+                                    <a href="javascript:;" class="tutor-quiz-question-trash" data-question-id="<?php echo esc_attr( $question->question_id ); ?>"><i class="tutor-icon-garbage"></i> </a>
                                 </div>
                             </div>
                     <?php
@@ -144,7 +144,7 @@ if ( $topic_id != '' ) {
                         <h4> <?php _e('Time Limit', 'tutor'); ?> </h4>
                         <div class="tutor-quiz-builder-row">
                             <div class="tutor-quiz-builder-col auto-width">
-                                <input type="text" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
+                                <input type="text" name="quiz_option[time_limit][time_value]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ) ?>">
                             </div>
                             <div class="tutor-quiz-builder-col auto-width">
                                 <?php $limit_time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type', 'minutes') ?>
@@ -219,7 +219,7 @@ if ( $topic_id != '' ) {
                                 <div class="tutor-field-type-slider" data-min="0" data-max="20">
                                     <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
                                     <div class="tutor-field-slider"></div>
-                                    <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
+                                    <input type="hidden" value="<?php echo esc_attr( $attempts_allowed ); ?>" name="quiz_option[attempts_allowed]" />
                                 </div>
                             </div>
                         </div>
@@ -230,7 +230,7 @@ if ( $topic_id != '' ) {
                         <h4><?php _e('Passing Grade (%)', 'tutor'); ?></h4>
                         <div class="tutor-quiz-builder-row">
                             <div class="tutor-quiz-builder-col">
-                                <input type="number" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10">
+                                <input type="number" name="quiz_option[passing_grade]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 80 ) ) ?>" size="10">
                             </div>
                         </div>
                         <p class="help"><?php _e('Set the passing percentage for this quiz', 'tutor'); ?></p>
@@ -240,7 +240,7 @@ if ( $topic_id != '' ) {
                         <h4><?php _e('Max questions allowed to answer', 'tutor'); ?></h4>
                         <div class="tutor-quiz-builder-row">
                             <div class="tutor-quiz-builder-col">
-                                <input type="number" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>">
+                                <input type="number" name="quiz_option[max_questions_for_answer]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'max_questions_for_answer', 10 ) ) ?>">
                             </div>
                         </div>
                         <p class="help"><?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?></p>
@@ -254,7 +254,7 @@ if ( $topic_id != '' ) {
             <div class="tutor-quiz-builder-modal-control-btn-group">
                 <div class="quiz-builder-btn-group-left">
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-back"><?php _e('Back', 'tutor'); ?></a>
-                    <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn" data-toast_success_message="<?php _e('Saved', 'tutor'); ?>"><?php _e('Save', 'tutor'); ?></a>
+                    <a href="#quiz-builder-tab-advanced-options" class="quiz-modal-tab-navigation-btn quiz-modal-settings-save-btn" data-toast_success_message="<?php esc_attr_e('Saved', 'tutor'); ?>"><?php _e('Save', 'tutor'); ?></a>
                 </div>
                 <!--<div class="quiz-builder-btn-group-right">
                     <a href="#quiz-builder-tab-questions" class="quiz-modal-tab-navigation-btn quiz-modal-btn-cancel"><?php /*_e('Cancel', 'tutor'); */ ?></a>
@@ -322,7 +322,7 @@ if ( $topic_id != '' ) {
                 <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
-                        <input type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>">
+                        <input type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'short_answer_characters_limit', 200 ) ); ?>">
                     </div>
                 </div>
                 <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
@@ -332,7 +332,7 @@ if ( $topic_id != '' ) {
                 <h4><?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
-                        <input type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>">
+                        <input type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo esc_attr( tutor_utils()->get_quiz_option( $quiz_id, 'open_ended_answer_characters_limit', 500 ) ); ?>">
                     </div>
                 </div>
                 <p class="help"><?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?></p>

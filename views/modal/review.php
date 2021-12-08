@@ -1,5 +1,5 @@
 <form class="tutor-component-popup-container tutor-course-review-popup-form">  
-    <input type="hidden" name="tutor_course_id" value="<?php echo $course_id; ?>">          
+    <input type="hidden" name="tutor_course_id" value="<?php echo esc_attr( $course_id ); ?>">          
     <div class="tutor-component-popup-40">                
         <div class="tutor-component-content-container tutor-star-rating-container">
             <h3><?php _e('How would you rate this course?', 'tutor'); ?></h3>
@@ -11,7 +11,7 @@
                 ?>
             </div>
             <div class="tutor-form-group">
-                <textarea name="review" placeholder="<?php _e('Tell us about your own personal experience taking this course. Was it a good match for you?', 'tutor'); ?>"></textarea>
+                <textarea name="review" placeholder="<?php esc_attr_e('Tell us about your own personal experience taking this course. Was it a good match for you?', 'tutor'); ?>"></textarea>
             </div>
 
             <div class="tutor-component-button-container">

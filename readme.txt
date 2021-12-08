@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.12 =
+= 1.9.12 - December 8, 2021 =
 Update: Security Update
 
 = 1.9.11 - October 18, 2021 =

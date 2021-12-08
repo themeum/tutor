@@ -29,7 +29,7 @@ $user = get_userdata($user_id);
                     </div>
                     <div class="attempt-info-content">
                         <h5><?php echo __('Student Name', 'tutor'); ?></h5>
-                        <h4><?php echo $user->display_name; ?></h4>
+                        <h4><?php echo esc_html( $user->display_name ); ?></h4>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@ $user = get_userdata($user_id);
                     <h5><?php echo __('Quiz', 'tutor'); ?></h5>
                     <h4>
                         <?php
-                        echo "<a href='" .admin_url("post.php?post={$attempt->quiz_id}&action=edit")."'>".get_the_title($attempt->quiz_id)."</a>";
+                        echo "<a href='" .esc_url( admin_url("post.php?post={$attempt->quiz_id}&action=edit") )."'>".get_the_title($attempt->quiz_id)."</a>";
                         ?>
                     </h4>
                 </div>
@@ -75,7 +75,7 @@ $user = get_userdata($user_id);
                         <?php
                         $quiz = tutor_utils()->get_course_by_quiz($attempt->quiz_id);
                         if ($quiz) {
-                            echo "<a href='".admin_url( "post.php?post={$quiz->ID}&action=edit" ) . "'>". get_the_title( $quiz->ID )."</a>";
+                            echo "<a href='".esc_url( admin_url( "post.php?post={$quiz->ID}&action=edit" ) ) . "'>". get_the_title( $quiz->ID )."</a>";
                         }
                         ?>
                     </h4>

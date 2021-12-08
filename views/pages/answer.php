@@ -14,7 +14,7 @@ $question = tutor_utils()->get_qa_question($question_id);
         <form action="<?php echo admin_url('admin-post.php') ?>" id="tutor_admin_answer_form" method="post">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
             <input type="hidden" value="tutor_place_answer" name="action"/>
-            <input type="hidden" value="<?php echo $question_id; ?>" name="question_id"/>
+            <input type="hidden" value="<?php echo esc_attr( $question_id ); ?>" name="question_id"/>
 
             <div class="tutor-option-field-row">
                 <div class="tutor-option-field">
