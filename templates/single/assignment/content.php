@@ -473,29 +473,35 @@ function tutor_assignment_convert_seconds($seconds){
 								$attached_files = json_decode($attached_files, true);
 		
 								if (tutor_utils()->count($attached_files)) {
-						?>
-						<div class="tutor-attachment-files submited-files d-flex tutor-mt-20 tutor-mt-sm-40">
-							<?php
-								$upload_dir = wp_get_upload_dir();
-								$upload_baseurl = trailingslashit(tutor_utils()->array_get('baseurl', $upload_dir));
-									foreach ($attached_files as $attached_file) {
-								?>
-										<div class="tutor-instructor-card">
-											<div class="tutor-icard-content">
-												<div class="text-regular-body color-text-title">
-													<?php echo tutor_utils()->array_get('name', $attached_file); ?>
+									?>
+									<div class="tutor-attachment-files submited-files d-flex tutor-mt-20 tutor-mt-sm-40">
+										<?php
+											$upload_dir = wp_get_upload_dir();
+											$upload_baseurl = trailingslashit(tutor_utils()->array_get('baseurl', $upload_dir));
+
+											foreach ($attached_files as $attached_file) {
+												?>
+												<div class="tutor-instructor-card">
+													<div class="tutor-icard-content">
+														<div class="text-regular-body color-text-title">
+															<?php echo tutor_utils()->array_get('name', $attached_file); ?>
+														</div>
+														<div class="text-regular-small">Size: <?php echo tutor_utils()->array_get('size', $attached_file); ?></div>
+													</div>
+													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
+														<a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
+															<span class="ttr-download-line color-design-brand"></span>
+														</a>
+													</div>
 												</div>
-												<div class="text-regular-small">Size: <?php echo tutor_utils()->array_get('size', $attached_file); ?></div>
-											</div>
-											<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
-												<a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
-													<span class="ttr-download-line color-design-brand"></span>
-												</a>
-											</div>
-										</div>
-							<?php }  ?>
-						</div>
-						<?php } } ?>
+												<?php 
+											}  
+										?>
+									</div>
+									<?php 
+								} 
+							} 
+						?>
 					</div>
 				</div>
 
