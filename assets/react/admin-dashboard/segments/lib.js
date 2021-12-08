@@ -1,3 +1,17 @@
+
+
+// this function will load after document content load
+window.readyState_complete = (func) => {
+  const _funcCaller = (f) => f();
+  document.addEventListener('readystatechange', (event) => {
+    if (event.target.readyState === 'complete') {
+      typeof func == 'function' ? _funcCaller(func) : '';
+    }
+  });
+}
+
+
+
 const element = (selector) => {
   return document.querySelector(selector);
 };

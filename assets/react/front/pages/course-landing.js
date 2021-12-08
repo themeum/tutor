@@ -7,7 +7,7 @@ window.jQuery(document).ready($ => {
      * 
      * @since v1.9.5
      */
-     $('.tutor-course-retake-button').click(function(e) {
+     $('.tutor-course-retake-button').prop('disabled', false).click(function(e) {
         e.preventDefault();
 
         var url = $(this).attr('href');
