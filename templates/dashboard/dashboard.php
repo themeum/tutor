@@ -53,12 +53,13 @@ if(tutor_utils()->get_option('enable_profile_completion')) {
                             foreach ($profile_completion as $key => $data) {
                                 $is_set = $data['is_set']; // Whether the step is done or not
                                 ?>
-                                <li>
-                                    <?php if($is_set){ ?>
-                                    <span class="icon ttr-tick-circle-outline-filled not-empty"></span>
-                                    <?php } else { ?>
-                                    <span class="ttr-cross-circle-outline-filled empty"></span>
-                                    <?php } ?>
+                                <li class="tutor-bs-d-flex tutor-bs-align-items-center">
+                                    <?php if($is_set): ?>
+                                        <span class="icon ttr-tick-circle-outline-filled not-empty tutor-mr-5"></span>
+                                    <?php else: ?>
+                                        <span class="ttr-cross-circle-outline-filled empty tutor-mr-5"></span>
+                                    <?php endif; ?>
+
                                     <span>
                                         <?php echo $data['label_html']; ?>
                                     </span>
@@ -182,7 +183,7 @@ if(count($instructor_course)) {
 
     ?>
         <h3 class="popular-courses-heading-dashboard">
-            <?php esc_html_e('Popular Courses', 'tutor'); ?>
+            <?php esc_html_e('My Courses', 'tutor'); ?>
             <a style="float:right" class="tutor-view-all-course" href="<?php echo esc_url(tutor_utils()->tutor_dashboard_url('my-courses')); ?>">
                 <?php esc_html_e('View All', 'tutor'); ?>
             </a>
@@ -234,7 +235,7 @@ if(count($instructor_course)) {
                             </td>
                             <td data-th="<?php esc_html_e('Rating', 'tutor'); ?>">
                                 <div class="td-tutor-rating text-regular-body color-text-subsued">
-                                    <?php tutor_utils()->star_rating_generator($course_rating->rating_avg); ?> <span><?php esc_html_e($course_rating->rating_avg); ?></span>
+                                    <?php tutor_utils()->star_rating_generator_v2($course_rating->rating_avg, null, true); ?>
                                 </div>
                             </td>
                         </tr>

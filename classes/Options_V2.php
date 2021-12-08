@@ -142,12 +142,11 @@ class Options_V2 {
 	public function tutor_delete_single_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 
-		$delete_id          = $this->get_request_data( 'delete_id' );
+		$delete_id = $this->get_request_data( 'delete_id' );
 		unset( $tutor_settings_log[ $delete_id ] );
 
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
-		wp_send_json_success( $tutor_settings_log );
 	}
 
 	/**
@@ -275,7 +274,7 @@ class Options_V2 {
 
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
 
-		$option = tutor_utils()->sanitize_recursively( $option, array('email_footer_text') );
+		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
@@ -550,10 +549,10 @@ class Options_V2 {
 								'desc'    => __( 'The highest number of attempts students are allowed to take for a quiz. 0 means unlimited attempts.', 'tutor' ),
 							),
 							array(
-								'key'     => 'quiz_previous_button_disabled',
+								'key'     => 'quiz_previous_button_enabled',
 								'type'    => 'toggle_switch',
-								'label'   => __( 'Hide Quiz Previous Button', 'tutor' ),
-								'default' => 'off',
+								'label'   => __( 'Show Quiz Previous Button', 'tutor' ),
+								'default' => 'on',
 								'desc'    => __( 'Choose whether to show or hide previous button for single question.', 'tutor' ),
 							),
 							array(

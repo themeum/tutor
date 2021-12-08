@@ -5489,272 +5489,308 @@
 }
 
 .text-thin-h1 {
-  font-weight: 100 !important;
-  font-size: 80px !important;
+  font-weight: 100;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-thin-h2 {
-  font-weight: 100 !important;
-  font-size: 60px !important;
+  font-weight: 100;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-thin-h3 {
-  font-weight: 100 !important;
-  font-size: 40px !important;
+  font-weight: 100;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-thin-h4 {
-  font-weight: 100 !important;
-  font-size: 30px !important;
+  font-weight: 100;
+  font-size: 30px;
   line-height: 133%;
 }
 
 .text-thin-h5 {
-  font-weight: 100 !important;
-  font-size: 24px !important;
+  font-weight: 100;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-thin-h6 {
-  font-weight: 100 !important;
-  font-size: 20px !important;
+  font-weight: 100;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-thin-body {
-  font-weight: 100 !important;
-  font-size: 16px !important;
+  font-weight: 100;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-thin-caption {
-  font-weight: 100 !important;
-  font-size: 15px !important;
+  font-weight: 100;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-thin-small {
-  font-weight: 100 !important;
-  font-size: 13px !important;
+  font-weight: 100;
+  font-size: 13px;
   line-height: 138%;
 }
 
 .text-thin-tiny {
-  font-weight: 100 !important;
-  font-size: 11px !important;
+  font-weight: 100;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-regular-h1 {
-  font-weight: 400 !important;
-  font-size: 80px !important;
+  font-weight: 400;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-regular-h2 {
-  font-weight: 400 !important;
-  font-size: 60px !important;
+  font-weight: 400;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-regular-h3 {
-  font-weight: 400 !important;
-  font-size: 40px !important;
+  font-weight: 400;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-regular-h4 {
-  font-weight: 400 !important;
-  font-size: 30px !important;
+  font-weight: 400;
+  font-size: 30px;
   line-height: 133%;
 }
 
 .text-regular-h5 {
-  font-weight: 400 !important;
-  font-size: 24px !important;
+  font-weight: 400;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-regular-h6 {
-  font-weight: 400 !important;
-  font-size: 20px !important;
+  font-weight: 400;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-regular-body, .tutor-course-details-page .tutor-course-details-tab .tab-item-content p, .tutor-accordion-item-body-content, .tutor-course-listing-filter .filter-widget-checkboxes label {
-  font-weight: 400 !important;
-  font-size: 16px !important;
+  font-weight: 400;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-regular-caption, .tutor-alert, .tutor-alert .tutor-alert-text, table.tutor-ui-table .td-list-item .tutor-form-check label, .tutor-default-tab .tab-header-item-seemore-popup .tab-header-item {
-  font-weight: 400 !important;
-  font-size: 15px !important;
+  font-weight: 400;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-regular-small, .text-body, .tooltip-wrap .tooltip-txt {
-  font-weight: 400 !important;
-  font-size: 13px !important;
+  font-weight: 400;
+  font-size: 13px;
   line-height: 138%;
 }
 
 .text-regular-tiny {
-  font-weight: 400 !important;
-  font-size: 11px !important;
+  font-weight: 400;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-medium-h1 {
-  font-weight: 500 !important;
-  font-size: 80px !important;
+  font-weight: 500;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-medium-h2 {
-  font-weight: 500 !important;
-  font-size: 60px !important;
+  font-weight: 500;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-medium-h3 {
-  font-weight: 500 !important;
-  font-size: 40px !important;
+  font-weight: 500;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-medium-h4 {
-  font-weight: 500 !important;
-  font-size: 30px !important;
+  font-weight: 500;
+  font-size: 30px;
   line-height: 123%;
 }
 
 .text-medium-h5 {
-  font-weight: 500 !important;
-  font-size: 24px !important;
+  font-weight: 500;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-medium-h6, .tutor-accordion-item-header {
-  font-weight: 500 !important;
-  font-size: 20px !important;
+  font-weight: 500;
+  font-size: 20px;
   line-height: 140%;
 }
 
 .text-medium-body, select.tutor-form-select, .tutor-dropdown-select-selected > div:first-child {
-  font-weight: 500 !important;
-  font-size: 16px !important;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-medium-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers, .tutor-default-tab .tab-header-item, .tutor-default-tab .tab-header-item-seemore-toggle, .tutor-wp-dashboard-filter-items .tutor-form-label {
-  font-weight: 500 !important;
-  font-size: 15px !important;
+  font-weight: 500;
+  font-size: 15px;
   line-height: 160%;
 }
 
-.text-medium-small, .tutor-badge-label, .tutor-course-listing-item-sm .tutor-ratings .tutor-rating-text {
-  font-weight: 500 !important;
-  font-size: 13px !important;
+.text-medium-small, .tutor-badge-label, .tutor-form-select-with-icon select, .tutor-course-listing-item-sm .tutor-ratings .tutor-rating-text {
+  font-weight: 500;
+  font-size: 13px;
   line-height: 162%;
 }
 
 .text-medium-tiny {
-  font-weight: 500 !important;
-  font-size: 11px !important;
+  font-weight: 500;
+  font-size: 11px;
   line-height: 145%;
 }
 
+.text-semi-h1 {
+  font-weight: 600;
+  font-size: 80px;
+  line-height: 101%;
+}
+
+.text-semi-h2 {
+  font-weight: 600;
+  font-size: 60px;
+  line-height: 117%;
+}
+
+.text-semi-h3 {
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 120%;
+}
+
+.text-semi-h4 {
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 123%;
+}
+
+.text-semi-h5 {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 142%;
+}
+
+.text-semi-h6 {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 150%;
+}
+
 .text-semi-caption {
-  font-weight: 600 !important;
-  font-size: 15px !important;
+  font-weight: 600;
+  font-size: 15px;
   line-height: 165%;
 }
 
 .text-bold-h1 {
-  font-weight: 700 !important;
-  font-size: 80px !important;
+  font-weight: 700;
+  font-size: 80px;
   line-height: 101%;
 }
 
 .text-bold-h2 {
-  font-weight: 700 !important;
-  font-size: 60px !important;
+  font-weight: 700;
+  font-size: 60px;
   line-height: 117%;
 }
 
 .text-bold-h3 {
-  font-weight: 700 !important;
-  font-size: 40px !important;
+  font-weight: 700;
+  font-size: 40px;
   line-height: 120%;
 }
 
 .text-bold-h4 {
-  font-weight: 700 !important;
-  font-size: 30px !important;
+  font-weight: 700;
+  font-size: 30px;
   line-height: 123%;
 }
 
 .text-bold-h5 {
-  font-weight: 700 !important;
-  font-size: 24px !important;
+  font-weight: 700;
+  font-size: 24px;
   line-height: 142%;
 }
 
 .text-bold-h6 {
-  font-weight: 700 !important;
-  font-size: 20px !important;
+  font-weight: 700;
+  font-size: 20px;
   line-height: 150%;
 }
 
 .text-bold-body {
-  font-weight: 700 !important;
-  font-size: 16px !important;
+  font-weight: 700;
+  font-size: 16px;
   line-height: 162%;
 }
 
 .text-bold-caption, .tutor-ui-pagination ul.tutor-pagination-numbers .page-numbers.current {
-  font-weight: 700 !important;
-  font-size: 15px !important;
+  font-weight: 700;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-bold-small {
-  font-weight: 700 !important;
-  font-size: 13px !important;
+  font-weight: 700;
+  font-size: 13px;
   line-height: 162%;
 }
 
 .text-bold-tiny {
-  font-weight: 700 !important;
-  font-size: 11px !important;
+  font-weight: 700;
+  font-size: 11px;
   line-height: 145%;
 }
 
 .text-btn-xlarge, .tutor-btn.tutor-btn-xl, .tutor-btn.tutor-btn-icon.tutor-btn-xl {
-  font-weight: 500 !important;
-  font-size: 18px !important;
+  font-weight: 500;
+  font-size: 18px;
   line-height: 178%;
 }
 
 .text-btn-large, .tutor-btn.tutor-btn-lg, .tutor-btn.tutor-btn-icon.tutor-btn-lg {
-  font-weight: 500 !important;
-  font-size: 16px !important;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 200%;
 }
 
 .text-btn-medium, .tutor-btn.tutor-btn-md, .tutor-btn.tutor-btn-icon.tutor-btn-md {
-  font-weight: 500 !important;
-  font-size: 15px !important;
+  font-weight: 500;
+  font-size: 15px;
   line-height: 160%;
 }
 
 .text-btn-small, .tutor-btn.tutor-btn-sm, .tutor-btn.tutor-btn-icon.tutor-btn-sm, table.tutor-ui-table .td-action-btns .btn-outline.tutor-btn {
-  font-weight: 500 !important;
-  font-size: 13px !important;
+  font-weight: 500;
+  font-size: 13px;
   line-height: 123%;
 }
 
@@ -6717,6 +6753,26 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.d-grid {
+  display: grid;
+}
+
+.d-grid.grid-col-1x1 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.d-grid.grid-col-1x2 {
+  grid-template-columns: 1fr 2fr;
+}
+
+.d-grid.grid-col-1x3 {
+  grid-template-columns: 1fr 3fr;
+}
+
+.d-grid.grid-col-1x4 {
+  grid-template-columns: 1fr 4fr;
 }
 
 .tutor-cursor-pointer {
@@ -20205,7 +20261,7 @@ body.tutor-component-popup-opened {
 }
 
 .tutor-star-rating-group i.tutor-icon-star-full {
-  color: #ED9700 !important;
+  color: #ED9700;
 }
 
 .tutor-updating-message {
@@ -21445,9 +21501,54 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
     top: 10px !important;
     right: 10px !important;
     color: gray !important;
+    z-index: 1;
   }
   .tutor-modal.tutor-modal-is-close-beside .tutor-modal-close > * {
     font-size: 30px;
+  }
+}
+
+.tutor-modal-ins-approval .tutor-modal-root {
+  width: 634px;
+}
+
+.tutor-modal-ins-approval .tutor-modal-buttons .tutor-btn {
+  max-width: 280px;
+}
+
+.tutor-modal-ins-approval .tutor-avatar {
+  width: 100px;
+  height: 100px;
+}
+
+.tutor-modal-ins-approval .tutor-avatar img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.tutor-modal-ins-approval .tutor-modal-buttons {
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tutor-modal-gradebook .tutor-modal-footer .tutor-btn {
+  margin-left: auto;
+}
+
+@media (max-width: 575.98px) {
+  .tutor-modal .tutor-btn:not(.tutor-is-icon-btn) {
+    padding: 6px 20px !important;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    max-width: -webkit-max-content;
+    max-width: -moz-max-content;
+    max-width: max-content;
+    height: auto !important;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 2;
   }
 }
 
@@ -23322,7 +23423,7 @@ select.tutor-form-select:focus {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  height: 24px;
+  min-height: 24px !important;
   position: relative;
   z-index: 1;
   background: transparent;
@@ -23482,6 +23583,8 @@ select.tutor-form-select:focus {
 
 .tutor-btn {
   border-radius: 6px;
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .tutor-btn:not(.tutor-is-outline):not(.tutor-no-hover).tutor-btn-wordpress:hover {
@@ -23797,6 +23900,7 @@ table.tutor-ui-table.tutor-no-thead tr:first-child td:last-child {
     background: rgba(239, 241, 247, 0.8);
     text-align: left;
     padding: 15px 10px;
+    white-space: nowrap;
   }
   table.tutor-ui-table td {
     padding: 17px 10px;
@@ -24111,6 +24215,30 @@ table.tutor-ui-table .column-empty-state .td-empty-state img {
   max-width: 100%;
 }
 
+table.tutor-ui-table.table-dashboard-course-list td:nth-child(1), table.tutor-ui-table.table-dashboard-course-list td:nth-child(2) {
+  vertical-align: top;
+}
+
+table.tutor-ui-table.table-dashboard-course-list .td-checkbox input[type='checkbox'] {
+  margin-top: 7px;
+}
+
+table.tutor-ui-table.tutor-gradebooks-lists td {
+  border-color: #e0e2ea;
+}
+
+table.tutor-ui-table.tutor-gradebooks-lists td:first-child {
+  border-left-color: #cdcfd5;
+}
+
+table.tutor-ui-table.tutor-gradebooks-lists td:last-child {
+  border-right-color: #cdcfd5;
+}
+
+table.tutor-ui-table.tutor-gradebooks-lists tbody tr:first-child td {
+  border-top-color: #cdcfd5;
+}
+
 table.tutor-ui-table.tutor-ui-table-responsive {
   /*
 	Max width before this PARTICULAR table gets nasty. This query will take effect for any screen smaller than 760px and also iPads specifically.
@@ -24228,61 +24356,61 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   width: 100%;
 }
 
-.tutor-ui-table-data-td-target [data-td-target] {
+table.tutor-ui-table-data-td-target [data-td-target] {
   cursor: pointer;
 }
 
 @media (min-width: 1200px) {
-  .tutor-ui-table-data-td-target [data-td-target] {
+  table.tutor-ui-table-data-td-target [data-td-target] {
     padding: 20px !important;
   }
 }
 
-.tutor-ui-table-data-td-target [data-td-target] > * {
+table.tutor-ui-table-data-td-target [data-td-target] > * {
   pointer-events: none;
 }
 
-.tutor-ui-table-data-td-target .is-active {
+table.tutor-ui-table-data-td-target .is-active {
   -webkit-box-shadow: -1px 0 0 #e7e8ef;
           box-shadow: -1px 0 0 #e7e8ef;
   background: #f4f6f9 !important;
 }
 
-.tutor-ui-table-data-td-target .is-active [class^='ttr-']:before {
+table.tutor-ui-table-data-td-target .is-active [class^='ttr-']:before {
   content: '\e941';
 }
 
-.tutor-ui-table-data-td-target td.data-td-content {
+table.tutor-ui-table-data-td-target td.data-td-content {
   padding: unset !important;
   border-top-color: transparent;
   background-color: #f4f6f9 !important;
 }
 
 @media (max-width: 1199.98px) {
-  .tutor-ui-table-data-td-target td.data-td-content {
+  table.tutor-ui-table-data-td-target td.data-td-content {
     border: none !important;
   }
-  .tutor-ui-table-data-td-target td.data-td-content.is-active {
+  table.tutor-ui-table-data-td-target td.data-td-content.is-active {
     -webkit-box-shadow: 0 0 0 1px #cdcfd5;
             box-shadow: 0 0 0 1px #cdcfd5;
   }
 }
 
-.tutor-ui-table-data-td-target td.data-td-content > * {
+table.tutor-ui-table-data-td-target td.data-td-content > * {
   display: none;
 }
 
-.tutor-ui-table-data-td-target td.data-td-content.is-active {
+table.tutor-ui-table-data-td-target td.data-td-content.is-active {
   padding: 20px 30px 30px 30px !important;
   border-top-color: #cdcfd5;
 }
 
-.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
+table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   display: block;
 }
 
 @media (min-width: 1200px) {
-  .tutor-ui-table-data-td-target td.data-td-content.is-active {
+  table.tutor-ui-table-data-td-target td.data-td-content.is-active {
     position: relative;
     border-top-color: transparent !important;
     -webkit-box-shadow: 0 2px 0 -1px #f4f6f9, 0 -2px 0 -1px #f4f6f9;
@@ -28344,22 +28472,4 @@ table.tutor-ui-table-no-border:not(.tutor-is-flexible) {
   cursor: pointer;
 }
 
-.d-grid {
-  display: grid;
-}
-
-.d-grid.grid-col-1x1 {
-  grid-template-columns: 1fr 1fr;
-}
-
-.d-grid.grid-col-1x2 {
-  grid-template-columns: 1fr 2fr;
-}
-
-.d-grid.grid-col-1x3 {
-  grid-template-columns: 1fr 3fr;
-}
-
-.d-grid.grid-col-1x4 {
-  grid-template-columns: 1fr 4fr;
-}
+/*# sourceMappingURL=tutor-v2.css.map */

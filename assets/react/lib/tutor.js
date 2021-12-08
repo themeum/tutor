@@ -1,6 +1,8 @@
 import '../../../v2-library/_src/js/main';
 
-window.tutor_get_nonce_data = function(send_key_value) {
+
+
+window.tutor_get_nonce_data = function (send_key_value) {
 	var nonce_data = window._tutorobject || {};
 	var nonce_key = nonce_data.nonce_key || '';
 	var nonce_value = nonce_data[nonce_key] || '';
@@ -12,11 +14,11 @@ window.tutor_get_nonce_data = function(send_key_value) {
 	return { [nonce_key]: nonce_value };
 };
 
-window.tutor_popup = function($, icon, padding) {
+window.tutor_popup = function ($, icon, padding) {
 	var $this = this;
 	var element;
 
-	this.popup_wrapper = function(wrapper_tag) {
+	this.popup_wrapper = function (wrapper_tag) {
 		var img_tag =
 			icon === ''
 				? ''
@@ -40,15 +42,15 @@ window.tutor_popup = function($, icon, padding) {
 		);
 	};
 
-	this.popup = function(data) {
+	this.popup = function (data) {
 		var title = data.title ? '<h3>' + data.title + '</h3>' : '';
 		var description = data.description ? '<p>' + data.description + '</p>' : '';
 
-		var buttons = Object.keys(data.buttons || {}).map(function(key) {
+		var buttons = Object.keys(data.buttons || {}).map(function (key) {
 			var button = data.buttons[key];
 			var button_id = button.id ? 'tutor-popup-' + button.id : '';
 			return $('<button id="' + button_id + '" class="' + button.class + '">' + button.title + '</button>').click(
-				function() {
+				function () {
 					button.callback($(this));
 				}
 			);
@@ -65,11 +67,11 @@ window.tutor_popup = function($, icon, padding) {
 
 		// Assign close event on click black overlay
 		element
-			.click(function() {
+			.click(function () {
 				$(this).remove();
 			})
 			.children()
-			.click(function(e) {
+			.click(function (e) {
 				e.stopPropagation();
 			});
 
@@ -106,7 +108,7 @@ window.tutor_date_picker = () => {
 	}
 };
 
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	'use strict';
 	const { __, _x, _n, _nx } = wp.i18n;
 
@@ -135,7 +137,7 @@ jQuery(document).ready(function($) {
 	 * @since v.1.3.4
 	 */
 
-	$(document).on('click', '.tutor-course-thumbnail-upload-btn', function(event) {
+	$(document).on('click', '.tutor-course-thumbnail-upload-btn', function (event) {
 		event.preventDefault();
 		var $that = $(this);
 		var frame;
@@ -150,7 +152,7 @@ jQuery(document).ready(function($) {
 			},
 			multiple: false,
 		});
-		frame.on('select', function() {
+		frame.on('select', function () {
 			var attachment = frame
 				.state()
 				.get('selection')
@@ -170,7 +172,7 @@ jQuery(document).ready(function($) {
 	});
 
 	//Delete Thumbnail
-	$(document).on('click', '.tutor-course-thumbnail-delete-btn', function(event) {
+	$(document).on('click', '.tutor-course-thumbnail-delete-btn', function (event) {
 		event.preventDefault();
 		var $that = $(this);
 
@@ -189,7 +191,7 @@ jQuery(document).ready(function($) {
 		$('.tutor-course-thumbnail-delete-btn').hide();
 	});
 
-	$(document).on('change keyup', '.course-edit-topic-title-input', function(e) {
+	$(document).on('change keyup', '.course-edit-topic-title-input', function (e) {
 		e.preventDefault();
 		$(this)
 			.closest('.tutor-topics-top')
@@ -200,7 +202,7 @@ jQuery(document).ready(function($) {
 	/**
 	 * Delete Lesson from course builder
 	 */
-	$(document).on('click', '.tutor-delete-lesson-btn', function(e) {
+	$(document).on('click', '.tutor-delete-lesson-btn', function (e) {
 		e.preventDefault();
 
 		if (!confirm(__('Are you sure to delete?', 'tutor'))) {
@@ -214,173 +216,16 @@ jQuery(document).ready(function($) {
 			url: window._tutorobject.ajaxurl,
 			type: 'POST',
 			data: { lesson_id: lesson_id, action: 'tutor_delete_lesson_by_id' },
-			beforeSend: function() {
+			beforeSend: function () {
 				$that.addClass('tutor-updating-message');
 			},
-			success: function(data) {
+			success: function (data) {
 				if (data.success) {
 					$that.closest('.course-content-item').remove();
 				}
 			},
-			complete: function() {
+			complete: function () {
 				$that.removeClass('tutor-updating-message');
-			},
-		});
-	});
-
-	/**
-	 * Quiz Builder Modal Tabs
-	 */
-	$(document).on('click', '.tutor-quiz-modal-tab-item', function(e) {
-		e.preventDefault();
-
-		var $that = $(this);
-
-		var $quizTitle = $('[name="quiz_title"]');
-		var quiz_title = $quizTitle.val();
-		if (!quiz_title) {
-			$quizTitle
-				.closest('.tutor-quiz-builder-form-row')
-				.find('.quiz_form_msg')
-				.html('<p class="quiz-form-warning">Please save the quiz' + ' first</p>');
-			return;
-		} else {
-			$quizTitle
-				.closest('.tutor-quiz-builder-form-row')
-				.find('.quiz_form_msg')
-				.html('');
-		}
-
-		var tabSelector = $that.attr('href');
-		$('.quiz-builder-tab-container').hide();
-		$(tabSelector).show();
-
-		$('a.tutor-quiz-modal-tab-item').removeClass('active');
-		$that.addClass('active');
-	});
-
-	/**
-	 * Get question answers option edit form
-	 *
-	 * @since v.1.0.0
-	 */
-	$(document).on('click', '.tutor-quiz-answer-edit a', function(e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var answer_id = $that.closest('.tutor-quiz-answer-wrap').attr('data-answer-id');
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: { answer_id: answer_id, action: 'tutor_quiz_edit_question_answer' },
-			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
-			},
-			success: function(data) {
-				$('#tutor_quiz_question_answer_form').html(data.data.output);
-			},
-			complete: function() {
-				$that.removeClass('tutor-updating-message');
-			},
-		});
-	});
-
-	/**
-	 * Saving question answers options
-	 * Student should select the right answer at quiz attempts
-	 *
-	 * @since v.1.0.0
-	 */
-
-	$(document).on('click', '#quiz-answer-save-btn', function(e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
-		$formInput.action = 'tutor_save_quiz_answer_options';
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: $formInput,
-			beforeSend: function() {
-				$('#quiz_validation_msg_wrap').html('');
-				$that.addClass('tutor-updating-message');
-			},
-			success: function(data) {
-				$('#tutor_quiz_question_answers').trigger('refresh');
-			},
-			complete: function() {
-				$that.removeClass('tutor-updating-message');
-			},
-		});
-	});
-
-	/**
-	 * Updating Answer
-	 *
-	 * @since v.1.0.0
-	 */
-	$(document).on('click', '#quiz-answer-edit-btn', function(e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var $formInput = $('#tutor-quiz-question-wrapper :input').serializeObject();
-		$formInput.action = 'tutor_update_quiz_answer_options';
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: $formInput,
-			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
-			},
-			success: function(data) {
-				$('#tutor_quiz_question_answers').trigger('refresh');
-			},
-			complete: function() {
-				$that.removeClass('tutor-updating-message');
-			},
-		});
-	});
-
-	$(document).on('change', '.tutor-quiz-answers-mark-correct-wrap input', function(e) {
-		e.preventDefault();
-
-		var $that = $(this);
-
-		var answer_id = $that.val();
-		var inputValue = 1;
-		if (!$that.prop('checked')) {
-			inputValue = 0;
-		}
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: { answer_id: answer_id, inputValue: inputValue, action: 'tutor_mark_answer_as_correct' },
-		});
-	});
-
-	/**
-	 * Delete answer for a question in quiz builder
-	 *
-	 * @since v.1.0.0
-	 */
-
-	$(document).on('click', '.tutor-quiz-answer-trash-wrap a.answer-trash-btn', function(e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var answer_id = $that.attr('data-answer-id');
-
-		$.ajax({
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			data: { answer_id: answer_id, action: 'tutor_quiz_builder_delete_answer' },
-			beforeSend: function() {
-				$that.closest('.tutor-quiz-answer-wrap').remove();
 			},
 		});
 	});
@@ -390,7 +235,7 @@ jQuery(document).ready(function($) {
 	 * @since v.1.0.0
 	 */
 
-	$(document).on('click', '.tutor-delete-quiz-btn', function(e) {
+	$(document).on('click', '.tutor-delete-quiz-btn', function (e) {
 		e.preventDefault();
 
 		if (!confirm(__('Are you sure to delete?', 'tutor'))) {
@@ -407,10 +252,10 @@ jQuery(document).ready(function($) {
 				quiz_id: quiz_id,
 				action: 'tutor_delete_quiz_by_id',
 			},
-			beforeSend: function() {
+			beforeSend: function () {
 				$that.addClass('tutor-updating-message');
 			},
-			success: function(resp) {
+			success: function (resp) {
 				const { data = {}, success } = resp || {};
 				const { message = __('Something Went Wrong!') } = data;
 
@@ -421,58 +266,13 @@ jQuery(document).ready(function($) {
 
 				tutor_toast('Error!', message, 'error');
 			},
-			complete: function() {
+			complete: function () {
 				$that.removeClass('tutor-updating-message');
 			},
 		});
 	});
 
-	$(document).on('click', '.tutor-media-upload-btn', function(e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		var frame;
-		if (frame) {
-			frame.open();
-			return;
-		}
-		frame = wp.media({
-			title: __('Select or Upload Media Of Your Chosen Persuasion', 'tutor'),
-			button: {
-				text: __('Use this media', 'tutor'),
-			},
-			multiple: false,
-		});
-		frame.on('select', function() {
-			var attachment = frame
-				.state()
-				.get('selection')
-				.first()
-				.toJSON();
-			$that.html('<img src="' + attachment.url + '" alt="" />');
-			$that
-				.closest('.tutor-media-upload-wrap')
-				.find('input')
-				.val(attachment.id);
-		});
-		frame.open();
-	});
-
-	$(document).on('click', '.tutor-media-upload-trash', function(e) {
-		e.preventDefault();
-
-		var $that = $(this);
-		$that
-			.closest('.tutor-media-upload-wrap')
-			.find('.tutor-media-upload-btn')
-			.html('<i class="tutor-icon-image1"></i>');
-		$that
-			.closest('.tutor-media-upload-wrap')
-			.find('input')
-			.val('');
-	});
-
-	$(document).on('click', '.settings-tabs-navs li', function(e) {
+	$(document).on('click', '.settings-tabs-navs li', function (e) {
 		e.preventDefault();
 
 		var $that = $(this);
@@ -498,7 +298,7 @@ jQuery(document).ready(function($) {
 	 *
 	 * @since v.1.6.3
 	 */
-	$(document).on('keyup change', '.tutor-number-validation', function(e) {
+	$(document).on('keyup change', '.tutor-number-validation', function (e) {
 		var input = $(this);
 		var val = parseInt(input.val());
 		var min = parseInt(input.attr('data-min'));
@@ -514,7 +314,7 @@ jQuery(document).ready(function($) {
 	 * @since v.1.6.4
 	 * Quiz Attempts Instructor Feedback
 	 */
-	$(document).on('click', '.tutor-instructor-feedback', function(e) {
+	$(document).on('click', '.tutor-instructor-feedback', function (e) {
 		e.preventDefault();
 		var $that = $(this);
 
@@ -526,27 +326,27 @@ jQuery(document).ready(function($) {
 				feedback: $('.tutor-instructor-feedback-content').val(),
 				action: 'tutor_instructor_feedback',
 			},
-			beforeSend: function() {
+			beforeSend: function () {
 				$that.addClass('tutor-updating-message');
 			},
-			success: function(data) {
+			success: function (data) {
 				if (data.success) {
 					$that.closest('.course-content-item').remove();
 					tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
 				}
 			},
-			complete: function() {
+			complete: function () {
 				$that.removeClass('tutor-updating-message');
 			},
 		});
 	});
 
 	//dropdown toggle
-	$(document).click(function() {
+	$(document).click(function () {
 		$('.tutor-dropdown').removeClass('show');
 	});
 
-	$('.tutor-dropdown').click(function(e) {
+	$('.tutor-dropdown').click(function (e) {
 		e.stopPropagation();
 		if ($('.tutor-dropdown').hasClass('show')) {
 			$('.tutor-dropdown').removeClass('show');
@@ -558,7 +358,7 @@ jQuery(document).ready(function($) {
 	 * @since v.1.8.6
 	 * SUbmit form through ajax
 	 */
-	$('.tutor-form-submit-through-ajax').submit(function(e) {
+	$('.tutor-form-submit-through-ajax').submit(function (e) {
 		e.preventDefault();
 
 		var $that = $(this);
@@ -572,10 +372,10 @@ jQuery(document).ready(function($) {
 			url: url,
 			type: type,
 			data: data,
-			success: function() {
+			success: function () {
 				tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
 			},
-			complete: function() {
+			complete: function () {
 				$that.find('button').removeClass('tutor-updating-message');
 			},
 		});
@@ -588,11 +388,11 @@ jQuery(document).ready(function($) {
 	$.ajaxSetup({ data: tutor_get_nonce_data() });
 });
 
-jQuery.fn.serializeObject = function() {
+jQuery.fn.serializeObject = function () {
 	var values = {};
 	var array = this.serializeArray();
 
-	jQuery.each(array, function() {
+	jQuery.each(array, function () {
 		if (values[this.name]) {
 			if (!values[this.name].push) {
 				values[this.name] = [values[this.name]];
@@ -606,12 +406,13 @@ jQuery.fn.serializeObject = function() {
 	return values;
 };
 
-window.tutor_toast = function(title, description, type) {
+window.tutor_toast = function (title, description, type) {
 	var tutor_ob = window._tutorobject || {};
 	var asset = (tutor_ob.tutor_url || '') + 'assets/images/';
 
 	if (!jQuery('.tutor-toast-parent').length) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
+		// jQuery('body').append('<div class="tutor-notification tutor-is-danger tutor-mb-15"></div>');
 	}
 
 	// var icons = {
@@ -621,25 +422,11 @@ window.tutor_toast = function(title, description, type) {
 	var alert = type == 'success' ? 'success' : type == 'error' ? 'danger' : 'primary';
 	var icon =
 		type == 'success'
-			? 'ttr-mark-cricle'
+			? 'ttr-mark-filled'
 			: type == 'error'
-			? 'ttr-cross-cricle-filled'
-			: 'ttr-circle-outline-info-filled';
-	// var content = jQuery(`
-	//     <div class="tutor-notification tutor-mb-15 ${alert}">
-	//         <div class="tutor-notification-icon">
-	//             <i class="${icon}"></i>
-	//         </div>
-	//         <div class="tutor-notification-content">
-	//             <h5>${title}</h5>
-	//             <p>${description}</p>
-	//         </div>
-	//         <span class="tutor-notification-close tutor-toast-close">
-	//             <i class="ttr-cross-filled"></i>
-	//         </span>
-	//     </div>`);
-
-	var content = jQuery(`
+				? 'ttr-line-cross-line'
+				: 'ttr-info-circle-outline-filled';
+	var contentS = jQuery(`
         <div class="tutor-large-notification tutor-large-notification-${alert}">
             <div class="tutor-large-notification-icon">
                 <span class="tutor-icon-48 ${icon} tutor-mr-10"></span>
@@ -656,15 +443,30 @@ window.tutor_toast = function(title, description, type) {
         </div>
     `);
 
-	content.find('.tutor-noti-close').click(function() {
+	var content = jQuery(`
+		<div class="tutor-notification tutor-is-${alert} tutor-mb-15">
+			<div class="tutor-notification-icon">
+				<i class="${icon}"></i>
+			</div>
+			<div class="tutor-notification-content">
+			<h5>${title}</h5>
+			<p>${description}</p>
+			</div>
+			<button class="tutor-notification-close">
+				<i class="fas fa-times"></i>
+			</button>
+		</div>
+    `);
+
+	content.find('.tutor-noti-close').click(function () {
 		content.remove();
 	});
 
 	jQuery('.tutor-toast-parent').append(content);
 
-	setTimeout(function() {
+	setTimeout(function () {
 		if (content) {
-			content.fadeOut('fast', function() {
+			content.fadeOut('fast', function () {
 				jQuery(this).remove();
 			});
 		}

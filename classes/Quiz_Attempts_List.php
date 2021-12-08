@@ -56,49 +56,12 @@ class Quiz_Attempts_List {
 	public function get_quiz_attempts_stat($instructor_id) {
 		global $wpdb;
 
-		$where_clause = '';
-		if(!tutor_utils()->has_user_role('administrator', $instructor_id)){
-			$course_ids = tutor_utils()->get_course_id_by('instructor', $instructor_id);
-			$courses_ids = count($courses_ids) ? implode(',', $courses_ids) : '0';
-			$where_clause.=' AND course.ID IN('.$cours_ids.')';
-		}
-		
-		$attempts = $wpdb->get_results(
-			"SELECT attempt.total_marks, attempt.earned_marks, attempt.attempt_info
-			FROM {$wpdb->prefix}tutor_quiz_attempts attempt
-				INNER JOIN {$wpdb->posts} course ON attempt.course_id=course.ID
-			WHERE 1=1 " . $where_clause
-		);
+		$all 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts");
+		$pass 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND earned_marks>=total_marks");
+		$fail 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND earned_marks<total_marks");
+		$pending = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND attempt_status='review_required'");
 
-		!is_array($attempts) ? $attempts=array() : 0;
-
-		$stats = array(
-			'all' => count($attempts),
-			'pass' => 0,
-			'fail' => 0,
-			'pending' => 0
-		);
-
-		foreach($attempts as $attempt) {
-			$info = @unserialize($attempt->attempt_info);
-			$passing_grade = (is_array($info) && $info['passing_grade']) ? (int)$info['passing_grade'] : 0;
-
-			// Pending count
-			if($attempt->earned_marks===null || $attempt->total_marks===null) {
-				$stats['pending']+=1;
-				continue;
-			}
-
-			// Pass/fail
-			$pass_mark = !$passing_grade ? 0 : ($passing_grade/100)*$attempt->total_marks;
-			if($pass_mark>=$attempt->earned_marks) {
-				$stats['pass']+=1;
-			} else {
-				$stats['fail']+=1;
-			}
-		}
-
-		return $stats;
+		return compact('all', 'pass', 'fail', 'pending');
 	}
 
 	/**
@@ -384,7 +347,9 @@ class Quiz_Attempts_List {
 	function column_attempt_status($item){
 		$status = ucwords(str_replace('quiz_', '', $item->attempt_status));
 
-		return "<span class='attempt-status-{$item->attempt_status}'>{$status}</span>";
+		return "<span class='attempt-status-{$item->attempt_status}'>
+					{$status}
+				</span>";
 	}
 
 	function get_columns(){
@@ -428,59 +393,5 @@ class Quiz_Attempts_List {
 
 			tutor_utils()->delete_quiz_attempt( $attempt_ids );
 		}
-	}
-
-	function prepare_items( $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '' ) {
-		global $wpdb;
-
-		$per_page = 20;
-
-		$columns = $this->get_columns();
-		$hidden = array();
-		$sortable = $this->get_sortable_columns();
-
-		$this->_column_headers = array($columns, $hidden, $sortable);
-		$this->process_bulk_action();
-
-		$current_page = $this->get_pagenum();
-
-		$total_items = 0;
-		$this->items = array();
-
-		if ( current_user_can( 'administrator' ) ) {
-			
-			$this->items = tutor_utils()->get_quiz_attempts( ( $current_page - 1 ) * $per_page, $per_page, $search_filter, $course_filter, $date_filter, $order_filter );
-
-			$total_items = tutor_utils()->get_total_quiz_attempts(); 
-
-		} elseif ( current_user_can( 'tutor_instructor' ) ){
-			/**
-			 * Instructors course specific quiz attempts
-			 */
-			$user_id = get_current_user_id();
-			$get_assigned_courses_ids = $wpdb->get_col($wpdb->prepare("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = %d", $user_id));
-
-			$custom_author_query = "AND {$wpdb->posts}.post_author = {$user_id}";
-			if (is_array($get_assigned_courses_ids) && count($get_assigned_courses_ids)){
-				$in_query_pre = implode(',', $get_assigned_courses_ids);
-				$custom_author_query = "  AND ( {$wpdb->posts}.post_author = {$user_id} OR {$wpdb->posts}.ID IN({$in_query_pre}) ) ";
-			}
-			$course_post_type = tutor()->course_post_type;
-			$get_course_ids = $wpdb->get_col("SELECT ID from {$wpdb->posts} where post_type = '{$course_post_type}' $custom_author_query ; ");
-
-			if (is_array($get_course_ids) && count($get_course_ids)){
-
-				$this->items = tutor_utils()->get_quiz_attempts_by_course_ids(( $current_page - 1 ) * $per_page, $per_page, $get_course_ids, $search_filter, $course_filter, $date_filter, $order_filter );
-				
-				$total_items = tutor_utils()->get_total_quiz_attempts_by_course_ids($get_course_ids);
-			}
-
-		}
-
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil($total_items/$per_page)
-		) );
 	}
 }

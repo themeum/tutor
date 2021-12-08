@@ -3,6 +3,13 @@
 
     $page_key = 'attempt-table';
     $table_columns = include __DIR__ . '/contexts.php';
+
+    if(count($attempt_list)) {
+        // Provide the attempt data from the first attempt
+        // For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
+        $attempt_data = $attempt_list[0];
+        include __DIR__ . '/header.php';
+    }
 ?>
 
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-30">
@@ -64,6 +71,19 @@
                                                     <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank">
                                                         <?php echo get_the_title($attempt->course_id); ?>
                                                     </a>
+
+                                                    <?php 
+                                                        if($context=='backend-dashboard-students-attempts') {
+                                                            $attempt_user = get_userdata( $attempt->user_id );
+                                                            $user_name = $attempt_user ? $attempt_user->display_name : '';
+
+                                                            ?>
+                                                            <div>
+                                                                <span class="text-regular-small"><?php _e('Student', 'tutor'); ?></span>: <span class="text-medium-small"><?php echo $user_name; ?></span>
+                                                            </div>
+                                                            <?php
+                                                        }
+                                                    ?>
                                                 </p>
                                                 <?php do_action('tutor_quiz/table/after/course_title', $attempt, $context); ?>
                                             </div>

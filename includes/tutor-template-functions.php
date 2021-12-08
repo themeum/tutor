@@ -411,8 +411,8 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
             return $thumb_url;
         }
 
-        echo '<div class="tutor-course-thumbnail-bg" style="background-image:url('.$thumb_url.'); background-size:cover;">
-            <img src="'.$placeHolderUrl .'" style="visibility:hidden-"/>
+        echo '<div class="tutor-course-thumbnail-bg tutor-text-center">
+            <img src="'.$thumb_url.'"/>
         </div>';
     }
 }
@@ -1250,15 +1250,15 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         if ( $duration ) {
             $output = '';
             if ( $durationHours > 0 ) {
-                $output .= '<span class="text-medium-caption color-text-primary">' . ' ' . $durationHours . '</span> <span class="text-medium-caption color-text-subsued">' . __( 'hour', 'tutor' ) . '</span>';
+                $output .= '<span class="text-medium-caption color-text-primary tutor-meta-level">' . ' ' . $durationHours . '</span> <span class="text-medium-caption color-text-subsued tutor-meta-value">' . __( 'hour', 'tutor' ) . '</span>';
             }
 
             if ( $durationMinutes > 0 ) {
-                $output .= '<span class="text-medium-caption color-text-primary">' . ' ' . $durationMinutes . '</span> <span class="text-medium-caption color-text-subsued">' . __( 'minute', 'tutor' ) . '</span>';
+                $output .= '<span class="text-medium-caption color-text-primary tutor-meta-level">' . ' ' . $durationMinutes . '</span> <span class="text-medium-caption color-text-subsued tutor-meta-value">' . __( 'minute', 'tutor' ) . '</span>';
             }
 
             if ( $durationSeconds > 0 ) {
-                $output .= '<span class="text-medium-caption color-text-primary">' . ' ' . $durationSeconds . '</span> <span class="text-medium-caption color-text-subsued">' . __( 'Second', 'tutor' ) . '</span>';
+                $output .= '<span class="text-medium-caption color-text-primary tutor-meta-level">' . ' ' . $durationSeconds . '</span> <span class="text-medium-caption color-text-subsued tutor-meta-value">' . __( 'Second', 'tutor' ) . '</span>';
             }
 
             return $output;

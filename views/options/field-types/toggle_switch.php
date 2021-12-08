@@ -13,6 +13,7 @@ $field_label_title = isset( $field['label_title'] ) ? $field['label_title'] : nu
 $label_title       = ( isset( $field_label_title ) && null !== esc_attr( $field_label_title ) ) ? esc_attr( $field_label_title ) : null;
 $default           = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
 $option_value      = $this->get( esc_attr( $field_key ), $default );
+$option_value      = is_array( $option_value ) ? $option_value[0] : $option_value;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>

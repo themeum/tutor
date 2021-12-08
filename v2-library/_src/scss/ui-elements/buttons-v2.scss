@@ -54,6 +54,8 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 .tutor-btn {
 	// font-family: 'SF Pro Display', sans-serif;
 	border-radius: 6px;
+	white-space: nowrap;
+	word-break: keep-all;
 	&:not(.tutor-is-outline):not(.tutor-no-hover) {
 		&.tutor-btn-wordpress:hover {
 			background: $brand-wordpress-hover;

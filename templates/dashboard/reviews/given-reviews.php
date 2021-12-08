@@ -20,7 +20,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
 ?>
 
 <div class="tutor-dashboard-content-inner">
-
+    <h3><?php _e('Reviews', 'tutor'); ?></h3>
 	<?php
 	if (current_user_can(tutor()->instructor_role)){
 		?>
@@ -36,7 +36,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
 		<?php
 		if ( ! is_array($reviews) || ! count($reviews)){ ?>
             <div class="tutor-dashboard-content-inner">
-                <p><?php esc_html_e("Sorry, but you are looking for something that isn't here." , 'tutor'); ?></p>
+                <?php tutor_utils()->tutor_empty_state(); ?>
             </div>
 			<?php
 		}

@@ -112,7 +112,6 @@ class Instructors_List extends \Tutor_List_Table {
 			$this->bulk_action_approved(),
 			$this->bulk_action_pending(),
 			$this->bulk_action_blocked(),
-			$this->bulk_action_delete(),
 		);
 		return $actions;
 	}

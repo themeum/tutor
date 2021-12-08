@@ -55,17 +55,25 @@
                 $completed_lessons   = tutor_utils()->get_completed_lesson_count_by_course();
                 $completed_percent   = tutor_utils()->get_course_completed_percent();
                 $is_completed_course = tutor_utils()->is_completed_course();
-                $retake_course       = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
+                $retake_course       = is_single_course() && tutor_utils()->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
+
+                $start_content      = '';
 
                 // Show Start/Continue/Retake Button
                 if ( $lesson_url ) { 
-                    $button_class = 'tutor-is-fullwidth tutor-btn ' . ( $retake_course ? 'tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full' : '' ) . ' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
+                    $button_class = 'tutor-is-fullwidth tutor-btn ' . 
+                                    ( $retake_course ? 'tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full' : '' ) . 
+                                    ' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' . 
+                                    ( $retake_course ? ' tutor-course-retake-button' : '' );
+
                     // Button identifier class
                     $button_identifier = 'start-continue-retake-button';
-                ?>
-                    <a href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class . ' ' . $button_identifier ); ?>" data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
+                    $tag = $retake_course ? 'button' : 'a';
+                    ob_start();
+                    ?>
+                    <<?php echo $tag;?> <?php echo $retake_course ? 'disabled="disabled"' : ''; ?> href="<?php echo esc_url( $lesson_url ); ?>" class="<?php echo esc_attr( $button_class . ' ' . $button_identifier ); ?>" data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
                         <?php
-                            if ( is_single_course() && $retake_course ) {
+                            if ( $retake_course ) {
                                 esc_html_e( 'Retake This Course', 'tutor' );
                             } elseif ( $completed_percent <= 0 ) {
                                 esc_html_e( 'Start Learning', 'tutor' );
@@ -73,17 +81,11 @@
                                 esc_html_e( 'Continue Learning', 'tutor' );
                             }
                         ?>
-                    </a>
+                    </<?php echo $tag;?>>
                     <?php 
-                } else {
-                    // Show Only enrolled message if there is no content to start from
-                    ?>
-                    <div class="text-regular-caption color-text-hints tutor-mt-12 tutor-bs-d-flex tutor-bs-justify-content-center">
-                        <span class="tutor-icon-26 color-success ttr-purchase-filled tutor-mr-6"></span>
-                        <?php echo sprintf( __( 'You enrolled this course on %s', 'tutor' ), '<span class="text-bold-small color-success tutor-ml-3">' . tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) . '</span>' ); ?>
-                    </div>
-                    <?php
-                }
+                    $start_content = ob_get_clean();
+                } 
+                echo apply_filters( 'tutor_course/single/start/button', $start_content, get_the_ID() );
 
                 // Show Course Completion Button
                 if ( ! $is_completed_course ) {
@@ -102,6 +104,19 @@
                     <?php
                     echo apply_filters( 'tutor_course/single/complete_form', ob_get_clean() );
                 }
+
+                ?>
+                <div class="text-regular-caption color-text-hints tutor-mt-12 tutor-bs-d-flex tutor-bs-justify-content-center">
+                    <span class="tutor-icon-26 color-success ttr-purchase-filled tutor-mr-6"></span>
+                    <span class="tutor-enrolled-info-text">
+                        <?php esc_html_e( 'You enrolled this course on', 'tutor' ); ?>
+                        <span class="text-bold-small color-success tutor-ml-3 tutor-enrolled-info-date">
+                            <?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) ); ?>
+                        </span>
+                    </span>
+                </div>
+                <?php
+
                 do_action( 'tutor_course/single/actions_btn_group/after' ); 
 
             } elseif ( $is_privileged_user ) {

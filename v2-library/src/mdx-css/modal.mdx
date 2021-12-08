@@ -111,6 +111,47 @@ Use `className="tutor-modal modal-sticky-header-footer"`
     </div>
 </Playground>
 
+## Modal - instructor approval
+
+<Playground>
+    <button data-tutor-modal-target="tutor-ins-approval-1" className="tutor-btn">Open modal</button>
+
+    <div id="tutor-ins-approval-1" className="tutor-modal tutor-modal-is-close-beside tutor-modal-ins-approval tutor-is-active">
+        <span className="tutor-modal-overlay"></span>
+        <div className="tutor-modal-root">
+            <button data-tutor-modal-close className="tutor-modal-close">
+                <span className="tutor-icon-56 ttr-line-cross-line"></span>
+            </button>
+            <div className="tutor-modal-inner">
+                <div className="tutor-modal-body tutor-text-center">
+                    <div className="tutor-modal-text-wrap">
+                        <div className="text-regular-h4 color-text-primary">A New Instructor Just Signed Up</div>
+                        <div className="text-regular-small color-text-subsued tutor-mt-10">You can either accept or reject the application. The applicant will be notified via email either way.</div>
+                    </div>
+                    <div className="tutor-modal-ins-meta tutor-mt-44">
+                        <div class="flex-center">
+                            <div class="tutor-avatar">
+                                <img src="https://i.imgur.com/CckCKYQ.jpeg" alt="instructor avatar" />
+                            </div>
+                        </div>
+                        <div className="text-medium-h4 color-text-primay tutor-mt-20">Lewis Jennifar</div>
+                        <div className="text-regular-body color-text-title tutor-mt-8">Username: <span className="color-text-primary">lewisjennifar</span></div>
+                        <div className="text-regular-body color-text-title tutor-mt-3">Email: <span className="color-text-primary">lewisjennifar@gmail.com</span></div>
+                    </div>
+                    <div className="tutor-modal-buttons tutor-mt-35 tutor-mt-md-50">
+                        <button className="tutor-btn tutor-btn-full ">
+                            Approve The Instructor
+                        </button>
+                        <button data-tutor-modal-close className="tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-10">
+                            Reject The Application
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Playground>
+
 ## Basic Modal - is close beside
 
 <Playground>

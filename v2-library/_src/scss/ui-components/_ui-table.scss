@@ -165,6 +165,7 @@ table.tutor-ui-table {
 			background: rgba(239, 241, 247, 0.8);
 			text-align: left;
 			padding: 15px 10px;
+			white-space: nowrap;
 		}
 
 		td {
@@ -525,6 +526,43 @@ table.tutor-ui-table {
 	}
 } // end Table th/td Content Styles
 
+// Table Custom Styles
+table.tutor-ui-table {
+	&.table-dashboard-course-list {
+		td {
+			&:nth-child(1),
+			&:nth-child(2) {
+				vertical-align: top;
+			}
+		}
+
+		.td-checkbox {
+			input[type='checkbox'] {
+				margin-top: 7px;
+			}
+		}
+	}
+
+	&.tutor-gradebooks-lists {
+		td {
+			border-color: #e0e2ea;
+			&:first-child {
+				border-left-color: #cdcfd5;
+			}
+			&:last-child {
+				border-right-color: #cdcfd5;
+			}
+		}
+		tbody {
+			tr:first-child {
+				td {
+					border-top-color: #cdcfd5;
+				}
+			}
+		}
+	}
+}
+
 // Table Responsive Styles
 table.tutor-ui-table.tutor-ui-table-responsive {
 	/*
@@ -655,7 +693,7 @@ table.tutor-ui-table-no-border {
 }
 
 // Table toggle collapse td/tr
-.tutor-ui-table-data-td-target {
+table.tutor-ui-table-data-td-target {
 	[data-td-target] {
 		cursor: pointer;
 		@include breakpoint-min(desktop-lg) {

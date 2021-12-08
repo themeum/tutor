@@ -109,7 +109,7 @@
 
 .tutor-addons-list-items {
     @include breakpoint-min(1600) {
-        @include responsiveGrid(350px, 390px);
+        @include responsiveGrid(350px, 1fr);
     }
     @include responsiveGrid(330px, 1fr);
     gap: 40px;
@@ -118,7 +118,7 @@
     // column-width: 390px;
 
     &.is-less-items {
-        grid-template-columns: repeat(auto-fit, minmax(350px, 390px));
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     }
 
     > .tutor-addons-card {

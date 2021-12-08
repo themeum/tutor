@@ -178,7 +178,7 @@ class Ajax{
 
 		$review_id = sanitize_text_field( tutor_utils()->array_get('review_id', $_POST) );
 
-		if(!tutor_utils()->can_user_manage('review', $review_id)) {
+		if(!tutor_utils()->can_user_manage('review', $review_id, get_current_user_id())) {
 			wp_send_json_error( array('message' => __('Permissioned Denied!', 'tutor')) );
 			exit;
 		}
@@ -282,7 +282,7 @@ class Ajax{
 
                     $required = array();
                     version_compare( PHP_VERSION, '7.2.5', '>=' ) ? 0 : $required[] = __( 'PHP 7.2.5 or greater is required', 'tutor' );
-                    ! is_ssl() ? $required[] = __( 'Please install SSL certificate properly', 'tutor' ) : 0;
+                    ! is_ssl() ? $required[] = __( 'SSL certificate', 'tutor' ) : 0;
             
                     foreach ( array( 'curl', 'gmp', 'mbstring', 'openssl' ) as $ext ) {
                         ! extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong>' : 0;

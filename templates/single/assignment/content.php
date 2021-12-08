@@ -31,13 +31,18 @@ $course_id = tutor_utils()->get_course_id_by_subcontent($course_content_id);
 // Get total content count
 $course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true);
 
+function tutor_assignment_convert_seconds($seconds){
+	$dt1 = new DateTime("@0");
+	$dt2 = new DateTime("@$seconds");
+	return $dt1->diff($dt2)->format('%a Days, %h Hours');
+}
 ?>
 
 <?php do_action('tutor_assignment/single/before/content'); ?>
 
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
     <div class="tutor-topbar-left-item d-flex"> 
-        <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center">
+        <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
             <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
                 <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
             </a>
@@ -85,7 +90,7 @@ $course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true)
 
 <div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
     <div class="tutor-mobile-top-nav d-grid">
-        <a href="<?php echo get_the_permalink($previous_id); ?>">
+        <a href="<?php echo esc_url( get_the_permalink( isset( $previous_id ) ? $previous_id : '' ) ); ?>">
             <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
         </a>
         <div class="tutor-top-nav-title text-regular-body color-text-primary">
@@ -148,17 +153,13 @@ $course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true)
 					<span class="text-medium-body color-text-primary">
 						<?php
 							if ($time_duration['value'] != 0) {
-								if ($now > $remaining_time and $is_submitted == false) { ?>
-						<?php _e('Expired', 'tutor'); ?>
-						<?php
+								if ($now > $remaining_time and $is_submitted == false) { 
+									_e('Expired', 'tutor');
 								} else {
-									function convert_seconds($seconds){
-										$dt1 = new DateTime("@0");
-										$dt2 = new DateTime("@$seconds");
-										return $dt1->diff($dt2)->format('%a Days, %h Hours');
-									}
-									echo convert_seconds($remaining)."\n";
+									echo tutor_assignment_convert_seconds($remaining);
 								}
+							} else {
+								_e('N\\A', 'tutor'); 
 							}
 						?>
 					</span>
@@ -277,10 +278,18 @@ $course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true)
 									</div>
 									<div class="tutor-input-type-size">
 										<p class="text-regular-small color-text-subsued">
-											<?php _e('File Support: ', 'tutor'); ?><span class="color-text-primary"><?php _e('jpg, .jpeg,. gif, or .png.', 'tutor'); ?></span><?php _e(' no text on the image.', 'tutor'); ?>
+											<?php _e('File Support: ', 'tutor'); ?>
+											<span class="color-text-primary">
+												<?php _e('jpg, .jpeg,. gif, or .png.', 'tutor'); ?>
+											</span>
+											<?php _e(' no text on the image.', 'tutor'); ?>
 										</p>
 										<p class="text-regular-small color-text-subsued tutor-mt-7">
-											<?php _e('Total File Size: Max', 'tutor'); ?> <span class="color-text-primary"><?php echo $file_upload_limit; ?><?php _e('MB', 'tutor'); ?></span>
+											<?php _e('Total File Size: Max', 'tutor'); ?> 
+											<span class="color-text-primary">
+												<?php echo $file_upload_limit; ?>
+												<?php _e('MB', 'tutor'); ?>
+											</span>
 										</p>
 									</div>
 								</div>
@@ -464,29 +473,35 @@ $course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true)
 								$attached_files = json_decode($attached_files, true);
 		
 								if (tutor_utils()->count($attached_files)) {
-						?>
-						<div class="tutor-attachment-files submited-files d-flex tutor-mt-20 tutor-mt-sm-40">
-							<?php
-								$upload_dir = wp_get_upload_dir();
-								$upload_baseurl = trailingslashit(tutor_utils()->array_get('baseurl', $upload_dir));
-									foreach ($attached_files as $attached_file) {
-								?>
-										<div class="tutor-instructor-card">
-											<div class="tutor-icard-content">
-												<div class="text-regular-body color-text-title">
-													<?php echo tutor_utils()->array_get('name', $attached_file); ?>
+									?>
+									<div class="tutor-attachment-files submited-files d-flex tutor-mt-20 tutor-mt-sm-40">
+										<?php
+											$upload_dir = wp_get_upload_dir();
+											$upload_baseurl = trailingslashit(tutor_utils()->array_get('baseurl', $upload_dir));
+
+											foreach ($attached_files as $attached_file) {
+												?>
+												<div class="tutor-instructor-card">
+													<div class="tutor-icard-content">
+														<div class="text-regular-body color-text-title">
+															<?php echo tutor_utils()->array_get('name', $attached_file); ?>
+														</div>
+														<div class="text-regular-small">Size: <?php echo tutor_utils()->array_get('size', $attached_file); ?></div>
+													</div>
+													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
+														<a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
+															<span class="ttr-download-line color-design-brand"></span>
+														</a>
+													</div>
 												</div>
-												<div class="text-regular-small">Size: <?php echo tutor_utils()->array_get('size', $attached_file); ?></div>
-											</div>
-											<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
-												<a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
-													<span class="ttr-download-line color-design-brand"></span>
-												</a>
-											</div>
-										</div>
-							<?php }  ?>
-						</div>
-						<?php } } ?>
+												<?php 
+											}  
+										?>
+									</div>
+									<?php 
+								} 
+							} 
+						?>
 					</div>
 				</div>
 

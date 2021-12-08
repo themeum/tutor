@@ -34,7 +34,7 @@ const AddonCard = ({ addon, addonId }) => {
 			</div>
 			<div className=" card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center">
 				<div className="text-medium-small color-text-hints">
-					<p className="extra-plugins color-text-hints text-medium-small">{addon.plugins_required?.length > 0 ? __('Required Plugin(s)', 'tutor') : addon.ext_required?.length > 0 ? __('Required for Push Notification', 'tutor') : __('No additional plugin(s) required', 'tutor')}</p>
+					<p className="extra-plugins color-text-hints text-medium-small">{addon.plugins_required?.length > 0 ? __('Required Plugin(s)', 'tutor') : addon.ext_required?.length > 0 ? __('Required for Push Notification', 'tutor') : __('No extra plugin required', 'tutor')}</p>
 						{addon.ext_required &&
 							addon.ext_required ? addon.ext_required.map((extension, index) => {
 								return (

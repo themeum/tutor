@@ -13,7 +13,7 @@
 		<div class="tutor-option-field-row tutor-bs-d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
-					<span class="ttr-upload-icon-line"></span>
+					<span class="ttr-upload-icon-line tutor-icon-80 color-brand-wordpress"></span>
 					<div class="title">Drag &amp; Drop your JSON File here </div>
 					<div class="subtitle"><span>File Format:</span> .json <br> Or</div>
 					<label for="drag-drop-input" class="tutor-btn tutor-is-sm">
@@ -35,10 +35,10 @@
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<p class="text-regular-h6">Current Settings</p>
-				<p class="text-medium-small">
+				<div class="label text-regular-h6 color-text-primary">Current Settings</div>
+				<div class="desc text-medium-small color-text-subsued">
 					<span style="font-weight: 500">Last Update: </span>20 July, 2020, 12:47 pm
-				</p>
+				</div>
 			</div>
 			<div class="tutor-option-field-input">
 				<button class="tutor-btn tutor-is-outline tutor-is-sm" id="export_settings">Export Settings</button>
@@ -67,24 +67,24 @@
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>
-						<div class="tutor-popup-opener">
+						<div class="tutor-popup-opener tutor-ml-16">
 							<button
 							type="button"
 							class="popup-btn"
 							data-tutor-popup-target="popup-<?php echo esc_attr( $key ); ?>"
 							>
-							<span class="toggle-icon"></span>
+								<span class="toggle-icon"></span>
 							</button>
 							<ul id="popup-<?php echo esc_attr( $key ); ?>" class="popup-menu">
 							<li>
 								<a class="export_single_settings" data-id="<?php echo $key; ?>">
-									<span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
+									<span class="icon ttr-msg-archive-filled color-design-white"></span>
 									<span class="text-regular-body color-text-white">Download</span>
 								</a>
 							</li>
 							<li>
 								<a class="delete_single_settings" data-id="<?php echo $key; ?>">
-									<span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
+									<span class="icon ttr-delete-fill-filled color-design-white"></span>
 									<span class="text-regular-body color-text-white">Delete</span>
 								</a>
 							</li>
@@ -109,10 +109,10 @@
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<p class="text-regular-h6"> Reset Everything to Default</p>
-				<p class="text-medium-small">
+				<div class="text-regular-h6 color-text-primary"> Reset Everything to Default</div>
+				<div class="text-medium-small color-text-subsued">
 					<span style="font-weight: 500">Reset subtitle
-				</span></p>
+				</span></div>
 			</div>
 			<div class="tutor-option-field-input">
 				<button class="tutor-btn tutor-is-outline tutor-is-sm" id="reset_options">Reset All Settings</button>

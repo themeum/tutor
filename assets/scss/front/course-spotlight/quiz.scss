@@ -124,7 +124,7 @@
         }
         .tutor-quiz-dotted-box {
             // min-width: 230px;
-            padding: 5px 20px 5px 20px;
+            padding: 8px 20px 8px 20px;
             min-height: 48px;
             border: 2px dashed #ddd;
             border-radius: 5px;
@@ -171,9 +171,6 @@
             display: grid;
             gap: 20px 20px;
             grid-template-columns: repeat(auto-fit, minmax(163px, 1fr));
-            @include breakpoint-max(mobile) {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
         #tutor-quiz-image-single-choice {
             .tutor-image-checkbox {
@@ -227,6 +224,13 @@
                             }
                         }
                     }
+                }
+            }
+        }
+        #tutor-quiz-single-multiple-choice { 
+            .tutor-image-checkbox {
+                > div:not(:first-child) {
+                    margin-top: 25px;
                 }
             }
         }
@@ -292,6 +296,11 @@
                     }
                 }
             }
+            &.tutor-quiz-multiple-variation {
+                .tutor-image-checkbox {
+                    grid-template-columns: 240px;
+                }
+            }
         }
         .quiz-question-ans-choice-area {
             .quiz-short-ans-image {
@@ -300,9 +309,6 @@
                 height: auto;
             }
             .quiz-question-ans-choice {
-                &:not(:first-child) {
-                    margin-top: 25px;
-                }
                 label {
                     min-width: 240px;
                     border: 1px solid $black-20;
@@ -345,17 +351,21 @@
             }
             .quiz-matching-ans {
                 display: flex;
-                max-width: 370px;
+                max-width: 500px;
                 align-items: center;
+                flex-wrap: wrap;
                 .tutor-quiz-ans-no {
-                    width: 30%;
+                    width: 230px;
                 }
                 .quiz-matching-ans-item {
                     display: flex;
-                    width: 70%;
+                    width: 270px;
                     align-items: center;
+                    @include breakpoint-max(mobile) {
+                        margin-top: 20px;
+                    }
                     span {
-                        margin-right: 20px;
+                        margin: 0px 20px;
                     }
                     .tutor-quiz-dotted-box {
                         width: 230px;
@@ -519,7 +529,7 @@
                 }
             }
             .quiz-question {
-                margin-top: 20px;
+                // margin-top: 20px;
             }
             .quiz-question-ans-choice-area {
                 .quiz-question-ans-choice {

@@ -57,6 +57,9 @@ a.back-to-quiz-questions-btn {
         
         .lead-option {
             @include valueWithPrefix(flex, 1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             
             .question-type-pro {
                 display: none;
@@ -115,13 +118,24 @@ a.back-to-quiz-questions-btn {
     }
 }
 
-#tutor-answer-builder {
+#tutor_quiz_builder_answer_wrapper {
     background: #E3E5EB;
     margin-left: -30px;
     margin-right: -30px;
-    
-    #tutor_quiz_question_answer_form {
-        padding: 15px;
+
+    &>div{
+        padding: 30px;
+
+        &:empty{
+            display: none;
+        }
+    }
+
+    &>a {
+        display: block;
+        padding: 15px 30px;
+        background: #EFF1F6;
+        border-top: 1px solid #CDCFD5;
     }
 
     .tutor-add-option-wrapper {
@@ -134,19 +148,36 @@ a.back-to-quiz-questions-btn {
         padding: 15px;
     }
     
-    &>div:empty{
-        display: none;
-    }
-
     .tutor-quiz-question-answers-form {
-        background-color: #fff;
-        padding: 20px;
-        -webkit-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        border: 1px solid #dedede;
-        border-radius: 3px;
+        padding: 20px 30px;
     }
 
+    .tutor-quiz-answer-wrap {
+        &:not(:last-child) {
+            margin-bottom: 15px;
+        }
+
+        .tutor-quiz-answer {
+            background-color: #fff;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #dedede;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            line-height: 22px;
+            border-radius: 3px;
+
+            .tutor-quiz-answer-edit {
+                a {
+                    display: block;
+                    padding: 0px 9px;
+                }
+            } 
+        }
+    }
 }
 
 .quiz-builder-question-wrap {

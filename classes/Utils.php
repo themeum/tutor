@@ -997,8 +997,9 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function checking_nonce( $request_method = null ) {
-		!$request_method ? $request_method = strtolower($_SERVER['REQUEST_METHOD']) : 0;
-		$data = $request_method === 'post' ? $_POST : $_GET;
+		!$request_method ? $request_method = $_SERVER['REQUEST_METHOD'] : 0;
+
+		$data = strtolower($request_method) === 'post' ? $_POST : $_GET;
 		$nonce_value = sanitize_text_field(tutor_utils()->array_get(tutor()->nonce, $data, null));
 		$matched = $nonce_value && wp_verify_nonce( $nonce_value, tutor()->nonce_action );
 
@@ -2343,7 +2344,7 @@ class Utils {
 	    $course_id = $this->get_post_id( $course_id );
 	    $user_id   = $this->get_user_id( $user_id );
 	    $enrolled  = $this->is_enrolled($course_id, $user_id);
-
+die($cancel_status);
 	    if ( $enrolled ) {
 	        global $wpdb;
 
@@ -2364,6 +2365,7 @@ class Utils {
 	            $wpdb->update( $wpdb->posts, array( 'post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id ) );
 
 				if ( $cancel_status === 'cancel' ) {
+					die($cancel_status);
 					do_action( 'tutor_enrollment/after/cancel', $enrolled->ID );
 				}
 			}
@@ -4021,7 +4023,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '', $question_id=null, $meta_query=null, $asker_id=null ) {
+	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '', $question_id=null, $meta_query=null, $asker_id=null, $question_status=null, $count_only=false ) {
 		global $wpdb;
 
 		$user_id     		  = get_current_user_id();
@@ -4030,6 +4032,7 @@ class Utils {
 		$question_clause 	  = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
 		$meta_clause 		  = '';
 		$in_question_id_query = '';
+		$qna_types_caluse	  = '';
 
 		/**
 		 * Get only assinged  courses questions if current user is not admin
@@ -4049,12 +4052,30 @@ class Utils {
 			foreach($meta_query as $key=>$value) {
 				$meta_array[] = "_meta.meta_key='{$key}' AND _meta.meta_value='{$value}'";
 			}
-
 			$meta_clause .= ' AND ' . implode(' AND ', $meta_array);
 		}
 
-		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT DISTINCT _question.comment_ID,
+		// Assign read, unread, archived, important identifier
+		switch($question_status) {
+			case 'read' :
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value=1) ';
+				break;
+
+			case 'unread' :
+				$qna_types_caluse = ' AND (_meta.meta_key!=\'tutor_qna_read\' OR _meta.meta_value!=1) ';
+				break;
+
+			case 'archived' :
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_archived\' AND _meta.meta_value=1) ';
+				break;
+
+			case 'important' :
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value!=1) ';
+				break;
+		}
+
+		$columns_select = $count_only ? 'COUNT(_question.comment_ID)' :
+			"_question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
@@ -4068,8 +4089,13 @@ class Utils {
 					(	SELECT  COUNT(answers_t.comment_ID)
 						FROM 	{$wpdb->comments} answers_t
 						WHERE 	answers_t.comment_parent = _question.comment_ID
-					) AS answer_count
-			FROM 	{$wpdb->comments} _question
+					) AS answer_count";
+
+		$limit_offset = $count_only ? '' : ' LIMIT '.$limit.' OFFSET '.$start;
+
+		$query = $wpdb->prepare(
+			"SELECT DISTINCT {$columns_select}
+			FROM {$wpdb->comments} _question
 					INNER JOIN {$wpdb->posts} _course
 							ON _question.comment_post_ID = _course.ID
 					INNER JOIN {$wpdb->users} _user
@@ -4082,12 +4108,17 @@ class Utils {
 					{$in_question_id_query}
 					{$question_clause}
 					{$meta_clause}
+					{$qna_types_caluse}
 			ORDER BY _question.comment_ID DESC
-			LIMIT %d, %d;",
-			$search_term,
-			$start,
-			$limit
-		) );
+			{$limit_offset}",
+			$search_term
+		);
+
+		if($count_only) {
+			return $wpdb->get_var($query);
+		}
+
+		$query = $wpdb->get_results( $query );
 
 		// Collect question IDs and create empty meta array placeholder
 		$question_ids = array();
@@ -4994,40 +5025,58 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter='', $course_filter='', $date_filter='', $order_filter='' ) {
+	public function get_quiz_attempts( $start = 0, $limit = 10, $search_filter='', $course_filter='', $date_filter='', $order_filter='', $result_state=null, $count_only=false ) {
 		global $wpdb;
 
 		$search_filter  = '%' . $wpdb->esc_like( $search_filter ) . '%';
 		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
 		$date_filter	= $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
+		$result_clause	= '';
+		$select_columns = $count_only ? 'COUNT(quiz_attempts.attempt_id)' : 'quiz_attempts.*, quiz.*, users.*';
+		$limit_offset	= $count_only ? '' : ' LIMIT '.$limit.' OFFSET '.$start;
 
-		$query = $wpdb->get_results( $wpdb->prepare(
-			"SELECT quiz_attempts.*, quiz.*, users.*
-		 	FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-					INNER JOIN {$wpdb->posts} quiz
-							ON quiz_attempts.quiz_id = quiz.ID
-					INNER JOIN {$wpdb->users} AS users
-							ON quiz_attempts.user_id = users.ID
-					INNER JOIN {$wpdb->posts} AS course
-							ON course.ID = quiz_attempts.course_id
+		switch($result_state) {
+			case 'pass' :
+				$result_clause = ' AND quiz_attempts.earned_marks>=quiz_attempts.total_marks ';
+				break;
+
+			case 'fail' :
+				$result_clause = ' AND quiz_attempts.earned_marks<quiz_attempts.total_marks ';
+				break;
+
+			case 'pending' :
+				$result_clause = ' AND quiz_attempts.attempt_status=\'review_required\'';
+				break;
+		}
+
+		$query = $wpdb->prepare(
+			"SELECT {$select_columns}
+		 	FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+					INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
+					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
+					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
 			WHERE 	quiz_attempts.attempt_status != %s
-					AND ( users.user_email LIKE %s OR users.display_name LIKE %s OR quiz.post_title LIKE %s OR course.post_title LIKE %s )
+					AND (
+							users.user_email LIKE %s
+							OR users.display_name LIKE %s
+							OR quiz.post_title LIKE %s
+							OR course.post_title LIKE %s
+						)
+					AND quiz_attempts.attempt_ended_at IS NOT NULL
+					{$result_clause}
 					{$course_filter}
 					{$date_filter}
 			ORDER 	BY quiz_attempts.attempt_ended_at $order_filter
-			LIMIT 	%d, %d;
-			",
+			{$limit_offset}",
 			'attempt_started',
 			$search_filter,
 			$search_filter,
 			$search_filter,
-			$search_filter,
-			$start,
-			$limit
-		) );
+			$search_filter
+		);
 
-		return $query;
+		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query);
 	}
 
 	/**
@@ -7632,7 +7681,7 @@ class Utils {
 			'lesson' => 'lesson',
 			'tutor_zoom_meeting' => 'zoom_meeting'
 		);
-		
+
 		$content_type = get_post_field( 'post_type', $content_id );
 
 		return $this->get_course_id_by($mapping[$content_type], $content_id);
@@ -7646,11 +7695,10 @@ class Utils {
 	 * Check if user can create, edit, delete various tutor contents such as lesson, quiz, answer etc.
 	 */
 	public function can_user_manage( $content, $object_id, $user_id=0, $allow_current_admin=true ) {
-
+		$user_id   = (int)$this->get_user_id( $user_id );
 		$course_id = $this->get_course_id_by( $content, $object_id );
 
 		if( $course_id ) {
-
 			if( $allow_current_admin && current_user_can( 'administrator' ) ) {
 				// Admin has access to everything
 				return true;
@@ -7661,10 +7709,11 @@ class Utils {
 				return (int)$instructor->ID;
 			}, $instructors) : array();
 
-			$user_id   = (int)$this->get_user_id( $user_id );
 			$is_listed = in_array( $user_id, $instructor_ids );
 
-			return $is_listed;
+			if($is_listed) {
+				return true;
+			}
 		}
 
 		global $wpdb;
@@ -7674,8 +7723,9 @@ class Utils {
 				// just check if own content. Instructor privilege already checked in the earlier blocks
 				$id = $wpdb->get_var($wpdb->prepare(
 					"SELECT comment_ID
-					FROM {$wpdb->comments} WHERE user_id %d",
-					$user_id
+					FROM {$wpdb->comments} WHERE user_id = %d AND comment_ID=%d",
+					$user_id,
+					$object_id
 				));
 
 				return $id ? true : false;
@@ -8273,9 +8323,9 @@ class Utils {
 	 */
 	public function tutor_empty_state( string $title = '' ) {
 		$page_title = $title ? $title : ''; ?>
-		<div class="td-empty-state tutor-p-30">
+		<div class="td-empty-state tutor-p-30 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
-			<div class="text-regular-h5 color-text-primary tutor-mt-20">
+			<div class="text-regular-h5 color-text-primary tutor-mt-20 tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
 		</div>
@@ -8436,35 +8486,59 @@ class Utils {
 	}
 
 	/**
-	 * Course nav items 
+	 * Course nav items
 	 *
 	 * @since v2.0.0
 	 */
 	public function course_nav_items() {
 		$array =  array(
-			'info' => array( 
-				'title' => __('Course Info', 'tutor'), 
+			'info' => array(
+				'title' => __('Course Info', 'tutor'),
 				'method' => 'tutor_course_info_tab'
 			),
-			'curriculum' => array( 
-				'title' => __('Curriculum', 'tutor'), 
-				'method' => 'tutor_course_topics' 
+			'curriculum' => array(
+				'title' => __('Curriculum', 'tutor'),
+				'method' => 'tutor_course_topics'
 			),
-			'reviews' => array( 
-				'title' => __('Reviews', 'tutor'), 
-				'method' => 'tutor_course_target_reviews_html' 
+			'reviews' => array(
+				'title' => __('Reviews', 'tutor'),
+				'method' => 'tutor_course_target_reviews_html'
 			),
-			'questions' => array( 
-				'title' => __('Q&A', 'tutor'), 
+			'questions' => array(
+				'title' => __('Q&A', 'tutor'),
 				'method' => 'tutor_course_question_and_answer',
 				'require_enrolment' => true
 			),
-			'announcements' => array( 
-				'title' => __('Announcements', 'tutor'), 
+			'announcements' => array(
+				'title' => __('Announcements', 'tutor'),
 				'method' => 'tutor_course_announcements',
 				'require_enrolment' => true
 			)
 		);
 		return $array;
+	}
+
+	public function get_quiz_attempt_timing($attempt_data) {
+		$attempt_duration = '';
+		$attempt_duration_taken = '';
+		$attempt_info = @unserialize($attempt_data->attempt_info);
+		if(is_array($attempt_info)) {
+			// Allowed duration
+			if(isset($attempt_info['time_limit'])) {
+				$attempt_duration = $attempt_info['time_limit']['time_value'] . ' ' . __(ucwords($attempt_info['time_limit']['time_type']), 'tutor');
+			}
+
+			// Taken duration
+			$seconds = strtotime($attempt_data->attempt_ended_at) - strtotime($attempt_data->attempt_started_at);
+			$minutes = $seconds/60;
+
+			if($seconds<60) {
+				$attempt_duration_taken = $seconds . ' ' . ($seconds>1 ? __('Seconds', 'tutor') : __('Second', 'tutor'));
+			} else {
+				$attempt_duration_taken = $minutes>1 ? __('Minutes', 'tutor') : __('Minute', 'tutor');
+			}
+		}
+
+		return compact('attempt_duration', 'attempt_duration_taken');
 	}
 }

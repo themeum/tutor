@@ -41,7 +41,6 @@
 						?>
 						<li class="tutor-option-nav-item">
 							<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
-								<!-- <img src="<?php echo esc_attr( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>-icon" /> -->
 								<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-icon-30 color-black-40"></span>
 								<span class="nav-label"><?php echo esc_html( $section['label'] ); ?></span>
 							</a>
@@ -77,26 +76,4 @@
 <style>
 	.color-picker-input input[type=color]:focus,.color-picker-input input[type=color]:active {box-shadow: none;}
 	.color-preset-input [type="radio"]{position: absolute;opacity: 0;visibility: hidden;z-index: -1;}
-	#wpbody-content {
-		margin-top: 70px;
-	}
-	#wpcontent {
-		padding-left: 30px;
-		padding-right: 25px;
-	}
-	.notice, div.error, div.updated {
-		margin-right: 0;
-		margin-left: 0;
-	}
-	.notice.is-dismissible {
-		margin-bottom: 10px;
-	}
-	#wpfooter {
-		background: #f0f0f1;
-		z-index: 10;
-		box-shadow: 0 -1px 0px 0 rgb(220 219 220);
-	}
-	#wpwrap {
-		overflow-y: hidden;
-	}
 </style>

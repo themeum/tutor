@@ -1,3 +1,4 @@
+import "./segments/lib";
 import "./segments/navigation";
 import "./segments/image-preview";
 import "./segments/options";
@@ -26,7 +27,7 @@ jQuery(document).ready(function ($) {
 
   const { __, _x, _n, _nx } = wp.i18n;
   const search_student_placeholder = __("Search students", "tutor");
-  /**
+  /**i
    * Color Picker
    * @since v.1.2.21
    */
@@ -239,20 +240,47 @@ jQuery(document).ready(function ($) {
         let message = '';
         if (action == 'approve') {
           message = 'Instructor approved!';
-        } 
+        }
         if (action == 'blocked') {
           message = 'Instructor blocked!';
-        } 
-        tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
-        location.reload();
+        }
+        /**
+         * If it is instructor modal for approve or blocked
+         * hide modal then show toast then reload
+         * 
+         * @since v2.0.0
+         */
+        const instructorModal = document.querySelector('.tutor-modal-ins-approval');
+        if (instructorModal) {
+          if (instructorModal.classList.contains('tutor-is-active')) {
+            instructorModal.classList.remove('tutor-is-active');
+          }
+          tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+          location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
+        } else {
+          tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+          location.reload();
+        }
       } else {
         tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
       }
-    } catch(error) {
+    } catch (error) {
       loadingButton.innerHTML = prevHtml;
       tutor_toast(__("Operation failed", "tutor"), error, "error");
     }
   });
+
+  /**
+   * If click on close instructor approve or modal then redirect to main URL
+   * if not redirect then it will not work with pagination.
+   */
+  const instructorModal =  document.querySelector('.tutor-modal-ins-approval .tutor-icon-56.ttr-line-cross-line');
+  if (instructorModal) {
+    instructorModal.addEventListener('click', function(){
+      console.log('ckk')
+      location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
+    })
+  }
 
   /**
    * On form submit block | approve instructor

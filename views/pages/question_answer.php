@@ -15,7 +15,6 @@ if (isset($_GET['question_id'])){
 $qna = (new \TUTOR\Question_Answers_List())->get_items();
 $qna_list = $qna['items'];
 $qna_pagination = $qna['pagination'];
-
 ?>
 
 
@@ -50,4 +49,18 @@ $qna_pagination = $qna['pagination'];
 
 		echo paginate_links( $qna_pagination );
 	?>
+	<div class="tutor-mt-30">
+		<?php
+			/**
+			 * Prepare pagination data & load template
+			 */
+			$pagination_data = array(
+				'total_items' => $qna_pagination['total_items'],
+				'per_page'    => $qna_pagination['per_page'],
+				'paged'       => $qna_pagination['paged'],
+			);
+			$pagination_template = tutor()->path . 'views/elements/pagination.php';
+			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+		?>
+	</div>
 </div>

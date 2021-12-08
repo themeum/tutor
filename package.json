@@ -4,8 +4,10 @@
 	"description": "<img src='.github/tutor-github.png' alt='TutorLMS' width='100%'>",
 	"main": "index.js",
 	"scripts": {
-		"build": "webpack --env=build --mode=production && _GULP_ENV='build' gulp build",
-		"build-dev": "webpack --mode=development && gulp build",
+		"build": "webpack --env=build --mode=production && npm run gulp-build",
+		"build-dev": "webpack --mode=development && npm run gulp-build-dev",
+		"gulp-build": "rm ./languages/tutor.pot && _GULP_ENV='build' gulp build",
+		"gulp-build-dev": "rm ./languages/tutor.pot && gulp build",
 		"css-watch": "gulp watch",
 		"js-watch": "webpack --watch --mode=development",
 		"docz-build": "docz build",
