@@ -1,8 +1,8 @@
 <form class="tutor_lesson_modal_form">
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
     <input type="hidden" name="action" value="tutor_modal_create_or_update_lesson">
-    <input type="hidden" name="lesson_id" value="<?php echo $post->ID; ?>">
-    <input type="hidden" name="current_topic_id" value="<?php echo $topic_id; ?>">
+    <input type="hidden" name="lesson_id" value="<?php echo esc_attr( $post->ID ); ?>">
+    <input type="hidden" name="current_topic_id" value="<?php echo esc_attr( $topic_id ); ?>">
 
 	<?php
 	if (get_tutor_option('enable_lesson_classic_editor')){
@@ -55,7 +55,7 @@
                             <a href="javascript:;" class="tutor-lesson-thumbnail-delete-btn" style="display: <?php echo $lesson_thumbnail_id ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
                         </p>
 
-                        <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="<?php echo $lesson_thumbnail_id; ?>">
+                        <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="<?php echo esc_attr( $lesson_thumbnail_id ); ?>">
                         <button type="button" class="lesson_thumbnail_upload_btn tutor-btn bordered-btn"><?php echo $thumbnail_upload_text; ?></button>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="tutor-btn active update_lesson_modal_btn" data-toast_success_message="<?php _e('Lesson Updated', 'tutor'); ?>">
+        <button type="button" class="tutor-btn active update_lesson_modal_btn" data-toast_success_message="<?php esc_attr_e('Lesson Updated', 'tutor'); ?>">
             <?php _e('Update Lesson', 'tutor'); ?>
         </button>
     </div>

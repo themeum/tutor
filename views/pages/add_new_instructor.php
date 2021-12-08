@@ -32,7 +32,7 @@
                 </label>
             </div>
             <div class="tutor-option-field">
-                <input type="text" name="first_name" value="<?php esc_attr_e( tutor_utils()->input_old('first_name') ); ?>" placeholder="<?php esc_attr_e('First Name', 'tutor'); ?>">
+                <input type="text" name="first_name" value="<?php echo esc_attr( tutor_utils()->input_old('first_name') ); ?>" placeholder="<?php esc_attr_e('First Name', 'tutor'); ?>">
             </div>
         </div>
 
@@ -46,7 +46,7 @@
             </div>
 
             <div class="tutor-option-field">
-                <input type="text" name="last_name" value="<?php esc_attr_e( tutor_utils()->input_old('last_name') ); ?>" placeholder="<?php esc_attr_e('Last Name', 'tutor'); ?>">
+                <input type="text" name="last_name" value="<?php echo esc_attr( tutor_utils()->input_old('last_name') ); ?>" placeholder="<?php esc_attr_e('Last Name', 'tutor'); ?>">
             </div>
         </div>
 
@@ -59,7 +59,7 @@
             </div>
 
             <div class="tutor-option-field">
-                <input type="text" name="user_login" class="tutor_user_name" value="<?php esc_attr_e( tutor_utils()->input_old('user_login') ); ?>" placeholder="<?php esc_attr_e('User Name', 'tutor'); ?>">
+                <input type="text" name="user_login" class="tutor_user_name" value="<?php echo esc_attr( tutor_utils()->input_old('user_login') ); ?>" placeholder="<?php esc_attr_e('User Name', 'tutor'); ?>">
             </div>
         </div>
 
@@ -72,7 +72,7 @@
             </div>
 
             <div class="tutor-option-field">
-                <input type="text" name="email" value="<?php esc_attr_e( tutor_utils()->input_old('email') ); ?>" placeholder="<?php esc_attr_e('E-Mail', 'tutor'); ?>">
+                <input type="text" name="email" value="<?php echo esc_attr( tutor_utils()->input_old('email') ); ?>" placeholder="<?php esc_attr_e('E-Mail', 'tutor'); ?>">
             </div>
         </div>
 
@@ -85,7 +85,7 @@
             </div>
 
             <div class="tutor-option-field">
-                <input type="text" name="phone_number" value="<?php esc_attr_e( tutor_utils()->input_old('phone_number') ); ?>" placeholder="<?php esc_attr_e('Phone Number', 'tutor'); ?>">
+                <input type="text" name="phone_number" value="<?php echo esc_attr( tutor_utils()->input_old('phone_number') ); ?>" placeholder="<?php esc_attr_e('Phone Number', 'tutor'); ?>">
             </div>
         </div>
 
@@ -98,7 +98,7 @@
             </div>
 
             <div class="tutor-option-field">
-                <input type="password" name="password" value="<?php esc_attr_e( tutor_utils()->input_old('password') ); ?>" placeholder="<?php esc_attr_e('Password', 'tutor'); ?>">
+                <input type="password" name="password" value="<?php echo esc_attr( tutor_utils()->input_old('password') ); ?>" placeholder="<?php esc_attr_e('Password', 'tutor'); ?>">
             </div>
         </div>
 
@@ -111,7 +111,7 @@
             </div>
 
             <div class="tutor-option-field">
-                <input type="password" name="password_confirmation" value="<?php esc_attr_e( tutor_utils()->input_old('password_confirmation') ); ?>" placeholder="<?php esc_attr_e('Password Confirmation', 'tutor'); ?>">
+                <input type="password" name="password_confirmation" value="<?php echo esc_attr( tutor_utils()->input_old('password_confirmation') ); ?>" placeholder="<?php esc_attr_e('Password Confirmation', 'tutor'); ?>">
             </div>
         </div>
 

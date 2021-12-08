@@ -39,7 +39,7 @@ $instructorList->prepare_items( $search_filter, $course_filter, $date_filter,$or
     <hr class="wp-header-end">
 
     <form id="students-filter" method="get">
-        <input type="hidden" name="page" value="<?php echo \TUTOR\Instructors_List::INSTRUCTOR_LIST_PAGE; ?>" />
+        <input type="hidden" name="page" value="<?php echo esc_attr( \TUTOR\Instructors_List::INSTRUCTOR_LIST_PAGE ); ?>" />
 		<?php
 			//$instructorList->search_box(__('Search', 'tutor'), 'instructors');
 			$instructorList->display( $enable_sorting_field_with_bulk_action = true ); 

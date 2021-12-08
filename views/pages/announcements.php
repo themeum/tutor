@@ -50,13 +50,13 @@ $the_query = new WP_Query($args);
     <div>
         <div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
         <div>
-            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?php echo esc_attr( $search_filter ); ?>" autocomplete="off" placeholder="<?php _e('Search Announcements', 'tutor'); ?>" />
+            <input type="text" class="tutor-report-search tutor-announcement-search-field" value="<?php echo esc_attr( $search_filter ); ?>" autocomplete="off" placeholder="<?php esc_attr_e('Search Announcements', 'tutor'); ?>" />
             <button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
         </div>
     </div>
 
     <div>
-        <div class="menu-label"><?php _e('Courses', 'tutor'); ?></div>
+        <div class="menu-label"><?php esc_html_e('Courses', 'tutor'); ?></div>
         <div>
             <?php
             //get courses
@@ -65,7 +65,7 @@ $the_query = new WP_Query($args);
 
             <select class="tutor-report-category tutor-announcement-course-sorting">
                
-                <option value=""><?php _e('All', 'tutor'); ?></option>
+                <option value=""><?php esc_html_e('All', 'tutor'); ?></option>
              
                 <?php if ($courses) : ?>
                     <?php foreach ($courses as $course) : ?>
@@ -74,14 +74,14 @@ $the_query = new WP_Query($args);
                         </option>
                     <?php endforeach; ?>
                 <?php else : ?>
-                    <option value=""><?php _e('No course found', 'tutor'); ?></option>
+                    <option value=""><?php esc_html_e('No course found', 'tutor'); ?></option>
                 <?php endif; ?>
             </select>
         </div>
     </div>
 
     <div>
-        <div class="menu-label"><?php _e('Sort By', 'tutor'); ?></div>
+        <div class="menu-label"><?php esc_html_e('Sort By', 'tutor'); ?></div>
         <div>
             <select class="tutor-report-sort tutor-announcement-order-sorting">
                 <option <?php selected($order_filter, 'ASC'); ?>>ASC</option>
@@ -199,8 +199,8 @@ $the_query = new WP_Query($args);
                             <?php if ($courses) : ?>
                                 <?php foreach ($courses as $course) : ?>
 
-                                    <option value="<?php echo esc_attr($course->ID) ?>">
-                                        <?php echo $course->post_title; ?>
+                                    <option value="<?php echo esc_attr( $course->ID ) ?>">
+                                        <?php echo esc_html( $course->post_title ); ?>
                                     </option>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -217,7 +217,7 @@ $the_query = new WP_Query($args);
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_announcement_title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
+                        <input type="text" name="tutor_announcement_title" value="" placeholder="<?php esc_attr_e('Announcement title', 'tutor'); ?>" required>
                     </div>
                 </div>
 
@@ -227,7 +227,7 @@ $the_query = new WP_Query($args);
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
+                        <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php esc_attr_e('Summary...', 'tutor'); ?>" required></textarea>
                     </div>
                 </div>
                 
@@ -281,8 +281,8 @@ $the_query = new WP_Query($args);
                             <?php if ($courses) : ?>
                                 <?php foreach ($courses as $course) : ?>
 
-                                    <option value="<?php echo esc_attr($course->ID) ?>">
-                                        <?php echo $course->post_title; ?>
+                                    <option value="<?php echo esc_attr( $course->ID ) ?>">
+                                        <?php echo esc_html( $course->post_title ); ?>
                                     </option>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -299,7 +299,7 @@ $the_query = new WP_Query($args);
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <input type="text" name="tutor_announcement_title" id="tutor-announcement-title" value="" placeholder="<?php _e('Announcement title', 'tutor'); ?>" required>
+                        <input type="text" name="tutor_announcement_title" id="tutor-announcement-title" value="" placeholder="<?php esc_attr_e('Announcement title', 'tutor'); ?>" required>
                     </div>
                 </div>
 
@@ -309,7 +309,7 @@ $the_query = new WP_Query($args);
                     </label>
 
                     <div class="tutor-announcement-form-control">
-                        <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_announcement_summary" value="" placeholder="<?php _e('Summary...', 'tutor'); ?>" required></textarea>
+                        <textarea rows="6" type="text" id="tutor-announcement-summary" name="tutor_announcement_summary" value="" placeholder="<?php esc_attr_e('Summary...', 'tutor'); ?>" required></textarea>
                     </div>
                 </div>
 

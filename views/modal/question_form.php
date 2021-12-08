@@ -7,7 +7,7 @@ $settings = maybe_unserialize($question->question_settings);
 
 
     <div class="question-form-header">
-        <a href="javascript:;" class="back-to-quiz-questions-btn open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>"
+        <a href="javascript:;" class="back-to-quiz-questions-btn open-tutor-quiz-modal" data-quiz-id="<?php echo esc_attr( $quiz_id ); ?>"
            data-back-to-tab="#quiz-builder-tab-questions"><i class="tutor-icon-next-2"></i> <?php _e('Back', 'tutor'); ?></a>
     </div>
 
@@ -21,7 +21,7 @@ $settings = maybe_unserialize($question->question_settings);
                 <h4><?php _e('Write your question here', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
-                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($question->question_title) ); ?>">
+                        <input type="text" name="tutor_quiz_question[<?php echo esc_attr( $question_id ); ?>][question_title]" placeholder="<?php esc_attr_e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($question->question_title) ); ?>">
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@ $settings = maybe_unserialize($question->question_settings);
                             <div class="select-header">
                                 <span class="lead-option"> <i class="tutor-icon-yes-no"></i> <?php _e('True or False', 'tutor'); ?> </span>
                                 <span class="select-dropdown"><i class="tutor-icon-light-down"></i> </span>
-                                <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo $question_id; ?>][question_type]" value="" >
+                                <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo esc_attr( $question_id ); ?>][question_type]" value="" >
                             </div>
 
 							<?php $question_types = tutor_utils()->get_question_types(); ?>
@@ -45,7 +45,7 @@ $settings = maybe_unserialize($question->question_settings);
 
 								foreach ($question_types as $type => $question_type){
 									?>
-                                    <p class="tutor-select-option" data-value="<?php echo $type; ?>" <?php echo $question->question_type===$type ? ' data-selected="selected"' : ''; ?> data-is-pro="<?php echo (! $has_tutor_pro &&  $question_type['is_pro']) ? 'true' : 'false' ?>" >
+                                    <p class="tutor-select-option" data-value="<?php echo esc_attr( $type ); ?>" <?php echo $question->question_type===$type ? ' data-selected="selected"' : ''; ?> data-is-pro="<?php echo (! $has_tutor_pro &&  $question_type['is_pro']) ? 'true' : 'false' ?>" >
 										<?php echo $question_type['icon'].' '.$question_type['name']; ?>
 
 										<?php
@@ -69,14 +69,14 @@ $settings = maybe_unserialize($question->question_settings);
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col auto-width">
                         <label class="btn-switch">
-                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][answer_required]" <?php checked('1', tutor_utils()->avalue_dot('answer_required', $settings)); ?> />
+                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo esc_attr( $question_id ); ?>][answer_required]" <?php checked('1', tutor_utils()->avalue_dot('answer_required', $settings)); ?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
                         <span><?php _e('Answer Required', 'tutor'); ?></span>
                     </div>
                     <div class="tutor-quiz-builder-col auto-width">
                         <label class="btn-switch">
-                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][randomize_question]" <?php checked('1', tutor_utils()->avalue_dot('randomize_question', $settings)); ?> />
+                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo esc_attr( $question_id ); ?>][randomize_question]" <?php checked('1', tutor_utils()->avalue_dot('randomize_question', $settings)); ?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
                         <span><?php _e('Randomize', 'tutor'); ?></span>
@@ -88,8 +88,8 @@ $settings = maybe_unserialize($question->question_settings);
                 <h4><?php _e('Point(s) for this answer', 'tutor'); ?></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
-                        <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php
-						echo $question->question_mark; ?>">
+                        <input type="text" name="tutor_quiz_question[<?php echo esc_attr( $question_id ); ?>][question_mark]" placeholder="<?php esc_attr_e('set the mark ex. 10', 'tutor'); ?>" value="<?php
+						echo esc_attr( $question->question_mark ); ?>">
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@ $settings = maybe_unserialize($question->question_settings);
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col auto-width">
                         <label class="btn-switch">
-                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][show_question_mark]" <?php checked('1', tutor_utils()->avalue_dot('show_question_mark', $settings)); ?> />
+                            <input type="checkbox" value="1" name="tutor_quiz_question[<?php echo esc_attr( $question_id ); ?>][show_question_mark]" <?php checked('1', tutor_utils()->avalue_dot('show_question_mark', $settings)); ?> />
                             <div class="btn-slider btn-round"></div>
                         </label>
                         <span><?php _e('Display Points', 'tutor'); ?></span>
@@ -110,7 +110,7 @@ $settings = maybe_unserialize($question->question_settings);
                 <h4><?php _e('Description', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></h4>
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
-                        <textarea name="tutor_quiz_question[<?php echo $question_id; ?>][question_description]"><?php echo stripslashes($question->question_description);?></textarea>
+                        <textarea name="tutor_quiz_question[<?php echo esc_attr( $question_id ); ?>][question_description]"><?php echo stripslashes($question->question_description);?></textarea>
                     </div>
                 </div>
             </div>
@@ -131,13 +131,13 @@ $settings = maybe_unserialize($question->question_settings);
                 <div class="tutor-quiz-builder-row">
                     <div class="tutor-quiz-builder-col">
                         <div id="tuotr_question_options_for_quiz" class="quiz-modal-field-wrap">
-                            <div id="tutor_quiz_question_answers" data-question-id="<?php echo $question_id; ?>"><?php
+                            <div id="tutor_quiz_question_answers" data-question-id="<?php echo esc_attr( $question_id ); ?>"><?php
 
 								$answers = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers where belongs_question_id = %d AND belongs_question_type = %s order by answer_order asc ;", $question_id, $question->question_type));
 								if (is_array($answers) && count($answers)){
 									foreach ($answers as $answer){
 										?>
-                                        <div class="tutor-quiz-answer-wrap" data-answer-id="<?php echo $answer->answer_id; ?>">
+                                        <div class="tutor-quiz-answer-wrap" data-answer-id="<?php echo esc_attr( $answer->answer_id ); ?>">
                                             <div class="tutor-quiz-answer">
                                         <span class="tutor-quiz-answer-title">
                                             <?php
@@ -154,20 +154,20 @@ $settings = maybe_unserialize($question->question_settings);
 
 												<?php
 												if ($answer->image_id){
-													echo '<span class="tutor-question-answer-image"><img src="'.wp_get_attachment_image_url($answer->image_id).'" /> </span>';
+													echo '<span class="tutor-question-answer-image"><img src="'. esc_url( wp_get_attachment_image_url( $answer->image_id ) ) .'" /> </span>';
 												}
 												if ($question->question_type === 'true_false' || $question->question_type === 'single_choice'){
 													?>
                                                     <span class="tutor-quiz-answers-mark-correct-wrap">
-                                                <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]"
-                                                       value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
+                                                <input type="radio" name="mark_as_correct[<?php echo esc_attr( $answer->belongs_question_id ); ?>]"
+                                                       value="<?php echo esc_attr( $answer->answer_id ); ?>" title="<?php esc_attr_e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                                             </span>
 													<?php
 												}elseif ($question->question_type === 'multiple_choice'){
 													?>
                                                     <span class="tutor-quiz-answers-mark-correct-wrap">
-                                                <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]"
-                                                       value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
+                                                <input type="checkbox" name="mark_as_correct[<?php echo esc_attr( $answer->belongs_question_id ); ?>]"
+                                                       value="<?php echo esc_attr( $answer->answer_id ); ?>" title="<?php esc_attr_e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                                             </span>
 													<?php
 												}
@@ -182,7 +182,7 @@ $settings = maybe_unserialize($question->question_settings);
 
                                             <?php if ( $question->question_type !== 'true_false' ){ ?>
                                                 <div class="tutor-quiz-answer-trash-wrap">
-                                                    <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>"><i class="tutor-icon-garbage"></i> </a>
+                                                    <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo esc_attr( $answer->answer_id ); ?>"><i class="tutor-icon-garbage"></i> </a>
                                                 </div>
                                             <?php } ?>
                                         </div>
@@ -194,7 +194,7 @@ $settings = maybe_unserialize($question->question_settings);
 
                             <div id="tutor_quiz_question_answer_form"></div>
 
-                            <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
+                            <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo esc_attr( $question_id ); ?>">
                                 <i class="tutor-icon-block tutor-icon-plus"></i>
 								<?php _e('Add An Option', 'tutor'); ?>
                             </a>
