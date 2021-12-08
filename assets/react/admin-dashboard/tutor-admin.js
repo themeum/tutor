@@ -270,6 +270,18 @@ jQuery(document).ready(function ($) {
   });
 
   /**
+   * If click on close instructor approve or modal then redirect to main URL
+   * if not redirect then it will not work with pagination.
+   */
+  const instructorModal =  document.querySelector('.tutor-modal-ins-approval .tutor-icon-56.ttr-line-cross-line');
+  if (instructorModal) {
+    instructorModal.addEventListener('click', function(){
+      console.log('ckk')
+      location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
+    })
+  }
+
+  /**
    * On form submit block | approve instructor
    *
    * @since v.2.0.0
