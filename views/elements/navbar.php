@@ -39,7 +39,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 					<?php foreach ( $data['tabs'] as $key => $v ) : ?>
 						<a href="<?php echo esc_attr( $v['url'] ); ?>" class="filter-btn <?php echo esc_attr( $data['active'] == $v['key'] ? 'is-active' : '' ); ?>">
 							<?php echo esc_html( $v['title'] ); ?>
-							<?php if ( ! isset( $v['novalue'] ) ) : ?>
+							<?php if ( isset( $v['value'] ) ) : ?>
 								(<?php echo esc_attr( $v['value'] ); ?>)
 							<?php endif; ?>
 						</a>

@@ -90,7 +90,7 @@ function tutor_assignment_convert_seconds($seconds){
 
 <div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
     <div class="tutor-mobile-top-nav d-grid">
-        <a href="<?php echo get_the_permalink($previous_id); ?>">
+        <a href="<?php echo esc_url( get_the_permalink( isset( $previous_id ) ? $previous_id : '' ) ); ?>">
             <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
         </a>
         <div class="tutor-top-nav-title text-regular-body color-text-primary">

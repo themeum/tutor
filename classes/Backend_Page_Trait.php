@@ -177,4 +177,16 @@ trait Backend_Page_Trait {
 			'option' => __( 'Trash', 'tutor' ),
 		);
 	}
+	/**
+	 * Bulk action trash
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function bulk_action_reject(): array {
+		return array(
+			'value'  => 'reject',
+			'option' => __( 'Reject', 'tutor' ),
+		);
+	}
 }

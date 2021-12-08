@@ -5002,10 +5002,11 @@ var TutorDatepicker = function TutorDatepicker(data) {
   var url = new URL(window.location.href);
   var params = url.searchParams;
 
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(stringToDate('24-06-2021', 'dd-mm-yyyy', '-')),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(),
       _useState2 = _slicedToArray(_useState, 2),
       startDate = _useState2[0],
-      setStartDate = _useState2[1];
+      setStartDate = _useState2[1]; //const [startDate, setStartDate] = useState(stringToDate('24-06-2021', 'dd-mm-yyyy', '-'));
+
 
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),

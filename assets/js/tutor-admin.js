@@ -87,7 +87,7 @@ var AddonCard = function AddonCard(_ref) {
     className: "text-medium-small color-text-hints"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
     className: "extra-plugins color-text-hints text-medium-small"
-  }, ((_addon$plugins_requir = addon.plugins_required) === null || _addon$plugins_requir === void 0 ? void 0 : _addon$plugins_requir.length) > 0 ? __('Required Plugin(s)', 'tutor') : ((_addon$ext_required = addon.ext_required) === null || _addon$ext_required === void 0 ? void 0 : _addon$ext_required.length) > 0 ? __('Required for Push Notification', 'tutor') : __('No additional plugin(s) required', 'tutor')), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
+  }, ((_addon$plugins_requir = addon.plugins_required) === null || _addon$plugins_requir === void 0 ? void 0 : _addon$plugins_requir.length) > 0 ? __('Required Plugin(s)', 'tutor') : ((_addon$ext_required = addon.ext_required) === null || _addon$ext_required === void 0 ? void 0 : _addon$ext_required.length) > 0 ? __('Required for Push Notification', 'tutor') : __('No extra plugin required', 'tutor')), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
       className: "extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption",
       key: index
