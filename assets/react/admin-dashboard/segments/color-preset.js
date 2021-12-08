@@ -11,26 +11,44 @@ const otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-optio
 const otherColorsExpanded = document.querySelector('.other_colors.expanded');
 const designNav = document.querySelectorAll('.tutor-option-nav-item');
 
-document.addEventListener('readystatechange', (event) => {
-	if (event.target.readyState === 'interactive') {
+
+
+readyState_complete(() => {
+	if (typeof otherColorsPreview === 'function') {
+		otherColorsPreview();
 	}
-	if (event.target.readyState === 'complete') {
-		if (typeof otherColorsPreview === 'function') {
-			otherColorsPreview();
+
+	designNav.forEach((item) => {
+		item.onclick = () => {
+			setTimeout(() => {
+				if ('design' === item.children[0].dataset.tab) {
+					otherColorsPreview();
+				}
+			})
 		}
+	})
+})
 
-		designNav.forEach((item) => {
-			item.onclick = () => {
-				setTimeout(() => {
-					if ('design' === item.children[0].dataset.tab) {
-						otherColorsPreview();
-					}
-				})
-			}
-		})
+// document.addEventListener('readystatechange', (event) => {
+// 	if (event.target.readyState === 'interactive') {
+// 	}
+// 	if (event.target.readyState === 'complete') {
+// 		if (typeof otherColorsPreview === 'function') {
+// 			otherColorsPreview();
+// 		}
 
-	}
-});
+// 		designNav.forEach((item) => {
+// 			item.onclick = () => {
+// 				setTimeout(() => {
+// 					if ('design' === item.children[0].dataset.tab) {
+// 						otherColorsPreview();
+// 					}
+// 				})
+// 			}
+// 		})
+
+// 	}
+// });
 
 const otherColorsPreview = () => {
 	let itemsHeight = (initHeight = 0);
@@ -67,7 +85,7 @@ const otherColorsPreview = () => {
 // Color PRESET Slecetion (color inputs)
 if (colorPresetInputs) {
 	colorPresetInputs.forEach((preset) => {
-		
+
 		const presetItem = preset.parentElement.querySelector(".preset-item");
 		const presetColors = presetItem.querySelectorAll(".header span");
 		const presetInput = preset.closest(".color-preset-input");
