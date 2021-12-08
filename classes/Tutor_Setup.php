@@ -120,12 +120,12 @@ if ( ! defined( 'ABSPATH' ) )
                         foreach ($field_parent['attr'] as $key => $field) {
                             if(!isset($field['lable'])){ continue; }
                             $html .= '<div class="tutor-setting'.(in_array( $field['type'], $full_width_fields ) ? " course-setting-wrapper" : "").' '.(isset($field['class']) ? $field['class'] : '').'">';
-                                $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'] : '';
+                                $html .= isset( $field['lable'] ) ? '<div class="title text-regular-body color-text-primary">'.$field['lable'] : '';
                                 $html .= isset( $field['tooltip'] ) ? '<span id="tooltip-btn" class="tooltip-btn" data-tooltip="'.$field['tooltip'].'"><span></span></span>' : '';
                                 $html .= isset( $field['lable'] ) ? '</div>' : '';
 
                                 if(!in_array($field['type'], $down_desc_fields)) {
-                                    $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
+                                    $html .= isset( $field['desc'] ) ? '<div class="content text-regular-small color-text-subsued">'.$field['desc'].'</div>' : '';
                                 }
 
                                 $html .= '<div class="settings">';
@@ -751,7 +751,7 @@ if ( ! defined( 'ABSPATH' ) )
                     </div>
 
                     <div class="wizard-type-footer">
-                        <div>
+                        <div class="text-regular-caption">
                             <span><?php _e('Not sure?', 'tutor'); ?></span>&nbsp;
                             <a href="#" class="tutor-type-skip" class="">
                                 <?php _e('Let’s go to the next step.', 'tutor'); ?>
