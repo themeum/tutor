@@ -1,0 +1,43 @@
+
+.answer-image-matched-wrap {
+    display: block;
+    .image-matching-item {
+        display: flex;
+        align-items: center;
+        &:not(:last-child) {
+            margin-bottom: 12px;
+        }
+        img {
+            max-width: 35px;
+        }
+        .dragged-caption {
+            font-size: 14px;
+            margin-left: 12px;
+        }
+    }
+}
+
+.correct-answer-wrap {
+    .matching-type {
+        @include valueWithPrefix(display, flex);
+        @include propertyWithPrefix(align-items, center);
+
+        &:not(:last-child) {
+            margin-bottom: 12px;
+        }
+    }
+
+    .text-image-type {
+        @include valueWithPrefix(display, flex);
+        @include propertyWithPrefix(align-items, center);
+
+        .image {
+            margin-right: 12px;
+        }
+    }
+
+    img {
+        max-width: 35px;
+        max-height: 35px;
+    }
+}

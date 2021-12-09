@@ -18,52 +18,53 @@ function show_correct_answer( $answers= array() ){
     if(!empty($answers)){
 
 		echo '<div class="correct-answer-wrap">';
-        foreach ($answers as $key => $ans) {
-            $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
-            if (isset($ans->answer_two_gap_match)) { echo '<div class="matching-type">'; }
-            switch ($type) {
-				case 'text_image':
-					echo '<div class="text-image-type">';
-                        if(isset($ans->image_id)){
-                            $img_url = wp_get_attachment_image_url($ans->image_id);
-                            if($img_url){
-                                echo '<span class="image"><img src="'.$img_url.'" /></span>';
+            foreach ($answers as $key => $ans) {
+                $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
+                if (isset($ans->answer_two_gap_match)) { 
+                    echo '<div class="matching-type">'; 
+                }
+
+                switch ($type) {
+                    case 'text_image':
+                        echo '<div class="text-image-type">';
+                            if(isset($ans->image_id)){
+                                $img_url = wp_get_attachment_image_url($ans->image_id);
+                                if($img_url){
+                                    echo '<span class="image"><img src="'.$img_url.'" /></span>';
+                                }
                             }
-                        }
+                            if(isset($ans->answer_title)) {
+                                echo '<span class="caption">'.stripslashes($ans->answer_title).'</span>';
+                            }
+                        echo '</div>';
+                        break;
+                        
+                    case 'text':
                         if(isset($ans->answer_title)) {
-                            echo '<span class="caption">'.stripslashes($ans->answer_title).'</span>';
+                            echo '<span class="text-medium-caption color-text-primary">'
+                                .stripslashes($ans->answer_title).
+                            '</span>';
                         }
-					echo '</div>';
-                    break;
-                    
-				case 'text':
-                    if(isset($ans->answer_title)) {
-                        echo '<span class="text-medium-caption color-text-primary">'
-                            .stripslashes($ans->answer_title).
-                        '</span>';
-                    }
-                    break;
+                        break;
 
-				case 'image':
-					echo '<div class="image-type">';
-                        if(isset($ans->image_id)){
-                            $img_url = wp_get_attachment_image_url($ans->image_id);
-                            if($img_url){
-                                echo '<span class="image"><img src="'.$img_url.'" />'.'</span>';
+                    case 'image':
+                        echo '<div class="image-type">';
+                            if(isset($ans->image_id)){
+                                $img_url = wp_get_attachment_image_url($ans->image_id);
+                                if($img_url){
+                                    echo '<span class="image"><img src="'.$img_url.'" />'.'</span>';
+                                }
                             }
-                        }
-                    echo '</div>';
-                    break;
+                        echo '</div>';
+                        break;
+                }
 
-                default:
-                    break;
+                if (isset($ans->answer_two_gap_match)) {
+                    echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
+                    echo '<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>';
+                    echo '</div>';
+                }
             }
-            if (isset($ans->answer_two_gap_match)) {
-                echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
-                echo '<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>';
-                echo '</div>';
-			}
-        }
 		echo '</div>';
     }
 }
@@ -72,7 +73,6 @@ function show_correct_answer( $answers= array() ){
 if(!isset($user_data)) {
     $user_data = get_userdata( $user_id );
 }
-
 
 // Prepare atttempt meta info
 extract(tutor_utils()->get_quiz_attempt_timing($attempt_data)); // $attempt_duration, $attempt_duration_taken;

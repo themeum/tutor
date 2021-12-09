@@ -2223,12 +2223,6 @@ span.result-review-required {
   padding: 10px 20px;
 }
 
-.answer-image-matched-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .image-matching-item {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 50px;
@@ -2685,22 +2679,6 @@ span.withdraw-method-label {
 .quiz-attempt-answers-wrap table .quiz-incorrect-answer-text i {
   background: #df3247;
   font-size: 10px;
-}
-
-.answer-image-matched-wrap {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.answer-image-matched-wrap .image-matching-item {
-  margin: 0 5px;
-  max-width: 70px;
-}
-
-.answer-image-matched-wrap .image-matching-item .dragged-caption {
-  font-size: 14px;
-  margin-top: 4px;
 }
 
 /**
@@ -7414,6 +7392,79 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
 
 .tutor-qna-sptolight-sidebar .tutor-qa-reply {
   position: initial !important;
+}
+
+.answer-image-matched-wrap {
+  display: block;
+}
+
+.answer-image-matched-wrap .image-matching-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.answer-image-matched-wrap .image-matching-item:not(:last-child) {
+  margin-bottom: 12px;
+}
+
+.answer-image-matched-wrap .image-matching-item img {
+  max-width: 35px;
+}
+
+.answer-image-matched-wrap .image-matching-item .dragged-caption {
+  font-size: 14px;
+  margin-left: 12px;
+}
+
+.correct-answer-wrap .matching-type {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+}
+
+.correct-answer-wrap .matching-type:not(:last-child) {
+  margin-bottom: 12px;
+}
+
+.correct-answer-wrap .text-image-type {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+}
+
+.correct-answer-wrap .text-image-type .image {
+  margin-right: 12px;
+}
+
+.correct-answer-wrap img {
+  max-width: 35px;
+  max-height: 35px;
 }
 
 table.tutor-ui-table.tutor-table-with-checkbox .td-checkbox input[type='checkbox'] {

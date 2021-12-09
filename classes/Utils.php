@@ -7381,7 +7381,7 @@ die($cancel_status);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%', 'tutor' ), '<a class="color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
+			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%s', 'tutor' ), '<a class="color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
 		}
 
 		// Now assign identifer whether set or not
