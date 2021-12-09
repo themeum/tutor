@@ -109,7 +109,7 @@
 
 // Zoom Integration
 .tutor-zoom-integration-card {
-	max-width: 1367px;
+	// max-width: 1367px;
 	&-body {
 		border-top: 1px solid $stroke-light-30;
 		border-bottom: 1px solid $stroke-light-30;
@@ -118,10 +118,11 @@
 		align-items: center;
 
 		@include breakpoint-min(1500) {
-			grid-template-columns: 275px 410px 195px 228px auto;
+			// grid-template-columns: 275px 410px 195px 228px auto;
+			@include responsiveGrid(200px, auto);
 		}
+
 		@include breakpoint-min(desktop-lg) {
-			grid-auto-flow: column;
 			.list-item {
 				&:last-child {
 					justify-self: flex-end;
@@ -129,37 +130,43 @@
 			}
 		}
 
-		@include breakpoint-max(1200) {
-			@include responsiveGrid(250px, 1fr);
+		@include breakpoint-max(1499) {
+			grid-template-columns: repeat(auto-fit, minmax(140px, auto));
+			.list-item {
+				&.list-item-buttons {
+					grid-area: 2 / span 4;
+				}
+			}
 		}
 	}
-	&-header {
-	}
-	&-footer {
-	}
+}
 
-	.tutor-btn:not(.tutor-is-outline) {
-		border-color: #2d8cff;
-		background: #2d8cff;
-		&:hover {
-			background: darken(#2d8cff, 5);
-			border-color: darken(#2d8cff, 5);
-		}
-	}
-	.tutor-btn.tutor-is-outline {
-		padding: 6px 12px;
-		border-color: #2d8cff;
-		color: #2d8cff;
-		&:hover {
+:not(.tutor-zoom-meeting-modal-wrap) {
+	.tutor-zoom-integration-card-body {
+		.tutor-btn:not(.tutor-is-outline) {
 			border-color: #2d8cff;
 			background: #2d8cff;
+			&:hover {
+				background: darken(#2d8cff, 5);
+				border-color: darken(#2d8cff, 5);
+			}
 		}
-	}
-	.tutor-btn.tutor-is-circle {
-		color: $design-grey;
-		background: transparent;
-		&:hover {
-			background: $black-05;
+
+		.tutor-btn.tutor-is-outline {
+			padding: 6px 12px;
+			border-color: #2d8cff;
+			color: #2d8cff;
+			&:hover {
+				border-color: #2d8cff;
+				background: #2d8cff;
+			}
+		}
+		.tutor-btn.tutor-is-circle {
+			color: $design-grey;
+			background: transparent;
+			&:hover {
+				background: $black-05;
+			}
 		}
 	}
 }
