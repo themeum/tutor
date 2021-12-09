@@ -6775,6 +6775,30 @@ body.tutor-backend-tutor-google-classroom #wpbody-content {
           box-shadow: 0 0 0 3px #ffe6e6 !important;
 }
 
+.template-preview img {
+  overflow: hidden;
+  position: relative;
+}
+
+.template-preview img:empty:before {
+  content: '\e93a';
+  font-family: 'tutor-v2-iconpack' !important;
+  font-size: 2em;
+  position: absolute;
+  inset: 0;
+  background: #eff1f7;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  color: #b4b7c0;
+}
+
 .tutor-option-field-input.image-previewer img::before {
   content: '';
   position: absolute;

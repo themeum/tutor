@@ -2138,7 +2138,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     image_delete.onclick = function () {
       input_file.value = '';
-      email_title_logo.src = 'https://via.placeholder.com/108x26?text=Upload';
+      email_title_logo.src = '';
     };
   };
 
