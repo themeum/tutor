@@ -76,18 +76,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     '.tutor-comment-line'
                 );
                 const childCommentCount = childComments.length;
-                const lastCommentHeight =
-                    childComments[childCommentCount - 1].clientHeight;
+                const lastCommentHeight = (childComments[childCommentCount - 1] || {}).clientHeight || 0;
                 let heightOfLine =
                     lastCommentHeight +
                     replyComment.clientHeight +
                     20 -
                     25 +
                     50;
-                commentLine.style.setProperty(
-                    'height',
-                    `calc(100% - ${heightOfLine}px)`
-                );
+                
+                if(commentLine){
+                    commentLine.style.setProperty(
+                        'height',
+                        `calc(100% - ${heightOfLine}px)`
+                    );
+                }    
             });
         }
     }, 2000);

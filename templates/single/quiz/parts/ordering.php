@@ -1,4 +1,4 @@
-<div id="quiz-ordering-ans-area" class="quiz-question-ans-choice-area quiz-image-ordering-ans-area tutor-mt-70 tutor-sortable-list question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
+<div id="quiz-ordering-ans-area" class="quiz-question-ans-choice-area quiz-image-ordering-ans-area tutor-mt-40 tutor-sortable-list question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> ">
     <?php
         if ( is_array($answers) && count($answers) ) {
             $answer_i = 0;

@@ -1,8 +1,46 @@
-<div class="quiz-question-ans-choice-area tutor-mt-70 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> "">
-    <div id="tutor-quiz-image-multiple-choice" class="tutor-quiz-wrap">
+<?php 
+    !is_array($answers) ? $answers=array() : 0;
+
+    $stat = array(
+        'text' => false,
+        'image' => false,
+        'text_image' => false
+    );
+
+    foreach($answers as $answer) {
+        $answer->answer_view_format == 'image' ? $stat['image']=true : false;
+        $answer->answer_view_format == 'text_image' ? $stat['text_image']=true : false;
+        ($answer->answer_view_format !== 'image' &&  $answer->answer_view_format !== 'text_image') ? $stat['text']=true : 0;
+    }
+
+    $class = '';
+    $id = '';
+
+    if($stat['text'] && !$stat['image'] && !$stat['text_image']) {
+        // Only text
+        $id = 'tutor-quiz-single-multiple-choice';
+
+    } else if(!$stat['text'] && $stat['image'] && !$stat['text_image']) {
+        // Only image
+        $id = 'tutor-quiz-image-multiple-choice';
+
+    } else if(!$stat['text'] && !$stat['image'] && $stat['text_image']) {
+        // Only image qith text
+        $id = 'tutor-quiz-image-multiple-choice';
+
+    } else {
+        // Multi variation
+        $id = 'tutor-quiz-image-multiple-choice';
+        $class = 'tutor-quiz-multiple-variation';
+    }
+?>
+
+<div class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo $question_type; ?> <?php echo $answer_required? 'quiz-answer-required':''; ?> "">
+    <!-- <div id="tutor-quiz-image-multiple-choice" class="tutor-quiz-multiple-variation tutor-quiz-wrap"> -->
+    <div id="<?php echo $id; ?>" class="<?php echo $class; ?> tutor-quiz-wrap">
         <div class="tutor-image-checkbox">
             <?php
-                if ( is_array($answers) && count($answers) ) {
+                if(count($answers)) {
                     foreach ($answers as $answer){
                         $answer_title = stripslashes($answer->answer_title);
                         $answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0; 
@@ -11,7 +49,7 @@
                             ?>
                             <div class="quiz-question-ans-choice">
                                 <label for="<?php echo $answer->answer_id; ?>">
-                                    <input class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="radio" value="<?php echo $answer->answer_id; ?>">
+                                    <input class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="<?php echo $choice_type; ?>" value="<?php echo $answer->answer_id; ?>">
                                     <span class="text-regular-body color-text-primary">
                                         <?php
                                             echo $answer_title;

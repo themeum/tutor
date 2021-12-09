@@ -34,7 +34,13 @@ $typographyUtils: (
 	'medium-small' 500 13px 162%,
 	'medium-tiny' 500 11px 145%,
 	// Semi Bold 600
-		'semi-caption' 600 15px 165%,
+		'semi-h1' 600 80px 101%,
+	'semi-h2' 600 60px 117%,
+	'semi-h3' 600 40px 120%,
+	'semi-h4' 600 30px 123%,
+	'semi-h5' 600 24px 142%,
+	'semi-h6' 600 20px 150%,
+	'semi-caption' 600 15px 165%,
 	// Bold 700
 		'bold-h1' 700 80px 101%,
 	'bold-h2' 700 60px 117%,
@@ -72,4 +78,3 @@ $iconSizes: 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30, 32, 34, 35, 36, 
 		font-size: #{$fSize}px;
 	}
 }
-

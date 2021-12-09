@@ -138,6 +138,7 @@ jQuery(document).ready(function($) {
      * @since v.1.0.0
      */
     $('.tutorPlayer').each(function () {
+        console.log(this);
         videoPlayer.init(this);
     });
 
@@ -1254,13 +1255,13 @@ jQuery(document).ready(function($) {
             const target = event.target;
             const targetTag = target.tagName
             const parentTag = target.parentElement.tagName;
-
+    
             if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.html() != 'EXPIRED') {
                 if (targetTag === 'A' || parentTag === 'A') {
                     event.preventDefault();
                     event.stopImmediatePropagation();
                     let popup;
-
+    
                     let data = {
                         title: __('Abandon Quiz?', 'tutor'),
                         description: __('Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor'),
@@ -1270,7 +1271,7 @@ jQuery(document).ready(function($) {
                                 id: 'leave',
                                 class: 'tutor-btn tutor-is-outline tutor-is-default',
                                 callback: function () {
-
+    
                                     var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
                                     $.ajax({
                                         url: window._tutorobject.ajaxurl,
@@ -1307,7 +1308,7 @@ jQuery(document).ready(function($) {
                             },
                         }
                     };
-
+    
                     popup = new window.tutor_popup($, '', 40).popup(data);
                 }
             }
