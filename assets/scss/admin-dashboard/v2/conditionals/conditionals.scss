@@ -32,6 +32,24 @@
 }
 
 // Image Preview -> Design + Certificate > Logo and Signature Upload
+.template-preview{
+	img {
+		overflow: hidden;
+		position: relative;
+		&:empty:before {
+			content: '\e93a';
+			font-family: 'tutor-v2-iconpack' !important;
+			font-size: 2em;
+			position: absolute;
+			inset: 0;
+			background: $black-05;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #b4b7c0;
+		}
+	}
+}
 .tutor-option-field-input.image-previewer {
 	img {
 		&::before {

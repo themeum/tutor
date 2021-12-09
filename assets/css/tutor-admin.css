@@ -4381,6 +4381,8 @@ li.tutor-option-nav-item h4 {
   font-weight: 400;
   line-height: 162%;
   border-color: #bababa;
+  -moz-transition: all 500ms;
+  transition: all 500ms;
 }
 
 .tutor-option-field-row select.tutor-form-select,
@@ -4395,6 +4397,8 @@ li.tutor-option-nav-item h4 {
   font-weight: 400;
   line-height: 162%;
   border-color: #bababa;
+  -webkit-transition: all 500ms;
+  transition: all 500ms;
 }
 
 .tutor-option-field-row select.tutor-form-select::-webkit-input-placeholder, .tutor-option-field-row input.tutor-form-control::-webkit-input-placeholder, .tutor-option-field-row textarea.tutor-form-control::-webkit-input-placeholder, .tutor-option-field-row textarea.tutor-form-control:read-only::-webkit-input-placeholder, .tutor-dashboard-page select.tutor-form-select::-webkit-input-placeholder, .tutor-dashboard-page input.tutor-form-control::-webkit-input-placeholder, .tutor-dashboard-page textarea.tutor-form-control::-webkit-input-placeholder, .tutor-dashboard-page textarea.tutor-form-control:read-only::-webkit-input-placeholder {
@@ -4430,6 +4434,7 @@ li.tutor-option-nav-item h4 {
 
 .tutor-option-field-row textarea.tutor-form-control:-moz-read-only:hover, .tutor-dashboard-page textarea.tutor-form-control:-moz-read-only:hover {
   color: #212327;
+  box-shadow: 0 0 10px -7px;
 }
 
 .tutor-option-field-row select.tutor-form-select:hover,
@@ -4441,11 +4446,14 @@ li.tutor-option-nav-item h4 {
 .tutor-dashboard-page textarea.tutor-form-control:hover,
 .tutor-dashboard-page textarea.tutor-form-control:read-only:hover {
   color: #212327;
+  -webkit-box-shadow: 0 0 10px -7px;
+          box-shadow: 0 0 10px -7px;
 }
 
 .tutor-option-field-row textarea.tutor-form-control:-moz-read-only:focus, .tutor-dashboard-page textarea.tutor-form-control:-moz-read-only:focus {
   color: #212327;
   border-color: #1973aa;
+  box-shadow: 0 0 10px -5px;
 }
 
 .tutor-option-field-row select.tutor-form-select:focus,
@@ -4458,6 +4466,8 @@ li.tutor-option-nav-item h4 {
 .tutor-dashboard-page textarea.tutor-form-control:read-only:focus {
   color: #212327;
   border-color: #1973aa;
+  -webkit-box-shadow: 0 0 10px -5px;
+          box-shadow: 0 0 10px -5px;
 }
 
 .tutor-option-field-row select.tutor-form-select,
@@ -4498,10 +4508,15 @@ li.tutor-option-nav-item h4 {
   background-color: #1973aa;
 }
 
+.tutor-option-header input[type='search']:hover {
+  -webkit-box-shadow: 0 0 10px -7px;
+          box-shadow: 0 0 10px -7px;
+}
+
 .tutor-option-header input[type='search']:focus {
   border-color: #1973aa;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  -webkit-box-shadow: 0 0 10px -5px;
+          box-shadow: 0 0 10px -5px;
 }
 
 .search-popup-opener,
@@ -5118,15 +5133,22 @@ li.tutor-option-nav-item h4 {
 
 .tutor-option-single-item .item-wrapper {
   background: #ffffff;
-  border: 1px solid #e8e8e8;
+  border: 1px solid #d3d4d9;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border-radius: 6px;
   padding: 20px 26px;
+  -webkit-transition: all 500ms;
+  transition: all 500ms;
 }
 
 .tutor-option-single-item .item-wrapper:not(:last-child) {
   margin-bottom: 8px;
+}
+
+.tutor-option-single-item .item-wrapper:hover {
+  -webkit-box-shadow: 0 0 30px -25px #000;
+          box-shadow: 0 0 30px -25px #000;
 }
 
 @media (min-width: 1200px) {
@@ -6729,6 +6751,30 @@ body.tutor-backend-tutor-google-classroom #wpbody-content {
   border-color: var(--tutor-danger) !important;
   -webkit-box-shadow: 0 0 0 3px #ffe6e6 !important;
           box-shadow: 0 0 0 3px #ffe6e6 !important;
+}
+
+.template-preview img {
+  overflow: hidden;
+  position: relative;
+}
+
+.template-preview img:empty:before {
+  content: '\e93a';
+  font-family: 'tutor-v2-iconpack' !important;
+  font-size: 2em;
+  position: absolute;
+  inset: 0;
+  background: #eff1f7;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  color: #b4b7c0;
 }
 
 .tutor-option-field-input.image-previewer img::before {

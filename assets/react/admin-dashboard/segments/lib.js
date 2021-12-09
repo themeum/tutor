@@ -2,21 +2,38 @@
 
 // this function will load after document content load
 window.readyState_complete = (func) => {
-  const _funcCaller = (f) => f();
-  document.addEventListener('readystatechange', (event) => {
-    if (event.target.readyState === 'complete') {
-      typeof func == 'function' ? _funcCaller(func) : '';
-    }
-  });
+  const _caller = (f) => f();
+  document.addEventListener('readystatechange', (e) => e.target.readyState === 'complete' ? (typeof func == 'function' ? setTimeout(() => _caller(func)) : '') : '');
 }
 
+window.addBodyClass = (currentUrl) => {
+  // History push
+  const url = new URL(currentUrl);
+  const tabPage = url.searchParams.get('tab_page');
+  const tabPageEdit = url.searchParams.get('edit') && '_edit';
+  document.body.classList.add(tabPage);
+  document.body.classList.add(tabPage + tabPageEdit);
+};
 
 
-const element = (selector) => {
+window.selectorElement = (selector) => {
   return document.querySelector(selector);
 };
-const elements = (selector) => {
+
+window.selectorElements = (selector) => {
   return document.querySelectorAll(selector);
+};
+
+window.selectorsByName = (selector) => {
+  return document.getElementsByName(selector);
+};
+
+window.selectorById = (selector) => {
+  return document.getElementById(selector);
+};
+
+window.selectorByClass = (selector) => {
+  return document.getElementsByClassName(selector);
 };
 
 /**
@@ -24,7 +41,7 @@ const elements = (selector) => {
  * @param {json} response
  * @param {string} fileName
  */
-const json_download = (response, fileName) => {
+window.json_download = (response, fileName) => {
   const fileToSave = new Blob([response], {
     type: "application/json",
   });
@@ -34,4 +51,3 @@ const json_download = (response, fileName) => {
   el.click();
 };
 
-export { element, elements, json_download };
