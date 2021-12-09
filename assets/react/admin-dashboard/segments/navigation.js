@@ -14,7 +14,7 @@ readyState_complete(() => {
 });
 
 
-
+addBodyClass(window.location);
 navTabLists.forEach((list) => {
     list.addEventListener('click', (e) => {
         const dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
@@ -26,13 +26,14 @@ navTabLists.forEach((list) => {
             // remove active from other buttons
             navTabItems.forEach((item) => {
                 item.classList.remove('active');
+                document.body.classList.remove(item.dataset.tab);
                 if (e.target.dataset.tab) {
+                    document.body.classList.add(e.target.dataset.tab);
                     e.target.classList.add('active');
                 } else {
                     e.target.parentElement.classList.add('active');
                 }
             });
-
             // hide other tab contents
             navPages.forEach((content) => {
                 content.classList.remove('active');
@@ -48,6 +49,7 @@ navTabLists.forEach((list) => {
             const pushUrl = `${url.origin + url.pathname}?${params.toString()}`;
 
             window.history.pushState({}, '', pushUrl);
+            addBodyClass(window.location);
 
             const loadingSpinner = document.getElementById(dataTab).querySelector('.loading-spinner');
             if (loadingSpinner) {

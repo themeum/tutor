@@ -6,6 +6,15 @@ window.readyState_complete = (func) => {
   document.addEventListener('readystatechange', (e) => e.target.readyState === 'complete' ? (typeof func == 'function' ? setTimeout(() => _caller(func)) : '') : '');
 }
 
+window.addBodyClass = (currentUrl) => {
+  // History push
+  const url = new URL(currentUrl);
+  const tabPage = url.searchParams.get('tab_page');
+  const tabPageEdit = url.searchParams.get('edit') && '_edit';
+  const customClassName = tabPageEdit ? tabPage + tabPageEdit : tabPage;
+  document.body.classList.add(`${customClassName}`);
+  console.log(customClassName);
+};
 
 
 window.selectorElement = (selector) => {
@@ -33,7 +42,7 @@ window.selectorByClass = (selector) => {
  * @param {json} response
  * @param {string} fileName
  */
-const json_download = (response, fileName) => {
+window.json_download = (response, fileName) => {
   const fileToSave = new Blob([response], {
     type: "application/json",
   });
