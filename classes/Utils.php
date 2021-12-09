@@ -2344,7 +2344,7 @@ class Utils {
 	    $course_id = $this->get_post_id( $course_id );
 	    $user_id   = $this->get_user_id( $user_id );
 	    $enrolled  = $this->is_enrolled($course_id, $user_id);
-die($cancel_status);
+
 	    if ( $enrolled ) {
 	        global $wpdb;
 
@@ -2358,15 +2358,12 @@ die($cancel_status);
 	                delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id' );
 	                delete_post_meta( $order_id, '_is_tutor_order_for_course' );
 					delete_post_meta( $order_id, '_tutor_order_for_course_id_'.$course_id );
-
-					do_action( 'tutor_enrollment/after/delete', $enrolled->ID );
                 }
             } else {
 	            $wpdb->update( $wpdb->posts, array( 'post_status' => $cancel_status), array('post_type' => 'tutor_enrolled', 'post_author' => $user_id, 'post_parent' => $course_id ) );
 
 				if ( $cancel_status === 'cancel' ) {
 					die($cancel_status);
-					do_action( 'tutor_enrollment/after/cancel', $enrolled->ID );
 				}
 			}
         }
@@ -7381,7 +7378,7 @@ die($cancel_status);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%', 'tutor' ), '<a class="color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
+			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%s', 'tutor' ), '<a class="color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
 		}
 
 		// Now assign identifer whether set or not

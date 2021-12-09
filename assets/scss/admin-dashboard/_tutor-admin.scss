@@ -977,12 +977,6 @@ span.result-review-required {
 	padding: 10px 20px;
 }
 
-.answer-image-matched-wrap {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-}
-
 .image-matching-item {
 	-webkit-box-flex: 0;
 	-ms-flex: 0 0 50px;
@@ -1436,22 +1430,6 @@ span.withdraw-method-label {
 			font-size: 10px;
 		}
 	}
-}
-
-.answer-image-matched-wrap {
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-}
-
-.answer-image-matched-wrap .image-matching-item {
-	margin: 0 5px;
-	max-width: 70px;
-}
-
-.answer-image-matched-wrap .image-matching-item .dragged-caption {
-	font-size: 14px;
-	margin-top: 4px;
 }
 
 /**
