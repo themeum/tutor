@@ -87,6 +87,7 @@
 	textarea.tutor-form-control:read-only {
 		@include getTypography(400, 16px, 162%);
 		border-color: #bababa;
+		transition: all 500ms;
 
 		&::placeholder {
 			color: $text-hints;
@@ -94,11 +95,13 @@
 
 		&:hover {
 			color: $text-primary;
+			box-shadow: 0 0 10px -7px;
 		}
 
 		&:focus {
 			color: $text-primary;
 			border-color: $brand-wordpress;
+			box-shadow: 0 0 10px -5px;
 		}
 	}
 
@@ -139,9 +142,12 @@
 
 .tutor-option-header {
 	input[type='search'] {
+		&:hover {
+			box-shadow: 0 0 10px -7px;
+		}
 		&:focus {
 			border-color: $brand-wordpress;
-			box-shadow: none;
+			box-shadow: 0 0 10px -5px;
 		}
 	}
 }
