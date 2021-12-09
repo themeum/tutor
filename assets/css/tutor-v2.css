@@ -26019,33 +26019,33 @@ table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   }
 }
 
-.tutor-zoom-integration-card .tutor-btn:not(.tutor-is-outline) {
+.tutor-zoom-integration-card .list-item > .tutor-btn:not(.tutor-is-outline) {
   border-color: #2d8cff;
   background: #2d8cff;
 }
 
-.tutor-zoom-integration-card .tutor-btn:not(.tutor-is-outline):hover {
+.tutor-zoom-integration-card .list-item > .tutor-btn:not(.tutor-is-outline):hover {
   background: #147eff;
   border-color: #147eff;
 }
 
-.tutor-zoom-integration-card .tutor-btn.tutor-is-outline {
+.tutor-zoom-integration-card .list-item > .tutor-btn.tutor-is-outline {
   padding: 6px 12px;
   border-color: #2d8cff;
   color: #2d8cff;
 }
 
-.tutor-zoom-integration-card .tutor-btn.tutor-is-outline:hover {
+.tutor-zoom-integration-card .list-item > .tutor-btn.tutor-is-outline:hover {
   border-color: #2d8cff;
   background: #2d8cff;
 }
 
-.tutor-zoom-integration-card .tutor-btn.tutor-is-circle {
+.tutor-zoom-integration-card .list-item > .tutor-btn.tutor-is-circle {
   color: #41454f;
   background: transparent;
 }
 
-.tutor-zoom-integration-card .tutor-btn.tutor-is-circle:hover {
+.tutor-zoom-integration-card .list-item > .tutor-btn.tutor-is-circle:hover {
   background: #eff1f7;
 }
 
