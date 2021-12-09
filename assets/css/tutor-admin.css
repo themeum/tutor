@@ -6726,12 +6726,12 @@ div.updated {
   margin-bottom: 10px;
 }
 
-body.tutor-backend-tutor_settings:not(.email_notification_edit) #wpbody-content,
+body.tutor-backend-tutor_settings #wpbody-content,
 body.tutor-backend-tutor-tools #wpbody-content {
   margin-top: 70px;
 }
 
-body.tutor-backend-tutor_settings:not(.email_notification_edit) #wpfooter,
+body.tutor-backend-tutor_settings #wpfooter,
 body.tutor-backend-tutor-tools #wpfooter {
   background: #f0f0f1;
   z-index: 10;
@@ -6739,7 +6739,7 @@ body.tutor-backend-tutor-tools #wpfooter {
           box-shadow: 0 -1px 0px 0 #dcdbdc;
 }
 
-body.tutor-backend-tutor_settings:not(.email_notification_edit) #wpwrap,
+body.tutor-backend-tutor_settings #wpwrap,
 body.tutor-backend-tutor-tools #wpwrap {
   overflow-y: hidden;
 }
