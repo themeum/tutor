@@ -11,9 +11,8 @@ window.addBodyClass = (currentUrl) => {
   const url = new URL(currentUrl);
   const tabPage = url.searchParams.get('tab_page');
   const tabPageEdit = url.searchParams.get('edit') && '_edit';
-  const customClassName = tabPageEdit ? tabPage + tabPageEdit : tabPage;
-  document.body.classList.add(`${customClassName}`);
-  console.log(customClassName);
+  document.body.classList.add(`${tabPage ?? ''}`);
+  document.body.classList.add(`${tabPageEdit ? tabPage + tabPageEdit : tabPage}`);
 };
 
 

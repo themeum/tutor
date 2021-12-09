@@ -9,7 +9,7 @@ div.updated {
 }
 
 // Tutor Backend Pages
-body.tutor-backend-tutor_settings,
+body.tutor-backend-tutor_settings:not(.email_notification_edit),
 body.tutor-backend-tutor-tools {
 	#wpbody-content {
 		margin-top: 70px;
