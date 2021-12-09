@@ -3,14 +3,9 @@ Reset to default for settings individual page
 */
 
 const optionForm = document.querySelector('#tutor-option-form');
-
-document.addEventListener('readystatechange', (event) => {
-	if (event.target.readyState === 'interactive') {
-	}
-	if (event.target.readyState === 'complete') {
-		typeof resetConfirmation === 'function' ? resetConfirmation() : '';
-		typeof modalResetOpen === 'function' ? modalResetOpen() : '';
-	}
+readyState_complete(() => {
+	typeof resetConfirmation === 'function' ? resetConfirmation() : '';
+	typeof modalResetOpen === 'function' ? modalResetOpen() : '';
 });
 const modalConfirmation = document.getElementById('tutor-modal-bulk-action');
 
