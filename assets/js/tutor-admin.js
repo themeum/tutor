@@ -1946,9 +1946,8 @@ window.addBodyClass = function (currentUrl) {
   var url = new URL(currentUrl);
   var tabPage = url.searchParams.get('tab_page');
   var tabPageEdit = url.searchParams.get('edit') && '_edit';
-  var customClassName = tabPageEdit ? tabPage + tabPageEdit : tabPage;
-  document.body.classList.add("".concat(customClassName));
-  console.log(customClassName);
+  document.body.classList.add("".concat(tabPage !== null && tabPage !== void 0 ? tabPage : ''));
+  document.body.classList.add("".concat(tabPageEdit ? tabPage + tabPageEdit : tabPage));
 };
 
 window.selectorElement = function (selector) {
