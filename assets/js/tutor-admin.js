@@ -31729,7 +31729,8 @@ jQuery(document).ready(function ($) {
 
   $(document).on("click", "a.instructor-action", /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      var $that, action, instructorId, loadingButton, prevHtml, formData, post, response, message;
+      var $that, action, instructorId, loadingButton, prevHtml, formData, post, response, message, _instructorModal;
+
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -31776,9 +31777,27 @@ jQuery(document).ready(function ($) {
                 if (action == 'blocked') {
                   message = 'Instructor blocked!';
                 }
+                /**
+                 * If it is instructor modal for approve or blocked
+                 * hide modal then show toast then reload
+                 * 
+                 * @since v2.0.0
+                 */
 
-                tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
-                location.reload();
+
+                _instructorModal = document.querySelector('.tutor-modal-ins-approval');
+
+                if (_instructorModal) {
+                  if (_instructorModal.classList.contains('tutor-is-active')) {
+                    _instructorModal.classList.remove('tutor-is-active');
+                  }
+
+                  tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+                  location.href = "".concat(window._tutorobject.home_url, "/wp-admin/admin.php?page=tutor-instructors");
+                } else {
+                  tutor_toast(__("Success", "tutor"), __(message, 'tutor'), "success");
+                  location.reload();
+                }
               } else {
                 tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
               }
@@ -31804,6 +31823,19 @@ jQuery(document).ready(function ($) {
       return _ref.apply(this, arguments);
     };
   }());
+  /**
+   * If click on close instructor approve or modal then redirect to main URL
+   * if not redirect then it will not work with pagination.
+   */
+
+  var instructorModal = document.querySelector('.tutor-modal-ins-approval .tutor-icon-56.ttr-line-cross-line');
+
+  if (instructorModal) {
+    instructorModal.addEventListener('click', function () {
+      console.log('ckk');
+      location.href = "".concat(window._tutorobject.home_url, "/wp-admin/admin.php?page=tutor-instructors");
+    });
+  }
   /**
    * On form submit block | approve instructor
    *
@@ -31838,6 +31870,7 @@ jQuery(document).ready(function ($) {
   /**
    * Password Reveal
    */
+
 
   $(document).on('click', ".tutor-password-reveal", function (e) {
     //toggle icon

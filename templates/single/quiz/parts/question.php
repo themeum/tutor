@@ -44,7 +44,7 @@
                 $previous_question = $question_i>1 ? $questions[$question_i-1] : false;
                 ?>
                 <div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ; ?> data-quiz-feedback-mode="<?php echo $feedback_mode; ?>"  data-question_index="<?php echo $question_i; ?>">
-                    <div class="quiz-question tutor-mt-60 tutor-mr-100">
+                    <div class="quiz-question tutor-mt-60 tutor-mr-md-100">
                         <?php echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
 
                             $question_type = $question->question_type;
@@ -150,7 +150,7 @@
 
             if ($question_layout_view === 'question_below_each_other'){
                 ?>
-                <div class="quiz-answer-footer-bar">
+                <div class="quiz-answer-footer-bar tutor-mt-60">
                     <div class="quiz-footer-button">
                         <button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-btn"><?php _e( 'Submit Quiz', 'tutor' ); ?></button>
                     </div>

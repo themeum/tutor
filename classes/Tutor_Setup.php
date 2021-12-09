@@ -120,12 +120,12 @@ if ( ! defined( 'ABSPATH' ) )
                         foreach ($field_parent['attr'] as $key => $field) {
                             if(!isset($field['lable'])){ continue; }
                             $html .= '<div class="tutor-setting'.(in_array( $field['type'], $full_width_fields ) ? " course-setting-wrapper" : "").' '.(isset($field['class']) ? $field['class'] : '').'">';
-                                $html .= isset( $field['lable'] ) ? '<div class="title">'.$field['lable'] : '';
+                                $html .= isset( $field['lable'] ) ? '<div class="title text-regular-body color-text-primary">'.$field['lable'] : '';
                                 $html .= isset( $field['tooltip'] ) ? '<span id="tooltip-btn" class="tooltip-btn" data-tooltip="'.$field['tooltip'].'"><span></span></span>' : '';
                                 $html .= isset( $field['lable'] ) ? '</div>' : '';
 
                                 if(!in_array($field['type'], $down_desc_fields)) {
-                                    $html .= isset( $field['desc'] ) ? '<div class="content">'.$field['desc'].'</div>' : '';
+                                    $html .= isset( $field['desc'] ) ? '<div class="content text-regular-small color-text-subsued">'.$field['desc'].'</div>' : '';
                                 }
 
                                 $html .= '<div class="settings">';
@@ -634,52 +634,71 @@ if ( ! defined( 'ABSPATH' ) )
                             <img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" />
                         </div>
                         <div>
-                            <h3>
+                            <div class="wizard-boarding-header-sub text-regular-h5 color-text-primary">
                                 <?php printf(__('Hello %s, welcome to Tutor LMS!', 'tutor'), $current_user->user_login); ?>
-                            </h3>
-                            <h2>
+                            </div>
+                            <div class="wizard-boarding-header-main text-semi-h3 color-text-primary tutor-mt-10">
                                 <?php _e('Thank You for Choosing Us', 'tutor'); ?>
-                            </h2>
+                            </div>
                         </div>
                     </div>
-                    <div class="wizard-boarding-body">
+                    <div class="wizard-boarding-body tutor-mt-60">
                         <ul class="slider tutor-boarding">
                             <li>
-
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/scalable_lms_solution.jpg'; ?>" alt="<?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor') ?>"/></div>
-                                <div class="slide-title"><?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor'); ?></div>
-                                <div class="slide-subtitle"><?php _e('From individual instructors to vast eLearning platforms, Tutor LMS grows with you to create your ideal vision of an LMS website.', 'tutor'); ?></div>
+                                <div class="slide-thumb">
+                                    <img src="<?php echo tutor()->url . 'assets/images/scalable_lms_solution.jpg'; ?>" alt="<?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor') ?>"/>
+                                </div>
+                                <div class="slide-title text-medium-h5 color-text-primary"><?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor'); ?></div>
+                                <div class="slide-subtitle text-regular-body color-text-subsued tutor-mt-16">
+                                    <?php _e('From individual instructors to vast eLearning platforms, Tutor LMS grows with you to create your ideal vision of an LMS website.', 'tutor'); ?>
+                                </div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/extensive_course_builder.jpg'; ?>" alt="<?php _e('Extensive Course Builder', 'tutor') ?>"/></div>
-                                <div class="slide-title"><?php _e('Extensive Course Builder', 'tutor'); ?></div>
-                                <div class="slide-subtitle"><?php _e('Tutor LMS comes with a state-of-the-art frontend course builder. Construct rich and resourceful courses with ease.', 'tutor'); ?></div>
+                                <div class="slide-thumb">
+                                    <img src="<?php echo tutor()->url . 'assets/images/extensive_course_builder.jpg'; ?>" alt="<?php _e('Extensive Course Builder', 'tutor') ?>"/>
+                                </div>
+                                <div class="slide-title text-medium-h5 color-text-primary"><?php _e('Extensive Course Builder', 'tutor'); ?></div>
+                                <div class="slide-subtitle text-regular-body color-text-subsued tutor-mt-16">
+                                    <?php _e('Tutor LMS comes with a state-of-the-art frontend course builder. Construct rich and resourceful courses with ease.', 'tutor'); ?>
+                                </div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/advanced_quiz_creator.jpg'; ?>" alt="<?php _e('Advanced Quiz Creator', 'tutor'); ?>"/></div>
-                                <div class="slide-title"><?php _e('Advanced Quiz Creator', 'tutor'); ?></div>
-                                <div class="slide-subtitle"><?php _e('Build interactive quizzes with the vast selection of question types and verify the learning of your students.', 'tutor'); ?></div>
+                                <div class="slide-thumb">
+                                    <img src="<?php echo tutor()->url . 'assets/images/advanced_quiz_creator.jpg'; ?>" alt="<?php _e('Advanced Quiz Creator', 'tutor'); ?>"/>
+                                </div>
+                                <div class="slide-title text-medium-h5 color-text-primary"><?php _e('Advanced Quiz Creator', 'tutor'); ?></div>
+                                <div class="slide-subtitle text-regular-body color-text-subsued tutor-mt-16">
+                                    <?php _e('Build interactive quizzes with the vast selection of question types and verify the learning of your students.', 'tutor'); ?>
+                                </div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/freedom_with_ecommerce.jpg'; ?>" alt="<?php _e('Freedom With eCommerce', 'tutor'); ?>"/></div>
-                                <div class="slide-title"><?php _e('Freedom With eCommerce', 'tutor'); ?></div>
-                                <div class="slide-subtitle"><?php _e('Select an eCommerce plugin and sell courses any way you like and use any payment gateway you want!', 'tutor'); ?></div>
+                                <div class="slide-thumb">
+                                    <img src="<?php echo tutor()->url . 'assets/images/freedom_with_ecommerce.jpg'; ?>" alt="<?php _e('Freedom With eCommerce', 'tutor'); ?>"/>
+                                </div>
+                                <div class="slide-title text-medium-h5 color-text-primary"><?php _e('Freedom With eCommerce', 'tutor'); ?></div>
+                                <div class="slide-subtitle text-regular-body color-text-subsued tutor-mt-16">
+                                    <?php _e('Select an eCommerce plugin and sell courses any way you like and use any payment gateway you want!', 'tutor'); ?>
+                                </div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/reports_and_analytics.jpg'; ?>" alt="<?php _e('Reports and Analytics', 'tutor'); ?>"/></div>
-                                <div class="slide-title"><?php _e('Reports and Analytics', 'tutor'); ?></div>
-                                <div class="slide-subtitle"><?php _e('Track what type of courses sell the most! Gain insights on user purchases, manage reviews and track quiz attempts.', 'tutor'); ?></div>
+                                <div class="slide-thumb">
+                                    <img src="<?php echo tutor()->url . 'assets/images/reports_and_analytics.jpg'; ?>" alt="<?php _e('Reports and Analytics', 'tutor'); ?>"/>
+                                </div>
+                                <div class="slide-title text-medium-h5 color-text-primary"><?php _e('Reports and Analytics', 'tutor'); ?></div>
+                                <div class="slide-subtitle text-regular-body color-text-subsued tutor-mt-16">
+                                    <?php _e('Track what type of courses sell the most! Gain insights on user purchases, manage reviews and track quiz attempts.', 'tutor'); ?>
+                                </div>
                             </li>
                         </ul>
                     </div>
                     <div class="wizard-boarding-footer">
-                        <div>
-                            <button class="tutor-btn tutor-boarding-next">
+                        <div class="">
+                            <button class="tutor-btn tutor-btn-primary tutor-btn-md">
                                 <?php _e('Let’s Start', 'tutor'); ?>
                             </button>
                         </div>
                         <div>
-                            <a href="<?php echo admin_url(); ?>" class="tutor-boarding-skip text-bold-caption">
+                            <a href="<?php echo admin_url(); ?>" class="text-bold-caption">
                                 <?php _e('I already know, skip it!', 'tutor'); ?>
                             </a>
                         </div>
@@ -732,7 +751,7 @@ if ( ! defined( 'ABSPATH' ) )
                     </div>
 
                     <div class="wizard-type-footer">
-                        <div>
+                        <div class="text-regular-caption">
                             <span><?php _e('Not sure?', 'tutor'); ?></span>&nbsp;
                             <a href="#" class="tutor-type-skip" class="">
                                 <?php _e('Let’s go to the next step.', 'tutor'); ?>

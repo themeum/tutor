@@ -1115,37 +1115,37 @@
 //         height: auto;
 //     }
 // }
-// .tutor-quiz-questions-pagination ul {
-//     margin: 0;
-//     padding: 0;
-//     list-style: none;
-//     li {
-//         display: inline-block;
-//         a {
-//             border: 1px solid var(--tutor-primary-color);
-//             padding: 7px 13px;
-//             display: block;
-//             border-radius: 50%;
-//             margin-right: 10px;
-//             color: var(--tutor-primary-color);
-//             font-weight: bold;
-//             font-size: 15px;
-//             width: 30px;
-//             height: 30px;
-//             @include valueWithPrefix(display, flex);
-//             @include propertyWithPrefix(align-items, center);
-//             @include propertyWithPrefix(justify-content, center);
-//             &:hover,
-//             &.active {
-//                 background-color: var(--tutor-primary-color);
-//                 color: white;
-//                 &:hover {
-//                     opacity: .8;
-//                 }
-//             }
-//         }
-//     }
-// }
+.tutor-quiz-questions-pagination ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    li {
+        display: inline-block;
+        a {
+            border: 1px solid var(--tutor-primary-color);
+            padding: 7px 13px;
+            display: block;
+            border-radius: 50%;
+            margin-right: 10px;
+            color: var(--tutor-primary-color);
+            font-weight: bold;
+            font-size: 15px;
+            width: 30px;
+            height: 30px;
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(align-items, center);
+            @include propertyWithPrefix(justify-content, center);
+            &:hover,
+            &.active {
+                background-color: var(--tutor-primary-color);
+                color: white;
+                &:hover {
+                    opacity: .8;
+                }
+            }
+        }
+    }
+}
 // .quiz-image-answering-wrap {
 //     display: flex;
 //     flex-wrap: wrap;
