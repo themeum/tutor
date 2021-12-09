@@ -147,6 +147,7 @@ class Options_V2 {
 
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
+		wp_send_json_success($tutor_settings_log);
 	}
 
 	/**

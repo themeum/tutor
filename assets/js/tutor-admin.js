@@ -1637,10 +1637,10 @@ document.addEventListener("readystatechange", function (event) {
     import_history_data();
     export_single_settings();
     reset_default_options();
-    apply_single_settings(); // setInterval(function () {
-    // load_saved_data();
-    // console.log("working");
-    // }, 10000);
+    apply_single_settings();
+    setInterval(function () {
+      load_saved_data();
+    }, 100000);
   }
 });
 /**
@@ -1679,6 +1679,7 @@ var load_saved_data = function load_saved_data() {
   xhttp.onreadystatechange = function () {
     if (xhttp.readyState === 4) {
       tutor_option_history_load(xhttp.response);
+      delete_history_data();
     }
   };
 };
@@ -1687,21 +1688,22 @@ function tutor_option_history_load(history_data) {
   var dataset = JSON.parse(history_data).data;
   var output = "";
 
-  if (0 !== dataset.length) {
+  if (null !== dataset && 0 !== dataset.length) {
     Object.entries(dataset).forEach(function (_ref) {
       var _ref2 = _slicedToArray(_ref, 2),
           key = _ref2[0],
           value = _ref2[1];
 
       var badgeStatus = value.datatype == "saved" ? " label-primary-wp" : " label-refund";
-      output = "<div class=\"tutor-option-field-row\">\n\t\t\t\t\t<div class=\"tutor-option-field-label\">\n\t\t\t\t\t\t<p class=\"text-medium-small\">".concat(value.history_date, "\n\t\t\t\t\t\t<span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\"> ").concat(value.datatype, "</span> </p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"tutor-option-field-input\">\n\t\t\t\t\t\t<button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n\n          <div class=\"tutor-popup-opener\">\n            <button\n            type=\"button\"\n            class=\"popup-btn\"\n            data-tutor-popup-target=\"popup-").concat(key, "\"\n            >\n            <span class=\"toggle-icon\"></span>\n            </button>\n            <ul id=\"popup-").concat(key, "\" class=\"popup-menu\">\n            <li>\n              <a class=\"export_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon tutor-v2-icon-test icon-msg-archive-filled color-design-white\"></span>\n                <span class=\"text-regular-body color-text-white\">Download</span>\n              </a>\n            </li>\n            <li>\n              <a class=\"delete_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon tutor-v2-icon-test icon-delete-fill-filled color-design-white\"></span>\n                <span class=\"text-regular-body color-text-white\">Delete</span>\n              </a>\n            </li>\n            </ul>\n          </div>\n          </div>\n        </div>") + output;
+      output = "<div class=\"tutor-option-field-row\">\n\t\t\t\t\t<div class=\"tutor-option-field-label\">\n\t\t\t\t\t\t<p class=\"text-medium-small\">".concat(value.history_date, "\n\t\t\t\t\t\t<span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\"> ").concat(value.datatype, "</span> </p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"tutor-option-field-input\">\n\t\t\t\t\t\t<button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n\n          <div class=\"tutor-popup-opener tutor-ml-16\">\n            <button\n            type=\"button\"\n            class=\"popup-btn\"\n            data-tutor-popup-target=\"popup-").concat(key, "\"\n            >\n            <span class=\"toggle-icon\"></span>\n            </button>\n            <ul id=\"popup-").concat(key, "\" class=\"popup-menu\">\n            <li>\n              <a class=\"export_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon tutor-v2-icon-test icon-msg-archive-filled color-design-white\"></span>\n                <span class=\"text-regular-body color-text-white\">Download</span>\n              </a>\n            </li>\n            <li>\n              <a class=\"delete_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon tutor-v2-icon-test icon-delete-fill-filled color-design-white\"></span>\n                <span class=\"text-regular-body color-text-white\">Delete</span>\n              </a>\n            </li>\n            </ul>\n          </div>\n          </div>\n        </div>") + output;
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
   }
 
   var heading = "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p>Date</p></div></div>";
-  selectorElement(".history_data").innerHTML = heading + output;
+  var historyData = selectorElement(".history_data");
+  null !== historyData ? historyData.innerHTML = heading + output : '';
   export_single_settings(); // popupToggle();
 
   apply_single_settings();
@@ -1824,92 +1826,97 @@ var import_history_data = function import_history_data() {
 var export_single_settings = function export_single_settings() {
   var single_settings = selectorElements(".export_single_settings");
 
-  var _loop = function _loop(i) {
-    single_settings[i].onclick = function () {
-      var export_id = single_settings[i].dataset.id;
-      var formData = new FormData();
-      formData.append("action", "tutor_export_single_settings");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      formData.append("time", Date.now());
-      formData.append("export_id", export_id);
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
+  if (single_settings) {
+    var _loop = function _loop(i) {
+      single_settings[i].onclick = function () {
+        var export_id = single_settings[i].dataset.id;
+        var formData = new FormData();
+        formData.append("action", "tutor_export_single_settings");
+        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+        formData.append("time", Date.now());
+        formData.append("export_id", export_id);
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", _tutorobject.ajaxurl, true);
+        xhttp.send(formData);
 
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          console.log(xhttp.response); // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
-
-          var fileName = export_id;
-          json_download(xhttp.response, fileName);
-        }
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState === 4) {
+            // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
+            var fileName = export_id;
+            json_download(xhttp.response, fileName);
+          }
+        };
       };
     };
-  };
 
-  for (var i = 0; i < single_settings.length; i++) {
-    _loop(i);
+    for (var i = 0; i < single_settings.length; i++) {
+      _loop(i);
+    }
   }
 };
 
 var apply_single_settings = function apply_single_settings() {
   var apply_settings = selectorElements(".apply_settings");
 
-  var _loop2 = function _loop2(i) {
-    apply_settings[i].onclick = function () {
-      var apply_id = apply_settings[i].dataset.id;
-      var formData = new FormData();
-      formData.append("action", "tutor_apply_settings");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      formData.append("apply_id", apply_id);
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
+  if (apply_settings) {
+    var _loop2 = function _loop2(i) {
+      apply_settings[i].onclick = function () {
+        var apply_id = apply_settings[i].dataset.id;
+        var formData = new FormData();
+        formData.append("action", "tutor_apply_settings");
+        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+        formData.append("apply_id", apply_id);
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", _tutorobject.ajaxurl, true);
+        xhttp.send(formData);
 
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          tutor_toast("Success", "Applied settings successfully!", "success");
-          console.log(xhttp.response);
-        }
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState === 4) {
+            tutor_toast("Success", "Applied settings successfully!", "success");
+            console.log(xhttp.response);
+          }
+        };
       };
     };
-  };
 
-  for (var i = 0; i < apply_settings.length; i++) {
-    _loop2(i);
+    for (var i = 0; i < apply_settings.length; i++) {
+      _loop2(i);
+    }
   }
 };
 
 var delete_history_data = function delete_history_data() {
   var delete_settings = selectorElements(".delete_single_settings");
 
-  var _loop3 = function _loop3(i) {
-    delete_settings[i].onclick = function () {
-      var delete_id = delete_settings[i].dataset.id;
-      var formData = new FormData();
-      formData.append("action", "tutor_delete_single_settings");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      formData.append("time", Date.now());
-      formData.append("delete_id", delete_id);
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
+  if (delete_settings) {
+    var _loop3 = function _loop3(i) {
+      delete_settings[i].onclick = function () {
+        var delete_id = delete_settings[i].dataset.id;
+        var formData = new FormData();
+        formData.append("action", "tutor_delete_single_settings");
+        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+        formData.append("time", Date.now());
+        formData.append("delete_id", delete_id);
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", _tutorobject.ajaxurl, true);
+        xhttp.send(formData);
 
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          // console.log(JSON.parse(xhttp.response));
-          tutor_option_history_load(xhttp.responseText);
-          delete_history_data();
-          setTimeout(function () {
-            tutor_toast('Success', "Data deleted successfully!", 'success');
-          }, 200);
-        }
+        xhttp.onreadystatechange = function () {
+          if (xhttp.readyState === 4) {
+            console.log(JSON.parse(xhttp.response));
+            tutor_option_history_load(xhttp.responseText);
+            delete_history_data();
+            setTimeout(function () {
+              tutor_toast('Success', "Data deleted successfully!", 'success');
+            }, 200);
+          }
+        };
       };
     };
-  };
 
-  for (var i = 0; i < delete_settings.length; i++) {
-    _loop3(i);
+    for (var i = 0; i < delete_settings.length; i++) {
+      _loop3(i);
+    }
   }
 };
 
@@ -1932,6 +1939,16 @@ window.readyState_complete = function (func) {
       return _caller(func);
     }) : '' : '';
   });
+};
+
+window.addBodyClass = function (currentUrl) {
+  // History push
+  var url = new URL(currentUrl);
+  var tabPage = url.searchParams.get('tab_page');
+  var tabPageEdit = url.searchParams.get('edit') && '_edit';
+  var customClassName = tabPageEdit ? tabPage + tabPageEdit : tabPage;
+  document.body.classList.add("".concat(customClassName));
+  console.log(customClassName);
 };
 
 window.selectorElement = function (selector) {
@@ -1960,7 +1977,7 @@ window.selectorByClass = function (selector) {
  */
 
 
-var json_download = function json_download(response, fileName) {
+window.json_download = function (response, fileName) {
   var fileToSave = new Blob([response], {
     type: "application/json"
   });
@@ -1991,6 +2008,7 @@ readyState_complete(function () {
     document.title = loadNavItem.querySelector('.nav-label').innerText + ' ‹ ' + _tutorobject.site_title;
   }
 });
+addBodyClass(window.location);
 navTabLists.forEach(function (list) {
   list.addEventListener('click', function (e) {
     var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
@@ -2002,8 +2020,10 @@ navTabLists.forEach(function (list) {
 
       navTabItems.forEach(function (item) {
         item.classList.remove('active');
+        document.body.classList.remove(item.dataset.tab);
 
         if (e.target.dataset.tab) {
+          document.body.classList.add(e.target.dataset.tab);
           e.target.classList.add('active');
         } else {
           e.target.parentElement.classList.add('active');
@@ -2024,6 +2044,7 @@ navTabLists.forEach(function (list) {
       });
       var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());
       window.history.pushState({}, '', pushUrl);
+      addBodyClass(window.location);
       var loadingSpinner = document.getElementById(dataTab).querySelector('.loading-spinner');
 
       if (loadingSpinner) {
@@ -31540,7 +31561,10 @@ var toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
 toggleChange.forEach(function (element) {
   element.addEventListener("change", function (e) {
     var check_value = element.previousElementSibling;
-    check_value.value == "on" ? check_value.value = "off" : check_value.value = "on";
+
+    if (check_value) {
+      check_value.value == "on" ? check_value.value = "off" : check_value.value = "on";
+    }
   });
 });
 jQuery(document).ready(function ($) {
