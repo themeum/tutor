@@ -109,19 +109,20 @@ if ( ! defined( 'ABSPATH' ) )
                 
                 $html .= '<li class="'.($i==1 ? "active" : "").'">';
                     $html .= '<div class="tutor-setup-content-heading heading">';
-                        $html .= '<div class="setup-section-title">'.$field_parent['lable'].'</div>';
+                        $html .= '<div class="setup-section-title text-medium-h6 color-text-primary">'.$field_parent['lable'].'</div>';
                         $html .= '<div class="step-info">';
-                            $html .= '<span class="">'.__('Step', 'tutor').':</span> <strong>'.$i.' / '.count($field_arr).'</strong>';
+                            $html .= '<span class="text-regular-caption color-text-hints">'.__('Step', 'tutor').':</span> <strong class="color-text-primary">'.$i.'/'.count($field_arr).' </strong>';
                         $html .= '</div>';
-                        $html .= '<div class="tutor-reset-section">'.__('Reset Default', 'tutor').'</div>';
+                        $html .= '<div class="tutor-reset-section text-btn-small color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center">'.__('Reset Default', 'tutor').'</div>';
                     $html .= '</div>';
                     $html .= '<div class="tutor-setup-content-heading body">';
 
                         foreach ($field_parent['attr'] as $key => $field) {
                             if(!isset($field['lable'])){ continue; }
                             $html .= '<div class="tutor-setting'.(in_array( $field['type'], $full_width_fields ) ? " course-setting-wrapper" : "").' '.(isset($field['class']) ? $field['class'] : '').'">';
-                                $html .= isset( $field['lable'] ) ? '<div class="title text-regular-body color-text-primary">'.$field['lable'] : '';
-                                $html .= isset( $field['tooltip'] ) ? '<span id="tooltip-btn" class="tooltip-btn" data-tooltip="'.$field['tooltip'].'"><span></span></span>' : '';
+                                $html .= isset( $field['lable'] ) ? '<div class="text-regular-body color-text-primary ______">'.$field['lable'] : '';
+                                // $html .= isset( $field['tooltip'] ) ? '<span id="tooltip-btn" class="tooltip-btn" data-tooltip="'.$field['tooltip'].'"><span></span></span>' : '';
+                                $html .= isset( $field['tooltip'] ) ? '<span class="tooltip-wrap tooltip-icon"><span class="tooltip-txt tooltip-right">'.$field['tooltip'].'</span></span>' : '';
                                 $html .= isset( $field['lable'] ) ? '</div>' : '';
 
                                 if(!in_array($field['type'], $down_desc_fields)) {
@@ -584,10 +585,10 @@ if ( ! defined( 'ABSPATH' ) )
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
                                             <button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
-                                                <?php _e('CREATE A NEW COURSE', 'tutor'); ?>
+                                                <?php _e('Create a New Course', 'tutor'); ?>
                                             </button>
-                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
-                                                <?php _e('EXPLORE ADDONS', 'tutor'); ?>
+                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-redirect" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
+                                                <?php _e('Explore Addons', 'tutor'); ?>
                                             </button>
                                         </div>
                                     </div>

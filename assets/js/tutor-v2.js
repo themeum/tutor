@@ -4243,7 +4243,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 var accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
 
-if (accordionItemHeaders) {
+if (accordionItemHeaders.length) {
   accordionItemHeaders.forEach(function (accordionItemHeader) {
     accordionItemHeader.addEventListener('click', function () {
       accordionItemHeader.classList.toggle('is-active');
@@ -4364,10 +4364,10 @@ if (tutorDropdownSelect) {
       var key = e.target.dataset.key;
 
       if (key === 'custom') {
-        document.querySelector(".tutor-v2-date-range-picker.inactive").classList.add('active');
-        document.querySelector(".tutor-v2-date-range-picker.inactive input").click();
-        document.querySelector(".tutor-v2-date-range-picker.inactive input").style.display = "none";
-        document.querySelector(".tutor-v2-date-range-picker.inactive .react-datepicker-popper").style.marginTop = "-40px";
+        document.querySelector('.tutor-v2-date-range-picker.inactive').classList.add('active');
+        document.querySelector('.tutor-v2-date-range-picker.inactive input').click();
+        document.querySelector('.tutor-v2-date-range-picker.inactive input').style.display = 'none';
+        document.querySelector('.tutor-v2-date-range-picker.inactive .react-datepicker-popper').style.marginTop = '-40px';
       }
 
       selected.innerHTML = option.querySelector('label').innerHTML;
@@ -4375,6 +4375,8 @@ if (tutorDropdownSelect) {
     });
   });
 }
+
+console.log(tutorDropdownSelect);
 
 /***/ }),
 
