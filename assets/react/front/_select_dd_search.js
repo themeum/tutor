@@ -1,11 +1,17 @@
 window.selectSearchField = (selectElement) => {
     const tutorFormSelect = document.querySelectorAll(selectElement);
 
+
     setTimeout(() => {
         tutorFormSelect.forEach(element => {
             let searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
             element.insertAdjacentHTML('afterend', ddMarkup(element.options));
             searchInput = element.nextElementSibling.querySelector('input');
+            console.log(element.options.length, searchInput);
+
+            if (element.options.length > 1) {
+                searchInput.style.display = 'none';
+            }
 
             dropDownWrapper = document.querySelector('.tutor-dropdown-select');
             dropDownAll = document.querySelector('.tutor-dropdown-select-options-container');
@@ -13,7 +19,7 @@ window.selectSearchField = (selectElement) => {
             const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
 
             selectLabel.onclick = (e) => {
-                dropDownAll.classList.remove('is-active');
+                // dropDownAll.classList.remove('is-active');
                 dropDown.classList.toggle('is-active');
                 searchInput.focus();
             }
@@ -83,6 +89,7 @@ window.selectSearchField = (selectElement) => {
         `;
         return markupDD;
     };
+
 }
 
 selectSearchField('.tutor-form-select');
