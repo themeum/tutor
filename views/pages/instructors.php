@@ -46,9 +46,11 @@ if ( 'pending' === $active_tab ) {
 	$instructor_status = array( 'pending' );
 } elseif ( 'blocked' === $active_tab ) {
 	$instructor_status = array( 'blocked' );
+} else if('approved' == $active_tab) {
+	$instructor_status = array( 'approved' );
 }
 $instructors_list = tutor_utils()->get_instructors( $offset, $per_page, $search, $course_id, $date, $order, $instructor_status );
-$total            = tutor_utils()->get_total_instructors( $search, $instructor_status, $course_id, $date );
+$total = tutor_utils()->get_total_instructors( $search, $instructor_status, $course_id, $date );
 
 /**
  * Navbar data to make nav menu

@@ -72,6 +72,29 @@
 			// flex: 0 0 100%;
 		}
 	}
+	@include breakpoint-max(1300) {
+		flex-wrap: wrap;
+		margin-top: 40px;
+	}
+	@include breakpoint-max(mobile) {
+		flex-direction: row;
+		display: block !important;
+		&-items {
+			display: block !important;
+			select.tutor-form-select,
+			.tutor-react-datepicker .react-datepicker__input-container input,
+			.tutor-input-group {
+				max-width: 100% !important;
+				width: 100% !important;
+			}
+		}
+		&-item {
+			margin-top: 20px;
+			.tutor-admin-page-refresh {
+				margin-top: 20px;
+			}
+		}
+	}
 }
 .tutor-wp-dashboard-filter-items {
 	// width: 100%;
@@ -86,12 +109,13 @@
 	}
 
 	select.tutor-form-select,
-	.tutor-input-group {
-		width: 180px;
+	.tutor-input-group,
+	.tutor-react-datepicker .react-datepicker__input-container input {
+		width: max-content;
 		max-width: 180px;
 	}
 
-	@include breakpoint-min(1500) {
+	@include breakpoint-min(1600) {
 		select.tutor-form-select,
 		.tutor-input-group {
 			width: 227px;
@@ -140,7 +164,8 @@
 		}
 	}
 
-	.tutor-btn:not(.tutor-is-outline) {
+	.tutor-btn.update_zoom_meeting_modal_btn,
+	.tutor-btn.create-zoom-meeting-btn {
 		border-color: #2d8cff;
 		background: #2d8cff;
 		&:hover {
@@ -148,6 +173,7 @@
 			border-color: darken(#2d8cff, 5);
 		}
 	}
+
 	.tutor-btn.tutor-is-outline {
 		padding: 6px 12px;
 		border-color: #2d8cff;

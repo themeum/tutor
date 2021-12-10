@@ -24,10 +24,7 @@ const TutorDatepicker = (data) => {
 	const url = new URL(window.location.href);
 	const params = url.searchParams;
 
-
-	console.log(default_date);
-
-	const [startDate, setStartDate] = default_date ? useState(stringToDate(default_date, 'dd-mm-yyyy', '-')) : useState();
+	const [startDate, setStartDate] = useState(default_date ? stringToDate(default_date, 'dd-mm-yyyy', '-') : undefined);
 	//const [startDate, setStartDate] = useState(stringToDate('24-06-2021', 'dd-mm-yyyy', '-'));
 	const [dropdownMonth, setDropdownMonth] = useState(false);
 	const [dropdownYear, setDropdownYear] = useState(false);
