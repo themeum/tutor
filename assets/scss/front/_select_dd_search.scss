@@ -1,0 +1,14 @@
+.tutor-form-select {
+  display: none !important;
+}
+.tutor-dropdown-select.select-dropdown {
+  .tutor-dropdown-select-options-container {
+    .tutor-frequencies {
+      max-height: 100%;
+      overflow-y: scroll;
+    }
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+  }
+}
