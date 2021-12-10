@@ -81,7 +81,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 	<?php
 }
 
-function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $publish_date ) {
+function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $publish_date, $publish_time ) {
 	// TODO: Update this modal with new modal variation from Saif
 	?>
 	<div id="<?php echo $id; ?>" class="tutor-modal modal-view-double-segment">
@@ -120,7 +120,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 								<?php _e( 'Publised Date', 'tutor' ); ?>
 							</div>
 							<div class="text-bold-body color-text-primary tutor-mt-3">
-								<?php echo $publish_date; ?>
+								<?php echo $publish_date . ', ' . $publish_time; ?>
 							</div>
 						</div>
 					</div>
@@ -134,7 +134,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md">
 								<?php _e( 'Delete', 'tutor' ); ?>
 							</button>
-							<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-md">
+							<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn-md">
 								<?php _e( 'Edit', 'tutor' ); ?>
 							</button>
 						</div>
@@ -171,7 +171,7 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
 							<?php _e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-list-ajax-action"  data-request_data='{"announcement_id":<?php echo $announcment_id; ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo $row_id; ?>">
+						<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-list-ajax-action"  data-request_data='{"announcement_id":<?php echo $announcment_id; ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo $row_id; ?>">
 							<?php _e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>
@@ -258,13 +258,12 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 
 						<td data-th="<?php esc_html_e( 'Announcement', 'tutor' ); ?>" class="column-fullwidth">
 							<div>
-								<p class="td-course color-text-primary text-medium-body">
+								<div class="td-course color-text-primary text-medium-body">
 									<?php echo esc_html( $announcement->post_title ); ?>
-								</p>
-								<p class="text-subsued">
-									<?php esc_html_e( 'Course: ', 'tutor' ); ?>
-									<?php echo esc_html( $course ? $course->post_title : '' ); ?>
-								</p>
+								</div>
+								<div class="text-subsued">
+									<strong><?php esc_html_e( 'Course', 'tutor' ); ?>: </strong> <?php echo esc_html( $course ? $course->post_title : '' ); ?>
+								</div>
 							</div>
 						</td>
 						<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
@@ -298,7 +297,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							
 							<?php
 								tutor_announcement_modal( $update_modal_id, __( 'Edit Announcment', 'tutor' ), $courses, $announcement );
-								tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course->post_title, $date_format );
+								tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course->post_title, $date_format, $time_format );
 								tutor_announcement_modal_delete( $delete_modal_id, $announcement->ID, $row_id );
 							?>
 						</td>

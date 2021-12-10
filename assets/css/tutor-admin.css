@@ -1365,10 +1365,10 @@
   margin-right: 0;
 }
 
-.tutor_lesson_modal_form .tutor-option-field-row input[type="text"],
-.tutor_lesson_modal_form .tutor-option-field-row input[type="email"],
-.tutor_lesson_modal_form .tutor-option-field-row input[type="number"],
-.tutor_lesson_modal_form .tutor-option-field-row input[type="password"],
+.tutor_lesson_modal_form .tutor-option-field-row input[type='text'],
+.tutor_lesson_modal_form .tutor-option-field-row input[type='email'],
+.tutor_lesson_modal_form .tutor-option-field-row input[type='number'],
+.tutor_lesson_modal_form .tutor-option-field-row input[type='password'],
 .tutor_lesson_modal_form .tutor-option-field-row textarea {
   width: 100%;
   display: block;
@@ -1982,6 +1982,7 @@ input:checked + .btn-slider:before {
   -webkit-box-shadow: none;
   box-shadow: none;
   height: 42px !important;
+  line-height: 1;
   padding: 0 24px 0 12px !important;
   margin: 0;
 }
@@ -3622,7 +3623,7 @@ table.tutor-table p {
   font-style: normal;
   font-weight: normal;
   font-size: 15px;
-  color: #5B616F;
+  color: #5b616f;
   cursor: pointer;
   -ms-flex-item-align: center;
       align-self: center;
@@ -3630,7 +3631,7 @@ table.tutor-table p {
 }
 
 .tutor-admin-page-refresh i {
-  color: #1973AA;
+  color: #1973aa;
   font-size: 18px;
 }
 

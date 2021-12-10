@@ -91,27 +91,27 @@
 .tutor-option-field-row input[type='number'],
 .tutor-option-field-row input[type='password'],
 .tutor-option-field-row textarea {
-  &:last-child {
-    margin-right: 0;
-  }
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  color: #333;
-  display: inline-block;
-  vertical-align: middle;
-  padding: 7px 12px;
-  margin: 0 10px 0 0;
-  width: 400px;
-  min-height: 35px;
+	&:last-child {
+		margin-right: 0;
+	}
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	color: #333;
+	display: inline-block;
+	vertical-align: middle;
+	padding: 7px 12px;
+	margin: 0 10px 0 0;
+	width: 400px;
+	min-height: 35px;
 }
 
-.tutor_lesson_modal_form .tutor-option-field-row input[type="text"],
-.tutor_lesson_modal_form .tutor-option-field-row input[type="email"],
-.tutor_lesson_modal_form .tutor-option-field-row input[type="number"],
-.tutor_lesson_modal_form .tutor-option-field-row input[type="password"],
+.tutor_lesson_modal_form .tutor-option-field-row input[type='text'],
+.tutor_lesson_modal_form .tutor-option-field-row input[type='email'],
+.tutor_lesson_modal_form .tutor-option-field-row input[type='number'],
+.tutor_lesson_modal_form .tutor-option-field-row input[type='password'],
 .tutor_lesson_modal_form .tutor-option-field-row textarea {
 	width: 100%;
 	display: block;
@@ -629,8 +629,7 @@ input:checked + .btn-slider:before {
 	border: 1px solid #d4dadb;
 }
 
-.assignment-modal-form-wrap
-	.tutor-option-field.tutor-assignment-modal-title-wrap {
+.assignment-modal-form-wrap .tutor-option-field.tutor-assignment-modal-title-wrap {
 	margin: 0;
 }
 
@@ -735,6 +734,7 @@ input:checked + .btn-slider:before {
 	-webkit-box-shadow: none;
 	box-shadow: none;
 	height: 42px !important;
+	line-height: 1;
 	padding: 0 24px 0 12px !important;
 	margin: 0;
 }
@@ -2107,16 +2107,12 @@ table.tutor-table p {
 	margin-bottom: 7px;
 }
 
-.tutor-admin-search-box-container
-	> div:nth-child(4)
-	input::-webkit-input-placeholder {
+.tutor-admin-search-box-container > div:nth-child(4) input::-webkit-input-placeholder {
 	color: #3f435b;
 	font-size: 15px;
 }
 
-.tutor-admin-search-box-container
-	> div:nth-child(1)
-	input::-webkit-input-placeholder {
+.tutor-admin-search-box-container > div:nth-child(1) input::-webkit-input-placeholder {
 	font-size: 16px;
 	font-weight: 400;
 	color: #737787;
@@ -2397,10 +2393,7 @@ table.tutor-table p {
 	background-color: #3e64de;
 }
 
-.report-course-list-wrap
-	> .tutor-list-table
-	tbody
-	td:not(.detail):nth-last-child(3) {
+.report-course-list-wrap > .tutor-list-table tbody td:not(.detail):nth-last-child(3) {
 	vertical-align: middle;
 }
 
@@ -2527,11 +2520,11 @@ table.tutor-table p {
 }
 
 .tutor-wp-dashboard-filter-items {
-    display: inherit;
+	display: inherit;
 }
 
 .row-actions {
-    left: 0;
+	left: 0;
 }
 //a-to-z-sorting icon
 .tutor-table-rows-sorting {
@@ -2547,12 +2540,12 @@ table.tutor-table p {
 	font-style: normal;
 	font-weight: normal;
 	font-size: 15px;
-	color: #5B616F;
+	color: #5b616f;
 	cursor: pointer;
 	align-self: center;
 	margin-top: 43px;
-		i {
-			color: #1973AA;
-			font-size: 18px;
-		}
+	i {
+		color: #1973aa;
+		font-size: 18px;
+	}
 }

@@ -5004,23 +5004,22 @@ var TutorDatepicker = function TutorDatepicker(data) {
   var default_date = data.input_value || null;
   var url = new URL(window.location.href);
   var params = url.searchParams;
-  console.log(default_date);
 
-  var _ref = default_date ? (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(stringToDate(default_date, 'dd-mm-yyyy', '-')) : (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(),
-      _ref2 = _slicedToArray(_ref, 2),
-      startDate = _ref2[0],
-      setStartDate = _ref2[1]; //const [startDate, setStartDate] = useState(stringToDate('24-06-2021', 'dd-mm-yyyy', '-'));
-
-
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(default_date ? stringToDate(default_date, 'dd-mm-yyyy', '-') : undefined),
       _useState2 = _slicedToArray(_useState, 2),
-      dropdownMonth = _useState2[0],
-      setDropdownMonth = _useState2[1];
+      startDate = _useState2[0],
+      setStartDate = _useState2[1]; //const [startDate, setStartDate] = useState(stringToDate('24-06-2021', 'dd-mm-yyyy', '-'));
+
 
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      dropdownYear = _useState4[0],
-      setDropdownYear = _useState4[1];
+      dropdownMonth = _useState4[0],
+      setDropdownMonth = _useState4[1];
+
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      dropdownYear = _useState6[0],
+      setDropdownYear = _useState6[1];
 
   var handleCalendarClose = function handleCalendarClose() {
     setDropdownYear(false);
@@ -5067,14 +5066,14 @@ var TutorDatepicker = function TutorDatepicker(data) {
     onCalendarClose: handleCalendarClose,
     onClick: handleCalendarClose,
     dateFormat: dateFormat,
-    renderCustomHeader: function renderCustomHeader(_ref3) {
-      var date = _ref3.date,
-          changeYear = _ref3.changeYear,
-          changeMonth = _ref3.changeMonth,
-          decreaseMonth = _ref3.decreaseMonth,
-          increaseMonth = _ref3.increaseMonth,
-          prevMonthButtonDisabled = _ref3.prevMonthButtonDisabled,
-          nextMonthButtonDisabled = _ref3.nextMonthButtonDisabled;
+    renderCustomHeader: function renderCustomHeader(_ref) {
+      var date = _ref.date,
+          changeYear = _ref.changeYear,
+          changeMonth = _ref.changeMonth,
+          decreaseMonth = _ref.decreaseMonth,
+          increaseMonth = _ref.increaseMonth,
+          prevMonthButtonDisabled = _ref.prevMonthButtonDisabled,
+          nextMonthButtonDisabled = _ref.nextMonthButtonDisabled;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "datepicker-header-custom"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
