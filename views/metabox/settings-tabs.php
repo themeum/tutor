@@ -93,10 +93,10 @@ $current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 
 												case 'radio' :
 													foreach($field['options'] as $value => $label) {
-														$id_string = 'course_setting_radio_' . $value;
+														$id_string = 'course_setting_radio_' . (!empty($field['id']) ? $field['id'] : $value);
 														?>
 														<div class="tutor-form-check tutor-mb-10">
-															<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
+															<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
 															<label for="<?php echo $id_string; ?>" class="text-medium-caption">
 																<?php echo $label; ?>
 															</label>
@@ -108,7 +108,8 @@ $current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 											case 'checkbox' :
 											case 'toggle_switch' :
 												foreach($field['options'] as $option) {
-													$id_string = 'course_setting_' . $field['type'] . '_' . $field_key;
+													$fragment = (!empty($field['id']) ? $field['id'] : $field['type'] . '_' . $field_key);
+													$id_string = 'course_setting_' . $fragment;
 
 													if($field['type']=='checkbox') {
 														?>

@@ -5,6 +5,7 @@ import './assignment';
 import './attachment';
 import './video-picker';
 import './instructor-multi';
+import './content-drip';
 
 window.jQuery(document).ready(function($) {
     $('.tutor-certificate-template-tab [data-tutor-tab-target]').click(function(){
