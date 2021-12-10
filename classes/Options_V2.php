@@ -506,30 +506,6 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
-								'key'          => 'quiz_time_limit',
-								'type'         => 'group_fields',
-								'label'        => __( 'Time Limit', 'tutor' ),
-								'desc'         => __( '0 means unlimited time.', 'tutor' ),
-								'group_fields' => array(
-									'value' => array(
-										'type'    => 'text',
-										'default' => '0',
-									),
-									'time'  => array(
-										'type'           => 'select',
-										'default'        => 'minutes',
-										'select_options' => false,
-										'options'        => array(
-											'weeks'   => __( 'Weeks', 'tutor' ),
-											'days'    => __( 'Days', 'tutor' ),
-											'hours'   => __( 'Hours', 'tutor' ),
-											'minutes' => __( 'Minutes', 'tutor' ),
-											'seconds' => __( 'Seconds', 'tutor' ),
-										),
-									),
-								),
-							),
-							array(
 								'key'            => 'quiz_when_time_expires',
 								'type'           => 'radio_vertical',
 								'label'          => __( 'When time expires', 'tutor' ),

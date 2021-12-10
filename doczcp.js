@@ -44,9 +44,13 @@ const src_dir = path.resolve(__dirname+'/v2-library/src/gatsby-theme-docz');
 if(!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
     console.log('Directory Created', dir);
+} else {
+    console.log(dir+' exists already. Not created.');
 }
 
 if(!fs.existsSync(dir+'/gatsby-theme-docz')) {
     copyFolderRecursiveSync(src_dir, dir);
     console.log('Copied gatsby theme', src_dir, dir);
+} else {
+    console.log(dir+'/gatsby-theme-docz not exist. Could not copy.');
 }
