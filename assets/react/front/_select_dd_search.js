@@ -3,9 +3,6 @@ window.selectSearchField = (selectElement) => {
 
     setTimeout(() => {
         tutorFormSelect.forEach(element => {
-            // const selectDropdown = tutorFormSelect && tutorFormSelect.querySelector('.tutor-dropdown-select');
-            // selectDropdown.classList.toggle('is-active');
-
             let searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
             element.insertAdjacentHTML('afterend', ddMarkup(element.options));
             searchInput = element.nextElementSibling.querySelector('input');
@@ -39,21 +36,22 @@ window.selectSearchField = (selectElement) => {
                 resultList.forEach((item) => {
                     textToSearch = item.querySelector(".text-regular-caption");
                     txtValue = textToSearch.textContent || textToSearch.innerText;
-                    item.style.display = (txtValue.toUpperCase().indexOf(resultFilter) > -1) ? '' : 'none';
+                    if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
+                        item.style.display = ''
+                    } else {
+                        item.style.display = 'none';
+                        resultWrap.innerHTML = `
+                        <div class="tutor-dropdown-select-option">
+                            <label for="select-item-1">
+                                <div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="">No item found.</div>
+                            </label>
+                        </div>
+                        `;
+                    }
                 })
-
-
-
             }
-
-
-            // textToSearch.onclick = (e) => {
-            //     console.log(e.target);
-            // }
-
-
         });
-    }, 200);
+    }, 20);
 
 
 
@@ -87,4 +85,4 @@ window.selectSearchField = (selectElement) => {
     };
 }
 
-selectSearchField('.tutor-form-select');    
+selectSearchField('.tutor-form-select');

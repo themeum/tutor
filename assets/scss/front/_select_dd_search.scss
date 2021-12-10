@@ -5,7 +5,7 @@
   .tutor-dropdown-select-options-container {
     .tutor-frequencies {
       max-height: 100%;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
     display: flex;
     flex-direction: column;
