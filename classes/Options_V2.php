@@ -1447,12 +1447,12 @@ class Options_V2 {
 								'desc'        => __( 'Enabling this feature will show a notification bar to students and instructors to complete their profile information', 'tutor' ),
 							),
 							array(
-								'key'         => 'disable_tutor_native_login',
+								'key'         => 'enable_tutor_native_login',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Disable Tutor Login', 'tutor' ),
+								'label'       => __( 'Enable Tutor Login', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'on',
-								'desc'        => __( 'Disable to use the default WordPress login page', 'tutor' ),
+								'desc'        => __( 'Enable to use the tutor login modal instead of the default WordPress login page', 'tutor' ),
 							),
 							array(
 								'key'         => 'hide_admin_bar_for_users',

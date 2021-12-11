@@ -12,6 +12,11 @@
 	white-space: nowrap;
 	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.384);
 	
+	@media (max-width:575px) {
+		left: 108px;
+		right: auto;
+	}
+	
 	button {
 		margin: 5px;
 		border: none;

@@ -12,6 +12,29 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 class Utils {
+
+	private function option_recursive($array, $key) {
+		foreach($array as $option) {
+			$is_array = is_array($option);
+
+			if($is_array && isset($option['key'], $option['default']) && $option['key']==$key) {
+				$value = $option['default'];
+				$option['default'] == 'on' ? $value=true : 0;
+				$option['default'] == 'off' ? $value=false : 0;
+
+				return $value;
+			}
+
+			$value = $is_array ? $this->option_recursive($option, $key) : null;
+
+			if(!($value===null)) {
+				return $value;
+			}
+		}
+
+		return null;
+	}
+
 	private function get_option_default($key, $fallback, $from_options) {
 		if(!$from_options) {
 			// Avoid infinity recursion
@@ -21,29 +44,7 @@ class Utils {
 		$tutor_options_array = (new Options_V2(false))->get_setting_fields();
 		!is_array($tutor_options_array) ? $tutor_options_array=array() : 0;
 		
-		function recursion($array, $key) {
-			foreach($array as $option) {
-				$is_array = is_array($option);
-
-				if($is_array && isset($option['key'], $option['default']) && $option['key']==$key) {
-					$value = $option['default'];
-					$option['default'] == 'on' ? $value=true : 0;
-					$option['default'] == 'off' ? $value=false : 0;
-
-					return $value;
-				}
-
-				$value = $is_array ? recursion($option, $key) : null;
-
-				if(!($value===null)) {
-					return $value;
-				}
-			}
-
-			return null;
-		}
-
-		$default_value = recursion($tutor_options_array, $key);
+		$default_value = $this->option_recursive($tutor_options_array, $key);
 		
 		return $default_value===null ? $fallback : $default_value;
 	}
@@ -59,17 +60,15 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_option( $key = null, $default = false, $type = true, $from_options=false ) {
+	public function get_option( $key, $default = false, $type = true, $from_options=false ) {
 		$option = (array) maybe_unserialize(get_option('tutor_option'));
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
+			if($key=='enable_tutor_native_login') {
+				exit ('Hhhh111');
+			}
 			// If the option array is not yet stored on database, then return default/fallback
 			return $this->get_option_default( $key, $default, $from_options );
-		}
-
-		if ( ! $key ) {
-			// Return entire option array if no key specified
-			return $option;
 		}
 
 		// Get option value by option key
@@ -94,10 +93,12 @@ class Utils {
 				if ( isset( $new_option[$dotKey] ) ) {
 					$new_option = $new_option[$dotKey];
 				} else {
+					if($key=='enable_tutor_native_login') {
+						exit ('Hhhhss');
+					}
 					return $this->get_option_default( $key, $default, $from_options );
 				}
 			}
-
 
 			// Convert off/on switch values to boolean
 			$value = $new_option;
@@ -108,6 +109,10 @@ class Utils {
 			}
 
 			return apply_filters( $key, $value );
+		}
+
+		if($key=='enable_tutor_native_login') {
+			exit ('Hhhh');
 		}
 
 		return $this->get_option_default( $key, $default, $from_options );
@@ -5064,11 +5069,11 @@ class Utils {
 
 		switch($result_state) {
 			case 'pass' :
-				$result_clause = ' AND quiz_attempts.earned_marks>=quiz_attempts.total_marks ';
+				$result_clause = ' AND quiz_attempts.earned_marks>=quiz_attempts.total_marks AND quiz_attempts.attempt_status!=\'review_required\' ';
 				break;
 
 			case 'fail' :
-				$result_clause = ' AND quiz_attempts.earned_marks<quiz_attempts.total_marks ';
+				$result_clause = ' AND quiz_attempts.earned_marks<quiz_attempts.total_marks AND quiz_attempts.attempt_status!=\'review_required\' ';
 				break;
 
 			case 'pending' :
@@ -6156,57 +6161,6 @@ class Utils {
 		$instructor = new \WP_User( $instructor_id );
 		$instructor->remove_role( tutor()->instructor_role );
 		do_action( 'tutor_after_blocked_instructor', $instructor_id );
-	}
-
-	/**
-	 * @param string $msg
-	 * @param string $name
-	 *
-	 * Set Flash Message to view in next action / route
-	 */
-	public function set_flash_msg( $msg = '', $name = 'success' ) {
-		global $wp_filesystem;
-		if ( ! $wp_filesystem ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
-		}
-
-		$filename = "tutor_flash_msg_{$name}.txt";
-		$upload_dir = wp_upload_dir();
-		$dir = trailingslashit( $upload_dir['basedir'] ) . 'tutor/';
-
-		WP_Filesystem( false, $upload_dir['basedir'], true );
-
-		if ( ! $wp_filesystem->is_dir( $dir ) ) {
-			$wp_filesystem->mkdir( $dir );
-		}
-
-		$wp_filesystem->put_contents( $dir . $filename, $msg );
-	}
-
-	/**
-	 * @param null $name
-	 *
-	 * @return mixed|string|void
-	 *
-	 * Get Flash Message
-	 */
-	public function get_flash_msg( $name = null ) {
-		if ( ! $name ) {
-			return '';
-		}
-
-		$upload_dir = wp_get_upload_dir();
-		$upload_dir = trailingslashit( $upload_dir['basedir'] );
-		$msg_name   = 'tutor_flash_msg_'.$name;
-
-		$msg = '';
-		$flash_msg_file_name = $upload_dir."tutor/{$msg_name}.txt";
-		if ( file_exists( $flash_msg_file_name ) ) {
-			$msg = file_get_contents( $flash_msg_file_name );
-			unlink( $flash_msg_file_name );
-		}
-
-		return apply_filters( 'tutor_get_flash_msg', $msg, $name );
 	}
 
 	/**

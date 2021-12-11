@@ -22837,6 +22837,7 @@ input.tutor-form-check-input[type='radio']:checked {
 
 select.tutor-form-select {
   width: 100%;
+  max-width: 100%;
   background-color: #fff;
   background-repeat: no-repeat;
   border: 1px solid #ced4da;
