@@ -57,8 +57,8 @@ class Quiz_Attempts_List {
 		global $wpdb;
 
 		$all 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts");
-		$pass 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND earned_marks>=total_marks");
-		$fail 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND earned_marks<total_marks");
+		$pass 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND earned_marks>=total_marks AND attempt_status!='review_required'");
+		$fail 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND earned_marks<total_marks AND attempt_status!='review_required'");
 		$pending = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND attempt_status='review_required'");
 
 		return compact('all', 'pass', 'fail', 'pending');
@@ -77,7 +77,7 @@ class Quiz_Attempts_List {
 		$url     = get_pagenum_link();
 		$stats 	 = $this->get_quiz_attempts_stat(get_current_user_id());
 		
-		$tabs      = array(
+		$tabs 	 = array(
 			array(
 				'key'   => 'all',
 				'title' => __( 'All', 'tutor' ),

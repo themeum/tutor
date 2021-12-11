@@ -12,6 +12,7 @@ $height-sm: 40px;
 select.tutor-form-select {
 	@extend .d-block;
 	width: 100%;
+	max-width: 100%;
 	// min-width: -webkit-fill-available;
 	background-color: #fff;
 	background-repeat: no-repeat;

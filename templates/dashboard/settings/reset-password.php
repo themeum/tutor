@@ -13,32 +13,7 @@
         ?>
     </div>
 
-    <?php
-    $success_msg = tutor_utils()->get_flash_msg('success');
-    if ($success_msg){
-        ?>
-        <div class="tutor-success-msg">
-            <?php echo wp_kses_post($success_msg); ?>
-        </div>
-        <?php
-    }
-    ?>
-
     <form action="" method="post" enctype="multipart/form-data">
-        <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-        <input type="hidden" value="tutor_reset_password" name="tutor_action" />
-
-        <?php
-        $errors = apply_filters('tutor_reset_password_validation_errors', array());
-        if (is_array($errors) && count($errors)){
-            echo wp_kses_post('<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">');
-            foreach ($errors as $error_key => $error_value){
-                echo wp_kses_post("<li>{$error_value}</li>");
-            }
-            echo wp_kses_post('</ul></div>');
-        }
-        ?>
-
         <?php do_action('tutor_reset_password_input_before') ?>
 
         <div class="tutor-bs-row">
@@ -103,7 +78,7 @@
 
         <div class="tutor-bs-row">
             <div class="tutor-bs-col-12">
-                <button type="submit" class="tutor-btn">
+                <button type="submit" class="tutor-btn tutor-profile-password-reset">
                     <?php esc_html_e('Reset Password', 'tutor'); ?>
                 </button>
             </div>
