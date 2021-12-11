@@ -1,6 +1,5 @@
 <?php
 $args = $this->args;
-$current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 
 ?>
 
@@ -45,14 +44,10 @@ $current_tab = tutor_utils()->array_get('settings_tab', $_GET);
 				$callback = tutor_utils()->array_get('callback', $tab);
 				$fields = tutor_utils()->array_get('fields', $tab);
 
-				if ($current_tab){
-					$active = $current_tab === $key ? 'active' : '' ;
-					$display = $current_tab === $key ? 'block' : 'none' ;
-				}else{
-					$active = $i ===1 ? 'active' : '';
-					$display = $i ===1 ? 'block' : 'none' ;
-				}
-
+				// Set first tab as active
+				$active = $i ===1 ? 'active' : '';
+				$display = $i ===1 ? 'block' : 'none' ;
+				
 				echo "<div id='settings-tab-{$key}' class='settings-tab-wrap {$active}' style='display: {$display};'>";
 
 					do_action("tutor_course/settings_tab_content/before", $key, $tab);

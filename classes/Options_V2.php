@@ -565,7 +565,7 @@ class Options_V2 {
 									'vimeo'        => __( 'Vimeo', 'tutor' ),
 									'embedded'     => __( 'Embedded', 'tutor' ),
 								),
-								'desc'        => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
+								'desc'        => __( 'Choose video sources you\'d like to support.', 'tutor' ),
 							),
 						),
 					),
