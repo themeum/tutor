@@ -26,7 +26,11 @@ class Options_V2 {
 	private $options;
 	private $setting_fields;
 
-	public function __construct() {
+	public function __construct($register_hook=true) {
+		if(!$register_hook) {
+			return;
+		}
+		
 		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_default_save', array( $this, 'tutor_option_default_save' ) );
@@ -331,7 +335,7 @@ class Options_V2 {
 		include $template_path;
 	}
 
-	private function get_setting_fields() {
+	public function get_setting_fields() {
 
 		if ( $this->setting_fields ) {
 			// Return from property if already prepared
@@ -349,7 +353,6 @@ class Options_V2 {
 		foreach ( $withdrawl_methods as $key => $method ) {
 			$methods_array[ $key ] = $method['method_name'];
 		}
-
 		$attr = array(
 			'general'      => array(
 				'label'    => __( 'General', 'tutor' ),
@@ -902,12 +905,12 @@ class Options_V2 {
 										'desc'        => __( 'Toggle to remove course level', 'tutor' ),
 									),
 									array(
-										'key'         => 'disable_course_share',
+										'key'         => 'enable_course_share',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Disable Share', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Toggle to hide course share', 'tutor' ),
+										'label'       => __( 'Enable Share', 'tutor' ),
+										'label_title' => __( 'Enable', 'tutor' ),
+										'default'     => 'on',
+										'desc'        => __( 'Toggle to show/hide course share', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_duration',

@@ -26099,6 +26099,7 @@ table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   display: -ms-flexbox;
   display: flex;
   gap: 30px;
+  position: relative;
 }
 
 .tutor-course-details-action-btns > a {

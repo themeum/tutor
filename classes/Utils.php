@@ -12,8 +12,40 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 class Utils {
-	public function get_option_default($key, $fallback) {
-		return $fallback;
+	private function get_option_default($key, $fallback, $from_options) {
+		if(!$from_options) {
+			// Avoid infinity recursion
+			return $fallback;
+		}
+
+		$tutor_options_array = (new Options_V2(false))->get_setting_fields();
+		!is_array($tutor_options_array) ? $tutor_options_array=array() : 0;
+		
+		function recursion($array, $key) {
+			foreach($array as $option) {
+				$is_array = is_array($option);
+
+				if($is_array && isset($option['key'], $option['default']) && $option['key']==$key) {
+					$value = $option['default'];
+					$option['default'] == 'on' ? $value=true : 0;
+					$option['default'] == 'off' ? $value=false : 0;
+
+					return $value;
+				}
+
+				$value = $is_array ? recursion($option, $key) : null;
+
+				if(!($value===null)) {
+					return $value;
+				}
+			}
+
+			return null;
+		}
+
+		$default_value = recursion($tutor_options_array, $key);
+		
+		return $default_value===null ? $fallback : $default_value;
 	}
 
 	/**
@@ -27,12 +59,12 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_option( $key = null, $default = false, $type = true ) {
+	public function get_option( $key = null, $default = false, $type = true, $from_options=false ) {
 		$option = (array) maybe_unserialize(get_option('tutor_option'));
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
 			// If the option array is not yet stored on database, then return default/fallback
-			return $this->get_option_default( $key, $default );
+			return $this->get_option_default( $key, $default, $from_options );
 		}
 
 		if ( ! $key ) {
@@ -62,7 +94,7 @@ class Utils {
 				if ( isset( $new_option[$dotKey] ) ) {
 					$new_option = $new_option[$dotKey];
 				} else {
-					return $this->get_option_default( $key, $default );
+					return $this->get_option_default( $key, $default, $from_options );
 				}
 			}
 
@@ -78,7 +110,7 @@ class Utils {
 			return apply_filters( $key, $value );
 		}
 
-		return $this->get_option_default( $key, $default );
+		return $this->get_option_default( $key, $default, $from_options );
 	}
 
 	/**
