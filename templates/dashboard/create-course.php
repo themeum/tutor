@@ -205,7 +205,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 								<div class="tutor-bs-row tutor-bs-align-items-center">
 									<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
 										<div class="tutor-form-check tutor-mb-15">
-											<input type="radio" id="tutor_price_paid" class="tutor-form-check-input" name="tutor_course_price_type"  value="paid" <?php checked( $_tutor_course_price_type, 'paid' ); ?>/>
+											<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="tutor_course_price_type"  value="paid" <?php checked( $_tutor_course_price_type, 'paid' ); ?>/>
 											<label for="tutor_price_paid" class="tutor-amount-field">
 												<span class="tutor-input-prepand">
 												<?php echo $currency_symbol; ?>
@@ -216,7 +216,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 									</div>
 									<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
 										<div class="tutor-form-check tutor-mb-15">
-											<input type="radio" id="tutor_price_free" class="tutor-form-check-input" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked( $_tutor_course_price_type, 'free' ) : checked( 'true', 'true' ); ?>/>
+											<input type="radio" id="tutor_price_free" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked( $_tutor_course_price_type, 'free' ) : checked( 'true', 'true' ); ?>/>
 											<label for="tutor_price_free">
 											<?php _e( 'Free', 'tutor' ); ?>
 											</label>

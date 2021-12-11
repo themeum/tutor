@@ -263,10 +263,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function has_edd() {
-		$activated_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
-		$depends           = array( 'easy-digital-downloads/easy-digital-downloads.php' );
-		$has_edd           = count( array_intersect( $depends, $activated_plugins ) ) == count( $depends );
-		return $has_edd;
+		return $this->is_plugin_active('easy-digital-downloads/easy-digital-downloads.php');
 	}
 
 	/**
