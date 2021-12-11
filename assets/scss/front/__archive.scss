@@ -1241,48 +1241,6 @@ Instructor
 	color: #fff;
 }
 
-/*
-social share
-*/
-
-.tutor-single-course-meta ul li.tutor-social-share {
-	float: right;
-	margin-right: 0;
-	display: inline-flex;
-	align-items: center;
-}
-
-@media (max-width: 575px) {
-	.tutor-single-course-meta ul li.tutor-social-share {
-		display: none;
-	}
-}
-
-.tutor-single-course-meta ul li.tutor-social-share button {
-	margin: 0;
-	border: none;
-	background: transparent;
-	color: var(--tutor-light-color);
-	-webkit-transition: 300ms;
-	transition: 300ms;
-	padding: 0 4px;
-	cursor: pointer;
-}
-
-.tutor-single-course-meta ul li.tutor-social-share button:hover {
-	color: var(--tutor-primary-color);
-}
-
-/* ************************* */
-
-/* ******** RTL CSS ******** */
-
-/* ************************* */
-
-.rtl .tutor-single-course-meta ul li.tutor-social-share {
-	float: left;
-}
-
 .rtl .tutor-single-course-meta ul li,
 .rtl .tutor-loop-author > div {
 	float: right;

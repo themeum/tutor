@@ -1362,7 +1362,6 @@ if ( ! function_exists('tutor_social_share')) {
         }
 
         if ( $echo && $output!='' ) {
-            echo '<span>' . __('Share:', 'tutor') . '</span>';
             echo $output;
         }
 
