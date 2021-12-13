@@ -5031,6 +5031,7 @@ li.tutor-option-nav-item h4 {
   height: 60px;
   top: 32px;
   left: 36px;
+  border-bottom: 1px solid #f0f0f1;
 }
 
 .tutor-option-header > div:nth-child(3) {
