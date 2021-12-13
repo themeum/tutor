@@ -139,6 +139,8 @@
 	height: 60px;
 	top: 32px;
 	left: 36px;
+	border-bottom: 1px solid #f0f0f1;
+
 	@include breakpoint-min(960) {
 		left: 160px;
 	}
