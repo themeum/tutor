@@ -1,4 +1,5 @@
 window.selectSearchField = (selectElement) => {
+    return;
     const tutorFormSelect = document.querySelectorAll(selectElement);
 
     setTimeout(() => {
