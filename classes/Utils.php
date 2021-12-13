@@ -64,9 +64,6 @@ class Utils {
 		$option = (array) maybe_unserialize(get_option('tutor_option'));
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
-			if($key=='enable_tutor_native_login') {
-				exit ('Hhhh111');
-			}
 			// If the option array is not yet stored on database, then return default/fallback
 			return $this->get_option_default( $key, $default, $from_options );
 		}
@@ -93,9 +90,6 @@ class Utils {
 				if ( isset( $new_option[$dotKey] ) ) {
 					$new_option = $new_option[$dotKey];
 				} else {
-					if($key=='enable_tutor_native_login') {
-						exit ('Hhhhss');
-					}
 					return $this->get_option_default( $key, $default, $from_options );
 				}
 			}
@@ -109,10 +103,6 @@ class Utils {
 			}
 
 			return apply_filters( $key, $value );
-		}
-
-		if($key=='enable_tutor_native_login') {
-			exit ('Hhhh');
 		}
 
 		return $this->get_option_default( $key, $default, $from_options );

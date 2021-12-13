@@ -15,6 +15,10 @@ window.selectSearchField = (selectElement) => {
 
     setTimeout(() => {
         tutorFormSelect.forEach(element => {
+
+            let initialSelectedItem = element.options[element.selectedIndex];
+            // console.log(element.options[element.selectedIndex].text);
+
             element.style.display = 'none';
             let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
             element.insertAdjacentHTML('afterend', ddMarkup(element.options));
@@ -29,6 +33,7 @@ window.selectSearchField = (selectElement) => {
             dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
             const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
             const selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
+            selectedLabel.innerText = initialSelectedItem.text;
 
             selectLabel.onclick = (e) => {
                 e.stopPropagation();
@@ -45,16 +50,23 @@ window.selectSearchField = (selectElement) => {
                         let selectFieldOptions = Array.from(element.options);
                         selectFieldOptions.forEach((option, i) => {
                             if (option.value === e.target.dataset.key) {
-                                element.value = e.target.dataset.key;
+                                // element.value = e.target.dataset.key;
                                 dropDown.classList.toggle('is-active');
                                 selectedLabel.innerText = e.target.innerText;
                                 selectedLabel.dataset.value = option.value;
+                                element.value = option.value;
+                                console.log(option.value, element.options[i]);
                             }
                         });
+                        jQuery(selectFieldOptions).trigger('change');
                         console.log(element.value);
                     }
                 })
             }
+
+
+
+
             searchInput.onkeyup = (e) => {
                 resultFilter = e.target.value.toUpperCase();
                 resultList.forEach((item) => {
@@ -111,7 +123,7 @@ window.selectSearchField = (selectElement) => {
                 </div>
             </div>
             <div class="tutor-dropdown-select-selected">
-                <div class="text-medium-body color-text-primary"> Today	</div>
+                <div class="text-medium-body color-text-primary"> ${window.wp.i18n.__('Select One', 'tutor')}	</div>
             </div>
         </div>
         `;
