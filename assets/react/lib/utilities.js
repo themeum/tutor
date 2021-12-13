@@ -81,9 +81,7 @@ window.jQuery(document).ready(function($) {
         let min = $(this).attr('min');
         let max = $(this).attr('max');
         let val = parseInt( $(this).val() || 0);
-
-        console.log(min, max);
-
+        
         // Prevent number smaller than min
         if(!(min===undefined)) {
             val<(parseInt(min)) ? $(this).val(min) : 0;

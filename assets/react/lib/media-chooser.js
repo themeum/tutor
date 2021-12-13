@@ -29,7 +29,8 @@ window.jQuery(document).ready(function ($) {
             wrapper.find('img').attr('src', attachment.url);
             wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
             wrapper.find('.delete-btn').show();
-            document.getElementById('save_tutor_option').disabled = false;
+            
+            $('#save_tutor_option').prop('disabled', false);
         });
         frame.open();
     });

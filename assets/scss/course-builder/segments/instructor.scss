@@ -139,6 +139,7 @@
 #tutor_course_instructor_modal {
     .tutor-search-result {
         position: absolute;
+        z-index: 99;
         width: 300px;
         background: white;
         max-height: 216px;

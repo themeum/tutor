@@ -15,7 +15,7 @@
     $is_purchasable = tutor_utils()->is_course_purchasable();
     
     // Get login url if 
-    $is_tutor_login_disabled = tutor_utils()->get_option( 'disable_tutor_native_login' );
+    $is_tutor_login_disabled = !tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true );
     $auth_url = $is_tutor_login_disabled ? isset( $_SERVER['REQUEST_SCHEME'] ) ? wp_login_url( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) : '' : '';
 
     // Right sidebar meta data
@@ -41,11 +41,14 @@
             'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null
         ),
     ), get_the_ID());
+
+    $login_class = !is_user_logged_in() ? 'tutor-course-entry-box-login' : '';
+    $login_url = tutor_utils()->get_option('enable_tutor_native_login', null, true, true) ? '' : wp_login_url(tutor()->current_url);
 ?>
 
 <div class="tutor-course-sidebar-card">
     <!-- Course Entry -->
-    <div class="tutor-course-sidebar-card-body tutor-p-30 <?php echo ! is_user_logged_in() ? 'tutor-course-entry-box-login' : ''; ?>">
+    <div class="tutor-course-sidebar-card-body tutor-p-30 <?php echo $login_class; ?>" data-login_url="<?php echo $login_url; ?>">
         <?php 
             if ( $is_enrolled ) {
                 // The user is enrolled anyway. No matter manual, free, purchased, woocommerce, edd, membership

@@ -312,6 +312,9 @@ window.jQuery(document).ready(function ($) {
                     step_switch(modal, true);
 
                     enable_quiz_questions_sorting();
+
+                    // Trigger change to set background based on checked status
+                    $('[name="quiz_option[feedback_mode]"]').trigger('change');
                 },
                 complete: function () {
                     btn.removeClass('tutor-updating-message');
@@ -579,5 +582,17 @@ window.jQuery(document).ready(function ($) {
     $(document).on('click', '.tutor-quiz-advance-settings .tutor-quiz-advance-header', function () {
         $(this).parent().toggleClass('tutor-is-active')
             .find('.ttr-angle-down-filled').toggleClass('ttr-angle-up-filled');
+    });
+
+    // Change background of quiz feedback mode
+    $(document).on('change', '[name="quiz_option[feedback_mode]"]', function() {
+        if($(this).prop('checked')) {
+            $(this).parent()
+                .addClass('tutor-bg-white')
+                .removeClass('tutor-bg-transparent')
+            .siblings().filter('.tutor-radio-select')
+                .addClass('tutor-bg-transparent')
+                .removeClass('tutor-bg-white');
+        }
     });
 });

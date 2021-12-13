@@ -50,6 +50,8 @@ window.jQuery(document).ready(function($){
                     modal.find('[name="topic_title"]').val('');
                     modal.find('[name="topic_summery"]').val('');
                 }
+
+                window.dispatchEvent(new Event(_tutorobject.content_change_event));
             },
             complete: function () {
                 $button.removeClass('tutor-updating-message');

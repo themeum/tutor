@@ -115,6 +115,10 @@
                 @include propertyWithPrefix(flex-wrap, wrap);
                 
                 button {
+                    
+                }
+
+                &>span>button, &>button {
                     font-style: normal;
                     font-weight: 500;
                     padding: 6px 12px;
@@ -124,9 +128,7 @@
                     &, .tutor-icon-plus-square-button {
                         font-size: 13px;
                     }
-                }
 
-                &>button {
                     &:not(:last-of-type) {
                         margin-right: 9px;
                     }

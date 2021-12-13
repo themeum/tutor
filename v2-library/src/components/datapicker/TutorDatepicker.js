@@ -20,10 +20,11 @@ function stringToDate(_date, _format, _delimiter) {
 
 const TutorDatepicker = (data) => {
 	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'd-M-Y';
+	const default_date = data.input_value || null;
 	const url = new URL(window.location.href);
 	const params = url.searchParams;
 
-	const [startDate, setStartDate] = useState();
+	const [startDate, setStartDate] = useState(default_date ? stringToDate(default_date, 'dd-mm-yyyy', '-') : undefined);
 	//const [startDate, setStartDate] = useState(stringToDate('24-06-2021', 'dd-mm-yyyy', '-'));
 	const [dropdownMonth, setDropdownMonth] = useState(false);
 	const [dropdownYear, setDropdownYear] = useState(false);
@@ -34,6 +35,8 @@ const TutorDatepicker = (data) => {
 	};
 
 	const handleCalendarChange = (date) => {
+		console.log('Redirect call', date);
+		
 		setStartDate(date);
 		setDropdownYear(false);
 		setDropdownMonth(false);
@@ -169,7 +172,9 @@ const TutorDatepicker = (data) => {
 
 							<div className="navigation-icon">
 								<button
-									onClick={() => {
+									onClick={(e) => {
+										e.preventDefault();
+										console.log('Decrease called');
 										decreaseMonth();
 										handleCalendarClose();
 									}}
@@ -183,7 +188,9 @@ const TutorDatepicker = (data) => {
 									</svg>
 								</button>
 								<button
-									onClick={() => {
+									onClick={(e) => {
+										e.preventDefault();
+										console.log('Increase called');
 										increaseMonth();
 										handleCalendarClose();
 									}}

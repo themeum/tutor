@@ -33,12 +33,14 @@
 .tutor-course-details-action-btns {
 	display: flex;
 	gap: 30px;
+	position: relative;
 
-	> a {
+	& > a {
 		display: flex;
 		align-items: center;
 		gap: 2px;
 	}
+	
 	.action-btn [class^='ttr-'] {
 		font-size: 21px;
 	}

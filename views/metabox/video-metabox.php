@@ -25,6 +25,7 @@ $video_sources  = array(
 
 $supported_sources = tutor_utils()->get_option('supported_video_sources', array());
 if(!is_array($supported_sources) || !count($supported_sources)) {
+    _e('No video source selected from settings!', 'tutor');
     return;
 }
 ?>

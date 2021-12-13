@@ -83,32 +83,29 @@ ul.tutor-setup-content li.active {
 
 	.tutor-setup-content {
 		border-radius: 6px;
-		overflow: hidden;
+		// overflow: hidden;
 		box-shadow: 0 2px 4px 0 rgba(219, 215, 215, 0.5);
 		background-color: #ffffff;
 
 		.tutor-setup-content-heading {
 			.setup-section-title {
-				font-style: normal;
-				font-weight: 500;
-				font-size: 20px;
-				color: #1f2949;
+				// color: #1f2949;
 			}
 
 			.step-info {
-				strong {
-					font-style: normal;
-					font-weight: normal;
-					font-size: 15px;
-					color: #757c8e;
-				}
+				// strong {
+				// 	font-style: normal;
+				// 	font-weight: normal;
+				// 	font-size: 15px;
+				// 	color: #757c8e;
+				// }
 			}
 
 			.tutor-reset-section {
-				font-style: normal;
-				font-weight: 500;
-				font-size: 13px;
-				color: #5b616f;
+				// font-style: normal;
+				// font-weight: 500;
+				// font-size: 13px;
+				// color: #5b616f;
 			}
 		}
 
@@ -251,20 +248,19 @@ ul.tutor-setup-content li.active {
 			&:last-child {
 				position: relative;
 				padding-left: 22px;
-				opacity: 0.7;
 				cursor: pointer;
 			}
 
 			&:last-child {
-				font-style: normal;
-				font-weight: 500;
-				font-size: 13px;
-				color: #5b616f;
+				// font-style: normal;
+				// font-weight: 500;
+				// font-size: 13px;
+				// color: #5b616f;
 
 				&:before {
 					content: url(../images/reload-arrow.svg);
 					position: absolute;
-					left: -3px;
+					left: 0;
 				}
 			}
 		}
@@ -285,7 +281,13 @@ ul.tutor-setup-content li.active {
 	padding-top: 37px;
 
 	& > div > div:first-child {
-		width: 150px;
+		width: 160px;
+	}
+	.tooltip-wrap.tooltip-icon {
+		width: 18px;
+		height: 18px;
+		background-size: 100%;
+		margin-bottom: -3px;
 	}
 }
 
@@ -729,15 +731,15 @@ button.tutor-setup-previous {
 }
 
 .tutor-setup-content-heading.heading > div:nth-child(1) {
-	font-size: 20px;
-	line-height: 1;
-	font-weight: 300;
-	color: var(--secondary-text);
+	// font-size: 20px;
+	// line-height: 1;
+	// font-weight: 300;
+	// color: var(--secondary-text);
 }
 
 .tutor-setup-content-heading.heading > div {
-	font-weight: 300;
-	color: var(--primary-text);
+	// font-weight: 300;
+	// color: var(--primary-text);
 }
 
 .tutor-setting .content b {
@@ -1120,7 +1122,7 @@ button.tutor-setup-skip {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-	max-width: 383px;
+	width: 383px;
 	max-width: 100%;
 	height: 6px;
 	border-radius: 8px;

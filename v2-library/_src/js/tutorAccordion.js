@@ -2,7 +2,7 @@
  * Tutor accrodion
  */
 const accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
-if (accordionItemHeaders) {
+if (accordionItemHeaders.length) {
 	accordionItemHeaders.forEach((accordionItemHeader) => {
 		accordionItemHeader.addEventListener('click', () => {
 			accordionItemHeader.classList.toggle('is-active');

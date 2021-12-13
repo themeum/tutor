@@ -26,7 +26,11 @@ class Options_V2 {
 	private $options;
 	private $setting_fields;
 
-	public function __construct() {
+	public function __construct($register_hook=true) {
+		if(!$register_hook) {
+			return;
+		}
+		
 		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_default_save', array( $this, 'tutor_option_default_save' ) );
@@ -147,6 +151,7 @@ class Options_V2 {
 
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
+		wp_send_json_success($tutor_settings_log);
 	}
 
 	/**
@@ -330,7 +335,7 @@ class Options_V2 {
 		include $template_path;
 	}
 
-	private function get_setting_fields() {
+	public function get_setting_fields() {
 
 		if ( $this->setting_fields ) {
 			// Return from property if already prepared
@@ -348,7 +353,6 @@ class Options_V2 {
 		foreach ( $withdrawl_methods as $key => $method ) {
 			$methods_array[ $key ] = $method['method_name'];
 		}
-
 		$attr = array(
 			'general'      => array(
 				'label'    => __( 'General', 'tutor' ),
@@ -497,6 +501,14 @@ class Options_V2 {
 								'default'     => 'off',
 								'desc'        => __( 'Enabling this feature will be load next course content automatically after finishing current video.', 'tutor' ),
 							),
+							array(
+								'key'         => 'enable_comment_for_lesson',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Enable Lesson Comment', 'tutor' ),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'Enabling this feature will make students able to post comment on lessons.', 'tutor' ),
+							),
 						),
 					),
 					'block_quiz'   => array(
@@ -504,30 +516,6 @@ class Options_V2 {
 						'slug'       => 'quiz',
 						'block_type' => 'uniform',
 						'fields'     => array(
-							array(
-								'key'          => 'quiz_time_limit',
-								'type'         => 'group_fields',
-								'label'        => __( 'Time Limit', 'tutor' ),
-								'desc'         => __( '0 means unlimited time.', 'tutor' ),
-								'group_fields' => array(
-									'value' => array(
-										'type'    => 'text',
-										'default' => '0',
-									),
-									'time'  => array(
-										'type'           => 'select',
-										'default'        => 'minutes',
-										'select_options' => false,
-										'options'        => array(
-											'weeks'   => __( 'Weeks', 'tutor' ),
-											'days'    => __( 'Days', 'tutor' ),
-											'hours'   => __( 'Hours', 'tutor' ),
-											'minutes' => __( 'Minutes', 'tutor' ),
-											'seconds' => __( 'Seconds', 'tutor' ),
-										),
-									),
-								),
-							),
 							array(
 								'key'            => 'quiz_when_time_expires',
 								'type'           => 'radio_vertical',
@@ -588,7 +576,7 @@ class Options_V2 {
 									'vimeo'        => __( 'Vimeo', 'tutor' ),
 									'embedded'     => __( 'Embedded', 'tutor' ),
 								),
-								'desc'        => __( 'Choose video sources you\'d like to support. Unchecking all will not disable video feature.', 'tutor' ),
+								'desc'        => __( 'Choose video sources you\'d like to support.', 'tutor' ),
 							),
 						),
 					),
@@ -925,12 +913,12 @@ class Options_V2 {
 										'desc'        => __( 'Toggle to remove course level', 'tutor' ),
 									),
 									array(
-										'key'         => 'disable_course_share',
+										'key'         => 'enable_course_share',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Disable Share', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
-										'desc'        => __( 'Toggle to hide course share', 'tutor' ),
+										'label'       => __( 'Enable Share', 'tutor' ),
+										'label_title' => __( 'Enable', 'tutor' ),
+										'default'     => 'on',
+										'desc'        => __( 'Toggle to show/hide course share', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_duration',
@@ -1467,12 +1455,12 @@ class Options_V2 {
 								'desc'        => __( 'Enabling this feature will show a notification bar to students and instructors to complete their profile information', 'tutor' ),
 							),
 							array(
-								'key'         => 'disable_tutor_native_login',
+								'key'         => 'enable_tutor_native_login',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Disable Tutor Login', 'tutor' ),
+								'label'       => __( 'Enable Tutor Login', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'on',
-								'desc'        => __( 'Disable to use the default WordPress login page', 'tutor' ),
+								'desc'        => __( 'Enable to use the tutor login modal instead of the default WordPress login page', 'tutor' ),
 							),
 							array(
 								'key'         => 'hide_admin_bar_for_users',

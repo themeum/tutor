@@ -56,7 +56,9 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                         }
 
                         echo implode(', ', $cats_array);
-                    } 
+                    } else {
+                        _e('Uncategorized', 'tutor');
+                    }
                 ?>
             </span>
         </div>
@@ -64,9 +66,13 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
             <a href="#" class="action-btn text-regular-body color-text-primary tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
                 <i class="ttr-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
-            <a href="#" class="action-btn text-regular-body color-text-primary">
-                <span class="ttr-share-filled"></span> <?php _e('Share', 'tutor'); ?>
-            </a>
+
+            <?php if ( tutor_utils()->get_option('enable_course_share', false, true, true) ): ?>
+                <a href="#" class="action-btn text-regular-body color-text-primary">
+                    <span class="ttr-share-filled"></span> <?php _e('Share', 'tutor'); ?>
+                </a>
+                <?php tutor_social_share(); ?>
+            <?php endif; ?>
         </div>
     </div>
 </header>
