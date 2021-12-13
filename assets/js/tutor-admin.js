@@ -2963,6 +2963,8 @@ window.selectSearchField = function (selectElement) {
 
   setTimeout(function () {
     tutorFormSelect.forEach(function (element) {
+      var initialSelectedItem = element.options[element.selectedIndex]; // console.log(element.options[element.selectedIndex].text);
+
       element.style.display = 'none';
       var searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
       element.insertAdjacentHTML('afterend', ddMarkup(element.options));
@@ -2978,6 +2980,7 @@ window.selectSearchField = function (selectElement) {
       dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
       var selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
       var selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
+      selectedLabel.innerText = initialSelectedItem.text;
 
       selectLabel.onclick = function (e) {
         e.stopPropagation();
@@ -2995,12 +2998,15 @@ window.selectSearchField = function (selectElement) {
             var selectFieldOptions = Array.from(element.options);
             selectFieldOptions.forEach(function (option, i) {
               if (option.value === e.target.dataset.key) {
-                element.value = e.target.dataset.key;
+                // element.value = e.target.dataset.key;
                 dropDown.classList.toggle('is-active');
                 selectedLabel.innerText = e.target.innerText;
                 selectedLabel.dataset.value = option.value;
+                element.value = option.value;
+                console.log(option.value, element.options[i]);
               }
             });
+            jQuery(selectFieldOptions).trigger('change');
             console.log(element.value);
           };
         });
@@ -3035,7 +3041,7 @@ window.selectSearchField = function (selectElement) {
     Array.from(options).forEach(function (item) {
       optionsList += "\n            <div class=\"tutor-dropdown-select-option\">\n                <label for=\"select-item-1\">\n                    <div class=\"text-regular-caption color-text-title tutor-admin-report-frequency\" data-key=\"".concat(item.value, "\">").concat(item.text, "</div>\n                </label>\n            </div>\n            ");
     });
-    var markupDD = "\n        <div class=\"tutor-dropdown-select select-dropdown\">\n            <div class=\"tutor-dropdown-select-options-container\">\n                <div class=\"tutor-input-search\">\n                    <div class=\"tutor-input-group tutor-form-control-has-icon tutor-form-control-lg\">\n                        <span class=\"ttr-search-filled tutor-input-group-icon color-black-50\"></span>\n                        <input\n                        type=\"search\"\n                        class=\"tutor-form-control\"\n                        placeholder=\"Search ...\"\n                        />\n                    </div>\n                </div>\n                <div class=\"tutor-frequencies\">\n                    ".concat(optionsList, "\n                </div>\n            </div>\n            <div class=\"tutor-dropdown-select-selected\">\n                <div class=\"text-medium-body color-text-primary\"> Today\t</div>\n            </div>\n        </div>\n        ");
+    var markupDD = "\n        <div class=\"tutor-dropdown-select select-dropdown\">\n            <div class=\"tutor-dropdown-select-options-container\">\n                <div class=\"tutor-input-search\">\n                    <div class=\"tutor-input-group tutor-form-control-has-icon tutor-form-control-lg\">\n                        <span class=\"ttr-search-filled tutor-input-group-icon color-black-50\"></span>\n                        <input\n                        type=\"search\"\n                        class=\"tutor-form-control\"\n                        placeholder=\"Search ...\"\n                        />\n                    </div>\n                </div>\n                <div class=\"tutor-frequencies\">\n                    ".concat(optionsList, "\n                </div>\n            </div>\n            <div class=\"tutor-dropdown-select-selected\">\n                <div class=\"text-medium-body color-text-primary\"> ").concat(window.wp.i18n.__('Select One', 'tutor'), "\t</div>\n            </div>\n        </div>\n        ");
     return markupDD;
   };
 };
