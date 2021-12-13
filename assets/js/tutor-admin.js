@@ -2937,6 +2937,113 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /***/ }),
 
+/***/ "./assets/react/front/_select_dd_search.js":
+/*!*************************************************!*\
+  !*** ./assets/react/front/_select_dd_search.js ***!
+  \*************************************************/
+/***/ (() => {
+
+window.selectSearchField = function (selectElement) {
+  var tutorFormSelect = document.querySelectorAll(selectElement);
+
+  var dd_hide_onclick = function dd_hide_onclick() {
+    var dd_wrap = document.querySelectorAll('.tutor-dropdown-select-options-container');
+    dd_wrap.forEach(function (item) {
+      item.onclick = function (e) {
+        return e.stopPropagation();
+      };
+
+      item.classList.contains('is-active') ? item.classList.remove('is-active') : '';
+    });
+  };
+
+  document.onclick = function () {
+    dd_hide_onclick();
+  };
+
+  setTimeout(function () {
+    tutorFormSelect.forEach(function (element) {
+      element.style.display = 'none';
+      var searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
+      element.insertAdjacentHTML('afterend', ddMarkup(element.options));
+      searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
+      searchInput = searchInputWrap && searchInputWrap.querySelector('input');
+
+      if (element.options.length < 5) {
+        searchInputWrap.style.display = 'none';
+      }
+
+      dropDownWrapper = document.querySelector('.tutor-dropdown-select');
+      dropDownAll = document.querySelector('.tutor-dropdown-select-options-container');
+      dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
+      var selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
+      var selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
+
+      selectLabel.onclick = function (e) {
+        e.stopPropagation();
+        dd_hide_onclick();
+        dropDown.classList.toggle('is-active');
+        searchInput.focus();
+      };
+
+      resultWrap = searchInputWrap.nextElementSibling;
+      resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');
+
+      if (resultList) {
+        resultList.forEach(function (item) {
+          item.onclick = function (e) {
+            var selectFieldOptions = Array.from(element.options);
+            selectFieldOptions.forEach(function (option, i) {
+              if (option.value === e.target.dataset.key) {
+                element.value = e.target.dataset.key;
+                dropDown.classList.toggle('is-active');
+                selectedLabel.innerText = e.target.innerText;
+                selectedLabel.dataset.value = option.value;
+              }
+            });
+            console.log(element.value);
+          };
+        });
+      }
+
+      searchInput.onkeyup = function (e) {
+        resultFilter = e.target.value.toUpperCase();
+        resultList.forEach(function (item) {
+          textToSearch = item.querySelector(".text-regular-caption");
+          txtValue = textToSearch.textContent || textToSearch.innerText;
+
+          if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
+            item.style.display = '';
+          } else {
+            // console.log(item.style.display);
+            item.style.display = 'none';
+            /* resultWrap.innerHTML = `
+            <div class="tutor-dropdown-select-option">
+                <label for="select-item-1">
+                    <div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="">No item found.</div>
+                </label>
+            </div>
+            `; */
+          }
+        });
+      };
+    });
+  }, 20);
+
+  var ddMarkup = function ddMarkup(options) {
+    var optionsList = '';
+    Array.from(options).forEach(function (item) {
+      optionsList += "\n            <div class=\"tutor-dropdown-select-option\">\n                <label for=\"select-item-1\">\n                    <div class=\"text-regular-caption color-text-title tutor-admin-report-frequency\" data-key=\"".concat(item.value, "\">").concat(item.text, "</div>\n                </label>\n            </div>\n            ");
+    });
+    var markupDD = "\n        <div class=\"tutor-dropdown-select select-dropdown\">\n            <div class=\"tutor-dropdown-select-options-container\">\n                <div class=\"tutor-input-search\">\n                    <div class=\"tutor-input-group tutor-form-control-has-icon tutor-form-control-lg\">\n                        <span class=\"ttr-search-filled tutor-input-group-icon color-black-50\"></span>\n                        <input\n                        type=\"search\"\n                        class=\"tutor-form-control\"\n                        placeholder=\"Search ...\"\n                        />\n                    </div>\n                </div>\n                <div class=\"tutor-frequencies\">\n                    ".concat(optionsList, "\n                </div>\n            </div>\n            <div class=\"tutor-dropdown-select-selected\">\n                <div class=\"text-medium-body color-text-primary\"> Today\t</div>\n            </div>\n        </div>\n        ");
+    return markupDD;
+  };
+};
+
+selectSearchField('.tutor-form-select');
+
+/***/ }),
+
 /***/ "./node_modules/object-assign/index.js":
 /*!*********************************************!*\
   !*** ./node_modules/object-assign/index.js ***!
@@ -31539,9 +31646,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _segments_withdraw__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_segments_withdraw__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./segments/editor_full */ "./assets/react/admin-dashboard/segments/editor_full.js");
 /* harmony import */ var _segments_editor_full__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_segments_editor_full__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _front_select_dd_search__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../front/_select_dd_search */ "./assets/react/front/_select_dd_search.js");
+/* harmony import */ var _front_select_dd_search__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_front_select_dd_search__WEBPACK_IMPORTED_MODULE_12__);
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 
@@ -31779,7 +31889,7 @@ jQuery(document).ready(function ($) {
                 /**
                  * If it is instructor modal for approve or blocked
                  * hide modal then show toast then reload
-                 * 
+                 *
                  * @since v2.0.0
                  */
 

@@ -24,4 +24,4 @@ if (tutorDropdownSelect) {
 	});
 }
 
-console.log(tutorDropdownSelect);
+// console.log(tutorDropdownSelect);

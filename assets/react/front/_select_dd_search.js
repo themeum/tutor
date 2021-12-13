@@ -15,6 +15,7 @@ window.selectSearchField = (selectElement) => {
 
     setTimeout(() => {
         tutorFormSelect.forEach(element => {
+            element.style.display = 'none';
             let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
             element.insertAdjacentHTML('afterend', ddMarkup(element.options));
             searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
@@ -27,6 +28,7 @@ window.selectSearchField = (selectElement) => {
             dropDownAll = document.querySelector('.tutor-dropdown-select-options-container');
             dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
             const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
+            const selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
 
             selectLabel.onclick = (e) => {
                 e.stopPropagation();
@@ -42,11 +44,14 @@ window.selectSearchField = (selectElement) => {
                     item.onclick = (e) => {
                         let selectFieldOptions = Array.from(element.options);
                         selectFieldOptions.forEach((option, i) => {
-                            if (option.value === e.target.dataset.key) element.selectedIndex = i;
+                            if (option.value === e.target.dataset.key) {
+                                element.value = e.target.dataset.key;
+                                dropDown.classList.toggle('is-active');
+                                selectedLabel.innerText = e.target.innerText;
+                                selectedLabel.dataset.value = option.value;
+                            }
                         });
-
-                        dropDown.classList.toggle('is-active');
-                        selectLabel.querySelector('.text-medium-body').innerText = e.target.innerText;
+                        console.log(element.value);
                     }
                 })
             }
@@ -112,7 +117,6 @@ window.selectSearchField = (selectElement) => {
         `;
         return markupDD;
     };
-
 }
 
 selectSearchField('.tutor-form-select');
