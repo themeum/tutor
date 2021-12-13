@@ -68,7 +68,7 @@
 			?>
 			<!-- course progress -->
 			<?php if ( is_array( $course_progress ) && count( $course_progress ) ) : ?>
-				<div class="tutor-course-progress-wrapper tutor-mb-30">
+				<div class="tutor-course-progress-wrapper tutor-mb-30" style="width: 100%;">
 					<span class="color-text-primary text-medium-h6">
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</span>
@@ -120,7 +120,7 @@
 			}
 			echo apply_filters( 'tutor_course/single/start/button', $start_content, get_the_ID() );
 
-			// Show Course Completion Button
+			// Show Course Completion Button.
 			if ( ! $is_completed_course ) {
 				ob_start();
 				?>
