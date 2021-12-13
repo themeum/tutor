@@ -97,7 +97,7 @@
 				<label class="tutor-form-label">
 				<?php esc_html_e( 'Sort By', 'tutor' ); ?>
 				</label>
-				<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-order">
+				<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-order" data-search="no">
 				<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
 							<?php esc_html_e( 'DESC', 'tutor' ); ?>
 						</option>
@@ -122,9 +122,9 @@
 						<input
 							type="search"
 							class="tutor-form-control"
-							id="tutor-backend-filter-search" 
-							name="search" 
-							placeholder="<?php esc_html_e( 'Search...' ); ?>" 
+							id="tutor-backend-filter-search"
+							name="search"
+							placeholder="<?php esc_html_e( 'Search...' ); ?>"
 							value="<?php esc_html_e( $search ); ?>" />
 					</div>
 				</form>
