@@ -2,7 +2,8 @@
     // The comment Query
     $comments = get_comments( array(
         'status' => 'approve',
-        'post_id' => get_the_ID()
+        'post_id' => get_the_ID(),
+        'parent' => 0
     ) );
 ?>
 <div class="text-medium-h6 color-text-primary">
@@ -90,7 +91,7 @@
                         </div>
                     </form>
                 </div>
-                <!-- <span class="tutor-comment-line"></span> -->
+                <span class="tutor-comment-line"></span>
             </div>
         <?php endforeach; ?>
     <?php endif; ?>

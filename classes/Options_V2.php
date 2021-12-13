@@ -501,6 +501,14 @@ class Options_V2 {
 								'default'     => 'off',
 								'desc'        => __( 'Enabling this feature will be load next course content automatically after finishing current video.', 'tutor' ),
 							),
+							array(
+								'key'         => 'enable_comment_for_lesson',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Enable Lesson Comment', 'tutor' ),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'Enabling this feature will make students able to post comment on lessons.', 'tutor' ),
+							),
 						),
 					),
 					'block_quiz'   => array(

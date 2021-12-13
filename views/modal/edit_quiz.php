@@ -26,7 +26,7 @@
                 ?>
                 <div class="tutor-quiz-item tutor-mb-15 quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
                     <div class="tutor-quiz-item-label">
-                        <span class="tutor-quiz-item-draggable ttr-menu-line tutor-icon-24 question-sorting"></span>
+                        <span class="tutor-quiz-item-draggable ttr-drag-line tutor-icon-24 question-sorting"></span>
                         <h6 class="tutor-quiz-item-name">
                             <?php echo stripslashes($question->question_title); ?>
                         </h6>
@@ -91,14 +91,14 @@
                         <option value="weeks" <?php selected('weeks', $limit_time_type); ?>><?php _e('Weeks', 'tutor'); ?></option>
                     </select>
                 </div>
-                <div class="tutor-bs-col-sm-12 tutor-bs-col-md-5">
+                <div class="tutor-bs-col-sm-12 tutor-bs-col-md-5 tutor-mt-4 tutor-mb-4">
                     <label class="tutor-form-toggle">
                         <input type="checkbox" class="tutor-form-toggle-input" value="1" name="quiz_option[hide_quiz_time_display]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_quiz_time_display')); ?> />
                         <span class="tutor-form-toggle-control"></span> <?php _e('Hide quiz time - display', 'tutor'); ?>
                     </label>
                 </div>
             </div>
-            <p class="tutor-input-feedback">
+            <p class="text-regular-small color-text-hints tutor-mt-10">
                 <?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?>
             </p>
         </div>
@@ -107,11 +107,11 @@
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Quiz Feedback Mode', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
-            <p class="tutor-input-feedback">
-                <?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>
-            </p>
+            <div class="text-regular-small color-text-hints tutor-mb-10">
+                (<?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>)
+            </div>
 
-            <label class="tutor-radio-select tutor-mb-10">
+            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Default', 'tutor'); ?></span>
@@ -119,7 +119,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-mb-10">
+            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
@@ -127,7 +127,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-mb-10">
+            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Reveal Mode', 'tutor'); ?></span>

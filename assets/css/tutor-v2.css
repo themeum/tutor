@@ -6879,6 +6879,10 @@ body {
   background-color: #eff1f6 !important;
 }
 
+.tutor-bg-transparent {
+  background-color: transparent !important;
+}
+
 .tutor-text-nowrap {
   white-space: nowrap;
   overflow: hidden;

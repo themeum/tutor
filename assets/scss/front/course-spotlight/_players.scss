@@ -1,64 +1,66 @@
-.course-players {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 250px);
-    background: black;
-    display: block;
-
-    iframe {
+.tutor-single-lesson-wraper {
+    .course-players {
+        position: relative;
         width: 100%;
-        height: 100%;
-        position: absolute;
-        border: none;
-    }
-
-    .tutor-lesson-prev, .tutor-lesson-next {
-        cursor: pointer;
-        width: 31px;
-        height: 215px;
-        background: rgba(255, 255, 255, 0.1);
-        top: 50%;
-        transform: translateY(-50%);
-        position: absolute;
-        backdrop-filter: blur(94px);
-
-        span {
-            font-size: 40px;
-            color: #ffffff8c;
-        }
-    }
-    .tutor-lesson-prev {
-        left: 0;
-        border-radius: 0px 6px 6px 0px;
-    }
-    .tutor-lesson-next {
-        right: 0;
-        border-radius: 6px 0px 0px 6px;
-    }
-
-    @include breakpoint-max(768) {
-        height: 500px;
-        width: 100%;
+        height: calc(100vh - 250px);
+        background: black;
+        display: block;
 
         iframe {
             width: 100%;
+            height: 100%;
+            position: absolute;
+            border: none;
         }
 
         .tutor-lesson-prev, .tutor-lesson-next {
+            cursor: pointer;
             width: 31px;
-            height: 120px;
+            height: 215px;
+            background: rgba(255, 255, 255, 0.1);
+            top: 50%;
+            transform: translateY(-50%);
+            position: absolute;
+            backdrop-filter: blur(94px);
+
             span {
-                font-size: 30px;
+                font-size: 40px;
                 color: #ffffff8c;
             }
         }
-    }
+        .tutor-lesson-prev {
+            left: 0;
+            border-radius: 0px 6px 6px 0px;
+        }
+        .tutor-lesson-next {
+            right: 0;
+            border-radius: 6px 0px 0px 6px;
+        }
 
-    @include breakpoint-max(mobile) {
-        height: 240px;
-        width: 100%;
-        iframe {
+        @include breakpoint-max(768) {
+            height: 500px;
             width: 100%;
+
+            iframe {
+                width: 100%;
+            }
+
+            .tutor-lesson-prev, .tutor-lesson-next {
+                width: 31px;
+                height: 120px;
+                span {
+                    font-size: 30px;
+                    color: #ffffff8c;
+                }
+            }
+        }
+
+        @include breakpoint-max(mobile) {
+            height: 240px;
+            width: 100%;
+            iframe {
+                width: 100%;
+            }
         }
     }
 }

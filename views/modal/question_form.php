@@ -61,13 +61,13 @@ $settings = maybe_unserialize($question->question_settings);
                 </div>
                 <div class="tutor-bs-col-12 tutor-bs-col-md-8">
                     <div class="tutor-bs-row tutor-bs-align-items-center">
-                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-6">
+                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-6 tutor-mt-4 tutor-mb-4">
                             <label class="tutor-form-toggle tutor-text-nowrap">
                                 <input type="checkbox" class="tutor-form-toggle-input"  value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][answer_required]" <?php checked('1', tutor_utils()->avalue_dot('answer_required', $settings)); ?> />
                                 <span class="tutor-form-toggle-control"></span> <?php _e('Answer Required', 'tutor'); ?>
                             </label>
                         </div>
-                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-6">
+                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-6 tutor-mt-4 tutor-mb-4">
                             <label class="tutor-form-toggle tutor-text-nowrap">
                                 <input type="checkbox" class="tutor-form-toggle-input" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][randomize_question]" <?php checked('1', tutor_utils()->avalue_dot('randomize_question', $settings)); ?> />
                                 <span class="tutor-form-toggle-control"></span> <?php _e('Randomize', 'tutor'); ?>
@@ -88,7 +88,7 @@ $settings = maybe_unserialize($question->question_settings);
                 <div class="tutor-bs-col-sm-6 tutor-bs-col-md-4">
                     <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" class="tutor-form-control tutor-mb-10" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php echo $question->question_mark; ?>">
                 </div>
-                <div class="tutor-bs-col-sm-6 tutor-bs-col-md-4">
+                <div class="tutor-bs-col-sm-6 tutor-bs-col-md-4 tutor-mt-4 tutor-mb-4">
                     <label class="tutor-form-toggle tutor-text-nowrap">
                         <input type="checkbox" class="tutor-form-toggle-input" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][show_question_mark]" <?php checked('1', tutor_utils()->avalue_dot('show_question_mark', $settings)); ?> />
                         <span class="tutor-form-toggle-control"></span> <?php _e('Display Points', 'tutor'); ?>
