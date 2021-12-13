@@ -7514,7 +7514,66 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   max-height: 35px;
 }
 
-table.tutor-ui-table.tutor-table-with-checkbox .td-checkbox input[type='checkbox'] {
+.tutor-form-select {
+  display: none !important;
+}
+
+.tutor-backend-settings-page .tutor-dropdown-select-options-container .tutor-input-search .tutor-input-group.tutor-form-control-has-icon .tutor-input-group-icon {
+  line-height: 40px;
+  height: 40px;
+}
+
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-option:last-child {
+  border-top: none;
+}
+
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected {
+  margin-bottom: 0;
+}
+
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected .text-medium-body, .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected .tutor-option-field-label label, .tutor-option-field-label .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected label,
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected .tutor-option-field-label .label, .tutor-option-field-label .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected .label, .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected .tutor-option-nav-page.import-export .popup-opener li, .tutor-option-nav-page.import-export .popup-opener .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected li {
+  padding-right: 20px;
+}
+
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-options-container {
+  z-index: -1;
+  min-width: 228px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  overflow-y: hidden;
+}
+
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-options-container .tutor-input-search input {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-color: #dcdbdc;
+  border-bottom-left-radius: unset !important;
+  border-bottom-right-radius: unset !important;
+}
+
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-options-container .tutor-input-search input:active, .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-options-container .tutor-input-search input:focus {
+  border-color: #dcdbdc;
+}
+
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-options-container.is-active {
+  z-index: 999;
+  text-align: left;
+  right: 0;
+}
+
+.tutor-dropdown-select.select-dropdown .tutor-dropdown-select-options-container .tutor-frequencies {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+table.tutor-ui-table.tutor-table-with-checkbox .td-checkbox input[type="checkbox"] {
   margin: 0;
 }
 

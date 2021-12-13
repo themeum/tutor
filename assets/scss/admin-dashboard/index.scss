@@ -6,14 +6,15 @@
 @import "./announcements";
 @import "./v2/dashborad-custom.scss";
 @import "./segments/withdraw";
-@import '../modules/qna.scss';
-@import '../modules/quiz-attempts.scss';
+@import "../modules/qna.scss";
+@import "../modules/quiz-attempts.scss";
+@import "../front/select_dd_search";
 
 table.tutor-ui-table.tutor-table-with-checkbox {
-    .td-checkbox input[type='checkbox'] {
-        margin: 0;
-    }
+  .td-checkbox input[type="checkbox"] {
+    margin: 0;
+  }
 }
 a.tutor-admin-page-refresh:focus {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }

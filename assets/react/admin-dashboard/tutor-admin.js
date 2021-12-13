@@ -11,6 +11,7 @@ import "./segments/filter";
 import "./segments/withdraw";
 import ajaxHandler from './segments/filter';
 import "./segments/editor_full";
+import '../front/_select_dd_search';
 
 const toggleChange = document.querySelectorAll(".tutor-form-toggle-input");
 toggleChange.forEach((element) => {
@@ -249,7 +250,7 @@ jQuery(document).ready(function ($) {
         /**
          * If it is instructor modal for approve or blocked
          * hide modal then show toast then reload
-         * 
+         *
          * @since v2.0.0
          */
         const instructorModal = document.querySelector('.tutor-modal-ins-approval');
