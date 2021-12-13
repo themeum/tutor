@@ -15,15 +15,9 @@ if ( empty( $media_url ) ) {
 		</div>
 		<div class="thumbnail-input">
 			<p class="text-regular-body color-text-subsued">
-				<strong class="text-medium-body">
-					<?php _e( 'Size: 700x430 pixels', 'tutor' ); ?>;
-				</strong>
+				<?php _e('Size', 'ttuor'); ?>: <strong class="text-medium-body"><?php _e( '700x430 pixels', 'tutor' ); ?>;</strong>
 				<br />
-
-				<?php _e( 'File Support', 'tutor' ); ?>:
-				<strong class="text-medium-body">
-					<?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?>
-				</strong>
+				<?php _e( 'File Support', 'tutor' ); ?>: <strong class="text-medium-body"><?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?></strong>
 			</p>
 
 			<button class="tutor-btn tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">

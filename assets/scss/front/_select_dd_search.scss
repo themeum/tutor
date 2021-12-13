@@ -1,11 +1,32 @@
 .tutor-form-select {
-  // display: none !important;
+  display: none !important;
 }
 .tutor-dropdown-select.select-dropdown {
+  .tutor-dropdown-select-option:last-child {
+    border-top: none;
+  }
   .tutor-dropdown-select-options-container {
+    .tutor-input-search {
+      input {
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        border-color: #dcdbdc;
+        border-bottom-left-radius: unset !important;
+        border-bottom-right-radius: unset !important;
+        &:active,
+        &:focus {
+          border-color: #dcdbdc;
+        }
+      }
+    }
+    &.is-active {
+      z-index: 999;
+    }
+    z-index: -1;
     .tutor-frequencies {
       max-height: 100%;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
     display: flex;
     flex-direction: column;
