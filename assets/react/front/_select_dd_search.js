@@ -2,11 +2,19 @@ window.selectSearchField = (selectElement) => {
     const tutorFormSelect = document.querySelectorAll(selectElement);
 
     const dd_hide_onclick = () => {
-        let dd_wrap = document.querySelectorAll('.tutor-dropdown-select-options-container');
-        dd_wrap.forEach((item) => {
-            item.onclick = (e) => e.stopPropagation();
-            item.classList.contains('is-active') ? item.classList.remove('is-active') : ''
-        })
+        setTimeout(() => {
+            let dd_wrap_main = document.querySelectorAll('.tutor-dropdown-select.select-dropdown');
+            if (dd_wrap_main) {
+                dd_wrap_main.forEach((item_main) => {
+                    item_main.onclick = (e) => { e.stopPropagation(); }
+                    let dd_wrap = item_main.querySelectorAll('.tutor-dropdown-select-options-container');
+                    dd_wrap.forEach((item) => {
+                        item.onclick = (e) => { e.stopPropagation(); }
+                        item.classList.remove('is-active');
+                    })
+                })
+            }
+        }, 100)
     }
 
     document.onclick = () => {
@@ -20,7 +28,7 @@ window.selectSearchField = (selectElement) => {
             // console.log(element.options[element.selectedIndex].text);
 
             element.style.display = 'none';
-            let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
+            let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
             element.insertAdjacentHTML('afterend', ddMarkup(element.options));
             searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
             searchInput = searchInputWrap && searchInputWrap.querySelector('input');
@@ -28,38 +36,35 @@ window.selectSearchField = (selectElement) => {
                 searchInputWrap.style.display = 'none';
             }
 
-            dropDownWrapper = document.querySelector('.tutor-dropdown-select');
-            dropDownAll = document.querySelector('.tutor-dropdown-select-options-container');
             dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
             const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
             const selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
             selectedLabel.innerText = initialSelectedItem.text;
 
             selectLabel.onclick = (e) => {
+                // dd_hide_onclick();
                 e.stopPropagation();
-                dd_hide_onclick();
                 dropDown.classList.toggle('is-active');
                 searchInput.focus();
             }
 
             resultWrap = searchInputWrap.nextElementSibling;
             resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');
+
             if (resultList) {
                 resultList.forEach((item) => {
                     item.onclick = (e) => {
                         let selectFieldOptions = Array.from(element.options);
                         selectFieldOptions.forEach((option, i) => {
                             if (option.value === e.target.dataset.key) {
-                                // element.value = e.target.dataset.key;
                                 dropDown.classList.toggle('is-active');
                                 selectedLabel.innerText = e.target.innerText;
                                 selectedLabel.dataset.value = option.value;
                                 element.value = option.value;
-                                console.log(option.value, element.options[i]);
                             }
                         });
-                        jQuery(selectFieldOptions).trigger('change');
-                        console.log(element.value);
+                        var onChangeEvent = new Event('change');
+                        element.dispatchEvent(onChangeEvent);
                     }
                 })
             }
