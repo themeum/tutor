@@ -3179,7 +3179,7 @@ window.jQuery(document).ready(function ($) {
       wrapper.find('img').attr('src', attachment.url);
       wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
       wrapper.find('.delete-btn').show();
-      document.getElementById('save_tutor_option').disabled = false;
+      $('#save_tutor_option').prop('disabled', false);
     });
     frame.open();
   });
@@ -3964,8 +3964,7 @@ window.jQuery(document).ready(function ($) {
   $(document).on('input', 'input.tutor-form-control[type="number"], input.tutor-form-number-verify[type="number"]', function () {
     var min = $(this).attr('min');
     var max = $(this).attr('max');
-    var val = parseInt($(this).val() || 0);
-    console.log(min, max); // Prevent number smaller than min
+    var val = parseInt($(this).val() || 0); // Prevent number smaller than min
 
     if (!(min === undefined)) {
       val < parseInt(min) ? $(this).val(min) : 0;
@@ -4243,7 +4242,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 var accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
 
-if (accordionItemHeaders) {
+if (accordionItemHeaders.length) {
   accordionItemHeaders.forEach(function (accordionItemHeader) {
     accordionItemHeader.addEventListener('click', function () {
       accordionItemHeader.classList.toggle('is-active');
@@ -4364,10 +4363,10 @@ if (tutorDropdownSelect) {
       var key = e.target.dataset.key;
 
       if (key === 'custom') {
-        document.querySelector(".tutor-v2-date-range-picker.inactive").classList.add('active');
-        document.querySelector(".tutor-v2-date-range-picker.inactive input").click();
-        document.querySelector(".tutor-v2-date-range-picker.inactive input").style.display = "none";
-        document.querySelector(".tutor-v2-date-range-picker.inactive .react-datepicker-popper").style.marginTop = "-40px";
+        document.querySelector('.tutor-v2-date-range-picker.inactive').classList.add('active');
+        document.querySelector('.tutor-v2-date-range-picker.inactive input').click();
+        document.querySelector('.tutor-v2-date-range-picker.inactive input').style.display = 'none';
+        document.querySelector('.tutor-v2-date-range-picker.inactive .react-datepicker-popper').style.marginTop = '-40px';
       }
 
       selected.innerHTML = option.querySelector('label').innerHTML;
@@ -4375,6 +4374,8 @@ if (tutorDropdownSelect) {
     });
   });
 }
+
+console.log(tutorDropdownSelect);
 
 /***/ }),
 
@@ -4999,10 +5000,11 @@ function stringToDate(_date, _format, _delimiter) {
 
 var TutorDatepicker = function TutorDatepicker(data) {
   var dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'd-M-Y';
+  var default_date = data.input_value || null;
   var url = new URL(window.location.href);
   var params = url.searchParams;
 
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(default_date ? stringToDate(default_date, 'dd-mm-yyyy', '-') : undefined),
       _useState2 = _slicedToArray(_useState, 2),
       startDate = _useState2[0],
       setStartDate = _useState2[1]; //const [startDate, setStartDate] = useState(stringToDate('24-06-2021', 'dd-mm-yyyy', '-'));
@@ -5024,6 +5026,7 @@ var TutorDatepicker = function TutorDatepicker(data) {
   };
 
   var handleCalendarChange = function handleCalendarChange(date) {
+    console.log('Redirect call', date);
     setStartDate(date);
     setDropdownYear(false);
     setDropdownMonth(false);
@@ -5140,7 +5143,9 @@ var TutorDatepicker = function TutorDatepicker(data) {
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "navigation-icon"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-        onClick: function onClick() {
+        onClick: function onClick(e) {
+          e.preventDefault();
+          console.log('Decrease called');
           decreaseMonth();
           handleCalendarClose();
         },
@@ -5155,7 +5160,9 @@ var TutorDatepicker = function TutorDatepicker(data) {
         d: "M25.9926 20.4027C26.0753 20.4857 26.1404 20.5844 26.184 20.6931C26.2283 20.8067 26.2507 20.9276 26.25 21.0495C26.2489 21.1627 26.2265 21.2746 26.184 21.3795C26.1411 21.4886 26.0759 21.5875 25.9926 21.6699L25.1544 22.5081C24.9787 22.6844 24.7431 22.7881 24.4944 22.7985C24.3734 22.7991 24.253 22.7802 24.138 22.7424C24.029 22.7024 23.93 22.6394 23.8476 22.5576L18.0001 16.6804L12.1361 22.5477C12.0565 22.6367 11.957 22.7057 11.8457 22.749C11.7307 22.7868 11.6103 22.8057 11.4893 22.8051C11.3672 22.797 11.2475 22.7668 11.1362 22.716C11.0281 22.6668 10.9297 22.5987 10.8458 22.5147L10.0076 21.6765C9.92317 21.595 9.8578 21.4958 9.81621 21.3861C9.77002 21.2742 9.74754 21.154 9.75021 21.033C9.75013 20.9197 9.77256 20.8076 9.81621 20.703C9.85865 20.5937 9.9239 20.4947 10.0076 20.4126L17.3566 13.057C17.4329 12.9565 17.5326 12.876 17.647 12.8227C17.7579 12.7728 17.8785 12.748 18.0001 12.7501C18.1224 12.7486 18.2433 12.7757 18.3532 12.8293C18.4698 12.8837 18.5742 12.9612 18.6601 13.057L25.9926 20.4027Z",
         fill: "#CDCFD5"
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-        onClick: function onClick() {
+        onClick: function onClick(e) {
+          e.preventDefault();
+          console.log('Increase called');
           increaseMonth();
           handleCalendarClose();
         },

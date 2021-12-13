@@ -29,10 +29,11 @@ class Student {
 	 */
 	public function __construct() {
 		add_action( 'template_redirect', array( $this, 'register_student' ) );
-		add_action( 'template_redirect', array( $this, 'update_profile' ) );
 		add_filter( 'get_avatar_url', array( $this, 'filter_avatar' ), 10, 3 );
-		add_action( 'tutor_action_tutor_reset_password', array( $this, 'tutor_reset_password' ) );
 		add_action( 'tutor_action_tutor_social_profile', array( $this, 'tutor_social_profile' ) );
+		
+		add_action( 'wp_ajax_tutor_profile_password_reset', array( $this, 'tutor_reset_password' ) );
+		add_action( 'wp_ajax_tutor_update_profile', array( $this, 'update_profile' ) );
 	}
 
 	/**
@@ -141,14 +142,10 @@ class Student {
 	}
 
 	public function update_profile() {
-		if ( tutor_utils()->array_get( 'tutor_action', $_POST ) !== 'tutor_profile_edit' ) {
-			return;
-		}
-
-		$user_id = get_current_user_id();
-
 		// Checking nonce
 		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
 		do_action( 'tutor_profile_update_before', $user_id );
 
 		$first_name        = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
@@ -183,8 +180,8 @@ class Student {
 			}
 		}
 		do_action( 'tutor_profile_update_after', $user_id );
-		wp_redirect( wp_get_raw_referer() );
-		die();
+		
+		wp_send_json_success( array('message' => __('Profile Updated', 'tutor')) );
 	}
 
 	/**
@@ -259,19 +256,14 @@ class Student {
 		if ( $new_password !== $confirm_new_password ) {
 			$validation_errors['password_not_matched'] = __( 'New password and confirm password does not matched', 'tutor' );
 		}
-		if ( count( $validation_errors ) ) {
-			$this->error_msgs = $validation_errors;
-			add_filter( 'tutor_reset_password_validation_errors', array( $this, 'tutor_student_form_validation_errors' ) );
-			return;
-		}
-
+		
 		if ( $previous_password_checked && ! empty( $new_password ) && $new_password === $confirm_new_password ) {
 			wp_set_password( $new_password, $user->ID );
-			tutor_utils()->set_flash_msg( __( 'Password set successfully', 'tutor' ) );
+			wp_send_json_success( array('message' => __('Password Changed', 'tutor')) );
 		}
 
-		wp_redirect( wp_get_raw_referer() );
-		die();
+		$first_message = count($validation_errors) ? $validation_errors[array_keys($validation_errors)[0]] : __('Something went wrong!', 'tutor');
+		wp_send_json_error( array('message' => $first_message) );
 	}
 
 	/**

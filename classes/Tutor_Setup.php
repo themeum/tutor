@@ -109,19 +109,29 @@ if ( ! defined( 'ABSPATH' ) )
                 
                 $html .= '<li class="'.($i==1 ? "active" : "").'">';
                     $html .= '<div class="tutor-setup-content-heading heading">';
-                        $html .= '<div class="setup-section-title">'.$field_parent['lable'].'</div>';
+                        $html .= '<div class="setup-section-title text-medium-h6 color-text-primary">'.$field_parent['lable'].'</div>';
                         $html .= '<div class="step-info">';
-                            $html .= '<span class="">'.__('Step', 'tutor').':</span> <strong>'.$i.' / '.count($field_arr).'</strong>';
+                            $html .= '<span class="text-regular-caption color-text-hints">'.__('Step', 'tutor').':</span> <strong class="color-text-primary">'.$i.'/'.count($field_arr).' </strong>';
                         $html .= '</div>';
-                        $html .= '<div class="tutor-reset-section">'.__('Reset Default', 'tutor').'</div>';
+                        $html .= '<div class="tutor-reset-section text-btn-small color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center">'.__('Reset Default', 'tutor').'</div>';
                     $html .= '</div>';
                     $html .= '<div class="tutor-setup-content-heading body">';
 
                         foreach ($field_parent['attr'] as $key => $field) {
                             if(!isset($field['lable'])){ continue; }
+
+                            // Generate data attributes if necessary
+                            $data_attr = '';
+                            if(isset($field['data']) && is_array($field['data'])) {
+                                foreach($field['data'] as $data_key => $data_value) {
+                                    $data_attr.= ' data-'.$data_key.'="'.$data_value.'" ';
+                                }
+                            }
+
                             $html .= '<div class="tutor-setting'.(in_array( $field['type'], $full_width_fields ) ? " course-setting-wrapper" : "").' '.(isset($field['class']) ? $field['class'] : '').'">';
-                                $html .= isset( $field['lable'] ) ? '<div class="title text-regular-body color-text-primary">'.$field['lable'] : '';
-                                $html .= isset( $field['tooltip'] ) ? '<span id="tooltip-btn" class="tooltip-btn" data-tooltip="'.$field['tooltip'].'"><span></span></span>' : '';
+                                $html .= isset( $field['lable'] ) ? '<div class="text-regular-body color-text-primary ______">'.$field['lable'] : '';
+                                // $html .= isset( $field['tooltip'] ) ? '<span id="tooltip-btn" class="tooltip-btn" data-tooltip="'.$field['tooltip'].'"><span></span></span>' : '';
+                                $html .= isset( $field['tooltip'] ) ? '<span class="tooltip-wrap tooltip-icon"><span class="tooltip-txt tooltip-right">'.$field['tooltip'].'</span></span>' : '';
                                 $html .= isset( $field['lable'] ) ? '</div>' : '';
 
                                 if(!in_array($field['type'], $down_desc_fields)) {
@@ -136,7 +146,7 @@ if ( ! defined( 'ABSPATH' ) )
                                             $html .= '<label for="'.$key.'" class="switch-label input-switch-label">';
                                                 $html .= '<span class="label-off">'.__('OFF', 'tutor').'</span>';
                                                 $html .= '<div class="switchbox-wrapper">';
-                                                        $html .= '<input id="'.$key.'" class="input-switchbox" type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
+                                                        $html .= '<input '.$data_attr.' id="'.$key.'" class="input-switchbox" type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
                                                         $html .= '<span class="switchbox-icon"></span>';
                                                 $html .= '</div>';
                                                 $html .= '<span class="label-on">'.__('ON', 'tutor').'</span>';
@@ -361,8 +371,12 @@ if ( ! defined( 'ABSPATH' ) )
                         'enable_tutor_earning' => array(
                             'type' => 'earning'
                         ),
-                        'enable_public_profile' => array(
+                        'public_profile_layout' => array(
                             'type' => 'switch',
+                            'data' => array(
+                                'off' => 'private',
+                                'on' => tutor_utils()->get_option( 'public_profile_layout', 'pp-rectangle' )
+                            ),
                             'lable' => __('Public Profile', 'tutor'),
                             'desc' => __('Allow users to have a public profile to showcase awards and completed courses.', 'tutor'),
                         ),
@@ -421,12 +435,6 @@ if ( ! defined( 'ABSPATH' ) )
                 'quiz' => array(
                     'lable' => __('Quiz Settings', 'tutor'),
                     'attr' => array(
-                        'quiz_time_limit' => array(
-                            'type' => 'slider',
-                            'time' => true,
-                            'lable' => __('Time Limit', 'tutor'),
-                            'tooltip' => __('How much time to complete a quiz?', 'tutor'),
-                        ),
                         'quiz_when_time_expires' => array(
                             'type' => 'radio',
                             'lable' => __('When Time Expires', 'tutor'),
@@ -566,10 +574,13 @@ if ( ! defined( 'ABSPATH' ) )
                         <form id="tutor-setup-form" method="post">
 		                    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                             <input type="hidden" name="action" value="setup_action">
+
                             <?php $course_marketplace = tutor_utils()->get_option('enable_course_marketplace'); ?>
                             <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="<?php echo ($course_marketplace ? 1 : 0); ?>">
+                            
                             <?php $earning = tutor_utils()->get_option('enable_tutor_earning'); ?>
                             <input type="hidden" name="enable_tutor_earning" class="enable_tutor_earning_data" value="<?php echo ($earning ? 1 : 0); ?>">
+                            
                             <ul class="tutor-setup-content">
                                 <?php $this->tutor_setup_generator(); ?>
                                 <li>
@@ -584,27 +595,23 @@ if ( ! defined( 'ABSPATH' ) )
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
                                             <button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
-                                                <?php _e('CREATE A NEW COURSE', 'tutor'); ?>
+                                                <?php _e('Create a New Course', 'tutor'); ?>
                                             </button>
-                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
-                                                <?php _e('EXPLORE ADDONS', 'tutor'); ?>
+                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-redirect" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
+                                                <?php _e('Explore Addons', 'tutor'); ?>
                                             </button>
                                         </div>
                                     </div>
                                 </li>
                             </ul>
                         </form>
-
-
                     </div>
                 </div>
             </div>
             <?php
         }
 
-
         public function tutor_setup_wizard_action() {
-            
             $html = '<div class="tutor-setup-content-footer footer">';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
                     $html .= '<button class="tutor-btn tutor-btn-disable-outline tutor-btn-md tutor-setup-previous">';
@@ -693,7 +700,7 @@ if ( ! defined( 'ABSPATH' ) )
                     </div>
                     <div class="wizard-boarding-footer">
                         <div class="">
-                            <button class="tutor-btn tutor-btn-primary tutor-btn-md">
+                            <button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-boarding-next">
                                 <?php _e('Let’s Start', 'tutor'); ?>
                             </button>
                         </div>
@@ -720,7 +727,7 @@ if ( ! defined( 'ABSPATH' ) )
                     </div>
                     <div class="wizard-type-body">
                         <div class="wizard-type-item">
-                            <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace_setup" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
+                            <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-0">
                                 <img src="<?php echo tutor()->url.'assets/images/single-marketplace.svg'; ?>" />
@@ -735,7 +742,7 @@ if ( ! defined( 'ABSPATH' ) )
                         </div>
 
                         <div class="wizard-type-item">
-                            <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace_setup" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
+                            <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-1">
                                 <img src="<?php echo tutor()->url.'assets/images/multiple-marketplace.svg'; ?>" />

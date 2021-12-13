@@ -70,12 +70,14 @@
                         </span>
                     <?php endif; ?>
 
-                    <span class="tutor-quiz-answer-sort-icon tutor-ml-10">
-                        <i class="tutor-icon-menu-2"></i> 
-                    </span>
+                    <?php if($question_type !== 'fill_in_the_blank'): ?>
+                        <span class="tutor-quiz-answer-sort-icon tutor-ml-10">
+                            <i class="tutor-icon-menu-2"></i> 
+                        </span>
+                    <?php endif; ?>
                 </div>
 
-                <?php if ( $question_type !== 'true_false' ): ?>
+                <?php if ( $question_type !== 'true_false' && $question_type !== 'fill_in_the_blank' ): ?>
                     <div class="tutor-quiz-answer-trash-wrap">
                         <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>">
                         <i class="tutor-icon-garbage"></i> 
@@ -89,7 +91,7 @@
     ?>
 </div>
 
-<?php if($question_type!='true_false'): ?>
+<?php if($question_type!='true_false' && ($question_type!='fill_in_the_blank' || empty($answers))): ?>
     <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
         <i class="tutor-icon-block tutor-icon-plus"></i>
         <?php _e('Add An Option', 'tutor'); ?>
