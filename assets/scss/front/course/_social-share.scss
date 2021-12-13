@@ -1,0 +1,39 @@
+
+.tutor-social-share-wrap {
+	display: none;
+	position: absolute;
+    right: 0;
+    white-space: nowrap;
+    top: 32px;
+    z-index: 4;
+    background: white;
+	border-radius: 6px;
+    padding: 10px;
+	white-space: nowrap;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.384);
+	
+	@media (max-width:575px) {
+		left: 108px;
+		right: auto;
+	}
+	
+	button {
+		margin: 5px;
+		border: none;
+		width: 25px;
+		height: 25px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		border-radius: 50%;
+		overflow: hidden;
+		background: transparent;
+		color: var(--tutor-light-color);
+		cursor: pointer;
+
+		&:hover {
+			color: var(--tutor-primary-color);
+		}
+	}
+}

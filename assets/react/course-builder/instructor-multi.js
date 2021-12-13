@@ -113,7 +113,7 @@ window.jQuery(document).ready($=>{
                     $('#tutor_course_instructor_modal').removeClass('tutor-is-active');
 
                     // Show the result in course editor
-                    $('.tutor-course-available-instructors').html(data.data.output);
+                    $('.tutor-course-instructors-metabox-wrap').parent().html(data.data.output);
                     $('.tutor-modal-wrap').removeClass('show');
                     return;
                 }

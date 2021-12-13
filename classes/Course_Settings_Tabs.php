@@ -19,6 +19,7 @@ class Course_Settings_Tabs{
         add_action( 'tutor/frontend_course_edit/after/description', array($this, 'display_frontend'), 10, 0 );
 
         add_action('tutor_save_course', array($this, 'save_course'), 10, 2);
+        add_action('tutor_save_course_settings', array($this, 'save_course'), 10, 2);
     }
 
     public function register_meta_box(){
