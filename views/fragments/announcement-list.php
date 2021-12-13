@@ -199,7 +199,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 					</th>
 					<th width="15%">
 						<div class="text-regular-small color-text-subsued">
-								<?php esc_html_e( 'Date', 'tutor-pro' ); ?>
+							<?php esc_html_e( 'Date', 'tutor-pro' ); ?>
 						</div>
 					</th>
 				<?php else : ?>
@@ -212,7 +212,6 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 				<th class="tutor-table-rows-sorting">
 					<div class="inline-flex-center color-text-subsued">
 						<span class="text-regular-small"><?php esc_html_e( 'Announcements', 'tutor' ); ?></span>
-						<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon"></span>
 					</div>
 				</th>
 				<th class="tutor-shrink"></th>

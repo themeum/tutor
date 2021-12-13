@@ -18,23 +18,20 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
-    <div class="submitted-assignment-title">
-        <a class="prev-btn" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('assignments')); ?>"><span>&leftarrow;</span><?php _e('Back', 'tutor'); ?></a>
+    <div class="tutor-mb-30">
+        <a class="prev-btn" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('assignments')); ?>">
+            <span>&leftarrow;</span><?php _e('Back', 'tutor'); ?>
+        </a>
     </div>
 
     <?php if (tutor_utils()->count($assignments_submitted)): ?>
         <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
-            <p>
-                <?php esc_html_e('Course', 'tutor'); ?> :
-                <a href="<?php echo esc_url(get_the_permalink($assignments_submitted[0]->comment_parent)); ?>" target="_blank">
-                    <?php echo get_the_title($assignments_submitted[0]->comment_parent); ?>
-                </a>
-            </p>
-            <h3>
-                <a href="<?php echo esc_url(get_the_permalink($assignment_id)); ?>" target="_blank">
-                    <?php echo get_the_title($assignment_id); ?>
-                </a>
-            </h3>
+            <div class="text-regular-small color-text-subsued tutor-mb-10">
+                <?php esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($assignments_submitted[0]->comment_parent); ?>
+            </div>
+            <div class="text-medium-h6">
+                <?php echo get_the_title($assignment_id); ?>
+            </div>
             <div class="assignment-info">
                 <p>
                     <?php esc_html_e('Submission Deadline', 'tutor'); ?>:

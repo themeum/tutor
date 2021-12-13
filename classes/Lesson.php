@@ -167,13 +167,14 @@ class Lesson extends Tutor_Base {
 		$lesson_content = wp_kses_post($_POST['lesson_content']);
 
 		$lesson_data = array(
-			'post_type'    => $this->lesson_post_type,
-			'post_title'   => $title,
-			'post_name'    => sanitize_title($title),
-			'post_content' => $lesson_content,
-			'post_status'  => 'publish',
-			'post_author'  => get_current_user_id(),
-			'post_parent'  => $topic_id
+			'post_type'      => $this->lesson_post_type,
+			'post_title'     => $title,
+			'post_name'      => sanitize_title($title),
+			'post_content'   => $lesson_content,
+			'post_status'    => 'publish',
+			'comment_status' => tutor_utils()->get_option('enable_comment_for_lesson') ? 'open' : 'closed',
+			'post_author'    => get_current_user_id(),
+			'post_parent'    => $topic_id
 		);
 
 		if($lesson_id==0) {

@@ -2,6 +2,7 @@ import './_login-reg';
 import './_spotlight';
 import './_wishlist';
 import './_social-share';
+import './_spotlight-quiz';
 
 window.jQuery(document).ready($=>{
     // Login require on enrol purchase click

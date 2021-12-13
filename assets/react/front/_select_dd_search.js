@@ -1,14 +1,27 @@
 window.selectSearchField = (selectElement) => {
     const tutorFormSelect = document.querySelectorAll(selectElement);
 
+    const dd_hide_onclick = () => {
+        let dd_wrap = document.querySelectorAll('.tutor-dropdown-select-options-container');
+        dd_wrap.forEach((item) => {
+            item.onclick = (e) => e.stopPropagation();
+            item.classList.contains('is-active') ? item.classList.remove('is-active') : ''
+        })
+    }
+
+    document.onclick = () => {
+        dd_hide_onclick();
+    }
+
     setTimeout(() => {
         tutorFormSelect.forEach(element => {
-            // const selectDropdown = tutorFormSelect && tutorFormSelect.querySelector('.tutor-dropdown-select');
-            // selectDropdown.classList.toggle('is-active');
-
-            let searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
+            let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownAll, dropDown;
             element.insertAdjacentHTML('afterend', ddMarkup(element.options));
-            searchInput = element.nextElementSibling.querySelector('input');
+            searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
+            searchInput = searchInputWrap && searchInputWrap.querySelector('input');
+            if (element.options.length < 5) {
+                searchInputWrap.style.display = 'none';
+            }
 
             dropDownWrapper = document.querySelector('.tutor-dropdown-select');
             dropDownAll = document.querySelector('.tutor-dropdown-select-options-container');
@@ -16,44 +29,50 @@ window.selectSearchField = (selectElement) => {
             const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
 
             selectLabel.onclick = (e) => {
-                dropDownAll.classList.remove('is-active');
+                e.stopPropagation();
+                dd_hide_onclick();
                 dropDown.classList.toggle('is-active');
                 searchInput.focus();
             }
-            resultWrap = searchInput.nextElementSibling;
-            resultList = resultWrap.querySelectorAll('.tutor-dropdown-select-option');
-            resultList.forEach((item) => {
-                item.onclick = (e) => {
-                    let selectFieldOptions = Array.from(element.options);
-                    selectFieldOptions.forEach((option, i) => {
-                        if (option.value === e.target.dataset.key) element.selectedIndex = i;
-                    });
-                    dropDown.classList.toggle('is-active');
-                    selectLabel.querySelector('.text-medium-body').innerText = e.target.innerText;
-                    console.log(element.value);
-                }
-            })
 
+            resultWrap = searchInputWrap.nextElementSibling;
+            resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');
+            if (resultList) {
+                resultList.forEach((item) => {
+                    item.onclick = (e) => {
+                        let selectFieldOptions = Array.from(element.options);
+                        selectFieldOptions.forEach((option, i) => {
+                            if (option.value === e.target.dataset.key) element.selectedIndex = i;
+                            jQuery(selectFieldOptions).trigger('change');
+                        });
+
+                        dropDown.classList.toggle('is-active');
+                        selectLabel.querySelector('.text-medium-body').innerText = e.target.innerText;
+                    }
+                })
+            }
             searchInput.onkeyup = (e) => {
                 resultFilter = e.target.value.toUpperCase();
                 resultList.forEach((item) => {
                     textToSearch = item.querySelector(".text-regular-caption");
                     txtValue = textToSearch.textContent || textToSearch.innerText;
-                    item.style.display = (txtValue.toUpperCase().indexOf(resultFilter) > -1) ? '' : 'none';
+                    if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
+                        item.style.display = ''
+                    } else {
+                        // console.log(item.style.display);
+                        item.style.display = 'none';
+                        /* resultWrap.innerHTML = `
+                        <div class="tutor-dropdown-select-option">
+                            <label for="select-item-1">
+                                <div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="">No item found.</div>
+                            </label>
+                        </div>
+                        `; */
+                    }
                 })
-
-
-
             }
-
-
-            // textToSearch.onclick = (e) => {
-            //     console.log(e.target);
-            // }
-
-
         });
-    }, 200);
+    }, 20);
 
 
 
@@ -73,18 +92,28 @@ window.selectSearchField = (selectElement) => {
         let markupDD = `
         <div class="tutor-dropdown-select select-dropdown">
             <div class="tutor-dropdown-select-options-container">
-                <input type="text" placeholder="Search here...">
+                <div class="tutor-input-search">
+                    <div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-lg">
+                        <span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+                        <input
+                        type="search"
+                        class="tutor-form-control"
+                        placeholder="Search ..."
+                        />
+                    </div>
+                </div>
                 <div class="tutor-frequencies">
                     ${optionsList}
                 </div>
             </div>
             <div class="tutor-dropdown-select-selected">
-                <div class="text-medium-body color-text-primary"> Today	</div>
+                <div class="text-medium-body color-text-primary"> ${window.wp.i18n.__('Select One', 'tutor')}	</div>
             </div>
         </div>
         `;
         return markupDD;
     };
+
 }
 
-selectSearchField('.tutor-form-select');    
+selectSearchField('.tutor-form-select');
