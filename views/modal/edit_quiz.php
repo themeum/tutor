@@ -26,7 +26,7 @@
                 ?>
                 <div class="tutor-quiz-item tutor-mb-15 quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
                     <div class="tutor-quiz-item-label">
-                        <span class="tutor-quiz-item-draggable ttr-menu-line tutor-icon-24 question-sorting"></span>
+                        <span class="tutor-quiz-item-draggable ttr-drag-line tutor-icon-24 question-sorting"></span>
                         <h6 class="tutor-quiz-item-name">
                             <?php echo stripslashes($question->question_title); ?>
                         </h6>

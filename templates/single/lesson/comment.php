@@ -2,7 +2,8 @@
     // The comment Query
     $comments = get_comments( array(
         'status' => 'approve',
-        'post_id' => get_the_ID()
+        'post_id' => get_the_ID(),
+        'parent' => 0
     ) );
 ?>
 <div class="text-medium-h6 color-text-primary">
