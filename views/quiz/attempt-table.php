@@ -4,7 +4,7 @@
     $page_key = 'attempt-table';
     $table_columns = include __DIR__ . '/contexts.php';
 
-    if(count($attempt_list)) {
+    if($context=='course-single-previous-attempts' && is_array($attempt_list) && count($attempt_list)) {
         // Provide the attempt data from the first attempt
         // For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
         $attempt_data = $attempt_list[0];
@@ -60,6 +60,18 @@
                                         <?php
                                         break;
                                         
+                                    case 'date' :
+                                        ?>
+                                        <td data-th="<?php echo $column; ?>" class="column-fullwidth">
+                                            <div class="td-statement-info">
+                                                <span class="text-regular-small color-text-primary">
+                                                    <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <?php
+                                        break;
+
                                     case 'quiz_info' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>" class="column-fullwidth">
@@ -67,10 +79,10 @@
                                                 <span class="text-regular-small color-text-primary">
                                                     <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
                                                 </span>
-                                                <p class="text-medium-body color-text-primary tutor-margin-0">
-                                                    <a href="<?php echo get_the_permalink($attempt->course_id); ?>" target="_blank">
+                                                <div class="text-medium-body color-text-primary tutor-margin-0">
+                                                    <div class="text-medium-body color-text-primary" data-href="<?php echo get_the_permalink($attempt->course_id); ?>">
                                                         <?php echo get_the_title($attempt->course_id); ?>
-                                                    </a>
+                                                    </div>
 
                                                     <?php 
                                                         if($context=='backend-dashboard-students-attempts') {
@@ -79,12 +91,14 @@
 
                                                             ?>
                                                             <div>
-                                                                <span class="text-regular-small"><?php _e('Student', 'tutor'); ?></span>: <span class="text-medium-small"><?php echo $user_name; ?></span>
+                                                                <span class="text-regular-small">
+                                                                    <?php _e('Student', 'tutor'); ?></span>: <span class="text-medium-small"><?php echo $user_name; ?>
+                                                                </span>
                                                             </div>
                                                             <?php
                                                         }
                                                     ?>
-                                                </p>
+                                                </div>
                                                 <?php do_action('tutor_quiz/table/after/course_title', $attempt, $context); ?>
                                             </div>
                                         </td>
@@ -173,7 +187,13 @@
                                             <td data-th="See Details">
                                                 <div class="inline-flex-center td-action-btns">
                                                     <a href="<?php echo $url; ?>" class="btn-outline tutor-btn">
-                                                        <?php _e( 'Details', 'tutor-pro' ); ?>
+                                                        <?php 
+                                                            if($attempt->attempt_status === 'review_required' && ($context=='frontend-dashboard-students-attempts' || $context=='backend-dashboard-students-attempts')) {
+                                                                _e('Review', 'tutor');
+                                                            } else {
+                                                                _e( 'Details', 'tutor-pro' ); 
+                                                            }
+                                                        ?>
                                                     </a>
                                                 </div>
                                             </td>

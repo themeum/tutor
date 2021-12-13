@@ -32,7 +32,7 @@
     <div class="flex">
         <?php _e('Total Marks', 'tutor'); ?>: 
         <span class="color-text-primary">
-            <?php echo $total_marks; ?>
+            <?php echo $earned_marks . '/' . $total_marks; ?>
         </span>
     </div>
     <div class="flex">

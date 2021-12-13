@@ -501,6 +501,7 @@ class Course extends Tutor_Base {
 		if (tutor_utils()->array_get('tutor_course_action', $_POST) !== '_tutor_course_enroll_now' || ! isset($_POST['tutor_course_id']) ){
 			return;
 		}
+
 		//Checking Nonce
 		tutor_utils()->checking_nonce();
 

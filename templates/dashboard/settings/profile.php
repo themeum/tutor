@@ -101,9 +101,6 @@ $public_display = array_unique( $public_display );
 	</div>
 
 	<form action="" method="post" enctype="multipart/form-data">
-		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-		<input type="hidden" value="tutor_profile_edit" name="tutor_action" />
-
 		<?php
 		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
 		if ( is_array( $errors ) && count( $errors ) ) {
@@ -194,7 +191,7 @@ $public_display = array_unique( $public_display );
 
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12">
-				<button type="submit" class="tutor-btn">
+				<button type="submit" class="tutor-btn tutor-profile-settings-save">
 					<?php esc_html_e( 'Update Profile', 'tutor' ); ?>
 				</button>
 			</div>

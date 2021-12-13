@@ -1,20 +1,28 @@
 jQuery.fn.serializeObject = function()
 {
-   var values = {};
-   var array = this.serializeArray();
+	var $ = jQuery;
+	var values = {};
+	var array = this.serializeArray();
 
-   jQuery.each(array, function() {
-       if (values[this.name]) {
-           if (!values[this.name].push) {
-               values[this.name] = [values[this.name]];
-           }
-           values[this.name].push(this.value || '');
-       } else {
-           values[this.name] = this.value || '';
-       }
-   });
+	jQuery.each(array, function() {
+		if (values[this.name]) {
+			if (!values[this.name].push) {
+				values[this.name] = [values[this.name]];
+			}
+			values[this.name].push(this.value || '');
+		} else {
+			values[this.name] = this.value || '';
+		}
+	});
 
-   return values;
+	// Map array value
+	$(this).find("input:checkbox").each(function() {
+		values[$(this).attr('name')] = $(this).prop('checked') ? 
+											($(this).attr('data-on')!==undefined ? $(this).attr('data-on') : 'on') :
+											($(this).attr('data-off')!==undefined ? $(this).attr('data-off') : 'off');
+	});
+
+   	return values;
 };
 
 jQuery(document).ready(function($) {
@@ -65,13 +73,13 @@ jQuery(document).ready(function($) {
 		$(".tutor-setup-wizard-settings").addClass("active");
 		$('.tutor-setup-title li').eq(0).addClass('active')
 		window.location.hash = "general";
-		showHide( $("input[name='enable_course_marketplace_setup']:checked").val() )
+		showHide( $("input[name='enable_course_marketplace']:checked").val() )
 	});
 
 	/* ---------------------
 	* Marketplace Type
 	* ---------------------- */
-	$("input[type=radio][name=enable_course_marketplace_setup]").change( function() {
+	$("input[type=radio][name=enable_course_marketplace]").change( function() {
 			if (this.value == "0") {
 				$("input[name=enable_course_marketplace]").val("");
 				$("input[name=enable_tutor_earning]").val("");

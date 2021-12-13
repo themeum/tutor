@@ -586,11 +586,6 @@ final class Tutor {
 			'courses_col_per_row'               => '3',
 			'courses_per_page'                  => '12',
 			'lesson_permalink_base'             => 'lesson',
-			'quiz_time_limit'                   =>
-				array(
-					'value' => '0',
-					'time'  => 'minutes',
-				),
 			'quiz_when_time_expires'            => 'autosubmit',
 			'quiz_attempts_allowed'             => '10',
 			'quiz_grade_method'                 => 'highest_grade',

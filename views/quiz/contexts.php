@@ -4,6 +4,7 @@ $contexts =  array(
     'attempt-table' => array(
         'columns' => array(
             'checkbox'          => '<div class="d-flex"><input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" /></div>',
+            'date'              => __('Date', 'tutor'),
             'quiz_info'         => __('Quiz Info', 'tutor'),
             'course'            => __('Course', 'tutor'),
             'question'          => __('Question', 'tutor'),
@@ -26,8 +27,28 @@ $contexts =  array(
                 'details'
             ),
             'frontend-dashboard-students-attempts' => 'frontend-dashboard-my-attempts',
-            'course-single-previous-attempts' => 'frontend-dashboard-my-attempts',
-            'backend-dashboard-students-attempts' => true,
+            'course-single-previous-attempts' => array(
+                'date',
+                'question',
+                'total_marks',
+                'correct_answer',
+                'incorrect_answer',
+                'earned_marks',
+                'result',
+                'details'
+            ),
+            'backend-dashboard-students-attempts' => array(
+                'checkbox',
+                'quiz_info',
+                'course',
+                'question',
+                'total_marks',
+                'correct_answer',
+                'incorrect_answer',
+                'earned_marks',
+                'result',
+                'details',
+            ),
         )
     ),
     'attempt-details-summary' => array(
