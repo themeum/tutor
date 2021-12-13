@@ -137,33 +137,33 @@ if ($best_watch_time > 0){
 <?php tutor_lesson_video(); ?>
 
 <div class="tutor-course-spotlight-wrapper">
-    <div class="tutor-default-tab tutor-course-details-tab">
+    <div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
         <div class="tab-header tutor-bs-d-flex justify-content-center">
-            <div class="tab-header-item flex-center is-active" data-tutor-tab-target="tutor-course-details-tab-1">
+            <div class="tab-header-item flex-center is-active" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-1">
                 <span class="ttr-document-alt-filled"></span>
                 <span><?php _e('Overview','tutor'); ?></span>
             </div>
-            <div class="tab-header-item flex-center" data-tutor-tab-target="tutor-course-details-tab-2">
+            <div class="tab-header-item flex-center" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-2">
                 <span class="ttr-attach-filled"></span>
                 <span><?php _e('Exercise Files','tutor'); ?></span>
             </div>
-            <div class="tab-header-item flex-center" data-tutor-tab-target="tutor-course-details-tab-3">
+            <div class="tab-header-item flex-center" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-3">
                 <span class="ttr-comment-filled"></span>
                 <span><?php _e('Comments','tutor'); ?></span>
             </div>
         </div>
         <div class="tab-body">
-            <div class="tab-body-item is-active" id="tutor-course-details-tab-1">
+            <div class="tab-body-item is-active" id="tutor-course-spotlight-tab-1">
                 <div class="text-medium-h6 color-text-primary"><?php _e('About Lesson','tutor'); ?></div>
                 <div class="text-regular-body color-text-subsued tutor-mt-12">
                     <?php the_content(); ?>
                 </div>
             </div>
-            <div class="tab-body-item" id="tutor-course-details-tab-2">
+            <div class="tab-body-item" id="tutor-course-spotlight-tab-2">
                 <div class="text-medium-h6 color-text-primary"><?php _e('Exercise Files','tutor'); ?></div>
                 <?php get_tutor_posts_attachments(); ?>
             </div>
-            <div class="tab-body-item" id="tutor-course-details-tab-3">
+            <div class="tab-body-item" id="tutor-course-spotlight-tab-3">
                 <?php require __DIR__ . '/comment.php'; ?>
             </div>
         </div>

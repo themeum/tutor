@@ -90,7 +90,7 @@
                         </div>
                     </form>
                 </div>
-                <!-- <span class="tutor-comment-line"></span> -->
+                <span class="tutor-comment-line"></span>
             </div>
         <?php endforeach; ?>
     <?php endif; ?>
