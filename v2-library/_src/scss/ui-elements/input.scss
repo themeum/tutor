@@ -265,7 +265,7 @@ textarea.tutor-form-control {
 
 .tutor-form-check {
 	@extend .d-flex;
-	@extend .align-items-center;
+	// @extend .align-items-center;
 	label {
 		cursor: pointer;
 		font-size: 16px;
@@ -297,6 +297,7 @@ input.tutor-form-check-input {
 	background-repeat: no-repeat;
 	transition: 300ms;
 	box-shadow: 0 0 0 0 var(--tutor-primary-lighter);
+	flex: 0 0 auto;
 
 	&:before,
 	&:after {
