@@ -74,37 +74,40 @@ if ( ! $assignment_submitted_id ) {
 	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-30 tutor-mb-15">
 		<h5 class="text-medium-h6 tutor-mb-12"><?php esc_html_e( 'Assignment Description:', 'tutor' ); ?></h5>
 		<p class="text-regular-body color-text-subsued tutor-mb-25"><?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?></p>
-		
-		<h5 class="text-medium-h6 tutor-mb-12"><?php _e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
-		<div class="tutor-attachment-cards">
 		<?php
-			$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
-		if ( $attached_files ) {
-			$attached_files = json_decode( $attached_files, true );
-			if ( tutor_utils()->count( $attached_files ) ) {
-				$upload_dir     = wp_get_upload_dir();
-				$upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
-				foreach ( $attached_files as $attached_file ) {
-					?>
-							<div>
-								<div>
-									<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank">
-								<?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?>
-									</a>
-									<span class="filesize"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></span>
-								</div>
-								<div>
-									<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-mt-5" target="_blank">
-										<span class="ttr-download-line"></span>
-									</a>
-								</div>
-							</div>
-					<?php
+		$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
+		if ( $attached_files && is_array( json_decode( $attached_files ) ) ) :
+			?>
+			<h5 class="text-medium-h6 tutor-mb-12"><?php _e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
+			<div class="tutor-attachment-cards">
+				<?php
+				if ( $attached_files ) {
+					$attached_files = json_decode( $attached_files, true );
+					if ( tutor_utils()->count( $attached_files ) ) {
+						$upload_dir     = wp_get_upload_dir();
+						$upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
+						foreach ( $attached_files as $attached_file ) {
+							?>
+									<div>
+										<div>
+											<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank">
+										<?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?>
+											</a>
+											<span class="filesize"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></span>
+										</div>
+										<div>
+											<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-mt-5" target="_blank">
+												<span class="ttr-download-line"></span>
+											</a>
+										</div>
+									</div>
+							<?php
+						}
+					}
 				}
-			}
-		}
-		?>
-		</div>
+				?>
+			</div>
+		<?php endif; ?>
 	</div>
 			
 	<div class="tutor-dashboard-assignment-review-area tutor-mt-30">
@@ -123,7 +126,7 @@ if ( ! $assignment_submitted_id ) {
 			</div>
 			
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
-				<label for=""><?php esc_html_e( 'Write a note', 'tutor' ); ?></label>
+				<label for=""><?php esc_html_e( 'Feedback', 'tutor' ); ?></label>
 			</div>
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-20">
 				<textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php esc_html_e( $instructor_note ); ?></textarea>
