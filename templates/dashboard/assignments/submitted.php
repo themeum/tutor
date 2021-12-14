@@ -20,7 +20,7 @@ $deadline  = tutor_utils()->get_assignment_deadline_date( $assignment_id, $forma
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
 	<div class="tutor-mb-22">
 		<a class="prev-btn" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
-			<span>&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?>
+			<span class="color-text-primary assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
 
