@@ -54,19 +54,19 @@
 						if (noticeText) {
 							noticeText.style.display = 'block';
 							noticeText.textContent = 'week';
-							noticeText.classList.add('weak');
+							// noticeText.classList.add('weak');
 						}
 					}
 					if (no == 2) {
 						medium.classList.add('active');
 						if (noticeText) {
 							noticeText.textContent = 'medium';
-							noticeText.classList.add('medium');
+							// noticeText.classList.add('medium');
 						}
 					} else {
 						medium.classList.remove('active');
 						if (noticeText) {
-							noticeText.classList.remove('medium');
+							// noticeText.classList.remove('medium');
 						}
 					}
 					if (no == 3) {
@@ -75,12 +75,12 @@
 						strong.classList.add('active');
 						if (noticeText) {
 							noticeText.textContent = 'strong';
-							noticeText.classList.add('strong');
+							// noticeText.classList.add('strong');
 						}
 					} else {
 						strong.classList.remove('active');
 						if (noticeText) {
-							noticeText.classList.remove('strong');
+							// noticeText.classList.remove('strong');
 						}
 					}
 

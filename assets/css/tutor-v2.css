@@ -25652,16 +25652,16 @@ table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   display: none;
 }
 
+.tutor-dashboard-content-inner .field-label {
+  color: #5b616f;
+}
+
 .tutor-password-strength-checker {
   position: relative;
 }
 
 .tutor-password-strength-checker .tutor-password-field {
   text-align: left;
-}
-
-.tutor-password-strength-checker .tutor-password-field .field-label {
-  color: #5b616f;
 }
 
 .tutor-password-strength-checker .tutor-password-field .field-group,
