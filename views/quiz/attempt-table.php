@@ -75,7 +75,7 @@
                                     case 'quiz_info' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>" class="column-fullwidth">
-                                            <div class="td-statement-info">
+                                            <div class="td-statement-info tutor-mr-20">
                                                 <span class="text-regular-small color-text-primary">
                                                     <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
                                                 </span>
