@@ -8292,14 +8292,16 @@ class Utils {
 	 * @return mixed|html
 	 */
 	public function tutor_empty_state( string $title = '' ) {
-		$page_title = $title ? $title : ''; ?>
-		<div class="td-empty-state tutor-p-30 tutor-text-center">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
-			<div class="text-regular-h5 color-text-primary tutor-mt-20 tutor-text-center">
-				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
+		$page_title = $title ? $title : ''; 
+		?>
+			<div class="td-empty-state tutor-p-30 tutor-text-center">
+				<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
+				<div class="text-regular-h5 color-text-primary tutor-mt-20 tutor-text-center">
+					<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
+				</div>
 			</div>
-		</div>
-	<?php }
+		<?php 
+	}
 
 	/**
 	 * Translate dynamic text, dynamic text is not translate while potting
@@ -8500,15 +8502,47 @@ class Utils {
 
 			// Taken duration
 			$seconds = strtotime($attempt_data->attempt_ended_at) - strtotime($attempt_data->attempt_started_at);
-			$minutes = $seconds/60;
-
-			if($seconds<60) {
-				$attempt_duration_taken = $seconds . ' ' . ($seconds>1 ? __('Seconds', 'tutor') : __('Second', 'tutor'));
-			} else {
-				$attempt_duration_taken = $minutes>1 ? __('Minutes', 'tutor') : __('Minute', 'tutor');
-			}
+			$attempt_duration_taken = $this->seconds_to_time($seconds);
 		}
 
 		return compact('attempt_duration', 'attempt_duration_taken');
+	}
+
+	public function seconds_to_time($inputSeconds) {
+		$secondsInAMinute = 60;
+		$secondsInAnHour = 60 * $secondsInAMinute;
+		$secondsInADay = 24 * $secondsInAnHour;
+	
+		// Extract days
+		$days = floor($inputSeconds / $secondsInADay);
+	
+		// Extract hours
+		$hourSeconds = $inputSeconds % $secondsInADay;
+		$hours = floor($hourSeconds / $secondsInAnHour);
+	
+		// Extract minutes
+		$minuteSeconds = $hourSeconds % $secondsInAnHour;
+		$minutes = floor($minuteSeconds / $secondsInAMinute);
+	
+		// Extract the remaining seconds
+		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
+		$seconds = ceil($remainingSeconds);
+	
+		// Format and return
+		$timeParts = [];
+		$sections = [
+			'day' => (int)$days,
+			'hour' => (int)$hours,
+			'minute' => (int)$minutes,
+			'second' => (int)$seconds,
+		];
+	
+		foreach ($sections as $name => $value){
+			if ($value > 0){
+				$timeParts[] = $value. ' '.$name.($value == 1 ? '' : 's');
+			}
+		}
+	
+		return implode(', ', $timeParts);
 	}
 }

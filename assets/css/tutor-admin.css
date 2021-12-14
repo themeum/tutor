@@ -3604,7 +3604,7 @@ table.tutor-table p {
   display: inherit;
 }
 
-.row-actions {
+.tutor-list-table.row-actions {
   left: 0;
 }
 
@@ -7515,8 +7515,50 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   max-height: 35px;
 }
 
-.tutor-form-select {
-  display: none !important;
+.tutor-quiz-attempt-details .tutor-icon-rounded {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  display: -o-inline-flex;
+  display: -ms-inline-flex;
+  display: -moz-inline-flex;
+  display: -webkit-inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  border-radius: 50%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tutor-quiz-attempt-details .tutor-icon-rounded.tutor-text-danger {
+  border-color: var(--tutor-danger);
+}
+
+.tutor-quiz-attempt-details .tutor-icon-rounded.tutor-text-success {
+  border-color: var(--tutor-success);
+}
+
+.tutor-quiz-attempt-details .tutor-icon-rounded:not(:hover) {
+  opacity: .8;
 }
 
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-option:last-child {
