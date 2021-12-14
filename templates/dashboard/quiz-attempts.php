@@ -21,10 +21,14 @@ if ( isset( $_GET['view_quiz_attempt_id'] ) ) {
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $current_page  = max( 1, tutor_utils()->array_get( 'current_page', $_GET ) );
 $offset        = ( $current_page - 1 ) * $item_per_page;
+
 ?>
 
 <h3><?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?></h3>
 <?php
+// Load filter template.
+tutor_load_template_from_custom_path( tutor()->path . 'templates/dashboard/elements/filters.php' );
+
 $course_id           = tutor_utils()->get_assigned_courses_ids_by_instructors();
 $quiz_attempts       = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id );
 $quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids( $course_id );
