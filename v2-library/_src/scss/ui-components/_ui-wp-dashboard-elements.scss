@@ -111,8 +111,9 @@
 	select.tutor-form-select,
 	.tutor-input-group,
 	.tutor-react-datepicker .react-datepicker__input-container input {
-		width: max-content;
 		max-width: 180px;
+		max-width: max-content;
+		line-height: 1;
 	}
 
 	@include breakpoint-min(1600) {

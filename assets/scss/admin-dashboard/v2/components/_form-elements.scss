@@ -87,15 +87,10 @@
 	textarea.tutor-form-control:read-only {
 		@include getTypography(400, 16px, 162%);
 		border-color: #bababa;
-		transition: all 500ms;
+		transition: all 200ms;
 
 		&::placeholder {
 			color: $text-hints;
-		}
-
-		&:hover {
-			color: $text-primary;
-			box-shadow: 0 0 10px -7px;
 		}
 
 		&:focus {

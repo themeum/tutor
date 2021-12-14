@@ -72,23 +72,23 @@ var AddonCard = function AddonCard(_ref) {
     alt: addon.name
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-title tutor-mt-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "text-medium-h5 color-text-primary tutor-mb-4"
-  }, addon.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+  }, addon.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "text-medium-small color-text-hints tutor-mt-5"
   }, "By", ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
     href: url,
     className: "color-brand-wordpress"
   }, author))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "addon-des text-regular-body color-text-subsued tutor-mt-20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, addon.description))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, addon.description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: " card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "text-medium-small color-text-hints"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "extra-plugins color-text-hints text-medium-small"
   }, ((_addon$plugins_requir = addon.plugins_required) === null || _addon$plugins_requir === void 0 ? void 0 : _addon$plugins_requir.length) > 0 ? __('Required Plugin(s)', 'tutor') : ((_addon$ext_required = addon.ext_required) === null || _addon$ext_required === void 0 ? void 0 : _addon$ext_required.length) > 0 ? __('Required for Push Notification', 'tutor') : __('No extra plugin required', 'tutor')), addon.ext_required && addon.ext_required ? addon.ext_required.map(function (extension, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       className: "extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption",
       key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
@@ -100,7 +100,7 @@ var AddonCard = function AddonCard(_ref) {
       }
     }));
   }) : addon.depend_plugins ? addon.plugins_required.map(function (plugin, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
       className: "plugins-wrapper tutor-bs-d-flex color-text-primary text-medium-caption",
       key: index
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
@@ -699,7 +699,7 @@ var displayAddons = function displayAddons(addons) {
     var name = addon.name,
         url = addon.url,
         description = addon.description;
-    return "\n            <div class=\"tutor-addons-card\">\n                <div class=\"tooltip-wrap tutor-lock-tooltip\">\n\t\t\t\t\t<span class=\"tooltip-txt tooltip-top\">Available in Pro</span>\n\t\t\t\t</div>\n                <div class=\"card-body tutor-px-30 tutor-py-35\">\n                    <div class=\"addon-logo\">\n                        <img src=\"".concat(url, "\" alt=\"").concat(name, "\" /> \n                    </div>\n                    <div class=\"addon-title tutor-mt-20\">\n                        <h5 class=\"text-medium-h5 color-text-primary tutor-mb-4\">").concat(name, "</h5>\n                    </div>\n                    <div class=\"addon-des text-regular-body color-text-subsued tutor-mt-20\">\n                        <p>").concat(description, "</p>\n                    </div>\n                </div>\n            </div>");
+    return "\n            <div class=\"tutor-addons-card\">\n                <div class=\"tooltip-wrap tutor-lock-tooltip\">\n\t\t\t\t\t<span class=\"tooltip-txt tooltip-top\">Available in Pro</span>\n\t\t\t\t</div>\n                <div class=\"card-body tutor-px-30 tutor-py-35\">\n                    <div class=\"addon-logo\">\n                        <img src=\"".concat(url, "\" alt=\"").concat(name, "\" /> \n                    </div>\n                    <div class=\"addon-title tutor-mt-20\">\n                        <h5 class=\"text-medium-h5 color-text-primary tutor-mb-4\">").concat(name, "</h5>\n                    </div>\n                    <div class=\"addon-des text-regular-body color-text-subsued tutor-mt-20\">\n                        ").concat(description, "\n                    </div>\n                </div>\n            </div>");
   }).join('');
 
   if (null !== addonsList) {

@@ -65,6 +65,11 @@ $typographyUtils: (
 		font-size: #{$fSize};
 		line-height: #{$lHeight};
 	}
+	.tutor-text-#{$classSuffix} {
+		font-weight: #{$fWeight};
+		font-size: #{$fSize};
+		line-height: #{$lHeight};
+	}
 }
 
 .text-body {
