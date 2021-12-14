@@ -26,7 +26,7 @@ $date_filter  = isset( $_GET['date'] ) ? $_GET['date'] : '';
 			<?php if ( $courses ) : ?>
 				<?php foreach ( $courses as $course ) : ?>
 					<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
-						<?php echo $course->post_title; ?>
+						<?php echo esc_html( $course->post_title ); ?>
 					</option>
 				<?php endforeach; ?>
 			<?php else : ?>

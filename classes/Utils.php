@@ -5129,6 +5129,9 @@ class Utils {
 	 */
 	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null ) {
 		global $wpdb;
+		$search_filter 	= sanitize_text_field( $search_filter );
+		$course_filter	= sanitize_text_field( $course_filter );
+		$date_filter 	= sanitize_text_field( $date_filter );
 
 		$course_ids = array_map( function( $id ) {
 			return "'" . esc_sql( $id ) . "'";
@@ -5176,16 +5179,25 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '' ) {
+	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '', $course_filter = '', $date_filter = '' ) {
 		global $wpdb;
 
 		$course_ids = array_map( function( $id ) {
 			return "'" . esc_sql( $id ) . "'";
 		}, $course_ids );
 
+		// Sanitization.
+		$search_term 	= sanitize_text_field( $search_term );
+		$course_filter	= sanitize_text_field( $course_filter );
+		$date_filter 	= sanitize_text_field( $date_filter );
+
 		$course_ids_in = implode( ', ', $course_ids );
 		$search_term   = '%' . $wpdb->esc_like( $search_term ) . '%';
 
+		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
+		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
+	
 		$count = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(attempt_id)
 			FROM  	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
@@ -5193,14 +5205,14 @@ class Utils {
 							ON quiz_attempts.quiz_id = quiz.ID
 					INNER JOIN {$wpdb->users}
 							ON quiz_attempts.user_id = {$wpdb->users}.ID
+					INNER JOIN {$wpdb->posts} AS course
+							ON course.ID = quiz_attempts.course_id
 			WHERE 	quiz_attempts.course_id IN (" . $course_ids_in . ")
 					AND attempt_status != %s
-					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
+					{$course_filter}
+					{$date_filter}
 			",
-			'attempt_started',
-			$search_term,
-			$search_term,
-			$search_term
+			'attempt_started'
 		) );
 
 		return (int) $count;
