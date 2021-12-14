@@ -1,4 +1,4 @@
-.tutor-form-select {
+.tutor-form-select:not([nodropdown]) {
   display: none !important;
 }
 

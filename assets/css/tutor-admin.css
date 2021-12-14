@@ -7515,7 +7515,7 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   max-height: 35px;
 }
 
-.tutor-form-select {
+.tutor-form-select:not([nodropdown]) {
   display: none !important;
 }
 

@@ -2944,7 +2944,12 @@ document.addEventListener("DOMContentLoaded", function () {
 /***/ (() => {
 
 window.selectSearchField = function (selectElement) {
-  var tutorFormSelect = document.querySelectorAll(selectElement);
+  var tutorFormSelect = document.querySelectorAll(selectElement); // let tutorFormSelectable = tutorFormSelect && tutorFormSelect.dataset.select;
+  // tutorFormSelect.getAttribute("noDropdown")
+
+  /* if (!object.hasAttribute("data-example-param")) {
+      console.log(tutorFormSelect.dataset.select);
+  } */
 
   var dd_hide_onclick = function dd_hide_onclick() {
     setTimeout(function () {
@@ -2954,6 +2959,7 @@ window.selectSearchField = function (selectElement) {
         dd_wrap_main.forEach(function (item_main) {
           item_main.onclick = function (e) {
             e.stopPropagation();
+            dd_wrap_main.style.display = 'block';
           };
 
           var dd_wrap = item_main.querySelectorAll('.tutor-dropdown-select-options-container');
@@ -2975,72 +2981,75 @@ window.selectSearchField = function (selectElement) {
 
   setTimeout(function () {
     tutorFormSelect.forEach(function (element) {
-      var initialSelectedItem = element.options[element.selectedIndex]; // console.log(element.options[element.selectedIndex].text);
+      if (!element.hasAttribute("noDropdown")) {
+        var initialSelectedItem = element.options[element.selectedIndex]; // console.log(element.options[element.selectedIndex].text);
 
-      element.style.display = 'none';
-      var searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
-      element.insertAdjacentHTML('afterend', ddMarkup(element.options));
-      searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
-      searchInput = searchInputWrap && searchInputWrap.querySelector('input');
+        element.style.display = 'none';
+        var searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
+        element.insertAdjacentHTML('afterend', ddMarkup(element.options));
+        searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
+        searchInput = searchInputWrap && searchInputWrap.querySelector('input');
 
-      if (element.options.length < 5) {
-        searchInputWrap.style.display = 'none';
+        if (element.options.length < 5) {
+          searchInputWrap.style.display = 'none';
+        }
+
+        dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
+        var selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
+        var selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
+        selectedLabel.innerText = initialSelectedItem && initialSelectedItem.text;
+
+        selectLabel.onclick = function (e) {
+          // dd_hide_onclick();
+          e.stopPropagation();
+          dropDown.classList.toggle('is-active');
+          searchInput.focus();
+        };
+
+        resultWrap = searchInputWrap.nextElementSibling;
+        resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');
+
+        if (resultList) {
+          resultList.forEach(function (item) {
+            item.onclick = function (e) {
+              var selectFieldOptions = Array.from(element.options);
+              selectFieldOptions.forEach(function (option, i) {
+                if (option.value === e.target.dataset.key) {
+                  dropDown.classList.toggle('is-active');
+                  selectedLabel.innerText = e.target.innerText;
+                  selectedLabel.dataset.value = option.value;
+                  element.value = option.value;
+                }
+              });
+              var onChangeEvent = new Event('change');
+              element.dispatchEvent(onChangeEvent);
+              jQuery(selectFieldOptions).trigger('change');
+            };
+          });
+        }
+
+        searchInput.onkeyup = function (e) {
+          resultFilter = e.target.value.toUpperCase();
+          resultList.forEach(function (item) {
+            textToSearch = item.querySelector(".text-regular-caption");
+            txtValue = textToSearch.textContent || textToSearch.innerText;
+
+            if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
+              item.style.display = '';
+            } else {
+              // console.log(item.style.display);
+              item.style.display = 'none';
+              /* resultWrap.innerHTML = `
+              <div class="tutor-dropdown-select-option">
+                  <label for="select-item-1">
+                      <div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="">No item found.</div>
+                  </label>
+              </div>
+              `; */
+            }
+          });
+        };
       }
-
-      dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
-      var selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
-      var selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
-      selectedLabel.innerText = initialSelectedItem.text;
-
-      selectLabel.onclick = function (e) {
-        // dd_hide_onclick();
-        e.stopPropagation();
-        dropDown.classList.toggle('is-active');
-        searchInput.focus();
-      };
-
-      resultWrap = searchInputWrap.nextElementSibling;
-      resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');
-
-      if (resultList) {
-        resultList.forEach(function (item) {
-          item.onclick = function (e) {
-            var selectFieldOptions = Array.from(element.options);
-            selectFieldOptions.forEach(function (option, i) {
-              if (option.value === e.target.dataset.key) {
-                dropDown.classList.toggle('is-active');
-                selectedLabel.innerText = e.target.innerText;
-                selectedLabel.dataset.value = option.value;
-                element.value = option.value;
-              }
-            });
-            var onChangeEvent = new Event('change');
-            element.dispatchEvent(onChangeEvent);
-          };
-        });
-      }
-
-      searchInput.onkeyup = function (e) {
-        resultFilter = e.target.value.toUpperCase();
-        resultList.forEach(function (item) {
-          textToSearch = item.querySelector(".text-regular-caption");
-          txtValue = textToSearch.textContent || textToSearch.innerText;
-
-          if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
-            item.style.display = '';
-          } else {
-            // console.log(item.style.display);
-            item.style.display = 'none';
-            /* resultWrap.innerHTML = `
-            <div class="tutor-dropdown-select-option">
-                <label for="select-item-1">
-                    <div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="">No item found.</div>
-                </label>
-            </div>
-            `; */
-          }
-        });
-      };
     });
   }, 20);
 
