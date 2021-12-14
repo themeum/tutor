@@ -21833,52 +21833,6 @@ body.tutor-screen-course-builder .select2-container .select2-search__field {
   background: #eff1f7;
 }
 
-.tutor-icon-rounded {
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  display: -o-inline-flex;
-  display: -ms-inline-flex;
-  display: -moz-inline-flex;
-  display: -webkit-inline-flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -o-align-items: center;
-  -ms-align-items: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -o-justify-content: center;
-  -ms-justify-content: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-  width: 32px;
-  height: 32px;
-  overflow: hidden;
-  border-radius: 50%;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  border-width: 1px;
-  border-style: solid;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.tutor-icon-rounded.tutor-text-danger {
-  border-color: var(--tutor-danger);
-}
-
-.tutor-icon-rounded.tutor-text-success {
-  border-color: var(--tutor-success);
-}
-
-.tutor-icon-rounded:not(:hover) {
-  opacity: .8;
-}
-
 /**
  * Buttons
  */
@@ -26030,6 +25984,55 @@ table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   border-color: #1973aa;
   -webkit-box-shadow: unset;
           box-shadow: unset;
+}
+
+.tutor-zoom-integration-card .tutor-zoom-no-meetings {
+  margin: 15px;
+}
+
+.tutor-zoom-integration-card .tutor-zoom-no-meetings > div:first-child {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -o-flex;
+  display: -ms-flex;
+  display: -moz-flex;
+  display: -webkit-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #2D8CFF;
+  color: white;
+}
+
+.tutor-zoom-integration-card .tutor-zoom-no-meetings > div:nth-child(2) {
+  -webkit-box-flex: 1;
+          flex: 1;
+  -o-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+  margin: 0 10px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  color: #1973AA;
 }
 
 .tutor-zoom-integration-card-body {
