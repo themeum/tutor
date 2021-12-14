@@ -1,12 +1,8 @@
+import { result } from "lodash";
+
 window.selectSearchField = (selectElement) => {
     const tutorFormSelect = document.querySelectorAll(selectElement);
-    // let tutorFormSelectable = tutorFormSelect && tutorFormSelect.dataset.select;
 
-    // tutorFormSelect.getAttribute("noDropdown")
-
-    /* if (!object.hasAttribute("data-example-param")) {
-        console.log(tutorFormSelect.dataset.select);
-    } */
     const dd_hide_onclick = () => {
         setTimeout(() => {
             let dd_wrap_main = document.querySelectorAll('.tutor-dropdown-select.select-dropdown');
@@ -77,19 +73,32 @@ window.selectSearchField = (selectElement) => {
 
                             var onChangeEvent = new Event('change');
                             element.dispatchEvent(onChangeEvent);
-                            jQuery(selectFieldOptions).trigger('change');
+                            // jQuery(selectFieldOptions).trigger('change');
                         }
                     })
                 }
 
+                const countHiddenItems = (list) => {
+                    let result = 0;
+                    list.forEach((item) => {
+                        if (item.style.display !== 'none') {
+                            result += 1;
+                        }
+                    })
+                    return result;
+                }
+
                 searchInput.onkeyup = (e) => {
+                    let txtValue, noItemFound = false;
                     resultFilter = e.target.value.toUpperCase();
                     resultList.forEach((item) => {
                         textToSearch = item.querySelector(".text-regular-caption");
                         txtValue = textToSearch.textContent || textToSearch.innerText;
                         if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
                             item.style.display = ''
+                            noItemFound = 'false';
                         } else {
+                            noItemFound = 'true';
                             // console.log(item.style.display);
                             item.style.display = 'none';
                             /* resultWrap.innerHTML = `
@@ -100,7 +109,28 @@ window.selectSearchField = (selectElement) => {
                             </div>
                             `; */
                         }
+
                     })
+
+                    if (0 == countHiddenItems(resultList)) {
+                        console.log(dropDown.querySelector('.tutor-frequencies'), 'no item');
+                        let appendNoItemText = dropDown.querySelector('.tutor-frequencies');
+                        let noItemText = `
+                        <div class="tutor-dropdown-select-option noItem">
+                            <label>No item found</label>
+                        </div>
+                        `;
+                        let hasNoItem = false;
+                        appendNoItemText.querySelectorAll('.tutor-dropdown-select-option').forEach((item) => {
+                            if (item.classList.contains('noItem') == true) {
+                                hasNoItem = true;
+                            }
+                        })
+                        if (false == hasNoItem) {
+                            appendNoItemText.insertAdjacentHTML("beforeend", noItemText);
+                        }
+                    }
+
                 }
             }
         });
@@ -114,7 +144,7 @@ window.selectSearchField = (selectElement) => {
         Array.from(options).forEach((item) => {
             optionsList += `
             <div class="tutor-dropdown-select-option">
-                <label for="select-item-1">
+                <label>
                     <div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="${item.value}">${item.text}</div>
                 </label>
             </div>
