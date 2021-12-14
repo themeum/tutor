@@ -18,7 +18,7 @@ if ( isset( $_GET['view_quiz_attempt_id'] ) ) {
 	return;
 }
 
-$item_per_page = 20;
+$item_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $current_page  = max( 1, tutor_utils()->array_get( 'current_page', $_GET ) );
 $offset        = ( $current_page - 1 ) * $item_per_page;
 ?>
@@ -46,15 +46,11 @@ tutor_load_template_from_custom_path(
 	)
 );
 
+$pagination_data              = array(
+	'total_items' => $quiz_attempts_count,
+	'per_page'    => $item_per_page,
+	'paged'       => $current_page,
+);
+$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
 ?>
-<div class="tutor-pagination">
-	<?php
-	echo paginate_links(
-		array(
-			'format'  => '?current_page=%#%',
-			'current' => $current_page,
-			'total'   => ceil( $quiz_attempts_count / $item_per_page ),
-		)
-	);
-	?>
-</div>
