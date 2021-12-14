@@ -35,7 +35,7 @@ if ( ! $assignment_submitted_id ) {
 
 	<div class="submitted-assignment-title tutor-mb-15">
 		<a class="prev-btn" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
-			<span>&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?>
+			<span class="assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
  
@@ -43,7 +43,7 @@ if ( ! $assignment_submitted_id ) {
 		<table class="tutor-ui-table-no-border tutor-is-lefty tutor-is-flexible">
 			<tbody>
 				<tr>
-					<td><?php esc_html_e( 'Course', 'tutor' ); ?>:</td>
+					<td class="color-text-subsued"><?php esc_html_e( 'Course', 'tutor' ); ?>:</td>
 					<td>
 						<a href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
 						<?php esc_html_e( get_the_title( $submitted_assignment->comment_parent ) ); ?>
@@ -51,7 +51,7 @@ if ( ! $assignment_submitted_id ) {
 					</td>
 				</tr>
 				<tr>
-					<td><?php esc_html_e( 'Student', 'tutor' ); ?>:</td>
+					<td class="color-text-subsued"><?php esc_html_e( 'Student', 'tutor' ); ?>:</td>
 					<td>
 						<span>
 						<?php echo esc_html( $comment_author->display_name . ' (' . $comment_author->user_email . ')' ); ?>
@@ -59,7 +59,7 @@ if ( ! $assignment_submitted_id ) {
 					</td>
 				</tr>
 				<tr>
-					<td><?php esc_html_e( 'Submitted Date', 'tutor' ); ?>:</td>
+					<td class="color-text-subsued"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?>:</td>
 					<td>
 						<span>
 						<?php echo esc_attr( date( 'j M, Y, h:i a', strtotime( $submitted_assignment->comment_date ) ) ); ?>
@@ -71,11 +71,11 @@ if ( ! $assignment_submitted_id ) {
 	</div>
 	<hr>
 
-	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-15 tutor-mb-15">
-		<h4><?php _e( 'Assignment Description:', 'tutor' ); ?></h4>
-		<p><?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?></p>
+	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-30 tutor-mb-15">
+		<h5 class="text-medium-h6 tutor-mb-12"><?php esc_html_e( 'Assignment Description:', 'tutor' ); ?></h5>
+		<p class="text-regular-body color-text-subsued tutor-mb-25"><?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?></p>
 		
-		<h5 class="tutor-mt-15"><?php _e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
+		<h5 class="text-medium-h6 tutor-mb-12"><?php _e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
 		<div class="tutor-attachment-cards">
 		<?php
 			$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
@@ -94,7 +94,7 @@ if ( ! $assignment_submitted_id ) {
 									<span class="filesize"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></span>
 								</div>
 								<div>
-									<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank">
+									<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-mt-5" target="_blank">
 										<span class="ttr-download-line"></span>
 									</a>
 								</div>
@@ -117,7 +117,7 @@ if ( ! $assignment_submitted_id ) {
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
 				<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 			</div>
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9">
+			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-30">
 				<input class="tutor-form-control" type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0">
 				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" ); ?></p>
 			</div>
@@ -125,7 +125,7 @@ if ( ! $assignment_submitted_id ) {
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
 				<label for=""><?php esc_html_e( 'Write a note', 'tutor' ); ?></label>
 			</div>
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9">
+			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-20">
 				<textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php esc_html_e( $instructor_note ); ?></textarea>
 			</div>
 			
