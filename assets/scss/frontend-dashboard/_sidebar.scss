@@ -55,14 +55,15 @@
 
             &.active a {
                 background-color: var(--tutor-primary-color);
-                color: #ffffff;
+                color: var(--tutor-primary-text-color);
 
                 &:hover {
                     background-color: var(--tutor-primary-hover-color);
                 }
 
                 &::before {
-                    color: var(--tutor-primary-hover-color);
+                    // color: var(--tutor-primary-hover-color);
+                    color: var(--tutor-primary-text-color);
                 }
 
                 li {
