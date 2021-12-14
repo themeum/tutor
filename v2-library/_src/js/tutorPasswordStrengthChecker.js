@@ -27,7 +27,6 @@
 
 				const input = e.target;
 				if (input.value != '') {
-					console.log(hintWrapper);
 					if (indicator) {
 						indicator.style.display = 'flex';
 					}
