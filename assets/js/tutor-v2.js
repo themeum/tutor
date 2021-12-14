@@ -4571,8 +4571,7 @@ document.addEventListener('click', function (e) {
 
             if (noticeText) {
               noticeText.style.display = 'block';
-              noticeText.textContent = 'week';
-              noticeText.classList.add('weak');
+              noticeText.textContent = 'week'; // noticeText.classList.add('weak');
             }
           }
 
@@ -4580,14 +4579,12 @@ document.addEventListener('click', function (e) {
             medium.classList.add('active');
 
             if (noticeText) {
-              noticeText.textContent = 'medium';
-              noticeText.classList.add('medium');
+              noticeText.textContent = 'medium'; // noticeText.classList.add('medium');
             }
           } else {
             medium.classList.remove('active');
 
-            if (noticeText) {
-              noticeText.classList.remove('medium');
+            if (noticeText) {// noticeText.classList.remove('medium');
             }
           }
 
@@ -4597,14 +4594,12 @@ document.addEventListener('click', function (e) {
             strong.classList.add('active');
 
             if (noticeText) {
-              noticeText.textContent = 'strong';
-              noticeText.classList.add('strong');
+              noticeText.textContent = 'strong'; // noticeText.classList.add('strong');
             }
           } else {
             strong.classList.remove('active');
 
-            if (noticeText) {
-              noticeText.classList.remove('strong');
+            if (noticeText) {// noticeText.classList.remove('strong');
             }
           }
 

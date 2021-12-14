@@ -71,7 +71,7 @@
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
 				<div class="tutor-password-field tutor-settings-pass-field">
-					<label class="tutor-form-label" for="password-field-icon-1">
+					<label class="field-label tutor-form-label" for="password-field-icon-1">
 						<?php esc_html_e( 'Re-type New Password', 'tutor' ); ?>
 					</label>
 					<div class="field-group tutor-input-group">
