@@ -7,8 +7,7 @@
 	const weak = document.querySelector('.tutor-passowrd-strength-hint .weak');
 	const medium = document.querySelector('.tutor-passowrd-strength-hint .medium');
 	const strong = document.querySelector('.tutor-passowrd-strength-hint .strong');
-	// const text = document.querySelector('.tutor-passowrd-strength-hint .text');
-	// const showBtn = document.querySelector('.tutor-password-field .show-hide-btn');
+
 	let regExpWeak = /[a-z]/;
 	let regExpMedium = /\d+/;
 	let regExpStrong = /.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/;
@@ -16,7 +15,7 @@
 	if (passwordCheckerInput) {
 		passwordCheckerInput.forEach((checkerInput) => {
 			checkerInput.addEventListener('input', (e) => {
-				let indicator, noticeText;
+				let indicator, noticeText, no;
 
 				const showBtn = checkerInput && checkerInput.closest('.tutor-password-field').querySelector('.show-hide-btn');
 				let hintWrapper = checkerInput.closest('.tutor-password-strength-checker');
@@ -27,6 +26,7 @@
 
 				const input = e.target;
 				if (input.value != '') {
+
 					if (indicator) {
 						indicator.style.display = 'flex';
 					}
