@@ -241,8 +241,10 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.12 - December 8, 2021 =
+= 1.9.12 - December 14, 2021 =
+
 Update: Security Update
+Fix: Instructor can access Withdrawal Requests Issue
 
 = 1.9.11 - October 18, 2021 =
 
