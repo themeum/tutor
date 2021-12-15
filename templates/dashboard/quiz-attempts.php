@@ -12,41 +12,54 @@
  */
 
 
-if(isset($_GET['view_quiz_attempt_id'])) {
-    // Load single attempt details if ID provided
-    include __DIR__ . '/quiz-attempts/quiz-reviews.php';
-    return;
+if ( isset( $_GET['view_quiz_attempt_id'] ) ) {
+	// Load single attempt details if ID provided
+	include __DIR__ . '/quiz-attempts/quiz-reviews.php';
+	return;
 }
 
-$per_page = 20;
-$current_page = max( 1, tutor_utils()->array_get('current_page', $_GET) );
-$offset = ($current_page-1)*$per_page;
+$item_per_page = tutor_utils()->get_option( 'pagination_per_page' );
+$current_page  = max( 1, tutor_utils()->array_get( 'current_page', $_GET ) );
+$offset        = ( $current_page - 1 ) * $item_per_page;
+// Filter params.
+$course_filter  = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
+$order_filter   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+$date_filter    = isset( $_GET['date'] ) ? $_GET['date'] : '';
 ?>
 
-<h3><?php _e('Quiz Attempts', 'tutor'); ?></h3>
+<h3><?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?></h3>
 <?php
-$course_id = tutor_utils()->get_assigned_courses_ids_by_instructors();
-$quiz_attempts = tutor_utils()->get_quiz_attempts_by_course_ids($offset, $per_page, $course_id);
-$quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids($course_id);
+// Load filter template.
+tutor_load_template_from_custom_path( tutor()->path . 'templates/dashboard/elements/filters.php' );
 
-add_action( 'tutor_quiz/table/after/course_title', function($attempt) {
-    ?>
-    <span><?php _e('Student', 'tutor'); ?>: </span> <strong title="<?php echo $attempt->user_email; ?>"><?php echo $attempt->display_name; ?></strong>
-    <?php
-} );
+$course_id           = tutor_utils()->get_assigned_courses_ids_by_instructors();
+// how to pass params $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null .
+$quiz_attempts       = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter );
 
-tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
-    'attempt_list' => $quiz_attempts,
-    'context' => 'frontend-dashboard-students-attempts'
-));
+$quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids( $course_id, '', $course_filter, $date_filter );
 
+add_action(
+	'tutor_quiz/table/after/course_title',
+	function( $attempt ) {
+		?>
+	<span><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> <strong title="<?php echo esc_attr( $attempt->user_email ); ?>"><?php echo esc_attr( $attempt->display_name ); ?></strong>
+		<?php
+	}
+);
+
+tutor_load_template_from_custom_path(
+	tutor()->path . '/views/quiz/attempt-table.php',
+	array(
+		'attempt_list' => $quiz_attempts,
+		'context'      => 'frontend-dashboard-students-attempts',
+	)
+);
+
+$pagination_data              = array(
+	'total_items' => $quiz_attempts_count,
+	'per_page'    => $item_per_page,
+	'paged'       => $current_page,
+);
+$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
 ?>
-<div class="tutor-pagination">
-    <?php
-    echo paginate_links( array(
-        'format' => '?current_page=%#%',
-        'current' => $current_page,
-        'total' => ceil($quiz_attempts_count/$per_page)
-    ) );
-    ?>
-</div>

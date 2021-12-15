@@ -2950,7 +2950,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 window.selectSearchField = function (selectElement) {
-  return;
   var tutorFormSelect = document.querySelectorAll(selectElement);
 
   var dd_hide_onclick = function dd_hide_onclick() {
