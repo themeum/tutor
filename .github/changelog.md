@@ -1,5 +1,16 @@
 # TutorLMS Changelog
 
+### 1.9.13 - December 20, 2021
+
+* Update: Security Update
+
+
+### 1.9.12 - December 14, 2021
+
+* Update: Security Update
+* Fix: Instructor can access Withdrawal Requests Issue
+
+
 ### 1.9.11 - October 18, 2021
 
 * New: Certificate Builder plugin compatibility
