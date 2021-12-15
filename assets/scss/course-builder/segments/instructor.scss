@@ -1,3 +1,4 @@
+$inst_gap: 30px;
 
 // Multi instructor list styles
 .tutor-course-available-instructors {
@@ -9,9 +10,9 @@
     
     .added-instructor-item {
         -webkit-box-flex: 0;
-        -ms-flex: 0 0 calc(50% - 20px);
-        flex: 0 0 calc(50% - 20px);
-        max-width: calc(50% - 20px);
+        -ms-flex: 0 0 calc(50% - #{$inst_gap});
+        flex: 0 0 calc(50% - #{$inst_gap});
+        max-width: calc(50% - #{$inst_gap});
         border: 1px solid #dcdfe5;
         padding: 13px;
         display: -webkit-inline-box;
@@ -24,13 +25,13 @@
         position: relative;
         -webkit-box-sizing: border-box;
                 box-sizing: border-box;
-        margin: 0px 10px 10px 0;
+        margin: 0px #{$inst_gap} #{$inst_gap} 0;
 
         @media (min-width: 1300px) {
-            -ms-flex: 0 0 calc(33.333% - 20px);
+            -ms-flex: 0 0 calc(33.333% - #{$inst_gap});
             -webkit-box-flex: 0;
-                    flex: 0 0 calc(33.333% - 20px);
-            max-width: calc(33.333% - 20px);
+                    flex: 0 0 calc(33.333% - #{$inst_gap});
+            max-width: calc(33.333% - #{$inst_gap});
         }
         
         @media (max-width: 546px) {

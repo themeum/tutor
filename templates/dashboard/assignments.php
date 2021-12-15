@@ -56,8 +56,8 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 				<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 			</select>
 		</div>
-		<div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-announcement-datepicker">
-			<label><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
+		<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
+			<label class="tutor-bs-d-block"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
 			<div class="tutor-v2-date-picker"></div>
 		</div>
 	</div>

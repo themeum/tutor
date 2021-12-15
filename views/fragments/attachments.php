@@ -3,7 +3,7 @@
     $size_below = isset($data['size_below']) && $data['size_below']==true;
 ?>
 
-<div class="tutor-attachment-cards tutor-attachment-size-<?php echo $size_below ? 'below' : 'aside'; ?> tutor-course-builder-attachments <?php echo (isset($data['no_control']) && $data['no_control']) ? 'tutor-no-control' : ''; ?>">
+<div class="tutor-attachment-cards <?php echo (isset($data['is_responsive']) && $data['is_responsive']) ? 'tutor-attachment-cards-responsive' : ''; ?> tutor-attachment-size-<?php echo $size_below ? 'below' : 'aside'; ?> tutor-course-builder-attachments <?php echo (isset($data['no_control']) && $data['no_control']) ? 'tutor-no-control' : ''; ?>">
     <?php 
     if ( is_array($attachments) && count($attachments)) {
         foreach ( $attachments as $attachment ) {

@@ -3,12 +3,15 @@
 		margin-bottom: 20px;
 	}
 }
+.assignment-back-icon {
+	color: #1A1B1E !important;
+}
 .submitted-assignments-sorting-wrap {
 	margin-bottom: 30px;
 	.tutor-form-group {
 		display: flex;
 		align-items: center;
-		flex-basis: 35% !important;
+		flex-basis: 25% !important;
 		label, select {
 			margin-bottom: 0;
 		}
@@ -67,7 +70,7 @@
 }
 .tutor-assignment-review-header {
 	p span {
-		font-weight: 400;
+		font-weight: 600;
 		color: var(--tutor-text-color);
 	}
 }

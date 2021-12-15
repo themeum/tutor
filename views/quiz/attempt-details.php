@@ -262,8 +262,7 @@ include __DIR__ . '/header.php';
     if (is_array($answers) && count($answers)){
         echo $context!='course-single-previous-attempts' ? '<strong>'.__('Quiz Overview', 'tutor').'</strong>' : '';
         ?>
-        
-        <table class="tutor-ui-table tutor-ui-table-responsive tutor-mb-30">
+        <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-30">
             <thead>
                 <tr>
                     <?php 
@@ -279,6 +278,22 @@ include __DIR__ . '/header.php';
                     foreach ($answers as $answer){
                         $answer_i++;
                         $question_type = tutor_utils()->get_question_types($answer->question_type);
+
+
+                        $answer_status = null;
+                        if ( (bool) (isset( $answer->is_correct ) ? $answer->is_correct : '') ) {
+                            $answer_status = 'correct';
+                        } else {
+                            if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                                if ( (bool) $attempt_data->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+                                    $answer_status = 'wrong';
+                                } else {
+                                    $answer_status = 'pending';
+                                }
+                            } else {
+                                $answer_status = 'wrong';
+                            }
+                        }
                         ?>
                         
                         <tr>
@@ -545,7 +560,7 @@ include __DIR__ . '/header.php';
                                                         show_correct_answer($correct_answer);
                                                     }
                                                 }
-                                                ?>
+                                                ?>&nbsp;
                                             </td>
                                             <?php
                                             break;
@@ -554,20 +569,19 @@ include __DIR__ . '/header.php';
                                             ?>
                                             <td data-th="<?php echo $column; ?>">
                                                 <?php
+                                                    switch($answer_status) {
+                                                        case 'correct' : 
+                                                            echo '<span class="tutor-badge-label label-success">'.__('Correct', 'tutor').'</span>';
+                                                            break;
 
-                                                if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                                                    echo '<span class="tutor-badge-label label-success">'.__('Correct', 'tutor').'</span>';
-                                                } else {
-                                                    if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-                                                        if ( (bool) $attempt_data->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-                                                            echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
-                                                        } else {
+                                                        case 'pending' :
                                                             echo '<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>';
-                                                        }
-                                                    } else {
-                                                        echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                                            break;
+
+                                                        case 'wrong' :
+                                                            echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                                            break;
                                                     }
-                                                }
                                                 ?>
                                             </td>
                                             <?php
@@ -575,7 +589,7 @@ include __DIR__ . '/header.php';
 
                                         case 'manual_review' :
                                             ?>
-                                            <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10">
+                                            <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap <?php echo 'tutor-quiz-answer-status-'.$answer_status; ?>">
                                                 <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-10 tutor-icon-rounded tutor-text-success">
                                                     <i class="tutor-icon-mark"></i> 
                                                 </a>
