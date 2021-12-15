@@ -1,5 +1,3 @@
-import { result } from "lodash";
-
 window.selectSearchField = (selectElement) => {
     const tutorFormSelect = document.querySelectorAll(selectElement);
 

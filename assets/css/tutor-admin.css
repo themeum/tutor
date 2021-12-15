@@ -8516,10 +8516,6 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   opacity: .8;
 }
 
-.tutor-form-select:not([nodropdown]) {
-  display: none !important;
-}
-
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-option:last-child {
   border-top: none;
 }
