@@ -2,8 +2,8 @@
     $filter_object = new \TUTOR\Course_Filter();
     
     $filter_prices=array(
-        'free'=> __('Free', 'tutor'),
-        'paid'=> __('Paid', 'tutor'),
+        'free'=> __( 'Free', 'tutor' ),
+        'paid'=> __( 'Paid', 'tutor' ),
     );
 
     $course_levels      = tutor_utils()->course_levels();
@@ -11,9 +11,9 @@
     $supported_filters = array_keys($supported_filters);
 ?>
 <form>  
-    <?php do_action('tutor_course_filter/before'); ?>
+    <?php do_action( 'tutor_course_filter/before' ); ?>
     <?php
-        if(in_array('search', $supported_filters)){
+        if ( in_array( 'search', $supported_filters ) ) {
             ?>
              <div class="filter-widget-search">
                 <div class="tutor-input-group tutor-form-control-has-icon tutor-from-control">
@@ -111,5 +111,5 @@
             </div>
         </div>
     </div>
-    <?php do_action('tutor_course_filter/after'); ?>
+    <?php do_action( 'tutor_course_filter/after' ); ?>
 </form>

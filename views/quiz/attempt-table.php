@@ -1,15 +1,15 @@
 <?php
-    extract($data); // $attempt_list, $context;
+	extract( $data ); // $attempt_list, $context;
 
-    $page_key = 'attempt-table';
-    $table_columns = include __DIR__ . '/contexts.php';
+	$page_key      = 'attempt-table';
+	$table_columns = include __DIR__ . '/contexts.php';
 
-    if($context=='course-single-previous-attempts' && is_array($attempt_list) && count($attempt_list)) {
-        // Provide the attempt data from the first attempt
-        // For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
-        $attempt_data = $attempt_list[0];
-        include __DIR__ . '/header.php';
-    }
+if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) && count( $attempt_list ) ) {
+	// Provide the attempt data from the first attempt
+	// For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
+	$attempt_data = $attempt_list[0];
+	include __DIR__ . '/header.php';
+}
 ?>
 
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-30">
@@ -209,11 +209,11 @@
                 ?>
                 <tr>
 					<td colspan="100%" class="column-empty-state">
-						<?php tutor_utils()->tutor_empty_state( __( 'No attempt found', 'tutor' ) ); ?>
+					<?php tutor_utils()->tutor_empty_state( __( 'No attempt found', 'tutor' ) ); ?>
 					</td>
-                </tr>
-                <?php
-            }
-        ?>
-    </tbody>
+				</tr>
+				<?php
+		}
+		?>
+	</tbody>
 </table>

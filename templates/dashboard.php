@@ -76,8 +76,7 @@ do_action('tutor_dashboard/before/wrap');
         <div class="tutor-bs-row">
             <div class="tutor-bs-col-12">
                 <div class="tutor-bs-row tutor-bs-align-items-center tutor-dashboard-header">
-                    <div class="tutor-bs-col-4 tutor-bs-col-sm-3 tutor-bs-col-md-2 tutor-bs-flex-center tutor-dashboard-header-avatar">
-                        <img src="<?php echo get_avatar_url($user_id, array('size' => 150)); ?>" />
+                    <div class="tutor-bs-col-4 tutor-bs-col-sm-3 tutor-bs-col-md-2 tutor-bs-flex-center tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
                     </div>
                     <div class="tutor-bs-col-8 tutor-bs-col-sm-9 tutor-bs-col-md-10">
                         <div class="tutor-bs-row tutor-bs-align-items-center">

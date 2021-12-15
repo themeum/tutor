@@ -7,22 +7,22 @@
 
 global $wpdb;
 
-$order_filter  = isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'desc';
-$assignment_id = sanitize_text_field($_GET['assignment']);
-$assignments_submitted = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d ORDER BY comment_ID $order_filter", $assignment_id));
+$order_filter          = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'desc';
+$assignment_id         = sanitize_text_field( $_GET['assignment'] );
+$assignments_submitted = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d ORDER BY comment_ID $order_filter", $assignment_id ) );
 
-$max_mark = tutor_utils()->get_assignment_option($assignment_id, 'total_mark');
-$pass_mark = tutor_utils()->get_assignment_option($assignment_id, 'pass_mark');
-$format = get_option('date_format').' '.get_option('time_format');
-$deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format, __('No Limit', 'tutor'));
+$max_mark  = tutor_utils()->get_assignment_option( $assignment_id, 'total_mark' );
+$pass_mark = tutor_utils()->get_assignment_option( $assignment_id, 'pass_mark' );
+$format    = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+$deadline  = tutor_utils()->get_assignment_deadline_date( $assignment_id, $format, __( 'No Limit', 'tutor' ) );
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
-    <div class="tutor-mb-30">
-        <a class="prev-btn" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('assignments')); ?>">
-            <span>&leftarrow;</span><?php _e('Back', 'tutor'); ?>
-        </a>
-    </div>
+	<div class="tutor-mb-22">
+		<a class="prev-btn" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
+			<span class="color-text-primary assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?>
+		</a>
+	</div>
 
     <?php if (tutor_utils()->count($assignments_submitted)): ?>
         <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
@@ -48,17 +48,16 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
             </div>
         </div>
 
-        <div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
-            <div class="tutor-form-group">
-                <label><?php esc_html_e('Sort By:', 'tutor'); ?></label>
-                <select class="tutor-announcement-order-sorting tutor-form-select">
-                    <option value="desc" <?php selected($order_filter, 'desc'); ?>><?php _e('Latest', 'tutor'); ?></option>
-                    <option value="asc" <?php selected($order_filter, 'asc'); ?>><?php _e('Oldest', 'tutor'); ?></option>
-                </select>
-            </div>
-        </div>
+		<div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
+			<div class="tutor-form-group">
+				<label><?php esc_html_e( 'Sort By:', 'tutor' ); ?></label>
+				<select class="tutor-announcement-order-sorting tutor-form-select">
+					<option value="desc" <?php selected( $order_filter, 'desc' ); ?>><?php esc_html_e( 'Latest', 'tutor' ); ?></option>
+					<option value="asc" <?php selected( $order_filter, 'asc' ); ?>><?php esc_html_e( 'Oldest', 'tutor' ); ?></option>
+				</select>
+			</div>
+		</div>
 
-        <table class="tutor-ui-table tutor-ui-table-responsive table-assignment">
             <thead>
                 <tr>
                     <th>

@@ -250,9 +250,14 @@ textarea.tutor-form-control {
 	margin: 5px 0 0;
 	color: var(--tutor-text-subtitle);
 	position: relative;
+
 	&.tutor-has-icon {
 		padding-left: 21px;
+		&.tutor-pl-25 {
+			padding-left: 25px;
+		}
 	}
+
 	.tutor-input-feedback-icon {
 		font-size: 14px;
 		position: absolute;

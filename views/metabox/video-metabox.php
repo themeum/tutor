@@ -3,7 +3,7 @@
  * Don't change it, it's supporting modal in other place
  * if get_the_ID() empty, then it's means we are passing $post variable from another place
  */
-if (get_the_ID())
+if ( get_the_ID() )
 	global $post;
 
 $video          = maybe_unserialize(get_post_meta($post->ID, '_video', true));
@@ -24,6 +24,8 @@ $video_sources  = array(
 );
 
 $supported_sources = tutor_utils()->get_option('supported_video_sources', array());
+is_string($supported_sources) ? $supported_sources=array($supported_sources) : 0;
+
 if(!is_array($supported_sources) || !count($supported_sources)) {
     _e('No video source selected from settings!', 'tutor');
     return;
@@ -43,7 +45,7 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
     </label>
     <div class="tutor-input-group tutor-mb-15 tutor-bs-d-block">
         <div class="tutor-video-upload-wrap container-fluid g-0">
-            <select name="video[source]" class="tutor-form-select tutor_lesson_video_source tutor-form-select">
+            <select name="video[source]" class="tutor-form-select tutor_lesson_video_source tutor-form-select" noDropdown>
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php
                     foreach($video_sources as $value=>$source){
@@ -55,7 +57,7 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
                     }
                 ?>
             </select>
-            
+
             <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_html5 tutor-dashed-uploader <?php echo $sourceVideoID ? 'tutor-has-video' : ''; ?>" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
                 <div class="video-metabox-source-html5-upload">
                     <p class="video-upload-icon"><i class="tutor-icon-upload"></i></p>
@@ -72,7 +74,7 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
                 </div>
 
                 <div class="html5-video-data">
-                    <?php 
+                    <?php
                         // Load Attachment card segment
                         tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/attachments.php', array(
                             'attachments' => array($videoAttachment ? $videoAttachment : (object)array()),

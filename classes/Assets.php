@@ -267,10 +267,10 @@ class Assets {
 	private function load_color_palette() {
 		$colors = array(
 			'tutor_primary_color'       => '--tutor-primary-color',
+			'tutor_primary_text_color'  => '--tutor-primary-text-color',
 			'tutor_primary_hover_color' => '--tutor-primary-hover-color',
 			'tutor_text_color'          => '--tutor-text-color',
 			'tutor_light_color'         => '--tutor-light-color',
-
 			'tutor_button_primary'      => '--tutor-primary-button-color',
 			'tutor_button_danger'       => '--tutor-danger-button-color',
 			'tutor_button_success'      => '--tutor-success-button-color',
