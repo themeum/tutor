@@ -2526,6 +2526,7 @@ table.tutor_status_table th mark.yes {
 .tutor-text-avatar {
   border-radius: 50%;
   width: 40px;
+  min-width: 40px;
   height: 40px;
   text-align: center;
   display: block;
@@ -4132,7 +4133,7 @@ table.tutor-table p {
 
 /**
   * announcement css
-  * @since v1.7.9 
+  * @since v1.7.9
   */
 .tutor-admin-search-box-container {
   display: -webkit-box;
@@ -4256,8 +4257,8 @@ table.tutor-table p {
   }
 }
 
-/** 
-   * Common CSS .tutor-list-*  - start 
+/**
+   * Common CSS .tutor-list-*  - start
    * .tutor-list-wrap > .tutor-list-header + .tutor-list-table + .tutor-list-footer
   */
 .tutor-list-wrap .tutor-list-table tbody td {
@@ -4376,8 +4377,8 @@ table.tutor-table p {
   }
 }
 
-/** 
-   * Common CSS /.tutor-list-* - end 
+/**
+   * Common CSS /.tutor-list-* - end
   */
 /* .report-course-list - start */
 .report-course-list-header {
@@ -8516,16 +8517,13 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   opacity: .8;
 }
 
-.tutor-form-select:not([nodropdown]) {
-  display: none !important;
-}
-
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-option:last-child {
   border-top: none;
 }
 
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected {
   margin-bottom: 0;
+  height: 40px;
 }
 
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected .text-medium-body, .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected .tutor-option-field-label label, .tutor-option-field-label .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected label,
