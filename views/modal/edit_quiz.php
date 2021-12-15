@@ -108,7 +108,7 @@
         <label class="tutor-form-label"><?php _e('Quiz Feedback Mode', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
             <div class="text-regular-small color-text-hints tutor-mb-10">
-                (<?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>)
+                (<?php _e('Pick the quiz system\'s behaviour on choice based questions.', 'tutor'); ?>)
             </div>
 
             <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10">

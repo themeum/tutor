@@ -241,13 +241,22 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 2.0.0 - November 15, 2021 =
+= 2.0.0 - January 01, 2022 =
 
 New: Certificate builder in frontend dashboard
 Update: Overall Design System
 Update: Backend dashboard settings rearranged
 Update: Primary table columns data type is now bigint
 Update: Disbaling quiz details attempt feature removed
+
+= 1.9.13 - December 20, 2021 =
+
+Update: Security Update
+
+= 1.9.12 - December 14, 2021 =
+
+Update: Security Update
+Fix: Instructor can access Withdrawal Requests Issue
 
 = 1.9.11 - October 18, 2021 =
 
