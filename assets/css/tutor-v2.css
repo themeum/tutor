@@ -21305,7 +21305,7 @@ body.tutor-screen-course-builder .select2-container .select2-selection--single {
 }
 
 body.tutor-screen-course-builder .select2-container .select2-selection--multiple {
-  min-height: 50px;
+  min-height: 45px;
 }
 
 body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .select2-dropdown.select2-dropdown--below, body.tutor-screen-course-builder.tutor-screen-course-builder-frontend .select2-dropdown.select2-dropdown--above {
@@ -23640,6 +23640,10 @@ textarea.tutor-form-control.tutor-textarea-auto-height {
 
 .tutor-input-feedback.tutor-has-icon {
   padding-left: 21px;
+}
+
+.tutor-input-feedback.tutor-has-icon.tutor-pl-25 {
+  padding-left: 25px;
 }
 
 .tutor-input-feedback .tutor-input-feedback-icon {
@@ -26734,12 +26738,24 @@ table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   color: #f44337;
 }
 
+.tutor-attachment-cards {
+  /* Responsive cards */
+}
+
 .tutor-attachment-cards, .tutor-attachment-cards > div {
   width: 100%;
 }
 
+.tutor-attachment-cards span.ttr-download-line {
+  background: #E9EDFB;
+  border-radius: 50%;
+  text-align: center;
+  padding: 10px;
+  font-size: 20px;
+}
+
 .tutor-attachment-cards > div {
-  padding: 0px 14px;
+  padding: 7px 14px;
   margin-bottom: 15px;
   background: #FFFFFF;
   border: 1px solid #C0C3CB;
@@ -26810,6 +26826,19 @@ table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   -ms-align-items: center;
   -moz-align-items: center;
   -webkit-align-items: center;
+}
+
+.tutor-attachment-cards.tutor-attachment-cards-responsive > div {
+  width: calc(33.33% - 20px);
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1200px) {
+  .tutor-attachment-cards.tutor-attachment-cards-responsive > div {
+    width: calc(50% - 20px) !important;
+  }
 }
 
 .tutor-wp-dashboard-header {

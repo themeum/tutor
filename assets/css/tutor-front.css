@@ -6213,14 +6213,6 @@ Withdraw Method
   margin: 5px 0;
 }
 
-.tutor-attachment-cards span.ttr-download-line {
-  background: #E9EDFB;
-  border-radius: 50%;
-  text-align: center;
-  padding: 10px;
-  font-size: 20px;
-}
-
 .tutor-dashboard-announcement-sorting-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
