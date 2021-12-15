@@ -2,7 +2,17 @@
 .tutor-cursor-pointer {
 	cursor: pointer;
 }
-
+.tutor-valign-top {
+    vertical-align: top;
+}
+// width 100%
+.tutor-w-100 {
+	width: 100%;
+}
+// min-width 100%
+.tutor-mw-100 {
+	min-width: 100%;
+}
 // display
 .d-inline {
 	display: inline;

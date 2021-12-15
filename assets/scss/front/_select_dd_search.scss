@@ -1,5 +1,5 @@
 .tutor-form-select:not([nodropdown]) {
-  display: none !important;
+  //   display: none !important;
 }
 
 .tutor-dropdown-select.select-dropdown {
@@ -8,6 +8,7 @@
   }
   .tutor-dropdown-select-selected {
     margin-bottom: 0;
+    height: 40px;
     .text-medium-body {
       padding-right: 20px;
     }
