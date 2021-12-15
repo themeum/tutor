@@ -20634,6 +20634,7 @@
 
 :root {
   --tutor-primary-color: #1B52D8;
+  --tutor-primary-text-color: #ffffff;
   --tutor-primary-hover-color: #1b52a9;
   --tutor-text-color: #4B5981;
   --tutor-light-color: #B1B8C9;
@@ -26587,16 +26588,16 @@ table.tutor-ui-table-data-td-target td.data-td-content.is-active > * {
   display: none;
 }
 
+.tutor-dashboard-content-inner .field-label {
+  color: #5b616f;
+}
+
 .tutor-password-strength-checker {
   position: relative;
 }
 
 .tutor-password-strength-checker .tutor-password-field {
   text-align: left;
-}
-
-.tutor-password-strength-checker .tutor-password-field .field-label {
-  color: #5b616f;
 }
 
 .tutor-password-strength-checker .tutor-password-field .field-group,

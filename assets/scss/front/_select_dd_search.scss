@@ -1,5 +1,5 @@
-.tutor-form-select {
-  // display: none !important;
+.tutor-form-select:not([nodropdown]) {
+  display: none !important;
 }
 
 .tutor-dropdown-select.select-dropdown {
