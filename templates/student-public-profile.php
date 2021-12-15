@@ -58,7 +58,7 @@ if ( $is_instructor ) {
 				<span class='rating-digits'>
 					<?php echo esc_html( number_format( $instructor_rating->rating_avg, 2 ) ); ?>
 				</span> 
-				<span class='rating-total-meta text-hints text-regular-caption'>
+				<span class='rating-total-meta text-hints tutor-text-regular-caption'>
 					(<?php echo esc_html( number_format( $instructor_rating->rating_count, 2 ) ); ?>)
 				</span>
 			</div>

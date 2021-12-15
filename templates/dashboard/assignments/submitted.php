@@ -26,7 +26,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
 
     <?php if (tutor_utils()->count($assignments_submitted)): ?>
         <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
-            <div class="text-regular-small color-text-subsued tutor-mb-10">
+            <div class="text-regular-small tutor-color-text-subsued tutor-mb-10">
                 <?php esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($assignments_submitted[0]->comment_parent); ?>
             </div>
             <div class="text-medium-h6">
@@ -62,26 +62,26 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
             <thead>
                 <tr>
                     <th>
-                        <span class="text-regular-small color-text-subsued">
+                        <span class="text-regular-small tutor-color-text-subsued">
                             <?php esc_html_e('Date', 'tutor'); ?>
                         </span>
                     </th>
                     <th>
-                        <div class="inline-flex-center color-text-subsued">
+                        <div class="inline-flex-center tutor-color-text-subsued">
                             <span class="text-regular-small">
                                 <?php esc_html_e('Student', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="inline-flex-center color-text-subsued">
+                        <div class="inline-flex-center tutor-color-text-subsued">
                             <span class="text-regular-small">
                                 <?php esc_html_e('Total Points', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="inline-flex-center color-text-subsued">
+                        <div class="inline-flex-center tutor-color-text-subsued">
                             <span class="text-regular-small">
                                 <?php esc_html_e('Result', 'tutor'); ?>
                             </span>
@@ -108,7 +108,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                     ?>
                     <tr>
                         <td data-th="<?php esc_html('Date', 'tutor'); ?>">
-                            <span class="color-text-primary text-medium-caption">
+                            <span class="tutor-color-text-primary tutor-text-medium-caption">
                                 <?php echo wp_kses_post( date('j M, Y,<\b\r>h:i a', strtotime($assignment->comment_date))); ?>
                             </span>
                         </td>
@@ -124,7 +124,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                             </div>
                         </td>
                         <td data-th="<?php esc_html('Total Points', 'tutor'); ?>">
-                            <span class="color-text-primary text-medium-caption">
+                            <span class="tutor-color-text-primary tutor-text-medium-caption">
                                 <?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : ''; ?>
                             </span>
                         </td>

@@ -24,14 +24,14 @@ if (is_array($materials) && count($materials)){
 	?>
 	<div class="tutor-course-details-widget tutor-mt-40">
 		<div class="tutor-course-details-widget-title tutor-mb-16">
-			<span class="color-text-primary text-medium-h6">
+			<span class="tutor-color-text-primary tutor-text-medium-h6">
 				<?php _e('Material Includes', 'tutor'); ?>
 			</span>
 		</div>
 		<ul class="tutor-course-details-widget-list">
 			<?php foreach ($materials as $material): ?>
-				<li class="tutor-bs-d-flex tutor-bs-align-items-center color-text-primary text-regular-body tutor-mb-10">
-					<span class="ttr-mark-filled color-design-brand tutor-mr-5"></span>
+				<li class="tutor-bs-d-flex tutor-bs-align-items-center tutor-color-text-primary tutor-text-regular-body tutor-mb-10">
+					<span class="ttr-mark-filled tutor-color-design-brand tutor-mr-5"></span>
 					<span><?php echo $material; ?></span>
 				</li>
 			<?php endforeach; ?>

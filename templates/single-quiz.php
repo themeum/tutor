@@ -42,12 +42,12 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                 <div class="tutor-topbar-left-item d-flex"> 
                     <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
                         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                            <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
+                            <span class="ttr-icon-light-left-line tutor-color-text-white flex-center"></span>
                         </a>
                     </div>
                     <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-                        <span class="ttr-quiz-filled color-text-white tutor-mr-5"></span>
-                        <span class="text-regular-caption color-design-white">
+                        <span class="ttr-quiz-filled tutor-color-text-white tutor-mr-5"></span>
+                        <span class="tutor-text-regular-caption tutor-color-design-white">
                             <?php 
                                 esc_html_e( 'Quiz: ', 'tutor' );
                                 the_title();
@@ -60,15 +60,15 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                         <?php
                             do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
                         ?>
-                        <div class="text-regular-caption color-design-white">
-                            <span class="tutor-progress-content color-primary-60">
+                        <div class="tutor-text-regular-caption tutor-color-design-white">
+                            <span class="tutor-progress-content tutor-color-primary-60">
                                 <?php _e('Your Progress:', 'tutor'); ?>
                             </span>
-                            <span class="text-bold-caption">
+                            <span class="tutor-text-bold-caption">
                                 <?php echo $course_stats['completed_count']; ?>
                             </span> 
                             <?php _e('of ', 'tutor'); ?>
-                            <span class="text-bold-caption">
+                            <span class="tutor-text-bold-caption">
                                 <?php echo $course_stats['total_count']; ?>
                             </span>
                             (<?php echo $course_stats['completed_percent'] .'%'; ?>)
@@ -80,7 +80,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                     <div class="tutor-topbar-cross-icon flex-center">
                         <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
                         <a href="<?php echo get_the_permalink($course_id); ?>">
-                            <span class="ttr-line-cross-line color-text-white flex-center"></span>
+                            <span class="ttr-line-cross-line tutor-color-text-white flex-center"></span>
                         </a>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                     <a href="<?php echo get_the_permalink($previous_id); ?>">
                         <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
                     </a>
-                    <div class="tutor-top-nav-title text-regular-body color-text-primary">
+                    <div class="tutor-top-nav-title tutor-text-regular-body  tutor-color-text-primary">
                         <?php 
                             the_title();
                         ?>

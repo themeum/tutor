@@ -3336,7 +3336,7 @@ class Utils {
 			<?php
 				if($show_avg_rate) {
 					?>
-					<span class="tutor-rating-text text-regular-body color-text-subsued tutor-pl-0 tutor-ml-10">
+					<span class="tutor-rating-text tutor-text-regular-body tutor-color-text-subsued tutor-pl-0 tutor-ml-10">
 						<?php
 							echo $current_rating;
 							if(!($total_count===null)) {
@@ -7344,14 +7344,14 @@ class Utils {
 
 		// List constantly required fields
 		$required_fields = array(
-			'first_name' 				  => sprintf( __( 'Set Your %sFirst Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
-			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
-			'_tutor_profile_photo' 		  => sprintf( __( 'Set Your %sProfile Photo%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'first_name' 				  => sprintf( __( 'Set Your %sFirst Name%s', 'tutor' ), '<a class="tutor-color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%s', 'tutor' ), '<a class="tutor-color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'_tutor_profile_photo' 		  => sprintf( __( 'Set Your %sProfile Photo%s', 'tutor' ), '<a class="tutor-color-text-primary" href="'.$settings_url.'">', '</a>' ),
 		);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%s', 'tutor' ), '<a class="color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
+			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%s', 'tutor' ), '<a class="tutor-color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
 		}
 
 		// Now assign identifer whether set or not
@@ -8295,7 +8295,7 @@ class Utils {
 		$page_title = $title ? $title : ''; ?>
 		<div class="td-empty-state tutor-p-30 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
-			<div class="text-regular-h5 color-text-primary tutor-mt-20 tutor-text-center">
+			<div class="tutor-text-regular-h5  tutor-color-text-primary tutor-mt-20 tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
 		</div>

@@ -14,7 +14,7 @@ if ( empty( $media_url ) ) {
 			<span class="delete-btn" style="<?php echo ! $media_url ? 'display:none' : ''; ?>"></span>
 		</div>
 		<div class="thumbnail-input">
-			<p class="text-regular-body color-text-subsued">
+			<p class="text-regular-body tutor-color-text-subsued">
 				<?php _e('Size', 'ttuor'); ?>: <strong class="text-medium-body"><?php _e( '700x430 pixels', 'tutor' ); ?>;</strong>
 				<br />
 				<?php _e( 'File Support', 'tutor' ); ?>: <strong class="text-medium-body"><?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?></strong>

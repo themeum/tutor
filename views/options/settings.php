@@ -18,7 +18,7 @@
 		<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 		<div class="search-field">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
-				<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+				<span class="ttr-search-filled tutor-input-group-icon tutor-color-black-50"></span>
 				<input type="search" accesskey="s" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search ...⌃⌥ + S or Alt+S for shortcut', 'tutor' ); ?>" />
 				<div class="search-popup-opener search_result"></div>
 			</div>
@@ -41,7 +41,7 @@
 						?>
 						<li class="tutor-option-nav-item">
 							<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
-								<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-icon-30 color-black-40"></span>
+								<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-icon-30 tutor-color-black-40"></span>
 								<span class="nav-label"><?php echo esc_html( $section['label'] ); ?></span>
 							</a>
 						</li>

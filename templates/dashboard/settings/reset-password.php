@@ -47,7 +47,7 @@
                             <span class="medium"></span>
                             <span class="strong"></span>
                         </div>
-                        <div class="text text-regular-caption color-text-hints"></div>
+                        <div class="text tutor-text-regular-caption tutor-color-text-hints"></div>
                     </div>
                 </div>
             </div>

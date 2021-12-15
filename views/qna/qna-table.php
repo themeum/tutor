@@ -9,7 +9,7 @@
         <tr>
             <?php 
                 foreach($table_columns as $key=>$column) {
-                    echo '<th><span class="text-regular-small color-text-subsued">'. $column . '</span></th>';
+                    echo '<th><span class="text-regular-small tutor-color-text-subsued">'. $column . '</span></th>';
                 }
             ?>
         </tr>
@@ -48,10 +48,10 @@
                                             <div class="td-avatar">
                                                 <i data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled" class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?> tutor-icon-20 tutor-mr-10 tutor-cursor-pointer" data-action="important"></i>
                                                 <img src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
-                                                <span class="text-medium-body color-text-primary">
+                                                <span class="tutor-text-medium-body  tutor-color-text-primary">
                                                     <?php echo $qna->display_name; ?>
                                                 </span>
-                                                <a href="#" class="btn-text btn-detail-link color-design-dark">
+                                                <a href="#" class="btn-text btn-detail-link tutor-color-design-dark">
                                                     <span class="ttr-detail-link-filled"></span>
                                                 </a>
                                             </div>
@@ -76,7 +76,7 @@
                                     case 'reply' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
-                                            <span class="text-medium-caption color-text-primary">
+                                            <span class="text-medium-caption tutor-color-text-primary">
                                                 <?php echo $qna->answer_count; ?>
                                             </span>
                                         </td>
@@ -121,16 +121,16 @@
                                                         <?php if($context!='frontend-dashboard-qna-table-student'): ?>
                                                             <li class="tutor-qna-badges">
                                                                 <a href="#" data-action="archived" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white"  data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
-                                                                    <span class="ttr-msg-archive-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                                    <span class="text-regular-body color-text-white">
+                                                                    <span class="ttr-msg-archive-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                                    <span class="text-regular-body tutor-color-text-white">
                                                                         <?php $is_archived ?  _e('Un-archive', 'tutor') : _e('Archive', 'tutor'); ?>
                                                                     </span>
                                                                 </a>
                                                             </li>
                                                             <li class="tutor-qna-badges">
                                                                 <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
-                                                                    <span class="ttr-envelope-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                                    <span class="text-regular-body color-text-white" >
+                                                                    <span class="ttr-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                                    <span class="text-regular-body tutor-color-text-white" >
                                                                         <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
                                                                     </span>
                                                                 </a>
@@ -138,8 +138,8 @@
                                                         <?php endif; ?>
                                                         <li>
                                                             <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>">
-                                                                <span class="ttr-delete-fill-filled color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                                <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
+                                                                <span class="ttr-delete-fill-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                                <span class="text-regular-body tutor-color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                                             </a>
                                                         </li>
                                                     </ul>

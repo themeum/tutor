@@ -5,7 +5,7 @@
                 $answer_title = stripslashes($answer->answer_title);
                 $answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0; 
     ?>
-	<div class="fill-in-the-gap text-regular-body color-design-dark">
+	<div class="fill-in-the-gap tutor-text-regular-body tutor-color-design-dark">
         <?php
             $count_dash_fields = substr_count($answer_title, '{dash}');
             if ($count_dash_fields){

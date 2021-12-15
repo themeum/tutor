@@ -28,7 +28,7 @@ if (is_array($attachments) && count($attachments)){
         <a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?>>
             <div class="tutor-instructor-card tutor-mb-10">
                 <div class="tutor-icard-content">
-                    <h6 class="tutor-name text-regular-body color-text-title">
+                    <h6 class="tutor-name tutor-text-regular-body tutor-color-text-title">
                         <?php echo esc_html( $attachment->name ); ?>
                     </h6>
                     <div class="text-regular-small">
@@ -36,7 +36,7 @@ if (is_array($attachments) && count($attachments)){
                     </div>
                 </div>
                 <div class="tutor-avatar tutor-is-xs flex-center tutor-bs-flex-shrink-0">
-                    <span class="tutor-icon-24 ttr-download-line color-design-brand"></span>
+                    <span class="tutor-icon-24 ttr-download-line tutor-color-design-brand"></span>
                 </div>
             </div>
         </a> 

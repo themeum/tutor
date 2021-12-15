@@ -5409,7 +5409,6 @@ li.tutor-option-nav-item h4 {
 .tutor-option-field-row textarea.tutor-form-control:-moz-read-only:focus, .tutor-dashboard-page textarea.tutor-form-control:-moz-read-only:focus {
   color: #212327;
   border-color: #1973aa;
-  box-shadow: 0 0 10px -5px;
 }
 
 .tutor-option-field-row select.tutor-form-select:focus,
@@ -5422,8 +5421,6 @@ li.tutor-option-nav-item h4 {
 .tutor-dashboard-page textarea.tutor-form-control:read-only:focus {
   color: #212327;
   border-color: #1973aa;
-  -webkit-box-shadow: 0 0 10px -5px;
-          box-shadow: 0 0 10px -5px;
 }
 
 .tutor-option-field-row select.tutor-form-select,
@@ -5877,6 +5874,16 @@ li.tutor-option-nav-item h4 {
   color: #5b616f;
 }
 
+.tutor-backend-settings-page p,
+.tutor-backend-settings-page h1,
+.tutor-backend-settings-page h2,
+.tutor-backend-settings-page h3,
+.tutor-backend-settings-page h4,
+.tutor-backend-settings-page h5 {
+  margin: 0;
+  padding: 0;
+}
+
 .tutor-backend-settings-page .tutor-option-header,
 .tutor-backend-settings-page .tutor-option-form {
   display: grid;
@@ -6095,17 +6102,10 @@ li.tutor-option-nav-item h4 {
           box-sizing: border-box;
   border-radius: 6px;
   padding: 20px 26px;
-  -webkit-transition: all 500ms;
-  transition: all 500ms;
 }
 
 .tutor-option-single-item .item-wrapper:not(:last-child) {
   margin-bottom: 8px;
-}
-
-.tutor-option-single-item .item-wrapper:hover {
-  -webkit-box-shadow: 0 0 30px -25px #000;
-          box-shadow: 0 0 30px -25px #000;
 }
 
 @media (min-width: 1200px) {
@@ -6354,6 +6354,12 @@ li.tutor-option-nav-item h4 {
 
 .tutor-option-field-row .tutor-option-field-input.d-flex {
   margin-top: 0px;
+}
+
+.tutor-option-field-row .type-check .tutor-form-check {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .tutor-option-field-row:not(.d-block) .tutor-option-field-input {
