@@ -554,7 +554,7 @@ class Tutor_List_Table {
 		if ( !$action_count )
 			return '';
 
-		$out = '<div class="' . ( $always_visible ? 'row-actions visible' : 'row-actions' ) . '">';
+		$out = '<div class="tutor-list-table row-actions' . ( $always_visible ? ' visible' : '' ) . '">';
 		foreach ( $actions as $action => $link ) {
 			++$i;
 			( $i == $action_count ) ? $sep = '' : $sep = ' | ';

@@ -1,4 +1,6 @@
 window.selectSearchField = (selectElement) => {
+    return;
+    
     const tutorFormSelect = document.querySelectorAll(selectElement);
 
     const dd_hide_onclick = () => {
