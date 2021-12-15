@@ -18,7 +18,7 @@ if(tutor_utils()->get_option('enable_profile_completion')) {
         <div class="profile-completion">
             <div class="tutor-bs-row tutor-bs-align-items-center">
                 <div class="tutor-bs-col-md-8 profile-completion-content">
-                    <div class="list-item-title text-medium-h5 color-text-primary">
+                    <div class="list-item-title tutor-text-medium-h5 tutor-color-text-primary">
                         <?php esc_html_e( 'Complete Your Profile', 'tutor' ) ?>
                     </div>
                     <div class="tutor-mt-20">
@@ -40,9 +40,9 @@ if(tutor_utils()->get_option('enable_profile_completion')) {
                             </span>
                         </li>
                     </div>
-                    <div class="list-item-title text-medium-h6 tutor-mt-30">
+                    <div class="list-item-title tutor-text-medium-h6 tutor-mt-30">
                         <span><?php $complete_count>($total_count/2) ? _e( 'You are almost done', 'tutor' ) : _e('Please complete profile') ?></span>:&nbsp;
-                        <span class="color-text-primary">
+                        <span class="tutor-color-text-primary">
                             <?php echo $complete_count . '/' . $total_count; ?>
                         </span>
                     </div>
@@ -193,18 +193,18 @@ if(count($instructor_course)) {
                 <thead>
                     <tr>
                         <th>
-                            <span class="text-regular-small color-text-subsued">
+                            <span class="text-regular-small tutor-color-text-subsued">
                                 <?php esc_html_e('Course Name', 'tutor'); ?>
                             </span>
                         </th>
                         <th>
-                            <div class="inline-flex-center color-text-subsued">
+                            <div class="inline-flex-center tutor-color-text-subsued">
                                 <span class="text-regular-small"><?php esc_html_e('Enrolled', 'tutor'); ?></span>
                                 <span class="ttr-ordering-a-to-z-filled"></span>
                             </div>
                         </th>
                         <th>
-                            <div class="inline-flex-center color-text-subsued">
+                            <div class="inline-flex-center tutor-color-text-subsued">
                                 <span class="text-regular-small"><?php esc_html_e('Rating', 'tutor'); ?></span>
                                 <span class="ttr-ordering-a-to-z-filled"></span>
                             </div>
@@ -222,19 +222,19 @@ if(count($instructor_course)) {
                         ?>
                         <tr>
                             <td data-th="<?php esc_html_e('Course Name', 'tutor'); ?>" class="column-fullwidth">
-                                <div class="td-course text-medium-body color-text-primary">
+                                <div class="td-course  tutor-text-medium-body  tutor-color-text-primary">
                                     <a href="<?php echo esc_url(get_the_permalink($course->ID)); ?>" target="_blank">
                                         <?php esc_html_e($course->post_title); ?>
                                     </a>
                                 </div>
                             </td>
                             <td data-th="<?php esc_html_e('Enrolled', 'tutor'); ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php esc_html_e($enrolled); ?>
                                 </span>
                             </td>
                             <td data-th="<?php esc_html_e('Rating', 'tutor'); ?>">
-                                <div class="td-tutor-rating text-regular-body color-text-subsued">
+                                <div class="td-tutor-rating tutor-text-regular-body tutor-color-text-subsued">
                                     <?php tutor_utils()->star_rating_generator_v2($course_rating->rating_avg, null, true); ?>
                                 </div>
                             </td>

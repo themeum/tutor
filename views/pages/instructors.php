@@ -99,25 +99,25 @@ $filters = array(
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-					<div class="inline-flex-center color-text-subsued">
+					<div class="inline-flex-center tutor-color-text-subsued">
 						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
 						<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-					<div class="inline-flex-center color-text-subsued">
+					<div class="inline-flex-center tutor-color-text-subsued">
 						<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
 						<span class="ttr-order-down-filled up-down-icon"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-					<div class="inline-flex-center color-text-subsued">
+					<div class="inline-flex-center tutor-color-text-subsued">
 						<span class="text-regular-small"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
 						<span class="ttr-order-down-filled up-down-icon"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center color-text-subsued">
+				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled up-down-icon"></span>
 				</div>
@@ -143,28 +143,28 @@ $filters = array(
 								<div class="td-avatar">
 								<?php $avatar_url = get_avatar_url( $list->ID ); ?>
 									<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-									<span class="color-text-primary text-medium-body">
+									<span class="tutor-color-text-primary tutor-text-medium-body">
 										<?php echo esc_html( $list->display_name ); ?>
 									</span>
 								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
-									<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
+									<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link tutor-color-design-dark">
 										<span class="ttr-detail-link-filled tutor-mt-5"></span>
 									</a>
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-								<span class="color-text-primary text-regular-caption">
+								<span class="tutor-color-text-primary tutor-text-regular-caption">
 							<?php echo esc_html( $list->user_email ); ?>
 								</span>
 							</td>
 							</td>
 							<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
-								<span class="color-text-primary text-regular-caption">
+								<span class="tutor-color-text-primary tutor-text-regular-caption">
 							<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
 								</span>
 							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<span class="color-text-primary text-medium-caption">
+								<span class="tutor-color-text-primary tutor-text-medium-caption">
 									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?>">
 									<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
 									</span>
@@ -343,10 +343,10 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 		<?php if ( $instructor_data ) : ?>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-text-wrap">
-						<div class="text-regular-h4 color-text-primary">
+						<div class="text-regular-h4 tutor-color-text-primary">
 							<?php esc_html_e( 'A New Instructor Just Signed Up', 'tutor' ); ?>
 						</div>
-						<div class="text-regular-small color-text-subsued tutor-mt-10">
+						<div class="text-regular-small tutor-color-text-subsued tutor-mt-10">
 							<?php esc_html_e( 'You can either accept or reject the application. The applicant will be notified via email either way.', 'tutor' ); ?>
 						</div>
 					</div>
@@ -356,7 +356,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 								<?php echo get_avatar( $instructor_data->ID ); ?>
 							</div>
 						</div>
-						<div class="text-medium-h4 color-text-primay tutor-mt-20">
+						<div class="text-medium-h4 tutor-color-text-primay tutor-mt-20">
 							<?php
 							echo esc_html(
 								( '' !== $instructor_data->display_name ?
@@ -365,15 +365,15 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 							);
 							?>
 						</div>
-						<div class="text-regular-body color-text-title tutor-mt-8">
+						<div class="text-regular-body tutor-color-text-title tutor-mt-8">
 							<?php esc_html_e( 'Username:', 'tutor' ); ?> 
-							<span class="color-text-primary">
+							<span class="tutor-color-text-primary">
 								<?php echo esc_html( $instructor_data->user_login ); ?>
 							</span>
 						</div>
-						<div class="text-regular-body color-text-title tutor-mt-3">
+						<div class="text-regular-body tutor-color-text-title tutor-mt-3">
 							<?php esc_html_e( 'Email:', 'tutor' ); ?> 
-							<span class="color-text-primary">
+							<span class="tutor-color-text-primary">
 								<?php echo esc_html( $instructor_data->user_email ); ?>
 							</span>
 						</div>

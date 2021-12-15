@@ -23829,6 +23829,43 @@ input.tutor-form-check-input[type='radio']:checked {
           box-shadow: 0 0 0 2px #e1f1fb;
 }
 
+input.tutor-form-check-input.tutor-wp-admin[type='checkbox']:checked,
+input.tutor-form-check-input.tutor-wp-admin[type='radio']:checked {
+  border-color: #1973aa;
+  background-color: #1973aa;
+}
+
+input.tutor-form-check-input.tutor-wp-admin[type='checkbox']:focus,
+input.tutor-form-check-input.tutor-wp-admin[type='radio']:focus {
+  -webkit-box-shadow: 0 0 0 4px #e1f1fb;
+          box-shadow: 0 0 0 4px #e1f1fb;
+}
+
+input.tutor-form-check-16 {
+  width: 16px;
+  height: 16px;
+}
+
+input.tutor-form-check-18 {
+  width: 18px;
+  height: 18px;
+}
+
+input.tutor-form-check-20 {
+  width: 20px;
+  height: 20px;
+}
+
+input.tutor-form-check-22 {
+  width: 22px;
+  height: 22px;
+}
+
+input.tutor-form-check-24 {
+  width: 24px;
+  height: 24px;
+}
+
 select.tutor-form-select {
   width: 100%;
   max-width: 100%;

@@ -144,7 +144,7 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 			
-		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon color-design-warning ttr-circle-outline-info-filled"></span></div><div class="text-medium-caption color-text-primary">Fully Booked</div></div>';
+		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon tutor-color-design-warning ttr-circle-outline-info-filled"></span></div><div class="tutor-text-medium-caption  tutor-color-text-primary">Fully Booked</div></div>';
 	}
 
 	function restrict_media( $where ){

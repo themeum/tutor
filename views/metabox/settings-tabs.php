@@ -114,7 +114,7 @@ $args = $this->args;
 																<?php echo $option['label_title']; ?>
 																<?php 
 																	if(!empty($option['hint'])) {
-																		echo '<span class="tutor-bs-d-block text-regular-small">'.$option['hint'].'</span>';
+																		echo '<span class="tutor-bs-d-block tutor-text-regular-small">'.$option['hint'].'</span>';
 																	}
 																?>
 															</label>

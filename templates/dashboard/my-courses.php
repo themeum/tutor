@@ -59,14 +59,14 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                         </div>
                         <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-18">
                             <div class="list-item-rating tutor-bs-d-flex tutor-mb-10">
-                                <span class="date text-h6 color-text-primary">
+                                <span class="date text-h6 tutor-color-text-primary">
                                     <?php echo esc_html( get_the_date() ); ?> <?php echo esc_html( get_the_time() ); ?>
                                 </span>
                             </div>
-                            <div class="list-item-title text-medium-h6 color-text-primary">
+                            <div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary">
                                 <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
                             </div>
-                            <div class="list-item-meta text-medium-caption color-text-primary tutor-bs-d-flex tutor-mt-10">
+                            <div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-mt-10">
                                 <?php
                                 $course_duration = get_tutor_course_duration_context();
                                 $course_students = tutor_utils()->count_enrolled_users_by_course();
@@ -74,12 +74,12 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                                 <?php
                                 if(!empty($course_duration)) { ?>
                                     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                                    <span class="meta-icon ttr-clock-filled color-text-hints"></span><span><?php echo $course_duration; ?></span>
+                                    <span class="meta-icon ttr-clock-filled tutor-color-text-hints"></span><span><?php echo $course_duration; ?></span>
                                     </div>
                                 <?php } ?>
                                 <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
                                     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                                        <span class="meta-icon ttr-user-filled color-text-hints"></span>
+                                        <span class="meta-icon ttr-user-filled tutor-color-text-hints"></span>
                                         <span><?php echo $course_students; ?></span>
                                     </div>
                                 <?php endif; ?>
@@ -93,7 +93,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                                     <span class="price text-h6">
                                         <?php esc_html_e('Price:', 'tutor') ?> 
                                     </span>
-                                    <span class="price text-h6 color-text-primary">
+                                    <span class="price text-h6 tutor-color-text-primary">
                                         <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
                                     </span>
                                 </div>

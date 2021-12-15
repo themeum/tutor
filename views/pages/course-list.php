@@ -157,7 +157,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="text-regular-small color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<span class="text-regular-small">
 									<?php esc_html_e( 'Date', 'tutor' ); ?>
 								</span>
@@ -165,7 +165,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="text-regular-small color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<span class="text-regular-small">
 									<?php esc_html_e( 'Title', 'tutor' ); ?>
 								</span>
@@ -173,7 +173,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="inline-flex-center color-text-subsued">
+							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 								</span>
@@ -181,17 +181,17 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 							</div>
 						</th>	
 						<th>
-							<div class="text-regular-small color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Course Categories', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="text-regular-small color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Students', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="text-regular-small color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</div>
 						</th>
@@ -218,39 +218,39 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
-									<div class="td-datetime text-regular-caption color-text-primary">
+									<div class="td-datetime tutor-text-regular-caption tutor-color-text-primary">
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>,<br>
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
 									</div>
 								</td>
 
 								<td data-th="<?php esc_html_e( 'Course Name', 'tutor' ); ?>" class="column-fullwidth">
-									<div class="td-course color-text-primary text-medium-body">
+									<div class="td-course tutor-color-text-primary tutor-text-medium-body">
 										<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
 											<?php echo esc_html( $post->post_title ); ?>
 										</a>
 										<div class="course-meta">
-										<span class="color-text-hints text-medium-small">
+										<span class="color-text-hints tutor-text-medium-small">
 											<?php esc_html_e( 'Topic:', 'tutor' ); ?> 
-											<strong class="color-text-primary">
+											<strong class="tutor-color-text-primary">
 												<?php echo esc_html( $count_topic ); ?>
 											</strong>
 										</span>
-										<span class="color-text-hints text-medium-small">
+										<span class="color-text-hints tutor-text-medium-small">
 											<?php esc_html_e( 'Lesson:', 'tutor' ); ?> 
-											<strong class="color-text-primary">
+											<strong class="tutor-color-text-primary">
 												<?php echo esc_html( $count_lesson ); ?>
 											</strong>
 										</span>
-										<span class="color-text-hints text-medium-small">
+										<span class="color-text-hints tutor-text-medium-small">
 											<?php esc_html_e( 'Quiz:', 'tutor' ); ?> 
-											<strong class="color-text-primary">
+											<strong class="tutor-color-text-primary">
 												<?php echo esc_html( $count_quiz ); ?>
 											</strong>
 										</span>
-										<span class="color-text-hints text-medium-small">
+										<span class="color-text-hints tutor-text-medium-small">
 											<?php esc_html_e( 'Assignment:', 'tutor' ); ?> 
-											<strong class="color-text-primary">
+											<strong class="tutor-color-text-primary">
 												<?php echo esc_html( $count_assignment ); ?>
 											</strong>
 										</span>
@@ -262,12 +262,12 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										<?php
 											echo wp_kses_post( tutor_utils()->get_tutor_avatar( $post->post_author ) );
 										?>
-										<p class="text-medium-body color-text-primary">
+										<p class="tutor-text-medium-body  tutor-color-text-primary">
 											<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 										</p>
 										<a
 										href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author ) ); ?>"
-										class="btn-text btn-detail-link color-design-dark" target="_blank"
+										class="btn-text btn-detail-link tutor-color-design-dark" target="_blank"
 										>
 										<span class="ttr-detail-link-filled"></span>
 										</a>
@@ -284,12 +284,12 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 									?>
 								</td>
 								<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>">
-									  <div class="text-regular-caption color-text-primary">
+									  <div class="text-regular-caption tutor-color-text-primary">
 										<?php echo esc_html( $total_student ); ?>
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Price', 'tutor' ); ?>">
-									<div class="text-regular-caption color-text-primary">
+									<div class="text-regular-caption tutor-color-text-primary">
 										<?php
 											$price = tutor_utils()->get_course_price( $post->ID );
 										if ( null === $price ) {
@@ -331,7 +331,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											<li>
 												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
 													<i class="ttr-eye-fill-filled"></i>
-													<span class="text-regular-body color-text-white">
+													<span class="text-regular-body tutor-color-text-white">
 														<?php esc_html_e( 'View Course', 'tutor' ); ?>
 													</span>
 												</a>
@@ -339,8 +339,8 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="#" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
-													<i class="ttr-delete-fill-filled color-design-white"></i>
-													<span class="text-regular-body color-text-white">
+													<i class="ttr-delete-fill-filled tutor-color-design-white"></i>
+													<span class="text-regular-body tutor-color-text-white">
 													<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
 													</span>
 												</a>

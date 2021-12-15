@@ -6,10 +6,10 @@
             if($total_questions) {
                 ?>
                 <div class="quiz-qno d-flex">
-                    <span class="text-regular-body color-text-hints tutor-mr-10">
+                    <span class="text-regular-body tutor-color-text-hints tutor-mr-10">
                         <?php _e('Questions No', 'tutor'); ?>:
                     </span>
-                    <span class="text-bold-body color-text-title tutor-quiz-question-counter">
+                    <span class="text-bold-body tutor-color-text-title tutor-quiz-question-counter">
                         <span>1</span>/<?php echo $total_questions; ?>
                     </span>
                 </div>
@@ -17,8 +17,8 @@
             }
         ?>
         <div class="quiz-total-attempt d-flex d-xs-none">
-            <span class="text-regular-body color-text-hints tutor-mr-10">Total <?php _e('Attempted', 'tutor'); ?>:</span>
-            <span class="text-bold-body color-text-title">
+            <span class="text-regular-body tutor-color-text-hints tutor-mr-10">Total <?php _e('Attempted', 'tutor'); ?>:</span>
+            <span class="text-bold-body tutor-color-text-title">
             <?php
                 if($attempts_allowed != 0){
                     if($attempted_count){
@@ -50,7 +50,7 @@
                     </div>
                 <?php endif; ?>
 
-                <p class="text-regular-body color-text-hints tutor-mr-10">
+                <p class="text-regular-body tutor-color-text-hints tutor-mr-10">
                     <?php _e( 'Time remaining: ', 'tutor' ); ?>
                 </p>
                 <span id="tutor-quiz-time-update" class="text-medium-body <?php if ($remaining_time_context < 0) { echo 'color-text-error';} ?>" data-attempt-settings="<?php echo esc_attr(json_encode($is_started_quiz)) ?>" data-attempt-meta="<?php echo esc_attr(json_encode($quiz_attempt_info)) ?>">
@@ -65,8 +65,8 @@
     <?php if ($remaining_time_context < 0) { ?>
     <div class="tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between" data-attempt-allowed="<?php esc_attr_e( $attempts_allowed );?>" data-attempt-remaining="<?php esc_attr_e( $attempt_remaining );?>">
         <div class="flash-info d-flex align-items-center">
-            <span class="ttr-warning-outline-circle-filled color-design-warning tutor-mr-7"></span>
-            <span class="text-regular-caption color-text-title">
+            <span class="ttr-warning-outline-circle-filled tutor-color-design-warning tutor-mr-7"></span>
+            <span class="text-regular-caption tutor-color-text-title">
                 <?php
                     _e('Your time limit for this quiz has expired, please reattempt the quiz. Attempts
                     remaining:', 'tutor');
@@ -100,8 +100,8 @@
     ?>
     <div class="tutor-quiz-warning-box time-over d-flex align-items-center justify-content-between">
         <div class="flash-info d-flex align-items-center">
-            <span class="ttr-cross-circle-outline-filled color-design-danger tutor-mr-7"></span>
-            <span class="text-regular-caption color-text-title">
+            <span class="ttr-cross-circle-outline-filled tutor-color-design-danger tutor-mr-7"></span>
+            <span class="text-regular-caption tutor-color-text-title">
                 <?php _e('Unfortunately, you are out of time and quiz attempts.', 'tutor'); ?>
             </span>
         </div>

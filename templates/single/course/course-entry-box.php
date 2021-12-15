@@ -69,11 +69,11 @@
 			<!-- course progress -->
 			<?php if ( is_array( $course_progress ) && count( $course_progress ) ) : ?>
 				<div class="tutor-course-progress-wrapper tutor-mb-30" style="width: 100%;">
-					<span class="color-text-primary text-medium-h6">
+					<span class="tutor-color-text-primary tutor-text-medium-h6">
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</span>
 					<div class="list-item-progress tutor-mt-16">
-						<div class="text-regular-body color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
@@ -139,11 +139,11 @@
 			}
 
 			?>
-				<div class="text-regular-caption color-text-hints tutor-mt-12 tutor-bs-d-flex tutor-bs-justify-content-center">
-					<span class="tutor-icon-26 color-success ttr-purchase-filled tutor-mr-6"></span>
+				<div class="text-regular-caption tutor-color-text-hints tutor-mt-12 tutor-bs-d-flex tutor-bs-justify-content-center">
+					<span class="tutor-icon-26 tutor-color-success ttr-purchase-filled tutor-mr-6"></span>
 					<span class="tutor-enrolled-info-text">
 					<?php esc_html_e( 'You enrolled this course on', 'tutor' ); ?>
-						<span class="text-bold-small color-success tutor-ml-3 tutor-enrolled-info-date">
+						<span class="text-bold-small tutor-color-success tutor-ml-3 tutor-enrolled-info-date">
 						<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) ); ?>
 						</span>
 					</span>
@@ -198,7 +198,7 @@
 				?>
 					<div class="tutor-course-sidebar-card-pricing tutor-bs-d-flex align-items-end tutor-bs-justify-content-between">
 						<div>
-							<span class="text-bold-h4 color-text-primary"><?php esc_html_e( 'Free', 'tutor' ); ?></span>
+							<span class="text-bold-h4 tutor-color-text-primary"><?php esc_html_e( 'Free', 'tutor' ); ?></span>
 						</div>
 					</div>
 					<div class="tutor-course-sidebar-card-btns">
@@ -211,7 +211,7 @@
 							</button>
 						</form>
 					</div>
-					<div class="text-regular-caption color-text-hints tutor-mt-12 tutor-text-center">
+					<div class="text-regular-caption tutor-color-text-hints tutor-mt-12 tutor-text-center">
 					<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
 					</div>
 					<?php
@@ -231,13 +231,13 @@
 				?>
 				<li class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
 					<div class="flex-center">
-						<span class="tutor-icon-24 <?php echo $meta['icon_class']; ?> color-text-primary"></span>
-						<span class="text-regular-caption color-text-hints tutor-ml-5">
+						<span class="tutor-icon-24 <?php echo $meta['icon_class']; ?> tutor-color-text-primary"></span>
+						<span class="text-regular-caption tutor-color-text-hints tutor-ml-5">
 							<?php echo esc_html( $meta['label'] ); ?>
 						</span>
 					</div>
 					<div>
-						<span class="text-medium-caption color-text-primary">
+						<span class="text-medium-caption tutor-color-text-primary">
 							<?php echo wp_kses_post( $meta['value'] ); ?>
 						</span>
 					</div>

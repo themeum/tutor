@@ -19,16 +19,16 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
     </div>
     <div class="tutor-bs-col-sm-4">
         <input class="tutor-form-control" type="number" min="0" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
-        <span class="text-thin-caption"><?php _e('HH', 'tutor'); ?></span>
+        <span class="tutor-text-thin-caption"><?php _e('HH', 'tutor'); ?></span>
     </div>
     <div class="tutor-bs-col-sm-4">
         <input class="tutor-form-control" type="number" class="tutor-number-validation" min="0" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
-        <span class="text-thin-caption"><?php _e('MM', 'tutor'); ?></span>
+        <span class="tutor-text-thin-caption"><?php _e('MM', 'tutor'); ?></span>
     </div>
 
     <div class="tutor-bs-col-sm-4">
         <input class="tutor-form-control" type="number" class="tutor-number-validation" min="0" data-min="0" data-max="59" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
-        <span class="text-thin-caption"><?php _e('SS', 'tutor'); ?></span>
+        <span class="tutor-text-thin-caption"><?php _e('SS', 'tutor'); ?></span>
     </div>
 </div>
 
@@ -37,7 +37,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <?php _e('What Will I Learn?', 'tutor'); ?>
     </label>
     <textarea class="tutor-form-control tutor-textarea-auto-height" name="course_benefits" rows="2"><?php echo $benefits; ?></textarea>
-    <span class="text-thin-caption">
+    <span class="tutor-text-thin-caption">
         <?php _e('List the knowledge and skills that students will learn after completing this course. (One per line)', 'tutor'); ?>
     </span>
 </div>
@@ -47,7 +47,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <?php _e('Requirements/Instructions', 'tutor'); ?> <br />
     </label>
     <textarea class="tutor-form-control tutor-textarea-auto-height" name="course_requirements" rows="2"><?php echo $requirements; ?></textarea>
-    <span class="text-thin-caption">
+    <span class="tutor-text-thin-caption">
         <?php _e('Additional requirements or special instructions for the students (One per line)', 'tutor'); ?>
     </span>
 </div>
@@ -57,7 +57,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <?php _e('Targeted Audience', 'tutor'); ?> <br />
     </label>
     <textarea class="tutor-form-control tutor-textarea-auto-height" name="course_target_audience" rows="2"><?php echo $target_audience; ?></textarea>
-    <span class="text-thin-caption">
+    <span class="tutor-text-thin-caption">
         <?php _e('Specify the target audience that will benefit the most from the course. (One line per target audience.)', 'tutor'); ?>
     </span>
 </div>
@@ -67,7 +67,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <?php _e('Materials Included', 'tutor'); ?> <br />
     </label>
     <textarea class="tutor-form-control tutor-textarea-auto-height" name="course_material_includes" rows="2"><?php echo $material_includes; ?></textarea>
-    <span class="text-thin-caption">
+    <span class="tutor-text-thin-caption">
         <?php _e('A list of assets you will be providing for the students in this course (One per line)', 'tutor'); ?>
     </span>
 </div>
