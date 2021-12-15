@@ -4380,9 +4380,7 @@ if (tutorDropdownSelect) {
       optionsContainer.classList.remove('is-active');
     });
   });
-}
-
-console.log(tutorDropdownSelect);
+} // console.log(tutorDropdownSelect);
 
 /***/ }),
 

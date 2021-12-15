@@ -7765,6 +7765,18 @@
   cursor: pointer;
 }
 
+.tutor-valign-top {
+  vertical-align: top;
+}
+
+.tutor-w-100 {
+  width: 100%;
+}
+
+.tutor-mw-100 {
+  min-width: 100%;
+}
+
 .d-inline {
   display: inline;
 }

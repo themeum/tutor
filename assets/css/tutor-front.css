@@ -5286,6 +5286,7 @@ table.course-single-gradebooks a {
 
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected {
   margin-bottom: 0;
+  height: 40px;
 }
 
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected .text-medium-body {
