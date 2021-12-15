@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
    * On change status
    * update course status
    */
-  const availableStatus = ["publish", "pending", "trash", "draft"];
+  const availableStatus = ["publish", "pending", "trash", "draft", "private"];
   const courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
   for (let status of courseStatusUpdate) {
     status.onchange = async (e) => {

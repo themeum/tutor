@@ -1127,7 +1127,7 @@ document.addEventListener("DOMContentLoaded", function () {
    */
 
 
-  var availableStatus = ["publish", "pending", "trash", "draft"];
+  var availableStatus = ["publish", "pending", "trash", "draft", "private"];
   var courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
 
   var _iterator3 = _createForOfIteratorHelper(courseStatusUpdate),
