@@ -3962,9 +3962,16 @@ window.jQuery(document).ready(function ($) {
   $('.tutor-textarea-auto-height').trigger('input'); // Prevent number input out of range
 
   $(document).on('input', 'input.tutor-form-control[type="number"], input.tutor-form-number-verify[type="number"]', function () {
+    if ($(this).val() == '') {
+      $(this).val('');
+      return;
+    }
+
     var min = $(this).attr('min');
     var max = $(this).attr('max');
-    var val = parseInt($(this).val() || 0); // Prevent number smaller than min
+    var val = $(this).val().toString();
+    /\D/.test(val) ? val = '' : 0;
+    val = parseInt(val || 0); // Prevent number smaller than min
 
     if (!(min === undefined)) {
       val < parseInt(min) ? $(this).val(min) : 0;
