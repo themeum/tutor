@@ -43,7 +43,7 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
     </label>
     <div class="tutor-input-group tutor-mb-15 tutor-bs-d-block">
         <div class="tutor-video-upload-wrap container-fluid g-0">
-            <select name="video[source]" class="tutor-form-select tutor_lesson_video_source tutor-form-select">
+            <select name="video[source]" class="tutor_lesson_video_source tutor-form-select">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php
                     foreach($video_sources as $value=>$source){

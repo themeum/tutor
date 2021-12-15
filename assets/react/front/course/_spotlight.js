@@ -104,11 +104,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     }
     commentSideLine();
-    // if(parentComments && replyComment) {
-    //     console.log('yo yo pops from the baler list ', parentComments);
-    //     console.log('yo yo pops from the baler list ', replyComment);
-    //     commentSideLine();
-    // }
 	const spotlightTabs = document.querySelectorAll(
 		'.tutor-spotlight-tab.tutor-default-tab .tab-header-item'
 	);
@@ -127,7 +122,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					event.currentTarget.parentNode.nextElementSibling;
 				tabConent.querySelector('#' + id).classList.add('is-active');
                 if (id === 'tutor-course-spotlight-tab-3') {
-                    console.log('milse ', id);
 					commentSideLine();
 				}
 			});

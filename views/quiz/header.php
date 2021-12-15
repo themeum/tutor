@@ -14,6 +14,7 @@
         $student_url    = '#';
 
         extract(tutor_utils()->get_quiz_attempt_timing($attempt_data)); // $attempt_duration, $attempt_duration_taken;
+        
         $quiz_time      = $attempt_duration;
         $attempt_time   = $attempt_duration_taken;
 

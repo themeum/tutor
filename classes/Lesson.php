@@ -172,7 +172,7 @@ class Lesson extends Tutor_Base {
 			'post_name'      => sanitize_title($title),
 			'post_content'   => $lesson_content,
 			'post_status'    => 'publish',
-			'comment_status' => tutor_utils()->get_option('enable_comment_for_lesson') ? 'open' : 'closed',
+			'comment_status' => 'open',
 			'post_author'    => get_current_user_id(),
 			'post_parent'    => $topic_id
 		);

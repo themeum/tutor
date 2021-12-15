@@ -2944,6 +2944,7 @@ document.addEventListener("DOMContentLoaded", function () {
 /***/ (() => {
 
 window.selectSearchField = function (selectElement) {
+  return;
   var tutorFormSelect = document.querySelectorAll(selectElement);
 
   var dd_hide_onclick = function dd_hide_onclick() {
