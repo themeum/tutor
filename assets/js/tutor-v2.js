@@ -5077,6 +5077,7 @@ var TutorDatepicker = function TutorDatepicker(data) {
     var params = url.searchParams;
     params.set(type, val);
     params.set('paged', 1);
+    params.set('current_page', 1);
     return url;
   };
 

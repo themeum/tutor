@@ -69,6 +69,7 @@ const TutorDatepicker = (data) => {
 		const params = url.searchParams;
 		params.set(type, val);
 		params.set('paged', 1);
+		params.set('current_page', 1);
 		return url;
 	};
 	useEffect(() => {
