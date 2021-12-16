@@ -34,7 +34,7 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
 
 
 <div class="tutor-mb-30">
-    <label class="tutor-form-label">
+    <label class="text-medium-body color-text-primary">
         <?php
         if ($post->post_type === tutor()->course_post_type){
             _e('Course Intro Video', 'tutor');
@@ -45,6 +45,11 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
     </label>
     <div class="tutor-input-group tutor-mb-15 tutor-bs-d-block">
         <div class="tutor-video-upload-wrap container-fluid g-0">
+            <div class="tutor-dropdown-icon-pack">
+                <i class="ttr-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
+                <!-- <i class="ttr-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
+                <i class="ttr-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i> -->
+            </div>
             <select name="video[source]" class="tutor-form-select tutor_lesson_video_source tutor-form-select" noDropdown>
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php

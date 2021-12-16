@@ -20,7 +20,7 @@ $can_publish_course = (bool) tutor_utils()->get_option( 'instructor_can_publish_
 ?>
 
 <?php
-if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
+if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
 	$args = array(
 		'headline'    => __( 'Permission Denied', 'tutor' ),
 		'message'     => __( 'You don\'t have the right to edit this course', 'tutor' ),
@@ -153,7 +153,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 						<div class="tutor-mb-30">
 							<label class="tutor-course-field-label"><?php _e( 'Course Title', 'tutor' ); ?></label>
 							<div class="tooltip-wrap tutor-bs-d-block">
-								<span class="tooltip-txt tooltip-right">
+								<span class="tooltip-txt tooltip-right tutor-mt-10">
 									<?php _e( '60', 'tutor' ); ?>
 								</span>
 								<input type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e( 'ex. Learn photoshop CS6 from scratch', 'tutor' ); ?>">
@@ -239,6 +239,8 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 										array(
 											'media_id'   => get_post_thumbnail_id( $course_id ),
 											'input_name' => 'tutor_course_thumbnail_id',
+											'placeholder'=> tutor()->url . '/assets/images/placeholder-course.svg',
+											'borderless' => true
 										),
 										false
 									);
