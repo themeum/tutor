@@ -17,7 +17,6 @@ $sidebar_width: 360px;
 
     .tutor-qa-reply{
         bottom: 20px;
-        position: sticky;
         bottom: 0;
         background: white;
         z-index: 10;
@@ -135,14 +134,39 @@ $sidebar_width: 360px;
                 background: white;
                 border-radius: 6px;
                 margin: 0;
+                position: relative;
+
+                &:before{
+                    content: '';
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    top: -5px;
+                    background: inherit;
+                    -webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+                    clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+                    -webkit-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    border-radius: 3px;
+                }
             }
 
             &.tutor-qna-left {
-                
+                .tutor-qna-text{
+                    &:before{
+                        left: 15px;
+                    }
+                }
             }
 
             &.tutor-qna-right {
                 float: right;
+
+                .tutor-qna-text{
+                    &:before{
+                        right: 15px;
+                    }
+                }
 
                 .tutor-qna-user{
                     @include propertyWithPrefix(flex-flow, row-reverse);
@@ -348,5 +372,18 @@ table.qna-list-table {
 
     .tutor-qa-reply {
         position: initial !important;
+    }
+}
+
+.tutor-qa-reply {
+    &[data-context=course-single-qna-sidebar], &[data-context=course-single-qna-single] {
+        &, textarea {
+            border: none !important;
+        }
+
+        textarea{
+            border: 1px solid #CDCFD5 !important;
+            border-radius: 6px !important;
+        }
     }
 }
