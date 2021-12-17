@@ -1,12 +1,9 @@
 <?php 
     extract($data); // $question_id
 
-    // Access Privilege check
-    if(!$question_id || !tutor_utils()->can_user_manage('qa_question', $question_id)){
-        _e('Access Denied. Or question not found.', 'tutor');
-        return;
-    }
-
+    // At first set this as read
+    update_comment_meta( $question_id, 'tutor_qna_read', 1 );
+    
     // QNA data
     $question       = tutor_utils()->get_qa_question($question_id);
     $meta           = $question->meta;

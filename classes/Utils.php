@@ -4083,7 +4083,7 @@ class Utils {
 				break;
 
 			case 'unread' :
-				$qna_types_caluse = ' AND (_meta.meta_key!=\'tutor_qna_read\' OR _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value!=1) ';
 				break;
 
 			case 'archived' :
@@ -4091,11 +4091,11 @@ class Utils {
 				break;
 
 			case 'important' :
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value=1) ';
 				break;
 		}
 
-		$columns_select = $count_only ? 'COUNT(_question.comment_ID)' :
+		$columns_select = $count_only ? '_question.comment_ID' :
 			"_question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
@@ -4136,7 +4136,7 @@ class Utils {
 		);
 
 		if($count_only) {
-			return $wpdb->get_var($query);
+			return count($wpdb->get_results($query));
 		}
 
 		$query = $wpdb->get_results( $query );

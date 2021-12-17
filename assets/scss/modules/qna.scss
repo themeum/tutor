@@ -77,6 +77,7 @@ $sidebar_width: 360px;
         position: sticky;
         top: 32px;
         margin-left: -19px;
+        z-index: 9;
 
         &>div{
             &:last-child{
@@ -350,6 +351,53 @@ table.qna-list-table {
         &:not(.is-qna-read) {
             .tutor-qna-title {
                 font-weight: bold;
+                font-size: 16px;
+                color: #212327;
+            }
+        }
+    }
+
+    .tutor-qna-question-col {
+
+        i {
+            font-size: 24px !important;
+            margin-right: 13px;
+            left: -6px;
+            top: 2px;
+        }
+
+        span {
+            margin-bottom: 5px;
+        }
+
+        small {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 13px;
+            color: #525252;
+        }
+
+        &:not(.is-read) {
+            i {
+                color: #1973AA;
+            }
+
+            span {
+                font-style: normal;
+                font-weight: bold;
+                font-size: 16px;
+                color: #212327;
+            }
+        }
+
+        &.is-read {
+            i{
+                color: #C0C3CB;
+            }
+
+            span{
+                font-style: normal;
+                font-weight: 500;
                 font-size: 16px;
                 color: #212327;
             }

@@ -61,6 +61,11 @@ class Q_and_A {
 		// Insert new question/answer
 		$wpdb->insert($wpdb->comments, $data);
 		!$question_id ? $question_id = (int) $wpdb->insert_id : 0;
+
+		// Mark the question unseen if action made from student
+		// if($user_id!=) {
+			update_comment_meta( $question_id, 'tutor_qna_read', 0 );
+		// }
 		
 		// Provide the html now
 		ob_start();
@@ -121,12 +126,13 @@ class Q_and_A {
 	 */
 	public static function tabs_key_value() {
 		$url = get_pagenum_link();
+		
 		$stats = array(
-			'all' => $all = count( tutor_utils()->get_qa_questions(0, 99999) ),
-			'read' => $read = count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_read'=>1))),
-			'unread' => $all-$read,
-			'important' => count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_important'=>1))),
-			'archived' => count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_archived'=>1)))
+			'all' 		=> tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, null, true),
+			'read' 		=> tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, 'read', true),
+			'unread' 	=> tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, 'unread', true),
+			'important' => tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, 'important', true),
+			'archived' 	=> tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, 'archived', true)
 		);
 
 		$tabs = array(
@@ -137,6 +143,7 @@ class Q_and_A {
 			'archived',
 		);
 
+		// Assign value, url etc to the tab array
 		$tabs = array_map(function($tab) use($stats, $url) {
 			return array(
 				'key'   => $tab,
