@@ -9907,6 +9907,7 @@ body.wp-admin .tutor-qna-single-wrapper .tutor-qa-reply {
   position: sticky;
   top: 32px;
   margin-left: -19px;
+  z-index: 9;
 }
 
 .tutor-qna-single-question .tutor-qa-sticky-bar > div:last-child {
@@ -10179,6 +10180,46 @@ table.qna-list-table tr .tutor-qna-title {
 
 table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   font-weight: bold;
+  font-size: 16px;
+  color: #212327;
+}
+
+table.qna-list-table .tutor-qna-question-col i {
+  font-size: 24px !important;
+  margin-right: 13px;
+  left: -6px;
+  top: 2px;
+}
+
+table.qna-list-table .tutor-qna-question-col span {
+  margin-bottom: 5px;
+}
+
+table.qna-list-table .tutor-qna-question-col small {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  color: #525252;
+}
+
+table.qna-list-table .tutor-qna-question-col:not(.is-read) i {
+  color: #1973AA;
+}
+
+table.qna-list-table .tutor-qna-question-col:not(.is-read) span {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  color: #212327;
+}
+
+table.qna-list-table .tutor-qna-question-col.is-read i {
+  color: #C0C3CB;
+}
+
+table.qna-list-table .tutor-qna-question-col.is-read span {
+  font-style: normal;
+  font-weight: 500;
   font-size: 16px;
   color: #212327;
 }
