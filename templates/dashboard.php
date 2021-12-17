@@ -71,105 +71,75 @@ do_action( 'tutor_dashboard/before/wrap' );
 
 <div class="tutor-wrap tutor-dashboard tutor-dashboard-student">
 	<div class="tutor-bs-container">
-
-		<!-- Head Part -->
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12">
-				<div class="tutor-bs-row tutor-bs-align-items-center tutor-dashboard-header">
-					<div class="tutor-bs-col-4 tutor-bs-col-sm-3 tutor-bs-col-md-2 tutor-bs-flex-center tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
+		<!-- new head part  -->
+		<div class="tutor-bs-row tutor-bs-d-flex justify-content-between" style="border-bottom: 1px solid #dcdfe5;">
+			<div class="tutor-header-left-side tutor-dashboard-header tutor-bs-col-md-6 tutor-bs-d-flex align-items-center" style="border: none;">
+				<div class=" tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
+				</div>
+				<div class="tutor-user-info tutor-ml-20">
+					<div class="tutor-dashboard-header-display-name">
+						<h4><strong><?php echo $user->display_name; ?></strong> </h4>
 					</div>
-					<div class="tutor-bs-col-8 tutor-bs-col-sm-9 tutor-bs-col-md-10">
-						<div class="tutor-bs-row tutor-bs-align-items-center">
-							<div class="tutor-bs-col-12 tutor-bs-col-md-5">
-								<div class="tutor-dashboard-header-display-name">
-									<h4><strong><?php echo $user->display_name; ?></strong> </h4>
-								</div>
-								<?php
-									$instructor_rating = tutor_utils()->get_instructor_ratings( $user->ID );
-
-								if ( current_user_can( tutor()->instructor_role ) ) {
-									?>
-										<div class="tutor-dashboard-header-stats">
-											<div class="tutor-dashboard-header-ratings">
-											<?php tutor_utils()->star_rating_generator_v2( $instructor_rating->rating_avg, $instructor_rating->rating_count, true ); ?>
-											</div>
-											<!--<div class="tutor-dashboard-header-notifications">
-											<?php /*_e('Notification'); */ ?> <span>9</span>
-											</div>-->
-										</div>
-										<?php
-								}
-								?>
-							</div>
-							<div class="tutor-bs-col-12 tutor-bs-col-md-7 tutor-bs-d-md-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
-								<?php
-									do_action( 'tutor_dashboard/before_header_button' );
-									$instructor_status  = tutor_utils()->instructor_status();
-									$instructor_status  = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
-									$rejected_on        = get_user_meta( $user->ID, '_is_tutor_instructor_rejected', true );
-									$info_style         = 'vertical-align: middle; margin-right: 7px;';
-									$info_message_style = 'display:inline-block; color:#7A7A7A; font-size: 15px;';
-
-									ob_start();
-								if ( tutor_utils()->get_option( 'enable_become_instructor_btn' ) ) {
-									?>
-											<a id="tutor-become-instructor-button" style="vertical-align:middle" class="tutor-btn bordered-btn" href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>">
-												<i class="tutor-icon-man-user"></i> &nbsp; <?php _e( 'Become an instructor', 'tutor' ); ?>
-											</a>
-										<?php
-								}
-									$become_button = ob_get_clean();
-
-								if ( current_user_can( tutor()->instructor_role ) ) {
-									$course_type = tutor()->course_post_type;
-									?>
-										<a class="tutor-btn tutor-is-outline" href="<?php echo apply_filters( 'frontend_course_create_url', admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ); ?>">
-											<i class="tutor-icon-plus-square-button tutor-mr-10"></i> <?php _e( 'Create Course', 'tutor' ); ?>
-										</a>
-										<?php
-								} elseif ( $instructor_status == 'pending' ) {
-									$on = get_user_meta( $user->ID, '_is_tutor_instructor', true );
-									$on = date( 'd F, Y', $on );
-									echo '<span style="' . $info_message_style . '">
-                                                <i class="dashicons dashicons-info color-warning-90" style=" ' . $info_style . '"></i>',
-											__( 'Your Application is pending as of', 'tutor' ), ' <b>', $on, '</b>',
-										'</span>';
-								} elseif ( $rejected_on || $instructor_status !== 'blocked' ) {
-									echo $become_button;
-								}
-								?>
-							</div>
-						</div>
-					</div>
-					
 					<?php
-					if (
-								$instructor_status != 'approved' &&
-								$instructor_status != 'pending' &&
-								$rejected_on &&
-								get_user_meta( get_current_user_id(), 'tutor_instructor_show_rejection_message', true )
-							) {
+						$instructor_rating = tutor_utils()->get_instructor_ratings( $user->ID );
+
+					if ( current_user_can( tutor()->instructor_role ) ) {
 						?>
-							<div class="tutor-bs-col-12 tutor-instructor-rejection-notice">
-							<?php
-								$on = date( 'd F, Y', $rejected_on );
-								echo '<span>
-                                        <i class="dashicons dashicons-info"></i>',
-									__( 'Your application to become an instructor was rejected on', 'tutor' ) . ' ' . $on .
-								'</span>
-                                    <a href="?tutor_action=hide_instructor_notice">✕</a>';
-							?>
+							<div class="tutor-dashboard-header-stats">
+								<div class="tutor-dashboard-header-ratings">
+								<?php tutor_utils()->star_rating_generator_v2( $instructor_rating->rating_avg, $instructor_rating->rating_count, true ); ?>
+								</div>
+								<!--<div class="tutor-dashboard-header-notifications">
+								<?php /*_e('Notification'); */ ?> <span>9</span>
+								</div>-->
 							</div>
 							<?php
 					}
 					?>
 				</div>
 			</div>
-			<div class="tutor-bs-col-12">
-				<?php do_action( 'tutor_dashboard/notification_area' ); ?>
+			<div class="tutor-header-right-side  tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end">
+				<div class="tutor-bs-d-flex align-items-center">
+					<?php
+						do_action( 'tutor_dashboard/before_header_button' );
+						$instructor_status  = tutor_utils()->instructor_status();
+						$instructor_status  = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
+						$rejected_on        = get_user_meta( $user->ID, '_is_tutor_instructor_rejected', true );
+						$info_style         = 'vertical-align: middle; margin-right: 7px;';
+						$info_message_style = 'display:inline-block; color:#7A7A7A; font-size: 15px;';
+
+						ob_start();
+					if ( tutor_utils()->get_option( 'enable_become_instructor_btn' ) ) {
+						?>
+								<a id="tutor-become-instructor-button" style="vertical-align:middle" class="tutor-btn bordered-btn" href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>">
+									<i class="tutor-icon-man-user"></i> &nbsp; <?php _e( 'Become an instructor', 'tutor' ); ?>
+								</a>
+							<?php
+					}
+						$become_button = ob_get_clean();
+
+					if ( current_user_can( tutor()->instructor_role ) ) {
+						$course_type = tutor()->course_post_type;
+						?>
+							<a class="tutor-btn tutor-is-outline" href="<?php echo apply_filters( 'frontend_course_create_url', admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ); ?>">
+								<i class="tutor-icon-plus-square-button tutor-mr-10"></i> <?php _e( 'Create Course', 'tutor' ); ?>
+							</a>
+							<?php
+					} elseif ( $instructor_status == 'pending' ) {
+						$on = get_user_meta( $user->ID, '_is_tutor_instructor', true );
+						$on = date( 'd F, Y', $on );
+						echo '<span style="' . $info_message_style . '">
+                                    <i class="dashicons dashicons-info color-warning-90" style=" ' . $info_style . '"></i>',
+								__( 'Your Application is pending as of', 'tutor' ), ' <b>', $on, '</b>',
+							'</span>';
+					} elseif ( $rejected_on || $instructor_status !== 'blocked' ) {
+						echo $become_button;
+					}
+					?>
+				</div>
 			</div>
 		</div>
-
+		<!-- new head part end -->
 		<!-- Sidebar and Content Part -->
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-md-4 tutor-bs-col-lg-3 tutor-dashboard-left-menu">
