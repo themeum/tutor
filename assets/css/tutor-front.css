@@ -9832,7 +9832,6 @@ body.wp-admin .tutor-qna-single-wrapper .tutor-qa-reply {
 
 .tutor-qna-single-question .tutor-qa-reply {
   bottom: 20px;
-  position: sticky;
   bottom: 0;
   background: white;
   z-index: 10;
@@ -9988,10 +9987,33 @@ body.wp-admin .tutor-qna-single-wrapper .tutor-qa-reply {
   background: white;
   border-radius: 6px;
   margin: 0;
+  position: relative;
+}
+
+.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat .tutor-qna-text:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: -5px;
+  background: inherit;
+  -webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+  clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border-radius: 3px;
+}
+
+.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat.tutor-qna-left .tutor-qna-text:before {
+  left: 15px;
 }
 
 .tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat.tutor-qna-right {
   float: right;
+}
+
+.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat.tutor-qna-right .tutor-qna-text:before {
+  right: 15px;
 }
 
 .tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat.tutor-qna-right .tutor-qna-user {
@@ -10175,6 +10197,15 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
 
 .tutor-qna-sptolight-sidebar .tutor-qa-reply {
   position: initial !important;
+}
+
+.tutor-qa-reply[data-context=course-single-qna-sidebar], .tutor-qa-reply[data-context=course-single-qna-sidebar] textarea, .tutor-qa-reply[data-context=course-single-qna-single], .tutor-qa-reply[data-context=course-single-qna-single] textarea {
+  border: none !important;
+}
+
+.tutor-qa-reply[data-context=course-single-qna-sidebar] textarea, .tutor-qa-reply[data-context=course-single-qna-single] textarea {
+  border: 1px solid #CDCFD5 !important;
+  border-radius: 6px !important;
 }
 
 .answer-image-matched-wrap {
