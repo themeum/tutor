@@ -18,7 +18,7 @@ $announcements = tutor_utils()->get_announcements(get_the_ID());
 <?php if(is_array($announcements) && count($announcements)): ?>
 	<?php foreach($announcements as $announcement): ?>
 		<div class="tutor-announcement bg-white tutor-mb-30">
-			<div class="tutor-announcement-head color-text-primary bg-black-03 tutor-px-28 tutor-py-20">
+			<div class="tutor-announcement-head tutor-color-text-primary bg-black-03 tutor-px-28 tutor-py-20">
 				<div class="text-medium-h6">
 					<?php echo $announcement->post_title; ?>
 				</div>
@@ -28,7 +28,7 @@ $announcements = tutor_utils()->get_announcements(get_the_ID());
 							<img src="<?php echo get_avatar_url( $announcement->post_author ); ?>" alt="instructor avatar" />
 						</div>
 						<div class="text-medium-caption">
-							<span class="text-regular-caption color-text-subsued">by</span> <?php echo get_userdata( $announcement->post_author )->display_name; ?>
+							<span class="text-regular-caption tutor-color-text-subsued">by</span> <?php echo get_userdata( $announcement->post_author )->display_name; ?>
 						</div>
 					</div>
 					<div class="text-regular-caption">
@@ -37,7 +37,7 @@ $announcements = tutor_utils()->get_announcements(get_the_ID());
 				</div>
 			</div>
 			<div class="tutor-announcement-body tutor-px-28 tutor-py-24">
-				<div class="text-regular-body color-text-subsued">
+				<div class="text-regular-body tutor-color-text-subsued">
 					<?php 
 						echo tutor_utils()->announcement_content(wpautop(stripslashes($announcement->post_content))); 
 					?>
@@ -47,8 +47,8 @@ $announcements = tutor_utils()->get_announcements(get_the_ID());
 	<?php endforeach; ?>
 <?php else: ?>
 	<div class="tutor-no-announcements">
-		<div class="text-medium-h6 color-text-primary"><?php _e('No announcements posted yet.', 'tutor'); ?></div>
-		<div class="text-regular-body color-text-subsued tutor-mt-7">
+		<div class="text-medium-h6 tutor-color-text-primary"><?php _e('No announcements posted yet.', 'tutor'); ?></div>
+		<div class="text-regular-body tutor-color-text-subsued tutor-mt-7">
 			<?php _e('The instructor hasn’t added any announcements to this course yet. Announcements are used to inform you of updates or additions to the course.', 'tutor'); ?>
 		</div>
 	</div>

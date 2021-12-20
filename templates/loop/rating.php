@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				tutor_utils()->star_rating_generator_course($course_rating->rating_avg);
 			?>
         </div>
-        <div class="tutor-rating-text color-text-subsued text-medium-small">
+        <div class="tutor-rating-text tutor-color-text-subsued tutor-text-medium-small">
 			<?php
 				if ($course_rating->rating_avg > 0) {
 					echo apply_filters('tutor_course_rating_average', $course_rating->rating_avg);

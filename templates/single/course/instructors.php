@@ -20,7 +20,7 @@ $instructors = tutor_utils()->get_instructors_by_course();
 if($instructors && count($instructors)) {
 	?>
 	<div class="tutor-mt-65">
-		<div class="color-text-primary text-medium-h6 tutor-mb-25">
+		<div class="tutor-color-text-primary tutor-text-medium-h6 tutor-mb-25">
 			<?php _e('About the instructors', 'tutor'); ?>
 		</div>
 		<?php foreach($instructors as $instructor): ?>
@@ -30,15 +30,15 @@ if($instructors && count($instructors)) {
 						<img src="<?php echo get_avatar_url($instructor->ID); ?>" alt="instructor avatar" />
 					</div>
 					<div class="tutor-ins-rest">
-						<div class="tutor-ins-title text-medium-body color-text-primary">
+						<div class="tutor-ins-title  tutor-text-medium-body  tutor-color-text-primary">
 							<a href="<?php echo tutor_utils()->profile_url($instructor->ID); ?>"><?php echo $instructor->display_name; ?></a>
 						</div>
 						<?php if ( ! empty($instructor->tutor_profile_job_title)): ?>
-							<div class="tutor-ins-designation text-regular-caption color-text-hints tutor-mt-3">
+							<div class="tutor-ins-designation tutor-text-regular-caption tutor-color-text-hints tutor-mt-3">
 								<?php echo $instructor->tutor_profile_job_title; ?>
 							</div>
 						<?php endif; ?>
-						<div class="tutor-ins-summary text-regular-body text-subsued tutor-mt-18">
+						<div class="tutor-ins-summary tutor-text-regular-body text-subsued tutor-mt-18">
 							<?php echo htmlspecialchars($instructor->tutor_profile_bio); ?>
 						</div>
 					</div>
@@ -49,21 +49,21 @@ if($instructors && count($instructors)) {
 						tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 
 					?>
 					<div class="tutor-ins-meta tutor-bs-d-flex">
-						<div class="tutor-ins-meta-item color-design-dark flex-center">
+						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center">
 							<span class="tutor-icon-30 ttr-user-filled"></span>
-							<span class="text-bold-body color-text-primary tutor-mr-4">
+							<span class="text-bold-body tutor-color-text-primary tutor-mr-4">
 								<?php echo tutor_utils()->get_total_students_by_instructor($instructor->ID); ?>
 							</span>
-							<span class="text-regular-caption color-text-subsued">
+							<span class="text-regular-caption tutor-color-text-subsued">
 								<?php _e('Students', 'tutor'); ?>
 							</span>
 						</div>
-						<div class="tutor-ins-meta-item color-design-dark flex-center ">
+						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center ">
 							<span class="tutor-icon-30 ttr-mortarboard-line"></span>
-							<span class="text-bold-body color-text-primary tutor-mr-4">
+							<span class="text-bold-body tutor-color-text-primary tutor-mr-4">
 								<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?>
 							</span>
-							<span class="text-regular-caption color-text-subsued">
+							<span class="text-regular-caption tutor-color-text-subsued">
 								<?php _e('Courses', 'tutor'); ?>
 							</span>
 						</div>

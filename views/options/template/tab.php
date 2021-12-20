@@ -35,7 +35,7 @@
         <?php if(count($more_popups)): ?>
             <div class="tab-header-item-seemore tutor-bs-ml-auto">
                 <div class="tab-header-item-seemore-toggle" data-seemore-target="tutor-settings-tab-seemore-11">
-                    <span class="icon-seemore ttr-line-cross-line tutor-icon-20 color-text-brand"></span>
+                    <span class="icon-seemore ttr-line-cross-line tutor-icon-20 tutor-color-text-brand"></span>
                 </div>
                 <div id="tutor-settings-tab-seemore-11" class="tab-header-item-seemore-popup">
                     <ul>

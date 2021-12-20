@@ -61,7 +61,7 @@
                             $show_question_mark = (bool) tutor_utils()->avalue_dot('show_question_mark', $question_settings);
                             $answer_required = (bool) tutor_utils()->array_get('answer_required', $question_settings);
 
-                            echo '<div class="quiz-question-title text-medium-h4 color-text-primary tutor-mb-20">';
+                            echo '<div class="quiz-question-title tutor-text-medium-h4 tutor-color-text-primary tutor-mb-20">';
                             if ( ! $hide_question_number_overview){
                                 echo $question_i. ". ";
                             }
@@ -74,7 +74,7 @@
 
                             $question_description = nl2br( stripslashes($question->question_description) );
                             if ($question_description){
-                                echo "<div class='matching-quiz-question-desc'><span class='text-regular-caption color-text-subsued'>{$question_description}</span></div>";
+                                echo "<div class='matching-quiz-question-desc'><span class='text-regular-caption tutor-color-text-subsued'>{$question_description}</span></div>";
                             }
                         ?>
                     </div>

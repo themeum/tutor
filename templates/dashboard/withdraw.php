@@ -39,7 +39,7 @@ else if(function_exists('edd_currency_symbol')){
 
 ?>
 
-<div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal color-text-primary">
+<div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal tutor-color-text-primary">
     <h4><?php echo __('Withdrawal', 'tutor'); ?></h4>
 
     <div class="tutor-component-three-col-action">
@@ -105,7 +105,7 @@ else if(function_exists('edd_currency_symbol')){
                     <div>
                         <i class="tutor-icon-line-cross close-withdraw-form-btn"></i>
                         <img src="<?php echo $image_base; ?>wallet.svg" />
-                        <div class="text-medium-h5 color-text-primary tutor-mt-20">
+                        <div class="text-medium-h5 tutor-color-text-primary tutor-mt-20">
                             <?php esc_html_e('Withdrawal Request', 'tutor'); ?>
                         </div>
                         <p class="tutor-mb-40"><?php esc_html_e('Please enter withdrawal amount and click the submit request button', 'tutor'); ?></p>
@@ -175,7 +175,7 @@ else if(function_exists('edd_currency_symbol')){
     if (tutor_utils()->count($all_histories->results)) {
         ?>
         <div class="withdraw-history-table-wrap tutor-tooltip-inside">
-            <div class="withdraw-history-table-title color-text-primary">
+            <div class="withdraw-history-table-title tutor-color-text-primary">
                 <h4> <?php esc_html_e('Withdrawal History', 'tutor'); ?></h4>
             </div>
 
@@ -183,22 +183,22 @@ else if(function_exists('edd_currency_symbol')){
                 <thead>
                     <tr>
                         <th>
-                            <span class="text-regular-small color-text-subsued">
+                            <span class="text-regular-small tutor-color-text-subsued">
                                 <?php esc_html_e('Withdrawal Method', 'tutor') ?>
                             </span>
                         </th>
                         <th width="30%">
-                            <span class="text-regular-small color-text-subsued">
+                            <span class="text-regular-small tutor-color-text-subsued">
                                 <?php esc_html_e('Requested On', 'tutor') ?>
                             </span>
                         </th>
                         <th width="15%">
-                            <span class="text-regular-small color-text-subsued">
+                            <span class="text-regular-small tutor-color-text-subsued">
                                 <?php esc_html_e('Amount', 'tutor') ?>
                             </span>
                         </th>
                         <th width="15%">
-                            <span class="text-regular-small color-text-subsued">
+                            <span class="text-regular-small tutor-color-text-subsued">
                                 <?php esc_html_e('Status', 'tutor') ?>
                             </span>
                         </th>
