@@ -14,13 +14,12 @@ if (isset($_GET['view_quiz_attempt_id']) && is_numeric($_GET['view_quiz_attempt_
     return;
 }
 
-use TUTOR\Quiz_Attempts_List;
-$quiz_attempts = new Quiz_Attempts_List();
+$quiz_attempts = new TUTOR\Quiz_Attempts_List(false);
 
 /**
  * Short able params
  */
-$user_id = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
+$user_id   = isset( $_GET['user_id'] ) ? $_GET['user_id'] : '';
 $course_id = isset( $_GET['course-id'] ) ? $_GET['course-id'] : '';
 $order     = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date      = isset( $_GET['date'] ) ? tutor_get_formated_date( 'Y-m-d', $_GET['date'] ) : '';
