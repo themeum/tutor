@@ -851,7 +851,6 @@ class Utils {
         $totalContents    = $this->count($course_contents);
         $totalContents    = $totalContents ? $totalContents : 0;
         $completedCount   = $completed_lesson;
-
         if ( tutor_utils()->count( $course_contents ) ) {
             foreach ( $course_contents as $content ) {
                 if ( $content->post_type === 'tutor_quiz' ) {
@@ -864,7 +863,17 @@ class Utils {
                     if ( $isSubmitted ) {
                         $completedCount++;
                     }
-                }
+                } elseif ( $content->post_type === 'tutor_zoom_meeting' ) {
+					/**
+					 * count zoom lesson completion for course progress
+					 *
+					 * @since v2.0.0
+					 */
+					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
+					if ( $is_completed ) {
+						$completedCount++;
+					}
+				}
             }
         }
 
@@ -8555,4 +8564,5 @@ class Utils {
 	
 		return implode(', ', $timeParts);
 	}
+
 }

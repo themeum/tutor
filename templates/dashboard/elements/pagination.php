@@ -7,7 +7,7 @@
  */
 
 if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
-	<nav class="tutor-ui-pagination tutor-ui-pagination-wp">
+	<nav class="tutor-ui-pagination">
 		<div classs="tutor-pagination-hints">
 			<div class="text-regular-caption tutor-color-text-subsued">
 			<?php esc_html_e( 'Page', 'tutor' ); ?> 

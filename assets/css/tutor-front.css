@@ -6026,6 +6026,15 @@ table.tutor-dashboard-statement-table p.small-text {
   font-family: 'Manrope', sans-serif !important;
 }
 
+@media screen and (max-width: 767.98px) {
+  .tutor-header-right-side {
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+}
+
 /**
  * Tutor Course Delete Popup
  */

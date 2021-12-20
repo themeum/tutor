@@ -642,3 +642,10 @@ table.tutor-dashboard-statement-table p.small-text {
 		}
 	}
 }
+//applies to small devices (landscape phones, less than 768px)
+@media screen and (max-width: 767.98px ) {
+	.tutor-header-right-side {
+		justify-content: flex-start;
+		margin-bottom: 20px;
+	}
+}
