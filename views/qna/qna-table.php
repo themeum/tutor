@@ -11,7 +11,7 @@
             <?php 
                 foreach($table_columns as $key=>$column) {
                     echo '<th>
-                            <span class="text-regular-small tutor-color-text-subsued">'. 
+                            <span class="text-regular-small tutor-color-text-subsued" style="'.($key=='action' ? 'visibility:hidden' : '').'">'. 
                                 $column 
                             . '</span>
                         </th>';
@@ -107,7 +107,7 @@
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
                                             <div class="tooltip-wrap">
-                                                <i class="ttr-tick-circle-outline-filled tutor-font-size-24 <?php echo $is_solved ? 'tutor-text-success' : ''; ?>"></i>
+                                                <i class=" tutor-font-size-24 <?php echo $is_solved ? 'ttr-mark-cricle tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i>
                                                 <span class="tooltip-txt tooltip-bottom">
                                                     <?php $is_solved ? _e('Solved', 'tutor') : _e('Unresolved Yet', 'tutor'); ?>
                                                 </span>
@@ -118,10 +118,10 @@
 
                                     case 'action' :
                                         ?>
-                                        <td data-th="<?php echo $column; ?>">
+                                        <td data-th="<?php echo $column; ?>" class="tutor-text-right">
                                             <div class="inline-flex-center td-action-btns">
                                                 <a href="<?php echo add_query_arg( array( 'question_id'=>$qna->comment_ID ), tutor()->current_url ); ?>" class="btn-outline tutor-btn">
-                                                    <?php _e( 'Details', 'tutor-pro' ); ?>
+                                                    <?php _e( 'Reply', 'tutor-pro' ); ?>
                                                 </a>
 
                                                 <!-- ToolTip Action -->
