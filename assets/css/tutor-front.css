@@ -9838,6 +9838,13 @@ body.wp-admin .tutor-qna-single-wrapper .tutor-qa-reply {
   overflow: hidden;
 }
 
+.tutor-qna-single-question .tutor-qna-single-wrapper .qna-back-button {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  color: #5B616F;
+}
+
 .tutor-qna-single-question .tutor-qa-reply {
   bottom: 20px;
   bottom: 0;
