@@ -61,16 +61,16 @@
         <?php if(in_array($context, array('backend-dashboard-qna-single', 'frontend-dashboard-qna-single'))): ?>
             <div class="tutor-qa-sticky-bar">
                 <div>
-                    <a href="<?php echo $back_url; ?>">
-                        <?php _e('Back', 'tutor'); ?>
+                    <a class="qna-back-button" href="<?php echo $back_url; ?>">
+                        <i class="ttr-previous-line"></i> <?php _e('Back', 'tutor'); ?>
                     </a>
                 </div>
                 <div class="tutor-qna-badges">
 
                     <!-- Show meta data actions if it is instructor view -->
                     <?php if(!$is_user_asker): ?>
-                        <span data-action="solved" data-state-class-selector="i" data-state-class-0="ttr-tick-circle-outline-filled" data-state-class-1="ttr-tick-circle-outline-filled tutor-text-success">
-                            <i class="<?php echo $is_solved ? 'ttr-tick-circle-outline-filled tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
+                        <span data-action="solved" data-state-class-selector="i" data-state-class-0="ttr-tick-circle-outline-filled" data-state-class-1="ttr-mark-cricle tutor-text-success">
+                            <i class="<?php echo $is_solved ? 'ttr-mark-cricle tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
                             <span><?php _e('Solved', 'tutor'); ?></span>
                         </span>
                         <span data-action="important" data-state-class-selector="i" data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled">
