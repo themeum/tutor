@@ -42,7 +42,11 @@ window.jQuery(document).ready($=>{
             attachment_card.find('.filesize').text(attachment.filesizeHumanReadable);
             
             // Add video id to hidden input
-            container.find("input.input_source_video_id").val(attachment.id);
+            container
+                .find("input.input_source_video_id")
+                .val(attachment.id)
+                .data('video_url', attachment.url)
+                .trigger('paste');
 
             // Add identifer that video added
             container.addClass('tutor-has-video');
@@ -51,7 +55,4 @@ window.jQuery(document).ready($=>{
         // Finally, open the modal on click
         frame.open();
     });
-
-    // Remove video
-    
 });

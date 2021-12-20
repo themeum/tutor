@@ -45,10 +45,10 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
     </label>
     <div class="tutor-input-group tutor-mb-15 tutor-bs-d-block">
         <div class="tutor-video-upload-wrap container-fluid g-0">
-            <div class="tutor-dropdown-icon-pack">
+            <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo $videoSource; ?>">
                 <i class="ttr-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
-                <!-- <i class="ttr-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
-                <i class="ttr-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i> -->
+                <i class="ttr-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
+                <i class="ttr-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
             </div>
             <select name="video[source]" class="tutor-form-select tutor_lesson_video_source tutor-form-select" noDropdown>
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
@@ -82,7 +82,7 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
                     <?php
                         // Load Attachment card segment
                         tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/attachments.php', array(
-                            'attachments' => array($videoAttachment ? $videoAttachment : (object)array()),
+                            'attachments' => array($videoAttachment ? $videoAttachment : (object)array('id'=>0, 'url'=>'', 'title'=>'', 'size'=>'')),
                             'size_below' => true,
                             'no_control' => true
                         ), false);

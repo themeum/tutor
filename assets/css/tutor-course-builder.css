@@ -3555,4 +3555,24 @@ body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #tut
   padding: 15px;
 }
 
+body.tutor-screen-course-builder .tutor-dropdown-icon-pack {
+  position: absolute;
+  top: 13px;
+  left: 10px;
+}
+
+body.tutor-screen-course-builder .tutor-dropdown-icon-pack + select {
+  padding-left: 35px;
+}
+
+body.tutor-screen-course-builder .tutor-dropdown-icon-pack [data-for] {
+  display: none;
+}
+
+body.tutor-screen-course-builder .tutor-dropdown-icon-pack[data-video_source=html5] [data-for=html5],
+body.tutor-screen-course-builder .tutor-dropdown-icon-pack[data-video_source=youtube] [data-for=youtube],
+body.tutor-screen-course-builder .tutor-dropdown-icon-pack[data-video_source=vimeo] [data-for=vimeo] {
+  display: block;
+}
+
 /*# sourceMappingURL=tutor-course-builder.css.map */

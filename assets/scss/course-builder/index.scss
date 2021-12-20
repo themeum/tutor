@@ -85,4 +85,25 @@ body.tutor-screen-course-builder {
     &:not(.tutor-screen-course-builder-frontend) {
         @import './backend.scss';
     }
+
+    .tutor-dropdown-icon-pack {
+        position: absolute;
+        top: 13px;
+        left: 10px;
+
+        &+select {
+            padding-left: 35px;
+        }
+
+        [data-for] {
+            display: none;
+        }
+
+        &[data-video_source=html5] [data-for=html5], 
+        &[data-video_source=youtube] [data-for=youtube], 
+        &[data-video_source=vimeo] [data-for=vimeo] 
+        {
+            display: block;
+        }
+    }
 }
