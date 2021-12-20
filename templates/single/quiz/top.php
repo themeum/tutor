@@ -22,8 +22,7 @@ $attempted_count 	= is_array($previous_attempts) ? count($previous_attempts) : 0
 
 $attempts_allowed 	= tutor_utils()->get_quiz_option(get_the_ID(), 'attempts_allowed', 0);
 $passing_grade 		= tutor_utils()->get_quiz_option(get_the_ID(), 'passing_grade', 0);
-
-$attempt_remaining 	= $attempts_allowed - $attempted_count;
+$attempt_remaining 	= (int) $attempts_allowed - (int) $attempted_count;
 
 do_action('tutor_quiz/single/before/top');
 ?>

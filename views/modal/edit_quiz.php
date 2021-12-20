@@ -137,14 +137,14 @@
         </div>
     </div>
     
-    <div class="tutor-mb-30">
+    <div class="tutor-mb-30 tutor-quiz-slider">
         <label class="tutor-form-label"><?php _e('Attempts Allowed', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
             <?php
                 $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
                 $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
             ?>
-            <div class="tutor-field-type-slider" data-min="0" data-max="20">
+            <div class="tutor-field-type-slider tutor-p-0" data-min="0" data-max="20">
                 <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
                 <div class="tutor-field-slider"></div>
                 <input type="hidden" value="<?php echo $attempts_allowed; ?>" name="quiz_option[attempts_allowed]" />
