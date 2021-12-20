@@ -1,12 +1,9 @@
 <?php 
     extract($data); // $question_id
 
-    // Access Privilege check
-    if(!$question_id || !tutor_utils()->can_user_manage('qa_question', $question_id)){
-        _e('Access Denied. Or question not found.', 'tutor');
-        return;
-    }
-
+    // At first set this as read
+    update_comment_meta( $question_id, 'tutor_qna_read', 1 );
+    
     // QNA data
     $question       = tutor_utils()->get_qa_question($question_id);
     $meta           = $question->meta;
@@ -59,17 +56,21 @@
     </div>
 
     <div class="tutor-qna-single-wrapper">
+
+        <!-- Show header action bar if it is single question in backend/frontend dashboard -->
         <?php if(in_array($context, array('backend-dashboard-qna-single', 'frontend-dashboard-qna-single'))): ?>
             <div class="tutor-qa-sticky-bar">
                 <div>
-                    <a href="<?php echo $back_url; ?>">
-                        <?php _e('Back', 'tutor'); ?>
+                    <a class="qna-back-button" href="<?php echo $back_url; ?>">
+                        <i class="ttr-previous-line"></i> <?php _e('Back', 'tutor'); ?>
                     </a>
                 </div>
                 <div class="tutor-qna-badges">
+
+                    <!-- Show meta data actions if it is instructor view -->
                     <?php if(!$is_user_asker): ?>
-                        <span data-action="solved" data-state-class-selector="i" data-state-class-0="ttr-tick-circle-outline-filled" data-state-class-1="ttr-tick-circle-outline-filled tutor-text-success">
-                            <i class="<?php echo $is_solved ? 'ttr-tick-circle-outline-filled tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
+                        <span data-action="solved" data-state-class-selector="i" data-state-class-0="ttr-tick-circle-outline-filled" data-state-class-1="ttr-mark-cricle tutor-text-success">
+                            <i class="<?php echo $is_solved ? 'ttr-mark-cricle tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
                             <span><?php _e('Solved', 'tutor'); ?></span>
                         </span>
                         <span data-action="important" data-state-class-selector="i" data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled">
@@ -92,6 +93,8 @@
                 </div>
             </div>
         <?php endif; ?>
+
+        <!-- Show  question anaswer. Both the root level question and reply will go in single loop. Just first one will be considered as root questoin. -->
         <div class="tutor-qa-chatlist">
             <?php
                 $current_user_id = get_current_user_id();
@@ -136,7 +139,7 @@
                 }
             ?>
         </div>
-        <div class="tutor-qa-reply" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+        <div class="tutor-qa-reply" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
             <textarea class="tutor-form-control" placeholder="<?php _e('Write here...', 'tutor'); ?>"></textarea>
             <div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center">
                 <button type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-is-xs tutor-ml-15">

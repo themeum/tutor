@@ -21,7 +21,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<span class="las la-times"></span>
 					</button>
 				</div>
-				
+
 				<div class="tutor-modal-body-alt modal-container">
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="announcement_id" value="<?php echo $announcment_id; ?>">
@@ -31,7 +31,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php _e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select" name="tutor_announcement_course" required>
+						<select class="tutor-form-select" name="tutor_announcement_course" required noDropdown>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>
@@ -55,7 +55,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						</label>
 						<textarea class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php echo $summary; ?></textarea>
 					</div>
-					
+
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
@@ -252,7 +252,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 						<?php else : ?>
 							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" class="tutor-text-nowrap">
 								<?php echo esc_html( $date_format ); ?>
-							</td>                    
+							</td>
 						<?php endif; ?>
 
 						<td data-th="<?php esc_html_e( 'Announcement', 'tutor' ); ?>" class="column-fullwidth">
@@ -272,7 +272,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</button>
 								</div>
-								
+
 								<div class="tutor-popup-opener">
 									<button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
 										<span class="toggle-icon"></span>
@@ -293,7 +293,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									</ul>
 								</div>
 							</div>
-							
+
 							<?php
 								tutor_announcement_modal( $update_modal_id, __( 'Edit Announcment', 'tutor' ), $courses, $announcement );
 								tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course->post_title, $date_format, $time_format );
@@ -311,7 +311,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 			<?php endif; ?>
 		</tbody>
 	</table>
-	
+
 	<div class="tutor-pagination-wrapper <?php echo esc_attr( is_admin() ? 'tutor-mt-20' : '' ); ?>">
 	<?php
 		// Need an unlikely integer.
@@ -346,7 +346,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 
 		?>
 	</div>
- 
+
 
 
 <?php

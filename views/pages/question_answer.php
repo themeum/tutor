@@ -15,8 +15,17 @@ if (isset($_GET['question_id'])){
 $qna = (new \TUTOR\Question_Answers_List())->get_items();
 $qna_list = $qna['items'];
 $qna_pagination = $qna['pagination'];
-?>
 
+
+/* $filters = array(
+	'bulk_action'   => true,
+	'bulk_actions'  => array('delete' => __('Delete', 'tutor')),
+	'ajax_action'   => 'tutor_quiz_attempts_bulk_action',
+	'filters'       => true,
+	'course_filter' => true,
+); */
+
+?>
 
 <?php
 	/**
@@ -38,7 +47,6 @@ $qna_pagination = $qna['pagination'];
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	// tutor_load_template_from_custom_path( $filters_template, $filters );
 ?>
-
 
 <div class="wrap">
 	<?php 
