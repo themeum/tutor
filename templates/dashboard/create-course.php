@@ -154,9 +154,9 @@ if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(),
 							<label class="tutor-course-field-label"><?php _e( 'Course Title', 'tutor' ); ?></label>
 							<div class="tooltip-wrap tutor-bs-d-block">
 								<span class="tooltip-txt tooltip-right tutor-mt-10">
-									<?php _e( '60', 'tutor' ); ?>
+									<?php _e( '350', 'tutor' ); ?>
 								</span>
-								<input type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e( 'ex. Learn photoshop CS6 from scratch', 'tutor' ); ?>">
+								<input type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e( 'ex. Learn photoshop CS6 from scratch', 'tutor' ); ?>" maxlength="350">
 							</div>
 						</div>
 						
@@ -213,7 +213,7 @@ if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(),
 													<span class="tutor-input-prepand">
 													<?php echo $currency_symbol; ?>
 													</span>
-													<input type="number" class="tutor-form-number-verify" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e( 'Set course price', 'tutor' ); ?>" min="0">
+													<input type="number" class="tutor-form-number-verify tutor-pl-6" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e( 'Set course price', 'tutor' ); ?>" min="0">
 												</label>
 											</div>
 										</div>

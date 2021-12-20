@@ -2195,6 +2195,7 @@ body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border-radius: 6px;
+  width: 100%;
 }
 
 body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs .settings-tabs-heading {
@@ -2305,7 +2306,7 @@ body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs .course-set
 }
 
 body.tutor-screen-course-builder #tutor-metabox-course-settings-tabs .course-settings-tabs-container .settings-tabs-container input.tutor-form-check-input {
-  margin-top: 3px;
+  margin-top: 0;
 }
 
 body.tutor-screen-course-builder:not(.tutor-screen-course-builder-frontend) #course-settings .inside {
