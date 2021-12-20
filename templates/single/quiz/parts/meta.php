@@ -33,7 +33,7 @@
 	<?php if ( ! $hide_quiz_time_display ) : ?>
 		<div class="quiz-meta-info-right">
 			<div class="quiz-time-remaining d-flex">
-				<?php if ( $remaining_time_context > 0 ) : ?>
+				<?php if ( $remaining_time_secs > 0 ) : ?>
 					<div class="quiz-time-remaining-progress-circle">
 						<svg viewBox="0 0 50 50" width="50" height="50" style="--quizeProgress: 30;">
 							<circle cx="0" cy="0" r="7"></circle>
@@ -42,7 +42,7 @@
 					</div>
 				<?php endif; ?>
 
-				<?php if ( $remaining_time_context < 0 ) : ?>
+				<?php if ( $remaining_time_secs < 0 ) : ?>
 					<div class="quiz-time-remaining-expired-circle">
 						<svg viewBox="0 0 50 50" width="50" height="50">
 							<circle cx="0" cy="0" r="8"></circle>
@@ -55,11 +55,11 @@
 				</p>
 				<span id="tutor-quiz-time-update" class="text-medium-body 
 				<?php
-				if ( $remaining_time_context < 0 ) {
+				if ( $remaining_time_secs < 0 ) {
 					echo 'color-text-error';}
 				?>
 				" data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>">
-					<?php echo esc_html( $remaining_time_context ); ?>
+					<?php echo esc_html( $remaining_time_secs ); ?>
 				</span>
 			</div>
 		</div>
@@ -67,44 +67,44 @@
 </div>
 
 <div class="quiz-flash-message">
-	<?php if ( $remaining_time_context < 0 ) { ?>
-	<div class="tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
-		<div class="flash-info d-flex align-items-center">
-			<span class="ttr-warning-outline-circle-filled tutor-color-design-warning tutor-mr-7"></span>
-			<span class="text-regular-caption tutor-color-text-title">
-				<?php
-					esc_html_e(
-						'Your time limit for this quiz has expired, please reattempt the quiz. Attempts
-                    remaining:',
-						'tutor'
-					);
-				?>
-				 <?php
+	<?php if ( $attempt_remaining ) { ?>
+		<div class="tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
+			<div class="flash-info d-flex align-items-center">
+				<span class="ttr-warning-outline-circle-filled tutor-color-design-warning tutor-mr-7"></span>
+				<span class="text-regular-caption tutor-color-text-title">
+					<?php
+						esc_html_e(
+							'Your time limit for this quiz has expired, please reattempt the quiz. Attempts
+                        remaining:',
+							'tutor'
+						);
+					?>
+					<?php
 					if ( $attempts_allowed != 0 ) {
 						if ( $attempted_count ) {
 							echo esc_html( $attempted_count . '/' );
 						}
 					}
-					echo 0 == $attempts_allowed ? esc_html__( 'No limit', 'tutor' ) : esc_html( $attempts_allowed );
+						echo 0 == $attempts_allowed ? esc_html__( 'No limit', 'tutor' ) : esc_html( $attempts_allowed );
 					?>
-			</span>
-		</div>
-		<div class="flash-action">
-			<form id="tutor-start-quiz" method="post">
-				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+				</span>
+			</div>
+			<div class="flash-action">
+				<form id="tutor-start-quiz" method="post">
+					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-				<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-				<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
+					<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
+					<input type="hidden" value="tutor_start_quiz" name="tutor_action"/>
 
-				<button type="submit" class="tutor-btn tutor-btn-md reattempt-btn" name="start_quiz_btn" value="start_quiz">
-					<?php esc_html_e( 'Reattempt', 'tutor' ); ?>
-				</button>
-			</form>
+					<button type="submit" class="tutor-btn tutor-btn-md reattempt-btn" name="start_quiz_btn" value="start_quiz">
+						<?php esc_html_e( 'Reattempt', 'tutor' ); ?>
+					</button>
+				</form>
+			</div>
 		</div>
-	</div>
 		<?php
 	}
-	if ( $remaining_time_context < 0 && $attempts_allowed == $attempted_count ) {
+	if ( $remaining_time_secs < 0 && $attempts_allowed == $attempted_count ) {
 		?>
 	<div class="tutor-quiz-warning-box time-over d-flex align-items-center justify-content-between">
 		<div class="flash-info d-flex align-items-center">
