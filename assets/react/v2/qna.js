@@ -20,8 +20,6 @@ window.jQuery(document).ready($=>{
         let question_id = $(this).closest('[data-question_id]').data('question_id');
         let button = $(this);
 
-        console.log('Clicked here');
-
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -51,7 +49,7 @@ window.jQuery(document).ready($=>{
                     console.log(remove_class, add_class);
 
                     var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
-                    class_element.addClass(add_class).removeClass(remove_class);
+                    class_element.removeClass(remove_class).addClass(add_class);
                 }
                 
                 // Toggle text if togglable text defined
@@ -60,6 +58,7 @@ window.jQuery(document).ready($=>{
                     // Get toggle text
                     var new_text = button.data( new_value==1 ? 'state-text-1' : 'state-text-0' );
                 
+                    console.log(button.data('state-text-selector'));
                     var text_element = button.data('state-text-selector') ? button.find(button.data('state-text-selector')) : button;
                     text_element.text(new_text);
                 }
@@ -79,6 +78,7 @@ window.jQuery(document).ready($=>{
         let course_id   = button.closest('[data-course_id]').data('course_id');
         let context     = button.closest('[data-context]').data('context');
         let answer      = form.find('textarea').val();
+        let back_url    = $(this).data('back_url');
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -88,6 +88,7 @@ window.jQuery(document).ready($=>{
                 question_id,
                 context,
                 answer,
+                back_url,
                 action: 'tutor_qna_create_update'
             },
             beforeSend: () =>{
