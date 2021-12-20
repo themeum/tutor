@@ -556,4 +556,12 @@ jQuery(document).ready(function ($) {
   if (tutorCheckbox) {
     tutorCheckbox.parent().addClass('tutor-option-field-row');
   }
+  const tdWithRadio = document.querySelectorAll("td[id^='tutor-student-course-'] .tutor-form-check");
+  tdWithRadio.forEach(item => {
+    if(item) {
+      if (item.classList.contains('tutor-option-field-row')) {
+        item.classList.remove('tutor-option-field-row');
+      }
+    }
+  });
 });
