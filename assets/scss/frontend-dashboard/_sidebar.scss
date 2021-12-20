@@ -55,14 +55,15 @@
 
             &.active a {
                 background-color: var(--tutor-primary-color);
-                color: #ffffff;
+                color: var(--tutor-primary-text-color);
 
                 &:hover {
                     background-color: var(--tutor-primary-hover-color);
                 }
 
                 &::before {
-                    color: var(--tutor-primary-hover-color);
+                    // color: var(--tutor-primary-hover-color);
+                    color: var(--tutor-primary-text-color);
                 }
 
                 li {
@@ -237,20 +238,20 @@
 }
 
 &:not(.is-sidebar-expanded) {
-    .tutor-dashboard-left-menu {
-        @media (max-width: 767px) {
-            display: none;
-        }
-    }
+	.tutor-dashboard-left-menu {
+		@media (max-width: 767px) {
+			display: none;
+		}
+	}
 }
 
 &.is-sidebar-expanded {
-    ul.tutor-dashboard-permalinks {
-        border-right: none !important;
+	ul.tutor-dashboard-permalinks {
+		border-right: none !important;
 
-        li.active a {
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-    }
+		li.active a {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
 }

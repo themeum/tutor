@@ -2,8 +2,8 @@
     $filter_object = new \TUTOR\Course_Filter();
     
     $filter_prices=array(
-        'free'=> __('Free', 'tutor'),
-        'paid'=> __('Paid', 'tutor'),
+        'free'=> __( 'Free', 'tutor' ),
+        'paid'=> __( 'Paid', 'tutor' ),
     );
 
     $course_levels      = tutor_utils()->course_levels();
@@ -11,13 +11,13 @@
     $supported_filters = array_keys($supported_filters);
 ?>
 <form>  
-    <?php do_action('tutor_course_filter/before'); ?>
+    <?php do_action( 'tutor_course_filter/before' ); ?>
     <?php
-        if(in_array('search', $supported_filters)){
+        if ( in_array( 'search', $supported_filters ) ) {
             ?>
              <div class="filter-widget-search">
                 <div class="tutor-input-group tutor-form-control-has-icon tutor-from-control">
-                    <span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+                    <span class="ttr-search-filled tutor-input-group-icon tutor-color-black-50"></span>
                     <input type="Search" class="tutor-form-control" name="keyword" placeholder="<?php _e('Search...'); ?>"/>
                 </div>
             </div>
@@ -29,7 +29,7 @@
             <?php
                 if(in_array('category', $supported_filters)){
             ?>
-            <div class="filter-widget-title text-regular-h6 color-text-primary tutor-mb-26">
+            <div class="filter-widget-title tutor-text-regular-h6 tutor-color-text-primary tutor-mb-26">
                 <?php esc_html_e('Category', 'tutor'); ?>
             </div>
             <div class="filter-widget-checkboxes">
@@ -43,7 +43,7 @@
             <?php
                 if(in_array('tag', $supported_filters)){
             ?>
-            <div class="filter-widget-title text-regular-h6 color-text-primary tutor-mb-26">
+            <div class="filter-widget-title tutor-text-regular-h6 tutor-color-text-primary tutor-mb-26">
                 <?php esc_html_e( 'Tag', 'tutor' ); ?>
             </div>
             <div class="filter-widget-checkboxes">
@@ -57,7 +57,7 @@
     ?>
     <div class="filter-widget-input-wrapper tutor-mt-26">
         <div class="filter-widget-input">
-            <div class="filter-widget-title text-regular-h6 color-text-primary tutor-mb-26">
+            <div class="filter-widget-title tutor-text-regular-h6 tutor-color-text-primary tutor-mb-26">
                 <?php esc_html_e( 'Level', 'tutor' ); ?>
             </div>
             <div class="filter-widget-checkboxes">
@@ -82,7 +82,7 @@
     ?>
     <div class="filter-widget-input-wrapper tutor-mt-26">
         <div class="filter-widget-input">
-            <div class="filter-widget-title text-regular-h6 color-text-primary tutor-mb-26">
+            <div class="filter-widget-title tutor-text-regular-h6 tutor-color-text-primary tutor-mb-26">
                 <?php _e('Price', 'tutor'); ?>
             </div>
             <div class="filter-widget-checkboxes">
@@ -111,5 +111,5 @@
             </div>
         </div>
     </div>
-    <?php do_action('tutor_course_filter/after'); ?>
+    <?php do_action( 'tutor_course_filter/after' ); ?>
 </form>

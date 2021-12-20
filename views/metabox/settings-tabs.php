@@ -67,11 +67,12 @@ $args = $this->args;
 							<div class="tutor-bs-row tutor-mb-30">
 								<?php
 									$second_class = 'tutor-bs-col-12';
+									$_vertical = isset($field['is_vertical']) ? $field['is_vertical'] : false;
 
 									if (!empty($field['label'])){
-										$second_class = 'tutor-bs-col-12 tutor-bs-col-md-7';
+										$second_class = 'tutor-bs-col-12 '.($_vertical ? '' : 'tutor-bs-col-md-7');
 										?>
-										<div class="tutor-bs-col-12 tutor-bs-col-md-5">
+										<div class="tutor-bs-col-12 <?php echo $_vertical ? '' : 'tutor-bs-col-md-5'; ?>">
 											<label class="tutor-course-setting-label">
 												<?php echo $field['label']; ?>
 											</label>
@@ -83,14 +84,14 @@ $args = $this->args;
 									<?php
 										switch($field['type']) {
 											case 'number' :
-												echo '<input class="tutor-form-control" type="number" name="' . $field_key . '" value="' . $value . '"  min="0">';
+												echo '<input style="max-width:126px !important;" class="tutor-form-control" type="number" name="' . $field_key . '" value="' . $value . '"  min="0">';
 												break;
 
 												case 'radio' :
 													foreach($field['options'] as $value => $label) {
 														$id_string = 'course_setting_radio_' . (!empty($field['id']) ? $field['id'] : $value);
 														?>
-														<div class="tutor-form-check tutor-mb-10">
+														<div class="tutor-form-check tutor-mt-10 tutor-mb-10">
 															<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
 															<label for="<?php echo $id_string; ?>" class="text-medium-caption">
 																<?php echo $label; ?>
@@ -114,7 +115,7 @@ $args = $this->args;
 																<?php echo $option['label_title']; ?>
 																<?php 
 																	if(!empty($option['hint'])) {
-																		echo '<span class="tutor-bs-d-block text-regular-small">'.$option['hint'].'</span>';
+																		echo '<span class="tutor-bs-d-block tutor-text-regular-small">'.$option['hint'].'</span>';
 																	}
 																?>
 															</label>
@@ -130,7 +131,7 @@ $args = $this->args;
 
 														if(!empty($option['hint'])) {
 															?>
-															<p class="tutor-input-feedback tutor-has-icon">
+															<p class="tutor-input-feedback tutor-has-icon tutor-pl-25">
 																<i class="ttr-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19"></i>
 																<?php echo $option['hint']; ?>
 															</p>
@@ -161,7 +162,7 @@ $args = $this->args;
 
 										if (isset($field['desc'])){
 											?>
-												<p class="tutor-input-feedback tutor-has-icon">
+												<p class="tutor-input-feedback tutor-has-icon tutor-pl-25">
 													<i class="ttr-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19"></i>
 													<?php echo $field['desc']; ?>
 												</p>

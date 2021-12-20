@@ -1,4 +1,3 @@
-
 .answer-image-matched-wrap {
     display: block;
     .image-matching-item {
@@ -39,5 +38,77 @@
     img {
         max-width: 35px;
         max-height: 35px;
+    }
+}
+
+
+.tutor-quiz-attempt-details-wrapper {
+    .back {
+        position: relative;
+        a {
+            font-size: 16px;
+            color: #5B616F;
+            .ttr-previous-line {
+                font-size: 20px;
+                line-height: 0px;
+                color: #1A1B1E;
+            }
+        }
+    }
+}
+
+.tutor-quiz-attempt-details {
+
+    .tutor-icon-rounded {
+        @include valueWithPrefix(display, inline-flex);
+        @include propertyWithPrefix(align-items, center);
+        @include propertyWithPrefix(justify-content, center);
+        width: 32px;
+        height: 32px;
+        overflow: hidden;
+        border-radius: 50%;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border-width: 1px;
+        border-style: solid;
+        font-size: 13px;
+        cursor: pointer;
+
+        &.tutor-text-danger {
+            border-color: var(--tutor-danger);
+        }
+
+        &.tutor-text-success {
+            border-color: var(--tutor-success);
+        }
+
+        &:not(:hover) {
+            opacity: .8;
+        }
+    }
+
+    tr {
+        &:not(:hover) {
+            &.tutor-quiz-answer-status-correct {
+                .tutor-icon-rounded.tutor-text-danger {
+                    color: #CDCFD5 !important;
+                    border-color: #CDCFD5 !important;
+                }
+            }
+
+            &.tutor-quiz-answer-status-wrong {
+                .tutor-icon-rounded.tutor-text-success {
+                    color: #CDCFD5 !important;
+                    border-color: #CDCFD5 !important;
+                }
+            }
+
+            &.tutor-quiz-answer-status-pending {
+                .tutor-icon-rounded.tutor-text-success, .tutor-icon-rounded.tutor-text-danger {
+                    color: #CDCFD5 !important;
+                    border-color: #CDCFD5 !important;
+                }
+            }
+        }
     }
 }

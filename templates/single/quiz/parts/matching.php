@@ -7,12 +7,12 @@
         <div class="tutor-quiz-border-box" draggable="true">
             <?php
                 if ($question_type === 'matching'){
-                    echo '<span class="tutor-dragging-text-conent text-regular-body color-text-primary">'.stripslashes($rand_answer->answer_two_gap_match).'</span>';
+                    echo '<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">'.stripslashes($rand_answer->answer_two_gap_match).'</span>';
                 }else{
-                    echo '<span class="tutor-dragging-text-conent text-regular-body color-text-primary">'.stripslashes($rand_answer->answer_title).'</span>';
+                    echo '<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">'.stripslashes($rand_answer->answer_title).'</span>';
                 }
             ?>
-            <span class="ttr-humnurger-filled color-black-fill"></span>
+            <span class="ttr-humnurger-filled tutor-color-black-fill"></span>
             <input type="hidden" data-name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answers][]" value="<?php echo $rand_answer->answer_id; ?>" >
         </div>
         <?php } ?>
@@ -25,7 +25,7 @@
                 $answer_i++;
     ?>
     <div class="quiz-matching-ans">
-        <div class="tutor-quiz-ans-no text-medium-body color-text-primary">
+        <div class="tutor-quiz-ans-no  tutor-text-medium-body  tutor-color-text-primary">
             <?php 
                 if($answer_i < 9){
                     echo 0;
@@ -36,9 +36,9 @@
             ?> 
         </div>
         <div class="quiz-matching-ans-item">
-            <span class="text-medium-body color-text-primary">-</span>
+            <span class="tutor-text-medium-body  tutor-color-text-primary">-</span>
             <div class="tutor-quiz-dotted-box tutor-dropzone">
-                <span class="tutor-dragging-text-conent text-regular-body color-text-primary">
+                <span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">
                     <?php _e('Drag your ans', 'tutor'); ?>
                 </span>
             </div>

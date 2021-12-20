@@ -105,7 +105,7 @@ $col_classes = array(
                                     }
 
                                     if ( ! empty( $field['desc'] ) ) {
-                                        echo wp_kses_post("<p class='withdraw-field-desc color-text-subsued'>{$field['desc']}</p>");
+                                        echo wp_kses_post("<p class='withdraw-field-desc tutor-color-text-subsued'>{$field['desc']}</p>");
                                     }
                                     ?>
                                 </div>

@@ -83,27 +83,27 @@ $offset      = ( $per_page * $paged ) - $per_page;
     <table class="tutor-ui-table tutor-ui-table-responsive">
         <thead class="tutor-text-sm tutor-text-400">
             <th>
-                <span class="text-regular-small color-text-subsued">
+                <span class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Order ID', 'tutor' ); ?>
                 </span>
             </th>
             <th>
-                <span class="text-regular-small color-text-subsued">
+                <span class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Course Name', 'tutor' ); ?>
                 </span>
             </th>
             <th>
-                <span class="text-regular-small color-text-subsued">
+                <span class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Date', 'tutor' ); ?>
                 </span>
             </th>
             <th>
-                <span class="text-regular-small color-text-subsued">
+                <span class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Price', 'tutor' ); ?>
                 </span>
             </th>
             <th>
-                <span class="text-regular-small color-text-subsued">
+                <span class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Status', 'tutor' ); ?>
                 </span>
             </th>
@@ -158,7 +158,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
             ?>
                 <tr>
                     <td data-th="Order ID">
-                        <div class="td-course text-medium-body color-text-primary">
+                        <div class="td-course  tutor-text-medium-body  tutor-color-text-primary">
                             #<?php esc_html_e( $order->ID ); ?>
                         </div>
                     </td>
@@ -167,22 +167,22 @@ $offset      = ( $per_page * $paged ) - $per_page;
                             $courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
                             if ( tutor_utils()->count( $courses ) ) {
                                 foreach ( $courses as $course ) {
-                                    echo '<p class="text-medium-caption color-text-primary">' . esc_html( get_the_title( $course['course_id'] ) ) . '</p>';
+                                    echo '<p class="text-medium-caption tutor-color-text-primary">' . esc_html( get_the_title( $course['course_id'] ) ) . '</p>';
                                 }
                             }
                         ?>
                     </td>
                     <td data-th="Date">
-                        <span class="text-medium-caption color-text-primary"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ); ?></span>
+                        <span class="text-medium-caption tutor-color-text-primary"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ); ?></span>
                     </td>
                     <td data-th="Price">
-                        <span class="text-medium-caption color-text-primary"><?php echo wp_kses_post( $price ); ?></span>
+                        <span class="text-medium-caption tutor-color-text-primary"><?php echo wp_kses_post( $price ); ?></span>
                     </td>
                     <td data-th="Status">
                         <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-5"><?php esc_html_e( $order_status_text ); ?></span>
                     </td>
                     <td data-th="Download" class="tutor-export-purchase-history" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
-                        <a><span class="ttr-receipt-line color-text-title" style="font-size:24px"></span></a>
+                        <a><span class="ttr-receipt-line tutor-color-text-title" style="font-size:24px"></span></a>
                     </td>
                 </tr>
                 <?php } ?>

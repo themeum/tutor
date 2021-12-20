@@ -11,7 +11,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 
 
 
-<div class="list-item-meta text-medium-caption color-text-primary tutor-bs-d-flex tutor-mt-10">
+<div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-mt-10">
     <?php
         $course_duration = get_tutor_course_duration_context();
         $course_students = tutor_utils()->count_enrolled_users_by_course();
@@ -20,13 +20,13 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
         if(!empty($course_duration)) { 
     ?>
     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-        <span class="meta-icon ttr-clock-filled color-text-hints"></span>
+        <span class="meta-icon ttr-clock-filled tutor-color-text-hints"></span>
         <span><?php echo wp_kses_post( $course_duration ); ?></span>
     </div>
     <?php } ?>
     <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-        <span class="meta-icon ttr-user-filled color-text-hints"></span>
+        <span class="meta-icon ttr-user-filled tutor-color-text-hints"></span>
         <span><?php echo esc_html( $course_students ); ?></span>
     </div>
     <?php endif; ?>
@@ -36,9 +36,9 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
 	<div class="tutor-avatar">
 		<a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
 	</div>
-	<div class="text-regular-caption color-text-subsued">
+	<div class="text-regular-caption tutor-color-text-subsued">
 		<?php esc_html_e('By', 'tutor') ?>
-		<span class="text-medium-caption color-text-primary">
+		<span class="text-medium-caption tutor-color-text-primary">
 		<?php esc_html_e(get_the_author()); ?>
 		</span>
 		<?php
@@ -46,7 +46,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
             if(!empty($course_categories) && is_array($course_categories ) && count($course_categories)){
         ?>
         <?php esc_html_e('In', 'tutor') ?>
-		<span class="text-medium-caption course-category color-text-primary">
+		<span class="text-medium-caption course-category tutor-color-text-primary">
         <?php
             foreach ($course_categories as $course_category){
                 $category_name = $course_category->name;

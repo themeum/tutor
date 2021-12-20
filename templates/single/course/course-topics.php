@@ -24,7 +24,7 @@ do_action('tutor_course/single/before/topics');
 
 <div class="tutor-course-topics-header">
 	<div class="tutor-course-topics-header-left">
-		<div class="text-medium-h6 color-text-primary">
+		<div class="text-medium-h6 tutor-color-text-primary">
 			<span>
 				<?php
 					$title = __( 'Course Curriculm', 'tutor' );
@@ -32,7 +32,7 @@ do_action('tutor_course/single/before/topics');
 				?>
 			</span>
 		</div>
-		<div class="text-regular-body color-text-subsued tutor-mt-12">
+		<div class="text-regular-body tutor-color-text-subsued tutor-mt-12">
 			Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas quaerat fuga consectetur. Quia voluptatibus ullam beatae nesciunt provident voluptas est!
 		</div>
 	</div>
@@ -77,8 +77,8 @@ do_action('tutor_course/single/before/topics');
 										?>
 										<li>
 											<div>
-												<span class="<?php echo $topic_content_icon; ?> tutor-icon-24 color-black-30 tutor-mr-14"></span>
-												<span class="text-regular-body color-text-primary">
+												<span class="<?php echo $topic_content_icon; ?> tutor-icon-24 tutor-color-black-30 tutor-mr-14"></span>
+												<span class="text-regular-body tutor-color-text-primary">
 													<?php 
 														$lesson_title = '';
 
@@ -112,10 +112,10 @@ do_action('tutor_course/single/before/topics');
 												</span>
 											</div>
 											<div>
-												<span class="text-regular-caption color-text-hints">
+												<span class="text-regular-caption tutor-color-text-hints">
 													<?php echo $play_time ? tutor_utils()->get_optimized_duration($play_time) : ''; ?>
 												</span>
-												<!-- <span class="<?php echo $is_locked ? ' ttr-lock-stroke-filled' : 'ttr-eye-filled'; ?> tutor-icon-24 color-black-20 tutor-ml-20"></span> -->
+												<!-- <span class="<?php echo $is_locked ? ' ttr-lock-stroke-filled' : 'ttr-eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20"></span> -->
 											</div>
 										</li>
 									<?php endwhile; ?>

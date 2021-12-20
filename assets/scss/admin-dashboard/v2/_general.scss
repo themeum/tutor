@@ -1,6 +1,15 @@
 // Common Styles
 .tutor-backend-settings-page {
 	// padding-top: 62px;
+	p,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
+		margin: 0;
+		padding: 0;
+	}
 
 	@extend .text-body;
 	color: $text-subsued;
@@ -139,6 +148,8 @@
 	height: 60px;
 	top: 32px;
 	left: 36px;
+	border-bottom: 1px solid #f0f0f1;
+
 	@include breakpoint-min(960) {
 		left: 160px;
 	}
@@ -202,9 +213,9 @@
 		&:not(:last-child) {
 			margin-bottom: 8px;
 		}
-		transition: all 500ms;
+		// transition: all 500ms;
 		&:hover {
-			box-shadow: 0 0 30px -25px #000;
+			// box-shadow: 0 0 30px -25px #000;
 		}
 	}
 
@@ -404,6 +415,11 @@
 		// min-width: 200px;
 		&.d-flex {
 			margin-top: 0px;
+		}
+	}
+	.type-check {
+		.tutor-form-check {
+			align-items: center;
 		}
 	}
 	&:not(.d-block) {

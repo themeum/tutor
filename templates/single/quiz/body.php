@@ -84,5 +84,5 @@
 ?>
 
 <script>
-	window.tutor_quiz_context = '<?php echo strrev(base64_encode(json_encode($quiz_answers))); ?>';
+	window.tutor_quiz_context = '<?php echo strrev(json_encode($quiz_answers)); ?>';
 </script>

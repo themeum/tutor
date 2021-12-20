@@ -64,9 +64,6 @@ class Utils {
 		$option = (array) maybe_unserialize(get_option('tutor_option'));
 
 		if ( empty( $option ) || ! is_array( $option ) ) {
-			if($key=='enable_tutor_native_login') {
-				exit ('Hhhh111');
-			}
 			// If the option array is not yet stored on database, then return default/fallback
 			return $this->get_option_default( $key, $default, $from_options );
 		}
@@ -93,9 +90,6 @@ class Utils {
 				if ( isset( $new_option[$dotKey] ) ) {
 					$new_option = $new_option[$dotKey];
 				} else {
-					if($key=='enable_tutor_native_login') {
-						exit ('Hhhhss');
-					}
 					return $this->get_option_default( $key, $default, $from_options );
 				}
 			}
@@ -109,10 +103,6 @@ class Utils {
 			}
 
 			return apply_filters( $key, $value );
-		}
-
-		if($key=='enable_tutor_native_login') {
-			exit ('Hhhh');
 		}
 
 		return $this->get_option_default( $key, $default, $from_options );
@@ -861,7 +851,6 @@ class Utils {
         $totalContents    = $this->count($course_contents);
         $totalContents    = $totalContents ? $totalContents : 0;
         $completedCount   = $completed_lesson;
-
         if ( tutor_utils()->count( $course_contents ) ) {
             foreach ( $course_contents as $content ) {
                 if ( $content->post_type === 'tutor_quiz' ) {
@@ -874,7 +863,17 @@ class Utils {
                     if ( $isSubmitted ) {
                         $completedCount++;
                     }
-                }
+                } elseif ( $content->post_type === 'tutor_zoom_meeting' ) {
+					/**
+					 * count zoom lesson completion for course progress
+					 *
+					 * @since v2.0.0
+					 */
+					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
+					if ( $is_completed ) {
+						$completedCount++;
+					}
+				}
             }
         }
 
@@ -3346,7 +3345,7 @@ class Utils {
 			<?php
 				if($show_avg_rate) {
 					?>
-					<span class="tutor-rating-text text-regular-body color-text-subsued tutor-pl-0 tutor-ml-10">
+					<span class="tutor-rating-text tutor-text-regular-body tutor-color-text-subsued tutor-pl-0 tutor-ml-10">
 						<?php
 							echo $current_rating;
 							if(!($total_count===null)) {
@@ -4093,7 +4092,7 @@ class Utils {
 				break;
 
 			case 'unread' :
-				$qna_types_caluse = ' AND (_meta.meta_key!=\'tutor_qna_read\' OR _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value!=1) ';
 				break;
 
 			case 'archived' :
@@ -4101,11 +4100,11 @@ class Utils {
 				break;
 
 			case 'important' :
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value=1) ';
 				break;
 		}
 
-		$columns_select = $count_only ? 'COUNT(_question.comment_ID)' :
+		$columns_select = $count_only ? '_question.comment_ID' :
 			"_question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
@@ -4146,7 +4145,7 @@ class Utils {
 		);
 
 		if($count_only) {
-			return $wpdb->get_var($query);
+			return count($wpdb->get_results($query));
 		}
 
 		$query = $wpdb->get_results( $query );
@@ -5139,6 +5138,9 @@ class Utils {
 	 */
 	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null ) {
 		global $wpdb;
+		$search_filter 	= sanitize_text_field( $search_filter );
+		$course_filter	= sanitize_text_field( $course_filter );
+		$date_filter 	= sanitize_text_field( $date_filter );
 
 		$course_ids = array_map( function( $id ) {
 			return "'" . esc_sql( $id ) . "'";
@@ -5186,16 +5188,25 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '' ) {
+	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '', $course_filter = '', $date_filter = '' ) {
 		global $wpdb;
 
 		$course_ids = array_map( function( $id ) {
 			return "'" . esc_sql( $id ) . "'";
 		}, $course_ids );
 
+		// Sanitization.
+		$search_term 	= sanitize_text_field( $search_term );
+		$course_filter	= sanitize_text_field( $course_filter );
+		$date_filter 	= sanitize_text_field( $date_filter );
+
 		$course_ids_in = implode( ', ', $course_ids );
 		$search_term   = '%' . $wpdb->esc_like( $search_term ) . '%';
 
+		$course_filter	= $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '' ;
+		$date_filter	= $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
+		$date_filter	= $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '' ;
+	
 		$count = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(attempt_id)
 			FROM  	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
@@ -5203,14 +5214,14 @@ class Utils {
 							ON quiz_attempts.quiz_id = quiz.ID
 					INNER JOIN {$wpdb->users}
 							ON quiz_attempts.user_id = {$wpdb->users}.ID
+					INNER JOIN {$wpdb->posts} AS course
+							ON course.ID = quiz_attempts.course_id
 			WHERE 	quiz_attempts.course_id IN (" . $course_ids_in . ")
 					AND attempt_status != %s
-					AND ( user_email LIKE %s OR display_name LIKE %s OR post_title LIKE %s )
+					{$course_filter}
+					{$date_filter}
 			",
-			'attempt_started',
-			$search_term,
-			$search_term,
-			$search_term
+			'attempt_started'
 		) );
 
 		return (int) $count;
@@ -7354,14 +7365,14 @@ class Utils {
 
 		// List constantly required fields
 		$required_fields = array(
-			'first_name' 				  => sprintf( __( 'Set Your %sFirst Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
-			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
-			'_tutor_profile_photo' 		  => sprintf( __( 'Set Your %sProfile Photo%s', 'tutor' ), '<a class="color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'first_name' 				  => sprintf( __( 'Set Your %sFirst Name%s', 'tutor' ), '<a class="tutor-color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'last_name' 				  => sprintf( __( 'Set Your %sLast Name%s', 'tutor' ), '<a class="tutor-color-text-primary" href="'.$settings_url.'">', '</a>' ),
+			'_tutor_profile_photo' 		  => sprintf( __( 'Set Your %sProfile Photo%s', 'tutor' ), '<a class="tutor-color-text-primary" href="'.$settings_url.'">', '</a>' ),
 		);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%s', 'tutor' ), '<a class="color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
+			$required_fields[ '_tutor_withdraw_method_data' ] = sprintf( __( 'Set %sWithdraw Method%s', 'tutor' ), '<a class="tutor-color-text-primary" href="'.$withdraw_settings_url.'">', '</a>' );
 		}
 
 		// Now assign identifer whether set or not
@@ -8305,11 +8316,11 @@ class Utils {
 		$page_title = $title ? $title : ''; ?>
 		<div class="td-empty-state tutor-p-30 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%"/>
-			<div class="text-regular-h5 color-text-primary tutor-mt-20 tutor-text-center">
+			<div class="tutor-text-regular-h5  tutor-color-text-primary tutor-mt-20 tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
-		</div>
-	<?php }
+		<?php 
+	}
 
 	/**
 	 * Translate dynamic text, dynamic text is not translate while potting
@@ -8510,15 +8521,48 @@ class Utils {
 
 			// Taken duration
 			$seconds = strtotime($attempt_data->attempt_ended_at) - strtotime($attempt_data->attempt_started_at);
-			$minutes = $seconds/60;
-
-			if($seconds<60) {
-				$attempt_duration_taken = $seconds . ' ' . ($seconds>1 ? __('Seconds', 'tutor') : __('Second', 'tutor'));
-			} else {
-				$attempt_duration_taken = $minutes>1 ? __('Minutes', 'tutor') : __('Minute', 'tutor');
-			}
+			$attempt_duration_taken = $this->seconds_to_time($seconds);
 		}
 
 		return compact('attempt_duration', 'attempt_duration_taken');
 	}
+
+	public function seconds_to_time($inputSeconds) {
+		$secondsInAMinute = 60;
+		$secondsInAnHour = 60 * $secondsInAMinute;
+		$secondsInADay = 24 * $secondsInAnHour;
+	
+		// Extract days
+		$days = floor($inputSeconds / $secondsInADay);
+	
+		// Extract hours
+		$hourSeconds = $inputSeconds % $secondsInADay;
+		$hours = floor($hourSeconds / $secondsInAnHour);
+	
+		// Extract minutes
+		$minuteSeconds = $hourSeconds % $secondsInAnHour;
+		$minutes = floor($minuteSeconds / $secondsInAMinute);
+	
+		// Extract the remaining seconds
+		$remainingSeconds = $minuteSeconds % $secondsInAMinute;
+		$seconds = ceil($remainingSeconds);
+	
+		// Format and return
+		$timeParts = [];
+		$sections = [
+			'day' => (int)$days,
+			'hour' => (int)$hours,
+			'minute' => (int)$minutes,
+			'second' => (int)$seconds,
+		];
+	
+		foreach ($sections as $name => $value){
+			if ($value > 0){
+				$timeParts[] = $value. ' '.$name.($value == 1 ? '' : 's');
+			}
+		}
+	
+		return implode(', ', $timeParts);
+	}
+
 }

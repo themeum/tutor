@@ -90,9 +90,9 @@ $image_base = tutor()->url . '/assets/images/';
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
 		<select class="tutor-form-select tutor-announcement-course-sorting">
-		   
+
 			<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
-		
+
 			<?php if ( $courses ) : ?>
 				<?php foreach ( $courses as $course ) : ?>
 					<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
@@ -107,7 +107,7 @@ $image_base = tutor()->url . '/assets/images/';
 
 	<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
 		<label class="tutor-bs-d-block"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
-		<select class="tutor-form-select tutor-announcement-order-sorting">
+		<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
 			<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 			<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 		</select>

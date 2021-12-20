@@ -42,7 +42,7 @@ function show_correct_answer( $answers= array() ){
                         
                     case 'text':
                         if(isset($ans->answer_title)) {
-                            echo '<span class="text-medium-caption color-text-primary">'
+                            echo '<span class="text-medium-caption tutor-color-text-primary">'
                                 .stripslashes($ans->answer_title).
                             '</span>';
                         }
@@ -112,7 +112,7 @@ include __DIR__ . '/header.php';
         <tr>
             <?php 
                 foreach($table_1_columns as $key => $column) {
-                    echo '<th><span class="text-regular-small color-text-subsued">'.$column.'</span></th>';
+                    echo '<th><span class="text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
                 }
             ?>
         </tr>
@@ -127,10 +127,10 @@ include __DIR__ . '/header.php';
                             <td data-th="<?php echo $column; ?>">
                                 <div class="td-avatar">
                                     <img src="<?php echo esc_url(get_avatar_url($user_id)); ?>" alt="<?php echo esc_attr($user->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
-                                    <p class="text-medium-body color-text-primary">
+                                    <p class="tutor-text-medium-body  tutor-color-text-primary">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </p>
-                                    <a href="#" class="btn-text btn-detail-link color-design-dark">
+                                    <a href="#" class="btn-text btn-detail-link tutor-color-design-dark">
                                         <span class="ttr-detail-link-filled"></span>
                                     </a>
                                 </div>
@@ -141,7 +141,7 @@ include __DIR__ . '/header.php';
                         case 'date' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php
                                         echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
                                     ?>
@@ -153,7 +153,7 @@ include __DIR__ . '/header.php';
                         case 'qeustion_count' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php echo $attempt_data->total_questions; ?>
                                 </span>
                             </td>
@@ -179,7 +179,7 @@ include __DIR__ . '/header.php';
                         case 'total_marks' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php echo $attempt_data->total_marks; ?>
                                 </span>
                             </td>
@@ -189,7 +189,7 @@ include __DIR__ . '/header.php';
                         case 'pass_marks' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php
                                         $pass_marks = ($total_marks * $passing_grade) / 100;
                                         echo number_format_i18n($pass_marks, 2);
@@ -205,7 +205,7 @@ include __DIR__ . '/header.php';
                         case 'correct_answer' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php echo $correct; ?>
                                 </span>
                             </td>
@@ -215,7 +215,7 @@ include __DIR__ . '/header.php';
                         case 'incorrect_answer' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php echo $incorrect; ?>
                                 </span>
                             </td>
@@ -225,7 +225,7 @@ include __DIR__ . '/header.php';
                         case 'earned_marks' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php 
                                         echo $attempt_data->earned_marks; 
                                         $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
@@ -239,7 +239,7 @@ include __DIR__ . '/header.php';
                         case 'result':
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption color-text-primary">
+                                <span class="text-medium-caption tutor-color-text-primary">
                                     <?php 
                                         if ($earned_percentage >= $pass_mark_percent){
                                             echo '<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>';
@@ -262,13 +262,12 @@ include __DIR__ . '/header.php';
     if (is_array($answers) && count($answers)){
         echo $context!='course-single-previous-attempts' ? '<strong>'.__('Quiz Overview', 'tutor').'</strong>' : '';
         ?>
-        
-        <table class="tutor-ui-table tutor-ui-table-responsive tutor-mb-30">
+        <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-30">
             <thead>
                 <tr>
                     <?php 
                         foreach($table_2_columns as $key => $column) {
-                            echo '<th><span class="text-regular-small color-text-subsued">'.$column.'</span></th>';
+                            echo '<th><span class="text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
                         }
                     ?>
                 </tr>
@@ -279,16 +278,32 @@ include __DIR__ . '/header.php';
                     foreach ($answers as $answer){
                         $answer_i++;
                         $question_type = tutor_utils()->get_question_types($answer->question_type);
+
+
+                        $answer_status = null;
+                        if ( (bool) (isset( $answer->is_correct ) ? $answer->is_correct : '') ) {
+                            $answer_status = 'correct';
+                        } else {
+                            if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                                if ( (bool) $attempt_data->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+                                    $answer_status = 'wrong';
+                                } else {
+                                    $answer_status = 'pending';
+                                }
+                            } else {
+                                $answer_status = 'wrong';
+                            }
+                        }
                         ?>
                         
-                        <tr>
+                        <tr class="<?php echo 'tutor-quiz-answer-status-'.$answer_status; ?>">
                             <?php foreach($table_2_columns as $key => $column): ?>
                                 <?php 
                                     switch($key) {
                                         case 'no' :
                                             ?>
                                             <td data-th="<?php echo $column; ?>">
-                                                <span class="text-medium-caption color-text-primary">
+                                                <span class="text-medium-caption tutor-color-text-primary">
                                                     <?php echo $answer_i; ?>
                                                 </span>
                                             </td>
@@ -329,7 +344,7 @@ include __DIR__ . '/header.php';
                                                         $answer_titles = wp_list_pluck($get_answers, 'answer_title');
                                                         $answer_titles = array_map('stripslashes', $answer_titles);
                                                         
-                                                        echo '<span class="text-medium-caption color-text-primary">'.implode('</p><p>', $answer_titles).'</span>';
+                                                        echo '<span class="text-medium-caption tutor-color-text-primary">'.implode('</p><p>', $answer_titles).'</span>';
                                                     } 
                                                 
                                                     // Multiple choice
@@ -338,7 +353,7 @@ include __DIR__ . '/header.php';
                                                         $answer_titles = wp_list_pluck($get_answers, 'answer_title');
                                                         $answer_titles = array_map('stripslashes', $answer_titles);
 
-                                                        echo '<p class="text-medium-caption color-text-primary">'.implode('</p><p>', $answer_titles).'</p>';
+                                                        echo '<p class="text-medium-caption tutor-color-text-primary">'.implode('</p><p>', $answer_titles).'</p>';
                                                     }
                                                 
                                                     // Fill in the blank
@@ -458,7 +473,7 @@ include __DIR__ . '/header.php';
                                                             $answer->question_id 
                                                         ) );
 
-                                                        echo '<span class="text-medium-caption color-text-primary">' . $correct_answer . '</span>';
+                                                        echo '<span class="text-medium-caption tutor-color-text-primary">' . $correct_answer . '</span>';
                                                     } 
                                                     
                                                     // Single choice
@@ -545,7 +560,7 @@ include __DIR__ . '/header.php';
                                                         show_correct_answer($correct_answer);
                                                     }
                                                 }
-                                                ?>
+                                                ?>&nbsp;
                                             </td>
                                             <?php
                                             break;
@@ -554,20 +569,19 @@ include __DIR__ . '/header.php';
                                             ?>
                                             <td data-th="<?php echo $column; ?>">
                                                 <?php
+                                                    switch($answer_status) {
+                                                        case 'correct' : 
+                                                            echo '<span class="tutor-badge-label label-success">'.__('Correct', 'tutor').'</span>';
+                                                            break;
 
-                                                if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-                                                    echo '<span class="tutor-badge-label label-success">'.__('Correct', 'tutor').'</span>';
-                                                } else {
-                                                    if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
-                                                        if ( (bool) $attempt_data->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-                                                            echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
-                                                        } else {
+                                                        case 'pending' :
                                                             echo '<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>';
-                                                        }
-                                                    } else {
-                                                        echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                                            break;
+
+                                                        case 'wrong' :
+                                                            echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                                            break;
                                                     }
-                                                }
                                                 ?>
                                             </td>
                                             <?php
@@ -575,7 +589,7 @@ include __DIR__ . '/header.php';
 
                                         case 'manual_review' :
                                             ?>
-                                            <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10">
+                                            <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap">
                                                 <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-10 tutor-icon-rounded tutor-text-success">
                                                     <i class="tutor-icon-mark"></i> 
                                                 </a>

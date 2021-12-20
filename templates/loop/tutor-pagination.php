@@ -38,13 +38,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <nav class="tutor-course-list-pagination tutor-ui-pagination">
 <div class="tutor-pagination-hints">
-	<div class="text-regular-caption color-text-subsued">
+	<div class="text-regular-caption tutor-color-text-subsued">
 		<?php _e('Page', 'tutor'); ?> 
-		<span class="text-medium-caption color-text-primary">
+		<span class="text-medium-caption tutor-color-text-primary">
 		<?php echo esc_html( $paged ); ?> 
 		</span>
 		<?php _e('of', 'tutor'); ?>
-		<span className="text-medium-caption color-text-primary">
+		<span className="text-medium-caption tutor-color-text-primary">
 		<?php echo esc_html( $pages ); ?>
 		</span>
 	</div>

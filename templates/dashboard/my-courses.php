@@ -59,28 +59,28 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                         </div>
                         <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-18">
                             <div class="list-item-rating tutor-bs-d-flex tutor-mb-10">
-                                <span class="date text-h6 color-text-primary">
+                                <span class="date text-h6 tutor-color-text-primary">
                                     <?php echo esc_html( get_the_date() ); ?> <?php echo esc_html( get_the_time() ); ?>
                                 </span>
                             </div>
-                            <div class="list-item-title text-medium-h6 color-text-primary">
+                            <div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary">
                                 <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
                             </div>
-                            <div class="list-item-meta text-medium-caption color-text-primary tutor-bs-d-flex tutor-mt-10">
+                            <div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-bs-justify-content-between tutor-mt-10">
                                 <?php
-                                $course_duration = get_tutor_course_duration_context();
+                                $course_duration = get_tutor_course_duration_context( $post->ID, true );
                                 $course_students = tutor_utils()->count_enrolled_users_by_course();
                                 ?>
                                 <?php
-                                if(!empty($course_duration)) { ?>
+                                if ( ! empty( $course_duration ) ) { ?>
                                     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                                    <span class="meta-icon ttr-clock-filled color-text-hints"></span><span><?php echo $course_duration; ?></span>
+                                    <span class="tutor-color-text-hints"><?php esc_html_e( 'Duration: ', 'tutor' ); ?></span><span><?php echo wp_kses_post( $course_duration ); ?></span>
                                     </div>
                                 <?php } ?>
                                 <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
                                     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                                        <span class="meta-icon ttr-user-filled color-text-hints"></span>
-                                        <span><?php echo $course_students; ?></span>
+                                        <span class="ttr-user-filled tutor-text-dark tutor-font-size-24"></span>
+                                        <span><?php echo esc_html( $course_students ); ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -91,18 +91,18 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                             <div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
                                 <div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center">
                                     <span class="price text-h6">
-                                        <?php esc_html_e('Price:', 'tutor') ?> 
+                                        <?php esc_html_e( 'Price:', 'tutor' ) ?> 
                                     </span>
-                                    <span class="price text-h6 color-text-primary">
-                                        <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
+                                    <span class="price text-h6 tutor-color-text-primary">
+                                        <?php echo tutor_utils()->tutor_price( tutor_utils()->get_course_price() ); ?>
                                     </span>
                                 </div>
                                 <div class="list-item-button">
-                                    <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                        <i class="btn-icon tutor-icon-pencil"></i>
+                                    <a href="<?php echo tutor_utils()->course_edit_link( $post->ID ); ?>" class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
+                                        <i class="ttr-edit-filled tutor-font-size-24"></i>
                                     </a>
                                     <i data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                        <i class="btn-icon tutor-icon-garbage"></i>
+                                        <i class="ttr-delete-stroke-filled tutor-font-size-24"></i>
                                     </i>
                                 </div>
                             </div>

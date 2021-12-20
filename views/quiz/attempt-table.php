@@ -1,15 +1,15 @@
 <?php
-    extract($data); // $attempt_list, $context;
+	extract( $data ); // $attempt_list, $context;
 
-    $page_key = 'attempt-table';
-    $table_columns = include __DIR__ . '/contexts.php';
+	$page_key      = 'attempt-table';
+	$table_columns = include __DIR__ . '/contexts.php';
 
-    if($context=='course-single-previous-attempts' && is_array($attempt_list) && count($attempt_list)) {
-        // Provide the attempt data from the first attempt
-        // For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
-        $attempt_data = $attempt_list[0];
-        include __DIR__ . '/header.php';
-    }
+if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) && count( $attempt_list ) ) {
+	// Provide the attempt data from the first attempt
+	// For now now attempt specific data is shown, that's why no problem if we take meta data from any atttempt.
+	$attempt_data = $attempt_list[0];
+	include __DIR__ . '/header.php';
+}
 ?>
 
 <table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-30">
@@ -17,7 +17,7 @@
         <tr>
             <?php 
                 foreach($table_columns as $key=>$column) {
-                    echo '<th><span class="text-regular-small color-text-subsued">'. $column . '</span></th>';
+                    echo '<th><span class="text-regular-small tutor-color-text-subsued">'. $column . '</span></th>';
                 }
             ?>
         </tr>
@@ -64,7 +64,7 @@
                                         ?>
                                         <td data-th="<?php echo $column; ?>" class="column-fullwidth">
                                             <div class="td-statement-info">
-                                                <span class="text-regular-small color-text-primary">
+                                                <span class="text-regular-small tutor-color-text-primary">
                                                     <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
                                                 </span>
                                             </div>
@@ -76,11 +76,11 @@
                                         ?>
                                         <td data-th="<?php echo $column; ?>" class="column-fullwidth">
                                             <div class="td-statement-info">
-                                                <span class="text-regular-small color-text-primary">
+                                                <span class="text-regular-small tutor-color-text-primary">
                                                     <?php echo date_i18n(get_option('date_format').' '.get_option('time_format'), strtotime($attempt->attempt_ended_at)); ?>
                                                 </span>
-                                                <div class="text-medium-body color-text-primary tutor-margin-0">
-                                                    <div class="text-medium-body color-text-primary" data-href="<?php echo get_the_permalink($attempt->course_id); ?>">
+                                                <div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
+                                                    <div class="tutor-text-medium-body  tutor-color-text-primary" data-href="<?php echo get_the_permalink($attempt->course_id); ?>">
                                                         <?php echo get_the_title($attempt->course_id); ?>
                                                     </div>
 
@@ -108,7 +108,7 @@
                                     case 'course' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
-                                            <span class="text-medium-caption color-text-primary">
+                                            <span class="text-medium-caption tutor-color-text-primary">
                                                 <?php echo get_the_title($attempt->course_id);?>
                                             </span>
                                         </td>
@@ -118,7 +118,7 @@
                                     case 'question' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
-                                            <span class="text-medium-caption color-text-primary">
+                                            <span class="text-medium-caption tutor-color-text-primary">
                                                 <?php echo count($answers);?>
                                             </span>
                                         </td>
@@ -128,7 +128,7 @@
                                     case 'total_marks' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
-                                            <span class="text-medium-caption color-text-primary">
+                                            <span class="text-medium-caption tutor-color-text-primary">
                                                 <?php echo $attempt->total_marks;?>
                                             </span>
                                         </td>
@@ -138,7 +138,7 @@
                                     case 'correct_answer' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
-                                            <span class="text-medium-caption color-text-primary">
+                                            <span class="text-medium-caption tutor-color-text-primary">
                                                 <?php echo $correct; ?>
                                             </span>
                                         </td>
@@ -148,7 +148,7 @@
                                     case 'incorrect_answer' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
-                                            <span class="text-medium-caption color-text-primary">
+                                            <span class="text-medium-caption tutor-color-text-primary">
                                                 <?php echo $incorrect; ?>
                                             </span>
                                         </td>
@@ -158,7 +158,7 @@
                                     case 'earned_marks' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
-                                            <span class="text-medium-caption color-text-primary">
+                                            <span class="text-medium-caption tutor-color-text-primary">
                                                 <?php echo $attempt->earned_marks.' ('.$earned_percentage.'%)'; ?>
                                             </span>
                                         </td>
@@ -209,11 +209,11 @@
                 ?>
                 <tr>
 					<td colspan="100%" class="column-empty-state">
-						<?php tutor_utils()->tutor_empty_state( __( 'No attempt found', 'tutor' ) ); ?>
+					<?php tutor_utils()->tutor_empty_state( __( 'No attempt found', 'tutor' ) ); ?>
 					</td>
-                </tr>
-                <?php
-            }
-        ?>
-    </tbody>
+				</tr>
+				<?php
+		}
+		?>
+	</tbody>
 </table>
