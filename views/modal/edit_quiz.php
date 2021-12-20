@@ -45,14 +45,14 @@
                             <ul class="popup-menu" id="<?php echo $id_target; ?>">
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="ttr-edit-filled tutor-icon-24 tutor-mr-5 color-design-white"></span>
-                                        <span class="text-regular-body color-text-white"><?php _e('Edit', 'tutor'); ?></span>
+                                        <span class="ttr-edit-filled tutor-icon-24 tutor-mr-5 tutor-color-design-white"></span>
+                                        <span class="text-regular-body tutor-color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="ttr-delete-fill-filled tutor-icon-24 tutor-mr-5 color-design-white"></span>
-                                        <span class="text-regular-body color-text-white"><?php _e('Delete', 'tutor'); ?></span>
+                                        <span class="ttr-delete-fill-filled tutor-icon-24 tutor-mr-5 tutor-color-design-white"></span>
+                                        <span class="text-regular-body tutor-color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>
                             </ul>
@@ -98,7 +98,7 @@
                     </label>
                 </div>
             </div>
-            <p class="text-regular-small color-text-hints tutor-mt-10">
+            <p class="text-regular-small tutor-color-text-hints tutor-mt-10">
                 <?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?>
             </p>
         </div>
@@ -107,7 +107,7 @@
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Quiz Feedback Mode', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
-            <div class="text-regular-small color-text-hints tutor-mb-10">
+            <div class="text-regular-small tutor-color-text-hints tutor-mb-10">
                 (<?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>)
             </div>
 

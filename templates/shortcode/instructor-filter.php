@@ -31,14 +31,14 @@ if ( $total_categories && $total_categories > $limit ) {
 	<div class="tutor-instructor-filter-sidebar">
 		<div class="tutor-instructor-customize-wrapper">
 			<div class="tutor-instructor-filters">
-				<i class="ttr-customize-filled color-text-brand"></i>
-				<span class="text-medium-h5 color-text-primary">
+				<i class="ttr-customize-filled tutor-color-text-brand"></i>
+				<span class="text-medium-h5 tutor-color-text-primary">
 					<?php esc_html_e( 'Filters', 'tutor' ); ?>
 				</span>
 			</div>
 			<div class="tutor-instructor-customize-clear clear-instructor-filter">
 				<i class="tutor-icon-line-cross design-dark"></i>
-				<span className="color-text-hints text-regular-body">
+				<span className="color-text-hints tutor-text-regular-body">
 					<?php esc_html_e( 'Clear', 'tutor' ); ?>
 				</span>
 			</div>
@@ -64,7 +64,7 @@ if ( $total_categories && $total_categories > $limit ) {
 								class="tutor-form-check-input tutor-form-check-square"
 								name="category"
 								value="<?php esc_attr_e( $category_id ); ?>"/>
-							<label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>" class="color-text-title text-medium-caption">
+							<label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>" class="color-text-title tutor-text-medium-caption">
 							 <?php esc_html_e( $category->name ); ?>
 							</label>
 						</div>
@@ -75,8 +75,8 @@ if ( $total_categories && $total_categories > $limit ) {
 			<?php if ( $show_more ) : ?>
 				<div class="tutor-instructor-category-show-more">
 					<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
-						<i class="ttr-plus-bold-filled color-text-brand"></i>
-						<span class="text-subsued text-medium-caption">
+						<i class="ttr-plus-bold-filled tutor-color-text-brand"></i>
+						<span class="text-subsued tutor-text-medium-caption">
 							<?php esc_html_e( 'Show More', 'tutor' ); ?>
 							<span class="tutor-show-more-loading"></span>
 						</span>
@@ -93,10 +93,10 @@ if ( $total_categories && $total_categories > $limit ) {
 			<div class="tutor-instructor-rating-range-wrapper">
 				<div class="tutor-instructor-ratings">
 					<?php for ( $i = 1; $i < 6; $i++ ) : ?>
-						<i class="ttr-star-line-filled color-black-fill-20" data-value="<?php echo $i; ?>"></i>
+						<i class="ttr-star-line-filled tutor-color-black-fill-20" data-value="<?php echo $i; ?>"></i>
 					<?php endfor; ?> 
 				</div>
-				<span class="text-subsued text-medium-body tutor-instructor-rating-filter"></span>   
+				<span class="text-subsued tutor-text-medium-body tutor-instructor-rating-filter"></span>   
 			</div>
 		</div>
 	</div>
@@ -109,10 +109,10 @@ if ( $total_categories && $total_categories > $limit ) {
 		</div>
 		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-30">
 			<div class="tutor-instructor-form-group">
-				<label for="tutor-instructor-relevant-sort" class="text-hints text-regular-body">
+				<label for="tutor-instructor-relevant-sort" class="text-hints tutor-text-regular-body">
 					<?php _e( 'Short by', 'tutor' ); ?>
 				</label>
-				<select class="text-title  text-regular-body" id="tutor-instructor-relevant-sort">
+				<select class="text-title  tutor-text-regular-body" id="tutor-instructor-relevant-sort">
 					<?php foreach ( $short_by as $k => $v ) : ?>
 						<option value="<?php esc_attr_e( $k ); ?>">
 							<?php esc_html_e( $v ); ?>
@@ -163,8 +163,8 @@ if ( $total_categories && $total_categories > $limit ) {
 					<?php if ( $show_more ) : ?>
 					<div class="tutor-instructor-category-show-more tutor-mb-25">
 						<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
-							<i class="ttr-plus-bold-filled color-text-brand"></i>
-							<span class="text-subsued text-medium-caption">
+							<i class="ttr-plus-bold-filled tutor-color-text-brand"></i>
+							<span class="text-subsued tutor-text-medium-caption">
 								<?php esc_html_e( 'Show More', 'tutor' ); ?>
 								<span class="tutor-show-more-loading"></span>
 							</span>

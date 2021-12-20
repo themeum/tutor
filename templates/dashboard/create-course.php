@@ -20,7 +20,7 @@ $can_publish_course = (bool) tutor_utils()->get_option( 'instructor_can_publish_
 ?>
 
 <?php
-if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
+if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
 	$args = array(
 		'headline'    => __( 'Permission Denied', 'tutor' ),
 		'message'     => __( 'You don\'t have the right to edit this course', 'tutor' ),
@@ -153,7 +153,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 						<div class="tutor-mb-30">
 							<label class="tutor-course-field-label"><?php _e( 'Course Title', 'tutor' ); ?></label>
 							<div class="tooltip-wrap tutor-bs-d-block">
-								<span class="tooltip-txt tooltip-right">
+								<span class="tooltip-txt tooltip-right tutor-mt-10">
 									<?php _e( '60', 'tutor' ); ?>
 								</span>
 								<input type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e( 'ex. Learn photoshop CS6 from scratch', 'tutor' ); ?>">
@@ -180,13 +180,13 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 
 						<div class="tutor-frontend-builder-item-scope">
 							<div class="tutor-form-group">
-								<label>
+								<label class="tutor-form-label">
 									<?php _e( 'Choose a category', 'tutor' ); ?>
 								</label>
 								<div class="tutor-form-field-course-categories">
 									<?php
-									// echo tutor_course_categories_checkbox($course_id);
-									echo tutor_course_categories_dropdown( $course_id, array( 'classes' => 'tutor_select2' ) );
+										// echo tutor_course_categories_checkbox($course_id);
+										echo tutor_course_categories_dropdown( $course_id, array( 'classes' => 'tutor_select2' ) );
 									?>
 								</div>
 							</div>
@@ -202,7 +202,10 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 
 								$_tutor_course_price_type = tutils()->price_type();
 								?>
-									<div class="tutor-bs-row tutor-bs-align-items-center">
+									<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-30">
+										<div class="tutor-bs-col-12">
+											<label class="tutor-form-label"><?php _e('Course Price', 'tutor'); ?></label>
+										</div>
 										<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
 											<div class="tutor-form-check tutor-bs-align-items-center tutor-mb-15">
 												<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="tutor_course_price_type"  value="paid" <?php checked( $_tutor_course_price_type, 'paid' ); ?>/>
@@ -236,6 +239,8 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 										array(
 											'media_id'   => get_post_thumbnail_id( $course_id ),
 											'input_name' => 'tutor_course_thumbnail_id',
+											'placeholder'=> tutor()->url . '/assets/images/placeholder-course.svg',
+											'borderless' => true
 										),
 										false
 									);

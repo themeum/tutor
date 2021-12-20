@@ -11,7 +11,7 @@
  */
 ?>
 
-<div class="list-item-title text-medium-h5 color-text-primary">
+<div class="list-item-title tutor-text-medium-h5 tutor-color-text-primary">
     <a href="<?php echo esc_url(get_the_permalink()); ?>"><?php the_title(); ?></a>
 </div>
 

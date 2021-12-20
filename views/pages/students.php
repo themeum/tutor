@@ -74,25 +74,25 @@ $filters = array(
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center color-text-subsued">
+				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
 					<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon"></span>
 				</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center color-text-subsued">
+				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled up-down-icon"></span>
 				</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center color-text-subsued">
+				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled up-down-icon"></span>
 				</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center color-text-subsued">
+				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled up-down-icon"></span>
 				</div>
@@ -113,29 +113,29 @@ $filters = array(
 							<div class="td-avatar">
 								<?php $avatar_url  = get_avatar_url( $list->ID ); ?>
 								<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-								<span class="color-text-primary text-medium-body tutor-m-0">
+								<span class="tutor-color-text-primary tutor-text-medium-body tutor-m-0">
 									<?php esc_html_e( $list->display_name ); ?>
 								</span>
 								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
-								<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link color-design-dark">
+								<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link tutor-color-design-dark">
 									<span class="ttr-detail-link-filled tutor-mt-5"></span>
 								</a>
 							</div>
 						</td>
 						<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-							<span class="color-text-primary text-regular-caption">
+							<span class="tutor-color-text-primary tutor-text-regular-caption">
 							<?php echo esc_html( $list->user_email ); ?>
 							</span>
 						</td>
 						</td>
 						<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
-							<span class="color-text-primary text-regular-caption">
+							<span class="tutor-color-text-primary tutor-text-regular-caption">
 							<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ). ', ' . get_option( 'time_format' ), $list->user_registered ) ); ?>
 							</span>
 						</td>
 						<td data-th="<?php esc_html_e( 'Course Taken', 'tutor' ); ?>">
 						<?php $course_taken = tutor_utils()->get_enrolled_courses_ids_by_user( $list->ID ); ?>
-							<span class="color-text-primary text-medium-caption"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
+							<span class="tutor-color-text-primary tutor-text-medium-caption"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
 						</td>
 						<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
 							<div class="inline-flex-center td-action-btns">

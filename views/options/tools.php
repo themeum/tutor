@@ -31,7 +31,7 @@
 						?>
 							<li class="tutor-option-nav-item">
 								<a href="<?php echo esc_url( $page_url ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
-									<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-icon-30 color-black-40"></span>
+									<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-icon-30 tutor-color-black-40"></span>
 									<span class="nav-label"><?php echo esc_html( $section['label'] ); ?></span>
 								</a>
 							</li>

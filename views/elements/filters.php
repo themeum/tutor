@@ -118,7 +118,7 @@
 					<?php esc_html_e( 'Search', 'tutor' ); ?>
 					</label>
 					<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
-						<span class="ttr-search-filled tutor-input-group-icon color-black-50"></span>
+						<span class="ttr-search-filled tutor-input-group-icon tutor-color-black-50"></span>
 						<input
 							type="search"
 							class="tutor-form-control"

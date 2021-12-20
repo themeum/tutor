@@ -13,7 +13,7 @@
 		<div class="tutor-option-field-row tutor-bs-d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
-					<span class="ttr-upload-icon-line tutor-icon-80 color-brand-wordpress"></span>
+					<span class="ttr-upload-icon-line tutor-icon-80 tutor-color-brand-wordpress"></span>
 					<div class="title">Drag &amp; Drop your JSON File here </div>
 					<div class="subtitle"><span>File Format:</span> .json <br> Or</div>
 					<label for="drag-drop-input" class="tutor-btn tutor-is-sm">
@@ -35,8 +35,8 @@
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="label text-regular-h6 color-text-primary">Current Settings</div>
-				<div class="desc text-medium-small color-text-subsued">
+				<div class="label tutor-text-regular-h6 tutor-color-text-primary">Current Settings</div>
+				<div class="desc tutor-text-medium-small tutor-color-text-subsued">
 					<span style="font-weight: 500">Last Update: </span>20 July, 2020, 12:47 pm
 				</div>
 			</div>
@@ -78,14 +78,14 @@
 							<ul id="popup-<?php echo esc_attr( $key ); ?>" class="popup-menu">
 							<li>
 								<a class="export_single_settings" data-id="<?php echo $key; ?>">
-									<span class="icon ttr-msg-archive-filled color-design-white"></span>
-									<span class="text-regular-body color-text-white">Download</span>
+									<span class="icon ttr-msg-archive-filled tutor-color-design-white"></span>
+									<span class="text-regular-body tutor-color-text-white">Download</span>
 								</a>
 							</li>
 							<li>
 								<a class="delete_single_settings" data-id="<?php echo $key; ?>">
-									<span class="icon ttr-delete-fill-filled color-design-white"></span>
-									<span class="text-regular-body color-text-white">Delete</span>
+									<span class="icon ttr-delete-fill-filled tutor-color-design-white"></span>
+									<span class="text-regular-body tutor-color-text-white">Delete</span>
 								</a>
 							</li>
 							</ul>
@@ -109,8 +109,8 @@
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="text-regular-h6 color-text-primary"> Reset Everything to Default</div>
-				<div class="text-medium-small color-text-subsued">
+				<div class="text-regular-h6 tutor-color-text-primary"> Reset Everything to Default</div>
+				<div class="text-medium-small tutor-color-text-subsued">
 					<span style="font-weight: 500">Reset subtitle
 				</span></div>
 			</div>

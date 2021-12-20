@@ -44,12 +44,12 @@ function tutor_assignment_convert_seconds($seconds){
     <div class="tutor-topbar-left-item d-flex"> 
         <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
             <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
+                <span class="ttr-icon-light-left-line tutor-color-text-white flex-center"></span>
             </a>
         </div>
         <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-			<span class="ttr-assignment-filled color-text-white tutor-mr-5"></span>
-			<span class="text-regular-caption color-design-white">
+			<span class="ttr-assignment-filled tutor-color-text-white tutor-mr-5"></span>
+			<span class="text-regular-caption tutor-color-design-white">
 				<?php 
 					esc_html_e( 'Assignment: ', 'tutor' );
 					the_title();
@@ -62,8 +62,8 @@ function tutor_assignment_convert_seconds($seconds){
             <?php
                 do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
             ?>
-            <div class="text-regular-caption color-design-white">
-                <span class="tutor-progress-content color-primary-60">
+            <div class="text-regular-caption tutor-color-design-white">
+                <span class="tutor-progress-content tutor-color-primary-60">
                     <?php _e('Your Progress:', 'tutor'); ?>
                 </span>
                 <span class="text-bold-caption">
@@ -82,7 +82,7 @@ function tutor_assignment_convert_seconds($seconds){
         <div class="tutor-topbar-cross-icon flex-center">
             <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
             <a href="<?php echo get_the_permalink($course_id); ?>">
-                <span class="ttr-line-cross-line color-text-white flex-center"></span>
+                <span class="ttr-line-cross-line tutor-color-text-white flex-center"></span>
             </a>
         </div>
     </div>
@@ -93,7 +93,7 @@ function tutor_assignment_convert_seconds($seconds){
         <a href="<?php echo esc_url( get_the_permalink( isset( $previous_id ) ? $previous_id : '' ) ); ?>">
             <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
         </a>
-        <div class="tutor-top-nav-title text-regular-body color-text-primary">
+        <div class="tutor-top-nav-title tutor-text-regular-body tutor-color-text-primary">
             <?php 
                 the_title();
             ?>
@@ -102,7 +102,7 @@ function tutor_assignment_convert_seconds($seconds){
 </div>
 <div class="tutor-quiz-wrapper tutor-quiz-wrapper d-flex justify-content-center tutor-mt-100 tutor-pb-100">
 	<div id="tutor-assignment-wrap" class="tutor-quiz-wrap tutor-course-assignment-details tutor-submit-assignment  tutor-assignment-result-pending">	
-		<div class="tutor-assignment-title text-medium-h4 color-text-primary">
+		<div class="tutor-assignment-title tutor-text-medium-h4 tutor-color-text-primary">
 			<?php the_title(); ?>
 		</div>
 
@@ -143,14 +143,14 @@ function tutor_assignment_convert_seconds($seconds){
 		<div class="tutor-assignment-meta-info d-flex justify-content-between tutor-mt-25 tutor-mt-sm-35 tutor-py-15 tutor-py-sm-22">
 			<div class="tutor-assignment-detail-info d-flex">
 				<div class="tutor-assignment-duration">
-					<span class="text-regular-body color-text-hints"><?php _e('Duration:', 'tutor'); ?></span>
-					<span class="text-medium-body color-text-primary">
+					<span class="text-regular-body tutor-color-text-hints"><?php _e('Duration:', 'tutor'); ?></span>
+					<span class="tutor-text-medium-body  tutor-color-text-primary">
 						<?php echo $time_duration["value"] ? $time_duration["value"] . ' ' . $time_duration["time"] : __('No limit', 'tutor'); ?>
 					</span>
 				</div>
 				<div class="tutor-assignmetn-deadline">
-					<span class="text-regular-body color-text-hints"><?php _e('Deadline:', 'tutor'); ?></span>
-					<span class="text-medium-body color-text-primary">
+					<span class="text-regular-body tutor-color-text-hints"><?php _e('Deadline:', 'tutor'); ?></span>
+					<span class="tutor-text-medium-body  tutor-color-text-primary">
 						<?php
 							if ($time_duration['value'] != 0) {
 								if ($now > $remaining_time and $is_submitted == false) { 
@@ -167,12 +167,12 @@ function tutor_assignment_convert_seconds($seconds){
 			</div>
 			<div class="tutor-assignment-detail-info d-flex">
 				<div class="tutor-assignment-marks">
-					<span class="text-regular-body color-text-hints"><?php _e('Total Marks:', 'tutor'); ?></span>
-					<span class="text-medium-body color-text-primary"><?php echo $total_mark; ?></span>
+					<span class="text-regular-body tutor-color-text-hints"><?php _e('Total Marks:', 'tutor'); ?></span>
+					<span class="tutor-text-medium-body  tutor-color-text-primary"><?php echo $total_mark; ?></span>
 				</div>
 				<div class="tutor-assignmetn-pass-mark">
-					<span class="text-regular-body color-text-hints"><?php _e('Passing Mark:', 'tutor'); ?></span>
-					<span class="text-medium-body color-text-primary"><?php echo $pass_mark; ?></span>
+					<span class="text-regular-body tutor-color-text-hints"><?php _e('Passing Mark:', 'tutor'); ?></span>
+					<span class="tutor-text-medium-body  tutor-color-text-primary"><?php echo $pass_mark; ?></span>
 				</div>
 			</div>
 		</div>
@@ -188,8 +188,8 @@ function tutor_assignment_convert_seconds($seconds){
 			<div class="quiz-flash-message tutor-mt-25 tutor-mt-sm-35">
 				<div class="tutor-quiz-warning-box time-over d-flex align-items-center justify-content-between">
 					<div class="flash-info d-flex align-items-center">
-						<span class="ttr-cross-cricle-filled color-design-danger tutor-mr-7"></span>
-						<span class="text-regular-caption color-danger-100">
+						<span class="ttr-cross-cricle-filled tutor-color-design-danger tutor-mr-7"></span>
+						<span class="text-regular-caption tutor-color-danger-100">
 							<?php _e('You have missed the submission deadline. Please contact the instructor for more information.', 'tutor'); ?>
 						</span>
 					</div>
@@ -203,11 +203,11 @@ function tutor_assignment_convert_seconds($seconds){
 		<div class="tutor-time-out-assignment-details tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
 			<div class="tutor-to-assignment tutor-pt-30 tutor-pt-sm-40 has-show-more">
 
-				<div class="tutor-to-title text-medium-h6 color-text-primary">
+				<div class="tutor-to-title tutor-text-medium-h6 tutor-color-text-primary">
 					<?php _e('Description', 'tutor'); ?>
 				</div>
 
-				<div class="tutor-to-body text-regular-body color-text-subsued tutor-pt-12">
+				<div class="tutor-to-body tutor-text-regular-body tutor-color-text-subsued tutor-pt-12">
 					<?php the_content(); ?>
 				</div>
 
@@ -250,10 +250,10 @@ function tutor_assignment_convert_seconds($seconds){
 
 					<?php $allowd_upload_files = (int) tutor_utils()->get_assignment_option(get_the_ID(), 'upload_files_limit'); ?>
 					<div class="tutor-assignment-body tutor-pt-30 tutor-pt-sm-40 has-show-more">
-						<div class="tutor-to-title text-medium-h6 color-text-primary">
+						<div class="tutor-to-title tutor-text-medium-h6 tutor-color-text-primary">
 							<?php _e('Assignment Submission', 'tutor'); ?>
 						</div>
-						<div class="text-regular-caption color-text-subsued tutor-pt-15 tutor-pt-sm-30">
+						<div class="text-regular-caption tutor-color-text-subsued tutor-pt-15 tutor-pt-sm-30">
 						<?php _e('Assignment answer form', 'tutor'); ?>
 						</div>
 						<div class="tutor-assignment-text-area tutor-pt-20">
@@ -262,7 +262,7 @@ function tutor_assignment_convert_seconds($seconds){
 
 						<?php if ($allowd_upload_files) { ?>
 							<div class="tutor-assignment-attachment tutor-mt-30 tutor-py-20 tutor-px-15 tutor-py-sm-30 tutor-px-sm-30">
-								<div class="text-regular-caption color-text-subsued">
+								<div class="text-regular-caption tutor-color-text-subsued">
 									<?php _e('Attach assignment files', 'tutor'); ?>
 								</div>
 								<div class="tutor-attachment-files tutor-mt-12">
@@ -277,16 +277,16 @@ function tutor_assignment_convert_seconds($seconds){
 										</form>
 									</div>
 									<div class="tutor-input-type-size">
-										<p class="text-regular-small color-text-subsued">
+										<p class="text-regular-small tutor-color-text-subsued">
 											<?php _e('File Support: ', 'tutor'); ?>
-											<span class="color-text-primary">
+											<span class="tutor-color-text-primary">
 												<?php _e('jpg, .jpeg,. gif, or .png.', 'tutor'); ?>
 											</span>
 											<?php _e(' no text on the image.', 'tutor'); ?>
 										</p>
-										<p class="text-regular-small color-text-subsued tutor-mt-7">
+										<p class="text-regular-small tutor-color-text-subsued tutor-mt-7">
 											<?php _e('Total File Size: Max', 'tutor'); ?> 
-											<span class="color-text-primary">
+											<span class="tutor-color-text-primary">
 												<?php echo $file_upload_limit; ?>
 												<?php _e('MB', 'tutor'); ?>
 											</span>
@@ -308,10 +308,10 @@ function tutor_assignment_convert_seconds($seconds){
 			</div> <!-- assignment-submission -->
 			<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-30 tutor-pb-sm-45">
 				<div class="tutor-ad-body tutor-pt-40 tutor-pt-sm-60 has-show-more" id="content-section">
-					<div class="text-medium-h6 color-text-primary">
+					<div class="text-medium-h6 tutor-color-text-primary">
 						<?php _e('Description', 'tutor'); ?>
 					</div>
-					<div class="text-regular-body color-text-subsued tutor-pt-12" id="short-text">
+					<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="short-text">
 						<?php
 							$content = get_the_content();
 							$s_content = $content;
@@ -319,15 +319,15 @@ function tutor_assignment_convert_seconds($seconds){
 						?>
 						<span id="dots"></span>
 					</div>
-					<div class="text-regular-body color-text-subsued tutor-pt-12" id="full-text">
+					<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="full-text">
 						<?php
 							the_content();
 						?>
 					</div>
 					<div class="tutor-show-more-btn tutor-pt-12">
 						<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
-							<span class="btn-icon ttr-plus-filled color-design-brand" id="no-icon"></span>
-							<span class="color-text-primary"><?php _e('Show More', 'tutot'); ?></span>
+							<span class="btn-icon ttr-plus-filled tutor-color-design-brand" id="no-icon"></span>
+							<span class="tutor-color-text-primary"><?php _e('Show More', 'tutot'); ?></span>
 						</button>
 					</div>
 				</div>
@@ -360,27 +360,27 @@ function tutor_assignment_convert_seconds($seconds){
 								<thead>
 									<tr>
 										<th>
-										<span class="text-regular-small color-text-subsued">
+										<span class="text-regular-small tutor-color-text-subsued">
 											<?php _e('Date', 'tutor'); ?>
 										</span>
 										</th>
 										<th>
-										<span class="text-regular-small color-text-subsued">
+										<span class="text-regular-small tutor-color-text-subsued">
 											<?php _e('Total Marks', 'tutor'); ?>
 										</span>
 										</th>
 										<th>
-										<span class="text-regular-small color-text-subsued">
+										<span class="text-regular-small tutor-color-text-subsued">
 											<?php _e('Pass Marks', 'tutor'); ?>
 										</span>
 										</th>
 										<th>
-										<span class="text-regular-small color-text-subsued">
+										<span class="text-regular-small tutor-color-text-subsued">
 											<?php _e('Earned Marks', 'tutor'); ?>
 										</span>
 										</th>
 										<th>
-										<span class="text-regular-small color-text-subsued">
+										<span class="text-regular-small tutor-color-text-subsued">
 											<?php _e('Result', 'tutor'); ?>	
 										</span>
 										</th>
@@ -390,23 +390,23 @@ function tutor_assignment_convert_seconds($seconds){
 									<tr>
 										<td data-th="Date" class="date">
 											<div class="td-statement-info">
-												<span class="text-medium-small color-text-primary">
+												<span class="text-medium-small tutor-color-text-primary">
 													<?php esc_html_e( date('F j Y g:i a', strtotime( $submitted_assignment->comment_date ) ), 'tutor' ); ?>
 												</span>
 											</div>
 										</td>
 										<td data-th="Total Marks" class="total-marks">
-											<span class="text-medium-caption color-text-primary">
+											<span class="text-medium-caption tutor-color-text-primary">
 												<?php esc_html_e( $max_mark, 'tutor' ); ?>
 											</span>
 										</td>
 										<td data-th="Pass Marks" class="pass-marks">
-											<span class="text-medium-caption color-text-primary">
+											<span class="text-medium-caption tutor-color-text-primary">
 												<?php esc_html_e( $pass_mark, 'tutor' ); ?>
 											</span>
 										</td>
 										<td data-th="Earned Marks" class="earned-marks">
-											<span class="text-medium-caption color-text-primary">
+											<span class="text-medium-caption tutor-color-text-primary">
 												<?php esc_html_e( $given_mark, 'tutor' ); ?>
 											</span>
 										</td>
@@ -445,10 +445,10 @@ function tutor_assignment_convert_seconds($seconds){
 					if ($is_reviewed_by_instructor) {
 				?>
 				<div class="tutor-instructor-note tutor-my-30 tutor-py-20 tutor-px-25 tutor-py-sm-30 tutor-px-sm-35">
-					<div class="tutor-in-title text-medium-h6 color-text-primary">
+					<div class="tutor-in-title tutor-text-medium-h6 tutor-color-text-primary">
 						<?php _e('Instructor Note', 'tutor'); ?>
 					</div>
-					<div class="tutor-in-body text-regular-body color-text-subsued tutor-pt-10 tutor-pt-sm-18">
+					<div class="tutor-in-body tutor-text-regular-body tutor-color-text-subsued tutor-pt-10 tutor-pt-sm-18">
 						<?php echo nl2br(get_comment_meta($submitted_assignment->comment_ID, 'instructor_note', true)) ?>
 					</div>
 				</div>
@@ -457,14 +457,14 @@ function tutor_assignment_convert_seconds($seconds){
 				<div class="tutor-assignment-details tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
 					<div class="tutor-ar-body tutor-pt-25 tutor-pb-40 tutor-px-15 tutor-px-md-30">
 						<div class="tutor-ar-header d-flex justify-content-between align-items-center">
-							<div class="tutor-ar-title text-medium-h6 color-text-primary">
+							<div class="tutor-ar-title tutor-text-medium-h6 tutor-color-text-primary">
 								<?php _e('Your Assigment', 'tutor'); ?>
 							</div>
 							<div class="tutor-ar-btn">
 							<button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">Edit</button>
 							</div>
 						</div>
-						<div class="text-regular-body color-text-subsued tutor-pt-18">
+						<div class="text-regular-body tutor-color-text-subsued tutor-pt-18">
 							<?php echo nl2br(stripslashes($submitted_assignment->comment_content)); ?>
 						</div>
 						<?php
@@ -483,14 +483,14 @@ function tutor_assignment_convert_seconds($seconds){
 												?>
 												<div class="tutor-instructor-card">
 													<div class="tutor-icard-content">
-														<div class="text-regular-body color-text-title">
+														<div class="text-regular-body tutor-color-text-title">
 															<?php echo tutor_utils()->array_get('name', $attached_file); ?>
 														</div>
 														<div class="text-regular-small">Size: <?php echo tutor_utils()->array_get('size', $attached_file); ?></div>
 													</div>
 													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
 														<a href="<?php echo $upload_baseurl . tutor_utils()->array_get('uploaded_path', $attached_file) ?>" target="_blank">
-															<span class="ttr-download-line color-design-brand"></span>
+															<span class="ttr-download-line tutor-color-design-brand"></span>
 														</a>
 													</div>
 												</div>
@@ -507,10 +507,10 @@ function tutor_assignment_convert_seconds($seconds){
 
 				<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-30 tutor-pb-sm-45">
 					<div class="tutor-ad-body tutor-pt-40 tutor-pt-sm-60 has-show-more" id="content-section">
-						<div class="text-medium-h6 color-text-primary">
+						<div class="text-medium-h6 tutor-color-text-primary">
 							<?php _e('Description', 'tutor'); ?>
 						</div>
-						<div class="text-regular-body color-text-subsued tutor-pt-12" id="short-text">
+						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="short-text">
 							<?php
 								$content = get_the_content();
 								$s_content = $content;
@@ -518,7 +518,7 @@ function tutor_assignment_convert_seconds($seconds){
 							?>
 							<span id="dots"></span>
 						</div>
-						<div class="text-regular-body color-text-subsued tutor-pt-12" id="full-text">
+						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="full-text">
 							<?php
 								the_content();
 							?>
@@ -529,8 +529,8 @@ function tutor_assignment_convert_seconds($seconds){
 						?>
 						<div class="tutor-show-more-btn tutor-pt-12">
 							<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
-								<span class="btn-icon ttr-plus-filled color-design-brand" id="no-icon"></span>
-								<span class="color-text-primary"><?php _e('Show More', 'tutot'); ?></span>
+								<span class="btn-icon ttr-plus-filled tutor-color-design-brand" id="no-icon"></span>
+								<span class="tutor-color-text-primary"><?php _e('Show More', 'tutot'); ?></span>
 							</button>
 						</div>
 						<?php } ?>
