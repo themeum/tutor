@@ -44,9 +44,11 @@ window.jQuery(document).ready(function ($) {
 
         var $that = $(this);
         var wrapper = $that.closest('.tutor-thumbnail-uploader');
+        var img = wrapper.find('img');
+        var placeholder = img.data('placeholder') || '';
 
         wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val('');
-        wrapper.find('img').attr('src', '');
+        img.attr('src', placeholder);
 
         $that.hide();
     });

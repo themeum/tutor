@@ -301,21 +301,21 @@ $filters = array(
 					</div>
 				</div>
 				<div class="tutor-bs-row tutor-mx-0" id="tutor-new-instructor-form-response"></div>
-		  </div>
-	  <div class="tutor-modal-footer">
-		<div class="tutor-bs-d-flex tutor-bs-justify-content-between">
-		  <div class="col">
-			<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn-loading" name="tutor_register_instructor_btn">
-			<?php esc_html_e( 'Add Instructor', 'tutor' ); ?>
-			</button>
-		  </div>
-		  <div class="col-auto">
-			<button data-tutor-modal-close class="tutor-btn tutor-is-default">
-			  <?php esc_html_e( 'Cancel', 'tutor' ); ?>
-			</button>
-		  </div>
-		</div>
-	  </div>
+		  	</div>
+			<div class="tutor-modal-footer">
+				<div class="tutor-bs-d-flex tutor-bs-justify-content-between">
+					<div class="col">
+						<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn-loading" name="tutor_register_instructor_btn">
+							<?php esc_html_e( 'Add Instructor', 'tutor' ); ?>
+						</button>
+					</div>
+					<div class="col-auto">
+						<button data-tutor-modal-close class="tutor-btn tutor-is-default">
+							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+						</button>
+					</div>
+				</div>
+			</div>
 	</form>
 	</div>
   </div>

@@ -1235,7 +1235,7 @@ function get_tutor_course_level($course_id = 0){
 }
 
 if ( ! function_exists('get_tutor_course_duration_context')) {
-    function get_tutor_course_duration_context( $course_id = 0 ) {
+    function get_tutor_course_duration_context( $course_id = 0, $short_form = false ) {
         if ( ! $course_id ) {
             $course_id = get_the_ID();
         }
@@ -1247,18 +1247,22 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         $durationMinutes = tutor_utils()->avalue_dot( 'minutes', $duration );
         $durationSeconds = tutor_utils()->avalue_dot( 'seconds', $duration );
 
+        $hour_format   = $short_form ? __( 'h', 'tutor' ) : __( 'hour', 'tutor' );
+        $minute_format = $short_form ? __( 'm', 'tutor' ) : __( 'minute', 'tutor' );
+        $second_format = $short_form ? __( 's', 'tutor' ) : __( 'second', 'tutor' );
+
         if ( $duration ) {
             $output = '';
             if ( $durationHours > 0 ) {
-                $output .= '<span class="tutor-text-medium-caption  tutor-color-text-primary tutor-meta-level">' . ' ' . $durationHours . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . __( 'hour', 'tutor' ) . '</span>';
+                $output .= '<span class="tutor-text-medium-caption tutor-color-text-primary tutor-meta-level">' . ' ' . $durationHours . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . $hour_format . '</span>';
             }
 
             if ( $durationMinutes > 0 ) {
-                $output .= '<span class="tutor-text-medium-caption  tutor-color-text-primary tutor-meta-level">' . ' ' . $durationMinutes . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . __( 'minute', 'tutor' ) . '</span>';
+                $output .= '<span class="tutor-text-medium-caption tutor-color-text-primary tutor-meta-level">' . ' ' . $durationMinutes . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . $minute_format . '</span>';
             }
 
             if ( $durationSeconds > 0 ) {
-                $output .= '<span class="tutor-text-medium-caption  tutor-color-text-primary tutor-meta-level">' . ' ' . $durationSeconds . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . __( 'Second', 'tutor' ) . '</span>';
+                $output .= '<span class="tutor-text-medium-caption tutor-color-text-primary tutor-meta-level">' . ' ' . $durationSeconds . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . $second_format . '</span>';
             }
 
             return $output;

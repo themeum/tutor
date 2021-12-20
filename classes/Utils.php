@@ -851,7 +851,6 @@ class Utils {
         $totalContents    = $this->count($course_contents);
         $totalContents    = $totalContents ? $totalContents : 0;
         $completedCount   = $completed_lesson;
-
         if ( tutor_utils()->count( $course_contents ) ) {
             foreach ( $course_contents as $content ) {
                 if ( $content->post_type === 'tutor_quiz' ) {
@@ -864,7 +863,17 @@ class Utils {
                     if ( $isSubmitted ) {
                         $completedCount++;
                     }
-                }
+                } elseif ( $content->post_type === 'tutor_zoom_meeting' ) {
+					/**
+					 * count zoom lesson completion for course progress
+					 *
+					 * @since v2.0.0
+					 */
+					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
+					if ( $is_completed ) {
+						$completedCount++;
+					}
+				}
             }
         }
 
@@ -4083,7 +4092,7 @@ class Utils {
 				break;
 
 			case 'unread' :
-				$qna_types_caluse = ' AND (_meta.meta_key!=\'tutor_qna_read\' OR _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value!=1) ';
 				break;
 
 			case 'archived' :
@@ -4091,11 +4100,11 @@ class Utils {
 				break;
 
 			case 'important' :
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value=1) ';
 				break;
 		}
 
-		$columns_select = $count_only ? 'COUNT(_question.comment_ID)' :
+		$columns_select = $count_only ? '_question.comment_ID' :
 			"_question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
@@ -4136,7 +4145,7 @@ class Utils {
 		);
 
 		if($count_only) {
-			return $wpdb->get_var($query);
+			return count($wpdb->get_results($query));
 		}
 
 		$query = $wpdb->get_results( $query );
@@ -8555,4 +8564,5 @@ class Utils {
 	
 		return implode(', ', $timeParts);
 	}
+
 }

@@ -99,7 +99,9 @@ window.jQuery(document).ready(function($){
 
     // Video source 
     $(document).on('change', '.tutor_lesson_video_source', function(e){
-        $(this).nextAll().hide().filter('.video_source_wrap_'+$(this).val()).show();
+        let val = $(this).val();
+        $(this).nextAll().hide().filter('.video_source_wrap_'+val).show();
+        $(this).prev().filter('[data-video_source]').attr('data-video_source', val);
     });
 
     // Update lesson
@@ -148,7 +150,13 @@ window.jQuery(document).ready(function($){
     * @since v.1.9.0
     * Parse and show video duration on link paste in lesson video 
     */
-    var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
+    var video_url_input = [
+        '.video_source_wrap_external_url input', 
+        '.video_source_wrap_vimeo input', 
+        '.video_source_wrap_youtube input', 
+        '.video_source_wrap_html5 input.input_source_video_id'
+    ].join(',');
+
     var autofill_url_timeout;
     $(document).on('blur', video_url_input, function() {
         var url = $(this).val();
@@ -162,11 +170,11 @@ window.jQuery(document).ready(function($){
 
         var root = $(this).closest('.tutor-lesson-modal-wrap').find('.tutor-option-field-video-duration');
         var duration_label = root.find('label');
-        var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
+        var is_wp_media = $(this).hasClass('input_source_video_id');
         var autofill_url = $(this).data('autofill_url');
         $(this).data('autofill_url', null);
 
-        var video_url = is_wp_media ? $(this).find('span').data('video_url') : (autofill_url || e.originalEvent.clipboardData.getData('text')); 
+        var video_url = is_wp_media ? $(this).data('video_url') : (autofill_url || e.originalEvent.clipboardData.getData('text')); 
         
         var toggle_loading = function(show) {
 
