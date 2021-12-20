@@ -170,10 +170,12 @@ jQuery(document).ready(function ($) {
     if ($tutor_quiz_time_update.length) {
         attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
         var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
+        var quiz_duration = $tutor_quiz_time_update.attr('data-quiz-duration');
 
         if (attempt_meta.time_limit.time_limit_seconds > 0) {
             //No time Zero limit for
-            var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
+            //var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
+            var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + quiz_duration;
             var time_now = new Date(attempt_meta.date_time_now).getTime();
 
             var tutor_quiz_interval = setInterval(function () {
@@ -265,7 +267,8 @@ jQuery(document).ready(function ($) {
                 $tutor_quiz_time_update.html(countdown_human);
             }, 1000);
         } else {
-            $tutor_quiz_time_update.closest('.time-remaining').remove();
+            $tutor_quiz_time_update.html('');
+            console.log('removed');
         }
     }
 

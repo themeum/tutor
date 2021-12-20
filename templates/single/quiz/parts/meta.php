@@ -20,7 +20,7 @@
 			<span class="text-regular-body tutor-color-text-hints tutor-mr-10">Total <?php esc_html_e( 'Attempted', 'tutor' ); ?>:</span>
 			<span class="text-bold-body tutor-color-text-title">
 			<?php
-			if ( $attempts_allowed != 0 ) {
+			if ( 0 != $attempts_allowed ) {
 				if ( $attempted_count ) {
 					echo esc_html( $attempted_count ) . '/';
 				}
@@ -56,10 +56,11 @@
 				<span id="tutor-quiz-time-update" class="text-medium-body 
 				<?php
 				if ( $remaining_time_secs < 0 ) {
-					echo 'color-text-error';}
+					echo 'color-text-error';
+				}
 				?>
-				" data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>">
-					<?php echo esc_html( $remaining_time_secs ); ?>
+				" data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>" data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
+
 				</span>
 			</div>
 		</div>

@@ -8565,4 +8565,33 @@ class Utils {
 		return implode(', ', $timeParts);
 	}
 
+	/**
+	 * Get quiz time duration in seconds
+	 *
+	 * @param string $time_type | supported time type : seconds, minutes, hours, days, weeks
+	 * @param int $time_value | quiz duration
+	 *
+	 * @return int | quiz time duration in seconds
+	 */
+	public function quiz_time_duration_in_seconds( string $time_type, int $time_value ) : int {
+		if ( 'seconds' === $time_type ) {
+			return (int) $time_value;
+		}
+		$time_unit_seconds = 0;
+		switch ($time_type) {
+			case 'minutes':
+				$time_unit_seconds = 60;
+			case 'hours':
+				$time_unit_seconds = 3600;
+			case 'days':
+				$time_unit_seconds = 24 * 3600;
+			case 'weeks':
+				$time_unit_seconds = 7 * 86400;
+			default:
+				break;
+		}
+		$quiz_duration_in_seconds = $time_unit_seconds * $time_value;
+		return (int) $quiz_duration_in_seconds;
+	}
+
 }
