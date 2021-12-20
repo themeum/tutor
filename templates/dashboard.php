@@ -78,7 +78,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 				</div>
 				<div class="tutor-user-info tutor-ml-20">
 					<div class="tutor-dashboard-header-display-name">
-						<h4><strong><?php echo $user->display_name; ?></strong> </h4>
+						<h4><strong><?php echo esc_html( $user->display_name ); ?></strong> </h4>
 					</div>
 					<?php
 						$instructor_rating = tutor_utils()->get_instructor_ratings( $user->ID );
@@ -98,7 +98,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 					?>
 				</div>
 			</div>
-			<div class="tutor-header-right-side  tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end">
+			<div class="tutor-header-right-side tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end">
 				<div class="tutor-bs-d-flex align-items-center">
 					<?php
 						do_action( 'tutor_dashboard/before_header_button' );
@@ -121,8 +121,8 @@ do_action( 'tutor_dashboard/before/wrap' );
 					if ( current_user_can( tutor()->instructor_role ) ) {
 						$course_type = tutor()->course_post_type;
 						?>
-							<a class="tutor-btn tutor-is-outline" href="<?php echo apply_filters( 'frontend_course_create_url', admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ); ?>">
-								<i class="tutor-icon-plus-square-button tutor-mr-10"></i> <?php _e( 'Create Course', 'tutor' ); ?>
+							<a class="tutor-btn tutor-is-outline" href="<?php echo esc_url( apply_filters( 'frontend_course_create_url', admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ) ); ?>">
+								<i class="tutor-icon-plus-square-button tutor-mr-10"></i> <?php esc_html_e( 'Create Course', 'tutor' ); ?>
 							</a>
 							<?php
 					} elseif ( $instructor_status == 'pending' ) {
