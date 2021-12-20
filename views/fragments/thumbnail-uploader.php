@@ -8,8 +8,8 @@
 	$is_borderless = isset($data['borderless']) && $data['borderless']==true;
 	$placeholder = !empty($data['placeholder']) ? $data['placeholder'] : '';
 ?>
-<div class="tutor-thumbnail-uploader <?php echo $is_borderless ? ' tutor-is-borderless ' : ''; ?>" data-media-heading="<?php echo ! empty( $media_heading ) ? $media_heading : __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ); ?>">
-	<div class="thumbnail-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10 <?php echo $is_borderless ? '' : 'tutor-p-15'; ?>">
+<div class="tutor-thumbnail-uploader" data-media-heading="<?php echo ! empty( $media_heading ) ? $media_heading : __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ); ?>">
+	<div class="thumbnail-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10 <?php echo $is_borderless ? 'tutor-is-borderless' : 'tutor-p-15'; ?>">
 		<div class="thumbnail-preview image-previewer">
 			<span class="preview-loading"></span>
 			<input type="hidden" class="tutor-tumbnail-id-input" name="<?php echo $input_name; ?>" value="<?php echo ! empty( $media_id ) ? $media_id : ''; ?>">

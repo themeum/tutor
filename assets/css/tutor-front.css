@@ -5286,7 +5286,6 @@ table.course-single-gradebooks a {
 
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected {
   margin-bottom: 0;
-  height: 40px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -10322,6 +10321,21 @@ table.qna-list-table .tutor-qna-question-col.is-read span {
   max-height: 35px;
 }
 
+.tutor-quiz-attempt-details-wrapper .back {
+  position: relative;
+}
+
+.tutor-quiz-attempt-details-wrapper .back a {
+  font-size: 16px;
+  color: #5B616F;
+}
+
+.tutor-quiz-attempt-details-wrapper .back a .ttr-previous-line {
+  font-size: 20px;
+  line-height: 0px;
+  color: #1A1B1E;
+}
+
 .tutor-quiz-attempt-details .tutor-icon-rounded {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -10366,6 +10380,21 @@ table.qna-list-table .tutor-qna-question-col.is-read span {
 
 .tutor-quiz-attempt-details .tutor-icon-rounded:not(:hover) {
   opacity: .8;
+}
+
+.tutor-quiz-attempt-details tr:not(:hover).tutor-quiz-answer-status-correct .tutor-icon-rounded.tutor-text-danger {
+  color: #CDCFD5 !important;
+  border-color: #CDCFD5 !important;
+}
+
+.tutor-quiz-attempt-details tr:not(:hover).tutor-quiz-answer-status-wrong .tutor-icon-rounded.tutor-text-success {
+  color: #CDCFD5 !important;
+  border-color: #CDCFD5 !important;
+}
+
+.tutor-quiz-attempt-details tr:not(:hover).tutor-quiz-answer-status-pending .tutor-icon-rounded.tutor-text-success, .tutor-quiz-attempt-details tr:not(:hover).tutor-quiz-answer-status-pending .tutor-icon-rounded.tutor-text-danger {
+  color: #CDCFD5 !important;
+  border-color: #CDCFD5 !important;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

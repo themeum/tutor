@@ -4558,21 +4558,6 @@
   }
 }
 
-.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-details-wrapper .back {
-  position: relative;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-details-wrapper .back a {
-  font-size: 16px;
-  color: #5B616F;
-}
-
-.tutor-dashboard .tutor-dashboard-content .tutor-quiz-attempt-details-wrapper .back a .ttr-previous-line {
-  font-size: 20px;
-  line-height: 0px;
-  color: #1A1B1E;
-}
-
 .tutor-dashboard .tutor-dashboard-content .tutor-dashboard-profile-data > div {
   margin-bottom: 30px;
 }

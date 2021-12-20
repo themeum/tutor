@@ -443,7 +443,9 @@ window.jQuery(document).ready(function ($) {
   }); // Video source 
 
   $(document).on('change', '.tutor_lesson_video_source', function (e) {
-    $(this).nextAll().hide().filter('.video_source_wrap_' + $(this).val()).show();
+    var val = $(this).val();
+    $(this).nextAll().hide().filter('.video_source_wrap_' + val).show();
+    $(this).prev().filter('[data-video_source]').attr('data-video_source', val);
   }); // Update lesson
 
   $(document).on('click', '.update_lesson_modal_btn', function (event) {
@@ -487,7 +489,7 @@ window.jQuery(document).ready(function ($) {
    * Parse and show video duration on link paste in lesson video 
    */
 
-  var video_url_input = '.video_source_wrap_external_url input, .video_source_wrap_vimeo input, .video_source_wrap_youtube input, .video_source_wrap_html5, .video_source_upload_wrap_html5';
+  var video_url_input = ['.video_source_wrap_external_url input', '.video_source_wrap_vimeo input', '.video_source_wrap_youtube input', '.video_source_wrap_html5 input.input_source_video_id'].join(',');
   var autofill_url_timeout;
   $(document).on('blur', video_url_input, function () {
     var url = $(this).val();
@@ -501,10 +503,10 @@ window.jQuery(document).ready(function ($) {
     e.stopImmediatePropagation();
     var root = $(this).closest('.tutor-lesson-modal-wrap').find('.tutor-option-field-video-duration');
     var duration_label = root.find('label');
-    var is_wp_media = $(this).hasClass('video_source_wrap_html5') || $(this).hasClass('video_source_upload_wrap_html5');
+    var is_wp_media = $(this).hasClass('input_source_video_id');
     var autofill_url = $(this).data('autofill_url');
     $(this).data('autofill_url', null);
-    var video_url = is_wp_media ? $(this).find('span').data('video_url') : autofill_url || e.originalEvent.clipboardData.getData('text');
+    var video_url = is_wp_media ? $(this).data('video_url') : autofill_url || e.originalEvent.clipboardData.getData('text');
 
     var toggle_loading = function toggle_loading(show) {
       if (!show) {
@@ -1348,13 +1350,13 @@ window.jQuery(document).ready(function ($) {
       attachment_card.find(".filename").text(attachment.name).attr('href', attachment.url);
       attachment_card.find('.filesize').text(attachment.filesizeHumanReadable); // Add video id to hidden input
 
-      container.find("input.input_source_video_id").val(attachment.id); // Add identifer that video added
+      container.find("input.input_source_video_id").val(attachment.id).data('video_url', attachment.url).trigger('paste'); // Add identifer that video added
 
       container.addClass('tutor-has-video');
     }); // Finally, open the modal on click
 
     frame.open();
-  }); // Remove video
+  });
 });
 
 /***/ }),
