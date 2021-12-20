@@ -78,11 +78,17 @@ window.jQuery(document).ready(function($) {
 
     // Prevent number input out of range
     $(document).on('input', 'input.tutor-form-control[type="number"], input.tutor-form-number-verify[type="number"]', function() {
+        if($(this).val()=='') {
+            $(this).val('');
+            return;
+        }
+        
         let min = $(this).attr('min');
         let max = $(this).attr('max');
-        let val = parseInt( $(this).val() || 0);
-
-        console.log(min, max);
+        
+        let val = $(this).val().toString();
+        /\D/.test(val) ? val='' : 0;
+        val = parseInt(val || 0);
 
         // Prevent number smaller than min
         if(!(min===undefined)) {

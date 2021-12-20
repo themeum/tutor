@@ -111,7 +111,7 @@
                         </g>
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M234.948 131.032H239.01C248.09 131.032 248.09 144.643 239.01 144.643H234.948V155.627C234.948 158.731 232.559 161.119 229.452 161.119H218.461V157.06C218.461 147.986 204.842 147.986 204.842 157.06V161.119H193.851C190.745 161.119 188.355 158.731 188.355 155.627V144.643H192.417C201.497 144.643 201.497 131.032 192.417 131.032H188.355V120.047C188.355 116.943 190.745 114.555 193.851 114.555H204.842V110.496C204.842 101.422 218.461 101.422 218.461 110.496V114.555H229.452C232.559 114.555 234.948 116.943 234.948 120.047V131.032Z" fill="url(#paint1_linear_12122:207971)"/>
                         <defs>
-                        <filter id="filter0_d_12122:207971" x="133.762" y="59.2075" width="160.043" height="159.978" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <filter id="filter0_d_12122:207971" x="133.762" y="59.2075" width="160.043" height="159.978" filterUnits="userSpaceOnUse" tutor-color-interpolation-filters="sRGB">
                         <feFlood flood-opacity="0" result="BackgroundImageFix"/>
                         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
                         <feOffset dy="4"/>
@@ -157,7 +157,7 @@
                 </div>
             </div>
 		</div>
-        <h3 class="title text-medium-h5 color-text-primary tutor-mb-10"><?php esc_html_e( 'Addons List', 'tutor' ); ?></h3>
+        <h3 class="title tutor-text-medium-h5 tutor-color-text-primary tutor-mb-10"><?php esc_html_e( 'Addons List', 'tutor' ); ?></h3>
         <div class="tutor-addons-list-select-filter d-flex justify-content-end align-items-center">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
 				<span class="ttr-search-filled tutor-input-group-icon"></span>

@@ -33,15 +33,15 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
         } 
     ?>
 
-    <div class="tutor-course-details-title text-bold-h4 color-text-primary tutor-mt-10">
+    <div class="tutor-course-details-title tutor-text-bold-h4 tutor-color-text-primary tutor-mt-10">
         <?php do_action('tutor_course/single/title/before'); ?>
         <h1 class="tutor-course-header-h1">
             <?php the_title(); ?>
         </h1>
     </div>
     <div class="tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-mt-28">
-        <div class="tutor-course-details-category text-medium-body color-text-primary">
-            <span class="text-regular-body color-text-hints">
+        <div class="tutor-course-details-category  tutor-text-medium-body  tutor-color-text-primary">
+            <span class="text-regular-body tutor-color-text-hints">
                 <?php _e('Categories', 'tutor'); ?>:
             </span>
             <span>
@@ -63,12 +63,12 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
             </span>
         </div>
         <div class="tutor-course-details-action-btns tutor-mt-10 tutor-mt-sm-0">
-            <a href="#" class="action-btn text-regular-body color-text-primary tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
+            <a href="#" class="action-btn tutor-text-regular-body tutor-color-text-primary tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
                 <i class="ttr-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
 
             <?php if ( tutor_utils()->get_option('enable_course_share', false, true, true) ): ?>
-                <a href="#" class="action-btn text-regular-body color-text-primary">
+                <a href="#" class="action-btn tutor-text-regular-body tutor-color-text-primary">
                     <span class="ttr-share-filled"></span> <?php _e('Share', 'tutor'); ?>
                 </a>
                 <?php tutor_social_share(); ?>

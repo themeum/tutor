@@ -29,7 +29,7 @@ $rating = tutor_utils()->get_course_rating();
 ?>
 <div class="tutor-course-topics-header">
 	<div class="tutor-course-topics-header-left tutor-mb-20">
-		<div class="text-primary text-medium-h6">
+		<div class="text-primary tutor-text-medium-h6">
 			<span>
 				<?php
 					$review_title = apply_filters( 'tutor_course_reviews_section_title', 'Student Ratings & Reviews' );
@@ -43,11 +43,11 @@ $rating = tutor_utils()->get_course_rating();
 <div class="tutor-ratingsreviews">
 	<div class="tutor-ratingsreviews-ratings">
 		<div class="tutor-ratingsreviews-ratings-avg">
-			<div class="text-medium-h1 color-text-primary">
+			<div class="text-medium-h1 tutor-color-text-primary">
 				<?php echo number_format( $rating->rating_avg, 1 ); ?>
 			</div>
 			<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-bs-d-block' ); ?>
-			<div class="tutor-total-ratings-text text-regular-body text-subsued">
+			<div class="tutor-total-ratings-text tutor-text-regular-body text-subsued">
 				<span class="tutor-rating-text-part">
 					<?php esc_html_e( 'Total ', 'tutor' ); ?>
 				</span>
@@ -69,7 +69,7 @@ $rating = tutor_utils()->get_course_rating();
 							<div class="tutor-rating-stars">
 								<span class="ttr-star-line-filled"></span>
 							</div>
-							<div class="tutor-rating-text text-medium-body color-text-primary">
+							<div class="tutor-rating-text  tutor-text-medium-body  tutor-color-text-primary">
 								<?php echo $key; ?>
 							</div>
 						</div>
@@ -77,7 +77,7 @@ $rating = tutor_utils()->get_course_rating();
 							<span class="progress-value"></span>
 						</div>
 					</div>
-					<div class="rating-num text-regular-caption color-text-subsued">
+					<div class="rating-num tutor-text-regular-caption tutor-color-text-subsued">
 						<?php
 							echo $value . ' ';
 							echo $value > 1 ? __( 'ratings', 'tutor' ) : __( 'rating', 'tutor' );
@@ -99,12 +99,12 @@ $rating = tutor_utils()->get_course_rating();
 							<div class="">
 								<img class="tutor-avatar-circle tutor-50" src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="student avatar" />
 							</div>
-							<div class="text-regular-body color-text-primary tutor-mt-16">
+							<div class="text-regular-body tutor-color-text-primary tutor-mt-16">
 								<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-reviewer-name">
 								<?php echo esc_html( $review->display_name ); ?>
 								</a>
 							</div>
-							<div class="text-regular-small color-text-hints">
+							<div class="text-regular-small tutor-color-text-hints">
 								<span class="tutor-review-time">
 									<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
 								</span>
@@ -112,7 +112,7 @@ $rating = tutor_utils()->get_course_rating();
 						</div>
 						<div>
 						<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
-							<div class="text-regular-caption color-text-subsued tutor-mt-10 tutor-review-comment">
+							<div class="text-regular-caption tutor-color-text-subsued tutor-mt-10 tutor-review-comment">
 							<?php echo htmlspecialchars( $review->comment_content ); ?>
 							</div>
 						</div>

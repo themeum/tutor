@@ -41,11 +41,11 @@ class Question_Answers_List extends \Tutor_List_Table {
 
 		// $this->process_bulk_action();
 
-		$current_page = $this->get_pagenum();
+		$current_page 	= $this->get_pagenum();
 		
-		$question_status = !empty($_GET['data']) ? $_GET['data'] : null;
-		$items = tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term, null, null, null, $question_status);
-		$total_items = tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term, null, null, null, $question_status, true);
+		$question_status= !empty($_GET['data']) ? $_GET['data'] : null;
+		$items 			= tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term, null, null, null, $question_status, false, true);
+		$total_items 	= tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term, null, null, null, $question_status, true);
 
 		return array(
 			'items' => $items,

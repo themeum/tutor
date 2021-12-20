@@ -104,10 +104,16 @@ $colorUtils: (
 	.color-#{$classSuffix} {
 		color: #{$value};
 	}
+	.tutor-color-#{$classSuffix} {
+		color: #{$value};
+	}
 }
 
 @each $classSuffix, $value in $colorUtils {
 	.bg-#{$classSuffix} {
+		background-color: #{$value};
+	}
+	.tutor-bg-#{$classSuffix} {
 		background-color: #{$value};
 	}
 }

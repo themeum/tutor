@@ -35,6 +35,8 @@ const TutorDatepicker = (data) => {
 	};
 
 	const handleCalendarChange = (date) => {
+		console.log('Redirect call', date);
+		
 		setStartDate(date);
 		setDropdownYear(false);
 		setDropdownMonth(false);
@@ -67,6 +69,7 @@ const TutorDatepicker = (data) => {
 		const params = url.searchParams;
 		params.set(type, val);
 		params.set('paged', 1);
+		params.set('current_page', 1);
 		return url;
 	};
 	useEffect(() => {
@@ -170,7 +173,9 @@ const TutorDatepicker = (data) => {
 
 							<div className="navigation-icon">
 								<button
-									onClick={() => {
+									onClick={(e) => {
+										e.preventDefault();
+										console.log('Decrease called');
 										decreaseMonth();
 										handleCalendarClose();
 									}}
@@ -184,7 +189,9 @@ const TutorDatepicker = (data) => {
 									</svg>
 								</button>
 								<button
-									onClick={() => {
+									onClick={(e) => {
+										e.preventDefault();
+										console.log('Increase called');
 										increaseMonth();
 										handleCalendarClose();
 									}}

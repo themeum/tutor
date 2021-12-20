@@ -2,10 +2,11 @@
     // The comment Query
     $comments = get_comments( array(
         'status' => 'approve',
-        'post_id' => get_the_ID()
+        'post_id' => get_the_ID(),
+        'parent' => 0
     ) );
 ?>
-<div class="text-medium-h6 color-text-primary">
+<div class="text-medium-h6 tutor-color-text-primary">
     <?php _e('Join the conversation', 'tutor'); ?>
 </div>
 <div class="tutor-conversation tutor-mt-12 tutor-pb-20 tutor-pb-sm-50">
@@ -36,15 +37,15 @@
                                 <?php echo human_time_diff(strtotime($comment->comment_date), tutor_time()).__(' ago', 'tutor'); ?>
                             </span>
                         </div>
-                        <div class="tutor-comment-text text-regular-body tutor-mt-5">
+                        <div class="tutor-comment-text tutor-text-regular-body tutor-mt-5">
                             <?php echo $comment->comment_content; ?>
                         </div>
                     </div>
                     <div class="tutor-comment-actions tutor-ml-22">
-                        <span class="text-regular-body color-text-title">reply</span>
-                        <!-- <span class="text-regular-body color-text-title">like</span>
-                        <span class="text-regular-body color-text-title">edit</span>
-                        <span class="text-regular-body color-text-title">delete</span> -->
+                        <span class="text-regular-body tutor-color-text-title">reply</span>
+                        <!-- <span class="text-regular-body tutor-color-text-title">like</span>
+                        <span class="text-regular-body tutor-color-text-title">edit</span>
+                        <span class="text-regular-body tutor-color-text-title">delete</span> -->
                     </div>
 
                     <?php 
@@ -68,7 +69,7 @@
                                                 <?php echo human_time_diff(strtotime($reply->comment_date), tutor_time()).__(' ago', 'tutor'); ?>
                                             </span>
                                         </div>
-                                        <div class="tutor-comment-text text-regular-body tutor-mt-5">
+                                        <div class="tutor-comment-text tutor-text-regular-body tutor-mt-5">
                                             <?php echo $reply->comment_content; ?>
                                         </div>
                                     </div>
@@ -90,7 +91,7 @@
                         </div>
                     </form>
                 </div>
-                <!-- <span class="tutor-comment-line"></span> -->
+                <span class="tutor-comment-line"></span>
             </div>
         <?php endforeach; ?>
     <?php endif; ?>

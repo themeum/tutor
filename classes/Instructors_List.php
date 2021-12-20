@@ -254,9 +254,9 @@ class Instructors_List extends \Tutor_List_Table {
 		}
 
 		// Add user edit link
-		$edit_link                             = get_edit_user_link( $item->ID );
-		$edit_link                             = '<a href="' . $edit_link . '">' . __( 'Edit' ) . '</a>';
-		$actions['tutor-instructor-edit-link'] = $edit_link;
+		$edit_link = get_edit_user_link($item->ID);
+		$edit_link = '<a href="' . esc_url( $edit_link ) . '">'. esc_html__( 'Edit' ) . '</a>';
+		$actions['tutor-instructor-edit-link']=$edit_link;
 
 		// Add remove instructor action
 		$removal_title                      = $status == 'pending' ? __( 'Reject', 'tutor' ) : __( 'Remove as Instructor', 'tutor' );

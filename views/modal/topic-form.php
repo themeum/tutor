@@ -42,7 +42,7 @@
                         </button>
                     </div>
                     <div class="tutor-bs-col-auto">
-                        <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                        <button data-tutor-modal-close class="tutor-btn tutor-btn-disable">
                             <?php _e('Cancel', 'tutor'); ?>
                         </button>
                     </div>

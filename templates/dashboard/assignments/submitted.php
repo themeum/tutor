@@ -7,34 +7,31 @@
 
 global $wpdb;
 
-$order_filter  = isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'desc';
-$assignment_id = sanitize_text_field($_GET['assignment']);
-$assignments_submitted = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d ORDER BY comment_ID $order_filter", $assignment_id));
+$order_filter          = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'desc';
+$assignment_id         = sanitize_text_field( $_GET['assignment'] );
+$assignments_submitted = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d ORDER BY comment_ID $order_filter", $assignment_id ) );
 
-$max_mark = tutor_utils()->get_assignment_option($assignment_id, 'total_mark');
-$pass_mark = tutor_utils()->get_assignment_option($assignment_id, 'pass_mark');
-$format = get_option('date_format').' '.get_option('time_format');
-$deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format, __('No Limit', 'tutor'));
+$max_mark  = tutor_utils()->get_assignment_option( $assignment_id, 'total_mark' );
+$pass_mark = tutor_utils()->get_assignment_option( $assignment_id, 'pass_mark' );
+$format    = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+$deadline  = tutor_utils()->get_assignment_deadline_date( $assignment_id, $format, __( 'No Limit', 'tutor' ) );
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
-    <div class="submitted-assignment-title">
-        <a class="prev-btn" href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('assignments')); ?>"><span>&leftarrow;</span><?php _e('Back', 'tutor'); ?></a>
-    </div>
+	<div class="tutor-mb-22">
+		<a class="prev-btn" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
+			<span class="color-text-primary assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?>
+		</a>
+	</div>
 
     <?php if (tutor_utils()->count($assignments_submitted)): ?>
         <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
-            <p>
-                <?php esc_html_e('Course', 'tutor'); ?> :
-                <a href="<?php echo esc_url(get_the_permalink($assignments_submitted[0]->comment_parent)); ?>" target="_blank">
-                    <?php echo get_the_title($assignments_submitted[0]->comment_parent); ?>
-                </a>
-            </p>
-            <h3>
-                <a href="<?php echo esc_url(get_the_permalink($assignment_id)); ?>" target="_blank">
-                    <?php echo get_the_title($assignment_id); ?>
-                </a>
-            </h3>
+            <div class="text-regular-small tutor-color-text-subsued tutor-mb-10">
+                <?php esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($assignments_submitted[0]->comment_parent); ?>
+            </div>
+            <div class="text-medium-h6">
+                <?php echo get_the_title($assignment_id); ?>
+            </div>
             <div class="assignment-info">
                 <p>
                     <?php esc_html_e('Submission Deadline', 'tutor'); ?>:
@@ -51,40 +48,39 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
             </div>
         </div>
 
-        <div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
-            <div class="tutor-form-group">
-                <label><?php esc_html_e('Sort By:', 'tutor'); ?></label>
-                <select class="tutor-announcement-order-sorting tutor-form-select">
-                    <option value="desc" <?php selected($order_filter, 'desc'); ?>><?php _e('Latest', 'tutor'); ?></option>
-                    <option value="asc" <?php selected($order_filter, 'asc'); ?>><?php _e('Oldest', 'tutor'); ?></option>
-                </select>
-            </div>
-        </div>
+		<div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
+			<div class="tutor-form-group">
+				<label><?php esc_html_e( 'Sort By:', 'tutor' ); ?></label>
+				<select class="tutor-announcement-order-sorting tutor-form-select">
+					<option value="desc" <?php selected( $order_filter, 'desc' ); ?>><?php esc_html_e( 'Latest', 'tutor' ); ?></option>
+					<option value="asc" <?php selected( $order_filter, 'asc' ); ?>><?php esc_html_e( 'Oldest', 'tutor' ); ?></option>
+				</select>
+			</div>
+		</div>
 
-        <table class="tutor-ui-table tutor-ui-table-responsive table-assignment">
             <thead>
                 <tr>
                     <th>
-                        <span class="text-regular-small color-text-subsued">
+                        <span class="text-regular-small tutor-color-text-subsued">
                             <?php esc_html_e('Date', 'tutor'); ?>
                         </span>
                     </th>
                     <th>
-                        <div class="inline-flex-center color-text-subsued">
+                        <div class="inline-flex-center tutor-color-text-subsued">
                             <span class="text-regular-small">
                                 <?php esc_html_e('Student', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="inline-flex-center color-text-subsued">
+                        <div class="inline-flex-center tutor-color-text-subsued">
                             <span class="text-regular-small">
                                 <?php esc_html_e('Total Points', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="inline-flex-center color-text-subsued">
+                        <div class="inline-flex-center tutor-color-text-subsued">
                             <span class="text-regular-small">
                                 <?php esc_html_e('Result', 'tutor'); ?>
                             </span>
@@ -111,7 +107,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                     ?>
                     <tr>
                         <td data-th="<?php esc_html('Date', 'tutor'); ?>">
-                            <span class="color-text-primary text-medium-caption">
+                            <span class="tutor-color-text-primary tutor-text-medium-caption">
                                 <?php echo wp_kses_post( date('j M, Y,<\b\r>h:i a', strtotime($assignment->comment_date))); ?>
                             </span>
                         </td>
@@ -127,7 +123,7 @@ $deadline = tutor_utils()->get_assignment_deadline_date($assignment_id, $format,
                             </div>
                         </td>
                         <td data-th="<?php esc_html('Total Points', 'tutor'); ?>">
-                            <span class="color-text-primary text-medium-caption">
+                            <span class="tutor-color-text-primary tutor-text-medium-caption">
                                 <?php echo !empty($given_mark) ? $given_mark . '/' . $max_mark : ''; ?>
                             </span>
                         </td>

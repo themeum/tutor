@@ -287,6 +287,7 @@ table.tutor_status_table th mark.yes {
 .tutor-text-avatar {
 	border-radius: 50%;
 	width: 40px;
+	min-width: 40px;
 	height: 40px;
 	text-align: center;
 	display: block;
@@ -2028,7 +2029,7 @@ table.tutor-table p {
 
 /**
   * announcement css
-  * @since v1.7.9 
+  * @since v1.7.9
   */
 
 .tutor-admin-search-box-container {
@@ -2140,8 +2141,8 @@ table.tutor-table p {
 	}
 }
 
-/** 
-   * Common CSS .tutor-list-*  - start 
+/**
+   * Common CSS .tutor-list-*  - start
    * .tutor-list-wrap > .tutor-list-header + .tutor-list-table + .tutor-list-footer
   */
 
@@ -2329,8 +2330,8 @@ table.tutor-table p {
 	}
 }
 
-/** 
-   * Common CSS /.tutor-list-* - end 
+/**
+   * Common CSS /.tutor-list-* - end
   */
 
 /* .report-course-list - start */
@@ -2523,9 +2524,10 @@ table.tutor-table p {
 	display: inherit;
 }
 
-.row-actions {
+.tutor-list-table.row-actions {
 	left: 0;
 }
+
 //a-to-z-sorting icon
 .tutor-table-rows-sorting {
 	cursor: pointer;

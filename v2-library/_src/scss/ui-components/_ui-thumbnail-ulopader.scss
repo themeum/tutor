@@ -2,12 +2,13 @@
 	width: 100%;
 
 	.thumbnail-wrapper {
-		/* design/white */
 		background: $bg-white;
-		/* stroke/gray40 */
-		border: 1px solid $stroke-gray;
 		box-sizing: border-box;
 		border-radius: 6px;
+
+		&:not(.tutor-is-borderless) {
+			border: 1px solid $stroke-gray;
+		}
 	}
 
 	.thumbnail-preview {

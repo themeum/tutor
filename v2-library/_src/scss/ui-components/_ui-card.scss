@@ -5,8 +5,16 @@
         width: 100%;
     }
 
+    span.ttr-download-line {
+		background: #E9EDFB;
+		border-radius: 50%;
+		text-align: center;
+		padding: 10px;
+		font-size: 20px;
+	}
+
     &>div{
-        padding: 0px 14px;
+        padding: 7px 14px;
         margin-bottom: 15px;
         background: #FFFFFF;
         border: 1px solid #C0C3CB;
@@ -48,6 +56,21 @@
         &:last-child{
             @include valueWithPrefix(display, flex);
             @include propertyWithPrefix(align-items, center);
+        }
+    }
+
+
+    /* Responsive cards */
+    &.tutor-attachment-cards-responsive{
+        &>div{
+            width: calc(33.33% - 20px);
+            float: left;
+            margin-right: 20px;
+            margin-bottom: 20px;
+
+            @media(max-width: 1200px) {
+                width: calc(50% - 20px) !important;
+            }
         }
     }
 }

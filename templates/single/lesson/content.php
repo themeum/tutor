@@ -40,6 +40,7 @@ if ($best_watch_time > 0){
 	$jsonData['best_watch_time'] = $best_watch_time;
 }
 
+$is_comment_enabled = tutor_utils()->get_option('enable_comment_for_lesson') && comments_open();
 ?>
 
 <?php do_action('tutor_lesson/single/before/content'); ?>
@@ -48,12 +49,12 @@ if ($best_watch_time > 0){
         <div class="tutor-topbar-left-item d-flex"> 
             <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
                 <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                    <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
+                    <span class="ttr-icon-light-left-line tutor-color-text-white flex-center"></span>
                 </a>
             </div>
             <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-                <span class="ttr-youtube-brand color-text-white tutor-mr-5"></span>
-                <span class="text-regular-caption color-design-white">
+                <span class="ttr-youtube-brand tutor-color-text-white tutor-mr-5"></span>
+                <span class="text-regular-caption tutor-color-design-white">
                     <?php 
                         esc_html_e( 'Lesson: ', 'tutor' );
                         the_title();
@@ -66,8 +67,8 @@ if ($best_watch_time > 0){
                 <?php
                     do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
                 ?>
-                <div class="text-regular-caption color-design-white">
-                    <span class="tutor-progress-content color-primary-60">
+                <div class="text-regular-caption tutor-color-design-white">
+                    <span class="tutor-progress-content tutor-color-primary-60">
                         <?php _e('Your Progress:', 'tutor'); ?>
                     </span>
                     <span class="text-bold-caption">
@@ -89,7 +90,7 @@ if ($best_watch_time > 0){
             <div class="tutor-topbar-cross-icon flex-center">
                 <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
                 <a href="<?php echo get_the_permalink($course_id); ?>">
-                    <span class="ttr-line-cross-line color-text-white flex-center"></span>
+                    <span class="ttr-line-cross-line tutor-color-text-white flex-center"></span>
                 </a>
             </div>
         </div>
@@ -99,7 +100,7 @@ if ($best_watch_time > 0){
             <a href="<?php echo get_the_permalink($previous_id); ?>">
                 <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
             </a>
-            <div class="tutor-top-nav-title text-regular-body color-text-primary">
+            <div class="tutor-top-nav-title tutor-text-regular-body tutor-color-text-primary">
                 <?php 
                     the_title();
                 ?>
@@ -110,12 +111,12 @@ if ($best_watch_time > 0){
     <div class="tutor-single-page-top-bar d-flex justify-content-between">
         <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
             <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                <span class="ttr-icon-light-left-line color-text-white flex-center"></span>
+                <span class="ttr-icon-light-left-line tutor-color-text-white flex-center"></span>
             </a>
         </div>
         <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-            <span class="ttr-youtube-brand color-text-white tutor-mr-5"></span>
-            <span class="text-regular-caption color-design-white">
+            <span class="ttr-youtube-brand tutor-color-text-white tutor-mr-5"></span>
+            <span class="text-regular-caption tutor-color-design-white">
                 <?php 
                     esc_html_e( 'Lesson: ', 'tutor' );
                     the_title();
@@ -126,7 +127,7 @@ if ($best_watch_time > 0){
         <div class="tutor-topbar-cross-icon flex-center">
             <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
             <a href="<?php echo get_the_permalink($course_id); ?>">
-                <span class="ttr-line-cross-line color-text-white flex-center"></span>
+                <span class="ttr-line-cross-line tutor-color-text-white flex-center"></span>
             </a>
         </div>
     </div>
@@ -137,35 +138,39 @@ if ($best_watch_time > 0){
 <?php tutor_lesson_video(); ?>
 
 <div class="tutor-course-spotlight-wrapper">
-    <div class="tutor-default-tab tutor-course-details-tab">
+    <div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
         <div class="tab-header tutor-bs-d-flex justify-content-center">
-            <div class="tab-header-item flex-center is-active" data-tutor-tab-target="tutor-course-details-tab-1">
+            <div class="tab-header-item flex-center is-active" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-1">
                 <span class="ttr-document-alt-filled"></span>
                 <span><?php _e('Overview','tutor'); ?></span>
             </div>
-            <div class="tab-header-item flex-center" data-tutor-tab-target="tutor-course-details-tab-2">
+            <div class="tab-header-item flex-center" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-2">
                 <span class="ttr-attach-filled"></span>
                 <span><?php _e('Exercise Files','tutor'); ?></span>
             </div>
-            <div class="tab-header-item flex-center" data-tutor-tab-target="tutor-course-details-tab-3">
-                <span class="ttr-comment-filled"></span>
-                <span><?php _e('Comments','tutor'); ?></span>
-            </div>
+            <?php if($is_comment_enabled): ?>
+                <div class="tab-header-item flex-center" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-3">
+                    <span class="ttr-comment-filled"></span>
+                    <span><?php _e('Comments','tutor'); ?></span>
+                </div>
+            <?php endif; ?>
         </div>
         <div class="tab-body">
-            <div class="tab-body-item is-active" id="tutor-course-details-tab-1">
-                <div class="text-medium-h6 color-text-primary"><?php _e('About Lesson','tutor'); ?></div>
-                <div class="text-regular-body color-text-subsued tutor-mt-12">
+            <div class="tab-body-item is-active" id="tutor-course-spotlight-tab-1">
+                <div class="text-medium-h6 tutor-color-text-primary"><?php _e('About Lesson','tutor'); ?></div>
+                <div class="text-regular-body tutor-color-text-subsued tutor-mt-12">
                     <?php the_content(); ?>
                 </div>
             </div>
-            <div class="tab-body-item" id="tutor-course-details-tab-2">
-                <div class="text-medium-h6 color-text-primary"><?php _e('Exercise Files','tutor'); ?></div>
+            <div class="tab-body-item" id="tutor-course-spotlight-tab-2">
+                <div class="text-medium-h6 tutor-color-text-primary"><?php _e('Exercise Files','tutor'); ?></div>
                 <?php get_tutor_posts_attachments(); ?>
             </div>
-            <div class="tab-body-item" id="tutor-course-details-tab-3">
-                <?php require __DIR__ . '/comment.php'; ?>
-            </div>
+            <?php if($is_comment_enabled): ?>
+                <div class="tab-body-item" id="tutor-course-spotlight-tab-3">
+                    <?php require __DIR__ . '/comment.php'; ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

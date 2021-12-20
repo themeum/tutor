@@ -1,9 +1,9 @@
 <form class="tutor_lesson_modal_form">
 	<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
     <input type="hidden" name="action" value="tutor_modal_create_or_update_lesson">
-    <input type="hidden" name="lesson_id" value="<?php echo $post->ID; ?>">
-    <input type="hidden" name="current_topic_id" value="<?php echo $topic_id; ?>">
-    
+    <input type="hidden" name="lesson_id" value="<?php echo esc_attr( $post->ID ); ?>">
+    <input type="hidden" name="current_topic_id" value="<?php echo esc_attr( $topic_id ); ?>">
+
     <?php do_action('tutor_lesson_edit_modal_form_before', $post); ?>
 
     <div class="tutor-mb-30">
@@ -61,7 +61,7 @@
         
         include tutor()->path.'views/metabox/lesson-attachments-metabox.php';
         do_action( 'tutor_lesson_edit_modal_after_attachment' );
+        
+        do_action('tutor_lesson_edit_modal_form_after', $post); 
     ?>
-
-    <?php do_action('tutor_lesson_edit_modal_form_after', $post); ?>
 </form>
