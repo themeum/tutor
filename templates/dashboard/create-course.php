@@ -110,12 +110,12 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 							<?php
 					} else {
 						?>
-							<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active">
+							<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active tutor-modal-is-close-in-header">
 								<span class="tutor-modal-overlay"></span>
-								<button data-tutor-modal-close class="tutor-modal-close">
-									<span class="las la-times"></span>
-								</button>
 								<div class="tutor-modal-root">
+									<button data-tutor-modal-close class="tutor-modal-close tutor-color-text-hints">
+										<span class="ttr-line-cross-line tutor-icon-40"></span>
+									</button>
 									<div class="tutor-modal-inner">
 										<div class="tutor-modal-body tutor-text-center">
 											<div class="tutor-modal-icon">
