@@ -47,7 +47,7 @@
 		}
 	}
 
-	&:not(.modal-sticky-header-footer):not(.modal-view-double-segment) {
+	&:not(.modal-sticky-header-footer):not(.modal-view-double-segment):not(.tutor-modal-is-close-inside-header) {
 		.tutor-modal-close {
 			position: fixed;
 			right: 30px;
@@ -84,7 +84,7 @@
 		.tutor-modal-footer {
 			border-top: 1px solid $stroke-light-30;
 		}
-	}
+	} // end of /.modal-sticky-header-footer
 
 	// View Announcement modal
 	&.modal-view-double-segment {
@@ -136,7 +136,18 @@
 				gap: 10px;
 			}
 		}
-	}
+
+		@include breakpoint-min(desktop-lg) {
+			.footer-btns {
+				> *:not(:first-child) {
+					margin-left: 15px;
+				}
+			}
+		}
+		.tutor-btn:not(.tutor-btn-icon).tutor-btn-md {
+			padding: 7px 21px;
+		}
+	} // end of /.modal-view-double-segment
 
 	.tutor-modal-root {
 		background: transparent;
@@ -169,7 +180,7 @@
 				margin: 0 0 18px;
 			}
 		}
-	}
+	} // end of /.tutor-modal-root
 
 	// size
 
@@ -554,6 +565,11 @@
 			}
 		}
 	} // end of /.tutor-modal-is-close-beside
+
+	&.tutor-modal-is-close-inside-header {
+		.tutor-modal-close {
+		}
+	}
 
 	&-ins-approval {
 		.tutor-modal-root {
