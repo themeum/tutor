@@ -635,15 +635,20 @@ table.tutor-dashboard-statement-table p.small-text {
 	display: none !important;
 }
 
-.tutor-dashboard-left-menu {
-	li:nth-child(-n + 9) {
-		a {
-			font-family: 'Manrope', sans-serif !important;
-		}
-	}
+[class*='tutor-screen-'] {
+	font-family: 'Inter', sans-serif;
 }
+
+.tutor-dashboard-left-menu {
+	// li:nth-child(-n + 9) {
+	// 	a {
+	// 		font-family: 'Manrope', sans-serif !important;
+	// 	}
+	// }
+}
+
 //applies to small devices (landscape phones, less than 768px)
-@media screen and (max-width: 767.98px ) {
+@media screen and (max-width: 767.98px) {
 	.tutor-header-right-side {
 		justify-content: flex-start;
 		margin-bottom: 20px;
