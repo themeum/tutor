@@ -30,7 +30,7 @@ class Options_V2 {
 		if(!$register_hook) {
 			return;
 		}
-		
+
 		// Saving option.
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_default_save', array( $this, 'tutor_option_default_save' ) );
