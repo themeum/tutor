@@ -91,7 +91,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 			<div class="tutor-modal-inner">
 				<div class="tutor-modal-header">
 					<button data-tutor-modal-close class="tutor-modal-close tutor-color-text-hints">
-						<span class="ttr-line-cross-line"></span>
+						<span class="ttr-line-cross-line tutor-icon-40"></span>
 					</button>
 				</div>
 				<div class="tutor-modal-body tutor-bs-align-items-start">
@@ -108,7 +108,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 				<div class="tutor-modal-footer">
 					<div class="footer-top">
 						<div class="">
-							<div class="text-regular-caption tutor-color-text-subsued">
+							<div class="tutor-text-regular-caption tutor-color-text-subsued">
 								<?php _e( 'Course', 'tutor' ); ?>
 							</div>
 							<div class="text-bold-body tutor-color-text-primary tutor-mt-3">
