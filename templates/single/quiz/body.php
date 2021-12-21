@@ -21,7 +21,6 @@
 	$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
 
 	$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
-	var_dump( $attempt_remaining );
 	$quiz_answers      = array();
 
 if ( $attempted_count !== 0 ) {
