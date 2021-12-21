@@ -33,8 +33,12 @@ class Quiz_Attempts_List {
 	/**
 	 * Handle dependencies
 	 */
-	public function __construct() {
+	public function __construct($register_hook=true) {
 		$this->page_title = __( 'Quiz Attempts', 'tutor' );
+		if(!$register_hook) {
+			return;
+		}
+		
 		/**
 		 * Handle bulk action
 		 *
@@ -186,11 +190,21 @@ class Quiz_Attempts_List {
 	public function quiz_attempts_bulk_action() {
 		// check nonce.
 		tutor_utils()->checking_nonce();
-		$status   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
-		$update   = self::update_quiz_attempts( $status, $bulk_ids );
-		return true === $update ? wp_send_json_success() : wp_send_json_error();
-		exit;
+
+		$bulk_action = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
+		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) :'';
+		$bulk_ids = explode(',', $bulk_ids);
+		$bulk_ids = array_map(function($id){return (int)trim($id);}, $bulk_ids);
+		
+		switch($bulk_action) {
+			case 'delete' :
+				foreach($bulk_ids as $id) {
+
+				}
+				break;
+		}
+		
+		wp_send_json_success();
 	}
 
 	/**

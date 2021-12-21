@@ -71,6 +71,7 @@ class Q_and_A {
 		ob_start();
 		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
 			'question_id' => $question_id,
+			'back_url' => esc_url( $_POST['back_url'] ),
 			'context' => $context
 		));
 		wp_send_json_success(array('html' => ob_get_clean()));

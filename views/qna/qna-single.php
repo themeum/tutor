@@ -8,7 +8,7 @@
     $question       = tutor_utils()->get_qa_question($question_id);
     $meta           = $question->meta;
     $answers        = tutor_utils()->get_qa_answer_by_question($question_id);
-    $back_url       = remove_query_arg( 'question_id', tutor()->current_url );
+    $back_url       = isset($back_url) ? $back_url : remove_query_arg( 'question_id', tutor()->current_url );
 
     // Badges data
     $is_solved      = (int)tutor_utils()->array_get('tutor_qna_solved', $meta, 0);
@@ -77,13 +77,13 @@
                             <i class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?>"></i> 
                             <span><?php _e('Important', 'tutor'); ?></span>
                         </span>
-                        <span data-action="archived" data-state-class-selector="i" data-state-class-0="ttr-msg-archive-filled" data-state-class-1="ttr-msg-important-fill-filled">
+                        <span data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e('Archive', 'tutor'); ?>" data-state-text-1="<?php _e('Un-Archive', 'tutor'); ?>" data-state-class-selector="i" data-state-class-0="ttr-msg-archive-filled" data-state-class-1="ttr-msg-archive-filled">
                             <i class="<?php echo $is_archived ? 'ttr-msg-archive-filled' : 'ttr-msg-archive-filled'; ?>"></i> 
-                            <span><?php _e('Archive', 'tutor'); ?></span>
+                            <span><?php $is_archived ? _e('Un-Archive', 'tutor') :  _e('Archive', 'tutor'); ?></span>
                         </span>
-                        <span data-action="unread" data-state-class-selector="i" data-state-class-0="ttr-msg-unread-filled" data-state-class-1="ttr-msg-read-filled">
+                        <span data-action="unread" data-state-text-selector="span" data-state-text-0="<?php _e('Mark as read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>" data-state-class-selector="i" data-state-class-0="ttr-msg-unread-filled" data-state-class-1="ttr-msg-read-filled">
                             <i class="<?php echo $is_read ? 'ttr-msg-read-filled' : 'ttr-msg-unread-filled'; ?>"></i> 
-                            <span><?php _e('Mark as Unread', 'tutor'); ?></span>
+                            <span><?php $is_read ? _e('Mark as Unread', 'tutor') : _e('Mark as read', 'tutor'); ?></span>
                         </span>
                     <?php endif; ?>
                     <span data-tutor-modal-target="<?php echo $modal_id; ?>">
@@ -142,7 +142,7 @@
         <div class="tutor-qa-reply" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
             <textarea class="tutor-form-control" placeholder="<?php _e('Write here...', 'tutor'); ?>"></textarea>
             <div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center">
-                <button type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-is-xs tutor-ml-15">
+                <button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-is-xs tutor-ml-15">
                     <?php esc_html_e('Reply', 'tutor'); ?> 
                 </button>
             </div>
