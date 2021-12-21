@@ -21,6 +21,7 @@ class Q_and_A {
 		 * @since v2.0.0
 		 */
 		add_action('wp_ajax_tutor_qna_single_action', array($this, 'tutor_qna_single_action'));
+		add_action('wp_ajax_tutor_qna_bulk_action', array($this, 'process_bulk_action'));
 	}
 
 	public function tutor_qna_create_update() {
@@ -84,18 +85,48 @@ class Q_and_A {
 	public function tutor_delete_dashboard_question() {
 		tutor_utils()->checking_nonce();
 
-		global $wpdb;
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
 		
 		if( !$question_id || !tutor_utils()->can_user_manage('qa_question', $question_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
-		//Deleting question (comment), child question and question meta (comment meta)
-		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID = %d", $question_id));
-		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent = %d", $question_id));
-		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id = %d", $question_id));
-		
+
+		$this->delete_qna_permanently(array($question_id));
+
+		wp_send_json_success();
+	}
+
+	private function delete_qna_permanently($question_ids) {
+		if(count($question_ids)) {
+			global $wpdb;
+			$question_ids = implode(',', $question_ids);
+
+			//Deleting question (comment), child question and question meta (comment meta)
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID IN($question_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent IN($question_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id IN($question_ids)" );
+		}
+	}
+
+	function process_bulk_action() {
+		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+		$action = isset($_POST['bulk-action']) ? sanitize_text_field($_POST['bulk-action']) : null;
+
+		switch($action) {
+			case 'delete' :
+				$qa_ids = sanitize_text_field( $_POST['bulk-ids'] );
+				$qa_ids = explode(',', $qa_ids);
+				$qa_ids = array_filter($qa_ids, function($id) use($user_id){
+					return is_numeric($id) && tutor_utils()->can_user_manage( 'qa_question', $id, $user_id);
+				});
+
+				$this->delete_qna_permanently($qa_ids);
+				break;
+		}
+
 		wp_send_json_success();
 	}
 
