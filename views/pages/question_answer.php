@@ -12,11 +12,21 @@ if (isset($_GET['question_id'])){
     return;
 }
 
-$qna = (new \TUTOR\Question_Answers_List())->get_items();
+$qna_object = new \TUTOR\Question_Answers_List(false);
+$qna = $qna_object->get_items($_GET);
 $qna_list = $qna['items'];
 $qna_pagination = $qna['pagination'];
-?>
 
+
+$filters = array(
+	'bulk_action'   => true,
+	'bulk_actions'  => $qna_object->get_bulk_actions(),
+	'ajax_action'   => 'tutor_qna_bulk_action',
+	'filters'       => true,
+	'course_filter' => true,
+);
+
+?>
 
 <?php
 	/**
@@ -36,11 +46,10 @@ $qna_pagination = $qna['pagination'];
 	$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
-	// tutor_load_template_from_custom_path( $filters_template, $filters );
+	tutor_load_template_from_custom_path( $filters_template, $filters );
 ?>
 
-
-<div class="wrap">
+<div class="wrap tutor-mt-50">
 	<?php 
 		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
 			'qna_list' => $qna_list,

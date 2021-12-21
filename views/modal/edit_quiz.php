@@ -50,7 +50,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
+                                    <a href="#" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="ttr-delete-fill-filled tutor-icon-24 tutor-mr-5 tutor-color-design-white"></span>
                                         <span class="text-regular-body tutor-color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>

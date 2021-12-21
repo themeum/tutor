@@ -144,6 +144,8 @@ final class Tutor {
 		$this->instructor            = new Instructor();
 		$this->student               = new Student();
 		$this->q_and_a               = new Q_and_A();
+		$this->q_and_a_list          = new Question_Answers_List();
+		$this->q_attempt             = new Quiz_Attempts_List();
 		$this->quiz                  = new Quiz();
 		$this->tools                 = new Tools();
 		$this->user                  = new User();

@@ -21,6 +21,7 @@ class Q_and_A {
 		 * @since v2.0.0
 		 */
 		add_action('wp_ajax_tutor_qna_single_action', array($this, 'tutor_qna_single_action'));
+		add_action('wp_ajax_tutor_qna_bulk_action', array($this, 'process_bulk_action'));
 	}
 
 	public function tutor_qna_create_update() {
@@ -61,11 +62,17 @@ class Q_and_A {
 		// Insert new question/answer
 		$wpdb->insert($wpdb->comments, $data);
 		!$question_id ? $question_id = (int) $wpdb->insert_id : 0;
+
+		// Mark the question unseen if action made from student
+		// if($user_id!=) {
+			update_comment_meta( $question_id, 'tutor_qna_read', 0 );
+		// }
 		
 		// Provide the html now
 		ob_start();
 		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
 			'question_id' => $question_id,
+			'back_url' => esc_url( $_POST['back_url'] ),
 			'context' => $context
 		));
 		wp_send_json_success(array('html' => ob_get_clean()));
@@ -78,18 +85,48 @@ class Q_and_A {
 	public function tutor_delete_dashboard_question() {
 		tutor_utils()->checking_nonce();
 
-		global $wpdb;
 		$question_id = intval(sanitize_text_field($_POST['question_id']));
 		
 		if( !$question_id || !tutor_utils()->can_user_manage('qa_question', $question_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
-		//Deleting question (comment), child question and question meta (comment meta)
-		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID = %d", $question_id));
-		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent = %d", $question_id));
-		$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id = %d", $question_id));
-		
+
+		$this->delete_qna_permanently(array($question_id));
+
+		wp_send_json_success();
+	}
+
+	private function delete_qna_permanently($question_ids) {
+		if(count($question_ids)) {
+			global $wpdb;
+			$question_ids = implode(',', $question_ids);
+
+			//Deleting question (comment), child question and question meta (comment meta)
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_ID IN($question_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->comments} WHERE {$wpdb->comments}.comment_parent IN($question_ids)" );
+			$wpdb->query( "DELETE FROM {$wpdb->commentmeta} WHERE {$wpdb->commentmeta}.comment_id IN($question_ids)" );
+		}
+	}
+
+	function process_bulk_action() {
+		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+		$action = isset($_POST['bulk-action']) ? sanitize_text_field($_POST['bulk-action']) : null;
+
+		switch($action) {
+			case 'delete' :
+				$qa_ids = sanitize_text_field( $_POST['bulk-ids'] );
+				$qa_ids = explode(',', $qa_ids);
+				$qa_ids = array_filter($qa_ids, function($id) use($user_id){
+					return is_numeric($id) && tutor_utils()->can_user_manage( 'qa_question', $id, $user_id);
+				});
+
+				$this->delete_qna_permanently($qa_ids);
+				break;
+		}
+
 		wp_send_json_success();
 	}
 
@@ -121,12 +158,13 @@ class Q_and_A {
 	 */
 	public static function tabs_key_value() {
 		$url = get_pagenum_link();
+		
 		$stats = array(
-			'all' => $all = count( tutor_utils()->get_qa_questions(0, 99999) ),
-			'read' => $read = count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_read'=>1))),
-			'unread' => $all-$read,
-			'important' => count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_important'=>1))),
-			'archived' => count(tutor_utils()->get_qa_questions(0, 99999, '', null, array('tutor_qna_archived'=>1)))
+			'all' 		=> tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, null, true),
+			'read' 		=> tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, 'read', true),
+			'unread' 	=> tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, 'unread', true),
+			'important' => tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, 'important', true),
+			'archived' 	=> tutor_utils()->get_qa_questions(0, 99999, '', null, null, null, 'archived', true)
 		);
 
 		$tabs = array(
@@ -137,6 +175,7 @@ class Q_and_A {
 			'archived',
 		);
 
+		// Assign value, url etc to the tab array
 		$tabs = array_map(function($tab) use($stats, $url) {
 			return array(
 				'key'   => $tab,

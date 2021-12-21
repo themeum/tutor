@@ -15,9 +15,17 @@ $sidebar_width: 360px;
         }
     }
 
+    .tutor-qna-single-wrapper{
+        .qna-back-button {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            color: #5B616F;
+        }
+    }
+    
     .tutor-qa-reply{
         bottom: 20px;
-        position: sticky;
         bottom: 0;
         background: white;
         z-index: 10;
@@ -78,6 +86,7 @@ $sidebar_width: 360px;
         position: sticky;
         top: 32px;
         margin-left: -19px;
+        z-index: 9;
 
         &>div{
             &:last-child{
@@ -135,14 +144,39 @@ $sidebar_width: 360px;
                 background: white;
                 border-radius: 6px;
                 margin: 0;
+                position: relative;
+
+                &:before{
+                    content: '';
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    top: -5px;
+                    background: inherit;
+                    -webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+                    clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+                    -webkit-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    border-radius: 3px;
+                }
             }
 
             &.tutor-qna-left {
-                
+                .tutor-qna-text{
+                    &:before{
+                        left: 15px;
+                    }
+                }
             }
 
             &.tutor-qna-right {
                 float: right;
+
+                .tutor-qna-text{
+                    &:before{
+                        right: 15px;
+                    }
+                }
 
                 .tutor-qna-user{
                     @include propertyWithPrefix(flex-flow, row-reverse);
@@ -331,6 +365,53 @@ table.qna-list-table {
             }
         }
     }
+
+    .tutor-qna-question-col {
+
+        i {
+            font-size: 24px !important;
+            margin-right: 13px;
+            left: -6px;
+            top: 2px;
+        }
+
+        span {
+            margin-bottom: 5px;
+        }
+
+        small {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 13px;
+            color: #525252;
+        }
+
+        &:not(.is-read) {
+            i {
+                color: #1973AA;
+            }
+
+            span {
+                font-style: normal;
+                font-weight: bold;
+                font-size: 16px;
+                color: #212327;
+            }
+        }
+
+        &.is-read {
+            i{
+                color: #C0C3CB;
+            }
+
+            span{
+                font-style: normal;
+                font-weight: 500;
+                font-size: 16px;
+                color: #212327;
+            }
+        }
+    }
 }
 
 .tutor-qna-sptolight-sidebar {
@@ -348,5 +429,18 @@ table.qna-list-table {
 
     .tutor-qa-reply {
         position: initial !important;
+    }
+}
+
+.tutor-qa-reply {
+    &[data-context=course-single-qna-sidebar], &[data-context=course-single-qna-single] {
+        &, textarea {
+            border: none !important;
+        }
+
+        textarea{
+            border: 1px solid #CDCFD5 !important;
+            border-radius: 6px !important;
+        }
     }
 }
