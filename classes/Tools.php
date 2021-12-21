@@ -32,7 +32,7 @@ class Tools {
 		tutor_utils()->checking_nonce();
 
 		$tutor_pages = tutor_utils()->tutor_pages();
-		
+
 		foreach ($tutor_pages as $page){
 			$visible = tutor_utils()->array_get('page_visible', $page);
 			$page_title = tutor_utils()->array_get('page_name', $page);
@@ -102,7 +102,7 @@ class Tools {
      * @since v.1.5.7
      */
     public function redirect_to_wizard_page(){
-	    if (tutor_utils()->array_get('page', $_GET) === 'tutor-tools' && tutor_utils()->array_get('sub_page', $_GET) === 'tutor-setup' ){
+		if (tutor_utils()->array_get('page', $_GET) === 'tutor-tools' && tutor_utils()->array_get('sub_page', $_GET) === 'tutor-setup' ){
             exit(wp_redirect(admin_url('admin.php?page=tutor-setup')));
         }
     }
