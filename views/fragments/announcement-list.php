@@ -150,11 +150,11 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 	?>
 	<div id="<?php echo $id; ?>" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
-		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="las la-times"></span>
-		</button>
 		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
+			<div class="tutor-modal-inner tutor-modal-close-inner">
+				<button data-tutor-modal-close class="tutor-modal-close">
+					<span class="las la-times"></span>
+				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-icon">
 						<img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
@@ -266,7 +266,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</div>
 						</td>
 						<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
-							<div class="tutor-bs-d-flex tutor-bs-align-items-center">
+							<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
 								<div class="inline-flex-center td-action-btns">
 									<button class="btn-outline tutor-btn tutor-is-default tutor-is-xs tutor-mr-10 tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
@@ -285,7 +285,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 											</a>
 										</li>
 										<li>
-											<a href="#" class="tutor-quiz-question-trash" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
+											<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
 												<i class="ttr-delete-fill-filled tutor-color-design-white"></i>
 												<span class="text-regular-body tutor-color-text-white"><?php _e( 'Delete', 'tutor' ); ?></span>
 											</a>

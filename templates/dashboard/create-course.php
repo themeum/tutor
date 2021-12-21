@@ -114,13 +114,11 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 								<span class="tutor-modal-overlay"></span>
 								<div class="tutor-modal-root">
 									
-									<div class="tutor-modal-inner">
-										<div class="tutor-modal-header">
-											<button data-tutor-modal-close class="tutor-modal-close tutor-color-text-hints">
-												<span class="ttr-line-cross-line tutor-icon-40"></span>
-											</button>
-										</div>
-										<div class="tutor-text-center tutor-px-50 tutor-pb-md-100 tutor-pb-50">
+									<div class="tutor-modal-inner tutor-modal-close-inner">
+										<button data-tutor-modal-close class="tutor-modal-close">
+											<span class="las la-times"></span>
+										</button>
+										<div class="tutor-text-center tutor-mt-80 tutor-px-50 tutor-pb-md-100 tutor-pb-50">
 											<div class="tutor-modal-icon tutor-flex-center">
 												<img src="<?php echo tutor()->url; ?>/assets/images/icon-cup.svg" alt="" />
 											</div>
