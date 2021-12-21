@@ -258,6 +258,7 @@ window.jQuery(document).ready(function ($) {
     var goNext = false; // Prepare answer array
 
     var quiz_answers = JSON.parse(window.tutor_quiz_context.split('').reverse().join(''));
+    console.log(quiz_answers);
     !Array.isArray(quiz_answers) ? quiz_answers = [] : 0; // Evaluate result
 
     var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
@@ -1861,8 +1862,6 @@ jQuery(document).ready(function ($) {
   if ($tutor_quiz_time_update.length) {
     attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
     var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
-    var quiz_duration = $tutor_quiz_time_update.attr('data-quiz-duration'); //console.log(`${new Date(attempt_settings.attempt_started_at).getTime() + quiz_duration }`)
-    //if (quiz_duration > 0) {
 
     if (attempt_meta.time_limit.time_limit_seconds > 0) {
       //No time Zero limit for
@@ -1870,7 +1869,11 @@ jQuery(document).ready(function ($) {
 
       var time_now = new Date(attempt_meta.date_time_now).getTime();
       var tutor_quiz_interval = setInterval(function () {
-        var distance = countDownDate - time_now;
+        // let i = 1;
+        // i++
+        var distance = countDownDate - time_now; // let timeProgress = (distance/100) * i;
+        // console.log(timeProgress)
+
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
         var minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60));
