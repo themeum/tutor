@@ -50,7 +50,7 @@
 					</div>
 				<?php endif; ?>
 
-				<p class="text-regular-body tutor-color-text-hints tutor-mr-10">
+				<p class="text-regular-body tutor-color-text-hints tutor-mr-10" id="tutor-quiz-time-expire-wrapper" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
 					<?php esc_html_e( 'Time remaining: ', 'tutor' ); ?>
 				</p>
 				<span id="tutor-quiz-time-update" class="text-medium-body 

@@ -5286,7 +5286,6 @@ table.course-single-gradebooks a {
 
 .tutor-dropdown-select.select-dropdown .tutor-dropdown-select-selected {
   margin-bottom: 0;
-  height: 40px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
