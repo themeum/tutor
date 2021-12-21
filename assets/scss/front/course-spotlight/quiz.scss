@@ -544,3 +544,20 @@
         align-items: flex-start;
     }
 }
+#tutor-quiz-time-expire-wrapper {
+    display: none;
+    &.tutor-alert-show {
+        display: flex;
+    }
+    .flash-info span:first-child {
+        &.ttr-cross-circle-outline-filled::before {
+            color: #f44337;
+        }
+    }
+}
+.tutor-quiz-time-expired {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 26px;
+    color: #F44337;
+}
