@@ -9859,9 +9859,15 @@ body.wp-admin .tutor-qna-single-wrapper .tutor-qa-reply {
   overflow: hidden;
 }
 
+.tutor-qna-single-question .tutor-qna-single-wrapper .qna-back-button {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  color: #5B616F;
+}
+
 .tutor-qna-single-question .tutor-qa-reply {
   bottom: 20px;
-  position: sticky;
   bottom: 0;
   background: white;
   z-index: 10;
@@ -9937,6 +9943,7 @@ body.wp-admin .tutor-qna-single-wrapper .tutor-qa-reply {
   position: sticky;
   top: 32px;
   margin-left: -19px;
+  z-index: 9;
 }
 
 .tutor-qna-single-question .tutor-qa-sticky-bar > div:last-child {
@@ -10017,10 +10024,33 @@ body.wp-admin .tutor-qna-single-wrapper .tutor-qa-reply {
   background: white;
   border-radius: 6px;
   margin: 0;
+  position: relative;
+}
+
+.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat .tutor-qna-text:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: -5px;
+  background: inherit;
+  -webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+  clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border-radius: 3px;
+}
+
+.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat.tutor-qna-left .tutor-qna-text:before {
+  left: 15px;
 }
 
 .tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat.tutor-qna-right {
   float: right;
+}
+
+.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat.tutor-qna-right .tutor-qna-text:before {
+  right: 15px;
 }
 
 .tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat.tutor-qna-right .tutor-qna-user {
@@ -10190,6 +10220,46 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   color: #212327;
 }
 
+table.qna-list-table .tutor-qna-question-col i {
+  font-size: 24px !important;
+  margin-right: 13px;
+  left: -6px;
+  top: 2px;
+}
+
+table.qna-list-table .tutor-qna-question-col span {
+  margin-bottom: 5px;
+}
+
+table.qna-list-table .tutor-qna-question-col small {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  color: #525252;
+}
+
+table.qna-list-table .tutor-qna-question-col:not(.is-read) i {
+  color: #1973AA;
+}
+
+table.qna-list-table .tutor-qna-question-col:not(.is-read) span {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  color: #212327;
+}
+
+table.qna-list-table .tutor-qna-question-col.is-read i {
+  color: #C0C3CB;
+}
+
+table.qna-list-table .tutor-qna-question-col.is-read span {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  color: #212327;
+}
+
 .tutor-qna-sptolight-sidebar {
   padding: 15px;
 }
@@ -10204,6 +10274,15 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
 
 .tutor-qna-sptolight-sidebar .tutor-qa-reply {
   position: initial !important;
+}
+
+.tutor-qa-reply[data-context=course-single-qna-sidebar], .tutor-qa-reply[data-context=course-single-qna-sidebar] textarea, .tutor-qa-reply[data-context=course-single-qna-single], .tutor-qa-reply[data-context=course-single-qna-single] textarea {
+  border: none !important;
+}
+
+.tutor-qa-reply[data-context=course-single-qna-sidebar] textarea, .tutor-qa-reply[data-context=course-single-qna-single] textarea {
+  border: 1px solid #CDCFD5 !important;
+  border-radius: 6px !important;
 }
 
 .answer-image-matched-wrap {
@@ -10279,6 +10358,21 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
   max-height: 35px;
 }
 
+.tutor-quiz-attempt-details-wrapper .back {
+  position: relative;
+}
+
+.tutor-quiz-attempt-details-wrapper .back a {
+  font-size: 16px;
+  color: #5B616F;
+}
+
+.tutor-quiz-attempt-details-wrapper .back a .ttr-previous-line {
+  font-size: 20px;
+  line-height: 0px;
+  color: #1A1B1E;
+}
+
 .tutor-quiz-attempt-details .tutor-icon-rounded {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -10323,6 +10417,21 @@ table.qna-list-table tr:not(.is-qna-read) .tutor-qna-title {
 
 .tutor-quiz-attempt-details .tutor-icon-rounded:not(:hover) {
   opacity: .8;
+}
+
+.tutor-quiz-attempt-details tr:not(:hover).tutor-quiz-answer-status-correct .tutor-icon-rounded.tutor-text-danger {
+  color: #CDCFD5 !important;
+  border-color: #CDCFD5 !important;
+}
+
+.tutor-quiz-attempt-details tr:not(:hover).tutor-quiz-answer-status-wrong .tutor-icon-rounded.tutor-text-success {
+  color: #CDCFD5 !important;
+  border-color: #CDCFD5 !important;
+}
+
+.tutor-quiz-attempt-details tr:not(:hover).tutor-quiz-answer-status-pending .tutor-icon-rounded.tutor-text-success, .tutor-quiz-attempt-details tr:not(:hover).tutor-quiz-answer-status-pending .tutor-icon-rounded.tutor-text-danger {
+  color: #CDCFD5 !important;
+  border-color: #CDCFD5 !important;
 }
 
 /*# sourceMappingURL=tutor-front.css.map */

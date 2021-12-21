@@ -21,8 +21,32 @@ example: ```"<button data-tutor-modal-target="YOUR_MODAL_ID" className="tutor-bt
 Use ```"data-tutor-modal-close=true"``` to close a modal. <br/>
 example: ```"<button data-tutor-modal-close='true' className="tutor-btn">Cancel</button>"```
 
-## Modal - Sticky header and footer
-Use `className="tutor-modal modal-sticky-header-footer"`
+## Modal - close inside header
+Use `className="tutor-modal tutor-modal-close-in-header"`
+
+<Playground>
+    <button data-tutor-modal-target="tutor-modal-close-in-header-1" className="tutor-btn">Open modal</button>
+
+    <div id="tutor-modal-close-in-header-1" className="tutor-modal tutor-modal-close-in-header">
+       <span className="tutor-modal-overlay"></span>
+        <div className="tutor-modal-root">
+            <div className="tutor-modal-inner">
+                <div className="tutor-modal-header">
+                    <h3 className="tutor-modal-title">Close in Header</h3>
+                    <button data-tutor-modal-close className="tutor-modal-close">
+                        <span class="ttr-line-cross-line tutor-icon-40"></span>
+                    </button>
+                </div>
+                <div className="tutor-modal-body">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam molestiae possimus dicta, qui, eveniet, reiciendis repudiandae cumque quod nobis fugit modi excepturi omnis! Error eos vitae quibusdam, velit in facilis!
+                </div>
+                <div className="tutor-modal-footer">
+                    Lorem ipsum dolor sit amet.
+                </div>
+            </div>
+        </div>
+    </div>
+</Playground>
 
 <Playground>
     <button data-tutor-modal-target="modal-sticky-1" className="tutor-btn">Open modal</button>
@@ -116,7 +140,7 @@ Use `className="tutor-modal modal-sticky-header-footer"`
 <Playground>
     <button data-tutor-modal-target="tutor-ins-approval-1" className="tutor-btn">Open modal</button>
 
-    <div id="tutor-ins-approval-1" className="tutor-modal tutor-modal-is-close-beside tutor-modal-ins-approval tutor-is-active">
+    <div id="tutor-ins-approval-1" className="tutor-modal tutor-modal-is-close-beside tutor-modal-ins-approval">
         <span className="tutor-modal-overlay"></span>
         <div className="tutor-modal-root">
             <button data-tutor-modal-close className="tutor-modal-close">

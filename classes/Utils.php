@@ -4053,16 +4053,18 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '', $question_id=null, $meta_query=null, $asker_id=null, $question_status=null, $count_only=false ) {
+	public function get_qa_questions( $start = 0, $limit = 10, $search_term = '', $question_id=null, $meta_query=null, $asker_id=null, $question_status=null, $count_only=false, $args=array() ) {
 		global $wpdb;
 
 		$user_id     		  = get_current_user_id();
 		$course_type 		  = tutor()->course_post_type;
 		$search_term 		  = '%' . $wpdb->esc_like( $search_term ) . '%';
 		$question_clause 	  = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
+		$order_condition	  = ' ORDER BY _question.comment_ID DESC ';
 		$meta_clause 		  = '';
 		$in_question_id_query = '';
 		$qna_types_caluse	  = '';
+		$filter_clause		  = '';
 
 		/**
 		 * Get only assinged  courses questions if current user is not admin
@@ -4074,6 +4076,23 @@ class Utils {
 			$my_course_ids = $this->get_course_id_by('instructor', $user_id) ;
 			$in_ids = count($my_course_ids) ? implode( ',', $my_course_ids ) : '0';
 			$in_question_id_query .= " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
+		}
+
+		// Add more filters to the query
+		if(isset($args['course-id']) && is_numeric($args['course-id'])) {
+			$filter_clause .= ' AND _course.ID='.$args['course-id'];
+		}
+
+		if(isset($args['date'])) {
+			$date = sanitize_text_field( $args['date'] );
+			$filter_clause .= ' AND DATE(_question.comment_date)=\''.$date.'\'';
+		}
+
+		if(isset($args['order'])) {
+			$order = strtolower($args['order']);
+			if($order=='asc' || $order=='desc') {
+				$order_condition = ' ORDER BY _question.comment_ID '.$order.' ';
+			}
 		}
 
 		// Meta query
@@ -4092,7 +4111,7 @@ class Utils {
 				break;
 
 			case 'unread' :
-				$qna_types_caluse = ' AND (_meta.meta_key!=\'tutor_qna_read\' OR _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value!=1) ';
 				break;
 
 			case 'archived' :
@@ -4100,11 +4119,11 @@ class Utils {
 				break;
 
 			case 'important' :
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value=1) ';
 				break;
 		}
 
-		$columns_select = $count_only ? 'COUNT(_question.comment_ID)' :
+		$columns_select = $count_only ? '_question.comment_ID' :
 			"_question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
@@ -4139,13 +4158,14 @@ class Utils {
 					{$question_clause}
 					{$meta_clause}
 					{$qna_types_caluse}
-			ORDER BY _question.comment_ID DESC
+					{$filter_clause}
+			{$order_condition}
 			{$limit_offset}",
 			$search_term
 		);
 
 		if($count_only) {
-			return $wpdb->get_var($query);
+			return count($wpdb->get_results($query));
 		}
 
 		$query = $wpdb->get_results( $query );

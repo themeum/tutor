@@ -76,6 +76,11 @@ $args = $this->args;
 											<label class="tutor-course-setting-label">
 												<?php echo $field['label']; ?>
 											</label>
+											<?php if ( isset( $field['desc'] ) && 'Content Drip Type' === $field['label'] ) { ?>
+												<p class="tutor-input-feedback">
+													<?php echo $field['desc']; ?>
+												</p>
+											<?php } ?>
 										</div>
 										<?php
 									}
@@ -91,9 +96,9 @@ $args = $this->args;
 													foreach($field['options'] as $value => $label) {
 														$id_string = 'course_setting_radio_' . (!empty($field['id']) ? $field['id'] : $value);
 														?>
-														<div class="tutor-form-check tutor-mt-10 tutor-mb-10">
+														<div class="tutor-form-check tutor-mt-20 tutor-mb-20 tutor-bs-align-items-center">
 															<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
-															<label for="<?php echo $id_string; ?>" class="text-medium-caption">
+															<label for="<?php echo $id_string; ?>" class="text-medium-caption tutor-font-size-15">
 																<?php echo $label; ?>
 															</label>
 														</div>
@@ -160,9 +165,9 @@ $args = $this->args;
 												break;
 										}
 
-										if (isset($field['desc'])){
+										if ( isset( $field['desc'] ) && 'Content Drip Type' !== $field['label'] ) {
 											?>
-												<p class="tutor-input-feedback tutor-has-icon tutor-pl-25">
+												<p class="tutor-input-feedback tutor-has-icon tutor-pl-25" style="margin-top: 14px;">
 													<i class="ttr-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19"></i>
 													<?php echo $field['desc']; ?>
 												</p>

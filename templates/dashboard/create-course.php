@@ -20,7 +20,7 @@ $can_publish_course = (bool) tutor_utils()->get_option( 'instructor_can_publish_
 ?>
 
 <?php
-if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
+if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
 	$args = array(
 		'headline'    => __( 'Permission Denied', 'tutor' ),
 		'message'     => __( 'You don\'t have the right to edit this course', 'tutor' ),
@@ -110,20 +110,21 @@ if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(),
 							<?php
 					} else {
 						?>
-							<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active">
+							<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active tutor-modal-is-close-inside-header">
 								<span class="tutor-modal-overlay"></span>
-								<button data-tutor-modal-close class="tutor-modal-close">
-									<span class="las la-times"></span>
-								</button>
 								<div class="tutor-modal-root">
-									<div class="tutor-modal-inner">
-										<div class="tutor-modal-body tutor-text-center">
-											<div class="tutor-modal-icon">
+									
+									<div class="tutor-modal-inner tutor-modal-close-inner">
+										<button data-tutor-modal-close class="tutor-modal-close">
+											<span class="las la-times"></span>
+										</button>
+										<div class="tutor-text-center tutor-mt-80 tutor-px-50 tutor-pb-md-100 tutor-pb-50">
+											<div class="tutor-modal-icon tutor-flex-center">
 												<img src="<?php echo tutor()->url; ?>/assets/images/icon-cup.svg" alt="" />
 											</div>
-											<div class="tutor-modal-text-wrap">
-												<h3 class="tutor-modal-title"><?php _e( 'Thank You!', 'tutor' ); ?></h3>
-												<p><?php echo $message; ?></p>
+											<div class="tutor-modal-text-wrap tutor-mt-26">
+												<div class="tutor-modal-title tutor-text-regular-h4 tutor-color-text-primary"><?php _e( 'Thank You!', 'tutor' ); ?></div>
+												<div class="tutor-text-regular-body tutor-text-subsued tutor-mt-18"><?php echo $message; ?></div>
 											</div>
 										</div>
 									</div>
@@ -154,9 +155,9 @@ if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(),
 							<label class="tutor-course-field-label"><?php _e( 'Course Title', 'tutor' ); ?></label>
 							<div class="tooltip-wrap tutor-bs-d-block">
 								<span class="tooltip-txt tooltip-right tutor-mt-10">
-									<?php _e( '60', 'tutor' ); ?>
+									<?php _e( '350', 'tutor' ); ?>
 								</span>
-								<input type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e( 'ex. Learn photoshop CS6 from scratch', 'tutor' ); ?>">
+								<input type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e( 'ex. Learn photoshop CS6 from scratch', 'tutor' ); ?>" maxlength="350">
 							</div>
 						</div>
 						
@@ -180,7 +181,7 @@ if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(),
 
 						<div class="tutor-frontend-builder-item-scope">
 							<div class="tutor-form-group">
-								<label class="tutor-form-label">
+								<label class="tutor-form-label tutor-font-size-16">
 									<?php _e( 'Choose a category', 'tutor' ); ?>
 								</label>
 								<div class="tutor-form-field-course-categories">
@@ -204,7 +205,7 @@ if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(),
 								?>
 									<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-30">
 										<div class="tutor-bs-col-12">
-											<label class="tutor-form-label"><?php _e('Course Price', 'tutor'); ?></label>
+											<label class="tutor-form-label tutor-font-size-16"><?php _e('Course Price', 'tutor'); ?></label>
 										</div>
 										<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
 											<div class="tutor-form-check tutor-bs-align-items-center tutor-mb-15">
@@ -213,14 +214,14 @@ if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(),
 													<span class="tutor-input-prepand">
 													<?php echo $currency_symbol; ?>
 													</span>
-													<input type="number" class="tutor-form-number-verify" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e( 'Set course price', 'tutor' ); ?>" min="0">
+													<input type="number" class="tutor-form-number-verify tutor-pl-10" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e( 'Set course price', 'tutor' ); ?>" min="0">
 												</label>
 											</div>
 										</div>
 										<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
 											<div class="tutor-form-check tutor-bs-align-items-center tutor-mb-15">
 												<input type="radio" id="tutor_price_free" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked( $_tutor_course_price_type, 'free' ) : checked( 'true', 'true' ); ?>/>
-												<label for="tutor_price_free">
+												<label for="tutor_price_free" class="tutor-font-size-15">
 													<?php _e( 'Free', 'tutor' ); ?>
 												</label>
 											</div>
@@ -231,16 +232,18 @@ if (!$course_id || ! tutor_utils()->can_user_edit_course( get_current_user_id(),
 						?>
 
 						<div class="tutor-mb-30">
-							<label class="tutor-course-field-label"><?php _e( 'Course Thumbnail', 'tutor' ); ?></label>
+							<label class="tutor-course-field-label tutor-font-size-16"><?php _e( 'Course Thumbnail', 'tutor' ); ?></label>
 							<div class="tutor-input-group tutor-mb-15">
 								<?php
 									tutor_load_template_from_custom_path(
 										tutor()->path . '/views/fragments/thumbnail-uploader.php',
 										array(
-											'media_id'   => get_post_thumbnail_id( $course_id ),
-											'input_name' => 'tutor_course_thumbnail_id',
-											'placeholder'=> tutor()->url . '/assets/images/placeholder-course.svg',
-											'borderless' => true
+											'media_id'    => get_post_thumbnail_id( $course_id ),
+											'input_name'  => 'tutor_course_thumbnail_id',
+											'placeholder' => tutor()->url . '/assets/images/thumbnail-placeholder.svg',
+											'borderless'  => true,
+											'background'  => '#E3E6EB',
+											'border'      => '#E3E6EB',
 										),
 										false
 									);

@@ -21,7 +21,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<span class="las la-times"></span>
 					</button>
 				</div>
-				
+
 				<div class="tutor-modal-body-alt modal-container">
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="announcement_id" value="<?php echo $announcment_id; ?>">
@@ -31,7 +31,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php _e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select" name="tutor_announcement_course" required>
+						<select class="tutor-form-select" name="tutor_announcement_course" required noDropdown>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>
@@ -55,7 +55,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						</label>
 						<textarea class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php echo $summary; ?></textarea>
 					</div>
-					
+
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
@@ -91,7 +91,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 			<div class="tutor-modal-inner">
 				<div class="tutor-modal-header">
 					<button data-tutor-modal-close class="tutor-modal-close tutor-color-text-hints">
-						<span class="ttr-line-cross-line"></span>
+						<span class="ttr-line-cross-line tutor-icon-40"></span>
 					</button>
 				</div>
 				<div class="tutor-modal-body tutor-bs-align-items-start">
@@ -108,7 +108,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 				<div class="tutor-modal-footer">
 					<div class="footer-top">
 						<div class="">
-							<div class="text-regular-caption tutor-color-text-subsued">
+							<div class="tutor-text-regular-caption tutor-color-text-subsued">
 								<?php _e( 'Course', 'tutor' ); ?>
 							</div>
 							<div class="text-bold-body tutor-color-text-primary tutor-mt-3">
@@ -150,11 +150,11 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 	?>
 	<div id="<?php echo $id; ?>" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
-		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="las la-times"></span>
-		</button>
 		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
+			<div class="tutor-modal-inner tutor-modal-close-inner">
+				<button data-tutor-modal-close class="tutor-modal-close">
+					<span class="las la-times"></span>
+				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-icon">
 						<img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
@@ -252,7 +252,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 						<?php else : ?>
 							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" class="tutor-text-nowrap">
 								<?php echo esc_html( $date_format ); ?>
-							</td>                    
+							</td>
 						<?php endif; ?>
 
 						<td data-th="<?php esc_html_e( 'Announcement', 'tutor' ); ?>" class="column-fullwidth">
@@ -266,13 +266,13 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</div>
 						</td>
 						<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
-							<div class="tutor-bs-d-flex tutor-bs-align-items-center">
+							<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
 								<div class="inline-flex-center td-action-btns">
 									<button class="btn-outline tutor-btn tutor-is-default tutor-is-xs tutor-mr-10 tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</button>
 								</div>
-								
+
 								<div class="tutor-popup-opener">
 									<button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
 										<span class="toggle-icon"></span>
@@ -285,7 +285,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 											</a>
 										</li>
 										<li>
-											<a href="#" class="tutor-quiz-question-trash" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
+											<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
 												<i class="ttr-delete-fill-filled tutor-color-design-white"></i>
 												<span class="text-regular-body tutor-color-text-white"><?php _e( 'Delete', 'tutor' ); ?></span>
 											</a>
@@ -293,7 +293,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									</ul>
 								</div>
 							</div>
-							
+
 							<?php
 								tutor_announcement_modal( $update_modal_id, __( 'Edit Announcment', 'tutor' ), $courses, $announcement );
 								tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course->post_title, $date_format, $time_format );
@@ -311,7 +311,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 			<?php endif; ?>
 		</tbody>
 	</table>
-	
+
 	<div class="tutor-pagination-wrapper <?php echo esc_attr( is_admin() ? 'tutor-mt-20' : '' ); ?>">
 	<?php
 		// Need an unlikely integer.
@@ -346,7 +346,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 
 		?>
 	</div>
- 
+
 
 
 <?php

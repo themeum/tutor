@@ -296,7 +296,7 @@ include __DIR__ . '/header.php';
                         }
                         ?>
                         
-                        <tr>
+                        <tr class="<?php echo 'tutor-quiz-answer-status-'.$answer_status; ?>">
                             <?php foreach($table_2_columns as $key => $column): ?>
                                 <?php 
                                     switch($key) {
@@ -589,7 +589,7 @@ include __DIR__ . '/header.php';
 
                                         case 'manual_review' :
                                             ?>
-                                            <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap <?php echo 'tutor-quiz-answer-status-'.$answer_status; ?>">
+                                            <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap">
                                                 <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-10 tutor-icon-rounded tutor-text-success">
                                                     <i class="tutor-icon-mark"></i> 
                                                 </a>
