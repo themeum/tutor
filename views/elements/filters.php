@@ -93,19 +93,22 @@
 				</select>
 			</div>
 			<?php endif; ?>
-			<div class="tutor-wp-dashboard-filter-item">
-				<label class="tutor-form-label">
-				<?php esc_html_e( 'Sort By', 'tutor' ); ?>
-				</label>
-				<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-order" data-search="no">
-				<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
-							<?php esc_html_e( 'DESC', 'tutor' ); ?>
-						</option>
-						<option value="ASC" <?php selected( $order, 'ASC', 'selected' ); ?>>
-							<?php esc_html_e( 'ASC', 'tutor' ); ?>
-						</option>
-				</select>
-			</div>
+
+			<?php if(!isset($data['sort_by']) || $data['sort_by']==true): ?>
+				<div class="tutor-wp-dashboard-filter-item">
+					<label class="tutor-form-label">
+					<?php esc_html_e( 'Sort By', 'tutor' ); ?>
+					</label>
+					<select class="tutor-form-select tutor-form-control-sm" id="tutor-backend-filter-order" data-search="no">
+					<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
+								<?php esc_html_e( 'DESC', 'tutor' ); ?>
+							</option>
+							<option value="ASC" <?php selected( $order, 'ASC', 'selected' ); ?>>
+								<?php esc_html_e( 'ASC', 'tutor' ); ?>
+							</option>
+					</select>
+				</div>
+			<?php endif; ?>
 			<div class="tutor-wp-dashboard-filter-item">
 				<label class="tutor-form-label">
 				<?php esc_html_e( 'Date', 'tutor' ); ?>

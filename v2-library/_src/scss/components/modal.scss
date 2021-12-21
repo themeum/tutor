@@ -155,6 +155,18 @@
 			width: 100%;
 			background: #ffffff;
 			border-radius: 20px;
+
+			&.tutor-modal-close-inner {
+				position: relative;
+
+				.tutor-modal-close {
+					position: absolute !important;
+					top: 15px !important;
+					right: 15px !important;
+					color: inherit !important;
+					padding: 0 !important;
+				}
+			}
 		}
 		.tutor-modal-body {
 			font-size: 16px;
