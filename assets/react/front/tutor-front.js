@@ -275,8 +275,7 @@ jQuery(document).ready(function ($) {
                 $tutor_quiz_time_update.html(countdown_human);
             }, 1000);
         } else {
-            $tutor_quiz_time_update.html('');
-            console.log('removed');
+            $tutor_quiz_time_update.html(__('No Limit', 'tutor'));
         }
     }
 
