@@ -13,7 +13,6 @@
 	$quiz_time_value = $quiz_time_limit['time_value'];
 	$quiz_time_type  = $quiz_time_limit['time_type'];
 	$is_started_quiz = tutor_utils()->is_started_quiz();
-    var_dump( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) );
 	$previous_attempts = tutor_utils()->quiz_attempts();
 	$attempted_count   = is_array( $previous_attempts ) ? count( $previous_attempts ) : 0;
 	$questions_order   = tutor_utils()->get_quiz_option( $quiz_id, 'questions_order', 'rand' );
@@ -22,6 +21,7 @@
 	$feedback_mode     = tutor_utils()->get_quiz_option( $quiz_id, 'feedback_mode', 0 );
 
 	$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
+	var_dump( $attempt_remaining );
 	$quiz_answers      = array();
 
 if ( $attempted_count !== 0 ) {

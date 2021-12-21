@@ -164,18 +164,18 @@ jQuery(document).ready(function ($) {
     /**
      * Quiz attempt
      */
-
     var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
     var attempt_settings = null;
     if ($tutor_quiz_time_update.length) {
         attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
         var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
         var quiz_duration = $tutor_quiz_time_update.attr('data-quiz-duration');
-
+        //console.log(`${new Date(attempt_settings.attempt_started_at).getTime() + quiz_duration }`)
+        //if (quiz_duration > 0) {
         if (attempt_meta.time_limit.time_limit_seconds > 0) {
             //No time Zero limit for
-            //var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
-            var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + quiz_duration;
+            var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + (attempt_meta.time_limit.time_limit_seconds * 1000);
+            //var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + Number(quiz_duration);
             var time_now = new Date(attempt_meta.date_time_now).getTime();
 
             var tutor_quiz_interval = setInterval(function () {
@@ -205,13 +205,13 @@ jQuery(document).ready(function ($) {
                     clearInterval(tutor_quiz_interval);
                     countdown_human = "EXPIRED";
                     //Set the quiz attempt to timeout in ajax
-                    if (_tutorobject.quiz_options.quiz_when_time_expires === 'autosubmit') {
+                    if (_tutorobject.quiz_options.quiz_when_time_expires === 'auto_submit') {
                         /**
                          * Auto Submit
                          */
                         $('form#tutor-answering-quiz').submit();
 
-                    } else if (_tutorobject.quiz_options.quiz_when_time_expires === 'autoabandon') {
+                    } else if (_tutorobject.quiz_options.quiz_when_time_expires === 'auto_abandon') {
 
                         /**
                          *
@@ -243,10 +243,11 @@ jQuery(document).ready(function ($) {
 
                                 var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
                                 $(alertDiv).addClass('tutor-alert-show');
-                                if (att > 0) {
+                                if (attemptRemaining > 0) {
                                     $(`${alertDiv} .text`).html(
-                                        __('Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor')
+                                        __('Your time limit for thiddddds quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor')
                                     );
+                                    $tutor_quiz_time_update.css('display', 'block');
                                 } else {
                                     $(alertDiv).addClass('tutor-alert-danger');
                                     $("#tutor-start-quiz").hide();
