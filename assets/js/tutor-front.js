@@ -1914,9 +1914,9 @@ jQuery(document).ready(function ($) {
             var quiz_timeout_data = {
               quiz_id: quiz_id,
               action: 'tutor_quiz_timeout'
-            };
-            var att = $("#tutor-quiz-time-expire-wrapper").attr('data-attempt-remaining'); //disable buttons
+            }; //disable buttons
 
+            $(".tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn").addClass('tutor-btn-disable');
             $(".tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn").prop('disabled', true); //add alert text
 
             $(".time-remaining span").css('color', '#F44337');
@@ -1927,16 +1927,26 @@ jQuery(document).ready(function ($) {
               success: function success(data) {
                 var attemptAllowed = $("#tutor-quiz-time-expire-wrapper").data('attempt-allowed');
                 var attemptRemaining = $("#tutor-quiz-time-expire-wrapper").data('attempt-remaining');
-                var alertDiv = "#tutor-quiz-time-expire-wrapper .tutor-alert";
-                $(alertDiv).addClass('tutor-alert-show');
+                var alertDiv = "#tutor-quiz-time-expire-wrapper";
+                $(alertDiv).addClass('tutor-alert-show'); // if attempt remaining
 
                 if (attemptRemaining > 0) {
-                  $("".concat(alertDiv, " .text")).html(__('Your time limit for thiddddds quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor'));
-                  $tutor_quiz_time_update.css('display', 'block');
+                  $("".concat(alertDiv, " .tutor-quiz-alert-text")).html(__('Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor'));
                 } else {
-                  $(alertDiv).addClass('tutor-alert-danger');
+                  // if attempt not remaining 
+                  if ($(alertDiv).hasClass('time-remaining-warning')) {
+                    $(alertDiv).removeClass('time-remaining-warning');
+                    $(alertDiv).addClass('time-over');
+                  }
+
+                  if ($("".concat(alertDiv, " .flash-info span:first-child")).hasClass('ttr-warning-outline-circle-filled')) {
+                    $("".concat(alertDiv, " .flash-info span:first-child")).removeClass('ttr-warning-outline-circle-filled');
+                    $("".concat(alertDiv, " .flash-info span:first-child")).addClass('ttr-cross-circle-outline-filled');
+                  }
+
+                  $tutor_quiz_time_update.toggleClass('tutor-quiz-time-expired');
                   $("#tutor-start-quiz").hide();
-                  $("".concat(alertDiv, " .text")).html("".concat(__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')));
+                  $("".concat(alertDiv, " .tutor-quiz-alert-text")).html("".concat(__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')));
                 }
               },
               complete: function complete() {}

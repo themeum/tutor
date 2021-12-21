@@ -9277,6 +9277,27 @@ Instructor customize filters styles
   }
 }
 
+.tutor-single-lesson-wraper .tutor-single-entry-content #tutor-quiz-time-expire-wrapper {
+  display: none;
+}
+
+.tutor-single-lesson-wraper .tutor-single-entry-content #tutor-quiz-time-expire-wrapper.tutor-alert-show {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.tutor-single-lesson-wraper .tutor-single-entry-content #tutor-quiz-time-expire-wrapper .flash-info span:first-child.ttr-cross-circle-outline-filled::before {
+  color: #f44337;
+}
+
+.tutor-single-lesson-wraper .tutor-single-entry-content .tutor-quiz-time-expired {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 26px;
+  color: #F44337;
+}
+
 @media (max-width: 600px) {
   .tutor-topbar-content-title-wrap {
     -webkit-box-align: start;
