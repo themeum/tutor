@@ -166,7 +166,6 @@ window.jQuery(document).ready($=>{
         e.preventDefault();
         let counter_el = $('.tutor-quiz-question-counter>span:first-child');
         let current_question = parseInt($(this).closest('[data-question_index]').data('question_index'));
-
         // Show previous quiz if press previous button
         if ($(this).hasClass('tutor-quiz-answer-previous-btn')) {
             $(this).closest('.quiz-attempt-single-question').hide().prev().show();
@@ -257,5 +256,8 @@ window.jQuery(document).ready($=>{
         setTimeout(() => {
             quizSubmitBtn.disabled = true;
         }, 500);
+    });
+    $(".tutor-quiz-submit-btn").click(function() {
+        $("#tutor-answering-quiz").submit();
     });
 });
