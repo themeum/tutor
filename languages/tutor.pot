@@ -256,6 +256,10 @@ msgid "Unfortunately, you are out of time and quiz attempts. "
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No Limit"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Assignment answer can not be empty"
 msgstr ""
 
