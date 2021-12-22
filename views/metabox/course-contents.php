@@ -32,16 +32,16 @@
         <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
             <div class="tutor-topics-top">
                 <h4 class="tutor-topic-title">
-                    <i class="ttr-menu-line tutor-icon-24 course-move-handle"></i>
+                    <i class="ttr-humnurger-filled tutor-icon-24 course-move-handle"></i>
                     <span class="topic-inner-title"><?php echo stripslashes($topic->post_title); ?></span>
-                    <span class="tutor-topic-inline-edit-btn ">
-                        <i class="tutor-icon-pencil" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>
+                    <span class="tutor-topic-inline-edit-btn tutor-font-size-24">
+                        <i class="color-text-hints ttr-edit-filled tutor-icon-24" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>
                     </span>
-                    <span class="topic-delete-btn">
-                        <i class="tutor-icon-garbage"></i>
+                    <span class="topic-delete-btn tutor-font-size-24">
+                        <i class="color-text-hints ttr-delete-stroke-filled tutor-icon-24"></i>
                     </span>
-                    <span class="expand-collapse-wrap">
-                        <i class="tutor-icon-light-down"></i>
+                    <span class="expand-collapse-wrap tutor-font-size-24">
+                        <i class="color-text-brand ttr-angle-down-filled tutor-icon-26"></i>
                     </span>
                 </h4>
                 <?php 
@@ -93,13 +93,18 @@
 							?>
                             <div id="tutor-assignment-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
                                 <div class="tutor-course-content-top">
-                                    <i class="ttr-menu-line tutor-icon-24"></i>
+                                    <span class="color-text-hints ttr-humnurger-filled tutor-font-size-24 tutor-pr-10"></span>
                                     <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?> 
                                     </a>
-                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                        <i class="tutor-icon-garbage"></i>
-                                    </a>
+                                    <div>
+                                        <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                            <span class="color-text-hints ttr-edit-filled tutor-font-size-24"></span>
+                                        </a>
+                                        <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
+                                            <span class="color-text-hints ttr-delete-stroke-filled tutor-font-size-24"></span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 							<?php
@@ -108,13 +113,18 @@
 							?>
                             <div id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
                                 <div class="tutor-course-content-top">
-                                    <i class="ttr-menu-line tutor-icon-24"></i>
+                                    <span class="color-text-hints ttr-humnurger-filled tutor-font-size-24 tutor-pr-10"></span>
                                     <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?> 
                                     </a>
-                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                        <i class="tutor-icon-garbage"></i>
-                                    </a>
+                                    <div>
+                                        <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                            <span class="color-text-hints ttr-edit-filled tutor-font-size-24"></span>
+                                        </a>
+                                        <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
+                                            <span class="color-text-hints ttr-delete-stroke-filled tutor-font-size-24"></span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 							<?php

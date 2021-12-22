@@ -34,7 +34,7 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
 
 
 <div class="tutor-mb-30">
-    <label class="text-medium-body color-text-primary">
+    <label class="text-medium-body color-text-primary tutor-pb-10">
         <?php
         if ($post->post_type === tutor()->course_post_type){
             _e('Course Intro Video', 'tutor');
@@ -43,14 +43,14 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
         }
         ?>
     </label>
-    <div class="tutor-input-group tutor-mb-15 tutor-bs-d-block">
-        <div class="tutor-video-upload-wrap container-fluid g-0">
+    <div class="tutor-input-group tutor-mb-15 tutor-mt-10 tutor-bs-d-block">
+        <div class="tutor-video-upload-wrap g-0">
             <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo $videoSource; ?>">
                 <i class="ttr-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
                 <i class="ttr-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
                 <i class="ttr-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
             </div>
-            <select name="video[source]" class="tutor-form-select tutor_lesson_video_source tutor-form-select" noDropdown>
+            <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source" noDropdown>
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php
                     foreach($video_sources as $value=>$source){
@@ -67,8 +67,8 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
                 <div class="video-metabox-source-html5-upload">
                     <p class="video-upload-icon"><i class="tutor-icon-upload"></i></p>
                     <p><strong><?php _e('Drag & Drop Your Video', 'tutor'); ?></strong></p>
-                    <p><?php _e('File Format: ', 'tutor'); ?> .mp4</p>
-                    <p><?php _e('Or', 'tutor'); ?> .mp4</p>
+                    <p><?php _e('File Format: ', 'tutor'); ?> <span class="color-text-primary">.mp4</span></p>
+                    <p class="color-text-primary"><?php _e('or', 'tutor'); ?></p>
 
                     <div class="video_source_upload_wrap_html5">
                         <button class="video_upload_btn tutor-btn tutor-btn-secondary tutor-btn-md">
