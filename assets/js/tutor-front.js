@@ -258,7 +258,6 @@ window.jQuery(document).ready(function ($) {
     var goNext = false; // Prepare answer array
 
     var quiz_answers = JSON.parse(window.tutor_quiz_context.split('').reverse().join(''));
-    console.log(quiz_answers);
     !Array.isArray(quiz_answers) ? quiz_answers = [] : 0; // Evaluate result
 
     var feedBackMode = $question_wrap.attr('data-quiz-feedback-mode');
