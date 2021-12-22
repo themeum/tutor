@@ -7,7 +7,7 @@
 $previous_attempts = tutor_utils()->quiz_attempts();
 $attempted_count = is_array($previous_attempts) ? count($previous_attempts) : 0;
 $attempts_allowed = tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', 0);
-$attempt_remaining = $attempts_allowed - $attempted_count;
+$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
 
 if(isset($_GET['view_quiz_attempt_id'])) {
     // Load single attempt details if ID provided

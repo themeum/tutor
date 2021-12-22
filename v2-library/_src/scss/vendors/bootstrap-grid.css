@@ -48,7 +48,7 @@
 		max-width: 1140px;
 	}
 }
-@media (min-width: 1400px) {
+/* @media (min-width: 1400px) {
 	.container-xxl,
 	.container-xl,
 	.container-lg,
@@ -57,9 +57,11 @@
 	.container {
 		max-width: 1320px;
 	}
-}
+} */
+
 .row {
 	--bs-gutter-x: 1.5rem;
+	--bs-gutter-x: 30px;
 	--bs-gutter-y: 0;
 	display: flex;
 	flex-wrap: wrap;

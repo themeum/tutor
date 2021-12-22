@@ -101,6 +101,6 @@ window.jQuery(document).ready(function($){
         
         var wrapper = $(this).closest('.tutor-topics-wrap');
         wrapper.find('.tutor-topics-body').slideToggle();
-        wrapper.find('.expand-collapse-wrap').toggleClass('is-expanded').find('i').toggleClass('tutor-icon-light-down tutor-icon-light-up');
+        wrapper.find('.expand-collapse-wrap').toggleClass('is-expanded').find('i').toggleClass('ttr-angle-down-filled ttr-angle-up-filled');
     });
 });

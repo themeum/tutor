@@ -957,7 +957,7 @@ class Quiz {
 							'belongs_question_id'   => esc_sql( $question_id ) ,
 							'belongs_question_type' => $question_type,
 							'answer_title'          => __('False', 'tutor'),
-							'is_correct'            => $answer['true_false'] == 'false' ? 1 : 0,
+							'is_correct'            => $answer['true_false'] == 'false' ? 0 : 1,
 							'answer_two_gap_match'  => 'false',
 						),
 					);
@@ -1149,6 +1149,32 @@ class Quiz {
 	    global $wpdb;
 
 	    $answer_id = sanitize_text_field($_POST['answer_id']);
+		// get question info.
+		$belong_question = $wpdb->get_row( $wpdb->prepare(
+			" SELECT belongs_question_id, belongs_question_type
+				FROM {$wpdb->tutor_quiz_question_answers}
+				WHERE answer_id = %d
+				LIMIT 1
+			",
+			$answer_id
+		) );
+		if ( $belong_question ) {
+			// if question found update all answer is_correct to 0 except post answer.
+			$question_type 	= $belong_question->belongs_question_type;
+			$question_id 	= $belong_question->belongs_question_id;
+			if ( 'true_false' === $question_type || 'single_choice' === $question_type ) {
+				$update = $wpdb->query( $wpdb->prepare(
+					"UPDATE {$wpdb->tutor_quiz_question_answers}
+						SET is_correct = 0
+						WHERE belongs_question_id = %d 
+							AND answer_id != %d
+					",
+					$question_id,
+					$answer_id
+				) );
+			}
+		}
+
 	    $inputValue = sanitize_text_field($_POST['inputValue']);
 		
 		if(!tutor_utils()->can_user_manage('quiz_answer', $answer_id)) {
