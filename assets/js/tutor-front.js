@@ -498,6 +498,9 @@ window.jQuery(document).ready(function ($) {
       quizSubmitBtn.disabled = true;
     }, 500);
   });
+  $(".tutor-quiz-submit-btn").click(function () {
+    $("#tutor-answering-quiz").submit();
+  });
 });
 
 /***/ }),
