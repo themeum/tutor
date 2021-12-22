@@ -44,7 +44,7 @@
 			$previous_question = $question_i > 1 ? $questions[ $question_i - 1 ] : false;
 			?>
 				<div id="quiz-attempt-single-question-<?php echo esc_attr( $question->question_id ); ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo esc_attr( $question_i ); ?>" style="display: <?php echo esc_attr( $style_display ); ?> ;" <?php echo esc_attr( $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : '' ); ?> data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>"  data-question_index="<?php echo esc_attr( $question_i ); ?>">
-					<div class="quiz-question tutor-mt-60 tutor-mr-md-100">
+					<div class="quiz-question tutor-mt-45 tutor-mr-md-100">
 					<?php
 						echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
 
