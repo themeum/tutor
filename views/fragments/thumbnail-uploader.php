@@ -5,12 +5,14 @@
 		$media_url = wp_get_attachment_url( $media_id );
 	}
 
-	$is_borderless = isset($data['borderless']) && $data['borderless']==true;
-	$placeholder = !empty($data['placeholder']) ? $data['placeholder'] : '';
+	$is_borderless = isset( $data['borderless'] ) && $data['borderless'] == true;
+	$placeholder   = ! empty( $data['placeholder'] ) ? $data['placeholder'] : '';
+	$background    = ! empty( $data['background']) ? $data['background'] : '#eff1f7';
+	$border_color  = ! empty( $data['border']) ? $data['border'] : '#eff1f7';
 ?>
 <div class="tutor-thumbnail-uploader" data-media-heading="<?php echo ! empty( $media_heading ) ? $media_heading : __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ); ?>">
 	<div class="thumbnail-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10 <?php echo $is_borderless ? 'tutor-is-borderless' : 'tutor-p-15'; ?>">
-		<div class="thumbnail-preview image-previewer">
+		<div class="thumbnail-preview image-previewer" style="background:<?php echo esc_attr( $background ); ?>; border: 2px solid <?php echo esc_attr( $border_color ); ?>;">
 			<span class="preview-loading"></span>
 			<input type="hidden" class="tutor-tumbnail-id-input" name="<?php echo $input_name; ?>" value="<?php echo ! empty( $media_id ) ? $media_id : ''; ?>">
 			<img src="<?php echo $media_url ? $media_url : $placeholder; ?>" data-placeholder="<?php echo $placeholder; ?>"/>
@@ -18,7 +20,7 @@
 		</div>
 		<div class="thumbnail-input">
 			<p class="text-regular-body tutor-color-text-subsued">
-				<?php _e('Size', 'ttuor'); ?>: <strong class="text-bold-body"><?php _e( '700x430 pixels', 'tutor' ); ?>;</strong>
+				<?php _e( 'Size', 'tutor' ); ?>: <strong class="text-bold-body"><?php _e( '700x430 pixels', 'tutor' ); ?>;</strong>
 				<br />
 				<?php _e( 'File Support', 'tutor' ); ?>: <strong class="text-bold-body"><?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?></strong>
 			</p>
