@@ -51,10 +51,6 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                     $tutor_course_img = get_tutor_course_thumbnail_src();
                     $id_string_delete = 'tutor_my_courses_delete_' . $post->ID;
                     $row_id = 'tutor-dashboard-my-course-' . $post->ID;
-
-                    echo $tutor_course_img;
-                    die();
-                    
                     ?>
                     
                     <div id="<?php echo $row_id; ?>" class="tutor-course-listing-item tutor-course-listing-item-sm tutor-mycourse-<?php the_ID(); ?>">
