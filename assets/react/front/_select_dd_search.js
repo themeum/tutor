@@ -1,30 +1,8 @@
 window.selectSearchField = (selectElement) => {
     const tutorFormSelect = document.querySelectorAll(selectElement);
+    readyState_complete(() => {
 
-    const dd_hide_onclick = () => {
-        setTimeout(() => {
-            let dd_wrap_main = document.querySelectorAll('.tutor-dropdown-select.select-dropdown');
-            if (dd_wrap_main) {
-                dd_wrap_main.forEach((item_main) => {
-                    item_main.onclick = (e) => {
-                        e.stopPropagation();
-                        dd_wrap_main.style.display = 'block'
-                    }
-                    let dd_wrap = item_main.querySelectorAll('.tutor-dropdown-select-options-container');
-                    dd_wrap.forEach((item) => {
-                        item.onclick = (e) => { e.stopPropagation(); }
-                        item.classList.remove('is-active');
-                    })
-                })
-            }
-        }, 100)
-    }
 
-    document.onclick = () => {
-        dd_hide_onclick();
-    }
-
-    setTimeout(() => {
         tutorFormSelect.forEach(element => {
             if (!element.hasAttribute("noDropdown")) {
 
@@ -45,11 +23,20 @@ window.selectSearchField = (selectElement) => {
                 const selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
                 selectedLabel.innerText = initialSelectedItem && initialSelectedItem.text;
 
+
+
                 selectLabel.onclick = (e) => {
-                    // dd_hide_onclick();
+                    dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
+
                     e.stopPropagation();
                     dropDown.classList.toggle('is-active');
                     searchInput.focus();
+
+                    dropDown.onclick = (e) => {
+                        e.stopPropagation();
+
+                    }
+
                 }
 
                 resultWrap = searchInputWrap.nextElementSibling;
@@ -58,7 +45,6 @@ window.selectSearchField = (selectElement) => {
                 if (resultList) {
                     resultList.forEach((item) => {
                         item.onclick = (e) => {
-
                             let selectFieldOptions = Array.from(element.options);
                             selectFieldOptions.forEach((option, i) => {
                                 if (option.value === e.target.dataset.key) {
@@ -66,6 +52,7 @@ window.selectSearchField = (selectElement) => {
                                     selectedLabel.innerText = e.target.innerText;
                                     selectedLabel.dataset.value = option.value;
                                     element.value = option.value;
+                                    document.getElementById('save_tutor_option').disabled = false;
                                 }
                             });
 
@@ -90,34 +77,33 @@ window.selectSearchField = (selectElement) => {
                     let txtValue, noItemFound = false;
                     resultFilter = e.target.value.toUpperCase();
                     resultList.forEach((item) => {
+
                         textToSearch = item.querySelector(".text-regular-caption");
                         txtValue = textToSearch.textContent || textToSearch.innerText;
                         if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
                             item.style.display = ''
                             noItemFound = 'false';
+                            // console.log('found');
                         } else {
                             noItemFound = 'true';
-                            // console.log(item.style.display);
                             item.style.display = 'none';
-                            /* resultWrap.innerHTML = `
-                            <div class="tutor-dropdown-select-option">
-                                <label for="select-item-1">
-                                    <div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="">No item found.</div>
-                                </label>
-                            </div>
-                            `; */
+                            // console.log('not found');
                         }
 
                     })
 
+                    // console.log(countHiddenItems(resultList), noItemFound);
+
+                    let noItemText = `
+                    <div class="tutor-dropdown-select-option noItem">
+                        <label>No item found</label>
+                    </div>
+                    `;
+
+                    let appendNoItemText = dropDown.querySelector('.tutor-frequencies');
                     if (0 == countHiddenItems(resultList)) {
-                        console.log(dropDown.querySelector('.tutor-frequencies'), 'no item');
-                        let appendNoItemText = dropDown.querySelector('.tutor-frequencies');
-                        let noItemText = `
-                        <div class="tutor-dropdown-select-option noItem">
-                            <label>No item found</label>
-                        </div>
-                        `;
+
+
                         let hasNoItem = false;
                         appendNoItemText.querySelectorAll('.tutor-dropdown-select-option').forEach((item) => {
                             if (item.classList.contains('noItem') == true) {
@@ -126,15 +112,38 @@ window.selectSearchField = (selectElement) => {
                         })
                         if (false == hasNoItem) {
                             appendNoItemText.insertAdjacentHTML("beforeend", noItemText);
+                            hasNoItem = true;
+                        }
+                    } else {
+                        if (null !== dropDown.querySelector('.noItem')) {
+                            dropDown.querySelector('.noItem').remove();
                         }
                     }
 
                 }
             }
         });
-    }, 20);
 
 
+
+
+        let otherDropDown = document.querySelectorAll('.tutor-dropdown-select-options-container');
+        document.onclick = (e) => {
+            dd_hide_dom_click(otherDropDown);
+        }
+
+
+    })
+
+
+
+    const dd_hide_dom_click = (elem) => {
+        if (elem) {
+            elem.forEach((elemItem) => {
+                elemItem.classList.remove('is-active');
+            })
+        }
+    }
 
     const ddMarkup = (options) => {
 
