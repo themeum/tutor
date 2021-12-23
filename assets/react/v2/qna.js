@@ -106,6 +106,8 @@ window.jQuery(document).ready($=>{
                 } else {
                     $('.tutor-qna-single-question').eq(0).before(resp.data.html);
                 }
+                //on successful reply make the textarea empty
+                $("#sideabr-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
             },
             complete: () =>{
                 button.removeClass('tutor-updating-message');
