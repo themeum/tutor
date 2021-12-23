@@ -5,12 +5,6 @@
 .tutor-course-details {
 	&-page {
 		.tutor-course-details-tab {
-			.tab-header {
-				position: sticky;
-				top: 0;
-				background: #fff;
-				z-index: 999;
-			}
 			.tab-item-content {
 				p {
 					@extend .text-regular-body;
@@ -30,6 +24,29 @@
 	}
 }
 
+.tutor-course-details-page {
+	.tutor-course-details-tab {
+		@include breakpoint-min(800) {
+			.tab-header {
+				position: sticky;
+				top: 0;
+				background: #fff;
+				z-index: 999;
+			}
+		}
+	}
+}
+
+.admin-bar {
+	.tutor-course-details-tab {
+		@include breakpoint-min(800) {
+			.tab-header {
+				top: 32px;
+			}
+		}
+	}
+}
+
 .tutor-course-details-action-btns {
 	display: flex;
 	gap: 30px;
@@ -40,7 +57,7 @@
 		align-items: center;
 		gap: 2px;
 	}
-	
+
 	.action-btn [class^='ttr-'] {
 		font-size: 21px;
 	}
@@ -277,11 +294,20 @@
 	}
 
 	iframe {
-		width: 100%;
-		height: 440px;
+		// width: 100%;
+		// height: 440px;
 		border: none;
 		background: #fff;
 		border-radius: 6px;
+	}
+
+	.tutor-course-thumbnail-bg {
+		img {
+			aspect-ratio: 16/9;
+			object-fit: cover;
+			width: 100%;
+			height: auto;
+		}
 	}
 
 	&-main {
@@ -289,6 +315,8 @@
 		grid-gap: 30px;
 		@include breakpoint-min(desktop) {
 			grid-template-columns: 8fr 4fr;
+		}
+		@include breakpoint-min(desktop-lg) {
 			grid-gap: 55px;
 		}
 
@@ -720,3 +748,8 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 		}
 	} // end /.tutor-gradebook-allgrades
 } // end /.tutor-gradebook
+
+// Layout - Debug
+.tutor-course-details-page > * > * {
+	// border: 1px solid red;
+}
