@@ -62,8 +62,8 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 				if ( $topics->have_posts() ) {
 					while ( $topics->have_posts() ) {
 						$topics->the_post();
-						$topic_id      	= get_the_ID();
-						$topic_summery 	= get_the_content();
+						$topic_id       = get_the_ID();
+						$topic_summery  = get_the_content();
 						$total_contents = tutor_utils()->count_completed_contents_by_topic( $topic_id );
 						?>
 
@@ -110,15 +110,15 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 														</div>
 														<div class="tutor-single-lesson-items-right d-flex tutor-lesson-right-icons">
 															<span class="text-regular-caption tutor-color-text-title">
-														<?php
-															do_action( 'tutor/lesson_list/right_icon_area', $post );
-
-															$time_limit = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
-														if ( $time_limit ) {
-															$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
-															echo "{$time_limit} {$time_type}";
-														}
-														?>
+																<?php
+																	$time_limit = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
+																if ( $time_limit ) {
+																	$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
+																	echo esc_html( "{$time_limit} {$time_type}" );
+																}
+																$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID )
+																?>
+																<input type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly <?php echo esc_attr( $has_attempt ? 'checked' : '' ); ?>/>
 															</span>
 														</div>
 													</a>
