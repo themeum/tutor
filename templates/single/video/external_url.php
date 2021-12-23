@@ -26,7 +26,7 @@ $poster_url = $poster ? wp_get_attachment_url($poster) : '';
 do_action('tutor_lesson/single/before/video/external_url');
 ?>
 <?php if($video_info ) { ?>
-<div class="course-players flex-center">
+<div class="course-players">
     <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData)); ?>">
 	
 	<video poster="<?php echo $poster_url; ?>" class="tutorPlayer" playsinline controls >
