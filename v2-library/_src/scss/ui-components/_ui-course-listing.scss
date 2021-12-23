@@ -49,7 +49,11 @@
 			font-size: 28px;
 		}
 	}
-	//    /* stroke/light20 */ background: #E0E2EA;
+
+	.course-listing-thumbnail {
+		height: 250px;
+		width: 100%;
+	}
 
 	&-head {
 		border-top-left-radius: 6px;
