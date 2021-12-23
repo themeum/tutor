@@ -26,21 +26,21 @@
 
         .tutor-dashboard-header-avatar {
             background-size: cover;
-            width: 88px;
-            height: 88px;
+            width: 80px;
+            height: 80px;
             background-position: center;
             border-radius: 50%;
             -webkit-box-sizing: border-box;
-                    box-sizing: border-box;
-        } 
-
+            box-sizing: border-box;
+        }
+    
         .tutor-dashboard-header-info {
             @include propertyWithPrefix(flex, 1);
             @include propertyWithPrefix(flex-grow, 1);
             padding-left: 24px;
             padding-top: 15px;
             padding-bottom: 15px;
-
+    
             .tutor-dashboard-header-display-name {
                 h4 {
                     margin: 0;
@@ -49,19 +49,24 @@
                     font-size: 30px;
                     color: $black-main;
                 }
-            } 
-
+            }
+    
             .tutor-dashboard-header-stats {
                 @include valueWithPrefix(display, flex);
                 @include propertyWithPrefix(flex-wrap, wrap);
                 line-height: 25px;
-
-                &>div{
+    
+                & > div {
                     &:not(:first-child) {
                         margin-left: 30px;
                     }
                 }
             }
+        }
+    
+        &-greetings,
+        &-username {
+            text-transform: capitalize;
         }
     }
 }
