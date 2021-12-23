@@ -76,11 +76,17 @@ do_action( 'tutor_dashboard/before/wrap' );
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-bs-col-md-6 tutor-bs-d-flex align-items-center" style="border: none;">
 				<div class=" tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
 				</div>
-				<div class="tutor-user-info tutor-ml-20">
-					<div class="tutor-dashboard-header-display-name">
-						<h4><strong><?php echo esc_html( $user->display_name ); ?></strong> </h4>
+				<div class="tutor-user-info tutor-ml-16">
+					<div class="tutor-dashboard-header-display-name tutor-color-text-primary">
+						<!-- <h4><strong><?php echo esc_html( $user->display_name ); ?></strong> </h4> -->
+						<div class="tutor-text-regular-h5 tutor-dashboard-header-greetings">
+							Hello,
+						</div>
+						<div class="tutor-text-semi-h4 tutor-dashboard-header-username">
+							<?php echo esc_html( $user->display_name ); ?>
+						</div>
 					</div>
-					<?php
+					<!-- <?php
 						$instructor_rating = tutor_utils()->get_instructor_ratings( $user->ID );
 
 					if ( current_user_can( tutor()->instructor_role ) ) {
@@ -89,13 +95,13 @@ do_action( 'tutor_dashboard/before/wrap' );
 								<div class="tutor-dashboard-header-ratings">
 								<?php tutor_utils()->star_rating_generator_v2( $instructor_rating->rating_avg, $instructor_rating->rating_count, true ); ?>
 								</div>
-								<!--<div class="tutor-dashboard-header-notifications">
+								<div class="tutor-dashboard-header-notifications">
 								<?php /*_e('Notification'); */ ?> <span>9</span>
-								</div>-->
+								</div>
 							</div>
 							<?php
 					}
-					?>
+					?> -->
 				</div>
 			</div>
 			<div class="tutor-header-right-side tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end">
@@ -171,7 +177,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 								$dashboard_key = '';
 							}
 							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-							echo "<li class='{$li_class}  {$active_class}'><a href='" . $menu_link . "'> {$menu_title} </a> </li>";
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a href='" . $menu_link . "' class='tutor-text-regular-body tutor-color-text-primary'> {$menu_title} </a> </li>";
 						}
 					}
 					?>
