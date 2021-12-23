@@ -125,7 +125,7 @@
 							</div>
 
 							<div class="tutor-qna-text">
-							<?php echo htmlspecialchars( strip_tags( $answer->comment_content ) ); ?>
+							<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
 							</div>
 
 						<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
