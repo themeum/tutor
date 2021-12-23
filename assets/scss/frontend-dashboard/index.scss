@@ -13,15 +13,19 @@
 
     // Individual dashboard pages
     .tutor-dashboard-content {
-        padding-top: 30px;
+        padding-top: 27px;
         &>h3,
         &>h4 {
             font-style: normal;
             font-weight: 500;
             font-size: 24px;
             color: $black-main;
-            margin: 0 0 20px 0;
+            margin: 0 0 25px 0;
             line-height: 34px;
+           
+        }
+        .tutor-capitalize-text {
+            text-transform: capitalize;
         }
 
         @import './pages/dashboard.scss';
