@@ -62,9 +62,9 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 				if ( $topics->have_posts() ) {
 					while ( $topics->have_posts() ) {
 						$topics->the_post();
-						$topic_id      = get_the_ID();
-						$topic_summery = get_the_content();
-						$total_contents = tutor_utils()->get_contents_by_topic( $topic_id );
+						$topic_id      	= get_the_ID();
+						$topic_summery 	= get_the_content();
+						$total_contents = tutor_utils()->count_completed_contents_by_topic( $topic_id );
 						?>
 
 						<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
@@ -82,9 +82,11 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 									</h3>
 								</div>
 								<div class="tutor-topics-title-right align-self-end">
+									<?php if ( isset( $total_contents['contents'] ) && $total_contents['contents'] > 0 ) : ?>
 									<p class="tutor-topic-subtitle tutor-text-regular-caption tutor-color-text-subsued">
-										3/<?php echo esc_html( is_array( $total_contents ) ? count( $total_contents ) : 0 ); ?>
+										<?php echo esc_html( isset( $total_contents['completed'] ) ? $total_contents['completed'] : 0 ); ?>/<?php echo esc_html( isset( $total_contents['contents'] ) ? $total_contents['contents'] : 0 ); ?>
 									</p>
+									<?php endif; ?>
 								</div>
 							</div>
 							<?php
