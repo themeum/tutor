@@ -26,8 +26,8 @@ class Options_V2 {
 	private $options;
 	private $setting_fields;
 
-	public function __construct($register_hook=true) {
-		if(!$register_hook) {
+	public function __construct( $register_hook = true ) {
+		if ( ! $register_hook ) {
 			return;
 		}
 
@@ -151,7 +151,7 @@ class Options_V2 {
 
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
-		wp_send_json_success($tutor_settings_log);
+		wp_send_json_success( $tutor_settings_log );
 	}
 
 	/**
@@ -909,7 +909,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Disable Level', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Toggle to remove course level', 'tutor' ),
 									),
 									array(
@@ -925,7 +925,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Duration', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Enable to show course duration', 'tutor' ),
 									),
 									array(
@@ -933,7 +933,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Enrolled Students', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Enable to show total enrolled students', 'tutor' ),
 									),
 									array(
@@ -941,7 +941,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Update Date', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide course update infromation', 'tutor' ),
 									),
 									array(
@@ -949,7 +949,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Progress Bar', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide course progress for Students', 'tutor' ),
 									),
 									array(
@@ -957,7 +957,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Material', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide course materials', 'tutor' ),
 									),
 									array(
@@ -965,7 +965,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'About', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide course about section', 'tutor' ),
 									),
 									array(
@@ -973,7 +973,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Description', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide course description', 'tutor' ),
 									),
 									array(
@@ -981,7 +981,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Benefits', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide course benefits section', 'tutor' ),
 									),
 									array(
@@ -989,7 +989,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Pre-Requirements', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide courses requirements setion', 'tutor' ),
 									),
 									array(
@@ -997,7 +997,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Target Audience', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Enable to show course target audience setion', 'tutor' ),
 									),
 									array(
@@ -1005,7 +1005,7 @@ class Options_V2 {
 										'type'        => 'toggle_single',
 										'label'       => __( 'Announcements', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
-										'default'     => 'off',
+										'default'     => 'on',
 										'desc'        => __( 'Disable to hide course announcements settion', 'tutor' ),
 									),
 									array(

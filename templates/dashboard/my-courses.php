@@ -55,7 +55,8 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                     
                     <div id="<?php echo $row_id; ?>" class="tutor-course-listing-item tutor-course-listing-item-sm tutor-mycourse-<?php the_ID(); ?>">
                         <div class="tutor-course-listing-item-head tutor-bs-d-flex">
-                            <img src="<?php echo esc_url($tutor_course_img); ?>" alt="Course Thumbnail">
+                            <!-- <img src="<?php echo esc_url($tutor_course_img); ?>" alt="Course Thumbnail"> -->
+                            <div class="course-listing-thumbnail" style="background-image:url(<?php echo esc_url($tutor_course_img); ?>)"></div>
                         </div>
                         <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-18">
                             <div class="list-item-rating tutor-bs-d-flex tutor-mb-10">
