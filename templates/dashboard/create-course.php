@@ -173,7 +173,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 										'statusbar'     => false,
 									);
 									wp_editor( $post->post_content, 'course_description', $editor_settings );
-									?>
+								?>
 							</div>
 						</div>
 						

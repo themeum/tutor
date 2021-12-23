@@ -8614,4 +8614,28 @@ class Utils {
 		return (int) $quiz_duration_in_seconds;
 	}
 
+	/**
+	 * Get all contents (lesosn, assignment, zoom, quiz etc) that belong to this topic
+	 *
+	 * @param int $topic_id | topic id.
+	 *
+	 * @return array of objects on success | false on failure 
+	 */
+	public function get_contents_by_topic( int $topic_id ) {
+		global $wpdb;
+		$contents = $wpdb->get_results( $wpdb->prepare(
+			" SELECT content.ID, content.post_title 
+				FROM {$wpdb->posts} AS topics 
+					INNER JOIN {$wpdb->posts} AS content 
+						ON content.post_parent = topics.ID 
+				WHERE topics.post_type = 'topics'
+					AND topics.ID = %d 
+					AND content.post_status = %s
+			",
+			$topic_id,
+			'publish'
+		) );
+		return $contents;
+	}
+
 }

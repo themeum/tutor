@@ -66,6 +66,7 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 						$topics->the_post();
 						$topic_id      = get_the_ID();
 						$topic_summery = get_the_content();
+						$total_contents = 0;
 						?>
 
 						<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
@@ -79,12 +80,13 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 									<h3 class="text-medium-h6 tutor-color-text-brand">
 										<?php
 											the_title();
+											the_ID();
 										?>
 									</h3>
 								</div>
 								<div class="tutor-topics-title-right align-self-end">
 									<p class="tutor-topic-subtitle tutor-text-regular-caption tutor-color-text-subsued">
-										<!-- 3/5 -->
+										3/<?php echo esc_html( $total_contents ); ?>
 									</p>
 								</div>
 							</div>
@@ -95,7 +97,6 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 							if ( $lessons->have_posts() ) {
 								while ( $lessons->have_posts() ) {
 									$lessons->the_post();
-
 									if ( $post->post_type === 'tutor_quiz' && ! $_is_preview ) {
 										$quiz = $post;
 										?>
