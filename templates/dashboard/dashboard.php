@@ -16,8 +16,6 @@ if (tutor_utils()->get_option('enable_profile_completion')) {
         return !$data['is_set'];
     }));
 
-    echo $complete_count = $total_count - $incomplete_count;
-
     if ($total_count && $incomplete_count && $incomplete_count <= $total_count) {
 ?>
         <div class="profile-completion">
