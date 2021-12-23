@@ -10,13 +10,15 @@
 
 if (tutor_utils()->get_option('enable_profile_completion')) {
     $profile_completion = tutor_utils()->user_profile_completion();
+
     $total_count = count($profile_completion);
     $incomplete_count = count(array_filter($profile_completion, function ($data) {
         return !$data['is_set'];
     }));
-    $complete_count = $total_count - $incomplete_count;
 
-    if ($total_count && $incomplete_count && $incomplete_count < $total_count) {
+    echo $complete_count = $total_count - $incomplete_count;
+
+    if ($total_count && $incomplete_count && $incomplete_count <= $total_count) {
 ?>
         <div class="profile-completion">
             <div class="tutor-bs-row tutor-bs-align-items-center">
