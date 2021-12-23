@@ -34,8 +34,6 @@ if ( $post->post_type === 'tutor_quiz' ) {
 }
 $disable_qa_for_this_course = get_post_meta( $course_id, '_tutor_enable_qa', true ) != 'yes';
 $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_course' ) && $disable_qa_for_this_course != 'yes';
-
-
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/lesson_sidebar' ); ?>
@@ -66,7 +64,7 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 						$topics->the_post();
 						$topic_id      = get_the_ID();
 						$topic_summery = get_the_content();
-						$total_contents = 0;
+						$total_contents = tutor_utils()->get_contents_by_topic( $topic_id );
 						?>
 
 						<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
@@ -80,13 +78,12 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 									<h3 class="text-medium-h6 tutor-color-text-brand">
 										<?php
 											the_title();
-											the_ID();
 										?>
 									</h3>
 								</div>
 								<div class="tutor-topics-title-right align-self-end">
 									<p class="tutor-topic-subtitle tutor-text-regular-caption tutor-color-text-subsued">
-										3/<?php echo esc_html( $total_contents ); ?>
+										3/<?php echo esc_html( is_array( $total_contents ) ? count( $total_contents ) : 0 ); ?>
 									</p>
 								</div>
 							</div>

@@ -8624,7 +8624,7 @@ class Utils {
 	public function get_contents_by_topic( int $topic_id ) {
 		global $wpdb;
 		$contents = $wpdb->get_results( $wpdb->prepare(
-			" SELECT content.ID, content.post_title 
+			" SELECT content.ID, content.post_title, content.post_type
 				FROM {$wpdb->posts} AS topics 
 					INNER JOIN {$wpdb->posts} AS content 
 						ON content.post_parent = topics.ID 
