@@ -1,15 +1,15 @@
 @import '../../../v2-library/_src/scss/reusables.scss';
 .tutor-dashboard {
-    // Libraries to use in all frontend dashboard pages
-    @import './lib/dropdown-action.scss';
-    @import './lib/inline-link.scss';
-    @import './lib/phone-number-field.scss';
-    @import './lib/form-fields.scss';
+	// Libraries to use in all frontend dashboard pages
+	@import './lib/dropdown-action.scss';
+	@import './lib/inline-link.scss';
+	@import './lib/phone-number-field.scss';
+	@import './lib/form-fields.scss';
 
-    // Frontend dashboard wrapper header, sidebar etc.
-    @import './header.scss';
-    @import './sidebar.scss';
-    @import './footer';
+	// Frontend dashboard wrapper header, sidebar etc.
+	@import './header.scss';
+	@import './sidebar.scss';
+	@import './footer';
 
     // Individual dashboard pages
     .tutor-dashboard-content {
@@ -22,21 +22,25 @@
             color: $black-main;
             margin: 0 0 25px 0;
             line-height: 34px;
-           
         }
+        & > h3 {
+			&.popular-courses-heading-dashboard {
+				margin-top: 28px;
+			}
+		}
         .tutor-capitalize-text {
             text-transform: capitalize;
         }
 
-        @import './pages/dashboard.scss';
-        @import './pages/my-profile.scss';
-        @import './pages/enrolled-courses.scss';
-        @import './pages/wishlist.scss';
-        @import './pages/review.scss';
-        @import './pages/quiz-attempt.scss';
-        @import './pages/setting.scss';
-        @import './pages/assignment.scss';
-        @import './pages/my-courses.scss';
-        @import './pages/qna';
-    }
+		@import './pages/dashboard.scss';
+		@import './pages/my-profile.scss';
+		@import './pages/enrolled-courses.scss';
+		@import './pages/wishlist.scss';
+		@import './pages/review.scss';
+		@import './pages/quiz-attempt.scss';
+		@import './pages/setting.scss';
+		@import './pages/assignment.scss';
+		@import './pages/my-courses.scss';
+		@import './pages/qna';
+	}
 }
