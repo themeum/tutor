@@ -2765,19 +2765,19 @@ msgstr ""
 msgid "Count"
 msgstr ""
 
-#: includes/tutor-general-functions.php:76
+#: includes/tutor-general-functions.php:143
 msgid "Search Course Category. ex. Design, Development, Business"
 msgstr ""
 
-#: includes/tutor-general-functions.php:77
+#: includes/tutor-general-functions.php:144
 msgid "Select a category"
 msgstr ""
 
-#: includes/tutor-general-functions.php:121
+#: includes/tutor-general-functions.php:188
 msgid "Search Course Tags. ex. Design, Development, Business"
 msgstr ""
 
-#: includes/tutor-general-functions.php:122
+#: includes/tutor-general-functions.php:189
 msgid "Select a tag"
 msgstr ""
 
