@@ -6,17 +6,17 @@
 		@extend .align-items-center;
 		color: var(--tutor-warning);
 		span:not(:last-child) {
-			margin-right: 3px;
+			// margin-right: 3px;
 		}
 		span,
 		i {
-			font-size: 22px;
+			font-size: 18px;
 		}
 	}
 	.tutor-rating-text {
 		font-size: 16px;
 		font-weight: 500;
-		padding-left: 6px;
+		padding-left: 3px;
 	}
 
 	&.tutor-is-xs {
