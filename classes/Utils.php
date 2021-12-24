@@ -8966,4 +8966,28 @@ class Utils
 		);
 	}
 
+	/**
+	 * Text message for the list tables that will be visible
+	 * if no record found or filter data not found
+	 *
+	 * @return string | not found text
+	 *
+	 * @since v2.0.0
+	 */
+	public function not_found_text() : string {
+		$course   	= isset( $_GET['course-id'] ) ? true : false;
+		$date     	= isset( $_GET['date'] ) ? true : false;
+		$search 	= isset( $_GET['search'] ) ? true : false;
+		$category 	= isset( $_GET['category'] ) ? true : false;
+		$text = array(
+			'normal'	=> __( 'No Data Available in this Section', 'tutor' ),
+			'filter'	=> __( 'No Data Found from your Search/Filter')
+		);
+
+		if ( $course || $date || $search || $category ) {
+			return $text['filter'];
+		} else {
+			return $text['normal'];
+		}
+	}
 }
