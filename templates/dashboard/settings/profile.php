@@ -68,7 +68,7 @@ $public_display = array_unique( $public_display );
 					   <?php
 							echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' );
 						?>
-						 
+
 					</span>
 				</button>
 			</div>
@@ -88,7 +88,7 @@ $public_display = array_unique( $public_display );
 			<div class="up-arrow">
 				<i></i>
 			</div>
-			
+
 			<span class="tutor_pp_uploader profile-uploader">
 				<i class="profile-upload-icon ttr-image-filled"></i> <?php esc_html_e( 'Upload Photo', 'tutor' ); ?>
 			</span>
@@ -104,11 +104,11 @@ $public_display = array_unique( $public_display );
 		<?php
 		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo wp_kses_post('<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">');
+			echo wp_kses_post( '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">' );
 			foreach ( $errors as $error_key => $error_value ) {
-				echo wp_kses_post("<li>{$error_value}</li>");
+				echo wp_kses_post( "<li>{$error_value}</li>" );
 			}
-			echo wp_kses_post('</ul></div>');
+			echo wp_kses_post( '</ul></div>' );
 		}
 		?>
 
@@ -129,7 +129,7 @@ $public_display = array_unique( $public_display );
 				</label>
 			</div>
 		</div>
-		
+
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
 				<label>
@@ -141,7 +141,7 @@ $public_display = array_unique( $public_display );
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
 				<label>
 					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
-					<input class="tutor-form-control" type="tel" name="phone_number" value="<?php esc_attr_e( get_user_meta( $user->ID, 'phone_number', true ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
+					<input class="tutor-form-control" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_number" value="<?php esc_html_e( filter_var( get_user_meta( $user->ID, 'phone_number', true ), FILTER_SANITIZE_NUMBER_INT ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
 				</label>
 			</div>
 		</div>
@@ -173,7 +173,7 @@ $public_display = array_unique( $public_display );
 						<?php
 						foreach ( $public_display as $id => $item ) {
 							?>
-									<option <?php selected( $user->display_name, $item ); ?>><?php esc_html_e($item); ?></option>
+									<option <?php selected( $user->display_name, $item ); ?>><?php esc_html_e( $item ); ?></option>
 								<?php
 						}
 						?>
@@ -182,7 +182,7 @@ $public_display = array_unique( $public_display );
 				<p>
 					<small>
 						<?php esc_html_e( 'The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor' ); ?>
-					</small> 
+					</small>
 				</p>
 			</div>
 		</div>
@@ -200,3 +200,6 @@ $public_display = array_unique( $public_display );
 
 	<?php do_action( 'tutor_profile_edit_form_after' ); ?>
 </div>
+<style>
+	.tutor-form-control.invalid{border-color: red;}
+</style>

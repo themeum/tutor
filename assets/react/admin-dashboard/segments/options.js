@@ -131,20 +131,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	const checkNumberFieldsOnSubmit = (inputFields) => {
 		inputFields.forEach((numberField) => {
 			// console.log(numberField);
-			/* let pageNeedsValidation = numberField.closest('.tutor-option-nav-page');
-			let invalidLabel = numberField && numberField.parentNode.parentNode.querySelector('h5').innerText;
-			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('h2').innerText;
+		})
+	}
 
-			let invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
-			if (false === validateEmail(numberField.value)) {
-				numberField.style.borderColor = 'red';
-				numberField.focus();
-				tutor_toast('Warning', invalidMessage, 'error');
-			} else {
-				formSubmit = true;
-			} */
-		});
-	};
+
 
 	const inputEmailFields = document.querySelectorAll('[type="email"]');
 	const inputNumberFields = document.querySelectorAll('[type="number"]');
@@ -160,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		var button = $('#save_tutor_option');
 		var $form = $(this);
 		var data = $form.serializeObject();
-		// console.log(data);
 		if (typeof inputNumberFields !== 'undefined') {
 			checkNumberFieldsOnSubmit(inputNumberFields);
 		}
