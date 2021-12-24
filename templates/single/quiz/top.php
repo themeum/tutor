@@ -144,7 +144,7 @@ do_action('tutor_quiz/single/before/top');
 										<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
 											<?php esc_html_e('Cancel', 'tutor'); ?>
 										</button>
-										<a class="tutor-btn tutor-list-ajax-action" href="<?php echo $skip_url; ?>">
+										<a class="tutor-btn" href="<?php echo $skip_url; ?>">
 											<?php esc_html_e('Yes, Skip This', 'tutor'); ?>
 										</a>
 									</div>
