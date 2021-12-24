@@ -15,7 +15,7 @@ const tutorIconsV2 = {
 // Tutor v2 icons
 const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
 	var $ = window.jQuery;
 	const { __ } = wp.i18n;
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		// );
 		let image_delete = image_upload_wrap.querySelector('.delete-btn');
 
-		image_uploader[i].onclick = function (e) {
+		image_uploader[i].onclick = function(e) {
 			e.preventDefault();
 
 			var image_frame = wp.media({
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				upload_previewer.src = image_input.value = image_url;
 			}); */
 
-			image_frame.on('insert', function (selection) {
+			image_frame.on('insert', function(selection) {
 				var state = image_frame.state();
 				selection = selection || state.get('selection');
 				if (!selection) return;
@@ -76,29 +76,24 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 		};
 
-		image_delete.onclick = function () {
+		image_delete.onclick = function() {
 			input_file.value = '';
 			email_title_logo.src = '';
 		};
 	}
 
-
-
-
 	const validateEmail = (email) => {
 		const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(String(email).toLowerCase());
-	}
+	};
 
-
-	$(window).on('click', function (e) {
+	$(window).on('click', function(e) {
 		$('.tutor-notification, .search_result').removeClass('show');
 	});
 
-	$('.tutor-notification-close').click(function (e) {
+	$('.tutor-notification-close').click(function(e) {
 		$('.tutor-notification').removeClass('show');
 	});
-
 
 	var formSubmit = false;
 	const checkEmailFields = (inputFields) => {
@@ -112,9 +107,9 @@ document.addEventListener('DOMContentLoaded', function () {
 					emailField.style.borderColor = '#ddd';
 					formSubmit = true;
 				}
-			}
-		})
-	}
+			};
+		});
+	};
 
 	const checkEmailFieldsOnSubmit = (inputFields) => {
 		inputFields.forEach((emailField) => {
@@ -130,25 +125,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			} else {
 				formSubmit = true;
 			}
-		})
-	}
-
+		});
+	};
 
 	const checkNumberFieldsOnSubmit = (inputFields) => {
 		inputFields.forEach((numberField) => {
-			console.log(numberField);
-			/* let pageNeedsValidation = numberField.closest('.tutor-option-nav-page');
-			let invalidLabel = numberField && numberField.parentNode.parentNode.querySelector('h5').innerText;
-			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('h2').innerText;
-
-			let invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
-			if (false === validateEmail(numberField.value)) {
-				numberField.style.borderColor = 'red';
-				numberField.focus();
-				tutor_toast('Warning', invalidMessage, 'error');
-			} else {
-				formSubmit = true;
-			} */
+			// console.log(numberField);
 		})
 	}
 
@@ -158,35 +140,33 @@ document.addEventListener('DOMContentLoaded', function () {
 	const inputNumberFields = document.querySelectorAll('[type="number"]');
 	checkEmailFields(inputEmailFields);
 
-
-	$('#save_tutor_option').click(function (e) {
+	$('#save_tutor_option').click(function(e) {
 		e.preventDefault();
 		$('#tutor-option-form').submit();
 	});
 
-	$('#tutor-option-form').submit(function (e) {
+	$('#tutor-option-form').submit(function(e) {
 		e.preventDefault();
 		var button = $('#save_tutor_option');
 		var $form = $(this);
 		var data = $form.serializeObject();
-		console.log(data);
 		if (typeof inputNumberFields !== 'undefined') {
 			checkNumberFieldsOnSubmit(inputNumberFields);
 		}
 		if (typeof inputEmailFields !== 'undefined') {
 			checkEmailFieldsOnSubmit(inputEmailFields);
 		}
-		
+
 		if (true === formSubmit) {
 			if (!e.detail || e.detail == 1) {
 				$.ajax({
 					url: window._tutorobject.ajaxurl,
 					type: 'POST',
 					data: data,
-					beforeSend: function () {
+					beforeSend: function() {
 						button.addClass('tutor-updating-message');
 					},
-					success: function (resp) {
+					success: function(resp) {
 						const { data = {}, success } = resp || {};
 						const { message = __('Something Went Wrong!', 'tutor') } = data;
 
@@ -199,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 						tutor_toast('Error!', message, 'error');
 					},
-					complete: function () {
+					complete: function() {
 						button.removeClass('tutor-updating-message');
 					},
 				});
@@ -238,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		return output;
 	}
 
-	$('#search_settings').on('input', function (e) {
+	$('#search_settings').on('input', function(e) {
 		e.preventDefault();
 
 		if (e.target.value) {
@@ -251,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					keyword: searchKey,
 				},
 				// beforeSend: function () {},
-				success: function (data) {
+				success: function(data) {
 					// console.log(data.data);
 					// return false;
 					var output = '',
@@ -266,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						field_key = '',
 						result = data.data.fields;
 
-					Object.values(result).forEach(function (item, index, arr) {
+					Object.values(result).forEach(function(item, index, arr) {
 						item_text = item.label;
 						section_slug = item.section_slug;
 						section_label = item.section_label;
@@ -279,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						if (matchedText) {
 							wrapped_item = item_text.replace(
 								searchKeyRegex,
-								`<span style='color: #212327; font-weight:500'>${matchedText}</span>`
+								`<span style='color: #212327; font-weight:500'>${matchedText}</span>`,
 							);
 
 							output += view_item(wrapped_item, section_slug, section_label, block_label, field_key);
@@ -295,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					output = '';
 					// console.log("working");
 				},
-				complete: function () {
+				complete: function() {
 					// Active navigation element
 					navigationTrigger();
 				},
@@ -317,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			link.addEventListener('click', (e) => {
 				const dataTab = e.target.closest('[data-tab]').dataset.tab;
 				const dataKey = e.target.closest('[data-key]').dataset.key;
-				console.log('clicked search');
+				// console.log('clicked search');
 				if (dataTab) {
 					document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title;
 					// remove active from other buttons
@@ -363,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (scrollTargetEl) {
 			targetEl.classList.add('isHighlighted');
 			setTimeout(() => {
-				targetEl.classList.remove("isHighlighted");
+				targetEl.classList.remove('isHighlighted');
 			}, 6000);
 
 			scrollTargetEl.scrollIntoView({
@@ -380,31 +360,31 @@ document.addEventListener('DOMContentLoaded', function () {
 	!exporter
 		? 0
 		: exporter.addEventListener('click', (e) => {
-			e.preventDefault();
-			fetch(_tutorobject.ajaxurl, {
-				method: 'POST',
-				credentials: 'same-origin',
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'Cache-Control': 'no-cache',
-				},
-				body: new URLSearchParams({
-					action: 'tutor_export_settings',
-				}),
-			})
-				.then((response) => response.json())
-				.then((response) => {
-					const file = new Blob([JSON.stringify(response)], {
-						type: 'application/json',
-					});
-
-					let url = URL.createObjectURL(file);
-					let element = document.createElement('a');
-					element.setAttribute('href', url);
-					element.setAttribute('download', 'tutor_options');
-					element.click();
-					document.body.removeChild(element);
+				e.preventDefault();
+				fetch(_tutorobject.ajaxurl, {
+					method: 'POST',
+					credentials: 'same-origin',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Cache-Control': 'no-cache',
+					},
+					body: new URLSearchParams({
+						action: 'tutor_export_settings',
+					}),
 				})
-				.catch((err) => console.log(err));
-		});
+					.then((response) => response.json())
+					.then((response) => {
+						const file = new Blob([JSON.stringify(response)], {
+							type: 'application/json',
+						});
+
+						let url = URL.createObjectURL(file);
+						let element = document.createElement('a');
+						element.setAttribute('href', url);
+						element.setAttribute('download', 'tutor_options');
+						element.click();
+						document.body.removeChild(element);
+					})
+					.catch((err) => console.log(err));
+		  });
 });

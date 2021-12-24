@@ -11,8 +11,6 @@ const otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-optio
 const otherColorsExpanded = document.querySelector('.other_colors.expanded');
 const designNav = document.querySelectorAll('.tutor-option-nav-item');
 
-
-
 readyState_complete(() => {
 	if (typeof otherColorsPreview === 'function') {
 		otherColorsPreview();
@@ -24,10 +22,10 @@ readyState_complete(() => {
 				if ('design' === item.children[0].dataset.tab) {
 					otherColorsPreview();
 				}
-			})
-		}
-	})
-})
+			});
+		};
+	});
+});
 
 const otherColorsPreview = () => {
 	let itemsHeight = (initHeight = 0);
@@ -64,16 +62,15 @@ const otherColorsPreview = () => {
 // Color PRESET Slecetion (color inputs)
 if (colorPresetInputs) {
 	colorPresetInputs.forEach((preset) => {
-
-		const presetItem = preset.parentElement.querySelector(".preset-item");
-		const presetColors = presetItem.querySelectorAll(".header span");
-		const presetInput = preset.closest(".color-preset-input");
+		const presetItem = preset.parentElement.querySelector('.preset-item');
+		const presetColors = presetItem.querySelectorAll('.header span');
+		const presetInput = preset.closest('.color-preset-input');
 		// listening preset input events
 		if (true === preset.checked) {
-			presetInput.classList.add("is-checked");
+			presetInput.classList.add('is-checked');
 		}
-		preset.addEventListener("input", (e) => {
-			presetInput.classList.add("is-checked");
+		preset.addEventListener('input', (e) => {
+			presetInput.classList.add('is-checked');
 			presetColors.forEach((color) => {
 				let presetKey = color.dataset.preset;
 				let presetColor = color.dataset.color;
@@ -102,11 +99,9 @@ const updateCustomPreset = (picker) => {
 	const customPresetEl = document.querySelector("label.color-preset-input[for='custom']");
 
 	// listening picker input events
-	picker.addEventListener("input", function (e) {
-		const presetColors =
-			customPresetEl && customPresetEl.querySelectorAll(".header span");
-		const presetItem =
-			customPresetEl && customPresetEl.querySelector('input[type="radio"]');
+	picker.addEventListener('input', function(e) {
+		const presetColors = customPresetEl && customPresetEl.querySelectorAll('.header span');
+		const presetItem = customPresetEl && customPresetEl.querySelector('input[type="radio"]');
 		const pickerCode = picker.nextElementSibling;
 		pickerCode.innerText = picker.value;
 
