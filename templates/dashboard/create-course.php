@@ -152,7 +152,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 					<!--.tutor-course-builder-section-title-->
 					<div class="tutor-course-builder-section-content">
 						<div class="tutor-mb-30">
-							<label class="tutor-course-field-label"><?php _e( 'Course Title', 'tutor' ); ?></label>
+							<label class="tutor-course-field-label tutor-font-size-16 color-text-primary"><?php _e( 'Course Title', 'tutor' ); ?></label>
 							<div class="tooltip-wrap tutor-bs-d-block">
 								<span class="tooltip-txt tooltip-right tutor-mt-10">
 									<?php _e( '350', 'tutor' ); ?>
@@ -162,7 +162,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 						</div>
 						
 						<div class="tutor-mb-30">
-							<label class="tutor-course-field-label"><?php _e( 'Description', 'tutor' ); ?></label>
+							<label class="tutor-course-field-label tutor-font-size-16 color-text-primary"><?php _e( 'About Course', 'tutor' ); ?></label>
 							<div class="tutor-input-group tutor-mb-15">
 								<?php
 									$editor_settings = array(
