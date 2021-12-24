@@ -8878,4 +8878,93 @@ class Utils
 		$quiz_duration_in_seconds = $time_unit_seconds * $time_value;
 		return (int) $quiz_duration_in_seconds;
 	}
+
+	/**
+	 * Get all contents (lesosn, assignment, zoom, quiz etc) that belong to this topic
+	 *
+	 * @param int $topic_id | topic id.
+	 *
+	 * @return array of objects on success | false on failure
+	 * 
+	 * @since v2.0.0
+	 */
+	public function get_contents_by_topic( int $topic_id ) {
+		global $wpdb;
+		$topic_id = sanitize_text_field( $topic_id ); 
+		$contents = $wpdb->get_results( $wpdb->prepare(
+			" SELECT content.ID, content.post_title, content.post_type
+				FROM {$wpdb->posts} AS topics 
+					INNER JOIN {$wpdb->posts} AS content 
+						ON content.post_parent = topics.ID 
+				WHERE topics.post_type = 'topics'
+					AND topics.ID = %d 
+					AND content.post_status = %s
+			",
+			$topic_id,
+			'publish'
+		) );
+		return $contents;
+	}
+
+	/**
+	 * Get total number of contents & completed contents that
+	 * belongs to this topic
+	 *
+	 * @param int $topic_id | all contents will be checked that belong to this topic.
+	 *
+	 * @return array counted number of contents & completed contents number.
+	 *
+	 * @since v2.0.0
+	 */
+	public function count_completed_contents_by_topic( int $topic_id ) : array {
+		$topic_id 	= sanitize_text_field( $topic_id );
+		$contents 	= $this->get_contents_by_topic( $topic_id );
+		$user_id 	= get_current_user_id();
+		$completed 	= 0;
+
+		$lesson_post_type 		= 'lesson';
+		$quiz_post_type 		= 'tutor_quiz';
+		$assignment_post_type 	= 'tutor_assignments';
+		$zoom_lesson_post_type 	= 'tutor_zoom_meeting';
+
+		if ( $contents ) {
+			foreach ( $contents as $content ) {
+				switch ($content->post_type) {
+					case $lesson_post_type:
+						$is_lesson_completed = $this->is_completed_lesson( $content->ID , $user_id );
+						if ( $is_lesson_completed ) {
+							$completed++;
+						}
+						break;
+					case $quiz_post_type:
+						$has_attempt = $this->has_attempted_quiz( $user_id, $content->ID );
+						if ( $has_attempt ) {
+							$completed++;
+						}
+						break;
+					case $assignment_post_type:
+						$is_assignment_completed = $this->is_assignment_submitted( $content->ID , $user_id );
+						if ( $is_assignment_completed ) {
+							$completed++;
+						}
+						break;
+					case $zoom_lesson_post_type:
+						if ( \class_exists( '\TUTOR_ZOOM\Zoom' ) ) {
+							$is_zoom_lesson_completed = \TUTOR_ZOOM\Zoom::is_zoom_lesson_done( '', $content->ID, $user_id );
+							if ( $is_zoom_lesson_completed ) {
+								$completed++;
+							}
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		return array(
+			'contents' 	=> is_array( $contents ) ? count( $contents ) : 0,
+			'completed'	=> $completed
+		);
+	}
+
 }
