@@ -3453,22 +3453,9 @@ class Utils
 				?>
 			</div>
 			<?php
-<<<<<<< HEAD
-				if($show_avg_rate) {
-					?>
-					<span class="tutor-rating-text tutor-text-regular-body tutor-color-text-subsued">
-						<?php
-							echo $current_rating;
-							if(!($total_count===null)) {
-								echo '&nbsp;('.$total_count.' '.($total_count>1 ? __('Ratings', 'tutor') : __('Rating', 'tutor')).')';
-							}
-						?>
-					</span>
-=======
 			if ($show_avg_rate) {
 			?>
 				<span class="tutor-rating-text tutor-text-regular-body tutor-color-text-subsued tutor-pl-0 tutor-ml-10">
->>>>>>> 0b2735b5ba09b1276e96a7a38f1171f6afa2da5f
 					<?php
 					echo $current_rating;
 					if (!($total_count === null)) {
