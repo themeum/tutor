@@ -53,10 +53,9 @@ window.selectSearchField = (selectElement) => {
                                         selectedLabel.innerText = e.target.innerText;
                                         selectedLabel.dataset.value = option.value;
                                         element.value = option.value;
-
-                                        let settings_button = document.getElementById('save_tutor_option');
-                                        if(settings_button) {
-                                            settings_button.disabled = false;
+                                        const save_tutor_option = document.getElementById('save_tutor_option');
+                                        if (save_tutor_option) {
+                                            save_tutor_option.disabled = false;
                                         }
                                     }
                                 });
