@@ -1,47 +1,47 @@
-.tutor-dashboard-qna-vew-as{
-    &.current-view-instructor{
-        span{
-            &:nth-of-type(3){
-                font-style: normal;
-                font-weight: 500;
-                font-size: 16px;
-                color: #41454F;
-            }
+.tutor-dashboard-qna-vew-as {
+	&.current-view-instructor {
+		span {
+			&:nth-of-type(3) {
+				font-style: normal;
+				font-weight: 500;
+				font-size: 16px;
+				color: #41454f;
+			}
 
-            &:nth-of-type(2){
-                background: var(--tutor-success) !important;
-                background-color: var(--tutor-success) !important;
-            }
+			&:nth-of-type(2) {
+				// background: var(--tutor-success) !important;
+				// background-color: var(--tutor-success) !important;
+			}
 
-            &:nth-of-type(1){
-                font-style: normal;
-                font-weight: normal;
-                font-size: 16px;
-                color: #C0C3CB;
-            }
-        }
-    }
+			&:nth-of-type(1) {
+				font-style: normal;
+				font-weight: normal;
+				font-size: 16px;
+				color: #c0c3cb;
+			}
+		}
+	}
 
-    &.current-view-student {
-        span{
-            &:nth-of-type(1){
-                font-style: normal;
-                font-weight: 500;
-                font-size: 16px;
-                color: #41454F;
-            }
+	&.current-view-student {
+		span {
+			&:nth-of-type(1) {
+				font-style: normal;
+				font-weight: 500;
+				font-size: 16px;
+				color: #41454f;
+			}
 
-            &:nth-of-type(2){
-                background: var(--tutor-success) !important;
-                background-color: var(--tutor-success) !important;
-            }
+			&:nth-of-type(2) {
+				background: var(--tutor-success) !important;
+				background-color: var(--tutor-success) !important;
+			}
 
-            &:nth-of-type(3){
-                font-style: normal;
-                font-weight: normal;
-                font-size: 16px;
-                color: #C0C3CB;
-            }
-        }
-    }
+			&:nth-of-type(3) {
+				font-style: normal;
+				font-weight: normal;
+				font-size: 16px;
+				color: #c0c3cb;
+			}
+		}
+	}
 }
