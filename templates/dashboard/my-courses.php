@@ -38,6 +38,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
     <?php
         $status = $active_tab=='my-courses' ? array('publish') : array('pending', 'draft');
         $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
+        $placeholder_img = tutor()->url . 'assets/images/placeholder.jpg';
 
         if (is_array($my_courses) && count($my_courses)){
             global $post;
@@ -53,10 +54,10 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                     $row_id = 'tutor-dashboard-my-course-' . $post->ID;
                     ?>
                     
-                    <div id="<?php echo $row_id; ?>" class="tutor-course-listing-item tutor-course-listing-item-sm tutor-mycourse-<?php the_ID(); ?>">
+                    <div id="<?php echo $row_id; ?>" class="tutor-course-listing-item tutor-course-listing-item-sm tutor-mycourses-card tutor-mycourse-<?php the_ID(); ?>">
                         <div class="tutor-course-listing-item-head tutor-bs-d-flex">
                             <!-- <img src="<?php echo esc_url($tutor_course_img); ?>" alt="Course Thumbnail"> -->
-                            <div class="course-listing-thumbnail" style="background-image:url(<?php echo esc_url($tutor_course_img); ?>)"></div>
+                            <div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>)"></div>
                         </div>
                         <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-18">
                             <div class="list-item-rating tutor-bs-d-flex tutor-mb-10">
@@ -67,21 +68,21 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                             <div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary">
                                 <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
                             </div>
-                            <div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-bs-justify-content-between tutor-mt-10">
+                            <div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-mt-10">
                                 <?php
-                                $course_duration = get_tutor_course_duration_context( $post->ID, true );
+                                $course_duration = get_tutor_course_duration_context();
                                 $course_students = tutor_utils()->count_enrolled_users_by_course();
                                 ?>
                                 <?php
-                                if ( ! empty( $course_duration ) ) { ?>
+                                if(!empty($course_duration)) { ?>
                                     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                                    <span class="tutor-color-text-hints"><?php esc_html_e( 'Duration: ', 'tutor' ); ?></span><span><?php echo wp_kses_post( $course_duration ); ?></span>
+                                    <span class="meta-icon ttr-clock-filled tutor-color-text-hints"></span><span><?php echo $course_duration; ?></span>
                                     </div>
                                 <?php } ?>
                                 <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
                                     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-                                        <span class="ttr-user-filled tutor-text-dark tutor-font-size-24"></span>
-                                        <span><?php echo esc_html( $course_students ); ?></span>
+                                        <span class="meta-icon ttr-user-filled tutor-color-text-hints"></span>
+                                        <span><?php echo $course_students; ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -92,18 +93,18 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                             <div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
                                 <div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center">
                                     <span class="price text-h6">
-                                        <?php esc_html_e( 'Price:', 'tutor' ) ?> 
+                                        <?php esc_html_e('Price:', 'tutor') ?> 
                                     </span>
                                     <span class="price text-h6 tutor-color-text-primary">
-                                        <?php echo tutor_utils()->tutor_price( tutor_utils()->get_course_price() ); ?>
+                                        <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
                                     </span>
                                 </div>
                                 <div class="list-item-button">
-                                    <a href="<?php echo tutor_utils()->course_edit_link( $post->ID ); ?>" class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                        <i class="ttr-edit-filled tutor-font-size-24"></i>
+                                    <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
+                                        <i class="btn-icon tutor-icon-pencil"></i>
                                     </a>
                                     <i data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                        <i class="ttr-delete-stroke-filled tutor-font-size-24"></i>
+                                        <i class="btn-icon tutor-icon-garbage"></i>
                                     </i>
                                 </div>
                             </div>

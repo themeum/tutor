@@ -52,6 +52,7 @@
 
 	.course-listing-thumbnail {
 		height: 250px;
+		width: 100%;
 	}
 
 	&-head {
@@ -188,6 +189,37 @@
 			}
 		}
 	} // end  .tutor-course-listing-item-grid-4
+
+	.tutor-course-listing-thumbnail {
+		width: 100%;
+		height: 150px;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+	}
+
+	&.tutor-mycourses-card {
+		border: 1px solid #cdcfd5;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		border-radius: 6px;
+		.tutor-course-listing-thumbnail {
+			height: 160px;
+		}
+		.tutor-course-listing-item-head {
+			margin: -1px;
+			border-radius: unset;
+		}
+		.tutor-course-listing-item-body,
+		.tutor-course-listing-item-footer {
+			border-right: none;
+			border-left: none;
+		}
+		.tutor-course-listing-item-footer {
+			border-bottom: none;
+		}
+	}
 } // end  .tutor-course-listing-item
 
 // .tutor-course-listing-* variations demo
