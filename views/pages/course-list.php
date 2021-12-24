@@ -129,7 +129,7 @@ $available_status = array(
 	'pending' => __( 'Pending', 'tutor' ),
 	'trash'   => __( 'Trash', 'tutor' ),
 	'draft'   => __( 'Draft', 'tutor' ),
-	'private' => __( 'Private', 'tutor' )
+	'private' => __( 'Private', 'tutor' ),
 );
 
 ?>
@@ -355,7 +355,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 					<?php else : ?>
 						<tr>
 							<td colspan="100%" class="column-empty-state">
-								<?php tutor_utils()->tutor_empty_state( __( 'No course found', 'tutor' )); ?>
+								<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 							</td>
 						</tr>
 					<?php endif; ?>

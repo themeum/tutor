@@ -4183,7 +4183,7 @@ class Utils
 		$question_clause 	  = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
 		$order_condition	  = ' ORDER BY _question.comment_ID DESC ';
 		$meta_clause 		  = '';
-		$in_question_id_query = '';
+		$in_course_id_query   = '';
 		$qna_types_caluse	  = '';
 		$filter_clause		  = '';
 
@@ -4193,10 +4193,14 @@ class Utils
 		// User query
 		if ($asker_id) {
 			$question_clause .= ' AND _question.user_id=' . $asker_id;
+		} 
+		
+		if(isset($args['course_id'])) {
+			$in_course_id_query .= " AND _question.comment_post_ID=".$args['course_id']." ";
 		} else if (!$this->has_user_role('administrator', $user_id) && current_user_can(tutor()->instructor_role)) {
 			$my_course_ids = $this->get_course_id_by('instructor', $user_id);
 			$in_ids = count($my_course_ids) ? implode(',', $my_course_ids) : '0';
-			$in_question_id_query .= " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
+			$in_course_id_query .= " AND _question.comment_post_ID IN($in_ids) ";
 		}
 
 		// Add more filters to the query
@@ -4245,7 +4249,7 @@ class Utils
 		}
 
 		$columns_select = $count_only ? '_question.comment_ID' :
-			"_question.comment_ID,
+					"_question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
@@ -4275,7 +4279,7 @@ class Utils
 			WHERE  	_question.comment_type = 'tutor_q_and_a'
 					AND _question.comment_parent = 0
 					AND _question.comment_content LIKE %s
-					{$in_question_id_query}
+					{$in_course_id_query}
 					{$question_clause}
 					{$meta_clause}
 					{$qna_types_caluse}
@@ -8962,4 +8966,28 @@ class Utils
 		);
 	}
 
+	/**
+	 * Text message for the list tables that will be visible
+	 * if no record found or filter data not found
+	 *
+	 * @return string | not found text
+	 *
+	 * @since v2.0.0
+	 */
+	public function not_found_text() : string {
+		$course   	= isset( $_GET['course-id'] ) ? true : false;
+		$date     	= isset( $_GET['date'] ) ? true : false;
+		$search 	= isset( $_GET['search'] ) ? true : false;
+		$category 	= isset( $_GET['category'] ) ? true : false;
+		$text = array(
+			'normal'	=> __( 'No Data Available in this Section', 'tutor' ),
+			'filter'	=> __( 'No Data Found from your Search/Filter')
+		);
+
+		if ( $course || $date || $search || $category ) {
+			return $text['filter'];
+		} else {
+			return $text['normal'];
+		}
+	}
 }
