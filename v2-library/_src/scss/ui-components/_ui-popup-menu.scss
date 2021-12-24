@@ -51,7 +51,7 @@
 		}
 	}
 
-	.popup-menu {
+	ul.popup-menu {
 		$width: 170px;
 		$arrow: 6px;
 		$menuBg: $bg-dark-10;
@@ -62,6 +62,8 @@
 		z-index: 99999;
 		top: calc(100% + 8px);
 		min-width: $width;
+		width: max-content;
+		max-width: 350px;
 		// to align right
 		right: -$arrow;
 		right: 0;
