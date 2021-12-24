@@ -6,7 +6,6 @@ window.jQuery(document).ready($=>{
 
         // Prepare answer array
         var quiz_answers = JSON.parse(window.tutor_quiz_context.split('').reverse().join(''));
-        console.log(quiz_answers);
         !Array.isArray(quiz_answers) ? quiz_answers = [] : 0;
 
         // Evaluate result
@@ -165,10 +164,8 @@ window.jQuery(document).ready($=>{
 
      $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
         e.preventDefault();
-
         let counter_el = $('.tutor-quiz-question-counter>span:first-child');
         let current_question = parseInt($(this).closest('[data-question_index]').data('question_index'));
-
         // Show previous quiz if press previous button
         if ($(this).hasClass('tutor-quiz-answer-previous-btn')) {
             $(this).closest('.quiz-attempt-single-question').hide().prev().show();
@@ -259,5 +256,8 @@ window.jQuery(document).ready($=>{
         setTimeout(() => {
             quizSubmitBtn.disabled = true;
         }, 500);
+    });
+    $(".tutor-quiz-submit-btn").click(function() {
+        $("#tutor-answering-quiz").submit();
     });
 });
