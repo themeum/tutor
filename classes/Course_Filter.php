@@ -134,7 +134,6 @@ class Course_Filter{
     }
 
     private function render_terms_hierarchically($terms, $taxonomy) {
-        
         $term_id = $this->get_current_term_id();
 
         foreach($terms as $term){
@@ -146,9 +145,8 @@ class Course_Filter{
                     <label for="<?php echo $term->term_id; ?>">
                         <?php echo $term->name; ?>
                     </label>
-
-                    <?php isset($term->children) ? $this->render_terms_hierarchically($term->children, $taxonomy) : 0; ?>
                 </div>
+                <?php isset($term->children) ? $this->render_terms_hierarchically($term->children, $taxonomy) : 0; ?>
             <?php
         }
     }
