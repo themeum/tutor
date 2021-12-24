@@ -107,7 +107,7 @@
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
                                             <div class="tooltip-wrap">
-                                                <i class=" tutor-font-size-24 <?php echo $is_solved ? 'ttr-mark-cricle tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i>
+                                                <i class=" tutor-font-size-24 <?php echo $is_solved ? 'ttr-mark-cricle tutor-text-success' : 'ttr-tick-circle-outline-filled tutor-color-black-40'; ?>"></i>
                                                 <span class="tooltip-txt tooltip-bottom">
                                                     <?php $is_solved ? _e('Solved', 'tutor') : _e('Unresolved Yet', 'tutor'); ?>
                                                 </span>
@@ -127,7 +127,7 @@
                                                 <!-- ToolTip Action -->
                                                 <div class="tutor-popup-opener">
                                                     <button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $menu_id; ?>">
-                                                        <span class="toggle-icon"></span>
+                                                        <span class="toggle-icon tutor-color-black-30"></span>
                                                     </button>
                                                     <ul id="<?php echo $menu_id; ?>" class="popup-menu">
                                                         <?php if($context!='frontend-dashboard-qna-table-student'): ?>
@@ -142,7 +142,7 @@
                                                             <li class="tutor-qna-badges">
                                                                 <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
                                                                     <span class="ttr-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                                    <span class="text-regular-body tutor-color-text-white" >
+                                                                    <span class="text-regular-body tutor-color-text-white" style="text-align: left;">
                                                                         <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
                                                                     </span>
                                                                 </a>
