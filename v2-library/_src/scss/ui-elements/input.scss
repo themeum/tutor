@@ -368,7 +368,7 @@ input.tutor-form-check-input {
 			}
 		}
 		&:checked ~ .tutor-form-toggle-control {
-			background-color: var(--tutor-success);
+			background-color: var(--tutor-primary);
 			&::before {
 				left: 18px;
 			}
