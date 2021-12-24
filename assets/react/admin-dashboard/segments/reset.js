@@ -132,6 +132,7 @@ const resetConfirmation = () => {
 										itemName = 'tutor_option[' + optionKeys.key + ']';
 										checkElements = elementByName(`${itemName}`);
 										[...checkElements].forEach((elemCheck) => {
+											elemCheck.value = 'on' === optionKeys.default ? 'on' : 'off';
 											elemCheck.nextElementSibling.checked = 'on' === optionKeys.default ? true : false;
 										});
 									});

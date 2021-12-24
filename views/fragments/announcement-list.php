@@ -305,7 +305,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 			<?php else : ?>
 				<tr>
 					<td colspan="100%" class="column-empty-state">
-						<?php tutor_utils()->tutor_empty_state( __( 'No announcement found', 'tutor' ) ); ?>
+						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 					</td>
 				</tr>
 			<?php endif; ?>

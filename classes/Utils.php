@@ -2707,11 +2707,6 @@ class Utils
 			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 		));
 
-		$disable = !get_tutor_option('enable_course_review');
-		if ($disable && isset($nav_items['reviews'])) {
-			unset($nav_items['reviews']);
-		}
-
 		$nav_items = array_merge($nav_items, $instructor_nav_items);
 
 		$new_navs = apply_filters('tutor_dashboard/bottom_nav_items', array(
@@ -4188,7 +4183,7 @@ class Utils
 		$question_clause 	  = $question_id ? ' AND _question.comment_ID=' . $question_id : '';
 		$order_condition	  = ' ORDER BY _question.comment_ID DESC ';
 		$meta_clause 		  = '';
-		$in_question_id_query = '';
+		$in_course_id_query   = '';
 		$qna_types_caluse	  = '';
 		$filter_clause		  = '';
 
@@ -4198,10 +4193,14 @@ class Utils
 		// User query
 		if ($asker_id) {
 			$question_clause .= ' AND _question.user_id=' . $asker_id;
+		} 
+		
+		if(isset($args['course_id'])) {
+			$in_course_id_query .= " AND _question.comment_post_ID=".$args['course_id']." ";
 		} else if (!$this->has_user_role('administrator', $user_id) && current_user_can(tutor()->instructor_role)) {
 			$my_course_ids = $this->get_course_id_by('instructor', $user_id);
 			$in_ids = count($my_course_ids) ? implode(',', $my_course_ids) : '0';
-			$in_question_id_query .= " AND {$wpdb->comments}.comment_post_ID IN($in_ids) ";
+			$in_course_id_query .= " AND _question.comment_post_ID IN($in_ids) ";
 		}
 
 		// Add more filters to the query
@@ -4250,7 +4249,7 @@ class Utils
 		}
 
 		$columns_select = $count_only ? '_question.comment_ID' :
-			"_question.comment_ID,
+					"_question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
@@ -4280,7 +4279,7 @@ class Utils
 			WHERE  	_question.comment_type = 'tutor_q_and_a'
 					AND _question.comment_parent = 0
 					AND _question.comment_content LIKE %s
-					{$in_question_id_query}
+					{$in_course_id_query}
 					{$question_clause}
 					{$meta_clause}
 					{$qna_types_caluse}
@@ -8591,6 +8590,7 @@ class Utils
 			<div class="tutor-text-regular-h5  tutor-color-text-subsued tutor-mt-20 tutor-text-center">
 				<?php echo sprintf(esc_html_x('%s', $page_title, 'tutor'), $page_title); ?>
 			</div>
+		</div>
 	<?php
 	}
 
@@ -8876,5 +8876,118 @@ class Utils
 		}
 		$quiz_duration_in_seconds = $time_unit_seconds * $time_value;
 		return (int) $quiz_duration_in_seconds;
+	}
+
+	/**
+	 * Get all contents (lesosn, assignment, zoom, quiz etc) that belong to this topic
+	 *
+	 * @param int $topic_id | topic id.
+	 *
+	 * @return array of objects on success | false on failure
+	 * 
+	 * @since v2.0.0
+	 */
+	public function get_contents_by_topic( int $topic_id ) {
+		global $wpdb;
+		$topic_id = sanitize_text_field( $topic_id ); 
+		$contents = $wpdb->get_results( $wpdb->prepare(
+			" SELECT content.ID, content.post_title, content.post_type
+				FROM {$wpdb->posts} AS topics 
+					INNER JOIN {$wpdb->posts} AS content 
+						ON content.post_parent = topics.ID 
+				WHERE topics.post_type = 'topics'
+					AND topics.ID = %d 
+					AND content.post_status = %s
+			",
+			$topic_id,
+			'publish'
+		) );
+		return $contents;
+	}
+
+	/**
+	 * Get total number of contents & completed contents that
+	 * belongs to this topic
+	 *
+	 * @param int $topic_id | all contents will be checked that belong to this topic.
+	 *
+	 * @return array counted number of contents & completed contents number.
+	 *
+	 * @since v2.0.0
+	 */
+	public function count_completed_contents_by_topic( int $topic_id ) : array {
+		$topic_id 	= sanitize_text_field( $topic_id );
+		$contents 	= $this->get_contents_by_topic( $topic_id );
+		$user_id 	= get_current_user_id();
+		$completed 	= 0;
+
+		$lesson_post_type 		= 'lesson';
+		$quiz_post_type 		= 'tutor_quiz';
+		$assignment_post_type 	= 'tutor_assignments';
+		$zoom_lesson_post_type 	= 'tutor_zoom_meeting';
+
+		if ( $contents ) {
+			foreach ( $contents as $content ) {
+				switch ($content->post_type) {
+					case $lesson_post_type:
+						$is_lesson_completed = $this->is_completed_lesson( $content->ID , $user_id );
+						if ( $is_lesson_completed ) {
+							$completed++;
+						}
+						break;
+					case $quiz_post_type:
+						$has_attempt = $this->has_attempted_quiz( $user_id, $content->ID );
+						if ( $has_attempt ) {
+							$completed++;
+						}
+						break;
+					case $assignment_post_type:
+						$is_assignment_completed = $this->is_assignment_submitted( $content->ID , $user_id );
+						if ( $is_assignment_completed ) {
+							$completed++;
+						}
+						break;
+					case $zoom_lesson_post_type:
+						if ( \class_exists( '\TUTOR_ZOOM\Zoom' ) ) {
+							$is_zoom_lesson_completed = \TUTOR_ZOOM\Zoom::is_zoom_lesson_done( '', $content->ID, $user_id );
+							if ( $is_zoom_lesson_completed ) {
+								$completed++;
+							}
+						}
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		return array(
+			'contents' 	=> is_array( $contents ) ? count( $contents ) : 0,
+			'completed'	=> $completed
+		);
+	}
+
+	/**
+	 * Text message for the list tables that will be visible
+	 * if no record found or filter data not found
+	 *
+	 * @return string | not found text
+	 *
+	 * @since v2.0.0
+	 */
+	public function not_found_text() : string {
+		$course   	= isset( $_GET['course-id'] ) ? true : false;
+		$date     	= isset( $_GET['date'] ) ? true : false;
+		$search 	= isset( $_GET['search'] ) ? true : false;
+		$category 	= isset( $_GET['category'] ) ? true : false;
+		$text = array(
+			'normal'	=> __( 'No Data Available in this Section', 'tutor' ),
+			'filter'	=> __( 'No Data Found from your Search/Filter')
+		);
+
+		if ( $course || $date || $search || $category ) {
+			return $text['filter'];
+		} else {
+			return $text['normal'];
+		}
 	}
 }

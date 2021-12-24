@@ -26,7 +26,7 @@ $reviews = tutor_utils()->get_reviews_by_instructor(get_current_user_id(), $offs
 $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
 ?>
     <div class="tutor-dashboard-content-inner">
-        <h3><?php _e('Reviews', 'tutor'); ?></h3>
+        <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e('Reviews', 'tutor'); ?></div>
 		<?php if (current_user_can(tutor()->instructor_role)): ?>
             <div class="tutor-dashboard-inline-links">
                 <ul>

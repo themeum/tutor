@@ -47,6 +47,7 @@
 
 	input.tutor-form-control {
 		padding: 0 15px;
+		&.tutor-w-90,
 		&[type='number'] {
 			padding: 0px 5px;
 			text-align: center;

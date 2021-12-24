@@ -21,7 +21,7 @@ $option_value      = is_array( $option_value ) ? $option_value[0] : $option_valu
 		<label class="tutor-form-toggle">
 			<?php printf( "<span class='label-before'>%s</span>", esc_attr( $field_label_title ) ); ?>
 			<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
-			<input type="checkbox" value="on" <?php checked( esc_attr( $option_value ), 'on' ); ?> class="tutor-form-toggle-input">
+			<input type="checkbox" <?php checked( esc_attr( $option_value ), 'on' ); ?> class="tutor-form-toggle-input">
 			<span class="tutor-form-toggle-control"></span>
 		</label>
 	</div>

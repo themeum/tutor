@@ -150,6 +150,14 @@ ul.tutor-setup-content li.active {
 	letter-spacing: -0.08px;
 	color: var(--primary-text);
 	position: relative;
+    // list-style: none;
+    // font-size: 14px;
+    // letter-spacing: -0.08px;
+    // color: var(--primary-text);
+    // position: relative;
+    // display: flex;
+    // flex-direction: column;
+    // row-gap: 50px;
 }
 
 .tutor-setup-title:before {
@@ -279,7 +287,7 @@ ul.tutor-setup-content li.active {
 
 .tutor-setup-content-heading.body {
 	padding-top: 37px;
-
+	min-height: 280px;
 	& > div > div:first-child {
 		width: 160px;
 	}
