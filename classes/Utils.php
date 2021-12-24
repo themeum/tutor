@@ -2707,11 +2707,6 @@ class Utils
 			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role),
 		));
 
-		$disable = !get_tutor_option('enable_course_review');
-		if ($disable && isset($nav_items['reviews'])) {
-			unset($nav_items['reviews']);
-		}
-
 		$nav_items = array_merge($nav_items, $instructor_nav_items);
 
 		$new_navs = apply_filters('tutor_dashboard/bottom_nav_items', array(
