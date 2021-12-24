@@ -152,7 +152,18 @@ do_action( 'tutor_dashboard/before/wrap' );
 				<ul class="tutor-dashboard-permalinks">
 					<?php
 					$dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
+					// get reviews settings value.
+					$disable = ! get_tutor_option( 'enable_course_review' );
+
 					foreach ( $dashboard_pages as $dashboard_key => $dashboard_page ) {
+						/**
+						 * If not enable from settings then quit
+						 *
+						 *  @since v2.0.0
+						 */
+						if ( $disable && 'reviews' === $dashboard_key ) {
+							continue;
+						}
 						$menu_title = $dashboard_page;
 						$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $dashboard_key );
 						$separator  = false;

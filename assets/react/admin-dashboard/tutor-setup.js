@@ -264,6 +264,14 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Select Option
 	* ---------------------- */
+	$(document).on('click', function(e) {
+		if(!e.target.closest('.grade-calculation')) {
+			if ($(".grade-calculation .options-container") && $(".grade-calculation .options-container").hasClass('active')) {
+				$(".grade-calculation .options-container").removeClass('active');
+			}
+		}
+	});
+	
 	$(".selected").on("click", function () {
 		$(".options-container").toggleClass("active");
 	});
