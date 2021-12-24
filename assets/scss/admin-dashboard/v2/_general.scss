@@ -809,6 +809,9 @@
 		> [class^='tutor-form-']:not(:last-child) {
 			margin-right: 15px;
 		}
+		> [class^='tutor-form-']:last-child {
+			margin-left: 15px;
+		}
 	}
 	.type-toggle-grid {
 		display: grid;
