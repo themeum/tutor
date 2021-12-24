@@ -17,11 +17,11 @@ $user = wp_get_current_user();
 		<?php
 			tutor_load_template( 'dashboard.settings.nav-bar', array( 'active_setting_nav' => 'social-profile' ) );
 		?>
-		
+
 		<h3><?php esc_html_e( 'Social Profile Link', 'tutor' ); ?></h3>
 	</div>
 
-	<form action="" method="post" enctype="multipart/form-data">
+	<form id="user_social_form" action="" method="post" enctype="multipart/form-data">
 		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 		<input type="hidden" value="tutor_social_profile" name="tutor_action" />
 		<?php
@@ -31,16 +31,16 @@ $user = wp_get_current_user();
 			$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 		foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 			?>
-					<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-30 tutor-social-field">
-						<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
-							<i class="<?php echo esc_html( $social_icon['icon_classes'] ); ?>"></i>
+						<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-30 tutor-social-field">
+							<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
+								<i class="<?php echo esc_html( $social_icon['icon_classes'] ); ?>"></i>
 						<?php echo esc_html( $social_icon['label'] ); ?>
+							</div>
+							<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-6">
+								<input class="tutor-form-control" type="url" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_url( get_user_meta( $user->ID, $key, true ) ); ?>" placeholder="<?php echo esc_html( $social_icon['placeholder'] ); ?>">
+							</div>
 						</div>
-						<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-6">
-							<input class="tutor-form-control" type="url" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_html( get_user_meta( $user->ID, $key, true ) ); ?>" placeholder="<?php echo esc_html( $social_icon['placeholder'] ); ?>">
-						</div>
-					</div>
-		<?php
+				<?php
 		}
 		?>
 
