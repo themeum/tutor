@@ -33,6 +33,9 @@
 .tutor-course-listing-item {
 	background: $bg-white;
 	// display: grid;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	a {
 		text-decoration: none;
 		color: inherit;
@@ -179,6 +182,7 @@
 		}
 	}
 
+	// .tutor-course-listing-item-sm
 	&-sm {
 		.list-item-meta .meta-icon {
 			font-size: 20px;
@@ -201,10 +205,12 @@
 	.tutor-course-listing-item-head {
 		a.tutor-course-listing-thumb-permalink {
 			display: block;
-			width: max-content;
+			width: 100%;
+			height: 100%;
 		}
 	}
 
+	&,
 	&.tutor-mycourses-card {
 		border: 1px solid #cdcfd5;
 		display: flex;
