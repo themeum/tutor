@@ -8,7 +8,7 @@ global $post;
 $wishlists = tutor_utils()->get_wishlist(); 
 ?>
 
-<h3><?php _e('Wishlist', 'tutor'); ?></h3>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e('Wishlist', 'tutor'); ?></div>
 <div class="tutor-dashboard-content-inner my-wishlist">
 	<?php if (is_array($wishlists) && count($wishlists)): ?>
 		<div class="tutor-bs-row">

@@ -28,7 +28,7 @@ tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-new.php', a
 ), false);
 
 // Previous qna list
-$questions = tutor_utils()->get_qa_questions(0, 20);
+$questions = tutor_utils()->get_qa_questions(0, 20, $search_term = '', $question_id = null, $meta_query = null, $asker_id = null, $question_status = null, $count_only = false, $args = array('course_id' => get_the_ID()));
 foreach ($questions as $question) {
     tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
         'question_id' => $question->comment_ID,
