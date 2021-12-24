@@ -203,7 +203,7 @@
                 ?>
                 <tr>
 					<td colspan="100%" class="column-empty-state">
-						<?php tutor_utils()->tutor_empty_state( __( 'No Q&A found', 'tutor' ) ); ?>
+						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 					</td>
                 </tr>
                 <?php

@@ -209,7 +209,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
                 ?>
                 <tr>
 					<td colspan="100%" class="column-empty-state">
-					<?php tutor_utils()->tutor_empty_state( __( 'No attempt found', 'tutor' ) ); ?>
+					<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 					</td>
 				</tr>
 				<?php
