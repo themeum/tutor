@@ -198,6 +198,13 @@
 		background-position: center;
 	}
 
+	.tutor-course-listing-item-head {
+		a.tutor-course-listing-thumb-permalink {
+			display: block;
+			width: max-content;
+		}
+	}
+
 	&.tutor-mycourses-card {
 		border: 1px solid #cdcfd5;
 		display: flex;
@@ -209,7 +216,7 @@
 		}
 		.tutor-course-listing-item-head {
 			margin: -1px;
-			border-radius: unset;
+			// border-radius: unset;
 		}
 		.tutor-course-listing-item-body,
 		.tutor-course-listing-item-footer {
