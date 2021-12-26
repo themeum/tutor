@@ -14,10 +14,10 @@ $value = (int) $this->get($field['field_key']);
         ?>
     </div>
 
-    <input type="hidden" name="_tutor_course_settings[<?php echo $field['field_key']; ?>]" value="<?php echo $value; ?>">
+    <input type="hidden" name="_tutor_course_settings[<?php echo esc_attr( $instructor->ID ); ?>]" value="<?php echo esc_attr( $value ); ?>">
     <button class="button button-cancel tutor-option-media-upload-btn">
         <i class="dashicons dashicons-upload"></i>
-        <?php echo $field['label']; ?>
+        <?php echo esc_attr( $field['label'] ); ?>
     </button>
 </div>
 

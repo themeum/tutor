@@ -4,4 +4,4 @@ if ( ! $value && isset($field['default'])){
 	$value = $field['default'];
 }
 ?>
-<input type="text" name="_tutor_course_settings[<?php echo $field['field_key']; ?>]" value="<?php echo $value; ?>" >
+<input type="text" name="_tutor_course_settings[<?php echo esc_attr( $instructor->ID ); ?>]" value="<?php echo esc_attr( $value ); ?>" >

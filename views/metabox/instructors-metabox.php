@@ -12,14 +12,14 @@
 			foreach ($instructors as $instructor){
                 $authorTag = '';
 				if ($post->post_author == $instructor->ID){
-					$authorTag = '<img src="'.$instructor_crown_src.'"><i class="instructor-name-tooltip" title="'. __("Author", "tutor") .'">'. __("Author", "tutor") .'</i>';
+                    $authorTag = '<img src="'.esc_url($instructor_crown_src).'"><i class="instructor-name-tooltip" title="'. __("Author", "tutor") .'">'. __("Author", "tutor") .'</i>';
 				}
 				?>
-                <div id="added-instructor-id-<?php echo $instructor->ID; ?>" class="added-instructor-item added-instructor-item-<?php echo $instructor->ID; ?>" data-instructor-id="<?php echo $instructor->ID; ?>">
+                <div id="added-instructor-id-<?php echo esc_attr($instructor->ID); ?>" class="added-instructor-item added-instructor-item-<?php echo esc_attr($instructor->ID); ?>" data-instructor-id="<?php echo esc_attr($instructor->ID); ?>">
 					<span class="instructor-icon">
                         <?php echo get_avatar($instructor->ID, 30); ?>
                     </span>
-                    <span class="instructor-name"> <?php echo $instructor->display_name.' '.$authorTag; ?> </span>
+                    <span class="instructor-name"> <?php echo esc_attr($instructor->display_name).' '._esc_html($authorTag); ?> </span>
                     <span class="instructor-control">
 						<a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-line-cross"></i></a>
 					</span>

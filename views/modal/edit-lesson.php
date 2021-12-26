@@ -8,7 +8,7 @@
 	if (get_tutor_option('enable_lesson_classic_editor')){
 		?>
         <div class="modal-classic-btn-wrap">
-            <a class="tutor-classic-editor-btn btn-sm" target="_blank" href="<?php echo esc_url(get_admin_url()); ?>post.php?post=<?php echo $post->ID; ?>&action=edit" >
+            <a class="tutor-classic-editor-btn btn-sm" target="_blank" href="<?php echo esc_url(get_admin_url()); ?>post.php?post=<?php echo esc_attr( $post->ID ); ?>&action=edit" >
                 <i class="tutor-icon-classic-editor topic-edit-icon"></i> <?php echo __('Classic Editor', 'tutor'); ?>
             </a>
         </div>
@@ -56,7 +56,7 @@
                         </p>
 
                         <input type="hidden" class="_lesson_thumbnail_id" name="_lesson_thumbnail_id" value="<?php echo esc_attr( $lesson_thumbnail_id ); ?>">
-                        <button type="button" class="lesson_thumbnail_upload_btn tutor-btn bordered-btn"><?php echo $thumbnail_upload_text; ?></button>
+                        <button type="button" class="lesson_thumbnail_upload_btn tutor-btn bordered-btn"><?php echo esc_attr( $thumbnail_upload_text ); ?></button>
                     </div>
                 </div>
             </div>

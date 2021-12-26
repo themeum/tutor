@@ -31,11 +31,11 @@ $_tutor_course_price_type = tutils()->price_type();
 			<?php
 			foreach ($products as $product){
 			    if ($product->ID == $product_id){
-				    echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
+				    echo "<option value='".esc_attr($product->ID)."' ".selected($product->ID, $product_id)." >".esc_attr($product->post_title)."</option>";
 			    }
 			    $usedProduct = tutor_utils()->product_belongs_with_course($product->ID);
 			    if ( ! $usedProduct){
-				    echo "<option value='{$product->ID}' ".selected($product->ID, $product_id)." >{$product->post_title}</option>";
+				    echo "<option value='".esc_attr($product->ID)."' ".selected($product->ID, $product_id)." >".esc_attr($product->post_title)."</option>";
 			    }
 			}
 			?>

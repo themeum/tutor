@@ -46,16 +46,16 @@ $page_name = $current_page ? $current_page : 'addons';
                                     <div class="name column-name">
                                         <h3>
 											<?php
-											echo "<a href='{$addon->product_url}' target='_blank'>{$addon->product_name}</a>";
+											echo "<a href='".esc_url($addon->product_url)."' target='_blank'>".esc_attr($addon->product_name)."</a>";
 											if ( $addon->thumbnail ) {
-												echo "<img src='{$addon->thumbnail}' class='plugin-icon' alt=''>";
+												echo "<img src='".esc_url($addon->thumbnail)."' class='plugin-icon' alt=''>";
 											}
 											?>
                                         </h3>
                                     </div>
                                     <div class="action-links">
                                         <ul class="plugin-action-buttons">
-                                            <li><a href="<?php echo $addon->product_url; ?>" class="button button-primary activate-now"
+                                            <li><a href="<?php echo esc_url( $addon->product_url ); ?>" class="button button-primary activate-now"
                                                    target="_blank">  <?php _e( 'Buy Now', 'tutor' ); ?></a></li>
 
                                             <li>
@@ -68,7 +68,7 @@ $page_name = $current_page ? $current_page : 'addons';
                                         </ul>
                                     </div>
                                     <div class="desc column-description">
-										<?php echo $addon->short_description ? "<p>{$addon->short_description}</p>" : ''; ?>
+										<?php echo $addon->short_description ? "<p>".esc_attr($addon->short_description)."</p>" : ''; ?>
 
                                         <p class="authors"><cite>By <a href="https://www.themeum.com" target="_blank">Themeum</a></cite></p>
                                     </div>
@@ -76,7 +76,7 @@ $page_name = $current_page ? $current_page : 'addons';
                                 <div class="plugin-card-bottom">
 									<?php
 									if ( $addon->version ) {
-										echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : {$addon->version}</div>";
+										echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : ".esc_attr($addon->version)."</div>";
 									}
 									?>
                                     <!--

@@ -8,7 +8,8 @@
     "build-dev": "webpack --mode=development && gulp build",
     "css-watch": "gulp watch",
     "js-watch": "webpack --watch --mode=development",
-    "watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\""
+    "watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\"",
+    "lib-watch": "concurrently \"npm run css-watch\" \"npm run js-watch\""
   },
   "keywords": [
     "lms",

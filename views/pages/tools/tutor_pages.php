@@ -22,16 +22,16 @@ $tutor_pages = tutils()->tutor_pages();
 		    $page_id = $page['page_id'];
 			?>
             <tr>
-                <td><?php echo $page_id; ?></td>
+                <td><?php echo esc_attr( $page_id ); ?></td>
                 <td>
 					<?php
 					echo "<p>";
 
 					if ($page['page_exists']){
 						$edit_url = admin_url("post.php?post={$page_id}&action=edit");
-						echo "<a href='{$edit_url}' target='_blank'>";
+						echo "<a href='".esc_url($edit_url)."' target='_blank'>";
 					}
-					echo $page['page_name'];
+					echo esc_attr( $page['page_name'] );
 
 					if ($page['page_exists']){
 						echo '</a>';
@@ -63,7 +63,7 @@ $tutor_pages = tutils()->tutor_pages();
                     if ($page['page_exists'] && $page['page_visible']){
 	                    $page = get_post($page_id);
 
-	                    echo "<a href='".get_permalink($page)."' target='_blank' style='color: green;'> <i class='dashicons dashicons-yes-alt'></i> /{$page->post_name} </a>";
+	                    echo "<a href='".get_permalink($page)."' target='_blank' style='color: green;'> <i class='dashicons dashicons-yes-alt'></i> /".esc_attr($page->post_name)." </a>";
                     }
                     ?>
                 </td>

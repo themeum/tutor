@@ -85,7 +85,7 @@ if ( $topic_id != '' ) {
                     if ($questions) {
                         foreach ($questions as $question) {
                     ?>
-                            <div class="quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
+                            <div class="quiz-builder-question-wrap" data-question-id="<?php echo esc_attr($question->question_id); ?>">
                                 <div class="quiz-builder-question">
                                     <span class="question-sorting">
                                         <i class="tutor-icon-move"></i>
@@ -96,7 +96,7 @@ if ( $topic_id != '' ) {
                                     <span class="question-icon">
                                         <?php
                                         $type = tutor_utils()->get_question_types($question->question_type);
-                                        echo $type['icon'] . ' ' . $type['name'];
+                                        echo $type['icon'] . ' ' . esc_attr($type['name']);
                                         ?>
                                     </span>
 
@@ -217,7 +217,7 @@ if ( $topic_id != '' ) {
                                 ?>
 
                                 <div class="tutor-field-type-slider" data-min="0" data-max="20">
-                                    <p class="tutor-field-type-slider-value"><?php echo $attempts_allowed; ?></p>
+                                    <p class="tutor-field-type-slider-value"><?php echo esc_attr($attempts_allowed); ?></p>
                                     <div class="tutor-field-slider"></div>
                                     <input type="hidden" value="<?php echo esc_attr( $attempts_allowed ); ?>" name="quiz_option[attempts_allowed]" />
                                 </div>

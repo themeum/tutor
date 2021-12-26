@@ -4,7 +4,7 @@ $allowed_sub_pages = array( 'add_new_instructor' );
 $sub_page = sanitize_text_field( tutor_utils()->array_get('sub_page', $_GET, '') );
 
 if ( is_string( $sub_page ) && in_array($sub_page, $allowed_sub_pages)){
-	$include_file = tutor()->path."views/pages/{$sub_page}.php";
+	$include_file = tutor()->path."views/pages/".esc_attr($sub_page).".php";
 	if (file_exists($include_file)){
 		include $include_file;
 		return;

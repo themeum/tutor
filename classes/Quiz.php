@@ -286,7 +286,7 @@ class Quiz {
 		$attempt = tutor_utils()->get_attempt($attempt_id);
 		$course_id = tutor_utils()->get_course_by_quiz($attempt->quiz_id)->ID;
 
-		$attempt_answers = isset($_POST['attempt']) ? $_POST['attempt'] : false;
+		$attempt_answers = isset($_POST['attempt']) ? sanitize_data($_POST['attempt']) : false;
 		if ( ! is_user_logged_in()){
 			die('Please sign in to do this operation');
 		}
@@ -642,7 +642,7 @@ class Quiz {
 		$next_order_id      = tutor_utils()->get_next_course_content_order_id($topic_id);
 
 		if(!tutils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_error( array('message'=>__('Access Denied', 'tutor'), 'data'=>$_POST) );
+			wp_send_json_error( array('message'=>__('Access Denied', 'tutor'), 'data'=>sanitize_data($_POST)) );
 		}
 
 		$post_arr = array(
@@ -830,7 +830,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$question_data = $_POST['tutor_quiz_question'];
+		$question_data = sanitize_data($_POST['tutor_quiz_question']);
 
 		foreach ($question_data as $question_id => $question) {
 
@@ -955,8 +955,8 @@ class Quiz {
 
 		global $wpdb;
 
-		$questions = $_POST['tutor_quiz_question'];
-		$answers = $_POST['quiz_answer'];
+		$questions = sanitize_data($_POST['tutor_quiz_question']);
+		$answers = sanitize_data($_POST['quiz_answer']);
 
 		foreach ($answers as $question_id => $answer){
 
@@ -1049,8 +1049,8 @@ class Quiz {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
 
-		$questions = $_POST['tutor_quiz_question'];
-		$answers = $_POST['quiz_answer'];
+		$questions = sanitize_data($_POST['tutor_quiz_question']);
+		$answers = sanitize_data($_POST['quiz_answer']);
 
 		foreach ($answers as $question_id => $answer){
 			$question = tutor_utils()->avalue_dot($question_id, $questions);
@@ -1208,7 +1208,7 @@ class Quiz {
 	    global $wpdb;
 
 	    if ( ! empty($_POST['sorted_answer_ids']) && is_array($_POST['sorted_answer_ids']) && count($_POST['sorted_answer_ids']) ){
-	        $answer_ids = $_POST['sorted_answer_ids'];
+	        $answer_ids = sanitize_data($_POST['sorted_answer_ids']);
 	        $i = 0;
 	        foreach ($answer_ids as $key => $answer_id){
 				if(tutils()->can_user_manage('quiz_answer', $answer_id)) {

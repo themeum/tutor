@@ -70,7 +70,7 @@ $the_query = new WP_Query($args);
                 <?php if ($courses) : ?>
                     <?php foreach ($courses as $course) : ?>
                         <option value="<?php echo esc_attr($course->ID) ?>" <?php selected($course_id, $course->ID, 'selected') ?>>
-                            <?php echo $course->post_title; ?>
+                            <?php echo esc_attr( $course->post_title ); ?>
                         </option>
                     <?php endforeach; ?>
                 <?php else : ?>
@@ -122,7 +122,7 @@ $the_query = new WP_Query($args);
                     $dateObj = date_create($post->post_date);
                     $date_format = date_format($dateObj, 'F j, Y, g:i a');
                     ?>
-                    <tr id="tutor-announcement-tr-<?php echo $post->ID; ?>">
+                    <tr id="tutor-announcement-tr-<?php echo esc_attr( $post->ID ); ?>">
                         <td class="tutor-announcement-date"><?php echo esc_html($date_format); ?></td>
                         <td class="tutor-announcement-content-wrap">
                             <div class="tutor-announcement-content">
@@ -130,15 +130,15 @@ $the_query = new WP_Query($args);
                                     <?php echo esc_html($post->post_title); ?>
                                 </span>
                                 <p>
-                                    <?php echo $course ? $course->post_title : ''; ?>
+                                    <?php echo $course ? esc_attr( $course->post_title ) : ''; ?>
                                 </p>
                             </div>
                             <div class="tutor-announcement-buttons">
 
-                                <button type="button" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-btn bordered-btn tutor-announcement-edit">
+                                <button type="button" announcement-title="<?php echo esc_attr($post->post_title); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo esc_attr( $post->post_parent ); ?>" announcement-id="<?php echo esc_attr( $post->ID ); ?>" class="tutor-btn bordered-btn tutor-announcement-edit">
                                     <?php _e('Edit', 'tutor'); ?>
                                 </button>
-                                <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?php echo $post->ID; ?>">
+                                <button type="button" class="tutor-btn bordered-btn tutor-announcement-delete" announcement-id="<?php echo esc_attr( $post->ID ); ?>">
                                     <?php _e('Delete', 'tutor'); ?>
                                 </button>
 

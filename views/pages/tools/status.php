@@ -179,7 +179,7 @@
 			<tr>
 				<td data-export-label="SUHOSIN Installed"><?php esc_html_e( 'SUHOSIN installed', 'tutor' ); ?>:</td>
 				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Suhosin is an advanced protection system for PHP installations. It was designed to protect your servers on the one hand against a number of well known problems in PHP applications and on the other hand against potential unknown vulnerabilities within these applications or the PHP core itself. If enabled on your server, Suhosin may need to be configured to increase its data submission limits.', 'tutor' ) );  ?></td>
-				<td><?php echo $environment['suhosin_installed'] ? '<span class="dashicons dashicons-yes"></span>' : '&ndash;'; ?></td>
+				<td><?php echo $environment['suhosin_installed'] ? _esc_html( '<span class="dashicons dashicons-yes"></span>' ) : '&ndash;'; ?></td>
 			</tr>
 		<?php endif; ?>
 
@@ -303,7 +303,7 @@
 				$override_files = \TUTOR\Admin::template_overridden_files();
 				if (is_array($override_files) && count($override_files)){
 					foreach ($override_files as $file){
-						echo "{$file} ,<br />";
+						echo esc_attr($file). ",<br />";
 					}
 				}
 				?>

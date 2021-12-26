@@ -14,8 +14,8 @@
 					foreach ( $addons as $basName => $addon ) {
 						$addonConfig = tutor_utils()->get_addon_config($basName);
 
-						$addons_path = trailingslashit(tutor()->path."assets/addons/{$basName}");
-						$addons_url = trailingslashit(tutor()->url."assets/addons/{$basName}");
+						$addons_path = trailingslashit(tutor()->path."assets/addons/".esc_attr($basName));
+						$addons_url = trailingslashit(tutor()->url."assets/addons/".esc_attr($basName));
 
 						$thumbnailURL =  tutor()->url.'assets/images/tutor-plugin.png';
 
@@ -33,8 +33,8 @@
                                 <div class="name column-name">
                                     <h3>
 										<?php
-										echo $addon['name'];
-										echo "<img src='{$thumbnailURL}' class='plugin-icon' alt=''>";
+										echo esc_attr( $addon['name'] );
+										echo "<img src='".esc_url($thumbnailURL)."' class='plugin-icon' alt=''>";
 										?>
                                     </h3>
                                 </div>
@@ -42,18 +42,18 @@
                                     <ul class="plugin-action-buttons">
                                         <li>
                                             <a href="https://www.themeum.com/product/tutor-lms/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists"
-                                               class="addon-buynow-link" target="_blank">Buy Now</a>
+                                               class="addon-buynow-link" target="_blank"><?php _e('Buy Now','tutor');?></a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="desc column-description">
-                                    <p><?php echo $addon['description']; ?></p>
+                                    <p><?php echo _esc_html( $addon['description'] ); ?></p>
                                     <p class="authors"><cite>By <a href="https://www.themeum.com/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists" target="_blank">Themeum</a></cite></p>
                                 </div>
                             </div>
                             <div class="plugin-card-bottom">
 								<?php
-                                echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : ".TUTOR_VERSION." </div>";
+                                echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : ".esc_attr(TUTOR_VERSION)." </div>";
 								?>
                             </div>
                         </div>

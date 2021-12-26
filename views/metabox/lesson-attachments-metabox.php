@@ -17,8 +17,8 @@ if (get_the_ID())
 				<div class="tutor-added-attachment">
                     <i class="tutor-icon-archive"></i>
                     <a href="javascript:;" class="tutor-delete-attachment tutor-icon-line-cross"></a>
-                    <a href="<?php echo $attachment->url; ?>"><?php echo $attachment->name; ?></a>
-                    <input type="hidden" name="tutor_attachments[]" value="<?php echo $attachment->id; ?>">
+                    <a href="<?php echo esc_url( $attachment->url ); ?>"><?php echo esc_attr( $attachment->name ); ?></a>
+                    <input type="hidden" name="tutor_attachments[]" value="<?php echo esc_attr( $attachment->id ); ?>">
 				</div>
 			<?php }
 		}
