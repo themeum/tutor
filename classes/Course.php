@@ -1302,8 +1302,8 @@ class Course extends Tutor_Base {
 		do_action('tutor_before_course_sidebar_settings_metabox', $post);
 		?>
 		<div class="tutor-course-sidebar-settings-item" id="_tutor_is_course_public_meta_checkbox" style="display:none">
-			<label for="<?php echo $is_public; ?>">
-				<input id="<?php echo $is_public; ?>" type="checkbox" name="<?php echo $is_public; ?>" value="yes" <?php echo $is_public_checked; ?> />
+			<label for="<?php echo esc_attr( $is_public ); ?>">
+				<input id="<?php echo esc_attr( $is_public ); ?>" type="checkbox" name="<?php echo esc_attr( $is_public ); ?>" value="yes" <?php echo _esc_html( $is_public_checked ); ?> />
 				<?php _e('Make This Course Public', 'tutor'); ?>
 				<small style="display:block;padding-left:24px">
 					<?php _e('No enrollment required.', 'tutor'); ?> 
@@ -1311,9 +1311,9 @@ class Course extends Tutor_Base {
 			</label>
 		</div>
 		<div class="tutor-course-sidebar-settings-item">
-			<label for="<?php echo $disable_qa; ?>">
+			<label for="<?php echo esc_attr( $disable_qa ); ?>">
 				<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
-				<input id="<?php echo $disable_qa; ?>" type="checkbox" name="<?php echo $disable_qa; ?>" value="yes" <?php echo $disable_qa_checked; ?> />
+				<input id="<?php echo esc_attr( $disable_qa ); ?>" type="checkbox" name="<?php echo esc_attr( $disable_qa ); ?>" value="yes" <?php echo _esc_html( $disable_qa_checked ); ?> />
 				<?php _e('Disable Q&A', 'tutor'); ?>
 			</label>
 		</div>

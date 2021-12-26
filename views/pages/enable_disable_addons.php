@@ -41,8 +41,8 @@
                                 <div class="name column-name">
                                     <h3>
 										<?php
-										echo $addon['name'];
-										echo "<img src='{$thumbnailURL}' class='plugin-icon' alt=''>";
+										echo esc_attr( $addon['name'] );
+										echo "<img src='".esc_url($thumbnailURL)."' class='plugin-icon' alt=''>";
 										?>
                                     </h3>
                                 </div>
@@ -52,7 +52,7 @@
                                     <ul class="plugin-action-buttons">
                                         <li>
                                             <label class="btn-switch">
-                                                <input type="checkbox" class="tutor_addons_list_item" value="1" name="<?php echo $basName; ?>" <?php checked(true, $isEnable) ?> />
+                                                <input type="checkbox" class="tutor_addons_list_item" value="1" name="<?php echo esc_attr( $basName ); ?>" <?php checked(true, $isEnable) ?> />
                                                 <div class="btn-slider btn-round"></div>
                                             </label>
                                         </li>
@@ -61,7 +61,7 @@
                                 <?php } ?>
 
                                 <div class="desc column-description">
-                                    <p><?php echo $addon['description']; ?></p>
+                                    <p><?php echo _esc_html( $addon['description'] ); ?></p>
                                     <p class="authors"><cite>By <a href="https://www.themeum.com" target="_blank">Themeum</a></cite></p>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
 										<ul style="list-style: disc; padding-left: 15px;">
 											<?php 
 												foreach($required as $req) {
-													echo '<li>' . $req . '</li>';
+													echo '<li>' . esc_attr( $req ) . '</li>';
 												}
 											?>
 										</ul>
@@ -107,7 +107,7 @@
 
                             <div class="plugin-card-bottom">
 								<?php
-								echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : ".TUTOR_VERSION." </div>";
+								echo "<div class='plugin-version'> " . __( 'Version', 'tutor' ) . " : ".esc_attr( TUTOR_VERSION )." </div>";
 								?>
                             </div>
                         </div>

@@ -12,7 +12,7 @@ if ( ! isset($field['group_fields']) || ! is_array($field['group_fields']) || ! 
 		$label = tutor_utils()->avalue_dot('label', $group_field);
 		?>
 		<div class="tutor-option-group-field">
-			<?php include tutor()->path."views/options/field-types/groups/{$group_field['type']}.php"; ?>
+			<?php include tutor()->path."views/options/field-types/groups/".esc_attr($group_field['type']).".php"; ?>
 		</div>
 		<?php
 	}

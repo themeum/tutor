@@ -43,7 +43,7 @@ else if(function_exists('edd_currency_symbol')){
     <h4><?php echo __('Withdrawal', 'tutor'); ?></h4>
 
     <div class="tutor-component-three-col-action">
-        <img src="<?php echo $image_base; ?>wallet.svg" />
+        <img src="<?php echo esc_url( $image_base ); ?>wallet.svg" />
         
         <div>
             <small><?php _e('Current Balance', 'tutor'); ?></small>
@@ -70,7 +70,7 @@ else if(function_exists('edd_currency_symbol')){
     </div>
 
     <div class="current-withdraw-account-wrap withdrawal-preference inline-image-text">
-        <img src="<?php echo $image_base; ?>info-icon-question.svg" />
+        <img src="<?php echo esc_url( $image_base ); ?>info-icon-question.svg" />
         <span>
             <?php
             $my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink('settings/withdraw-settings');
@@ -92,7 +92,7 @@ else if(function_exists('edd_currency_symbol')){
                         <br />
                         <br />
                         <div style="text-align:center">
-                            <img src="<?php echo $image_base; ?>icon-cheers.svg" />
+                            <img src="<?php echo esc_url( $image_base ); ?>icon-cheers.svg" />
                             <h3><?php _e('Your withdrawal request has been successfully accepted', 'tutor'); ?></h3>
                             <p><?php _e('Please check your transaction notification on your connected withdrawal method', 'tutor'); ?></p>
                         </div>
@@ -104,7 +104,7 @@ else if(function_exists('edd_currency_symbol')){
                 <div class="tutor-withdrawal-op-up-frorm">
                     <div>
                         <i class="tutor-icon-line-cross close-withdraw-form-btn"></i>
-                        <img src="<?php echo $image_base; ?>wallet.svg" />
+                        <img src="<?php echo esc_url( $image_base ); ?>wallet.svg" />
                         <h3><?php _e('Withdrawal Request', 'tutor'); ?></h3>
                         <p><?php _e('Please enter withdrawal amount and click the submit request button', 'tutor'); ?></p>
                         <table>
@@ -144,7 +144,7 @@ else if(function_exists('edd_currency_symbol')){
                                     <input type="number" min="<?php echo esc_attr($min_withdraw); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required>
                                 </div>
                                 <div class="inline-image-text">
-                                    <img src="<?php echo $image_base; ?>info-icon-question.svg" />
+                                    <img src="<?php echo esc_url( $image_base ); ?>info-icon-question.svg" />
                                     <span>
                                         <?php echo __( 'Minimum withdraw amount is', 'tutor' ).' '.strip_tags($formatted_min_withdraw_amount); ?>
                                     </span>
@@ -242,7 +242,7 @@ else if(function_exists('edd_currency_symbol')){
                                 ?>
                                     <span class="tutor-status-text-container">
                                         <span class="tool-tip-container">
-                                            <img src="<?php echo $image_base; ?>info-icon.svg" />
+                                            <img src="<?php echo esc_url( $image_base ); ?>info-icon.svg" />
                                             <span class="tooltip tip-left" role="tooltip">
                                                 <?php echo $status_message[$withdraw_history->status]; ?>
                                             </span>

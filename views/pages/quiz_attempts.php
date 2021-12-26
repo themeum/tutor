@@ -6,7 +6,7 @@
 
 if (isset($_GET['sub_page'])){
     $page = sanitize_text_field($_GET['sub_page']);
-    include_once tutor()->path."views/pages/{$page}.php";
+    include_once tutor()->path."views/pages/".esc_attr($page).".php";
     return;
 }
 /**

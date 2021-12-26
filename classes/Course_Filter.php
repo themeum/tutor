@@ -146,7 +146,7 @@ class Course_Filter {
 				<div class="tutor-course-filter-nested-terms">
 					<label>
 						<input type="checkbox" name="tutor-course-filter-<?php echo esc_attr( $taxonomy ); ?>" value="<?php echo esc_attr( $term->term_id ); ?>" <?php echo $term->term_id == $term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
-						<?php echo $term->name; ?>
+						<?php echo _esc_html($term->name); ?>
 					</label>
 
 					<?php isset( $term->children ) ? $this->render_terms_hierarchically( $term->children, $taxonomy ) : 0; ?>

@@ -22,16 +22,16 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
             <div class="tutor-lesson-video-runtime">
 
                 <div class="tutor-option-group-field">
-                    <input type="number" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
+                    <input type="number" value="<?php echo $durationHours ? esc_attr( $durationHours ) : esc_attr( '00' ); ?>" name="course_duration[hours]">
                     <p class="desc"><?php _e('HH', 'tutor'); ?></p>
                 </div>
                 <div class="tutor-option-group-field">
-                    <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
+                    <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationMinutes ? esc_attr( $durationMinutes ) : esc_attr( '00' ); ?>" name="course_duration[minutes]">
                     <p class="desc"><?php _e('MM', 'tutor'); ?></p>
                 </div>
 
                 <div class="tutor-option-group-field">
-                    <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
+                    <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationSeconds ? esc_attr( $durationSeconds ) : esc_attr( '00' ); ?>" name="course_duration[seconds]">
                     <p class="desc"><?php _e('SS', 'tutor'); ?></p>
                 </div>
 
@@ -50,7 +50,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         </label>
 	</div>
 	<div class="tutor-option-field tutor-option-tooltip">
-		<textarea name="course_benefits" rows="2"><?php echo $benefits; ?></textarea>
+		<textarea name="course_benefits" rows="2"><?php echo esc_textarea( $benefits ); ?></textarea>
 		<p class="desc">
 			<?php _e('List the knowledge and skills that students will learn after completing this course. (One per line)
 ', 'tutor'); ?>
@@ -65,7 +65,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         </label>
     </div>
     <div class="tutor-option-field tutor-option-tooltip">
-        <textarea name="course_requirements" rows="2"><?php echo $requirements; ?></textarea>
+        <textarea name="course_requirements" rows="2"><?php echo esc_textarea( $requirements ); ?></textarea>
 
         <p class="desc">
 			<?php _e('Additional requirements or special instructions for the students (One per line)', 'tutor'); ?>
@@ -80,7 +80,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         </label>
     </div>
     <div class="tutor-option-field tutor-option-tooltip">
-        <textarea name="course_target_audience" rows="2"><?php echo $target_audience; ?></textarea>
+        <textarea name="course_target_audience" rows="2"><?php echo esc_textarea( $target_audience ); ?></textarea>
 
         <p class="desc">
 			<?php _e('Specify the target audience that will benefit the most from the course. (One line per target audience.)', 'tutor'); ?>
@@ -96,7 +96,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         </label>
     </div>
     <div class="tutor-option-field tutor-option-tooltip">
-        <textarea name="course_material_includes" rows="2"><?php echo $material_includes; ?></textarea>
+        <textarea name="course_material_includes" rows="2"><?php echo esc_textarea( $material_includes ); ?></textarea>
 
         <p class="desc">
 			<?php _e('A list of assets you will be providing for the students in this course (One per line)', 'tutor'); ?>

@@ -29,7 +29,7 @@
 
 	foreach ($query_topics->posts as $topic){
 		?>
-        <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap">
+        <div id="tutor-topics-<?php echo esc_attr( $topic->ID ); ?>" class="tutor-topics-wrap">
 
             <div class="tutor-topics-top">
                 <h4 class="tutor-topic-title">
@@ -40,7 +40,7 @@
                         <i class="tutor-icon-pencil topic-edit-icon"></i>
                     </span>
                     <span class="topic-delete-btn">
-                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?action=tutor_delete_topic&topic_id='.$topic->ID), tutor()->nonce_action, tutor()->nonce); ?>" title="<?php _e('Delete Topic', 'tutor'); ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?action=tutor_delete_topic&topic_id='.esc_attr($topic->ID)), tutor()->nonce_action, tutor()->nonce); ?>" title="<?php _e('Delete Topic', 'tutor'); ?>" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>">
                             <i class="tutor-icon-garbage"></i>
                         </a>
                     </span>
@@ -69,7 +69,7 @@
                             <label for=""><?php _e('Topic Summary', 'tutor'); ?></label>
                         </div>
                         <div class="tutor-option-field">
-                            <textarea name="topic_summery"><?php echo $topic->post_content; ?></textarea>
+                            <textarea name="topic_summery"><?php echo esc_textarea( $topic->post_content ); ?></textarea>
                             <p class="desc">
 								<?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
                             </p>
@@ -103,51 +103,51 @@
 						if ($lesson->post_type === 'tutor_quiz'){
 							$quiz = $lesson;
 							?>
-                            <div id="tutor-quiz-<?php echo $quiz->ID; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $topic->ID; ?>">
+                            <div id="tutor-quiz-<?php echo esc_attr( $quiz->ID ); ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo esc_attr( $topic->ID ); ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>">
                                         <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
                                     <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
-                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
 
 							<?php
 						}elseif($lesson->post_type === 'tutor_assignments'){
 							?>
-                            <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
+                            <div id="tutor-assignment-<?php echo esc_attr( $lesson->ID ); ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
 							$lesson->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $lesson->ID; ?>"
-                                       data-topic-id="<?php echo $topic->ID; ?>"><i class="tutor-icon-clipboard"></i> <?php echo
+                                    <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo esc_attr( $lesson->ID ); ?>"
+                                       data-topic-id="<?php echo esc_attr( $topic->ID ); ?>"><i class="tutor-icon-clipboard"></i> <?php echo
                                         $lesson->post_title; ?> </a>
-                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
 							<?php
                         } elseif ($lesson->post_type === 'tutor_zoom_meeting'){
 							?>
-                            <div id="tutor-zoom-meeting-<?php echo $lesson->ID; ?>" class="course-content-item tutor-zoom-meeting-item tutor-zoom-meeting-<?php echo $lesson->ID; ?>">
+                            <div id="tutor-zoom-meeting-<?php echo esc_attr( $lesson->ID ); ?>" class="course-content-item tutor-zoom-meeting-item tutor-zoom-meeting-<?php echo esc_attr( $lesson->ID ); ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="tutor-zoom-meeting-modal-open-btn" data-meeting-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>" data-click-form="course-builder">
+                                    <a href="javascript:;" class="tutor-zoom-meeting-modal-open-btn" data-meeting-id="<?php echo esc_attr( $lesson->ID ); ?>" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>" data-click-form="course-builder">
                                         <?php echo stripslashes($lesson->post_title); ?>
                                     </a>
-                                    <a href="javascript:;" class="tutor-zoom-meeting-delete-btn" data-meeting-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="tutor-zoom-meeting-delete-btn" data-meeting-id="<?php echo esc_attr( $lesson->ID ); ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
 							<?php
                         } else {
 							?>
-                            <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
+                            <div id="tutor-lesson-<?php echo esc_attr( $lesson->ID ); ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
 							$lesson->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
-                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
 							<?php
@@ -155,16 +155,16 @@
 					}
                 ?></div>
 
-                <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo $topic->ID; ?>">
+                <div class="tutor_add_quiz_wrap" data-add-quiz-under="<?php echo esc_attr( $topic->ID ); ?>">
                     <div class="tutor-add-cotnents-btn-group tutor-add-quiz-button-wrap">
 
 	                    <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
 
-                        <a href="javascript:;" class="open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
+                        <a href="javascript:;" class="open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>" data-lesson-id="0" >
                             <i class="tutor-icon-plus-square-button"></i>
                             <?php _e('Lesson', 'tutor'); ?>
                         </a>
-                        <a href="javascript:;" class="tutor-add-quiz-btn" data-topic-id="<?php echo $topic->ID; ?>">
+                        <a href="javascript:;" class="tutor-add-quiz-btn" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>">
                             <i class="tutor-icon-plus-square-button"></i>
                             <?php _e('Quiz', 'tutor'); ?>
                         </a>
@@ -193,39 +193,39 @@
 						if ($lesson->post_type === 'tutor_quiz'){
 							$quiz = $lesson;
 							?>
-                            <div id="tutor-quiz-<?php echo $quiz->ID; ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $topic->ID; ?>">
+                            <div id="tutor-quiz-<?php echo esc_attr( $quiz->ID ); ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo esc_attr( $topic->ID ); ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                    <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>">
                                         <i class=" tutor-icon-doubt"></i>[<?php _e('QUIZ', 'tutor'); ?>] <?php echo stripslashes($quiz->post_title); ?>
                                     </a>
                                     <?php do_action('tutor_course_builder_before_quiz_btn_action', $quiz->ID); ?>
-                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
 
 							<?php
 						}elseif($lesson->post_type === 'tutor_assignments'){
 							?>
-                            <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
+                            <div id="tutor-assignment-<?php echo esc_attr( $lesson->ID ); ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
 							$lesson->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $lesson->ID; ?>"
-                                       data-topic-id="<?php echo $topic->ID; ?>"><i class="tutor-icon-clipboard"></i> <?php echo
+                                    <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo esc_attr( $lesson->ID ); ?>"
+                                       data-topic-id="<?php echo esc_attr( $topic->ID ); ?>"><i class="tutor-icon-clipboard"></i> <?php echo
 										stripslashes($lesson->post_title); ?> </a>
-                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
 							<?php
 						} else{
 							?>
-                            <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
+                            <div id="tutor-lesson-<?php echo esc_attr( $lesson->ID ); ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
 							$lesson->ID; ?>">
                                 <div class="tutor-lesson-top">
                                     <i class="tutor-icon-move"></i>
-                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo is_object($topic) ? $topic->ID : ''; ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
-                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>" data-topic-id="<?php echo is_object($topic) ? $topic->ID : ''; ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>"><i class="tutor-icon-garbage"></i></a>
                                 </div>
                             </div>
 							<?php

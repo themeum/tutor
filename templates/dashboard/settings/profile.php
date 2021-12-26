@@ -45,7 +45,7 @@ if ($cover_photo_id){
             </div>
         </div>
         <div id="tutor_photo_meta_area">
-            <img src="<?php echo tutor()->url . '/assets/images/'; ?>info-icon.svg" />
+            <img src="<?php echo esc_url(tutor()->url . '/assets/images/info-icon.svg'); ?>" />
             <span><?php _e('Profile Photo Size', 'tutor'); ?>: <span><?php _e('200x200', 'tutor'); ?></span> <?php _e('pixels', 'tutor'); ?>,</span>
             <span>&nbsp;&nbsp;&nbsp;&nbsp;<?php _e('Cover Photo Size', 'tutor'); ?>: <span><?php _e('700x430', 'tutor'); ?></span> <?php _e('pixels', 'tutor'); ?> </span>
             <span class="loader-area"><?php _e('Saving...', 'tutor'); ?></span>

@@ -7,7 +7,7 @@
 ?>
 
 <div id="tutor-course-content-builder-root">
-    <div class="tutor-course-builder-header <?php echo $classname; ?>">
+    <div class="tutor-course-builder-header <?php echo esc_attr( $classname ); ?>">
         <a href="javascript:;" class="tutor-expand-all-topic"><?php _e('Expand all', 'tutor'); ?></a> |
         <a href="javascript:;" class="tutor-collapse-all-topic"><?php _e('Collapse all', 'tutor'); ?></a>
     </div>
@@ -49,7 +49,7 @@
                 </p>
                 <?php
                 //submit_button(__('Add Topic', 'tutor'), 'primary', 'submit', true, array('id' => 'tutor-add-topic-btn')); ?>
-                <input type="hidden" name="tutor_topic_course_ID" value="<?php echo $course_id; ?>">
+                <input type="hidden" name="tutor_topic_course_ID" value="<?php echo esc_attr( $course_id ); ?>">
                 <button type="button" class="tutor-btn" id="tutor-add-topic-btn"><?php _e('Add Topic', 'tutor'); ?></button>
             </div>
         </div>

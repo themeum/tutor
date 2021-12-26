@@ -72,7 +72,7 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
 
                     <div class="video_source_upload_wrap_html5">
                         <a href="javascript:;" class="video_upload_btn tutor-button bordered-button"><?php _e('Upload Video', 'tutor'); ?></a>
-                        <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
+                        <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo esc_attr( $sourceVideoID ); ?>" >
                         <p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e('Media ID', 'tutor'); ?>: <span class="video_media_id"><?php echo esc_html( $sourceVideoID ); ?></span></p>
                     </div>
 
@@ -90,7 +90,7 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
                                         $poster_url = wp_get_attachment_image_url( $poster );
                                     }
                                     ?>
-                                    <img src="<?php echo $poster_url; ?>" class="thumbnail-img" data-placeholder-src="<?php echo $builder_course_img_src; ?>">
+                                    <img src="<?php echo esc_url( $poster_url ); ?>" class="thumbnail-img" data-placeholder-src="<?php echo esc_url( $builder_course_img_src ); ?>">
                                     <a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display: <?php echo
                                     $poster ? 'block':'none'; ?>;"><i class="tutor-icon-line-cross"></i></a>
                                     <div class="tutor-builder-course-video-poster-text">
@@ -101,7 +101,7 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
                             </div>
                             <div class="tutor-col-auto">
                                 <div class="builder-course-thumbnail-upload-wrap">
-                                    <input type="hidden" id="tutor_course_thumbnail_id" name="video[poster]" value="<?php echo $poster; ?>">
+                                    <input type="hidden" id="tutor_course_thumbnail_id" name="video[poster]" value="<?php echo esc_attr( $poster ); ?>">
                                     <a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button
                                     button-transparent"><i class="tutor-icon-photo-add"></i> <?php _e('Upload Image', 'tutor'); ?></a>
                                 </div>
@@ -143,17 +143,17 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
                     <div class="tutor-option-gorup-fields-wrap">
                         <div class="tutor-lesson-video-runtime">
                             <div class="tutor-option-group-field">
-                                <input type="number" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]">
+                                <input type="number" value="<?php echo $runtimeHours ? esc_attr( $runtimeHours ) : '00'; ?>" name="video[runtime][hours]">
                                 <p class="desc"><?php _e('HH', 'tutor'); ?></p>
                             </div>
 
                             <div class="tutor-option-group-field">
-                                <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]">
+                                <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeMinutes ? esc_attr( $runtimeMinutes ) : '00'; ?>" name="video[runtime][minutes]">
                                 <p class="desc"><?php _e('MM', 'tutor'); ?></p>
                             </div>
 
                             <div class="tutor-option-group-field">
-                                <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]">
+                                <input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeSeconds ? esc_attr( $runtimeSeconds ) : '00'; ?>" name="video[runtime][seconds]">
                                 <p class="desc"><?php _e('SS', 'tutor'); ?></p>
                             </div>
                         </div>

@@ -104,7 +104,7 @@ $user = get_userdata($user_id);
                             $output .= __( $attempt->earned_marks." out of ".$attempt->total_marks, 'tutor' );
                             $output .= "<span>, $marks_earned_text ($earned_percentage%)</span>";
                         }
-                        echo $output;
+                        echo _esc_html( $output );
                         ?>
                     </h4>
                 </div>
@@ -201,8 +201,8 @@ $user = get_userdata($user_id);
                     $question_type = tutor_utils()->get_question_types($answer->question_type);
                     ?>
                     <tr>
-                        <td><?php echo $question_type['icon']; ?></td>
-                        <td><?php echo $answer_i; ?></td>
+                        <td><?php echo _esc_html( $question_type['icon'] ); ?></td>
+                        <td><?php echo esc_attr( $answer_i ); ?></td>
                         <td><?php echo stripslashes($answer->question_title); ?></td>
                         <td>
                             <?php
@@ -226,7 +226,7 @@ $user = get_userdata($user_id);
                                     $input_data = array();
                                     for($i=0; $i<$count_dash_fields; $i++){
                                         //$dash_string[] = '{dash}';
-                                        $input_data[] =  isset($answer_titles[$i]) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : "______";
+                                        $input_data[] =  isset($answer_titles[$i]) ? "<span class='filled_dash_unser'>".esc_attr($answer_titles[$i])."</span>" : "______";
                                     }
                                     $answer_title = $db_answer->answer_title;
                                     foreach($input_data as $replace){
@@ -294,7 +294,7 @@ $user = get_userdata($user_id);
                                     ?>
                                     <div class="image-matching-item">
                                         <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id); ?>" /> </p>
-                                        <p class="dragged-caption"><?php echo $image_answer; ?></p>
+                                        <p class="dragged-caption"><?php echo _esc_html( $image_answer ); ?></p>
                                     </div>
                                     <?php
                                 }
@@ -339,8 +339,8 @@ $user = get_userdata($user_id);
                                 $nonce_key = tutor()->nonce;
                                 $nonce_value = wp_create_nonce(tutor()->nonce_action);
                             ?>
-                            <a href="<?php echo admin_url("admin.php?{$nonce_key}={$nonce_value}&action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct"); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="attempt-mark-correct-btn quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
-                            <a href="<?php echo admin_url("admin.php?{$nonce_key}={$nonce_value}&action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=incorrect"); ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="attempt-mark-incorrect-btn quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
+                            <a href="<?php echo esc_url(admin_url("admin.php?{$nonce_key}={$nonce_value}&action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=correct")); ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="attempt-mark-correct-btn quiz-manual-review-action"><i class="tutor-icon-mark"></i> </a>
+                            <a href="<?php echo esc_url(admin_url("admin.php?{$nonce_key}={$nonce_value}&action=review_quiz_answer&attempt_id={$attempt_id}&attempt_answer_id={$answer->attempt_answer_id}&mark_as=incorrect")); ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="attempt-mark-incorrect-btn quiz-manual-review-action"><i class="tutor-icon-line-cross"></i></a>
                         </td>
                     </tr>
                     <?php
@@ -362,6 +362,6 @@ $user = get_userdata($user_id);
     </div>
     <div class="tutor-instructor-feedback-wrap">
         <textarea class="tutor-instructor-feedback-content" style="width:100%; height: 100px;"><?php echo get_post_meta($attempt_id, 'instructor_feedback', true); ?></textarea>
-        <a class="tutor-button tutor-button-primary tutor-instructor-feedback" data-attemptid="<?php echo $attempt_id; ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>"><?php _e('Update', 'tutor'); ?></a>
+        <a class="tutor-button tutor-button-primary tutor-instructor-feedback" data-attemptid="<?php echo esc_attr( $attempt_id ); ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>"><?php _e('Update', 'tutor'); ?></a>
     </div>
 </div>

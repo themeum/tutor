@@ -99,7 +99,7 @@
             <button class="tm-close tutor-icon-line-cross"></button>
 
             <div class="tutor-modal-body tutor-course-delete-popup">
-                <img src="<?php echo tutor()->url . 'assets/images/delete-icon.png' ?>" alt="">
+                <img src="<?php echo esc_url(tutor()->url . 'assets/images/delete-icon.png') ?>" alt="">
                 <h3><?php _e('Delete This Course?', 'tutor'); ?></h3>
                 <p><?php _e("You are going to delete this course, it can't be undone", 'tutor'); ?></p>
                 <div class="tutor-modal-button-group">
