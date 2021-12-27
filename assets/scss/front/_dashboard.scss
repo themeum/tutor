@@ -654,3 +654,9 @@ table.tutor-dashboard-statement-table p.small-text {
 		margin-bottom: 20px;
 	}
 }
+
+@include breakpoint-max(tablet) {
+	.tutor-header-right-side {
+		margin-top: 20px;
+	}
+}
