@@ -8602,27 +8602,46 @@ class Utils
 	 * @return string
 	 * @since v2.0.0
 	 */
-	public function translate_dynamic_text($key): string
+	public function translate_dynamic_text($key, $add_badge=false, $badge_tag='span'): string
 	{
+		$old_key = $key;
+		$key = trim( strtolower( $key ) );
+
 		$key_value = array(
-			'pending'  		=> __('Pending', 'tutor'),
-			'approved' 		=> __('Approved', 'tutor'),
-			'rejected' 		=> __('Rejected', 'tutor'),
-			'completed'  	=> __('Completed', 'tutor'),
-			'processing' 	=> __('Processing', 'tutor'),
-			'cancelled'  	=> __('Cancelled', 'tutor'),
-			'canceled'  	=> __('Cancelled', 'tutor'),
-			'blocked'		=> __('Blocked', 'tutor'),
-			'cancel'		=> __('Cancelled', 'tutor'),
-			'on-hold'		=> __('On Hold', 'tutor'),
-			'onhold'		=> __('On Hold', 'tutor'),
-			'wc-on-hold'	=> __('On Hold', 'tutor'),
-			'publish' 		=> __('Publish', 'tutor'),
-			'trash'   		=> __('Trash', 'tutor'),
-			'draft'   		=> __('Draft', 'tutor'),
-			'private' 		=> __('Private', 'tutor')
+			'pending'  		=> array('badge' => 'warning',	'text' => __('Pending', 'tutor')),
+			'pass'			=> array('badge' => 'success', 	'text' => __('Pass', 'tutor')),
+			'correct'		=> array('badge' => 'success', 	'text' => __('Correct', 'tutor')),
+			'fail'			=> array('badge' => 'danger', 	'text' => __('Fail', 'tutor')),
+			'wrong'			=> array('badge' => 'danger', 	'text' => __('Wrong', 'tutor')),
+			'approved' 		=> array('badge' => 'success', 	'text' => __('Approved', 'tutor')),
+			'rejected' 		=> array('badge' => 'danger', 	'text' => __('Rejected', 'tutor')),
+			'completed'  	=> array('badge' => 'success', 	'text' => __('Completed', 'tutor')),
+			'processing' 	=> array('badge' => 'warning', 	'text' => __('Processing', 'tutor')),
+			'cancelled'  	=> array('badge' => 'danger', 	'text' => __('Cancelled', 'tutor')),
+			'canceled'  	=> array('badge' => 'danger', 	'text' => __('Cancelled', 'tutor')),
+			'blocked'		=> array('badge' => 'danger', 	'text' => __('Blocked', 'tutor')),
+			'cancel'		=> array('badge' => 'danger', 	'text' => __('Cancelled', 'tutor')),
+			'on-hold'		=> array('badge' => 'warning', 	'text' => __('On Hold', 'tutor')),
+			'onhold'		=> array('badge' => 'warning', 	'text' => __('On Hold', 'tutor')),
+			'wc-on-hold'	=> array('badge' => 'warning', 	'text' => __('On Hold', 'tutor')),
+			'publish' 		=> array('badge' => 'success', 	'text' => __('Publish', 'tutor')),
+			'trash'   		=> array('badge' => 'danger', 	'text' => __('Trash', 'tutor')),
+			'draft'   		=> array('badge' => 'warning', 	'text' => __('Draft', 'tutor')),
+			'private' 		=> array('badge' => 'warning', 	'text' => __('Private', 'tutor')),
 		);
-		return isset($key_value[$key]) ? $key_value[$key] : $key;
+
+		if($add_badge && isset($key_value[$key])) {
+			return '<'.$badge_tag.' class="tutor-badge-label label-'.$key_value[$key]['badge'].'">'.
+					$key_value[$key]['text'].
+				'</'.$badge_tag.'>';
+		}
+		
+		// Revert to linear textual array
+		$key_value = array_map(function($kv){
+			return $kv['text'];
+		}, $key_value);
+
+		return isset($key_value[$key]) ? $key_value[$key] : $old_key;
 	}
 
 	/**

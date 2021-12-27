@@ -260,7 +260,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<td data-th="<?php esc_html_e( 'Author', 'tutor' ); ?>">
 									<div class="td-avatar">
 										<?php
-											echo wp_kses_post( tutor_utils()->get_tutor_avatar( $post->post_author ) );
+											echo get_avatar( $post->post_author, '96' );
 										?>
 										<p class="tutor-text-medium-body  tutor-color-text-primary">
 											<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
