@@ -21,7 +21,7 @@
 	);
 
 	// Prepare course list based on page tab
-	$courses_list = $courses_list_array[ $active_tab ];
+	$courses_list =  $courses_list_array[ $active_tab ];
 	?>
 
 <h3><?php esc_html_e( $page_tabs[ $active_tab ] ); ?></h3>
@@ -90,6 +90,6 @@
 			?>
 		</div>
 	<?php else : ?>
-		<?php tutor_utils()->tutor_empty_state(); ?>
+		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 	<?php endif; ?>
 </div>

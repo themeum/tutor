@@ -36,6 +36,6 @@ $wishlists = tutor_utils()->get_wishlist();
 			?>
 		</div>
 	<?php else: ?>
-		<?php tutor_utils()->tutor_empty_state( __('You do not have any course on the wishlist yet.', 'tutor')); ?>
+		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 	<?php endif; ?>
 </div>
