@@ -147,7 +147,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
             </div>
             <?php
         } else {
-            tutor_utils()->tutor_empty_state();
+            tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() );
         }
     ?>
 </div>
