@@ -190,7 +190,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
             <tr>
                 <td colspan="100%">
                     <div class="td-empty-state">
-                        <?php tutor_utils()->tutor_empty_state( 'No order history available', 'tutor' ); ?>
+                        <?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
                     </div>
                 </td>
             </tr>
