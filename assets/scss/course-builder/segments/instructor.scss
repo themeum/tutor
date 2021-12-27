@@ -43,23 +43,28 @@ $inst_gap: 30px;
         
         .instructor-control {
             position: absolute;
-            right: 14px;
+            right: 0;
             top: 50%;
             font-size: 12px;
             -webkit-transform: translateY(-50%);
             transform: translateY(-50%);
-            display: none;
             -webkit-transition: 300ms;
             transition: 300ms;
+            background: white;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10px;
 
             a {
                 text-decoration: none;
             }
         }
 
-        &:hover{
+        &:not(:hover){
             .instructor-control {
-                display: inline-block;
+                display: none;
             }
         }
 
@@ -103,6 +108,35 @@ $inst_gap: 30px;
 
 // Multi instructor picker modal
 #tutor_course_instructor_modal {
+
+    .tutor-modal-body{
+        padding: 40px ​50p;
+    }
+
+    .tutor-modal-body-alt{
+        padding: 0;
+        text-align: left;
+    }
+
+    .instructor-modal-title {
+        text-align: left;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        color: #1D1F37;
+        border-bottom: 1px solid #CDCFD5;
+        position: relative;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        
+        .tutor-modal-close{
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: inherit;
+        }
+    }
+
     .tutor-search-result {
         position: absolute;
         z-index: 99;
@@ -173,6 +207,21 @@ $inst_gap: 30px;
                 i{
                     display: none;
                 }
+            }
+        }
+    }
+
+    .tutor-selected-result {
+        min-height: 150px;
+        margin-bottom: 20px;
+    }
+
+    .tutor-instructor-buttons {
+        text-align: left;
+
+        button{
+            &:last-child{
+                float: right;
             }
         }
     }

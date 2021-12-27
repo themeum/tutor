@@ -74,7 +74,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 		<!-- new head part  -->
 		<div class="tutor-bs-row tutor-bs-d-flex justify-content-between tutor-frontend-dashboard-header">
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-bs-col-md-6 tutor-bs-d-flex align-items-center" style="border: none;">
-				<div class=" tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
+				<div class="tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
 				</div>
 				<div class="tutor-user-info tutor-ml-16">
 					<div class="tutor-dashboard-header-display-name tutor-color-text-primary">
