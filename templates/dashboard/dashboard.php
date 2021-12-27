@@ -84,7 +84,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 }
 ?>
 
-<h3><?php _e('Dashboard', 'tutor'); ?></h3>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25"><?php _e('Dashboard', 'tutor'); ?></div>
 
 <div class="tutor-dashboard-content-inner">
 
@@ -177,6 +177,57 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
         endif;
         ?>
     </div>
+</div>
+
+<?php
+$tutor_course_img = get_tutor_course_thumbnail_src();
+$placeholder_img = tutor()->url . 'assets/images/placeholder.jpg';
+?>
+
+
+
+<div class="tutor-frontend-dashboard-course-porgress">
+	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">In Progress Course</div>
+	<div class="tutor-frontend-dashboard-course-porgress-cards">
+		<div class="tutor-frontend-dashboard-course-porgress-card tutor-frontend-dashboard-course-porgress-card-horizontal tutor-course-listing-item tutor-course-listing-item-sm">
+			<div class="tutor-course-listing-item-head tutor-bs-d-flex">
+				<a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink"> 
+					<div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>)"></div>
+				</a>
+			</div>
+			<div class="tutor-course-listing-item-body tutor-px-30 tutor-pt-26 tutor-pb-20">
+				<div class="list-item-rating tutor-bs-d-flex">
+					<div class="tutor-ratings tutor-is-sm">
+						<div class="tutor-rating-stars">
+							<span class="ttr-star-full-filled"></span>
+							<span class="ttr-star-full-filled"></span>
+							<span class="ttr-star-full-filled"></span>
+							<span class="ttr-star-half-filled"></span>
+							<span class="ttr-star-line-filled"></span>
+						</div>
+						<div class="tutor-rating-text tutor-color-text-subsued tutor-text-regular-body">4.0</div>
+					</div>
+				</div>
+				<div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary tutor-mt-6">
+					<a href="#">Udemy Masters: Learn Online Course Creation - Unofficial</a>
+				</div>
+				<div class="list-item-steps tutor-mt-14">
+					<span class="tutor-text-regular-caption tutor-color-text-hints">
+						Completed Lessons: 
+					</span>
+					<span class="tutor-text-medium-caption tutor-color-text-primary"><span> 1 </span>of <span> 9 </span> lessons</s>
+				</div>
+				<div class="list-item-progress tutor-mt-30">
+					<div class="tutor-text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+						<div class="progress-bar tutor-mr-14" style="--progress-value:20%"><span class="progress-value"></span></div>
+						<span class="progress-percentage tutor-text-regular-caption tutor-color-text-hints">
+							<span class="tutor-text-medium-caption tutor-color-text-primary ">20%</span> Complete
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <?php
