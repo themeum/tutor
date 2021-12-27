@@ -450,19 +450,19 @@ if (! function_exists('course_builder_section_wrap') ) {
         ?>
         <div class="tutor-course-builder-section">
             <div class="tutor-course-builder-section-title">
-                <h3><i class="tutor-icon-down"></i> <span><?php echo $title; ?></span></h3>
+                <h3><i class="tutor-icon-down"></i> <span><?php echo esc_attr( $title ); ?></span></h3>
             </div>
             <div class="tutor-course-builder-section-content">
-        <?php echo $content; ?>
+        <?php echo _esc_html($content); ?>
             </div>
         </div>
         <?php
         $html = ob_get_clean();
 
         if ($echo ) {
-            echo $html;
+            echo _esc_html($html);
         } else {
-            return $html;
+            return _esc_html($html);
         }
     }
 }
@@ -613,14 +613,14 @@ if (! function_exists('tutor_alert') ) {
             }
         }
         if (! $msg ) {
-            return $msg;
+            return _esc_html($msg);
         }
 
         $html = "<div class='tutor-alert tutor-alert-{$type}'>{$msg}</div>";
         if ($echo ) {
-            echo $html;
+            echo _esc_html($html);
         }
-        return $html;
+        return _esc_html($html);
     }
 }
 
@@ -728,9 +728,9 @@ if (! function_exists('tutor_action_field') ) {
         }
 
         if ($echo ) {
-            echo $output;
+            echo _esc_html($output);
         } else {
-            return $output;
+            return _esc_html($output);
         }
     }
 }

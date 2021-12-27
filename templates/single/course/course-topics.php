@@ -56,8 +56,8 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 
                     <div class="tutor-course-topic tutor-topics-in-single-lesson <?php if($index == 1) echo "tutor-active"; ?>">
                         <div class="tutor-course-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
-                            <h4> 
-								<i class="tutor-icon-plus"></i> 
+                            <h4>
+								<i class="tutor-icon-plus"></i>
 								<?php
 								the_title();
 								if($topic_summery) {
@@ -71,7 +71,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 						if ($topic_summery){
 							?>
 							<div class="tutor-topics-summery">
-								<?php echo $topic_summery; ?>
+								<?php echo wp_kses_post( $topic_summery ); ?>
 							</div>
 							<?php
 						}
@@ -81,7 +81,7 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 
 							<?php
 							$lessons = tutor_utils()->get_course_contents_by_topic(get_the_ID(), -1);
-							
+
 							if ($lessons->have_posts()){
 								while ($lessons->have_posts()){ $lessons->the_post();
 									global $post;
@@ -117,12 +117,12 @@ $is_enrolled = tutor_utils()->is_enrolled($course_id);
 											$countdown = '';
 											if ($post->post_type === 'tutor_zoom_meeting'){
 												$lesson_title = '<i class="zoom-icon"><img src="'.TUTOR_ZOOM()->url . 'assets/images/zoom-icon-grey.svg"></i>';
-												
+
 												$zoom_meeting = tutor_zoom_meeting_data($post->ID);
 												$countdown = '<div class="tutor-zoom-lesson-countdown tutor-lesson-duration" data-timer="'.$zoom_meeting->countdown_date.'" data-timezone="'.$zoom_meeting->timezone.'"></div>';
 											}
 
-											
+
 											// Show clickable content if enrolled
 											// Or if it is public and not paid, then show content forcefully
 											if ($is_enrolled || (get_post_meta($course_id, '_tutor_is_public_course', true)=='yes' && !tutor_utils()->is_course_purchasable($course_id))){

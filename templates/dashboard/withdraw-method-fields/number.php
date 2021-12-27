@@ -5,4 +5,4 @@
  */
 
 ?>
-<input type="number" name="withdraw_method_field[<?php echo $method_id ?>][<?php echo $field_name ?>]" value="<?php echo $old_value; ?>">
+<input type="number" name="withdraw_method_field[<?php echo esc_attr( $method_id ); ?>][<?php echo esc_attr( $field_name ); ?>]" value="<?php echo esc_attr( $old_value ); ?>">

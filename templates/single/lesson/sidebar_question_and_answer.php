@@ -31,7 +31,7 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
         $current_user = tutor_utils()->get_user_id();
         $all_instructors = tutor_utils()->get_instructors_by_course($course_id);
         $all_instructors = wp_list_pluck( (array)$all_instructors, 'ID' );
-        
+
         if( in_array($current_user ,$all_instructors) ) {
             $questions = tutor_utils()->get_top_question($course_id, $current_user, 0 , 20, true);
         } else {
@@ -57,7 +57,7 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 
                         <div class="tutor_question_area">
                             <p><strong><?php echo stripslashes($question->question_title); ?> </strong></p>
-							<?php echo wpautop(stripslashes($question->comment_content)); ?>
+							<?php echo wp_kses_post(wpautop(stripslashes($question->comment_content))); ?>
                         </div>
                     </div>
                 </div>
@@ -86,7 +86,7 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
                                             </div>
 
                                             <div class="tutor_question_area">
-                                                <?php echo wpautop(stripslashes($answer->comment_content)); ?>
+                                                <?php echo wp_kses_post(wpautop(stripslashes($answer->comment_content))); ?>
                                             </div>
                                         </div>
                                     </div>
