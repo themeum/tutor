@@ -25,8 +25,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		?>
 		<div class="profile-completion">
 			<div class="tutor-bs-row tutor-bs-align-items-center">
-				<div class="tutor-bs-col-md-8 profile-completion-content">
-					<div class="list-item-title tutor-text-medium-h5 tutor-color-text-primary">
+				<div class="tutor-bs-col-md-7 profile-completion-content">
+					<div class="list-item-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-12">
 						<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
 					</div>
 					<div class="tutor-mt-20">
@@ -36,7 +36,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 										'tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full' :
 										'tutor-btn tutor-btn-sm tutor-btn-full'
 							?>
-								<li>
+								<li class="<?php echo "tutor-profile-complete-dash-{$total_count}" ?> ">
 									<span class="<?php echo $class; ?>"></span>
 								</li>
 								<?php
@@ -49,13 +49,13 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						</li>
 					</div>
 					<div class="list-item-title tutor-text-medium-h6 tutor-mt-30">
-						<span><?php $complete_count > ( $total_count / 2 ) ? _e( 'You are almost done', 'tutor' ) : _e( 'Please complete profile' ); ?></span>:&nbsp;
+						<span class="tutor-color-text-hints"><?php $complete_count > ( $total_count / 2 ) ? _e( 'You are almost done', 'tutor' ) : _e( 'Please complete profile' ); ?></span>:&nbsp;
 						<span class="tutor-color-text-primary">
 							<?php echo $complete_count . '/' . $total_count; ?>
 						</span>
 					</div>
 				</div>
-				<div class="tutor-bs-col-md-4 warning">
+				<div class="tutor-bs-col-md-5 warning">
 					<ul class="tutor-m-0 tutor-p-0">
 						<?php
 						foreach ( $profile_completion as $key => $data ) {
@@ -63,12 +63,12 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							?>
 								<li class="tutor-bs-d-flex tutor-bs-align-items-center">
 								<?php if ( $is_set ) : ?>
-										<span class="icon ttr-tick-circle-outline-filled not-empty tutor-mr-5"></span>
+										<span class="icon ttr-tick-circle-outline-filled not-empty tutor-mr-8"></span>
 									<?php else : ?>
 										<span class="ttr-cross-circle-outline-filled empty tutor-mr-5"></span>
 									<?php endif; ?>
 
-									<span>
+									<span class="<?php echo $is_set ? 'tutor-color-text-title' : 'tutor-color-text-hints' ?>">
 									<?php echo $data['label_html']; ?>
 									</span>
 								</li>
@@ -84,7 +84,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 }
 ?>
 
-<h3><?php _e('Dashboard', 'tutor'); ?></h3>
+<h3 class="tutor-dashboard-title"><?php _e('Dashboard', 'tutor'); ?></h3>
 
 <div class="tutor-dashboard-content-inner">
 
@@ -208,13 +208,13 @@ if ( count( $instructor_course ) ) {
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
-								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon"></span>
+								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-18"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled tutor-icon-18"></span>
 							</div>
 						</th>
 					</tr>
