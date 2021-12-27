@@ -20,7 +20,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
 ?>
 
 <div class="tutor-dashboard-content-inner">
-    <h3><?php _e('Reviews', 'tutor'); ?></h3>
+    <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e('Reviews', 'tutor'); ?></div>
 	<?php
 	if (current_user_can(tutor()->instructor_role)){
 		?>
@@ -54,31 +54,34 @@ $received_count = tutor_utils()->get_reviews_by_instructor(0, 0, 0)->count;
                     <div class="tutor-dashboard-review-header">
 
                         <div class="tutor-dashboard-review-heading">
-                            <div class="tutor-dashboard-review-title">
+                            <div class="tutor-dashboard-review-title tutor-text-regular-h6 tutor-color-text-primary">
 								<?php esc_html_e('Course: ', 'tutor'); ?>
-                                <span class="text-medium-h6" data-href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
+                                <span class="tutor-text-medium-h6" data-href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
                                     <?php esc_html_e(get_the_title($review->comment_post_ID)); ?>
                                 </span>
                             </div>
                         </div>
                     </div>
+
                     <div class="individual-dashboard-review-body">
-                        <div class="tutor-bs-d-flex tutor-bs-justify-content-between">
-                            <div class="individual-star-rating-wrap">
+                        <div class="tutor-bs-d-sm-flex tutor-bs-justify-content-between ">
+                            <div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-10">
                                 <?php tutor_utils()->star_rating_generator_v2($review->rating, null, true);?> 
                             </div>
-                            <div class="tutor-given-review-action">
-                                <span data-tutor-modal-target="<?php echo esc_html($update_id); ?>">
-                                    <i class="ttr-pencil-line"></i> <span><?php esc_html_e('Edit', 'tutor'); ?></span>
+                            <div class="tutor-given-review-action tutor-text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center">
+                                <span data-tutor-modal-target="<?php echo esc_html($update_id); ?>" class="tutor-bs-d-flex tutor-bs-align-items-center">
+                                    <i class="ttr-edit-filled tutor-icon-24 tutor-mr-3"></i>
+                                    <span><?php esc_html_e('Edit', 'tutor'); ?></span>
                                 </span>
-                                <span data-tutor-modal-target="<?php echo esc_html($delete_id); ?>">
-                                    <i class="ttr-delete-stroke-filled"></i> <span><?php esc_html_e('Delete', 'tutor'); ?></span>
+                                <span data-tutor-modal-target="<?php echo esc_html($delete_id); ?>" class="tutor-bs-d-flex tutor-bs-align-items-center">
+                                    <i class="ttr-delete-stroke-filled tutor-icon-24 tutor-mr-3"></i>
+                                    <span><?php esc_html_e('Delete', 'tutor'); ?></span>
                                 </span>
                             </div>
                         </div>
-                        <p class="tutor-mt-10 tutor-mb-10">
+                        <div class="tutor-mt-24 tutor-text-regular-body tutor-color-text-hints">
                             <?php echo htmlspecialchars(stripslashes( $review->comment_content )); ?>
-                        </p>
+                        </div>
                     </div>
 
                     <!-- Edit Modal -->

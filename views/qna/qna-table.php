@@ -49,7 +49,7 @@
                                         
                                     case 'student' :
                                         ?>
-                                        <td data-th="<?php echo $column; ?>" class="tutor-qna-badges">
+                                        <td data-th="<?php echo $column; ?>" class="tutor-qna-badges v-align-top">
                                             <div class="td-avatar">
                                                 <div class="tooltip-wrap">
                                                     <i data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled" class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer" data-action="important"></i>

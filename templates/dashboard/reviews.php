@@ -51,19 +51,19 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                 <thead>
                     <tr>
                         <th>
-                            <span class="text-regular-small tutor-color-text-subsued">
+                            <div class="tutor-text-regular-small tutor-color-text-subsued">
                                 <?php esc_html_e('Student', 'tutor'); ?>
-                            </span>
+                            </div>
                         </th>
                         <th>
-                            <span class="text-regular-small tutor-color-text-subsued">
+                            <div class="tutor-text-regular-small tutor-color-text-subsued">
                                 <?php esc_html_e('Date', 'tutor'); ?>
-                            </span>
+                            </div>
                         </th>
                         <th>
-                            <span class="text-regular-small tutor-color-text-subsued">
+                            <div class="tutor-text-regular-small tutor-color-text-subsued">
                                 <?php esc_html_e('Feedback', 'tutor'); ?>
-                            </span>
+                            </div>
                         </th>
                     </tr>
                 </thead>
@@ -79,30 +79,32 @@ $given_count = tutor_utils()->get_reviews_by_user(0, 0, 0, true)->count;
                             <td data-th="<?php esc_html_e('Student', 'tutor'); ?>" class="column-fullwidth">
                                 <div class="td-avatar">
                                     <img src="<?php echo esc_url($avatar_url); ?>" alt="student avatar"/>
-                                    <span class="tutor-text-medium-body  tutor-color-text-primary">
+                                    <span class="tutor-text-medium-body tutor-color-text-primary">
                                         <?php esc_html_e($student_name); ?>
                                     </span>
                                 </div>
                             </td>
                             <td data-th="<?php esc_html_e('Date', 'tutor'); ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
-                                    <?php echo tutor_get_formated_date(null, $review->comment_date); ?>
-                                </span>
+                                <div class="text-medium-caption tutor-color-text-primary">
+                                    <?php
+                                    $date = explode(',', tutor_get_formated_date(null, $review->comment_date));
+                                    echo $date[0] . ',<br />'. $date[1]; ?>
+                                </div>
                             </td>
                             <td data-th="<?php esc_html_e('Feedback', 'tutor'); ?>">
                                 <div class="td-feedback">
                                     <div class="td-tutor-rating tutor-text-regular-body tutor-color-text-subsued">
                                         <?php tutor_utils()->star_rating_generator_v2($review->rating, null, true); ?>
                                     </div>
-                                    <p class="review-text tutor-color-text-subsued tutor-mb-0">
+                                    <div class="tutor-text-regular-body tutor-color-text-subsued tutor-mt-10">
                                         <?php echo htmlspecialchars(stripslashes( $review->comment_content )); ?>
-                                    </p>
-                                    <p class="course-name tutor-text-medium-small tutor-color-text-title tutor-mb-0">
-                                        <strong><?php esc_html_e('Course', 'tutor'); ?>:</strong>&nbsp;
+                                    </div>
+                                    <div class="course-name tutor-text-regular-small tutor-color-text-title tutor-mb-0">
+                                        <span class="tutor-text-medium-small"><?php esc_html_e('Course', 'tutor'); ?>:</span>&nbsp;
                                         <span data-href="<?php echo esc_url(get_the_permalink($review->comment_post_ID)); ?>">
                                             <?php esc_html_e(get_the_title($review->comment_post_ID)); ?>
                                         </span>
-                                    </p>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
