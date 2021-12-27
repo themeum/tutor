@@ -70,17 +70,19 @@
                                         $content = htmlspecialchars( strip_tags($qna->comment_content) );
                                         ?>
                                         <td data-th="<?php echo $column; ?>" title="<?php echo $content; ?>">
-                                            <div class="tutor-input-feedback tutor-has-icon tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
-                                                <i class="ttr-bullet-point-filled tutor-input-feedback-icon"></i>
-                                                <div>
-                                                    <span class="tutor-qna-title">
-                                                        <?php echo $content;?>
-                                                    </span>
-                                                    <small class="tutor-text-nowrap">
-                                                        <?php _e('Course'); ?>: <?php echo $qna->post_title; ?>
-                                                    </small>
-                                                </div>            
-                                            </div>
+                                            <a href="<?php echo add_query_arg( array( 'question_id'=>$qna->comment_ID ), tutor()->current_url ); ?>">
+                                                <div class="tutor-input-feedback tutor-has-icon tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
+                                                    <i class="ttr-bullet-point-filled tutor-input-feedback-icon"></i>
+                                                    <div>
+                                                        <span class="tutor-qna-title">
+                                                            <?php echo $content;?>
+                                                        </span>
+                                                        <small class="tutor-text-nowrap">
+                                                            <?php _e('Course'); ?>: <?php echo $qna->post_title; ?>
+                                                        </small>
+                                                    </div>            
+                                                </div>
+                                            </a>
                                         </td>
                                         <?php
                                         break;
