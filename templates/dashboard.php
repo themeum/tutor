@@ -104,7 +104,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 					?> -->
 				</div>
 			</div>
-			<div class="tutor-header-right-side tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end">
+			<div class="tutor-header-right-side tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end tutor-mt-20 tutor-mt-md-0">
 				<div class="tutor-bs-d-flex align-items-center">
 					<?php
 						do_action( 'tutor_dashboard/before_header_button' );
