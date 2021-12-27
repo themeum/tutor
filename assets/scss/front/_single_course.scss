@@ -41,7 +41,7 @@
 }
 
 .tutor-single-course-rating {
-    color: #F8C51C;
+    color: #f8c51c;
     font-size: 16px;
     .tutor-single-rating-count {
         color: var(--tutor-text-color);
@@ -72,7 +72,6 @@
     margin-bottom: 40px;
     //font-size: var(--tutor-text-size);
 }
-
 
 /*tutor course meta*/
 
@@ -132,7 +131,7 @@
     color: #ffffff;
 }
 
-.tutor-single-course-meta ul li>div {
+.tutor-single-course-meta ul li > div {
     display: inline-block;
     vertical-align: top;
 }
@@ -174,8 +173,8 @@
 
 .tutor-single-course-meta.tutor-lead-meta {
     margin-bottom: 33px;
-    border-top: 1px solid #DCDFE5;
-    border-bottom: 1px solid #DCDFE5;
+    border-top: 1px solid #dcdfe5;
+    border-bottom: 1px solid #dcdfe5;
 }
 
 @media (max-width: 991px) {
@@ -222,7 +221,7 @@
 }
 
 .tutor-single-course-meta.tutor-lead-meta ul li a:not(:last-child):after {
-    content: ',';
+    content: ",";
     margin-right: 4px;
 }
 
@@ -243,11 +242,10 @@
         font-weight: 700;
     }
     .tutor-single-course-meta.tutor-lead-meta ul li span::after {
-        content: ':';
+        content: ":";
         color: var(--tutor-text-color);
     }
 }
-
 
 /*benifit*/
 
@@ -265,7 +263,6 @@
     //font-size: var(--tutor-text-size);
 }
 
-
 /*.tutor-course-topics-wrap*/
 
 .tutor-course-topics-header {
@@ -275,7 +272,9 @@
     margin-bottom: 8px;
 }
 
-.tutor-course-topics-header .tutor-course-topics-header-right span:not(:first-child) {
+.tutor-course-topics-header
+    .tutor-course-topics-header-right
+    span:not(:first-child) {
     margin-left: 45px;
 }
 
@@ -298,7 +297,7 @@
     margin-top: 0;
 }
 
-.tutor-course-topic.tutor-active .tutor-course-title h4>i:before {
+.tutor-course-topic.tutor-active .tutor-course-title h4 > i:before {
     content: "\e910";
 }
 
@@ -310,7 +309,7 @@
 }
 
 .tutor-course-topics-contents .tutor-course-topic {
-    border: 1px solid #DCE4E6;
+    border: 1px solid #dce4e6;
     margin-bottom: 20px;
     border-radius: 5px;
     overflow: hidden;
@@ -322,7 +321,7 @@
 }
 
 .tutor-course-lesson {
-    border-top: 1px solid #DCE4E6;
+    border-top: 1px solid #dce4e6;
 }
 
 .tutor-course-lesson h5 {
@@ -388,16 +387,19 @@ table.course-single-gradebooks .datetime {
     overflow: hidden;
     font-size: 20px;
     background-position: center center !important;
-    background-size: cover !important
+    background-size: cover !important;
 }
 
-.tutor-course-lessons .tutor-course-lesson h5 i.tutor-lesson-thumbnail-icon:after {
+.tutor-course-lessons
+    .tutor-course-lesson
+    h5
+    i.tutor-lesson-thumbnail-icon:after {
     position: absolute;
-    content: '';
+    content: "";
     left: 0;
     top: 0;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, .5);
-    z-index: -1
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
 }
