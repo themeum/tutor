@@ -308,9 +308,14 @@ class Course_List {
 			$wpdb->prepare(
 				" DELETE FROM {$post_table}
 				WHERE ID IN ($bulk_ids)
-			"
+					AND 1 = %d
+			",
+				1
 			)
 		);
+		// Delete post meta.
+		self::permanently_delete_course_meta( $bulk_ids );
+
 		return false === $delete ? false : true;
 	}
 
@@ -401,5 +406,28 @@ class Course_List {
 			'total_inprogress'  => $course_inprogress,
 			'total_enrollments' => count( $enrollments ),
 		);
+	}
+
+	/**
+	 * Delete post meta permanently
+	 *
+	 * @param string $bulk_ids | comma separated ids.
+	 *
+	 * @return bool
+	 *
+	 * @since v2.0.0
+	 */
+	public static function permanently_delete_course_meta( $bulk_ids ): bool {
+		global $wpdb;
+		$wpdb->query(
+			$wpdb->prepare(
+				" DELETE FROM {$wpdb->postmeta}
+				WHERE post_id IN ($bulk_ids)
+					AND 1 = %d
+			",
+				1
+			)
+		);
+		return true;
 	}
 }
