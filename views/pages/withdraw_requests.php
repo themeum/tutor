@@ -92,7 +92,7 @@ $filters = array(
 								<span>
 									<?php esc_html_e( 'Request By', 'tutor' ); ?>
 								</span>
-								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-color-text-subsued"></span>
+								<span class="ttr-ordering-a-to-z-filled tutor-icon-18 a-to-z-sort-icon tutor-color-text-subsued"></span>
 							</div>
 						</th>
 						<th>

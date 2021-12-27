@@ -161,7 +161,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<span class="text-regular-small">
 									<?php esc_html_e( 'Date', 'tutor' ); ?>
 								</span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
@@ -169,7 +169,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<span class="text-regular-small">
 									<?php esc_html_e( 'Title', 'tutor' ); ?>
 								</span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
@@ -177,7 +177,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<span class="text-regular-small">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 								</span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled"></span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>	
 						<th>
