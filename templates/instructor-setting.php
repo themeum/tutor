@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) )
 					?>
                     <label class="instructor-layout-template <?php echo ($template === $selected_template) ? 'selected-template' : '' ?> ">
                         <img src="<?php echo esc_url($img); ?>" />
-                        <input type="radio" name="tutor_option[instructor_list_layout]" value="<?php echo $template; ?>" <?php checked($template, $selected_template) ?> style="display: none;" >
+                        <input type="radio" name="tutor_option[instructor_list_layout]" value="<?php echo esc_attr( $template ); ?>" <?php checked($template, $selected_template) ?> style="display: none;" >
                     </label>
 					<?php
 				}

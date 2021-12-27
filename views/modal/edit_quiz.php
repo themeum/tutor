@@ -96,7 +96,7 @@ if ( $topic_id != '' ) {
                                     <span class="question-icon">
                                         <?php
                                         $type = tutor_utils()->get_question_types($question->question_type);
-                                        echo $type['icon'] . ' ' . esc_attr($type['name']);
+                                        echo $type['icon'] . ' ' . $type['name'];
                                         ?>
                                     </span>
 

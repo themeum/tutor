@@ -40,7 +40,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 		$quiz_title = "<p><strong>{$item->display_name}</strong></p>";
 		$quiz_title .= "<p>{$item->user_email}</p>";
-		//@since 1.9.5 instead of showing time ago showing original date time 
+		//@since 1.9.5 instead of showing time ago showing original date time
 		if ($item->attempt_ended_at){
 			$ended_ago_time = human_time_diff(strtotime($item->attempt_ended_at), tutor_time()).__(' ago', 'tutor');
 			$attempt_started_at = date_format(date_create($item->attempt_started_at), 'd M, Y, h:i a');
@@ -77,7 +77,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	}
 
 	function column_total_questions($item) {
-		echo $item->total_questions;
+		echo esc_attr( $item->total_questions );
 	}
 
 	function column_earned_marks($item){
@@ -168,10 +168,10 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$this->items = array();
 
 		if ( current_user_can( 'administrator' ) ) {
-			
+
 			$this->items = tutor_utils()->get_quiz_attempts( ( $current_page - 1 ) * $per_page, $per_page, $search_filter, $course_filter, $date_filter, $order_filter );
 
-			$total_items = tutor_utils()->get_total_quiz_attempts(); 
+			$total_items = tutor_utils()->get_total_quiz_attempts();
 
 		} elseif ( current_user_can( 'tutor_instructor' ) ){
 			/**
@@ -191,7 +191,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			if (is_array($get_course_ids) && count($get_course_ids)){
 
 				$this->items = tutor_utils()->get_quiz_attempts_by_course_ids(( $current_page - 1 ) * $per_page, $per_page, $get_course_ids, $search_filter, $course_filter, $date_filter, $order_filter );
-				
+
 				$total_items = tutor_utils()->get_total_quiz_attempts_by_course_ids($get_course_ids);
 			}
 

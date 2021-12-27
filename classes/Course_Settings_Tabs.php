@@ -86,7 +86,7 @@ class Course_Settings_Tabs {
 						$field['field_key'] = $field_key;
 						$this->field_type( $field );
 						if ( isset( $field['desc'] ) ) {
-							printf( "<p class='desc'>%s</p>", esc_attr( $field['desc'] ) );
+							printf( "<p class='desc'>%s</p>", _esc_html( $field['desc'] ) );
 						}
 						?>
 					</div>

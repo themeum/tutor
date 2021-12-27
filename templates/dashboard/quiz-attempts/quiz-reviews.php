@@ -95,7 +95,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
             <div class="attempt-header-quiz"><?php echo __('Quiz:','tutor')." <a href='" .get_permalink($attempt_data->quiz_id)."'>".get_the_title($attempt_data->quiz_id)."</a>"; ?></div>
             <div class="attempt-header-course"><?php echo __('Course:','tutor')." <a href='" .get_permalink($attempt_data->course_id)."'>".get_the_title($attempt_data->course_id)."</a>"; ?></div>
         </div>
-            
+
         <table class="wp-list-table">
             <tr>
                 <th><?php _e('#', 'tutor'); ?></th>
@@ -108,7 +108,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
                 <th><?php _e('Earned Marks', 'tutor'); ?></th>
                 <th><?php _e('Results', 'tutor'); ?></th>
             </tr>
-            
+
             <tr>
                 <td><?php echo $attempt_data->attempt_id; ?></td>
                 <td>
@@ -119,7 +119,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
                 <td><?php echo $attempt_data->total_questions; ?></td>
                 <td><?php echo $attempt_data->total_marks; ?></td>
                 <td>
-                    <?php 
+                    <?php
                         $pass_mark_percent = tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
                         echo $pass_mark_percent.'%';
                     ?>
@@ -145,14 +145,14 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
                 </td>
                 <td><?php echo $incorrect; ?></td>
                 <td>
-                    <?php 
-                        echo $attempt_data->earned_marks; 
+                    <?php
+                        echo $attempt_data->earned_marks;
                         $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
                         echo '('.$earned_percentage.'%)';
                     ?>
                 </td>
                 <td>
-                    <?php 
+                    <?php
                         if ($earned_percentage >= $pass_mark_percent){
                             echo '<span class="result-pass">'.__('Pass', 'tutor').'</span>';
                         }else{
@@ -361,7 +361,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
                                     if($correct_answer){
                                         echo implode(', ', explode('|', stripslashes($correct_answer)));
                                     }
-                                    
+
                                 } elseif ( $answer->question_type === 'ordering' ) {
                                     $correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d ORDER BY answer_order ASC;", $answer->question_id ) );
                                     show_correct_answer($correct_answer);

@@ -339,7 +339,7 @@ class Tutor_List_Table {
 			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
 		?>
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo $text; ?>:</label>
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_attr( $text ); ?>:</label>
 			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, '', '', false, array( 'id' => 'search-submit' ) ); ?>
 		</p>
@@ -359,16 +359,16 @@ class Tutor_List_Table {
 				<select class="tutor-assignment-course-sorting">
 					<option value="0">'.__('All','tutor').'</option>
 					OPTIONS_PLACEHOLDER
-				</select>	
+				</select>
 			</div>
 			';
 		$options = '';
 		foreach ( $courses as $course ) {
 			$options .= '<option value="' . $course->ID . '" ' . selected( $selected,$course->ID, false ) . '> ' . $course->post_title . ' </option>';
 		}
-		
+
 		$content = str_replace( 'OPTIONS_PLACEHOLDER', $options, $markup );
-		echo $content;
+		echo _esc_html($content);
 	}
 
 	/**
@@ -384,15 +384,15 @@ class Tutor_List_Table {
 				<label>'.__('Sort By', 'tutor').'</label>
 				<select class="tutor-assignment-order-sorting">
 					OPTION_PLACEHOLDER
-				</select>	
+				</select>
 			</div>
 			';
 		$options = '';
 		foreach( $orders as $order ) {
 			$options .= '<option value="' . $order . '" '. selected( $selected, $order, false ) . '> '. __( $order, 'tutor' ) . ' </option>';
-		}		
+		}
 		$content = str_replace( 'OPTION_PLACEHOLDER', $options, $markup );
-		echo $content;		
+		echo _esc_html($content);
 	}
 	/**
 	 * @since 1.8.0
@@ -410,8 +410,8 @@ class Tutor_List_Table {
 				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="' . $placeholder . '" value="' . $date_input . '">
 				<i class="tutor-icon-calendar"></i>
 			</div>
-			';		
-		echo $markup;
+			';
+		echo _esc_html($markup);
 	}
 
 	/**
@@ -892,7 +892,7 @@ class Tutor_List_Table {
 		}
 		$this->_pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
 
-		echo $this->_pagination;
+		echo _esc_html($this->_pagination);
 	}
 
 	/**
@@ -1222,9 +1222,9 @@ class Tutor_List_Table {
 
 	/**
 	 * Sorting fields added on tutor table
-	 * 
+	 *
 	 * Course id | Search | Date | Order
-	 * 
+	 *
 	 * @since 1.9.5
 	 */
 	protected function display_sorting_fields() {
@@ -1245,7 +1245,7 @@ class Tutor_List_Table {
 
 				?>
 			</div>
-			
+
 			<div class="tutor-admin-search-box-container" style="margin:0px;">
 
 				<div>
@@ -1257,13 +1257,13 @@ class Tutor_List_Table {
 						?>
 
 						<select class="tutor-report-category tutor-announcement-course-sorting">
-						
+
 							<option value=""><?php _e('All', 'tutor'); ?></option>
-						
+
 							<?php if ($courses) : ?>
 								<?php foreach ($courses as $course) : ?>
 									<option value="<?php echo esc_attr($course->ID) ?>" <?php selected($course_id, $course->ID, 'selected') ?>>
-										<?php echo $course->post_title; ?>
+										<?php echo esc_attr( $course->post_title ); ?>
 									</option>
 								<?php endforeach; ?>
 							<?php else : ?>
@@ -1294,13 +1294,13 @@ class Tutor_List_Table {
 				<div class="tutor-search-form-group">
 					<div class="menu-label"><?php _e('Search', 'tutor'); ?></div>
 					<div style="position:relative;">
-						<input type="text" name="search" class="tutor-report-search tutor-announcement-search-field" value="<?php echo $search_filter; ?>" autocomplete="off" placeholder="<?php _e('Search', 'tutor'); ?>" />
+						<input type="text" name="search" class="tutor-report-search tutor-announcement-search-field" value="<?php echo esc_attr( $search_filter ); ?>" autocomplete="off" placeholder="<?php _e('Search', 'tutor'); ?>" />
 						<button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
 					</div>
 				</div>
-				
-			</div>		
-		</div>		
+
+			</div>
+		</div>
 		<?php
 	}
 
@@ -1392,7 +1392,7 @@ class Tutor_List_Table {
 
 			if ( 'cb' === $column_name ) {
 				echo '<th scope="row" class="check-column">';
-				echo $this->column_cb( $item );
+				echo _esc_html($this->column_cb( $item ));
 				echo '</th>';
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {
 				echo call_user_func(
@@ -1405,12 +1405,12 @@ class Tutor_List_Table {
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
 				echo "<td $attributes>";
 				echo call_user_func( array( $this, 'column_' . $column_name ), $item );
-				echo $this->handle_row_actions( $item, $column_name, $primary );
+				echo _esc_html($this->handle_row_actions( $item, $column_name, $primary ));
 				echo "</td>";
 			} else {
 				echo "<td $attributes>";
-				echo $this->column_default( $item, $column_name );
-				echo $this->handle_row_actions( $item, $column_name, $primary );
+				echo _esc_html($this->column_default( $item, $column_name ));
+				echo _esc_html($this->handle_row_actions( $item, $column_name, $primary ));
 				echo "</td>";
 			}
 		}
@@ -1427,7 +1427,7 @@ class Tutor_List_Table {
 	 * @return string The row actions HTML, or an empty string if the current column is the primary column.
 	 */
 	protected function handle_row_actions( $item, $column_name, $primary ) {
-		return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>' : '';
+		return $column_name === $primary ? _esc_html('<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>') : '';
 	}
 
 	/**

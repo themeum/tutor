@@ -55,7 +55,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 						$topic_summery = get_the_content();
 						?>
 
-                        <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
+                        <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo esc_attr( $topic_id ); ?>">
                             <div class="tutor-topics-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
                                 <h3>
 									<?php
@@ -72,7 +72,7 @@ $enable_q_and_a_on_course = tutor_utils()->get_option('enable_q_and_a_on_course'
 							if ($topic_summery){
 								?>
                                 <div class="tutor-topics-summery">
-									<?php echo $topic_summery; ?>
+									<?php echo wp_kses_post( $topic_summery ); ?>
                                 </div>
 								<?php
 							}

@@ -80,7 +80,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 						    $topic_summery = get_the_content();
 						    ?>
 
-                            <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
+                            <div class="tutor-topics-in-single-lesson tutor-topics-<?php echo esc_attr( $topic_id ); ?>">
                                 <div class="tutor-topics-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
                                     <h3>
 									    <?php
@@ -97,7 +97,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
 							    if ($topic_summery){
 								    ?>
                                     <div class="tutor-topics-summery">
-									    <?php echo $topic_summery; ?>
+									    <?php echo wp_kses_post( $topic_summery ); ?>
                                     </div>
 								    <?php
 							    }

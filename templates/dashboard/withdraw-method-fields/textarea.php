@@ -5,4 +5,4 @@
  */
 
 ?>
-<textarea name="withdraw_method_field[<?php echo $method_id ?>][<?php echo $field_name ?>]"><?php echo $old_value; ?></textarea>
+<textarea name="withdraw_method_field[<?php echo esc_attr( $method_id ); ?>][<?php echo esc_attr( $field_name ); ?>]"><?php echo esc_attr( $old_value ); ?></textarea>

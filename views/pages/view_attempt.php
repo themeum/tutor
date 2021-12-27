@@ -201,7 +201,7 @@ $user = get_userdata($user_id);
                     $question_type = tutor_utils()->get_question_types($answer->question_type);
                     ?>
                     <tr>
-                        <td><?php echo _esc_html( $question_type['icon'] ); ?></td>
+                        <td><?php echo $question_type['icon']; ?></td>
                         <td><?php echo esc_attr( $answer_i ); ?></td>
                         <td><?php echo stripslashes($answer->question_title); ?></td>
                         <td>
@@ -309,7 +309,7 @@ $user = get_userdata($user_id);
 
     if ( $answer->is_correct ) {
         echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
-    } 
+    }
     else {
         if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer')
         {
@@ -322,11 +322,11 @@ $user = get_userdata($user_id);
             else if ( $answer->is_correct == 0 ) {
 
                 echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
-            } 
+            }
             else {
                 echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> '.__('Correct', 'tutor').'</span>';
             }
-        } 
+        }
         else {
             echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> '.__('Incorrect', 'tutor').'</span>';
         }
@@ -335,7 +335,7 @@ $user = get_userdata($user_id);
 </td>
 
                         <td style="white-space: nowrap">
-                            <?php 
+                            <?php
                                 $nonce_key = tutor()->nonce;
                                 $nonce_value = wp_create_nonce(tutor()->nonce_action);
                             ?>
