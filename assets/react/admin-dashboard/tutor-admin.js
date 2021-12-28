@@ -189,11 +189,35 @@ jQuery(document).ready(function ($) {
         if (!data.success) {
           if (data.data.errors.errors) {
             for (let v of Object.values(data.data.errors.errors)) {
-              responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+              //responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+              responseContainer.append(`
+              <div class='tutor-bs-col'>
+                <div class="tutor-alert tutor-warning">
+                <div class="tutor-alert-text">
+                    <span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+                    <span>
+                      ${v}
+                    </span>
+                </div>
+                </div>
+              </div>
+              `);
             }
           } else {
             for (let v of Object.values(data.data.errors)) {
-              responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+              //responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+              responseContainer.append(`
+              <div class='tutor-bs-col'>
+                <div class="tutor-alert tutor-warning">
+                <div class="tutor-alert-text">
+                    <span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+                    <span>
+                      ${v}
+                    </span>
+                </div>
+                </div>
+              </div>
+              `);
             }
           }
 

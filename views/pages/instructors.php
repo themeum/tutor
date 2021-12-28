@@ -18,7 +18,6 @@ if ( isset( $_GET['sub_page'] ) ) {
 use TUTOR\Instructors_List;
 $instructors = new Instructors_List();
 
-
 /**
  * Short able params
  */
@@ -46,11 +45,11 @@ if ( 'pending' === $active_tab ) {
 	$instructor_status = array( 'pending' );
 } elseif ( 'blocked' === $active_tab ) {
 	$instructor_status = array( 'blocked' );
-} else if('approved' == $active_tab) {
+} elseif ( 'approved' == $active_tab ) {
 	$instructor_status = array( 'approved' );
 }
 $instructors_list = tutor_utils()->get_instructors( $offset, $per_page, $search, $course_id, $date, $order, $instructor_status );
-$total = tutor_utils()->get_total_instructors( $search, $instructor_status, $course_id, $date );
+$total            = tutor_utils()->get_total_instructors( $search, $instructor_status, $course_id, $date );
 
 /**
  * Navbar data to make nav menu
@@ -85,8 +84,12 @@ $filters = array(
 	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
-
-?>
+	$available_status = array(
+		'pending'  => 'warning',
+		'approved' => 'success',
+		'blocked'  => 'danger',
+	);
+	?>
 
 <div class="wrap">
 	<div class="tutor-ui-table-responsive tutor-mt-30">
@@ -117,6 +120,14 @@ $filters = array(
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
+					<div class="inline-flex-center tutor-color-text-subsued">
+						<span class="text-regular-small">
+							<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
+						</span>
+						<span class="ttr-order-down-filled up-down-icon"></span>
+					</div>
+				</th>
+				<th class="tutor-table-rows-sorting">
 				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled up-down-icon"></span>
@@ -127,12 +138,10 @@ $filters = array(
 			</thead>
 			<tbody>
 				<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
-	
 					<?php
 					foreach ( $instructors_list as $list ) :
 						$alert = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
 						?>
-						
 						<tr>
 							<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
 								<div class="td-checkbox d-flex ">
@@ -146,8 +155,7 @@ $filters = array(
 									<span class="tutor-color-text-primary tutor-text-medium-body">
 										<?php echo esc_html( $list->display_name ); ?>
 									</span>
-								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
-									<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link tutor-color-design-dark">
+									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
 										<span class="ttr-detail-link-filled tutor-mt-5"></span>
 									</a>
 								</div>
@@ -163,17 +171,28 @@ $filters = array(
 							<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
 								</span>
 							</td>
-							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<span class="tutor-color-text-primary tutor-text-medium-caption">
-									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?>">
-									<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
-									</span>
+							<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
+								<span class="tutor-color-text-primary tutor-text-regular-caption">
+								<?php echo esc_html( tutor_utils()->get_option( 'earning_instructor_commission' ) . '%' ); ?>
 								</span>
 							</td>
-							<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
-							<div class="inline-flex-center td-action-btns">
-							<?php echo wp_kses_post( $instructors->column_action( $list, 'status' ) ); ?>
-							</div>
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>" class="tutor-instructor-status-update"  data-id="<?php echo esc_attr( $list->ID ); ?>">
+								<div class="tutor-form-select-with-icon select-<?php echo esc_html( $available_status[ $list->status ] ); ?>">
+									<select>
+										<?php foreach ( $available_status as $key => $status ) : ?>
+											<option value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $status ); ?>" <?php selected( $list->status, $key ); ?>>
+												<?php echo esc_html( tutor_utils()->translate_dynamic_text( $key ) ); ?>
+											</option>
+										<?php endforeach; ?>
+									</select>
+									<i class="icon1 ttr-eye-fill-filled"></i>
+									<i class="icon2 ttr-angle-down-filled"></i>
+								</div>
+							</td>
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+								<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-disable-outline tutor-btn-sm">
+									<?php esc_html_e( 'Edit', 'tutor' ); ?>
+								</a>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -226,7 +245,7 @@ $filters = array(
 							<?php esc_html_e( 'First Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
+							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 					<div class="tutor-bs-col">
@@ -234,7 +253,7 @@ $filters = array(
 							<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="last_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
+							<input type="text" name="last_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
@@ -244,7 +263,7 @@ $filters = array(
 							<?php esc_html_e( 'User Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
+							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>" pattern="^[a-zA-Z0-9_]*$" title="<?php esc_attr_e( 'Only alphanumeric and underscore are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 					<div class="tutor-bs-col">
@@ -252,7 +271,7 @@ $filters = array(
 							<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
+							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
@@ -273,7 +292,7 @@ $filters = array(
 						</label>
 						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
 							<span class="ttr-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
-							<input type="password" name="password"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="new-password" required/>
+							<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control tutor-mb-10" minlength="8" placeholder="*******" autocomplete="new-password" required/>
 						</div>
 					</div>
 					<div class="tutor-bs-col">
@@ -282,7 +301,7 @@ $filters = array(
 						</label>
 						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
 							<span class="ttr-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
-							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" required/>
+							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.' ,'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
 						</div>
 					</div>
 				</div>	
@@ -301,7 +320,7 @@ $filters = array(
 					</div>
 				</div>
 				<div class="tutor-bs-row tutor-mx-0" id="tutor-new-instructor-form-response"></div>
-		  	</div>
+			  </div>
 			<div class="tutor-modal-footer">
 				<div class="tutor-bs-d-flex tutor-bs-justify-content-between">
 					<div class="col">
@@ -327,9 +346,9 @@ $filters = array(
  *
  * @since v2.0.0
  */
-$instructor_id         = isset( $_GET['instructor'] ) ? sanitize_text_field( $_GET['instructor'] ) : '';
-$prompt_action         = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-	$instructor_data   = get_userdata( $instructor_id );
+$instructor_id       = isset( $_GET['instructor'] ) ? sanitize_text_field( $_GET['instructor'] ) : '';
+$prompt_action       = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+	$instructor_data = get_userdata( $instructor_id );
 if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) ) :
 	$instructor_status = tutor_utils()->instructor_status( $instructor_data->ID, false );
 	?>

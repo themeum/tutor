@@ -47,7 +47,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php _e( 'Announcement Title', 'tutor' ); ?>
 						</label>
-						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php _e( 'Announcement title', 'tutor' ); ?>" required>
+						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php _e( 'Announcement title', 'tutor' ); ?>" maxlength="255" required>
 					</div>
 					<div class="tutor-form-group">
 						<label class="tutor-form-label" for="tutor_announcement_course">
