@@ -116,8 +116,7 @@ $filters = array(
 								<span class="tutor-color-text-primary tutor-text-medium-body tutor-m-0">
 									<?php esc_html_e( $list->display_name ); ?>
 								</span>
-								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php')); ?>
-								<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link tutor-color-design-dark">
+								<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
 									<span class="ttr-detail-link-filled tutor-mt-5"></span>
 								</a>
 							</div>
