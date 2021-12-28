@@ -1,9 +1,9 @@
 <?php
 /**
  * Add translation support for external tinyMCE button
- * 
+ *
  * Containing all translate able strings
- * 
+ *
  * @since 1.9.7
  */
 if ( ! defined( 'ABSPATH' ) )
@@ -34,3 +34,4 @@ function tutor_tinymce_plugin_translation() {
 }
 
 $strings = tutor_tinymce_plugin_translation();
+

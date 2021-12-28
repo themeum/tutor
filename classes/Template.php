@@ -141,7 +141,7 @@ class Template extends Tutor_Base {
 		if ($wp_query->is_single && ! empty($wp_query->query_vars['post_type']) && $wp_query->query_vars['post_type'] === $this->course_post_type){
 
 			do_action( 'single_course_template_before_load', get_the_ID() );
-			
+
 			$student_must_login_to_view_course = tutor_utils()->get_option('student_must_login_to_view_course');
 			if ($student_must_login_to_view_course){
 				if ( ! is_user_logged_in() ) {
@@ -223,7 +223,7 @@ class Template extends Tutor_Base {
 			if(get_post_meta($course_id, '_tutor_is_public_course', true)=='yes' && !tutor_utils()->is_course_purchasable($course_id)){
 				$template = tutor_get_template( 'single-lesson' );
 			}
-			
+
 			return apply_filters('tutor_lesson_template', $template);
 		}
 		return $template;
@@ -334,7 +334,7 @@ class Template extends Tutor_Base {
 						global $wp;
 						$full_path = explode('/', trim( str_replace( get_home_url(), '', home_url( $wp->request ) ), '/' ) );
 						$template = tutor_get_template( end($full_path)=='create-course' ? implode('/', $full_path) : 'dashboard' );
-						
+
 						/**
 						 * Check page page permission
 						 *

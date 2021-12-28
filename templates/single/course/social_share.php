@@ -17,13 +17,11 @@ $share_config = array(
 	'text'  => get_the_excerpt(),
 	'image' => get_tutor_course_thumbnail( 'post-thumbnail', true ),
 );
-echo $share_config_json = json_encode($share_config);
 ?>
-
-<div class="tutor-social-share-wrap" data-social-share-config="<?php echo $share_config_json; ?>">
-	<?php
-	foreach ( $tutor_social_share_icons as $icon ) {
-		echo '<button class="tutor_share ' . $icon['share_class'] . '"> ' . $icon['icon_html'] . ' </button>';
-	}
-	?>
+<div class="tutor-social-share-wrap" data-social-share-config="<?php echo esc_attr(  json_encode( $share_config ) ); ?>">
+<?php
+foreach ( $tutor_social_share_icons as $icon ) {
+	echo '<button class="tutor_share ' . esc_attr( $icon['share_class'] ) . '"> ' . _esc_html( $icon['icon_html'] ) . ' </button>';
+}
+?>
 </div>
