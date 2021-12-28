@@ -47,13 +47,15 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php _e( 'Announcement Title', 'tutor' ); ?>
 						</label>
-						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php _e( 'Announcement title', 'tutor' ); ?>" required>
+						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php _e( 'Announcement title', 'tutor' ); ?>" maxlength="255" required>
 					</div>
 					<div class="tutor-form-group">
 						<label class="tutor-form-label" for="tutor_announcement_course">
 							<?php _e( 'Summary', 'tutor' ); ?>
 						</label>
-						<textarea class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php echo $summary; ?></textarea>
+						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required>
+							<?php echo $summary; ?>
+						</textarea>
 					</div>
 
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
@@ -239,7 +241,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										type="checkbox"
 										class="tutor-form-check-input tutor-bulk-checkbox"
 										name="tutor-bulk-checkbox-all"
-										value="<?php esc_attr_e( $announcement->ID ); ?>"
+										value="<?php esc_attr_e( $announcement->ID ); ?>"	
 									/>
 								</div>
 							</td>
@@ -260,8 +262,8 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 								<div class="td-course tutor-color-text-primary tutor-text-medium-body">
 									<?php echo esc_html( $announcement->post_title ); ?>
 								</div>
-								<div class="text-subsued">
-									<strong><?php esc_html_e( 'Course', 'tutor' ); ?>: </strong> <?php echo esc_html( $course ? $course->post_title : '' ); ?>
+								<div class="tutor-color-text-subsued" style="font-weight: 500; font-size: 15px; line-height: 21px;">
+									<?php esc_html_e( 'Course', 'tutor' ); ?>: <?php echo esc_html( $course ? $course->post_title : '' ); ?>
 								</div>
 							</div>
 						</td>
