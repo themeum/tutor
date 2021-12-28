@@ -138,12 +138,10 @@ $filters = array(
 			</thead>
 			<tbody>
 				<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
-	
 					<?php
 					foreach ( $instructors_list as $list ) :
 						$alert = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
 						?>
-						
 						<tr>
 							<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
 								<div class="td-checkbox d-flex ">
@@ -157,8 +155,7 @@ $filters = array(
 									<span class="tutor-color-text-primary tutor-text-medium-body">
 										<?php echo esc_html( $list->display_name ); ?>
 									</span>
-								<?php $edit_link = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ); ?>
-									<a href="<?php echo esc_url( $edit_link ); ?>" class="btn-text btn-detail-link tutor-color-design-dark">
+									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
 										<span class="ttr-detail-link-filled tutor-mt-5"></span>
 									</a>
 								</div>
@@ -179,11 +176,11 @@ $filters = array(
 								<?php echo esc_html( tutor_utils()->get_option( 'earning_instructor_commission' ) . '%' ); ?>
 								</span>
 							</td>
-							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>" class="tutor-instructor-status-update"  data-id="<?php echo esc_attr( $list->ID ); ?>">
 								<div class="tutor-form-select-with-icon select-<?php echo esc_html( $available_status[ $list->status ] ); ?>">
 									<select>
 										<?php foreach ( $available_status as $key => $status ) : ?>
-											<option value="<?php esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
+											<option value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $status ); ?>" <?php selected( $list->status, $key ); ?>>
 												<?php echo esc_html( tutor_utils()->translate_dynamic_text( $key ) ); ?>
 											</option>
 										<?php endforeach; ?>
