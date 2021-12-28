@@ -25,7 +25,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		?>
 		<div class="profile-completion">
 			<div class="tutor-bs-row tutor-bs-align-items-center">
-				<div class="tutor-bs-col-md-7 profile-completion-content">
+				<div class="tutor-bs-col-md-7 profile-completion-content <?php echo tutor_utils()->is_instructor() ? "tutor-profile-completion-content-admin": "" ?>">
 					<div class="list-item-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-12">
 						<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
 					</div>
