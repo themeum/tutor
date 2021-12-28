@@ -245,7 +245,7 @@ $filters = array(
 							<?php esc_html_e( 'First Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
+							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 					<div class="tutor-bs-col">
@@ -253,7 +253,7 @@ $filters = array(
 							<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="last_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
+							<input type="text" name="last_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
@@ -263,7 +263,7 @@ $filters = array(
 							<?php esc_html_e( 'User Name', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-]+" title="<?php esc_attr_e( 'Only letters and numbers are allowed', 'tutor' ); ?>" required/>
+							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>" pattern="^[a-zA-Z0-9_]*$" title="<?php esc_attr_e( 'Only alphanumeric and underscore are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 					<div class="tutor-bs-col">
@@ -271,7 +271,7 @@ $filters = array(
 							<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
+							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
@@ -292,7 +292,7 @@ $filters = array(
 						</label>
 						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
 							<span class="ttr-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
-							<input type="password" name="password"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="new-password" required/>
+							<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control tutor-mb-10" minlength="8" placeholder="*******" autocomplete="new-password" required/>
 						</div>
 					</div>
 					<div class="tutor-bs-col">
@@ -301,7 +301,7 @@ $filters = array(
 						</label>
 						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
 							<span class="ttr-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
-							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" required/>
+							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.' ,'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
 						</div>
 					</div>
 				</div>	
