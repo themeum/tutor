@@ -94,7 +94,7 @@ class Instructor {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
 		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
-			$validation_errors['password_confirmation'] = __( 'Confirm password does not matched with Password field', 'tutor' );
+			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
 
 		if ( count( $validation_errors ) ) {
@@ -193,7 +193,7 @@ class Instructor {
 				'user_login'            => __( 'User Name field is required', 'tutor' ),
 				'phone_number'          => __( 'Phone Number field is required', 'tutor' ),
 				'password'              => __( 'Password field is required', 'tutor' ),
-				'password_confirmation' => __( 'Password Confirmation field is required', 'tutor' ),
+				'password_confirmation' => __( 'Your passwords should match each other. Please recheck.', 'tutor' ),
 			)
 		);
 
@@ -208,7 +208,7 @@ class Instructor {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
 		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
-			$validation_errors['password_confirmation'] = __( 'Confirm password does not matched with Password field', 'tutor' );
+			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
 
 		if ( count( $validation_errors ) ) {
