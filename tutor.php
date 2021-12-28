@@ -89,7 +89,7 @@ if ( ! function_exists('tutor_utils') ) {
 			// Use runtime cache
 			$GLOBALS['tutor_utils_object'] = new \TUTOR\Utils();
 		}
-		
+
 		return $GLOBALS['tutor_utils_object'];
 	}
 }

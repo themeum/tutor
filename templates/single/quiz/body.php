@@ -115,11 +115,13 @@ $quiz_answers      = array();
 
 						$next_question     = isset( $questions[ $question_i ] ) ? $questions[ $question_i ] : false;
 						$previous_question = $question_i > 1 ? $questions[ $question_i - 1 ] : false;
+						$next_question_id = $next_question ? "data-next-question-id=#quiz-attempt-single-question-{$next_question->question_id}" : '';
 						?>
-						<div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-{$next_question->question_id}'" : ''; ?> data-quiz-feedback-mode="<?php echo $feedback_mode; ?>" >
+						<div id="quiz-attempt-single-question-<?php echo $question->question_id; ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo esc_attr( $next_question_id ); ?> data-quiz-feedback-mode="<?php echo $feedback_mode; ?>" >
 
+						<input type="hidden" name="attempt[<?php echo esc_attr( $is_started_quiz->attempt_id )?>][quiz_question_ids][]" value="<?php echo esc_attr( $question->question_id )?>" />
 							<?php
-							echo "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
+
 
 
 							$question_type = $question->question_type;
@@ -479,7 +481,8 @@ $quiz_answers      = array();
 	do_action( 'tutor_quiz/body/after', $quiz_id );
 	?>
 </div>
-
+<?php
+$quiz_answers_base64 = strrev( base64_encode( json_encode( $quiz_answers ) ) ); ?>
 <script>
-	window.tutor_quiz_context = '<?php echo strrev( base64_encode( json_encode( $quiz_answers ) ) ); ?>';
+	window.tutor_quiz_context = "<?php echo $quiz_answers_base64; ?>";
 </script>
