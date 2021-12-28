@@ -26,7 +26,7 @@ $as_student_url     = add_query_arg( array('view_as'=>'student'), tutor()->curre
 
 <div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-24">
     <div class="tutor-bs-col">
-        <div class="tutor-text-medium-h5"><?php _e('Question & Answer', 'tutor'); ?></div>
+        <div class="tutor-text-medium-h5 tutor-color-text-primary"><?php _e('Question & Answer', 'tutor'); ?></div>
     </div>
     <?php if($is_instructor): ?>
         <div class="tutor-bs-col-auto">
