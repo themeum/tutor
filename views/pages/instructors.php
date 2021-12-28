@@ -18,7 +18,6 @@ if ( isset( $_GET['sub_page'] ) ) {
 use TUTOR\Instructors_List;
 $instructors = new Instructors_List();
 
-
 /**
  * Short able params
  */
@@ -121,6 +120,14 @@ $filters = array(
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
+					<div class="inline-flex-center tutor-color-text-subsued">
+						<span class="text-regular-small">
+							<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
+						</span>
+						<span class="ttr-order-down-filled up-down-icon"></span>
+					</div>
+				</th>
+				<th class="tutor-table-rows-sorting">
 				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
 					<span class="ttr-order-down-filled up-down-icon"></span>
@@ -167,6 +174,11 @@ $filters = array(
 							<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
 								</span>
 							</td>
+							<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
+								<span class="tutor-color-text-primary tutor-text-regular-caption">
+								<?php echo esc_html( tutor_utils()->get_option( 'earning_instructor_commission' ) . '%' ); ?>
+								</span>
+							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
 								<div class="tutor-form-select-with-icon select-<?php echo esc_html( $available_status[ $list->status ] ); ?>">
 									<select>
@@ -181,9 +193,9 @@ $filters = array(
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<button class="tutor-btn tutor-btn-wordpress tutor-btn-disable-outline tutor-btn-sm">
+								<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-disable-outline tutor-btn-sm">
 									<?php esc_html_e( 'Edit', 'tutor' ); ?>
-								</button>
+								</a>
 							</td>
 						</tr>
 					<?php endforeach; ?>
