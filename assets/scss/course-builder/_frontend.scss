@@ -1,172 +1,177 @@
-.tutor-option-field, .tutor-form-group {
-	textarea {
-		height: 100px;
-	}
+.tutor-option-field,
+.tutor-form-group {
+    textarea {
+        height: 100px;
+    }
 }
 
 .tutor-form-row {
-	margin-top: 20px;
-	margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .tutor-course-builder-section {
-	margin-bottom: 60px;
+    margin-bottom: 60px;
 
-	input[type=text], input[type=number], textarea, .wp-editor-wrap{
-		width: 100%;
-	}
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    .wp-editor-wrap {
+        width: 100%;
+    }
 
-	.tutor-frontend-builder-item-scope {
-		margin-bottom: 30px;
-		
-		&:last-child {
-			margin-bottom: 0;
-		}
-	
-		.tutor-builder-item-heading {
-			font-weight: 500;
-			line-height: 21px;
-			margin-bottom: 10px;
-			display: block;
-		}
-	}
-	
-	.tutor-course-builder-section-title{
-		h3 {
-			font-size: 20px;
-			position: relative;
-			overflow: hidden;
-			z-index: 1;
-			margin: 0 0 25px;
-			cursor: pointer;
-			border-bottom: 1px solid #C0C3CB;
-			font-style: normal;
-			font-weight: bold;
-			color: #41454F;
-			padding-bottom: 20px;
+    .tutor-frontend-builder-item-scope {
+        margin-bottom: 30px;
 
-			span, i{
-				float: left;
-				background-color: #fff;
-				font-size: 20px;
-				line-height: 20px;
-			}
-			
-			i {
-				color: #3E64DE;
-				font-size: 30px;
-			}
+        &:last-child {
+            margin-bottom: 0;
+        }
 
-			span {
-				padding: 0 15px 0 9px;
-			}
-		}
-	} 
+        .tutor-builder-item-heading {
+            font-weight: 500;
+            line-height: 21px;
+            margin-bottom: 10px;
+            display: block;
+        }
+    }
 
-	.tutor-course-field-label {
-		font-style: normal;
-		font-weight: 500;
-		font-size: 16px;
-		color: #212327;
-		margin-bottom: 10px;
-		display: block;
-	}
+    .tutor-course-builder-section-title {
+        h3 {
+            font-size: 20px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            margin: 0 0 25px;
+            cursor: pointer;
+            border-bottom: 1px solid #c0c3cb;
+            font-style: normal;
+            font-weight: bold;
+            color: #41454f;
+            padding-bottom: 20px;
+
+            span,
+            i {
+                float: left;
+                background-color: #fff;
+                font-size: 20px;
+                line-height: 20px;
+            }
+
+            i {
+                color: #3e64de;
+                font-size: 30px;
+            }
+
+            span {
+                padding: 0 15px 0 9px;
+            }
+        }
+    }
+
+    .tutor-course-field-label {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        color: #212327;
+        margin-bottom: 10px;
+        display: block;
+    }
 }
 
-.tutor-dashboard-builder-header{
-	padding: 10px 0px;
-	border-bottom: 1px solid #C0C3CB;
-	top: 0px;
-	background: #fff;
-	width: 100%;
-	z-index: 1999;
+.tutor-dashboard-builder-header {
+    padding: 10px 0px;
+    border-bottom: 1px solid #c0c3cb;
+    top: 0px;
+    background: #fff;
+    width: 100%;
+    z-index: 1999;
 
-	// Keep sticky until 601 px.
-	@media (min-width:601px) {
-		position: sticky;
-	}
+    // Keep sticky until 601 px.
+    @media (min-width: 601px) {
+        position: sticky;
+    }
 
-	@at-root{
-		// Top position in case of admin bar
-		body.admin-bar{
-			.tutor-dashboard-builder-header{
-				top: 32px !important;
-				@media (max-width: 783px) {
-					top: 46px !important;
-				}
-			}
-		}
-	}
+    @at-root {
+        // Top position in case of admin bar
+        body.admin-bar {
+            .tutor-dashboard-builder-header {
+                top: 32px !important;
+                @media (max-width: 783px) {
+                    top: 46px !important;
+                }
+            }
+        }
+    }
 
-	.tutor-row{
-		justify-content: space-between;
-		.tutor-col-auto{
-			@media (max-width: 991px) {
-				flex: 0 0 100%;
-				max-width: 100%;
-				&:first-child{
-					margin-bottom: 15px;
-				}
-			}
-		}
-	}
+    .tutor-row {
+        justify-content: space-between;
+        .tutor-col-auto {
+            @media (max-width: 991px) {
+                flex: 0 0 100%;
+                max-width: 100%;
+                &:first-child {
+                    margin-bottom: 15px;
+                }
+            }
+        }
+    }
 
-	.tutor-dashboard-builder-header-left{
-		@include valueWithPrefix(display, flex);
-		@include propertyWithPrefix(align-items, center);
+    .tutor-dashboard-builder-header-left {
+        @include valueWithPrefix(display, flex);
+        @include propertyWithPrefix(align-items, center);
 
-		.tutor-dashboard-builder-logo{
-			padding:0 25px;
-			position: relative;
-			img {
-				max-height: 32px;
-			}
-		}
+        .tutor-dashboard-builder-logo {
+            padding: 0 25px;
+            position: relative;
+            img {
+                max-height: 32px;
+            }
+        }
 
-		button{
-			margin: 0;
-			padding: 0px 15px;
-			line-height: 30px;
-			border: none;
-			background: transparent;
-			display: inline-flex;
-			color: var(--tutor-text-color);
-			transition: 300ms;
-			font-weight: 500;
-			white-space: nowrap;
-			
-			i{
-				font-size: 24px;
-				line-height: 30px;
-				margin-right: 9px;
-			}
+        button {
+            margin: 0;
+            padding: 0px 15px;
+            line-height: 30px;
+            border: none;
+            background: transparent;
+            display: inline-flex;
+            color: var(--tutor-text-color);
+            transition: 300ms;
+            font-weight: 500;
+            white-space: nowrap;
 
-			&:hover{
-				color: var(--tutor-primary-color);
-				background: transparent;
-				i{
-					color: var(--tutor-primary-color)
-				}
-			}
-		}
-	}
+            i {
+                font-size: 24px;
+                line-height: 30px;
+                margin-right: 9px;
+            }
+
+            &:hover {
+                color: var(--tutor-primary-color);
+                background: transparent;
+                i {
+                    color: var(--tutor-primary-color);
+                }
+            }
+        }
+    }
 }
 
 #wp-course_description-editor-container {
-	border-radius: 6px;
-	overflow: hidden;
-	border: 1px solid #C0C3CB;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #c0c3cb;
 
-	.mce-top-part {
-		&::before{
-			box-shadow: none;
-		}
+    .mce-top-part {
+        &::before {
+            box-shadow: none;
+        }
 
-		div.mce-toolbar-grp {
-			background: $black-05;
-			border-bottom: none;
-		}
-	}
+        div.mce-toolbar-grp {
+            background: $black-05;
+            border-bottom: none;
+        }
+    }
 }
 
 /*
@@ -174,50 +179,50 @@
  */
 
 .tutor-course-level-meta {
-	@include valueWithPrefix(display, flex);
-	@include propertyWithPrefix(justify-content, space-between);
-	
-	label{
-		margin: 0 40px 0 0;
-		font-weight: 600;
-	}
+    @include valueWithPrefix(display, flex);
+    @include propertyWithPrefix(justify-content, space-between);
+
+    label {
+        margin: 0 40px 0 0;
+        font-weight: 600;
+    }
 }
 
-.tutor-frontend-builder-course-price{
-	color: $black-main;
+.tutor-frontend-builder-course-price {
+    color: $black-main;
 
-	.tutor-form-group input{
-		margin-bottom: 0;
-	}
-	
-	.field-container{
-		@include valueWithPrefix(display, flex);
-		@include propertyWithPrefix(align-items, center);
+    .tutor-form-group input {
+        margin-bottom: 0;
+    }
 
-		input[name=course_price] {
-			width: 110px;
-		}
+    .field-container {
+        @include valueWithPrefix(display, flex);
+        @include propertyWithPrefix(align-items, center);
 
-		&>label {
-			@include valueWithPrefix(display, inline-flex);
-			&:first-child{
-				margin-right: 25px;
-			}
-		}
-	}
+        input[name="course_price"] {
+            width: 110px;
+        }
+
+        & > label {
+            @include valueWithPrefix(display, inline-flex);
+            &:first-child {
+                margin-right: 25px;
+            }
+        }
+    }
 }
 
-.tutor-course-builder-btn-group{
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap;
+.tutor-course-builder-btn-group {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 /**
 Content Drip (Pro)
  */
 .select2-dropdown.increasezindex {
-	z-index:9999999999999;
+    z-index: 9999999999999;
 }
 
 .select2-selection__rendered [class^="tutor-icon-"] {
@@ -225,39 +230,39 @@ Content Drip (Pro)
 }
 
 // Course builder tips
-.tutor-course-builder-upload-tips{
+.tutor-course-builder-upload-tips {
     position: sticky;
-	top: 103px;
+    top: 103px;
 
-	@at-root{
-		body.admin-bar {
-			.tutor-course-builder-upload-tips {
-				top: 135px !important;
-			}
-		}
-	}
+    @at-root {
+        body.admin-bar {
+            .tutor-course-builder-upload-tips {
+                top: 135px !important;
+            }
+        }
+    }
 
     @media (max-width: 991px) {
         position: static;
     }
 
-    ul{
+    ul {
         margin: 0;
         padding: 0 0 0 35px;
         list-style: none;
 
-        li{
+        li {
             position: relative;
             margin-bottom: 20px;
             line-height: 24px;
-            
-            &::after{
-                content: '';
+
+            &::after {
+                content: "";
                 position: absolute;
                 height: 8px;
                 width: 8px;
                 border-radius: 50%;
-                background: #3E64DE;;
+                background: #3e64de;
                 left: -26px;
                 top: 9px;
             }

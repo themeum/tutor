@@ -3,7 +3,7 @@
 		list-style: none;
 		margin: 0px 0 20px;
 		padding: 25px 0;
-		border-right: 1px solid #dcdfe5;
+		// border-right: 1px solid #dcdfe5;
 		margin-right: 15px;
 		// margin-left: -5px;
 		a {
@@ -162,10 +162,25 @@
 &.is-sidebar-expanded {
 	ul.tutor-dashboard-permalinks {
 		border-right: none !important;
-
 		li.active a {
 			border-top-left-radius: 0;
 			border-bottom-left-radius: 0;
+		}
+	}
+}
+
+.tutor-frontend-dashboard-maincontent {
+	ul.tutor-dashboard-permalinks {
+		position: relative;
+		&:before {
+			content: '';
+			position: absolute;
+			width: auto;
+			height: 3000%;
+			right: 0;
+			top: 0;
+			border-right: 1px solid #dcdfe5;
+			z-index: 1;
 		}
 	}
 }
