@@ -110,6 +110,17 @@
 			height: 100%;
 			border-left: 1px solid #cdcfd5;
 		}
+		&.tutor-profile-completion-content-admin {
+			&::before {
+				content: '';
+				position: absolute;
+				right: 0;
+				top: -2px;
+				width: 1px;
+				height: calc(100% + 4px);
+				border-left: 1px solid #cdcfd5;
+			}
+		}
 		li {
 			list-style: none;
 			display: inline-block;
