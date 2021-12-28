@@ -46,11 +46,11 @@ if ( 'pending' === $active_tab ) {
 	$instructor_status = array( 'pending' );
 } elseif ( 'blocked' === $active_tab ) {
 	$instructor_status = array( 'blocked' );
-} else if('approved' == $active_tab) {
+} elseif ( 'approved' == $active_tab ) {
 	$instructor_status = array( 'approved' );
 }
 $instructors_list = tutor_utils()->get_instructors( $offset, $per_page, $search, $course_id, $date, $order, $instructor_status );
-$total = tutor_utils()->get_total_instructors( $search, $instructor_status, $course_id, $date );
+$total            = tutor_utils()->get_total_instructors( $search, $instructor_status, $course_id, $date );
 
 /**
  * Navbar data to make nav menu
@@ -85,8 +85,12 @@ $filters = array(
 	$filters_template = tutor()->path . 'views/elements/filters.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
-
-?>
+	$available_status = array(
+		'pending'  => 'warning',
+		'approved' => 'success',
+		'blocked'  => 'danger',
+	);
+	?>
 
 <div class="wrap">
 	<div class="tutor-ui-table-responsive tutor-mt-30">
@@ -164,16 +168,22 @@ $filters = array(
 								</span>
 							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<span class="tutor-color-text-primary tutor-text-medium-caption">
-									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?>">
-									<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
-									</span>
-								</span>
+								<div class="tutor-form-select-with-icon select-<?php echo esc_html( $available_status[ $list->status ] ); ?>">
+									<select>
+										<?php foreach ( $available_status as $key => $status ) : ?>
+											<option value="<?php esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
+												<?php echo esc_html( tutor_utils()->translate_dynamic_text( $key ) ); ?>
+											</option>
+										<?php endforeach; ?>
+									</select>
+									<i class="icon1 ttr-eye-fill-filled"></i>
+									<i class="icon2 ttr-angle-down-filled"></i>
+								</div>
 							</td>
-							<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
-							<div class="inline-flex-center td-action-btns">
-							<?php echo wp_kses_post( $instructors->column_action( $list, 'status' ) ); ?>
-							</div>
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+								<button class="tutor-btn tutor-btn-wordpress tutor-btn-disable-outline tutor-btn-sm">
+									<?php esc_html_e( 'Edit', 'tutor' ); ?>
+								</button>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -301,7 +311,7 @@ $filters = array(
 					</div>
 				</div>
 				<div class="tutor-bs-row tutor-mx-0" id="tutor-new-instructor-form-response"></div>
-		  	</div>
+			  </div>
 			<div class="tutor-modal-footer">
 				<div class="tutor-bs-d-flex tutor-bs-justify-content-between">
 					<div class="col">
@@ -327,9 +337,9 @@ $filters = array(
  *
  * @since v2.0.0
  */
-$instructor_id         = isset( $_GET['instructor'] ) ? sanitize_text_field( $_GET['instructor'] ) : '';
-$prompt_action         = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-	$instructor_data   = get_userdata( $instructor_id );
+$instructor_id       = isset( $_GET['instructor'] ) ? sanitize_text_field( $_GET['instructor'] ) : '';
+$prompt_action       = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+	$instructor_data = get_userdata( $instructor_id );
 if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) ) :
 	$instructor_status = tutor_utils()->instructor_status( $instructor_data->ID, false );
 	?>
