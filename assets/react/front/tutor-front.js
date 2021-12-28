@@ -703,10 +703,10 @@ jQuery(document).ready(function ($) {
      */
 
     $('.tutor-course-builder-section-title').on('click', function () {
-        if ($(this).find('i').hasClass("tutor-icon-up")) {
-            $(this).find('i').removeClass('tutor-icon-up').addClass('tutor-icon-down');
+        if ($(this).find('i').hasClass("ttr-angle-up-filled")) {
+            $(this).find('i').removeClass('ttr-angle-up-filled').addClass('ttr-angle-down-filled');
         } else {
-            $(this).find('i').removeClass('tutor-icon-down').addClass('tutor-icon-up');
+            $(this).find('i').removeClass('ttr-angle-down-filled').addClass('ttr-angle-up-filled');
         }
         $(this).next('div').slideToggle();
     });

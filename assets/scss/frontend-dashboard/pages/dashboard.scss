@@ -1,5 +1,5 @@
 .tutor-dashboard-cards-container {
-	width: calc(100% + 20px);
+	width: calc(100% + 30px);
 	& > div {
 		p {
 			@include valueWithPrefix(display, flex);
@@ -70,6 +70,10 @@
 					}
 				}
 			}
+			.tutor-dashboard-info-val {
+				margin-top: 10px;
+				margin-bottom: -6px;
+			}
 		}
 	}
 }
@@ -87,22 +91,49 @@
 	border: 1px solid #cdcfd5;
 	box-sizing: border-box;
 	border-radius: 6px;
-	margin-right: 25px;
+	// margin-right: 25px;
 	margin-bottom: 20px;
 	padding: 0px;
 	.tutor-bs-row {
 		margin-left: 0px;
 	}
 	.profile-completion-content {
-		padding: 35px;
+		padding: 10px 0px 15px 30px;
+		position: relative;
+		// padding: 35px;
+		&::before {
+			content: '';
+			position: absolute;
+			right: 0;
+			top: 0;
+			width: 1px;
+			height: 100%;
+			border-left: 1px solid #cdcfd5;
+		}
+		&.tutor-profile-completion-content-admin {
+			&::before {
+				content: '';
+				position: absolute;
+				right: 0;
+				top: -2px;
+				width: 1px;
+				height: calc(100% + 4px);
+				border-left: 1px solid #cdcfd5;
+			}
+		}
 		li {
 			list-style: none;
 			display: inline-block;
-			width: 15%;
+			&.tutor-profile-complete-dash-3 {
+				width: 115px;
+			}
+			&.tutor-profile-complete-dash-4 {
+				width: 86px;
+			}
 		}
 		li:last-child {
 			width: 20%;
-			padding-left: 20px;
+			padding-left: 12px;
 		}
 		.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
 			padding: 0px 6px;
@@ -117,13 +148,18 @@
 			display: inline-block;
 			text-align: center;
 			color: #fff;
-			font-size: 16px;
 			line-height: 30px;
+			font-size: 21px;
+			line-height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 	}
 	.warning {
-		padding: 35px;
-		border-left: 1px solid #cdcfd5;
+		padding: 10px 0px 15px 30px;
+		// padding: 35px;
+		// border-left: 1px solid #cdcfd5;
 		ul {
 			list-style: none;
 			padding: 0px;
@@ -132,11 +168,11 @@
 				font-size: 15px;
 				.empty {
 					color: #f44337;
-					font-size: 18px;
+					font-size: 24px;
 				}
 				.not-empty {
 					color: #24a148;
-					font-size: 18px;
+					font-size: 24px;
 				}
 				a {
 					text-decoration: underline;

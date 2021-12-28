@@ -69,12 +69,12 @@ $footer_links = array(
 do_action( 'tutor_dashboard/before/wrap' );
 ?>
 
-<div class="tutor-wrap tutor-dashboard tutor-dashboard-student">
+<div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student">
 	<div class="tutor-bs-container">
 		<!-- new head part  -->
 		<div class="tutor-bs-row tutor-bs-d-flex justify-content-between tutor-frontend-dashboard-header">
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-bs-col-md-6 tutor-bs-d-flex align-items-center" style="border: none;">
-				<div class=" tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
+				<div class="tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
 				</div>
 				<div class="tutor-user-info tutor-ml-16">
 					<div class="tutor-dashboard-header-display-name tutor-color-text-primary">
@@ -147,7 +147,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 		</div>
 		<!-- new head part end -->
 		<!-- Sidebar and Content Part -->
-		<div class="tutor-bs-row">
+		<div class="tutor-bs-row tutor-frontend-dashboard-maincontent">
 			<div class="tutor-bs-col-12 tutor-bs-col-md-4 tutor-bs-col-lg-3 tutor-dashboard-left-menu">
 				<ul class="tutor-dashboard-permalinks">
 					<?php
@@ -242,6 +242,11 @@ do_action( 'tutor_dashboard/before/wrap' );
 	</div>
 </div>
 
+<style>
+	.site-content {
+		overflow-y: hidden;
+	}
+</style>
 
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
 
