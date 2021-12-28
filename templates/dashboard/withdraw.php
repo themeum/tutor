@@ -73,8 +73,8 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 		<span>
 			<?php
 			$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
-			echo $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), $withdraw_method_name ) : '';
-			echo sprintf( __( 'You can change your %1$s withdrawal preference %2$s', 'tutor' ), "<a href='{$my_profile_url}'>", '</a>' );
+			echo $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), esc_attr( $withdraw_method_name ) ) : '';
+			echo sprintf( __( 'You can change your %1$s withdrawal preference %2$s', 'tutor' ), '<a href="' . esc_url( $my_profile_url ) . '">', '</a>' );
 			?>
 		</span>
 	</div>
@@ -111,11 +111,11 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 								<tr>
 									<td>
 										<span><?php _e( 'Current Balance', 'tutor' ); ?></span><br />
-										<b><?php echo $balance_formatted; ?></b>
+										<b><?php echo esc_attr( $balance_formatted ); ?></b>
 									</td>
 									<td>
 										<span><?php _e( 'Selected Payment Method', 'tutor' ); ?></span><br />
-										<b><?php echo $withdraw_method_name; ?></b>
+										<b><?php echo esc_attr( $withdraw_method_name ); ?></b>
 									</td>
 								</tr>
 							</tbody>
@@ -138,7 +138,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 								<label for="tutor_withdraw_amount"><?php _e( 'Amount', 'tutor' ); ?></label>
 								<div class="withdraw-form-field-amount">
 									<span>
-										<span><?php echo $currency_symbol; ?></span>
+										<span><?php echo esc_attr( $currency_symbol ); ?></span>
 									</span>
 									<input type="number" min="<?php echo esc_attr( $min_withdraw ); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required>
 								</div>
@@ -230,7 +230,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 							</td>
 							<td>
 								<span class="inline-image-text is-inline-block">
-									<span class="tutor-status-text status-<?php echo $withdraw_history->status; ?>">
+									<span class="tutor-status-text status-<?php echo esc_attr( $withdraw_history->status ); ?>">
 										<?php echo __( ucfirst( $withdraw_history->status ), 'tutor' ); ?>
 									</span>
 								</span>
@@ -243,7 +243,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 										<span class="tool-tip-container">
 											<img src="<?php echo esc_url( $image_base ); ?>info-icon.svg" />
 											<span class="tooltip tip-left" role="tooltip">
-												<?php echo $status_message[ $withdraw_history->status ]; ?>
+												<?php echo esc_attr( $status_message[ $withdraw_history->status ] ); ?>
 											</span>
 										</span>
 									</span>

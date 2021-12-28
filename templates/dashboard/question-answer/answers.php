@@ -28,7 +28,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 				</div>
 
 				<div class="tutor_question_area">
-					<p><strong><?php echo $question->question_title; ?> </strong></p>
+					<p><strong><?php echo esc_attr( $question->question_title ); ?> </strong></p>
 					<?php echo wp_kses_post( wpautop( stripslashes( $question->comment_content ) ) ); ?>
 				</div>
 			</div>
@@ -44,10 +44,10 @@ $profile_url = tutils()->profile_url( $question->user_id );
 							<div class="tutor-question-wrap">
 								<div class="question-top-meta">
 									<div class="tutor-question-avater">
-										<a href="<?php echo $answer_profile; ?>"> <?php echo tutils()->get_tutor_avatar( $answer->user_id ); ?></a>
+										<a href="<?php echo esc_url( $answer_profile ); ?>"> <?php echo tutils()->get_tutor_avatar( $answer->user_id ); ?></a>
 									</div>
 									<p class="review-meta">
-										<a href="<?php echo $answer_profile; ?>"><?php echo $answer->display_name; ?></a>
+										<a href="<?php echo esc_url( $answer_profile ); ?>"><?php echo esc_attr( $answer->display_name ); ?></a>
 										<span class="tutor-text-mute">
 										<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ); ?>
 										</span>
@@ -67,7 +67,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 				<form action="<?php echo admin_url( 'admin-post.php' ); ?>" id="tutor_admin_answer_form" method="post">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 					<input type="hidden" value="tutor_place_answer" name="action"/>
-					<input type="hidden" value="<?php echo $question_id; ?>" name="question_id"/>
+					<input type="hidden" value="<?php echo esc_attr( $question_id ); ?>" name="question_id"/>
 					<div class="tutor-form-group">
 						<?php
 						$editor_settings = array(

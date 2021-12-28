@@ -29,7 +29,7 @@ if ( $cover_photo_id ) {
 
 	<div id="tutor_profile_cover_photo_editor">
 		<input id="tutor_photo_dialogue_box" type="file" accept=".png,.jpg,.jpeg"/>
-		<div id="tutor_cover_area" data-fallback="<?php echo $cover_placeholder; ?>" style="background-image:url(<?php echo $cover_photo_src; ?>)">
+		<div id="tutor_cover_area" data-fallback="<?php echo esc_url( $cover_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $cover_photo_src ); ?>)">
 			<span class="tutor_cover_deleter">
 				<i class="tutor-icon-garbage"></i>
 			</span>
@@ -37,7 +37,7 @@ if ( $cover_photo_id ) {
 				<button class="tutor_cover_uploader">
 					<i class="tutor-icon-image-ans"></i>
 					<span>
-                        <?php
+						<?php
 							echo $profile_photo_id ? __( 'Update Cover Photo', 'tutor' ) : __( 'Upload Cover Photo', 'tutor' );
 						?>
 
@@ -51,7 +51,7 @@ if ( $cover_photo_id ) {
 			<span>&nbsp;&nbsp;&nbsp;&nbsp;<?php _e( 'Cover Photo Size', 'tutor' ); ?>: <span><?php _e( '700x430', 'tutor' ); ?></span> <?php _e( 'pixels', 'tutor' ); ?> </span>
 			<span class="loader-area"><?php _e( 'Saving...', 'tutor' ); ?></span>
 		</div>
-		<div id="tutor_profile_area" data-fallback="<?php echo $profile_placeholder; ?>" style="background-image:url(<?php echo $profile_photo_src; ?>)">
+		<div id="tutor_profile_area" data-fallback="<?php echo esc_url($profile_placeholder); ?>" style="background-image:url(<?php echo esc_url($profile_photo_src); ?>)">
 			<div class="tutor_overlay">
 				<i class="tutor-icon-image-ans"></i>
 			</div>
@@ -95,7 +95,7 @@ if ( $cover_photo_id ) {
 					<label>
 						<?php _e( 'First Name', 'tutor' ); ?>
 					</label>
-					<input type="text" name="first_name" value="<?php echo $user->first_name; ?>" placeholder="<?php _e( 'First Name', 'tutor' ); ?>">
+					<input type="text" name="first_name" value="<?php echo esc_attr( $user->first_name ); ?>" placeholder="<?php _e( 'First Name', 'tutor' ); ?>">
 				</div>
 			</div>
 
@@ -104,7 +104,7 @@ if ( $cover_photo_id ) {
 					<label>
 						<?php _e( 'Last Name', 'tutor' ); ?>
 					</label>
-					<input type="text" name="last_name" value="<?php echo $user->last_name; ?>" placeholder="<?php _e( 'Last Name', 'tutor' ); ?>">
+					<input type="text" name="last_name" value="<?php echo esc_attr( $user->last_name ); ?>" placeholder="<?php _e( 'Last Name', 'tutor' ); ?>">
 				</div>
 			</div>
 		</div>
@@ -115,7 +115,7 @@ if ( $cover_photo_id ) {
 					<label>
 						<?php _e( 'User Name', 'tutor' ); ?>
 					</label>
-					<input type="text" disabled="disabled" value="<?php echo $user->user_login; ?>">
+					<input type="text" disabled="disabled" value="<?php echo esc_attr( $user->user_login ); ?>">
 				</div>
 			</div>
 
@@ -174,7 +174,7 @@ if ( $cover_photo_id ) {
 
 						foreach ( $public_display as $id => $item ) {
 							?>
-							<option <?php selected( $user->display_name, $item ); ?>><?php echo $item; ?></option>
+							<option <?php selected( $user->display_name, $item ); ?>><?php echo esc_attr( $item ); ?></option>
 							<?php
 						}
 						?>

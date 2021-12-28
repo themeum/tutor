@@ -57,7 +57,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 			<?php if ( ! $disable_course_author ) { ?>
 				<li class="tutor-single-course-author-meta">
 					<div class="tutor-single-course-avatar">
-						<a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?></a>
+						<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?></a>
 					</div>
 					<div class="tutor-single-course-author-name">
 						<span><?php _e( 'by', 'tutor' ); ?></span>

@@ -18,7 +18,7 @@ do_action('tutor_course/single/enrolled/before/instructors');
 $instructors = tutor_utils()->get_instructors_by_course();
 if ($instructors){
 	$count = is_array($instructors) ? count($instructors) : 0;
-	
+
 	?>
 	<h4 class="tutor-segment-title"><?php $count>1 ? _e('About the instructors', 'tutor') : _e('About the instructor', 'tutor'); ?></h4>
 
@@ -31,13 +31,13 @@ if ($instructors){
 				<div class="single-instructor-top">
                     <div class="tutor-instructor-left">
                         <div class="instructor-avatar">
-                            <a href="<?php echo $profile_url; ?>">
+                            <a href="<?php echo esc_url( $profile_url ); ?>">
                                 <?php echo tutor_utils()->get_tutor_avatar($instructor->ID); ?>
                             </a>
                         </div>
 
                         <div class="instructor-name">
-                            <h3><a href="<?php echo $profile_url; ?>"><?php echo $instructor->display_name; ?></a> </h3>
+                            <h3><a href="<?php echo esc_url( $profile_url ); ?>"><?php echo $instructor->display_name; ?></a> </h3>
                             <?php
                             if ( ! empty($instructor->tutor_profile_job_title)){
                                 echo "<h4>{$instructor->tutor_profile_job_title}</h4>";

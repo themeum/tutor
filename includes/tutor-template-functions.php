@@ -1505,10 +1505,10 @@ if ( ! function_exists( 'tutor_social_share' ) ) {
 
 		if ( $echo && $output != '' ) {
 			echo '<span>' . __( 'Share:', 'tutor' ) . '</span>';
-			echo $output;
+			echo _esc_html( htmlentities( $output ) );
 		}
 
-		return $output;
+		return _esc_html( htmlentities( $output ) );
 	}
 }
 

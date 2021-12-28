@@ -223,7 +223,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 						<td><?php echo esc_attr( $answer_i ); ?></td>
 						<td>
 							<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-							<span data-title="<?php echo esc_attr( $type['name'] ); ?>"><?php echo $question_type['icon']; ?></span>
+							<span data-title="<?php echo esc_attr( $type['name'] ); ?>"><?php echo _esc_html($question_type['icon']); ?></span>
 						</td>
 						<td><?php echo esc_attr( stripslashes( $answer->question_title ) ); ?></td>
 						<td>
@@ -315,7 +315,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 									?>
 									<div class="image-matching-item">
 										<p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id ); ?>" /> </p>
-										<p class="dragged-caption"><?php echo $image_answer; ?></p>
+										<p class="dragged-caption"><?php echo _esc_html($image_answer); ?></p>
 									</div>
 									<?php
 								}
@@ -332,7 +332,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 								global $wpdb;
 								if ( $answer->question_type === 'true_false' ) {
 									$correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
-									echo $correct_answer;
+									echo esc_attr( $correct_answer );
 
 								} elseif ( $answer->question_type === 'single_choice' ) {
 									$correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );

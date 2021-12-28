@@ -47,10 +47,10 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
                     <div class="tutor-question-wrap">
                         <div class="question-top-meta">
                             <div class="tutor-question-avater">
-                                <a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($question->user_id); ?></a>
+                                <a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutor_utils()->get_tutor_avatar($question->user_id); ?></a>
                             </div>
                             <p class="review-meta">
-                                <a href="<?php echo $profile_url; ?>"><?php echo $question->display_name; ?></a>
+                                <a href="<?php echo esc_url( $profile_url ); ?>"><?php echo $question->display_name; ?></a>
                                 <span class="tutor-text-mute"><?php echo sprintf(__('%s ago', 'tutor'), human_time_diff(strtotime($question->comment_date_gmt))); ?></span>
                             </p>
                         </div>

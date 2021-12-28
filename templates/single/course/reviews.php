@@ -82,14 +82,14 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) {
 			foreach ( $reviews as $review ) {
 				$profile_url = tutor_utils()->profile_url( $review->user_id );
 				?>
-				<div class="tutor-review-individual-item tutor-review-<?php echo $review->comment_ID; ?>">
+				<div class="tutor-review-individual-item tutor-review-<?php echo esc_url( $review->comment_ID ); ?>">
 					<div class="review-left">
 						<div class="review-avatar">
-							<a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar( $review->user_id ); ?> </a>
+							<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutor_utils()->get_tutor_avatar( $review->user_id ); ?> </a>
 						</div>
 						<div class="tutor-review-user-info">
 							<div class="review-time-name">
-								<p> <a href="<?php echo $profile_url; ?>">  <?php echo $review->display_name; ?> </a> </p>
+								<p> <a href="<?php echo esc_url( $profile_url ); ?>">  <?php echo $review->display_name; ?> </a> </p>
 								<p class="review-meta">
 									<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
 								</p>

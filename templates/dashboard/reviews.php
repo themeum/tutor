@@ -32,9 +32,9 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 			?>
 			<div class="tutor-dashboard-inline-links">
 				<ul>
-					<li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ); ?>"> <?php _e( 'Received', 'tutor' ); ?> (<?php echo $reviews->count; ?>)</a> </li>
+					<li class="active"><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ); ?>"> <?php _e( 'Received', 'tutor' ); ?> (<?php echo esc_attr( $reviews->count ); ?>)</a> </li>
 					<?php if ( $given_count ) : ?>
-						<li> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ); ?>"> <?php _e( 'Given', 'tutor' ); ?> (<?php echo $given_count; ?>)</a> </li>
+						<li> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ); ?>"> <?php _e( 'Given', 'tutor' ); ?> (<?php echo esc_attr( $given_count ); ?>)</a> </li>
 					<?php endif; ?>
 				</ul>
 			</div>
@@ -56,7 +56,7 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 					foreach ( $reviews->results as $review ) {
 						$profile_url = tutor_utils()->profile_url( $review->user_id );
 						?>
-						<div class="tutor-dashboard-single-review tutor-review-<?php echo $review->comment_ID; ?>">
+						<div class="tutor-dashboard-single-review tutor-review-<?php echo esc_attr( $review->comment_ID ); ?>">
 							<div class="tutor-dashboard-review-header">
 
 								<div class="tutor-dashboard-review-heading">
