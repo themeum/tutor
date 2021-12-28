@@ -77,7 +77,7 @@
                                                         <span class="tutor-qna-title">
                                                             <?php echo $content;?>
                                                         </span>
-                                                        <small class="tutor-text-nowrap">
+                                                        <small class="tutor-color-text-subsued">
                                                             <?php _e('Course'); ?>: <?php echo $qna->post_title; ?>
                                                         </small>
                                                     </div>            

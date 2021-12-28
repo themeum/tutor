@@ -59,19 +59,17 @@ $image_base = tutor()->url . '/assets/images/';
 ?>
 
 <div class="tutor-dashboard-content-inner">
-	<h4><?php echo __( 'Announcement', 'tutor' ); ?></h4>
+	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php echo __( 'Announcement', 'tutor' ); ?></div>
 	<!--notice-->
 	<div class="tutor-component-three-col-action new-announcement-wrap">
 		<div class="tutor-announcement-big-icon">
 			<i class="tutor-icon-speaker"></i>
 		</div>
 		<div>
-			<small><?php esc_html_e( 'Create Announcement', 'tutor' ); ?></small>
-			<p>
-				<strong>
+			<span class=" tutor-color-text-subsued"><?php esc_html_e( 'Create Announcement', 'tutor' ); ?></span>
+			<div class="tutor-text-regular-h6 tutor-color-text-primary">
 					<?php esc_html_e( 'Notify all students of your course', 'tutor' ); ?>
-				</strong>
-			</p>
+			</div>
 		</div>
 		<div class="new-announcement-button">
 			<button type="button" class="tutor-btn" data-tutor-modal-target="tutor_announcement_new">
@@ -84,9 +82,9 @@ $image_base = tutor()->url . '/assets/images/';
 
 
 <!--Filter-->
-<div class="tutor-bs-row tutor-mb-30">
-	<div class="tutor-bs-col-12 tutor-bs-col-lg-6">
-		<label class="tutor-bs-d-block">
+<div class="tutor-bs-row tutor-mb-30 tutor-mt-42" style="width: calc(100% + 30px);">
+	<div class="tutor-bs-col-12 tutor-bs-col-lg-6 tutor-mt-10 tutor-mt-lg-0">
+		<label class="tutor-bs-d-block tutor-mb-10">
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
 		<select class="tutor-form-select tutor-announcement-course-sorting">
@@ -105,16 +103,16 @@ $image_base = tutor()->url . '/assets/images/';
 		</select>
 	</div>
 
-	<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
-		<label class="tutor-bs-d-block"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
+	<div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-mt-10 tutor-mt-lg-0">
+		<label class="tutor-bs-d-block tutor-mb-10"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
 		<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
 			<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 			<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 		</select>
 	</div>
 
-	<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
-		<label class="tutor-bs-d-block"><?php esc_html_e( 'Date', 'tutor' ); ?></label>
+	<div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-mt-10 tutor-mt-lg-0">
+		<label class="tutor-bs-d-block tutor-mb-10"><?php esc_html_e( 'Date', 'tutor' ); ?></label>
 		<div class="tutor-v2-date-picker"></div>
 	</div>
 </div>

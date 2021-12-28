@@ -49,7 +49,7 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 			<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
 				<span class="ttr-question-filled"></span>
 				<span class="text-medium-caption tutor-color-text-title">
-					<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
+					<?php esc_html_e( 'Question & Answer sdf', 'tutor' ); ?>
 				</span>
 			</div>
 			<?php } ?>
