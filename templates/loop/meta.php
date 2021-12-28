@@ -19,14 +19,14 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 	?>
 	<?php if ( ! $disable_total_enrolled ) : ?>
 	<div class="tutor-single-loop-meta">
-		<i class="tutor-icon-user"></i><span><?php echo $course_students; ?></span>
+		<i class="tutor-icon-user"></i><span><?php echo esc_attr( $course_students ); ?></span>
 	</div>
 	<?php endif; ?>
 	<?php
 	if ( ! empty( $course_duration ) ) {
 		?>
 		<div class="tutor-single-loop-meta">
-			<i class="tutor-icon-clock"></i> <span><?php echo $course_duration; ?></span>
+			<i class="tutor-icon-clock"></i> <span><?php echo esc_attr( $course_duration ); ?></span>
 		</div>
 	<?php } ?>
 </div>
@@ -34,11 +34,11 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 
 <div class="tutor-loop-author">
 	<div class="tutor-single-course-avatar">
-		<a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?></a>
+		<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?></a>
 	</div>
 	<div class="tutor-single-course-author-name">
 		<span><?php _e( 'by', 'tutor' ); ?></span>
-		<a href="<?php echo $profile_url; ?>"><?php echo get_the_author(); ?></a>
+		<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo get_the_author(); ?></a>
 	</div>
 
 	<div class="tutor-course-lising-category">
