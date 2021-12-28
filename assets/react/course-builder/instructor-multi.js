@@ -42,10 +42,13 @@ window.jQuery(document).ready($=>{
                     }
                 },
                 success: function(resp) {
-                    const {search_result, shortlisted} = resp.data || {};
+                    const {search_result, shortlisted, shortlisted_count} = resp.data || {};
                     
                     search_container.html(search_result);
                     shortlist_container.html(shortlisted);
+
+                    let btn_disabled = shortlisted_count ? false : true;
+                    $('.add_instructor_to_course_btn').prop('disabled', btn_disabled);
 
                     callback ? callback() : 0;
                 }
