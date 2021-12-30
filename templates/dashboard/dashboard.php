@@ -243,12 +243,12 @@ if ( count( $instructor_course ) ) {
 	);
 
 	?>
-		<h3 class="popular-courses-heading-dashboard">
+		<div class="popular-courses-heading-dashboard tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25 tutor-mt-md-42 tutor-mt-0">
 			<?php esc_html_e( 'My Courses', 'tutor' ); ?>
 			<a style="float:right" class="tutor-view-all-course" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'my-courses' ) ); ?>">
 				<?php esc_html_e( 'View All', 'tutor' ); ?>
 			</a>
-		</h3>
+		</div>
 		<div class="tutor-dashboard-content-inner">
 			<table class="tutor-ui-table tutor-ui-table-responsive table-popular-courses">
 				<thead>
