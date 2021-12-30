@@ -21,17 +21,21 @@
     </thead>
     <tbody>
         <?php 
+            $current_user_id = get_current_user_id();
+            
             if(is_array($qna_list) && count($qna_list)) {
                 foreach($qna_list as $qna) {
                     $id_string_delete   = 'tutor_delete_qna_' . $qna->comment_ID;
                     $row_id             = 'tutor_qna_row_' . $qna->comment_ID;
                     $menu_id            =  'tutor_qna_menu_id_' . $qna->comment_ID;
+                    $is_self            = $current_user_id==$qna->user_id;
+                    $key_slug           = $is_self ? '_' . $current_user_id : '';
 
                     $meta               = $qna->meta;
-                    $is_solved          = (int)tutor_utils()->array_get('tutor_qna_solved', $meta, 0);
-                    $is_important       = (int)tutor_utils()->array_get('tutor_qna_important', $meta, 0);
-                    $is_archived        = (int)tutor_utils()->array_get('tutor_qna_archived', $meta, 0);
-                    $is_read            = (int)tutor_utils()->array_get('tutor_qna_read', $meta, 0);
+                    $is_solved          = (int)tutor_utils()->array_get('tutor_qna_solved'.$key_slug, $meta, 0);
+                    $is_important       = (int)tutor_utils()->array_get('tutor_qna_important'.$key_slug, $meta, 0);
+                    $is_archived        = (int)tutor_utils()->array_get('tutor_qna_archived'.$key_slug, $meta, 0);
+                    $is_read            = (int)tutor_utils()->array_get('tutor_qna_read'.$key_slug, $meta, 0);
                     ?>
                     <tr id="<?php echo $row_id; ?>" data-question_id="<?php echo $qna->comment_ID; ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
                         <?php 
@@ -49,7 +53,7 @@
                                         
                                     case 'student' :
                                         ?>
-                                        <td data-th="<?php echo $column; ?>" class="tutor-qna-badges v-align-top">
+                                        <td data-th="<?php echo $column; ?>">
                                             <div class="td-avatar">
                                                 <div class="tooltip-wrap">
                                                     <i data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled" class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer" data-action="important"></i>
@@ -77,7 +81,7 @@
                                                         <span class="tutor-qna-title">
                                                             <?php echo $content;?>
                                                         </span>
-                                                        <small class="tutor-text-nowrap">
+                                                        <small class="tutor-color-text-subsued">
                                                             <?php _e('Course'); ?>: <?php echo $qna->post_title; ?>
                                                         </small>
                                                     </div>            
@@ -141,15 +145,15 @@
                                                                     </span>
                                                                 </a>
                                                             </li>
-                                                            <li class="tutor-qna-badges">
-                                                                <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
-                                                                    <span class="ttr-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
-                                                                    <span class="text-regular-body tutor-color-text-white" style="text-align: left;">
-                                                                        <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
-                                                                    </span>
-                                                                </a>
-                                                            </li>
                                                         <?php endif; ?>
+                                                        <li class="tutor-qna-badges">
+                                                            <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
+                                                                <span class="ttr-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                                <span class="text-regular-body tutor-color-text-white" style="text-align: left;">
+                                                                    <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
+                                                                </span>
+                                                            </a>
+                                                        </li>
                                                         <li>
                                                             <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>">
                                                                 <span class="ttr-delete-fill-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>

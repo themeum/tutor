@@ -18,37 +18,40 @@
 	$is_tutor_login_disabled = ! tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true );
 	$auth_url                = $is_tutor_login_disabled ? isset( $_SERVER['REQUEST_SCHEME'] ) ? wp_login_url( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) : '' : '';
 
-	// Right sidebar meta data
-	$sidebar_meta = apply_filters(
-		'tutor/course/single/sidebar/metadata',
+
+	$default_meta = array(
 		array(
-			array(
-				'icon_class' => 'ttr-level-line',
-				'label'      => __( 'Level', 'tutor' ),
-				'value'      => get_tutor_course_level( get_the_ID() ),
-			),
-			array(
-				'icon_class' => 'ttr-student-line-1',
-				'label'      => __( 'Total Enrolled', 'tutor' ),
-				'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() : null,
-			),
-			array(
-				'icon_class' => 'ttr-clock-filled',
-				'label'      => __( 'Duration', 'tutor' ),
-				'value'      => get_tutor_option( 'enable_course_duration' ) ? get_tutor_course_duration_context() : null,
-			),
-			array(
-				'icon_class' => 'ttr-refresh-l',
-				'label'      => __( 'Last Updated', 'tutor' ),
-				'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null,
-			),
+			'icon_class' => 'ttr-student-line-1',
+			'label'      => __( 'Total Enrolled', 'tutor' ),
+			'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() : null,
 		),
-		get_the_ID()
+		array(
+			'icon_class' => 'ttr-clock-filled',
+			'label'      => __( 'Duration', 'tutor' ),
+			'value'      => get_tutor_option( 'enable_course_duration' ) ? get_tutor_course_duration_context() : null,
+		),
+		array(
+			'icon_class' => 'ttr-refresh-l',
+			'label'      => __( 'Last Updated', 'tutor' ),
+			'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null,
+		),
 	);
+
+	// Add level if enabled
+	if(tutor_utils()->get_option('enable_course_level', true, true)) {
+		array_unshift($default_meta, array(
+			'icon_class' => 'ttr-level-line',
+			'label'      => __( 'Level', 'tutor' ),
+			'value'      => get_tutor_course_level( get_the_ID() ),
+		));
+	}
+
+	// Right sidebar meta data
+	$sidebar_meta = apply_filters('tutor/course/single/sidebar/metadata', $default_meta, get_the_ID());
 
 	$login_class = ! is_user_logged_in() ? 'tutor-course-entry-box-login' : '';
 	$login_url   = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
-	?>
+?>
 
 <div class="tutor-course-sidebar-card">
 	<!-- Course Entry -->
@@ -67,7 +70,7 @@
 			$course_progress     = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 			?>
 			<!-- course progress -->
-			<?php if ( is_array( $course_progress ) && count( $course_progress ) ) : ?>
+			<?php if ( tutor_utils()->get_option('enable_course_progress_bar', true, true) && is_array( $course_progress ) && count( $course_progress ) ) : ?>
 				<div class="tutor-course-progress-wrapper tutor-mb-30" style="width: 100%;">
 					<span class="tutor-color-text-primary tutor-text-medium-h6">
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
