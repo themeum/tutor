@@ -391,26 +391,43 @@ class Assets
 		$course_builder_screen = $this->get_course_builder_screen();
 		$to_add                = array();
 
-		// Add course editor identifier class
+		// Add backend course editor identifier class to body
 		if ($course_builder_screen) {
+			$to_add[] = 'tutor-backend';
 			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
 		}
 
+		// Add frontend course builder identifier class
 		if (!$course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard()) {
 			$to_add[] = 'tutor-screen-frontend-dashboard';
 		}
 
 		if (is_admin()) {
-			if (isset($_GET['page']) && $_GET['page'] == 'tutor_settings') {
-				$to_add[] = 'tutor-screen-backend-settings ';
-			}
-			if (isset($_GET['page'])) {
-				$to_add[] = 'tutor-backend-' . $_GET['page'];
+			$screen = function_exists('get_current_screen') ? get_current_screen() : null;
+			$base = ($screen && is_object($screen) && property_exists($screen, 'base')) ? $screen->base : '';
+			$index = strpos($base, 'tutor');
+			
+			if($index===0 || $index>0) {
+				$to_add[] = 'tutor-backend';
+
+				if (isset($_GET['page']) && $_GET['page'] == 'tutor_settings') {
+					$to_add[] = 'tutor-screen-backend-settings ';
+				}
+				if (isset($_GET['page'])) {
+					$to_add[] = 'tutor-backend-' . $_GET['page'];
+				}
 			}
 		}
 
-		is_array($classes) ? $classes = array_merge($classes, $to_add) : $classes .= implode('', $to_add);
+		// Remove duplicate classes if any
+		$to_add = array_unique($to_add);
 
+		if(is_array($classes)) {
+			$classes = array_merge($classes, $to_add);
+		} else {
+			$classes .= implode(' ', $to_add);
+		}
+		
 		return $classes;
 	}
 }
