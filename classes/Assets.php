@@ -399,7 +399,6 @@ class Assets
 
 		// Add frontend course builder identifier class
 		if (!$course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard()) {
-			$to_add[] = 'tutor-backend';
 			$to_add[] = 'tutor-screen-frontend-dashboard';
 		}
 
