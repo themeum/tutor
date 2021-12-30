@@ -30,7 +30,7 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 
 				echo paginate_links(
 					array(
-						'base'      => isset( $data['base'] ) ? $data['base'] : $base,
+						'base'      => !empty( $data['base'] ) ? $data['base'] : $base,
 						'format'    => '?paged=%#%',
 						'current'   => $paged,
 						'total'     => ceil( $data['total_items'] / $per_page ),

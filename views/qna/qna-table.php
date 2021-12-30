@@ -1,5 +1,5 @@
 <?php 
-    extract($data); // $qna_list, $context
+    extract($data); // $qna_list, $context, $qna_pagination
     
     $page_key = 'qna-table';
     $table_columns = include __DIR__ . '/contexts.php';
@@ -27,7 +27,7 @@
                 foreach($qna_list as $qna) {
                     $id_string_delete   = 'tutor_delete_qna_' . $qna->comment_ID;
                     $row_id             = 'tutor_qna_row_' . $qna->comment_ID;
-                    $menu_id            =  'tutor_qna_menu_id_' . $qna->comment_ID;
+                    $menu_id            = 'tutor_qna_menu_id_' . $qna->comment_ID;
                     $is_self            = $current_user_id==$qna->user_id;
                     $key_slug           = $is_self ? '_' . $current_user_id : '';
 
@@ -55,7 +55,7 @@
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
                                             <div class="td-avatar">
-                                                <div class="tooltip-wrap">
+                                                <div class="tooltip-wrap tutor-qna-badges-wrapper">
                                                     <i data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled" class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer" data-action="important"></i>
                                                     <span class="tooltip-txt tooltip-bottom">
                                                         <?php $is_important ? _e('This conversation is important', 'tutor') : _e('Mark this conversation as important', 'tutor'); ?>
@@ -71,7 +71,7 @@
                                         break;
 
                                     case 'question' :
-                                        $content = htmlspecialchars( strip_tags($qna->comment_content) );
+                                        $content = esc_textarea( stripslashes($qna->comment_content) );
                                         ?>
                                         <td data-th="<?php echo $column; ?>" title="<?php echo $content; ?>">
                                             <a href="<?php echo add_query_arg( array( 'question_id'=>$qna->comment_ID ), tutor()->current_url ); ?>">
@@ -137,7 +137,7 @@
                                                     </button>
                                                     <ul id="<?php echo $menu_id; ?>" class="popup-menu">
                                                         <?php if($context!='frontend-dashboard-qna-table-student'): ?>
-                                                            <li class="tutor-qna-badges">
+                                                            <li class="tutor-qna-badges tutor-qna-badges-wrapper">
                                                                 <a href="#" data-action="archived" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white"  data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
                                                                     <span class="ttr-msg-archive-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
                                                                     <span class="text-regular-body tutor-color-text-white">
@@ -146,7 +146,7 @@
                                                                 </a>
                                                             </li>
                                                         <?php endif; ?>
-                                                        <li class="tutor-qna-badges">
+                                                        <li class="tutor-qna-badges tutor-qna-badges-wrapper">
                                                             <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
                                                                 <span class="ttr-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
                                                                 <span class="text-regular-body tutor-color-text-white" style="text-align: left;">
@@ -217,3 +217,16 @@
         ?>
     </tbody>
 </table>
+
+<div class="tutor-mt-50">
+    <?php 
+        $pagination_data = array(
+            'base'        => !empty($qna_pagination['base']) ? $qna_pagination['base'] : null,
+            'total_items' => $qna_pagination['total_items'],
+            'per_page'    => $qna_pagination['per_page'],
+            'paged'       => $qna_pagination['paged'],
+        );
+        $pagination_template = tutor()->path . 'views/elements/pagination.php';
+        tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+    ?>
+</div>
