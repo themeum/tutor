@@ -23,7 +23,7 @@ class Question_Answers_List extends \Tutor_List_Table {
 
 
 	function get_items($args=array()) {
-		$per_page = 15;
+		$per_page = tutor_utils()->get_option( 'pagination_per_page' );
 
 		$search_term = '';
 		if (isset($args['search'])){
