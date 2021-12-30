@@ -13,7 +13,7 @@
 	// $query_topics = tutor_utils()->get_topics($course_id);
 	$attached_lesson_ids = array();
 
-    // tutor_utils()->get_topics function doesn't work correctly for multi instructor case. Rather use get_posts.    
+    // tutor_utils()->get_topics function doesn't work correctly for multi instructor case. Rather use get_posts.
     $topic_args = array(
         'post_type'  => 'topics',
         'post_parent'  => $course_id,
@@ -82,12 +82,12 @@
                 </div>
             </div>
 
-            <div class="tutor-topics-body" style="display: <?php echo $current_topic_id == $topic->ID ? 'block' : 'none'; ?>;">
+            <div class="tutor-topics-body" style="display: <?php echo esc_attr( $current_topic_id == $topic->ID ? 'block' : 'none' ); ?>;">
 
                 <div class="tutor-lessons"><?php
                     // Below function doesn't work somehow because of using WP_Query in ajax call. Will be removed in future.
-					// $lessons = tutor_utils()->get_course_contents_by_topic($topic->ID, -1); 
-                    
+					// $lessons = tutor_utils()->get_course_contents_by_topic($topic->ID, -1);
+
 		            $post_type = apply_filters( 'tutor_course_contents_post_types', array( tutor()->lesson_post_type, 'tutor_quiz' ) );
                     $lessons = (object) array('posts' => get_posts(array(
                         'post_type'      => $post_type,
@@ -180,7 +180,7 @@
 </div>
 
 
-<?php 
+<?php
 	if ( count( $query_lesson ) > count( $attached_lesson_ids ) ) {
 		?>
         <div class="tutor-untopics-lessons tutor-course-builder-content-container">

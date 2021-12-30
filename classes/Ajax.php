@@ -402,7 +402,7 @@ class Ajax{
 
 			// On multisite, ensure user exists on current site, if not add them before allowing login.
 			if ( is_multisite() ) {
-				$user_data = get_user_by( is_email( $creds['user_login'] ) ? 'email' : 'login', $creds['user_login'] );
+				$user_data = get_user_by( is_email( $creds['user_login'] ) ?  'email'  :  'login' , $creds['user_login'] );
 
 				if ( $user_data && ! is_user_member_of_blog( $user_data->ID, get_current_blog_id() ) ) {
 					add_user_to_blog( get_current_blog_id(), $user_data->ID, 'customer' );
@@ -415,12 +415,12 @@ class Ajax{
 			if ( is_wp_error( $user ) ) {
 				$message = $user->get_error_message();
 				$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', $message );
-				
+
 				wp_send_json_error( $message );
 			} else {
 				//since 1.9.8 do enroll if guest attempt to enroll
 				do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
-				
+
 				wp_send_json_success([
 					'redirect' => apply_filters('tutor_login_redirect_url', $redirect_to)
 				]);
@@ -437,7 +437,7 @@ class Ajax{
 	 * Create/Update announcement
 	 * @since  v.1.7.9
 	 */
-	public function create_or_update_annoucement() {   
+	public function create_or_update_annoucement() {
         //prepare alert message
         $create_success_msg = __("Announcement created successfully",'tutor');
         $update_success_msg = __("Announcement updated successfully",'tutor');
@@ -451,11 +451,11 @@ class Ajax{
 		$course_id = sanitize_text_field($_POST['tutor_announcement_course']);
 		$announcement_title = sanitize_text_field($_POST['tutor_announcement_title']);
 		$announcement_summary = sanitize_textarea_field($_POST['tutor_announcement_summary']);
-		
+
 		if(!tutils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
-        
+
         //set data and sanitize it
         $form_data = array(
 			'post_type' => 'tutor_announcements',
@@ -471,16 +471,16 @@ class Ajax{
 
         //validation message set
         if (empty($form_data['post_parent'])) {
-            $error['post_parent'] = __('Course name required','tutor'); 
+            $error['post_parent'] = __('Course name required','tutor');
 
 		}
-		
+
         if (empty($form_data['post_title'])) {
-            $error['post_title'] = __('Announcement title required','tutor'); 
+            $error['post_title'] = __('Announcement title required','tutor');
 		}
-		
+
         if (empty($form_data['post_content'])) {
-            $error['post_content'] = __('Announcement summary required','tutor'); 
+            $error['post_content'] = __('Announcement summary required','tutor');
 
         }
 
@@ -499,7 +499,7 @@ class Ajax{
                 $response['message'] = ($action_type == 'create') ? $create_success_msg : $update_success_msg;
 
 				do_action('tutor_announcements/after/save', $post_id, $announcement, $action_type );
-                
+
                 wp_send_json($response);
             } else {
                 //failure message
@@ -538,8 +538,8 @@ class Ajax{
             $response = array(
                 'status'    => 'fail',
                 'message'   => __('Announcement delete failed','tutor')
-            );      
-            wp_send_json($response);     
+            );
+            wp_send_json($response);
         }
     }
 }

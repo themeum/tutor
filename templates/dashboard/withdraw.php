@@ -73,8 +73,8 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 		<span>
 			<?php
 			$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
-			echo $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), esc_attr( $withdraw_method_name ) ) : '';
-			echo sprintf( __( 'You can change your %1$s withdrawal preference %2$s', 'tutor' ), '<a href="' . esc_url( $my_profile_url ) . '">', '</a>' );
+			echo esc_attr( $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), $withdraw_method_name ) : '' );
+			echo _esc_html( sprintf( __( 'You can change your %1$s withdrawal preference %2$s', 'tutor' ), '<a href="' . esc_url( $my_profile_url ) . '">', '</a>' ) );
 			?>
 		</span>
 	</div>

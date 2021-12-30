@@ -43,7 +43,7 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) {
 						<p class="course-avg-rating-html">
 							<?php tutor_utils()->star_rating_generator( $rating->rating_avg ); ?>
 						</p>
-						<p class="tutor-course-avg-rating-total">Total <span><?php echo $rating->rating_count; ?></span> Ratings</p>
+						<p class="tutor-course-avg-rating-total">Total <span><?php echo esc_attr( $rating->rating_count ); ?></span> Ratings</p>
 
 					</div>
 					<div class="tutor-col">
@@ -54,16 +54,16 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) {
 								?>
 								<div class="course-rating-meter">
 									<div class="rating-meter-col"><i class="tutor-icon-star-full"></i></div>
-									<div class="rating-meter-col"><?php echo $key; ?></div>
+									<div class="rating-meter-col"><?php echo esc_attr( $key ); ?></div>
 									<div class="rating-meter-col rating-meter-bar-wrap">
 										<div class="rating-meter-bar">
-											<div class="rating-meter-fill-bar" style="width: <?php echo $rating_count_percent; ?>%;"></div>
+											<div class="rating-meter-fill-bar" style="width: <?php echo esc_attr( $rating_count_percent ); ?>%;"></div>
 										</div>
 									</div>
 									<div class="rating-meter-col rating-text-col">
 										<?php
-										echo $value . ' ';
-										echo $value > 1 ? __( 'ratings', 'tutor' ) : __( 'rating', 'tutor' );
+										echo esc_attr( $value ) . ' ';
+										echo esc_attr( $value > 1 ? __( 'ratings', 'tutor' ) : __( 'rating', 'tutor' ) );
 										?>
 									</div>
 								</div>
@@ -89,9 +89,9 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) {
 						</div>
 						<div class="tutor-review-user-info">
 							<div class="review-time-name">
-								<p> <a href="<?php echo esc_url( $profile_url ); ?>">  <?php echo $review->display_name; ?> </a> </p>
+								<p> <a href="<?php echo esc_url( $profile_url ); ?>">  <?php echo esc_attr( $review->display_name ); ?> </a> </p>
 								<p class="review-meta">
-									<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
+									<?php echo esc_attr( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) ); ?>
 								</p>
 							</div>
 							<div class="individual-review-rating-wrap">

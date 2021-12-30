@@ -12,28 +12,28 @@
  */
 
 
-do_action('tutor_course/single/before/requirements');
+do_action( 'tutor_course/single/before/requirements' );
 
 $course_requirements = tutor_course_requirements();
 
-if ( empty($course_requirements)){
+if ( empty( $course_requirements ) ) {
 	return;
 }
 
-if (is_array($course_requirements) && count($course_requirements)){
+if ( is_array( $course_requirements ) && count( $course_requirements ) ) {
 	?>
 
 	<div class="tutor-single-course-segment  tutor-course-requirements-wrap">
 
 		<div class="course-requirements-title">
-			<h4 class="tutor-segment-title"><?php _e('Requirements', 'tutor'); ?></h4>
+			<h4 class="tutor-segment-title"><?php _e( 'Requirements', 'tutor' ); ?></h4>
 		</div>
 
 		<div class="tutor-course-requirements-content">
 			<ul class="tutor-course-requirements-items tutor-custom-list-style">
 				<?php
-				foreach ($course_requirements as $requirement){
-					echo "<li>{$requirement}</li>";
+				foreach ( $course_requirements as $requirement ) {
+					echo _esc_html( '<li>' . $requirement . '</li>' );
 				}
 				?>
 			</ul>
@@ -42,4 +42,4 @@ if (is_array($course_requirements) && count($course_requirements)){
 
 <?php } ?>
 
-<?php do_action('tutor_course/single/after/requirements'); ?>
+<?php do_action( 'tutor_course/single/after/requirements' ); ?>

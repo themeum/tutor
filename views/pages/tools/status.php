@@ -1,9 +1,9 @@
 
 <div class="wrap">
-	<h2><?php _e('Tutor Environment Status', 'tutor'); ?></h2>
+	<h2><?php _e( 'Tutor Environment Status', 'tutor' ); ?></h2>
 
 	<?php
-	$environment      = \TUTOR\Admin::get_environment_info();
+	$environment = \TUTOR\Admin::get_environment_info();
 	?>
 
 	<table class="tutor_status_table widefat" cellspacing="0" id="status">
@@ -15,18 +15,18 @@
 		<tbody>
 		<tr>
 			<td data-export-label="Home URL"><?php esc_html_e( 'Home URL', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The homepage URL of your site.', 'tutor' ) );?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The homepage URL of your site.', 'tutor' ) ); ?></td>
 			<td><?php echo esc_html( $environment['home_url'] ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="Site URL"><?php esc_html_e( 'Site URL', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The root URL of your site.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The root URL of your site.', 'tutor' ) ); ?></td>
 			<td><?php echo esc_html( $environment['site_url'] ); ?></td>
 		</tr>
 
 		<tr>
 			<td data-export-label="WP Version"><?php esc_html_e( 'WordPress version', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of WordPress installed on your site.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of WordPress installed on your site.', 'tutor' ) ); ?></td>
 			<td>
 				<?php
 				$latest_version = get_transient( 'tutor_system_status_wp_version_check' );
@@ -55,18 +55,18 @@
 
 		<tr>
 			<td data-export-label="Tutor Version"><?php esc_html_e( 'Tutor Version', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of tutor.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of tutor.', 'tutor' ) ); ?></td>
 			<td><mark class="yes"><?php echo esc_html( $environment['version'] ); ?></mark></td>
 		</tr>
 
 		<tr>
 			<td data-export-label="WP Multisite"><?php esc_html_e( 'WordPress multisite', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Whether or not you have WordPress Multisite enabled.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Whether or not you have WordPress Multisite enabled.', 'tutor' ) ); ?></td>
 			<td><?php echo ( $environment['wp_multisite'] ) ? '<span class="dashicons dashicons-yes"></span>' : '&ndash;'; ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="WP Memory Limit"><?php esc_html_e( 'WordPress memory limit', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The maximum amount of memory (RAM) that your site can use at one time.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The maximum amount of memory (RAM) that your site can use at one time.', 'tutor' ) ); ?></td>
 			<td>
 				<?php
 				if ( $environment['wp_memory_limit'] < 67108864 ) {
@@ -80,7 +80,7 @@
 		</tr>
 		<tr>
 			<td data-export-label="WP Debug Mode"><?php esc_html_e( 'WordPress debug mode', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Displays whether or not WordPress is in Debug Mode.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Displays whether or not WordPress is in Debug Mode.', 'tutor' ) ); ?></td>
 			<td>
 				<?php if ( $environment['wp_debug_mode'] ) : ?>
 					<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>
@@ -91,7 +91,7 @@
 		</tr>
 		<tr>
 			<td data-export-label="WP Cron"><?php esc_html_e( 'WordPress cron', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Displays whether or not WP Cron Jobs are enabled.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Displays whether or not WP Cron Jobs are enabled.', 'tutor' ) ); ?></td>
 			<td>
 				<?php if ( $environment['wp_cron'] ) : ?>
 					<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>
@@ -102,7 +102,7 @@
 		</tr>
 		<tr>
 			<td data-export-label="Language"><?php esc_html_e( 'Language', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The current language used by WordPress. Default = English', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The current language used by WordPress. Default = English', 'tutor' ) ); ?></td>
 			<td><?php echo esc_html( $environment['language'] ); ?></td>
 		</tr>
 		<tr>
@@ -130,18 +130,18 @@
 		<tbody>
 		<tr>
 			<td data-export-label="Server Info"><?php esc_html_e( 'Server info', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Information about the web server that is currently hosting your site.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Information about the web server that is currently hosting your site.', 'tutor' ) ); ?></td>
 			<td><?php echo esc_html( $environment['server_info'] ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="PHP Version"><?php esc_html_e( 'PHP version', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of PHP installed on your hosting server.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of PHP installed on your hosting server.', 'tutor' ) ); ?></td>
 			<td>
 				<?php
 				if ( version_compare( $environment['php_version'], '7.2', '>=' ) ) {
 					echo '<mark class="yes">' . esc_html( $environment['php_version'] ) . '</mark>';
 				} else {
-					$class       = 'error';
+					$class = 'error';
 
 					if ( version_compare( $environment['php_version'], '5.6', '<' ) ) {
 						$notice = '<span class="dashicons dashicons-warning"></span> ' . __( 'Tutor will run under this version of PHP, however, it has reached end of life. We recommend using PHP version 7.2 or above for greater performance and security.', 'tutor' );
@@ -158,28 +158,28 @@
 		<?php if ( function_exists( 'ini_get' ) ) : ?>
 			<tr>
 				<td data-export-label="PHP Post Max Size"><?php esc_html_e( 'PHP post max size', 'tutor' ); ?>:</td>
-				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The largest filesize that can be contained in one post.', 'tutor' ) );  ?></td>
+				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The largest filesize that can be contained in one post.', 'tutor' ) ); ?></td>
 				<td><?php echo esc_html( size_format( $environment['php_post_max_size'] ) ); ?></td>
 			</tr>
 			<tr>
 				<td data-export-label="PHP Time Limit"><?php esc_html_e( 'PHP time limit', 'tutor' ); ?>:</td>
-				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The amount of time (in seconds) that your site will spend on a single operation before timing out (to avoid server lockups)', 'tutor' ) );  ?></td>
+				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The amount of time (in seconds) that your site will spend on a single operation before timing out (to avoid server lockups)', 'tutor' ) ); ?></td>
 				<td><?php echo esc_html( $environment['php_max_execution_time'] ); ?></td>
 			</tr>
 			<tr>
 				<td data-export-label="PHP Max Input Vars"><?php esc_html_e( 'PHP max input vars', 'tutor' ); ?>:</td>
-				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The maximum number of variables your server can use for a single function to avoid overloads.', 'tutor' ) );  ?></td>
+				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The maximum number of variables your server can use for a single function to avoid overloads.', 'tutor' ) ); ?></td>
 				<td><?php echo esc_html( $environment['php_max_input_vars'] ); ?></td>
 			</tr>
 			<tr>
 				<td data-export-label="cURL Version"><?php esc_html_e( 'cURL version', 'tutor' ); ?>:</td>
-				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of cURL installed on your server.', 'tutor' ) );  ?></td>
+				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of cURL installed on your server.', 'tutor' ) ); ?></td>
 				<td><?php echo esc_html( $environment['curl_version'] ); ?></td>
 			</tr>
 			<tr>
 				<td data-export-label="SUHOSIN Installed"><?php esc_html_e( 'SUHOSIN installed', 'tutor' ); ?>:</td>
-				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Suhosin is an advanced protection system for PHP installations. It was designed to protect your servers on the one hand against a number of well known problems in PHP applications and on the other hand against potential unknown vulnerabilities within these applications or the PHP core itself. If enabled on your server, Suhosin may need to be configured to increase its data submission limits.', 'tutor' ) );  ?></td>
-				<td><?php echo $environment['suhosin_installed'] ? _esc_html( '<span class="dashicons dashicons-yes"></span>' ) : '&ndash;'; ?></td>
+				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Suhosin is an advanced protection system for PHP installations. It was designed to protect your servers on the one hand against a number of well known problems in PHP applications and on the other hand against potential unknown vulnerabilities within these applications or the PHP core itself. If enabled on your server, Suhosin may need to be configured to increase its data submission limits.', 'tutor' ) ); ?></td>
+				<td><?php echo _esc_html( $environment['suhosin_installed'] ? '<span class="dashicons dashicons-yes"></span>' : '&ndash;' ); ?></td>
 			</tr>
 		<?php endif; ?>
 
@@ -189,7 +189,7 @@
 			?>
 			<tr>
 				<td data-export-label="MySQL Version"><?php esc_html_e( 'MySQL version', 'tutor' ); ?>:</td>
-				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of MySQL installed on your hosting server.', 'tutor' ) );  ?></td>
+				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of MySQL installed on your hosting server.', 'tutor' ) ); ?></td>
 				<td>
 					<?php
 					if ( version_compare( $environment['mysql_version'], '5.6', '<' ) && ! strstr( $environment['mysql_version_string'], 'MariaDB' ) ) {
@@ -204,12 +204,12 @@
 		<?php endif; ?>
 		<tr>
 			<td data-export-label="Max Upload Size"><?php esc_html_e( 'Max upload size', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The largest filesize that can be uploaded to your WordPress installation.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The largest filesize that can be uploaded to your WordPress installation.', 'tutor' ) ); ?></td>
 			<td><?php echo esc_html( size_format( $environment['max_upload_size'] ) ); ?></td>
 		</tr>
 		<tr>
 			<td data-export-label="Default Timezone is UTC"><?php esc_html_e( 'Default timezone is UTC', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The default timezone for your server.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The default timezone for your server.', 'tutor' ) ); ?></td>
 			<td>
 				<?php
 				if ( 'UTC' !== $environment['default_timezone'] ) {
@@ -223,7 +223,7 @@
 		</tr>
 		<tr>
 			<td data-export-label="fsockopen/cURL"><?php esc_html_e( 'fsockopen/cURL', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Payment gateways can use cURL to communicate with remote servers to authorize payments, other plugins may also use it when communicating with remote services.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Payment gateways can use cURL to communicate with remote servers to authorize payments, other plugins may also use it when communicating with remote services.', 'tutor' ) ); ?></td>
 			<td>
 				<?php
 				if ( $environment['fsockopen_or_curl_enabled'] ) {
@@ -236,7 +236,7 @@
 		</tr>
 		<tr>
 			<td data-export-label="DOMDocument"><?php esc_html_e( 'DOMDocument', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'HTML/Multipart emails use DOMDocument to generate inline CSS in templates.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'HTML/Multipart emails use DOMDocument to generate inline CSS in templates.', 'tutor' ) ); ?></td>
 			<td>
 				<?php
 				if ( $environment['domdocument_enabled'] ) {
@@ -250,7 +250,7 @@
 		</tr>
 		<tr>
 			<td data-export-label="GZip"><?php esc_html_e( 'GZip', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'GZip (gzopen) is used to open the GEOIP database from MaxMind.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'GZip (gzopen) is used to open the GEOIP database from MaxMind.', 'tutor' ) ); ?></td>
 			<td>
 				<?php
 				if ( $environment['gzip_enabled'] ) {
@@ -264,7 +264,7 @@
 		</tr>
 		<tr>
 			<td data-export-label="Multibyte String"><?php esc_html_e( 'Multibyte string', 'tutor' ); ?>:</td>
-			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Multibyte String (mbstring) is used to convert character encoding, like for emails or converting characters to lowercase.', 'tutor' ) );  ?></td>
+			<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'Multibyte String (mbstring) is used to convert character encoding, like for emails or converting characters to lowercase.', 'tutor' ) ); ?></td>
 			<td>
 				<?php
 				if ( $environment['mbstring_enabled'] ) {
@@ -301,9 +301,9 @@
 			<td>
 				<?php
 				$override_files = \TUTOR\Admin::template_overridden_files();
-				if (is_array($override_files) && count($override_files)){
-					foreach ($override_files as $file){
-						echo esc_attr($file). ",<br />";
+				if ( is_array( $override_files ) && count( $override_files ) ) {
+					foreach ( $override_files as $file ) {
+						echo esc_attr( $file ) . ',<br />';
 					}
 				}
 				?>

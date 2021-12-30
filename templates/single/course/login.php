@@ -11,16 +11,17 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 ?>
 
 <div class="tutor-single-course-segment tutor-course-login-wrap">
-    <div class="course-login-title">
-        <h4><?php _e('Login', 'tutor'); ?></h4>
-    </div>
+	<div class="course-login-title">
+		<h4><?php _e( 'Login', 'tutor' ); ?></h4>
+	</div>
 
-    <div class="tutor-single-course-login-form">
-	    <?php tutor_load_template( 'global.login' ); ?>
-    </div>
+	<div class="tutor-single-course-login-form">
+		<?php tutor_load_template( 'global.login' ); ?>
+	</div>
 </div>

@@ -223,7 +223,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 						<td><?php echo esc_attr( $answer_i ); ?></td>
 						<td>
 							<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-							<span data-title="<?php echo esc_attr( $type['name'] ); ?>"><?php echo _esc_html($question_type['icon']); ?></span>
+							<span data-title="<?php echo esc_attr( $type['name'] ); ?>"><?php echo _esc_html( $question_type['icon'] ); ?></span>
 						</td>
 						<td><?php echo esc_attr( stripslashes( $answer->question_title ) ); ?></td>
 						<td>
@@ -248,7 +248,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 									$dash_string = array();
 									$input_data  = array();
 									for ( $i = 0; $i < $count_dash_fields; $i++ ) {
-										$input_data[] = isset( $answer_titles[ $i ] ) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : '______';
+										$input_data[] = isset( $answer_titles[ $i ] ) ? _esc_html( '<span class="filled_dash_unser">' . $answer_titles[ $i ] . '</span>' ) : '______';
 									}
 									$answer_title = $db_answer->answer_title;
 									foreach ( $input_data as $replace ) {
@@ -268,7 +268,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 									$get_answers   = tutor_utils()->get_answer_by_id( $ordering_id );
 									$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 									$answer_titles = array_map( 'stripslashes', $answer_titles );
-									echo '<p>' . implode( '</p><p>', $answer_titles ) . '</p>';
+									echo _esc_html( '<p>' . implode( '</p><p>', $answer_titles ) . '</p>' );
 								}
 							} elseif ( $answer->question_type === 'matching' ) {
 
@@ -289,7 +289,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 								$ordering_ids           = maybe_unserialize( $answer->given_answer );
 								$original_saved_answers = tutor_utils()->get_answers_by_quiz_question( $answer->question_id );
 
-								echo '<div class="answer-image-matched-wrap">';
+								echo _esc_html('<div class="answer-image-matched-wrap">');
 								foreach ( $original_saved_answers as $key => $original_saved_answer ) {
 									$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
 									$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
@@ -307,7 +307,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 
 								$ordering_ids = maybe_unserialize( $answer->given_answer );
 
-								echo '<div class="answer-image-matched-wrap">';
+								echo _esc_html('<div class="answer-image-matched-wrap">');
 								foreach ( $ordering_ids as $answer_id => $image_answer ) {
 									$db_answers = tutor_utils()->get_answer_by_id( $answer_id );
 									foreach ( $db_answers as $db_answer ) {
@@ -315,7 +315,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 									?>
 									<div class="image-matching-item">
 										<p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id ); ?>" /> </p>
-										<p class="dragged-caption"><?php echo _esc_html($image_answer); ?></p>
+										<p class="dragged-caption"><?php echo _esc_html( $image_answer ); ?></p>
 									</div>
 									<?php
 								}

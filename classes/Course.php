@@ -260,7 +260,7 @@ class Course extends Tutor_Base {
 		if ( $echo ) {
 			echo _esc_html( $content );
 		} else {
-			return _esc_html( $content );
+			return  $content ;
 		}
 	}
 
@@ -751,13 +751,14 @@ class Course extends Tutor_Base {
 		if ( is_array( $instructors ) && count( $instructors ) ) {
 			$instructor_output = '';
 			foreach ( $instructors as $instructor ) {
-				$instructor_output .= "<p><label><input type='radio' name='tutor_instructor_ids[]' value='{$instructor->ID}' > {$instructor->display_name} </label></p>";
+				$instructor_output .= '<p><label><input type="radio" name="tutor_instructor_ids[]" value="' . $instructor->ID . '" > ' . $instructor->display_name . ' </label></p>';
 			}
 
 			$output .= apply_filters( 'tutor_course_instructors_html', $instructor_output, $instructors );
 
 		} else {
-			$output .= __( '<p>No instructor available or you have already added maximum instructors</p>', 'tutor' );
+			$output .= '<p>' . __( 'No instructor available or you have already added maximum instructors' ) . '</p>';
+			$output .= '<p>' . __( 'No instructor available or you have already added maximum instructors', 'tutor' ) . '</p>';
 		}
 
 		if ( ! defined( 'TUTOR_MT_VERSION' ) ) {
@@ -799,7 +800,7 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		wp_send_json_success( array( 'output' => $output ) );
+		wp_send_json_success( array( 'output' => htmlentities( $output ) ) );
 	}
 
 	public function detach_instructor_from_course() {

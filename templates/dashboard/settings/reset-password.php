@@ -37,11 +37,11 @@
 			<?php
 			$errors = apply_filters( 'tutor_reset_password_validation_errors', array() );
 			if ( is_array( $errors ) && count( $errors ) ) {
-				echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+				echo _esc_html( '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">' );
 				foreach ( $errors as $error_key => $error_value ) {
-					echo "<li>{$error_value}</li>";
+					echo _esc_html( '<li>' . $error_value . '</li>' );
 				}
-				echo '</ul></div>';
+				echo _esc_html( '</ul></div>' );
 			}
 			?>
 

@@ -44,7 +44,7 @@ if ( ! function_exists( 'tutor_get_template' ) ) {
 			}
 
 			if ( ! file_exists( $template_location ) ) {
-				echo '<div class="tutor-notice-warning"> ' . __( sprintf( 'The file you are trying to load does not exist in your theme or Tutor LMS plugin location. If you are extending the Tutor LMS plugin, please create a php file here: %s ', "<code>{$file_in_theme}</code>" ), 'tutor' ) . ' </div>';
+				echo '<div class="tutor-notice-warning"> ' . __( sprintf( 'The file you are trying to load does not exist in your theme or Tutor LMS plugin location. If you are extending the Tutor LMS plugin, please create a php file here: %s ', '"<code>' . $file_in_theme . '</code>"' ), 'tutor' ) . ' </div>';
 			}
 		}
 
@@ -1075,7 +1075,7 @@ function tutor_single_course_add_to_cart( $echo = true ) {
 		tutor_load_template( 'single.course.login' );
 		$login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
 
-		$output .= "<div class='tutor-cart-box-login-form' style='display: none;'><span class='login-overlay-close'></span><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
+		$output .= '<div class="tutor-cart-box-login-form" style="display: none;"><span class="login-overlay-close"></span><div class="tutor-cart-box-login-form-inner"><button class="tutor-popup-form-close tutor-icon-line-cross"></button>' . $login_form . '</div></div>';
 	}
 
 	if ( $echo ) {
@@ -1628,7 +1628,7 @@ if ( ! function_exists( 'tutor_login_form_popup' ) ) {
 		ob_start();
 		tutor_load_template( 'single.course.login' );
 		$login_form = apply_filters( 'tutor_course/global/login', ob_get_clean() );
-		$output    .= "<div class='tutor-cart-box-login-form' style='display: none;'><span class='login-overlay-close'></span><div class='tutor-cart-box-login-form-inner'><button class='tutor-popup-form-close tutor-icon-line-cross'></button>{$login_form}</div></div>";
+		$output    .= '<div class="tutor-cart-box-login-form" style="display: none;"><span class="login-overlay-close"></span><div class="tutor-cart-box-login-form-inner"><button class="tutor-popup-form-close tutor-icon-line-cross"></button>' . $login_form . '</div></div>';
 
 		$output = apply_filters( 'tutor_login_form_popup_html', $output );
 
