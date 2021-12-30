@@ -425,7 +425,7 @@ class Assets
 		if(is_array($classes)) {
 			$classes = array_merge($classes, $to_add);
 		} else {
-			$classes .= implode('', $to_add);
+			$classes .= implode(' ', $to_add);
 		}
 		
 		return $classes;
