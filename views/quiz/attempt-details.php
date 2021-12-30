@@ -3,7 +3,6 @@
 if ( ! defined( 'ABSPATH' ) ){
     exit;
 }
-
 extract($data); // $user_id, $attempt_id, $attempt_data(nullable), $context(nullable)
 
 !isset($attempt_data) ? $attempt_data = tutor_utils()->get_attempt($attempt_id) : 0;
@@ -12,6 +11,13 @@ extract($data); // $user_id, $attempt_id, $attempt_data(nullable), $context(null
 if (!$attempt_id || !$attempt_data || $user_id!=$attempt_data->user_id){
     echo '<p>'.__('Attempt not found or access permission denied', 'tutor').'</p>';
 	return;
+}
+
+if ( isset( $user_id ) && $user_id > 0 ) {
+    $user = get_userdata( $user_id );
+    if ( ! $user ) {
+        return;
+    }
 }
 
 function show_correct_answer( $answers= array() ){

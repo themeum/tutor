@@ -71,7 +71,7 @@
                                         break;
 
                                     case 'question' :
-                                        $content = htmlspecialchars( strip_tags($qna->comment_content) );
+                                        $content = esc_textarea( stripslashes($qna->comment_content) );
                                         ?>
                                         <td data-th="<?php echo $column; ?>" title="<?php echo $content; ?>">
                                             <a href="<?php echo add_query_arg( array( 'question_id'=>$qna->comment_ID ), tutor()->current_url ); ?>">
