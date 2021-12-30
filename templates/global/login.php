@@ -97,7 +97,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<p class="login-remember">
 				<label>
 					<input name="rememberme" type="checkbox" id="<?php echo esc_attr( $args['id_remember'] ); ?>"
-					value="forever" <?php $args['value_remember'] ? 'checked' : ''; ?>
+					value="forever" <?php echo esc_attr( $args['value_remember'] ? 'checked' : '' ); ?>
 					>
 					<?php echo esc_html( $args['label_remember'] ); ?>
 				</label>

@@ -33,7 +33,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 			?>
 			<span class="tutor-single-rating-count">
 				<?php
-				echo $course_rating->rating_avg;
+				echo esc_attr( $course_rating->rating_avg );
 				echo '<i>(' . $course_rating->rating_count . ')</i>';
 				?>
 			</span>
@@ -110,7 +110,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 				?>
 				<li>
 					<span><?php esc_html_e( 'Duration', 'tutor' ); ?></span>
-					<?php echo $course_duration; ?>
+					<?php echo esc_attr( $course_duration ); ?>
 				</li>
 				<?php
 			}
@@ -144,7 +144,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 		?>
 		<div class="tutor-course-summery">
 			<h4  class="tutor-segment-title"><?php esc_html_e( 'About Course', 'tutor' ); ?></h4>
-			<?php echo $excerpt; ?>
+			<?php echo esc_attr( $excerpt ); ?>
 		</div>
 		<?php
 	}

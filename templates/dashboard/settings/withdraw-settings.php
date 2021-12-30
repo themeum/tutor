@@ -69,7 +69,7 @@
 								<div class="withdraw-method-field-wrap withdraw-method-field-<?php echo esc_attr( $field_name ) . ' ' . esc_attr( $field['type'] ); ?> ">
 									<?php
 									if ( ! empty( $field['label'] ) ) {
-										echo "<label for='field_{$method_id}_$field_name'>{$field['label']}</label>";
+										echo _esc_html( '<label for="' . field_{$method_id}_$field_name . '">' . $field['label'] . '</label>' );
 									}
 
 									$passing_data = apply_filters(
@@ -87,10 +87,10 @@
 										$passing_data['old_value'] = $old_value;
 									}
 
-									tutor_load_template( "dashboard.withdraw-method-fields.{$field['type']}", $passing_data );
+									tutor_load_template( 'dashboard.withdraw-method-fields.' . $field['type'], $passing_data );
 
 									if ( ! empty( $field['desc'] ) ) {
-										echo "<p class='withdraw-field-desc'>{$field['desc']}</p>";
+										echo _esc_html('<p class='withdraw-field-desc'>'.$field['desc'].'</p>');
 									}
 									?>
 								</div>

@@ -38,7 +38,7 @@ if ( $cover_photo_id ) {
 					<i class="tutor-icon-image-ans"></i>
 					<span>
 						<?php
-							echo $profile_photo_id ? __( 'Update Cover Photo', 'tutor' ) : __( 'Upload Cover Photo', 'tutor' );
+							echo esc_attr( $profile_photo_id ? __( 'Update Cover Photo', 'tutor' ) : __( 'Upload Cover Photo', 'tutor' ) );
 						?>
 
 					</span>
@@ -51,7 +51,7 @@ if ( $cover_photo_id ) {
 			<span>&nbsp;&nbsp;&nbsp;&nbsp;<?php _e( 'Cover Photo Size', 'tutor' ); ?>: <span><?php _e( '700x430', 'tutor' ); ?></span> <?php _e( 'pixels', 'tutor' ); ?> </span>
 			<span class="loader-area"><?php _e( 'Saving...', 'tutor' ); ?></span>
 		</div>
-		<div id="tutor_profile_area" data-fallback="<?php echo esc_url($profile_placeholder); ?>" style="background-image:url(<?php echo esc_url($profile_photo_src); ?>)">
+		<div id="tutor_profile_area" data-fallback="<?php echo esc_url( $profile_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $profile_photo_src ); ?>)">
 			<div class="tutor_overlay">
 				<i class="tutor-icon-image-ans"></i>
 			</div>
@@ -79,11 +79,11 @@ if ( $cover_photo_id ) {
 		<?php
 		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+			echo _esc_html( '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">' );
 			foreach ( $errors as $error_key => $error_value ) {
-				echo "<li>{$error_value}</li>";
+				echo _esc_html( '<li>' . $error_value . '</li>' );
 			}
-			echo '</ul></div>';
+			echo _esc_html( '</ul></div>' );
 		}
 		?>
 

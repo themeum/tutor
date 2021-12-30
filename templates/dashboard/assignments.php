@@ -57,7 +57,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutils()->get_courses(
 	</div>
 	<div class="tutor-form-group tutor-announcement-datepicker">
 		<label><?php _e( 'Create Date', 'tutor' ); ?></label>
-		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo $date_filter !== '' ? _esc_html( tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) ) : ''; ?>" placeholder="<?php echo _esc_html( get_option( 'date_format' ) ); ?>" autocomplete="off" />
+		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo esc_attr( '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '' ); ?>" placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>" autocomplete="off" />
 		<i class="tutor-icon-calendar"></i>
 	</div>
 </div>

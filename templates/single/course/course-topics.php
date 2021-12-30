@@ -62,7 +62,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 						echo 'tutor-active';}
 					?>
 					">
-						<div class="tutor-course-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
+						<div class="tutor-course-title <?php echo esc_attr( $topic_summery ? 'has-summery' : '' ); ?>">
 							<h4>
 								<i class="tutor-icon-plus"></i>
 								<?php
@@ -84,7 +84,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 						}
 						?>
 
-						<div class="tutor-course-lessons" style="<?php echo $index > 1 ? 'display: none' : ''; ?>">
+						<div class="tutor-course-lessons" style="<?php echo esc_attr( 1 < $index ? 'display: none' : '' ); ?>">
 
 							<?php
 							$lessons = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
@@ -117,9 +117,9 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 											$lesson_title = '';
 											if ( has_post_thumbnail() ) {
 												$thumbnail_url = get_the_post_thumbnail_url( get_the_ID(), 'thumbnail' );
-												$lesson_title .= "<i style='background:url({$thumbnail_url})' class='tutor-lesson-thumbnail-icon $lesson_icon'></i>";
+												$lesson_title .= '<i style="background:url(' . $thumbnail_url . ')" class="tutor-lesson-thumbnail-icon ' . $lesson_icon . '"></i>';
 											} else {
-												$lesson_title .= "<i class='$lesson_icon'></i>";
+												$lesson_title .= '<i class="' . $lesson_icon . '"></i>';
 											}
 
 											$countdown = '';
@@ -136,7 +136,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 											if ( $is_enrolled || ( get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes' && ! tutor_utils()->is_course_purchasable( $course_id ) ) ) {
 												$lesson_title .= '<a href="' . get_the_permalink() . '"> ' . get_the_title() . ' </a>';
 
-												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>" . tutor_utils()->get_optimized_duration( $play_time ) . '</span>' : '';
+												$lesson_title .= $play_time ? '<span class="tutor-lesson-duration">' . tutor_utils()->get_optimized_duration( $play_time ) . '</span>' : '';
 
 												if ( $countdown ) {
 													if ( $zoom_meeting->is_expired ) {
@@ -147,10 +147,10 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 													$lesson_title .= $countdown;
 												}
 
-												echo $lesson_title;
+												echo esc_attr( $lesson_title );
 											} else {
 												$lesson_title .= get_the_title();
-												$lesson_title .= $play_time ? "<span class='tutor-lesson-duration'>" . tutor_utils()->get_optimized_duration( $play_time ) . '</span>' : '';
+												$lesson_title .= $play_time ? '<span class="tutor-lesson-duration">' . tutor_utils()->get_optimized_duration( $play_time ) . '</span>' : '';
 												echo apply_filters( 'tutor_course/contents/lesson/title', $lesson_title, get_the_ID() );
 											}
 

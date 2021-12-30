@@ -5969,7 +5969,7 @@ class Utils {
 		$status      = str_replace( 'wc-', '', $status );
 		$status_name = ucwords( str_replace( '-', ' ', $status ) );
 
-		return "<span class='label-order-status label-status-{$status}'>$status_name</span>";
+		return '<span class="label-order-status label-status-'.$status.'">'.$status_name.'</span>';
 	}
 
 	/**

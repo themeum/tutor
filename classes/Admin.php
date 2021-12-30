@@ -62,7 +62,7 @@ class Admin{
         if ($enable_course_marketplace) {
             add_submenu_page('tutor', __('Instructors', 'tutor'), __('Instructors', 'tutor'), 'manage_tutor', Instructors_List::INSTRUCTOR_LIST_PAGE, array($this, 'tutor_instructors'));
 		}
-		
+
 		add_submenu_page('tutor', __('Announcements', 'tutor'), __('Announcements', 'tutor'), 'manage_tutor_instructor', 'tutor_announcements', array($this, 'tutor_announcements'));
 
 		add_submenu_page('tutor', __('Q & A', 'tutor'), __('Q & A ', 'tutor').$unanswered_bubble, 'manage_tutor_instructor', Question_Answers_List::Question_Answer_PAGE, array($this, 'question_answer') );
@@ -193,7 +193,7 @@ class Admin{
 	}
 
 	public function posts_clauses_request($clauses){
-		
+
 		if(!is_admin() || (!isset($_GET['post_type']) || $_GET['post_type']!='courses') || tutor_utils()->has_user_role(array('administrator', 'editor'))) {
 			return $clauses;
 		}
@@ -205,14 +205,14 @@ class Admin{
 
 		$get_assigned_courses_ids = $wpdb->get_col($wpdb->prepare("SELECT meta_value from {$wpdb->usermeta} WHERE meta_key = '_tutor_instructor_course_id' AND user_id = %d", $user_id));
 		$own_courses = is_array($get_assigned_courses_ids) ? $get_assigned_courses_ids : array();
-		
+
 		$in_query_pre = count($own_courses) ? implode(',', $own_courses) : null;
 		$in_query_where = $in_query_pre ? " OR {$wpdb->posts}.ID IN({$in_query_pre})" : '';
 
 		$custom_author_query = "  AND ({$wpdb->posts}.post_type!='courses' OR {$wpdb->posts}.post_author = {$user_id}) {$in_query_where}";
-		
+
 		$clauses['where'] .= $custom_author_query;
-		
+
 		return $clauses;
 	}
 
@@ -237,8 +237,8 @@ class Admin{
 				global $wpdb;
 
 				$get_assigned_courses_ids = (int) $wpdb->get_var($wpdb->prepare(
-					"SELECT user_id 
-					from {$wpdb->usermeta} 
+					"SELECT user_id
+					from {$wpdb->usermeta}
 					WHERE user_id = %d AND meta_key = '_tutor_instructor_course_id' AND meta_value = %d ", $current_user, $get_post_id));
 
 				if ( ! $get_assigned_courses_ids){

@@ -40,7 +40,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 				foreach ( $answers as $answer ) {
 					$answer_profile = tutils()->profile_url( $answer->user_id );
 					?>
-						<div class="tutor_individual_answer <?php echo ( $question->user_id == $answer->user_id ) ? 'tutor-bg-white' : 'tutor-bg-light'; ?>">
+						<div class="tutor_individual_answer <?php echo esc_attr( ( $question->user_id == $answer->user_id ) ? 'tutor-bg-white' : 'tutor-bg-light' ); ?>">
 							<div class="tutor-question-wrap">
 								<div class="question-top-meta">
 									<div class="tutor-question-avater">

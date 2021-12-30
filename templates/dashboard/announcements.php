@@ -111,7 +111,7 @@ $image_base = tutor()->url . '/assets/images/';
 
 	<div class="tutor-form-group tutor-announcement-datepicker">
 		<label><?php _e( 'Date', 'tutor' ); ?></label>
-		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo $date_filter !== '' ? _esc_html( tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) ) : ''; ?>" placeholder="<?php echo _esc_html( get_option( 'date_format' ) ); ?>" autocomplete="off" />
+		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo esc_attr( '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '' ); ?>" placeholder="<?php echo _esc_html( get_option( 'date_format' ) ); ?>" autocomplete="off" />
 		<i class="tutor-icon-calendar"></i>
 	</div>
 </div>
@@ -137,7 +137,7 @@ $image_base = tutor()->url . '/assets/images/';
 						<td class="tutor-announcement-content-wrap">
 							<div class="tutor-announcement-content">
 								<h4><?php echo esc_html( $post->post_title ); ?></h4>
-								<p><?php echo $course ? esc_attr( $course->post_title ) : ''; ?></p>
+								<p><?php echo esc_attr( $course ? esc_attr( $course->post_title ) : '' ); ?></p>
 							</div>
 							<div class="tutor-announcement-buttons">
 								<li>

@@ -87,7 +87,7 @@ if ( $assignment_comment != false ) {
 		<ul>
 			<li>
 				<?php _e( 'Time Duration : ', 'tutor' ); ?>
-				<strong><?php echo $time_duration['value'] ? $time_duration['value'] . ' ' . $time_duration['time'] : __( 'No limit', 'tutor' ); ?></strong>
+				<strong><?php echo _esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . $time_duration['time'] : __( 'No limit', 'tutor' ) ); ?></strong>
 			</li>
 			<?php
 			/*
@@ -113,11 +113,11 @@ if ( $assignment_comment != false ) {
 
 			<li>
 				<?php _e( 'Total Points : ', 'tutor' ); ?>
-				<strong><?php echo $total_mark; ?></strong>
+				<strong><?php echo esc_attr( $total_mark ); ?></strong>
 			</li>
 			<li>
 				<?php _e( 'Minimum Pass Points : ', 'tutor' ); ?>
-				<strong><?php echo $pass_mark; ?></strong>
+				<strong><?php echo esc_attr( $pass_mark ); ?></strong>
 			</li>
 		</ul>
 	</div>
@@ -162,7 +162,7 @@ if ( $assignment_comment != false ) {
 					?>
 					<p class="attachment-file-name">
 						<a href="<?php echo wp_get_attachment_url( $attachment_id ); ?>" target="_blank">
-							<i class="tutor-icon-attach"></i> <?php echo $attachment_name; ?>
+							<i class="tutor-icon-attach"></i> <?php echo esc_attr( $attachment_name ); ?>
 						</a>
 					</p>
 					<?php
@@ -199,8 +199,8 @@ if ( $assignment_comment != false ) {
 						for ( $item = 1; $item <= $allowd_upload_files; $item++ ) {
 							?>
 							<div class="tutor-form-group">
-								<label for="tutor-assignment-input-<?php echo $item; ?>"><i class="tutor-icon-upload-file"></i><span><?php _e( 'Upload file', 'tutor' ); ?></span></label>
-								<input class="tutor-assignment-file-upload" id="tutor-assignment-input-<?php echo $item; ?>" type="file" name="attached_assignment_files[]">
+								<label for="tutor-assignment-input-<?php echo esc_attr( $item ); ?>"><i class="tutor-icon-upload-file"></i><span><?php _e( 'Upload file', 'tutor' ); ?></span></label>
+								<input class="tutor-assignment-file-upload" id="tutor-assignment-input-<?php echo esc_attr( $item ); ?>" type="file" name="attached_assignment_files[]">
 							</div>
 							<?php
 						}
@@ -211,10 +211,7 @@ if ( $assignment_comment != false ) {
 				?>
 				<div class="tutor-assignment-submit-btn-wrap">
 					<button type="submit" class="tutor-button tutor-button-primary" id="tutor_assignment_submit_btn">
-					<?php
-					_e( 'Submit Assignment', 'tutor' );
-					?>
-																												 </button>
+						<?php _e( 'Submit Assignment', 'tutor' ); ?> </button>
 				</div>
 			</form>
 
@@ -239,7 +236,7 @@ if ( $assignment_comment != false ) {
 				<?php ob_start(); ?>
 
 				<div class="assignment-result-wrap">
-					<h4><?php echo sprintf( __( 'You received %1$s points out of %2$s', 'tutor' ), "<span class='received-marks'>{$given_mark}</span>", "<span class='out-of-marks'>{$max_mark}</span>" ); ?></h4>
+					<h4><?php echo _esc_html( sprintf( __( 'You received %1$s points out of %2$s', 'tutor' ), '<span class="received-marks">' . $given_mark . '</span>', '<span class="out-of-marks">' . $max_mark . '</span>' ) ); ?></h4>
 					<h4 class="submitted-assignment-grade">
 						<?php _e( 'Your Grade is ', 'tutor' ); ?>
 						<?php
@@ -286,7 +283,7 @@ if ( $assignment_comment != false ) {
 						foreach ( $attached_files as $attached_file ) {
 							?>
 							<div class="uploaded-files">
-								<a href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>" target="_blank"><?php echo tutor_utils()->array_get( 'name', $attached_file ); ?>
+								<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank"><?php echo tutor_utils()->array_get( 'name', $attached_file ); ?>
 								</a>
 							</div>
 							<?php

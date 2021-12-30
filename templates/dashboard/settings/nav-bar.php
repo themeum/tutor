@@ -44,7 +44,7 @@
 
 		if ( $valid ) {
 			?>
-				<li class="<?php echo $active_setting_nav == $menu_key ? 'active' : ''; ?>">
+				<li class="<?php echo esc_attr( $active_setting_nav == $menu_key ? 'active' : '' ); ?>">
 					<a href="<?php echo esc_url( $menu['url'] ); ?>"> <?php echo esc_attr( $menu['title'] ); ?></a>
 				</li>
 				<?php

@@ -25,13 +25,13 @@ do_action('tutor_lesson/single/before/video/youtube');
 		if ($disable_default_player_youtube){
 			?>
             <div class="tutor-video-embeded-wrap">
-                <iframe src="https://www.youtube.com/embed/<?php echo $youtube_video_id; ?>" frameborder="0" allowfullscreen allowtransparency allow="autoplay"></iframe>
+                <iframe src="https://www.youtube.com/embed/<?php echo esc_attr( $youtube_video_id ); ?>" frameborder="0" allowfullscreen allowtransparency allow="autoplay"></iframe>
             </div>
 			<?php
 		}else{
 			?>
             <div class="plyr__video-embed" id="tutorPlayer">
-                <iframe src="https://www.youtube.com/embed/<?php echo $youtube_video_id; ?>?&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+                <iframe src="https://www.youtube.com/embed/<?php echo esc_attr( $youtube_video_id ); ?>?&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
             </div>
 		<?php } ?>
 

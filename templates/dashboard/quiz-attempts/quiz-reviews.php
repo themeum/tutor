@@ -266,7 +266,7 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 									$input_data  = array();
 									for ( $i = 0; $i < $count_dash_fields; $i++ ) {
 										// $dash_string[] = '{dash}';
-										$input_data[] = isset( $answer_titles[ $i ] ) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : '______';
+										$input_data[] = isset( $answer_titles[ $i ] ) ? _esc_html( '<span class="filled_dash_unser">' . $answer_titles[ $i ] . '</span>' ) : '______';
 									}
 									$answer_title = $db_answer->answer_title;
 									foreach ( $input_data as $replace ) {
@@ -286,7 +286,7 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 									$get_answers   = tutor_utils()->get_answer_by_id( $ordering_id );
 									$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 									$answer_titles = array_map( 'stripslashes', $answer_titles );
-									echo '<p>' . implode( '</p><p>', $answer_titles ) . '</p>';
+									echo _esc_html( '<p>' . implode( '</p><p>', $answer_titles ) . '</p>' );
 								}
 							} elseif ( $answer->question_type === 'matching' ) {
 
@@ -307,7 +307,7 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 								$ordering_ids           = maybe_unserialize( $answer->given_answer );
 								$original_saved_answers = tutor_utils()->get_answers_by_quiz_question( $answer->question_id );
 
-								echo '<div class="answer-image-matched-wrap">';
+								echo _esc_html( '<div class="answer-image-matched-wrap">' );
 								foreach ( $original_saved_answers as $key => $original_saved_answer ) {
 									$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
 									$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
@@ -325,7 +325,7 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 
 								$ordering_ids = maybe_unserialize( $answer->given_answer );
 
-								echo '<div class="answer-image-matched-wrap">';
+								echo _esc_html( '<div class="answer-image-matched-wrap">' );
 								foreach ( $ordering_ids as $answer_id => $image_answer ) {
 									$db_answers = tutor_utils()->get_answer_by_id( $answer_id );
 									foreach ( $db_answers as $db_answer ) {
