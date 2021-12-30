@@ -1,34 +1,31 @@
 <?php
-/**
- * @package @TUTOR
- * @since v.1.0.0
- */
+	/**
+	 * @package @TUTOR
+	 * @since v.1.0.0
+	 */
 
-if (isset($_GET['question_id'])){
-	tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
-		'question_id' => $_GET['question_id'],
-		'context' => 'backend-dashboard-qna-single'
-	));
-    return;
-}
+	if (isset($_GET['question_id'])){
+		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
+			'question_id' => $_GET['question_id'],
+			'context' => 'backend-dashboard-qna-single'
+		));
+		return;
+	}
 
-$qna_object = new \TUTOR\Question_Answers_List(false);
-$qna = $qna_object->get_items($_GET);
-$qna_list = $qna['items'];
-$qna_pagination = $qna['pagination'];
+	$qna_object = new \TUTOR\Question_Answers_List(false);
+	$qna = $qna_object->get_items($_GET);
+	$qna_list = $qna['items'];
+	$qna_pagination = $qna['pagination'];
 
 
-$filters = array(
-	'bulk_action'   => true,
-	'bulk_actions'  => $qna_object->get_bulk_actions(),
-	'ajax_action'   => 'tutor_qna_bulk_action',
-	'filters'       => true,
-	'course_filter' => true,
-);
+	$filters = array(
+		'bulk_action'   => true,
+		'bulk_actions'  => $qna_object->get_bulk_actions(),
+		'ajax_action'   => 'tutor_qna_bulk_action',
+		'filters'       => true,
+		'course_filter' => true,
+	);
 
-?>
-
-<?php
 	/**
 	 * Determine active tab
 	 */
@@ -53,23 +50,8 @@ $filters = array(
 	<?php 
 		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
 			'qna_list' => $qna_list,
-			'context' => 'backend-dashboard-qna-table'
+			'context' => 'backend-dashboard-qna-table',
+			'qna_pagination' => $qna_pagination
 		));
-
-		echo paginate_links( $qna_pagination );
 	?>
-	<div class="tutor-mt-30">
-		<?php
-			/**
-			 * Prepare pagination data & load template
-			 */
-			$pagination_data = array(
-				'total_items' => $qna_pagination['total_items'],
-				'per_page'    => $qna_pagination['per_page'],
-				'paged'       => $qna_pagination['paged'],
-			);
-			$pagination_template = tutor()->path . 'views/elements/pagination.php';
-			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-		?>
-	</div>
 </div>
