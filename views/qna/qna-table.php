@@ -126,7 +126,7 @@
                                         ?>
                                         <td data-th="<?php echo $column; ?>" class="tutor-text-right">
                                             <div class="inline-flex-center td-action-btns">
-                                                <a href="<?php echo add_query_arg( array( 'question_id'=>$qna->comment_ID ), tutor()->current_url ); ?>" class="btn-outline tutor-btn">
+                                                <a href="<?php echo add_query_arg( array( 'question_id'=>$qna->comment_ID ), tutor()->current_url ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
                                                     <?php _e( 'Reply', 'tutor-pro' ); ?>
                                                 </a>
 

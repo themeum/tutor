@@ -82,7 +82,7 @@
 		}
 
 		.tutor-modal-footer {
-			border-top: 1px solid $stroke-light-30;
+			// border-top: 1px solid $stroke-light-30;
 		}
 	} // end of /.modal-sticky-header-footer
 
@@ -116,6 +116,10 @@
 			.tutor-modal-body {
 				padding: 15px 60px;
 				padding-bottom: 62px;
+				@include breakpoint-max(mobile) {
+					padding: 15px 33px;
+					padding-bottom: 30px;
+				}
 			}
 
 			// @include breakpoint-min(desktop-lg) {
@@ -127,6 +131,9 @@
 
 		.tutor-modal-footer {
 			padding: 38px 60px 68px 60px;
+			@include breakpoint-max(mobile) {
+				padding: 38px 33px 68px 33px;
+			}
 			background: rgba(239, 241, 246, 0.5);
 			border-radius: 0px 0px 20px 30px;
 			border-top: 1px solid $stroke-light-20;
@@ -134,15 +141,18 @@
 				display: grid;
 				grid-template-columns: 1.55fr 1fr;
 				gap: 10px;
-			}
+				@include breakpoint-max(mobile) {
+					grid-template-columns: 1fr;
+				}
+ 			}
 		}
 
-		@include breakpoint-min(desktop-lg) {
-			.footer-btns {
-				> *:not(:first-child) {
-					margin-left: 15px;
-				}
+		.footer-btns {
+			> *:not(:first-child) {
+				margin-left: 15px;
 			}
+		}
+		@include breakpoint-min(desktop-lg) {
 		}
 		.tutor-btn:not(.tutor-btn-icon).tutor-btn-md {
 			padding: 7px 21px;
