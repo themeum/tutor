@@ -1247,9 +1247,9 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         $durationMinutes = tutor_utils()->avalue_dot( 'minutes', $duration );
         $durationSeconds = tutor_utils()->avalue_dot( 'seconds', $duration );
 
-        $hour_format   = $short_form ? __( 'h', 'tutor' ) : __( 'hour', 'tutor' );
-        $minute_format = $short_form ? __( 'm', 'tutor' ) : __( 'minute', 'tutor' );
-        $second_format = $short_form ? __( 's', 'tutor' ) : __( 'second', 'tutor' );
+        $hour_format   = $short_form ? __( 'h', 'tutor' ) : ($durationHours>1 ? __('hours', 'tutor') : __( 'hour', 'tutor' ));
+        $minute_format = $short_form ? __( 'm', 'tutor' ) : ($durationMinutes>1 ? __('minutes', 'tutor') : __( 'minute', 'tutor' ));
+        $second_format = $short_form ? __( 's', 'tutor' ) : ($durationSeconds>1 ? __('seconds', 'tutor') : __( 'second', 'tutor' ));
 
         if ( $duration ) {
             $output = '';
@@ -1261,7 +1261,7 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
                 $output .= '<span class="tutor-text-medium-caption tutor-color-text-primary tutor-meta-level">' . ' ' . $durationMinutes . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . $minute_format . '</span>';
             }
 
-            if ( $durationSeconds > 0 ) {
+            if ( !$durationHours && !$durationMinutes && $durationSeconds > 0 ) {
                 $output .= '<span class="tutor-text-medium-caption tutor-color-text-primary tutor-meta-level">' . ' ' . $durationSeconds . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . $second_format . '</span>';
             }
 
