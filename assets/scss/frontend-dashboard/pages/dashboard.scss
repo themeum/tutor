@@ -1,5 +1,12 @@
 .tutor-dashboard-cards-container {
 	width: calc(100% + 30px);
+	// @include breakpoint-min(desktop) {
+	// 	width: calc(100% + 30px);
+	// }
+	// @include breakpoint-max(desktop) {
+	// 	width: calc(100% + 60px);
+	// }
+
 	& > div {
 		p {
 			@include valueWithPrefix(display, flex);
@@ -28,12 +35,14 @@
 				}
 				&:nth-child(3) {
 					font-size: 15px;
+					line-height: 160%;
 					color: $black-60;
 				}
 				&:nth-child(2),
 				&:nth-child(4) {
 					font-weight: bold;
 					font-size: 30px;
+					line-height: 123%;
 					padding: 10px 0;
 					color: $black-main;
 				}
