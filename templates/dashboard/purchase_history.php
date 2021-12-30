@@ -25,7 +25,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
     }
 ?>
 
-<h3><?php esc_html_e( 'Order History', 'tutor' ); ?></h3>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php esc_html_e( 'Order History', 'tutor' ); ?></div>
 <div class="tutor-purchase-history">
     <!--filter buttons tabs-->
     <?php 
@@ -158,7 +158,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
             ?>
                 <tr>
                     <td data-th="Order ID">
-                        <div class="td-course  tutor-text-medium-body  tutor-color-text-primary">
+                        <div class="td-course  tutor-text-medium-body  tutor-color-text-primary" style="font-weight: 600;">
                             #<?php esc_html_e( $order->ID ); ?>
                         </div>
                     </td>
@@ -206,8 +206,11 @@ $offset      = ( $per_page * $paged ) - $per_page;
             'per_page'    => $per_page,
             'paged'       => $paged,
         );
-        $pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
-        tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+        $total_page = ceil($pagination_data['total_items'] / $pagination_data['per_page']);
+        if($total_page > 1) {
+            $pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
+            tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+        }
     ?>
 </div>
 
