@@ -44,7 +44,7 @@
 
 		li {
 			a {
-				display: block;
+				// display: block;
 				padding: 7px 20px;
 
 				&:hover {
@@ -137,13 +137,31 @@
 		}
 	}
 
-	li.tutor-dashboard-menu-item {
-		display: flex;
-		align-items: center;
-		a {
+	// li.tutor-dashboard-menu-item
+	.tutor-dashboard-menu-item {
+		&-link {
+			display: flex;
+			align-items: center;
 			border-top-left-radius: 4px;
 			border-bottom-left-radius: 4px;
-			&.active {
+			@extend .tutor-text-regular-body;
+			color: $text-primary;
+		}
+		&-icon {
+			@extend .tutor-icon-30;
+			color: $design-brand;
+			width: 30px;
+			height: 30px;
+		}
+		&-text {
+		}
+
+		&.active {
+			a {
+				color: $text-white;
+				.tutor-dashboard-menu-item-icon {
+					color: $text-white;
+				}
 			}
 		}
 
