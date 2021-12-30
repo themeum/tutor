@@ -13,9 +13,10 @@ window.jQuery(document).ready($=>{
     });
 
     // Change badge
-    $(document).on('click', '.tutor-qna-badges [data-action]', function(e){
+    $(document).on('click', '.tutor-qna-badges-wrapper [data-action]', function(e){
         e.preventDefault();
 
+        let row = $(this).closest('tr');
         let qna_action = $(this).data('action');
         let question_id = $(this).closest('[data-question_id]').data('question_id');
         let button = $(this);
@@ -61,6 +62,12 @@ window.jQuery(document).ready($=>{
                     console.log(button.data('state-text-selector'));
                     var text_element = button.data('state-text-selector') ? button.find(button.data('state-text-selector')) : button;
                     text_element.text(new_text);
+                }
+
+                // Update read unread
+                if(qna_action=='read') {
+                    let method = new_value==0 ? 'removeClass' : 'addClass';
+                    row.find('.tutor-qna-question-col')[method]('is-read');
                 }
             },
             complete:()=>{
