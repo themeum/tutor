@@ -226,7 +226,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 								?>
 							</td>
 							<td>
-								<strong><?php echo tutor_utils()->tutor_price( $withdraw_history->amount ); ?></strong>
+								<strong><?php echo esc_attr( tutor_utils()->tutor_price( $withdraw_history->amount ) ); ?></strong>
 							</td>
 							<td>
 								<span class="inline-image-text is-inline-block">

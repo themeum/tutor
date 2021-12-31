@@ -1156,7 +1156,7 @@ class Tutor_List_Table {
 		$current_url = remove_query_arg( 'paged', $current_url );
 
 		if ( isset( $_GET['orderby'] ) ) {
-			$current_orderby = sanitize_data($_GET['orderby']);
+			$current_orderby = sanitize_data( $_GET['orderby'] );
 		} else {
 			$current_orderby = '';
 		}
@@ -1233,7 +1233,7 @@ class Tutor_List_Table {
 
 		$this->screen->render_screen_reader_content( 'heading_list' );
 		?>
-		<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>">
+		<table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
 			<thead>
 			<tr>
 				<?php $this->print_column_headers(); ?>
@@ -1470,7 +1470,7 @@ class Tutor_List_Table {
 			// Instead of using esc_attr(), we strip tags to get closer to a user-friendly string.
 			$data = 'data-colname="' . wp_strip_all_tags( $column_display_name ) . '"';
 
-			$attributes = "class='$classes' $data";
+			$attributes = 'class="' . $classes . '" ' . $data;
 
 			if ( 'cb' === $column_name ) {
 				echo _esc_html( '<th scope="row" class="check-column">' );

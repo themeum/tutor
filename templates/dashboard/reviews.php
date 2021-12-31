@@ -69,7 +69,7 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 							<div class="individual-dashboard-review-body">
 								<div class="individual-star-rating-wrap">
 									<?php tutor_utils()->star_rating_generator( $review->rating ); ?>
-									<p class="review-meta"><?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?></p>
+									<p class="review-meta"><?php echo esc_attr( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) ); ?></p>
 								</div>
 
 								<?php echo wp_kses_post( wpautop( stripslashes( $review->comment_content ) ) ); ?>

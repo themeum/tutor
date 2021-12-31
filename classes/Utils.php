@@ -3167,7 +3167,7 @@ class Utils {
 		$bg_color = '#'.substr( md5( $initial_avatar ), 0, 6);
 		$initial_avatar = '<span class="tutor-text-avatar" style="background-color: '.$bg_color.'; color: #fff8e5">'.$initial_avatar.'</span>';
 
-		return $initial_avatar;
+		return _esc_html($initial_avatar);
 	}
 
 	/**

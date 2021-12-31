@@ -32,7 +32,7 @@ if ( $instructors ) {
 					<div class="tutor-instructor-left">
 						<div class="instructor-avatar">
 							<a href="<?php echo esc_url( $profile_url ); ?>">
-								<?php echo tutor_utils()->get_tutor_avatar( $instructor->ID ); ?>
+								<?php echo _esc_html( tutor_utils()->get_tutor_avatar( $instructor->ID ) ); ?>
 							</a>
 						</div>
 

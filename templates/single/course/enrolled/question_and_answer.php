@@ -68,7 +68,7 @@ if ( ! $enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes' ) {
 					<div class="tutor-question-wrap">
 						<div class="question-top-meta">
 							<div class="tutor-question-avater">
-								<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutor_utils()->get_tutor_avatar( $question->user_id ); ?></a>
+								<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo _esc_html(tutor_utils()->get_tutor_avatar( $question->user_id )); ?></a>
 							</div>
 							<p class="review-meta">
 								<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_attr( $question->display_name ); ?></a>

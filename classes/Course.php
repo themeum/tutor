@@ -165,7 +165,7 @@ class Course extends Tutor_Base {
 		}
 
 		return '<span class="tutor-course-booked-fully">
-			<img src="' . tutor()->url . '/assets/images/icon-warning-info.svg"/>
+			<img src="' . esc_url( tutor()->url . '/assets/images/icon-warning-info.svg' ) . '"/>
 			<span>' . __( 'Fully booked', 'tutor' ) . '</span>
 		</span>';
 	}
@@ -260,7 +260,7 @@ class Course extends Tutor_Base {
 		if ( $echo ) {
 			echo _esc_html( $content );
 		} else {
-			return  $content ;
+			return $content;
 		}
 	}
 
@@ -529,9 +529,9 @@ class Course extends Tutor_Base {
 			if ( $price ) {
 				$monetize_by = tutils()->get_option( 'monetize_by' );
 				if ( function_exists( 'wc_price' ) && $monetize_by === 'wc' ) {
-					echo _esc_html('<span class="tutor-label-success">' . wc_price( $price ) . '</span>');
+					echo _esc_html( '<span class="tutor-label-success">' . wc_price( $price ) . '</span>' );
 				} else {
-					echo _esc_html('<span class="tutor-label-success">' . $price . '</span>');
+					echo _esc_html( '<span class="tutor-label-success">' . $price . '</span>' );
 				}
 			} else {
 				echo apply_filters( 'tutor-loop-default-price', __( 'free', 'tutor' ) );

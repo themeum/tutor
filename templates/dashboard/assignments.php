@@ -91,7 +91,7 @@ if ( $assignments->count ) {
 					<tr>
 						<td>
 							<h4><?php echo esc_html( $item->post_title ); ?></h4>
-							<p><?php echo __( 'Course: ', 'tutor' ); ?><a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" target="_blank"><?php echo get_the_title( $course_id ); ?> </a></p>
+							<p><?php echo __( 'Course: ', 'tutor' ); ?><a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" target="_blank"><?php echo esc_attr( get_the_title( $course_id ) ); ?> </a></p>
 						</td>
 						<td><?php echo esc_attr( $max_mark ); ?></td>
 						<td><?php echo esc_attr( $comment_count ); ?></td>

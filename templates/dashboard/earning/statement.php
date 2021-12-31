@@ -27,7 +27,7 @@ if ( $statements->count ) {
 
 						<p>
 							<?php _e( 'Price', 'tutor' ); ?>
-							<?php echo tutor_utils()->tutor_price( $statement->course_price_total ); ?>
+							<?php echo esc_attr( tutor_utils()->tutor_price( $statement->course_price_total ) ); ?>
 						</p>
 
 						<p class="small-text">
@@ -43,17 +43,17 @@ if ( $statements->count ) {
 						?>
 					</td>
 					<td>
-						<p><?php echo tutor_utils()->tutor_price( $statement->instructor_amount ); ?></p>
+						<p><?php echo esc_attr( tutor_utils()->tutor_price( $statement->instructor_amount ) ); ?></p>
 						<p class="small-text"> <?php _e( 'As per' ); ?> <?php echo esc_attr( $statement->instructor_rate ); ?> (<?php echo esc_attr( $statement->commission_type ); ?>) </p>
 					</td>
 
 					<td>
-						<p><?php _e( 'Commission', 'tutor' ); ?> : <?php echo tutor_utils()->tutor_price( $statement->admin_amount ); ?> </p>
+						<p><?php _e( 'Commission', 'tutor' ); ?> : <?php echo esc_attr( tutor_utils()->tutor_price( $statement->admin_amount ) ); ?> </p>
 						<p class="small-text"><?php _e( 'Rate', 'tutor' ); ?> : <?php echo esc_attr( $statement->admin_rate ); ?> </p>
 						<p class="small-text"><?php _e( 'Type', 'tutor' ); ?> : <?php echo esc_attr( $statement->commission_type ); ?> </p>
 
 						<p><?php _e( 'Deducted', 'tutor' ); ?> : <?php echo esc_attr( $statement->deduct_fees_name ); ?>  <?php
-						echo tutor_utils()->tutor_price( $statement->deduct_fees_amount );
+						echo esc_attr( tutor_utils()->tutor_price( $statement->deduct_fees_amount ) );
 						?>
 						</p>
 						<p class="small-text"><?php _e( 'Type', 'tutor' ); ?> : <?php echo esc_attr( $statement->deduct_fees_type ); ?> </p>
