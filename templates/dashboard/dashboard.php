@@ -10,6 +10,7 @@
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
+	$is_instructor       = tutor_utils()->is_instructor();
 	$total_count        = count( $profile_completion );
 	$incomplete_count   = count(
 		array_filter(
@@ -21,65 +22,71 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	);
 	$complete_count     = $total_count - $incomplete_count;
 
-	if ( $total_count && $incomplete_count && $incomplete_count <= $total_count ) {
-		?>
-		<div class="profile-completion">
-			<div class="tutor-bs-row tutor-bs-align-items-center">
-				<div class="tutor-bs-col-md-7 profile-completion-content <?php echo tutor_utils()->is_instructor() ? "tutor-profile-completion-content-admin": "" ?>">
-					<div class="list-item-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-12">
-						<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
-					</div>
-					<div class="tutor-mt-20">
-						<?php
-						for ( $i = 1; $i <= $total_count; $i++ ) {
-							$class = $i > $complete_count ?
-										'tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full' :
-										'tutor-btn tutor-btn-sm tutor-btn-full'
+	if($is_instructor) {
+		if ( $total_count && $incomplete_count && $incomplete_count <= $total_count ) {
+			?>
+			<div class="profile-completion">
+				<div class="tutor-bs-row tutor-bs-align-items-center">
+					<div class="tutor-bs-col-md-7 profile-completion-content <?php echo tutor_utils()->is_instructor() ? "tutor-profile-completion-content-admin": "" ?>">
+						<div class="list-item-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-12">
+							<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
+						</div>
+						<div class="tutor-mt-20">
+							<?php
+							for ( $i = 1; $i <= $total_count; $i++ ) {
+								$class = $i > $complete_count ?
+											'tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full' :
+											'tutor-btn tutor-btn-sm tutor-btn-full'
+								?>
+									<li class="<?php echo "tutor-profile-complete-dash-{$total_count}" ?> ">
+										<span class="<?php echo $class; ?>"></span>
+									</li>
+									<?php
+							}
 							?>
-								<li class="<?php echo "tutor-profile-complete-dash-{$total_count}" ?> ">
-									<span class="<?php echo $class; ?>"></span>
-								</li>
-								<?php
-						}
-						?>
-						<li>
-							<span class="tutor-round-icon">
-								<i class="ttr-award-filled"></i>
+							<li>
+								<span class="tutor-round-icon">
+									<i class="ttr-award-filled"></i>
+								</span>
+							</li>
+						</div>
+						<div class="list-item-title tutor-text-medium-h6 tutor-mt-30">
+							<span class="tutor-color-text-hints"><?php $complete_count > ( $total_count / 2 ) ? _e( 'You are almost done', 'tutor' ) : _e( 'Please complete profile' ); ?></span>:&nbsp;
+							<span class="tutor-color-text-primary">
+								<?php echo $complete_count . '/' . $total_count; ?>
 							</span>
-						</li>
+						</div>
 					</div>
-					<div class="list-item-title tutor-text-medium-h6 tutor-mt-30">
-						<span class="tutor-color-text-hints"><?php $complete_count > ( $total_count / 2 ) ? _e( 'You are almost done', 'tutor' ) : _e( 'Please complete profile' ); ?></span>:&nbsp;
-						<span class="tutor-color-text-primary">
-							<?php echo $complete_count . '/' . $total_count; ?>
-						</span>
-					</div>
-				</div>
-				<div class="tutor-bs-col-md-5 warning">
-					<ul class="tutor-m-0 tutor-p-0">
-						<?php
-						foreach ( $profile_completion as $key => $data ) {
-							$is_set = $data['is_set']; // Whether the step is done or not
+					<div class="tutor-bs-col-md-5 warning">
+						<ul class="tutor-m-0 tutor-p-0">
+							<?php
+							foreach ( $profile_completion as $key => $data ) {
+								$is_set = $data['is_set']; // Whether the step is done or not
+								?>
+									<li class="tutor-bs-d-flex tutor-bs-align-items-center">
+									<?php if ( $is_set ) : ?>
+											<span class="icon ttr-tick-circle-outline-filled not-empty tutor-mr-8"></span>
+										<?php else : ?>
+											<span class="ttr-cross-circle-outline-filled empty tutor-mr-5"></span>
+										<?php endif; ?>
+	
+										<span class="<?php echo $is_set ? 'tutor-color-text-title' : 'tutor-color-text-hints' ?>">
+										<?php echo $data['label_html']; ?>
+										</span>
+									</li>
+									<?php
+							}
 							?>
-								<li class="tutor-bs-d-flex tutor-bs-align-items-center">
-								<?php if ( $is_set ) : ?>
-										<span class="icon ttr-tick-circle-outline-filled not-empty tutor-mr-8"></span>
-									<?php else : ?>
-										<span class="ttr-cross-circle-outline-filled empty tutor-mr-5"></span>
-									<?php endif; ?>
-
-									<span class="<?php echo $is_set ? 'tutor-color-text-title' : 'tutor-color-text-hints' ?>">
-									<?php echo $data['label_html']; ?>
-									</span>
-								</li>
-								<?php
-						}
-						?>
-					</ul>
+						</ul>
+					</div>
 				</div>
 			</div>
-		</div>
-		<?php
+			<?php
+		}
+	} else {
+		if(!$profile_completion->_tutor_profile_photo) {
+			echo "<p>{$profile_completion['_tutor_profile_photo']['label_html']}</p>";
+		}
 	}
 }
 ?>
