@@ -166,7 +166,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 						$menu_title = $dashboard_page;
 						$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $dashboard_key );
 						$separator  = false;
-						$menu_icon  = '<span class="ttr-dashboard-filled tutor-dashboard-menu-item-icon tutor-icon-30"></span>';
+						$menu_icon  = '';
 						
 						if ( is_array( $dashboard_page ) ) {
 							$menu_title = tutor_utils()->array_get( 'title', $dashboard_page );
