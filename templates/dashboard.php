@@ -154,7 +154,6 @@ do_action( 'tutor_dashboard/before/wrap' );
 					$dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
 					// get reviews settings value.
 					$disable = ! get_tutor_option( 'enable_course_review' );
-
 					foreach ( $dashboard_pages as $dashboard_key => $dashboard_page ) {
 						/**
 						 * If not enable from settings then quit
@@ -167,8 +166,14 @@ do_action( 'tutor_dashboard/before/wrap' );
 						$menu_title = $dashboard_page;
 						$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $dashboard_key );
 						$separator  = false;
+						$menu_icon  = '';
+						
 						if ( is_array( $dashboard_page ) ) {
 							$menu_title = tutor_utils()->array_get( 'title', $dashboard_page );
+							$menu_icon_name = tutor_utils()->array_get('icon', $dashboard_page);
+							if($menu_icon_name) {
+								$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon tutor-icon-30'></span>";
+							}
 							// Add new menu item property "url" for custom link
 							if ( isset( $dashboard_page['url'] ) ) {
 								$menu_link = $dashboard_page['url'];
@@ -188,7 +193,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 								$dashboard_key = '';
 							}
 							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a href='" . $menu_link . "' class='tutor-text-regular-body tutor-color-text-primary'> {$menu_title} </a> </li>";
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-10'>{$menu_title}</span></a></li>";
 						}
 					}
 					?>

@@ -349,3 +349,38 @@
 		margin-left: 10px;
 	}
 }
+
+// ..tutor-frontend-dashboard-course-porgress-*
+.tutor-frontend-dashboard-course-porgress {
+	&-cards {
+	}
+	&-card {
+		@include breakpoint-min(desktop) {
+			&-horizontal {
+				flex-direction: row;
+			}
+
+			.tutor-course-listing-item-head {
+				border-radius: 0;
+				border-top-left-radius: 6px;
+				border-bottom-right-radius: 6px;
+				overflow: visible;
+			}
+			.tutor-course-listing-thumbnail {
+				max-width: 350px;
+				width: 350px;
+			}
+			.tutor-course-listing-thumbnail {
+				max-width: 250px;
+				width: 250px;
+				height: 100%;
+				border-top-left-radius: 6px;
+				border-bottom-left-radius: 6px;
+			}
+		}
+
+		.list-item-progress .progress-percentage {
+			white-space: nowrap;
+		}
+	}
+}
