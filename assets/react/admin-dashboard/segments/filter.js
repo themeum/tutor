@@ -200,6 +200,49 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
+    /**
+   * On change status
+   * update instructor status
+   */
+     const availableInstructorStatus = ["pending", "approved", "blocked"];
+     const instructorStatusUpdate = document.querySelectorAll(".tutor-instructor-status-update");
+     for (let status of instructorStatusUpdate) {
+       status.onchange = async (e) => {
+         const target = e.target;
+         const newStatus = availableInstructorStatus[target.selectedIndex];
+         const prevStatus = target.dataset.status;
+         if (newStatus === prevStatus) {
+           return;
+         }
+   
+         const formData = new FormData();
+         formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+         formData.set("bulk-ids", target.closest('.tutor-instructor-status-update').dataset.id);
+         formData.set("bulk-action", newStatus);
+         formData.set("action", 'tutor_instructor_bulk_action');
+         const post = await ajaxHandler(formData);
+         const response = await post.json();
+         if (response.success) {
+           target.dataset.status = newStatus;
+           let putStatus = "select-default";
+           newStatus === "approved"
+             ? (putStatus = "select-success")
+             : newStatus === "pending"
+               ? (putStatus = "select-warning")
+               : newStatus === 'blocked'
+                 ? (putStatus = "select-danger")
+                 : "select-default";
+   
+           // add new status class
+           target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
+   
+           tutor_toast(__("Updated", "tutor"), __("Instructor status updated ", "tutor"), "success");
+         } else {
+           tutor_toast(__("Failed", "tutor"), __("Instructor status update failed ", "tutor"), "error");
+         }
+       };
+     }
+   
   /**
    * Delete course delete
    */

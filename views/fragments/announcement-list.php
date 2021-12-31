@@ -14,9 +14,9 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
 				<div class="tutor-modal-header">
-					<h3 class="tutor-modal-title">
+					<div class="tutor-text-bold-h6 tutor-color-text-title tutor-modal-title">
 						<?php echo $title; ?>
-					</h3>
+					</div>
 					<button data-tutor-modal-close class="tutor-modal-close">
 						<span class="las la-times"></span>
 					</button>
@@ -27,7 +27,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<input type="hidden" name="announcement_id" value="<?php echo $announcment_id; ?>">
 					<input type="hidden" name="action" value="tutor_announcement_create"/>
 					<input type="hidden" name="action_type" value="<?php echo $announcement ? 'update' : 'create'; ?>"/>
-					<div class="tutor-form-group">
+					<div class="tutor-form-group tutor-mb-20">
 						<label class="tutor-form-label">
 							<?php _e( 'Select Course', 'tutor' ); ?>
 						</label>
@@ -47,33 +47,27 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php _e( 'Announcement Title', 'tutor' ); ?>
 						</label>
-						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php _e( 'Announcement title', 'tutor' ); ?>" required>
+						<input class="tutor-form-control" type="text" name="tutor_announcement_title" value="<?php echo $announcment_title; ?>" placeholder="<?php _e( 'Announcement title', 'tutor' ); ?>" maxlength="255" required>
 					</div>
 					<div class="tutor-form-group">
 						<label class="tutor-form-label" for="tutor_announcement_course">
 							<?php _e( 'Summary', 'tutor' ); ?>
 						</label>
-						<textarea class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php echo $summary; ?></textarea>
+						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required>
+							<?php echo $summary; ?>
+						</textarea>
 					</div>
 
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
-				<div class="tutor-modal-footer">
-					<div class="tutor-bs-row">
-						<div class="tutor-bs-col">
-							<div class="tutor-btn-group">
-								<button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
-									<?php _e( 'Publish', 'tutor' ); ?>
-								</button>
-							</div>
-						</div>
-						<div class="tutor-bs-col-auto">
-							<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
-								<?php _e( 'Cancel', 'tutor' ); ?>
-							</button>
-						</div>
-					</div>
+				<div class="tutor-modal-footer d-flex justify-content-between">
+						<button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
+							<?php _e( 'Publish', 'tutor' ); ?>
+						</button>
+						<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
+							<?php _e( 'Cancel', 'tutor' ); ?>
+						</button>
 				</div>
 			</div>
 		</div>
@@ -96,7 +90,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 				</div>
 				<div class="tutor-modal-body tutor-bs-align-items-start">
 					<div class="view-announcement-icon bg-primary-40 tutor-color-brand-wordpress">
-						<span class="ttr-speaker-filled"></span>
+						<span class="ttr-speaker-filled tutor-color-design-brand"></span>
 					</div>
 					<div class="text-bold-h5 tutor-color-text-primary tutor-mt-35 pr-lg-5">
 						<?php echo $announcement->post_title; ?>
@@ -124,14 +118,14 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 							</div>
 						</div>
 					</div>
-					<div class="footer-bottom tutor-mt-60">
+					<div class="footer-bottom tutor-mt-sm-60 tutor-mt-20">
 						<div class="footer-btns">
-							<button data-tutor-modal-close class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md">
+							<button data-tutor-modal-close class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm tutor-bs-d-none tutor-bs-d-sm-block">
 								<?php _e( 'Cancel', 'tutor' ); ?>
 							</button>
 						</div>
-						<div class="footer-btns announcement-action-button tutor-bs-flex-sm-wrap tutor-bs-flex-md-nowrap">
-							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md">
+						<div class="footer-btns announcement-action-button d-flex justify-content-end tutor-bs-flex-sm-wrap tutor-bs-flex-md-nowrap">
+							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm tutor-btn-disable">
 								<?php _e( 'Delete', 'tutor' ); ?>
 							</button>
 							<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn-md">
@@ -239,7 +233,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										type="checkbox"
 										class="tutor-form-check-input tutor-bulk-checkbox"
 										name="tutor-bulk-checkbox-all"
-										value="<?php esc_attr_e( $announcement->ID ); ?>"
+										value="<?php esc_attr_e( $announcement->ID ); ?>"	
 									/>
 								</div>
 							</td>
@@ -260,15 +254,15 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 								<div class="td-course tutor-color-text-primary tutor-text-medium-body">
 									<?php echo esc_html( $announcement->post_title ); ?>
 								</div>
-								<div class="text-subsued">
-									<strong><?php esc_html_e( 'Course', 'tutor' ); ?>: </strong> <?php echo esc_html( $course ? $course->post_title : '' ); ?>
+								<div class="tutor-color-text-subsued" style="font-weight: 500; font-size: 15px; line-height: 21px;">
+									<?php esc_html_e( 'Course', 'tutor' ); ?>: <?php echo esc_html( $course ? $course->post_title : '' ); ?>
 								</div>
 							</div>
 						</td>
 						<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
 							<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
-								<div class="inline-flex-center td-action-btns">
-									<button class="btn-outline tutor-btn tutor-is-default tutor-is-xs tutor-mr-10 tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
+								<div class="inline-flex-center td-action-btns tutor-mr-5">
+									<button class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</button>
 								</div>

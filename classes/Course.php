@@ -826,7 +826,7 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_progress_bar($html){
-		$disable_option = (bool) get_tutor_option('disable_course_progress_bar');
+		$disable_option = !(bool)tutor_utils()->get_option('enable_course_progress_bar', true, true);
 		if($disable_option){
 			return '';
 		}
@@ -838,7 +838,7 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_material_includes($html){
-		$disable_option = (bool) get_tutor_option('disable_course_material');
+		$disable_option = !(bool)get_tutor_option('enable_course_material', true, true);
 		if($disable_option){
 			return '';
 		}
@@ -850,7 +850,7 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_content($html){
-		$disable_option = (bool) get_tutor_option('disable_course_description');
+		$disable_option = !(bool)tutor_utils()->get_option('enable_course_description', true, true);
 		if($disable_option){
 			return '';
 		}
@@ -862,7 +862,7 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_benefits($html){
-		$disable_option = (bool) get_tutor_option('disable_course_benefits');
+		$disable_option = !(bool) tutor_utils()->get_option('enable_course_benefits', true, true);
 		if($disable_option){
 			return '';
 		}
@@ -874,7 +874,7 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_requirements($html){
-		$disable_option = (bool) get_tutor_option('disable_course_requirements');
+		$disable_option = !(bool) tutor_utils()->get_option('enable_course_requirements', true, true);
 		if($disable_option){
 			return '';
 		}
@@ -886,7 +886,7 @@ class Course extends Tutor_Base {
 	 * @since v.1.4.8
 	 */
 	public function enable_disable_course_target_audience($html){
-		$disable_option = (bool) get_tutor_option('disable_course_target_audience');
+		$disable_option = !(bool) tutor_utils()->get_option('enable_course_target_audience', true, true);
 		if($disable_option){
 			return '';
 		}
@@ -900,7 +900,7 @@ class Course extends Tutor_Base {
 	public function enable_disable_course_nav_items($items, $course_id){
 		global $wp_query, $post;
 		$enable_q_and_a_on_course = (bool) get_tutor_option('enable_q_and_a_on_course');
-		$disable_course_announcements = (bool) get_tutor_option('disable_course_announcements');
+		$disable_course_announcements = !(bool) tutor_utils()->get_option('enable_course_announcements', true, true);
 		$disable_qa_for_this_course = ($wp_query->is_single && !empty($post)) ? get_post_meta($post->ID, '_tutor_enable_qa', true)!='yes' : false;
 
 		// Whether Q&A enabled

@@ -1,9 +1,6 @@
 <?php
 	extract( $data ); // $question_id
 
-	// At first set this as read
-	update_comment_meta( $question_id, 'tutor_qna_read', 1 );
-
 	// QNA data
 	$question = tutor_utils()->get_qa_question( $question_id );
 	$meta     = $question->meta;
@@ -11,14 +8,19 @@
 	$back_url = isset( $back_url ) ? $back_url : remove_query_arg( 'question_id', tutor()->current_url );
 
 	// Badges data
-	$is_solved     = (int) tutor_utils()->array_get( 'tutor_qna_solved', $meta, 0 );
-	$is_important  = (int) tutor_utils()->array_get( 'tutor_qna_important', $meta, 0 );
-	$is_archived   = (int) tutor_utils()->array_get( 'tutor_qna_archived', $meta, 0 );
-	$is_read       = (int) tutor_utils()->array_get( 'tutor_qna_read', $meta, 0 );
-	$is_user_asker = $question->user_id == get_current_user_id();
+	$_user_id	   = get_current_user_id();
+	$is_user_asker = $question->user_id == $_user_id;
+	$id_slug 	   = $is_user_asker ? '_'.$_user_id : '';
+	$is_solved     = (int) tutor_utils()->array_get( 'tutor_qna_solved'.$id_slug, $meta, 0 );
+	$is_important  = (int) tutor_utils()->array_get( 'tutor_qna_important'.$id_slug, $meta, 0 );
+	$is_archived   = (int) tutor_utils()->array_get( 'tutor_qna_archived'.$id_slug, $meta, 0 );
+	$is_read       = (int) tutor_utils()->array_get( 'tutor_qna_read'.$id_slug, $meta, 0 );
 
 	$modal_id     = 'tutor_qna_delete_single_' . $question_id;
 	$reply_hidden = ! wp_doing_ajax() ? 'display:none;' : 0;
+
+	// At first set this as read
+	update_comment_meta( $question_id, 'tutor_qna_read'.$id_slug, 1 );
 ?>
 
 <div class="tutor-qna-single-question" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
@@ -65,7 +67,7 @@
 						<i class="ttr-previous-line"></i> <?php _e( 'Back', 'tutor' ); ?>
 					</a>
 				</div>
-				<div class="tutor-qna-badges">
+				<div class="tutor-qna-badges tutor-qna-badges-wrapper">
 
 					<!-- Show meta data actions if it is instructor view -->
 					<?php if ( ! $is_user_asker ) : ?>
@@ -81,11 +83,11 @@
 							<i class="<?php echo $is_archived ? 'ttr-msg-archive-filled' : 'ttr-msg-archive-filled'; ?>"></i> 
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 						</span>
-						<span data-action="unread" data-state-text-selector="span" data-state-text-0="<?php _e( 'Mark as read', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Mark as Unread', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="ttr-msg-unread-filled" data-state-class-1="ttr-msg-read-filled">
-							<i class="<?php echo $is_read ? 'ttr-msg-read-filled' : 'ttr-msg-unread-filled'; ?>"></i> 
-							<span><?php $is_read ? _e( 'Mark as Unread', 'tutor' ) : _e( 'Mark as read', 'tutor' ); ?></span>
-						</span>
 					<?php endif; ?>
+					<span data-action="read" data-state-text-selector="span" data-state-text-0="<?php _e( 'Mark as read', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Mark as Unread', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="ttr-msg-unread-filled" data-state-class-1="ttr-msg-read-filled">
+						<i class="<?php echo $is_read ? 'ttr-msg-read-filled' : 'ttr-msg-unread-filled'; ?>"></i> 
+						<span><?php $is_read ? _e( 'Mark as Unread', 'tutor' ) : _e( 'Mark as read', 'tutor' ); ?></span>
+					</span>
 					<span data-tutor-modal-target="<?php echo $modal_id; ?>">
 						<i class="ttr-delete-fill-filled"></i> 
 						<span><?php _e( 'Delete', 'tutor' ); ?></span>

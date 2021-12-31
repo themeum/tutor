@@ -473,7 +473,7 @@ table.tutor-ui-table {
 
 	// Form elements
 	select.tutor-form-select {
-		min-width: max-content;
+		min-width: min-content;
 	}
 
 	input.tutor-form-check-input[type='checkbox'] {

@@ -26,7 +26,7 @@ $as_student_url     = add_query_arg( array('view_as'=>'student'), tutor()->curre
 
 <div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-24">
     <div class="tutor-bs-col">
-        <div class="tutor-text-medium-h5"><?php _e('Question & Answer', 'tutor'); ?></div>
+        <div class="tutor-text-medium-h5 tutor-color-text-primary"><?php _e('Question & Answer', 'tutor'); ?></div>
     </div>
     <?php if($is_instructor): ?>
         <div class="tutor-bs-col-auto">
@@ -44,26 +44,21 @@ $as_student_url     = add_query_arg( array('view_as'=>'student'), tutor()->curre
 </div>
 
 <?php
-$per_page = 10;
-$current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
-$offset = ($current_page-1)*$per_page;
+    $per_page = 10;
+    $current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
+    $offset = ($current_page-1)*$per_page;
 
-$total_items = tutor_utils()->get_total_qa_question();
-$questions = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id() );
+    $total_items = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, null, null, true) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id(), null, true );
+    $questions = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id() );
 
-tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
-    'qna_list' => $questions,
-    'context' => 'frontend-dashboard-qna-table-'.$view_as
-));
+    tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
+        'qna_list' => $questions,
+        'context' => 'frontend-dashboard-qna-table-'.$view_as,
+        'qna_pagination' => array(
+            'base' => '?current_page=%#%',
+            'total_items' => $total_items,
+            'per_page' => $per_page,
+            'paged' => $current_page
+        )
+    ));
 ?>
-<div class="tutor-dashboard-info-table-wrap tutor-dashboard-q-and-a">
-    <div class="tutor-pagination">
-        <?php
-            echo paginate_links( array(
-                'format' => '?current_page=%#%',
-                'current' => $current_page,
-                'total' => ceil($total_items/$per_page)
-            ) );
-        ?>
-    </div>
-</div>
