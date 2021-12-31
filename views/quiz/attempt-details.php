@@ -585,7 +585,7 @@ include __DIR__ . '/header.php';
                                                             break;
 
                                                         case 'wrong' :
-                                                            echo '<span class="tutor-badge-label label-danger">'.__('Wrong', 'tutor').'</span>';
+                                                            echo '<span class="tutor-badge-label label-danger">'.__('Incorrect', 'tutor').'</span>';
                                                             break;
                                                     }
                                                 ?>
