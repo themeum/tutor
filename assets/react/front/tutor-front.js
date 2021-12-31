@@ -536,7 +536,7 @@ jQuery(document).ready(function ($) {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
                     $('.tutor-earning-withdraw-form-wrap').hide();
-                    tutor_toast(__("Withdraw Success", "tutor"), __("Your withdrawal request has been successfully accepted ", "tutor"), "success");
+                    tutor_toast(__("Request Successful", "tutor"), __("Your request has been submitted. Please wait for the administrator’s response.", "tutor"), "success");
 
                 } else {
                     Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
