@@ -76,7 +76,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 		if ( $quiz ) {
 			$title = get_the_title( $quiz->ID );
-			return _esc_html( '<a href="' . admin_url( "post.php?post='.$quiz->ID.'&action=edit" ) . '">' . $title . '</a>' );
+			return _esc_html( '<a href="' . admin_url( "post.php?post={$quiz->ID}&action=edit" ) . '">' . $title . '</a>' );
 		}
 	}
 
@@ -93,11 +93,11 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 			$pass_mark_percent = tutor_utils()->get_quiz_option( $item->quiz_id, 'passing_grade', 0 );
 			$earned_percentage = $item->earned_marks > 0 ? ( number_format( ( $item->earned_marks * 100 ) / $item->total_marks ) ) : 0;
 
-			$output  = $item->earned_marks . __( ' out of ', 'tutor' ) . $item->total_marks . ' < br / > ';
-			$output .= '( ' . $earned_percentage . ' % ) ' . __( ' pass ', 'tutor' ) . ' ( ' . $pass_mark_percent . ' % ) < br / > ';
+			$output  = $item->earned_marks . __( ' out of ', 'tutor' ) . $item->total_marks . '<br/>';
+			$output .= '(' . $earned_percentage . '%)' . __( ' pass ', 'tutor' ) . '(' . $pass_mark_percent . ' %)<br/>';
 
 			if ( $earned_percentage >= $pass_mark_percent ) {
-				$output .= '<spanclass="result-pass"> ' . __( 'Pass', 'tutor' ) . '</span>';
+				$output .= '<span class="result-pass"> ' . __( 'Pass', 'tutor' ) . '</span>';
 			} else {
 				$output .= '<span class="result-fail"> ' . __( 'Fail', 'tutor' ) . '</span>';
 			}
@@ -108,9 +108,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	function column_attempt_status( $item ) {
 		$status = ucwords( str_replace( 'quiz_', '', $item->attempt_status ) );
 
-		return " < span class = 'attempt - status - {
-			$item->attempt_status}' > {
-	$status} < / span > ";
+		return '<span class="attempt-status-' . $item->attempt_status . '"> ' . $status . ' </span>';
 	}
 
 	function get_columns() {

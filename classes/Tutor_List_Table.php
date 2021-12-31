@@ -480,11 +480,11 @@ class Tutor_List_Table {
 
 		$this->screen->render_screen_reader_content( 'heading_views' );
 
-		echo _esc_html( '<ul class="subsubsub">\n' );
+		echo _esc_html( '<ul class="subsubsub">' );
 		foreach ( $views as $class => $view ) {
 			$views[ $class ] = "\t<li class='$class'>$view";
 		}
-		echo _esc_html( implode( ' |</li>\n', $views ) . '</li>\n' );
+		echo _esc_html( implode( ' |</li>', $views ) . '</li>' );
 		echo _esc_html( '</ul>' );
 	}
 
@@ -534,19 +534,19 @@ class Tutor_List_Table {
 		}
 
 		echo _esc_html( '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>' );
-		echo _esc_html( '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n" );
-		echo _esc_html( '<option value="-1">' . __( 'Bulk Actions', 'tutor' ) . "</option>\n" );
+		echo _esc_html( '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . '">' );
+		echo _esc_html( '<option value="-1">' . __( 'Bulk Actions', 'tutor' ) . '</option>' );
 
 		foreach ( $this->_actions as $name => $title ) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
 
-			echo _esc_html( '\t' . '<option value="' . $name . '"' . $class . '>' . $title . '</option>\n' );
+			echo _esc_html( '\t' . '<option value="' . $name . '"' . $class . '>' . $title . '</option>' );
 		}
 
-		echo '</select>\n';
+		echo '</select>';
 
 		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => 'doaction' . $two ) );
-		echo '\n';
+		echo '';
 	}
 
 	/**
@@ -593,7 +593,7 @@ class Tutor_List_Table {
 		foreach ( $actions as $action => $link ) {
 			++$i;
 			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
-			$out                          .= '<span class="' . $action . '">$link$sep</span>';
+			$out                          .= '<span class="' . $action . '">' . $link . $sep . '</span>';
 		}
 		$out .= '</div>';
 
@@ -679,7 +679,7 @@ class Tutor_List_Table {
 				$year  = $arc_row->year;
 
 				printf(
-					"<option %s value='%s'>%s</option>\n",
+					"<option %s value='%s'>%s</option>",
 					selected( $m, $year . $month, false ),
 					esc_attr( $arc_row->year . $month ),
 					/* translators: 1: month name, 2: 4-digit year */
@@ -709,7 +709,7 @@ class Tutor_List_Table {
 					$classes[] = 'current';
 				}
 				printf(
-					"<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>\n",
+					"<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>",
 					esc_url( add_query_arg( 'mode', $mode ) ),
 					implode( ' ', $classes ),
 					$title
@@ -921,13 +921,13 @@ class Tutor_List_Table {
 			$total_pages_before = '<span class="screen-reader-text">' . __( 'Current Page' ) . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
 		} else {
 			$html_current_page = sprintf(
-				"%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' /><span class='tablenav-paging-text'>",
+				'%s<input class="current-page" id="current-page-selector" type="text" name="paged" value="%s" size="%d" aria-describedby="table-paging" /><span class="tablenav-paging-text">',
 				'<label for="current-page-selector" class="screen-reader-text">' . __( 'Current Page' ) . '</label>',
 				$current,
 				strlen( $total_pages )
 			);
 		}
-		$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );
+		$html_total_pages = sprintf( '<span class="total-pages">%s</span>', number_format_i18n( $total_pages ) );
 		$page_links[]     = $total_pages_before . sprintf( _x( '%1$s of %2$s', 'paging' ), $html_current_page, $html_total_pages ) . $total_pages_after;
 
 		if ( $disable_next ) {
@@ -956,7 +956,7 @@ class Tutor_List_Table {
 		if ( ! empty( $infinite_scroll ) ) {
 			$pagination_links_class .= ' hide-if-js';
 		}
-		$output .= '\n<span class="' . $pagination_links_class . '">' . join( '\n', $page_links ) . '</span>';
+		$output .= '<span class="' . $pagination_links_class . '">' . join( '', $page_links ) . '</span>';
 
 		if ( $total_pages ) {
 			$page_class = $total_pages < 2 ? ' one-page' : '';
@@ -1214,7 +1214,7 @@ class Tutor_List_Table {
 				$class = "class='" . join( ' ', $class ) . "'";
 			}
 
-			echo _esc_html( "<$tag $scope $id $class>$column_display_name</$tag>" );
+			echo ( "<$tag $scope $id $class>$column_display_name</$tag>" );
 		}
 	}
 
@@ -1557,6 +1557,6 @@ class Tutor_List_Table {
 			),
 		);
 
-		printf( "<script type='text/javascript'>list_args = %s;</script>\n", wp_json_encode( $args ) );
+		printf( "<script type='text/javascript'>list_args = %s;</script>", wp_json_encode( $args ) );
 	}
 }
