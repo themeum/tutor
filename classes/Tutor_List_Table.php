@@ -355,16 +355,16 @@ class Tutor_List_Table {
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+			echo _esc_html( '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />' );
 		}
 		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+			echo _esc_html( '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />' );
 		}
 		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
-			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+			echo _esc_html( '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />' );
 		}
 		if ( ! empty( $_REQUEST['detached'] ) ) {
-			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+			echo _esc_html( '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />' );
 		}
 		?>
 		<p class="search-box">
@@ -480,12 +480,12 @@ class Tutor_List_Table {
 
 		$this->screen->render_screen_reader_content( 'heading_views' );
 
-		echo "<ul class='subsubsub'>\n";
+		echo _esc_html( '<ul class="subsubsub">\n' );
 		foreach ( $views as $class => $view ) {
 			$views[ $class ] = "\t<li class='$class'>$view";
 		}
-		echo implode( " |</li>\n", $views ) . "</li>\n";
-		echo '</ul>';
+		echo _esc_html( implode( ' |</li>\n', $views ) . '</li>\n' );
+		echo _esc_html( '</ul>' );
 	}
 
 	/**
@@ -533,20 +533,20 @@ class Tutor_List_Table {
 			return;
 		}
 
-		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>';
-		echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
-		echo '<option value="-1">' . __( 'Bulk Actions', 'tutor' ) . "</option>\n";
+		echo _esc_html( '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>' );
+		echo _esc_html( '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n" );
+		echo _esc_html( '<option value="-1">' . __( 'Bulk Actions', 'tutor' ) . "</option>\n" );
 
 		foreach ( $this->_actions as $name => $title ) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
 
-			echo "\t" . '<option value="' . $name . '"' . $class . '>' . $title . "</option>\n";
+			echo _esc_html( '\t' . '<option value="' . $name . '"' . $class . '>' . $title . '</option>\n' );
 		}
 
-		echo "</select>\n";
+		echo '</select>\n';
 
-		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction$two" ) );
-		echo "\n";
+		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => 'doaction' . $two ) );
+		echo '\n';
 	}
 
 	/**
@@ -1156,7 +1156,7 @@ class Tutor_List_Table {
 		$current_url = remove_query_arg( 'paged', $current_url );
 
 		if ( isset( $_GET['orderby'] ) ) {
-			$current_orderby = $_GET['orderby'];
+			$current_orderby = sanitize_data($_GET['orderby']);
 		} else {
 			$current_orderby = '';
 		}
@@ -1243,7 +1243,7 @@ class Tutor_List_Table {
 			<tbody id="the-list"
 			<?php
 			if ( $singular ) {
-				echo " data-wp-lists='list:$singular'";
+				echo _esc_html( 'data-wp-lists=list:' . $singular );
 			}
 			?>
 			>
@@ -1403,9 +1403,9 @@ class Tutor_List_Table {
 		if ( $this->has_items() ) {
 			$this->display_rows();
 		} else {
-			echo '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
+			echo _esc_html( '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">' );
 			$this->no_items();
-			echo '</td></tr>';
+			echo _esc_html( '</td></tr>' );
 		}
 	}
 
@@ -1428,9 +1428,9 @@ class Tutor_List_Table {
 	 * @param object $item The current item
 	 */
 	public function single_row( $item ) {
-		echo '<tr>';
+		echo _esc_html( '<tr>' );
 		$this->single_row_columns( $item );
-		echo '</tr>';
+		echo _esc_html( '</tr>' );
 	}
 
 	/**
@@ -1473,9 +1473,9 @@ class Tutor_List_Table {
 			$attributes = "class='$classes' $data";
 
 			if ( 'cb' === $column_name ) {
-				echo '<th scope="row" class="check-column">';
+				echo _esc_html( '<th scope="row" class="check-column">' );
 				echo _esc_html( $this->column_cb( $item ) );
-				echo '</th>';
+				echo _esc_html( '</th>' );
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {
 				echo call_user_func(
 					array( $this, '_column_' . $column_name ),
@@ -1485,15 +1485,15 @@ class Tutor_List_Table {
 					$primary
 				);
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				echo "<td $attributes>";
+				echo _esc_html( '<td ' . $attributes . '>' );
 				echo call_user_func( array( $this, 'column_' . $column_name ), $item );
 				echo _esc_html( $this->handle_row_actions( $item, $column_name, $primary ) );
-				echo '</td>';
+				echo _esc_html( '</td>' );
 			} else {
-				echo "<td $attributes>";
+				echo _esc_html( '<td ' . $attributes . '>' );
 				echo _esc_html( $this->column_default( $item, $column_name ) );
 				echo _esc_html( $this->handle_row_actions( $item, $column_name, $primary ) );
-				echo '</td>';
+				echo _esc_html( '</td>' );
 			}
 		}
 	}

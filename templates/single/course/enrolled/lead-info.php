@@ -35,7 +35,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 				<span class="tutor-single-rating-count">
 					<?php
 					echo esc_attr( $course_rating->rating_avg );
-					echo '<i>(' . esc_attr( $course_rating->rating_count ) . ')</i>';
+					echo _esc_html('<i>(' . esc_attr( $course_rating->rating_count ) . ')</i>');
 					?>
 				</span>
 			</span>
@@ -61,7 +61,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 					</div>
 					<div class="tutor-single-course-author-name">
 						<span><?php _e( 'by', 'tutor' ); ?></span>
-						<a href="<?php echo tutor_utils()->profile_url( $authordata->ID ); ?>"><?php echo get_the_author(); ?></a>
+						<a href="<?php echo esc_url( tutor_utils()->profile_url( $authordata->ID ) ); ?>"><?php echo get_the_author(); ?></a>
 					</div>
 				</li>
 			<?php } ?>
@@ -95,7 +95,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 					foreach ( $course_categories as $course_category ) {
 						$category_name = $course_category->name;
 						$category_link = get_term_link( $course_category->term_id );
-						echo '<a href="' . $category_link . '">' . $category_name . '</a>';
+						echo _esc_html('<a href="' . $category_link . '">' . $category_name . '</a>');
 					}
 					?>
 				</li>

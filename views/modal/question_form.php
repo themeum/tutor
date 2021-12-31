@@ -140,7 +140,7 @@ $settings = maybe_unserialize( $question->question_settings );
 											echo esc_attr( stripslashes( $answer->answer_title ) );
 											if ( $answer->belongs_question_type === 'fill_in_the_blank' ) {
 												echo ' (' . __( 'Answer', 'tutor' ) . ' : ';
-												echo '<strong>' . esc_attr( stripslashes( $answer->answer_two_gap_match ) ) . '</strong>)';
+												echo _esc_html('<strong>' . esc_attr( stripslashes( $answer->answer_two_gap_match ) ) . '</strong>)');
 											}
 											if ( $answer->belongs_question_type === 'matching' ) {
 												echo esc_attr( ' - ' . stripslashes( $answer->answer_two_gap_match ) );
@@ -149,7 +149,7 @@ $settings = maybe_unserialize( $question->question_settings );
 										</span>
 										<?php
 										if ( $answer->image_id ) {
-											echo '<span class="tutor-question-answer-image"><img src="' . esc_url( wp_get_attachment_image_url( $answer->image_id ) ) . '" /> </span>';
+											echo _esc_html('<span class="tutor-question-answer-image"><img src="' . esc_url( wp_get_attachment_image_url( $answer->image_id ) ) . '" /> </span>');
 										}
 										if ( $question->question_type === 'true_false' || $question->question_type === 'single_choice' ) {
 											?>

@@ -51,7 +51,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 			foreach ( $course_categories as $course_category ) {
 				$category_name = $course_category->name;
 				$category_link = get_term_link( $course_category->term_id );
-				echo '<a href="' . esc_url( $category_link ) . '"> ' . esc_attr( $category_name ) . '</a>';
+				echo _esc_html( '<a href="' . esc_url( $category_link ) . '"> ' . esc_attr( $category_name ) . '</a>' );
 			}
 		}
 		?>

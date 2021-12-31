@@ -41,13 +41,13 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 		$actions['answer'] = sprintf( '<a href="?page=%s&sub_page=%s&attempt_id=%s">' . __( 'Review', 'tutor' ) . '</a>', $_REQUEST['page'], 'view_attempt', $item->attempt_id );
 		// $actions['delete'] = sprintf('<a href="?page=%s&action=%s&attempt_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->attempt_id);
 
-		$quiz_title  = '<p><strong>'.$item->display_name.'</strong></p>';
-		$quiz_title .= '<p>'.$item->user_email.'</p>';
+		$quiz_title  = '<p><strong>' . $item->display_name . '</strong></p>';
+		$quiz_title .= '<p>' . $item->user_email . '</p>';
 		// @since 1.9.5 instead of showing time ago showing original date time
 		if ( $item->attempt_ended_at ) {
 			$ended_ago_time     = human_time_diff( strtotime( $item->attempt_ended_at ), tutor_time() ) . __( ' ago', 'tutor' );
 			$attempt_started_at = date_format( date_create( $item->attempt_started_at ), 'd M, Y, h:i a' );
-			$quiz_title        .= '<span>'.$attempt_started_at.'</span>';
+			$quiz_title        .= '<span>' . $attempt_started_at . '</span>';
 		}
 
 		// Return the title contents
@@ -76,7 +76,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 		if ( $quiz ) {
 			$title = get_the_title( $quiz->ID );
-			return _esc_html('<a href="' . admin_url( "post.php?post='.$quiz->ID.'&action=edit" ) . '">' . $title . '</a>');
+			return _esc_html( '<a href="' . admin_url( "post.php?post='.$quiz->ID.'&action=edit" ) . '">' . $title . '</a>' );
 		}
 	}
 

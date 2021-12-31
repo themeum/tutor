@@ -56,11 +56,7 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) { ?>
 
 					<div class="individual-review-course-name">
 						<?php _e( 'On', 'tutor' ); ?>
-						<a href="<?php echo get_the_permalink( $review->comment_post_ID ); ?>">
-											<?php
-											echo get_the_title( $review->comment_post_ID );
-											?>
-						</a>
+						<a href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>"><?php echo get_the_title( $review->comment_post_ID ); ?></a>
 					</div>
 
 					<div class="individual-review-rating-wrap">

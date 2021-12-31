@@ -40,7 +40,7 @@ global $post; ?>
 
 	else :
 		$msg = __( 'You do not have any course on the wishlist yet.', 'tutor' );
-		echo '<div class="tutor-col">' . $msg . '</div>';
+		echo _esc_html('<div class="tutor-col">' . $msg . '</div>');
 	endif;
 
 	?>

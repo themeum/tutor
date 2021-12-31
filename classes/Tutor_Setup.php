@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) )
                         if ($_POST[$key] == '') {
                             unset($options[$key]);
                         } else {
-                            $options[$key] = $_POST[$key];
+                            $options[$key] = sanitize_data($_POST[$key]);
                         }
                     }
                 } else {
@@ -679,7 +679,7 @@ if ( ! defined( 'ABSPATH' ) )
                                 </svg>
                             </button>
                         </div>
-                        <div><a href="<?php echo admin_url(); ?>"><?php _e('I already know, skip this!', 'tutor'); ?></a></div>
+                        <div><a href="<?php echo esc_url( admin_url() ); ?>"><?php _e('I already know, skip this!', 'tutor'); ?></a></div>
                     </div>
                 </div>
             </div>

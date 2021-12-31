@@ -90,7 +90,7 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 										<?php
 										the_title();
 										if ( $topic_summery ) {
-											echo "<span class='toggle-information-icon'>&quest;</span>";
+											echo _esc_html( '<span class="toggle-information-icon">&quest;</span>' );
 										}
 										?>
 									</h3>
@@ -133,7 +133,7 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 											}
 											?>
 
-											<div class="tutor-course-lesson <?php echo esc_attr( $currentPost->ID === get_the_ID()  ? 'active' : '' ); ?>">
+											<div class="tutor-course-lesson <?php echo esc_attr( $currentPost->ID === get_the_ID() ? 'active' : '' ); ?>">
 												<h5>
 													<?php
 													$lesson_title = "<i class='$lesson_icon'></i>";
@@ -195,7 +195,7 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 			<div class="tutor-topbar-item tutor-hide-sidebar-bar">
 				<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
 				<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
-				<a href="<?php echo get_the_permalink( $course_id ); ?>" class="tutor-topbar-home-btn">
+				<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" class="tutor-topbar-home-btn">
 					<i class="tutor-icon-home"></i> <?php echo __( 'Go to Course Home', 'tutor' ); ?>
 				</a>
 			</div>

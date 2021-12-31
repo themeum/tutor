@@ -2,7 +2,7 @@
 $classname = '';
 if ( version_compare( get_bloginfo( 'version' ), '5.5', '>=' ) ) {
 	$classname = 'has-postbox-header';
-	echo '<style> #tutor-course-topics .toggle-indicator:before { margin-top: 0; } </style>';
+	echo _esc_html( '<style> #tutor-course-topics .toggle-indicator:before { margin-top: 0; } </style>' );
 }
 ?>
 

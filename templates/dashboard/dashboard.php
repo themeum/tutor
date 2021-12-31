@@ -98,7 +98,7 @@
 					?>
 					<tr>
 						<td>
-							<a href="<?php echo get_the_permalink( $course->ID ); ?>" target="_blank"><?php echo esc_attr( $course->post_title ); ?></a>
+							<a href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>" target="_blank"><?php echo esc_attr( $course->post_title ); ?></a>
 						</td>
 						<td><?php echo esc_attr( $enrolled ); ?></td>
 						<td>

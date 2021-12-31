@@ -529,9 +529,9 @@ class Course extends Tutor_Base {
 			if ( $price ) {
 				$monetize_by = tutils()->get_option( 'monetize_by' );
 				if ( function_exists( 'wc_price' ) && $monetize_by === 'wc' ) {
-					echo '<span class="tutor-label-success">' . wc_price( $price ) . '</span>';
+					echo _esc_html('<span class="tutor-label-success">' . wc_price( $price ) . '</span>');
 				} else {
-					echo '<span class="tutor-label-success">' . $price . '</span>';
+					echo _esc_html('<span class="tutor-label-success">' . $price . '</span>');
 				}
 			} else {
 				echo apply_filters( 'tutor-loop-default-price', __( 'free', 'tutor' ) );

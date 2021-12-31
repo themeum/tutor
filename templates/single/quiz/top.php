@@ -25,7 +25,7 @@ do_action( 'tutor_quiz/single/before/top' );
 	<h2><?php echo get_the_title(); ?></h2>
 	<h5>
 		<?php _e( 'Course', 'tutor' ); ?> :
-		<a href="<?php echo get_the_permalink( $course->ID ); ?>"><?php echo get_the_title( $course->ID ); ?></a>
+		<a href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>"><?php echo get_the_title( $course->ID ); ?></a>
 	</h5>
 	<ul class="tutor-quiz-meta">
 

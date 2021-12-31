@@ -92,17 +92,22 @@ do_action( 'tutor_dashboard/before/wrap' );
 							if ( current_user_can( tutor()->instructor_role ) ) {
 								$course_type = tutor()->course_post_type;
 								?>
-								<a class="tutor-btn bordered-btn" href="<?php echo apply_filters( 'frontend_course_create_url', admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ); ?>">
+								<a class="tutor-btn bordered-btn" href="<?php echo esc_url( apply_filters( 'frontend_course_create_url', admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ) ); ?>">
 									<i class="tutor-icon-checkbox-pen-outline"></i> &nbsp; <?php _e( 'Add A New Course', 'tutor' ); ?>
 								</a>
 								<?php
 							} elseif ( $instructor_status == 'pending' ) {
 								$on = get_user_meta( $user->ID, '_is_tutor_instructor', true );
 								$on = date( 'd F, Y', $on );
-								echo '<span style="' . $info_message_style . '">
-                                        <i class="dashicons dashicons-info" style="color:#E53935; ' . $info_style . '"></i>',
-										__( 'Your Application is pending from', 'tutor' ), ' <b>', $on, '</b>',
-									'</span>';
+								echo _esc_html(
+									'<span style="' . $info_message_style . '">
+                                    <i class="dashicons dashicons-info" style="color:#E53935; ' . $info_style . '"></i>',
+									__( 'Your Application is pending from', 'tutor' ),
+									' <b>',
+									$on,
+									'</b>',
+									'</span>'
+								);
 							} elseif ( $rejected_on || $instructor_status !== 'blocked' ) {
 								echo _esc_html( $become_button );
 							}
@@ -119,11 +124,13 @@ do_action( 'tutor_dashboard/before/wrap' );
 								<div class="tutor-instructor-rejection-notice">
 								<?php
 									$on = date( 'd F, Y', $rejected_on );
-									echo '<span>
-                                            <i class="dashicons dashicons-info"></i>',
+									echo _esc_html(
+										'<span>
+                                    <i class="dashicons dashicons-info"></i>',
 										__( 'Your application to become an instructor was rejected on', 'tutor' ) . ' ' . $on .
-									'</span>
-                                        <a href="?tutor_action=hide_instructor_notice">✕</a>';
+										'</span>
+                                <a href="?tutor_action=hide_instructor_notice">✕</a>'
+									);
 								?>
 								</div>
 								<?php
@@ -164,7 +171,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 									$dashboard_key = '';
 								}
 								$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-								echo _esc_html( '<li class="' . $li_class . ' ' . $active_class . '"><a href="' . $menu_link . '"> ' . $menu_title . ' </a> </li>' );
+								echo _esc_html( '<li class="' . $li_class . ' ' . $active_class . '"><a href="' . esc_url( $menu_link ) . '"> ' . $menu_title . ' </a> </li>' );
 							}
 						}
 						?>

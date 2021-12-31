@@ -20,7 +20,7 @@ if ( $statements->count ) {
 				<tr>
 					<td>
 						<p>
-							<a href="<?php echo get_the_permalink( $statement->course_id ); ?>" target="_blank">
+							<a href="<?php echo esc_url( get_the_permalink( $statement->course_id ) ); ?>" target="_blank">
 								<?php echo esc_attr( $statement->course_title ); ?>
 							</a>
 						</p>
@@ -32,14 +32,14 @@ if ( $statements->count ) {
 
 						<p class="small-text">
 							<span class="statement-order-<?php echo esc_attr( $statement->order_status ); ?>"><?php echo esc_attr( $statement->order_status ); ?></span>
-                            <?php _e( 'Order ID' ); ?> #<?php echo esc_attr( $statement->order_id ); ?>,
+							<?php _e( 'Order ID' ); ?> #<?php echo esc_attr( $statement->order_id ); ?>,
 							<strong><?php _e( 'Date:', 'tutor' ); ?></strong>
 							<i><?php echo date_i18n( get_option( 'date_format' ), strtotime( $statement->created_at ) ) . ' ' . date_i18n( get_option( 'time_format' ), strtotime( $statement->created_at ) ); ?></i>
 						</p>
 
 						<?php
 						$order = new WC_Order( $statement->order_id );
-						echo '<div class="statement-address"> <strong>Purchaser</strong> <address>' . $order->get_formatted_billing_address() . '</address></div>';
+						echo _esc_html( '<div class="statement-address"> <strong>Purchaser</strong> <address>' . $order->get_formatted_billing_address() . '</address></div>' );
 						?>
 					</td>
 					<td>
