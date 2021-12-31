@@ -3407,12 +3407,12 @@ class Utils
 			$intRating = (int) $current_rating;
 
 			if ($intRating >= $i) {
-				$output .= '<i class="tutor-icon-star-full" data-rating-value="' . $i . '"></i>';
+				$output .= '<i class="ttr-star-full-filled" data-rating-value="' . $i . '"></i>';
 			} else {
 				if (($current_rating - $i) == -0.5) {
-					$output .= '<i class="tutor-icon-star-half" data-rating-value="' . $i . '"></i>';
+					$output .= '<i class="ttr-star-half-filled" data-rating-value="' . $i . '"></i>';
 				} else {
-					$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
+					$output .= '<i class="ttr-star-line-filled" data-rating-value="' . $i . '"></i>';
 				}
 			}
 		}
