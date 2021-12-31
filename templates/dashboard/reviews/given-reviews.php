@@ -52,7 +52,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 						<div class="tutor-dashboard-review-heading">
 							<div class="tutor-dashboard-review-title">
 								<?php _e( 'Course: ', 'tutor' ); ?>
-								<a href="<?php echo get_the_permalink( $review->comment_post_ID ); ?>"><?php echo get_the_title( $review->comment_post_ID ); ?></a>
+								<a href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>"><?php echo get_the_title( $review->comment_post_ID ); ?></a>
 							</div>
 
 							<div class="tutor-dashboard-review-links">

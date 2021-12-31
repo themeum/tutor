@@ -45,9 +45,9 @@
 
 				if ( version_compare( $environment['wp_version'], $latest_version, '<' ) ) {
 					/* Translators: %1$s: Current version, %2$s: New version */
-					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( '%1$s - There is a newer version of WordPress available (%2$s)', 'tutor' ), esc_html( $environment['wp_version'] ), esc_html( $latest_version ) ) . '</mark>';
+					echo _esc_html( '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( '%1$s - There is a newer version of WordPress available (%2$s)', 'tutor' ), esc_html( $environment['wp_version'] ), esc_html( $latest_version ) ) . '</mark>' );
 				} else {
-					echo '<mark class="yes">' . esc_html( $environment['wp_version'] ) . '</mark>';
+					echo _esc_html( '<mark class="yes">' . esc_html( $environment['wp_version'] ) . '</mark>' );
 				}
 				?>
 			</td>
@@ -71,9 +71,9 @@
 				<?php
 				if ( $environment['wp_memory_limit'] < 67108864 ) {
 					/* Translators: %1$s: Memory limit, %2$s: Docs link. */
-					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( '%1$s - We recommend setting memory to at least 64MB. See: %2$s', 'tutor' ), esc_html( size_format( $environment['wp_memory_limit'] ) ), '<a href="https://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP" target="_blank">' . esc_html__( 'Increasing memory allocated to PHP', 'tutor' ) . '</a>' ) . '</mark>';
+					echo _esc_html( '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( '%1$s - We recommend setting memory to at least 64MB. See: %2$s', 'tutor' ), esc_html( size_format( $environment['wp_memory_limit'] ) ), '<a href="https://codex.wordpress.org/Editing_wp-config.php#Increasing_memory_allocated_to_PHP" target="_blank">' . esc_html__( 'Increasing memory allocated to PHP', 'tutor' ) . '</a>' ) . '</mark>' );
 				} else {
-					echo '<mark class="yes">' . esc_html( size_format( $environment['wp_memory_limit'] ) ) . '</mark>';
+					echo _esc_html( '<mark class="yes">' . esc_html( size_format( $environment['wp_memory_limit'] ) ) . '</mark>' );
 				}
 				?>
 			</td>
@@ -139,7 +139,7 @@
 			<td>
 				<?php
 				if ( version_compare( $environment['php_version'], '7.2', '>=' ) ) {
-					echo '<mark class="yes">' . esc_html( $environment['php_version'] ) . '</mark>';
+					echo _esc_html( '<mark class="yes">' . esc_html( $environment['php_version'] ) . '</mark>' );
 				} else {
 					$class = 'error';
 
@@ -150,7 +150,7 @@
 						$class  = 'recommendation';
 					}
 
-					echo '<mark class="' . esc_attr( $class ) . '">' . esc_html( $environment['php_version'] ) . ' - ' . wp_kses_post( $notice ) . '</mark>';
+					echo _esc_html( '<mark class="' . esc_attr( $class ) . '">' . esc_html( $environment['php_version'] ) . ' - ' . wp_kses_post( $notice ) . '</mark>' );
 				}
 				?>
 			</td>
@@ -194,9 +194,9 @@
 					<?php
 					if ( version_compare( $environment['mysql_version'], '5.6', '<' ) && ! strstr( $environment['mysql_version_string'], 'MariaDB' ) ) {
 						/* Translators: %1$s: MySQL version, %2$s: Recommended MySQL version. */
-						echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'tutor' ), esc_html( $environment['mysql_version_string'] ), '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'tutor' ) . '</a>' ) . '</mark>';
+						echo _esc_html( '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'tutor' ), esc_html( $environment['mysql_version_string'] ), '<a href="https://wordpress.org)/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'tutor' ) . '</a>' ) . '</mark>' );
 					} else {
-						echo '<mark class="yes">' . esc_html( $environment['mysql_version_string'] ) . '</mark>';
+						echo _esc_html( '<mark class="yes">' . esc_html( $environment['mysql_version_string'] ) . '</mark>' );
 					}
 					?>
 				</td>
@@ -214,9 +214,9 @@
 				<?php
 				if ( 'UTC' !== $environment['default_timezone'] ) {
 					/* Translators: %s: default timezone.. */
-					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Default timezone is %s - it should be UTC', 'tutor' ), esc_html( $environment['default_timezone'] ) ) . '</mark>';
+					echo _esc_html( '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Default timezone is %s - it should be UTC', 'tutor' ), esc_html( $environment['default_timezone'] ) ) . '</mark>' );
 				} else {
-					echo '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>';
+					echo _esc_html( '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>' );
 				}
 				?>
 			</td>
@@ -227,9 +227,9 @@
 			<td>
 				<?php
 				if ( $environment['fsockopen_or_curl_enabled'] ) {
-					echo '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>';
+					echo _esc_html( '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>' );
 				} else {
-					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . esc_html__( 'Your server does not have fsockopen or cURL enabled - PayPal IPN and other scripts which communicate with other servers will not work. Contact your hosting provider.', 'tutor' ) . '</mark>';
+					echo _esc_html( '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . esc_html__( 'Your server does not have fsockopen or cURL enabled - PayPal IPN and other scripts which communicate with other servers will not work. Contact your hosting provider.', 'tutor' ) . '</mark>' );
 				}
 				?>
 			</td>
@@ -240,10 +240,10 @@
 			<td>
 				<?php
 				if ( $environment['domdocument_enabled'] ) {
-					echo '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>';
+					echo _esc_html( '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>' );
 				} else {
 					/* Translators: %s: classname and link. */
-					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument.', 'tutor' ), '<a href="https://php.net/manual/en/class.domdocument.php">DOMDocument</a>' ) . '</mark>';
+					echo _esc_html( '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument.', 'tutor' ), '<a href="https://php.net/manual/en/class.domdocument.php">DOMDocument</a>' ) . '</mark>' );
 				}
 				?>
 			</td>
@@ -254,10 +254,10 @@
 			<td>
 				<?php
 				if ( $environment['gzip_enabled'] ) {
-					echo '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>';
+					echo _esc_html( '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>' );
 				} else {
 					/* Translators: %s: classname and link. */
-					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Your server does not support the %s function - this is required to use the GeoIP database from MaxMind.', 'tutor' ), '<a href="https://php.net/manual/en/zlib.installation.php">gzopen</a>' ) . '</mark>';
+					echo _esc_html( '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Your server does not support the %s function - this is required to use the GeoIP database from MaxMind.', 'tutor' ), '<a href="https://php.net/manual/en/zlib.installation.php">gzopen</a>' ) . '</mark>' );
 				}
 				?>
 			</td>
@@ -268,10 +268,10 @@
 			<td>
 				<?php
 				if ( $environment['mbstring_enabled'] ) {
-					echo '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>';
+					echo _esc_html( '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>' );
 				} else {
 					/* Translators: %s: classname and link. */
-					echo '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it.', 'tutor' ), '<a href="https://php.net/manual/en/mbstring.installation.php">mbstring</a>' ) . '</mark>';
+					echo _esc_html( '<mark class="error"><span class="dashicons dashicons-warning"></span> ' . sprintf( esc_html__( 'Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it.', 'tutor' ), '<a href="https://php.net/manual/en/mbstring.installation.php">mbstring</a>' ) . '</mark>' );
 				}
 				?>
 			</td>

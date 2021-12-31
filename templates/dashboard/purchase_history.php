@@ -42,13 +42,13 @@ if ( tutils()->count( $orders ) ) {
 						$courses = tutils()->get_course_enrolled_ids_by_order_id( $order->ID );
 						if ( tutils()->count( $courses ) ) {
 							foreach ( $courses as $course ) {
-								echo '<p>' . get_the_title( $course['course_id'] ) . '</p>';
+								echo _esc_html('<p>' . get_the_title( $course['course_id'] ) . '</p>');
 							}
 						}
 						?>
 					</td>
-					<td><?php echo esc_attr( $price ); ?></td>
-					<td><?php echo esc_attr( $status ); ?></td>
+					<td><?php echo _esc_html( $price ); ?></td>
+					<td><?php echo _esc_html( $status ); ?></td>
 
 					<td>
 						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ); ?>

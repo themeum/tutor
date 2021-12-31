@@ -25,14 +25,14 @@
 			$timePeriodPageURL = add_query_arg( array( 'time_period' => $period ) );
 			$timePeriodPageURL = remove_query_arg( array( 'date_range_from', 'date_range_to', 'tutor_report_action' ), $timePeriodPageURL );
 
-			echo '<a href="' . $timePeriodPageURL . '" class="' . $activeClass . '">' . $period_name . '</a> ';
+			echo _esc_html( '<a href="' . esc_url( $timePeriodPageURL ) . '" class="' . $activeClass . '">' . $period_name . '</a> ' );
 		}
 		?>
 	</div>
 	<div class="tutor-date-range-wrap">
 		<form action="" class="report-date-range-form" method="get">
 			<?php
-			$query_arg = $_GET;
+			$query_arg = sanitize_data( $_GET );
 			if ( ! empty( $query_arg ) && is_array( $query_arg ) ) {
 				if ( isset( $query_arg['time_period'] ) ) {
 					unset( $query_arg['time_period'] );

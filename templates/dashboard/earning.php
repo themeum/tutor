@@ -25,7 +25,7 @@ $stats = tutils()->get_earning_chart( $user_id, $start_date, $end_date );
 extract( $stats );
 
 if ( ! $earning_sum ) {
-	echo '<p>' . __( 'No Earning info available', 'tutor' ) . '</p>';
+	echo _esc_html('<p>' . __( 'No Earning info available', 'tutor' ) . '</p>');
 	return;
 }
 
@@ -39,17 +39,17 @@ if ( ! $earning_sum ) {
 	<div class="tutor-dashboard-inline-links">
 		<ul>
 			<li class="active">
-				<a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'earning' ); ?>">
+				<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'earning' ) ); ?>">
 					<?php _e( 'Earnings', 'tutor' ); ?>
 				</a>
 			</li>
 			<li>
-				<a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'earning/report' ); ?>">
+				<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'earning/report' ) ); ?>">
 					<?php _e( 'Reports', 'tutor' ); ?>
 				</a>
 			</li>
 			<li>
-				<a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'earning/statements' ); ?>">
+				<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'earning/statements' ) ); ?>">
 					<?php _e( 'Statements', 'tutor' ); ?>
 				</a>
 			</li>

@@ -161,7 +161,7 @@ class Withdraw {
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		$post    = $_POST;
+		$post    = sanitize_data($_POST);
 
 		$method = tutor_utils()->avalue_dot( 'tutor_selected_withdraw_method', $post );
 		if ( ! $method ) {
@@ -197,7 +197,7 @@ class Withdraw {
 		do_action( 'tutor_withdraw_before' );
 
 		$user_id = get_current_user_id();
-		$post    = $_POST;
+		$post    = sanitize_data($_POST);
 
 		$withdraw_amount = sanitize_text_field( tutor_utils()->avalue_dot( 'tutor_withdraw_amount', $post ) );
 

@@ -214,8 +214,8 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 									&nbsp;
 									<span>
 										<?php
-										echo '<strong class="withdraw-method-name">', tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ), '</strong>';
-										echo '<small>', $method_title, '</small>';
+										echo _esc_html('<strong class="withdraw-method-name">', tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ), '</strong>');
+										echo _esc_html('<small>', $method_title, '</small>');
 										?>
 									</span>
 								</div>

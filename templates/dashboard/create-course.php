@@ -58,7 +58,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 				</div>
 				<div class="tutor-col-auto">
 					<div class="tutor-dashboard-builder-header-right">
-						<a href="<?php the_permalink( $course_id ); ?>" target="_blank"><i class="tutor-icon-glasses"></i><?php _e( 'Preview', 'tutor' ); ?></a>
+						<a href="<?php esc_url( get_the_permalink( $course_id ) ); ?>" target="_blank"><i class="tutor-icon-glasses"></i><?php _e( 'Preview', 'tutor' ); ?></a>
 						<?php
 						if ( $can_publish_course ) {
 							?>
@@ -70,7 +70,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 							<?php
 						}
 						?>
-						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>"> <?php _e( 'Exit', 'tutor' ); ?></a>
+						<a href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>"> <?php _e( 'Exit', 'tutor' ); ?></a>
 					</div>
 				</div>
 			</div>

@@ -108,7 +108,7 @@ $quiz_answers      = array();
 						$question_i++;
 						$question_settings = maybe_unserialize( $question->question_settings );
 
-						$style_display = ( $question_layout_view !== 'question_below_each_other' && $question_i == 1 ) ? 'block' : 'none';
+						$style_display = esc_attr( ( $question_layout_view !== 'question_below_each_other' && $question_i == 1 ) ? 'block' : 'none' );
 						if ( $question_layout_view === 'question_below_each_other' ) {
 							$style_display = 'block';
 						}
@@ -138,15 +138,15 @@ $quiz_answers      = array();
 							$show_question_mark = (bool) tutor_utils()->avalue_dot( 'show_question_mark', $question_settings );
 							$answer_required    = (bool) tutils()->array_get( 'answer_required', $question_settings );
 
-							echo '<h4 class="question-text">';
+							echo _esc_html( '<h4 class="question-text">' );
 							if ( ! $hide_question_number_overview ) {
 								echo esc_attr( $question_i ) . '. ';
 							}
 							echo stripslashes( $question->question_title );
-							echo '</h4>';
+							echo _esc_html( '</h4>' );
 
 							if ( $show_question_mark ) {
-								echo _esc_html('<p class="question-marks"> ' . __( 'Marks : ', 'tutor' ) . $question->question_mark . ' </p>');
+								echo _esc_html( '<p class="question-marks"> ' . __( 'Marks : ', 'tutor' ) . $question->question_mark . ' </p>' );
 							}
 
 							$question_description = nl2br( stripslashes( $question->question_description ) );
@@ -270,9 +270,9 @@ $quiz_answers      = array();
 													<div class="quiz-draggable-answer-item">
 														<?php
 														if ( $question_type === 'matching' ) {
-															echo '<span class="draggable-answer-title">' . stripslashes( $rand_answer->answer_two_gap_match ) . '</span>';
+															echo _esc_html( '<span class="draggable-answer-title">' . stripslashes( $rand_answer->answer_two_gap_match ) . '</span>' );
 														} else {
-															echo '<span class="draggable-answer-title">' . stripslashes( $rand_answer->answer_title ) . '</span>';
+															echo _esc_html( '<span class="draggable-answer-title">' . stripslashes( $rand_answer->answer_title ) . '</span>' );
 														}
 														?>
 														<span class="draggable-answer-icon"> <i class="tutor-icon-menu-2"></i> </span>
@@ -293,7 +293,7 @@ $quiz_answers      = array();
 															if ( $question_type === 'matching' ) {
 
 																if ( $answer->answer_view_format !== 'image' ) {
-																	echo '<p class="tutor-quiz-answer-title">' . stripslashes( $answer->answer_title ) . '</p>';
+																	echo _esc_html( '<p class="tutor-quiz-answer-title">' . stripslashes( $answer->answer_title ) . '</p>' );
 																}
 																if ( $answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image' ) {
 																	?>
@@ -303,7 +303,7 @@ $quiz_answers      = array();
 																	<?php
 																}
 															} elseif ( intval( $answer->image_id ) ) {
-																echo '<img src="' . wp_get_attachment_image_url( $answer->image_id, 'full' ) . '" />';
+																echo _esc_html( '<img src="' . wp_get_attachment_image_url( $answer->image_id, 'full' ) . '" />' );
 															}
 															?>
 														</div>
@@ -331,7 +331,7 @@ $quiz_answers      = array();
 										if ( isset( $get_option_meta['short_answer_characters_limit'] ) ) {
 											if ( $get_option_meta['short_answer_characters_limit'] != '' ) {
 												$characters_limit = tutor_utils()->avalue_dot( 'short_answer_characters_limit', $quiz_attempt_info );
-												echo '<p class="answer_limit_desc">' . __( 'characters remaining', 'tutor' ) . ' :<span class="characters_remaining">' . esc_attr( $characters_limit ) . '</span> </p>';
+												echo _esc_html( '<p class="answer_limit_desc">' . __( 'characters remaining', 'tutor' ) . ' :<span class="characters_remaining">' . esc_attr( $characters_limit ) . '</span> </p>' );
 											}
 										}
 									}
@@ -340,7 +340,7 @@ $quiz_answers      = array();
 										if ( isset( $get_option_meta['open_ended_answer_characters_limit'] ) ) {
 											if ( $get_option_meta['open_ended_answer_characters_limit'] != '' ) {
 												$characters_limit = $get_option_meta['open_ended_answer_characters_limit'];
-												echo '<p class="answer_limit_desc">' . __( 'characters remaining', 'tutor' ) . ' :<span class="characters_remaining">' . $characters_limit . '</span> </p>';
+												echo _esc_html( '<p class="answer_limit_desc">' . __( 'characters remaining', 'tutor' ) . ' :<span class="characters_remaining">' . $characters_limit . '</span> </p>' );
 											}
 										}
 									}
@@ -358,7 +358,7 @@ $quiz_answers      = array();
 												if ( intval( $answer->image_id ) ) {
 													?>
 													<div class="quiz-image-answering-image-wrap">
-														<?php echo '<img src="' . wp_get_attachment_image_url( $answer->image_id, 'full' ) . '" />'; ?>
+														<?php echo _esc_html( '<img src="' . wp_get_attachment_image_url( $answer->image_id, 'full' ) . '" />' ); ?>
 													</div>
 
 													<div class="quiz-image-answering-input-field-wrap">

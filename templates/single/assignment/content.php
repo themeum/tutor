@@ -28,7 +28,7 @@ if ( $assignment_comment != false ) {
 	<div class="tutor-topbar-item tutor-hide-sidebar-bar">
 		<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar"><i class="tutor-icon-angle-left"></i> </a>
 		<?php $course_id = tutor_utils()->get_course_id_by( 'assignment', get_the_ID() ); ?>
-		<a href="<?php echo get_the_permalink( $course_id ); ?>" class="tutor-topbar-home-btn">
+		<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" class="tutor-topbar-home-btn">
 			<i class="tutor-icon-home"></i> <?php echo __( 'Go to Course Home', 'tutor' ); ?>
 		</a>
 	</div>
@@ -161,7 +161,7 @@ if ( $assignment_comment != false ) {
 					$attachment_name = substr( $attachment_name, strrpos( $attachment_name, '/' ) + 1 );
 					?>
 					<p class="attachment-file-name">
-						<a href="<?php echo wp_get_attachment_url( $attachment_id ); ?>" target="_blank">
+						<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank">
 							<i class="tutor-icon-attach"></i> <?php echo esc_attr( $attachment_name ); ?>
 						</a>
 					</p>

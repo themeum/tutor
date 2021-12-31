@@ -70,14 +70,14 @@ class User {
 	public function tutor_user_photo_remove() {
 		tutils()->checking_nonce();
 
-		$this->delete_existing_user_photo( get_current_user_id(), $_POST['photo_type'] );
+		$this->delete_existing_user_photo( get_current_user_id(), sanitize_data( $_POST['photo_type'] ) );
 	}
 
 	public function update_user_photo() {
 		tutils()->checking_nonce();
 
 		$user_id  = get_current_user_id();
-		$meta_key = $_POST['photo_type'] == 'cover_photo' ? '_tutor_cover_photo' : '_tutor_profile_photo';
+		$meta_key = esc_attr( $_POST['photo_type'] == 'cover_photo' ? '_tutor_cover_photo' : '_tutor_profile_photo' );
 
 		/**
 		 * Photo Update from profile

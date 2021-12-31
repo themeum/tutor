@@ -34,7 +34,7 @@ $passing_grade = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
 			<tr>
 				<td>
 					<div class="course">
-						<a href="<?php echo get_the_permalink( $attempt->course_id ); ?>" target="_blank"><?php echo get_the_title( $attempt->course_id ); ?></a>
+						<a href="<?php echo esc_url( get_the_permalink( $attempt->course_id ) ); ?>" target="_blank"><?php echo get_the_title( $attempt->course_id ); ?></a>
 					</div>
 					<div class="course-meta">
 						<span><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?></span>

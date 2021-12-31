@@ -13,7 +13,7 @@
 
 
 if ( isset( $_GET['view_quiz_attempt_id'] ) && get_tutor_option( 'tutor_quiz_student_attempt_view_in_profile' ) ) {
-	$_GET['attempt_id'] = $_GET['view_quiz_attempt_id'];
+	$_GET['attempt_id'] = sanitize_data( $_GET['view_quiz_attempt_id'] );
 	echo tutor_get_template_html( 'dashboard.my-quiz-attempts.attempts-details' );
 	return;
 }
@@ -46,7 +46,7 @@ if ( $attempted_count ) {
 				<tr>
 					<td>
 						<div class="course">
-							<a href="<?php echo get_the_permalink( $attempt->course_id ); ?>" target="_blank"><?php echo get_the_title( $attempt->course_id ); ?></a>
+							<a href="<?php echo esc_url( get_the_permalink( $attempt->course_id ) ); ?>" target="_blank"><?php echo get_the_title( $attempt->course_id ); ?></a>
 						</div>
 						<div class="course-meta">
 							<span><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?></span>

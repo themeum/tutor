@@ -25,48 +25,48 @@ $tutor_pages = tutils()->tutor_pages();
 				<td><?php echo esc_attr( $page_id ); ?></td>
 				<td>
 					<?php
-					echo '<p>';
+					echo _esc_html( '<p>' );
 
 					if ( $page['page_exists'] ) {
 						$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-						echo "<a href='" . esc_url( $edit_url ) . "' target='_blank'>";
+						echo _esc_html( '<a href="' . esc_url( $edit_url ) . '" target="_blank">' );
 					}
 					echo esc_attr( $page['page_name'] );
 
 					if ( $page['page_exists'] ) {
-						echo '</a>';
+						echo _esc_html( '</a>' );
 					}
-					echo '</p>';
+					echo _esc_html( '</p>' );
 					?>
 				</td>
 
 				<td>
 					<?php
 					if ( ! $page_id ) {
-						echo '<p style="color: red;">';
-						echo "<i class='dashicons dashicons-warning'></i> ";
+						echo _esc_html( '<p style="color: red;">' );
+						echo _esc_html( '<i class="dashicons dashicons-warning"></i> ' );
 						_e( ' Page not set', 'tutor' );
-						echo '</p>';
+						echo _esc_html( '</p>' );
 					}
 
 					if ( ! $page['page_exists'] ) {
-						echo '<p style="color: red;">';
-						echo "<i class='dashicons dashicons-warning'></i> ";
+						echo _esc_html( '<p style="color: red;">' );
+						echo _esc_html( '<i class="dashicons dashicons-warning"></i> ' );
 						_e( ' Page deleted, please set new one', 'tutor' );
-						echo '</p>';
+						echo _esc_html( '</p>' );
 					}
 
 					if ( $page['page_exists'] && ! $page['page_visible'] ) {
-						echo '<p style="color: red;">';
-						echo "<i class='dashicons dashicons-warning'></i> ";
+						echo _esc_html( '<p style="color: red;">' );
+						echo _esc_html( '<i class="dashicons dashicons-warning"></i> ' );
 						_e( 'Page visibility is not public', 'tutor' );
-						echo '</p>';
+						echo _esc_html( '</p>' );
 					}
 
 					if ( $page['page_exists'] && $page['page_visible'] ) {
 						$page = get_post( $page_id );
 
-						echo "<a href='" . get_permalink( $page ) . "' target='_blank' style='color: green;'> <i class='dashicons dashicons-yes-alt'></i> /" . esc_attr( $page->post_name ) . ' </a>';
+						echo _esc_html( '<a href="' . get_permalink( $page ) . '" target="_blank" style="color: green;"> <i class="dashicons dashicons-yes-alt"></i> /' . esc_attr( $page->post_name ) . ' </a>' );
 					}
 					?>
 				</td>

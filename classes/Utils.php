@@ -442,9 +442,9 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function print_view( $value = '' ) {
-		echo '<pre>';
+		echo _esc_html('<pre>');
 		print_r( $value );
-		echo '</pre>';
+		echo _esc_html('</pre>');
 	}
 
 	/**
@@ -2570,7 +2570,7 @@ class Utils {
 	 */
 	public function input_old( $input = '', $old_data = null ) {
 		if ( ! $old_data ) {
-			$old_data = $_REQUEST;
+			$old_data = sanitize_data($_REQUEST);
 		}
 		$value = $this->avalue_dot( $input, $old_data );
 		if ( $value ) {

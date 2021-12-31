@@ -1,6 +1,6 @@
 <?php
 if ( $question_type === 'open_ended' ) {
-	echo '<p class="open-ended-notice" style="color: #ff0000;">' . __( 'No option is necessary for this answer type', 'tutor' ) . '</p>';
+	echo _esc_html( '<p class="open-ended-notice" style="color: #ff0000;">' . __( 'No option is necessary for this answer type', 'tutor' ) . '</p>' );
 	return '';
 }
 
@@ -40,9 +40,9 @@ $answer_two_gap_match = ! empty( $old_answer->answer_two_gap_match ) ? stripslas
 							<a href="javascript:;" class="tutor-media-upload-btn">
 								<?php
 								if ( $image_id ) {
-									echo '<img src="' . esc_url( wp_get_attachment_image_url( $image_id ) ) . '" />';
+									echo _esc_html( '<img src="' . esc_url( wp_get_attachment_image_url( $image_id ) ) . '" />' );
 								} else {
-									echo '<i class="tutor-icon-image1"></i>';
+									echo _esc_html( '<i class="tutor-icon-image1"></i>' );
 								}
 								?>
 							</a>
@@ -127,9 +127,9 @@ $answer_two_gap_match = ! empty( $old_answer->answer_two_gap_match ) ? stripslas
 							<a href="javascript:;" class="tutor-media-upload-btn">
 								<?php
 								if ( $image_id ) {
-									echo '<img src="' . esc_url( wp_get_attachment_image_url( $image_id ) ) . '" />';
+									echo _esc_html( '<img src="' . esc_url( wp_get_attachment_image_url( $image_id ) ) . '" />' );
 								} else {
-									echo '<i class="tutor-icon-image1"></i>';
+									echo _esc_html( '<i class="tutor-icon-image1"></i>' );
 								}
 								?>
 							</a>
@@ -180,9 +180,9 @@ $answer_two_gap_match = ! empty( $old_answer->answer_two_gap_match ) ? stripslas
 							<a href="javascript:;" class="tutor-media-upload-btn">
 								<?php
 								if ( $image_id ) {
-									echo '<img src="' . esc_url( wp_get_attachment_image_url( $image_id ) ) . '" />';
+									echo _esc_html( '<img src="' . esc_url( wp_get_attachment_image_url( $image_id ) ) . '" />' );
 								} else {
-									echo '<i class="tutor-icon-image1"></i>';
+									echo _esc_html( '<i class="tutor-icon-image1"></i>' );
 								}
 								?>
 							</a>
@@ -217,9 +217,9 @@ $answer_two_gap_match = ! empty( $old_answer->answer_two_gap_match ) ? stripslas
 							<a href="javascript:;" class="tutor-media-upload-btn">
 								<?php
 								if ( $image_id ) {
-									echo '<img src="' . esc_url( wp_get_attachment_image_url( $image_id ) ) . '" />';
+									echo _esc_html( '<img src="' . esc_url( wp_get_attachment_image_url( $image_id ) ) . '" />' );
 								} else {
-									echo '<i class="tutor-icon-image1"></i>';
+									echo _esc_html( '<i class="tutor-icon-image1"></i>' );
 								}
 								?>
 							</a>

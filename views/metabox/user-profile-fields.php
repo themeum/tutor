@@ -41,7 +41,7 @@ wp_enqueue_media();
 					<?php
 					$user_profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
 					if ( $user_profile_photo ) {
-						echo '<img src="' . esc_url( wp_get_attachment_image_url( $user_profile_photo ) ) . '" alt="" /> ';
+						echo _esc_html('<img src="' . esc_url( wp_get_attachment_image_url( $user_profile_photo ) ) . '" alt="" /> ');
 					}
 					?>
 				</p>

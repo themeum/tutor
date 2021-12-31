@@ -11,11 +11,11 @@ if ( $profile_completion->progress < 100 ) { ?>
 			<div class="profile-completion-warning-content">
 				<h4><?php _e( 'Complete Your Profile', 'tutor' ); ?></h4>
 				<div class="profile-completion-warning-details">
-					<p><?php _e( 'Complete your profile so people can know more about you! Go to Profile', 'tutor' ); ?> <a href="<?php echo tutils()->tutor_dashboard_url( 'settings' ); ?>"><?php _e( 'Settings', 'tutor' ); ?></a></p>
+					<p><?php _e( 'Complete your profile so people can know more about you! Go to Profile', 'tutor' ); ?> <a href="<?php echo esc_url( tutils()->tutor_dashboard_url( 'settings' ) ); ?>"><?php _e( 'Settings', 'tutor' ); ?></a></p>
 					<ul>
 						<?php
 						foreach ( $profile_completion->empty_fields as $empty_field ) {
-							echo '<li>' . __( 'Set Your', 'tutor' ) . '<span> ' . $empty_field . '</span></li>';
+							echo _esc_html('<li>' . __( 'Set Your', 'tutor' ) . '<span> ' . $empty_field . '</span></li>');
 						}
 						?>
 					</ul>

@@ -12,7 +12,7 @@ if ( is_string( $sub_page ) && in_array($sub_page, $allowed_sub_pages)){
 }
 /**
  * Quiz attempt filters added
- * 
+ *
  * @since 1.9.7
  */
 $search_filter	= isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';
@@ -27,10 +27,10 @@ $instructorList->prepare_items( $search_filter, $course_filter, $date_filter,$or
 
 <div class="wrap">
     <h1 class="wp-heading-inline"><?php esc_html_e( 'Instructors', 'tutor' ); ?></h1>
-	<?php 
+	<?php
 		if ( get_option( 'users_can_register', false ) && current_user_can( 'manage_options' ) ) {
 			?>
-			<a href="<?php echo add_query_arg( array( 'sub_page' => 'add_new_instructor' ) ); ?>" class="page-title-action">
+			<a href="<?php echo esc_url( add_query_arg( array( 'sub_page' => 'add_new_instructor' ) ) ); ?>" class="page-title-action">
 				<i class="tutor-icon-plus"></i> <?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
 			</a>
 			<?php
@@ -42,7 +42,7 @@ $instructorList->prepare_items( $search_filter, $course_filter, $date_filter,$or
         <input type="hidden" name="page" value="<?php echo esc_attr( \TUTOR\Instructors_List::INSTRUCTOR_LIST_PAGE ); ?>" />
 		<?php
 			//$instructorList->search_box(__('Search', 'tutor'), 'instructors');
-			$instructorList->display( $enable_sorting_field_with_bulk_action = true ); 
+			$instructorList->display( $enable_sorting_field_with_bulk_action = true );
 		?>
     </form>
 </div>

@@ -78,7 +78,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 						if ( current_user_can( tutor()->instructor_role ) ) {
 							$course_type = tutor()->course_post_type;
 							?>
-							<a class="tutor-btn bordered-btn" href="<?php echo apply_filters( 'frontend_course_create_url', admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ); ?>">
+							<a class="tutor-btn bordered-btn" href="<?php echo esc_url( apply_filters( 'frontend_course_create_url', admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ) ); ?>">
 								<i class="tutor-icon-checkbox-pen-outline"></i> &nbsp; <?php _e( 'Add A New Course', 'tutor' ); ?>
 							</a>
 							<?php
@@ -118,7 +118,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 							}
 						}
 						if ( $separator ) {
-							echo '<li class="tutor-dashboard-menu-divider"></li>';
+							echo _esc_html( '<li class="tutor-dashboard-menu-divider"></li>' );
 							if ( $menu_title ) {
 								echo _esc_html( '<li class="tutor-dashboard-menu-divider-header">' . $menu_title . '</li>' );
 							}
@@ -128,7 +128,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 								$dashboard_key = '';
 							}
 							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-							echo _esc_html( '<li class="' . $li_class . ' ' . $active_class . '"><a href="' . $menu_link . '"> ' . $menu_title . ' </a> </li>' );
+							echo _esc_html( '<li class="' . $li_class . ' ' . $active_class . '"><a href="' . esc_url( $menu_link ) . '"> ' . $menu_title . ' </a> </li>' );
 						}
 					}
 					?>

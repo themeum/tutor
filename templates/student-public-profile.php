@@ -63,7 +63,7 @@ if ( $is_instructor ) {
 	ob_start();
 foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 	$url = $social_icon['url'];
-	echo ! empty( $url ) ? _esc_html( '<a href="' . $url . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' ) : '';
+	echo ! empty( $url ) ? _esc_html( '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' ) : '';
 }
 	$social_media = ob_get_clean();
 ?>
@@ -134,7 +134,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 						<?php
 						foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 							$url = $social_icon['url'];
-							echo ! empty( $url ) ? '<a href="' . $url . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' : '';
+							echo ! empty( $url ) ? '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' : '';
 						}
 						?>
 					</div>

@@ -32,7 +32,7 @@
 	}
 
 	if ( ! count( $instructors ) ) {
-		echo '<div>', __( 'No Instructor Found', 'tutor' ), '</div>';
+		echo _esc_html( '<div>', __( 'No Instructor Found', 'tutor' ), '</div>' );
 	}
 	?>
 </div>

@@ -10,8 +10,8 @@ $page_name    = $current_page ? $current_page : 'addons';
 
 	<div class="wp-filter">
 		<ul class="filter-links">
-			<li class="tutor-available-addons <?php echo esc_attr( $page_name === 'addons' ? 'current' : '' ); ?> "><a href="<?php echo admin_url( 'admin.php?page=tutor-addons' ); ?>" aria-current="page"><?php _e( 'Plugins', 'tutor' ); ?></a> </li>
-			<li class="tutor-available-themes <?php echo esc_attr( $page_name === 'themes' ? 'current' : '' ); ?>"><a href="<?php echo admin_url( 'admin.php?page=tutor-addons&tab=themes' ); ?>"><?php _e( 'Themes', 'tutor' ); ?></a> </li>
+			<li class="tutor-available-addons <?php echo esc_attr( $page_name === 'addons' ? 'current' : '' ); ?> "><a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-addons' ) ); ?>" aria-current="page"><?php _e( 'Plugins', 'tutor' ); ?></a> </li>
+			<li class="tutor-available-themes <?php echo esc_attr( $page_name === 'themes' ? 'current' : '' ); ?>"><a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor-addons&tab=themes' ) ); ?>"><?php _e( 'Themes', 'tutor' ); ?></a> </li>
 		</ul>
 	</div>
 
@@ -46,9 +46,9 @@ $page_name    = $current_page ? $current_page : 'addons';
 									<div class="name column-name">
 										<h3>
 											<?php
-											echo "<a href='" . esc_url( $addon->product_url ) . "' target='_blank'>" . esc_attr( $addon->product_name ) . '</a>';
+											echo _esc_html( '<a href="' . esc_url( $addon->product_url ) . '" target="_blank">' . esc_attr( $addon->product_name ) . '</a>' );
 											if ( $addon->thumbnail ) {
-												echo "<img src='" . esc_url( $addon->thumbnail ) . "' class='plugin-icon' alt=''>";
+												echo _esc_html( '<img src="' . esc_url( $addon->thumbnail ) . '" class="plugin-icon" alt="">' );
 											}
 											?>
 										</h3>

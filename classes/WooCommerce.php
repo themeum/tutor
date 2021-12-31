@@ -608,7 +608,7 @@ add_action(
 
 		if ( $show ) {
 			$message = __( 'Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce.', 'tutor' );
-			echo '<div class="notice notice-error"><p>' . $message . '</p></div>';
+			echo _esc_html( '<div class="notice notice-error"><p>' . $message . '</p></div>' );
 		}
 	}
 );

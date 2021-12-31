@@ -63,7 +63,7 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 									<?php
 									the_title();
 									if ( $topic_summery ) {
-										echo "<span class='toggle-information-icon'>&quest;</span>";
+										echo _esc_html( '<span class="toggle-information-icon">&quest;</span>' );
 									}
 									?>
 								</h3>
@@ -92,7 +92,7 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 										if ( $post->post_type === 'tutor_quiz' ) {
 											$quiz = $post;
 											?>
-											<div class="tutor-single-lesson-items quiz-single-item quiz-single-item-<?php echo esc_attr( $quiz->ID ); ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
+											<div class="tutor-single-lesson-items quiz-single-item quiz-single-item-<?php echo esc_attr( $quiz->ID ); ?> <?php echo esc_attr( ( $currentPost->ID === get_the_ID() ) ? 'active' : '' ); ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
 												<a href="<?php echo get_permalink( $quiz->ID ); ?>" class="sidebar-single-quiz-a" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
 													<i class="tutor-icon-doubt"></i>
 													<span class="lesson_title"><?php echo esc_attr( $quiz->post_title ); ?></span>
@@ -118,8 +118,8 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 											 */
 
 											?>
-											<div class="tutor-single-lesson-items assignments-single-item assignment-single-item-<?php echo esc_attr( $post->ID ); ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>" data-assignment-id="<?php echo esc_attr( $post->ID ); ?>">
-												<a href="<?php echo get_permalink( $post->ID ); ?>" class="sidebar-single-assignment-a" data-assignment-id="<?php echo esc_attr( $post->ID ); ?>">
+											<div class="tutor-single-lesson-items assignments-single-item assignment-single-item-<?php echo esc_attr( $post->ID ); ?> <?php echo esc_attr( ( $currentPost->ID === get_the_ID() ) ? 'active' : '' ); ?>" data-assignment-id="<?php echo esc_attr( $post->ID ); ?>">
+												<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="sidebar-single-assignment-a" data-assignment-id="<?php echo esc_attr( $post->ID ); ?>">
 													<i class="tutor-icon-clipboard"></i>
 													<span class="lesson_title"> <?php echo esc_attr( $post->post_title ); ?> </span>
 													<span class="tutor-lesson-right-icons">
@@ -137,9 +137,9 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 											 */
 
 											?>
-											<div class="tutor-single-lesson-items zoom-meeting-single-item zoom-meeting-single-item-<?php echo esc_attr( $post->ID ); ?> <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>"
+											<div class="tutor-single-lesson-items zoom-meeting-single-item zoom-meeting-single-item-<?php echo esc_attr( $post->ID ); ?> <?php echo esc_attr( ( $currentPost->ID === get_the_ID() ) ? 'active' : '' ); ?>"
 												data-assignment-id="<?php echo esc_attr( $post->ID ); ?>">
-												<a href="<?php echo get_permalink( $post->ID ); ?>" class="sidebar-single-zoom-meeting-a">
+												<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="sidebar-single-zoom-meeting-a">
 													<i class="zoom-icon"><img src="<?php echo esc_url( TUTOR_ZOOM()->url . 'assets/images/zoom-icon-grey.svg' ); ?>"></i>
 													<span class="lesson_title"> <?php echo esc_attr( $post->post_title ); ?> </span>
 													<span class="tutor-lesson-right-icons">
@@ -164,22 +164,22 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 											$is_completed_lesson = tutor_utils()->is_completed_lesson();
 											?>
 
-											<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active' : ''; ?>">
+											<div class="tutor-single-lesson-items <?php echo esc_attr( ( $currentPost->ID === get_the_ID() ) ? 'active' : '' ); ?>">
 												<a href="<?php the_permalink(); ?>" class="tutor-single-lesson-a" data-lesson-id="<?php the_ID(); ?>">
 
 													<?php
 													$tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
-													echo "<i class='tutor-icon-$tutor_lesson_type_icon'></i>";
+													echo _esc_html( '<i class="tutor-icon-' . $tutor_lesson_type_icon . '"></i>' );
 													?>
 													<span class="lesson_title"><?php the_title(); ?></span>
 													<span class="tutor-lesson-right-icons">
 														<?php
 														do_action( 'tutor/lesson_list/right_icon_area', $post );
 														if ( $play_time ) {
-															echo "<i class='tutor-play-duration'>" . tutor_utils()->get_optimized_duration( $play_time ) . '</i>';
+															echo _esc_html( '<i class="tutor-play-duration">' . tutor_utils()->get_optimized_duration( $play_time ) . '</i>' );
 														}
-														$lesson_complete_icon = $is_completed_lesson ? 'tutor-icon-mark tutor-done' : '';
-														echo "<i class='tutor-lesson-complete $lesson_complete_icon'></i>";
+														$lesson_complete_icon = esc_attr( $is_completed_lesson ? 'tutor-icon-mark tutor-done' : '' );
+														echo _esc_html( '<i class="tutor-lesson-complete ' . $lesson_complete_icon . '"></i>' );
 														?>
 													</span>
 												</a>

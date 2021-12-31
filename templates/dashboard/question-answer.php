@@ -32,7 +32,7 @@ if ( tutils()->count( $questions ) ) {
 			foreach ( $questions as $question ) {
 				?>
 				<tr id="tutor-dashboard-question-<?php echo esc_attr( $question->comment_ID ); ?>">
-					<td><a href="<?php echo tutils()->get_tutor_dashboard_page_permalink( 'question-answer/answers?question_id=' . $question->comment_ID ); ?>"><?php echo esc_attr( $question->question_title ); ?></a></td>
+					<td><a href="<?php echo esc_url( tutils()->get_tutor_dashboard_page_permalink( 'question-answer/answers?question_id=' . $question->comment_ID ) ); ?>"><?php echo esc_attr( $question->question_title ); ?></a></td>
 					<td><?php echo esc_attr( $question->display_name ); ?></td>
 					<td><?php echo esc_attr( $question->post_title ); ?></td>
 					<td><?php echo esc_attr( $question->answer_count ); ?></td>

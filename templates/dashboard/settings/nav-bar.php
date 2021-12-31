@@ -39,6 +39,7 @@
 	?>
 <ul>
 	<?php
+    
 	foreach ( $setting_menus as $menu_key => $menu ) {
 		$valid = $menu_key == 'profile' || ! $menu['role'] || ( $menu['role'] == 'instructor' && current_user_can( tutor()->instructor_role ) );
 
@@ -47,7 +48,7 @@
 				<li class="<?php echo esc_attr( $active_setting_nav == $menu_key ? 'active' : '' ); ?>">
 					<a href="<?php echo esc_url( $menu['url'] ); ?>"> <?php echo esc_attr( $menu['title'] ); ?></a>
 				</li>
-				<?php
+			<?php
 		}
 	}
 	?>

@@ -92,7 +92,7 @@ if ( ! $enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes' ) {
 							foreach ( $answers as $answer ) {
 								$answer_profile = tutor_utils()->profile_url( $answer->user_id );
 								?>
-									<div class="tutor_individual_answer <?php echo ( $question->user_id == $answer->user_id ) ? 'tutor-bg-white' : 'tutor-bg-light'; ?>">
+									<div class="tutor_individual_answer <?php echo esc_attr( ( $question->user_id == $answer->user_id ) ? 'tutor-bg-white' : 'tutor-bg-light' ); ?>">
 										<div class="tutor-question-wrap">
 											<div class="question-top-meta">
 												<div class="tutor-question-avater">
