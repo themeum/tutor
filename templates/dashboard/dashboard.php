@@ -225,7 +225,7 @@ $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_u
 						</div>
 						<?php endif; ?>
 						<div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary tutor-mt-6">
-							<a href="#">
+							<a href="<?php the_permalink(); ?>">
 								<?php the_title(); ?>
 							</a>
 						</div>
