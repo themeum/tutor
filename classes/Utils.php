@@ -586,7 +586,7 @@ class Utils
 			'post_type' => $course_post_type,
 			'author' => $instructor_id,
 			'post_status' => array('publish', 'pending'),
-			'posts_per_page' => -1
+			'posts_per_page' => 10
 		));
 
 		return $courses;
