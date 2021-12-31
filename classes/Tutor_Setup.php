@@ -572,15 +572,15 @@ if ( ! defined( 'ABSPATH' ) )
 		                    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                             <input type="hidden" name="action" value="setup_action">
                             <?php $course_marketplace = tutor_utils()->get_option('enable_course_marketplace'); ?>
-                            <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="<?php echo ($course_marketplace ? 1 : 0); ?>">
+                            <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="<?php echo esc_attr($course_marketplace ? 1 : 0); ?>">
                             <?php $earning = tutor_utils()->get_option('enable_tutor_earning'); ?>
-                            <input type="hidden" name="enable_tutor_earning" class="enable_tutor_earning_data" value="<?php echo ($earning ? 1 : 0); ?>">
+                            <input type="hidden" name="enable_tutor_earning" class="enable_tutor_earning_data" value="<?php echo esc_attr( $earning ? 1 : 0); ?>">
                             <ul class="tutor-setup-content">
                                 <?php $this->tutor_setup_generator(); ?>
                                 <li>
                                     <div class="tutor-setup-content-heading greetings">
                                         <div class="header">
-                                            <img src="<?php echo tutor()->url . 'assets/images/greeting-img.jpg'; ?>" alt="greeting">
+                                            <img src="<?php echo esc_url(tutor()->url . 'assets/images/greeting-img.jpg'); ?>" alt="greeting">
                                         </div>
                                         <div class="content">
                                             <h2><?php _e('Congratulations, you’re all set!', 'tutor'); ?></h2>
@@ -588,8 +588,8 @@ if ( ! defined( 'ABSPATH' ) )
                                             <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a target="_blank" href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
-                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>"><?php _e('CREATE A NEW COURSE', 'tutor'); ?></button>
-                                            <button class="tutor-redirect primary-btn" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>"><?php _e('EXPLORE ADDONS', 'tutor'); ?></button>
+                                            <button class="tutor-redirect primary-btn" data-url="<?php echo esc_url( admin_url('post-new.php?post_type=courses') ); ?>"><?php _e('CREATE A NEW COURSE', 'tutor'); ?></button>
+                                            <button class="tutor-redirect primary-btn" data-url="<?php echo esc_url( admin_url('admin.php?page=tutor-addons') ); ?>"><?php _e('EXPLORE ADDONS', 'tutor'); ?></button>
                                         </div>
                                     </div>
                                 </li>
@@ -637,34 +637,34 @@ if ( ! defined( 'ABSPATH' ) )
             <div class="tutor-wizard-container">
                 <div class="tutor-wrapper-boarding tutor-setup-wizard-boarding active">
                     <div class="wizard-boarding-header">
-                        <div><img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" /></div>
+                        <div><img src="<?php echo esc_url( tutor()->url.'assets/images/tutor-logo.svg' ); ?>" /></div>
                         <div><?php printf(__('Hello %s, welcome to Tutor LMS! Thank you for choosing us.', 'tutor'), $current_user->user_login); ?></div>
                     </div>
                     <div class="wizard-boarding-body">
                         <ul class="slider tutor-boarding">
                             <li>
 
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/scalable_lms_solution.jpg'; ?>" alt="<?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor') ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo esc_url( tutor()->url . 'assets/images/scalable_lms_solution.jpg' ); ?>" alt="<?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor') ?>"/></div>
                                 <div class="slide-title"><?php _e('A Powerful, Smart, and Scalable LMS Solution', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('From individual instructors to vast eLearning platforms, Tutor LMS grows with you to create your ideal vision of an LMS website.', 'tutor'); ?></div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/extensive_course_builder.jpg'; ?>" alt="<?php _e('Extensive Course Builder', 'tutor') ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo esc_url( tutor()->url . 'assets/images/extensive_course_builder.jpg' ); ?>" alt="<?php _e('Extensive Course Builder', 'tutor') ?>"/></div>
                                 <div class="slide-title"><?php _e('Extensive Course Builder', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('Tutor LMS comes with a state-of-the-art frontend course builder. Construct rich and resourceful courses with ease.', 'tutor'); ?></div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/advanced_quiz_creator.jpg'; ?>" alt="<?php _e('Advanced Quiz Creator', 'tutor'); ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo esc_url( tutor()->url . 'assets/images/advanced_quiz_creator.jpg' ); ?>" alt="<?php _e('Advanced Quiz Creator', 'tutor'); ?>"/></div>
                                 <div class="slide-title"><?php _e('Advanced Quiz Creator', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('Build interactive quizzes with the vast selection of question types and verify the learning of your students.', 'tutor'); ?></div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/freedom_with_ecommerce.jpg'; ?>" alt="<?php _e('Freedom With eCommerce', 'tutor'); ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo esc_url( tutor()->url . 'assets/images/freedom_with_ecommerce.jpg' ); ?>" alt="<?php _e('Freedom With eCommerce', 'tutor'); ?>"/></div>
                                 <div class="slide-title"><?php _e('Freedom With eCommerce', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('Select an eCommerce plugin and sell courses any way you like and use any payment gateway you want!', 'tutor'); ?></div>
                             </li>
                             <li>
-                                <div class="slide-thumb"><img src="<?php echo tutor()->url . 'assets/images/reports_and_analytics.jpg'; ?>" alt="<?php _e('Reports and Analytics', 'tutor'); ?>"/></div>
+                                <div class="slide-thumb"><img src="<?php echo esc_url( tutor()->url . 'assets/images/reports_and_analytics.jpg' ); ?>" alt="<?php _e('Reports and Analytics', 'tutor'); ?>"/></div>
                                 <div class="slide-title"><?php _e('Reports and Analytics', 'tutor'); ?></div>
                                 <div class="slide-subtitle"><?php _e('Track what type of courses sell the most! Gain insights on user purchases, manage reviews and track quiz attempts.', 'tutor'); ?></div>
                             </li>
@@ -692,7 +692,7 @@ if ( ! defined( 'ABSPATH' ) )
             <div class="tutor-wizard-container">
                 <div class="tutor-wrapper-type tutor-setup-wizard-type">
                     <div class="wizard-type-header">
-                        <div class="logo"><img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" /></div>
+                        <div class="logo"><img src="<?php echo esc_url( tutor()->url.'assets/images/tutor-logo.svg' ); ?>" /></div>
                         <div class="title"><?php _e('Let’s get the platform up and running', 'tutor'); ?></div>
                         <div class="subtitle"><?php _e('Pick a category for your LMS platform. You can always update this later.', 'tutor'); ?></div>
                     </div>
@@ -701,7 +701,7 @@ if ( ! defined( 'ABSPATH' ) )
                             <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace_setup" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-0">
-                                <img src="<?php echo tutor()->url.'assets/images/single-marketplace.png'; ?>" />
+                                <img src="<?php echo esc_url( tutor()->url.'assets/images/single-marketplace.png' ); ?>" />
                                 <div class="title"><?php _e( 'Individual', 'tutor' ); ?></div>
                                 <div class="subtitle"><?php _e( 'I want to start my solo journey as an educator and spread my knowledge.', 'tutor' ); ?></div>
                             </label>
@@ -711,7 +711,7 @@ if ( ! defined( 'ABSPATH' ) )
                             <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace_setup" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-1">
-                                <img src="<?php echo tutor()->url.'assets/images/multiple-marketplace.png'; ?>" />
+                                <img src="<?php echo esc_url( tutor()->url.'assets/images/multiple-marketplace.png' ); ?>" />
                                 <div class="title"><?php _e( 'Marketplace', 'tutor' ); ?></div>
                                 <div class="subtitle"><?php _e( 'I want to create an eLearning platform to let anyone earn by teaching online.', 'tutor' ); ?></div>
                             </label>

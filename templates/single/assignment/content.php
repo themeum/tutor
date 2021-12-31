@@ -283,7 +283,7 @@ if ( $assignment_comment != false ) {
 						foreach ( $attached_files as $attached_file ) {
 							?>
 							<div class="uploaded-files">
-								<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank"><?php echo tutor_utils()->array_get( 'name', $attached_file ); ?>
+								<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank"><?php echo esc_attr( tutor_utils()->array_get( 'name', $attached_file ) ); ?>
 								</a>
 							</div>
 							<?php

@@ -85,7 +85,7 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) {
 				<div class="tutor-review-individual-item tutor-review-<?php echo esc_url( $review->comment_ID ); ?>">
 					<div class="review-left">
 						<div class="review-avatar">
-							<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutor_utils()->get_tutor_avatar( $review->user_id ); ?> </a>
+							<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo _esc_html(tutor_utils()->get_tutor_avatar( $review->user_id )); ?> </a>
 						</div>
 						<div class="tutor-review-user-info">
 							<div class="review-time-name">

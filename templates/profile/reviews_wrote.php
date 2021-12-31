@@ -39,7 +39,7 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) { ?>
 				<div class="review-left">
 					<div class="review-avatar">
 						<a href="<?php echo esc_url( $profile_url ); ?>">
-							<?php echo tutor_utils()->get_tutor_avatar( $review->user_id ); ?>
+							<?php echo _esc_html(tutor_utils()->get_tutor_avatar( $review->user_id )); ?>
 						</a>
 					</div>
 

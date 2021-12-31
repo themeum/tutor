@@ -17,7 +17,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 			<div class="tutor-question-wrap">
 				<div class="question-top-meta">
 					<div class="tutor-question-avater">
-						<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutils()->get_tutor_avatar( $question->user_id ); ?></a>
+						<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo _esc_html(tutils()->get_tutor_avatar( $question->user_id )); ?></a>
 					</div>
 					<p class="review-meta">
 						<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_attr( $question->display_name ); ?></a>
@@ -44,7 +44,7 @@ $profile_url = tutils()->profile_url( $question->user_id );
 							<div class="tutor-question-wrap">
 								<div class="question-top-meta">
 									<div class="tutor-question-avater">
-										<a href="<?php echo esc_url( $answer_profile ); ?>"> <?php echo tutils()->get_tutor_avatar( $answer->user_id ); ?></a>
+										<a href="<?php echo esc_url( $answer_profile ); ?>"> <?php echo _esc_html(tutils()->get_tutor_avatar( $answer->user_id )); ?></a>
 									</div>
 									<p class="review-meta">
 										<a href="<?php echo esc_url( $answer_profile ); ?>"><?php echo esc_attr( $answer->display_name ); ?></a>

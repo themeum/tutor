@@ -73,11 +73,11 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 	<div <?php tutor_post_class( 'tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-' . $profile_layout ); ?>>
 		<div class="tutor-container photo-area">
 			<div class="cover-area">
-				<div style="background-image:url(<?php echo tutor_utils()->get_cover_photo_url( $user_id ); ?>)"></div>
+				<div style="background-image:url(<?php echo esc_url( tutor_utils()->get_cover_photo_url( $user_id ) ); ?>)"></div>
 				<div></div>
 			</div>
 			<div class="pp-area">
-				<div class="profile-pic" style="background-image:url(<?php echo get_avatar_url( $user_id, array( 'size' => 150 ) ); ?>)"></div>
+				<div class="profile-pic" style="background-image:url(<?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)"></div>
 
 				<div class="profile-name">
 					<div class="profile-rating-media content-for-mobile">

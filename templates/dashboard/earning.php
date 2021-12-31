@@ -60,31 +60,31 @@ if ( ! $earning_sum ) {
 		<div class="tutor-dashboard-info-card">
 			<p>
 				<span> <?php _e( 'My Balance', 'tutor' ); ?> </span>
-				<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->balance ); ?></span>
+				<span class="tutor-dashboard-info-val"><?php echo _esc_html( tutor_utils()->tutor_price( $earning_sum->balance ) ); ?></span>
 			</p>
 		</div>
 		<div class="tutor-dashboard-info-card" title="<?php _e( 'All Time', 'tutor' ); ?>">
 			<p>
 				<span> <?php _e( 'My Earnings', 'tutor' ); ?> </span>
-				<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></span>
+				<span class="tutor-dashboard-info-val"><?php echo _esc_html( tutor_utils()->tutor_price( $earning_sum->instructor_amount ) ); ?></span>
 			</p>
 		</div>
 		<div class="tutor-dashboard-info-card"  title="<?php _e( 'Based on course price', 'tutor' ); ?>">
 			<p>
 				<span> <?php _e( 'All time sales', 'tutor' ); ?> </span>
-				<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->course_price_total ); ?></span>
+				<span class="tutor-dashboard-info-val"><?php echo _esc_html( tutor_utils()->tutor_price( $earning_sum->course_price_total ) ); ?></span>
 			</p>
 		</div>
 		<div class="tutor-dashboard-info-card" title="<?php _e( 'All of withdraw type excluding rejected.', 'tutor' ); ?>">
 			<p>
 				<span> <?php _e( 'All time withdrawals', 'tutor' ); ?> </span>
-				<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->withdraws_amount ); ?></span>
+				<span class="tutor-dashboard-info-val"><?php echo _esc_html( tutor_utils()->tutor_price( $earning_sum->withdraws_amount ) ); ?></span>
 			</p>
 		</div>
 		<div class="tutor-dashboard-info-card">
 			<p>
 				<span> <?php _e( 'Deducted Commissions', 'tutor' ); ?> </span>
-				<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->admin_amount ); ?></span>
+				<span class="tutor-dashboard-info-val"><?php echo _esc_html( tutor_utils()->tutor_price( $earning_sum->admin_amount ) ); ?></span>
 			</p>
 		</div>
 
@@ -92,7 +92,7 @@ if ( ! $earning_sum ) {
 			<div class="tutor-dashboard-info-card">
 				<p>
 					<span> <?php _e( 'Deducted Fees.', 'tutor' ); ?> </span>
-					<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->deduct_fees_amount ); ?></span>
+					<span class="tutor-dashboard-info-val"><?php echo _esc_html( tutor_utils()->tutor_price( $earning_sum->deduct_fees_amount ) ); ?></span>
 				</p>
 			</div>
 		<?php } ?>

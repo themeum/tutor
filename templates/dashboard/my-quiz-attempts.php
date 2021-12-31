@@ -50,7 +50,7 @@ if ( $attempted_count ) {
 						</div>
 						<div class="course-meta">
 							<span><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?></span>
-							<span><?php _e( 'Question: ', 'tutor' ); ?><strong><?php echo count( $answers ); ?></strong></span>
+							<span><?php _e( 'Question: ', 'tutor' ); ?><strong><?php echo esc_attr( count( $answers ) ); ?></strong></span>
 							<span><?php _e( 'Total Marks: ', 'tutor' ); ?><strong><?php echo esc_attr( $attempt->total_marks ); ?></strong></span>
 						</div>
 					</td>

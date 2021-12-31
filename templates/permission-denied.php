@@ -37,13 +37,13 @@ get_header();
 
 		<div>
 			<h2>
-				<?php echo isset( $headline ) ? $headline : __( 'Permission Denied', 'tutor' ); ?>
+				<?php echo _esc_html( isset( $headline ) ? $headline : __( 'Permission Denied', 'tutor' ) ); ?>
 			</h2>
 			<p>
-				<?php echo isset( $message ) ? $message : __( 'You don\'t have enough privilege to access this page', 'tutor' ); ?>
+				<?php echo _esc_html( isset( $message ) ? $message : __( 'You don\'t have enough privilege to access this page', 'tutor' ) ); ?>
 			</p>
 			<p>
-				<?php echo isset( $description ) ? $description : __( 'Please make sure you are logged in to correct account if the content needs authorization.', 'tutor' ); ?>
+				<?php echo _esc_html( isset( $description ) ? $description : __( 'Please make sure you are logged in to correct account if the content needs authorization.', 'tutor' ) ); ?>
 			</p>
 		</div>
 

@@ -184,7 +184,7 @@ class User {
 		<div class="wrap tutor-user-registration-notice-wrapper">
 			<div class="tutor-user-registration-notice">
 				<div>
-					<img src="<?php echo tutor()->url; ?>assets/images/icon-info-round.svg"/>
+					<img src="<?php echo esc_url( tutor()->url . 'assets/images/icon-info-round.svg' ); ?>"/>
 				</div>
 				<div>
 					<?php _e( 'As membership is turned off, students and instructors will not be able to sign up. <strong>Press Enable</strong> or go to <strong>Settings > General > Membership</strong> and enable "Anyone can register".' ); ?>
