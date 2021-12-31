@@ -73,6 +73,21 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 		&.tutor-btn-wordpress-outline:hover {
 			background: $brand-wordpress;
 		}
+
+		&.tutor-btn-outline-wp {
+			&:hover {
+				background: transparent;
+				border-color: $brand-wordpress;
+				color: $brand-wordpress;
+			}
+		}
+		&.tutor-btn-outline-fd {
+			&:hover {
+				background: transparent;
+				border-color: $color-brand;
+				color: $color-brand;
+			}
+		}
 	}
 
 	&.tutor-btn-ghost {

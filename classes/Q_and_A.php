@@ -35,7 +35,7 @@ class Q_and_A {
 		$qna_text = wp_kses_post( $_POST['answer'] );
 		if ( ! $qna_text ) {
 			// Content validation
-			wp_send_json_error( array( 'message' => __( 'Empty Cotent Not Allowed!', 'tutor' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Empty Content Not Allowed!', 'tutor' ) ) );
 		}
 
 		// Prepare course, question info
@@ -67,12 +67,12 @@ class Q_and_A {
 
 		// Insert new question/answer.
 		$wpdb->insert( $wpdb->comments, $data );
-		! $question_id ? $question_id = (int) $wpdb->insert_id : 0;
+		!$question_id ? $question_id = (int) $wpdb->insert_id : 0;
 
 		// Mark the question unseen if action made from student
-		// if($user_id!=) {.
-			update_comment_meta( $question_id, 'tutor_qna_read', 0 );
-		// }
+		$asker_id = $this->get_asker_id($question_id);
+		$self = $asker_id==$user_id;
+		update_comment_meta( $question_id, 'tutor_qna_read'.($self ? '' : '_'.$asker_id), 0 );
 
 		// Provide the html now.
 		ob_start();
@@ -142,6 +142,18 @@ class Q_and_A {
 		wp_send_json_success();
 	}
 
+	private function get_asker_id($question_id) {
+		global $wpdb;
+		$author_id = $wpdb->get_var($wpdb->prepare(
+			"SELECT user_id 
+			FROM {$wpdb->comments} 
+			WHERE comment_ID=%d", 
+			$question_id
+		));
+
+		return $author_id;
+	}
+
 	public function tutor_qna_single_action() {
 		tutor_utils()->checking_nonce();
 
@@ -151,15 +163,23 @@ class Q_and_A {
 			wp_send_json_error( array( 'message' => __( 'Permission Denied!', 'tutor' ) ) );
 		}
 
+		// Get who asked the question
+		$asker_id 	   = $this->get_asker_id($question_id);
+		$self 		   = $asker_id==get_current_user_id();
+		
 		// Get the existing value from meta
 		$action        = sanitize_text_field( $_POST['qna_action'] );
-		$meta_key      = 'tutor_qna_' . $action;
+		
+		// If current user asker, then make it unread for self
+		// If it is instructor, then make unread for instructor side
+		$meta_key      = 'tutor_qna_' . $action . ($self ? '_'.get_current_user_id() : ''); 
 		$current_value = (int) get_comment_meta( $question_id, $meta_key, true );
 		$new_value     = $current_value == 1 ? 0 : 1;
 
 		// Update the reverted value
 		update_comment_meta( $question_id, $meta_key, $new_value );
 
+		// Transfer the new status
 		wp_send_json_success( array( 'new_value' => $new_value ) );
 	}
 

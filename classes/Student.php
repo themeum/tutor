@@ -84,7 +84,7 @@ class Student {
 			$validation_errors['email'] = __( 'Valid E-Mail is required', 'tutor' );
 		}
 		if ( tutor_utils()->input_old( 'password' ) !== tutor_utils()->input_old( 'password_confirmation' ) ) {
-			$validation_errors['password_confirmation'] = __( 'Confirm password does not matched with Password field', 'tutor' );
+			$validation_errors['password_confirmation'] = __( 'Your passwords should match each other. Please recheck.', 'tutor' );
 		}
 
 		if ( count( $validation_errors ) ) {

@@ -717,16 +717,17 @@ Instructor
 .tutor-form-group label {
 	display: block;
 	margin-bottom: 10px;
+	margin-top: -2px;
 	//font-size: var(--tutor-text-size);
 }
 
 .tutor-option-field textarea,
-.tutor-option-field select,
+// .tutor-option-field select,
 .tutor-option-field input[type='text'],
 .tutor-option-field input[type='number'],
 .tutor-option-field input[type='pas.tutor-dashboard-content-innersword'],
 .tutor-form-group textarea,
-.tutor-form-group select,
+// .tutor-form-group select,
 .tutor-form-group input[type='text'],
 .tutor-form-group input[type='number'],
 .tutor-form-group input[type='password'] {
@@ -782,7 +783,7 @@ Instructor
 .tutor-form-group textarea:focus,
 .tutor-form-group input:not([type='submit']):focus {
 	background: #ffffff;
-	border-color: var(--tutor-primary-color);
+	border-color: var(--tutor-primary-color) !important;
 }
 
 .tutor-option-field textarea::-webkit-input-placeholder,
@@ -821,11 +822,11 @@ Instructor
 	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
 }
 
-.tutor-option-field select,
-.tutor-form-group select {
-	padding: 2px 5px;
-	height: 50px;
-}
+// .tutor-option-field select,
+// .tutor-form-group select {
+// 	padding: 2px 5px;
+// 	height: 50px;
+// }
 
 .tutor-form-group.tutor-reg-form-btn-wrap {
 	text-align: right;

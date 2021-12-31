@@ -1,5 +1,12 @@
 .tutor-dashboard-cards-container {
 	width: calc(100% + 30px);
+	// @include breakpoint-min(desktop) {
+	// 	width: calc(100% + 30px);
+	// }
+	// @include breakpoint-max(desktop) {
+	// 	width: calc(100% + 60px);
+	// }
+
 	& > div {
 		p {
 			@include valueWithPrefix(display, flex);
@@ -28,12 +35,14 @@
 				}
 				&:nth-child(3) {
 					font-size: 15px;
+					line-height: 160%;
 					color: $black-60;
 				}
 				&:nth-child(2),
 				&:nth-child(4) {
 					font-weight: bold;
 					font-size: 30px;
+					line-height: 123%;
 					padding: 10px 0;
 					color: $black-main;
 				}
@@ -71,7 +80,10 @@
 				}
 			}
 			.tutor-dashboard-info-val {
-				margin-top: 10px;
+				@include breakpoint-min(mobile) {
+					margin-top: 10px;
+				}
+				margin-top: 0px;
 				margin-bottom: -6px;
 			}
 		}
@@ -94,6 +106,7 @@
 	// margin-right: 25px;
 	margin-bottom: 20px;
 	padding: 0px;
+	overflow: hidden;
 	.tutor-bs-row {
 		margin-left: 0px;
 	}
@@ -101,26 +114,43 @@
 		padding: 10px 0px 15px 30px;
 		position: relative;
 		// padding: 35px;
-		&::before {
-			content: '';
-			position: absolute;
-			right: 0;
-			top: 0;
-			width: 1px;
-			height: 100%;
-			border-left: 1px solid #cdcfd5;
-		}
-		&.tutor-profile-completion-content-admin {
+		@include breakpoint-min(desktop) {
 			&::before {
 				content: '';
 				position: absolute;
 				right: 0;
-				top: -2px;
+				top: 0;
 				width: 1px;
-				height: calc(100% + 4px);
+				height: 100%;
 				border-left: 1px solid #cdcfd5;
 			}
+			&.tutor-profile-completion-content-admin {
+				&::before {
+					content: '';
+					position: absolute;
+					right: 0;
+					top: -20px;
+					width: 1px;
+					height: calc(100% + 40px);
+					border-left: 1px solid #cdcfd5;
+				}
+			}
 		}
+
+		@include breakpoint-max(desktop) {
+			&.tutor-profile-completion-content-admin {
+				&::before {
+					content: '';
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					height: 1px;
+					width: calc(100% + 40px);
+					border-bottom: 1px solid #cdcfd5;
+				}
+			}
+		}
+
 		li {
 			list-style: none;
 			display: inline-block;
@@ -133,7 +163,7 @@
 		}
 		li:last-child {
 			width: 20%;
-			padding-left: 12px;
+			padding-left: 3px;
 		}
 		.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
 			padding: 0px 6px;
@@ -189,10 +219,10 @@
 		}
 		.profile-completion-content {
 			padding: 25px 15px;
-			border-bottom: 1px solid #cdcfd5;
-			border-right: 0px;
+			// border-bottom: 1px solid #cdcfd5;
+			// border-right: 0px;
 			li {
-				margin-right: 0px;
+				// margin-right: 0px;
 			}
 			li:last-child {
 				width: 15%;

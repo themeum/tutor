@@ -22,7 +22,7 @@ if(isset($_GET['view_quiz_attempt_id'])) {
 $previous_attempts = tutor_utils()->get_all_quiz_attempts_by_user();
 ?>
 
-<h3><?php _e('My Quiz Attempts', 'tutor'); ?></h3>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e('My Quiz Attempts', 'tutor'); ?></div>
 <?php
     tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.php', array(
         'attempt_list' => $previous_attempts,
