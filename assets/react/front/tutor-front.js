@@ -532,12 +532,11 @@ jQuery(document).ready(function ($) {
             success: function (data) {
                 var Msg;
                 if (data.success) {
-
                     if (data.data.available_balance !== 'undefined') {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
-
-                    $('.tutor-withdrawal-pop-up-success').show().next().hide();
+                    $('.tutor-earning-withdraw-form-wrap').hide();
+                    tutor_toast(__("Request Successful", "tutor"), __("Your request has been submitted. Please wait for the administrator’s response.", "tutor"), "success");
 
                 } else {
                     Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
