@@ -32,6 +32,7 @@
     $button_class = 'tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full tutor-pr-0 tutor-pl-0 ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
     
     if ( $lesson_url && ! $is_completed_course ) { 
+        ob_start();
         ?>
         <a href="<?php echo $lesson_url; ?>" class="<?php echo $button_class; ?>" data-course_id="<?php echo get_the_ID(); ?>">
             <?php
@@ -44,8 +45,9 @@
             ?>
         </a>
         <?php 
-    } else {
-        echo wp_kses_post($enroll_btn);
+        $enroll_btn = ob_get_clean();
     }
+    
+    echo apply_filters( 'tutor_course/loop/start/button', $enroll_btn, get_the_ID() );
 ?>
 </div>

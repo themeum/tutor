@@ -65,7 +65,8 @@
 			$completed_lessons   = tutor_utils()->get_completed_lesson_count_by_course();
 			$completed_percent   = tutor_utils()->get_course_completed_percent();
 			$is_completed_course = tutor_utils()->is_completed_course();
-			$retake_course       = is_single_course() && tutor_utils()->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
+			$completed_anyway 	 = $is_completed_course || $completed_percent>=100;	
+			$retake_course       = is_single_course() && tutor_utils()->get_option( 'course_retake_feature', false ) && $completed_anyway;
 			$course_id           = get_the_ID();
 			$course_progress     = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 			?>
@@ -127,18 +128,18 @@
 			if ( ! $is_completed_course ) {
 				ob_start();
 				?>
-					<form method="post">
+				<form method="post">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-						<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
-						<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
+					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
+					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
 
-						<button type="submit" class="tutor-mt-25 tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
+					<button type="submit" class="tutor-mt-25 tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
 						<?php esc_html_e( 'Complete Course', 'tutor' ); ?>
-						</button>
-					</form>
-					<?php
-					echo apply_filters( 'tutor_course/single/complete_form', ob_get_clean() );
+					</button>
+				</form>
+				<?php
+				echo apply_filters( 'tutor_course/single/complete_form', ob_get_clean() );
 			}
 
 			?>
