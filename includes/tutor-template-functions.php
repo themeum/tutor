@@ -44,7 +44,7 @@ if ( ! function_exists( 'tutor_get_template' ) ) {
 			}
 
 			if ( ! file_exists( $template_location ) ) {
-				echo _esc_html('<div class="tutor-notice-warning"> ' . __( sprintf( 'The file you are trying to load does not exist in your theme or Tutor LMS plugin location. If you are extending the Tutor LMS plugin, please create a php file here: %s ', '"<code>' . $file_in_theme . '</code>"' ), 'tutor' ) . ' </div>');
+				echo _esc_html('<div class="tutor-notice-warning"> ' . __( sprintf( 'The file you are trying to load does not exist in your theme or Tutor LMS plugin location. If you are extending the Tutor LMS plugin, please create a php file here: %s ', '<code>' . $file_in_theme . '</code>' ), 'tutor' ) . ' </div>');
 			}
 		}
 
