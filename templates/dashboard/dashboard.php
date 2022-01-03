@@ -246,7 +246,7 @@ $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_u
 						</div>
 						<div class="list-item-progress tutor-mt-30">
 							<div class="tutor-text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
-								<div class="progress-bar tutor-mr-14" style="--progress-value:<?php esc_attr( $course_progress['completed_percent']); ?>%"><span class="progress-value"></span></div>
+								<div class="progress-bar tutor-mr-14" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent']); ?>%"><span class="progress-value"></span></div>
 								<span class="progress-percentage tutor-text-regular-caption tutor-color-text-hints">
 									<span class="tutor-text-medium-caption tutor-color-text-primary ">
 										<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
