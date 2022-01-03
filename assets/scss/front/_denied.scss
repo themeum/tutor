@@ -60,5 +60,7 @@
         @include propertyWithPrefix(flex-direction, column);
         @include propertyWithPrefix(align-items, center);
         row-gap: 50px;
+        width: 90%;
+        margin: auto;
     }
 }
