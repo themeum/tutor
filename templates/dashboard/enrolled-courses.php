@@ -85,8 +85,8 @@
 				 */
 				do_action( 'tutor_course/archive/after_loop_course' );
 			}
-
-				wp_reset_postdata();
+			
+			wp_reset_postdata();
 			?>
 		</div>
 	<?php else : ?>
