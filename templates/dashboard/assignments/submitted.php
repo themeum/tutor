@@ -99,7 +99,7 @@ if ( tutor_utils()->count( $assignments_submitted ) ) {
 						<td>
 							<div class="student-column">
 								<div class="student-avatar">
-									<?php echo _esc_html(tutils()->get_tutor_avatar( $comment_author->ID )); ?>
+									<?php echo _esc_html( tutils()->get_tutor_avatar( $comment_author->ID ) ); ?>
 								</div>
 								<div class="student-details">
 									<h4><?php echo esc_attr( $comment_author->display_name ); ?></h4>
@@ -107,7 +107,7 @@ if ( tutor_utils()->count( $assignments_submitted ) ) {
 								</div>
 							</div>
 						</td>
-						<td><?php echo ! empty( $given_mark ) ? esc_attr( $given_mark . '/' . $max_mark ) : esc_attr( $max_mark ); ?></td>
+						<td><?php echo esc_attr( ! empty( $given_mark ) ? $given_mark . '/' . $max_mark : $max_mark ); ?></td>
 						<td><?php echo esc_attr( $status ); ?></td>
 						<td>
 							<a href="<?php echo esc_url( $review_url . '?view_assignment=' . $assignment->comment_ID ) . '&assignment=' . $assignment_id; ?>" class="tutor-btn bordered-btn tutor-announcement-details">

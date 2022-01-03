@@ -67,7 +67,7 @@ if ( ! $earning_sum ) {
 
 
 <div class="tutor-dashboard-item-group">
-	<h4><?php echo sprintf( __( 'Earning Data for the month of %s', 'tutor' ), date( 'F, Y', strtotime( $start_date ) ) ); ?></h4>
+	<h4><?php echo wp_sprintf( __( 'Earning Data for the month of %s', 'tutor' ), date( 'F, Y', strtotime( $start_date ) ) ); ?></h4>
 	<?php
 	tutor_load_template( 'dashboard.earning.chart-body', compact( 'chartData', 'statements' ) );
 	?>

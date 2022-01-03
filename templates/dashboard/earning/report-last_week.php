@@ -71,7 +71,7 @@ if ( ! $earning_sum ) {
 
 
 <div class="tutor-dashboard-item-group">
-	<h4><?php echo sprintf( __( 'Showing Result from %1$s to %2$s', 'tutor' ), $begin->format( 'd F, Y' ), $end->format( 'd F, Y' ) ); ?></h4>
+	<h4><?php echo wp_sprintf( __( 'Showing Result from %1$s to %2$s', 'tutor' ), $begin->format( 'd F, Y' ), $end->format( 'd F, Y' ) ); ?></h4>
 	<?php
 	tutor_load_template( 'dashboard.earning.chart-body', compact( 'chartData', 'statements' ) );
 	?>

@@ -33,7 +33,7 @@ $page_name    = $current_page ? $current_page : 'addons';
 				?>
 
 				<p class="tutor-addons-last-checked-time">
-					<?php echo sprintf( __( 'Last checked %1$s ago, It will check again after %2$s from now' ), human_time_diff( $last_checked_time ), human_time_diff( tutor_time(), $last_checked_time + 6 * HOUR_IN_SECONDS ) ); ?>
+					<?php echo wp_sprintf( __( 'Last checked %1$s ago, It will check again after %2$s from now' ), human_time_diff( $last_checked_time ), human_time_diff( tutor_time(), $last_checked_time + 6 * HOUR_IN_SECONDS ) ); ?>
 				</p>
 
 				<div id="the-list">

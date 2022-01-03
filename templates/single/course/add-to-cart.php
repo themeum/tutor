@@ -55,7 +55,7 @@ $auth_url                = $is_tutor_login_disabled ? wp_login_url( $_SERVER['RE
 			$first_lesson_url                       = tutor_utils()->get_course_first_lesson( get_the_ID(), tutor()->lesson_post_type );
 			! $first_lesson_url ? $first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID() ) : 0;
 			?>
-			<div class="<?php echo implode( ' ', $tutor_form_class ); ?> ">
+			<div class="<?php echo esc_attr( implode( ' ', $tutor_form_class ) ); ?> ">
 				<div class=" tutor-course-enroll-wrap">
 					<a href="<?php echo esc_url( $first_lesson_url ); ?>" style="display:block">
 						<button class="tutor-btn-enroll tutor-btn tutor-course-purchase-btn">
@@ -67,7 +67,7 @@ $auth_url                = $is_tutor_login_disabled ? wp_login_url( $_SERVER['RE
 			<?php
 		} else {
 			?>
-			<form class="<?php echo implode( ' ', $tutor_form_class ); ?>" method="post">
+			<form class="<?php echo esc_attr( implode( ' ', $tutor_form_class ) ); ?>" method="post">
 				<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 				<input type="hidden" name="tutor_course_id" value="<?php echo get_the_ID(); ?>">
 				<input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">

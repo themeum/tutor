@@ -52,14 +52,14 @@ $question = tutor_utils()->get_qa_question( $question_id );
 					<p class="review-meta">
 						<?php echo esc_attr( $question->display_name ); ?> -
 						<span class="text-muted">
-							<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ); ?>
+							<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ); ?>
 						</span>
 					</p>
 				</div>
 
 				<div class="tutor_question_area">
 					<p>
-						<strong><?php echo stripslashes( $question->question_title ); ?> </strong>
+						<strong><?php echo stripslashes( esc_attr( $question->question_title ) ); ?> </strong>
 
 						<span class="text-muted">
 							<?php _e( 'on', 'tutor' ); ?> <?php echo esc_attr( $question->post_title ); ?>
@@ -80,10 +80,10 @@ $question = tutor_utils()->get_qa_question( $question_id );
 			if ( is_array( $answers ) && count( $answers ) ) {
 				foreach ( $answers as $answer ) {
 					?>
-					<div class="tutor_original_question <?php echo ( $question->user_id == $answer->user_id ) ? 'tutor-bg-white' : 'tutor-bg-light'; ?>">
+					<div class="tutor_original_question <?php echo esc_attr( ( $question->user_id == $answer->user_id ) ? 'tutor-bg-white' : 'tutor-bg-light' ); ?>">
 						<div class="question-left">
 							<?php
-							echo tutor_utils()->get_tutor_avatar( $answer->user_id );
+							echo _esc_html( tutor_utils()->get_tutor_avatar( $answer->user_id ) );
 							?>
 						</div>
 
@@ -92,7 +92,7 @@ $question = tutor_utils()->get_qa_question( $question_id );
 								<p class="review-meta">
 									<?php echo esc_attr( $answer->display_name ); ?> -
 									<span class="text-muted">
-										<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
+										<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
 									</span>
 								</p>
 							</div>

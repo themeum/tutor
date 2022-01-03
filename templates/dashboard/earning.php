@@ -118,12 +118,12 @@ if ( ! $tutor_primary_color ) {
 	var tutorChart = new Chart(ctx, {
 		type: 'line',
 		data: {
-			labels: <?php echo json_encode( array_keys( $chartData ) ); ?>,
+			labels: <?php echo wp_json_encode( array_keys( $chartData ) ); ?>,
 			datasets: [{
 				label: '<?php _e( 'Earning', 'tutor' ); ?>',
 				backgroundColor: '<?php echo esc_attr( $tutor_primary_color ); ?>',
 				borderColor: '<?php echo esc_attr( $tutor_primary_color ); ?>',
-				data: <?php echo json_encode( array_values( $chartData ) ); ?>,
+				data: <?php echo wp_json_encode( array_values( $chartData ) ); ?>,
 				borderWidth: 2,
 				fill: false,
 				lineTension: 0,
