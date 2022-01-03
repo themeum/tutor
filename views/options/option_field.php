@@ -10,7 +10,7 @@
 	?>
 	<div class="tutor-option-field">
 		<?php
-		echo _esc_html( $this->field_type( $field ) );
+		$this->field_type( $field ) ;
 
 		if ( isset( $field['desc'] ) ) {
 			echo _esc_html( '<p class="desc">' . $field['desc'] . '</p>' );

@@ -64,7 +64,7 @@
 						if ( ! empty( $field_group['fields'] ) && tutor_utils()->count( $field_group['fields'] ) ) {
 							foreach ( $field_group['fields'] as $field_key => $field ) {
 									$field['field_key'] = $field_key;
-									echo _esc_html( $this->generate_field( $field ) );
+									$this->generate_field( $field );
 							}
 						}
 						do_action( 'tutor_options_' . esc_attr( $key ) . '_' . esc_attr( $fgKey ) . '_after' );
