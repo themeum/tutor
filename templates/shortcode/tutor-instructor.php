@@ -6,7 +6,7 @@
 		$instructor_rating = tutor_utils()->get_instructor_ratings( $instructor->ID );
 		?>
 			<div class="tutor-course-col-<?php echo esc_attr( $column_count ); ?>">
-				<a href="<?php echo tutor_utils()->profile_url( $instructor->ID ); ?>" class="tutor-course tutor-course-loop tutor-instructor-list tutor-instructor-list-<?php echo esc_attr( $layout ); ?> tutor-instructor-list-<?php echo esc_attr( $instructor->ID ); ?>">
+				<a href="<?php echo esc_url( tutor_utils()->profile_url( $instructor->ID ) ); ?>" class="tutor-course tutor-course-loop tutor-instructor-list tutor-instructor-list-<?php echo esc_attr( $layout ); ?> tutor-instructor-list-<?php echo esc_attr( $instructor->ID ); ?>">
 					<div class="tutor-instructor-cover-photo" style="background-image:url(<?php echo esc_url( tutor_utils()->get_cover_photo_url( $instructor->ID ) ); ?>)"></div>
 					<div class="tutor-instructor-profile-photo" style="background-image:url(<?php echo get_avatar_url( $instructor->ID, array( 'size' => 500 ) ); ?>)"></div>
 					<div class="tutor-instructor-rating">

@@ -25,7 +25,7 @@
 	<?php do_action( 'tutor_before_student_reg_form' ); ?>
 
 	<form method="post" enctype="multipart/form-data" id="tutor-registration-from">
-		<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo isset( $_GET['id'] ) ? esc_attr( $_GET['id'] ) : ''; ?>">
+		<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo esc_attr( isset( $_GET['id'] ) ? $_GET['id'] : '' ); ?>">
 		<?php do_action( 'tutor_student_reg_form_start' ); ?>
 
 		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>

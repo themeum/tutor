@@ -135,7 +135,7 @@ if ( $cover_photo_id ) {
 					<label>
 						<?php _e( 'Bio', 'tutor' ); ?>
 					</label>
-					<textarea name="tutor_profile_bio"><?php echo strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ); ?></textarea>
+					<textarea name="tutor_profile_bio"><?php echo esc_textarea( strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ) ); ?></textarea>
 				</div>
 			</div>
 		</div>

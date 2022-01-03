@@ -72,7 +72,7 @@
 								<div class="required-plugin-cards">
 									<p>
 										<strong><?php _e( 'Required Plugin(s)', 'tutor' ); ?></strong><br/>
-										<?php echo implode( ', ', $plugins_required ); ?>
+										<?php echo esc_attr( implode( ', ', $plugins_required ) ); ?>
 									</p>
 								</div>
 								<?php

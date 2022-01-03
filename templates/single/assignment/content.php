@@ -315,7 +315,8 @@ if ( $assignment_comment != false ) {
 					<?php
 					if ( $time_duration['value'] != 0 ) {
 						if ( $now > $remaining_time ) {
-							echo 'disabled'; }
+							echo esc_attr( 'disabled' );
+						}
 					}
 					?>
 					>

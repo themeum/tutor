@@ -72,7 +72,7 @@ if ( ! $enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes' ) {
 							</div>
 							<p class="review-meta">
 								<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_attr( $question->display_name ); ?></a>
-								<span class="tutor-text-mute"><?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ); ?></span>
+								<span class="tutor-text-mute"><?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ); ?></span>
 							</p>
 						</div>
 
@@ -101,7 +101,7 @@ if ( ! $enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes' ) {
 												<p class="review-meta">
 													<a href="<?php echo esc_url( $answer_profile ); ?>"><?php echo esc_attr( $answer->display_name ); ?></a>
 													<span class="tutor-text-mute">
-													<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ); ?>
+													<?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ); ?>
 													</span>
 												</p>
 											</div>

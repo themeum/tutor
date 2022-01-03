@@ -22,7 +22,7 @@
 
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field tutor-lesson-modal-title-wrap">
-				<input type="text" name="lesson_title" value="<?php echo stripslashes( $post->post_title ); ?>" placeholder="<?php _e( 'Lesson title', 'tutor' ); ?>">
+				<input type="text" name="lesson_title" value="<?php echo stripslashes( esc_attr( $post->post_title ) ); ?>" placeholder="<?php _e( 'Lesson title', 'tutor' ); ?>">
 			</div>
 		</div>
 

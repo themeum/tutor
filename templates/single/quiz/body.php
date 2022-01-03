@@ -261,7 +261,7 @@ $quiz_answers      = array();
 									 */
 									if ( $question_type === 'matching' || $question_type === 'image_matching' ) {
 										?>
-										<div class="quiz-answers-type-matching-wrap <?php echo 'answer-type-' . $question_type; ?> ">
+										<div class="quiz-answers-type-matching-wrap <?php echo esc_attr( 'answer-type-' . $question_type ); ?> ">
 											<div class="quiz-draggable-rand-answers">
 												<?php
 												$rand_answers = tutor_utils()->get_answers_by_quiz_question( $question->question_id, true );

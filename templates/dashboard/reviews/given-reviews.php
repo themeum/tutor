@@ -24,8 +24,8 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 		?>
 		<div class="tutor-dashboard-inline-links">
 			<ul>
-				<li><a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ); ?>"> <?php _e( 'Received', 'tutor' ); ?> (<?php echo esc_attr( $received_count ); ?>)</a> </li>
-				<li class="active"> <a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ); ?>"> <?php _e( 'Given', 'tutor' ); ?> (<?php echo esc_attr( $review_count ); ?>)</a> </li>
+				<li><a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ) ); ?>"> <?php _e( 'Received', 'tutor' ); ?> (<?php echo esc_attr( $received_count ); ?>)</a> </li>
+				<li class="active"> <a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ) ); ?>"> <?php _e( 'Given', 'tutor' ); ?> (<?php echo esc_attr( $review_count ); ?>)</a> </li>
 			</ul>
 		</div>
 	<?php } ?>
@@ -65,7 +65,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					<div class="individual-dashboard-review-body">
 						<div class="individual-star-rating-wrap">
 							<?php tutor_utils()->star_rating_generator( $review->rating ); ?>
-							<p class="review-meta"><?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?></p>
+							<p class="review-meta"><?php echo wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?></p>
 						</div>
 
 						<?php echo wp_kses_post( wpautop( stripslashes( $review->comment_content ) ) ); ?>

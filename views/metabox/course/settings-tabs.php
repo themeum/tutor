@@ -36,7 +36,7 @@ $current_tab = tutils()->array_get( 'settings_tab', $_GET );
 
 					$icon = '';
 					if ( $icon_class ) {
-						$icon = "<i class='" . esc_attr( $icon_class ) . "'></i>";
+						$icon = '<i class="' . esc_attr( $icon_class ) . '"></i>';
 					}
 
 					echo _esc_html( '<li class="' . esc_attr( $active ) . '"><a href="' . esc_url( $url ) . '" data-target="#settings-tab-' . esc_attr( $key ) . '">' . $icon . ' ' . _esc_html( $label ) . '</a></li>' );

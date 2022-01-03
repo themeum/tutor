@@ -17,7 +17,7 @@
 				?>
 				<div id="added-instructor-id-<?php echo esc_attr( $instructor->ID ); ?>" class="added-instructor-item added-instructor-item-<?php echo esc_attr( $instructor->ID ); ?>" data-instructor-id="<?php echo esc_attr( $instructor->ID ); ?>">
 					<span class="instructor-icon">
-						<?php echo _esc_html(get_avatar( $instructor->ID, 30 )); ?>
+						<?php echo get_avatar( $instructor->ID, 30 ); ?>
 					</span>
 					<span class="instructor-name"> <?php echo esc_attr( $instructor->display_name ) . ' ' . _esc_html( $authorTag ); ?> </span>
 					<span class="instructor-control">

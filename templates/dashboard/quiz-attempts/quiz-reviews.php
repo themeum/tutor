@@ -243,7 +243,7 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 					<tr>
 						<td><?php echo esc_attr( $answer_i ); ?></td>
 						<td><?php echo _esc_html( $question_type['icon'] ); ?></td>
-						<td><?php echo stripslashes( $answer->question_title ); ?></td>
+						<td><?php echo stripslashes( esc_attr( $answer->question_title ) ); ?></td>
 						<td>
 							<?php
 							if ( $answer->question_type === 'true_false' || $answer->question_type === 'single_choice' ) {
@@ -317,7 +317,7 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 									?>
 									<div class="image-matching-item">
 										<p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id ); ?>" /> </p>
-										<p class="dragged-caption"><?php echo stripslashes( $provided_answer_order->answer_title ); ?></p>
+										<p class="dragged-caption"><?php echo stripslashes( esc_attr( $provided_answer_order->answer_title ) ); ?></p>
 									</div>
 									<?php
 								}

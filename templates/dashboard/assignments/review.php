@@ -100,7 +100,7 @@ if ( $submitted_assignment ) {
 				</div>
 				<div class="tutor-option-field input-mark">
 					<input type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo esc_attr( $given_mark ? $given_mark : 0 ); ?>">
-					<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), '<code>' . $max_mark . '</code>' ); ?></p>
+					<p class="desc"><?php echo wp_sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), '<code>' . $max_mark . '</code>' ); ?></p>
 				</div>
 			</div>
 			<div class="tutor-assignment-evaluate-row">

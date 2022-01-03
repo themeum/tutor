@@ -145,7 +145,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 								<div class="inline-image-text">
 									<img src="<?php echo esc_url( $image_base ); ?>info-icon-question.svg" />
 									<span>
-										<?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?>
+										<?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . _esc_html( strip_tags( $formatted_min_withdraw_amount ) ); ?>
 									</span>
 								</div>
 							</div>
@@ -210,12 +210,12 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 								}
 								?>
 								<div class="inline-image-text is-inline-block">
-									<img src="<?php echo isset( $method_icons[ $method_key ] ) ? esc_url( $method_icons[ $method_key ] ) : ''; ?>" />
+									<img src="<?php echo esc_url( isset( $method_icons[ $method_key ] ) ? $method_icons[ $method_key ] : '' ); ?>" />
 									&nbsp;
 									<span>
 										<?php
-										echo _esc_html('<strong class="withdraw-method-name">', tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ), '</strong>');
-										echo _esc_html('<small>', $method_title, '</small>');
+										echo _esc_html( '<strong class="withdraw-method-name">', tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ), '</strong>' );
+										echo _esc_html( '<small>', $method_title, '</small>' );
 										?>
 									</span>
 								</div>

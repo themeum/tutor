@@ -13,7 +13,7 @@
 			?>
 		</div>
 		<div class="tutor-form-group">
-			<textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($rating->review); ?></textarea>
+			<textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes(esc_textarea( $rating->review )); ?></textarea>
 		</div>
 		<div class="tutor-form-group">
 			<button type="submit" class="tutor-button tutor-button-primary"><?php _e('Update Review', 'tutor'); ?></button>

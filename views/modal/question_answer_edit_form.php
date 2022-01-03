@@ -68,7 +68,7 @@ $answer_two_gap_match = ! empty( $old_answer->answer_two_gap_match ) ? stripslas
 				</div>
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text_image" <?php echo checked( 'text_image', $answer_view_format ); ?> > <?php _e( 'Text &amp; Image both', 'tutor' ); ?>
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text_image" <?php echo _esc_html( checked( 'text_image', $answer_view_format ) ); ?> > <?php _e( 'Text &amp; Image both', 'tutor' ); ?>
 					</label>
 				</div>
 			</div>
@@ -153,13 +153,13 @@ $answer_two_gap_match = ! empty( $old_answer->answer_two_gap_match ) ? stripslas
 				</div>
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="image" <?php echo checked( 'image', $answer_view_format ); ?> >
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="image" <?php echo _esc_html( checked( 'image', $answer_view_format ) ); ?> >
 						<?php _e( 'Only Image', 'tutor' ); ?>
 					</label>
 				</div>
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text_image" <?php echo checked( 'text_image', $answer_view_format ); ?> >
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text_image" <?php echo _esc_html( checked( 'text_image', $answer_view_format ) ); ?> >
 						<?php _e( 'Text &amp; Image both', 'tutor' ); ?>
 					</label>
 				</div>

@@ -233,7 +233,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 
 											<div class="tutor-col-7">
 												<div class="builder-course-thumbnail-upload-wrap">
-													<div><?php echo sprintf( __( 'Important Guideline: %1$s 700x430 pixels %2$s %3$s File Support: %1$s jpg, .jpeg,. gif, or .png %2$s no text on the image.', 'tutor' ), '<strong>', '</strong>', '<br>' ); ?></div>
+													<div><?php echo wp_sprintf( __( 'Important Guideline: %1$s 700x430 pixels %2$s %3$s File Support: %1$s jpg, .jpeg,. gif, or .png %2$s no text on the image.', 'tutor' ), '<strong>', '</strong>', '<br>' ); ?></div>
 													<input type="hidden" id="tutor_course_thumbnail_id" name="tutor_course_thumbnail_id" value="<?php echo esc_attr( $post_thumbnail_id ); ?>">
 													<a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button"><?php _e( 'Upload Image', 'tutor' ); ?></a>
 												</div>

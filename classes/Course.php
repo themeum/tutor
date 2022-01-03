@@ -800,7 +800,7 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		wp_send_json_success( array( 'output' => htmlentities( $output ) ) );
+		wp_send_json_success( array( 'output' => _esc_html($output) ) );
 	}
 
 	public function detach_instructor_from_course() {
