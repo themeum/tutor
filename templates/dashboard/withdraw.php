@@ -16,7 +16,6 @@ $user_id               = get_current_user_id();
 $balance_formatted     = tutor_utils()->tutor_price( $earning_sum->balance );
 $is_balance_sufficient = true; // $earning_sum->balance >= $min_withdraw;
 $all_histories         = tutor_utils()->get_withdrawals_history( $user_id, array( 'status' => array( 'pending', 'approved', 'rejected' ) ) );
-
 $image_base   = tutor()->url . '/assets/images/';
 $method_icons = array(
 	'bank_transfer_withdraw' => $image_base . 'icon-bank.svg',
@@ -171,7 +170,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	?>
 
 	<?php
-	if ( false ) {
+	if ( is_array( $all_histories->results ) && count ( $all_histories->results ) ) {
 		?>
 		<div class="withdraw-history-table-wrap tutor-tooltip-inside">
 			<div class="withdraw-history-table-title tutor-color-text-primary">
@@ -231,17 +230,21 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 									<img src="<?php echo esc_url( isset( $method_icons[ $method_key ] ) ? $method_icons[ $method_key ] : '' ); ?>" />
 									&nbsp;
 									<span>
-										<?php
-										echo '<strong class="withdraw-method-name">', tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ), '</strong>';
-										echo '<small>', $method_title, '</small>';
-										?>
+										<strong class="withdraw-method-name">
+											<?php echo esc_html( tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ) ); ?>
+										</strong><br>
+										<span class="color-text-hints text-regular-small">
+											<?php echo esc_html( $method_title ); ?>
+										</span>
 									</span>
 								</div>
 							</td>
 							<td>
-								<?php
-									echo esc_attr( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $withdraw_history->created_at ) ) );
-								?>
+								<span class="color-text-primary">
+									<?php
+										echo esc_attr( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $withdraw_history->created_at ) ) );
+									?>
+								</span>
 							</td>
 							<td>
 								<strong><?php echo tutor_utils()->tutor_price( $withdraw_history->amount ); ?></strong>
@@ -270,13 +273,12 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 								<?php
 								if ( $withdraw_history->status !== 'approved' && isset( $status_message[ $withdraw_history->status ] ) ) {
 									?>
-									<span class="tutor-status-text-container">
-										<span class="tool-tip-container">
-											<img src="<?php echo esc_url( $image_base ); ?>info-icon.svg" />
-											<span class="tooltip tip-left" role="tooltip">
-												<?php esc_html_e( $status_message[ $withdraw_history->status ] ); ?>
+									<span class="tool-tip-container">
+										<div class="tooltip-wrap tooltip-icon tutor-mt-10">
+											<span class="tooltip-txt tooltip-bottom">
+												<?php echo esc_html( $status_message[ $withdraw_history->status ] ); ?>
 											</span>
-										</span>
+										</div>
 									</span>
 									<?php
 								}
