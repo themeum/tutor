@@ -791,7 +791,7 @@ class Course extends Tutor_Base {
 			foreach ( $saved_instructors as $t ) {
 
 				$output .= '<div id="added-instructor-id-' . $t->ID . '" class="added-instructor-item added-instructor-item-' . $t->ID . '" data-instructor-id="' . $t->ID . '">
-                    <span class="instructor-icon">' . get_avatar( $t->ID, 30 ) . '</span>
+                    <span class="instructor-icon">' . str_replace( "'", '"', get_avatar( $t->ID, 30 ) ) . '</span>
                     <span class="instructor-name"> ' . $t->display_name . ' </span>
                     <span class="instructor-control">
                         <a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-line-cross"></i></a>
