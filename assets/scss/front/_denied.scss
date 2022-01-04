@@ -28,14 +28,23 @@
 }
 
 .tutor-denied-wrapper {
+    .image-wrapper {
+        width: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+    }
     @include valueWithPrefix(display, flex);
     @include propertyWithPrefix(justify-content, center);
     column-gap: 80px;
-    max-width: 990px;
     margin: auto;
     padding: 60px 0 30px;
 
     .tutor-denied-content-wrapper {
+        width: 100%;
+        .tutor-logo {
+            height: 32px;
+        }
         @include valueWithPrefix(display, flex);
         @include propertyWithPrefix(flex-direction, column);
         row-gap: 39px;
@@ -51,5 +60,7 @@
         @include propertyWithPrefix(flex-direction, column);
         @include propertyWithPrefix(align-items, center);
         row-gap: 50px;
+        width: 90%;
+        margin: auto;
     }
 }
