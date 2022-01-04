@@ -249,7 +249,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</td>
 						<?php endif; ?>
 
-						<td data-th="<?php esc_html_e( 'Announcement', 'tutor' ); ?>" class="column-fullwidth">
+						<td data-th="<?php esc_html_e( 'Announcement', 'tutor' ); ?>">
 							<div>
 								<div class="td-course tutor-color-text-primary tutor-text-medium-body">
 									<?php echo esc_html( $announcement->post_title ); ?>

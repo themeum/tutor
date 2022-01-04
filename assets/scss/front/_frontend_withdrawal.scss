@@ -58,7 +58,12 @@
 		font-size: 15px;
 		color: #7a7a7a;
 	}
-
+	.current-withdraw-account-wrap.withdrawal-preference {
+		display: grid;
+		grid-template-columns: 20px auto;
+		align-items: center;
+		gap: 5px;
+	}
 	.inline-image-text {
 		& > img {
 			width: 23px;
@@ -260,7 +265,20 @@
 		.withdraw-history-table-title h4 {
 			margin-top: 45px;
 		}
+		table {	
+			.tutor-withdrawals-method {
+				display: grid;
+				grid-template-columns: 40px auto;
+				grid-gap: 15px;
+				align-items: center;
+				.tutor-withdrawals-method-icon {
 
+				}
+				.tutor-withdrawals-method-name {
+
+				}
+			}
+		}
 		table.withdrawals-history {
 			border: 1px solid #dcdbdc;
 			box-sizing: border-box;
