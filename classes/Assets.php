@@ -84,6 +84,7 @@ class Assets
 			'is_admin_bar_showing'         => is_admin_bar_showing(),
 			'addons_data'                  => tutor_utils()->prepare_free_addons_data(),
 			'content_change_event'         => 'tutor_content_changed_event',
+			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) || isset( $_GET['post_type'] ) && 'courses' === $_GET['post_type'] ? true : false
 		);
 	}
 
