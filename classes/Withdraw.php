@@ -143,7 +143,7 @@ class Withdraw {
 	public function withdraw_option_save() {
 		do_action( 'tutor_withdraw_options_save_before' );
 
-		$option = (array) isset( $_POST['tutor_withdraw_options'] ) ? $_POST['tutor_withdraw_options'] : array();
+		$option = (array) isset( $_POST['tutor_withdraw_options'] ) ? sanitize_data($_POST['tutor_withdraw_options']) : array();
 		$option = apply_filters( 'tutor_withdraw_options_input', $option );
 		update_option( 'tutor_withdraw_options', $option );
 

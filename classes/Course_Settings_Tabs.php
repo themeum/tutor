@@ -111,7 +111,7 @@ class Course_Settings_Tabs {
 	 * Fire when course saving...
 	 */
 	public function save_course( $post_ID, $post ) {
-		$_tutor_course_settings = tutils()->array_get( '_tutor_course_settings', $_POST );
+		$_tutor_course_settings = tutils()->array_get( '_tutor_course_settings', sanitize_data($_POST) );
 		if ( tutils()->count( $_tutor_course_settings ) ) {
 			update_post_meta( $post_ID, '_tutor_course_settings', $_tutor_course_settings );
 		}

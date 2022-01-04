@@ -33,7 +33,8 @@ function show_correct_answer( $answers = array() ) {
 		foreach ( $answers as $key => $ans ) {
 			$type = isset( $ans->answer_view_format ) ? $ans->answer_view_format : 'text_image';
 			if ( isset( $ans->answer_two_gap_match ) ) {
-				echo _esc_html( '<div class="matching-type">'; )}
+				echo _esc_html( '<div class="matching-type">' );
+			}
 			switch ( $type ) {
 				case 'text_image':
 					echo _esc_html( '<div class="text-image-type">' );
@@ -232,12 +233,12 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 								$get_answers   = tutor_utils()->get_answer_by_id( $answer->given_answer );
 								$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 								$answer_titles = array_map( 'stripslashes', $answer_titles );
-								echo _esc_html('<p>' . implode( '</p><p>', $answer_titles ) . '</p>';)
+								echo _esc_html( '<p>' . implode( '</p><p>', $answer_titles ) . '</p>'; )
 							} elseif ( $answer->question_type === 'multiple_choice' ) {
 								$get_answers   = tutor_utils()->get_answer_by_id( maybe_unserialize( $answer->given_answer ) );
 								$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 								$answer_titles = array_map( 'stripslashes', $answer_titles );
-								echo _esc_html('<p>' . implode( '</p><p>', $answer_titles ) . '</p>';)
+								echo _esc_html( '<p>' . implode( '</p><p>', $answer_titles ) . '</p>'; )
 							} elseif ( $answer->question_type === 'fill_in_the_blank' ) {
 								$answer_titles              = maybe_unserialize( $answer->given_answer );
 								$get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question( $answer->question_id );
@@ -302,7 +303,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 									</div>
 									<?php
 								}
-								echo _esc_html('</div>';)
+								echo _esc_html( '</div>'; )
 							} elseif ( $answer->question_type === 'image_answering' ) {
 
 								$ordering_ids = maybe_unserialize( $answer->given_answer );
@@ -319,7 +320,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 									</div>
 									<?php
 								}
-								echo _esc_html('</div>';)
+								echo _esc_html( '</div>'; )
 							}
 
 							?>
@@ -367,16 +368,16 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 							<?php
 
 							if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-								echo _esc_html('<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> ' . __( 'Correct', 'tutor' ) . '</span>';)
+								echo _esc_html( '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> ' . __( 'Correct', 'tutor' ) . '</span>'; )
 							} else {
 								if ( $answer->question_type === 'open_ended' || $answer->question_type === 'short_answer' ) {
 									if ( (bool) $attempt->is_manually_reviewed && ( ! isset( $answer->is_correct ) || $answer->is_correct == 0 ) ) {
-										echo _esc_html('<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> ' . __( 'Incorrect', 'tutor' ) . '</span>';)
+										echo _esc_html( '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> ' . __( 'Incorrect', 'tutor' ) . '</span>'; )
 									} else {
-										echo _esc_html('<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> ' . __( 'Review Required', 'tutor' ) . '</p>';)
+										echo _esc_html( '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> ' . __( 'Review Required', 'tutor' ) . '</p>'; )
 									}
 								} else {
-									echo _esc_html('<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> ' . __( 'Incorrect', 'tutor' ) . '</span>';)
+									echo _esc_html( '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> ' . __( 'Incorrect', 'tutor' ) . '</span>'; )
 								}
 							}
 							?>
