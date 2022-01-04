@@ -300,7 +300,7 @@
 
 	&.item-variation-dragndrop {
 		.item-wrapper {
-			background: $black-05;
+			background: #fff;
 			border: 1px solid $stroke-light-30;
 			padding: 28px;
 			padding-bottom: 25px;
@@ -310,6 +310,7 @@
 			background-color: $bg-white;
 			border-radius: 6px;
 			text-align: center;
+			border-color: #BDCAF1;
 			color: $text-primary;
 			padding: 25px 30px 38px;
 
