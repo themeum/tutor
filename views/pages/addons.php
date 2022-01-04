@@ -1,5 +1,5 @@
 <?php
-$current_page = tutor_utils()->avalue_dot( 'tab', $_GET );
+$current_page = tutor_utils()->avalue_dot( 'tab', sanitize_data($_GET) );
 $page_name    = $current_page ? $current_page : 'addons';
 ?>
 

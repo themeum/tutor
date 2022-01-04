@@ -11,7 +11,7 @@
 
 <?php
 $per_page     = 10;
-$current_page = max( 1, tutils()->avalue_dot( 'current_page', $_GET ) );
+$current_page = max( 1, tutils()->avalue_dot( 'current_page', sanitize_data($_GET) ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
 $total_items = tutils()->get_total_qa_question();

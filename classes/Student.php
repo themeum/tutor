@@ -33,7 +33,7 @@ class Student {
 			// Action must be register, and registrtion must be enabled in dashoard
 			return;
 		}
-		
+
 		//Checking nonce
 		tutor_utils()->checking_nonce();
 
@@ -45,19 +45,19 @@ class Student {
 			'password'                  => __('Password field is required', 'tutor'),
 			'password_confirmation'     => __('Password Confirmation field is required', 'tutor'),
 		));
-		
+
 
 		$validation_errors = array();
 
 		/*
 		*registration_errors
-		*push into validation_errors	
+		*push into validation_errors
 		*/
 		$errors = apply_filters('registration_errors',new  \WP_Error,'','');
-		foreach ($errors->errors as $key => $value) 
+		foreach ($errors->errors as $key => $value)
 		{
 		 	$validation_errors[$key] = $value[0];
-		 	
+
 		}
 
 		foreach ($required_fields as $required_key => $required_value){
@@ -104,7 +104,7 @@ class Student {
 
 			do_action('tutor_after_student_signup', $user_id);
 			//since 1.9.8 do enroll if guest attempt to enroll
-			do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
+			do_action( 'tutor_do_enroll_after_login_if_attempt', sanitize_data($_POST['tutor_course_enroll_attempt']) );
 			//Redirect page
 			$redirect_page = tutils()->array_get('redirect_to', $_REQUEST);
 			if ( ! $redirect_page){
@@ -133,7 +133,7 @@ class Student {
 		}
 
 		$user_id = get_current_user_id();
-		
+
 		//Checking nonce
 		tutor_utils()->checking_nonce();
         do_action('tutor_profile_update_before', $user_id);

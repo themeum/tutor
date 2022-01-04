@@ -59,7 +59,8 @@ class Options {
 
 		do_action('tutor_option_save_before');
 
-		$option = (array)tutils()->array_get('tutor_option', $_POST, array());
+		$option = (array) tutils()->array_get('tutor_option', $_POST, array());
+		$option = sanitize_data($option);
 
 		foreach ( $option as $key => $value ) {
 			if ( 'login_error_message' === $key ) {

@@ -108,7 +108,7 @@ class Quiz {
 		tutils()->checking_nonce();
 
 		$feedback   = sanitize_text_field( $_POST['feedback'] );
-		$attempt_id = (int) tutor_utils()->avalue_dot( 'attempts_id', $_POST );
+		$attempt_id = (int) tutor_utils()->avalue_dot( 'attempts_id', sanitize_data( $_POST ) );
 
 		if ( $attempt_id && tutils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			update_post_meta( $attempt_id, 'instructor_feedback', $feedback );
@@ -142,7 +142,7 @@ class Quiz {
 		tutils()->checking_nonce();
 
 		global $wpdb;
-		$quiz_id = (int) tutor_utils()->avalue_dot( 'quiz_id', $_POST );
+		$quiz_id = (int) tutor_utils()->avalue_dot( 'quiz_id', sanitize_data($_POST) );
 
 		if ( ! tutils()->can_user_manage( 'quiz', $quiz_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -650,7 +650,7 @@ class Quiz {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Access Denied', 'tutor' ),
-					'data'    => $_POST,
+					'data'    => sanitize_data($_POST),
 				)
 			);
 		}
@@ -1129,10 +1129,10 @@ class Quiz {
 
 		switch ( $question_type ) {
 			case 'true_false':
-				echo _esc_html('<label>' . __( 'Answer options &amp; mark correct', 'tutor' ) . '</label>');
+				echo _esc_html( '<label>' . __( 'Answer options &amp; mark correct', 'tutor' ) . '</label>' );
 				break;
 			case 'ordering':
-				echo _esc_html('<label>' . __( 'Make sure you’re saving the answers in the right order. Students will have to match this order exactly.', 'tutor' ) . '</label>');
+				echo _esc_html( '<label>' . __( 'Make sure you’re saving the answers in the right order. Students will have to match this order exactly.', 'tutor' ) . '</label>' );
 				break;
 		}
 
@@ -1146,7 +1146,7 @@ class Quiz {
 							echo esc_attr( stripslashes( $answer->answer_title ) );
 							if ( $answer->belongs_question_type === 'fill_in_the_blank' ) {
 								echo ' (' . __( 'Answer', 'tutor' ) . ' : ';
-								echo _esc_html('<strong>' . esc_attr( stripslashes( $answer->answer_two_gap_match ) ) . '</strong>)');
+								echo _esc_html( '<strong>' . esc_attr( stripslashes( $answer->answer_two_gap_match ) ) . '</strong>)' );
 							}
 							if ( $answer->belongs_question_type === 'matching' ) {
 								echo esc_attr( ' - ' . stripslashes( $answer->answer_two_gap_match ) );
@@ -1156,7 +1156,7 @@ class Quiz {
 
 						<?php
 						if ( $answer->image_id ) {
-							echo _esc_html('<span class="tutor-question-answer-image"><img src="' . wp_get_attachment_image_url( $answer->image_id ) . '" /> </span>');
+							echo _esc_html( '<span class="tutor-question-answer-image"><img src="' . wp_get_attachment_image_url( $answer->image_id ) . '" /> </span>' );
 						}
 						if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 							?>
@@ -1215,7 +1215,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$question_ids = tutor_utils()->avalue_dot( 'sorted_question_ids', $_POST );
+		$question_ids = tutor_utils()->avalue_dot( 'sorted_question_ids', sanitize_data($_POST) );
 		if ( is_array( $question_ids ) && count( $question_ids ) ) {
 			$i = 0;
 			foreach ( $question_ids as $key => $question_id ) {

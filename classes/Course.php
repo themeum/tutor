@@ -291,7 +291,7 @@ class Course extends Tutor_Base {
 		/**
 		 * Save course price type
 		 */
-		$price_type = tutils()->array_get( 'tutor_course_price_type', $_POST );
+		$price_type = tutils()->array_get( 'tutor_course_price_type', sanitize_data($_POST) );
 		if ( $price_type ) {
 			update_post_meta( $post_ID, '_tutor_course_price_type', $price_type );
 		}
@@ -307,7 +307,7 @@ class Course extends Tutor_Base {
 			update_post_meta( $post_ID, '_tutor_course_level', $course_level );
 		}
 
-		$additional_data_edit = tutils()->avalue_dot( '_tutor_course_additional_data_edit', $_POST );
+		$additional_data_edit = tutils()->avalue_dot( '_tutor_course_additional_data_edit', sanitize_data($_POST) );
 		if ( $additional_data_edit ) {
 			if ( ! empty( $_POST['course_benefits'] ) ) {
 				$course_benefits = wp_kses_post( $_POST['course_benefits'] );
@@ -392,7 +392,7 @@ class Course extends Tutor_Base {
 
 		if ( $additional_data_edit ) {
 			if ( ! empty( $_POST['video']['source'] ) ) { // Video
-				$video = tutor_utils()->array_get( 'video', $_POST );
+				$video = tutor_utils()->array_get( 'video', sanitize_data($_POST) );
 				update_post_meta( $post_ID, '_video', $video );
 			} else {
 				delete_post_meta( $post_ID, '_video' );
@@ -440,7 +440,7 @@ class Course extends Tutor_Base {
 		if ( empty( $_POST['topic_title'] ) ) {
 			wp_send_json_error();
 		}
-		$course_id           = (int) tutor_utils()->avalue_dot( 'tutor_topic_course_ID', $_POST );
+		$course_id           = (int) tutor_utils()->avalue_dot( 'tutor_topic_course_ID', sanitize_data($_POST) );
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id( $course_id );
 
 		if ( ! tutils()->can_user_manage( 'course', $course_id ) ) {
@@ -576,7 +576,7 @@ class Course extends Tutor_Base {
 	public function enroll_now() {
 
 		// Checking if action comes from Enroll form
-		if ( tutor_utils()->array_get( 'tutor_course_action', $_POST ) !== '_tutor_course_enroll_now' || ! isset( $_POST['tutor_course_id'] ) ) {
+		if ( tutor_utils()->array_get( 'tutor_course_action', sanitize_data($_POST) ) !== '_tutor_course_enroll_now' || ! isset( $_POST['tutor_course_id'] ) ) {
 			return;
 		}
 		// Checking Nonce
@@ -719,7 +719,7 @@ class Course extends Tutor_Base {
 		global $wpdb;
 
 		$course_id    = (int) sanitize_text_field( $_POST['course_id'] );
-		$search_terms = sanitize_text_field( tutor_utils()->avalue_dot( 'search_terms', $_POST ) );
+		$search_terms = sanitize_text_field( tutor_utils()->avalue_dot( 'search_terms', sanitize_data($_POST) ) );
 
 		if ( ! tutils()->can_user_manage( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -772,7 +772,7 @@ class Course extends Tutor_Base {
 		tutils()->checking_nonce();
 
 		$course_id      = (int) sanitize_text_field( $_POST['course_id'] );
-		$instructor_ids = tutor_utils()->avalue_dot( 'tutor_instructor_ids', $_POST );
+		$instructor_ids = tutor_utils()->avalue_dot( 'tutor_instructor_ids', sanitize_data($_POST) );
 
 		if ( ! tutils()->can_user_manage( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -1423,7 +1423,7 @@ class Course extends Tutor_Base {
 
 	public function tutor_reset_course_progress() {
 		tutils()->checking_nonce();
-		$course_id = tutor_utils()->array_get( 'course_id', $_POST );
+		$course_id = tutor_utils()->array_get( 'course_id', sanitize_data($_POST) );
 
 		if ( ! $course_id || ! is_numeric( $course_id ) || ! tutor_utils()->is_enrolled( $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid Course ID or Access Denied.', 'tutor' ) ) );
