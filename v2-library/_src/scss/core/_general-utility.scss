@@ -449,3 +449,17 @@
 		grid-template-columns: 1fr 4fr;
 	}
 }
+
+.td-none {
+	text-decoration: none;
+}
+
+.td-underline {
+	text-decoration: underline;
+}
+
+.hover-td-underline {
+	&:hover {
+		text-decoration: underline;
+	}
+}
