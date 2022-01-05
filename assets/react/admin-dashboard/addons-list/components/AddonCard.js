@@ -8,7 +8,7 @@ const AddonCard = ({ addon, addonId }) => {
 	const url = 'https://www.themeum.com';
 	const { handleOnChange, addonLoading } = useAddonsUpdate();
 	// const addonIsLoading = addonLoading[addonId];
-	console.log(addonLoading);
+	// console.log(addonLoading);
 
 	return (
 		<div
