@@ -32,6 +32,19 @@ export const AddonsContextProvider = (props) => {
 	const initialRenderRef = useRef(false);
 	const allAddonsRef = useRef(null);
 	const [addons, setAddons] = useState([]);
+	const [addonLoading, setAddonLoading] = useState({});
+
+	/**
+	 *
+	 * @param {Array} data
+	 * @returns {Object}
+	 */
+	function getAddonsState(data) {
+		return data?.reduce((store, obj) => {
+			store = { ...store, [obj.basename]: Boolean(obj.is_enabled) };
+			return store;
+		}, {});
+	}
 
 	const fetchAddons = async () => {
 		const formData = new FormData();
@@ -48,6 +61,8 @@ export const AddonsContextProvider = (props) => {
 				const response = await addons.json();
 				const data = response.data.addons;
 				if (data && data.length) {
+					const addonsLoadingState = getAddonsState(data);
+					setAddonLoading(addonsLoadingState);
 					setAllAddons(data);
 					allAddonsRef.current = data;
 					setLoding(false);
@@ -85,6 +100,7 @@ export const AddonsContextProvider = (props) => {
 
 	const handleOnChange = (event, addonBaseName) => {
 		const { checked } = event.target;
+		setAddonLoading((prev) => ({ ...prev, [addonBaseName]: true }));
 		const updatedAddonList = allAddonsRef.current.map((addon) => {
 			if (addon.basename === addonBaseName) return { ...addon, is_enabled: checked };
 			return addon;
@@ -104,11 +120,12 @@ export const AddonsContextProvider = (props) => {
 		}
 		allAddonsRef.current = updatedAddonList;
 
-		const toggleAddonStatus = async () => {
+		const toggleAddonStatus = async (updatedData) => {
 			const formData = new FormData();
 			formData.set('action', 'addon_enable_disable');
 			formData.set('isEnable', Number(checked));
 			formData.set('addonFieldName', addonBaseName);
+			formData.set('addonFieldNames', JSON.stringify(updatedData));
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 
 			try {
@@ -116,11 +133,16 @@ export const AddonsContextProvider = (props) => {
 					method: 'POST',
 					body: formData,
 				});
+				setAddonLoading((prev) => ({ ...prev, [addonBaseName]: false }));
 			} catch (error) {
 				console.log(error);
 			}
 		};
-		toggleAddonStatus();
+		setAddonLoading((prevData) => {
+			const updatedData = { ...prevData, [addonBaseName]: !prevData[addonBaseName] };
+			toggleAddonStatus(updatedData);
+			return updatedData;
+		});
 	};
 
 	const getTabStatus = (btn) => {
@@ -147,7 +169,7 @@ export const AddonsContextProvider = (props) => {
 	const filterAddons = (searchValue = '') => {
 		if (searchValue.trim()) {
 			const filteredAddons = allAddonsRef.current.filter((addon) =>
-				addon.name.toLowerCase().includes(searchValue.toLowerCase())
+				addon.name.toLowerCase().includes(searchValue.toLowerCase()),
 			);
 			setAllAddons(filteredAddons);
 		} else {
@@ -157,7 +179,9 @@ export const AddonsContextProvider = (props) => {
 
 	return (
 		<AddonsContext.Provider value={{ allAddons, addonList: addons, loading }}>
-			<AddonsUpdateContext.Provider value={{ activeTab, getTabStatus, setActiveTab, setAllAddons, handleOnChange, filterAddons }}>
+			<AddonsUpdateContext.Provider
+				value={{ activeTab, getTabStatus, setActiveTab, setAllAddons, handleOnChange, filterAddons, addonLoading }}
+			>
 				{props.children}
 			</AddonsUpdateContext.Provider>
 		</AddonsContext.Provider>
