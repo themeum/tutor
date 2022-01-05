@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.9.13 - December 20, 2021
+### 1.9.13 - January 05, 2022
 
 * Update: Security Update
 
