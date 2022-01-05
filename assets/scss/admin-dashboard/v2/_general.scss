@@ -300,13 +300,13 @@
 
 	&.item-variation-dragndrop {
 		.item-wrapper {
-			background: $black-05;
+			background: $bg-white;
 			border: 1px solid $stroke-light-30;
 			padding: 28px;
 			padding-bottom: 25px;
 		}
 		.drag-drop-zone {
-			@include getDashedBorder(2px, 18px, $black-20);
+			@include getDashedBorder(2px, 18px, $primary-60);
 			background-color: $bg-white;
 			border-radius: 6px;
 			text-align: center;
