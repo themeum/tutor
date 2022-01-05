@@ -179,9 +179,9 @@
 				</div>
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
-						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course">
+						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
 							<div class="tutor-bs-d-flex justify-content-between align-items-center">
-								<span class="color-text-primary text-medium-body">
+								<span class="color-text-primary text-medium-body tutor-pl-10">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
 								<div class="ttr-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
@@ -202,9 +202,9 @@
 
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
-						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history">
+						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
 							<div class="tutor-bs-d-flex justify-content-between align-items-center">
-								<span class="color-text-primary text-medium-body">
+								<span class="color-text-primary text-medium-body tutor-pl-10">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>
 								<div class="ttr-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
@@ -222,9 +222,16 @@
 									<div class="qna-previous-questions">
 										<?php foreach ( $own_questions as $question ) : ?>
 											<div>
-												<span><?php echo $question->comment_date; ?></span>
-												<strong><?php echo htmlspecialchars( $question->comment_content ); ?></strong>
-												<small><strong><?php _e( 'Course', 'tutor' ); ?></strong>: <?php echo $question->post_title; ?></small>
+												<span class="color-text-subsued text-regular-caption">
+													<?php echo esc_html( date_i18n( get_option( 'date_format') , strtotime( $question->comment_date ) ) ); ?>,
+													<?php echo esc_html( date_i18n( get_option( 'time_format') , strtotime( $question->comment_date ) ) ); ?>
+												</span>
+												<span class="color-text-primary text-bold-body">
+													<?php echo esc_textarea( $question->comment_content ); ?>
+												</span>
+												<span class="color-text-subsued">
+													<?php esc_html_e( 'Course', 'tutor' ); ?></strong>: <?php echo esc_html( $question->post_title ); ?>
+												</span>
 											</div>
 										<?php endforeach; ?>
 									</div>
