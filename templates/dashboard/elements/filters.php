@@ -14,8 +14,8 @@ $course_id    = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course
 $order_filter = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date_filter  = isset( $_GET['date'] ) ? $_GET['date'] : '';
 ?>
-<div class="tutor-bs-row">
-	<div class="tutor-bs-col-12 tutor-bs-col-lg-6">
+<div class="row">
+	<div class="col-12 col-md-6">
 		<label class="tutor-bs-d-block tutor-mb-10">
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
@@ -34,14 +34,14 @@ $date_filter  = isset( $_GET['date'] ) ? $_GET['date'] : '';
 			<?php endif; ?>
 		</select>
 	</div>
-	<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
+	<div class="col-xs-6 col-md-3 tutor-mt-10 tutor-mt-lg-0">
 		<label class="tutor-bs-d-block tutor-mb-10"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
 		<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
 			<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 			<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 		</select>
 	</div>
-	<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
+	<div class="col-xs-6 col-md-3 tutor-mt-10 tutor-mt-lg-0">
 		<label class="tutor-bs-d-block tutor-mb-10"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
 		<div class="tutor-v2-date-picker"></div>
 	</div>
