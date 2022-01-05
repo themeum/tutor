@@ -1,4 +1,4 @@
-<select name="_tutor_course_settings[<?php echo esc_attr( $instructor->ID ); ?>]" class="tutor_select2">
+<select name="_tutor_course_settings[<?php echo $field['field_key']; ?>]" class="tutor_select2">
 	<?php
 	if ( ! isset( $field['select_options'] ) || $field['select_options'] !== false ) {
 		echo '<option value="-1">' . __( 'Select Option', 'tutor' ) . '</option>';

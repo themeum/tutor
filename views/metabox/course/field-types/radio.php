@@ -5,7 +5,7 @@ if ( ! empty($field['options'])){
 		?>
         <p>
             <label>
-                <input type="radio" name="_tutor_course_settings[<?php echo esc_attr( $instructor->ID ); ?>]"  value="<?php echo esc_attr( $optionKey ) ?>" <?php checked($option_value,  $optionKey) ?> /> <?php echo esc_attr( $option ) ?>
+                <input type="radio" name="_tutor_course_settings[<?php echo $field['field_key']; ?>]"  value="<?php echo esc_attr( $optionKey ) ?>" <?php checked($option_value,  $optionKey) ?> /> <?php echo esc_attr( $option ) ?>
             </label>
         </p>
 		<?php
