@@ -337,7 +337,7 @@ class Post_types{
 			3  => __( 'Custom field deleted.', 'tutor' ),
 			4  => __( 'Course updated.', 'tutor' ),
 			/* translators: %s: date and time of the revision */
-			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Course restored to revision from %s', 'tutor' ), wp_post_revision_title( (int) sanitize_data($_GET['revision']), false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Course restored to revision from %s', 'tutor' ), wp_post_revision_title( (int) tutor_sanitize_data($_GET['revision']), false ) ) : false,
 			6  => __( 'Course published.', 'tutor' ),
 			7  => __( 'Course saved.', 'tutor' ),
 			8  => __( 'Course submitted.', 'tutor' ),

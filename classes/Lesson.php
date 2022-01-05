@@ -89,7 +89,7 @@ class Lesson extends Tutor_Base {
 		if ( $video_source === '-1' ) {
 			delete_post_meta( $post_ID, '_video' );
 		} elseif ( $video_source ) {
-			$video = (array) tutor_utils()->array_get( 'video', sanitize_data($_POST), array() );
+			$video = (array) tutor_utils()->array_get( 'video', tutor_sanitize_data($_POST), array() );
 			update_post_meta( $post_ID, '_video', $video );
 		}
 
@@ -117,7 +117,7 @@ class Lesson extends Tutor_Base {
 	public function tutor_load_edit_lesson_modal() {
 		tutils()->checking_nonce();
 
-		$lesson_id = (int) tutor_utils()->avalue_dot( 'lesson_id', sanitize_data($_POST) );
+		$lesson_id = (int) tutor_utils()->avalue_dot( 'lesson_id', tutor_sanitize_data($_POST) );
 		$topic_id  = (int) sanitize_text_field( $_POST['topic_id'] );
 
 		if ( ! tutils()->can_user_manage( 'topic', $topic_id ) ) {

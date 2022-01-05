@@ -13,7 +13,7 @@
 
 
 if ( isset( $_GET['view_quiz_attempt_id'] ) && get_tutor_option( 'tutor_quiz_student_attempt_view_in_profile' ) ) {
-	$_GET['attempt_id'] = sanitize_data( $_GET['view_quiz_attempt_id'] );
+	$_GET['attempt_id'] = tutor_sanitize_data( $_GET['view_quiz_attempt_id'] );
 	echo tutor_get_template_html( 'dashboard.my-quiz-attempts.attempts-details' );
 	return;
 }

@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * configure query with get params
  */
 $per_page = 10;
-$paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? sanitize_data($_GET['paged']) : 1;
+$paged    = ( isset( $_GET['paged'] ) && is_numeric( $_GET['paged'] ) && $_GET['paged'] >= 1 ) ? tutor_sanitize_data($_GET['paged']) : 1;
 
 $order_filter  = ( isset( $_GET['order'] ) && strtolower( $_GET['order'] ) == 'asc' ) ? 'ASC' : 'DESC';
 $search_filter = sanitize_text_field( tutor_utils()->array_get( 'search', $_GET, '' ) );

@@ -143,7 +143,7 @@ class Withdraw {
 	public function withdraw_option_save() {
 		do_action( 'tutor_withdraw_options_save_before' );
 
-		$option = (array) isset( $_POST['tutor_withdraw_options'] ) ? sanitize_data($_POST['tutor_withdraw_options']) : array();
+		$option = (array) isset( $_POST['tutor_withdraw_options'] ) ? tutor_sanitize_data($_POST['tutor_withdraw_options']) : array();
 		$option = apply_filters( 'tutor_withdraw_options_input', $option );
 		update_option( 'tutor_withdraw_options', $option );
 
@@ -161,7 +161,7 @@ class Withdraw {
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		$post    = sanitize_data($_POST);
+		$post    = tutor_sanitize_data($_POST);
 
 		$method = tutor_utils()->avalue_dot( 'tutor_selected_withdraw_method', $post );
 		if ( ! $method ) {
@@ -197,7 +197,7 @@ class Withdraw {
 		do_action( 'tutor_withdraw_before' );
 
 		$user_id = get_current_user_id();
-		$post    = sanitize_data($_POST);
+		$post    = tutor_sanitize_data($_POST);
 
 		$withdraw_amount = sanitize_text_field( tutor_utils()->avalue_dot( 'tutor_withdraw_amount', $post ) );
 

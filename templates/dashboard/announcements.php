@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @version 1.7.9
  */
 $per_page = 10;
-$paged    = max( 1, tutor_utils()->avalue_dot( 'current_page', sanitize_data($_GET) ) );
+$paged    = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
 
 $order_filter  = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
 $search_filter = isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';

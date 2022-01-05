@@ -17,7 +17,7 @@ class Course_Filter {
 
 	public function load_listing() {
 		tutils()->checking_nonce();
-		$_post = sanitize_data( $_POST );
+		$_post = tutor_sanitize_data( $_POST );
 
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) sanitize_text_field( tutils()->array_get( 'course_per_page', $_post, $default_per_page ) );

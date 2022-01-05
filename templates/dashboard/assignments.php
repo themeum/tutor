@@ -15,7 +15,7 @@
 global $wpdb;
 
 $per_page     = 10;
-$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', sanitize_data($_GET) ) );
+$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
 $course_id    = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';

@@ -173,7 +173,7 @@ class Instructors_List extends \Tutor_List_Table {
 		// Detect when a bulk action is being triggered...
 		if ( 'delete' === $this->current_action() ) {
 
-			$delete_instructors = sanitize_data($_GET['instructor']);
+			$delete_instructors = tutor_sanitize_data($_GET['instructor']);
 			if ( count( $delete_instructors ) ) {
 				foreach ( $delete_instructors as $instructor ) {
 					do_action( 'tutor_insctructor_before_delete', $instructor );

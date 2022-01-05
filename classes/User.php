@@ -70,7 +70,7 @@ class User {
 	public function tutor_user_photo_remove() {
 		tutils()->checking_nonce();
 
-		$this->delete_existing_user_photo( get_current_user_id(), sanitize_data( $_POST['photo_type'] ) );
+		$this->delete_existing_user_photo( get_current_user_id(), tutor_sanitize_data( $_POST['photo_type'] ) );
 	}
 
 	public function update_user_photo() {
@@ -118,7 +118,7 @@ class User {
 					wp_update_attachment_metadata( $media_id, wp_generate_attachment_metadata( $media_id, $file_path ) );
 
 					// Update it to user profile
-					$this->delete_existing_user_photo( $user_id, sanitize_data($_POST['photo_type']) );
+					$this->delete_existing_user_photo( $user_id, tutor_sanitize_data($_POST['photo_type']) );
 					update_user_meta( $user_id, $meta_key, $media_id );
 
 					exit( json_encode( array( 'status' => 'success' ) ) );

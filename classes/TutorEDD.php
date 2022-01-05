@@ -115,7 +115,7 @@ class TutorEDD extends Tutor_Base {
 	}
 
 	public function save_course_meta($post_ID) {
-		$product_id = tutor_utils()->avalue_dot('_tutor_course_product_id', sanitize_data($_POST));
+		$product_id = tutor_utils()->avalue_dot('_tutor_course_product_id', tutor_sanitize_data($_POST));
 
 		if ($product_id !== '-1') {
 			$product_id = (int) $product_id;

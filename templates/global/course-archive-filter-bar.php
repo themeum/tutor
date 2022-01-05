@@ -5,8 +5,8 @@
  */
 
 	$sort_by = '';
-	isset( $_GET['tutor_course_filter'] ) ? $sort_by  = sanitize_data( $_GET['tutor_course_filter'] ) : 0;
-	isset( $_POST['tutor_course_filter'] ) ? $sort_by = sanitize_data( $_POST['tutor_course_filter'] ) : 0;
+	isset( $_GET['tutor_course_filter'] ) ? $sort_by  = tutor_sanitize_data( $_GET['tutor_course_filter'] ) : 0;
+	isset( $_POST['tutor_course_filter'] ) ? $sort_by = tutor_sanitize_data( $_POST['tutor_course_filter'] ) : 0;
 ?>
 
 

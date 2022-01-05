@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Tutor input sanitization
  */
 
-if ( ! function_exists( 'sanitize_data' ) ) {
+if ( ! function_exists( 'tutor_sanitize_data' ) ) {
 	/**
 	 * Escaping for Sanitize data.
 	 *
@@ -17,7 +17,7 @@ if ( ! function_exists( 'sanitize_data' ) ) {
 	 * @param  string $type.
 	 * @return string
 	 */
-	function sanitize_data( $input = null, $type = null ) {
+	function tutor_sanitize_data( $input = null, $type = null ) {
 		$array  = array();
 		$object = new stdClass();
 
@@ -37,7 +37,7 @@ if ( ! function_exists( 'sanitize_data' ) ) {
 
 			foreach ( $input as $key => $value ) {
 				if ( is_object( $value ) ) {
-					$object->$key = sanitize_data( $value );
+					$object->$key = tutor_sanitize_data( $value );
 				} else {
 					$key          = sanitize_text_field( $key );
 					$value        = sanitize_text_field( $value );
@@ -48,7 +48,7 @@ if ( ! function_exists( 'sanitize_data' ) ) {
 		} elseif ( is_array( $input ) && count( $input ) ) {
 			foreach ( $input as $key => $value ) {
 				if ( is_array( $value ) ) {
-					$array[ $key ] = sanitize_data( $value );
+					$array[ $key ] = tutor_sanitize_data( $value );
 				} else {
 					$key           = sanitize_text_field( $key );
 					$value         = sanitize_text_field( $value );
