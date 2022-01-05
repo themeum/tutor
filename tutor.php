@@ -53,13 +53,12 @@ if ( ! function_exists( 'tutor' ) ) {
 		$has_pro = defined( 'TUTOR_PRO_VERSION' );
 
 		// Prepare the basepath.
-		$home_url    = get_home_url();
-		$parsed      = wp_parse_url( $home_url );
-		$base_path   = ( is_array( $parsed ) && isset( $parsed['path'] ) ) ? $parsed['path'] : '/';
-		$base_path   = rtrim( $base_path, '/' ) . '/';
-		$request_uri = filter_input( INPUT_SERVER, 'REQUEST_URI' );
-		// Get current URL.
-		$current_url = $home_url . '/' . substr( $request_uri, strlen( $base_path ) );
+		$home_url = get_home_url();
+		$parsed = parse_url($home_url);
+		$base_path = (is_array($parsed) && isset($parsed['path'])) ? $parsed['path'] : '/';
+		$base_path = rtrim($base_path, '/') . '/';
+		// Get current URL
+		$current_url = $home_url . '/' . substr($_SERVER['REQUEST_URI'], strlen($base_path));
 
 		$info = array(
 			'path'                 => $path,

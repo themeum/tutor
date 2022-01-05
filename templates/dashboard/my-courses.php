@@ -70,7 +70,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                             </div>
                             <div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-mt-10">
                                 <?php
-                                $course_duration = get_tutor_course_duration_context();
+                                $course_duration = get_tutor_course_duration_context( $post->ID, true );
                                 $course_students = tutor_utils()->count_enrolled_users_by_course();
                                 ?>
                                 <?php
