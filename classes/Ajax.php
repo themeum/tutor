@@ -328,8 +328,15 @@ class Ajax{
 
 		$addonsConfig = maybe_unserialize( get_option( 'tutor_addons_config' ) );
 
+		
+		
 		$isEnable = (bool) sanitize_text_field( tutor_utils()->avalue_dot( 'isEnable', $_POST ) );
 		$addonFieldName = sanitize_text_field( tutor_utils()->avalue_dot( 'addonFieldName', $_POST ) );
+		$addonFieldNames = json_decode(stripslashes(( tutor_utils()->avalue_dot( 'addonFieldNames', $_POST ) )), true);
+		
+		echo "<xmp>";
+		print_r($addonFieldNames);
+		echo "</xmp>";
 
 		do_action( 'tutor_addon_before_enable_disable' );
 		if ( $isEnable ) {

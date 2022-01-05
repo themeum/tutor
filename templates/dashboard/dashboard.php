@@ -82,7 +82,32 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		}
 	} else {
 		if(!$profile_completion->_tutor_profile_photo) {
-			echo "<p>{$profile_completion['_tutor_profile_photo']['label_html']}</p>";
+			$alert_message = sprintf('<div class="tutor-alert tutor-primary">
+			<div class="tutor-alert-text">
+				<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+				<span>
+					%s
+				</span>
+			</div>
+			<div class="tutor-alert-btns">
+				<div class="alert-btn-group">
+					<a class="tutor-btn tutor-btn-sm">Click Here</a>
+				</div>
+			</div>
+		</div>', $profile_completion["_tutor_profile_photo"]["label_html"]);
+			echo $alert_message;
+		// 	echo '<div class="tutor-alert tutor-warning">
+		// 	<div class="tutor-alert-text">
+		// 		<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+		// 		<span>
+		// 		{$profile_completion["_tutor_profile_photo"]["label_html"]}
+		// 		</span>
+		// 	</div>
+		// 	<div class="tutor-alert-btns">
+		// 		<span class="tutor-alert-close tutor-icon-28 tutor-color-black-40 ttr-cross-filled"></span>
+		// 	</div>
+		// </div>';
+
 		}
 	}
 }
