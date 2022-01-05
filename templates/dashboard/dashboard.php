@@ -28,7 +28,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary tutor-mt-12">
 							<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
 						</div>
-						<div class="tutor-mt-12 tutor-bs-d-flex tutor-bs-align-items-center">
+						<div class="tutor-mt-12 tutor-bs-align-items-center" style="display: grid; grid-template-columns: repeat(<?php echo $total_count+1; ?>, 1fr); ">
 							<?php
 							for ( $i = 1; $i <= $total_count; $i++ ) {
 								$class = $i > $complete_count ?
@@ -91,11 +91,12 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 			<div class="tutor-alert-btns">
 				<div class="alert-btn-group">
-					<a class="tutor-btn tutor-btn-sm">Click Here</a>
+					<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
 				</div>
 			</div>
-		</div>', $profile_completion["_tutor_profile_photo"]["label_html"]);
-			echo $alert_message;
+		</div>', $profile_completion["_tutor_profile_photo"]["label_html"], tutor_utils()->tutor_dashboard_url('settings'));
+
+		echo $alert_message;
 		// 	echo '<div class="tutor-alert tutor-warning">
 		// 	<div class="tutor-alert-text">
 		// 		<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>

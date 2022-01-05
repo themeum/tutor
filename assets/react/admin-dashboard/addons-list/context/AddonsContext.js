@@ -133,17 +133,21 @@ export const AddonsContextProvider = (props) => {
 					method: 'POST',
 					body: formData,
 				});
-				setAddonLoading((prev) => ({ ...prev, [addonBaseName]: false }));
+				setAddonLoading(updatedData);
 			} catch (error) {
 				console.log(error);
 			}
 		};
-		setAddonLoading((prevData) => {
-			const updatedData = { ...prevData, [addonBaseName]: !prevData[addonBaseName] };
-			toggleAddonStatus(updatedData);
-			return updatedData;
-		});
+		toggleAddonStatus();
 	};
+
+	setAddonLoading((prevData) => {
+		const updatedData = { ...prevData, [addonBaseName]: !prevData[addonBaseName] };
+		console.log('previous', prevData);
+		console.log('updatedData', updatedData);
+		toggleAddonStatus(updatedData);
+		return updatedData;
+	});
 
 	const getTabStatus = (btn) => {
 		switch (btn) {
