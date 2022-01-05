@@ -23,22 +23,18 @@ get_header();
 
 <div class="tutor-denied-wrapper">
 
-    <div class="image-wrapper">
-        <img src="<?php echo esc_url( tutor()->url.'assets/images/denied.png' )?>" alt="denied">
+    <div class="image-wrapper" style="background-image: url(<?php echo esc_url( tutor()->url.'assets/images/emptystate.svg' );?>);">
     </div>
 
     <div class="tutor-denied-content-wrapper">
-
         <div>
-            <img src="<?php echo esc_url( tutor()->url.'assets/images/tutor-logo.png' );?>" alt="tutor-logo">
-        </div>
-        
-						
+            <img src="<?php echo esc_url( tutor()->url.'assets/images/tutor-logo.png' );?>" class="tutor-logo" alt="tutor-logo">
+        </div>	
         <div>
-            <h2>
+            <span class="color-text-primary text-medium-h3">
                 <?php echo isset($headline) ? $headline : __( 'Permission Denied', 'tutor' ); ?>
-            </h2>
-            <p>
+            </span>
+            <p class="tutor-mt-10">
                 <?php echo isset($message) ? $message : __( 'You don\'t have enough privilege to access this page', 'tutor' ); ?>
             </p>
             <p> 
