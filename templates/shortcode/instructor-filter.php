@@ -33,7 +33,7 @@ foreach ( $categories as $category ) {
 			<br/>
 		</div>
 		<div class="course-category-filter">
-			<?php echo _esc_html( $category_list ); ?>
+			<?php echo $category_list; ?>
 		</div>
 	</div>
 	<div class="tutor-instructor-filter-result">
@@ -61,7 +61,7 @@ foreach ( $categories as $category ) {
 						</span>
 					</div>
 					<div>
-						<?php echo _esc_html( $category_list ); ?>
+						<?php echo $category_list; ?>
 					</div>
 					<div>
 						<button class="tutor-btn btn-sm">
@@ -75,7 +75,7 @@ foreach ( $categories as $category ) {
 			</div>
 		</div>
 		<div class="filter-result-container">
-			<?php echo _esc_html( $content ); ?>
+			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</div>
 	</div>
 </div>

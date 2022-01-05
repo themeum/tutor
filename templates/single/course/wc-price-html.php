@@ -13,10 +13,10 @@
 
 
 $is_purchasable = tutor_utils()->is_course_purchasable();
-$price          = apply_filters( 'get_tutor_course_price', null, get_the_ID() );
+$price = apply_filters( 'get_tutor_course_price', null, get_the_ID() );
 
 if ( $is_purchasable && $price ) {
-	echo _esc_html( '<div class="price">' . $price . '</div>' );
+	echo '<div class="price">' . $price . '</div>';
 } else {
 	?>
 	<div class="price">

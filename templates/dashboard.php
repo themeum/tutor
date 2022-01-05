@@ -99,17 +99,15 @@ do_action( 'tutor_dashboard/before/wrap' );
 							} elseif ( $instructor_status == 'pending' ) {
 								$on = get_user_meta( $user->ID, '_is_tutor_instructor', true );
 								$on = date( 'd F, Y', $on );
-								echo _esc_html(
-									'<span style="' . $info_message_style . '">
-                                    <i class="dashicons dashicons-info" style="color:#E53935; ' . $info_style . '"></i>',
-									__( 'Your Application is pending from', 'tutor' ),
-									' <b>',
-									$on,
-									'</b>',
-									'</span>'
-								);
+								echo '<span style="' . $info_message_style . '">
+										<i class="dashicons dashicons-info" style="color:#E53935; ' . $info_style . '"></i>'.
+										__( 'Your Application is pending from', 'tutor' ).
+										' <b>'.
+											$on.
+										'</b>'.
+									'</span>';
 							} elseif ( $rejected_on || $instructor_status !== 'blocked' ) {
-								echo _esc_html( $become_button );
+								echo $become_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							}
 							?>
 						</div>
@@ -122,18 +120,19 @@ do_action( 'tutor_dashboard/before/wrap' );
 							) {
 							?>
 								<div class="tutor-instructor-rejection-notice">
-								<?php
-									$on = date( 'd F, Y', $rejected_on );
-									echo _esc_html(
-										'<span>
-                                    <i class="dashicons dashicons-info"></i>',
-										__( 'Your application to become an instructor was rejected on', 'tutor' ) . ' ' . $on .
-										'</span>
-                                <a href="?tutor_action=hide_instructor_notice">✕</a>'
-									);
-								?>
+									<?php
+										$on = date( 'd F, Y', $rejected_on );
+
+										echo '<span>
+												<i class="dashicons dashicons-info"></i>',
+												__( 'Your application to become an instructor was rejected on', 'tutor' ) . ' ' . $on .
+											'</span>
+											<a href="?tutor_action=hide_instructor_notice">
+												✕
+											</a>';
+									?>
 								</div>
-								<?php
+							<?php
 						}
 						?>
 					</div>
@@ -161,9 +160,9 @@ do_action( 'tutor_dashboard/before/wrap' );
 								}
 							}
 							if ( $separator ) {
-								echo _esc_html( '<li class="tutor-dashboard-menu-divider"></li>' );
+								echo '<li class="tutor-dashboard-menu-divider"></li>';
 								if ( $menu_title ) {
-									echo _esc_html( '<li class="tutor-dashboard-menu-divider-header">' . $menu_title . '</li>' );
+									echo '<li class="tutor-dashboard-menu-divider-header">' . $menu_title . '</li>';
 								}
 							} else {
 								$li_class = 'tutor-dashboard-menu-' . $dashboard_key;
@@ -171,7 +170,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 									$dashboard_key = '';
 								}
 								$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-								echo _esc_html( '<li class="' . $li_class . ' ' . $active_class . '"><a href="' . esc_url( $menu_link ) . '"> ' . $menu_title . ' </a> </li>' );
+								echo '<li class="' . $li_class . ' ' . $active_class . '"><a href="' . esc_url( $menu_link ) . '"> ' . $menu_title . ' </a> </li>';
 							}
 						}
 						?>

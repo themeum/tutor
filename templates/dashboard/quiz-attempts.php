@@ -89,11 +89,13 @@ if ( $quiz_attempts_count ) {
 					</td>
 					<td>
 						<?php
-						if ( $attempt->attempt_status === 'review_required' ) {
-							echo _esc_html( '<span class="result-review-required">' . __( 'Under Review', 'tutor' ) . '</span>' );
-						} else {
-							echo _esc_html( $earned_percentage >= $passing_grade ? '<span class="result-pass">' . __( 'Pass', 'tutor' ) . '</span>' : '<span class="result-fail">' . __( 'Fail', 'tutor' ) . '</span>' );
-						}
+							if ( $attempt->attempt_status === 'review_required' ) {
+								echo '<span class="result-review-required">' . __( 'Under Review', 'tutor' ) . '</span>';
+							} else {
+								echo $earned_percentage >= $passing_grade ? 
+									'<span class="result-pass">' . __( 'Pass', 'tutor' ) . '</span>' : 
+									'<span class="result-fail">' . __( 'Fail', 'tutor' ) . '</span>';
+							}
 						?>
 					</td>
 					<td><a href="<?php echo esc_url( $attempt_action ); ?>"><?php _e( 'Details', 'tutor' ); ?></a></td>

@@ -34,19 +34,19 @@
 		<div class="tutor-dashboard-info-card">
 			<p>
 				<span><?php _e( 'Enrolled Courses', 'tutor' ); ?></span>
-				<span class="tutor-dashboard-info-val"><?php echo _esc_html( $enrolled_course_count ); ?></span>
+				<span class="tutor-dashboard-info-val"><?php echo $enrolled_course_count; ?></span>
 			</p>
 		</div>
 		<div class="tutor-dashboard-info-card">
 			<p>
 				<span><?php _e( 'Active Courses', 'tutor' ); ?></span>
-				<span class="tutor-dashboard-info-val"><?php echo _esc_html( $active_course_count ); ?></span>
+				<span class="tutor-dashboard-info-val"><?php echo $active_course_count; ?></span>
 			</p>
 		</div>
 		<div class="tutor-dashboard-info-card">
 			<p>
 				<span><?php _e( 'Completed Courses', 'tutor' ); ?></span>
-				<span class="tutor-dashboard-info-val"><?php echo _esc_html( $completed_course_count ); ?></span>
+				<span class="tutor-dashboard-info-val"><?php echo $completed_course_count; ?></span>
 			</p>
 		</div>
 
@@ -56,19 +56,21 @@
 			<div class="tutor-dashboard-info-card">
 				<p>
 					<span><?php _e( 'Total Students', 'tutor' ); ?></span>
-					<span class="tutor-dashboard-info-val"><?php echo _esc_html( $total_students ); ?></span>
+					<span class="tutor-dashboard-info-val">
+						<?php echo $total_students; ?>
+					</span>
 				</p>
 			</div>
 			<div class="tutor-dashboard-info-card">
 				<p>
 					<span><?php _e( 'Total Courses', 'tutor' ); ?></span>
-					<span class="tutor-dashboard-info-val"><?php echo _esc_html( count( $my_courses ) ); ?></span>
+					<span class="tutor-dashboard-info-val"><?php echo count( $my_courses ); ?></span>
 				</p>
 			</div>
 			<div class="tutor-dashboard-info-card">
 				<p>
 					<span><?php _e( 'Total Earnings', 'tutor' ); ?></span>
-					<span class="tutor-dashboard-info-val"><?php echo _esc_html( tutor_utils()->tutor_price( $earning_sum->instructor_amount ) ); ?></span>
+					<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></span>
 				</p>
 			</div>
 			<?php

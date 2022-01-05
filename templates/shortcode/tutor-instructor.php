@@ -32,7 +32,7 @@
 	}
 
 	if ( ! count( $instructors ) ) {
-		echo _esc_html( '<div>', __( 'No Instructor Found', 'tutor' ), '</div>' );
+		echo '<div>', __( 'No Instructor Found', 'tutor' ), '</div>';
 	}
 	?>
 </div>
@@ -43,12 +43,11 @@ if ( $previous_page || $next_page ) {
 	$next_url = ! $show_filter ? '?instructor-page=' . $next_page : '#';
 	?>
 		<div class="tutor-pagination-wrap">
-		<?php
-			echo _esc_html( $previous_page ? '<a class="page-numbers" href="' . $prev_url . '" data-page_number="' . $previous_page . '">« ' . __( 'Previous', 'tutor' ) . '</a>' : '' );
-			echo _esc_html( $next_page ? '&nbsp; <a class="next page-numbers" href="' . $next_url . '" data-page_number="' . $next_page . '">' . __( 'Next', 'tutor' ) . ' »</a>' : '' );
-		?>
-
+			<?php
+				echo $previous_page ? '<a class="page-numbers" href="' . $prev_url . '" data-page_number="' . $previous_page . '">« ' . __( 'Previous', 'tutor' ) . '</a>' : '';
+				echo $next_page ? '&nbsp; <a class="next page-numbers" href="' . $next_url . '" data-page_number="' . $next_page . '">' . __( 'Next', 'tutor' ) . ' »</a>' : '';
+			?>
 		</div>
-		<?php
+	<?php
 }
 ?>

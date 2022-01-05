@@ -63,7 +63,7 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 									<?php
 									the_title();
 									if ( $topic_summery ) {
-										echo _esc_html( '<span class="toggle-information-icon">&quest;</span>' );
+										echo '<span class="toggle-information-icon">&quest;</span>';
 									}
 									?>
 								</h3>
@@ -103,7 +103,7 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 													$time_limit = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
 													if ( $time_limit ) {
 														$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
-														echo _esc_html( '<span class="quiz-time-limit">' . $time_limit . ' ' . $time_type . '</span>' );
+														echo '<span class="quiz-time-limit">' . $time_limit . ' ' . $time_type . '</span>';
 													}
 													?>
 													</span>
@@ -169,17 +169,17 @@ $enable_q_and_a_on_course   = tutor_utils()->get_option( 'enable_q_and_a_on_cour
 
 													<?php
 													$tutor_lesson_type_icon = $play_time ? 'youtube' : 'document';
-													echo _esc_html( '<i class="tutor-icon-' . $tutor_lesson_type_icon . '"></i>' );
+													echo '<i class="tutor-icon-' . $tutor_lesson_type_icon . '"></i>';
 													?>
 													<span class="lesson_title"><?php the_title(); ?></span>
 													<span class="tutor-lesson-right-icons">
 														<?php
 														do_action( 'tutor/lesson_list/right_icon_area', $post );
 														if ( $play_time ) {
-															echo _esc_html( '<i class="tutor-play-duration">' . tutor_utils()->get_optimized_duration( $play_time ) . '</i>' );
+															echo '<i class="tutor-play-duration">' . tutor_utils()->get_optimized_duration( $play_time ) . '</i>';
 														}
 														$lesson_complete_icon = esc_attr( $is_completed_lesson ? 'tutor-icon-mark tutor-done' : '' );
-														echo _esc_html( '<i class="tutor-lesson-complete ' . $lesson_complete_icon . '"></i>' );
+														echo '<i class="tutor-lesson-complete ' . $lesson_complete_icon . '"></i>';
 														?>
 													</span>
 												</a>

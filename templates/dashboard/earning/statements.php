@@ -163,11 +163,9 @@ if ( $statements->count ) {
 						if ( $order && is_object( $order ) ) {
 							$billing_address = $order->get_formatted_billing_address();
 							if ( $billing_address ) {
-								echo _esc_html(
-									'<div class="statement-address">
-                                <strong>' . __( 'Purchaser', 'tutor' ) . ': </strong> <address>' . $billing_address . '</address>
-                            </div>'
-								);
+								echo '<div class="statement-address">
+										<strong>' . __( 'Purchaser', 'tutor' ) . ': </strong> <address>' . $billing_address . '</address>
+									</div>';
 							}
 						}
 						?>

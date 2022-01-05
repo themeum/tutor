@@ -447,9 +447,9 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function print_view( $value = '' ) {
-		echo _esc_html( '<pre>' );
-		print_r( $value );
-		echo _esc_html( '</pre>' );
+		echo '<pre>';
+			print_r( $value );
+		echo '</pre>';
 	}
 
 	/**
@@ -1628,7 +1628,7 @@ class Utils {
 		}
 
 		if ( $echo ) {
-			echo _esc_html( $tutor_lesson_type_icon );
+			echo $tutor_lesson_type_icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		return $tutor_lesson_type_icon;
@@ -3262,10 +3262,10 @@ class Utils {
 		$output .= '</div>';
 
 		if ( $echo ) {
-			echo _esc_html( $output );
+			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
-		return _esc_html( $output );
+		return $output;
 	}
 
 	/**
@@ -3316,7 +3316,7 @@ class Utils {
 		$bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
 		$initial_avatar = '<span class="tutor-text-avatar" style="background-color: ' . $bg_color . '; color: #fff8e5">' . $initial_avatar . '</span>';
 
-		return _esc_html( $initial_avatar );
+		return $initial_avatar;
 	}
 
 	/**

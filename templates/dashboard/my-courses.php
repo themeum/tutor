@@ -45,19 +45,19 @@
 								_e( 'Status:', 'tutor' );
 								$status = ucwords( $post->post_status );
 								$status = ( $status == 'Publish' ) ? __( 'Published', 'tutor' ) : $status;
-								echo _esc_html( '<span>' . __( $status, 'tutor' ) . '</span>' );
+								echo '<span>' . __( $status, 'tutor' ) . '</span>';
 								?>
 							</li>
 							<li>
 								<?php
 								_e( 'Duration:', 'tutor' );
-								echo _esc_html( '<span>' . $course_duration . '</span>' );
+								echo '<span>' . $course_duration . '</span>';
 								?>
 							</li>
 							<li>
 								<?php
 								_e( 'Students:', 'tutor' );
-								echo _esc_html( '<span>' . $course_students . '</span>' );
+								echo '<span>' . $course_students . '</span>';
 								?>
 							</li>
 						</ul>
@@ -65,7 +65,7 @@
 
 					<div class="mycourse-footer">
 						<div class="tutor-mycourses-stats">
-							<?php echo _esc_html( tutor_utils()->tutor_price( tutor_utils()->get_course_price() ) ); ?>
+							<?php echo tutor_utils()->tutor_price( tutor_utils()->get_course_price() ); ?>
 							<a href="<?php the_permalink(); ?>" class="tutor-mycourse-view">
 								<i class="tutor-icon-detail-link"></i>
 								<?php _e( 'View', 'tutor' ); ?>

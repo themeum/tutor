@@ -15,7 +15,7 @@ if ( $profile_completion->progress < 100 ) { ?>
 					<ul>
 						<?php
 						foreach ( $profile_completion->empty_fields as $empty_field ) {
-							echo _esc_html('<li>' . __( 'Set Your', 'tutor' ) . '<span> ' . $empty_field . '</span></li>');
+							echo '<li>' . __( 'Set Your', 'tutor' ) . '<span> ' . $empty_field . '</span></li>';
 						}
 						?>
 					</ul>

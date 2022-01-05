@@ -9,7 +9,7 @@
 				$title        = is_array( $page ) ? $page['title'] : $page;
 				$active_class = $key == $current_page ? 'nav-tab-item-active' : '';
 				$url          = add_query_arg( array( 'sub_page' => $key ) );
-				echo _esc_html( '<a href="' . esc_attr( $url ) . '" class="nav-tab-item ' . esc_attr( $active_class ) . '">' . esc_attr( $title ) . '</a>' );
+				echo '<a href="' . esc_attr( $url ) . '" class="nav-tab-item ' . esc_attr( $active_class ) . '">' . esc_attr( $title ) . '</a>';
 			}
 		}
 		?>

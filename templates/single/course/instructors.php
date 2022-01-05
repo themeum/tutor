@@ -32,7 +32,7 @@ if ( $instructors ) {
 					<div class="tutor-instructor-left">
 						<div class="instructor-avatar">
 							<a href="<?php echo esc_url( $profile_url ); ?>">
-								<?php echo _esc_html( tutor_utils()->get_tutor_avatar( $instructor->ID ) ); ?>
+								<?php echo tutor_utils()->get_tutor_avatar( $instructor->ID ); ?>
 							</a>
 						</div>
 
@@ -40,13 +40,13 @@ if ( $instructors ) {
 							<h3><a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_attr( $instructor->display_name ); ?></a> </h3>
 							<?php
 							if ( ! empty( $instructor->tutor_profile_job_title ) ) {
-								echo _esc_html( '<h4>' . esc_attr( $instructor->tutor_profile_job_title ) . '</h4>' );
+								echo '<h4>' . esc_attr( $instructor->tutor_profile_job_title ) . '</h4>';
 							}
 							?>
 						</div>
 					</div>
 					<div class="instructor-bio">
-						<?php echo _esc_html( $instructor->tutor_profile_bio ); ?>
+						<?php echo $instructor->tutor_profile_bio; ?>
 					</div>
 				</div>
 

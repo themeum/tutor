@@ -447,8 +447,8 @@ class Ajax {
 		tutils()->checking_nonce();
 
 		$username    = sanitize_text_field( tutils()->array_get( 'log', $_POST ) );
-		$password    = sanitize_text_field( utils()->array_get( 'pwd', $_POST ) );
-		$redirect_to = sanitize_text_field( tutils()->array_get( 'redirect_to', $_POST ) );
+		$password    = tutils()->array_get( 'pwd', $_POST ); // Password can not be sanitized because users might use special characters including quotes etc.
+		$redirect_to = esc_url( tutils()->array_get( 'redirect_to', $_POST ) );
 
 		try {
 			$creds = array(

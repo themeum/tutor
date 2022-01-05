@@ -25,7 +25,7 @@
 			$timePeriodPageURL = add_query_arg( array( 'time_period' => $period ) );
 			$timePeriodPageURL = remove_query_arg( array( 'date_range_from', 'date_range_to', 'tutor_report_action' ), $timePeriodPageURL );
 
-			echo _esc_html( '<a href="' . esc_url( $timePeriodPageURL ) . '" class="' . $activeClass . '">' . $period_name . '</a> ' );
+			echo '<a href="' . esc_url( $timePeriodPageURL ) . '" class="' . $activeClass . '">' . $period_name . '</a> ';
 		}
 		?>
 	</div>
@@ -39,7 +39,7 @@
 				}
 
 				foreach ( $query_arg as $name => $value ) {
-					echo _esc_html( '<input type="hidden" name="' . $name . '" value="' . $value . '" />' );
+					echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" />';
 				}
 			}
 

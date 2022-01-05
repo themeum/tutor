@@ -355,16 +355,16 @@ class Tutor_List_Table {
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo _esc_html( '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />' );
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
 		}
 		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo _esc_html( '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />' );
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
 		}
 		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
-			echo _esc_html( '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />' );
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
 		}
 		if ( ! empty( $_REQUEST['detached'] ) ) {
-			echo _esc_html( '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />' );
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
 		}
 		?>
 		<p class="search-box">
@@ -397,7 +397,7 @@ class Tutor_List_Table {
 		}
 
 		$content = str_replace( 'OPTIONS_PLACEHOLDER', $options, $markup );
-		echo _esc_html( $content );
+		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -421,7 +421,7 @@ class Tutor_List_Table {
 			$options .= '<option value="' . $order . '" ' . selected( $selected, $order, false ) . '> ' . __( $order, 'tutor' ) . ' </option>';
 		}
 		$content = str_replace( 'OPTION_PLACEHOLDER', $options, $markup );
-		echo _esc_html( $content );
+		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 	/**
 	 * @since 1.8.0
@@ -440,7 +440,7 @@ class Tutor_List_Table {
 				<i class="tutor-icon-calendar"></i>
 			</div>
 			';
-		echo _esc_html( $markup );
+		echo $markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -480,12 +480,12 @@ class Tutor_List_Table {
 
 		$this->screen->render_screen_reader_content( 'heading_views' );
 
-		echo _esc_html( '<ul class="subsubsub">' );
+		echo '<ul class="subsubsub">';
 		foreach ( $views as $class => $view ) {
 			$views[ $class ] = "\t<li class='$class'>$view";
 		}
-		echo _esc_html( implode( ' |</li>', $views ) . '</li>' );
-		echo _esc_html( '</ul>' );
+		echo implode( ' |</li>', $views ) . '</li>';
+		echo '</ul>';
 	}
 
 	/**
@@ -533,14 +533,14 @@ class Tutor_List_Table {
 			return;
 		}
 
-		echo _esc_html( '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>' );
-		echo _esc_html( '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . '">' );
-		echo _esc_html( '<option value="-1">' . __( 'Bulk Actions', 'tutor' ) . '</option>' );
+		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>';
+		echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . '">';
+		echo '<option value="-1">' . __( 'Bulk Actions', 'tutor' ) . '</option>';
 
 		foreach ( $this->_actions as $name => $title ) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
 
-			echo _esc_html( '\t' . '<option value="' . $name . '"' . $class . '>' . $title . '</option>' );
+			echo '\t' . '<option value="' . $name . '"' . $class . '>' . $title . '</option>';
 		}
 
 		echo '</select>';
@@ -599,7 +599,7 @@ class Tutor_List_Table {
 
 		$out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>';
 
-		return _esc_html( $out );
+		return $out; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 	}
 
@@ -965,7 +965,7 @@ class Tutor_List_Table {
 		}
 		$this->_pagination = '<div class="tablenav-pages' . $page_class . '">' . $output . '</div>';
 
-		echo _esc_html( $this->_pagination );
+		echo $this->_pagination; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -1243,7 +1243,7 @@ class Tutor_List_Table {
 			<tbody id="the-list"
 			<?php
 			if ( $singular ) {
-				echo _esc_html( 'data-wp-lists=list:' . $singular );
+				echo 'data-wp-lists=list:' . $singular;
 			}
 			?>
 			>
@@ -1403,9 +1403,9 @@ class Tutor_List_Table {
 		if ( $this->has_items() ) {
 			$this->display_rows();
 		} else {
-			echo _esc_html( '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">' );
+			echo '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
 			$this->no_items();
-			echo _esc_html( '</td></tr>' );
+			echo '</td></tr>';
 		}
 	}
 
@@ -1428,9 +1428,9 @@ class Tutor_List_Table {
 	 * @param object $item The current item
 	 */
 	public function single_row( $item ) {
-		echo _esc_html( '<tr>' );
+		echo '<tr>';
 		$this->single_row_columns( $item );
-		echo _esc_html( '</tr>' );
+		echo '</tr>';
 	}
 
 	/**
@@ -1473,9 +1473,9 @@ class Tutor_List_Table {
 			$attributes = 'class="' . $classes . '" ' . $data;
 
 			if ( 'cb' === $column_name ) {
-				echo _esc_html( '<th scope="row" class="check-column">' );
-				echo _esc_html( $this->column_cb( $item ) );
-				echo _esc_html( '</th>' );
+				echo '<th scope="row" class="check-column">';
+				echo $this->column_cb( $item );
+				echo '</th>';
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {
 				echo call_user_func(
 					array( $this, '_column_' . $column_name ),
@@ -1485,15 +1485,15 @@ class Tutor_List_Table {
 					$primary
 				);
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				echo _esc_html( '<td ' . $attributes . '>' );
+				echo '<td ' . $attributes . '>';
 				echo call_user_func( array( $this, 'column_' . $column_name ), $item );
-				echo _esc_html( $this->handle_row_actions( $item, $column_name, $primary ) );
-				echo _esc_html( '</td>' );
+				echo $this->handle_row_actions( $item, $column_name, $primary );
+				echo '</td>';
 			} else {
-				echo _esc_html( '<td ' . $attributes . '>' );
-				echo _esc_html( $this->column_default( $item, $column_name ) );
-				echo _esc_html( $this->handle_row_actions( $item, $column_name, $primary ) );
-				echo _esc_html( '</td>' );
+				echo '<td ' . $attributes . '>';
+				echo $this->column_default( $item, $column_name );
+				echo $this->handle_row_actions( $item, $column_name, $primary );
+				echo '</td>';
 			}
 		}
 	}
@@ -1509,7 +1509,7 @@ class Tutor_List_Table {
 	 * @return string The row actions HTML, or an empty string if the current column is the primary column.
 	 */
 	protected function handle_row_actions( $item, $column_name, $primary ) {
-		return $column_name === $primary ? _esc_html( '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>' ) : '';
+		return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>' : '';
 	}
 
 	/**

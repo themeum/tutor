@@ -144,7 +144,7 @@ class WooCommerce extends Tutor_Base {
 					ob_start();
 					?>
 					<div class="price">
-						<?php echo _esc_html( $product->get_price_html() ); ?>
+						<?php echo $product->get_price_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
 					<?php
 					return ob_get_clean();
@@ -608,7 +608,7 @@ add_action(
 
 		if ( $show ) {
 			$message = __( 'Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce.', 'tutor' );
-			echo _esc_html( '<div class="notice notice-error"><p>' . $message . '</p></div>' );
+			echo '<div class="notice notice-error"><p>' . $message . '</p></div>';
 		}
 	}
 );

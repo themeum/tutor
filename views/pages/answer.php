@@ -83,7 +83,7 @@ $question = tutor_utils()->get_qa_question( $question_id );
 					<div class="tutor_original_question <?php echo esc_attr( ( $question->user_id == $answer->user_id ) ? 'tutor-bg-white' : 'tutor-bg-light' ); ?>">
 						<div class="question-left">
 							<?php
-							echo _esc_html( tutor_utils()->get_tutor_avatar( $answer->user_id ) );
+								echo tutor_utils()->get_tutor_avatar( $answer->user_id );
 							?>
 						</div>
 

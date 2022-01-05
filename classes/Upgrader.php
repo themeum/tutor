@@ -65,7 +65,7 @@ class Upgrader {
 		if ( $upgrade_notice ) {
 			$upgrade_notice = '<span class="version"><code>v.' . $response->new_version . '</code></span> <br />' . $upgrade_notice;
 
-			echo apply_filters( 'tutor_in_plugin_update_message', $upgrade_notice ? _esc_html('</p> <div class="tutor_plugin_update_notice">' . $upgrade_notice . '</div> <p class="dummy">') : '' );
+			echo apply_filters( 'tutor_in_plugin_update_message', ($upgrade_notice ? '</p> <div class="tutor_plugin_update_notice">' . $upgrade_notice . '</div> <p class="dummy">' : '') );
 		}
 	}
 

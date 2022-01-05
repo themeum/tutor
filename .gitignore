@@ -16,8 +16,6 @@ Thumbs.db
 package-lock.json
 .sass-cache
 assets/**/*.map
-assets/css/*
-assets/js/*
 .prettierignore
 *.zip
 *.po

@@ -94,7 +94,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 					if ( $message && $expires && $expires > time() ) {
 						?>
 							<div class="tutor-alert tutor-alert-info">
-							<?php echo _esc_html( $message ); ?>
+								<?php echo esc_html( $message ); ?>
 							</div>
 							<?php
 					}

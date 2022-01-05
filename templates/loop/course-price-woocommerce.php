@@ -38,6 +38,6 @@
             </a></div>';
 	}
 
-	echo _esc_html( $price_html );
+	echo $price_html;
 	?>
 </div>

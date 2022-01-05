@@ -1,6 +1,6 @@
 <?php
 if ( ! isset( $field['select_options'] ) || $field['select_options'] !== false ) {
-	echo _esc_html( '<option value="-1">' . __( 'Select Option', 'tutor' ) . '</option>' );
+	echo '<option value="-1">' . __( 'Select Option', 'tutor' ) . '</option>';
 }
 if ( ! empty( $field['options'] ) ) {
 	foreach ( $field['options'] as $optionKey => $option ) {

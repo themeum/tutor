@@ -123,5 +123,5 @@ if ( $assignments->count ) {
 
 	<?php
 } else {
-	echo _esc_html('<p>' . __( 'No assignment available', 'tutor' ) . '</p>');
+	echo '<p>' . __( 'No assignment available', 'tutor' ) . '</p>';
 }

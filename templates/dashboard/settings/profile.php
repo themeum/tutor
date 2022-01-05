@@ -79,11 +79,11 @@ if ( $cover_photo_id ) {
 		<?php
 		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo _esc_html( '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">' );
+			echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
 			foreach ( $errors as $error_key => $error_value ) {
-				echo _esc_html( '<li>' . $error_value . '</li>' );
+				echo '<li>' . $error_value . '</li>';
 			}
-			echo _esc_html( '</ul></div>' );
+			echo '</ul></div>';
 		}
 		?>
 

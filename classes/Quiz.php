@@ -1129,10 +1129,10 @@ class Quiz {
 
 		switch ( $question_type ) {
 			case 'true_false':
-				echo _esc_html('<label>' . __( 'Answer options &amp; mark correct', 'tutor' ) . '</label>');
+				echo '<label>' . __( 'Answer options &amp; mark correct', 'tutor' ) . '</label>';
 				break;
 			case 'ordering':
-				echo _esc_html('<label>' . __( 'Make sure you’re saving the answers in the right order. Students will have to match this order exactly.', 'tutor' ) . '</label>');
+				echo '<label>' . __( 'Make sure you’re saving the answers in the right order. Students will have to match this order exactly.', 'tutor' ) . '</label>';
 				break;
 		}
 
@@ -1146,7 +1146,7 @@ class Quiz {
 							echo esc_attr( stripslashes( $answer->answer_title ) );
 							if ( $answer->belongs_question_type === 'fill_in_the_blank' ) {
 								echo ' (' . __( 'Answer', 'tutor' ) . ' : ';
-								echo _esc_html('<strong>' . esc_attr( stripslashes( $answer->answer_two_gap_match ) ) . '</strong>)');
+								echo '<strong>' . esc_attr( stripslashes( $answer->answer_two_gap_match ) ) . '</strong>)';
 							}
 							if ( $answer->belongs_question_type === 'matching' ) {
 								echo esc_attr( ' - ' . stripslashes( $answer->answer_two_gap_match ) );
@@ -1156,7 +1156,7 @@ class Quiz {
 
 						<?php
 						if ( $answer->image_id ) {
-							echo _esc_html('<span class="tutor-question-answer-image"><img src="' . wp_get_attachment_image_url( $answer->image_id ) . '" /> </span>');
+							echo '<span class="tutor-question-answer-image"><img src="' . wp_get_attachment_image_url( $answer->image_id ) . '" /> </span>';
 						}
 						if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 							?>

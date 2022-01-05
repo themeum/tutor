@@ -34,7 +34,7 @@
 									<h3>
 										<?php
 										echo esc_attr( $addon['name'] );
-										echo _esc_html( '<img src="' . esc_url( $thumbnailURL ) . '" class="plugin-icon" alt="">' );
+										echo '<img src="' . esc_url( $thumbnailURL ) . '" class="plugin-icon" alt="">';
 										?>
 									</h3>
 								</div>
@@ -46,13 +46,13 @@
 									</ul>
 								</div>
 								<div class="desc column-description">
-									<p><?php echo _esc_html( $addon['description'] ); ?></p>
+									<p><?php echo $addon['description']; ?></p>
 									<p class="authors"><cite>By <a href="https://www.themeum.com/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists" target="_blank">Themeum</a></cite></p>
 								</div>
 							</div>
 							<div class="plugin-card-bottom">
 								<?php
-								echo _esc_html( '<div class="plugin-version"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( TUTOR_VERSION ) . ' </div>' );
+									echo '<div class="plugin-version"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( TUTOR_VERSION ) . ' </div>';
 								?>
 							</div>
 						</div>

@@ -31,7 +31,7 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 				</div>
 
 				<div class="tutor-announcement-content">
-					<?php echo _esc_html(tutor_utils()->announcement_content( wpautop( stripslashes( $announcement->post_content ) ) )); ?>
+					<?php echo tutor_utils()->announcement_content( wpautop( stripslashes( $announcement->post_content ) ) ); ?>
 				</div>
 			</div>
 			<?php

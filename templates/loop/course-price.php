@@ -28,6 +28,6 @@
 			$price_html = '<div class="price"> ' . $product->get_price_html() . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div>';
 		}
 	}
-	echo _esc_html( $price_html );
+	echo $price_html;
 	?>
 </div>

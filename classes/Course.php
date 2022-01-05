@@ -209,9 +209,9 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo _esc_html( $content );
+			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
-			return _esc_html( $content );
+			return $content;
 		}
 	}
 
@@ -222,9 +222,9 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo _esc_html( $content );
+			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
-			return _esc_html( $content );
+			return $content;
 		}
 	}
 
@@ -234,9 +234,9 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo _esc_html( $content );
+			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
-			return _esc_html( $content );
+			return $content;
 		}
 	}
 
@@ -246,9 +246,9 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo _esc_html( $content );
+			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
-			return _esc_html( $content );
+			return $content;
 		}
 	}
 
@@ -258,7 +258,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo _esc_html( $content );
+			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
 			return $content;
 		}
@@ -529,9 +529,9 @@ class Course extends Tutor_Base {
 			if ( $price ) {
 				$monetize_by = tutils()->get_option( 'monetize_by' );
 				if ( function_exists( 'wc_price' ) && $monetize_by === 'wc' ) {
-					echo _esc_html( '<span class="tutor-label-success">' . wc_price( $price ) . '</span>' );
+					echo '<span class="tutor-label-success">' . wc_price( $price ) . '</span>';
 				} else {
-					echo _esc_html( '<span class="tutor-label-success">' . $price . '</span>' );
+					echo '<span class="tutor-label-success">' . $price . '</span>';
 				}
 			} else {
 				echo apply_filters( 'tutor-loop-default-price', __( 'free', 'tutor' ) );
@@ -800,7 +800,7 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		wp_send_json_success( array( 'output' => _esc_html($output) ) );
+		wp_send_json_success( array( 'output' => $output ) );
 	}
 
 	public function detach_instructor_from_course() {
@@ -1355,7 +1355,7 @@ class Course extends Tutor_Base {
 		?>
 		<div class="tutor-course-sidebar-settings-item" id="_tutor_is_course_public_meta_checkbox" style="display:none">
 			<label for="<?php echo esc_attr( $is_public ); ?>">
-				<input id="<?php echo esc_attr( $is_public ); ?>" type="checkbox" name="<?php echo esc_attr( $is_public ); ?>" value="yes" <?php echo _esc_html( $is_public_checked ); ?> />
+				<input id="<?php echo esc_attr( $is_public ); ?>" type="checkbox" name="<?php echo esc_attr( $is_public ); ?>" value="yes" <?php echo $is_public_checked; ?> />
 				<?php _e( 'Make This Course Public', 'tutor' ); ?>
 				<small style="display:block;padding-left:24px">
 					<?php _e( 'No enrollment required.', 'tutor' ); ?>
@@ -1365,7 +1365,7 @@ class Course extends Tutor_Base {
 		<div class="tutor-course-sidebar-settings-item">
 			<label for="<?php echo esc_attr( $disable_qa ); ?>">
 				<input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
-				<input id="<?php echo esc_attr( $disable_qa ); ?>" type="checkbox" name="<?php echo esc_attr( $disable_qa ); ?>" value="yes" <?php echo _esc_html( $disable_qa_checked ); ?> />
+				<input id="<?php echo esc_attr( $disable_qa ); ?>" type="checkbox" name="<?php echo esc_attr( $disable_qa ); ?>" value="yes" <?php echo $disable_qa_checked; ?> />
 				<?php _e( 'Disable Q&A', 'tutor' ); ?>
 			</label>
 		</div>

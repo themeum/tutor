@@ -24,7 +24,9 @@
 	$query_topics = (object) array( 'posts' => get_posts( $topic_args ) );
 
 	if ( ! count( $query_topics->posts ) ) {
-		echo _esc_html( '<p class="course-empty-content">' . __( 'Add a topic to build your course', 'tutor' ) . '</p>' );
+		echo '<p class="course-empty-content">' . 
+				__( 'Add a topic to build your course', 'tutor' ) . 
+			'</p>';
 	}
 
 	foreach ( $query_topics->posts as $topic ) {

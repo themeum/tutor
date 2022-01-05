@@ -68,7 +68,7 @@ $withdraw_methods = $this->withdraw_methods;
 							include tutor()->path . 'views/options/withdraw/' . esc_attr( $field['type'] ) . '.php';
 
 							if ( isset( $field['desc'] ) ) {
-								echo _esc_html( '<p class="desc">' . $field['desc'] . '</p>' );
+								echo '<p class="desc">' . esc_html( $field['desc'] ) . '</p>';
 							}
 							?>
 						</div>

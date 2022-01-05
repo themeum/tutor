@@ -26,7 +26,7 @@ $stats = tutils()->get_earning_chart( $user_id, $start_date, $end_date );
 extract( $stats );
 
 if ( ! $earning_sum ) {
-	echo _esc_html( '<p>' . __( 'No Earning info available', 'tutor' ) . '</p>' );
+	echo '<p>' . __( 'No Earning info available', 'tutor' ) . '</p>';
 	return;
 }
 

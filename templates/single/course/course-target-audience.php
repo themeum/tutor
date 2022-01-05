@@ -31,7 +31,7 @@ if ( is_array( $target_audience ) && count( $target_audience ) ) {
 			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
 				<?php
 				foreach ( $target_audience as $audience ) {
-					echo _esc_html( '<li>' . $audience . '</li>' );
+					echo '<li>' . $audience . '</li>';
 				}
 				?>
 			</ul>

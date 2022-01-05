@@ -92,6 +92,6 @@ class Dashboard {
 			$output = apply_filters( 'tutor_profile_completion_notification_html', ob_get_clean() );
 		}
 
-		echo _esc_html( $output );
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

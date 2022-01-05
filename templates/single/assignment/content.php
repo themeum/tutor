@@ -87,7 +87,7 @@ if ( $assignment_comment != false ) {
 		<ul>
 			<li>
 				<?php _e( 'Time Duration : ', 'tutor' ); ?>
-				<strong><?php echo _esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . $time_duration['time'] : __( 'No limit', 'tutor' ) ); ?></strong>
+				<strong><?php echo $time_duration['value'] ? $time_duration['value'] . ' ' . $time_duration['time'] : __( 'No limit', 'tutor' ); ?></strong>
 			</li>
 			<?php
 			/*
@@ -236,7 +236,7 @@ if ( $assignment_comment != false ) {
 				<?php ob_start(); ?>
 
 				<div class="assignment-result-wrap">
-					<h4><?php echo _esc_html( sprintf( __( 'You received %1$s points out of %2$s', 'tutor' ), '<span class="received-marks">' . $given_mark . '</span>', '<span class="out-of-marks">' . $max_mark . '</span>' ) ); ?></h4>
+					<h4><?php echo sprintf( __( 'You received %1$s points out of %2$s', 'tutor' ), '<span class="received-marks">' . $given_mark . '</span>', '<span class="out-of-marks">' . $max_mark . '</span>' ); ?></h4>
 					<h4 class="submitted-assignment-grade">
 						<?php _e( 'Your Grade is ', 'tutor' ); ?>
 						<?php

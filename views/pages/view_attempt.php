@@ -39,7 +39,7 @@ $user    = get_userdata( $user_id );
 					<h5><?php echo __( 'Quiz', 'tutor' ); ?></h5>
 					<h4>
 						<?php
-						echo _esc_html( '<a href="' . esc_url( admin_url( "post.php?post={$attempt->quiz_id}&action=edit" ) ) . '">' . get_the_title( $attempt->quiz_id ) . '</a>' );
+						echo '<a href="' . esc_url( admin_url( "post.php?post={$attempt->quiz_id}&action=edit" ) ) . '">' . get_the_title( $attempt->quiz_id ) . '</a>';
 						?>
 					</h4>
 				</div>
@@ -49,7 +49,7 @@ $user    = get_userdata( $user_id );
 				<div class="attempt-info-content">
 					<h5><?php echo __( 'Attempt Time', 'tutor' ); ?></h5>
 					<h4>
-						<?php echo _esc_html( date_i18n( get_option( 'date_format' ), strtotime( $attempt->attempt_started_at ) ) . ' ' . date_i18n( get_option( 'time_format' ), strtotime( $attempt->attempt_started_at ) ) ); ?>
+						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $attempt->attempt_started_at ) ) . ' ' . date_i18n( get_option( 'time_format' ), strtotime( $attempt->attempt_started_at ) ); ?>
 					</h4>
 				</div>
 			</div>
@@ -75,7 +75,7 @@ $user    = get_userdata( $user_id );
 						<?php
 						$quiz = tutor_utils()->get_course_by_quiz( $attempt->quiz_id );
 						if ( $quiz ) {
-							echo _esc_html( '<a href="' . esc_url( admin_url( 'post.php?post=' . $quiz->ID . '&action=edit' ) ) . '">' . get_the_title( $quiz->ID ) . '</a>' );
+							echo '<a href="' . esc_url( admin_url( 'post.php?post=' . $quiz->ID . '&action=edit' ) ) . '">' . get_the_title( $quiz->ID ) . '</a>';
 						}
 						?>
 					</h4>
@@ -104,7 +104,7 @@ $user    = get_userdata( $user_id );
 							$output .= __( $attempt->earned_marks . ' out of ' . $attempt->total_marks, 'tutor' );
 							$output .= '<span>, ' . $marks_earned_text . ' (' . $earned_percentage . '%)</span>';
 						}
-						echo _esc_html( $output );
+						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						?>
 					</h4>
 				</div>
@@ -154,7 +154,7 @@ $user    = get_userdata( $user_id );
 			}
 
 			if ( count( $required_review ) ) {
-				echo _esc_html( '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>' . __( 'Reminder:', 'tutor' ) . ' </strong> ' . sprintf( __( 'Please review answers for question no. %s', 'tutor' ), implode( ', ', $required_review ) ) . '</p>' );
+				echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>' . __( 'Reminder:', 'tutor' ) . ' </strong> ' . sprintf( __( 'Please review answers for question no. %s', 'tutor' ), implode( ', ', $required_review ) ) . '</p>';
 			}
 		}
 
@@ -203,7 +203,7 @@ $user    = get_userdata( $user_id );
 					$question_type = tutor_utils()->get_question_types( $answer->question_type );
 					?>
 					<tr>
-						<td><?php echo _esc_html( $question_type['icon'] ); ?></td>
+						<td><?php echo $question_type['icon']; ?></td>
 						<td><?php echo esc_attr( $answer_i ); ?></td>
 						<td><?php echo stripslashes( esc_attr( $answer->question_title ) ); ?></td>
 						<td>
@@ -212,12 +212,12 @@ $user    = get_userdata( $user_id );
 								$get_answers   = tutor_utils()->get_answer_by_id( $answer->given_answer );
 								$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 								$answer_titles = array_map( 'stripslashes', $answer_titles );
-								echo _esc_html( '<p>' . implode( '</p><p>', $answer_titles ) . '</p>' );
+								echo '<p>' . implode( '</p><p>', $answer_titles ) . '</p>';
 							} elseif ( $answer->question_type === 'multiple_choice' ) {
 								$get_answers   = tutor_utils()->get_answer_by_id( maybe_unserialize( $answer->given_answer ) );
 								$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 								$answer_titles = array_map( 'stripslashes', $answer_titles );
-								echo _esc_html( '<p>' . implode( '</p><p>', $answer_titles ) . '</p>' );
+								echo '<p>' . implode( '</p><p>', $answer_titles ) . '</p>';
 							} elseif ( $answer->question_type === 'fill_in_the_blank' ) {
 								$answer_titles              = maybe_unserialize( $answer->given_answer );
 								$get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question( $answer->question_id );
@@ -249,7 +249,7 @@ $user    = get_userdata( $user_id );
 									$get_answers   = tutor_utils()->get_answer_by_id( $ordering_id );
 									$answer_titles = wp_list_pluck( $get_answers, 'answer_title' );
 									$answer_titles = array_map( 'stripslashes', $answer_titles );
-									echo _esc_html( '<p>' . implode( '</p><p>', $answer_titles ) . '</p>' );
+									echo '<p>' . implode( '</p><p>', $answer_titles ) . '</p>';
 								}
 							} elseif ( $answer->question_type === 'matching' ) {
 
@@ -270,7 +270,7 @@ $user    = get_userdata( $user_id );
 								$ordering_ids           = maybe_unserialize( $answer->given_answer );
 								$original_saved_answers = tutor_utils()->get_answers_by_quiz_question( $answer->question_id );
 
-								echo _esc_html( '<div class="answer-image-matched-wrap">' );
+								echo '<div class="answer-image-matched-wrap">';
 								foreach ( $original_saved_answers as $key => $original_saved_answer ) {
 									$provided_answer_order_id = isset( $ordering_ids[ $key ] ) ? $ordering_ids[ $key ] : 0;
 									$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
@@ -283,12 +283,12 @@ $user    = get_userdata( $user_id );
 									</div>
 									<?php
 								}
-								echo _esc_html( '</div>' );
+								echo '</div>';
 							} elseif ( $answer->question_type === 'image_answering' ) {
 
 								$ordering_ids = maybe_unserialize( $answer->given_answer );
 
-								echo _esc_html( '<div class="answer-image-matched-wrap">' );
+								echo '<div class="answer-image-matched-wrap">';
 								foreach ( $ordering_ids as $answer_id => $image_answer ) {
 									$db_answers = tutor_utils()->get_answer_by_id( $answer_id );
 									foreach ( $db_answers as $db_answer ) {
@@ -296,39 +296,38 @@ $user    = get_userdata( $user_id );
 									?>
 									<div class="image-matching-item">
 										<p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id ); ?>" /> </p>
-										<p class="dragged-caption"><?php echo _esc_html( $image_answer ); ?></p>
+										<p class="dragged-caption"><?php echo $image_answer; ?></p>
 									</div>
 									<?php
 								}
-								echo _esc_html( '</div>' );
+								echo '</div>';
 							}
 
 							?>
 						</td>
 
-<td>
-					<?php
+						<td>
+							<?php
+								if ( $answer->is_correct ) {
+									echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> ' . __( 'Correct', 'tutor' ) . '</span>';
+								} else {
+									if ( $answer->question_type === 'open_ended' || $answer->question_type === 'short_answer' ) {
 
-					if ( $answer->is_correct ) {
-						echo _esc_html( '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> ' . __( 'Correct', 'tutor' ) . '</span>' );
-					} else {
-						if ( $answer->question_type === 'open_ended' || $answer->question_type === 'short_answer' ) {
+										// if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
+										if ( $answer->is_correct == null ) {
+											echo '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> ' . __( 'Review Required', 'tutor' ) . '</p>';
+										} elseif ( $answer->is_correct == 0 ) {
 
-							// if ( (bool) $attempt->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-							if ( $answer->is_correct == null ) {
-								echo _esc_html( '<p style="color: #878A8F;"><span style="color: #ff282a;">&ast;</span> ' . __( 'Review Required', 'tutor' ) . '</p>' );
-							} elseif ( $answer->is_correct == 0 ) {
-
-								echo _esc_html( '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> ' . __( 'Incorrect', 'tutor' ) . '</span>' );
-							} else {
-								echo _esc_html( '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> ' . __( 'Correct', 'tutor' ) . '</span>' );
-							}
-						} else {
-							echo _esc_html( '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> ' . __( 'Incorrect', 'tutor' ) . '</span>' );
-						}
-					}
-					?>
-</td>
+											echo '<span class="tutor-status-blocked-context"><i class="tutor-icon-line-cross"></i> ' . __( 'Incorrect', 'tutor' ) . '</span>';
+										} else {
+											echo '<span class="quiz-correct-answer-text"><i class="tutor-icon-mark"></i> ' . __( 'Correct', 'tutor' ) . '</span>';
+										}
+									} else {
+										echo '<span class="quiz-incorrect-answer-text"><i class="tutor-icon-line-cross"></i> ' . __( 'Incorrect', 'tutor' ) . '</span>';
+									}
+								}
+							?>
+						</td>
 
 						<td style="white-space: nowrap">
 							<?php
