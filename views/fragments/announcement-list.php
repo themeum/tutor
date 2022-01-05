@@ -191,15 +191,15 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input">
 						</div>
 					</th>
-					<th width="15%">
+					<th width="17%">
 						<div class="text-regular-small tutor-color-text-subsued">
-							<?php esc_html_e( 'Date', 'tutor-pro' ); ?>
+							<?php esc_html_e( 'Date', 'tutor-pro'); ?>
 						</div>
 					</th>
 				<?php else : ?>
-					<th class="tutor-shrink">
+					<th width="17%" class="tutor-shrink">
 						<span class="text-regular-small tutor-color-text-subsued">
-								<?php esc_html_e( 'Date', 'tutor' ); ?>
+							<?php esc_html_e( 'Date', 'tutor'); ?>
 						</span>
 					</th>
 				<?php endif; ?>
@@ -237,14 +237,14 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									/>
 								</div>
 							</td>
-							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
+							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" width="17%">
 								<div class="td-datetime">
 									<div class="tutor-text-medium-small tutor-color-text-primary"><?php echo esc_html( $date_format ); ?></div>
 									<div class="tutor-text-regular-small tutor-color-text-primary"><?php echo esc_html( $time_format ); ?></div>
 								</div>
 							</td>
 						<?php else : ?>
-							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" class="tutor-text-nowrap">
+							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" width="17%" class="tutor-text-nowrap">
 								<div class="td-datetime">
 									<div class="tutor-date tutor-text-medium-small tutor-color-text-primary"><?php echo esc_html( $date_format ); ?></div>
 									<div class="tutor-text-regular-small tutor-color-text-primary"><?php echo esc_html( $time_format ); ?></div>
