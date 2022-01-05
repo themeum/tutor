@@ -20,7 +20,7 @@ class Shortcode {
         'pp-left-middle',
         'pp-left-full'
 	);
-	
+
 	public function __construct() {
 		add_shortcode('tutor_student_registration_form', array($this, 'student_registration_form'));
 		add_shortcode('tutor_dashboard', array($this, 'tutor_dashboard'));
@@ -170,13 +170,13 @@ class Shortcode {
 
 		$previous_page = $page>0 ? $current_page-1 : null;
 		$next_page = (is_array($next_instructors) && count($next_instructors)>0) ? $current_page+1 : null;
-		
+
 		$layout = sanitize_text_field(tutils()->array_get('layout', $atts, ''));
 		$layout = in_array($layout, $this->instructor_layout) ? $layout : tutor_utils()->get_option('instructor_list_layout', $this->instructor_layout[0]);
 
 		$payload=array(
-			'instructors' 	=> is_array($instructors) ? $instructors : array(), 
-			'next_page' 	=> $next_page, 
+			'instructors' 	=> is_array($instructors) ? $instructors : array(),
+			'next_page' 	=> $next_page,
 			'previous_page' => $previous_page,
 			'column_count' 	=> sanitize_text_field(tutils()->array_get('column_per_row', $atts, 3)),
 			'layout' 		=> $layout,
@@ -186,7 +186,7 @@ class Shortcode {
 
 		return $payload;
 	}
-	
+
 	/**
 	 * @param $atts
 	 *
@@ -198,11 +198,11 @@ class Shortcode {
 
 		!is_array( $atts ) ? $atts = array() : 0;
 
-		$current_page = (int)tutor_utils()->array_get('instructor-page', $_GET, 1);
+		$current_page = (int)tutor_utils()->array_get('instructor-page', sanitize_data($_GET), 1);
 		$current_page = $current_page>=1 ? $current_page : 1;
-		
+
 		$show_filter = isset( $atts['filter'] ) ? $atts['filter']=='on' : tutor_utils()->get_option( 'instructor_list_show_filter', false );
-		
+
 		// Get instructor list to sow
 		$payload = $this->prepare_instructor_list($current_page, $atts);
 		$payload['show_filter'] = $show_filter;
@@ -212,7 +212,7 @@ class Shortcode {
 		$content = ob_get_clean();
 
 		if($show_filter) {
-			
+
 			$course_cats = get_terms( array(
 				'taxonomy' => 'course-category',
 				'hide_empty' => true,
@@ -222,7 +222,7 @@ class Shortcode {
 			$attributes = $payload;
 			unset( $attributes['instructors'] );
 
-			$payload = array( 
+			$payload = array(
 				'show_filter' => $show_filter,
 				'content' => $content,
 				'categories' => $course_cats,
@@ -232,7 +232,7 @@ class Shortcode {
 			ob_start();
 
 			tutor_load_template('shortcode.instructor-filter',  $payload);
-		
+
 			$content = ob_get_clean();
 		}
 
@@ -242,11 +242,11 @@ class Shortcode {
 	public function load_filtered_instructor() {
 		tutor_utils()->checking_nonce();
 
-		$attributes = (array)tutils()->array_get('attributes', $_POST, array());
+		$attributes = (array)tutils()->array_get('attributes', sanitize_data($_POST), array());
 		$current_page = (int)sanitize_text_field(tutils()->array_get('current_page', $attributes, 1));
 		$keyword = (string)sanitize_text_field(tutils()->array_get('keyword', $_POST, ''));
 
-		$category = (array)tutils()->array_get('category', $_POST, array());
+		$category = (array)tutils()->array_get('category', sanitize_data($_POST), array());
 		$category = array_filter($category, function($cat) {
 			return is_numeric($cat);
 		});
@@ -256,7 +256,7 @@ class Shortcode {
 		tutor_load_template('shortcode.tutor-instructor', $payload);
 		exit;
 	}
-	
+
 	/**
 	 * Show layout selection dashboard in instructor setting
 	 */
