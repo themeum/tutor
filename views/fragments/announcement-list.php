@@ -238,14 +238,17 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
-								<div class="td-datetime tutor-text-regular-caption tutor-color-text-primary">
-									<?php echo esc_html( $date_format ); ?>,<br>
-									<?php echo esc_html( $time_format ); ?>
+								<div class="td-datetime">
+									<div class="tutor-text-medium-small tutor-color-text-primary"><?php echo esc_html( $date_format ); ?></div>
+									<div class="tutor-text-regular-small tutor-color-text-primary"><?php echo esc_html( $time_format ); ?></div>
 								</div>
 							</td>
 						<?php else : ?>
 							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" class="tutor-text-nowrap">
-								<?php echo esc_html( $date_format ); ?>
+								<div class="td-datetime">
+									<div class="tutor-date tutor-text-medium-small tutor-color-text-primary"><?php echo esc_html( $date_format ); ?></div>
+									<div class="tutor-text-regular-small tutor-color-text-primary"><?php echo esc_html( $time_format ); ?></div>
+								</div>
 							</td>
 						<?php endif; ?>
 
@@ -254,7 +257,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 								<div class="td-course tutor-color-text-primary tutor-text-medium-body">
 									<?php echo esc_html( $announcement->post_title ); ?>
 								</div>
-								<div class="tutor-color-text-subsued" style="font-weight: 500; font-size: 15px; line-height: 21px;">
+								<div class="tutor-text-medium-small tutor-color-text-subsued" style="margin-top: 3px;">
 									<?php esc_html_e( 'Course', 'tutor' ); ?>: <?php echo esc_html( $course ? $course->post_title : '' ); ?>
 								</div>
 							</div>
