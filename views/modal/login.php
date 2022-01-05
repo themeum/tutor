@@ -1,19 +1,19 @@
 <?php 
     $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
 ?>
-<div class="tutor-login-modal tutor-modal tutor-is-sm">
+<div class="tutor-login-modal tutor-modal tutor-is-sm tutor-modal-is-close-inside-inner">
     <span class="tutor-modal-overlay"></span>
-    <button data-tutor-modal-close class="tutor-modal-close">
-        <span class="las la-times"></span>
-    </button>
     <div class="tutor-modal-root">
         <div class="tutor-modal-inner">
+            <button data-tutor-modal-close class="tutor-modal-close">
+                <span class="ttr-line-cross-line tutor-icon-40"></span>
+            </button>
 	        <?php do_action("tutor_before_login_form"); ?>
 
             <div class="tutor-modal-body">
-                <h3 class="tutor-modal-title tutor-mb-30">
+                <div class="tutor-text-regular-h5 tutor-color-text-primary tutor-mb-32">
                     <?php _e('Hi, Welcome back!', 'tutor'); ?>
-                </h3>
+                </div>
                 <form>
                     <input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo get_the_ID();?>">
                     <input type="hidden" name="tutor_action" value="tutor_user_login" />
@@ -33,20 +33,16 @@
                         do_action("login_form");
                         apply_filters("login_form_middle",'','');
                     ?>
-                    <div class="tutor-bs-row align-items-center tutor-mb-30">
-                        <div class="tutor-bs-col">
+                    <div class="d-flex justify-content-between align-items-center tutor-mb-40">
                         <div class="tutor-form-check">
-                            <input id="tutor-login-agmnt-1" type="checkbox" class="tutor-form-check-input" name="rememberme" value="forever"/>
-                            <label for="tutor-login-agmnt-1">
+                            <input id="tutor-login-agmnt-1" type="checkbox" class="tutor-form-check-input tutor-bg-black-40" name="rememberme" value="forever"/>
+                            <label for="tutor-login-agmnt-1" class="tutor-text-regular-caption tutor-color-text-hints">
                                 <?php _e('Keep me signed in', 'tutor'); ?>
                             </label>
                         </div>
-                        </div>
-                        <div class="tutor-bs-col-auto">
-                            <a href="<?php echo $lost_pass; ?>">
-                                <?php _e('Forgot Password?', 'tutor'); ?>
-                            </a>
-                        </div>
+                        <a href="<?php echo $lost_pass; ?>" class="tutor-text-medium-body tutor-color-text-subsued td-none">
+                            <?php _e('Forgot?', 'tutor'); ?>
+                        </a>
                     </div>
 
 		            <?php do_action("tutor_login_form_end");?>
@@ -54,9 +50,9 @@
                         <?php _e('Sign In', 'tutor'); ?>
                     </button>
                     <?php if(get_option( 'users_can_register', false )): ?>
-                        <div class="tutor-text-center tutor-mt-15">
+                        <div class="tutor-text-center tutor-text-regular-body tutor-color-text-subsued tutor-mt-18">
                             <?php _e('Don\'t have an account?', 'tutor'); ?>&nbsp;
-                            <a href="<?php echo add_query_arg ( array('redirect_to'=>tutor()->current_url), tutor_utils()->student_register_url() ); ?>">
+                            <a href="<?php echo add_query_arg ( array('redirect_to'=>tutor()->current_url), tutor_utils()->student_register_url() ); ?>" class="tutor-fweight-500 td-none tutor-color-design-brand">
                                 <?php _e('Registration Now', 'tutor'); ?>
                             </a>
                         </div>

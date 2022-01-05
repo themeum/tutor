@@ -47,7 +47,7 @@
 		}
 	}
 
-	&:not(.modal-sticky-header-footer):not(.modal-view-double-segment):not(.tutor-modal-is-close-inside-header) {
+	&:not(.modal-sticky-header-footer):not(.modal-view-double-segment):not(.tutor-modal-is-close-inside-header):not(.tutor-modal-is-close-inside-inner) {
 		.tutor-modal-close {
 			position: fixed;
 			right: 30px;
@@ -144,7 +144,7 @@
 				@include breakpoint-max(mobile) {
 					grid-template-columns: 1fr;
 				}
- 			}
+			}
 		}
 
 		.footer-btns {
@@ -547,6 +547,7 @@
 		}
 	}
 
+	// .tutor-modal..tutor-modal-is-close-beside
 	&.tutor-modal-is-close-beside {
 		display: flex;
 		align-items: center;
@@ -586,6 +587,7 @@
 		}
 	} // end of /.tutor-modal-is-close-beside
 
+	// .tutor-modal.tutor-modal-is-close-inside-header {}
 	&.tutor-modal-is-close-inside-header {
 		.tutor-modal-header {
 			display: flex;
@@ -602,6 +604,18 @@
 			top: -10px;
 		}
 	} // end of /.tutor-modal-is-close-inside-header
+
+	&.tutor-modal-is-close-inside-inner {
+		.tutor-modal-inner {
+			position: relative;
+		}
+		.tutor-modal-close {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			color: $black-50;
+		}
+	}
 
 	&-ins-approval {
 		.tutor-modal-root {
@@ -649,6 +663,29 @@
 	#modal-course-save-feedback {
 		.tutor-modal-body {
 			padding-top: 0;
+		}
+	}
+
+	// .tutor-modal.tutor-login-modal {}
+	&.tutor-login-modal {
+		.tutor-modal-root {
+			.tutor-modal-body {
+				padding: 50px 57px;
+				align-items: unset;
+				.tutor-modal-title {
+					@extend .tutor-text-regular-h5;
+				}
+
+				.tutor-form-check {
+					input {
+						// background-color: $black-05;
+					}
+					label {
+						@extend .tutor-text-regular-caption;
+						@extend .tutor-color-text-hints;
+					}
+				}
+			}
 		}
 	}
 } //end of /.tutor-modal
