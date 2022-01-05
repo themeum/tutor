@@ -118,7 +118,7 @@ class User {
 					wp_update_attachment_metadata( $media_id, wp_generate_attachment_metadata( $media_id, $file_path ) );
 
 					// Update it to user profile
-					$this->delete_existing_user_photo( $user_id, $_POST['photo_type'] );
+					$this->delete_existing_user_photo( $user_id, sanitize_data($_POST['photo_type']) );
 					update_user_meta( $user_id, $meta_key, $media_id );
 
 					exit( json_encode( array( 'status' => 'success' ) ) );

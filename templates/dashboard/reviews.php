@@ -19,7 +19,7 @@ if ( ! tutor_utils()->is_instructor() ) {
 
 // Pagination Variable
 $per_page     = tutils()->get_option( 'pagination_per_page', 20 );
-$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', $_GET ) );
+$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', sanitize_data($_GET) ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
 $reviews     = tutor_utils()->get_reviews_by_instructor( get_current_user_id(), $offset, $per_page );

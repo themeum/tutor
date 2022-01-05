@@ -1,7 +1,7 @@
 <?php
 $question_id = 0;
 if ( isset( $_GET['question_id'] ) ) {
-	$question_id = (int) $_GET['question_id'];
+	$question_id = (int) sanitize_data($_GET['question_id']);
 }
 
 $question    = tutils()->get_qa_question( $question_id );

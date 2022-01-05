@@ -130,7 +130,7 @@ class Admin{
 	}
 
 	public function tutor_tools(){
-		$tutor_admin_tools_page = tutils()->array_get('tutor_admin_tools_page', $_GET);
+		$tutor_admin_tools_page = tutils()->array_get('tutor_admin_tools_page', sanitize_data($_GET));
 		if ($tutor_admin_tools_page){
 			include apply_filters('tutor_admin_tools_page', tutor()->path."views/pages/{$tutor_admin_tools_page}.php", $tutor_admin_tools_page);
 		}else{
@@ -159,7 +159,7 @@ class Admin{
 	}
 
 	public function parent_menu_active(  $parent_file ){
-		$taxonomy = tutor_utils()->avalue_dot('taxonomy', $_GET);
+		$taxonomy = tutor_utils()->avalue_dot('taxonomy', sanitize_data($_GET));
 		if ($taxonomy === 'course-category' || $taxonomy === 'course-tag'){
 			return 'tutor';
 		}
@@ -168,7 +168,7 @@ class Admin{
 	}
 
 	public function submenu_file_active($submenu_file, $parent_file){
-		$taxonomy = tutor_utils()->avalue_dot('taxonomy', $_GET);
+		$taxonomy = tutor_utils()->avalue_dot('taxonomy', sanitize_data($_GET));
 		$course_post_type = tutor()->course_post_type;
 
 		if ($taxonomy === 'course-category'){

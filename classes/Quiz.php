@@ -108,7 +108,7 @@ class Quiz {
 		tutils()->checking_nonce();
 
 		$feedback   = sanitize_text_field( $_POST['feedback'] );
-		$attempt_id = (int) tutor_utils()->avalue_dot( 'attempts_id', $_POST );
+		$attempt_id = (int) tutor_utils()->avalue_dot( 'attempts_id', sanitize_data( $_POST ) );
 
 		if ( $attempt_id && tutils()->can_user_manage( 'attempt', $attempt_id ) ) {
 			update_post_meta( $attempt_id, 'instructor_feedback', $feedback );
@@ -142,7 +142,7 @@ class Quiz {
 		tutils()->checking_nonce();
 
 		global $wpdb;
-		$quiz_id = (int) tutor_utils()->avalue_dot( 'quiz_id', $_POST );
+		$quiz_id = (int) tutor_utils()->avalue_dot( 'quiz_id', sanitize_data($_POST) );
 
 		if ( ! tutils()->can_user_manage( 'quiz', $quiz_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -650,7 +650,7 @@ class Quiz {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Access Denied', 'tutor' ),
-					'data'    => $_POST,
+					'data'    => sanitize_data($_POST),
 				)
 			);
 		}
@@ -1215,7 +1215,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$question_ids = tutor_utils()->avalue_dot( 'sorted_question_ids', $_POST );
+		$question_ids = tutor_utils()->avalue_dot( 'sorted_question_ids', sanitize_data($_POST) );
 		if ( is_array( $question_ids ) && count( $question_ids ) ) {
 			$i = 0;
 			foreach ( $question_ids as $key => $question_id ) {
