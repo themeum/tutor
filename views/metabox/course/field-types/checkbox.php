@@ -5,7 +5,7 @@ if (empty($field['options'])){
     $label_title = isset($field['label_title']) ? $field['label_title'] : $field['label'];
 	?>
 	<label>
-		<input type="checkbox" name="_tutor_course_settings[<?php echo esc_attr( $instructor->ID ); ?>]" value="1" <?php checked($option_value, '1') ?> />
+		<input type="checkbox" name="_tutor_course_settings[<?php echo $field['field_key']; ?>]" value="1" <?php checked($option_value, '1') ?> />
 		<?php echo esc_attr( $label_title ); ?>
 	</label>
 	<?php

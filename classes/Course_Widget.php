@@ -34,9 +34,9 @@ class Course_Widget extends \WP_Widget {
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
-		echo esc_data( $args['before_widget'] );
+		echo $args['before_widget'];
 		if ( ! empty( $instance['title'] ) ) {
-			echo esc_data( $args['before_title'] ) . apply_filters( 'widget_title', $instance['title'] ) . esc_data( $args['after_title'] );
+			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
 		}
 
 		$course_post_type = tutor()->course_post_type;
@@ -89,9 +89,9 @@ class Course_Widget extends \WP_Widget {
 		$output = ob_get_clean();
 		wp_reset_query();
 
-		echo esc_data( $output );
+		echo $output;
 
-		echo esc_data( $args['after_widget'] );
+		echo $args['after_widget'];
 	}
 
 	/**

@@ -481,11 +481,7 @@ $quiz_answers      = array();
 	do_action( 'tutor_quiz/body/after', $quiz_id );
 	?>
 </div>
-<?php
-$quiz_answers        = tutor_sanitize_data( $quiz_answers );
-$quiz_answers_base64 = strrev( base64_encode( json_encode( $quiz_answers ) ) );
-// $quiz_ans = base64_decode($quiz_answers_base64);
-?>
+
 <script>
-	window.tutor_quiz_context = "<?php echo $quiz_answers_base64; ?>";
+	window.tutor_quiz_context = '<?php echo strrev(base64_encode(json_encode($quiz_answers))); ?>';
 </script>
