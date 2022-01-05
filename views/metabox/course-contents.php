@@ -6,7 +6,7 @@
 
 	<?php
 	if ( empty( $current_topic_id ) ) {
-		$current_topic_id = (int) tutor_utils()->avalue_dot( 'current_topic_id', sanitize_data($_POST) );
+		$current_topic_id = (int) tutor_utils()->avalue_dot( 'current_topic_id', tutor_sanitize_data($_POST) );
 	}
 
 	$query_lesson = tutor_utils()->get_lesson( $course_id, -1 );

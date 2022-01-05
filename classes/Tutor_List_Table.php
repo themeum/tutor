@@ -632,7 +632,7 @@ class Tutor_List_Table {
 		if ( ! isset( $_GET['post_status'] ) || 'trash' !== $_GET['post_status'] ) {
 			$extra_checks .= " AND post_status != 'trash'";
 		} elseif ( isset( $_GET['post_status'] ) ) {
-			$extra_checks = $wpdb->prepare( ' AND post_status = %s', sanitize_data($_GET['post_status']) );
+			$extra_checks = $wpdb->prepare( ' AND post_status = %s', tutor_sanitize_data($_GET['post_status']) );
 		}
 
 		$months = $wpdb->get_results(
@@ -1156,7 +1156,7 @@ class Tutor_List_Table {
 		$current_url = remove_query_arg( 'paged', $current_url );
 
 		if ( isset( $_GET['orderby'] ) ) {
-			$current_orderby = sanitize_data( $_GET['orderby'] );
+			$current_orderby = tutor_sanitize_data( $_GET['orderby'] );
 		} else {
 			$current_orderby = '';
 		}

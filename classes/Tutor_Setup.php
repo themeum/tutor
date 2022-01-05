@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) )
                         if ($_POST[$key] == '') {
                             unset($options[$key]);
                         } else {
-                            $options[$key] = sanitize_data($_POST[$key]);
+                            $options[$key] = tutor_sanitize_data($_POST[$key]);
                         }
                     }
                 } else {

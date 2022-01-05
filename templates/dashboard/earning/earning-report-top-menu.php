@@ -32,7 +32,7 @@
 	<div class="tutor-date-range-wrap">
 		<form action="" class="report-date-range-form" method="get">
 			<?php
-			$query_arg = sanitize_data( $_GET );
+			$query_arg = tutor_sanitize_data( $_GET );
 			if ( ! empty( $query_arg ) && is_array( $query_arg ) ) {
 				if ( isset( $query_arg['time_period'] ) ) {
 					unset( $query_arg['time_period'] );

@@ -482,7 +482,7 @@ $quiz_answers      = array();
 	?>
 </div>
 <?php
-$quiz_answers        = sanitize_data( $quiz_answers );
+$quiz_answers        = tutor_sanitize_data( $quiz_answers );
 $quiz_answers_base64 = strrev( base64_encode( json_encode( $quiz_answers ) ) );
 // $quiz_ans = base64_decode($quiz_answers_base64);
 ?>

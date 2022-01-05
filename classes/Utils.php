@@ -2696,7 +2696,7 @@ class Utils {
 	 */
 	public function input_old( $input = '', $old_data = null ) {
 		if ( ! $old_data ) {
-			$old_data = sanitize_data( $_REQUEST );
+			$old_data = tutor_sanitize_data( $_REQUEST );
 		}
 		$value = $this->avalue_dot( $input, $old_data );
 		if ( $value ) {

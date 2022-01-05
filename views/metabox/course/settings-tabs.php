@@ -1,6 +1,6 @@
 <?php
 $args        = $this->args;
-$current_tab = tutils()->array_get( 'settings_tab', sanitize_data($_GET) );
+$current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data($_GET) );
 
 ?>
 

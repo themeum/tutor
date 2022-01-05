@@ -198,7 +198,7 @@ class Shortcode {
 
 		!is_array( $atts ) ? $atts = array() : 0;
 
-		$current_page = (int)tutor_utils()->array_get('instructor-page', sanitize_data($_GET), 1);
+		$current_page = (int)tutor_utils()->array_get('instructor-page', tutor_sanitize_data($_GET), 1);
 		$current_page = $current_page>=1 ? $current_page : 1;
 
 		$show_filter = isset( $atts['filter'] ) ? $atts['filter']=='on' : tutor_utils()->get_option( 'instructor_list_show_filter', false );
@@ -242,11 +242,11 @@ class Shortcode {
 	public function load_filtered_instructor() {
 		tutor_utils()->checking_nonce();
 
-		$attributes = (array)tutils()->array_get('attributes', sanitize_data($_POST), array());
+		$attributes = (array)tutils()->array_get('attributes', tutor_sanitize_data($_POST), array());
 		$current_page = (int)sanitize_text_field(tutils()->array_get('current_page', $attributes, 1));
 		$keyword = (string)sanitize_text_field(tutils()->array_get('keyword', $_POST, ''));
 
-		$category = (array)tutils()->array_get('category', sanitize_data($_POST), array());
+		$category = (array)tutils()->array_get('category', tutor_sanitize_data($_POST), array());
 		$category = array_filter($category, function($cat) {
 			return is_numeric($cat);
 		});
