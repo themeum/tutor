@@ -63,7 +63,7 @@ if ( $is_instructor ) {
 	ob_start();
 foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 	$url = $social_icon['url'];
-	echo ! empty( $url ) ? _esc_html( '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' ) : '';
+	echo ! empty( $url ) ? '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' : '';
 }
 	$social_media = ob_get_clean();
 ?>
@@ -81,9 +81,9 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 
 				<div class="profile-name">
 					<div class="profile-rating-media content-for-mobile">
-						<?php echo _esc_html( $rating_content ); ?>
+						<?php echo $rating_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<div class="tutor-social-container content-for-desktop">
-							<?php echo _esc_html( $social_media ); ?>
+							<?php echo $social_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</div>
 					</div>
 
@@ -94,12 +94,12 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 						$student_count = tutor_utils()->get_total_students_by_instructor( $user_id );
 						?>
 							<span>
-								<span><?php echo _esc_html( $course_count ); ?></span>
+								<span><?php echo $course_count; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 							<?php $course_count > 1 ? _e( 'Courses', 'tutor' ) : _e( 'Course', 'tutor' ); ?>
 							</span>
 							<span><span>•</span></span>
 							<span>
-								<span><?php echo _esc_html( $student_count ); ?></span>
+								<span><?php echo $student_count; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 							<?php $student_count > 1 ? _e( 'Students', 'tutor' ) : _e( 'Student', 'tutor' ); ?>
 							</span>
 							<?php
@@ -111,7 +111,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 						$complete_count = $complete_count ? count( $complete_count ) : 0;
 						?>
 							<span>
-								<span><?php echo _esc_html( $enrol_count ); ?></span>
+								<span><?php echo $enrol_count; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 							<?php $enrol_count > 1 ? _e( 'Courses Enrolled', 'tutor' ) : _e( 'Course Enrolled', 'tutor' ); ?>
 							</span>
 							<span><span>•</span></span>
@@ -125,11 +125,11 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 				</div>
 
 				<div class="tutor-social-container content-for-mobile">
-					<?php echo _esc_html( $social_media ); ?>
+					<?php echo $social_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</div>
 
 				<div class="profile-rating-media content-for-desktop">
-					<?php echo _esc_html( $rating_content ); ?>
+					<?php echo $rating_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<div class="tutor-social-container content-for-desktop">
 						<?php
 						foreach ( $tutor_user_social_icons as $key => $social_icon ) {

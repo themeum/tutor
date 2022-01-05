@@ -74,7 +74,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 			<?php
 			$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
 			echo esc_attr( $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), $withdraw_method_name ) : '' );
-			echo _esc_html( sprintf( __( 'You can change your %1$s withdrawal preference %2$s', 'tutor' ), '<a href="' . esc_url( $my_profile_url ) . '">', '</a>' ) );
+			echo sprintf( __( 'You can change your %1$s withdrawal preference %2$s', 'tutor' ), '<a href="' . esc_url( $my_profile_url ) . '">', '</a>' );
 			?>
 		</span>
 	</div>
@@ -145,7 +145,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 								<div class="inline-image-text">
 									<img src="<?php echo esc_url( $image_base ); ?>info-icon-question.svg" />
 									<span>
-										<?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . _esc_html( strip_tags( $formatted_min_withdraw_amount ) ); ?>
+										<?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?>
 									</span>
 								</div>
 							</div>
@@ -214,8 +214,8 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 									&nbsp;
 									<span>
 										<?php
-										echo _esc_html( '<strong class="withdraw-method-name">', tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ), '</strong>' );
-										echo _esc_html( '<small>', $method_title, '</small>' );
+										echo '<strong class="withdraw-method-name">' . tutor_utils()->avalue_dot( 'withdraw_method_name', $method_data ) . '</strong>';
+										echo '<small>' . $method_title . '</small>';
 										?>
 									</span>
 								</div>

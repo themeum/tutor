@@ -41,8 +41,8 @@
 								<div class="name column-name">
 									<h3>
 										<?php
-										echo esc_attr( $addon['name'] );
-										echo _esc_html( '<img src="' . esc_url( $thumbnailURL ) . '" class="plugin-icon" alt="">' );
+											echo esc_attr( $addon['name'] );
+											echo '<img src="' . esc_url( $thumbnailURL ) . '" class="plugin-icon" alt="">';
 										?>
 									</h3>
 								</div>
@@ -61,7 +61,7 @@
 								<?php } ?>
 
 								<div class="desc column-description">
-									<p><?php echo _esc_html( $addon['description'] ); ?></p>
+									<p><?php echo $addon['description']; ?></p>
 									<p class="authors"><cite>By <a href="https://www.themeum.com" target="_blank">Themeum</a></cite></p>
 								</div>
 							</div>
@@ -91,12 +91,12 @@
 								if ( count( $required ) ) {
 									?>
 									<div class="required-plugin-cards">
-										<strong>Requirements</strong>
+										<strong><?php _e('Requirements', 'tutor'); ?></strong>
 										<ul style="list-style: disc; padding-left: 15px;">
 											<?php
-											foreach ( $required as $req ) {
-												echo _esc_html( '<li>' . $req . '</li>' );
-											}
+												foreach ( $required as $req ) {
+													echo '<li>' . $req . '</li>';
+												}
 											?>
 										</ul>
 									</div>
@@ -107,7 +107,9 @@
 
 							<div class="plugin-card-bottom">
 								<?php
-								echo _esc_html( '<div class="plugin-version"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( TUTOR_VERSION ) . ' </div>' );
+									echo '<div class="plugin-version"> ' . 
+											__( 'Version', 'tutor' ) . ' : ' . esc_attr( TUTOR_VERSION ) . ' 
+										</div>';
 								?>
 							</div>
 						</div>

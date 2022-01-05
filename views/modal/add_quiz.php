@@ -1,10 +1,10 @@
 <?php
 if ( ! empty( $_POST['tutor_quiz_builder_quiz_id'] ) ) {
 	$quiz_id = sanitize_text_field( $_POST['tutor_quiz_builder_quiz_id'] );
-	echo _esc_html( '<input id="tutor_quiz_builder_quiz_id" value="' . esc_attr( $quiz_id ) . '" />' );
+	echo '<input id="tutor_quiz_builder_quiz_id" value="' . esc_attr( $quiz_id ) . '" />';
 }
 if ( isset( $_POST['current_topic_id'] ) && $_POST['current_topic_id'] !== '' ) {
-	echo _esc_html( '<input type="hidden" id="current_topic_id_for_quiz" value="' . sanitize_text_field( $_POST['current_topic_id'] ) . '" />' );
+	echo '<input type="hidden" id="current_topic_id_for_quiz" value="' . sanitize_text_field( $_POST['current_topic_id'] ) . '" />';
 }
 ?>
 

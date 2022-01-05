@@ -28,9 +28,9 @@ if ( is_array( $materials ) && count( $materials ) ) {
 		<div class="tutor-course-target-audience-content">
 			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
 				<?php
-				foreach ( $materials as $material ) {
-					echo _esc_html( '<li>' . $material . '</li>' );
-				}
+					foreach ( $materials as $material ) {
+						echo '<li>' . $material . '</li>';
+					}
 				?>
 			</ul>
 		</div>

@@ -36,10 +36,10 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 				$tutor_course_duration = get_tutor_course_duration_context( $course_id );
 
 				if ( $tutor_lesson_count ) {
-					echo _esc_html( '<span>' . $tutor_lesson_count . ' ' . __( 'Lessons', 'tutor' ) . '</span>' );
+					echo '<span>' . $tutor_lesson_count . ' ' . __( 'Lessons', 'tutor' ) . '</span>';
 				}
 				if ( $tutor_course_duration ) {
-					echo _esc_html( '<span>' . $tutor_course_duration . '</span>' );
+					echo '<span>' . $tutor_course_duration . '</span>';
 				}
 				?>
 			</div>
@@ -68,7 +68,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 								<?php
 								the_title();
 								if ( $topic_summery ) {
-									echo _esc_html('<span class="toggle-information-icon">&quest;</span>');
+									echo '<span class="toggle-information-icon">&quest;</span>';
 								}
 								?>
 							</h4>

@@ -4,11 +4,11 @@ if ( ! empty( $_POST['tutor_quiz_builder_quiz_id'] ) ) {
 	$quiz_id = sanitize_text_field( $_POST['tutor_quiz_builder_quiz_id'] );
 	$quiz    = get_post( $quiz_id );
 
-	echo _esc_html('<input type="hidden"  id="tutor_quiz_builder_quiz_id" value="' . esc_attr( $quiz_id ) . '" />');
+	echo '<input type="hidden"  id="tutor_quiz_builder_quiz_id" value="' . esc_attr( $quiz_id ) . '" />';
 } elseif ( ! empty( $quiz_id ) ) {
 	$quiz = get_post( $quiz_id );
 
-	echo _esc_html('<input type="hidden" id="tutor_quiz_builder_quiz_id" value="' . esc_attr( $quiz_id ) . '" />');
+	echo '<input type="hidden" id="tutor_quiz_builder_quiz_id" value="' . esc_attr( $quiz_id ) . '" />';
 }
 
 if ( ! $quiz ) {
@@ -16,7 +16,7 @@ if ( ! $quiz ) {
 }
 
 if ( $topic_id != '' ) {
-	echo _esc_html('<input type="hidden" id="current_topic_id_for_quiz" value="' . sanitize_text_field( $_POST['topic_id'] ) . '" />');
+	echo '<input type="hidden" id="current_topic_id_for_quiz" value="' . sanitize_text_field( $_POST['topic_id'] ) . '" />';
 }
 
 ?>
@@ -99,7 +99,7 @@ if ( $topic_id != '' ) {
 									<span class="question-icon">
 										<?php
 										$type = tutor_utils()->get_question_types( $question->question_type );
-										echo _esc_html( $type['icon'] . ' ' . $type['name'] );
+										echo $type['icon'] . ' ' . $type['name'];
 										?>
 									</span>
 

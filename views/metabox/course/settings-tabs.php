@@ -39,7 +39,11 @@ $current_tab = tutils()->array_get( 'settings_tab', $_GET );
 						$icon = '<i class="' . esc_attr( $icon_class ) . '"></i>';
 					}
 
-					echo _esc_html( '<li class="' . esc_attr( $active ) . '"><a href="' . esc_url( $url ) . '" data-target="#settings-tab-' . esc_attr( $key ) . '">' . $icon . ' ' . _esc_html( $label ) . '</a></li>' );
+					echo '<li class="' . esc_attr( $active ) . '">
+							<a href="' . esc_url( $url ) . '" data-target="#settings-tab-' . esc_attr( $key ) . '">' . 
+								$icon . ' ' . $label . 
+							'</a>
+						</li>';
 				}
 				?>
 			</ul>
@@ -63,7 +67,7 @@ $current_tab = tutils()->array_get( 'settings_tab', $_GET );
 					$display = esc_attr( $i === 1 ? 'block' : 'none' );
 				}
 
-				echo _esc_html( '<div id="settings-tab-' . esc_attr( $key ) . '" class="settings-tab-wrap ' . esc_attr( $active ) . '" style="display: ' . esc_attr( $display ) . ';">' );
+				echo '<div id="settings-tab-' . esc_attr( $key ) . '" class="settings-tab-wrap ' . esc_attr( $active ) . '" style="display: ' . esc_attr( $display ) . ';">';
 
 				do_action( 'tutor_course/settings_tab_content/before', $key, $tab );
 				do_action( 'tutor_course/settings_tab_content/before/' . esc_attr( $key ) . '', $tab );
@@ -82,7 +86,7 @@ $current_tab = tutils()->array_get( 'settings_tab', $_GET );
 				do_action( 'tutor_course/settings_tab_content/after', $key, $tab );
 				do_action( 'tutor_course/settings_tab_content/after/' . esc_attr( $key ) . '', $tab );
 
-				echo _esc_html( '</div>' );
+				echo '</div>';
 			}
 			?>
 		</div>

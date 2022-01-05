@@ -49,16 +49,16 @@
 					?>
 						<ul>
 							<li>
-							<?php
-							_e( 'Total Lessons:', 'tutor' );
-							echo _esc_html( '<span>' . $total_lessons . '</span>' );
-							?>
+								<?php
+									_e( 'Total Lessons:', 'tutor' );
+									echo '<span>' . $total_lessons . '</span>';
+								?>
 							</li>
 							<li>
-							<?php
-							_e( 'Completed Lessons:', 'tutor' );
-							echo _esc_html( '<span>' . $completed_lessons . ' / ' . $total_lessons . '</span>' );
-							?>
+								<?php
+									_e( 'Completed Lessons:', 'tutor' );
+									echo '<span>' . $completed_lessons . ' / ' . $total_lessons . '</span>';
+								?>
 							</li>
 						</ul>
 					</div>
@@ -73,7 +73,7 @@
 		wp_reset_postdata();
 
 	else :
-		echo _esc_html( '<div class="tutor-mycourse-wrap"><div class="tutor-mycourse-content">' . __( 'There\'s no completed course', 'tutor' ) . '</div></div>' );
+		echo '<div class="tutor-mycourse-wrap"><div class="tutor-mycourse-content">' . __( 'There\'s no completed course', 'tutor' ) . '</div></div>';
 	endif;
 
 	?>

@@ -22,7 +22,7 @@ if ( isset( $GLOBALS['tutor_setting_nav']['profile'] ) ) {
 	tutor_load_template( 'dashboard.settings.profile' );
 } else {
 	foreach ( $GLOBALS['tutor_setting_nav'] as $page ) {
-		echo _esc_html( '<script>window.location.replace("', $page['url'], '");</script>' );
+		echo '<script>window.location.replace("', esc_url( $page['url'] ), '");</script>';
 		break;
 	}
 }

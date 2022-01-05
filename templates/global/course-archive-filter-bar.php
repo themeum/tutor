@@ -15,7 +15,7 @@
 		<?php
 		$courseCount = tutor_utils()->get_archive_page_course_count();
 		$count_text  = $courseCount > 1 ? __( '%s Courses', 'tutor' ) : __( '%s Course', 'tutor' );
-		echo _esc_html( sprintf( $count_text, '<strong>' . $courseCount . '</strong>' ) );
+		echo sprintf( $count_text, '<strong>' . $courseCount . '</strong>' );
 		?>
 	</div>
 

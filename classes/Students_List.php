@@ -47,7 +47,7 @@ class Students_List extends \Tutor_List_Table {
 		$courses = tutor_utils()->get_courses_by_user( $user_id );
 		if ( $courses && is_array( $courses->posts ) && count( $courses->posts ) ) {
 			foreach ( $courses->posts as $course ) {
-				echo _esc_html('<a href="' . get_the_permalink( $course->ID ) . '" target="_blank">' . $course->post_title . '</a> ');
+				echo '<a href="' . get_the_permalink( $course->ID ) . '" target="_blank">' . $course->post_title . '</a> ';
 			}
 		}
 	}

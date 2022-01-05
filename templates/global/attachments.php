@@ -26,7 +26,7 @@ if ( is_array( $attachments ) && count( $attachments ) ) {
 		<?php
 		foreach ( $attachments as $attachment ) {
 			?>
-			<a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo _esc_html( ( $open_mode_view ? $open_mode_view : ' download="' . $attachment->name . '" ' ) ); ?> class="tutor-lesson-attachment clearfix">
+			<a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo $open_mode_view ? $open_mode_view : ' download="' . $attachment->name . '" '; ?> class="tutor-lesson-attachment clearfix">
 				<div class="tutor-attachment-icon">
 					<i class="tutor-icon-<?php echo esc_attr( $attachment->icon ); ?>"></i>
 				</div>

@@ -13,7 +13,7 @@
 		$this->field_type( $field ) ;
 
 		if ( isset( $field['desc'] ) ) {
-			echo _esc_html( '<p class="desc">' . $field['desc'] . '</p>' );
+			echo '<p class="desc">' . $field['desc'] . '</p>';
 		}
 
 		do_action( 'tutor_options_after_field_' . esc_attr( $field['field_key'] ) );

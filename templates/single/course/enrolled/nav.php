@@ -26,11 +26,14 @@ $course_nav_item = tutor_utils()->course_sub_pages();
 		<ul>
 			<li class="<?php echo esc_attr( get_query_var( 'course_subpage' ) === '' ? 'active' : '' ); ?>"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php _e( 'Course Page', 'tutor' ); ?></a> </li>
 			<?php
-			foreach ( $course_nav_item as $nav_key => $nav_item ) {
-				$active_class = get_query_var( 'course_subpage' ) === $nav_key ? 'active' : '';
-				$url          = trailingslashit( get_permalink() ) . $nav_key;
-				echo _esc_html('<li class="' . esc_attr( $active_class ) . '"><a href="' . esc_url( $url ) . '">' . esc_attr( $nav_item ) . '</a> </li>');
-			}
+				foreach ( $course_nav_item as $nav_key => $nav_item ) {
+					$active_class = get_query_var( 'course_subpage' ) === $nav_key ? 'active' : '';
+					$url = trailingslashit( get_permalink() ) . $nav_key;
+					
+					echo '<li class="' . esc_attr( $active_class ) . '">
+							<a href="' . esc_url( $url ) . '">' . esc_attr( $nav_item ) . '</a> 
+						</li>';
+				}
 			?>
 		</ul>
 	</nav>

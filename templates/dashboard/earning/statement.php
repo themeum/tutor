@@ -39,7 +39,7 @@ if ( $statements->count ) {
 
 						<?php
 						$order = new WC_Order( $statement->order_id );
-						echo _esc_html( '<div class="statement-address"> <strong>Purchaser</strong> <address>' . $order->get_formatted_billing_address() . '</address></div>' );
+						echo '<div class="statement-address"> <strong>Purchaser</strong> <address>' . $order->get_formatted_billing_address() . '</address></div>';
 						?>
 					</td>
 					<td>

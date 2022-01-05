@@ -28,9 +28,11 @@ $_tutor_course_price_type = tutils()->price_type();
 		<select name="_tutor_course_product_id" class="tutor_select2" style="min-width: 300px;">
 			<option value="-1"><?php _e( 'Select a Product' ); ?></option>
 			<?php
-			foreach ( $products as $product ) {
-				echo _esc_html( '<option value="' . $product->ID . '" ' . selected( $product->ID, $product_id ) . ' >' . esc_attr( $product->post_title ) . '</option>' );
-			}
+				foreach ( $products as $product ) {
+					echo '<option value="' . $product->ID . '" ' . selected( $product->ID, $product_id ) . ' >' . 
+							esc_attr( $product->post_title ) . 
+						'</option>';
+				}
 			?>
 		</select>
 

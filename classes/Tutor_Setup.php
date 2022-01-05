@@ -350,7 +350,7 @@ if ( ! defined( 'ABSPATH' ) )
                 $i++;
             }
 
-            echo _esc_html($html);
+            echo $html;
         }
 
 

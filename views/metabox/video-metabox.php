@@ -67,7 +67,9 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
 			<?php
 			foreach ( $video_sources as $value => $source ) {
 				if ( in_array( $value, $supported_sources ) ) {
-					echo _esc_html( '<option value="' . $value . '" ' . selected( $value, $videoSource ) . '  data-icon="' . $source['icon'] . '" >' . $source['title'] . '</option>' );
+					echo '<option value="' . $value . '" ' . selected( $value, $videoSource ) . '  data-icon="' . $source['icon'] . '" >' . 
+							$source['title'] . 
+						'</option>';
 				}
 			}
 			?>
@@ -141,19 +143,20 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
 			</div>
 
 			<div class="video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo esc_attr( $videoSource === 'youtube' ? 'block' : 'none' ); ?>;">
-				<input type="text" name="video[source_youtube]" value="<?php echo _esc_html( tutor_utils()->avalue_dot( 'source_youtube', $video ) ); ?>" placeholder="<?php _e( 'YouTube Video URL', 'tutor' ); ?>" data-youtube_api_key="<?php echo esc_attr( tutils()->get_option( 'lesson_video_duration_youtube_api_key', '' ) ); ?>">
+				<input type="text" name="video[source_youtube]" value="<?php echo esc_attr( tutor_utils()->avalue_dot( 'source_youtube', $video ) ); ?>" placeholder="<?php _e( 'YouTube Video URL', 'tutor' ); ?>" data-youtube_api_key="<?php echo esc_attr( tutils()->get_option( 'lesson_video_duration_youtube_api_key', '' ) ); ?>">
 			</div>
 			<div class="video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo esc_attr( $videoSource === 'vimeo' ? 'block' : 'none' ); ?>;">
-				<input type="text" name="video[source_vimeo]" value="<?php echo _esc_html( tutor_utils()->avalue_dot( 'source_vimeo', $video ) ); ?>" placeholder="<?php _e( 'Vimeo Video URL', 'tutor' ); ?>">
+				<input type="text" name="video[source_vimeo]" value="<?php echo esc_attr( tutor_utils()->avalue_dot( 'source_vimeo', $video ) ); ?>" placeholder="<?php _e( 'Vimeo Video URL', 'tutor' ); ?>">
 			</div>
 			<div class="video-metabox-source-item video_source_wrap_embedded" style="display: <?php echo esc_attr( $videoSource === 'embedded' ? 'block' : 'none' ); ?>;">
-				<textarea name="video[source_embedded]" placeholder="<?php _e( 'Place your embedded code here', 'tutor' ); ?>"><?php echo _esc_html( tutor_utils()->avalue_dot( 'source_embedded', $video ) ); ?></textarea>
+				<textarea name="video[source_embedded]" placeholder="<?php _e( 'Place your embedded code here', 'tutor' ); ?>"><?php 
+					echo tutor_utils()->avalue_dot( 'source_embedded', $video ); 
+				?></textarea>
 			</div>
-
 		</div>
-
 	</div>
 </div>
+
 <?php
 if ( $post->post_type !== tutor()->course_post_type ) {
 	?>

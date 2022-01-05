@@ -24,6 +24,6 @@
 		$price_html = '<div class="price"> ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div>';
 	}
 
-	echo _esc_html( $price_html );
+	echo $price_html;
 	?>
 </div>

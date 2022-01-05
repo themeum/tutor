@@ -13,7 +13,9 @@
 			<?php
 			$course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() );
 			foreach ( $courses as $course ) {
-				echo _esc_html( '<option value="' . esc_attr( $course->ID ) . '" ' . selected( $course->ID, $course_id ) . '>' . esc_attr( $course->post_title ) . '</option>' );
+				echo '<option value="' . esc_attr( $course->ID ) . '" ' . selected( $course->ID, $course_id ) . '>' . 
+						esc_attr( $course->post_title ) . 
+					'</option>';
 			}
 			?>
 		</select>

@@ -61,23 +61,6 @@ if ( ! function_exists( 'sanitize_data' ) ) {
 	}
 }
 
-
-if ( ! function_exists( 'esc_data' ) ) {
-	/**
-	 * Escaping for HTML data.
-	 *
-	 * @since 1.9.13
-	 *
-	 * @param  string $input.
-	 * @return string
-	 */
-	function _esc_html( $input = null ) {
-		if ( $input ) {
-			return html_entity_decode( esc_html( $input ) );
-		}
-	}
-}
-
 /**
  * Tutor general Functions
  */
@@ -382,7 +365,7 @@ if ( ! function_exists( '__tutor_generate_categories_checkbox' ) ) {
 			$output .= '</ul>';
 		}
 
-		return _esc_html( $output );
+		return $output;
 
 	}
 }
@@ -415,7 +398,7 @@ if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
 			$output .= '</ul>';
 		}
 
-		return _esc_html( $output );
+		return $output;
 	}
 }
 
@@ -439,16 +422,16 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 				<h3><i class="tutor-icon-down"></i> <span><?php echo esc_attr( $title ); ?></span></h3>
 			</div>
 			<div class="tutor-course-builder-section-content">
-		<?php echo _esc_html( $content ); ?>
+				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 		</div>
 		<?php
 		$html = ob_get_clean();
 
 		if ( $echo ) {
-			echo _esc_html( $html );
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
-			return _esc_html( $html );
+			return $html;
 		}
 	}
 }
@@ -592,15 +575,15 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 			}
 		}
 		if ( ! $msg ) {
-			return _esc_html( $msg );
+			return $msg;
 		}
 
 		$html = '<div class="tutor-alert tutor-alert-' . $type . '">' . $msg . '</div>';
 
 		if ( $echo ) {
-			echo _esc_html( $html );
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
-		return _esc_html( $html );
+		return $html;
 	}
 }
 
@@ -703,9 +686,9 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 		}
 
 		if ( $echo ) {
-			echo _esc_html( $output );
+			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
-			return _esc_html( $output );
+			return $output;
 		}
 	}
 }

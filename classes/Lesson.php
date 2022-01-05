@@ -285,7 +285,7 @@ class Lesson extends Tutor_Base {
 
 			$course_id = tutor_utils()->get_course_id_by( 'lesson', $post_id );
 			if ( $course_id ) {
-				echo _esc_html( '<a href="' . admin_url( 'post.php?post=' . $course_id . '&action=edit' ) . '">' . get_the_title( $course_id ) . '</a>' );
+				echo '<a href="' . admin_url( 'post.php?post=' . $course_id . '&action=edit' ) . '">' . get_the_title( $course_id ) . '</a>';
 			}
 		}
 	}

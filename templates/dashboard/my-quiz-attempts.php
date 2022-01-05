@@ -82,9 +82,11 @@ if ( $attempted_count ) {
 					<td>
 						<?php
 						if ( $attempt->attempt_status === 'review_required' ) {
-							echo _esc_html( '<span class="result-review-required">' . __( 'Under Review', 'tutor' ) . '</span>' );
+							echo '<span class="result-review-required">' . __( 'Under Review', 'tutor' ) . '</span>';
 						} else {
-							echo _esc_html( $earned_percentage >= $passing_grade ? '<span class="result-pass">' . __( 'Pass', 'tutor' ) . '</span>' : '<span class="result-fail">' . __( 'Fail', 'tutor' ) . '</span>' );
+							echo $earned_percentage >= $passing_grade ? 
+								'<span class="result-pass">' . __( 'Pass', 'tutor' ) . '</span>' : 
+								'<span class="result-fail">' . __( 'Fail', 'tutor' ) . '</span>';
 						}
 						?>
 					</td>

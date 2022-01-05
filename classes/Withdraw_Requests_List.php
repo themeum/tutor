@@ -46,7 +46,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 	}
 
 	function column_requested_user( $item ) {
-		echo _esc_html( '<p>' . $item->user_name . '</p><p>' . $item->user_email . '</p>' );
+		echo '<p>' . $item->user_name . '</p><p>' . $item->user_email . '</p>';
 
 		$actions = array();
 		switch ( $item->status ) {
@@ -69,7 +69,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 
 		$actions['delete'] = sprintf( '<a href="?page=%s&action=%s&withdraw_id=%s" onclick="return confirm(\'' . __( 'Are you Sure? It can not be undone.', 'tutor' ) . '\')">' . __( 'Delete', 'tutor' ) . '</a>', self::WITHDRAW_REQUEST_LIST_PAGE, 'delete', $item->withdraw_id );
 
-		return _esc_html( '<div class="withdraw-list-row-actions">' . $this->row_actions( $actions ) . '</div>' );
+		return '<div class="withdraw-list-row-actions">' . $this->row_actions( $actions ) . '</div>';
 	}
 	function column_withdraw_method( $item ) {
 		if ( $item->method_data ) {
@@ -78,7 +78,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 			$method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $data );
 
 			if ( $method_name ) {
-				echo _esc_html( '<p><strong>' . $method_name . '</strong></p>' );
+				echo '<p><strong>' . $method_name . '</strong></p>';
 			}
 
 			unset( $data['withdraw_method_key'], $data['withdraw_method_name'] );
@@ -87,7 +87,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 				foreach ( $data as $method_field ) {
 					$label = tutor_utils()->avalue_dot( 'label', $method_field );
 					$value = tutor_utils()->avalue_dot( 'value', $method_field );
-					echo _esc_html( '<p class="withdraw-method-data-row"> <span class="withdraw-method-label">' . $label . '</span> : <span class="withdraw-method-value">' . $value . '</span> </p>' );
+					echo '<p class="withdraw-method-data-row"> <span class="withdraw-method-label">' . $label . '</span> : <span class="withdraw-method-value">' . $value . '</span> </p>';
 				}
 			}
 		}
@@ -95,7 +95,7 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 	}
 
 	function column_requested_at( $item ) {
-		echo _esc_html( '<p>' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item->created_at ) ) . '</p>' );
+		echo '<p>' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item->created_at ) ) . '</p>';
 	}
 
 	function column_amount( $item ) {
@@ -104,8 +104,8 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 			'approved' => __( 'approved', 'tutor' ),
 			'rejected' => __( 'rejected', 'tutor' ),
 		);
-		echo _esc_html( '<p>' . tutor_utils()->tutor_price( $item->amount ) . '</p>' );
-		echo _esc_html( '<p="withdraw-status withdraw-status-' . $item->status . '">' . __( isset( $available_status[ $item->status ] ) ? $available_status[ $item->status ] : $item->status, 'tutor' ) . '</span></p>' );
+		echo '<p>' . tutor_utils()->tutor_price( $item->amount ) . '</p>';
+		echo '<p="withdraw-status withdraw-status-' . $item->status . '">' . __( isset( $available_status[ $item->status ] ) ? $available_status[ $item->status ] : $item->status, 'tutor' ) . '</span></p>';
 	}
 
 	function get_columns() {

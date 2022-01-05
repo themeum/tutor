@@ -99,7 +99,7 @@ if ( tutor_utils()->count( $assignments_submitted ) ) {
 						<td>
 							<div class="student-column">
 								<div class="student-avatar">
-									<?php echo _esc_html( tutils()->get_tutor_avatar( $comment_author->ID ) ); ?>
+									<?php echo tutils()->get_tutor_avatar( $comment_author->ID ); ?>
 								</div>
 								<div class="student-details">
 									<h4><?php echo esc_attr( $comment_author->display_name ); ?></h4>

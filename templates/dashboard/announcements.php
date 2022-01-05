@@ -111,7 +111,7 @@ $image_base = tutor()->url . '/assets/images/';
 
 	<div class="tutor-form-group tutor-announcement-datepicker">
 		<label><?php _e( 'Date', 'tutor' ); ?></label>
-		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo esc_attr( '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '' ); ?>" placeholder="<?php echo _esc_html( get_option( 'date_format' ) ); ?>" autocomplete="off" />
+		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo esc_attr( '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '' ); ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
 		<i class="tutor-icon-calendar"></i>
 	</div>
 </div>
@@ -133,7 +133,7 @@ $image_base = tutor()->url . '/assets/images/';
 					$date_format = date_format( $dateObj, 'j M, Y,<\b\r>h:i a' );
 					?>
 					<tr id="tutor-announcement-tr-<?php echo esc_attr( $post->ID ); ?>">
-						<td class="tutor-announcement-date"><?php echo _esc_html( $date_format ); ?></td>
+						<td class="tutor-announcement-date"><?php echo $date_format; ?></td>
 						<td class="tutor-announcement-content-wrap">
 							<div class="tutor-announcement-content">
 								<h4><?php echo esc_html( $post->post_title ); ?></h4>
@@ -148,7 +148,7 @@ $image_base = tutor()->url . '/assets/images/';
 								<li class="tutor-dropdown">
 									<i class="tutor-icon-action"></i>
 									<ul class="tutor-dropdown-menu">
-										<li announcement-title="<?php echo esc_attr( $post->post_title ); ?>" announcement-summary="<?php echo _esc_html( $post->post_content ); ?>" course-id="<?php echo esc_attr( $post->post_parent ); ?>" announcement-id="<?php echo esc_attr( $post->ID ); ?>" class="tutor-announcement-edit">
+										<li announcement-title="<?php echo esc_attr( $post->post_title ); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo esc_attr( $post->post_parent ); ?>" announcement-id="<?php echo esc_attr( $post->ID ); ?>" class="tutor-announcement-edit">
 											<i class="tutor-icon-pencil"></i>
 											<?php _e( 'Edit', 'tutor' ); ?>
 										</li>

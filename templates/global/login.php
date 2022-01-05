@@ -74,7 +74,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo esc_html( $course_id ); ?>">
 	<?php do_action( 'tutor_login_form_start' ); ?>
 
-	<?php echo _esc_html($nonce_field); ?>
+	<?php echo $nonce_field; ?>
 
 	<input type="hidden" name="tutor_action" value="tutor_user_login" />
 		<p class="login-username">

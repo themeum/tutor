@@ -34,7 +34,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 
 <div class="tutor-loop-author">
 	<div class="tutor-single-course-avatar">
-		<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo _esc_html(tutor_utils()->get_tutor_avatar( $post->post_author )); ?></a>
+		<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?></a>
 	</div>
 	<div class="tutor-single-course-author-name">
 		<span><?php _e( 'by', 'tutor' ); ?></span>
@@ -51,7 +51,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 			foreach ( $course_categories as $course_category ) {
 				$category_name = $course_category->name;
 				$category_link = get_term_link( $course_category->term_id );
-				echo _esc_html( '<a href="' . esc_url( $category_link ) . '"> ' . esc_attr( $category_name ) . '</a>' );
+				echo '<a href="' . esc_url( $category_link ) . '"> ' . esc_attr( $category_name ) . '</a>';
 			}
 		}
 		?>

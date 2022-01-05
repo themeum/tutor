@@ -76,7 +76,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 
 		if ( $quiz ) {
 			$title = get_the_title( $quiz->ID );
-			return _esc_html( '<a href="' . admin_url( "post.php?post={$quiz->ID}&action=edit" ) . '">' . $title . '</a>' );
+			return '<a href="' . admin_url( "post.php?post={$quiz->ID}&action=edit" ) . '">' . $title . '</a>';
 		}
 	}
 

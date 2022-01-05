@@ -118,9 +118,9 @@ do_action( 'tutor_dashboard/before/wrap' );
 							}
 						}
 						if ( $separator ) {
-							echo _esc_html( '<li class="tutor-dashboard-menu-divider"></li>' );
+							echo '<li class="tutor-dashboard-menu-divider"></li>';
 							if ( $menu_title ) {
-								echo _esc_html( '<li class="tutor-dashboard-menu-divider-header">' . $menu_title . '</li>' );
+								echo '<li class="tutor-dashboard-menu-divider-header">' . $menu_title . '</li>';
 							}
 						} else {
 							$li_class = 'tutor-dashboard-menu-' . $dashboard_key;
@@ -128,7 +128,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 								$dashboard_key = '';
 							}
 							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-							echo _esc_html( '<li class="' . $li_class . ' ' . $active_class . '"><a href="' . esc_url( $menu_link ) . '"> ' . $menu_title . ' </a> </li>' );
+							echo '<li class="' . $li_class . ' ' . $active_class . '"><a href="' . esc_url( $menu_link ) . '"> ' . $menu_title . ' </a> </li>';
 						}
 					}
 					?>

@@ -57,7 +57,7 @@ class Instructors_List extends \Tutor_List_Table {
 	function column_status( $item ) {
 		$status      = tutor_utils()->instructor_status( $item->ID, false );
 		$status_name = tutor_utils()->instructor_status( $item->ID );
-		echo _esc_html( '<span class="tutor-status-context tutor-status-' . $status . '-context">' . $status_name . '</span>' );
+		echo '<span class="tutor-status-context tutor-status-' . $status . '-context">' . $status_name . '</span>';
 	}
 
 	function column_display_name( $item ) {

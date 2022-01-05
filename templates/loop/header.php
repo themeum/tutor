@@ -27,8 +27,8 @@
 			$action_class = apply_filters( 'tutor_popup_login_class', 'cart-required-login' );
 		}
 
-		echo _esc_html( '<span class="tutor-course-loop-level">' . get_tutor_course_level() . '</span>' );
-		echo _esc_html( '<span class="tutor-course-wishlist"><a href="javascript:;" class="tutor-icon-fav-line ' . $action_class . ' ' . $has_wish_list . ' " data-course-id="' . $course_id . '"></a> </span>' );
+		echo '<span class="tutor-course-loop-level">' . get_tutor_course_level() . '</span>';
+		echo '<span class="tutor-course-wishlist"><a href="javascript:;" class="tutor-icon-fav-line ' . $action_class . ' ' . $has_wish_list . ' " data-course-id="' . $course_id . '"></a> </span>';
 		?>
 	</div>
 </div>

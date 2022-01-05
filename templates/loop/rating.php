@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 		if ( $course_rating->rating_avg > 0 ) {
 			echo apply_filters( 'tutor_course_rating_average', $course_rating->rating_avg );
-			echo _esc_html( '<i>(' . apply_filters( 'tutor_course_rating_count', $course_rating->rating_count ) . ')</i>' );
+			echo '<i>(' . apply_filters( 'tutor_course_rating_count', $course_rating->rating_count ) . ')</i>';
 		}
 		?>
 	</span>
