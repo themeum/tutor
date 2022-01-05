@@ -67,7 +67,7 @@ $image_base = tutor()->url . '/assets/images/';
 		</div>
 		<div>
 			<span class=" tutor-color-text-subsued"><?php esc_html_e( 'Create Announcement', 'tutor' ); ?></span>
-			<div class="tutor-text-regular-h6 tutor-color-text-primary">
+			<div class="tutor-text-medium-h6 tutor-color-text-primary">
 					<?php esc_html_e( 'Notify all students of your course', 'tutor' ); ?>
 			</div>
 		</div>
