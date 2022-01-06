@@ -750,3 +750,12 @@ table.tutor-ui-table-data-td-target {
 		}
 	}
 }
+
+// Hot fix
+table.tutor-ui-table {
+	thead th {
+		> * {
+			font-size: 14px;
+		}
+	}
+}
