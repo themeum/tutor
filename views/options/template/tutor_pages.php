@@ -5,6 +5,9 @@ $tutor_pages = tutor_utils()->tutor_pages();
 	<h2>Tutor Pages</h2>
 </div>
 
+<?php	tutor_alert(__('Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor'), 'primary');
+ ?>
+
 <div class="tutor-option-single-item item-variation-table table-col-3 all-pages">
 	<h4>All Pages</h4>
 	<div class="item-wrapper">
@@ -35,7 +38,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 
 				if ( $page['page_exists'] ) {
 					$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-					echo "<a href='{$edit_url}' target='_blank' class='icon-link tutor-color-design-dark tutor-bs-d-flex tutor-ml-4'><span class=' ttr-detail-link-filled tutor-icon-24'></span></a>";
+					echo "<a href='{$edit_url}' target='_blank' class='icon-link tutor-color-stroke-light-30 tutor-bs-d-flex tutor-ml-4'><span class=' ttr-detail-link-filled tutor-icon-24'></span></a>";
 				}
 					echo '</div>';
 				?>
@@ -64,7 +67,3 @@ $tutor_pages = tutor_utils()->tutor_pages();
 	</form>
 
 </div><br>
-<div class="tutor-backend-alert alert-primary">
-	<span class="alert-icon ttr-warning-filled"></span>
-	<span class="alert-content"><?php echo esc_html( 'Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor' ); ?></span>
-</div>

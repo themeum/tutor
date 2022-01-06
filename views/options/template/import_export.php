@@ -1,16 +1,38 @@
 <div class="tutor-option-main-title">
 	<h2>Import/Export</h2>
 </div>
-<div class="tutor-backend-alert alert-warning">
-	<span class="alert-icon ttr-warning-filled"></span>
-	<span class="alert-content">Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.</span>
+
+<?php
+tutor_alert(
+	__( 'Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.', 'tutor' ),
+	'warning'
+);
+?>
+
+
+<div class="tutor-option-single-item">
+	<h4>Export</h4>
+	<div class="item-wrapper">
+		<div class="tutor-option-field-row">
+			<div class="tutor-option-field-label">
+				<div class="label tutor-text-regular-h6 tutor-color-text-primary">Current Settings</div>
+				<div class="desc tutor-text-medium-small tutor-color-text-subsued">
+					<span style="font-weight: 500">Last Update: </span>20 July, 2020, 12:47 pm
+				</div>
+			</div>
+			<div class="tutor-option-field-input">
+				<button class="tutor-btn tutor-is-outline tutor-is-sm" id="export_settings">Export Settings</button>
+			</div>
+		</div>
+	</div>
 </div>
+
 
 <div class="tutor-option-single-item item-variation-dragndrop import-setting">
 	<h4>Import Settings</h4>
 
 	<div class="item-wrapper">
-		<div class="tutor-option-field-row tutor-bs-d-block">
+		<div class="tutor-option-field-row tutor-bs-d-block d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
 					<span class="ttr-upload-icon-line tutor-icon-80 tutor-color-brand-wordpress"></span>
@@ -25,23 +47,6 @@
 			</div>
 			<div class="tutor-option-field-input tutor-mt-15">
 				<button class="tutor-btn tutor-is-sm" id="import_options">Update Settings</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="tutor-option-single-item">
-	<h4>Export</h4>
-	<div class="item-wrapper">
-		<div class="tutor-option-field-row">
-			<div class="tutor-option-field-label">
-				<div class="label tutor-text-regular-h6 tutor-color-text-primary">Current Settings</div>
-				<div class="desc tutor-text-medium-small tutor-color-text-subsued">
-					<span style="font-weight: 500">Last Update: </span>20 July, 2020, 12:47 pm
-				</div>
-			</div>
-			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-outline tutor-is-sm" id="export_settings">Export Settings</button>
 			</div>
 		</div>
 	</div>
