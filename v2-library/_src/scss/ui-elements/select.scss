@@ -25,7 +25,7 @@ select.tutor-form-select {
 	outline: none;
 	font-family: inherit;
 	@extend .color-text-primary;
-	@extend .text-medium-body;
+	@extend .text-medium-caption;
 
 	// size
 
@@ -33,7 +33,7 @@ select.tutor-form-select {
 	height: $height;
 	background-size: 14px auto;
 	background-position: right 17px center;
-	padding: 0 35px 0 20px;
+	padding: 0 35px 0 15px;
 	text-overflow: ellipsis;
 
 	&.tutor-form-control-lg {
