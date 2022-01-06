@@ -1,12 +1,13 @@
 <div class="tutor-option-main-title">
 	<h2>Import/Export</h2>
 </div>
-<div class="tutor-alert tutor-warning">
-  <div class="tutor-alert-text">
-	<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
-	<span><?php echo __( 'Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.', 'tutor' ); ?></span>
-  </div>
-</div>
+
+<?php
+tutor_alert(
+	__( 'Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.', 'tutor' ),
+	'warning'
+);
+?>
 
 
 <div class="tutor-option-single-item">
