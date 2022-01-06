@@ -62,10 +62,10 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 
 							case 'date':
 								?>
-										<td data-th="<?php echo $column; ?>" class="column-fullwidth">
+										<td data-th="<?php echo $column; ?>">
 											<div class="td-statement-info">
 												<span class="text-regular-small tutor-color-text-primary">
-											<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
+													<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
 												</span>
 											</div>
 										</td>
@@ -74,27 +74,27 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 
 							case 'quiz_info':
 								?>
-									<td data-th="<?php echo $column; ?>" class="column-fullwidth">
-										<div class="td-statement-info">
-											<span class="text-regular-small tutor-color-text-primary">
-												<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
-											</span>
-											<div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
-												<div class="tutor-text-medium-body  tutor-color-text-primary" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
-													<?php echo get_the_title( $attempt->course_id ); ?>
-												</div>
-
-												<?php
+										<td data-th="<?php echo $column; ?>">
+											<div class="td-statement-info">
+												<span class="tutor-text-regular-small tutor-color-text-primary">
+													<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
+												</span>
+												<div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
+													<div class="tutor-text-medium-body tutor-color-text-primary" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
+														<?php echo get_the_title( $attempt->course_id ); ?>
+													</div>
+													<?php
 													if ( $context == 'backend-dashboard-students-attempts' ) {
 														$attempt_user = get_userdata( $attempt->user_id );
 														$user_name    = $attempt_user ? $attempt_user->display_name : '';
+
 														?>
-															<div>
-																<span class="text-regular-small">
-																	<?php _e( 'Student', 'tutor' ); ?></span>: <span class="text-medium-small"><?php echo $user_name; ?>
-																</span>
-															</div>
-														<?php
+																	<div>
+																		<span class="tutor-text-regular-small tutor-color-text-title">
+																			<?php _e( 'Student', 'tutor' ); ?>
+																		</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
+																	</div>
+																<?php
 													} else {
 														?>
 															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> 
@@ -103,7 +103,9 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 															</span>
 														<?php
 													}
-												?>
+													?>
+												</div>
+												<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
 											</div>
 										</div>
 									</td>
@@ -114,7 +116,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-										<?php echo get_the_title( $attempt->course_id ); ?>
+												<?php echo get_the_title( $attempt->course_id ); ?>
 											</span>
 										</td>
 									<?php
@@ -124,7 +126,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-										<?php echo count( $answers ); ?>
+												<?php echo count( $answers ); ?>
 											</span>
 										</td>
 									<?php
@@ -134,7 +136,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-										<?php echo $attempt->total_marks; ?>
+												<?php echo $attempt->total_marks; ?>
 											</span>
 										</td>
 									<?php
@@ -144,7 +146,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-										<?php echo $correct; ?>
+												<?php echo $correct; ?>
 											</span>
 										</td>
 									<?php
@@ -154,7 +156,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-										<?php echo $incorrect; ?>
+												<?php echo $incorrect; ?>
 											</span>
 										</td>
 									<?php
@@ -164,7 +166,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-										<?php echo $attempt->earned_marks . ' (' . $earned_percentage . '%)'; ?>
+												<?php echo $attempt->earned_marks . ' (' . $earned_percentage . '%)'; ?>
 											</span>
 										</td>
 									<?php
@@ -214,7 +216,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 			?>
 				<tr>
 					<td colspan="100%" class="column-empty-state">
-				<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 					</td>
 				</tr>
 				<?php
