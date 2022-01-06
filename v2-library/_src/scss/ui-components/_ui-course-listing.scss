@@ -9,7 +9,7 @@
 		grid-template-rows: min-content;
 		@include responsiveGrid(250px, 1fr);
 
-		@include breakpoint-min(desktop) {
+		@include breakpoint-min(desktop-lg) {
 			// tutor-course-listing-grid-*
 			&-1 {
 				grid-template-columns: repeat(1, 1fr);
