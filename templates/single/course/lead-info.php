@@ -76,12 +76,11 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                 <i class="ttr-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
 
-            <?php if ( tutor_utils()->get_option('enable_course_share', false, true, true) ): ?>
-                <a href="#" class="action-btn tutor-text-regular-body tutor-color-text-primary">
-                    <span class="ttr-share-filled"></span> <?php _e('Share', 'tutor'); ?>
-                </a>
-                <?php tutor_social_share(); ?>
-            <?php endif; ?>
+            <?php 
+				if ( tutor_utils()->get_option('enable_course_share', false, true, true) ) {
+					tutor_load_template_from_custom_path(tutor()->path.'/views/course-share.php', array(), false);
+				}
+            ?>
         </div>
     </div>
 </header>
