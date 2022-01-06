@@ -3450,7 +3450,7 @@ class Utils
 			<?php
 			if ($show_avg_rate) {
 			?>
-				<span class="tutor-rating-text tutor-text-regular-body tutor-color-text-subsued tutor-pl-0 tutor-ml-10">
+				<span class="tutor-rating-text tutor-text-regular-body tutor-color-text-subsued tutor-pl-0 tutor-ml-0">
 					<?php
 					echo $current_rating;
 					if (!($total_count === null)) {
