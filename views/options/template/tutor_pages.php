@@ -5,12 +5,8 @@ $tutor_pages = tutor_utils()->tutor_pages();
 	<h2>Tutor Pages</h2>
 </div>
 
-<div class="tutor-alert tutor-primary">
-	<div class="tutor-alert-text">
-		<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
-		<span><?php echo esc_html( 'Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor' ); ?></span>
-	</div>
-</div>
+<?php	tutor_alert(__('Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor'), 'primary');
+ ?>
 
 <div class="tutor-option-single-item item-variation-table table-col-3 all-pages">
 	<h4>All Pages</h4>
