@@ -435,14 +435,22 @@ class Options_V2 {
 						'slug'       => 'course',
 						'block_type' => 'uniform',
 						'fields'     => array(
-							array(
-								'key'         => 'student_must_login_to_view_course',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Course Visibility', 'tutor' ),
-								'label_title' => __( 'Logged Only', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-							),
+							/**
+							 * TODO
+							 * 
+							 * This option will be implemented on future
+							 * release
+							 *
+							 * @since v2.0.0
+							 */
+							// array(
+							// 	'key'         => 'student_must_login_to_view_course',
+							// 	'type'        => 'toggle_switch',
+							// 	'label'       => __( 'Course Visibility', 'tutor' ),
+							// 	'label_title' => __( 'Logged Only', 'tutor' ),
+							// 	'default'     => 'off',
+							// 	'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
+							// ),
 							array(
 								'key'         => 'course_content_access_for_ia',
 								'type'        => 'toggle_switch',
