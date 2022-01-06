@@ -62,7 +62,7 @@ export const AddonsContextProvider = (props) => {
 				const data = response.data.addons;
 				if (data && data.length) {
 					const addonsLoadingState = getAddonsState(data);
-					setAddonLoading(addonsLoadingState);
+					// setAddonLoading(addonsLoadingState);
 					setAllAddons(data);
 					allAddonsRef.current = data;
 					setLoding(false);
@@ -120,12 +120,15 @@ export const AddonsContextProvider = (props) => {
 		}
 		allAddonsRef.current = updatedAddonList;
 
-		const toggleAddonStatus = async (updatedData) => {
+		const toggleAddonStatus = async () => {
+			const prevData = getAddonsState(updatedAddonList);
+			// console.log(prevData);
+
 			const formData = new FormData();
 			formData.set('action', 'addon_enable_disable');
 			formData.set('isEnable', Number(checked));
-			formData.set('addonFieldName', addonBaseName);
-			formData.set('addonFieldNames', JSON.stringify(updatedData));
+			formData.set('addonFieldName', prevData);
+			formData.set('addonFieldNames', JSON.stringify(prevData));
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 
 			try {
@@ -133,7 +136,7 @@ export const AddonsContextProvider = (props) => {
 					method: 'POST',
 					body: formData,
 				});
-				setAddonLoading(updatedData);
+				setAddonLoading(prevData);
 			} catch (error) {
 				console.log(error);
 			}
@@ -141,13 +144,13 @@ export const AddonsContextProvider = (props) => {
 		toggleAddonStatus();
 	};
 
-	setAddonLoading((prevData) => {
-		const updatedData = { ...prevData, [addonBaseName]: !prevData[addonBaseName] };
-		console.log('previous', prevData);
-		console.log('updatedData', updatedData);
-		toggleAddonStatus(updatedData);
-		return updatedData;
-	});
+	// setAddonLoading((prevData) => {
+	// 	const updatedData = { ...prevData, [addonBaseName]: !prevData[addonBaseName] };
+	// 	console.log('previous', prevData);
+	// 	console.log('updatedData', updatedData);
+	// 	toggleAddonStatus(updatedData);
+	// 	return updatedData;
+	// });
 
 	const getTabStatus = (btn) => {
 		switch (btn) {
