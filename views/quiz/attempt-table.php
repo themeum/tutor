@@ -74,35 +74,40 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 
 							case 'quiz_info':
 								?>
-										<td data-th="<?php echo $column; ?>" class="column-fullwidth">
-											<div class="td-statement-info">
-												<span class="text-regular-small tutor-color-text-primary">
-											<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
-												</span>
-												<div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
-													<div class="tutor-text-medium-body  tutor-color-text-primary" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
-												<?php echo get_the_title( $attempt->course_id ); ?>
-													</div>
+									<td data-th="<?php echo $column; ?>" class="column-fullwidth">
+										<div class="td-statement-info">
+											<span class="text-regular-small tutor-color-text-primary">
+												<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
+											</span>
+											<div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
+												<div class="tutor-text-medium-body  tutor-color-text-primary" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
+													<?php echo get_the_title( $attempt->course_id ); ?>
+												</div>
 
-											<?php
-											if ( $context == 'backend-dashboard-students-attempts' ) {
-												$attempt_user = get_userdata( $attempt->user_id );
-												$user_name    = $attempt_user ? $attempt_user->display_name : '';
-
-												?>
+												<?php
+													if ( $context == 'backend-dashboard-students-attempts' ) {
+														$attempt_user = get_userdata( $attempt->user_id );
+														$user_name    = $attempt_user ? $attempt_user->display_name : '';
+														?>
 															<div>
 																<span class="text-regular-small">
-														<?php _e( 'Student', 'tutor' ); ?></span>: <span class="text-medium-small"><?php echo $user_name; ?>
+																	<?php _e( 'Student', 'tutor' ); ?></span>: <span class="text-medium-small"><?php echo $user_name; ?>
 																</span>
 															</div>
 														<?php
-											}
-											?>
-												</div>
-												<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
+													} else {
+														?>
+															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> 
+															<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( $attempt->user_email ); ?>">
+																<?php echo esc_attr( $attempt->display_name ); ?>
+															</span>
+														<?php
+													}
+												?>
 											</div>
-										</td>
-										<?php
+										</div>
+									</td>
+								<?php
 								break;
 
 							case 'course':
