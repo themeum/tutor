@@ -5,7 +5,7 @@
     $table_columns = include __DIR__ . '/contexts.php';
 ?>
 
-<table class="tutor-ui-table tutor-ui-table-responsive qna-list-table">
+<table class="frontend-dashboard-qna-table tutor-ui-table tutor-ui-table-responsive qna-list-table">
     <thead>
         <tr>
             <?php 
