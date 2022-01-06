@@ -394,7 +394,7 @@ class Assets
 
 		// Add backend course editor identifier class to body
 		if ($course_builder_screen) {
-			$to_add[] = 'tutor-backend';
+			$to_add[] = is_admin() ? 'tutor-backend' : '';
 			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
 		}
 
