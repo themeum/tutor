@@ -337,8 +337,10 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 		if ( is_admin() ) {
 			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
 		} else {
-			$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
-			tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+			if($the_query->found_posts > $limit) {
+				$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+				tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+			}
 		}
 
 		?>
