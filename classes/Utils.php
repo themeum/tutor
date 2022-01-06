@@ -2687,25 +2687,9 @@ class Utils
 	 */
 	public function tutor_dashboard_pages()
 	{
-		$nav_items = apply_filters('tutor_dashboard/nav_items', array(
-			'index'             => array('title' => __('Dashboard', 'tutor'), 'icon' => 'ttr-dashboard-filled'),
-			'my-profile'        => array('title' => __('My Profile', 'tutor'), 'icon' => 'ttr-man-user-filled'),
-			'enrolled-courses'  => array('title' => __('Enrolled Courses', 'tutor'), 'icon' => 'ttr-college-graduation-filled'),
-			'wishlist'          => array('title' => __('Wishlist', 'tutor'), 'icon' => 'ttr-fav-full-filled'),
-			'reviews'           => array('title' => __('Reviews', 'tutor'), 'icon' => 'ttr-star-full-filled'),
-			'my-quiz-attempts'  => array('title' => __('My Quiz Attempts', 'tutor'), 'icon' => 'ttr-quiz-attempt-filled'),
-			'purchase_history'  => array('title' => __('Order History', 'tutor'), 'icon' => 'ttr-cart-filled'),
-			'question-answer'   => array('title' => __('Question & Answer', 'tutor'), 'icon' => 'ttr-question-filled'),
-		));
+		$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
 
-		$instructor_nav_items = apply_filters('tutor_dashboard/instructor_nav_items', array(
-			'separator-1'     	=> array('title' => __('Instructor', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'type' => 'separator'),
-			'create-course'     => array('title' => __('Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role),
-			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'icon' => 'ttr-space-filled'),
-			'announcements'     => array('title' => __('Announcements', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'icon' => 'ttr-speaker-filled'),
-			'withdraw'          => array('title' => __('Withdrawals', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'icon' => 'ttr-wallet-filled'),
-			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'icon' => 'ttr-quiz-filled'),
-		));
+		$instructor_nav_items = apply_filters('tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
 
 		$nav_items = array_merge($nav_items, $instructor_nav_items);
 
@@ -8929,5 +8913,43 @@ class Utils
 		} else {
 			return $text['normal'];
 		}
+	}
+
+	/**
+	 * Separation of all menu items for providing ease of usage
+	 *
+	 * @return array, array of menu items
+	 *
+	 * @since v.2.0.0
+	 */
+	public function instructor_menus(): array {
+		return array(
+			'separator-1'     	=> array('title' => __('Instructor', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'type' => 'separator'),
+			'create-course'     => array('title' => __('Create Course', 'tutor'), 'show_ui' => false, 'auth_cap' => tutor()->instructor_role),
+			'my-courses'        => array('title' => __('My Courses', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'icon' => 'ttr-space-filled'),
+			'announcements'     => array('title' => __('Announcements', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'icon' => 'ttr-speaker-filled'),
+			'withdraw'          => array('title' => __('Withdrawals', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'icon' => 'ttr-wallet-filled'),
+			'quiz-attempts'     => array('title' => __('Quiz Attempts', 'tutor'), 'auth_cap' => tutor()->instructor_role, 'icon' => 'ttr-quiz-filled'),
+		);
+	}
+
+	/**
+	 * Separation of all menu items for providing ease of usage
+	 *
+	 * @return array, array of menu items
+	 *
+	 * @since v.2.0.0
+	 */
+	public function default_menus(): array {
+		return array(
+			'index'             => array('title' => __('Dashboard', 'tutor'), 'icon' => 'ttr-dashboard-filled'),
+			'my-profile'        => array('title' => __('My Profile', 'tutor'), 'icon' => 'ttr-man-user-filled'),
+			'enrolled-courses'  => array('title' => __('Enrolled  Courses', 'tutor'), 'icon' => 'ttr-college-graduation-filled'),
+			'wishlist'          => array('title' => __('Wishlist', 'tutor'), 'icon' => 'ttr-fav-full-filled'),
+			'reviews'           => array('title' => __('Reviews', 'tutor'), 'icon' => 'ttr-star-full-filled'),
+			'my-quiz-attempts'  => array('title' => __('My Quiz Attempts', 'tutor'), 'icon' => 'ttr-quiz-attempt-filled'),
+			'purchase_history'  => array('title' => __('Order History', 'tutor'), 'icon' => 'ttr-cart-filled'),
+			'question-answer'   => array('title' => __('Question & Answer', 'tutor'), 'icon' => 'ttr-question-filled'),
+		);
 	}
 }
