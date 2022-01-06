@@ -5742,10 +5742,24 @@ class Utils
 	public function tutor_social_share_icons()
 	{
 		$icons = array(
-			'facebook' => array('share_class' => 's_facebook', 'icon_html' => '<i class="tutor-icon-facebook"></i>'),
-			'twitter'  => array('share_class' => 's_twitter', 'icon_html' => '<i class="tutor-icon-twitter"></i>'),
-			'linkedin' => array('share_class' => 's_linkedin', 'icon_html' => '<i class="tutor-icon-linkedin"></i>'),
-			'tumblr'   => array('share_class' => 's_tumblr', 'icon_html' => '<i class="tutor-icon-tumblr"></i>'),
+			'facebook' => array(
+				'share_class' => 's_facebook', 
+				'icon_html' => '<i class="tutor-icon-facebook"></i>', 
+				'text' => __('Facebook', 'tutor'),
+				'color' => '#3877EA'
+			),
+			'twitter'  => array(
+				'share_class' => 's_twitter', 
+				'icon_html' => '<i class="tutor-icon-twitter"></i>', 
+				'text' => __('Twitter', 'tutor'),
+				'color' => '#4CA0EB'
+			),
+			'linkedin' => array(
+				'share_class' => 's_linkedin', 
+				'icon_html' => '<i class="tutor-icon-linkedin"></i>', 
+				'text' => __('Linkedin', 'tutor'),
+				'color' => '#3967B6'
+			),
 		);
 
 		return apply_filters('tutor_social_share_icons', $icons);
