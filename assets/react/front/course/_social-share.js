@@ -7,15 +7,11 @@ window.jQuery(document).ready($=>{
      */
      if ($.fn.ShareLink) {
         var $social_share_wrap = $('.tutor-social-share-wrap');
-        $social_share_wrap.prev().click(function(e) {
-            e.preventDefault();
-            $social_share_wrap.toggle();
-        });
-
+        
         if ($social_share_wrap.length) {
             var share_config = JSON.parse($social_share_wrap.attr('data-social-share-config'));
 
-            $('.tutor_share').ShareLink({
+            $social_share_wrap.find('.tutor_share').ShareLink({
                 title: share_config.title,
                 text: share_config.text,
                 image: share_config.image,
