@@ -77,7 +77,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 				<div class="tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url( get_avatar_url( $user_id, array( 'size' => 150 ) ) ); ?>)">
 				</div>
 				<div class="tutor-user-info tutor-ml-16">
-					<div class="tutor-dashboard-header-display-name tutor-color-text-primary">
+					<div class="tutor-dashboard-header-display-name tutor-cor-text-primary">
 						<!-- <h4><strong><?php echo esc_html( $user->display_name ); ?></strong> </h4> -->
 						<div class="tutor-text-regular-h5 tutor-dashboard-header-greetings">
 							Hello,
@@ -86,7 +86,8 @@ do_action( 'tutor_dashboard/before/wrap' );
 							<?php echo esc_html( $user->display_name ); ?>
 						</div>
 					</div>
-					<!-- <?php
+					<!--
+					<?php
 						$instructor_rating = tutor_utils()->get_instructor_ratings( $user->ID );
 
 					if ( current_user_can( tutor()->instructor_role ) ) {
@@ -101,7 +102,8 @@ do_action( 'tutor_dashboard/before/wrap' );
 							</div>
 							<?php
 					}
-					?> -->
+					?>
+					 -->
 				</div>
 			</div>
 			<div class="tutor-header-right-side tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end tutor-mt-20 tutor-mt-md-0">
@@ -167,11 +169,11 @@ do_action( 'tutor_dashboard/before/wrap' );
 						$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $dashboard_key );
 						$separator  = false;
 						$menu_icon  = '';
-						
+
 						if ( is_array( $dashboard_page ) ) {
-							$menu_title = tutor_utils()->array_get( 'title', $dashboard_page );
-							$menu_icon_name = tutor_utils()->array_get('icon', $dashboard_page);
-							if($menu_icon_name) {
+							$menu_title     = tutor_utils()->array_get( 'title', $dashboard_page );
+							$menu_icon_name = tutor_utils()->array_get( 'icon', $dashboard_page );
+							if ( $menu_icon_name ) {
 								$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon tutor-icon-30'></span>";
 							}
 							// Add new menu item property "url" for custom link
@@ -192,8 +194,10 @@ do_action( 'tutor_dashboard/before/wrap' );
 							if ( $dashboard_key === 'index' ) {
 								$dashboard_key = '';
 							}
-							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-10'>{$menu_title}</span></a></li>";
+							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
+							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
+
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-10'>{$menu_title}</span></a></li>";
 						}
 					}
 					?>
