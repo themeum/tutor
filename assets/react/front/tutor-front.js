@@ -7,12 +7,12 @@ import './dashboard/export-csv';
 import '../admin-dashboard/segments/lib';
 
 readyState_complete(() => {
-        Object.entries(document.getElementsByTagName('a')).forEach((item) => {
-            let urlString = item[1].getAttribute('href');
-            if (urlString.includes('/logout') || urlString.includes('logout')) {
-                item[1].setAttribute('data-no-instant','');
-            }
-        })
+    Object.entries(document.getElementsByTagName('a')).forEach((item) => {
+        let urlString = item[1].getAttribute('href');
+        if (urlString.includes('/logout') || urlString.includes('logout')) {
+            item[1].setAttribute('data-no-instant','');
+        }
+    })
 })
 
 jQuery(document).ready(function ($) {
