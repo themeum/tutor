@@ -69,7 +69,9 @@
 								<div class="withdraw-method-field-wrap withdraw-method-field-<?php echo esc_attr( $field_name ) . ' ' . esc_attr( $field['type'] ); ?> ">
 									<?php
 									if ( ! empty( $field['label'] ) ) {
-										echo '<label for="' . field_{$method_id}_$field_name . '">' . $field['label'] . '</label>';
+										echo '<label for="field_'.$method_id.'_'.$field_name.'">' . 
+												$field['label'] . 
+											'</label>';
 									}
 
 									$passing_data = apply_filters(
