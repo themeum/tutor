@@ -1,4 +1,4 @@
-<?php 
+<?php
     $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
 ?>
 <div class="tutor-login-modal tutor-modal tutor-is-sm tutor-modal-is-close-inside-inner">
@@ -15,9 +15,11 @@
                     <?php _e('Hi, Welcome back!', 'tutor'); ?>
                 </div>
                 <form>
+
                     <input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo get_the_ID();?>">
                     <input type="hidden" name="tutor_action" value="tutor_user_login" />
-                    <input type="hidden" name="redirect_to" value="<?php echo tutor()->current_url; ?>" />
+                    <!-- <input type="hidden" name="redirect_to" value="<?php //echo tutor()->current_url; ?>" /> -->
+                    <input type="hidden" name="redirect_to" value="<?php echo $_SERVER['HTTP_REFERER'] ?>" />
 
                     <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-20">
                         <input type="text" class="tutor-form-control" placeholder="<?php _e('Username or Email Address', 'tutor'); ?>" name="log" value="" size="20"/>
@@ -28,7 +30,7 @@
                     <div class="tutor-login-error">
 
                     </div>
-                    <?php 
+                    <?php
                         do_action("tutor_login_form_middle");
                         do_action("login_form");
                         apply_filters("login_form_middle",'','');

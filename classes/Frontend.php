@@ -18,16 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Frontend {
 
 	public function __construct() {
-		// wp_deregister_script( 'instant-page' );
 		add_action( 'after_setup_theme', array( $this, 'remove_admin_bar' ) );
-
-		// dequeue tutorstarter's instant-page to prevent logout from frontend dashboard
-		add_action(
-			'wp_print_scripts',
-			function() {
-				wp_dequeue_script( 'instant-page' );
-			}
-		);
+		add_filter( 'nav_menu_link_attributes', array( $this, 'add_menu_atts' ), 10, 3 );
 	}
 
 	/**
@@ -38,5 +30,18 @@ class Frontend {
 		if ( ! current_user_can( 'administrator' ) && ! is_admin() && $hide_admin_bar_for_users ) {
 			show_admin_bar( false );
 		}
+	}
+
+	/**
+	 * add_menu_atts
+	 *
+	 * @param  mixed $atts
+	 * @param  mixed $item
+	 * @param  mixed $args
+	 * @return void
+	 */
+	function add_menu_atts( $atts, $item, $args ) {
+		$atts['onClick'] = 'return true';
+		return $atts;
 	}
 }
