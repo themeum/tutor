@@ -24,7 +24,7 @@ $as_instructor_url  = add_query_arg( array('view_as'=>'instructor'), tutor()->cu
 $as_student_url     = add_query_arg( array('view_as'=>'student'), tutor()->current_url );
 ?>
 
-<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-24">
+<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-24" style="width: calc(100% + 30px)">
     <div class="tutor-bs-col">
         <div class="tutor-text-medium-h5 tutor-color-text-primary"><?php _e('Question & Answer', 'tutor'); ?></div>
     </div>
