@@ -3,9 +3,10 @@
     
     $page_key = 'qna-table';
     $table_columns = include __DIR__ . '/contexts.php';
+    $view_as = isset($_GET['view_as']) ? $_GET['view_as'] : '';
 ?>
 
-<table class="tutor-ui-table tutor-ui-table-responsive qna-list-table">
+<table class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-ui-table tutor-ui-table-responsive qna-list-table">
     <thead>
         <tr>
             <?php 
@@ -61,7 +62,7 @@
                                                         <?php $is_important ? _e('This conversation is important', 'tutor') : _e('Mark this conversation as important', 'tutor'); ?>
                                                     </span>
                                                 </div>
-                                                <img class="tutor-ml-10" src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
+                                                <img src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
                                                 <span class="tutor-text-medium-body  tutor-color-text-primary">
                                                     <?php echo $qna->display_name; ?>
                                                 </span>

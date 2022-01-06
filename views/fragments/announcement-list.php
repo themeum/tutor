@@ -182,7 +182,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 
 <!-- Now Load The View -->
 
-	<table class="frontend-dashboard-table tutor-ui-table tutor-ui-table-responsive tutor-bg-white">
+	<table class="frontend-dashboard-announcement-table tutor-ui-table tutor-ui-table-responsive tutor-bg-white">
 		<thead>
 			<tr>
 				<?php if ( is_admin() ) : ?>
