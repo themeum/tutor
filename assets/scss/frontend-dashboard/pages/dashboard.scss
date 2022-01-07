@@ -81,7 +81,7 @@
 			}
 			.tutor-dashboard-info-val {
 				@include breakpoint-min(mobile) {
-					margin-top: 10px;
+					margin-top: 6px;
 				}
 				margin-top: 0px;
 				margin-bottom: -6px;
@@ -104,7 +104,7 @@
 	box-sizing: border-box;
 	border-radius: 6px;
 	// margin-right: 25px;
-	margin-bottom: 20px;
+	// margin-bottom: 20px;
 	padding: 0px;
 	overflow: hidden;
 	.tutor-bs-row {
@@ -112,6 +112,7 @@
 	}
 	.profile-completion-content {
 		padding: 10px 0px 15px 30px;
+		padding: 25px 10px 26px 30px;
 		position: relative;
 		// padding: 35px;
 		@include breakpoint-min(desktop) {
@@ -218,7 +219,7 @@
 			margin-left: 0px;
 		}
 		.profile-completion-content {
-			padding: 25px 15px;
+			padding: 25px;
 			// border-bottom: 1px solid #cdcfd5;
 			// border-right: 0px;
 			li {
@@ -230,7 +231,7 @@
 			}
 		}
 		.warning {
-			padding: 15px !important;
+			padding: 25px;
 			border-left: 0px;
 		}
 	}
