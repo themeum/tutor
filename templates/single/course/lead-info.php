@@ -43,7 +43,7 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
         <div class="tutor-course-details-category tutor-text-medium-body tutor-color-text-primary tutor-bs-d-flex tutor-bs-align-items-center">
             <?php if(tutor_utils()->get_option('enable_course_author')): ?>
                 <div class="tutor-course-author tutor-mr-15">
-                    <img src="<?php echo get_avatar_url( get_the_author_ID() ) ?>"/> 
+                    <img src="<?php echo get_avatar_url(  get_the_author_meta('ID') ); ?>"/> 
                     <span><?php _e('by', 'tutor'); ?></span>
                     <strong><?php echo get_the_author_meta('display_name'); ?></strong>
                 </div>
@@ -76,12 +76,11 @@ $profile_url = tutor_utils()->profile_url($authordata->ID);
                 <i class="ttr-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
 
-            <?php if ( tutor_utils()->get_option('enable_course_share', false, true, true) ): ?>
-                <a href="#" class="action-btn tutor-text-regular-body tutor-color-text-primary">
-                    <span class="ttr-share-filled"></span> <?php _e('Share', 'tutor'); ?>
-                </a>
-                <?php tutor_social_share(); ?>
-            <?php endif; ?>
+            <?php 
+				if ( tutor_utils()->get_option('enable_course_share', false, true, true) ) {
+					tutor_load_template_from_custom_path(tutor()->path.'/views/course-share.php', array(), false);
+				}
+            ?>
         </div>
     </div>
 </header>

@@ -6,7 +6,9 @@ const { __ } = wp.i18n;
 const AddonCard = ({ addon, addonId }) => {
 	const author = 'Themeum';
 	const url = 'https://www.themeum.com';
-	const { handleOnChange } = useAddonsUpdate();
+	const { handleOnChange, addonLoading } = useAddonsUpdate();
+	// const addonIsLoading = addonLoading[addonId];
+	// console.log(addonLoading);
 
 	return (
 		<div
@@ -70,9 +72,13 @@ const AddonCard = ({ addon, addonId }) => {
 								onChange={(event) => handleOnChange(event, addon.basename)}
 							/>
 							<span className="tutor-form-toggle-control"></span>
-							<span className="tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5">
-								{__('Active', 'tutor')}
-							</span>
+							{/* {addonIsLoading ? (
+								<span className="tutor-updating-message tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5"></span>
+							) : (
+								<span className="tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5">
+									{__('Active', 'tutor')}
+								</span>
+							)} */}
 						</label>
 					</div>
 				)}

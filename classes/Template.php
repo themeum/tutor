@@ -166,16 +166,7 @@ class Template extends Tutor_Base {
 		global $wp_query;
 
 		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === $this->course_post_type ) {
-
 			do_action( 'single_course_template_before_load', get_the_ID() );
-
-			$student_must_login_to_view_course = tutor_utils()->get_option( 'student_must_login_to_view_course' );
-			if ( $student_must_login_to_view_course ) {
-				if ( ! is_user_logged_in() ) {
-					return tutor_get_template( 'login' );
-				}
-			}
-
 			wp_reset_query();
 			return tutor_get_template( 'single-course' );
 		}
