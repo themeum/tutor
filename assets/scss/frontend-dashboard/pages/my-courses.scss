@@ -1,48 +1,55 @@
 .my-courses {
-    .tutor-course-listing-item-footer{
-        .list-item-button{
-            .tutor-btn{
-                &.tutor-btn-ghost{
-                    .btn-icon {
-                        font-size: 18px !important;
-                    }
-                } 
-            }
-        } 
-        
-    } 
+	.tutor-course-listing-item-footer {
+		.list-item-button {
+			.tutor-btn {
+				&.tutor-btn-ghost {
+					.btn-icon {
+						font-size: 18px !important;
+					}
+				}
+			}
+		}
+	}
 
-    .list-item-price {
-        &>span{
-            &:first-child {
-                font-style: normal;
-                font-weight: normal;
-                font-size: 15px;
-                color: #757C8E;
-            }
+	.list-item-price {
+		& > span {
+			// &:first-child {
+			// 	font-style: normal;
+			// 	font-weight: normal;
+			// 	font-size: 15px;
+			// 	color: #757c8e;
+			// }
 
-            &:last-child{
-                font-style: normal;
-                font-weight: 500;
-                font-size: 15px;
-                color: #212327;
-            }
-        }
-    }
+			// &:last-child {
+			// 	font-style: normal;
+			// 	font-weight: 500;
+			// 	font-size: 15px;
+			// 	color: #212327;
+			// }
+		}
+	}
 
-    .list-item-button {
-        &>a, &>i {
-            color: gray;
-            cursor: pointer;
-            
-        }
-    }
+	.list-item-button {
+		& > a,
+		& > i {
+			color: gray;
+			cursor: pointer;
+		}
+	}
 
-    .date {
-        font-size: 14px;
-    }
+	.date {
+		font-size: 14px;
+	}
 
-    .list-item-title {
-        font-size: 16px;
-    }
+	.tutor-course-listing-item-btns {
+		display: flex;
+		> a {
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			&:hover {
+				background: $black-05;
+			}
+		}
+	}
 }
