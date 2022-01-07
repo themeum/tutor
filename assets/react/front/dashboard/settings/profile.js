@@ -46,7 +46,7 @@ window.jQuery(document).ready($ => {
             form_data.append('photo_type', name);
             form_data.append('photo_file', file, file.name);
             form_data.append(nonce.key, nonce.value);
-            let server_max_size = photo_editor.find('.upload_max_filesize').val();
+            // let server_max_size = photo_editor.find('.upload_max_filesize').val();
             // this.verify_filesize(file);
             if (this.verify_filesize(file)) {
                 $.ajax({
@@ -139,7 +139,8 @@ window.jQuery(document).ready($ => {
         }
 
         this.error_alert = function () {
-            alert('Something Went Wrong.');
+            tutor_toast('Error', 'Maximum file size exceeded!', 'error');
+            // alert('Something Went Wrong.');
         }
 
         this.toggle_loader = function (name, show) {
