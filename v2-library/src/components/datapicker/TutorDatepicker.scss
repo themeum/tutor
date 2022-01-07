@@ -507,3 +507,27 @@
 		}
 	}
 }
+
+.react-datepicker__input-container {
+	position: relative;
+
+	.react-datepicker__close-icon {
+		position: absolute;
+		cursor: pointer;
+		outline: 0;
+		@extend .tutor-btn;
+		@extend .tutor-btn-tertiary;
+		@extend .tutor-is-outline;
+		height: 30px;
+		width: 30px;
+		right: -35px;
+		top: 50%;
+		transform: translateY(-50%);
+		border-radius: 50%;
+		padding: 0 !important;
+		&:after {
+			content: '×';
+			margin-top: -2px;
+		}
+	}
+}
