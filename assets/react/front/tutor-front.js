@@ -4,6 +4,16 @@ import './pages/instructor-list-filter';
 import './pages/course-landing';
 import './course/index';
 import './dashboard/export-csv';
+import '../admin-dashboard/segments/lib';
+
+readyState_complete(() => {
+    Object.entries(document.getElementsByTagName('a')).forEach((item) => {
+        let urlString = item[1].getAttribute('href');
+        if (urlString.includes('/logout') || urlString.includes('logout')) {
+            item[1].setAttribute('data-no-instant','');
+        }
+    })
+})
 
 jQuery(document).ready(function ($) {
     'use strict';
@@ -248,7 +258,7 @@ jQuery(document).ready(function ($) {
                                         __('Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' + attemptRemaining + '/' + attemptAllowed, 'tutor')
                                     );
                                 } else {
-                                    // if attempt not remaining 
+                                    // if attempt not remaining
                                     if ($(alertDiv).hasClass('time-remaining-warning')) {
                                         $(alertDiv).removeClass('time-remaining-warning');
                                         $(alertDiv).addClass('time-over');
@@ -406,7 +416,7 @@ jQuery(document).ready(function ($) {
         $('.tutor-tabs-btn-group a').removeClass('active');
         $that.addClass('active');
     });
-    
+
     $(document).on('click', '.tutor-quiz-question-paginate-item', function (e) {
         e.preventDefault();
         var $that = $(this);
@@ -531,14 +541,18 @@ jQuery(document).ready(function ($) {
             },
             success: function (data) {
                 var Msg;
+                $('.tutor-earning-withdraw-form-wrap').hide();
                 if (data.success) {
                     if (data.data.available_balance !== 'undefined') {
                         $('.withdraw-balance-col .available_balance').html(data.data.available_balance);
                     }
-                    $('.tutor-earning-withdraw-form-wrap').hide();
                     tutor_toast(__("Request Successful", "tutor"), __("Your request has been submitted. Please wait for the administrator’s response.", "tutor"), "success");
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500)
 
                 } else {
+                    tutor_toast('Error', data.data.msg, 'error');
                     Msg = '<div class="tutor-error-msg inline-image-text is-inline-block">\
                             <img src="'+ window._tutorobject.tutor_url + 'assets/images/icon-cross.svg"/> \
                             <div>\
@@ -547,10 +561,11 @@ jQuery(document).ready(function ($) {
                             </div>\
                         </div>';
 
-                    $responseDiv.html(Msg);
+                    // $responseDiv.html(Msg);
                     setTimeout(function () {
                         $responseDiv.html('');
                     }, 5000)
+                    return false;
                 }
             },
             complete: function () {
