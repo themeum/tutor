@@ -83,7 +83,7 @@ if ( tutils()->count( $questions ) ) {
 	</div>
 	<?php
 } else {
-	echo _e( 'No question is available', 'tutor' );
+	_e( 'No question is available', 'tutor' );
 }
 
 ?>

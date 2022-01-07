@@ -188,8 +188,10 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 												<input id="tutor_course_price_type_pro" type="radio" name="tutor_course_price_type" value="paid" <?php checked( $_tutor_course_price_type, 'paid' ); ?>>
 												<span></span>
 												<div class="tutor-form-group">
-													<span class="tutor-input-prepand"><?php echo esc_attr( $currency_symbol ); ?></span>
-													<input type="text" name="course_price" value="<?php echo esc_attr( $course_price->regular_price ); ?>" placeholder="<?php _e( 'Set course price', 'tutor' ); ?>">
+													<span class="tutor-input-prepand">
+														<?php echo $currency_symbol; ?>
+													</span>
+													<input type="text" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e( 'Set course price', 'tutor' ); ?>">
 												</div>
 											</label>
 										</div>
@@ -214,27 +216,25 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 											<div class="tutor-col-5">
 												<div class="builder-course-thumbnail-img-src">
 													<?php
-													$builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
-													$_thumbnail_url         = get_the_post_thumbnail_url( $course_id );
-													$post_thumbnail_id      = get_post_thumbnail_id( $course_id );
+														$builder_course_img_src = tutor()->url . 'assets/images/placeholder-course.jpg';
+														$_thumbnail_url         = get_the_post_thumbnail_url( $course_id );
+														$post_thumbnail_id      = get_post_thumbnail_id( $course_id );
 
-													if ( ! $_thumbnail_url ) {
-														$_thumbnail_url = $builder_course_img_src;
-													}
+														if ( ! $_thumbnail_url ) {
+															$_thumbnail_url = $builder_course_img_src;
+														}
 													?>
 													<img src="<?php echo esc_url( $_thumbnail_url ); ?>" class="thumbnail-img" data-placeholder-src="<?php echo esc_url( $builder_course_img_src ); ?>">
-													<a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display:
-													<?php
-													echo esc_attr( $post_thumbnail_id ? 'block' : 'none' );
-													?>
-													;"><i class="tutor-icon-line-cross"></i></a>
+													<a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display:<?php echo $post_thumbnail_id ? 'block' : 'none'; ?>;">
+														<i class="tutor-icon-line-cross"></i>
+													</a>
 												</div>
 											</div>
 
 											<div class="tutor-col-7">
 												<div class="builder-course-thumbnail-upload-wrap">
 													<div><?php echo wp_sprintf( __( 'Important Guideline: %1$s 700x430 pixels %2$s %3$s File Support: %1$s jpg, .jpeg,. gif, or .png %2$s no text on the image.', 'tutor' ), '<strong>', '</strong>', '<br>' ); ?></div>
-													<input type="hidden" id="tutor_course_thumbnail_id" name="tutor_course_thumbnail_id" value="<?php echo esc_attr( $post_thumbnail_id ); ?>">
+													<input type="hidden" id="tutor_course_thumbnail_id" name="tutor_course_thumbnail_id" value="<?php echo $post_thumbnail_id; ?>">
 													<a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button"><?php _e( 'Upload Image', 'tutor' ); ?></a>
 												</div>
 											</div>

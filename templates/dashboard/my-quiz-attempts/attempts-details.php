@@ -157,13 +157,13 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 						}
 					}
 				}
-				echo esc_attr( $correct );
+				echo $correct;
 				?>
 			</td>
-			<td><?php echo esc_attr( $incorrect ); ?></td>
+			<td><?php echo $incorrect; ?></td>
 			<td>
 				<?php
-					echo esc_attr( $attempt_data->earned_marks );
+					echo $attempt_data->earned_marks;
 					$earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format( ( $attempt_data->earned_marks * 100 ) / $attempt_data->total_marks ) ) : 0;
 					echo '(' . esc_attr( $earned_percentage ) . '%)';
 				?>
@@ -224,7 +224,7 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 					$question_type = tutor_utils()->get_question_types( $answer->question_type );
 					?>
 					<tr>
-						<td><?php echo esc_attr( $answer_i ); ?></td>
+						<td><?php echo $answer_i; ?></td>
 						<td>
 							<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
 							<span data-title="<?php echo esc_attr( $type['name'] ); ?>"><?php echo $question_type['icon']; ?></span>
@@ -335,8 +335,14 @@ $answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt_id );
 							if ( ( $answer->question_type != 'open_ended' && $answer->question_type != 'short_answer' ) ) {
 								global $wpdb;
 								if ( $answer->question_type === 'true_false' ) {
-									$correct_answer = $wpdb->get_var( $wpdb->prepare( "SELECT answer_title FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );
-									echo esc_attr( $correct_answer );
+									$correct_answer = $wpdb->get_var( $wpdb->prepare( 
+										"SELECT answer_title 
+										FROM {$wpdb->prefix}tutor_quiz_question_answers 
+										WHERE belongs_question_id = %d 
+											AND is_correct = 1", 
+										$answer->question_id 
+									) );
+									echo $correct_answer;
 
 								} elseif ( $answer->question_type === 'single_choice' ) {
 									$correct_answer = $wpdb->get_results( $wpdb->prepare( "SELECT answer_title, image_id, answer_view_format FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND is_correct = 1", $answer->question_id ) );

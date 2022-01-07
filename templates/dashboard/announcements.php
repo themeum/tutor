@@ -91,8 +91,8 @@ $image_base = tutor()->url . '/assets/images/';
 
 			<?php if ( $courses ) : ?>
 				<?php foreach ( $courses as $course ) : ?>
-					<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
-						<?php echo esc_attr( $course->post_title ); ?>
+					<option value="<?php echo $course->ID; ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
+						<?php echo $course->post_title; ?>
 					</option>
 				<?php endforeach; ?>
 			<?php else : ?>
@@ -111,7 +111,7 @@ $image_base = tutor()->url . '/assets/images/';
 
 	<div class="tutor-form-group tutor-announcement-datepicker">
 		<label><?php _e( 'Date', 'tutor' ); ?></label>
-		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo esc_attr( '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '' ); ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
+		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" value="<?php echo '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
 		<i class="tutor-icon-calendar"></i>
 	</div>
 </div>
@@ -132,27 +132,27 @@ $image_base = tutor()->url . '/assets/images/';
 					$dateObj     = date_create( $post->post_date );
 					$date_format = date_format( $dateObj, 'j M, Y,<\b\r>h:i a' );
 					?>
-					<tr id="tutor-announcement-tr-<?php echo esc_attr( $post->ID ); ?>">
+					<tr id="tutor-announcement-tr-<?php echo $post->ID; ?>">
 						<td class="tutor-announcement-date"><?php echo $date_format; ?></td>
 						<td class="tutor-announcement-content-wrap">
 							<div class="tutor-announcement-content">
 								<h4><?php echo esc_html( $post->post_title ); ?></h4>
-								<p><?php echo esc_attr( $course ? esc_attr( $course->post_title ) : '' ); ?></p>
+								<p><?php echo $course ? esc_attr( $course->post_title ) : ''; ?></p>
 							</div>
 							<div class="tutor-announcement-buttons">
 								<li>
-									<button type="button" course-name="<?php echo esc_attr( $course->post_title ); ?>" announcement-date="<?php echo esc_attr( $date_format ); ?>" announcement-title="<?php echo esc_attr( $post->post_title ); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo esc_attr( $post->post_parent ); ?>" announcement-id="<?php echo esc_attr( $post->ID ); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
+									<button type="button" course-name="<?php echo esc_attr( $course->post_title ); ?>" announcement-date="<?php echo esc_attr( $date_format ); ?>" announcement-title="<?php echo esc_attr( $post->post_title ); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-btn bordered-btn tutor-announcement-details">
 										<?php _e( 'Details', 'tutor' ); ?>
 									</button>
 								</li>
 								<li class="tutor-dropdown">
 									<i class="tutor-icon-action"></i>
 									<ul class="tutor-dropdown-menu">
-										<li announcement-title="<?php echo esc_attr( $post->post_title ); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo esc_attr( $post->post_parent ); ?>" announcement-id="<?php echo esc_attr( $post->ID ); ?>" class="tutor-announcement-edit">
+										<li announcement-title="<?php echo esc_attr( $post->post_title ); ?>" announcement-summary="<?php echo esc_attr( $post->post_content ); ?>" course-id="<?php echo $post->post_parent; ?>" announcement-id="<?php echo $post->ID; ?>" class="tutor-announcement-edit">
 											<i class="tutor-icon-pencil"></i>
 											<?php _e( 'Edit', 'tutor' ); ?>
 										</li>
-										<li class="tutor-announcement-delete" announcement-id="<?php echo esc_attr( $post->ID ); ?>">
+										<li class="tutor-announcement-delete" announcement-id="<?php echo $post->ID; ?>">
 											<i class="tutor-icon-garbage"></i>
 											<?php _e( 'Delete', 'tutor' ); ?>
 										</li>

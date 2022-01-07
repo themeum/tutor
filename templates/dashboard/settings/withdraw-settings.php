@@ -32,11 +32,11 @@
 						<input type="radio" id="withdraw_method_select_<?php echo esc_attr( $method_id ); ?>" class="withdraw-method-select-input" name="tutor_selected_withdraw_method" value="<?php echo esc_attr( $method_id ); ?>" style="display: none;" <?php checked( $method_id, $old_method_key ); ?>>
 
 						<label for="withdraw_method_select_<?php echo esc_attr( $method_id ); ?>">
-							<p><?php echo esc_attr( tutor_utils()->avalue_dot( 'method_name', $method ) ); ?></p>
-							<span><?php _e( 'Min withdraw', 'tutor' ); ?> <?php
-							echo esc_attr( tutor_utils()->tutor_price( $min_withdraw_amount ) );
-							?>
-								</span>
+							<p><?php echo tutor_utils()->avalue_dot( 'method_name', $method ); ?></p>
+							<span>
+								<?php _e( 'Min withdraw', 'tutor' ); ?> 
+								<?php echo tutor_utils()->tutor_price( $min_withdraw_amount ); ?>
+							</span>
 						</label>
 					</div>
 					<?php

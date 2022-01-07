@@ -23,7 +23,7 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 			?>
 			<div class="tutor-announcement">
 				<div class="tutor-announcement-title-wrap">
-					<h3><?php echo esc_attr( $announcement->post_title ); ?></h3>
+					<h3><?php echo $announcement->post_title; ?></h3>
 				</div>
 
 				<div class="tutor-announcement-meta tutor-text-mute">

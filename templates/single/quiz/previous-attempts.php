@@ -76,7 +76,7 @@ $passing_grade = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
 					}
 					?>
 				</td>
-				<td><a href="<?php echo esc_attr( $attempt_action ); ?>"><?php _e( 'Details', 'tutor' ); ?></a></td>
+				<td><a href="<?php echo esc_url( $attempt_action ); ?>"><?php _e( 'Details', 'tutor' ); ?></a></td>
 				<?php do_action( 'tutor_quiz/previous_attempts/table/tbody/col', $attempt ); ?>
 			</tr>
 			<?php

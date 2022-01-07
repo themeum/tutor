@@ -14,7 +14,8 @@
         <?php
         foreach ($levels as $level_key => $level){
             ?>
-            <label> <input type="radio" name="course_level" value="<?php echo esc_attr( $level_key ); ?>" <?php ($course_level ? checked($level_key, $course_level) : $level_key === 'intermediate') ? checked(1, 1): ''; ?> > 
+            <label> 
+                <input type="radio" name="course_level" value="<?php echo esc_attr( $level_key ); ?>" <?php ($course_level ? checked($level_key, $course_level) : $level_key === 'intermediate') ? checked(1, 1): ''; ?> > 
                 <?php echo esc_attr( $level ); ?>
             </label>
             <?php

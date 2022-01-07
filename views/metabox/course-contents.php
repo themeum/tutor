@@ -36,7 +36,7 @@
 			<div class="tutor-topics-top">
 				<h4 class="tutor-topic-title">
 					<i class="tutor-icon-move course-move-handle"></i>
-					<span class="topic-inner-title"><?php echo stripslashes( esc_attr( $topic->post_title ) ); ?></span>
+					<span class="topic-inner-title"><?php echo stripslashes( $topic->post_title ); ?></span>
 
 					<span class="tutor-topic-inline-edit-btn">
 						<i class="tutor-icon-pencil topic-edit-icon"></i>
@@ -84,7 +84,7 @@
 				</div>
 			</div>
 
-			<div class="tutor-topics-body" style="display: <?php echo esc_attr( $current_topic_id == $topic->ID ? 'block' : 'none' ); ?>;">
+			<div class="tutor-topics-body" style="display: <?php echo $current_topic_id == $topic->ID ? 'block' : 'none'; ?>;">
 
 				<div class="tutor-lessons">
 				<?php
@@ -227,7 +227,7 @@ if ( count( $query_lesson ) > count( $attached_lesson_ids ) ) {
 							<div id="tutor-lesson-<?php echo esc_attr( $lesson->ID ); ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo esc_attr( $lesson->ID );?>">
 								<div class="tutor-lesson-top">
 									<i class="tutor-icon-move"></i>
-									<a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>" data-topic-id="<?php echo esc_attr( is_object( $topic ) ? $topic->ID : '' ); ?>"><?php echo stripslashes( esc_attr( $lesson->post_title ) ); ?> </a>
+									<a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>" data-topic-id="<?php echo is_object( $topic ) ? $topic->ID : ''; ?>"><?php echo stripslashes( esc_attr( $lesson->post_title ) ); ?> </a>
 									<a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo esc_attr( $lesson->ID ); ?>"><i class="tutor-icon-garbage"></i></a>
 								</div>
 							</div>

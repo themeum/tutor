@@ -80,7 +80,7 @@ $question = tutor_utils()->get_qa_question( $question_id );
 			if ( is_array( $answers ) && count( $answers ) ) {
 				foreach ( $answers as $answer ) {
 					?>
-					<div class="tutor_original_question <?php echo esc_attr( ( $question->user_id == $answer->user_id ) ? 'tutor-bg-white' : 'tutor-bg-light' ); ?>">
+					<div class="tutor_original_question <?php echo $question->user_id == $answer->user_id ? 'tutor-bg-white' : 'tutor-bg-light'; ?>">
 						<div class="question-left">
 							<?php
 								echo tutor_utils()->get_tutor_avatar( $answer->user_id );

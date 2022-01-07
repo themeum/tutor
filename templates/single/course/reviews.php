@@ -91,7 +91,7 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) {
 							<div class="review-time-name">
 								<p> <a href="<?php echo esc_url( $profile_url ); ?>">  <?php echo esc_attr( $review->display_name ); ?> </a> </p>
 								<p class="review-meta">
-									<?php echo esc_attr( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) ); ?>
+									<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
 								</p>
 							</div>
 							<div class="individual-review-rating-wrap">

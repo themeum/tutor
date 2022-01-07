@@ -21,12 +21,12 @@
                     <select class="ignore-nice-select" name="tutor_announcement_course" id="" required>
                         <?php if ( $courses ) : ?>
                             <?php foreach ( $courses as $course ) : ?>
-                                <option value="<?php echo esc_attr( $course->ID ) ?>">
+                                <option value="<?php echo $course->ID; ?>">
                                     <?php echo esc_html( $course->post_title ); ?>
                                 </option>
                             <?php endforeach; ?>
                         <?php else : ?>
-                            <option value=""><?php echo esc_attr( 'No course found', 'tutor' ); ?></option>
+                            <option value=""><?php echo __( 'No course found', 'tutor' ); ?></option>
                         <?php endif; ?>
                     </select>
                 </div>
@@ -34,13 +34,13 @@
                     <label>
                         <?php esc_html_e( 'Announcement Title', 'tutor' ); ?>
                     </label>
-                    <input type="text" name="tutor_announcement_title" value="" placeholder="<?php echo esc_attr( 'Announcement title', 'tutor' ); ?>" required>
+                    <input type="text" name="tutor_announcement_title" value="" placeholder="<?php echo __( 'Announcement title', 'tutor' ); ?>" required>
                 </div>
                 <div class="tutor-form-group">
                     <label for="tutor_announcement_course">
                         <?php esc_html_e( 'Summary', 'tutor' ); ?>
                     </label>
-                    <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php echo esc_attr( 'Summary...', 'tutor' ); ?>" required></textarea>
+                    <textarea rows="6" type="text" name="tutor_announcement_summary" value="" placeholder="<?php echo __( 'Summary...', 'tutor' ); ?>" required></textarea>
                 </div>
                 
                 <?php do_action( 'tutor_announcement_editor/after' ); ?>

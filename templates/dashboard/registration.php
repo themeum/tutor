@@ -32,15 +32,14 @@
 		<input type="hidden" value="tutor_register_student" name="tutor_action"/>
 
 		<?php
-
-		$errors = apply_filters( 'tutor_student_register_validation_errors', array() );
-		if ( is_array( $errors ) && count( $errors ) ) {
-			echo _esc_h'<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">' );
-			foreach ( $errors as $error_key => $error_value ) {
-				echo '<li>' . $error_value . '</li>';
+			$errors = apply_filters( 'tutor_student_register_validation_errors', array() );
+			if ( is_array( $errors ) && count( $errors ) ) {
+				echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+				foreach ( $errors as $error_key => $error_value ) {
+					echo '<li>' . $error_value . '</li>';
+				}
+				echo '</ul></div>';
 			}
-			echo '</ul></div>';
-		}
 		?>
 
 		<div class="tutor-form-row">
@@ -63,7 +62,6 @@
 					<input type="text" name="last_name" value="<?php esc_attr_e( tutor_utils()->input_old( 'last_name' ) ); ?>" placeholder="<?php _e( 'Last Name', 'tutor' ); ?>" required autocomplete="family-name">
 				</div>
 			</div>
-
 		</div>
 
 		<div class="tutor-form-row">
@@ -82,11 +80,9 @@
 					<label>
 						<?php _e( 'E-Mail', 'tutor' ); ?>
 					</label>
-
 					<input type="text" name="email" value="<?php esc_attr_e( tutor_utils()->input_old( 'email' ) ); ?>" placeholder="<?php _e( 'E-Mail', 'tutor' ); ?>" required autocomplete="email">
 				</div>
 			</div>
-
 		</div>
 
 		<div class="tutor-form-row">

@@ -47,7 +47,7 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/wrap' ); ?>
-<div class="tutor-single-lesson-wrap <?php echo esc_attr( $enable_spotlight_mode ? 'tutor-spotlight-mode' : '' ); ?>">
+<div class="tutor-single-lesson-wrap <?php echo $enable_spotlight_mode ? 'tutor-spotlight-mode' : ''; ?>">
 	<div class="tutor-lesson-sidebar">
 
 
@@ -84,8 +84,8 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 							$topic_summery = get_the_content();
 							?>
 
-							<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo esc_attr( $topic_id ); ?>">
-								<div class="tutor-topics-title <?php echo esc_attr( $topic_summery ? 'has-summery' : '' ); ?>">
+							<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
+								<div class="tutor-topics-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
 									<h3>
 										<?php
 										the_title();
@@ -133,7 +133,7 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 											}
 											?>
 
-											<div class="tutor-course-lesson <?php echo esc_attr( $currentPost->ID === get_the_ID() ? 'active' : '' ); ?>">
+											<div class="tutor-course-lesson <?php echo $currentPost->ID === get_the_ID() ? 'active' : ''; ?>">
 												<h5>
 													<?php
 													$lesson_title = "<i class='$lesson_icon'></i>";

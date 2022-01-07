@@ -38,7 +38,7 @@ if ( $cover_photo_id ) {
 					<i class="tutor-icon-image-ans"></i>
 					<span>
 						<?php
-							echo esc_attr( $profile_photo_id ? __( 'Update Cover Photo', 'tutor' ) : __( 'Upload Cover Photo', 'tutor' ) );
+							echo $profile_photo_id ? __( 'Update Cover Photo', 'tutor' ) : __( 'Upload Cover Photo', 'tutor' );
 						?>
 
 					</span>
@@ -174,7 +174,9 @@ if ( $cover_photo_id ) {
 
 						foreach ( $public_display as $id => $item ) {
 							?>
-							<option <?php selected( $user->display_name, $item ); ?>><?php echo esc_attr( $item ); ?></option>
+								<option <?php selected( $user->display_name, $item ); ?>>
+									<?php echo esc_attr( $item ); ?>
+								</option>
 							<?php
 						}
 						?>

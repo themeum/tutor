@@ -46,13 +46,14 @@ $quiz_answers      = array();
 		?>
 
 		<div class="quiz-head-meta-info">
-			<?php
-			if ( ! $hide_quiz_time_display ) {
-				?>
+			<?php if ( ! $hide_quiz_time_display ): ?>
 				<div class="time-remaining">
-					<?php _e( 'Time remaining : ', 'tutor' ); ?> <span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>"><?php echo esc_attr( $remaining_time_context ); ?></span>
+					<?php _e( 'Time remaining : ', 'tutor' ); ?>&nbsp;
+					<span id="tutor-quiz-time-update" data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>">
+						<?php echo $remaining_time_context; ?>
+					</span>
 				</div>
-			<?php } ?>
+			<?php endif; ?>
 		</div>
 
 		<?php
@@ -108,7 +109,7 @@ $quiz_answers      = array();
 						$question_i++;
 						$question_settings = maybe_unserialize( $question->question_settings );
 
-						$style_display = esc_attr( ( $question_layout_view !== 'question_below_each_other' && $question_i == 1 ) ? 'block' : 'none' );
+						$style_display = ( $question_layout_view !== 'question_below_each_other' && $question_i == 1 ) ? 'block' : 'none';
 						if ( $question_layout_view === 'question_below_each_other' ) {
 							$style_display = 'block';
 						}
@@ -117,9 +118,9 @@ $quiz_answers      = array();
 						$previous_question = $question_i > 1 ? $questions[ $question_i - 1 ] : false;
 						$next_question_id  = $next_question ? "data-next-question-id=#quiz-attempt-single-question-{$next_question->question_id}" : '';
 						?>
-						<div id="quiz-attempt-single-question-<?php echo esc_attr( $question->question_id ); ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo esc_attr( $question_i ); ?>" style="display: <?php echo esc_attr( $style_display ); ?> ;" <?php echo esc_attr( $next_question_id ); ?> data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>" >
+						<div id="quiz-attempt-single-question-<?php echo esc_attr( $question->question_id ); ?>" class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo $question_i; ?>" style="display: <?php echo $style_display; ?> ;" <?php echo esc_attr( $next_question_id ); ?> data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>" >
 
-						<input type="hidden" name="attempt[<?php echo esc_attr( $is_started_quiz->attempt_id ); ?>][quiz_question_ids][]" value="<?php echo esc_attr( esc_attr( $question->question_id ) ); ?>" />
+						<input type="hidden" name="attempt[<?php echo esc_attr( $is_started_quiz->attempt_id ); ?>][quiz_question_ids][]" value="<?php echo $question->question_id; ?>" />
 							<?php
 
 
@@ -140,7 +141,7 @@ $quiz_answers      = array();
 
 							echo '<h4 class="question-text">';
 							if ( ! $hide_question_number_overview ) {
-								echo esc_attr( $question_i ) . '. ';
+								echo $question_i . '. ';
 							}
 							echo stripslashes( $question->question_title );
 							echo '</h4>';
@@ -155,7 +156,7 @@ $quiz_answers      = array();
 							}
 							?>
 
-							<div class="tutor-quiz-answers-wrap question-type-<?php echo esc_attr( $question_type ); ?> <?php echo esc_attr( $answer_required ? 'quiz-answer-required' : '' ); ?> ">
+							<div class="tutor-quiz-answers-wrap question-type-<?php echo esc_attr( $question_type ); ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?> ">
 								<?php
 								if ( is_array( $answers ) && count( $answers ) ) {
 									foreach ( $answers as $answer ) {
@@ -164,7 +165,7 @@ $quiz_answers      = array();
 
 										if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 											?>
-											<label class="answer-view-<?php echo esc_attr( $answer->answer_view_format ); ?>">
+											<label class="answer-view-<?php echo $answer->answer_view_format; ?>">
 												<div class="quiz-answer-input-body">
 													<?php
 													if ( $answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image' ) {

@@ -14,8 +14,8 @@
 					foreach ( $addons as $basName => $addon ) {
 						$addonConfig = tutor_utils()->get_addon_config( $basName );
 
-						$addons_path = trailingslashit( tutor()->path . 'assets/addons/' . esc_attr( $basName ) );
-						$addons_url  = trailingslashit( tutor()->url . 'assets/addons/' . esc_attr( $basName ) );
+						$addons_path = trailingslashit( tutor()->path . 'assets/addons/' . $basName );
+						$addons_url  = trailingslashit( tutor()->url . 'assets/addons/' . $basName );
 
 						$thumbnailURL = tutor()->url . 'assets/images/tutor-plugin.png';
 
@@ -33,8 +33,8 @@
 								<div class="name column-name">
 									<h3>
 										<?php
-										echo esc_attr( $addon['name'] );
-										echo '<img src="' . esc_url( $thumbnailURL ) . '" class="plugin-icon" alt="">';
+											echo $addon['name'];
+											echo '<img src="' . esc_url( $thumbnailURL ) . '" class="plugin-icon" alt="">';
 										?>
 									</h3>
 								</div>
@@ -52,7 +52,7 @@
 							</div>
 							<div class="plugin-card-bottom">
 								<?php
-									echo '<div class="plugin-version"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( TUTOR_VERSION ) . ' </div>';
+									echo '<div class="plugin-version"> ' . __( 'Version', 'tutor' ) . ' : ' . TUTOR_VERSION . ' </div>';
 								?>
 							</div>
 						</div>

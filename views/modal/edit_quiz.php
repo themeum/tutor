@@ -46,7 +46,7 @@ if ( $topic_id != '' ) {
 				<div class="tutor-quiz-builder-group">
 					<div class="tutor-quiz-builder-row">
 						<div class="tutor-quiz-builder-col">
-							<input type="text" name="quiz_title" placeholder="<?php _e( 'Type your quiz title here', 'tutor' ); ?>" value="<?php echo htmlspecialchars( stripslashes( esc_attr( $quiz->post_title ) ) ); ?>">
+							<input type="text" name="quiz_title" placeholder="<?php _e( 'Type your quiz title here', 'tutor' ); ?>" value="<?php echo stripslashes( esc_attr( $quiz->post_title ) ); ?>">
 						</div>
 					</div>
 					<p class="warning quiz_form_msg"></p>
@@ -54,7 +54,7 @@ if ( $topic_id != '' ) {
 				<div class="tutor-quiz-builder-group">
 					<div class="tutor-quiz-builder-row">
 						<div class="tutor-quiz-builder-col">
-							<textarea name="quiz_description" rows="5"><?php echo stripslashes( esc_attr( $quiz->post_content ) ); ?></textarea>
+							<textarea name="quiz_description" rows="5"><?php echo stripslashes( $quiz->post_content ); ?></textarea>
 						</div>
 					</div>
 				</div>
@@ -104,12 +104,16 @@ if ( $topic_id != '' ) {
 									</span>
 
 									<span class="question-edit-icon">
-										<a href="javascript:;" class="tutor-quiz-open-question-form" data-question-id="<?php echo esc_attr( $question->question_id ); ?>"><i class="tutor-icon-pencil"></i> </a>
+										<a href="javascript:;" class="tutor-quiz-open-question-form" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
+											<i class="tutor-icon-pencil"></i> 
+										</a>
 									</span>
 								</div>
 
 								<div class="quiz-builder-qustion-trash">
-									<a href="javascript:;" class="tutor-quiz-question-trash" data-question-id="<?php echo esc_attr( $question->question_id ); ?>"><i class="tutor-icon-garbage"></i> </a>
+									<a href="javascript:;" class="tutor-quiz-question-trash" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
+										<i class="tutor-icon-garbage"></i> 
+									</a>
 								</div>
 							</div>
 							<?php

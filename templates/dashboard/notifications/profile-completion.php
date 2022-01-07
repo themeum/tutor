@@ -21,10 +21,15 @@ if ( $profile_completion->progress < 100 ) { ?>
 					</ul>
 				</div>
 				<div class="profile-completion-warning-status">
-					<p><span><?php echo esc_attr( $profile_completion->progress ) . __( '% Complete', 'tutor' ); ?>,</span> <?php _e( 'You are almost done!', 'tutor' ); ?></p>
+					<p>
+						<span>
+							<?php echo $profile_completion->progress . __( '% Complete', 'tutor' ); ?>,
+						</span> 
+						<?php _e( 'You are almost done!', 'tutor' ); ?>
+					</p>
 					<div class="tutor-progress-bar-wrap">
 						<div class="tutor-progress-bar">
-							<div class="tutor-progress-filled" style="--tutor-progress-left: <?php echo esc_attr( $profile_completion->progress ); ?>%;"></div>
+							<div class="tutor-progress-filled" style="--tutor-progress-left: <?php echo $profile_completion->progress; ?>%;"></div>
 						</div>
 					</div>
 				</div>

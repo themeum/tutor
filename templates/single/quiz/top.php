@@ -63,7 +63,7 @@ do_action( 'tutor_quiz/single/before/top' );
 		?>
 		<li>
 			<strong><?php _e( 'Attempts Allowed', 'tutor' ); ?> :</strong>
-			<?php echo esc_attr( 0 === $attempts_allowed ? __( 'No limit', 'tutor' ) : $attempts_allowed ); ?>
+			<?php echo 0 === $attempts_allowed ? __( 'No limit', 'tutor' ) : $attempts_allowed; ?>
 		</li>
 		<?php
 
@@ -78,7 +78,7 @@ do_action( 'tutor_quiz/single/before/top' );
 		?>
 		<li>
 			<strong><?php _e( 'Attempts Remaining', 'tutor' ); ?> :</strong>
-			<?php echo esc_attr( $attempts_allowed == 0 ? __( 'No limit', 'tutor' ) : $attempt_remaining ); ?>
+			<?php echo $attempts_allowed == 0 ? __( 'No limit', 'tutor' ) : $attempt_remaining; ?>
 		</li>
 		<?php
 		if ( $passing_grade ) {

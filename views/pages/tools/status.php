@@ -151,7 +151,7 @@
 							$class  = 'recommendation';
 						}
 
-						echo '<mark class="' . esc_attr( $class ) . '">' . esc_html( $environment['php_version'] ) . ' - ' . wp_kses_post( $notice ) . '</mark>';
+						echo '<mark class="' . $class . '">' . esc_html( $environment['php_version'] ) . ' - ' . wp_kses_post( $notice ) . '</mark>';
 					}
 					?>
 				</td>

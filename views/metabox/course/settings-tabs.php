@@ -25,9 +25,9 @@ $current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data($_GET) )
 					$i++;
 
 					if ( $current_tab ) {
-						$active = esc_attr( $current_tab === $key ? 'active' : '' );
+						$active = $current_tab === $key ? 'active' : '';
 					} else {
-						$active = esc_attr( $i === 1 ? 'active' : '' );
+						$active = $i === 1 ? 'active' : '';
 					}
 
 					$label      = tutils()->array_get( 'label', $arg );
@@ -60,11 +60,11 @@ $current_tab = tutils()->array_get( 'settings_tab', tutor_sanitize_data($_GET) )
 				$fields   = tutils()->array_get( 'fields', $tab );
 
 				if ( $current_tab ) {
-					$active  = esc_attr( $current_tab === $key ? 'active' : '' );
-					$display = esc_attr( $current_tab === $key ? 'block' : 'none' );
+					$active  = $current_tab === $key ? 'active' : '';
+					$display = $current_tab === $key ? 'block' : 'none';
 				} else {
-					$active  = esc_attr( $i === 1 ? 'active' : '' );
-					$display = esc_attr( $i === 1 ? 'block' : 'none' );
+					$active  = $i === 1 ? 'active' : '';
+					$display = $i === 1 ? 'block' : 'none';
 				}
 
 				echo '<div id="settings-tab-' . esc_attr( $key ) . '" class="settings-tab-wrap ' . esc_attr( $active ) . '" style="display: ' . esc_attr( $display ) . ';">';

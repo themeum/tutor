@@ -21,7 +21,7 @@ class Course_Filter {
 
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) sanitize_text_field( tutils()->array_get( 'course_per_page', $_post, $default_per_page ) );
-		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? esc_attr( $_post['page'] ) : 1;
+		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? sanitize_text_field( $_post['page'] ) : 1;
 
 		$args = array(
 			'post_status'    => 'publish',
@@ -71,7 +71,7 @@ class Course_Filter {
 
 			if ( count( $type_array ) > 0 ) {
 				$level_price[] = array(
-					'key'     => esc_attr( 'level' === $type ? '_tutor_course_level' : '_tutor_course_price_type' ),
+					'key'     => 'level' === $type ? '_tutor_course_level' : '_tutor_course_price_type',
 					'value'   => $type_array,
 					'compare' => 'IN',
 				);
@@ -145,7 +145,7 @@ class Course_Filter {
 			?>
 				<div class="tutor-course-filter-nested-terms">
 					<label>
-						<input type="checkbox" name="tutor-course-filter-<?php echo esc_attr( $taxonomy ); ?>" value="<?php echo esc_attr( $term->term_id ); ?>" <?php echo esc_attr( $term->term_id == $term_id ? 'checked' : '' ); ?>/>&nbsp;
+						<input type="checkbox" name="tutor-course-filter-<?php echo esc_attr( $taxonomy ); ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id == $term_id ? 'checked' : ''; ?>/>&nbsp;
 						<?php echo $term->name; ?>
 					</label>
 

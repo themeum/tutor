@@ -15,7 +15,7 @@ if ( $is_instructor ) {
 	?>
 
 	<div class="tutor-instructor-pending-wrapper">
-		<div class="tutor-alert <?php echo esc_attr( ( $instructor_status == 'pending' ? 'tutor-alert-info' : ( $instructor_status == 'approved' ? 'tutor-alert-success' : ( $instructor_status == 'blocked' ? 'tutor-alert-danger' : '' ) ) ) ); ?>">
+		<div class="tutor-alert <?php echo $instructor_status == 'pending' ? 'tutor-alert-info' : ( $instructor_status == 'approved' ? 'tutor-alert-success' : ( $instructor_status == 'blocked' ? 'tutor-alert-danger' : '' ) ); ?>">
 
 			<?php
 			if ( $instructor_status == 'pending' ) {

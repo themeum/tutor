@@ -51,7 +51,11 @@ do_action( 'tutor_dashboard/before/wrap' );
 						</div>
 						<div class="tutor-dashboard-header-info">
 							<div class="tutor-dashboard-header-display-name">
-								<h4><strong><?php echo esc_attr( $user->display_name ); ?></strong> </h4>
+								<h4>
+									<strong>
+										<?php echo $user->display_name; ?>
+									</strong> 
+								</h4>
 							</div>
 							<?php $instructor_rating = tutils()->get_instructor_ratings( $user->ID ); ?>
 							<?php
@@ -61,7 +65,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 									<div class="tutor-dashboard-header-ratings">
 										<?php tutils()->star_rating_generator( $instructor_rating->rating_avg ); ?>
 										<span><?php echo esc_html( $instructor_rating->rating_avg ); ?></span>
-										<span> (<?php echo esc_attr( sprintf( __( '%d Ratings', 'tutor' ), $instructor_rating->rating_count ) ); ?>) </span>
+										<span> (<?php echo sprintf( __( '%d Ratings', 'tutor' ), $instructor_rating->rating_count ); ?>) </span>
 									</div>
 									<!--<div class="tutor-dashboard-header-notifications">
 										<?php /*_e('Notification'); */ ?> <span>9</span>

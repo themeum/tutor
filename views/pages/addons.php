@@ -46,9 +46,9 @@ $page_name    = $current_page ? $current_page : 'addons';
 									<div class="name column-name">
 										<h3>
 											<?php
-											echo _esc_html( '<a href="' . esc_url( $addon->product_url ) . '" target="_blank">' . esc_attr( $addon->product_name ) . '</a>' );
+											echo '<a href="' . esc_url( $addon->product_url ) . '" target="_blank">' . esc_attr( $addon->product_name ) . '</a>';
 											if ( $addon->thumbnail ) {
-												echo _esc_html( '<img src="' . esc_url( $addon->thumbnail ) . '" class="plugin-icon" alt="">' );
+												echo '<img src="' . esc_url( $addon->thumbnail ) . '" class="plugin-icon" alt="">';
 											}
 											?>
 										</h3>
@@ -60,24 +60,24 @@ $page_name    = $current_page ? $current_page : 'addons';
 
 											<li>
 												<?php
-												echo _esc_html( '<span class="addon-regular-price"><del>' . $addon->regular_price . '</del></span>' );
-												echo _esc_html( '<span class="addon-current-price">' . $addon->price . '</span>' );
+												echo '<span class="addon-regular-price"><del>' . $addon->regular_price . '</del></span>';
+												echo '<span class="addon-current-price">' . $addon->price . '</span>';
 												?>
 											</li>
 
 										</ul>
 									</div>
 									<div class="desc column-description">
-										<?php echo _esc_html( $addon->short_description ? '<p>' . esc_attr( $addon->short_description ) . '</p>' : '' ); ?>
+										<?php echo $addon->short_description ? '<p>' . esc_attr( $addon->short_description ) . '</p>' : ''; ?>
 
 										<p class="authors"><cite>By <a href="https://www.themeum.com" target="_blank">Themeum</a></cite></p>
 									</div>
 								</div>
 								<div class="plugin-card-bottom">
 									<?php
-									if ( $addon->version ) {
-										echo _esc_html( '<div class="plugin-version"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( $addon->version ) . '</div>' );
-									}
+										if ( $addon->version ) {
+											echo '<div class="plugin-version"> ' . __( 'Version', 'tutor' ) . ' : ' . esc_attr( $addon->version ) . '</div>';
+										}
 									?>
 									<!--
 									<div class="column-updated">
