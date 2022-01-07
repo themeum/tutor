@@ -105,7 +105,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                                         <i class="ttr-edit-filled tutor-icon-26 tutor-color-text-hints"></i>
                                     </a>
                                     <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                        <i class="ttr-delete-stroke-filled tutor-icon-26 tutor-color-text-hints"></i>
+                                        <i class="ttr-delete-stroke-filled tutor-icon-24 tutor-color-text-hints"></i>
                                     </a>
                                 </div>
                             </div>

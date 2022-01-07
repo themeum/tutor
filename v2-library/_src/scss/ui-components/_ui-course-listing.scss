@@ -384,3 +384,12 @@
 		}
 	}
 }
+
+// Loading Bookmark spacing fix
+.tutor-course-listing-item {
+	.tutor-updating-message {
+		&:before {
+			margin-right: 0 !important;
+		}
+	}
+}
