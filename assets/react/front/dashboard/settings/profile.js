@@ -46,23 +46,45 @@ window.jQuery(document).ready($ => {
             form_data.append('photo_type', name);
             form_data.append('photo_file', file, file.name);
             form_data.append(nonce.key, nonce.value);
+            let server_max_size = photo_editor.find('.upload_max_filesize').val();
+            // this.verify_filesize(file);
+            if (this.verify_filesize(file)) {
+                $.ajax({
+                    url: window._tutorobject.ajaxurl,
+                    data: form_data,
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    error: context.error_alert,
+                    complete: function () {
+                        context.toggle_loader(name, false);
+                    }
+                })
+                let photoType = this.title_capitalize(name.replace('_', ' '));
+                tutor_toast('Success', photoType+ ' Changed successfully!', 'success');
+            } else {
+                tutor_toast('Error', 'Maximum file size exceeded!', 'error');
+                return false;
+            }
 
-            $.ajax({
-                url: window._tutorobject.ajaxurl,
-                data: form_data,
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                error: context.error_alert,
-                complete: function () {
-                    context.toggle_loader(name, false);
-                }
-            })
+            // console.log(this.max_filesize,name,file);
+
+
         }
 
+        this.title_capitalize = function (string) {
+            const arr = string.split(" ");
+            for (var i = 0; i < arr.length; i++) {
+                arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+
+            }
+            return arr.join(" ");
+        }
         this.accept_upload_image = function (context, e) {
             var file = e.currentTarget.files[0] || null;
-            context.update_preview(e.currentTarget.name, file);
+            if (this.verify_filesize(file)) {
+                context.update_preview(e.currentTarget.name, file);
+            }
             context.upload_selected_image(e.currentTarget.name, file);
             $(e.currentTarget).val('');
         }
@@ -92,12 +114,24 @@ window.jQuery(document).ready($ => {
             }
 
             var reader = new FileReader();
+            this.verify_filesize(file);
+
             reader.onload = function (e) {
                 renderer.css('background-image', 'url(' + e.target.result + ')');
             }
 
             reader.readAsDataURL(file);
         }
+
+        this.verify_filesize = function (file) {
+            let server_max_size = photo_editor.find('.upload_max_filesize').val();
+
+            if (server_max_size < file.size) {
+                return false;
+            }
+            return true;
+        }
+
 
         this.toggle_profile_pic_action = function (show) {
             var method = show === undefined ? 'toggleClass' : (show ? 'addClass' : 'removeClass');

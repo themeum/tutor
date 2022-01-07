@@ -48,7 +48,8 @@ if ( ! in_array( $user->display_name, $public_display ) ) { // Only add this if 
 
 $public_display = array_map( 'trim', $public_display );
 $public_display = array_unique( $public_display );
-
+$max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
+// $max_filesize = 1009;
 ?>
 
 <div class="tutor-dashboard-setting-profile tutor-dashboard-content-inner">
@@ -56,7 +57,9 @@ $public_display = array_unique( $public_display );
 	<?php do_action( 'tutor_profile_edit_form_before' ); ?>
 
 	<div id="tutor_profile_cover_photo_editor">
+
 		<input id="tutor_photo_dialogue_box" type="file" accept=".png,.jpg,.jpeg"/>
+		<input type="hidden" class="upload_max_filesize" value="<?php echo $max_filesize; ?>">
 		<div id="tutor_cover_area" data-fallback="<?php esc_attr_e( $cover_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $cover_photo_src ); ?>)">
 			<span class="tutor_cover_deleter">
 				<span class="dashboard-profile-delete ttr-delete-fill-filled"></span>
@@ -64,12 +67,7 @@ $public_display = array_unique( $public_display );
 			<div class="tutor_overlay">
 				<button class="tutor_cover_uploader">
 					<i class="tutor-icon-image-ans"></i>
-					<span>
-					   <?php
-							echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' );
-						?>
-
-					</span>
+					<span><?php echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' ); ?></span>
 				</button>
 			</div>
 		</div>
