@@ -18,6 +18,7 @@ if(isset($_GET['view_as']) && in_array($_GET['view_as'], array('student', 'instr
 }
 
 $is_instructor      = tutor_utils()->is_instructor();
+$user_status        = get_user_meta( get_current_user_id(), '_tutor_instructor_status', true );
 $view_option        = get_user_meta( get_current_user_id(), 'tutor_qa_view_as', true );
 $view_as            = $is_instructor ? ($view_option ? $view_option : 'instructor') : 'student';
 $as_instructor_url  = add_query_arg( array('view_as'=>'instructor'), tutor()->current_url );
@@ -28,7 +29,7 @@ $as_student_url     = add_query_arg( array('view_as'=>'student'), tutor()->curre
     <div class="tutor-bs-col">
         <div class="tutor-text-medium-h5 tutor-color-text-primary"><?php _e('Question & Answer', 'tutor'); ?></div>
     </div>
-    <?php if($is_instructor): ?>
+    <?php if( $is_instructor && 'approved' === $user_status ): ?>
         <div class="tutor-bs-col-auto">
             <?php _e('View as', 'tutor'); ?>:
         </div>
