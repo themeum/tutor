@@ -81,7 +81,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			<?php
 		}
 	} else {
-		if(!$profile_completion->_tutor_profile_photo) {
+		if(!$profile_completion['_tutor_profile_photo']) {
 			$alert_message = sprintf('<div class="tutor-alert tutor-primary">
 			<div class="tutor-alert-text">
 				<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
@@ -229,7 +229,7 @@ $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_u
 				$courses_in_progress->the_post();
 				$tutor_course_img 	= get_tutor_course_thumbnail_src();
 				$course_rating		= tutor_utils()->get_course_rating( get_the_ID() );
-				$course_progress    = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+				$course_progress    = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
 				$completed_number 	= 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
 			?>
 			<div class="tutor-frontend-dashboard-course-porgress-cards tutor-mb-20">
