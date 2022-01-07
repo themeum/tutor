@@ -55,6 +55,7 @@ module.exports = (env, options) => {
 		config.devtool = false;
 		config.optimization = {
 			minimize: true,
+			// minimizer: [new CssMinimizerPlugin()],
 			minimizer: [minimizer, new CssMinimizerPlugin()],
 		};
 	}
@@ -96,7 +97,7 @@ module.exports = (env, options) => {
 					path: path.resolve(dest_path),
 					filename: `[name].js`,
 				},
-			})
+			}),
 		);
 	}
 
