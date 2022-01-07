@@ -224,7 +224,7 @@ $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_u
 		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
 			<?php esc_html_e( 'In Progress Course', 'tutor'); ?>
 		</div>
-		<?php if ( $courses_in_progress->have_posts() ) : ?>
+		<?php if ( is_array( $courses_in_progress ) && $courses_in_progress->have_posts() ) : ?>
 			<?php while( $courses_in_progress->have_posts() ) :
 				$courses_in_progress->the_post();
 				$tutor_course_img 	= get_tutor_course_thumbnail_src();
