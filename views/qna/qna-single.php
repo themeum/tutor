@@ -160,47 +160,88 @@
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
 					<h2><?php echo $question->display_name; ?></h2>
 					<strong><?php echo $question->user_email; ?></strong>
-				</div>
-				
-				<div class="tutor-qna-user-details">
-					<label for="qna_segment_1"><?php _e( 'Asked Under', 'tutor' ); ?></label>
-					<input id="qna_segment_1" type="radio" name="tutor_qna_segment"/>
-					<div>
-						<strong><?php echo $question->post_title; ?></strong>
+					<div class="tutor-user-social tutor-bs-d-flex tutor-mt-25" style="column-gap: 21px;">
+						<?php 
+							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
+
+							foreach ( $tutor_user_social_icons as $key => $social_icon ) :
+								$url                                    = get_user_meta( $question->user_id, $key, true );
+								$tutor_user_social_icons[ $key ]['url'] = $url;
+								if ( '' === $url ) {
+									continue;
+								}
+						?>
+							<a href="<?php echo esc_url( $url ); ?>">
+								<i class="color-text-hints <?php echo esc_attr( $social_icon['icon_classes'] ); ?>"></i>
+							</a>
+						<?php endforeach;?>
 					</div>
 				</div>
-
-			<?php
-				$own_questions = tutor_utils()->get_qa_questions( 0, 10, '', null, null, $question->user_id );
-				$own_questions = array_filter(
-					$own_questions,
-					function( $question ) use ( $question_id ) {
-						return true; // $question_id!=$question->comment_ID;
-					}
-				);
-
-			if ( count( $own_questions ) ) {
-				?>
-						<div class="tutor-qna-user-details">
-							<label for="qna_segment_2"><?php _e( 'Previous Question History', 'tutor' ); ?></label>
-							<input id="qna_segment_2" type="radio" name="tutor_qna_segment"/>
-							<div class="qna-previous-questions">
-						<?php
-						foreach ( $own_questions as $question ) {
-							?>
-										<div>
-											<span><?php echo $question->comment_date; ?></span>
-											<strong><?php echo htmlspecialchars( $question->comment_content ); ?></strong>
-											<small><strong><?php _e( 'Course', 'tutor' ); ?></strong>: <?php echo $question->post_title; ?></small>
-										</div>
-								<?php
-						}
-						?>
+				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
+					<tr>
+						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
+							<div class="tutor-bs-d-flex justify-content-between align-items-center">
+								<span class="color-text-primary text-medium-body tutor-pl-10">
+									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
+								</span>
+								<div class="ttr-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
 							</div>
-						</div>
-						<?php
-			}
-			?>
+							
+						</td>
+					</tr>
+					<tr>
+						<td class="data-td-content" id="tutor-asked-under-course">
+							<div class="td-toggle-content">
+								<span class="color-text-primary text-bold-body">
+									<?php echo esc_html( $question->post_title ); ?>
+								</span>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
+					<tr>
+						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
+							<div class="tutor-bs-d-flex justify-content-between align-items-center">
+								<span class="color-text-primary text-medium-body tutor-pl-10">
+									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
+								</span>
+								<div class="ttr-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
+							</div>
+							
+						</td>
+					</tr>
+					<tr>
+						<td class="data-td-content" id="tutor-prev-question-history">
+							<div class="td-toggle-content">
+								<?php
+									$own_questions = tutor_utils()->get_qa_questions( 0, 10, '', null, null, $question->user_id );
+								?>
+								<?php if ( count( $own_questions ) ) : ?>
+									<div class="qna-previous-questions">
+										<?php foreach ( $own_questions as $question ) : ?>
+											<div>
+												<span class="color-text-subsued text-regular-caption">
+													<?php echo esc_html( date_i18n( get_option( 'date_format') , strtotime( $question->comment_date ) ) ); ?>,
+													<?php echo esc_html( date_i18n( get_option( 'time_format') , strtotime( $question->comment_date ) ) ); ?>
+												</span>
+												<span class="color-text-primary text-bold-body">
+													<?php echo esc_textarea( $question->comment_content ); ?>
+												</span>
+												<span class="color-text-subsued">
+													<?php esc_html_e( 'Course', 'tutor' ); ?></strong>: <?php echo esc_html( $question->post_title ); ?>
+												</span>
+											</div>
+										<?php endforeach; ?>
+									</div>
+								<?php else : ?>
+									<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+								<?php endif; ?>
+							</div>
+						</td>
+					</tr>
+				</table>
 			</div>
 			<?php
 	}

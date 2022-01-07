@@ -28,7 +28,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary">
 							<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
 						</div>
-						<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10">
+						<div class="tutor-mt-12 tutor-bs-align-items-center" style="display: grid; grid-template-columns: repeat(<?php echo $total_count+1; ?>, 1fr); ">
 							<?php
 							for ( $i = 1; $i <= $total_count; $i++ ) {
 								$class = $i > $complete_count ?
@@ -82,7 +82,33 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		}
 	} else {
 		if(!$profile_completion->_tutor_profile_photo) {
-			echo "<p>{$profile_completion['_tutor_profile_photo']['label_html']}</p>";
+			$alert_message = sprintf('<div class="tutor-alert tutor-primary">
+			<div class="tutor-alert-text">
+				<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+				<span>
+					%s
+				</span>
+			</div>
+			<div class="tutor-alert-btns">
+				<div class="alert-btn-group">
+					<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
+				</div>
+			</div>
+		</div>', $profile_completion["_tutor_profile_photo"]["label_html"], tutor_utils()->tutor_dashboard_url('settings'));
+
+		echo $alert_message;
+		// 	echo '<div class="tutor-alert tutor-warning">
+		// 	<div class="tutor-alert-text">
+		// 		<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+		// 		<span>
+		// 		{$profile_completion["_tutor_profile_photo"]["label_html"]}
+		// 		</span>
+		// 	</div>
+		// 	<div class="tutor-alert-btns">
+		// 		<span class="tutor-alert-close tutor-icon-28 tutor-color-black-40 ttr-cross-filled"></span>
+		// 	</div>
+		// </div>';
+
 		}
 	}
 }
@@ -188,17 +214,17 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 /**
  * Active users in progress courses
  */
-$placeholder_img 		= tutor()->url . 'assets/images/placeholder.jpg';
+$placeholder_img 		= tutor()->url . 'assets/images/placeholder.png';
 $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_user_id() );
 ?>
 
 
 <?php if ( ! tutor_utils()->is_instructor() ) : ?>
 	<div class="tutor-frontend-dashboard-course-porgress">
-		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
-			<?php esc_html_e( 'In Progress Course', 'tutor'); ?>
-		</div>
 		<?php if ( $courses_in_progress->have_posts() ) : ?>
+			<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
+				<?php esc_html_e( 'In Progress Course', 'tutor'); ?>
+			</div>
 			<?php while( $courses_in_progress->have_posts() ) :
 				$courses_in_progress->the_post();
 				$tutor_course_img 	= get_tutor_course_thumbnail_src();

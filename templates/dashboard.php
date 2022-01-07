@@ -172,11 +172,11 @@ do_action( 'tutor_dashboard/before/wrap' );
 						$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $dashboard_key );
 						$separator  = false;
 						$menu_icon  = '';
-						
+
 						if ( is_array( $dashboard_page ) ) {
-							$menu_title = tutor_utils()->array_get( 'title', $dashboard_page );
-							$menu_icon_name = tutor_utils()->array_get('icon', $dashboard_page);
-							if($menu_icon_name) {
+							$menu_title     = tutor_utils()->array_get( 'title', $dashboard_page );
+							$menu_icon_name = tutor_utils()->array_get( 'icon', $dashboard_page );
+							if ( $menu_icon_name ) {
 								$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon tutor-icon-30'></span>";
 							}
 							// Add new menu item property "url" for custom link
@@ -197,8 +197,10 @@ do_action( 'tutor_dashboard/before/wrap' );
 							if ( $dashboard_key === 'index' ) {
 								$dashboard_key = '';
 							}
-							$active_class = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-10'>{$menu_title}</span></a></li>";
+							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
+							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
+
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-10'>{$menu_title}</span></a></li>";
 						}
 					}
 					?>

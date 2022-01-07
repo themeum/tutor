@@ -218,6 +218,7 @@ class Options_V2 {
 
 	public function tutor_import_settings() {
 		tutor_utils()->checking_nonce();
+		// pr($_REQUEST);
 		$request = $this->get_request_data( 'tutor_options' );
 
 		$time    = $this->get_request_data( 'time' );
@@ -434,14 +435,22 @@ class Options_V2 {
 						'slug'       => 'course',
 						'block_type' => 'uniform',
 						'fields'     => array(
-							array(
-								'key'         => 'student_must_login_to_view_course',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Course Visibility', 'tutor' ),
-								'label_title' => __( 'Logged Only', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
-							),
+							/**
+							 * TODO
+							 * 
+							 * This option will be implemented on future
+							 * release
+							 *
+							 * @since v2.0.0
+							 */
+							// array(
+							// 	'key'         => 'student_must_login_to_view_course',
+							// 	'type'        => 'toggle_switch',
+							// 	'label'       => __( 'Course Visibility', 'tutor' ),
+							// 	'label_title' => __( 'Logged Only', 'tutor' ),
+							// 	'default'     => 'off',
+							// 	'desc'        => __( 'Students must be logged in to view course', 'tutor' ),
+							// ),
 							array(
 								'key'         => 'course_content_access_for_ia',
 								'type'        => 'toggle_switch',
@@ -902,15 +911,15 @@ class Options_V2 {
 										'label'       => __( 'Author', 'tutor' ),
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'off',
-										'desc'        => __( 'Show author in single course', 'tutor' ),
+										'desc'        => __( 'Enable to remove course author name', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_level',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Course Level', 'tutor' ),
+										'label'       => __( 'Level', 'tutor' ),
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
-										'desc'        => __( 'Toggle to hide/show course level from sidebar meta data', 'tutor' ),
+										'desc'        => __( 'Toggle to remove course level', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_share',
@@ -918,7 +927,7 @@ class Options_V2 {
 										'label'       => __( 'Social Share', 'tutor' ),
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
-										'desc'        => __( 'Toggle to show/hide course share', 'tutor' ),
+										'desc'        => __( 'Toggle to enable course social share', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_duration',
@@ -931,8 +940,8 @@ class Options_V2 {
 									array(
 										'key'         => 'enable_course_total_enrolled',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Enrolled Students', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
+										'label'       => __( 'Total Enrolled', 'tutor' ),
+										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
 										'desc'        => __( 'Enable to show total enrolled students', 'tutor' ),
 									),
@@ -940,9 +949,9 @@ class Options_V2 {
 										'key'         => 'enable_course_update_date',
 										'type'        => 'toggle_single',
 										'label'       => __( 'Update Date', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
+										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
-										'desc'        => __( 'Disable to hide course update infromation', 'tutor' ),
+										'desc'        => __( 'Enable to show course update information', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_progress_bar',
@@ -987,7 +996,7 @@ class Options_V2 {
 									array(
 										'key'         => 'enable_course_requirements',
 										'type'        => 'toggle_single',
-										'label'       => __( 'Pre-Requirements', 'tutor' ),
+										'label'       => __( 'Requirements', 'tutor' ),
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
 										'desc'        => __( 'Enable to show courses requirements setion', 'tutor' ),
@@ -998,7 +1007,7 @@ class Options_V2 {
 										'label'       => __( 'Target Audience', 'tutor' ),
 										'label_title' => __( 'Disable', 'tutor' ),
 										'default'     => 'on',
-										'desc'        => __( 'Enable to show course target audience setion', 'tutor' ),
+										'desc'        => __( 'Enable to show course target audience section', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_announcements',
@@ -1006,15 +1015,15 @@ class Options_V2 {
 										'label'       => __( 'Announcements', 'tutor' ),
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
-										'desc'        => __( 'Enable to show course announcements tab', 'tutor' ),
+										'desc'        => __( 'Enable to show course announcements section', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_review',
 										'type'        => 'toggle_single',
 										'label'       => __( 'Review', 'tutor' ),
-										'label_title' => __( 'Disable', 'tutor' ),
+										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
-										'desc'        => __( 'Disable to hide course review section', 'tutor' ),
+										'desc'        => __( 'Enable to show course review section', 'tutor' ),
 									),
 								),
 								'desc'          => __( 'Content Needed Here...', 'tutor' ),
