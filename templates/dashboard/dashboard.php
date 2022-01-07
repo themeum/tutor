@@ -28,7 +28,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 						<div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary">
 							<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
 						</div>
-						<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-10">
+						<div class="tutor-mt-12 tutor-bs-align-items-center" style="display: grid; grid-template-columns: repeat(<?php echo $total_count+1; ?>, 1fr); ">
 							<?php
 							for ( $i = 1; $i <= $total_count; $i++ ) {
 								$class = $i > $complete_count ?
@@ -82,7 +82,33 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		}
 	} else {
 		if(!$profile_completion->_tutor_profile_photo) {
-			echo "<p>{$profile_completion['_tutor_profile_photo']['label_html']}</p>";
+			$alert_message = sprintf('<div class="tutor-alert tutor-primary">
+			<div class="tutor-alert-text">
+				<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+				<span>
+					%s
+				</span>
+			</div>
+			<div class="tutor-alert-btns">
+				<div class="alert-btn-group">
+					<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
+				</div>
+			</div>
+		</div>', $profile_completion["_tutor_profile_photo"]["label_html"], tutor_utils()->tutor_dashboard_url('settings'));
+
+		echo $alert_message;
+		// 	echo '<div class="tutor-alert tutor-warning">
+		// 	<div class="tutor-alert-text">
+		// 		<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+		// 		<span>
+		// 		{$profile_completion["_tutor_profile_photo"]["label_html"]}
+		// 		</span>
+		// 	</div>
+		// 	<div class="tutor-alert-btns">
+		// 		<span class="tutor-alert-close tutor-icon-28 tutor-color-black-40 ttr-cross-filled"></span>
+		// 	</div>
+		// </div>';
+
 		}
 	}
 }

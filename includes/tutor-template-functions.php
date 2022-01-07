@@ -1348,34 +1348,6 @@ if ( ! function_exists('tutor_lesson_sidebar_question_and_answer')) {
 /**
  * @param bool $echo
  *
- * @return mixed|void
- *
- * Get Social Share button to share on social media
- */
-
-if ( ! function_exists('tutor_social_share')) {
-    function tutor_social_share( $echo = true ) {
-
-        $output = '';
-        $tutor_social_share_icons = tutor_utils()->tutor_social_share_icons();
-
-        if (tutor_utils()->count($tutor_social_share_icons)) {
-            ob_start();
-            tutor_load_template( 'single.course.social_share', array( 'tutor_social_share_icons' => $tutor_social_share_icons ) );
-            $output = apply_filters( 'tutor_course/single/social_share', ob_get_clean() );
-        }
-
-        if ( $echo && $output!='' ) {
-            echo $output;
-        }
-
-        return $output;
-    }
-}
-
-/**
- * @param bool $echo
- *
  * @return mixed
  *
  * Get Assignment content
@@ -1492,5 +1464,22 @@ if ( ! function_exists('tutor_load_template_from_custom_path')) {
             }
         }
         do_action('tutor_load_template_from_custom_path_after', $template, $data);
+    }
+}
+
+/**
+ * Load enrolled course progress template
+ *
+ * This template will be used on only dashboard enrolled course page
+ *
+ * @since v2.0.0
+ */
+if ( ! function_exists( 'tutor_enrolled_course_progress' ) ) {
+    function tutor_enrolled_course_progress() {
+        global $wp_query;
+        $query_vars     = $wp_query->query_vars;
+        if ( isset( $query_vars[ 'tutor_dashboard_page' ] ) && 'enrolled-courses' === $query_vars['tutor_dashboard_page'] ) {
+            tutor_load_template_from_custom_path( tutor()->path . 'templates/loop/enrolled-course-progress.php', '', false );
+        } 
     }
 }

@@ -306,10 +306,11 @@
 			padding-bottom: 25px;
 		}
 		.drag-drop-zone {
-			@include getDashedBorder(2px, 18px, $primary-60);
+            @include getDashedBorder(2px, 18px, $primary-60);
 			background-color: $bg-white;
 			border-radius: 6px;
 			text-align: center;
+			border-color: #BDCAF1;
 			color: $text-primary;
 			padding: 25px 30px 38px;
 

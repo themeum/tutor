@@ -38,15 +38,6 @@ $quiz_attempts       = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, 
 
 $quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids( $course_id, '', $course_filter, $date_filter );
 
-add_action(
-	'tutor_quiz/table/after/course_title',
-	function( $attempt ) {
-		?>
-	<span><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> <strong title="<?php echo esc_attr( $attempt->user_email ); ?>"><?php echo esc_attr( $attempt->display_name ); ?></strong>
-		<?php
-	}
-);
-
 tutor_load_template_from_custom_path(
 	tutor()->path . '/views/quiz/attempt-table.php',
 	array(

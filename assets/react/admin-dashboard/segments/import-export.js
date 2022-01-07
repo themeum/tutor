@@ -82,14 +82,14 @@ function tutor_option_history_load(history_data) {
             <ul id="popup-${key}" class="popup-menu">
             <li>
               <a class="export_single_settings" data-id="${key}">
-                <span class="icon tutor-v2-icon-test icon-msg-archive-filled color-design-white"></span>
-                <span class="text-regular-body color-text-white">Download</span>
+                <span class="icon ttr-msg-archive-filled tutor-color-design-white"></span>
+                <span class="text-regular-body tutor-color-text-white">Download</span>
               </a>
             </li>
             <li>
               <a class="delete_single_settings" data-id="${key}">
-                <span class="icon tutor-v2-icon-test icon-delete-fill-filled color-design-white"></span>
-                <span class="text-regular-body color-text-white">Delete</span>
+                <span class="icon ttr-delete-fill-filled tutor-color-design-white"></span>
+                <span class="text-regular-body tutor-color-text-white">Delete</span>
               </a>
             </li>
             </ul>
