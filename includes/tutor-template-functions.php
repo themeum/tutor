@@ -1466,3 +1466,20 @@ if ( ! function_exists('tutor_load_template_from_custom_path')) {
         do_action('tutor_load_template_from_custom_path_after', $template, $data);
     }
 }
+
+/**
+ * Load enrolled course progress template
+ *
+ * This template will be used on only dashboard enrolled course page
+ *
+ * @since v2.0.0
+ */
+if ( ! function_exists( 'tutor_enrolled_course_progress' ) ) {
+    function tutor_enrolled_course_progress() {
+        global $wp_query;
+        $query_vars     = $wp_query->query_vars;
+        if ( isset( $query_vars[ 'tutor_dashboard_page' ] ) && 'enrolled-courses' === $query_vars['tutor_dashboard_page'] ) {
+            tutor_load_template_from_custom_path( tutor()->path . 'templates/loop/enrolled-course-progress.php', '', false );
+        } 
+    }
+}
