@@ -203,4 +203,18 @@
 			z-index: 1;
 		}
 	}
+	@include breakpoint-max(desktop-lg) {
+		.tutor-dashboard-menu-item-link {
+			font-size: 14px;
+		}
+
+		.tutor-dashboard-menu-item-icon {
+			font-size: 24px;
+			display: flex;
+			align-items: center;
+		}
+		.tutor-dashboard-menu-item-text {
+			margin-left: 0;
+		}
+	}
 }

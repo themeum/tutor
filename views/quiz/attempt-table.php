@@ -95,13 +95,21 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 																		</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
 																	</div>
 																<?php
+													} else {
+														?>
+															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> 
+															<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( $attempt->user_email ); ?>">
+																<?php echo esc_attr( $attempt->display_name ); ?>
+															</span>
+														<?php
 													}
 													?>
 												</div>
 												<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
 											</div>
-										</td>
-										<?php
+										</div>
+									</td>
+								<?php
 								break;
 
 							case 'course':

@@ -19,14 +19,14 @@ $job                   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile
 $bio                   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_bio', true ) ) );
 
 $profile_data = array(
-	array( __( 'Registration Date', 'tutor' ), ( $rdate ? $rdate : esc_html( '________' ) ) ),
-	array( __( 'First Name', 'tutor' ), ( $fname ? $fname : esc_html( '________' ) ) ),
-	array( __( 'Last Name', 'tutor' ), ( $lname ? $lname : __( '________' ) ) ),
+	array( __( 'Registration Date', 'tutor' ), ( $rdate ? $rdate : esc_html( '-' ) ) ),
+	array( __( 'First Name', 'tutor' ), ( $fname ? $fname : esc_html( '-' ) ) ),
+	array( __( 'Last Name', 'tutor' ), ( $lname ? $lname : __( '-' ) ) ),
 	array( __( 'Username', 'tutor' ), $uname ),
 	array( __( 'Email', 'tutor' ), $email ),
-	array( __( 'Phone Number', 'tutor' ), ( $phone ? $phone : '________' ) ),
-	array( __( 'Skill/Occupation', 'tutor' ), ( $job ? $job : '________' ) ),
-	'bio' => array( __( 'Biography', 'tutor' ), $bio ? $bio : '________' ),
+	array( __( 'Phone Number', 'tutor' ), ( $phone ? $phone : '-' ) ),
+	array( __( 'Skill/Occupation', 'tutor' ), ( $job ? $job : '-' ) ),
+	array( __( 'Biography', 'tutor' ), $bio ? $bio : '-' )
 )
 ?>
 
@@ -41,7 +41,7 @@ $profile_data = array(
 					<span class="tutor-text-regular-body tutor-color-text-subsued"><?php echo $data[0]; ?></span>
 				</div>
 				<div class="tutor-bs-col-12 tutor-bs-col-sm-7 tutor-bs-col-lg-9">
-					<?php echo $key == 'bio' ? $data[1] : '<span class="tutor-text-medium-body tutor-color-text-primary ' . $first_name_class . ' ">' . $data[1] . '</span>'; ?>
+					<?php echo $data[0] == 'Biography' ? '<span class="tutor-text-regular-body tutor-color-text-subsued">'.$data[1].'</span>' : '<span class="tutor-text-medium-body tutor-color-text-primary ' . $first_name_class . ' ">' . $data[1] . '</span>'; ?>
 				</div>
 			</div>
 		<?php

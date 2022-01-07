@@ -1,6 +1,24 @@
 $sidebar_width: 360px;
 
 .tutor-qna-single-question{
+    table.tutor-ui-table-data-td-target [data-td-target] {
+        padding: 12px !important;
+    }
+    table.tutor-ui-table tr:last-child td:last-child {
+        border-radius: 0;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        -ms-border-radius: 0;
+        -o-border-radius: 0;
+}
+    table.tutor-ui-table-data-td-target .is-active:not(.expand-btn) {
+        background-color: #fff !important;
+    }
+    td {
+        div.ttr-angle-down-filled {
+            font-size: 20px;
+        }
+    }
     @at-root{
         body.wp-admin {
             .tutor-qna-single-wrapper {
@@ -122,20 +140,7 @@ $sidebar_width: 360px;
                     @include propertyWithPrefix(flex, 1);
                     padding-left: 15px;
 
-                    strong{
-                        display: block;
-                        font-style: normal;
-                        font-weight: 500;
-                        font-size: 20px;
-                        color: #212327;
-                    }
 
-                    small{
-                        font-style: normal;
-                        font-weight: normal;
-                        font-size: 15px;
-                        color: #757C8E;
-                    }
                 }
             }
 
@@ -304,36 +309,10 @@ $sidebar_width: 360px;
     }
 
     .qna-previous-questions {
-        &>div{
-            &:not(:last-child) {
-                margin-bottom: 20px;
-            }
-
-            &>* {
-                display: block;
-                margin-bottom: 5px;
-            }
-
-            &>span{
-                font-style: normal;
-                font-weight: normal;
-                font-size: 15px;
-                color: #5B616F;
-            }
-
-            &>strong{
-                font-style: normal;
-                font-weight: bold;
-                font-size: 16px;
-                color: #212327;
-            }
-
-            &>small{
-                font-style: normal;
-                font-weight: 500;
-                font-size: 13px;
-                color: #525252;
-            }
+        div {
+            display: flex;
+            flex-direction: column;
+            row-gap: 5px;
         }
     }
 }

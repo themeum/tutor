@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'tutor_placeholder_img_src' ) ) {
 	function tutor_placeholder_img_src() {
-		$src = tutor()->url . 'assets/images/placeholder.jpg';
+		$src = tutor()->url . 'assets/images/placeholder.png';
 		return apply_filters( 'tutor_placeholder_img_src', $src );
 	}
 }
@@ -334,7 +334,7 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
 				<h3>
-					<i class="ttr-angle-down-filled"></i> 
+					<i class="ttr-angle-down-filled"></i>
 					<span><?php echo $title; ?></span>
 				</h3>
 			</div>
@@ -495,7 +495,12 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 			return $msg;
 		}
 
-		$html = "<div class='tutor-alert tutor-alert-{$type}'>{$msg}</div>";
+		$html = '<div class="asas tutor-alert tutor-' . esc_attr( $type ) . '">
+					<div class="tutor-alert-text">
+						<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+						<span>' . esc_attr( $msg ) . '</span>
+					</div>
+				</div>';
 		if ( $echo ) {
 			echo $html;
 		}
@@ -550,6 +555,7 @@ if ( ! function_exists( 'tutor_flash_set' ) ) {
 
 if ( ! function_exists( 'tutor_flash_get' ) ) {
 	function tutor_flash_get( $key = null ) {
+
 		if ( $key ) {
 			// ensure session is started
 			if ( session_status() !== PHP_SESSION_ACTIVE ) {
@@ -709,7 +715,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	function tutor_get_formated_date( $require_format, $user_date ) {
 		$require_format===null ? $require_format = get_option( 'date_format' ). ', ' . get_option( 'time_format' ) : 0;
 		!is_numeric($user_date) ? $user_date = strtotime(str_replace('/', '-', $user_date )) : 0;
-		
+
 		return date( $require_format, $user_date );
 	}
 }
