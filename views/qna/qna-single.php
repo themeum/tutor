@@ -72,20 +72,20 @@
 					<!-- Show meta data actions if it is instructor view -->
 					<?php if ( ! $is_user_asker ) : ?>
 						<span data-action="solved" data-state-class-selector="i" data-state-class-0="ttr-tick-circle-outline-filled" data-state-class-1="ttr-mark-cricle tutor-text-success">
-							<i class="<?php echo $is_solved ? 'ttr-mark-cricle tutor-text-success' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
+							<i class="<?php echo $is_solved ? 'ttr-mark-cricle tutor-text-success active' : 'ttr-tick-circle-outline-filled'; ?>"></i> 
 							<span><?php _e( 'Solved', 'tutor' ); ?></span>
 						</span>
 						<span data-action="important" data-state-class-selector="i" data-state-class-0="ttr-msg-important-filled" data-state-class-1="ttr-msg-important-fill-filled">
-							<i class="<?php echo $is_important ? 'ttr-msg-important-fill-filled' : 'ttr-msg-important-filled'; ?>"></i> 
+							<i class="<?php echo $is_important ? 'ttr-msg-important-fill-filled active' : 'ttr-msg-important-filled'; ?>"></i> 
 							<span><?php _e( 'Important', 'tutor' ); ?></span>
 						</span>
 						<span data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="ttr-msg-archive-filled" data-state-class-1="ttr-msg-archive-filled">
-							<i class="<?php echo $is_archived ? 'ttr-msg-archive-filled' : 'ttr-msg-archive-filled'; ?>"></i> 
+							<i class="<?php echo $is_archived ? 'ttr-msg-archive-filled active' : 'ttr-msg-archive-filled'; ?>"></i> 
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 						</span>
 					<?php endif; ?>
 					<span data-action="read" data-state-text-selector="span" data-state-text-0="<?php _e( 'Mark as read', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Mark as Unread', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="ttr-msg-unread-filled" data-state-class-1="ttr-msg-read-filled">
-						<i class="<?php echo $is_read ? 'ttr-msg-read-filled' : 'ttr-msg-unread-filled'; ?>"></i> 
+						<i class="<?php echo $is_read ? 'ttr-msg-read-filled active' : 'ttr-msg-unread-filled'; ?>"></i> 
 						<span><?php $is_read ? _e( 'Mark as Unread', 'tutor' ) : _e( 'Mark as read', 'tutor' ); ?></span>
 					</span>
 					<span data-tutor-modal-target="<?php echo $modal_id; ?>">
