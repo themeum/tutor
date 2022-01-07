@@ -38,7 +38,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
     <?php
         $status = $active_tab=='my-courses' ? array('publish') : array('pending', 'draft');
         $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
-        $placeholder_img = tutor()->url . 'assets/images/placeholder.jpg';
+        $placeholder_img = tutor()->url . 'assets/images/placeholder.png';
 
         if (is_array($my_courses) && count($my_courses)){
             global $post;

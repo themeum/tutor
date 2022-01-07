@@ -14,8 +14,7 @@
 <div class="list-item-progress tutor-mt-16 tutor-px-20">
     <div class="text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
         <span class="progress-steps">
-            <?php echo esc_html( $course_progress['completed_count'] ); ?>/
-            <?php echo esc_html( $course_progress['total_count'] ); ?>
+            <?php echo esc_html( $course_progress['completed_count'] ); ?>/<?php echo esc_html( $course_progress['total_count'] ); ?>
         </span>
         <span class="progress-percentage"> 
             <?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
