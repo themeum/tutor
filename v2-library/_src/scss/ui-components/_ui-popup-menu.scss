@@ -246,3 +246,49 @@
 		padding-right: 9px;
 	}
 }
+
+.tutor-clipboard-input-field {
+	.tutor-input-group {
+		.tutor-form-control {
+			padding-right: 70px;
+		}
+
+		.tutor-btn.tutor-btn-disable-outline {
+			font-size: 13px;
+			line-height: 123%;
+			padding: 7px 11px;
+			position: absolute;
+			top: 8px;
+			right: 8px;
+			height: calc(100% - 16px);
+		}
+	}
+
+	.tooltip {
+		display: inline-block;
+		position: absolute;
+		width: max-content;
+		height: auto;
+		font-size: 12px;
+		top: calc(-50% + 2px);
+		right: 10px;
+		padding: 2px 6px;
+		border-radius: 6px;
+		background: #fff;
+		color: $text-hints;
+		border: 1px solid $text-hints;
+		&:before {
+			--bw: 4px;
+			content: '';
+			position: absolute;
+			bottom: calc(-2 * var(--bw));
+			left: 50%;
+			-webkit-transform: translateX(-50%);
+			transform: translateX(-50%);
+			border-width: var(--bw);
+			border-style: solid;
+			border-color: transparent;
+			border-top-color: inherit;
+		}
+	}
+}

@@ -10,14 +10,14 @@ window.jQuery(document).ready($=>{
      */
      $(document).on('submit', '.tutor-login-modal form', function (e) {
         e.preventDefault();
-        
+
         var form = $(this);
         var button = form.find('button');
         var error_container = form.find('.tutor-login-error');
 
         var form_data = $(this).serializeObject();
         form_data.action = 'tutor_user_login';
-
+        console.log(form_data);
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -31,7 +31,7 @@ window.jQuery(document).ready($=>{
                     location.assign(response.data.redirect_to);
                     return;
                 }
-                
+
                 var error_message = (response.data || {}).message || __('Invalid username or password!', 'tutor');
                 error_container.html(`
                     <div class="tutor-alert tutor-warning tutor-mt-28">
