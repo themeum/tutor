@@ -66,15 +66,49 @@ document.addEventListener('click', async (e) => {
 		await navigator.clipboard.writeText(content);
 		const copiedTxt = await navigator.clipboard.readText();
 
-		showToolTip(e.target);
+		showToolTip(e.target, 'Copied !');
 	}
 });
+
 // Showing tooltip
-const showToolTip = (targetEl) => {
-	const toolTip = `<span class="tooltip">Copied!</span>`;
+const showToolTip = (targetEl, text = 'Copied!') => {
+	const toolTip = `<span class="tooltip">${text}</span>`;
 	targetEl.insertAdjacentHTML('beforebegin', toolTip);
 
 	setTimeout(() => {
 		document.querySelector('.tooltip').remove();
 	}, 500);
 };
+
+/**
+ * Input Field - Copy/Paste to/from clipboard
+ */
+document.addEventListener('click', async (e) => {
+	const copyTargetAttr = 'data-tutor-clipboard-copy-target';
+	const pasteTargetAttr = 'data-tutor-clipboard-paste-target';
+
+	if (e.target.hasAttribute(copyTargetAttr)) {
+		const id = e.target.getAttribute(copyTargetAttr);
+
+		/* Get the text field */
+		const text = document.getElementById(id).value;
+
+		/* Copy text into clipboard */
+		if (text) {
+			await navigator.clipboard.writeText(text);
+			showToolTip(e.target, 'Copied');
+		}
+	}
+
+	if (e.target.hasAttribute(pasteTargetAttr)) {
+		const id = e.target.getAttribute(pasteTargetAttr);
+
+		const text = await navigator.clipboard.readText();
+
+		/* Pasting on the text field */
+		if (text) {
+			document.getElementById(id).value = text;
+			showToolTip(e.target, 'Pasted');
+		}
+	}
+});
