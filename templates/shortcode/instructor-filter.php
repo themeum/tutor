@@ -5,7 +5,7 @@ foreach ( $categories as $category ) {
 	?>
 		<div>
 			<label>
-				<input type="checkbox" name="category" value="<?php echo esc_attr( $category->term_id ); ?>"/>
+				<input type="checkbox" name="category" value="<?php echo $category->term_id; ?>"/>
 			<?php echo esc_attr( $category->name ); ?>
 			</label>
 		</div>

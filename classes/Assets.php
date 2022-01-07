@@ -330,10 +330,10 @@ class Assets {
 	function tutor_generator_tag( $gen, $type ) {
 		switch ( $type ) {
 			case 'html':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . esc_attr( TUTOR_VERSION ) . '">';
+				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '">';
 				break;
 			case 'xhtml':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . esc_attr( TUTOR_VERSION ) . '" />';
+				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '" />';
 				break;
 		}
 		return $gen;
@@ -367,10 +367,10 @@ class Assets {
 		if ( is_admin() ) {
 			$screen = get_current_screen();
 			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == 'courses' ) {
-				return esc_attr( $screen->is_block_editor ? 'gutenberg' : 'classic' );
+				return $screen->is_block_editor ? 'gutenberg' : 'classic';
 			}
 		} elseif ( tutor_utils()->is_tutor_frontend_dashboard( 'create-course' ) ) {
-			return esc_attr( 'frontend' );
+			return 'frontend';
 		}
 
 		return null;

@@ -17,9 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 				$img               = $url_base . $template . '.jpg';
 				$selected_template = tutor_utils()->get_option( $layout_option_name . '_public_profile_layout' );
 				?>
-					<label class="instructor-layout-template <?php echo esc_attr( $template === $selected_template ? 'selected-template' : '' ); ?> ">
+					<label class="instructor-layout-template <?php echo $template === $selected_template ? 'selected-template' : ''; ?> ">
 						<img src="<?php echo esc_url( $img ); ?>" />
-						<input type="radio" name="tutor_option[<?php echo esc_attr( $layout_option_name ); ?>_public_profile_layout]" value="<?php echo esc_attr( $template ); ?>" <?php checked( $template, $selected_template ); ?> style="display: none;" >
+						<input type="radio" name="tutor_option[<?php echo $layout_option_name; ?>_public_profile_layout]" value="<?php echo $template; ?>" <?php checked( $template, $selected_template ); ?> style="display: none;" >
 					</label>
 					<?php
 			}

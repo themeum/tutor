@@ -79,9 +79,9 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
 			<?php esc_html_e( 'Select your preferred video type.', 'tutor' ); ?>
 		</p>
 
-		<div class="video-metabox-source-input-wrap" style="display: <?php echo esc_attr( ! $videoSource ? 'none' : 'block' ); ?>;">
+		<div class="video-metabox-source-input-wrap" style="display: <?php echo ! $videoSource ? 'none' : 'block'; ?>;">
 
-			<div class="video-metabox-source-item video_source_wrap_html5" style="display: <?php echo esc_attr( $videoSource === 'html5' ? 'block' : 'none' ); ?>;">
+			<div class="video-metabox-source-item video_source_wrap_html5" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
 
 				<div class="video-metabox-source-html5-upload">
 					<p class="video-upload-icon"><i class="tutor-icon-upload"></i></p>
@@ -91,7 +91,7 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
 					<div class="video_source_upload_wrap_html5">
 						<a href="javascript:;" class="video_upload_btn tutor-button bordered-button"><?php _e( 'Upload Video', 'tutor' ); ?></a>
 						<input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo esc_attr( $sourceVideoID ); ?>" >
-						<p style="display: <?php echo esc_attr( $sourceVideoID ? 'block' : 'none' ); ?>;"><?php _e( 'Media ID', 'tutor' ); ?>: <span class="video_media_id"><?php echo esc_html( $sourceVideoID ); ?></span></p>
+						<p style="display: <?php echo $sourceVideoID ? 'block' : 'none'; ?>;"><?php _e( 'Media ID', 'tutor' ); ?>: <span class="video_media_id"><?php echo esc_html( $sourceVideoID ); ?></span></p>
 					</div>
 
 				</div>
@@ -109,32 +109,29 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
 									}
 									?>
 									<img src="<?php echo esc_url( $poster_url ); ?>" class="thumbnail-img" data-placeholder-src="<?php echo esc_url( $builder_course_img_src ); ?>">
-									<a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display:
-									<?php
-									echo esc_attr( $poster ? 'block' : 'none' );
-									?>
-									;"><i class="tutor-icon-line-cross"></i></a>
+									<a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display:<?php echo $poster ? 'block' : 'none'; ?>;">
+										<i class="tutor-icon-line-cross"></i>
+									</a>
 									<div class="tutor-builder-course-video-poster-text">
-										<h5><?php esc_html_e( 'Video Poster', 'tutor' ); ?></h5>
-										<span><?php esc_html_e( 'Thumb Size: 700x430 pixels. File Support: jpg, jpeg, or png', 'tutor' ); ?></span>
+										<h5><?php _e( 'Video Poster', 'tutor' ); ?></h5>
+										<span><?php _e( 'Thumb Size: 700x430 pixels. File Support: jpg, jpeg, or png', 'tutor' ); ?></span>
 									</div>
 								</div>
 							</div>
 							<div class="tutor-col-auto">
 								<div class="builder-course-thumbnail-upload-wrap">
 									<input type="hidden" id="tutor_course_thumbnail_id" name="video[poster]" value="<?php echo esc_attr( $poster ); ?>">
-									<a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button
-									button-transparent"><i class="tutor-icon-photo-add"></i> <?php _e( 'Upload Image', 'tutor' ); ?></a>
+									<a href="javascript:;" class="tutor-course-thumbnail-upload-btn tutor-button bordered-button button-transparent">
+										<i class="tutor-icon-photo-add"></i> <?php _e( 'Upload Image', 'tutor' ); ?>
+									</a>
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
 
-
-			<div class="video-metabox-source-item video_source_wrap_external_url" style="display: <?php echo esc_attr( $videoSource === 'external_url' ? 'block' : 'none' ); ?>;">
+			<div class="video-metabox-source-item video_source_wrap_external_url" style="display: <?php echo $videoSource === 'external_url' ? 'block' : 'none'; ?>;">
 				<input type="text" name="video[source_external_url]" value="
 				<?php
 				echo tutor_utils()->avalue_dot( 'source_external_url', $video );
@@ -142,13 +139,13 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
 				" placeholder="<?php _e( 'External Video URL', 'tutor' ); ?>">
 			</div>
 
-			<div class="video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo esc_attr( $videoSource === 'youtube' ? 'block' : 'none' ); ?>;">
-				<input type="text" name="video[source_youtube]" value="<?php echo esc_attr( tutor_utils()->avalue_dot( 'source_youtube', $video ) ); ?>" placeholder="<?php _e( 'YouTube Video URL', 'tutor' ); ?>" data-youtube_api_key="<?php echo esc_attr( tutils()->get_option( 'lesson_video_duration_youtube_api_key', '' ) ); ?>">
+			<div class="video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' : 'none'; ?>;">
+				<input type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot( 'source_youtube', $video ); ?>" placeholder="<?php _e( 'YouTube Video URL', 'tutor' ); ?>" data-youtube_api_key="<?php echo tutils()->get_option( 'lesson_video_duration_youtube_api_key', '' ); ?>">
 			</div>
-			<div class="video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo esc_attr( $videoSource === 'vimeo' ? 'block' : 'none' ); ?>;">
-				<input type="text" name="video[source_vimeo]" value="<?php echo esc_attr( tutor_utils()->avalue_dot( 'source_vimeo', $video ) ); ?>" placeholder="<?php _e( 'Vimeo Video URL', 'tutor' ); ?>">
+			<div class="video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
+				<input type="text" name="video[source_vimeo]" value="<?php echo tutor_utils()->avalue_dot( 'source_vimeo', $video ); ?>" placeholder="<?php _e( 'Vimeo Video URL', 'tutor' ); ?>">
 			</div>
-			<div class="video-metabox-source-item video_source_wrap_embedded" style="display: <?php echo esc_attr( $videoSource === 'embedded' ? 'block' : 'none' ); ?>;">
+			<div class="video-metabox-source-item video_source_wrap_embedded" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
 				<textarea name="video[source_embedded]" placeholder="<?php _e( 'Place your embedded code here', 'tutor' ); ?>"><?php 
 					echo tutor_utils()->avalue_dot( 'source_embedded', $video ); 
 				?></textarea>

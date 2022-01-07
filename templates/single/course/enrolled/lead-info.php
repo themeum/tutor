@@ -120,7 +120,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 				?>
 				<li>
 					<span><?php esc_html_e( 'Total Enrolled', 'tutor' ); ?></span>
-					<?php echo (int) esc_attr( tutor_utils()->count_enrolled_users_by_course() ); ?>
+					<?php echo (int) tutor_utils()->count_enrolled_users_by_course(); ?>
 				</li>
 				<?php
 			}

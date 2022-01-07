@@ -87,7 +87,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 						</div>
 					</div>
 
-					<h3><?php echo esc_attr( $get_user->display_name ); ?></h3>
+					<h3><?php echo $get_user->display_name; ?></h3>
 					<?php
 					if ( $is_instructor ) {
 						$course_count  = tutor_utils()->get_course_count_by_instructor( $user_id );
@@ -116,7 +116,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 							</span>
 							<span><span>•</span></span>
 							<span>
-								<span><?php echo esc_attr( $complete_count ); ?></span>
+								<span><?php echo $complete_count; ?></span>
 							<?php $complete_count > 1 ? _e( 'Courses Completed', 'tutor' ) : _e( 'Course Completed', 'tutor' ); ?>
 							</span>
 							<?php

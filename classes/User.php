@@ -77,7 +77,7 @@ class User {
 		tutils()->checking_nonce();
 
 		$user_id  = get_current_user_id();
-		$meta_key = esc_attr( $_POST['photo_type'] == 'cover_photo' ? '_tutor_cover_photo' : '_tutor_profile_photo' );
+		$meta_key = sanitize_text_field( $_POST['photo_type'] ) == 'cover_photo' ? '_tutor_cover_photo' : '_tutor_profile_photo';
 
 		/**
 		 * Photo Update from profile

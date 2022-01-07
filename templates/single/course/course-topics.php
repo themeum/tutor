@@ -62,7 +62,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 						echo 'tutor-active';}
 					?>
 					">
-						<div class="tutor-course-title <?php echo esc_attr( $topic_summery ? 'has-summery' : '' ); ?>">
+						<div class="tutor-course-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
 							<h4>
 								<i class="tutor-icon-plus"></i>
 								<?php
@@ -84,7 +84,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 						}
 						?>
 
-						<div class="tutor-course-lessons" style="<?php echo esc_attr( 1 < $index ? 'display: none' : '' ); ?>">
+						<div class="tutor-course-lessons" style="<?php echo 1 < $index ? 'display: none' : ''; ?>">
 
 							<?php
 							$lessons = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
@@ -147,7 +147,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 													$lesson_title .= $countdown;
 												}
 
-												echo esc_attr( $lesson_title );
+												echo $lesson_title;
 											} else {
 												$lesson_title .= get_the_title();
 												$lesson_title .= $play_time ? '<span class="tutor-lesson-duration">' . tutor_utils()->get_optimized_duration( $play_time ) . '</span>' : '';

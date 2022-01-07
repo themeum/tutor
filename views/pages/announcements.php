@@ -131,7 +131,7 @@ $the_query = new WP_Query( $args );
 									<?php echo esc_html( $post->post_title ); ?>
 								</span>
 								<p>
-									<?php echo esc_attr( $course ? esc_attr( $course->post_title ) : '' ); ?>
+									<?php echo $course ? esc_attr( $course->post_title ) : ''; ?>
 								</p>
 							</div>
 							<div class="tutor-announcement-buttons">

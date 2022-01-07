@@ -204,7 +204,7 @@ $user    = get_userdata( $user_id );
 					?>
 					<tr>
 						<td><?php echo $question_type['icon']; ?></td>
-						<td><?php echo esc_attr( $answer_i ); ?></td>
+						<td><?php echo $answer_i; ?></td>
 						<td><?php echo stripslashes( esc_attr( $answer->question_title ) ); ?></td>
 						<td>
 							<?php

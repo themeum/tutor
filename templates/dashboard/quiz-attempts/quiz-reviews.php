@@ -89,7 +89,7 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 
 <div>
 	<?php $attempts_page = tutor_utils()->get_tutor_dashboard_page_permalink( 'quiz-attempts' ); ?>
-	<a class="prev-btn" href="<?php echo esc_attr( $attempts_page ); ?>"><span>&leftarrow;</span><?php _e( 'Back to Attempt List', 'tutor' ); ?></a>
+	<a class="prev-btn" href="<?php echo esc_url( $attempts_page ); ?>"><span>&leftarrow;</span><?php _e( 'Back to Attempt List', 'tutor' ); ?></a>
 </div>
 
 
@@ -143,15 +143,15 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 							}
 						}
 					}
-					echo esc_attr( $correct );
+					echo $correct;
 					?>
 				</td>
-				<td><?php echo esc_attr( $incorrect ); ?></td>
+				<td><?php echo $incorrect; ?></td>
 				<td>
 					<?php
-						echo esc_attr( $attempt_data->earned_marks );
+						echo $attempt_data->earned_marks;
 						$earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format( ( $attempt_data->earned_marks * 100 ) / $attempt_data->total_marks ) ) : 0;
-						echo esc_attr( '(' . $earned_percentage . '%)' );
+						echo '(' . $earned_percentage . '%)';
 					?>
 				</td>
 				<td>
@@ -242,7 +242,7 @@ $attempt_data = tutor_utils()->get_attempt( $attempt_id );
 					$question_type = tutor_utils()->get_question_types( $answer->question_type );
 					?>
 					<tr>
-						<td><?php echo esc_attr( $answer_i ); ?></td>
+						<td><?php echo $answer_i; ?></td>
 						<td><?php echo $question_type['icon']; ?></td>
 						<td><?php echo stripslashes( esc_attr( $answer->question_title ) ); ?></td>
 						<td>

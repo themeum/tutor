@@ -39,8 +39,8 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutils()->get_courses(
 
 			<?php if ( $courses ) : ?>
 				<?php foreach ( $courses as $course ) : ?>
-					<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
-						<?php echo esc_attr( $course->post_title ); ?>
+					<option value="<?php echo $course->ID; ?>" <?php selected( $course_id, $course->ID, 'selected' ); ?>>
+						<?php echo $course->post_title; ?>
 					</option>
 				<?php endforeach; ?>
 			<?php else : ?>
@@ -57,7 +57,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutils()->get_courses(
 	</div>
 	<div class="tutor-form-group tutor-announcement-datepicker">
 		<label><?php _e( 'Create Date', 'tutor' ); ?></label>
-		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo esc_attr( '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : '' ); ?>" placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>" autocomplete="off" />
+		<input type="text" class="tutor_date_picker tutor-announcement-date-sorting"  value="<?php echo '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" placeholder="<?php echo get_option( 'date_format' ); ?>" autocomplete="off" />
 		<i class="tutor-icon-calendar"></i>
 	</div>
 </div>
@@ -91,10 +91,15 @@ if ( $assignments->count ) {
 					<tr>
 						<td>
 							<h4><?php echo esc_html( $item->post_title ); ?></h4>
-							<p><?php echo __( 'Course: ', 'tutor' ); ?><a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" target="_blank"><?php echo esc_attr( get_the_title( $course_id ) ); ?> </a></p>
+							<p>
+								<?php echo __( 'Course', 'tutor' ); ?>: &nbsp;
+								<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" target="_blank">
+									<?php echo get_the_title( $course_id ); ?> 
+								</a>
+							</p>
 						</td>
-						<td><?php echo esc_attr( $max_mark ); ?></td>
-						<td><?php echo esc_attr( $comment_count ); ?></td>
+						<td><?php echo $max_mark; ?></td>
+						<td><?php echo $comment_count; ?></td>
 						<td>
 							<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn bordered-btn tutor-announcement-details">
 								<?php _e( 'Details', 'tutor' ); ?>

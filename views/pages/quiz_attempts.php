@@ -30,7 +30,7 @@ $quiz_attempt->prepare_items( $search_filter, $course_filter, $date_filter, $ord
 	</div>
 
 	<form id="quiz_attempts-filter" method="get">
-		<input type="hidden" name="page" value="<?php echo esc_attr( \TUTOR\Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE ); ?>" />
+		<input type="hidden" name="page" value="<?php echo \TUTOR\Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE; ?>" />
 		<?php $quiz_attempt->display($enable_sorting_field_with_bulk_action = true); ?>
 	</form>
 </div>

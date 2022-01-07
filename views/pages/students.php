@@ -8,7 +8,7 @@ $studentList->prepare_items();
 	<h2><?php esc_html_e( 'Students', 'tutor' ); ?></h2>
 
 	<form id="students-filter" method="get">
-		<input type="hidden" name="page" value="<?php echo esc_attr( \Tutor\Students_List::STUDENTS_LIST_PAGE ); ?>" />
+		<input type="hidden" name="page" value="<?php echo \Tutor\Students_List::STUDENTS_LIST_PAGE; ?>" />
 		<?php
 		$studentList->search_box( __( 'Search', 'tutor' ), 'students' );
 		$studentList->display(); ?>

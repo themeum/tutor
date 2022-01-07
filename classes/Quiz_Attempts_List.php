@@ -81,7 +81,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	}
 
 	function column_total_questions( $item ) {
-		echo esc_attr( $item->total_questions );
+		echo $item->total_questions;
 	}
 
 	function column_earned_marks( $item ) {

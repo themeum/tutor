@@ -100,11 +100,15 @@
 					?>
 					<tr>
 						<td>
-							<a href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>" target="_blank"><?php echo esc_attr( $course->post_title ); ?></a>
+							<a href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>" target="_blank">
+								<?php echo $course->post_title; ?>
+							</a>
 						</td>
-						<td><?php echo esc_attr( $enrolled ); ?></td>
+						<td><?php echo $enrolled; ?></td>
 						<td>
-							<small class="label-course-status label-course-<?php echo esc_attr( $course->post_status ); ?>"> <?php echo esc_attr( $course_status ); ?></small>
+							<small class="label-course-status label-course-<?php echo $course->post_status; ?>"> 
+								<?php echo $course_status; ?>
+							</small>
 						</td>
 					</tr>
 					<?php

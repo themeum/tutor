@@ -41,7 +41,7 @@
 								<div class="name column-name">
 									<h3>
 										<?php
-											echo esc_attr( $addon['name'] );
+											echo $addon['name'];
 											echo '<img src="' . esc_url( $thumbnailURL ) . '" class="plugin-icon" alt="">';
 										?>
 									</h3>
@@ -108,7 +108,7 @@
 							<div class="plugin-card-bottom">
 								<?php
 									echo '<div class="plugin-version"> ' . 
-											__( 'Version', 'tutor' ) . ' : ' . esc_attr( TUTOR_VERSION ) . ' 
+											__( 'Version', 'tutor' ) . ' : ' . TUTOR_VERSION . ' 
 										</div>';
 								?>
 							</div>

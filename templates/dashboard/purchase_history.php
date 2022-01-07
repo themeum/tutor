@@ -36,7 +36,7 @@ if ( tutils()->count( $orders ) ) {
 				}
 				?>
 				<tr>
-					<td>#<?php echo esc_attr( $order->ID ); ?></td>
+					<td>#<?php echo $order->ID; ?></td>
 					<td>
 						<?php
 						$courses = tutils()->get_course_enrolled_ids_by_order_id( $order->ID );
@@ -62,7 +62,7 @@ if ( tutils()->count( $orders ) ) {
 
 	<?php
 } else {
-	echo _e( 'No purchase history available', 'tutor' );
+	_e( 'No purchase history available', 'tutor' );
 }
 
 ?>

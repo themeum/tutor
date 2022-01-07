@@ -19,7 +19,7 @@
         if ( in_array( 'search', $supported_filters ) ) {
             ?>
             <div class="tutor-course-search-field">
-                <input type="text" name="keyword" placeholder="<?php echo esc_attr( 'Search...', 'tutor' ); ?>"/>
+                <input type="text" name="keyword" placeholder="<?php _e( 'Search...', 'tutor' ); ?>"/>
                 <i class="tutor-icon-magnifying-glass-1"></i>
             </div>
             <?php
@@ -71,13 +71,13 @@
             if ( ! $is_membership && in_array( 'price_type', $supported_filters ) ) {
                 ?>
                 <div>
-                    <h4><?php esc_html_e( 'Price', 'tutor' ); ?></h4>
+                    <h4><?php _e( 'Price', 'tutor' ); ?></h4>
                     <?php 
                         foreach ( $filter_prices as $value => $title ) {
                             ?>
                                 <label>
                                     <input type="checkbox" name="tutor-course-filter-price" value="<?php echo esc_attr( $value ); ?>"/>&nbsp;
-                                    <?php echo esc_html( $title ); ?>
+                                    <?php echo $title; ?>
                                 </label>
                             <?php
                         }

@@ -22,16 +22,16 @@ $material_includes = get_post_meta( $course_id, '_tutor_course_material_includes
 			<div class="tutor-lesson-video-runtime">
 
 				<div class="tutor-option-group-field">
-					<input type="number" value="<?php echo esc_attr( $durationHours ? esc_attr( $durationHours ) : esc_attr( '00' ) ); ?>" name="course_duration[hours]">
+					<input type="number" value="<?php echo $durationHours ? esc_attr( $durationHours ) : '00'; ?>" name="course_duration[hours]">
 					<p class="desc"><?php _e( 'HH', 'tutor' ); ?></p>
 				</div>
 				<div class="tutor-option-group-field">
-					<input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo esc_attr( $durationMinutes ? esc_attr( $durationMinutes ) : esc_attr( '00' ) ); ?>" name="course_duration[minutes]">
+					<input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationMinutes ? esc_attr( $durationMinutes ) : '00'; ?>" name="course_duration[minutes]">
 					<p class="desc"><?php _e( 'MM', 'tutor' ); ?></p>
 				</div>
 
 				<div class="tutor-option-group-field">
-					<input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo esc_attr( $durationSeconds ? esc_attr( $durationSeconds ) : esc_attr( '00' ) ); ?>" name="course_duration[seconds]">
+					<input type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $durationSeconds ? esc_attr( $durationSeconds ) : '00'; ?>" name="course_duration[seconds]">
 					<p class="desc"><?php _e( 'SS', 'tutor' ); ?></p>
 				</div>
 

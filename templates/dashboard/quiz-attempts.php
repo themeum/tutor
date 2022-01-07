@@ -78,14 +78,14 @@ if ( $quiz_attempts_count ) {
 								}
 							}
 						}
-							echo esc_attr( $correct );
+							echo $correct;
 						?>
 					</td>
 					<td>
-						<?php echo esc_attr( $incorrect ); ?>
+						<?php echo $incorrect; ?>
 					</td>
 					<td>
-						<?php echo esc_attr( $attempt->earned_marks . ' (' . $earned_percentage . '%)' ); ?>
+						<?php echo $attempt->earned_marks . ' (' . $earned_percentage . '%)'; ?>
 					</td>
 					<td>
 						<?php

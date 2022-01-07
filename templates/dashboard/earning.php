@@ -121,8 +121,8 @@ if ( ! $tutor_primary_color ) {
 			labels: <?php echo wp_json_encode( array_keys( $chartData ) ); ?>,
 			datasets: [{
 				label: '<?php _e( 'Earning', 'tutor' ); ?>',
-				backgroundColor: '<?php echo esc_attr( $tutor_primary_color ); ?>',
-				borderColor: '<?php echo esc_attr( $tutor_primary_color ); ?>',
+				backgroundColor: '<?php echo $tutor_primary_color; ?>',
+				borderColor: '<?php echo $tutor_primary_color; ?>',
 				data: <?php echo wp_json_encode( array_values( $chartData ) ); ?>,
 				borderWidth: 2,
 				fill: false,

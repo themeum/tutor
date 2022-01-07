@@ -57,7 +57,7 @@ get_header();
 			}
 			?>
 			<a href="<?php echo esc_url( $button['url'] ); ?>" class="tutor-button">
-				<?php echo esc_attr( $button['text'] ); ?>
+				<?php echo $button['text']; ?>
 			</a>
 		</div>
 

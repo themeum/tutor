@@ -76,7 +76,7 @@ class Course_Settings_Tabs {
 					if ( isset( $field['label'] ) ) {
 						?>
 						<div class="tutor-option-field-label">
-							<label for=""><?php echo esc_attr( $field['label'] ); ?></label>
+							<label for=""><?php echo $field['label']; ?></label>
 						</div>
 						<?php
 					}

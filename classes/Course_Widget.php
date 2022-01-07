@@ -111,50 +111,44 @@ class Course_Widget extends \WP_Widget {
 		$count       = ! empty( $instance['count'] ) ? $instance['count'] : '6';
 		?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_attr_e( 'Title:', 'tutor' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
+				<?php _e( 'Title', 'tutor' ); ?>:
+			</label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'id' ) ); ?>"><?php esc_attr_e( 'ID:', 'tutor' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'id' ) ); ?>">
+				<?php _e( 'ID', 'tutor' ); ?>:
+			</label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'id' ) ); ?>" type="text" value="<?php echo esc_attr( $id ); ?>"> <br />
-			<span style="color: #AAAAAA"><?php _e( 'Place single course id or comma (,) separated course ids', 'tutor' ); ?></span>
-		</p>
-
-		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>"><?php esc_attr_e( 'Exclude IDS:', 'tutor' ); ?></label>
-			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>" name="
-												  <?php
-													echo esc_attr(
-														$this->get_field_name( 'exclude_ids' )
-													);
-													?>
-				" type="text" value="<?php echo esc_attr( $exclude_ids ); ?>"> <br />
 			<span style="color: #AAAAAA">
-			<?php
-			_e( 'Place comma (,) separated courses ids which you like to exclude from the query', 'tutor' );
-			?>
+				<?php _e( 'Place single course id or comma (,) separated course ids', 'tutor' ); ?>
 			</span>
 		</p>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>"><?php esc_attr_e( 'Category:', 'tutor' ); ?></label>
-			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>" name="
-												  <?php
-													echo esc_attr(
-														$this->get_field_name( 'category' )
-													);
-													?>
-				" type="text" value="<?php echo esc_attr( $category ); ?>"> <br />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>"><?php esc_attr_e( 'Exclude IDS:', 'tutor' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>" name="<?php echo esc_attr($this->get_field_name( 'exclude_ids' )); ?>" type="text" value="<?php echo esc_attr( $exclude_ids ); ?>"> <br />
 			<span style="color: #AAAAAA">
-			<?php
-			_e( 'Place comma (,) separated category ids', 'tutor' );
-			?>
-				</span>
+				<?php _e( 'Place comma (,) separated courses ids which you like to exclude from the query', 'tutor' ); ?>
+			</span>
 		</p>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>"><?php esc_attr_e( 'OrderBy', 'tutor' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>">
+				<?php _e( 'Category', 'tutor' ); ?>:
+			</label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>" name="<?php echo esc_attr($this->get_field_name( 'category' )); ?>" type="text" value="<?php echo esc_attr( $category ); ?>"> <br />
+			<span style="color: #AAAAAA">
+				<?php _e( 'Place comma (,) separated category ids', 'tutor' ); ?>
+			</span>
+		</p>
+
+		<p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>">
+				<?php _e( 'OrderBy', 'tutor' ); ?>
+			</label>
 
 			<select class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'orderby' ) ); ?>" >
 				<option value="ID" <?php selected( 'ID', $orderby ); ?> >ID</option>
@@ -167,7 +161,9 @@ class Course_Widget extends \WP_Widget {
 		</p>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'order' ) ); ?>"><?php esc_attr_e( 'order', 'tutor' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'order' ) ); ?>">
+				<?php _e( 'Order', 'tutor' ); ?>
+			</label>
 
 			<select class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'order' ) ); ?>" >
 				<option value="DESC" <?php selected( 'DESC', $order ); ?> >DESC</option>
@@ -177,14 +173,10 @@ class Course_Widget extends \WP_Widget {
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>"><?php esc_attr_e( 'Count:', 'tutor' ); ?></label>
-			<input  class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" name="
-												   <?php
-													echo esc_attr(
-														$this->get_field_name( 'count' )
-													);
-													?>
-				" type="number" value="<?php echo esc_attr( $count ); ?>"> <br />
-			<span style="color: #AAAAAA"><?php _e( 'Total results you like to show', 'tutor' ); ?></span>
+			<input  class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'count' ) ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>"> <br />
+			<span style="color: #AAAAAA">
+				<?php _e( 'Total results you like to show', 'tutor' ); ?>
+			</span>
 		</p>
 
 		<?php
@@ -212,7 +204,4 @@ class Course_Widget extends \WP_Widget {
 
 		return $instance;
 	}
-
-
-
 }
