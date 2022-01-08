@@ -183,10 +183,9 @@ $sidebar_width: 360px;
                     }
                 }
 
-                .tutor-qna-user{
+                .tutor-qna-user {
                     @include propertyWithPrefix(flex-flow, row-reverse);
                     text-align: right;
-
                     &>div{
                         padding-left: 0;
                         padding-right: 15px;
@@ -370,7 +369,7 @@ table.qna-list-table {
                 color: #1973AA;
             }
 
-            span {
+            .tutor-qna-content {
                 font-style: normal;
                 font-weight: bold;
                 font-size: 16px;
@@ -379,11 +378,11 @@ table.qna-list-table {
         }
 
         &.is-read {
-            i{
+            i {
                 color: #C0C3CB;
             }
 
-            span{
+            .tutor-qna-content {
                 font-style: normal;
                 font-weight: 500;
                 font-size: 16px;

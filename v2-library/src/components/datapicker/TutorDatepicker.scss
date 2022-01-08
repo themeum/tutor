@@ -90,6 +90,7 @@
 				&:hover {
 					color: #3e64de;
 					background: #f6f8fd;
+					cursor: pointer;
 				}
 
 				&.is-current {
@@ -504,6 +505,40 @@
 	.tutor-react-datepicker .react-datepicker__input-container {
 		input:focus {
 			border-color: #2853da;
+		}
+	}
+}
+
+.react-datepicker__input-container {
+	position: relative;
+
+	.react-datepicker__close-icon {
+		position: absolute;
+		cursor: pointer;
+		outline: 0;
+		border: none;
+		height: 20px;
+		width: 20px;
+		right: -25px;
+		top: 50%;
+		transform: translateY(-50%);
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 !important;
+		--color: hsl(0, 0%, 70%);
+		background: var(--color) !important;
+		color: #fff;
+		border-color: var(--color) !important;
+		&:hover {
+			--color: hsl(0, 0%, 50%);
+			background: var(--color) !important;
+			border-color: var(--color) !important;
+		}
+		&:after {
+			content: '×';
+			margin-top: -2px;
 		}
 	}
 }

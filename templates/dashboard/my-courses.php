@@ -38,7 +38,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
     <?php
         $status = $active_tab=='my-courses' ? array('publish') : array('pending', 'draft');
         $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
-        $placeholder_img = tutor()->url . 'assets/images/placeholder.jpg';
+        $placeholder_img = tutor()->url . 'assets/images/placeholder.png';
 
         if (is_array($my_courses) && count($my_courses)){
             global $post;
@@ -105,7 +105,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                                         <i class="ttr-edit-filled tutor-icon-26 tutor-color-text-hints"></i>
                                     </a>
                                     <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                        <i class="ttr-delete-stroke-filled tutor-icon-26 tutor-color-text-hints"></i>
+                                        <i class="ttr-delete-stroke-filled tutor-icon-24 tutor-color-text-hints"></i>
                                     </a>
                                 </div>
                             </div>
