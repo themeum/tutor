@@ -12,7 +12,7 @@
  */
 
 $tutor_course_img = get_tutor_course_thumbnail_src();
-$placeholder_img = tutor()->url . 'assets/images/placeholder.jpg';
+$placeholder_img = tutor()->url . 'assets/images/placeholder.png';
 ?>
 
 <a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink"> 

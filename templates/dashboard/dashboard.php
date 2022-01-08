@@ -214,7 +214,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 /**
  * Active users in progress courses
  */
-$placeholder_img 		= tutor()->url . 'assets/images/placeholder.jpg';
+$placeholder_img 		= tutor()->url . 'assets/images/placeholder.png';
 $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_user_id() );
 ?>
 
