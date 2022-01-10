@@ -84,10 +84,9 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 														<?php echo get_the_title( $attempt->course_id ); ?>
 													</div>
 													<?php
+													$attempt_user = get_userdata( $attempt->user_id );
+													$user_name    = $attempt_user ? $attempt_user->display_name : '';
 													if ( $context == 'backend-dashboard-students-attempts' ) {
-														$attempt_user = get_userdata( $attempt->user_id );
-														$user_name    = $attempt_user ? $attempt_user->display_name : '';
-
 														?>
 																	<div>
 																		<span class="tutor-text-regular-small tutor-color-text-title">
@@ -99,7 +98,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 														?>
 															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> 
 															<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( $attempt->user_email ); ?>">
-																<?php echo esc_attr( $attempt->display_name ); ?>
+																<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
 															</span>
 														<?php
 													}
