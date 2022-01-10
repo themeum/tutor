@@ -69,7 +69,7 @@ if ( tutor_utils()->count( $assignments_submitted ) ) {
 			<thead>
 				<tr>
 					<th style="width:25%;"><?php esc_attr_e( 'Date', 'tutor' ); ?></td>
-					<th><?php esc_attr_e( 'Student', 'tutor' ); ?></td>
+					<th><?php _e( 'Student', 'tutor' ); ?></td>
 					<th style="width:15%;"><?php esc_attr_e( 'Total Points', 'tutor' ); ?></td>
 					<th style="width:12%;"><?php esc_attr_e( 'Result', 'tutor' ); ?></td>
 					<th style="width:10%;">&nbsp;</td>
@@ -108,15 +108,15 @@ if ( tutor_utils()->count( $assignments_submitted ) ) {
 							</div>
 						</td>
 						<td><?php echo esc_attr( ! empty( $given_mark ) ? $given_mark . '/' . $max_mark : $max_mark ); ?></td>
-						<td><?php echo esc_attr( $status ); ?></td>
+						<td><?php echo $status; ?></td>
 						<td>
 							<a href="<?php echo esc_url( $review_url . '?view_assignment=' . $assignment->comment_ID ) . '&assignment=' . $assignment_id; ?>" class="tutor-btn bordered-btn tutor-announcement-details">
-								<?php echo esc_attr( $button_text ); ?>
+								<?php echo $button_text; ?>
 							</a>
+						</td>
 					</tr>
 					<?php
 				}
-
 				?>
 
 			</tbody>
