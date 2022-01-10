@@ -53,9 +53,9 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label" for="tutor_announcement_course">
 							<?php _e( 'Summary', 'tutor' ); ?>
 						</label>
-						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required>
-							<?php echo $summary; ?>
-						</textarea>
+						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php 
+							echo $summary; 
+						?></textarea>
 					</div>
 
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
