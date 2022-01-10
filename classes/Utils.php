@@ -2597,11 +2597,6 @@ class Utils {
 			)
 		);
 
-		// Frontend dashboard certificate page is not supposed to show before v2.0.0
-		if(version_compare(TUTOR_VERSION, '2.0.0', '<') && isset($instructor_nav_items['certificate-builder'])) {
-			unset($instructor_nav_items['certificate-builder']);
-		}
-
 		$disable = get_tutor_option( 'disable_course_review' );
 		if ( $disable && isset( $nav_items['reviews'] ) ) {
 			unset( $nav_items['reviews'] );
