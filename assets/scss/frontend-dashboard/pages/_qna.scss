@@ -134,7 +134,7 @@ table.frontend-dashboard-qna-table-student {
 		td[data-th="Reply"] {
 
 		}
-		td[data-th="Action"] {
+		td[data-th="Act∫ion"] {
 
 		}
 	}
@@ -203,22 +203,19 @@ table.frontend-dashboard-qna-table-instructor {
 }
 
 .tutor-qna-single-wrapper {
-	// background: rebeccapurple;
 	.qna-back-button {
 		display: flex;
 		align-items: center;
-	}
+	}	
 	.tutor-qna-badges {
-
 		span[data-action="important"],
-		span[data-action="archived"] ,
-		span[data-action="read"] ,
+		span[data-action="archived"],
+		span[data-action="read"],
 		span[data-tutor-modal-target="tutor_qna_delete_single_44"] {
-			// color: $design-brand;
 		}
-		i.active {
-			color : $design-brand;
-		}
+		// i.active {
+		// 	color : $design-brand;
+		// }
 		span.tutor-updating-message {
 			i {
 				visibility: hidden;
