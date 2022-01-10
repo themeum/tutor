@@ -51,6 +51,9 @@ window.jQuery(document).ready($=>{
 
                     var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
                     class_element.removeClass(remove_class).addClass(add_class);
+                    
+                    // Toggle active class
+                    class_element[new_value==1 ? 'addClass' : 'removeClass']('active');
                 }
                 
                 // Toggle text if togglable text defined
