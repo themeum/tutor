@@ -130,6 +130,12 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 									</div>
 								</div>
 							</div>
+							<script>
+								const alertBox = document.getElementById('modal-course-save-feedback');
+								setTimeout(() => {
+									if(alertBox) alertBox.classList.remove('tutor-is-active');
+								}, 5000)
+							</script>
 							<?php
 					}
 				}
