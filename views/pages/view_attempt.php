@@ -7,6 +7,7 @@ $attempt_id   = (int) sanitize_text_field( $_GET['view_quiz_attempt_id'] );
 $attempt      = tutor_utils()->get_attempt( $attempt_id );
 $attempt_data = $attempt;
 $user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
+var_dump( the_post() );
 
 if ( ! $attempt ) {
 	?>
@@ -38,20 +39,25 @@ $user    = get_userdata( $user_id );
 
 <div class="wrap">
 	<div class="quiz-attempt-answers-wrap">
-		<div class="attempt-answers-header tutor-mb-5">
+		<div class="attempt-answers-header tutor-mb-10">
 			<div class="attempt-header-quiz">
-				<strong><?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?></strong>
+				<h3><?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?></h3>
 			</div>
 		</div>
-		<div class="tutor-instructor-feedback-wrap">
-			<textarea class="tutor-form-control">
+		<div class="tutor-instructor-feedback-wrap tutor-mb-15">
 			<?php
-				echo esc_textarea( get_post_meta( $attempt_id, 'instructor_feedback', true ) );
-			?>
-			</textarea>
-			<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-instructor-feedback tutor-mt-5" data-attemptid="<?php echo esc_attr_( $attempt_id ); ?>" data-toast_success_message="<?php esc_html_e( 'Updated', 'tutor' ); ?>">
-				<?php esc_html_e( 'Update', 'tutor' ); ?>
-			</button>
+				$editor_args          = array(
+					'content' => '',
+					'div_id'  => 'tutor-instructor-feedback-editor',
+					'args'    => array(),
+				);
+				$text_editor_template = tutor()->path . 'templates/global/tutor-text-editor.php';
+				tutor_load_template_from_custom_path( $text_editor_template, $editor_args );
+				?>
 		</div>
+		<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-instructor-feedback tutor-mt-5" data-attemptid="<?php echo esc_attr( $attempt_id ); ?>" data-toast_success_message="<?php esc_html_e( 'Updated', 'tutor' ); ?>">
+				<?php esc_html_e( 'Update', 'tutor' ); ?>
+		</button>
 	</div>
 </div>
+
