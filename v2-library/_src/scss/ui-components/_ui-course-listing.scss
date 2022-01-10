@@ -9,7 +9,7 @@
 		grid-template-rows: min-content;
 		@include responsiveGrid(250px, 1fr);
 
-		@include breakpoint-min(desktop) {
+		@include breakpoint-min(desktop-lg) {
 			// tutor-course-listing-grid-*
 			&-1 {
 				grid-template-columns: repeat(1, 1fr);
@@ -381,6 +381,21 @@
 
 		.list-item-progress .progress-percentage {
 			white-space: nowrap;
+		}
+	}
+}
+
+// Loading Bookmark spacing fix
+.tutor-course-listing-item {
+	.tutor-updating-message {
+		&:before {
+			margin-right: 0 !important;
+		}
+	}
+	.tutor-ratings {
+		.tutor-rating-text {
+			line-height: 1 !important;
+			margin-top: 2px;
 		}
 	}
 }

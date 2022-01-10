@@ -95,7 +95,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 				// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish.
 				?>
 					<tr>
-						<td data-th="Course Name" class="column-fullwidth">
+						<td data-th="Course Name">
 							<div class="tutor-color-text-primary td-course tutor-text-medium-body">
 								<a href="#"><?php esc_html_e( $item->post_title ); ?></a>
 								<div class="course-meta">
@@ -108,18 +108,18 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 						</td>
 						<td data-th="Total Points">
 							<span class="tutor-color-text-primary tutor-text-medium-caption">
-							<?php echo esc_html_e( $max_mark ); ?>
+								<?php echo esc_html_e( $max_mark ); ?>
 							</span>
 						</td>
 						<td data-th="Total SUbmits">
 							<span class="tutor-color-text-primary tutor-text-medium-caption">
-							<?php echo esc_html_e( $comment_count ); ?>
+								<?php echo esc_html_e( $comment_count ); ?>
 							</span>
 						</td>
 						<td data-th="Details URL">
 							<div class="inline-flex-center td-action-btns">
 								<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="btn-outline tutor-btn">
-								<?php esc_html_e( 'Details', 'tutor' ); ?>
+									<?php esc_html_e( 'Details', 'tutor' ); ?>
 								</a>
 							</div>
 						</td>
