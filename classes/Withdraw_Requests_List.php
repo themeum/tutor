@@ -204,8 +204,9 @@ class Withdraw_Requests_List extends \Tutor_List_Table {
 			$redirect = true;
 		}
 
-		if ( $redirect ) {
-			die( '<script>location.href=' . esc_url( $withdraw_page_url ) . ';</script>' );
+		if($this->current_action()) {
+			wp_redirect( $withdraw_page_url );
+			exit;
 		}
 	}
 
