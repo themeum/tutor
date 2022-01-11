@@ -214,17 +214,17 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 /**
  * Active users in progress courses
  */
-$placeholder_img 		= tutor()->url . 'assets/images/placeholder.jpg';
+$placeholder_img 		= tutor()->url . 'assets/images/placeholder.png';
 $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_user_id() );
 ?>
 
 
 <?php if ( ! tutor_utils()->is_instructor() ) : ?>
 	<div class="tutor-frontend-dashboard-course-porgress">
-		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
-			<?php esc_html_e( 'In Progress Course', 'tutor'); ?>
-		</div>
 		<?php if ( $courses_in_progress->have_posts() ) : ?>
+			<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
+				<?php esc_html_e( 'In Progress Course', 'tutor'); ?>
+			</div>
 			<?php while( $courses_in_progress->have_posts() ) :
 				$courses_in_progress->the_post();
 				$tutor_course_img 	= get_tutor_course_thumbnail_src();
@@ -320,13 +320,13 @@ if ( count( $instructor_course ) ) {
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
-								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-18"></span>
+								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-20"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled tutor-icon-18"></span>
+								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled tutor-icon-20"></span>
 							</div>
 						</th>
 					</tr>

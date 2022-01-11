@@ -5,13 +5,13 @@
 		margin: 0;
 		padding: 0;
 		border-bottom: 1px solid #dfe1e5;
-		
+
 		li {
 			display: inline-block;
-			
+
 			a {
 				display: block;
-				padding: 5px 20px 5px 0;
+				padding: 5px 0px 5px 0;
 				margin-bottom: -1px;
 				margin-right: 20px;
 				line-height: 40px;
@@ -25,7 +25,8 @@
 				}
 			}
 
-			&.active a, a:hover {
+			&.active a,
+			a:hover {
 				color: var(--tutor-primary-color);
 				border-bottom: 2px solid var(--tutor-primary-color);
 				padding-bottom: 4px;
@@ -33,7 +34,7 @@
 		}
 	}
 
-	&>h3{
+	& > h3 {
 		font-style: normal;
 		font-weight: 500;
 		font-size: 20px;
