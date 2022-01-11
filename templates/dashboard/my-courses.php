@@ -36,7 +36,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
 
     <!-- Course list -->
     <?php
-        $status = $active_tab=='my-courses' ? array('publish') : array('pending', 'draft');
+        $status = $active_tab=='my-courses' ? array('publish') : array('pending');
         $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
         $placeholder_img = tutor()->url . 'assets/images/placeholder.png';
 
