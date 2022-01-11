@@ -97,17 +97,27 @@ class Quiz {
 		$this->allowed_html = $allowed;
 	}
 
-	public function tutor_instructor_feedback(){
+	/**
+	 * Instructor feedback ajax request handler
+	 *
+	 * @return void | send json response
+	 */
+	public function tutor_instructor_feedback() {
 		tutor_utils()->checking_nonce();
 
-		$feedback = sanitize_text_field($_POST['feedback']);
-		$attempt_id = (int) tutor_utils()->avalue_dot('attempts_id', $_POST);
+		$feedback 	= wp_kses_post( $_POST['feedback'] );
+		$quiz_id 	= sanitize_text_field( $_POST['quiz_id'] );
 
-		if ($attempt_id && tutor_utils()->can_user_manage('attempt', $attempt_id)) {
-			update_post_meta($attempt_id, 'instructor_feedback', $feedback);
-			do_action('tutor_quiz/attempt/submitted/feedback', $attempt_id);
-
-			wp_send_json_success( );
+		if ( $quiz_id && tutor_utils()->can_user_manage('quiz', $quiz_id ) ) {
+			$update_meta = update_post_meta( $quiz_id, 'instructor_feedback', $feedback );
+			do_action( 'tutor_quiz/attempt/submitted/feedback', $quiz_id );
+			if ( $update_meta ) {
+				wp_send_json_success();
+			} else {
+				wp_send_json_error();
+			}
+		} else {
+			wp_send_json_error( __( 'Invalid quiz id', 'tutor' ) );
 		}
 	}
 
