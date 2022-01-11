@@ -11,6 +11,7 @@
 </div>
 <div class="tutor-conversation tutor-mt-12 tutor-pb-20 tutor-pb-sm-50">
     <form class="tutor-comment-box tutor-mt-32" action="<?php echo get_home_url(); ?>/wp-comments-post.php" method="post">
+    <input type="hidden" name="is_lesson_comment" value="true">
         <div class="comment-avatar">
             <img src="<?php echo get_avatar_url( get_current_user_id() ) ?>" alt="">
         </div>
@@ -48,12 +49,12 @@
                         <span class="text-regular-body tutor-color-text-title">delete</span> -->
                     </div>
 
-                    <?php 
+                    <?php
                         $replies = get_comments(array(
                             'status' => 'approve',
                             'post_id' => get_the_ID(),
                             'parent' => $comment->comment_ID
-                        )); 
+                        ));
                     ?>
                     <?php if(is_array($replies) && count($replies)): ?>
                         <?php foreach($replies as $reply): ?>
@@ -78,6 +79,7 @@
                         <?php endforeach; ?>
                     <?php endif; ?>
                     <form class="tutor-comment-box tutor-reply-box tutor-mt-20" action="<?php echo get_home_url(); ?>/wp-comments-post.php" method="post">
+                    <input type="hidden" name="is_lesson_comment" value="true">
                         <div class="comment-avatar">
                             <img src="<?php echo get_avatar_url( get_current_user_id() ) ?>" alt="">
                         </div>
