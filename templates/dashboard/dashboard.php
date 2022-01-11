@@ -7,7 +7,7 @@
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
-	$is_instructor      = tutor_utils()->is_instructor();
+	$is_instructor      = tutor_utils()->is_instructor(null, true);
 	$total_count        = count( $profile_completion );
 	$incomplete_count   = count(
 		array_filter(
