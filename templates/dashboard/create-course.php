@@ -131,10 +131,6 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 										</div>
 									</div>
 								</div>
-<<<<<<< HEAD
-								<?php
-						}
-=======
 							</div>
 							<script>
 								const alertBox = document.getElementById('modal-course-save-feedback');
@@ -143,7 +139,6 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 								}, 5000)
 							</script>
 							<?php
->>>>>>> e2b220aecf03eb703f34561990aaafc1d1e3439a
 					}
 
 					if ( $message || $expires ) {
