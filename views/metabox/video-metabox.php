@@ -37,6 +37,10 @@ $video_sources = array(
 		'title' => __( 'Embedded', 'tutor' ),
 		'icon'  => 'code',
 	),
+	'shortcode'     => array(
+		'title' => __( '[/] Shortcode', 'tutor' ),
+		'icon'  => '',
+	),
 );
 
 $supported_sources = tutor_utils()->get_option( 'supported_video_sources', $video_sources );
@@ -132,23 +136,23 @@ $default_source = tutor_utils()->get_option( 'default_video_source', null );
 			</div>
 
 			<div class="video-metabox-source-item video_source_wrap_external_url" style="display: <?php echo $videoSource === 'external_url' ? 'block' : 'none'; ?>;">
-				<input type="text" name="video[source_external_url]" value="
-				<?php
-				echo tutor_utils()->avalue_dot( 'source_external_url', $video );
-				?>
-				" placeholder="<?php _e( 'External Video URL', 'tutor' ); ?>">
+				<input type="text" name="video[source_external_url]" value="<?php echo tutor_utils()->avalue_dot( 'source_external_url', $video ); ?>" placeholder="<?php _e( 'External Video URL', 'tutor' ); ?>">
+			</div>
+
+			<div class="video-metabox-source-item video_source_wrap_shortcode" style="display: <?php echo $videoSource === 'shortcode' ? 'block' : 'none'; ?>;">
+				<input type="text" name="video[source_shortcode]" value="<?php echo tutor_utils()->avalue_dot( 'source_shortcode', $video ); ?>" placeholder="<?php _e( 'Shortcode', 'tutor' ); ?>">
 			</div>
 
 			<div class="video-metabox-source-item video_source_wrap_youtube" style="display: <?php echo $videoSource === 'youtube' ? 'block' : 'none'; ?>;">
 				<input type="text" name="video[source_youtube]" value="<?php echo tutor_utils()->avalue_dot( 'source_youtube', $video ); ?>" placeholder="<?php _e( 'YouTube Video URL', 'tutor' ); ?>" data-youtube_api_key="<?php echo tutils()->get_option( 'lesson_video_duration_youtube_api_key', '' ); ?>">
 			</div>
+
 			<div class="video-metabox-source-item video_source_wrap_vimeo" style="display: <?php echo $videoSource === 'vimeo' ? 'block' : 'none'; ?>;">
 				<input type="text" name="video[source_vimeo]" value="<?php echo tutor_utils()->avalue_dot( 'source_vimeo', $video ); ?>" placeholder="<?php _e( 'Vimeo Video URL', 'tutor' ); ?>">
 			</div>
+
 			<div class="video-metabox-source-item video_source_wrap_embedded" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
-				<textarea name="video[source_embedded]" placeholder="<?php _e( 'Place your embedded code here', 'tutor' ); ?>"><?php 
-					echo tutor_utils()->avalue_dot( 'source_embedded', $video ); 
-				?></textarea>
+				<textarea name="video[source_embedded]" placeholder="<?php _e( 'Place your embedded code here', 'tutor' ); ?>"><?php echo tutor_utils()->avalue_dot( 'source_embedded', $video ); ?></textarea>
 			</div>
 		</div>
 	</div>

@@ -89,7 +89,7 @@ class Lesson extends Tutor_Base {
 		if ( $video_source === '-1' ) {
 			delete_post_meta( $post_ID, '_video' );
 		} elseif ( $video_source ) {
-			$video = (array) tutor_utils()->array_get( 'video', tutor_sanitize_data($_POST), array() );
+			$video = (array) tutor_utils()->array_get( 'video', $_POST, array() );
 			update_post_meta( $post_ID, '_video', $video );
 		}
 
