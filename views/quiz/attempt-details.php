@@ -266,7 +266,7 @@ include __DIR__ . '/header.php';
 
 <?php
     if (is_array($answers) && count($answers)){
-        echo $context!='course-single-previous-attempts' ? '<strong>'.__('Quiz Overview', 'tutor').'</strong>' : '';
+        //echo $context!='course-single-previous-attempts' ? '<strong>'.__('Quiz Overview', 'tutor').'</strong>' : '';
         ?>
         <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-30">
             <thead>
