@@ -35,9 +35,6 @@ style="width: calc(100% + 30px)" -->
 	</div>
 	<?php if ( $is_instructor && 'approved' === $user_status ) : ?>
 		<div class="tutor-bs-col-auto">
-			<?php _e( 'View as', 'tutor' ); ?>:
-		</div>
-		<div class="tutor-bs-col-auto">
 			<label class="tutor-form-toggle tutor-dashboard-qna-vew-as current-view-<?php echo $view_as == 'instructor' ? 'instructor' : 'student'; ?>">
 				<input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as == 'instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo esc_url( $as_instructor_url ); ?>" data-as_student_url="<?php echo esc_url( $as_student_url ); ?>" disabled="disabled"/>
 				<span class="tutor-form-toggle-label tutor-form-toggle-checked"><?php esc_html_e( 'Student', 'tutor' ); ?></span>
