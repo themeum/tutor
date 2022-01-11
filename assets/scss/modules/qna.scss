@@ -1,425 +1,430 @@
 $sidebar_width: 360px;
 
-.tutor-qna-single-question{
-    table.tutor-ui-table-data-td-target [data-td-target] {
-        padding: 12px !important;
-    }
-    table.tutor-ui-table tr:last-child td:last-child {
-        border-radius: 0;
-        -webkit-border-radius: 0;
-        -moz-border-radius: 0;
-        -ms-border-radius: 0;
-        -o-border-radius: 0;
-}
-    table.tutor-ui-table-data-td-target .is-active:not(.expand-btn) {
-        background-color: #fff !important;
-    }
-    td {
-        div.ttr-angle-down-filled {
-            font-size: 20px;
-        }
-    }
-    @at-root{
-        body.wp-admin {
-            .tutor-qna-single-wrapper {
-                width: calc(100% - #{$sidebar_width});
+.tutor-qna-single-question {
+	table.tutor-ui-table-data-td-target [data-td-target] {
+		padding: 12px !important;
+	}
+	table.tutor-ui-table tr:last-child td:last-child {
+		border-radius: 0;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		-ms-border-radius: 0;
+		-o-border-radius: 0;
+	}
+	table.tutor-ui-table-data-td-target .is-active:not(.expand-btn) {
+		background-color: #fff !important;
+	}
+	td {
+		div.ttr-angle-down-filled {
+			font-size: 20px;
+		}
+	}
+	@at-root {
+		body.wp-admin {
+			.tutor-qna-single-wrapper {
+				width: calc(100% - #{$sidebar_width});
 
-                .tutor-qa-reply{
-                    border-top-left-radius: 6px;
-                    border-top-right-radius: 6px;
-                    overflow: hidden;
-                }
-            }
-        }
-    }
+				.tutor-qa-reply {
+					border-top-left-radius: 6px;
+					border-top-right-radius: 6px;
+					overflow: hidden;
+				}
+			}
+		}
+	}
 
-    .tutor-qna-single-wrapper{
-        .qna-back-button {
-            font-style: normal;
-            font-weight: normal;
-            font-size: 16px;
-            color: #5B616F;
-        }
-    }
-    
-    .tutor-qa-reply{
-        bottom: 20px;
-        bottom: 0;
-        background: white;
-        z-index: 10;
+	.tutor-qna-single-wrapper {
+		.qna-back-button {
+			font-style: normal;
+			font-weight: normal;
+			font-size: 16px;
+			color: #5b616f;
+		}
+	}
 
-        textarea{
-            min-height: initial !important;
-            height: 80px !important;
-            width: 100%;
-            border: none;
-            border-bottom: 1px solid #CDCFD5;
-            border-radius: 0 !important;
-            padding: 15px;
-            resize: none;
+	.tutor-qa-reply {
+		bottom: 20px;
+		bottom: 0;
+		background: white;
+		z-index: 10;
 
-            &, &:focus, &:active {
-                outline: none !important;
-                box-shadow: none;
-            }
-        }
+		textarea {
+			min-height: initial !important;
+			height: 80px !important;
+			width: 100%;
+			border: none;
+			border-bottom: 1px solid #cdcfd5;
+			border-radius: 0 !important;
+			padding: 15px;
+			resize: none;
 
-        div{
-            padding: 15px;
-        }
-    }
+			&,
+			&:focus,
+			&:active {
+				outline: none !important;
+				box-shadow: none;
+			}
+		}
 
-    // Badges class
-    .tutor-qna-badges {
-        &>span{
-            @include valueWithPrefix(display, inline-flex);
-            @include propertyWithPrefix(align-items, center);
-            margin-left: 15px;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 16px;
-            color: #5B616F;
-            cursor: pointer;
+		div {
+			padding: 15px;
+		}
+	}
 
-            &:hover {
-                color: #393a3d;
-            }
+	// Badges class
+	.tutor-qna-badges {
+		& > span {
+			@include valueWithPrefix(display, inline-flex);
+			@include propertyWithPrefix(align-items, center);
+			margin-left: 15px;
+			font-style: normal;
+			font-weight: normal;
+			font-size: 16px;
+			color: #5b616f;
+			cursor: pointer;
 
-            i{
-                display: inline-block;
-                margin-right: 5px;
-                
-                &[class^='ttr-'], &[class*=' ttr-']{
-                    font-size: 24px;
-                }
-            }
-        }
-    }
+			&:hover {
+				color: #393a3d;
+			}
 
-    // Top Sticky bar for badges
-    .tutor-qa-sticky-bar{
-        @include valueWithPrefix(display, flex);
-        background: white;
-        padding: 21px 15px;
-        position: sticky;
-        top: 32px;
-        margin-left: -19px;
-        z-index: 9;
+			i {
+				display: inline-block;
+				margin-right: 5px;
 
-        &>div{
-            &:last-child{
-                @include valueWithPrefix(flex, 1);
-                text-align: right;
-            }
-        }
-    }
+				&[class^='ttr-'],
+				&[class*=' ttr-'] {
+					font-size: 24px;
+				}
+			}
+		}
+	}
 
-    // Regular chatlist style 
-    .tutor-qa-chatlist{
-        overflow: auto;
+	// Top Sticky bar for badges
+	.tutor-qa-sticky-bar {
+		@include valueWithPrefix(display, flex);
+		background: white;
+		padding: 21px 15px;
+		position: sticky;
+		top: 32px;
+		margin-left: -19px;
+		z-index: 9;
 
-        .tutor-qna-chat {
-            width: auto;
-            max-width: 80%;
-            margin-bottom: 30px;
-            clear: both;
+		& > div {
+			&:last-child {
+				@include valueWithPrefix(flex, 1);
+				text-align: right;
+			}
+		}
+	}
 
-            .tutor-qna-user {
-                @include valueWithPrefix(display, flex);
-                @include propertyWithPrefix(align-items, center);
-                margin-bottom: 15px;
+	// Regular chatlist style
+	.tutor-qa-chatlist {
+		overflow: auto;
 
-                img{
-                    width: 50px;
-                    height: 50px;
-                    overflow: hidden;
-                    border-radius: 50%;
-                }
+		.tutor-qna-chat {
+			width: auto;
+			max-width: 80%;
+			margin-bottom: 30px;
+			clear: both;
 
-                &>div{
-                    @include propertyWithPrefix(flex, 1);
-                    padding-left: 15px;
+			.tutor-qna-user {
+				@include valueWithPrefix(display, flex);
+				@include propertyWithPrefix(align-items, center);
+				margin-bottom: 15px;
 
+				img {
+					width: 50px;
+					height: 50px;
+					overflow: hidden;
+					border-radius: 50%;
+				}
 
-                }
-            }
+				& > div {
+					@include propertyWithPrefix(flex, 1);
+					padding-left: 15px;
+				}
+			}
 
-            .tutor-qna-text{
-                padding: 15px;
-                background: white;
-                border-radius: 6px;
-                margin: 0;
-                position: relative;
+			.tutor-qna-text {
+				padding: 15px;
+				background: white;
+				border-radius: 6px;
+				margin: 0;
+				position: relative;
+				max-width: max-content;
 
-                &:before{
-                    content: '';
-                    position: absolute;
-                    width: 20px;
-                    height: 20px;
-                    top: -5px;
-                    background: inherit;
-                    -webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
-                    clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
-                    -webkit-transform: rotate(45deg);
-                    transform: rotate(45deg);
-                    border-radius: 3px;
-                }
-            }
+				&:before {
+					content: '';
+					position: absolute;
+					width: 20px;
+					height: 20px;
+					top: -5px;
+					background: inherit;
+					-webkit-clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+					clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+					-webkit-transform: rotate(45deg);
+					transform: rotate(45deg);
+					border-radius: 3px;
+				}
+			}
 
-            &.tutor-qna-left {
-                .tutor-qna-text{
-                    &:before{
-                        left: 15px;
-                    }
-                }
-            }
+			&.tutor-qna-left {
+				.tutor-qna-text {
+					&:before {
+						left: 15px;
+					}
+				}
+			}
 
-            &.tutor-qna-right {
-                float: right;
+			&.tutor-qna-right {
+				float: right;
 
-                .tutor-qna-text{
-                    &:before{
-                        right: 15px;
-                    }
-                }
+				.tutor-qna-text {
+					&:before {
+						right: 15px;
+					}
+					margin-left: auto !important;
+				}
 
-                .tutor-qna-user{
-                    @include propertyWithPrefix(flex-flow, row-reverse);
-                    text-align: right;
+				.tutor-qna-user {
+					@include propertyWithPrefix(flex-flow, row-reverse);
+					text-align: right;
+					& > div {
+						padding-left: 0;
+						padding-right: 15px;
+					}
+				}
+			}
+		}
+	}
 
-                    &>div{
-                        padding-left: 0;
-                        padding-right: 15px;
-                    }
-                }
-            }
-        }
-    }
+	&:not([data-context='backend-dashboard-qna-single']) {
+		.tutor-qna-left {
+			.tutor-qna-text {
+				background: #f1f5ff;
+			}
+		}
 
-    &:not([data-context="backend-dashboard-qna-single"]){
-        .tutor-qna-left {
-            .tutor-qna-text {
-                background: #FEECEB;
-            }
-        }
+		.tutor-qna-right {
+			.tutor-qna-text {
+				background: #e9edfb;
+				background: #f3f9fa;
+			}
+		}
 
-        .tutor-qna-right {
-            .tutor-qna-text {
-                background: #E9EDFB;
-            }
-        }
+		.tutor-qa-reply {
+			border: 1px solid $stroke-light-30;
+			border-radius: 6px;
+			bottom: 20px;
+			overflow: hidden;
+		}
+	}
 
-        .tutor-qa-reply {
-            border: 1px solid #CDCFD5;
-            border-radius: 6px;
-            bottom: 20px;
-            overflow: hidden;
-        }
-    }
+	.tutor-toggle-reply {
+		text-align: right;
+		span {
+			cursor: pointer;
 
-    .tutor-toggle-reply {
-        text-align: right;
-        span{
-            cursor: pointer;
+			&:hover {
+				text-decoration: underline;
+				font-style: normal;
+				font-weight: normal;
+				font-size: 15px;
+				color: #41454f;
+			}
+		}
+	}
 
-            &:hover{
-                text-decoration: underline;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 15px;
-                color: #41454F;
-            }
-        }
-    }
-
-    @at-root{
-        body.wp-admin {
-            .tutor-qa-chatlist, .tutor-qa-reply{
-                margin-right: 15px;
-                margin-top: 15px;
-            }
-        }
-    }
+	@at-root {
+		body.wp-admin {
+			.tutor-qa-chatlist,
+			.tutor-qa-reply {
+				margin-right: 15px;
+				margin-top: 15px;
+			}
+		}
+	}
 }
 
 .tutor-qna-admin-sidebar {
-    width: $sidebar-width;
-    position: fixed;
-    right: 0;
-    top: 32px;
-    bottom: 0;
-    left: auto;
-    background: white;
-    border-left: 1px solid #C0C3CB;
-    box-sizing: border-box;
-    overflow: auto;
-    
-    .tutor-qna-user {
-        padding: 20px;
+	width: $sidebar-width;
+	position: fixed;
+	right: 0;
+	top: 32px;
+	bottom: 0;
+	left: auto;
+	background: white;
+	border-left: 1px solid #c0c3cb;
+	box-sizing: border-box;
+	overflow: auto;
 
-        img{
-            width: 100px;
-            height: 100px;
-            overflow: hidden;
-            border-radius: 50%;
-        }
+	.tutor-qna-user {
+		padding: 20px;
 
-        h2 {
-            font-style: normal;
-            font-weight: 500;
-            font-size: 30px;
-            color: #212327;
-        }
+		img {
+			width: 100px;
+			height: 100px;
+			overflow: hidden;
+			border-radius: 50%;
+		}
 
-        strong{
-            font-style: normal;
-            font-weight: 500;
-            font-size: 16px;
-            color: #5B616F;
-        }
-    }
+		h2 {
+			font-style: normal;
+			font-weight: 500;
+			font-size: 30px;
+			color: #212327;
+		}
 
-    .tutor-qna-user-details {
-        label {
-            cursor: pointer;
-            padding: 15px;
-            border-top: 1px solid #C0C3CB;
-            border-bottom: 1px solid #C0C3CB;
-            display: block;
-            background: #F4F6F9;
-            font-style: normal;
-            font-weight: 500;
-            font-size: 16px;
-            color: #212327;
-        }
+		strong {
+			font-style: normal;
+			font-weight: 500;
+			font-size: 16px;
+			color: #5b616f;
+		}
+	}
 
-        &>div{
-            display: none;
-            padding: 15px;
-        }
+	.tutor-qna-user-details {
+		label {
+			cursor: pointer;
+			padding: 15px;
+			border-top: 1px solid #c0c3cb;
+			border-bottom: 1px solid #c0c3cb;
+			display: block;
+			background: #f4f6f9;
+			font-style: normal;
+			font-weight: 500;
+			font-size: 16px;
+			color: #212327;
+		}
 
-        input{
-            display: none;
+		& > div {
+			display: none;
+			padding: 15px;
+		}
 
-            &:checked{
-                &+div{
-                    display: block;
-                }
-            }
-        }
-    }
+		input {
+			display: none;
 
-    .qna-previous-questions {
-        div {
-            display: flex;
-            flex-direction: column;
-            row-gap: 5px;
-        }
-    }
+			&:checked {
+				& + div {
+					display: block;
+				}
+			}
+		}
+	}
+
+	.qna-previous-questions {
+		div {
+			display: flex;
+			flex-direction: column;
+			row-gap: 5px;
+		}
+	}
 }
 
 table.qna-list-table {
-    .ttr-msg-important-filled {
-        color: #9CA0AC;
-    }
+	.ttr-msg-important-filled {
+		color: #9ca0ac;
+	}
 
-    .ttr-msg-important-fill-filled {
-        color: #ED9700;
-    }
+	.ttr-msg-important-fill-filled {
+		color: #ed9700;
+	}
 
-    tr{
-        .tutor-qna-title {
-            font-style: normal;
-            font-weight: 500;
-            font-size: 16px;
-            color: #212327;
-            display: block;
-        }
+	tr {
+		.tutor-qna-title {
+			font-style: normal;
+			font-weight: 500;
+			font-size: 16px;
+			color: #212327;
+			display: block;
+		}
 
-        &:not(.is-qna-read) {
-            .tutor-qna-title {
-                font-weight: bold;
-                font-size: 16px;
-                color: #212327;
-            }
-        }
-    }
+		&:not(.is-qna-read) {
+			.tutor-qna-title {
+				font-weight: bold;
+				font-size: 16px;
+				color: #212327;
+			}
+		}
+	}
 
-    .tutor-qna-question-col {
+	.tutor-qna-question-col {
+		i {
+			font-size: 24px !important;
+			margin-right: 13px;
+			left: -6px;
+			top: 2px;
+		}
 
-        i {
-            font-size: 24px !important;
-            margin-right: 13px;
-            left: -6px;
-            top: 2px;
-        }
+		span {
+			margin-bottom: 5px;
+		}
 
-        span {
-            margin-bottom: 5px;
-        }
+		small {
+			font-style: normal;
+			font-weight: 500;
+			font-size: 13px;
+			color: #525252;
+		}
 
-        small {
-            font-style: normal;
-            font-weight: 500;
-            font-size: 13px;
-            color: #525252;
-        }
+		&:not(.is-read) {
+			i {
+				color: #1973aa;
+			}
 
-        &:not(.is-read) {
-            i {
-                color: #1973AA;
-            }
+			.tutor-qna-content {
+				font-style: normal;
+				font-weight: bold;
+				font-size: 16px;
+				color: #212327;
+			}
+		}
 
-            span {
-                font-style: normal;
-                font-weight: bold;
-                font-size: 16px;
-                color: #212327;
-            }
-        }
+		&.is-read {
+			i {
+				color: #c0c3cb;
+			}
 
-        &.is-read {
-            i{
-                color: #C0C3CB;
-            }
-
-            span{
-                font-style: normal;
-                font-weight: 500;
-                font-size: 16px;
-                color: #212327;
-            }
-        }
-    }
+			.tutor-qna-content {
+				font-style: normal;
+				font-weight: 500;
+				font-size: 16px;
+				color: #212327;
+			}
+		}
+	}
 }
 
 .tutor-qna-sptolight-sidebar {
-    padding: 15px;
+	padding: 15px;
 
-    .tutor-qa-new {
-        &[data-context="course-single-qna-sidebar"] {
-            background: #F4F6F9;
-            padding: 15px;
-            position: sticky;
-            bottom: 0;
-            margin: -15px;
-        }
-    }
+	.tutor-qa-new {
+		&[data-context='course-single-qna-sidebar'] {
+			background: #f4f6f9;
+			padding: 15px;
+			position: sticky;
+			bottom: 0;
+			margin: -15px;
+		}
+	}
 
-    .tutor-qa-reply {
-        position: initial !important;
-    }
+	.tutor-qa-reply {
+		position: initial !important;
+	}
 }
 
 .tutor-qa-reply {
-    &[data-context=course-single-qna-sidebar], &[data-context=course-single-qna-single] {
-        &, textarea {
-            border: none !important;
-        }
+	&[data-context='course-single-qna-sidebar'],
+	&[data-context='course-single-qna-single'] {
+		&,
+		textarea {
+			border: none !important;
+		}
 
-        textarea{
-            border: 1px solid #CDCFD5 !important;
-            border-radius: 6px !important;
-        }
-    }
+		textarea {
+			border: 1px solid #cdcfd5 !important;
+			border-radius: 6px !important;
+		}
+	}
 }

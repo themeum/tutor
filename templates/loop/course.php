@@ -44,6 +44,16 @@ do_action('tutor_course/loop/after_excerpt');
 do_action('tutor_course/loop/end_content_wrap');
 do_action('tutor_course/loop/tutor_pagination');
 
+/**
+ * Hooks for enrolled course progress
+ * That will affected on dashboard enrolled course page
+ *
+ * @since v2.0.0
+ */
+do_action('tutor_course/loop/before_enrolled_progress');
+do_action('tutor_course/loop/enrolled_course_progress');
+do_action('tutor_course/loop/after_enrolled_progress');
+
 do_action('tutor_course/loop/before_footer');
 do_action('tutor_course/loop/footer');
 do_action('tutor_course/loop/after_footer');
