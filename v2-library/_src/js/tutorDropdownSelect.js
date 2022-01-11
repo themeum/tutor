@@ -4,7 +4,8 @@ if (tutorDropdownSelect) {
 	const optionsContainer = document.querySelector('.tutor-dropdown-select-options-container');
 	const optionsList = document.querySelectorAll('.tutor-dropdown-select-option');
 
-	selected.addEventListener('click', () => {
+	selected.addEventListener('click', (e) => {
+		e.stopPropagation();
 		optionsContainer.classList.toggle('is-active');
 	});
 
