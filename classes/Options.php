@@ -105,7 +105,8 @@ class Options {
 			'external_url' => __('External URL', 'tutor'),
 			'youtube' => __('Youtube', 'tutor'),
 			'vimeo' => __('Vimeo', 'tutor'),
-			'embedded' => __('Embedded', 'tutor')
+			'embedded' => __('Embedded', 'tutor'),
+			'shortcode' => __('Shortcode', 'tutor')
 		);
 
 		$course_filters = array(

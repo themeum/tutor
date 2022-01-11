@@ -1746,7 +1746,8 @@ class Utils {
 							! empty( $video['source_external_url'] ) ||
 							! empty( $video['source_youtube'] ) ||
 							! empty( $video['source_vimeo'] ) ||
-							! empty( $video['source_embedded'] );
+							! empty( $video['source_embedded'] ) || 
+							! empty( $video['source_shortcode'] );
 
 				return $not_empty ? $video : false;
 			}

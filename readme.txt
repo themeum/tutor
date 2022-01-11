@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 1.9.13
+Stable tag: 1.9.14
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,6 +240,12 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 17. Tutor LMS Working Lifecycle
 
 == Changelog ==
+
+= 1.9.14 - January 11, 2022 =
+
+New: Now you can add Videos using a Shortcode
+Fix: Issue of HTML codes disappearing after saving a Quiz
+Fix: Issue regarding video not working using Embedded code
 
 = 1.9.13 - January 10, 2022 =
 

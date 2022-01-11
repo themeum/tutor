@@ -847,7 +847,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$question_data = tutor_sanitize_data( $_POST['tutor_quiz_question'] );
+		$question_data = $_POST['tutor_quiz_question'];
 
 		foreach ( $question_data as $question_id => $question ) {
 
