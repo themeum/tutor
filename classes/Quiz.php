@@ -104,21 +104,21 @@ class Quiz {
 	 */
 	public function tutor_instructor_feedback() {
 		tutor_utils()->checking_nonce();
-
-		$feedback 	= wp_kses_post( $_POST['feedback'] );
-		$quiz_id 	= sanitize_text_field( $_POST['quiz_id'] );
-
-		if ( $quiz_id && tutor_utils()->can_user_manage('quiz', $quiz_id ) ) {
-			$update_meta = update_post_meta( $quiz_id, 'instructor_feedback', $feedback );
-			do_action( 'tutor_quiz/attempt/submitted/feedback', $quiz_id );
-			if ( $update_meta ) {
+		$attempt_details 	= self::attempt_details( $_POST['attempt_id'] );
+		$feedback 			= wp_kses_post( $_POST['feedback'] );
+		$attempt_info 		= isset( $attempt_details->attempt_info ) ? unserialize( $attempt_details->attempt_info ) : false;
+		if ( $attempt_info ) {
+			$attempt_info->instructor_feedback = $feedback;
+			do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_details );
+			$attempt_details->attempt_info = serialize( $attempt_details->attempt_info );
+			$update = self::update_attempt_info( $attempt_details->attempt_id, $attempt_details->attempt_info );
+			if ( $update ) {
 				wp_send_json_success();
 			} else {
 				wp_send_json_error();
 			}
-		} else {
-			wp_send_json_error( __( 'Invalid quiz id', 'tutor' ) );
 		}
+		wp_send_json_error();
 	}
 
 	public function save_quiz_meta($post_ID){
@@ -1230,6 +1230,43 @@ class Quiz {
 
 		$html = ob_get_clean();
 		wp_send_json_success(array('html' => $html));
+	}
+
+	/**
+	 * Get attempt details
+	 *
+	 * @param int $attempt_id, required attempt id to get details
+	 *
+	 * @return mixed, object on success, null on failure
+	 */
+	public static function attempt_details( int $attempt_id ) {
+		global $wpdb;
+		$attempt_details = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT *FROM {$wpdb->prefix}tutor_quiz_attempts 
+					WHERE attempt_id = %d",
+				$attempt_id
+			)
+		);
+		return $attempt_details;
+	}
+
+	/**
+	 * Update attempt info
+	 *
+	 * @param $attempt_info, serialize data
+	 *
+	 * @return bool, true on success, false on failure
+	 */
+	public static function update_attempt_info( int $attempt_id, $attempt_info ) {
+		global $wpdb;
+		$table = $wpdb->prefix . 'tutor_quiz_attempts';
+		$update_info = $wpdb->update(
+			$table,
+			array( 'attempt_info' => $attempt_info ),
+			array( 'attempt_id' => $attempt_id )
+		);
+		return $update_info ? true : false;
 	}
 
 }

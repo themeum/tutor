@@ -7,7 +7,12 @@
  * @since v2.0.0
  */
 
-$quiz_id = $data['quiz_id'];
+$attempt_data = $data['attempt_data'];
+$attempt_info = isset( $attempt_data->attempt_info ) ? unserialize( $attempt_data->attempt_info ) : false;
+$content      = '';
+if ( $attempt_info ) {
+	$content = isset( $attempt_info->instructor_feedback ) ? $attempt_info->instructor_feedback : '';
+}
 ?>
 <div class="wrap">
 	<div class="quiz-attempt-answers-wrap">
@@ -19,7 +24,6 @@ $quiz_id = $data['quiz_id'];
 		<div class="tutor-instructor-feedback-wrap tutor-mb-15">
 			<div id="tutor-instructor-feedback-editor"></div>
 			<?php
-				$content 	= get_post_meta( $quiz_id, 'instructor_feedback', true );
 				$editor_args          = array(
 					'content' => $content,
 					'args'    => array(),
@@ -28,7 +32,7 @@ $quiz_id = $data['quiz_id'];
 				tutor_load_template_from_custom_path( $text_editor_template, $editor_args );
 				?>
 		</div>
-		<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-instructor-feedback tutor-mt-5" data-quiz-id="<?php echo esc_attr( $quiz_id ); ?>" data-toast_success_message="<?php esc_html_e( 'Updated', 'tutor' ); ?>">
+		<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-instructor-feedback tutor-mt-5" data-attempt-id="<?php echo esc_attr( $attempt_data->attempt_id ); ?>" data-toast_success_message="<?php esc_html_e( 'Updated', 'tutor' ); ?>">
 				<?php esc_html_e( 'Update', 'tutor' ); ?>
 		</button>
 	</div>
