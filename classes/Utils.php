@@ -2799,7 +2799,9 @@ class Utils
 	public function is_instructor($user_id = 0)
 	{
 		$user_id = $this->get_user_id($user_id);
-		return get_user_meta($user_id, '_is_tutor_instructor', true);
+		$user_status = get_user_meta($user_id, '_tutor_instructor_status', true);
+		$is_approved_instructor = isset($user_status) ? $user_status === 'approved': false;
+		return $is_approved_instructor && get_user_meta($user_id, '_is_tutor_instructor', true);
 	}
 
 	/**
