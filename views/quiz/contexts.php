@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $contexts =  array(
     'attempt-table' => array(

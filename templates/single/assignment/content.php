@@ -41,7 +41,7 @@ function tutor_assignment_convert_seconds($seconds){
 <?php do_action('tutor_assignment/single/before/content'); ?>
 
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
-    <div class="tutor-topbar-left-item d-flex"> 
+    <div class="tutor-topbar-left-item d-flex">
         <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
             <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
                 <span class="ttr-icon-light-left-line tutor-color-text-white flex-center"></span>
@@ -50,7 +50,7 @@ function tutor_assignment_convert_seconds($seconds){
         <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
 			<span class="ttr-assignment-filled tutor-color-text-white tutor-mr-5"></span>
 			<span class="text-regular-caption tutor-color-design-white">
-				<?php 
+				<?php
 					esc_html_e( 'Assignment: ', 'tutor' );
 					the_title();
 				?>
@@ -68,7 +68,7 @@ function tutor_assignment_convert_seconds($seconds){
                 </span>
                 <span class="text-bold-caption">
                     <?php echo $course_stats['completed_count']; ?>
-                </span> 
+                </span>
                 <?php _e('of ', 'tutor'); ?>
                 <span class="text-bold-caption">
                     <?php echo $course_stats['total_count']; ?>
@@ -94,14 +94,14 @@ function tutor_assignment_convert_seconds($seconds){
             <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
         </a>
         <div class="tutor-top-nav-title tutor-text-regular-body tutor-color-text-primary">
-            <?php 
+            <?php
                 the_title();
             ?>
         </div>
     </div>
 </div>
 <div class="tutor-quiz-wrapper tutor-quiz-wrapper d-flex justify-content-center tutor-mt-100 tutor-pb-100">
-	<div id="tutor-assignment-wrap" class="tutor-quiz-wrap tutor-course-assignment-details tutor-submit-assignment  tutor-assignment-result-pending">	
+	<div id="tutor-assignment-wrap" class="tutor-quiz-wrap tutor-course-assignment-details tutor-submit-assignment  tutor-assignment-result-pending">
 		<div class="tutor-assignment-title tutor-text-medium-h4 tutor-color-text-primary">
 			<?php the_title(); ?>
 		</div>
@@ -153,13 +153,13 @@ function tutor_assignment_convert_seconds($seconds){
 					<span class="tutor-text-medium-body  tutor-color-text-primary">
 						<?php
 							if ($time_duration['value'] != 0) {
-								if ($now > $remaining_time and $is_submitted == false) { 
+								if ($now > $remaining_time and $is_submitted == false) {
 									_e('Expired', 'tutor');
 								} else {
 									echo tutor_assignment_convert_seconds($remaining);
 								}
 							} else {
-								_e('N\\A', 'tutor'); 
+								_e('N\\A', 'tutor');
 							}
 						?>
 					</span>
@@ -181,7 +181,7 @@ function tutor_assignment_convert_seconds($seconds){
 		/*
 		*time_duration[value]==0 means no limit
 		*if have unlimited time then no msg should
-		*appear 
+		*appear
 		*/
 		if ($time_duration['value'] != 0) :
 			if ($now > $remaining_time and $is_submitted == false) : ?>
@@ -285,7 +285,7 @@ function tutor_assignment_convert_seconds($seconds){
 											<?php _e(' no text on the image.', 'tutor'); ?>
 										</p>
 										<p class="text-regular-small tutor-color-text-subsued tutor-mt-7">
-											<?php _e('Total File Size: Max', 'tutor'); ?> 
+											<?php _e('Total File Size: Max', 'tutor'); ?>
 											<span class="tutor-color-text-primary">
 												<?php echo $file_upload_limit; ?>
 												<?php _e('MB', 'tutor'); ?>
@@ -294,7 +294,7 @@ function tutor_assignment_convert_seconds($seconds){
 									</div>
 								</div>
 								<div class="tutor-asisgnment-upload-file-preview d-flex tutor-mt-20 tutor-mt-sm-30">
-									
+
 								</div>
 							</div>
 						<?php } ?>
@@ -342,17 +342,17 @@ function tutor_assignment_convert_seconds($seconds){
 			<?php
 		} else {
 
-			
+
 			if ($submitted_assignment) {
 				$is_reviewed_by_instructor = get_comment_meta($submitted_assignment->comment_ID, 'evaluate_time', true);
 
-				
+
 					$assignment_id = $submitted_assignment->comment_post_ID;
 					$submit_id = $submitted_assignment->comment_ID;
 
 					$max_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'total_mark');
 					$pass_mark = tutor_utils()->get_assignment_option($submitted_assignment->comment_post_ID, 'pass_mark');
-					$given_mark = get_comment_meta($submitted_assignment->comment_ID, 'assignment_mark', true);
+					$given_mark = get_comment_meta( $submitted_assignment->comment_ID, 'assignment_mark', true );
 			?>
 					<div class="tutor-assignment-result-table tutor-mt-30 tutor-mb-40">
 						<div class="tutor-ui-table-wrapper">
@@ -381,7 +381,7 @@ function tutor_assignment_convert_seconds($seconds){
 										</th>
 										<th>
 										<span class="text-regular-small tutor-color-text-subsued">
-											<?php _e('Result', 'tutor'); ?>	
+											<?php _e('Result', 'tutor'); ?>
 										</span>
 										</th>
 									</tr>
@@ -411,22 +411,25 @@ function tutor_assignment_convert_seconds($seconds){
 											</span>
 										</td>
 										<td data-th="Result" class="result">
-											<?php 
-												if ($is_reviewed_by_instructor) {
-												if ($given_mark >= $pass_mark) {
-											?>
-												<span class="tutor-badge-label label-success">
-													<?php _e('Passed', 'tutor'); ?>
-												</span>
 											<?php
+											if ( $is_reviewed_by_instructor ) {
+												if ( $given_mark >= $pass_mark ) {
+													?>
+													<span class="tutor-badge-label label-success">
+													<?php _e( 'Passed', 'tutor' ); ?>
+													</span>
+													<?php
 												} else {
+													?>
+													<span class="tutor-badge-label label-warning">
+													<?php _e( 'Failed', 'tutor' ); ?>
+													</span>
+												<?php }
+											}
 											?>
-												<span class="tutor-badge-label label-warning">
-													<?php _e('Failed', 'tutor'); ?>
-												</span>
-											<?php } } ?>
-											<?php 
-												if (!$is_reviewed_by_instructor) { 
+
+											<?php
+												if (!$is_reviewed_by_instructor) {
 											?>
 											<span class="tutor-badge-label label-danger">
 												<?php _e('Pending', 'tutor'); ?>
@@ -439,9 +442,9 @@ function tutor_assignment_convert_seconds($seconds){
 						</div>
 					</div> <!-- assignment-result-table -->
 
-				
 
-				<?php 
+
+				<?php
 					if ($is_reviewed_by_instructor) {
 				?>
 				<div class="tutor-instructor-note tutor-my-30 tutor-py-20 tutor-px-25 tutor-py-sm-30 tutor-px-sm-35">
@@ -471,7 +474,7 @@ function tutor_assignment_convert_seconds($seconds){
 							$attached_files = get_comment_meta($submitted_assignment->comment_ID, 'uploaded_attachments', true);
 							if ($attached_files) {
 								$attached_files = json_decode($attached_files, true);
-		
+
 								if (tutor_utils()->count($attached_files)) {
 									?>
 									<div class="tutor-attachment-files submited-files d-flex tutor-mt-20 tutor-mt-sm-40">
@@ -494,13 +497,13 @@ function tutor_assignment_convert_seconds($seconds){
 														</a>
 													</div>
 												</div>
-												<?php 
-											}  
+												<?php
+											}
 										?>
 									</div>
-									<?php 
-								} 
-							} 
+									<?php
+								}
+							}
 						?>
 					</div>
 				</div>
