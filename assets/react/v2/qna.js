@@ -51,6 +51,9 @@ window.jQuery(document).ready($=>{
 
                     var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
                     class_element.removeClass(remove_class).addClass(add_class);
+                    
+                    // Toggle active class
+                    class_element[new_value==1 ? 'addClass' : 'removeClass']('active');
                 }
                 
                 // Toggle text if togglable text defined
@@ -114,7 +117,12 @@ window.jQuery(document).ready($=>{
                     $('.tutor-qna-single-question').eq(0).before(resp.data.html);
                 }
                 //on successful reply make the textarea empty
-                $("#sideabr-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
+                if ($("#sideabr-qna-tab-content .tutor-quesanswer-askquestion textarea")) {
+                    $("#sideabr-qna-tab-content .tutor-quesanswer-askquestion textarea").val('');
+                }
+                if ($(".tutor-quesanswer-askquestion textarea")) {
+                    $(".tutor-quesanswer-askquestion textarea").val('');
+                }
             },
             complete: () =>{
                 button.removeClass('tutor-updating-message');
