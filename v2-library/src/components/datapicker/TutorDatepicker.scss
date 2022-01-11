@@ -213,6 +213,9 @@
 			&::placeholder {
 				text-transform: uppercase;
 			}
+			&:hover {
+				cursor: pointer;
+			}
 		}
 
 		&__header {
@@ -391,7 +394,7 @@
 			&:before {
 				content: '';
 				position: absolute;
-				inset: 0 -50%;
+				inset: 1px -50%;
 				box-shadow: 0px 1px 0px 0px #d2dbf5, 0px -1px 0px 0px #d2dbf5;
 				background: #f6f8fd;
 				z-index: -1;

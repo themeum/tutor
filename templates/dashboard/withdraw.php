@@ -38,7 +38,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal tutor-color-text-primary">
-	<h4><?php echo __( 'Withdrawal', 'tutor' ); ?></h4>
+	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php echo __( 'Withdrawal', 'tutor' ); ?></div>
 
 	<div class="tutor-component-three-col-action">
 		<img src="<?php echo esc_url( $image_base ); ?>wallet.svg" />
@@ -67,12 +67,12 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 		?>
 	</div>
 
-	<div class="current-withdraw-account-wrap withdrawal-preference inline-image-text">
+	<div class="current-withdraw-account-wrap withdrawal-preference inline-image-text tutor-mt-20">
 		<!-- <img src="<?php echo esc_url( $image_base ); ?>info-icon-question.svg" /> -->
 		<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path fill-rule="evenodd" clip-rule="evenodd" d="M0.5 9.00005C0.5 4.31315 4.3131 0.5 9 0.5C13.6869 0.5 17.5 4.31315 17.5 9.00005C17.5 13.687 13.6869 17.5 9 17.5C4.3131 17.5 0.5 13.687 0.5 9.00005ZM2.04498 9.00036C2.04498 12.8351 5.16474 15.9549 8.99953 15.9549C12.8343 15.9549 15.9541 12.8351 15.9541 9.00036C15.9541 5.16562 12.8343 2.04576 8.99953 2.04576C5.16474 2.04576 2.04498 5.16562 2.04498 9.00036ZM8.99976 4.10617C8.43176 4.10617 7.96967 4.56857 7.96967 5.13694C7.96967 5.70479 8.43176 6.16678 8.99976 6.16678C9.56777 6.16678 10.0299 5.70479 10.0299 5.13694C10.0299 4.56857 9.56777 4.10617 8.99976 4.10617ZM8.22699 8.48481C8.22699 8.05806 8.57297 7.71208 8.99972 7.71208C9.42647 7.71208 9.77244 8.05806 9.77244 8.48481V13.1212C9.77244 13.5479 9.42647 13.8939 8.99972 13.8939C8.57297 13.8939 8.22699 13.5479 8.22699 13.1212V8.48481Z" fill="#212327"/>
 		</svg>
-		<span class="tutor-color-text-hints">
+		<span class="tutor-text-regular-caption tutor-color-text-hints">
 			<?php
 			$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
 			echo $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), $withdraw_method_name ) : '';
