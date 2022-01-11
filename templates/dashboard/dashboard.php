@@ -20,7 +20,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$complete_count     = $total_count - $incomplete_count;
 
 	if ( $is_instructor ) {
-		if ( $total_count && $incomplete_count && $incomplete_count <= $total_count ) {
+		if ( isset($total_count) && isset($incomplete_count) && $incomplete_count <= $total_count ) {
 			?>
 			<div class="profile-completion tutor-mb-40">
 				<div class="tutor-bs-row tutor-bs-align-items-center">
@@ -81,7 +81,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			<?php
 		}
 	} else {
-		if ( ! $profile_completion['_tutor_profile_photo'] ) {
+		if ( ! $profile_completion['_tutor_profile_photo']['is_set'] ) {
 			$alert_message = sprintf(
 				'<div class="tutor-alert tutor-primary">
 			<div class="tutor-alert-text">
