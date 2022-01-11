@@ -7,7 +7,7 @@
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
-	$is_instructor       = tutor_utils()->is_instructor();
+	$is_instructor      = tutor_utils()->is_instructor();
 	$total_count        = count( $profile_completion );
 	$incomplete_count   = count(
 		array_filter(
@@ -19,23 +19,23 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	);
 	$complete_count     = $total_count - $incomplete_count;
 
-	if($is_instructor) {
+	if ( $is_instructor ) {
 		if ( $total_count && $incomplete_count && $incomplete_count <= $total_count ) {
 			?>
 			<div class="profile-completion tutor-mb-40">
 				<div class="tutor-bs-row tutor-bs-align-items-center">
-					<div class="tutor-bs-col-lg-7 profile-completion-content <?php echo tutor_utils()->is_instructor() ? "tutor-profile-completion-content-admin": "" ?>">
+					<div class="tutor-bs-col-lg-7 profile-completion-content <?php echo tutor_utils()->is_instructor() ? 'tutor-profile-completion-content-admin' : ''; ?>">
 						<div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary">
 							<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
 						</div>
-						<div class="tutor-mt-12 tutor-bs-align-items-center" style="display: grid; grid-template-columns: repeat(<?php echo $total_count+1; ?>, 1fr); ">
+						<div class="tutor-mt-12 tutor-bs-align-items-center" style="display: grid; grid-template-columns: repeat(<?php echo $total_count + 1; ?>, 1fr); ">
 							<?php
 							for ( $i = 1; $i <= $total_count; $i++ ) {
 								$class = $i > $complete_count ?
 											'tutor-btn tutor-btn-sm tutor-btn-disable tutor-no-hover tutor-btn-full' :
 											'tutor-btn tutor-btn-sm tutor-btn-full'
 								?>
-									<li class="<?php echo "tutor-profile-complete-dash-{$total_count}" ?>  tutor-mr-6">
+									<li class="<?php echo "tutor-profile-complete-dash-{$total_count}"; ?>  tutor-mr-6">
 										<span class="<?php echo $class; ?>"></span>
 									</li>
 									<?php
@@ -67,7 +67,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 											<span class="ttr-cross-circle-outline-filled empty tutor-mr-5"></span>
 										<?php endif; ?>
 
-										<span class="<?php echo $is_set ? 'tutor-color-text-title' : 'tutor-color-text-hints' ?>">
+										<span class="<?php echo $is_set ? 'tutor-color-text-title' : 'tutor-color-text-hints'; ?>">
 										<?php echo $data['label_html']; ?>
 										</span>
 									</li>
@@ -81,8 +81,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			<?php
 		}
 	} else {
-		if(!$profile_completion->_tutor_profile_photo) {
-			$alert_message = sprintf('<div class="tutor-alert tutor-primary">
+		if ( ! $profile_completion['_tutor_profile_photo'] ) {
+			$alert_message = sprintf(
+				'<div class="tutor-alert tutor-primary">
 			<div class="tutor-alert-text">
 				<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
 				<span>
@@ -94,28 +95,31 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 					<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
 				</div>
 			</div>
-		</div>', $profile_completion["_tutor_profile_photo"]["label_html"], tutor_utils()->tutor_dashboard_url('settings'));
+		</div>',
+				$profile_completion['_tutor_profile_photo']['label_html'],
+				tutor_utils()->tutor_dashboard_url( 'settings' )
+			);
 
-		echo $alert_message;
-		// 	echo '<div class="tutor-alert tutor-warning">
-		// 	<div class="tutor-alert-text">
-		// 		<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
-		// 		<span>
-		// 		{$profile_completion["_tutor_profile_photo"]["label_html"]}
-		// 		</span>
-		// 	</div>
-		// 	<div class="tutor-alert-btns">
-		// 		<span class="tutor-alert-close tutor-icon-28 tutor-color-black-40 ttr-cross-filled"></span>
-		// 	</div>
-		// </div>';
+			echo $alert_message;
+			// echo '<div class="tutor-alert tutor-warning">
+			// <div class="tutor-alert-text">
+			// <span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+			// <span>
+			// {$profile_completion["_tutor_profile_photo"]["label_html"]}
+			// </span>
+			// </div>
+			// <div class="tutor-alert-btns">
+			// <span class="tutor-alert-close tutor-icon-28 tutor-color-black-40 ttr-cross-filled"></span>
+			// </div>
+			// </div>';
 
 		}
 	}
 }
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25 tutor-dashboard-title"><?php _e('Dashboard', 'tutor'); ?></div>
-<!-- <h3 class="tutor-dashboard-title"><?php //_e('Dashboard', 'tutor'); ?></h3> -->
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25 tutor-dashboard-title"><?php _e( 'Dashboard', 'tutor' ); ?></div>
+<!-- <h3 class="tutor-dashboard-title"><?php // _e('Dashboard', 'tutor'); ?></h3> -->
 
 <div class="tutor-dashboard-content-inner">
 
@@ -214,29 +218,30 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 /**
  * Active users in progress courses
  */
-$placeholder_img 		= tutor()->url . 'assets/images/placeholder.jpg';
-$courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_user_id() );
+$placeholder_img     = tutor()->url . 'assets/images/placeholder.png';
+$courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_user_id() );
 ?>
 
 
 <?php if ( ! tutor_utils()->is_instructor() ) : ?>
 	<div class="tutor-frontend-dashboard-course-porgress">
 		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
-			<?php esc_html_e( 'In Progress Course', 'tutor'); ?>
+			<?php esc_html_e( 'In Progress Course', 'tutor' ); ?>
 		</div>
-		<?php if ( $courses_in_progress->have_posts() ) : ?>
-			<?php while( $courses_in_progress->have_posts() ) :
+		<?php if ( is_array( $courses_in_progress ) && $courses_in_progress->have_posts() ) : ?>
+			<?php
+			while ( $courses_in_progress->have_posts() ) :
 				$courses_in_progress->the_post();
-				$tutor_course_img 	= get_tutor_course_thumbnail_src();
-				$course_rating		= tutor_utils()->get_course_rating( get_the_ID() );
-				$course_progress    = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
-				$completed_number 	= 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
-			?>
+				$tutor_course_img = get_tutor_course_thumbnail_src();
+				$course_rating    = tutor_utils()->get_course_rating( get_the_ID() );
+				$course_progress  = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
+				$completed_number = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
+				?>
 			<div class="tutor-frontend-dashboard-course-porgress-cards tutor-mb-20">
 				<div class="tutor-frontend-dashboard-course-porgress-card tutor-frontend-dashboard-course-porgress-card-horizontal tutor-course-listing-item tutor-course-listing-item-sm tutor-bs-justify-content-start">
 					<div class="tutor-course-listing-item-head tutor-bs-d-flex">
 						<a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink"> 
-							<div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>)"></div>
+							<div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty( esc_url( $tutor_course_img ) ) ? $placeholder_img : esc_url( $tutor_course_img ); ?>)"></div>
 						</a>
 					</div>
 					<div class="tutor-course-listing-item-body tutor-px-30 tutor-pt-26 tutor-pb-20">
@@ -272,7 +277,7 @@ $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_u
 						</div>
 						<div class="list-item-progress tutor-mt-30">
 							<div class="tutor-text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
-								<div class="progress-bar tutor-mr-14" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent']); ?>%"><span class="progress-value"></span></div>
+								<div class="progress-bar tutor-mr-14" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="progress-value"></span></div>
 								<span class="progress-percentage tutor-text-regular-caption tutor-color-text-hints">
 									<span class="tutor-text-medium-caption tutor-color-text-primary ">
 										<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
@@ -285,7 +290,7 @@ $courses_in_progress 	= tutor_utils()->get_active_courses_by_user( get_current_u
 			</div>				
 			<?php endwhile; ?>
 			<?php wp_reset_postdata(); ?>
-		<?php else: ?>
+		<?php else : ?>
 			<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 		<?php endif; ?>
 	</div>
