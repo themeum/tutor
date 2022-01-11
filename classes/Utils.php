@@ -2796,12 +2796,15 @@ class Utils
 	 *
 	 * @since v.1.0.0
 	 */
-	public function is_instructor($user_id = 0)
+	public function is_instructor($user_id = 0, $is_approved = false)
 	{
 		$user_id = $this->get_user_id($user_id);
-		$user_status = get_user_meta($user_id, '_tutor_instructor_status', true);
-		$is_approved_instructor = isset($user_status) ? $user_status === 'approved': false;
-		return $is_approved_instructor && get_user_meta($user_id, '_is_tutor_instructor', true);
+		if($is_approved) {
+			$user_status = get_user_meta($user_id, '_tutor_instructor_status', true);
+			$is_approved_instructor = 'approved' === $user_status ? true : false;
+			return $is_approved_instructor && get_user_meta($user_id, '_is_tutor_instructor', true);
+		}
+		return get_user_meta($user_id, '_is_tutor_instructor', true);
 	}
 
 	/**
@@ -8508,7 +8511,7 @@ class Utils
 		$page_title = $title ? $title : ''; ?>
 		<div class="td-empty-state tutor-p-30 tutor-text-center">
 			<img src="<?php echo esc_url(tutor()->url . 'assets/images/emptystate.svg'); ?>" alt="<?php esc_attr_e($page_title); ?>" width="85%" />
-			<div class="tutor-text-regular-h5  tutor-color-text-subsued tutor-mt-20 tutor-text-center">
+			<div class="tutor-text-regular-h6  tutor-color-text-subsued tutor-mt-20 tutor-text-center">
 				<?php echo sprintf(esc_html_x('%s', $page_title, 'tutor'), $page_title); ?>
 			</div>
 		</div>
