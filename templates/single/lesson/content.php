@@ -139,12 +139,20 @@ $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) &
 <?php
 
 tutor_lesson_video();
-
-$url_components = parse_url( $_SERVER['HTTP_REFERER'] );
+$referer_url        = $_SERVER['HTTP_REFERER'];
+$referer_comment_id = explode( '#', $_SERVER[ REQUEST_URI ] );
+$url_components     = parse_url( $referer_url );
 parse_str( $url_components['query'], $output );
 $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : $output['page_tab'];
 
 ?>
+<script>
+setTimeout(()=>{
+    let lesson_comment_id = window.location.hash.replace('#', '');
+    lesson_comment_id = 'lesson-'+lesson_comment_id;
+    document.getElementById(""+lesson_comment_id+"").scrollIntoView();
+},999)
+</script>
 <div class="tutor-course-spotlight-wrapper">
 	<div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
 		<div class="tab-header tutor-bs-d-flex justify-content-center">
