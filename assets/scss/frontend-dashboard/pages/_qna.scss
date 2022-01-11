@@ -1,4 +1,3 @@
-
 .tutor-dashboard-qna-vew-as {
 	&.tutor-form-toggle {
 		.tutor-form-toggle-control {
@@ -13,12 +12,12 @@
 		}
 		.tutor-form-toggle-control:before {
 			height: 16px;
-    		width: 16px;
+			width: 16px;
 		}
 	}
 	&.current-view-instructor {
 		.tutor-form-toggle-label.tutor-form-toggle-checked {
-			color : var(--tutor-primary-color) !important;
+			color: var(--tutor-primary-color) !important;
 		}
 		.tutor-form-toggle-label.tutor-form-toggle-unchecked {
 			color: var(--tutor-border-color) !important;
@@ -52,7 +51,7 @@
 
 	&.current-view-student {
 		.tutor-form-toggle-label.tutor-form-toggle-checked {
-			color : var(--tutor-primary-color) !important;
+			color: var(--tutor-primary-color) !important;
 		}
 		.tutor-form-toggle-label.tutor-form-toggle-unchecked {
 			color: var(--tutor-border-color) !important;
@@ -86,12 +85,11 @@
 
 .tutor-frontend-dashboard-qna-header {
 	display: grid;
-    grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr 1fr;
 	@include breakpoint-max(991) {
 		grid-template-columns: 1fr;
 	}
 	.tutor-qna-header {
-
 	}
 	.tutor-qna-toggle {
 		display: flex;
@@ -105,12 +103,11 @@
 		// 	margin-right: 12px;
 		// }
 		.tutor-qna-toggle-area {
-
 		}
 	}
 }
 table {
-	td[data-th="Question"] {
+	td[data-th='Question'] {
 		.tutor-input-feedback {
 		}
 		.tutor-qna-desc {
@@ -124,26 +121,22 @@ table {
 table.frontend-dashboard-qna-table-student {
 	@include breakpoint-min(1200) {
 		th:first-child {
-			span { 
+			span {
 				padding-left: 21px;
 			}
 		}
-		td[data-th="Question"] {
-			
+		td[data-th='Question'] {
 		}
-		td[data-th="Reply"] {
-
+		td[data-th='Reply'] {
 		}
-		td[data-th="Act∫ion"] {
-
+		td[data-th='Act∫ion'] {
 		}
 	}
 }
 table.frontend-dashboard-qna-table-instructor {
 	@include breakpoint-min(1200) {
-
 		th:first-child {
-			 * {
+			* {
 				margin-left: 32px;
 			}
 		}
@@ -152,7 +145,7 @@ table.frontend-dashboard-qna-table-instructor {
 			vertical-align: top;
 		}
 
-		td[data-th="Student"] {
+		td[data-th='Student'] {
 			vertical-align: top;
 			width: 30%;
 			i {
@@ -162,7 +155,7 @@ table.frontend-dashboard-qna-table-instructor {
 			}
 		}
 
-		td[data-th="Question"] {
+		td[data-th='Question'] {
 			width: 35%;
 			i {
 				left: -26px;
@@ -179,24 +172,24 @@ table.frontend-dashboard-qna-table-instructor {
 			}
 		}
 
-		td[data-th="Reply"] {
+		td[data-th='Reply'] {
 			width: 8%;
 		}
 
-		td[data-th="Reply"],
-		td[data-th="Status"] {
+		td[data-th='Reply'],
+		td[data-th='Status'] {
 			div {
 				padding-top: 10px;
 			}
 		}
 
-		td[data-th="Action"] {
+		td[data-th='Action'] {
 			div {
-				margin-top: 4px;
+				// margin-top: 4px;
 			}
 		}
 
-		td[data-th="Action"] {
+		td[data-th='Action'] {
 			width: 15%;
 		}
 	}
@@ -206,12 +199,12 @@ table.frontend-dashboard-qna-table-instructor {
 	.qna-back-button {
 		display: flex;
 		align-items: center;
-	}	
+	}
 	.tutor-qna-badges {
-		span[data-action="important"],
-		span[data-action="archived"],
-		span[data-action="read"],
-		span[data-tutor-modal-target="tutor_qna_delete_single_44"] {
+		span[data-action='important'],
+		span[data-action='archived'],
+		span[data-action='read'],
+		span[data-tutor-modal-target='tutor_qna_delete_single_44'] {
 		}
 		// i.active {
 		// 	color : $design-brand;
@@ -226,4 +219,8 @@ table.frontend-dashboard-qna-table-instructor {
 			}
 		}
 	}
+}
+
+.tutor-input-feedback .tutor-input-feedback-icon {
+	margin-top: 2px;
 }
