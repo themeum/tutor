@@ -2801,7 +2801,7 @@ class Utils
 		$user_id = $this->get_user_id($user_id);
 		if($is_approved) {
 			$user_status = get_user_meta($user_id, '_tutor_instructor_status', true);
-			$is_approved_instructor = $user_status === 'approved' ? true : false;
+			$is_approved_instructor = 'approved' === $user_status ? true : false;
 			return $is_approved_instructor && get_user_meta($user_id, '_is_tutor_instructor', true);
 		}
 		return get_user_meta($user_id, '_is_tutor_instructor', true);
