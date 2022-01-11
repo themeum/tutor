@@ -8506,7 +8506,7 @@ class Utils
 		$page_title = $title ? $title : ''; ?>
 		<div class="td-empty-state tutor-p-30 tutor-text-center">
 			<img src="<?php echo esc_url(tutor()->url . 'assets/images/emptystate.svg'); ?>" alt="<?php esc_attr_e($page_title); ?>" width="85%" />
-			<div class="tutor-text-regular-h5  tutor-color-text-subsued tutor-mt-20 tutor-text-center">
+			<div class="tutor-text-regular-h6  tutor-color-text-subsued tutor-mt-20 tutor-text-center">
 				<?php echo sprintf(esc_html_x('%s', $page_title, 'tutor'), $page_title); ?>
 			</div>
 		</div>

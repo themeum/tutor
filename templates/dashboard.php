@@ -255,7 +255,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 </div>
 
 <style>
-	.site-content {
+	.site-content,.tutor-frontend-dashboard {
 		overflow-y: hidden;
 	}
 </style>

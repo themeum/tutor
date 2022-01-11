@@ -5,7 +5,7 @@
 	 */
 
 	$page_tabs = array(
-		'enrolled-courses'                   => __( 'All Courses', 'tutor' ),
+		'enrolled-courses'                   => __( 'Enrolled Courses', 'tutor' ),
 		'enrolled-courses/active-courses'    => __( 'Active Courses', 'tutor' ),
 		'enrolled-courses/completed-courses' => __( 'Completed Courses', 'tutor' ),
 	);
@@ -24,7 +24,7 @@
 	$courses_list =  $courses_list_array[ $active_tab ];
 	?>
 
-<h3><?php esc_html_e( $page_tabs[ $active_tab ] ); ?></h3>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-15 tutor-capitalize-text"><?php esc_html_e( $page_tabs[ $active_tab ] ); ?></div>
 <div class="tutor-dashboard-content-inner enrolled-courses">
 	<div class="tutor-dashboard-inline-links">
 		<ul>
