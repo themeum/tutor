@@ -322,7 +322,7 @@ jQuery(document).ready(function ($) {
 			url: window.ajaxurl || _tutorobject.ajaxurl,
 			type: 'POST',
 			data: {
-				quiz_id: $that.data('quiz-id'),
+				attempt_id: $that.data('attempt-id'),
 				feedback: tinymce.activeEditor.getContent(),
 				action: 'tutor_instructor_feedback',
 			},
