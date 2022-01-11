@@ -404,7 +404,7 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
         $post_id           = get_the_ID();
         $size              = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
         $post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
-        $placeHolderUrl    = tutor()->url . 'assets/images/placeholder.jpg';
+        $placeHolderUrl    = tutor()->url . 'assets/images/placeholder.png';
         $thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url($post_thumbnail_id, $size) : $placeHolderUrl;
 
         if($url) {
@@ -428,7 +428,7 @@ if ( ! function_exists('get_tutor_course_thumbnail_src')) {
             $size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
             $src = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
         } else {
-            $src = tutor()->url . 'assets/images/placeholder.jpg';
+            $src = tutor()->url . 'assets/images/placeholder.png';
         }
 
         return $src;
@@ -1254,15 +1254,15 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         if ( $duration ) {
             $output = '';
             if ( $durationHours > 0 ) {
-                $output .= '<span class="tutor-text-medium-caption tutor-color-text-primary tutor-meta-level">' . ' ' . $durationHours . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . $hour_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value">' . $hour_format . '</span> ';
             }
 
             if ( $durationMinutes > 0 ) {
-                $output .= '<span class="tutor-text-medium-caption tutor-color-text-primary tutor-meta-level">' . ' ' . $durationMinutes . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . $minute_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value">' . $minute_format . '</span>';
             }
 
             if ( !$durationHours && !$durationMinutes && $durationSeconds > 0 ) {
-                $output .= '<span class="tutor-text-medium-caption tutor-color-text-primary tutor-meta-level">' . ' ' . $durationSeconds . '</span> <span class="tutor-text-medium-caption tutor-color-text-subsued tutor-meta-value">' . $second_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value">' . $second_format . '</span>';
             }
 
             return $output;
@@ -1464,5 +1464,22 @@ if ( ! function_exists('tutor_load_template_from_custom_path')) {
             }
         }
         do_action('tutor_load_template_from_custom_path_after', $template, $data);
+    }
+}
+
+/**
+ * Load enrolled course progress template
+ *
+ * This template will be used on only dashboard enrolled course page
+ *
+ * @since v2.0.0
+ */
+if ( ! function_exists( 'tutor_enrolled_course_progress' ) ) {
+    function tutor_enrolled_course_progress() {
+        global $wp_query;
+        $query_vars     = $wp_query->query_vars;
+        if ( isset( $query_vars[ 'tutor_dashboard_page' ] ) && 'enrolled-courses' === $query_vars['tutor_dashboard_page'] ) {
+            tutor_load_template_from_custom_path( tutor()->path . 'templates/loop/enrolled-course-progress.php', '', false );
+        } 
     }
 }

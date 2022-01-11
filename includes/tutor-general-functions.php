@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'tutor_placeholder_img_src' ) ) {
 	function tutor_placeholder_img_src() {
-		$src = tutor()->url . 'assets/images/placeholder.jpg';
+		$src = tutor()->url . 'assets/images/placeholder.png';
 		return apply_filters( 'tutor_placeholder_img_src', $src );
 	}
 }

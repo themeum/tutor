@@ -9212,6 +9212,7 @@ class Utils {
 		);
 	}
 
+
 	/**
 	 * Separation of all menu items for providing ease of usage
 	 *
@@ -9221,38 +9222,60 @@ class Utils {
 	 */
 	public function default_menus(): array {
 		return array(
-			'index'            => array(
-				'title' => __( 'Dashboard', 'tutor' ),
-				'icon'  => 'ttr-dashboard-filled',
-			),
-			'my-profile'       => array(
-				'title' => __( 'My Profile', 'tutor' ),
-				'icon'  => 'ttr-man-user-filled',
-			),
-			'enrolled-courses' => array(
-				'title' => __( 'Enrolled  Courses', 'tutor' ),
-				'icon'  => 'ttr-college-graduation-filled',
-			),
-			'wishlist'         => array(
-				'title' => __( 'Wishlist', 'tutor' ),
-				'icon'  => 'ttr-fav-full-filled',
-			),
-			'reviews'          => array(
-				'title' => __( 'Reviews', 'tutor' ),
-				'icon'  => 'ttr-star-full-filled',
-			),
-			'my-quiz-attempts' => array(
-				'title' => __( 'My Quiz Attempts', 'tutor' ),
-				'icon'  => 'ttr-quiz-attempt-filled',
-			),
-			'purchase_history' => array(
-				'title' => __( 'Order History', 'tutor' ),
-				'icon'  => 'ttr-cart-filled',
-			),
-			'question-answer'  => array(
-				'title' => __( 'Question & Answer', 'tutor' ),
-				'icon'  => 'ttr-question-filled',
-			),
+			'index'             => array('title' => __('Dashboard', 'tutor'), 'icon' => 'ttr-dashboard-filled'),
+			'my-profile'        => array('title' => __('My Profile', 'tutor'), 'icon' => 'ttr-man-user-filled'),
+			'enrolled-courses'  => array('title' => __('Enrolled  Courses', 'tutor'), 'icon' => 'ttr-college-graduation-filled'),
+			'wishlist'          => array('title' => __('Wishlist', 'tutor'), 'icon' => 'ttr-fav-full-filled'),
+			'reviews'           => array('title' => __('Reviews', 'tutor'), 'icon' => 'ttr-star-full-filled'),
+			'my-quiz-attempts'  => array('title' => __('My Quiz Attempts', 'tutor'), 'icon' => 'ttr-quiz-attempt-filled'),
+			'purchase_history'  => array('title' => __('Order History', 'tutor'), 'icon' => 'ttr-cart-filled'),
+			'question-answer'   => array('title' => __('Question & Answer', 'tutor'), 'icon' => 'ttr-question-filled'),
 		);
 	}
+
+	/**
+	 * Render text editor any where
+	 *
+	 * @param string $content | default content to show on editor
+	 * @param string $div_id | div id where to render
+	 * @param array $args | args to use
+	 *
+	 * @since v2.0.0
+	 */
+	public function render_text_editor( string $content = '', string $div_id, array $args = [] ) {
+		$args	= count( $args ) ? $args : $this->text_editor_config();
+		wp_editor( wp_kses_post( $content ), 'tutor-instructor-feedback-editor', $args );
+	}
+
+	/**
+	 * Default config for tutor text editor
+	 *
+	 * Modify default param from here and pass to render_text_editor() method
+	 *
+	 * @return array | default config
+	 */
+	public function text_editor_config() {
+		$args    = array(
+			'textarea_name'    => '',
+			'tinymce'          => array(
+				'toolbar1' => 'bold,italic,underline,forecolor,fontselect,fontsizeselect,formatselect,alignleft,aligncenter,alignright,bullist,numlist,link,unlink,removeformat',
+				'toolbar2' => '',
+				'toolbar3' => '',
+			),
+			'media_buttons'    => false,
+			'quicktags'        => false,
+			'elementpath'      => false,
+			'wpautop'          => false,
+			'statusbar'        => false,
+			'textarea_rows'    => 3,
+			'drag_drop_upload' => false,
+			'default_editor'   => 'TinyMCE',
+			'editor_css'        => "<style>#wp-tutor-instructor-feedback-editor-editor-container {
+				display: none;
+			}</style>"
+		);
+		return $args;
+	}
+
+
 }

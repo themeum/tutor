@@ -3,9 +3,10 @@
     
     $page_key = 'qna-table';
     $table_columns = include __DIR__ . '/contexts.php';
+    $view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
 ?>
 
-<table class="tutor-ui-table tutor-ui-table-responsive qna-list-table">
+<table class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-ui-table tutor-ui-table-responsive qna-list-table">
     <thead>
         <tr>
             <?php 
@@ -61,10 +62,15 @@
                                                         <?php $is_important ? _e('This conversation is important', 'tutor') : _e('Mark this conversation as important', 'tutor'); ?>
                                                     </span>
                                                 </div>
-                                                <img class="tutor-ml-10" src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
-                                                <span class="tutor-text-medium-body  tutor-color-text-primary">
-                                                    <?php echo $qna->display_name; ?>
-                                                </span>
+                                                <img src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
+                                                <div class="">
+                                                    <div class="tutor-text-medium-body  tutor-color-text-primary">
+                                                        <?php echo $qna->display_name; ?>
+                                                    </div>
+                                                    <div class="tutor-text-medium-small tutor-color-text-hints" style="margin-top : -2px">
+                                                        3 min ago
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
                                         <?php
@@ -77,13 +83,14 @@
                                             <a href="<?php echo add_query_arg( array( 'question_id'=>$qna->comment_ID ), tutor()->current_url ); ?>">
                                                 <div class="tutor-input-feedback tutor-has-icon tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
                                                     <i class="ttr-bullet-point-filled tutor-input-feedback-icon"></i>
-                                                    <div>
-                                                        <span class="tutor-qna-title">
+                                                    <div class="tutor-qna-desc">
+                                                        <div class="tutor-qna-content tutor-text-bold-body tutor-color-text-primary">
                                                             <?php echo $content;?>
-                                                        </span>
-                                                        <small class="tutor-color-text-subsued">
-                                                            <?php _e('Course'); ?>: <?php echo $qna->post_title; ?>
-                                                        </small>
+                                                        </div>
+                                                        <div class="">
+                                                            <span class="tutor-text-medium-small tutor-color-text-subsued"><?php _e('Course'); ?>:</span> 
+                                                            <sapn class="tutor-text-regular-small tutor-color-text-subsued"><?php echo $qna->post_title; ?></span>
+                                                        </div>
                                                     </div>            
                                                 </div>
                                             </a>
@@ -94,9 +101,9 @@
                                     case 'reply' :
                                         ?>
                                         <td data-th="<?php echo $column; ?>">
-                                            <span class="text-medium-caption tutor-color-text-primary">
+                                            <div class="text-medium-caption tutor-color-text-primary">
                                                 <?php echo $qna->answer_count; ?>
-                                            </span>
+                                            </div>
                                         </td>
                                         <?php
                                         break;
