@@ -118,3 +118,14 @@
 		}
 	}
 }
+
+.tutor-given-review-action {
+	> span {
+		&:hover {
+			color: $design-brand;
+		}
+		> span {
+			line-height: 1;
+		}
+	}
+}
