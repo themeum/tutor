@@ -2,7 +2,9 @@
 
 ### 1.9.13 - January 10, 2022
 
-* Update: Security Update
+* Update: User Input field sanitization is made stronger to ensure SQL Injection
+* Update: HTML output of user provided input is more secure now
+* Update: XSS vulnerability protection is made stronger than before
 
 
 ### 1.9.12 - December 14, 2021
