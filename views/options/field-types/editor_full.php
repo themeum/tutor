@@ -20,7 +20,7 @@ $saved_data = $this->get( $field_key, array() );
 			$content_demo = '<p style="text-align:center;font-weight:500;color:#41454F;padding-top:30px;">More than 40,000+ eLearning creators just like you <br> who’ve used Tutor LMS</p>
 			<p style="text-align:center;color:#757C8E;">Themeum © 2013 - 2021 All Rights Reserved.</p>
 			<p style="text-align:center;color:#41454F;padding-bottom:30px;"><a style="text-decoration: none;color: inherit;" href="#">Privacy & Policy</a> <span>⋅</span> <a style="text-decoration: none;color: inherit;" href="#">Terms & Conditions</a> <span>⋅</span> <a style="text-decoration: none;color: inherit;" href="#">Subscribe</a> <span>⋅</span> <a style="text-decoration: none;color: inherit;" href="#">Unsubscribe</a></p>';
-			echo $editor_id    = 'editor_' . $field_id;
+			$editor_id    = 'editor_' . $field_id;
 
 			$content = empty( $saved_data ) ? $content_demo : wp_unslash( $saved_data );
 			$pattern = array( '/\<[\/]{0,1}div[^\>]*\>/i', '/<p>(?:\s|&nbsp;)*?<\/p>/i' );

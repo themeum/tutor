@@ -8989,6 +8989,11 @@ class Utils
 			'wpautop'      	 	=> false,
 			'statusbar'    	 	=> false,
 			'editor_height' 	=> 240,
+			'editor_css'		=> '<style>
+				#wp-tutor-global-text-editor-wrap div.mce-toolbar-grp {
+					background-color: #fff;
+				}
+			</style>'
 		);
 		return $args;
 	}
