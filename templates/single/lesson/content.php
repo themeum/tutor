@@ -148,11 +148,24 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : $output
 ?>
 <script>
 setTimeout(()=>{
-    let lesson_comment_id = window.location.hash.replace('#', '');
-    lesson_comment_id = 'lesson-'+lesson_comment_id;
-    document.getElementById(""+lesson_comment_id+"").scrollIntoView();
+	let lesson_comment_id = window.location.hash.replace('#', '');
+	lesson_comment_id = 'lesson-'+lesson_comment_id;
+	let lesson_comment_elem = document.getElementById(""+lesson_comment_id+"");
+	lesson_comment_elem.scrollIntoView();
+	lesson_comment_elem.querySelector('.tutor-actual-comment').classList.add('viewing');
+	setTimeout(()=>{
+		lesson_comment_elem.querySelector('.tutor-actual-comment').classList.remove('viewing');
+	},2999)
 },999)
 </script>
+<style>
+.tutor-actual-comment.viewing{
+	box-shadow: 0 0 10px #cdcfd5;
+	animation: blinkComment 1s infinite;
+}
+@keyframes blinkComment { 50% { box-shadow:0 0 0px #ffffff; }  }
+
+</style>
 <div class="tutor-course-spotlight-wrapper">
 	<div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
 		<div class="tab-header tutor-bs-d-flex justify-content-center">
