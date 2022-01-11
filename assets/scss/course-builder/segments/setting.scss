@@ -1,5 +1,23 @@
 /* Course settings module */
 .tutor-frontend-course-builder-form-field {
+    .tutor-btn {
+        font-family: 'Inter', sans-serif;
+        padding: 7px 20px;
+    }
+    .tutor-modal-body {
+        align-items: unset;
+    }
+    .tutor-course-available-instructors {
+        gap: 20px;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .added-instructor-item {
+        margin: 0 !important;
+        min-width: min-content;
+        max-width: 50% !important;
+        flex-basis: calc(50% - 20px) !important;
+    }
     .tutor-form-toggle-control {
         margin: 0;
     }

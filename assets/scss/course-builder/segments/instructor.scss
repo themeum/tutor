@@ -27,19 +27,19 @@ $inst_gap: 30px;
                 box-sizing: border-box;
         margin: 0px #{$inst_gap} #{$inst_gap} 0;
 
-        @media (min-width: 1300px) {
-            -ms-flex: 0 0 calc(33.333% - #{$inst_gap});
-            -webkit-box-flex: 0;
-                    flex: 0 0 calc(33.333% - #{$inst_gap});
-            max-width: calc(33.333% - #{$inst_gap});
-        }
+        // @media (min-width: 1300px) {
+        //     -ms-flex: 0 0 calc(33.333% - #{$inst_gap});
+        //     -webkit-box-flex: 0;
+        //             flex: 0 0 calc(33.333% - #{$inst_gap});
+        //     max-width: calc(33.333% - #{$inst_gap});
+        // }
         
-        @media (max-width: 546px) {
-            -ms-flex: 0 0 100%;
-            -webkit-box-flex: 0;
-                    flex: 0 0 100%;
-            max-width: 100%;
-        }
+        // @media (max-width: 546px) {
+        //     -ms-flex: 0 0 100%;
+        //     -webkit-box-flex: 0;
+        //             flex: 0 0 100%;
+        //     max-width: 100%;
+        // }
         
         .instructor-control {
             position: absolute;
