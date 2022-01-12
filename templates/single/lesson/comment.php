@@ -1,7 +1,6 @@
 <?php
     // The comment Query
     $comments = get_comments( array(
-        'status' => 'approve',
         'post_id' => get_the_ID(),
         'parent' => 0
     ) );
