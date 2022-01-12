@@ -21,19 +21,19 @@
         'posts_per_page' => -1,
     ));
     
-	if ( !count($query_topics)){
-		echo '<span class="color-text-warning tutor-bs-d-block tutor-mb-20">'.
-                __('Add a topic to build your course', 'tutor')
-            .'</span>';
-	}
+	// if ( !count($query_topics)){
+	// 	echo '<span class="color-text-warning tutor-bs-d-block tutor-mb-20">'.
+    //             __('Add a topic to build your course', 'tutor')
+    //         .'</span>';
+	// }
 
 	foreach ($query_topics as $topic){
 		?>
         <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
             <div class="tutor-topics-top">
-                <h4 class="tutor-topic-title">
+                <div class="tutor-topic-title">
                     <i class="ttr-humnurger-filled tutor-icon-24 course-move-handle"></i>
-                    <span class="topic-inner-title"><?php echo stripslashes($topic->post_title); ?></span>
+                    <span class="topic-inner-title tutor-text-bold-body tutor-color-text-primary"><?php echo stripslashes($topic->post_title); ?></span>
                     <span class="tutor-topic-inline-edit-btn tutor-font-size-24">
                         <i class="color-text-hints ttr-edit-filled tutor-icon-24" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>
                     </span>
@@ -43,7 +43,7 @@
                     <span class="expand-collapse-wrap tutor-font-size-24">
                         <i class="color-text-brand ttr-angle-down-filled tutor-icon-26"></i>
                     </span>
-                </h4>
+                </div>
                 <?php 
                     tutor_load_template_from_custom_path(tutor()->path.'/views/modal/topic-form.php', array(
                         'modal_title'   => __('Update Topic', 'tutor'),
