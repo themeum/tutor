@@ -53,7 +53,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 			<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
 				<span class="ttr-question-filled"></span>
 				<span class="text-medium-caption tutor-color-text-title">
-					<?php esc_html_e( 'Question & Answer sdf', 'tutor' ); ?>
+					<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
 				</span>
 			</div>
 			<?php } ?>
