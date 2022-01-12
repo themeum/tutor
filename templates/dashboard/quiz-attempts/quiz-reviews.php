@@ -41,7 +41,7 @@
 	 */
 	tutor_load_template_from_custom_path(
 		tutor()->path . 'views/quiz/instructor-feedback.php',
-		array( 'quiz_id' => $quiz_id )
+		array( 'attempt_data' => $attempt_data )
 	);
 	?>
 </div>

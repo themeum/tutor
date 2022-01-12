@@ -45,24 +45,5 @@ $user    = get_userdata( $user_id );
 			tutor()->path . 'views/quiz/instructor-feedback.php',
 			array( 'attempt_data' => $attempt_data )
 		);
-
-		// $attempt_details 	= \TUTOR\Quiz::attempt_details( 102 );
-		// $feedback 			= wp_kses_post( $_POST['feedback'] );
-		// $attempt_info 		= isset( $attempt_details->attempt_info ) ? unserialize( $attempt_details->attempt_info ) : false;
-		// if ( $attempt_info ) {
-		// 	$attempt_info = unserialize( $attempt_details->attempt_info );
-		// 	//$attempt_info->instructor_feedback = $feedback;
-		// 	echo "<pre>";
-		// 	print_r( $attempt_info );
-		// 	exit;
-		// 	do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_details );
-		// 	$attempt_details->attempt_info = serialize( $attempt_details->attempt_info );
-		// 	$update = \TUTOR\Quiz::update_attempt_info( $attempt_details->attempt_id, $attempt_details->attempt_info );
-		// 	if ( $update ) {
-		// 		var_dump( $update );
-		// 	} else {
-		// 		var_dump( $update );
-		// 	}
-		// }
 		?>
 </div>
