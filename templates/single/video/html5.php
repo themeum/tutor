@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) )
 
 global $previous_id;
 global $next_id;
+$course_content_id = get_the_ID();
 $content_id = tutor_utils()->get_post_id($course_content_id);
 $contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
 $previous_id = $contents->previous_id;
