@@ -13,7 +13,8 @@ table.my-quiz-attempts {
 	tr {
 		th {
 			white-space: unset;
-			padding: 16px 20px;
+			padding-top: 16px;
+			padding-bottom: 16px;
 			&:first-child {
 				width: 30%;
 			}

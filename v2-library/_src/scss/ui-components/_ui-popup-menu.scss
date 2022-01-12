@@ -138,14 +138,21 @@
 		position: relative;
 		display: inline-block;
 
-		.tutor-popover-toggle-btn .btn-icon {
-			transition: 250ms;
+		.tutor-popover-toggle-btn {
+			transition: unset;
+			.btn-icon {
+				transition: 250ms;
+			}
 		}
 
 		&.is-active {
-			.tutor-popover-toggle-btn .btn-icon {
-				transform: rotate(-180deg);
+			.tutor-popover-toggle-btn {
+				border-color: $color-brand;
 				color: $color-brand;
+				.btn-icon {
+					transform: rotate(-180deg);
+					color: $color-brand;
+				}
 			}
 		}
 	}
@@ -188,6 +195,8 @@
 		&:last-child {
 			border-top: 1px solid $stroke-light-30;
 			margin-top: 20px;
+			padding-top: 10px;
+			padding-bottom: 6px;
 		}
 	}
 
