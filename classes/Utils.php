@@ -5739,6 +5739,7 @@ class Utils {
 							ON enrolled.post_parent = course.ID
 			WHERE 	enrolled.post_type = %s
 					AND enrolled.post_status = %s
+					AND course.post_type = %s
 					{$author_query}
 			GROUP BY course_id
 			ORDER BY total_enrolled DESC
@@ -5746,6 +5747,7 @@ class Utils {
 			",
 				'tutor_enrolled',
 				'completed',
+				'courses',
 				$limit
 			)
 		);
