@@ -42,10 +42,11 @@ if ( $best_watch_time > 0 ) {
 }
 
 $is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open();
+$is_enrolled = tutor_utils()->is_enrolled( $course_id );
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
-<?php if ( ! $_is_preview ) : ?>
+<?php if ( $is_enrolled ) : ?>
 	<div class="tutor-single-page-top-bar d-flex justify-content-between">
 		<div class="tutor-topbar-left-item d-flex"> 
 			<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
