@@ -25,7 +25,7 @@
 				<?php _e( 'File Support', 'tutor' ); ?>: <strong class="text-bold-body"><?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?></strong>
 			</p>
 
-			<button class="tutor-btn tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">
+			<button type="button" class="tutor-btn tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">
 				<span class="tutor-btn-icon ttr-image-filled"></span>
 				<span><?php _e( 'Upload Image', 'tutor' ); ?></span>
 			</button>

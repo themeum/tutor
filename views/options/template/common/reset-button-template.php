@@ -13,7 +13,7 @@ $section_slug  = isset( $section['slug'] ) && ! empty( $section['slug'] ) ? esc_
 ?>
 <div class="tutor-option-main-title">
 	<h2><?php echo esc_attr( $section_label ); ?></h2>
-	<button data-tutor-modal-target="tutor-modal-bulk-action"
+	<button type="button" data-tutor-modal-target="tutor-modal-bulk-action"
 			class="modal-reset-open"
 			data-reset="<?php echo esc_attr( $section_slug ); ?>"
 			data-heading="<?php echo esc_html( 'Reset to Default Settings?' ); ?>"
