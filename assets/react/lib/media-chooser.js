@@ -6,6 +6,20 @@ window.jQuery(document).ready(function ($) {
      * upload thumbnail
      * @since v.1.5.6
      */
+
+    let enterClicked = false;
+    document.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            enterClicked = true;
+        }
+    });
+
+
+    if (enterClicked !== false) {
+        return false;
+    }
+
+
     $(document).on('click', '.tutor-thumbnail-uploader .tutor-thumbnail-upload-button', function (event) {
         event.preventDefault();
 
@@ -29,12 +43,11 @@ window.jQuery(document).ready(function ($) {
             wrapper.find('img').attr('src', attachment.url);
             wrapper.find('input[type="hidden"].tutor-tumbnail-id-input').val(attachment.id);
             wrapper.find('.delete-btn').show();
-            
+
             $('#save_tutor_option').prop('disabled', false);
         });
         frame.open();
     });
-
     /**
      * Thumbnail Delete
      * @since v.1.5.6

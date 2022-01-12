@@ -25,13 +25,13 @@ const modalResetOpen = () => {
 	})
 }
 
-const titleReseter = document.querySelectorAll('.tutor-option-single-item');
+/* const titleReseter = document.querySelectorAll('.tutor-option-single-item');
 titleReseter.forEach((item) => {
 	let h4 = item.querySelector('h4');
 	!h4 ? 0 : h4.onclick = (e) => {
-		//item.parentElement.querySelector('.modal-reset-open').click()
+		item.parentElement.querySelector('.modal-reset-open').click()
 	}
-})
+}) */
 
 const resetConfirmation = () => {
 	const resetDefaultBtn = document.querySelectorAll('.reset_to_default');
