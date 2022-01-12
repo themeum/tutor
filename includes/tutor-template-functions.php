@@ -176,7 +176,7 @@ if ( ! function_exists( 'tutor_course_loop_start' ) ) {
 		$output = apply_filters( 'tutor_course_loop_start', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -189,7 +189,7 @@ if ( ! function_exists( 'tutor_course_loop_end' ) ) {
 
 		$output = apply_filters( 'tutor_course_loop_end', ob_get_clean() );
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -203,7 +203,7 @@ if ( ! function_exists( 'tutor_course_archive_pagination' ) ) {
 
 		$output = apply_filters( 'tutor_course_archive_pagination', ob_get_clean() );
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -215,7 +215,7 @@ function tutor_course_loop_before_content() {
 	tutor_load_template( 'loop.loop-before-content' );
 
 	$output = apply_filters( 'tutor_course_loop_before_content', ob_get_clean() );
-	echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo $output;
 }
 
 function tutor_course_loop_after_content() {
@@ -223,7 +223,7 @@ function tutor_course_loop_after_content() {
 	tutor_load_template( 'loop.loop-after-content' );
 
 	$output = apply_filters( 'tutor_course_loop_after_content', ob_get_clean() );
-	echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo $output;
 }
 
 if ( ! function_exists( 'tutor_course_loop_title' ) ) {
@@ -232,7 +232,7 @@ if ( ! function_exists( 'tutor_course_loop_title' ) ) {
 		tutor_load_template( 'loop.title' );
 		$output = apply_filters( 'tutor_course_loop_title', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -243,7 +243,7 @@ if ( ! function_exists( 'tutor_course_loop_header' ) ) {
 		tutor_load_template( 'loop.header' );
 		$output = apply_filters( 'tutor_course_loop_header', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -253,7 +253,7 @@ if ( ! function_exists( 'tutor_course_loop_footer' ) ) {
 		tutor_load_template( 'loop.footer' );
 		$output = apply_filters( 'tutor_course_loop_footer', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -266,7 +266,7 @@ if ( ! function_exists( 'tutor_course_loop_start_content_wrap' ) ) {
 		tutor_load_template( 'loop.start_content_wrap' );
 		$output = apply_filters( 'tutor_course_loop_start_content_wrap', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -276,7 +276,7 @@ if ( ! function_exists( 'tutor_course_loop_end_content_wrap' ) ) {
 		tutor_load_template( 'loop.end_content_wrap' );
 		$output = apply_filters( 'tutor_course_loop_end_content_wrap', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -287,7 +287,7 @@ if ( ! function_exists( 'tutor_course_loop_thumbnail' ) ) {
 		$output = apply_filters( 'tutor_course_loop_thumbnail', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		} else {
 			return $output;
 		}
@@ -377,7 +377,7 @@ if ( ! function_exists( 'tutor_course_archive_filter_bar' ) ) {
 		tutor_load_template( 'global.course-archive-filter-bar' );
 		$output = apply_filters( 'tutor_course_archive_filter_bar', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -436,7 +436,7 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
 			$html = sprintf( '<img alt="%s" src="' . $placeHolderUrl . '" />', __( 'Placeholder', 'tutor' ) );
 		}
 
-		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $html;
 	}
 }
 /**
@@ -464,7 +464,7 @@ if ( ! function_exists( 'tutor_course_loop_meta' ) ) {
 		tutor_load_template( 'loop.meta' );
 		$output = apply_filters( 'tutor_course_loop_meta', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -480,7 +480,7 @@ if ( ! function_exists( 'tutor_course_loop_author' ) ) {
 		tutor_load_template( 'loop.course-author' );
 		$output = apply_filters( 'tutor_course_loop_author', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -528,7 +528,7 @@ if ( ! function_exists( 'tutor_course_loop_rating' ) ) {
 		tutor_load_template( 'loop.rating' );
 		$output = apply_filters( 'tutor_course_loop_rating', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -552,7 +552,7 @@ if ( ! function_exists( 'tutor_course_loop_add_to_cart' ) ) {
 		$output = apply_filters( 'tutor_course_loop_add_to_cart_link', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -564,7 +564,7 @@ if ( ! function_exists( 'tutor_course_price' ) ) {
 		tutor_load_template( 'single.course.wc-price-html' );
 		$output = apply_filters( 'tutor_course_price', ob_get_clean() );
 
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 }
 
@@ -667,7 +667,7 @@ if ( ! function_exists( 'tutor_course_benefits_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/benefits_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -690,7 +690,7 @@ if ( ! function_exists( 'tutor_course_topics' ) ) {
 		wp_reset_postdata();
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -739,7 +739,7 @@ if ( ! function_exists( 'tutor_course_requirements_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/requirements_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -788,7 +788,7 @@ if ( ! function_exists( 'tutor_course_target_audience_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/audience_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -819,7 +819,7 @@ if ( ! function_exists( 'tutor_course_material_includes_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/material_includes', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -840,7 +840,7 @@ if ( ! function_exists( 'tutor_course_instructors_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/instructors_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -853,7 +853,7 @@ if ( ! function_exists( 'tutor_course_target_reviews_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/reviews_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -866,7 +866,7 @@ if ( ! function_exists( 'tutor_course_target_review_form_html' ) ) {
 			$output = apply_filters( 'tutor_review_disabled_text', '' );
 
 			if ( $echo ) {
-				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $output;
 			}
 			return $output;
 		}
@@ -876,7 +876,7 @@ if ( ! function_exists( 'tutor_course_target_review_form_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/reviews_form', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -898,7 +898,7 @@ if ( ! function_exists( 'tutor_course_content' ) ) {
 		$output = apply_filters( 'tutor_course/single/content', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1044,7 +1044,7 @@ if ( ! function_exists( 'tutor_course_enroll_box' ) ) {
 		}
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1079,7 +1079,7 @@ function tutor_single_course_add_to_cart( $echo = true ) {
 	}
 
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 
 	return $output;
@@ -1118,7 +1118,7 @@ if ( ! function_exists( 'tutor_course_enrolled_nav' ) ) {
 		$output = apply_filters( 'tutor_course/single/enrolled/nav', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -1131,7 +1131,7 @@ if ( ! function_exists( 'tutor_course_video' ) ) {
 		$output = apply_filters( 'tutor_course/single/video', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -1144,7 +1144,7 @@ if ( ! function_exists( 'tutor_lesson_video' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/video', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -1167,7 +1167,7 @@ if ( ! function_exists( 'get_tutor_posts_attachments' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/attachments', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}
@@ -1189,7 +1189,7 @@ if ( ! function_exists( 'tutor_lessons_sidebar' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/lesson_sidebar', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1211,7 +1211,7 @@ if ( ! function_exists( 'tutor_lesson_content' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/content', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1225,7 +1225,7 @@ if ( ! function_exists( 'tutor_lesson_mark_complete_html' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/complete_form', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1239,7 +1239,7 @@ if ( ! function_exists( 'tutor_course_mark_complete_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/complete_form', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1264,7 +1264,7 @@ if ( ! function_exists( 'tutor_course_completing_progress_bar' ) ) {
 		$output = apply_filters( 'tutor_course/single/completing-progress-bar', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1277,7 +1277,7 @@ function tutor_course_question_and_answer( $echo = true ) {
 	$output = apply_filters( 'tutor_course/single/question_and_answer', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 
 	return $output;
@@ -1290,7 +1290,7 @@ function tutor_course_announcements( $echo = true ) {
 	$output = apply_filters( 'tutor_course/single/announcements', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 
 	return $output;
@@ -1302,7 +1302,7 @@ function tutor_single_quiz_top( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/top', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 	return $output;
 }
@@ -1331,7 +1331,7 @@ function tutor_single_quiz_content( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/content', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 	return $output;
 }
@@ -1343,7 +1343,7 @@ function tutor_single_quiz_no_course_belongs( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/no_course_belongs', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 	return $output;
 }
@@ -1355,7 +1355,7 @@ function single_quiz_contents( $echo = true ) {
 	$output = apply_filters( 'tutor_single_quiz/single_quiz_contents', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 	return $output;
 }
@@ -1454,7 +1454,7 @@ if ( ! function_exists( 'tutor_course_tags_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/tags_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1476,7 +1476,7 @@ if ( ! function_exists( 'tutor_lesson_sidebar_question_and_answer' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/sidebar_question_and_answer', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1529,7 +1529,7 @@ if ( ! function_exists( 'tutor_assignment_content' ) ) {
 		$output = apply_filters( 'tutor_assignment/single/content', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;
@@ -1588,7 +1588,7 @@ function tutor_next_previous_pagination( $course_content_id = 0, $echo = true ) 
 	$output = apply_filters( 'tutor/single/next_previous_pagination', ob_get_clean() );
 
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 
 	return $output;
@@ -1608,7 +1608,7 @@ function tutor_archive_course_add_to_cart( $echo = true ) {
 
 	$output = '';
 	if ( $echo ) {
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $output;
 	}
 	return $output;
 }
@@ -1633,7 +1633,7 @@ if ( ! function_exists( 'tutor_login_form_popup' ) ) {
 		$output = apply_filters( 'tutor_login_form_popup_html', $output );
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		return $output;
 	}

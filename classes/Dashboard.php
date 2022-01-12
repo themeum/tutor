@@ -39,7 +39,7 @@ class Dashboard {
 			/**
 			 * Get course which currently in edit, or insert new course
 			 */
-			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
+			$course_ID = (int) tutor_utils()->array_get( 'course_ID', $_GET );
 
 			if ( $course_ID ) {
 				$post_id = $course_ID;
@@ -84,14 +84,8 @@ class Dashboard {
 	 * @since v.1.6.6
 	 */
 	public function profile_completion_notification() {
-		$output                    = '';
-		$enable_profile_completion = tutils()->get_option( 'enable_profile_completion' );
-		if ( $enable_profile_completion ) {
-			ob_start();
+		if ( tutils()->get_option( 'enable_profile_completion' ) ) {
 			tutor_load_template( 'dashboard.notifications.profile-completion' );
-			$output = apply_filters( 'tutor_profile_completion_notification_html', ob_get_clean() );
 		}
-
-		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

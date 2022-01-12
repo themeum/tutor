@@ -148,7 +148,7 @@ class Instructors_List extends \Tutor_List_Table {
 
 	function process_bulk_action() {
 		if ( 'approve' === $this->current_action() ) {
-			$instructor_id = (int) sanitize_text_field( $_GET['instructor'] );
+			$instructor_id = (int) $_GET['instructor'];
 
 			do_action( 'tutor_before_approved_instructor', $instructor_id );
 
@@ -163,7 +163,7 @@ class Instructors_List extends \Tutor_List_Table {
 		}
 
 		if ( 'blocked' === $this->current_action() ) {
-			$instructor_id = (int) sanitize_text_field( $_GET['instructor'] );
+			$instructor_id = (int) $_GET['instructor'];
 
 			do_action( 'tutor_before_blocked_instructor', $instructor_id );
 			update_user_meta( $instructor_id, '_tutor_instructor_status', 'blocked' );

@@ -43,7 +43,7 @@ $rating     = $isLoggedIn ? tutor_utils()->get_course_rating_by_user() : '';
 			ob_start();
 			tutor_load_template( 'single.course.login' );
 			$output = apply_filters( 'tutor_course/global/login', ob_get_clean() );
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 		?>
 	</div>

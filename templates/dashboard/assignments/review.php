@@ -11,8 +11,8 @@
  * @version 1.4.3
  */
 
-$assignment_id           = (int) sanitize_text_field( tutor_utils()->array_get( 'assignment', $_GET ) );
-$assignment_submitted_id = (int) sanitize_text_field( tutor_utils()->array_get( 'view_assignment', $_GET ) );
+$assignment_id           = (int) tutor_utils()->array_get( 'assignment', $_GET );
+$assignment_submitted_id = (int) tutor_utils()->array_get( 'view_assignment', $_GET );
 $submitted_url           = tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments/submitted' );
 
 if ( ! $assignment_submitted_id ) {

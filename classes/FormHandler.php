@@ -101,7 +101,7 @@ class FormHandler {
 		tutils()->checking_nonce();
 
 		$reset_key        = sanitize_text_field( tutils()->array_get( 'reset_key', $_POST ) );
-		$user_id          = (int) sanitize_text_field( tutils()->array_get( 'user_id', $_POST ) );
+		$user_id          = (int) tutils()->array_get( 'user_id', $_POST );
 		$password         = sanitize_text_field( tutils()->array_get( 'password', $_POST ) );
 		$confirm_password = sanitize_text_field( tutils()->array_get( 'confirm_password', $_POST ) );
 

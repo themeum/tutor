@@ -422,14 +422,14 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 				<h3><i class="tutor-icon-down"></i> <span><?php echo $title; ?></span></h3>
 			</div>
 			<div class="tutor-course-builder-section-content">
-				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo $content; ?>
 			</div>
 		</div>
 		<?php
 		$html = ob_get_clean();
 
 		if ( $echo ) {
-			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $html;
 		} else {
 			return $html;
 		}
@@ -581,7 +581,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 		$html = '<div class="tutor-alert tutor-alert-' . $type . '">' . $msg . '</div>';
 
 		if ( $echo ) {
-			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $html;
 		}
 		return $html;
 	}
@@ -686,7 +686,7 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 		}
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		} else {
 			return $output;
 		}
