@@ -37,6 +37,8 @@ function tutor_assignment_convert_seconds( $seconds ) {
 	$dt2 = new DateTime( "@$seconds" );
 	return $dt1->diff( $dt2 )->format( '%a Days, %h Hours' );
 }
+$next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
+
 ?>
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
@@ -227,24 +229,39 @@ function tutor_assignment_convert_seconds( $seconds ) {
 		$assignment_attachments = maybe_unserialize( get_post_meta( get_the_ID(), '_tutor_assignment_attachments', true ) );
 		if ( tutor_utils()->count( $assignment_attachments ) ) {
 			?>
-			<div class="tutor-assignment-attachments">
-				<h2><?php _e( 'Attachments', 'tutor' ); ?></h2>
-				<?php
-				foreach ( $assignment_attachments as $attachment_id ) {
-					if ( $attachment_id ) {
-						$attachment_name = get_post_meta( $attachment_id, '_wp_attached_file', true );
-						$attachment_name = substr( $attachment_name, strrpos( $attachment_name, '/' ) + 1 );
-
-						?>
-						<p class="attachment-file-name">
-							<a href="<?php echo wp_get_attachment_url( $attachment_id ); ?>" target="_blank">
-								<i class="tutor-icon-attach"></i> <?php echo $attachment_name; ?>
-							</a>
-						</p>
+			<div class="tutor-assignment-attachments tutor-pt-40">
+				<span class="tutor-text-medium-h6 tutor-color-text-primary">
+					<?php esc_html_e( 'Attachments', 'tutor' ); ?>
+				</span>
+				<div class="tutor-bs-container tutor-pt-15">
+					<div class="tutor-bs-row tutor-bs-gy-3">
+					<?php if ( is_array( $assignment_attachments ) && count( $assignment_attachments ) ) : ?>
 						<?php
-					}
-				}
-				?>
+						foreach ( $assignment_attachments as $attachment_id ) :
+							$attachment_name = get_post_meta( $attachment_id, '_wp_attached_file', true );
+							$attachment_name = substr( $attachment_name, strrpos( $attachment_name, '/' ) + 1 );
+							$file_size 		 = tutor_utils()->get_attachment_file_size( $attachment_id );
+							?>
+							<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-10">
+								<div class="tutor-icard-content">
+									<div class="text-regular-body color-text-title">
+									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank">
+										<?php echo esc_html( $attachment_name ); ?>
+									</a>
+									</div>
+									<div class="text-regular-small">
+										<?php esc_html_e( 'Size: ', 'tutor' );?>
+										<?php echo esc_html( $file_size ? $file_size . 'KB' : '' ); ?>
+									</div>
+								</div>
+								<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
+									<span class="ttr-download-line"></span>
+								</div>
+							</div>					
+						<?php endforeach; ?>
+					<?php endif; ?>
+					</div>
+				</div>
 			</div>
 			<?php
 		}
@@ -342,13 +359,13 @@ function tutor_assignment_convert_seconds( $seconds ) {
 					</div>
 				</div>
 			</div>
-
+			<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
 			<div class="tutor-assignment-footer d-flex justify-content-end tutor-pt-30 tutor-pt-sm-45">
-				<button class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-10">
-					<?php _e( 'Sorry I don’t Understand', 'tutor' ); ?>
-				</button>
+				<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-10">
+					<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
+				</a>
 			</div>
-
+			<?php endif; ?>
 			<?php
 		} else {
 
@@ -580,12 +597,15 @@ function tutor_assignment_convert_seconds( $seconds ) {
 				}
 				?>
 >
-								<?php _e( 'Start Assignment Submit', 'tutor' ); ?>
+								<?php esc_html_e( 'Start Assignment Submit', 'tutor' ); ?>
 							</button>
 						</form>
-						<button class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-10">
-							<?php _e( 'Sorry I don’t Understand', 'tutor' ); ?>
-						</button>
+
+						<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
+							<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-10">
+							<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
+						</a>
+						<?php endif; ?>
 					</div>
 				</div>
 				<?php
