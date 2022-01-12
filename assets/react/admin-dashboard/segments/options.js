@@ -128,13 +128,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	};
 
-	const checkNumberFieldsOnSubmit = (inputFields) => {
-		inputFields.forEach((numberField) => {
-			// console.log(numberField);
-		})
-	}
-
-
+	// const checkNumberFieldsOnSubmit = (inputFields) => {
+	// 	inputFields.forEach((numberField) => {
+	// 		// console.log(numberField);
+	// 	})
+	// }
 
 	const inputEmailFields = document.querySelectorAll('[type="email"]');
 	const inputNumberFields = document.querySelectorAll('[type="number"]');
@@ -150,12 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		var button = $('#save_tutor_option');
 		var $form = $(this);
 		var data = $form.serializeObject();
-		if (typeof inputNumberFields !== 'undefined') {
-			checkNumberFieldsOnSubmit(inputNumberFields);
-		}
-		if (typeof inputEmailFields !== 'undefined') {
-			checkEmailFieldsOnSubmit(inputEmailFields);
-		}
 
 		if (true === formSubmit) {
 			if (!e.detail || e.detail == 1) {
@@ -259,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						if (matchedText) {
 							wrapped_item = item_text.replace(
 								searchKeyRegex,
-								`<span style='color: #212327; font-weight:500'>${matchedText}</span>`,
+								`<span style='color: #212327; font-weight:500'>${matchedText}</span>`
 							);
 
 							output += view_item(wrapped_item, section_slug, section_label, block_label, field_key);

@@ -338,6 +338,9 @@
 .ttr-copy-filled:before {
 	content: '\e960';
 }
+.ttr-copy-text-filled:before {
+	content: '\e961';
+}
 .ttr-copy-text-filled .path1:before {
 	content: '\e961';
 	color: rgb(26, 27, 30);
