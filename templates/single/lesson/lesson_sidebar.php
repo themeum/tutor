@@ -32,12 +32,13 @@ if ( $post->post_type === 'tutor_quiz' ) {
 } else {
 	$course_id = tutor_utils()->get_course_id_by( 'lesson', $post->ID );
 }
-$user_id 					  = get_current_user_id();
+$user_id                      = get_current_user_id();
 $disable_qa_for_this_course   = get_post_meta( $course_id, '_tutor_enable_qa', true ) != 'yes';
-$enable_q_and_a_on_course     = tutor_utils()->get_option( 'enable_q_and_a_on_course' ) && $disable_qa_for_this_course != 'yes';
+$enable_q_and_a_on_course     = tutor_utils()->get_option( 'enable_q_and_a_on_course' ) && $disable_qa_for_this_course;
 $is_enrolled                  = tutor_utils()->is_enrolled( $course_id );
 $is_instructor_of_this_course = tutor_utils()->is_instructor_of_this_course( $user_id, $course_id );
 $is_user_admin                = current_user_can( 'administrator' );
+
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/lesson_sidebar' ); ?>
