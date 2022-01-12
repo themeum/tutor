@@ -9002,4 +9002,16 @@ class Utils
 		);
 		return $args;
 	}
+
+	/**
+	 * Get the file size in kb
+	 *
+	 * @param int $attachment_id, attachment id to get size
+	 *
+	 * @return int attachment file size in kb
+	 */
+	public function get_attachment_file_size( int $attachment_id ): int {
+		$size = size_format( filesize( get_attached_file( $attachment_id ) ), 2 );
+		return (int) $size;
+	}
 }
