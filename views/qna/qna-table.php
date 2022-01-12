@@ -86,7 +86,11 @@ $view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
                                             <i class="ttr-bullet-point-filled tutor-input-feedback-icon"></i>
                                             <div class="tutor-qna-desc">
                                                 <div class="tutor-qna-content tutor-text-bold-body tutor-color-text-primary">
-                                                    <?php echo $content; ?>
+                                                    <?php
+                                                        $limit = 60;
+                                                        $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content; 
+                                                        echo $content;
+                                                    ?>
                                                 </div>
                                                 <div class="">
                                                     <span class="tutor-text-medium-small tutor-color-text-subsued"><?php _e('Course'); ?>:</span>
