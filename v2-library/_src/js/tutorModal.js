@@ -11,6 +11,7 @@ document.addEventListener('click', (e) => {
 	const overlay = 'tutor-modal-overlay';
 
 	if (enterPressed !== false) {
+		enterPressed = false;
 		return false;
 	}
 

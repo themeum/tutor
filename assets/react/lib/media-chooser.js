@@ -16,6 +16,7 @@ window.jQuery(document).ready(function ($) {
 
 
     if (enterClicked !== false) {
+        enterClicked = false;
         return false;
     }
 
