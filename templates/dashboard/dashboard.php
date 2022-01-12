@@ -320,13 +320,13 @@ if ( count( $instructor_course ) ) {
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
-								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-20"></span>
+								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled tutor-icon-20"></span>
+								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
 					</tr>
