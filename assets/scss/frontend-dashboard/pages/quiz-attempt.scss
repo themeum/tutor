@@ -1,4 +1,15 @@
 table.my-quiz-attempts {
+	thead {
+		th {
+			@include breakpoint-min(desktop-lg) {
+				&:last-child {
+					> * {
+						display: none;
+					}
+				}
+			}
+		}
+	}
 	tr {
 		th {
 			white-space: unset;

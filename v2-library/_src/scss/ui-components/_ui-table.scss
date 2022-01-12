@@ -531,7 +531,8 @@ table.tutor-ui-table {
 			text-align: center;
 			// width: 100%;
 			img {
-				max-width: 100%;
+				max-width: 80%;
+				margin: 0 auto;
 			}
 		}
 	}
@@ -543,6 +544,15 @@ table.tutor-ui-table {
 		}
 	}
 } // end Table th/td Content Styles
+
+.tutor-empty-state {
+	&.td-empty-state {
+		img {
+			max-width: 80%;
+			margin: 0 auto;
+		}
+	}
+}
 
 // Table Custom Styles
 table.tutor-ui-table {
