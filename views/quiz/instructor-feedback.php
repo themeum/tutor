@@ -11,8 +11,9 @@ $attempt_data = $data['attempt_data'];
 $attempt_info = isset( $attempt_data->attempt_info ) ? unserialize( $attempt_data->attempt_info ) : false;
 $content      = '';
 if ( $attempt_info ) {
-	$content = isset( $attempt_info->instructor_feedback ) ? $attempt_info->instructor_feedback : '';
+	$content = isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
 }
+
 ?>
 <div class="wrap">
 	<div class="quiz-attempt-answers-wrap">

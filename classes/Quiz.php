@@ -106,16 +106,22 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 		$attempt_details 	= self::attempt_details( $_POST['attempt_id'] );
 		$feedback 			= wp_kses_post( $_POST['feedback'] );
-		$attempt_info 		= isset( $attempt_details->attempt_info ) ? unserialize( $attempt_details->attempt_info ) : false;
+		$attempt_info 		= isset( $attempt_details->attempt_info ) ? $attempt_details->attempt_info : false;
 		if ( $attempt_info ) {
-			$attempt_info->instructor_feedback = $feedback;
-			do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_details );
-			$attempt_details->attempt_info = serialize( $attempt_details->attempt_info );
-			$update = self::update_attempt_info( $attempt_details->attempt_id, $attempt_details->attempt_info );
-			if ( $update ) {
-				wp_send_json_success();
+			$unserialized = unserialize( $attempt_details->attempt_info );
+			if ( is_array( $unserialized ) ) {
+				$unserialized['instructor_feedback'] = $feedback;
+
+				do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_details );
+
+				$update = self::update_attempt_info( $attempt_details->attempt_id, serialize( $unserialized ) );
+				if ( $update ) {
+					wp_send_json_success();
+				} else {
+					wp_send_json_error();
+				}
 			} else {
-				wp_send_json_error();
+				wp_send_json_error( __( 'Invalid quiz info' ) );
 			}
 		}
 		wp_send_json_error();
