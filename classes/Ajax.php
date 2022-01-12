@@ -198,7 +198,7 @@ class Ajax {
 
 		global $wpdb;
 
-		$course_id      = (int) sanitize_text_field( $_POST['tutor_course_id'] );
+		$course_id      = (int) $_POST['tutor_course_id'];
 		$question_title = sanitize_text_field( $_POST['question_title'] );
 		$question       = wp_kses_post( $_POST['question'] );
 
@@ -259,7 +259,7 @@ class Ajax {
 			wp_send_json_error( __( 'Please write answer', 'tutor' ) );
 		}
 
-		$question_id = (int) sanitize_text_field( $_POST['question_id'] );
+		$question_id = (int) $_POST['question_id'];
 		$question    = tutor_utils()->get_qa_question( $question_id );
 
 		$user_id = get_current_user_id();
@@ -299,7 +299,7 @@ class Ajax {
 	public function tutor_course_add_to_wishlist() {
 		tutils()->checking_nonce();
 
-		$course_id = (int) sanitize_text_field( $_POST['course_id'] );
+		$course_id = (int) $_POST['course_id'];
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error( array( 'redirect_to' => wp_login_url( wp_get_referer() ) ) );
 		}
@@ -385,7 +385,7 @@ class Ajax {
 	public function tutor_load_edit_review_modal() {
 		tutor_utils()->checking_nonce();
 
-		$review_id = (int) sanitize_text_field( tutils()->array_get( 'review_id', $_POST ) );
+		$review_id = (int) tutils()->array_get( 'review_id', $_POST );
 		$rating    = tutils()->get_rating_by_id( $review_id );
 
 		if ( ! tutils()->has_enrolled_content_access( 'review', $review_id ) ) {
@@ -405,7 +405,7 @@ class Ajax {
 
 		tutor_utils()->checking_nonce();
 
-		$review_id = (int) sanitize_text_field( tutils()->array_get( 'review_id', $_POST ) );
+		$review_id = (int) tutils()->array_get( 'review_id', $_POST );
 		$rating    = sanitize_text_field( tutor_utils()->avalue_dot( 'rating', $_POST ) );
 		$review    = wp_kses_post( tutor_utils()->avalue_dot( 'review', $_POST ) );
 
@@ -452,9 +452,9 @@ class Ajax {
 
 		try {
 			$creds = array(
-				'user_login'    => trim( wp_unslash( $username ) ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				'user_password' => $password, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-				'remember'      => isset( $_POST['rememberme'] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				'user_login'    => trim( wp_unslash( $username ) ), 
+				'user_password' => $password, 
+				'remember'      => isset( $_POST['rememberme'] ), 
 			);
 
 			$validation_error = new \WP_Error();

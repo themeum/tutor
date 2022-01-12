@@ -209,7 +209,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $content;
 		} else {
 			return $content;
 		}
@@ -222,7 +222,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $content;
 		} else {
 			return $content;
 		}
@@ -234,7 +234,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $content;
 		} else {
 			return $content;
 		}
@@ -246,7 +246,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $content;
 		} else {
 			return $content;
 		}
@@ -258,7 +258,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $content;
 		} else {
 			return $content;
 		}
@@ -474,7 +474,7 @@ class Course extends Tutor_Base {
 	public function tutor_update_topic() {
 		tutils()->checking_nonce();
 
-		$topic_id      = (int) sanitize_text_field( $_POST['topic_id'] );
+		$topic_id      = (int) $_POST['topic_id'];
 		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
 		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
 
@@ -548,7 +548,7 @@ class Course extends Tutor_Base {
 
 		global $wpdb;
 
-		$topic_id = (int) sanitize_text_field( $_GET['topic_id'] );
+		$topic_id = (int) $_GET['topic_id'];
 		$wpdb->update(
 			$wpdb->posts,
 			array( 'post_parent' => 0 ),
@@ -567,7 +567,7 @@ class Course extends Tutor_Base {
 	public function tutor_delete_announcement() {
 		tutor_utils()->checking_nonce( 'get' );
 
-		$announcement_id = (int) sanitize_text_field( $_GET['topic_id'] );
+		$announcement_id = (int) $_GET['topic_id'];
 
 		wp_delete_post( $announcement_id );
 		wp_safe_redirect( wp_get_referer() );
@@ -587,7 +587,7 @@ class Course extends Tutor_Base {
 			exit( __( 'Please Sign In first', 'tutor' ) );
 		}
 
-		$course_id = (int) sanitize_text_field( $_POST['tutor_course_id'] );
+		$course_id = (int) $_POST['tutor_course_id'];
 		$user_id   = get_current_user_id();
 
 		/**
@@ -635,7 +635,7 @@ class Course extends Tutor_Base {
 			die( __( 'Please Sign-In', 'tutor' ) );
 		}
 
-		$course_id = (int) sanitize_text_field( $_POST['course_id'] );
+		$course_id = (int) $_POST['course_id'];
 
 		do_action( 'tutor_course_complete_before', $course_id );
 		/**
@@ -718,7 +718,7 @@ class Course extends Tutor_Base {
 
 		global $wpdb;
 
-		$course_id    = (int) sanitize_text_field( $_POST['course_id'] );
+		$course_id    = (int) $_POST['course_id'];
 		$search_terms = sanitize_text_field( tutor_utils()->avalue_dot( 'search_terms', tutor_sanitize_data($_POST) ) );
 
 		if ( ! tutils()->can_user_manage( 'course', $course_id ) ) {
@@ -771,7 +771,7 @@ class Course extends Tutor_Base {
 	public function tutor_add_instructors_to_course() {
 		tutils()->checking_nonce();
 
-		$course_id      = (int) sanitize_text_field( $_POST['course_id'] );
+		$course_id      = (int) $_POST['course_id'];
 		$instructor_ids = tutor_utils()->avalue_dot( 'tutor_instructor_ids', tutor_sanitize_data($_POST) );
 
 		if ( ! tutils()->can_user_manage( 'course', $course_id ) ) {
@@ -808,8 +808,8 @@ class Course extends Tutor_Base {
 
 		global $wpdb;
 
-		$instructor_id = (int) sanitize_text_field( $_POST['instructor_id'] );
-		$course_id     = (int) sanitize_text_field( $_POST['course_id'] );
+		$instructor_id = (int) $_POST['instructor_id'];
+		$course_id     = (int) $_POST['course_id'];
 
 		if ( ! tutils()->can_user_manage( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );

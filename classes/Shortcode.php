@@ -162,7 +162,7 @@ class Shortcode {
 
 	private function prepare_instructor_list($current_page, $atts, $cat_ids = array(), $keyword = '') {
 
-		$limit = (int)sanitize_text_field(tutils()->array_get('count', $atts, 9));
+		$limit = (int) tutils()->array_get('count', $atts, 9);
 		$page = $current_page - 1;
 
 		$instructors = tutor_utils()->get_instructors($limit*$page, $limit, $keyword, '', '', '', 'approved', $cat_ids);
@@ -243,7 +243,7 @@ class Shortcode {
 		tutor_utils()->checking_nonce();
 
 		$attributes = (array)tutils()->array_get('attributes', tutor_sanitize_data($_POST), array());
-		$current_page = (int)sanitize_text_field(tutils()->array_get('current_page', $attributes, 1));
+		$current_page = (int) tutils()->array_get('current_page', $attributes, 1);
 		$keyword = (string)sanitize_text_field(tutils()->array_get('keyword', $_POST, ''));
 
 		$category = (array)tutils()->array_get('category', tutor_sanitize_data($_POST), array());

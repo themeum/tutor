@@ -111,7 +111,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 										'</b>'.
 									'</span>';
 							} elseif ( $rejected_on || $instructor_status !== 'blocked' ) {
-								echo $become_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								echo $become_button;
 							}
 							?>
 						</div>

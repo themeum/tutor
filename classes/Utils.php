@@ -1628,7 +1628,7 @@ class Utils {
 		}
 
 		if ( $echo ) {
-			echo $tutor_lesson_type_icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $tutor_lesson_type_icon;
 		}
 
 		return $tutor_lesson_type_icon;
@@ -3263,7 +3263,7 @@ class Utils {
 		$output .= '</div>';
 
 		if ( $echo ) {
-			echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $output;
 		}
 
 		return $output;

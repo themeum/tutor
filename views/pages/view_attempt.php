@@ -1,5 +1,5 @@
 <?php
-$attempt_id = (int) sanitize_text_field( $_GET['attempt_id'] );
+$attempt_id = (int) $_GET['attempt_id'];
 $attempt    = tutor_utils()->get_attempt( $attempt_id );
 
 if ( ! $attempt ) {
@@ -104,7 +104,7 @@ $user    = get_userdata( $user_id );
 							$output .= __( $attempt->earned_marks . ' out of ' . $attempt->total_marks, 'tutor' );
 							$output .= '<span>, ' . $marks_earned_text . ' (' . $earned_percentage . '%)</span>';
 						}
-						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						echo $output;
 						?>
 					</h4>
 				</div>

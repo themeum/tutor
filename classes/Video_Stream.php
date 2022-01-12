@@ -121,7 +121,7 @@ class Video_Stream {
 			}
 			// $data = fread($this->stream, $bytesToRead);
 			$data = @stream_get_contents( $this->stream, $bytesToRead, $i );
-			echo $data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $data;
 			flush();
 			$i += $bytesToRead;
 		}

@@ -38,7 +38,7 @@ class Quiz_Attempts_List extends \Tutor_List_Table {
 	function column_student( $item ) {
 		$actions = array();
 
-		$actions['answer'] = sprintf( '<a href="?page=%s&sub_page=%s&attempt_id=%s">' . __( 'Review', 'tutor' ) . '</a>', $_REQUEST['page'], 'view_attempt', $item->attempt_id );
+		$actions['answer'] = sprintf( '<a href="?page=%s&sub_page=%s&attempt_id=%s">' . __( 'Review', 'tutor' ) . '</a>', sanitize_text_field( $_REQUEST['page'] ), 'view_attempt', $item->attempt_id );
 		// $actions['delete'] = sprintf('<a href="?page=%s&action=%s&attempt_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->attempt_id);
 
 		$quiz_title  = '<p><strong>' . $item->display_name . '</strong></p>';

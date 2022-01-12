@@ -250,7 +250,7 @@ class Instructor {
 			wp_send_json_error( array('message' =>__('Access Denied', 'tutor')) );
 		}
 
-		$instructor_id = (int) sanitize_text_field(tutils()->array_get('instructor_id', $_POST));
+		$instructor_id = (int) tutils()->array_get('instructor_id', $_POST);
 		$action = sanitize_text_field(tutils()->array_get('action_name', $_POST));
 
 		if( 'approve' === $action ) {

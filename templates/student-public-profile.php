@@ -81,9 +81,9 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 
 				<div class="profile-name">
 					<div class="profile-rating-media content-for-mobile">
-						<?php echo $rating_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php echo $rating_content; ?>
 						<div class="tutor-social-container content-for-desktop">
-							<?php echo $social_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php echo $social_media; ?>
 						</div>
 					</div>
 
@@ -94,12 +94,12 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 						$student_count = tutor_utils()->get_total_students_by_instructor( $user_id );
 						?>
 							<span>
-								<span><?php echo $course_count; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+								<span><?php echo $course_count; ?></span>
 							<?php $course_count > 1 ? _e( 'Courses', 'tutor' ) : _e( 'Course', 'tutor' ); ?>
 							</span>
 							<span><span>•</span></span>
 							<span>
-								<span><?php echo $student_count; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+								<span><?php echo $student_count; ?></span>
 							<?php $student_count > 1 ? _e( 'Students', 'tutor' ) : _e( 'Student', 'tutor' ); ?>
 							</span>
 							<?php
@@ -111,7 +111,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 						$complete_count = $complete_count ? count( $complete_count ) : 0;
 						?>
 							<span>
-								<span><?php echo $enrol_count; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+								<span><?php echo $enrol_count; ?></span>
 							<?php $enrol_count > 1 ? _e( 'Courses Enrolled', 'tutor' ) : _e( 'Course Enrolled', 'tutor' ); ?>
 							</span>
 							<span><span>•</span></span>
@@ -125,11 +125,11 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 				</div>
 
 				<div class="tutor-social-container content-for-mobile">
-					<?php echo $social_media; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo $social_media; ?>
 				</div>
 
 				<div class="profile-rating-media content-for-desktop">
-					<?php echo $rating_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo $rating_content; ?>
 					<div class="tutor-social-container content-for-desktop">
 						<?php
 						foreach ( $tutor_user_social_icons as $key => $social_icon ) {

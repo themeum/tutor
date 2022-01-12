@@ -75,7 +75,7 @@ foreach ( $categories as $category ) {
 			</div>
 		</div>
 		<div class="filter-result-container">
-			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php echo $content; ?>
 		</div>
 	</div>
 </div>

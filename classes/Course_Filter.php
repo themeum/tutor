@@ -20,7 +20,7 @@ class Course_Filter {
 		$_post = tutor_sanitize_data( $_POST );
 
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
-		$courses_per_page = (int) sanitize_text_field( tutils()->array_get( 'course_per_page', $_post, $default_per_page ) );
+		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
 		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? sanitize_text_field( $_post['page'] ) : 1;
 
 		$args = array(
@@ -104,7 +104,7 @@ class Course_Filter {
 		}
 
 		query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
-		$col_per_row                    = (int) sanitize_text_field( tutils()->array_get( 'column_per_row', $_post, 3 ) );
+		$col_per_row                    = (int) tutils()->array_get( 'column_per_row', $_post, 3 );
 		$GLOBALS['tutor_shortcode_arg'] = array(
 			'column_per_row'  => $col_per_row <= 0 ? 3 : $col_per_row,
 			'course_per_page' => $courses_per_page,
@@ -145,8 +145,8 @@ class Course_Filter {
 			?>
 				<div class="tutor-course-filter-nested-terms">
 					<label>
-						<input type="checkbox" name="tutor-course-filter-<?php echo esc_attr( $taxonomy ); ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id == $term_id ? 'checked' : ''; ?>/>&nbsp;
-						<?php echo $term->name; ?>
+						<input type="checkbox" name="tutor-course-filter-<?php echo esc_attr( $taxonomy ); ?>" value="<?php echo esc_attr( $term->term_id ); ?>" <?php echo $term->term_id == $term_id ? 'checked' : ''; ?>/>&nbsp;
+						<?php echo sanitize_text_field( $term->name ); ?>
 					</label>
 
 					<?php isset( $term->children ) ? $this->render_terms_hierarchically( $term->children, $taxonomy ) : 0; ?>

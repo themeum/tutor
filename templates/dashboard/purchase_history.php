@@ -47,7 +47,7 @@ if ( tutils()->count( $orders ) ) {
 						}
 						?>
 					</td>
-					<td><?php echo $price; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></td>
+					<td><?php echo $price; ?></td>
 					<td><?php echo $status; ?></td>
 
 					<td>

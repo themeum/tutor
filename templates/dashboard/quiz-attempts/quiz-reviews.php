@@ -14,7 +14,7 @@
 ?>
 
 <?php
-$attempt_id = (int) sanitize_text_field( $_GET['attempt_id'] );
+$attempt_id = (int) $_GET['attempt_id'];
 $attempt    = tutor_utils()->get_attempt( $attempt_id );
 
 if ( ! $attempt ) {
