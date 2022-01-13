@@ -9242,20 +9242,6 @@ class Utils {
 	}
 
 	/**
-	 * Render text editor any where
-	 *
-	 * @param string $content | default content to show on editor
-	 * @param string $div_id | div id where to render
-	 * @param array $args | args to use
-	 *
-	 * @since v2.0.0
-	 */
-	public function render_text_editor( string $content = '', string $div_id, array $args = [] ) {
-		$args	= count( $args ) ? $args : $this->text_editor_config();
-		wp_editor( wp_kses_post( $content ), 'tutor-instructor-feedback-editor', $args );
-	}
-
-	/**
 	 * Default config for tutor text editor
 	 *
 	 * Modify default param from here and pass to render_text_editor() method
@@ -9264,26 +9250,37 @@ class Utils {
 	 */
 	public function text_editor_config() {
 		$args    = array(
-			'textarea_name'    => '',
-			'tinymce'          => array(
-				'toolbar1' => 'bold,italic,underline,forecolor,fontselect,fontsizeselect,formatselect,alignleft,aligncenter,alignright,bullist,numlist,link,unlink,removeformat',
+			'textarea_name' 	=> "tutor-global-text-editor",
+			'tinymce'       	=> array(
+				'toolbar1' 		=> 'bold,italic,underline,forecolor,fontselect,fontsizeselect,formatselect,alignleft,aligncenter,alignright,bullist,numlist,link,unlink,removeformat',
 				'toolbar2' => '',
 				'toolbar3' => '',
 			),
-			'media_buttons'    => false,
-			'quicktags'        => false,
-			'elementpath'      => false,
-			'wpautop'          => false,
-			'statusbar'        => false,
-			'textarea_rows'    => 3,
-			'drag_drop_upload' => false,
-			'default_editor'   => 'TinyMCE',
-			'editor_css'        => "<style>#wp-tutor-instructor-feedback-editor-editor-container {
-				display: none;
-			}</style>"
+			'media_buttons' 	=> false,
+			'drag_drop_upload'	=> false,
+			'quicktags'     	=> false,
+			'elementpath'   	=> false,
+			'wpautop'      	 	=> false,
+			'statusbar'    	 	=> false,
+			'editor_height' 	=> 240,
+			'editor_css'		=> '<style>
+				#wp-tutor-global-text-editor-wrap div.mce-toolbar-grp {
+					background-color: #fff;
+				}
+			</style>'
 		);
 		return $args;
 	}
 
-
+	/**
+	 * Get the file size in kb
+	 *
+	 * @param int $attachment_id, attachment id to get size
+	 *
+	 * @return int attachment file size in kb
+	 */
+	public function get_attachment_file_size( int $attachment_id ): int {
+		$size = size_format( filesize( get_attached_file( $attachment_id ) ), 2 );
+		return (int) $size;
+	}
 }
