@@ -53,10 +53,10 @@ do_action('tutor_course/single/before/wrap');
             <div class="tutor-course-details-page-main-right">
                 <div class="tutor-single-course-sidebar">
                     <?php do_action('tutor_course/single/before/sidebar'); ?>
-                    <?php //tutor_load_template('single.course.course-entry-box'); ?>
-                    <?php //tutor_course_requirements_html(); ?>
-                    <?php //tutor_course_tags_html(); ?>
-                    <?php //tutor_course_target_audience_html(); ?>
+                    <?php tutor_load_template('single.course.course-entry-box'); ?>
+                    <?php tutor_course_requirements_html(); ?>
+                    <?php tutor_course_tags_html(); ?>
+                    <?php tutor_course_target_audience_html(); ?>
                     <?php do_action('tutor_course/single/after/sidebar'); ?>
                 </div>
             </div>
