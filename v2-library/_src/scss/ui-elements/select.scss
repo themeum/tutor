@@ -66,6 +66,18 @@ select.tutor-form-select {
 		border-color: var(--tutor-primary);
 		box-shadow: unset;
 	}
+
+	// Foucs variation
+	&.tutor-form-select-wp {
+		&:focus {
+			border-color: $brand-wordpress !important;
+		}
+	}
+	&.tutor-form-select-fd {
+		&:focus {
+			border-color: $design-brand !important;
+		}
+	}
 }
 
 .tutor-form-select-with-btn {
