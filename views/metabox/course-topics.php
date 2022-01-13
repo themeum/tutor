@@ -107,13 +107,13 @@
                 <div class="tutor-modal-footer">
                     <div class="tutor-bs-row">
                         <div class="tutor-bs-col">
-                            <button type="button" class="tutor-btn update_lesson_modal_btn">
-                                <?php _e('Update Lesson', 'tutor'); ?>
+                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                                <?php _e('Cancel', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-bs-col-auto">
-                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
-                                <?php _e('Cancel', 'tutor'); ?>
+                            <button type="button" class="tutor-btn update_lesson_modal_btn">
+                                <?php _e('Update Lesson', 'tutor'); ?>
                             </button>
                         </div>
                     </div>

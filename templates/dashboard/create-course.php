@@ -139,6 +139,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 								}, 5000)
 							</script>
 							<?php
+						}
 					}
 
 					if ( $message || $expires ) {
