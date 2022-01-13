@@ -47,6 +47,12 @@ do_action( 'tutor_course/single/before/topics' );
 			<div class="tutor-accordion-item">
 				<div class="tutor-accordion-item-header">
 					<?php the_title(); ?>
+					<?php if ( ! empty( $topic_summery ) ) { ?>
+						<div class="tooltip-wrap tooltip-icon">
+							<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $topic_summery ); ?></span>
+						</div>
+					<?php } ?>
+
 				</div>
 				<?php
 					$topic_contents = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
