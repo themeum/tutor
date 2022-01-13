@@ -12,7 +12,7 @@
             </div>
             <div class="tutor-modal-body-alt">
                 <div class="tutor-mb-30">
-                    <label class="tutor-form-label"><?php _e('Topic Name', 'tutor'); ?></label>
+                    <label class="tutor-text-medium-caption tutor-color-text-title tutor-mb-5 d-block"><?php _e('Topic Name', 'tutor'); ?></label>
                     <div class="tutor-input-group tutor-mb-15">
                         <input type="text" name="topic_title" class="tutor-form-control tutor-mb-10" value="<?php echo !empty($data['title']) ? $data['title'] : ''; ?>"/>
                         <p class="tutor-input-feedback tutor-has-icon">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div>
-                    <label class="tutor-form-label"><?php _e('Topic Summary', 'tutor'); ?></label>
+                    <label class="tutor-text-medium-caption tutor-color-text-title tutor-mb-5 d-block"><?php _e('Topic Summary', 'tutor'); ?></label>
                     <div class="tutor-input-group tutor-mb-15">
                         <textarea name="topic_summery" class="tutor-form-control tutor-mb-10"><?php echo !empty($data['summary']) ? $data['summary'] : ''; ?></textarea>
                         <p class="tutor-input-feedback tutor-has-icon">

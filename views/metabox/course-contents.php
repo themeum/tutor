@@ -34,13 +34,13 @@
                 <div class="tutor-topic-title">
                     <i class="ttr-humnurger-filled tutor-icon-24 course-move-handle"></i>
                     <span class="topic-inner-title tutor-text-bold-body tutor-color-text-primary"><?php echo stripslashes($topic->post_title); ?></span>
-                    <span class="tutor-topic-inline-edit-btn tutor-font-size-24">
+                    <span class="tutor-topic-inline-edit-btn tutor-topic-btn-hover tutor-font-size-24">
                         <i class="color-text-hints ttr-edit-filled tutor-icon-24" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>
                     </span>
-                    <span class="topic-delete-btn tutor-font-size-24">
+                    <span class="topic-delete-btn tutor-topic-btn-hover tutor-font-size-24">
                         <i class="color-text-hints ttr-delete-stroke-filled tutor-icon-24"></i>
                     </span>
-                    <span class="expand-collapse-wrap tutor-font-size-24">
+                    <span class="expand-collapse-wrap tutor-topic-btn-hover tutor-font-size-24">
                         <i class="color-text-brand ttr-angle-down-filled tutor-icon-26"></i>
                     </span>
                 </div>

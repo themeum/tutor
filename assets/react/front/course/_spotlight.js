@@ -2,6 +2,13 @@ jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
 
+// const input = document.getElementById('tutor-course-builder-course-title-field');
+// const inputTooltip = document.getElementById('tutor-course-builder-course-title-field-tooltip');
+
+// input.addEventListener('keyup', function() {
+// 	console.log(input.value.lenght, input.value);
+// })
+
 document.addEventListener('DOMContentLoaded', (event) => {
 	const sidebar = document.querySelector(
 		'.tutor-lesson-sidebar.tutor-desktop-sidebar'
