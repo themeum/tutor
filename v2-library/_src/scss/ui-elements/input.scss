@@ -89,14 +89,18 @@ input.tutor-form-control {
 	}
 }
 
-input.tutor-form-control {
-	// &[type='date'] {
-	// 	@include svg-calender-line;
-	// }
-
-	// &[type='date' i]::-webkit-calendar-picker-indicator {
-	// 	@include svg-calender-line;
-	// }
+input.tutor-form-control,
+textarea.tutor-form-control {
+	&.tutor-form-control-wp {
+		&:focus {
+			border-color: $brand-wordpress !important;
+		}
+	}
+	&.tutor-form-control-fd {
+		&:focus {
+			border-color: $design-brand !important;
+		}
+	}
 }
 
 textarea.tutor-form-control {

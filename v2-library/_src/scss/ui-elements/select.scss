@@ -16,7 +16,7 @@ select.tutor-form-select {
 	// min-width: -webkit-fill-available;
 	background-color: #fff;
 	background-repeat: no-repeat;
-	border: 1px solid #ced4da;
+	border: 1px solid $stroke-gray;
 	border-radius: $radius;
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -65,6 +65,18 @@ select.tutor-form-select {
 	&:focus {
 		border-color: var(--tutor-primary);
 		box-shadow: unset;
+	}
+
+	// Foucs variation
+	&.tutor-form-select-wp {
+		&:focus {
+			border-color: $brand-wordpress !important;
+		}
+	}
+	&.tutor-form-select-fd {
+		&:focus {
+			border-color: $design-brand !important;
+		}
 	}
 }
 

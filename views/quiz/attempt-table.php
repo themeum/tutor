@@ -12,12 +12,12 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 }
 ?>
 
-<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-30">
+<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-45">
 	<thead>
 		<tr>
 			<?php
 			foreach ( $table_columns as $key => $column ) {
-				echo '<th><span class="text-regular-small tutor-color-text-subsued">' . $column . '</span></th>';
+				echo '<th><div class="text-regular-small tutor-color-text-subsued">' . $column . '</div></th>';
 			}
 			?>
 		</tr>
@@ -138,7 +138,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo $attempt->total_marks; ?>
+												<?php echo round($attempt->total_marks); ?>
 											</span>
 										</td>
 									<?php
@@ -168,7 +168,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo $attempt->earned_marks . ' (' . $earned_percentage . '%)'; ?>
+												<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '%)'; ?>
 											</span>
 										</td>
 									<?php

@@ -60,23 +60,23 @@ document.addEventListener('click', async (e) => {
 		const id = e.target.getAttribute(btnTargetAttr);
 
 		/* Get the text field */
-		const content = document.getElementById(id).textContent;
+		const content = document.getElementById(id).textContent.trim();
 
 		/* Copy the text inside the text field */
 		await navigator.clipboard.writeText(content);
 		const copiedTxt = await navigator.clipboard.readText();
 
-		showToolTip(e.target, 'Copied !');
+		showToolTip(e.target, 'Copied');
 	}
 });
 
 // Showing tooltip
 const showToolTip = (targetEl, text = 'Copied!') => {
-	const toolTip = `<span class="tooltip">${text}</span>`;
+	const toolTip = `<span class="tutor-tooltip">${text}</span>`;
 	targetEl.insertAdjacentHTML('beforebegin', toolTip);
 
 	setTimeout(() => {
-		document.querySelector('.tooltip').remove();
+		document.querySelector('.tutor-tooltip').remove();
 	}, 500);
 };
 
