@@ -1,13 +1,10 @@
 <?php
-	// The comment Query
-	$comments = get_comments(
-		array(
-			'status'  => 'approve',
-			'post_id' => get_the_ID(),
-			'parent'  => 0,
-		)
-	);
-	?>
+    // The comment Query
+    $comments = get_comments( array(
+        'post_id' => get_the_ID(),
+        'parent' => 0
+    ) );
+?>
 <div class="text-medium-h6 tutor-color-text-primary">
 	<?php _e( 'Join the conversation', 'tutor' ); ?>
 </div>

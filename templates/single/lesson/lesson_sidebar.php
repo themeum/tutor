@@ -32,9 +32,9 @@ if ( $post->post_type === 'tutor_quiz' ) {
 } else {
 	$course_id = tutor_utils()->get_course_id_by( 'lesson', $post->ID );
 }
-$user_id 					  = get_current_user_id();
-$disable_qa_for_this_course   = get_post_meta( $course_id, '_tutor_enable_qa', true ) != 'yes';
-$enable_q_and_a_on_course     = tutor_utils()->get_option( 'enable_q_and_a_on_course' ) && $disable_qa_for_this_course != 'yes';
+$user_id                      = get_current_user_id();
+$enable_qa_for_this_course    = get_post_meta( $course_id, '_tutor_enable_qa', true ) == 'yes';
+$enable_q_and_a_on_course     = tutor_utils()->get_option( 'enable_q_and_a_on_course' ) && $enable_qa_for_this_course;
 $is_enrolled                  = tutor_utils()->is_enrolled( $course_id );
 $is_instructor_of_this_course = tutor_utils()->is_instructor_of_this_course( $user_id, $course_id );
 $is_user_admin                = current_user_can( 'administrator' );
@@ -53,7 +53,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 			<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
 				<span class="ttr-question-filled"></span>
 				<span class="text-medium-caption tutor-color-text-title">
-					<?php esc_html_e( 'Question & Answer sdf', 'tutor' ); ?>
+					<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
 				</span>
 			</div>
 			<?php } ?>

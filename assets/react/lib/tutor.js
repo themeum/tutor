@@ -322,8 +322,8 @@ jQuery(document).ready(function ($) {
 			url: window.ajaxurl || _tutorobject.ajaxurl,
 			type: 'POST',
 			data: {
-				attempts_id: $that.data('attemptid'),
-				feedback: $('textarea[name="tutor-instructor-feedback-content"]').val(),
+				attempt_id: $that.data('attempt-id'),
+				feedback: tinymce.activeEditor.getContent(),
 				action: 'tutor_instructor_feedback',
 			},
 			beforeSend: function () {
