@@ -272,11 +272,11 @@ msgid "No Limit"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "__("Request Successful", "tutor""
+msgid "Request Successful"
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "__("Your request has been submitted. Please wait for the administrator’s response.", "tutor""
+msgid "Your request has been submitted. Please wait for the administrator’s response."
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
@@ -293,10 +293,6 @@ msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Abandon Quiz?"
-msgstr ""
-
-#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
-msgid "Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page."
 msgstr ""
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1

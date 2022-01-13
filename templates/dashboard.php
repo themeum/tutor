@@ -69,7 +69,7 @@ $footer_links = array(
 do_action( 'tutor_dashboard/before/wrap' );
 ?>
 
-<div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student">
+<div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-100">
 	<div class="tutor-bs-container">
 		<!-- new head part  -->
 		<div class="tutor-bs-row tutor-bs-d-flex justify-content-between tutor-frontend-dashboard-header">
@@ -255,7 +255,11 @@ do_action( 'tutor_dashboard/before/wrap' );
 </div>
 
 <style>
-	.site-content {
+	.site-content{
+		overflow-y: hidden;
+		padding-bottom: 0;
+	}
+	.tutor-frontend-dashboard {
 		overflow-y: hidden;
 	}
 </style>
