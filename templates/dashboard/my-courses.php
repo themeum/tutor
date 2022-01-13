@@ -80,7 +80,7 @@ $courseCols = $shortcode_arg===null ? tutor_utils()->get_option( 'courses_col_pe
                                         <span class="tutor-text-medium-caption tutor-color-text-primary"><?php echo $course_duration; ?></span>
                                     </div>
                                 <?php } ?>
-                                <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
+                                <?php if (!empty($course_students)) : ?>
                                     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
                                         <span class="meta-icon ttr-user-filled tutor-color-text-hints"></span>
                                         <span><?php echo $course_students; ?></span>

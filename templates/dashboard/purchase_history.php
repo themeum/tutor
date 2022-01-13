@@ -80,32 +80,32 @@ $offset      = ( $per_page * $paged ) - $per_page;
 
 <!-- Purchase history table -->
 <div class="tutor-ui-table-wrapper">
-    <table class="tutor-ui-table tutor-ui-table-responsive">
+    <table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-purchase-history">
         <thead class="tutor-text-sm tutor-text-400">
             <th>
-                <span class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Order ID', 'tutor' ); ?>
-                </span>
+                </div>
             </th>
             <th>
-                <span class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Course Name', 'tutor' ); ?>
-                </span>
+                </div>
             </th>
             <th>
-                <span class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Date', 'tutor' ); ?>
-                </span>
+                </div>
             </th>
             <th>
-                <span class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Price', 'tutor' ); ?>
-                </span>
+                </div>
             </th>
             <th>
-                <span class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-text-subsued">
                     <?php esc_html_e( 'Status', 'tutor' ); ?>
-                </span>
+                </div>
             </th>
             <th class="tutor-shrink"></th>
         </thead>
@@ -157,8 +157,8 @@ $offset      = ( $per_page * $paged ) - $per_page;
                         
             ?>
                 <tr>
-                    <td data-th="Order ID">
-                        <div class="td-course  tutor-text-medium-body  tutor-color-text-primary" style="font-weight: 600;">
+                    <td data-th="Order ID" class="v-align-top">
+                        <div class="td-course tutor-text-medium-body tutor-color-text-primary tutor-mt-4" style="font-weight: 600;">
                             #<?php esc_html_e( $order->ID ); ?>
                         </div>
                     </td>
@@ -167,7 +167,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
                             $courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
                             if ( tutor_utils()->count( $courses ) ) {
                                 foreach ( $courses as $course ) {
-                                    echo '<p class="text-medium-caption tutor-color-text-primary">' . esc_html( get_the_title( $course['course_id'] ) ) . '</p>';
+                                    echo '<div class="text-medium-caption tutor-color-text-primary">' . esc_html( get_the_title( $course['course_id'] ) ) . '</div>';
                                 }
                             }
                         ?>
