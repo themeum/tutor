@@ -8,8 +8,10 @@ document.addEventListener("readystatechange", (event) => {
     export_single_settings();
     reset_default_options();
     apply_single_settings();
-
-    setInterval(() => { load_saved_data() }, 100000);
+    const historyData = document.querySelector('.history_data');
+    if (typeof historyData !== 'undefined' && null !== historyData) {
+      setInterval(() => { load_saved_data() }, 100000);
+    }
   }
 });
 
