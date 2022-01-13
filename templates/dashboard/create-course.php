@@ -87,7 +87,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 	<!-- Course builder body -->
 	<div class="tutor-bs-container">
 		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-lg-8 tutor-mb-30 tutor-pr-0 tutor-pr-sm-60">
+			<div class="tutor-bs-col-12 tutor-bs-col-lg-8 tutor-mb-30 tutor-pr-0 tutor-pr-sm-30">
 				<div class="tutor-frontend-course-builder-form-field">
 					<input type="hidden" value="tutor_add_course_builder" name="tutor_action" />
 					<input type="hidden" name="course_ID" id="course_ID" value="<?php echo get_the_ID(); ?>">
@@ -161,10 +161,10 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 							<div class="tutor-mb-30">
 								<label class="tutor-course-field-label tutor-font-size-16 color-text-primary"><?php _e( 'Course Title', 'tutor' ); ?></label>
 								<div class="tooltip-wrap tutor-bs-d-block">
-									<span class="tooltip-txt tooltip-right tutor-mt-10">
+									<span class="tooltip-txt tooltip-right tutor-mt-10" id="tutor-course-builder-course-title-field-tooltip">
 										<?php _e( '350', 'tutor' ); ?>
 									</span>
-									<input type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e( 'ex. Learn photoshop CS6 from scratch', 'tutor' ); ?>" maxlength="350">
+									<input type="text" name="title" class="tutor-form-control" id="tutor-course-builder-course-title-field" value="<?php echo get_the_title(); ?>" placeholder="<?php _e( 'ex. Learn photoshop CS6 from scratch', 'tutor' ); ?>" maxlength="350">
 								</div>
 							</div>
 							
@@ -281,7 +281,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 			</div>
 			
 			<!-- Course builder tips right sidebar -->
-			<div class="tutor-bs-col-12 tutor-bs-col-lg-4 tutor-mb-30">
+			<div class="tutor-bs-col-12 tutor-bs-col-lg-4 tutor-mb-30 tutor-pl-0 tutor-pl-sm-30">
 				<div class="tutor-course-builder-upload-tips">
 					<h3 class="text-regular-body tutor-mb-20">
 						<strong>

@@ -1,8 +1,20 @@
 table.my-quiz-attempts {
+	thead {
+		th {
+			@include breakpoint-min(desktop-lg) {
+				&:last-child {
+					> * {
+						display: none;
+					}
+				}
+			}
+		}
+	}
 	tr {
 		th {
 			white-space: unset;
-			padding: 16px 20px;
+			padding-top: 16px;
+			padding-bottom: 16px;
 			&:first-child {
 				width: 30%;
 			}

@@ -32,12 +32,12 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
         <label class="text-medium-body tutor-font-size-16 color-text-primary"><?php _e( 'Total Course Duration', 'tutor' ); ?></label>
     </div>
     <div class="tutor-bs-col-6 tutor-bs-col-sm-4 tutor-bs-col-md-3">
-        <input class="tutor-form-control" type="number" min="0" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
-        <span class="tutor-text-thin-caption color-text-hints"><?php _e( 'Hour', 'tutor' ); ?></span>
+        <input class="tutor-form-control tutor-mb-5" type="number" min="0" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
+        <span class="tutor-text-regular-caption color-text-hints"><?php _e( 'Hour', 'tutor' ); ?></span>
     </div>
     <div class="tutor-bs-col-6 tutor-bs-col-sm-4 tutor-bs-col-md-3">
-        <input class="tutor-form-control tutor-number-validation" type="number" min="0" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
-        <span class="tutor-text-thin-caption color-text-hints"><?php _e( 'Minute', 'tutor' ); ?></span>
+        <input class="tutor-form-control tutor-mb-5 tutor-number-validation" type="number" min="0" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
+        <span class="tutor-text-regular-caption color-text-hints"><?php _e( 'Minute', 'tutor' ); ?></span>
     </div>
     <input type="hidden" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
 </div>
@@ -46,7 +46,7 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
     <label class="text-medium-body tutor-font-size-16 color-text-primary">
         <?php _e( 'Materials Included', 'tutor' ); ?> <br />
     </label>
-    <textarea class="tutor-form-control tutor-textarea-auto-height tutor-mt-10" name="course_material_includes" rows="2" placeholder="<?php esc_attr_e( 'A list of assets you will be providing for the students in this course (One per line)', 'tutor' ); ?>"><?php echo $material_includes; ?></textarea>
+    <textarea class="tutor-form-control tutor-textarea-auto-height tutor-mt-10" name="course_material_includes" rows="5" placeholder="<?php esc_attr_e( 'A list of assets you will be providing for the students in this course (One per line)', 'tutor' ); ?>"><?php echo $material_includes; ?></textarea>
 </div>
 
 <div class="tutor-mb-30">
