@@ -15,11 +15,12 @@
     $attempt_id = (int) sanitize_text_field($_GET['view_quiz_attempt_id']);
     $attempt_data = tutor_utils()->get_attempt($attempt_id);
     $user_id = tutor_utils()->avalue_dot('user_id', $attempt_data);
+    die;
 ?>
 
 <div class="wrap">
     <div class="tutor-quiz-attempt-details-wrapper">
-        <?php 
+        <?php
             tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
                 'attempt_id' => $attempt_id,
                 'attempt_data' => $attempt_data,
@@ -36,8 +37,8 @@
             </div>
         </div>
         <div class="tutor-instructor-feedback-wrap">
-            <textarea class="tutor-instructor-feedback-content tutor-form-control"><?php 
-                echo get_post_meta($attempt_id, 'instructor_feedback', true); 
+            <textarea class="tutor-instructor-feedback-content tutor-form-control"><?php
+                echo get_post_meta($attempt_id, 'instructor_feedback', true);
             ?></textarea>
 
             <a class="tutor-btn tutor-instructor-feedback tutor-mt-10" data-attemptid="<?php echo $attempt_id; ?>" data-toast_success_message="<?php _e('Updated', 'tutor'); ?>">

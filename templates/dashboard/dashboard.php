@@ -240,7 +240,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 			<div class="tutor-frontend-dashboard-course-porgress-cards tutor-mb-20">
 				<div class="tutor-frontend-dashboard-course-porgress-card tutor-frontend-dashboard-course-porgress-card-horizontal tutor-course-listing-item tutor-course-listing-item-sm tutor-bs-justify-content-start">
 					<div class="tutor-course-listing-item-head tutor-bs-d-flex">
-						<a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink"> 
+						<a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink">
 							<div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty( esc_url( $tutor_course_img ) ) ? $placeholder_img : esc_url( $tutor_course_img ); ?>)"></div>
 						</a>
 					</div>
@@ -262,7 +262,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 						</div>
 						<div class="list-item-steps tutor-mt-14">
 							<span class="tutor-text-regular-caption tutor-color-text-hints">
-								<?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?> 
+								<?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?>
 							</span>
 							<span class="tutor-text-medium-caption tutor-color-text-primary">
 								<span>
@@ -271,7 +271,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 								<?php esc_html_e( 'of', 'tutor' ); ?>
 								<span>
 									<?php echo esc_html( $course_progress['total_count'] ); ?>
-								</span> 
+								</span>
 								<?php echo esc_html( _n( 'lesson', 'lessons', $completed_number, 'tutor' ) ); ?>
 							</span>
 						</div>
@@ -287,7 +287,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 						</div>
 					</div>
 				</div>
-			</div>				
+			</div>
 			<?php endwhile; ?>
 			<?php wp_reset_postdata(); ?>
 		<?php else : ?>
@@ -376,6 +376,6 @@ if ( count( $instructor_course ) ) {
 				</tbody>
 			</table>
 		</div>
-		<?php
+	<?php
 }
 ?>
