@@ -38,6 +38,8 @@ function tutor_assignment_convert_seconds( $seconds ) {
 	return $dt1->diff( $dt2 )->format( '%a Days, %h Hours' );
 }
 $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
+$content   = get_the_content();
+$s_content = $content;
 ?>
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
@@ -266,8 +268,6 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 		}
 
 		if ( $is_submitting && ( $remaining_time > $now or $time_duration['value'] == 0 ) ) {
-			$content   = get_the_content();
-			$s_content = $content;
 			?>
 
 			<div class="tutor-assignment-submission tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
@@ -544,34 +544,33 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 				</div>
 
 				<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-30 tutor-pb-sm-45">
-					<div class="tutor-ad-body tutor-pt-40 tutor-pt-sm-60 has-show-more" id="content-section">
+					<div class="tutor-pt-40 tutor-pt-sm-60 <?php echo esc_attr( strlen( $s_content ) > 500 ? 'tutor-ad-body has-show-more' : '' ); ?>" id="content-section">
 						<div class="text-medium-h6 tutor-color-text-primary">
 							<?php _e( 'Description', 'tutor' ); ?>
 						</div>
 						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="short-text">
 							<?php
-								$content   = get_the_content();
-								$s_content = $content;
-								echo substr_replace( $s_content, '...', 500 );
+								if ( strlen( $s_content ) > 500 ) {
+									echo wp_kses_post( substr_replace( $s_content, '...', 500 ) );
+								} else {
+									echo wp_kses_post( $s_content );
+								}
 							?>
 							<span id="dots"></span>
 						</div>
-						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="full-text">
-							<?php
-								the_content();
-							?>
-						</div>
-						<?php
-							$content = get_the_content();
-						if ( strlen( $content ) !== 0 ) {
-							?>
-						<div class="tutor-show-more-btn tutor-pt-12">
-							<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
-								<span class="btn-icon ttr-plus-filled tutor-color-design-brand" id="no-icon"></span>
-								<span class="tutor-color-text-primary"><?php _e( 'Show More', 'tutor' ); ?></span>
-							</button>
-						</div>
-						<?php } ?>
+						<?php if ( strlen( $s_content ) > 500 ) : ?>
+							<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="full-text">
+								<?php
+									echo wp_kses_post( $s_content );
+								?>
+							</div>
+							<div class="tutor-show-more-btn tutor-pt-12">
+								<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
+									<span class="btn-icon ttr-plus-filled tutor-color-design-brand" id="no-icon"></span>
+									<span class="tutor-color-text-primary"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
+								</button>
+							</div>
+						<?php endif; ?>
 					</div>
 				</div>
 
