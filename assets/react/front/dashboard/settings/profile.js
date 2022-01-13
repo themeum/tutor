@@ -184,6 +184,7 @@ window.jQuery(document).ready(($) => {
 		var form = btn.closest('form');
 		var data = form.serializeObject();
 		let phone = document.querySelector('[name=phone_number]');
+
 		if (data.phone_number && !data.phone_number.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)) {
 			phone.classList.add('invalid');
 			tutor_toast('Invalid', 'Invalid phone number', 'error');
