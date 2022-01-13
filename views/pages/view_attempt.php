@@ -7,7 +7,7 @@ $attempt_id   = (int) sanitize_text_field( $_GET['view_quiz_attempt_id'] );
 $attempt      = tutor_utils()->get_attempt( $attempt_id );
 $attempt_data = $attempt;
 $user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
-var_dump( the_post() );
+// var_dump( the_post() );
 
 if ( ! $attempt ) {
 	?>

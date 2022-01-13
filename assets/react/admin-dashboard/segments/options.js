@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var button = $('#save_tutor_option');
 		var $form = $(this);
 		var data = $form.serializeObject();
+
 		if (typeof inputNumberFields !== 'undefined') {
 			checkNumberFieldsOnSubmit(inputNumberFields);
 		}

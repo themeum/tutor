@@ -12,7 +12,6 @@
  $args    = isset( $data['args'] ) ? $data['args'] : array();
 ?>
 <div class="tutor-text-editor-wrapper">
-	<div id="<?php echo esc_attr( isset( $data['div_id'] ) ? $data['div_id'] : '' ); ?>"></div>
 	<?php
 		tutor_utils()->render_text_editor( $content, $div_id, $args );
 	?>

@@ -1,9 +1,22 @@
+let enterPressed = false;
+document.addEventListener('keypress', function (e) {
+	if (e.key === 'Enter') {
+		enterPressed = true;
+	}
+});
+
 document.addEventListener('click', (e) => {
 	const attr = 'data-tutor-modal-target';
 	const closeAttr = 'data-tutor-modal-close';
 	const overlay = 'tutor-modal-overlay';
 
-	if (e.target.hasAttribute(attr) || e.target.closest(`[${attr}]`)) {
+	if (enterPressed !== false) {
+		enterPressed = false;
+		return false;
+	}
+
+	if ((e.target.hasAttribute(attr) || e.target.closest(`[${attr}]`))) {
+		console.log(enterPressed);
 		e.preventDefault();
 		const id = e.target.hasAttribute(attr)
 			? e.target.getAttribute(attr)
