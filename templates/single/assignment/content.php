@@ -38,7 +38,6 @@ function tutor_assignment_convert_seconds( $seconds ) {
 	return $dt1->diff( $dt2 )->format( '%a Days, %h Hours' );
 }
 $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
-
 ?>
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
@@ -153,23 +152,23 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 		<div class="tutor-assignment-meta-info d-flex justify-content-between tutor-mt-25 tutor-mt-sm-35 tutor-py-15 tutor-py-sm-22">
 			<div class="tutor-assignment-detail-info d-flex">
 				<div class="tutor-assignment-duration">
-					<span class="text-regular-body tutor-color-text-hints"><?php _e( 'Duration:', 'tutor' ); ?></span>
+					<span class="text-regular-body tutor-color-text-hints"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
 					<span class="tutor-text-medium-body  tutor-color-text-primary">
-						<?php echo $time_duration['value'] ? $time_duration['value'] . ' ' . $time_duration['time'] : __( 'No limit', 'tutor' ); ?>
+						<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . $time_duration['time'] : __( 'No limit', 'tutor' ) ); ?>
 					</span>
 				</div>
 				<div class="tutor-assignmetn-deadline">
-					<span class="text-regular-body tutor-color-text-hints"><?php _e( 'Deadline:', 'tutor' ); ?></span>
+					<span class="text-regular-body tutor-color-text-hints"><?php esc_html_e( 'Deadline:', 'tutor' ); ?></span>
 					<span class="tutor-text-medium-body  tutor-color-text-primary">
 						<?php
 						if ( $time_duration['value'] != 0 ) {
 							if ( $now > $remaining_time and $is_submitted == false ) {
-								_e( 'Expired', 'tutor' );
+								esc_html_e( 'Expired', 'tutor' );
 							} else {
-								echo tutor_assignment_convert_seconds( $remaining );
+								echo esc_html( tutor_assignment_convert_seconds( $remaining ) );
 							}
 						} else {
-							_e( 'N\\A', 'tutor' );
+							esc_html_e( 'N\\A', 'tutor' );
 						}
 						?>
 					</span>
@@ -240,7 +239,7 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 						foreach ( $assignment_attachments as $attachment_id ) :
 							$attachment_name = get_post_meta( $attachment_id, '_wp_attached_file', true );
 							$attachment_name = substr( $attachment_name, strrpos( $attachment_name, '/' ) + 1 );
-							$file_size 		 = tutor_utils()->get_attachment_file_size( $attachment_id );
+							$file_size       = tutor_utils()->get_attachment_file_size( $attachment_id );
 							?>
 							<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-10">
 								<div class="tutor-icard-content">
@@ -250,7 +249,7 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 									</a>
 									</div>
 									<div class="text-regular-small">
-										<?php esc_html_e( 'Size: ', 'tutor' );?>
+										<?php esc_html_e( 'Size: ', 'tutor' ); ?>
 										<?php echo esc_html( $file_size ? $file_size . 'KB' : '' ); ?>
 									</div>
 								</div>
@@ -266,7 +265,9 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 			<?php
 		}
 
-		if ( $is_submitting and ( $remaining_time > $now or $time_duration['value'] == 0 ) ) {
+		if ( $is_submitting && ( $remaining_time > $now or $time_duration['value'] == 0 ) ) {
+			$content   = get_the_content();
+			$s_content = $content;
 			?>
 
 			<div class="tutor-assignment-submission tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
@@ -334,29 +335,33 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 				</form>
 			</div> <!-- assignment-submission -->
 			<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-30 tutor-pb-sm-45">
-				<div class="tutor-ad-body tutor-pt-40 tutor-pt-sm-60 has-show-more" id="content-section">
+				<div class="tutor-pt-40 tutor-pt-sm-60 <?php echo esc_attr( strlen( $s_content ) > 500 ? 'tutor-ad-body has-show-more' : '' ); ?>" id="content-section">
 					<div class="text-medium-h6 tutor-color-text-primary">
 						<?php _e( 'Description', 'tutor' ); ?>
 					</div>
 					<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="short-text">
 						<?php
-							$content   = get_the_content();
-							$s_content = $content;
-							echo substr_replace( $s_content, '...', 500 );
+							if ( strlen( $s_content ) > 500 ) {
+								echo wp_kses_post( substr_replace( $s_content, '...', 500 ) );
+							} else {
+								echo wp_kses_post( $s_content );
+							}
 						?>
 						<span id="dots"></span>
 					</div>
-					<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="full-text">
-						<?php
-							the_content();
-						?>
-					</div>
-					<div class="tutor-show-more-btn tutor-pt-12">
-						<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
-							<span class="btn-icon ttr-plus-filled tutor-color-design-brand" id="no-icon"></span>
-							<span class="tutor-color-text-primary"><?php _e( 'Show More', 'tutot' ); ?></span>
-						</button>
-					</div>
+					<?php if ( strlen( $s_content ) > 500 ) : ?>
+						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="full-text">
+							<?php
+								echo wp_kses_post( $s_content );
+							?>
+						</div>
+						<div class="tutor-show-more-btn tutor-pt-12">
+							<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
+								<span class="btn-icon ttr-plus-filled tutor-color-design-brand" id="no-icon"></span>
+								<span class="tutor-color-text-primary"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
+							</button>
+						</div>
+					<?php endif; ?>
 				</div>
 			</div>
 			<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
@@ -369,7 +374,9 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 			<?php
 		} else {
 
-
+			/**
+			 * If assignment submitted
+			 */
 			if ( $submitted_assignment ) {
 				$is_reviewed_by_instructor = get_comment_meta( $submitted_assignment->comment_ID, 'evaluate_time', true );
 
@@ -487,10 +494,12 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 					<div class="tutor-ar-body tutor-pt-25 tutor-pb-40 tutor-px-15 tutor-px-md-30">
 						<div class="tutor-ar-header d-flex justify-content-between align-items-center">
 							<div class="tutor-ar-title tutor-text-medium-h6 tutor-color-text-primary">
-								<?php _e( 'Your Assigment', 'tutor' ); ?>
+								<?php esc_html_e( 'Your Assigment', 'tutor' ); ?>
 							</div>
 							<div class="tutor-ar-btn">
-							<button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">Edit</button>
+							<button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">
+								<?php esc_html_e( 'Edit', 'tutor' ); ?>
+							</button>
 							</div>
 						</div>
 						<div class="text-regular-body tutor-color-text-subsued tutor-pt-18">
@@ -559,7 +568,7 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 						<div class="tutor-show-more-btn tutor-pt-12">
 							<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
 								<span class="btn-icon ttr-plus-filled tutor-color-design-brand" id="no-icon"></span>
-								<span class="tutor-color-text-primary"><?php _e( 'Show More', 'tutot' ); ?></span>
+								<span class="tutor-color-text-primary"><?php _e( 'Show More', 'tutor' ); ?></span>
 							</button>
 						</div>
 						<?php } ?>
