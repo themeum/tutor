@@ -27,6 +27,7 @@
 
 // Table Base Structure
 table.tutor-ui-table {
+	margin: 0;
 	&,
 	tr,
 	th,
@@ -77,6 +78,7 @@ table.tutor-ui-table {
 		}
 	}
 
+	// table utility (individual th/td)
 	.v-align-top {
 		vertical-align: top;
 	}
@@ -171,6 +173,7 @@ table.tutor-ui-table {
 			text-align: left;
 			padding: 10px;
 			white-space: nowrap;
+			height: 48px;
 		}
 
 		td {
@@ -333,7 +336,7 @@ table.tutor-ui-table {
 				border-radius: 6px;
 				text-decoration: none;
 				background: transparent;
-				padding: 8px 10px;
+				padding: 7px 9px;
 				transition: 100ms ease;
 
 				&:hover,
@@ -785,5 +788,48 @@ table.tutor-ui-table {
 }
 
 // Table specefic styles
-.table.tutor-ui-table {
+table.tutor-ui-table {
+	&.tutor-ui-table-purchase-history {
+		th {
+			height: 48px;
+		}
+		@include breakpoint-min(desktop-lg) {
+			th,
+			td {
+				&:nth-child(2) {
+					width: 360px;
+				}
+			}
+		}
+		@include breakpoint-max(desktop-lg) {
+			td {
+				display: grid;
+				justify-content: flex-start;
+			}
+		}
+	}
+
+	&.table-assignment {
+		@include breakpoint-min(desktop-lg) {
+			th,
+			td {
+				&:nth-child(1) {
+					width: 505px;
+				}
+			}
+		}
+	}
+	&.tutor-ui-table-zoom {
+		@include breakpoint-min(desktop-lg) {
+			th,
+			td {
+				&:nth-child(1) {
+					width: 150px;
+				}
+				&:nth-child(2) {
+					width: 410px;
+				}
+			}
+		}
+	}
 }

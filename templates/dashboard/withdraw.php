@@ -175,33 +175,33 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	<?php
 	if ( is_array( $all_histories->results ) && count ( $all_histories->results ) ) {
 		?>
-		<div class="withdraw-history-table-wrap tutor-tooltip-inside">
+		<div class="withdraw-history-table-wrap tutor-tooltip-inside tutor-mt-40">
 			<div class="withdraw-history-table-title">
-				<h4 class="tutor-text-medium-h5 tutor-color-text-primary"> <?php esc_html_e( 'Withdrawal History', 'tutor' ); ?></h4>
+				<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"> <?php esc_html_e( 'Withdrawal History', 'tutor' ); ?></div>
 			</div>
 
 			<table class="tutor-ui-table tutor-ui-table-responsive">
 				<thead>
 					<tr>
 						<th width="40%">
-							<span class="text-regular-small tutor-color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Withdrawal Method', 'tutor' ); ?>
-							</span>
+							</div>
 						</th>
 						<th width="28%">
-							<span class="text-regular-small tutor-color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Requested On', 'tutor' ); ?>
-							</span>
+							</div>
 						</th>
 						<th width="13%">
-							<span class="text-regular-small tutor-color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Amount', 'tutor' ); ?>
-							</span>
+							</div>
 						</th>
 						<th width="13%">
-							<span class="text-regular-small tutor-color-text-subsued">
+							<div class="text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
-							</span>
+							</div>
 						</th>
 						<th></th>
 					</tr>
