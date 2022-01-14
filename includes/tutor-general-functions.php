@@ -429,7 +429,7 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		$html = ob_get_clean();
 
 		if ( $echo ) {
-			echo $html;
+			echo tutor_kses_html($html);
 		} else {
 			return $html;
 		}
@@ -581,7 +581,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 		$html = '<div class="tutor-alert tutor-alert-' . $type . '">' . $msg . '</div>';
 
 		if ( $echo ) {
-			echo $html;
+			echo tutor_kses_html($html);
 		}
 		return $html;
 	}
@@ -686,7 +686,7 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 		}
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		} else {
 			return $output;
 		}
@@ -796,4 +796,43 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	}
 }
 
+if(!function_exists('tutor_kses_allowed_html')) {
+	function tutor_kses_allowed_html($allowed_tags, $context) {
+		$tags = array('input', 'style', 'script', 'select', 'form', 'option', 'optgroup');
+		$atts = array('min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'title', 'role', 'placeholder', 'value', 'data-*');
 
+		foreach($tags as $tag) {
+			$tag_attrs = array();
+
+			foreach($atts as $att) {
+				$tag_attrs[$att] = true;
+			}
+
+			$allowed_tags[$tag] = $tag_attrs;
+		}
+		
+		return $allowed_tags;
+	}
+}
+
+if(!function_exists('tutor_kses_allowed_css')) {
+	function tutor_kses_allowed_css( $styles ) {
+		$styles[] = 'display';
+		return $styles;
+	}
+}
+
+if(!function_exists('tutor_kses_html')) {
+	function tutor_kses_html($content) {
+		add_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html', 10, 2 );
+		add_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
+
+		$content = preg_replace('/<!--(.|\s)*?-->/', '', $content);
+		$content = wp_kses_post( $content );
+
+		remove_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
+		remove_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html' );
+		
+		return $content;
+	}
+}

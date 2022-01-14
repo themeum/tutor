@@ -187,7 +187,6 @@ class Course extends Tutor_Base {
 	public function register_meta_box() {
 		$coursePostType     = tutor()->course_post_type;
 		$course_marketplace = tutor_utils()->get_option( 'enable_course_marketplace' );
-		// add_meta_box( 'tutor-course-levels', __( 'Course Level', 'tutor' ), array($this, 'course_level_metabox'), $coursePostType );
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array( $this, 'course_meta_box' ), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array( $this, 'course_additional_data_meta_box' ), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array( $this, 'video_metabox' ), $coursePostType );
@@ -209,7 +208,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content;
+			echo tutor_kses_html( $content );
 		} else {
 			return $content;
 		}
@@ -222,7 +221,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content;
+			echo tutor_kses_html( $content );
 		} else {
 			return $content;
 		}
@@ -234,19 +233,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content;
-		} else {
-			return $content;
-		}
-	}
-
-	public function course_level_metabox( $echo = true ) {
-		ob_start();
-		include tutor()->path . 'views/metabox/course-level-metabox.php';
-		$content = ob_get_clean();
-
-		if ( $echo ) {
-			echo $content;
+			echo tutor_kses_html( $content );
 		} else {
 			return $content;
 		}
@@ -258,7 +245,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content;
+			echo tutor_kses_html($content);
 		} else {
 			return $content;
 		}
@@ -271,10 +258,10 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box_in_frontend() {
 		do_action( 'tutor_course_builder_metabox_before', get_the_ID() );
-		course_builder_section_wrap( $this->video_metabox( $echo = false ), __( 'Video', 'tutor' ) );
-		course_builder_section_wrap( $this->course_meta_box( $echo = false ), __( 'Course Builder', 'tutor' ) );
-		course_builder_section_wrap( $this->instructors_metabox( $echo = false ), __( 'Instructors', 'tutor' ) );
-		course_builder_section_wrap( $this->course_additional_data_meta_box( $echo = false ), __( 'Additional Data', 'tutor' ) );
+		course_builder_section_wrap( $this->video_metabox( false ), __( 'Video', 'tutor' ) );
+		course_builder_section_wrap( $this->course_meta_box( false ), __( 'Course Builder', 'tutor' ) );
+		course_builder_section_wrap( $this->instructors_metabox( false ), __( 'Instructors', 'tutor' ) );
+		course_builder_section_wrap( $this->course_additional_data_meta_box( false ), __( 'Additional Data', 'tutor' ) );
 		do_action( 'tutor_course_builder_metabox_after', get_the_ID() );
 	}
 
@@ -757,7 +744,6 @@ class Course extends Tutor_Base {
 			$output .= apply_filters( 'tutor_course_instructors_html', $instructor_output, $instructors );
 
 		} else {
-			$output .= '<p>' . __( 'No instructor available or you have already added maximum instructors' ) . '</p>';
 			$output .= '<p>' . __( 'No instructor available or you have already added maximum instructors', 'tutor' ) . '</p>';
 		}
 
