@@ -337,16 +337,35 @@ $s_content            = $content;
 										</p>
 									</div>
 								</div>
-								<div class="tutor-asisgnment-upload-file-preview d-flex tutor-mt-20 tutor-mt-sm-30">
-
+								<!-- uploaded attachment by students -->
+								<div class="tutor-bs-container tutor-pt-15 tutor-update-assignment-attachments">
+									<div class="tutor-bs-row tutor-bs-gy-3" id="tutor-student-assignment-edit-file-preview">
+									<?php
+										$submitted_attachments = get_comment_meta( $assignment_comment_id, 'uploaded_attachments' );
+										foreach ( $submitted_attachments as $attach ) :
+											$attachments =  json_decode( $attach );
+										?>
+											<?php foreach ( $attachments as $attachment ) : ?>
+												<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15">
+													<div class="tutor-icard-content">
+														<div class="text-regular-body tutor-color-text-title">
+															<?php echo esc_html( $attachment->name ); ?>
+														</div>
+														<div class="text-regular-small">Size: 230KB;</div>
+													</div>
+													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
+														<a href="<?php echo esc_url( $attachment->url ); ?>" target="_blank">
+															<span class="ttr-cross-filled color-design-brand"></span>
+														</a>
+													</div>
+												</div>
+											<?php endforeach; ?>
+										<?php endforeach; ?>
+									</div>
 								</div>
+								<!-- uploaded attachment by students end -->
+							</div>
 
-							</div>
-							<div class="tutor-update-assignment-attachments">
-								<?php
-									$submitted_attachments = get_comment_meta( $assignment_comment_id, 'uploaded_attachments' );
-								?>
-							</div>
 						<?php } ?>
 						<div class="tutor-assignment-submit-btn tutor-mt-60">
 							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg" id="tutor_assignment_submit_btn">
