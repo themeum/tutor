@@ -1,0 +1,692 @@
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Required Plugin(s)"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Required for Push Notification"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No extra plugin required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Active"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No Addons Found!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Addons List"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Search…"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Warning", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Nothing was selected for bulk action.", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select checkbox for action"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Failed", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Something went wrong, please try again ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Updated", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course status updated ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course status update failed ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Instructor status updated ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Instructor status update failed ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Wait!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Are you sure you would like perform this action? We suggest you proceed with caution."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Delete", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course has been deleted ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course delete failed ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Operation failed", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something Went Wrong!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Settings Saved"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Failed"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something went wrong, please try again!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Withdraw Reject Reason"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Copied"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Search students", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Select or Upload Media Of Your Choice", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Upload media", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Success", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("New Instructor Added", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Something went wrong!", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something went wrong!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Do you want to save without any category?", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Please add 1 or more character", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Delete this enrolment", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Cancel", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Yes, Delete This", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Success"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Assignment Updated"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select or Upload Media Of Your Choice"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Upload media"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Size"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Lesson Updated"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Invalid Video URL"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Quiz Updated"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Quiz title required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Are you sure to delete the topic?"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something Went Wrong"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Invalid username or password!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Error!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Incorrect, Please try again"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "More answer for this question is required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Correct Answer"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Please select an option to answer"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Please select at least one option to answer."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "The answer for this question is required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Override Previous Progress"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Before continue, please decide whether to keep progress or reset."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Reset Data"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something went wrong"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Keep Data"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select One"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Unfortunately, you are out of time and quiz attempts. "
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No Limit"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Request Successful", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Your request has been submitted. Please wait for the administrator’s response.", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Assignment answer can not be empty"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Saving..."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Save"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Abandon Quiz?"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Yes, leave quiz"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Leaving..."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Stay here"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Rating and review required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Updated successfully!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Thank You for Rating The Course!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Updated rating will now be visible in the course page"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Your rating will now be visible in the course page"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select or Upload Media Of Your Chosen Persuasion"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Use this media"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Are you sure to delete?"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Copied!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Required Plugin(s)"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Required for Push Notification"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No extra plugin required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Active"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No Addons Found!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Addons List"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Search…"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Warning", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Nothing was selected for bulk action.", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select checkbox for action"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Failed", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Something went wrong, please try again ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Updated", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course status updated ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course status update failed ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Instructor status updated ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Instructor status update failed ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Wait!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Are you sure you would like perform this action? We suggest you proceed with caution."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Delete", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course has been deleted ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Course delete failed ", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Operation failed", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something Went Wrong!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Settings Saved"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Failed"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something went wrong, please try again!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Withdraw Reject Reason"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Copied"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Search students", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Select or Upload Media Of Your Choice", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Upload media", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Success", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("New Instructor Added", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Something went wrong!", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something went wrong!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Do you want to save without any category?", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Please add 1 or more character", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Delete this enrolment", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Cancel", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "__("Yes, Delete This", "tutor""
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Success"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Assignment Updated"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select or Upload Media Of Your Choice"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Upload media"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Size"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Lesson Updated"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Invalid Video URL"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Quiz Updated"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Quiz title required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Are you sure to delete the topic?"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something Went Wrong"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Invalid username or password!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Error!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Incorrect, Please try again"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "More answer for this question is required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Correct Answer"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Please select an option to answer"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Please select at least one option to answer."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "The answer for this question is required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Override Previous Progress"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Before continue, please decide whether to keep progress or reset."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Reset Data"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Something went wrong"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Keep Data"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select One"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Unfortunately, you are out of time and quiz attempts. "
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "No Limit"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Request Successful"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Your request has been submitted. Please wait for the administrator’s response."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Assignment answer can not be empty"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Saving..."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Save"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Abandon Quiz?"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Yes, leave quiz"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Leaving..."
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Stay here"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Rating and review required"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Updated successfully!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Thank You for Rating The Course!"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Updated rating will now be visible in the course page"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Your rating will now be visible in the course page"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Select or Upload Media Of Your Chosen Persuasion"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Use this media"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Are you sure to delete?"
+msgstr ""
+
+#: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
+msgid "Copied!"
+msgstr ""
