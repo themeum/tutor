@@ -3,7 +3,7 @@
     <div class="tutor-modal-root">
         <div class="tutor-modal-inner">
             <div class="tutor-modal-header">
-                <h3 class="tutor-modal-title">
+                <h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
                     <?php echo $data['modal_title']; ?>
                 </h3>
                 <button data-tutor-modal-close class="tutor-modal-close">
