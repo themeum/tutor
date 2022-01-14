@@ -1,4 +1,4 @@
-<?php 
+<?php
     extract($data); // $course_id, $context
 ?>
 <div class="tutor-qa-new tutor-quesanswer" data-course_id="<?php echo $course_id; ?>" data-question_id="0" data-context="<?php echo $context; ?>">
@@ -11,3 +11,4 @@
         </div>
     </div>
 </div>
+<div class="tutor-qna-single-question"></div>

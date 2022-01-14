@@ -30,4 +30,4 @@ assets/**/*.map
 *.lock
 *.log
 *.map
-.history
+*/bundle/*

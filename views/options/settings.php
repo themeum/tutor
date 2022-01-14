@@ -24,7 +24,7 @@
 			</div>
 		</div>
 		<div class="save-button">
-			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap" disabled>
+			<button id="save_tutor_option" class="tutor-btn tutor-text-nowrap" disabled form="tutor-option-form">
 				<?php _e( 'Save Changes', 'tutor' ); ?>
 			</button>
 		</div>

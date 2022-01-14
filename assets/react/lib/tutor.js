@@ -317,13 +317,13 @@ jQuery(document).ready(function ($) {
 	$(document).on('click', '.tutor-instructor-feedback', function (e) {
 		e.preventDefault();
 		var $that = $(this);
-
+		console.log(tinymce.activeEditor.getContent());
 		$.ajax({
 			url: window.ajaxurl || _tutorobject.ajaxurl,
 			type: 'POST',
 			data: {
-				attempts_id: $that.data('attemptid'),
-				feedback: $('.tutor-instructor-feedback-content').val(),
+				attempt_id: $that.data('attempt-id'),
+				feedback: tinymce.activeEditor.getContent(),
 				action: 'tutor_instructor_feedback',
 			},
 			beforeSend: function () {

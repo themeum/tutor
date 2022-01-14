@@ -1,14 +1,21 @@
 /* Course settings module */
 #wpcontent,
-.tutor-frontend-course-builder-form-field {
-    .tutor-form-toggle .tutor-form-toggle-control {
-        margin: 0 2px 0px 0px;
+#tutor-frontend-course-builder {
+    .tutor-certificate-template {
+        .template-item {
+            .template-radio-field {
+                height: 100% !important;
+            }
+        }
     }
     .tutor-btn {
         font-family: 'Inter', sans-serif;
         padding: 7px 20px;
         font-size: 15px;
         line-height: 24px;
+    }
+    .tutor-form-toggle .tutor-form-toggle-control {
+        margin: 0 2px 0px 0px !important;
     }
     .select2-container {
         li.select2-selection__choice {  
@@ -33,7 +40,7 @@
         }
     }
     .tutor-modal-body {
-        align-items: unset;
+        align-items: unset !important;
     }
     .tutor-attachments-metabox {
         .tutor-attachment-cards {
@@ -47,28 +54,28 @@
         flex-wrap: wrap;
         gap: 20px;
         justify-content: space-between;
-    }
-    .added-instructor-item {
-        margin: 0 !important;
-        max-width: calc(50% - 20px) !important;
-        flex-basis: calc(50% - 20px) !important;
-        @include breakpoint-max(mobile) {
-            max-width: 100% !important;
-            flex-basis: 100% !important;
-        }
-        .instructor-icon  {
-            height: auto !important;
-            max-width: 45px;
-        }
-        .instructor-name {
-            width: calc(100% - 45px);
-            flex-basis: calc(100% - 45px);
-            .instructor-intro {
-                display: flex;
-                align-items: center;
-                .instructor-img {}
-                .instructor-email {
-                    margin-top: -4px;
+        .added-instructor-item {
+            margin: 0 !important;
+            max-width: calc(50% - 20px) !important;
+            flex-basis: calc(50% - 20px) !important;
+            @include breakpoint-max(mobile) {
+                max-width: 100% !important;
+                flex-basis: 100% !important;
+            }
+            .instructor-icon  {
+                height: auto !important;
+                max-width: 45px;
+            }
+            .instructor-name {
+                width: calc(100% - 45px);
+                flex-basis: calc(100% - 45px);
+                .instructor-intro {
+                    display: flex;
+                    align-items: center;
+                    .instructor-img {}
+                    .instructor-email {
+                        margin-top: -4px;
+                    }
                 }
             }
         }
@@ -115,18 +122,6 @@
                         color: $design-brand;
                     }
                 }
-                // .tutor-topic-btn-hover:hover {
-                //     width: 34px;
-                //     height: 34px;
-                //     right: 50px;
-                //     top: calc(50% - 32px/2);
-                //     background: #E3E6EB;
-                //     border-radius: 50%;
-                //     display: block;
-                //     display: flex;
-                //     align-items: center;
-                //     justify-content: center;
-                // }
             }
         }
     }

@@ -23,7 +23,7 @@ $attempt_data = tutor_utils()->get_attempt($attempt_id);
 ?>
 
 <div class="tutor-quiz-attempt-details-wrapper">
-    <?php 
+    <?php
         tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
             'attempt_id' => $attempt_id,
             'attempt_data' => $attempt_data,

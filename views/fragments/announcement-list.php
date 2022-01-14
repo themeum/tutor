@@ -53,9 +53,9 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label" for="tutor_announcement_course">
 							<?php _e( 'Summary', 'tutor' ); ?>
 						</label>
-						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required>
-							<?php echo $summary; ?>
-						</textarea>
+						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php 
+							echo $summary; 
+						?></textarea>
 					</div>
 
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
@@ -83,7 +83,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
-				<div class="tutor-modal-header">
+				<div class="tutor-modal-header tutor-text-bold-h6 tutor-color-text-title">
 					<button data-tutor-modal-close class="tutor-modal-close tutor-color-text-hints">
 						<span class="ttr-line-cross-line tutor-icon-40"></span>
 					</button>
