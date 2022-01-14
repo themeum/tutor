@@ -296,7 +296,7 @@ $s_content            = $content;
 								);
 								$args['editor_height'] = '140';
 								$editor_args           = array(
-									'content' => $content->comment_content,
+									'content' => isset( $content->comment_content ) ? $content->comment_content : '',
 									'args'    => $args,
 								);
 								$text_editor_template  = tutor()->path . 'templates/global/tutor-text-editor.php';
@@ -342,6 +342,7 @@ $s_content            = $content;
 									<div class="tutor-bs-row tutor-bs-gy-3" id="tutor-student-assignment-edit-file-preview">
 									<?php
 										$submitted_attachments = get_comment_meta( $assignment_comment_id, 'uploaded_attachments' );
+										if ( is_array( $submitted_attachments ) && count( $submitted_attachments ) ) :
 										foreach ( $submitted_attachments as $attach ) :
 											$attachments =  json_decode( $attach );
 										?>
@@ -361,6 +362,7 @@ $s_content            = $content;
 												</div>
 											<?php endforeach; ?>
 										<?php endforeach; ?>
+										<?php endif; ?>
 									</div>
 								</div>
 								<!-- uploaded attachment by students end -->
