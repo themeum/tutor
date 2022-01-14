@@ -79,7 +79,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 				<div class="tutor-user-info tutor-ml-24">
 					<?php
 						$instructor_rating = tutor_utils()->get_instructor_ratings( $user->ID );
-						
+
 						if ( current_user_can( tutor()->instructor_role ) ) {
 							?>
 							<div class="tutor-text-semi-h4 tutor-dashboard-header-username">
@@ -95,7 +95,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 							</div>
 							<?php
 					}else{
-						?>	
+						?>
 							<div class="tutor-dashboard-header-display-name tutor-color-text-primary">
 								<div class="tutor-text-regular-h5 tutor-dashboard-header-greetings">
 									Hello,

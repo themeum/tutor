@@ -288,7 +288,14 @@ class Course_List {
 	public static function tutor_course_delete() {
 		tutor_utils()->checking_nonce();
 		$id     = sanitize_text_field( $_POST['id'] );
+		$announcements = get_posts(array('post_type'=>'tutor_announcements','post_parent'=>$id));
+		foreach ($announcements as $announcement) {
+			wp_delete_post( $announcement->ID, true );
+		}
 		$delete = self::delete_course( $id );
+
+
+		// $delete = Announcements::delete_announcements( $action, $bulk_ids )( $id );
 		return wp_send_json( $delete );
 		exit;
 	}
