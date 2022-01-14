@@ -1,5 +1,9 @@
 /* Course settings module */
-// .tutor-frontend-course-builder-form-field {
+#wpcontent,
+.tutor-frontend-course-builder-form-field {
+    .tutor-form-toggle .tutor-form-toggle-control {
+        margin: 0 2px 0px 0px;
+    }
     .tutor-btn {
         font-family: 'Inter', sans-serif;
         padding: 7px 20px;
@@ -40,6 +44,7 @@
     }
     .tutor-course-available-instructors {
         display: flex;
+        flex-wrap: wrap;
         gap: 20px;
         justify-content: space-between;
     }
@@ -76,17 +81,27 @@
             gap : 10px;
         }
     }
-    .tutor-form-toggle-control {
-        margin: 0;
+    .tutor-quiz-advance-settings p.help {
+        line-height: 1.34;
+        margin-top: 10px;
     }
     .tutor-form-group input:not([type=submit]):focus {
         border: 0px solid transparent !important;
     }
 
+    .tutor-quiz-builder-modal-wrap {
+        
+    }
+    .tutor_assignment_modal_form {
+        .tutor-form-select {
+            width: 135px;
+        }
+    }
+
     #tutor-course-content-wrap {
         .tutor-topics-top {
             .course-move-handle {
-                margin-top: -2px;
+                // margin-top: -2px;
             }
             .tutor-topic-title {
                 padding: 5px 5px;
@@ -115,7 +130,7 @@
             }
         }
     }
-// }
+}
 #tutor-metabox-course-settings-tabs {
     background-color: #fff;
     border: 1px solid $stroke-light-30;

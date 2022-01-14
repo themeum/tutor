@@ -62,16 +62,16 @@
                 <div class="tutor-modal-footer">
                     <div class="tutor-bs-row">
                         <div class="tutor-bs-col">
-                                <button type="button" data-action="back" class="tutor-btn tutor-is-default">
-                                    <?php _e('Back', 'tutor'); ?>
-                                </button>
-                                <button type="button" data-action="next" class="tutor-btn tutor-is-primary">
-                                    <?php _e('Save & Next', 'tutor'); ?>
-                                </button>
-                        </div>
-                        <div class="tutor-bs-col-auto">
                             <button data-tutor-modal-close class="tutor-btn tutor-is-default">
                                 <?php _e('Cancel', 'tutor'); ?>
+                            </button>
+                        </div>
+                        <div class="tutor-bs-col-auto">
+                            <button type="button" data-action="back" class="tutor-btn tutor-is-default tutor-mr-10">
+                                <?php _e('Back', 'tutor'); ?>
+                            </button>
+                            <button type="button" data-action="next" class="tutor-btn tutor-is-primary">
+                                <?php _e('Save & Next', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-bs-col">
