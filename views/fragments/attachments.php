@@ -15,7 +15,7 @@
                         <?php echo $attachment->title; ?>
                     </a>
                     <?php if($size_below): ?>
-                        <span class="filesize"><?php _e('Size', 'tutor'); ?>: <?php echo $attachment->size; ?></span>
+                        <span class="filesize" style="margin-top: -5px;"><?php _e('Size', 'tutor'); ?>: <?php echo $attachment->size; ?></span>
                     <?php endif; ?>
                     <input type="hidden" name="<?php echo isset($data['name']) ? $data['name'] : ''; ?>" value="<?php echo $attachment->id; ?>">
                 </div>
