@@ -15,7 +15,7 @@
 $course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), get_the_ID() );
 
 get_header();
-do_action('tutor_course/single/before/wrap'); 
+do_action('tutor_course/single/before/wrap');
 ?>
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
     <div class="tutor-course-details-page tutor-bs-container">
@@ -27,7 +27,7 @@ do_action('tutor_course/single/before/wrap');
                 <div class="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-30">
                     <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
                     <div class="tab-body">
-                        <?php 
+                        <?php
                             foreach($course_nav_item as $key=>$subpage) {
                                 ?>
                                 <div class="tab-body-item <?php echo $key=='info' ? 'is-active' : ''; ?>" id="tutor-course-details-tab-<?php echo $key; ?>">
