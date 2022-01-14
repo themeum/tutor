@@ -128,11 +128,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	};
 
-	// const checkNumberFieldsOnSubmit = (inputFields) => {
-	// 	inputFields.forEach((numberField) => {
-	// 		// console.log(numberField);
-	// 	})
-	// }
+	const checkNumberFieldsOnSubmit = (inputFields) => {
+		inputFields.forEach((numberField) => {
+			// console.log(numberField);
+		})
+	}
 
 	const inputEmailFields = document.querySelectorAll('[type="email"]');
 	const inputNumberFields = document.querySelectorAll('[type="number"]');
