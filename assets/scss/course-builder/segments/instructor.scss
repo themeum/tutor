@@ -6,13 +6,15 @@ $inst_gap: 30px;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 400px));
         gap: 20px;
+        justify-content: flex-start;
+        .added-instructor-item {
+            max-width: unset !important;
+        }
     }
 }
 .tutor-course-available-instructors {
     // display: flex;
     // flex-wrap: wrap;
-
-    
     .added-instructor-item {
         // flex: 0 0 calc(50% - #{$inst_gap});
         // max-width: calc(50% - #{$inst_gap});
@@ -120,7 +122,6 @@ $inst_gap: 30px;
             position: absolute;
             right: 0;
             top: 0;
-            color: inherit;
         }
     }
 
