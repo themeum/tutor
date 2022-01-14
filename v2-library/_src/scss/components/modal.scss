@@ -31,7 +31,7 @@
 		border: none;
 		span {
 			font-size: 28px;
-			color: #1A1B1E;
+			color: #9CA0AC;
 			margin-top: 4px;
 		}
 	}
@@ -258,7 +258,8 @@
 // modal steps
 
 .tutor-modal-steps {
-	padding: 30px 27px;
+	padding: 20px 27px;
+    border-bottom: 1px solid #cdcfd5;
 	ul {
 		list-style: none;
 		display: flex;
@@ -361,7 +362,11 @@
 		}
 	}
 }
-
+.tutor-quiz-builder-modal-wrap {
+	.tutor-modal-header {
+		border: unset !important;
+	}
+}
 // modal tabs
 
 .tutor-modal-tabs {

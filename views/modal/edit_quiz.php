@@ -111,7 +111,7 @@
                 (<?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>)
             </div>
 
-            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10">
+            <label class="tutor-radio-select tutor-bg-white tutor-mb-7">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Default', 'tutor'); ?></span>
@@ -119,7 +119,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10">
+            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10 tutor-mt-7">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
@@ -127,7 +127,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10">
+            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-10 tutor-mt-7">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Reveal Mode', 'tutor'); ?></span>
@@ -179,7 +179,7 @@
 
     <?php do_action('tutor_quiz_edit_modal_settings_tab_after_max_allowed_questions', $quiz); ?>
 
-    <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer tutor-mb-30"">
+    <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer tutor-mb-30">
         <!-- Header -->
         <div class="tutor-bs-row tutor-bs-align-items-center tutor-quiz-advance-header tutor-bs-g-0">
             <div class="tutor-bs-col">
@@ -187,18 +187,18 @@
                     <div class="tutor-bs-col-auto">
                         <span><i class="ttr-settings-filled"></i></span>
                     </div>
-                    <div class="tutor-bs-col tutor-padding-0">
+                    <div class="tutor-bs-col tutor-padding-0 tutor-text-medium-h6 tutor-color-text-title">
                         <?php _e('Advance Settings', 'tutor'); ?>
                     </div>
                 </div>
             </div>
             <div class="tutor-bs-col-auto">
-                <i class="ttr-angle-down-filled"></i>
+                <i class="ttr-angle-down-filled tutor-mr-30"></i>
             </div>
         </div>
 
         <!-- Fields -->
-        <div class="tutor-quiz-advance-content tutor-padding-30">
+        <div class="tutor-quiz-advance-content tutor-padding-32">
             <div class="tutor-quiz-advance-settings-fields tutor-bs-row">
                 <div class="tutor-bs-col-12 tutor-mb-30">
                     <label class="tutor-form-toggle">
@@ -240,13 +240,13 @@
 
                 <div class="tutor-bs-col-12 tutor-mb-30">
                     <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
-                    <input class="tutor-form-control" type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>" min="0">
+                    <input style="max-width: 135px;" class="tutor-form-control" type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>" min="0">
                     <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
                 </div>
 
                 <div class="tutor-bs-col-12">
                     <h4><?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?></h4>
-                    <input class="tutor-form-control" type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>" min="0">
+                    <input style="max-width: 135px;" class="tutor-form-control" type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>" min="0">
                     <p class="help"><?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?></p>
                 </div>
             </div>
