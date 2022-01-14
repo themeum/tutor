@@ -176,7 +176,7 @@ if ( ! function_exists( 'tutor_course_loop_start' ) ) {
 		$output = apply_filters( 'tutor_course_loop_start', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 		return $output;
 	}
@@ -189,7 +189,7 @@ if ( ! function_exists( 'tutor_course_loop_end' ) ) {
 
 		$output = apply_filters( 'tutor_course_loop_end', ob_get_clean() );
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 
 		return $output;
@@ -203,7 +203,7 @@ if ( ! function_exists( 'tutor_course_archive_pagination' ) ) {
 
 		$output = apply_filters( 'tutor_course_archive_pagination', ob_get_clean() );
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 
 		return $output;
@@ -215,7 +215,7 @@ function tutor_course_loop_before_content() {
 	tutor_load_template( 'loop.loop-before-content' );
 
 	$output = apply_filters( 'tutor_course_loop_before_content', ob_get_clean() );
-	echo $output;
+	echo tutor_kses_html($output);
 }
 
 function tutor_course_loop_after_content() {
@@ -223,7 +223,7 @@ function tutor_course_loop_after_content() {
 	tutor_load_template( 'loop.loop-after-content' );
 
 	$output = apply_filters( 'tutor_course_loop_after_content', ob_get_clean() );
-	echo $output;
+	echo tutor_kses_html($output);
 }
 
 if ( ! function_exists( 'tutor_course_loop_title' ) ) {
@@ -232,7 +232,7 @@ if ( ! function_exists( 'tutor_course_loop_title' ) ) {
 		tutor_load_template( 'loop.title' );
 		$output = apply_filters( 'tutor_course_loop_title', ob_get_clean() );
 
-		echo $output;
+		echo tutor_kses_html($output);
 	}
 }
 
@@ -243,7 +243,7 @@ if ( ! function_exists( 'tutor_course_loop_header' ) ) {
 		tutor_load_template( 'loop.header' );
 		$output = apply_filters( 'tutor_course_loop_header', ob_get_clean() );
 
-		echo $output;
+		echo tutor_kses_html($output);
 	}
 }
 
@@ -253,7 +253,7 @@ if ( ! function_exists( 'tutor_course_loop_footer' ) ) {
 		tutor_load_template( 'loop.footer' );
 		$output = apply_filters( 'tutor_course_loop_footer', ob_get_clean() );
 
-		echo $output;
+		echo tutor_kses_html($output);
 	}
 }
 
@@ -266,7 +266,7 @@ if ( ! function_exists( 'tutor_course_loop_start_content_wrap' ) ) {
 		tutor_load_template( 'loop.start_content_wrap' );
 		$output = apply_filters( 'tutor_course_loop_start_content_wrap', ob_get_clean() );
 
-		echo $output;
+		echo tutor_kses_html($output);
 	}
 }
 
@@ -276,7 +276,7 @@ if ( ! function_exists( 'tutor_course_loop_end_content_wrap' ) ) {
 		tutor_load_template( 'loop.end_content_wrap' );
 		$output = apply_filters( 'tutor_course_loop_end_content_wrap', ob_get_clean() );
 
-		echo $output;
+		echo tutor_kses_html($output);
 	}
 }
 
@@ -287,7 +287,7 @@ if ( ! function_exists( 'tutor_course_loop_thumbnail' ) ) {
 		$output = apply_filters( 'tutor_course_loop_thumbnail', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		} else {
 			return $output;
 		}
@@ -464,7 +464,7 @@ if ( ! function_exists( 'tutor_course_loop_meta' ) ) {
 		tutor_load_template( 'loop.meta' );
 		$output = apply_filters( 'tutor_course_loop_meta', ob_get_clean() );
 
-		echo $output;
+		echo tutor_kses_html($output);
 	}
 }
 
@@ -552,7 +552,7 @@ if ( ! function_exists( 'tutor_course_loop_add_to_cart' ) ) {
 		$output = apply_filters( 'tutor_course_loop_add_to_cart_link', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo wp_kses_post($output);
 		}
 		return $output;
 	}
@@ -667,7 +667,7 @@ if ( ! function_exists( 'tutor_course_benefits_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/benefits_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo wp_kses_post($output);
 		}
 		return $output;
 	}
@@ -690,7 +690,7 @@ if ( ! function_exists( 'tutor_course_topics' ) ) {
 		wp_reset_postdata();
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 
 		return $output;
@@ -739,7 +739,7 @@ if ( ! function_exists( 'tutor_course_requirements_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/requirements_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 		return $output;
 	}
@@ -788,7 +788,7 @@ if ( ! function_exists( 'tutor_course_target_audience_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/audience_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 		return $output;
 	}
@@ -819,7 +819,7 @@ if ( ! function_exists( 'tutor_course_material_includes_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/material_includes', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 		return $output;
 	}
@@ -840,7 +840,7 @@ if ( ! function_exists( 'tutor_course_instructors_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/instructors_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 		return $output;
 	}
@@ -853,7 +853,7 @@ if ( ! function_exists( 'tutor_course_target_reviews_html' ) ) {
 		$output = apply_filters( 'tutor_course/single/reviews_html', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 		return $output;
 	}
@@ -866,7 +866,7 @@ if ( ! function_exists( 'tutor_course_target_review_form_html' ) ) {
 			$output = apply_filters( 'tutor_review_disabled_text', '' );
 
 			if ( $echo ) {
-				echo $output;
+				echo tutor_kses_html($output);
 			}
 			return $output;
 		}
@@ -898,7 +898,7 @@ if ( ! function_exists( 'tutor_course_content' ) ) {
 		$output = apply_filters( 'tutor_course/single/content', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 
 		return $output;
@@ -936,7 +936,7 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 		$output = apply_filters( 'tutor_course/single/lead_info', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 		return $output;
 	}
@@ -972,7 +972,7 @@ if ( ! function_exists( 'tutor_course_enrolled_lead_info' ) ) {
 		$output = apply_filters( 'tutor_course/single/enrolled/lead_info', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 
 		return $output;
@@ -1189,7 +1189,7 @@ if ( ! function_exists( 'tutor_lessons_sidebar' ) ) {
 		$output = apply_filters( 'tutor_lesson/single/lesson_sidebar', ob_get_clean() );
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html($output);
 		}
 
 		return $output;

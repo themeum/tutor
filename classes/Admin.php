@@ -31,6 +31,15 @@ class Admin{
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 		//Register Course Widget
 		add_action( 'widgets_init', array($this, 'register_course_widget') );
+
+		// Update plugin v2 notice
+		add_action( 'in_plugin_update_message-'.tutor()->basename, array($this, 'plugin_update_notice_v2'), 10, 2 ); 
+	}
+
+	public function plugin_update_notice_v2($plugin_data, $r) {
+		echo '</p></div>'; 
+		tutor_load_template('v2-update-notice');
+		echo '<div style="display:none;"><p>';
 	}
 
 	public function register_menu(){
