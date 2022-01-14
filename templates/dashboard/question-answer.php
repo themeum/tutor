@@ -30,18 +30,13 @@ style="width: calc(100% + 30px)" -->
         <div class="tutor-text-medium-h5 tutor-color-text-primary"><?php _e('Question & Answer', 'tutor'); ?></div>
     </div>
     <?php if($is_instructor): ?>
-        <div class="tutor-qna-toggle">
-            <div class="tutor-qna-view-as">
-                <!-- <?php _e('View as', 'tutor'); ?>: -->
-            </div>
-            <div class="tutor-qna-toggle-area">
-                <label class="tutor-form-toggle tutor-dashboard-qna-vew-as current-view-<?php echo $view_as=='instructor' ? 'instructor' : 'student'; ?>">
-                    <input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as=='instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo $as_instructor_url; ?>" data-as_student_url="<?php echo $as_student_url; ?>" disabled="disabled"/>
-                    <span class="tutor-text-regular-body tutor-form-toggle-label <?php if($view_as == 'student') { echo 'tutor-form-toggle-checked'; }?>"><?php _e('Student', 'tutor'); ?></span>
-                    <span class="tutor-form-toggle-control"></span>
-                    <span class="tutor-text-regular-body tutor-form-toggle-label <?php if($view_as == 'instructor') { echo 'tutor-form-toggle-checked'; }?>"><?php _e('Instructor', 'tutor'); ?></span>
-                </label>
-            </div>
+        <div class="tutor-bs-col-auto">
+            <label class="tutor-form-toggle tutor-dashboard-qna-vew-as current-view-<?php echo $view_as=='instructor' ? 'instructor' : 'student'; ?>">
+                <input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as=='instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo $as_instructor_url; ?>" data-as_student_url="<?php echo $as_student_url; ?>" disabled="disabled"/>
+                <span class="tutor-form-toggle-label tutor-form-toggle-checked"><?php _e('Student', 'tutor'); ?></span>
+                <span class="tutor-form-toggle-control"></span>
+                <span class="tutor-form-toggle-label tutor-form-toggle-unchecked"><?php _e('Instructor', 'tutor'); ?></span>
+            </label>
         </div>
         <!-- <div class="tutor-bs-col">
             <div class="tutor-bs-row">

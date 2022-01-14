@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     function commentSideLine() {
         if (parentComments) {
             [...parentComments].forEach((parentComment) => {
-                
+
                 const childComments = parentComment.querySelectorAll(
                     '.tutor-comments-list.tutor-child-comment'
                 );
@@ -119,18 +119,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	);
 	if (spotlightTabs && spotlightTabContent) {
 		spotlightTabs.forEach((tab) => {
-			tab.addEventListener('click', (event) => { 
+			tab.addEventListener('click', (event) => {
                 clearSpotlightTabActiveClass();
 				event.currentTarget.classList.add('is-active');
 				let id = event.currentTarget.getAttribute(
 					'data-tutor-spotlight-tab-target'
 				);
+				let query_string = event.currentTarget.getAttribute(
+					'data-tutor-query-string'
+				);
+				// console.log(query_string);
 				const tabConent =
 					event.currentTarget.parentNode.nextElementSibling;
 				tabConent.querySelector('#' + id).classList.add('is-active');
                 if (id === 'tutor-course-spotlight-tab-3') {
 					commentSideLine();
 				}
+				let url = new URL(window.location);
+				url.searchParams.set('page_tab', query_string);
+				window.history.pushState({}, '', url);
+
 			});
 		});
 		const clearSpotlightTabActiveClass = () => {
@@ -199,6 +207,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	const fileUploadField = document.getElementById(
 		'tutor-assignment-file-upload'
 	);
+
 	if (fileUploadField) {
 		fileUploadField.addEventListener('change', tutorAssignmentFileHandler);
 	}
@@ -209,9 +218,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				message = 'Select one or more files.';
 			} else {
 				let fileCard = '';
+				const assignmentFilePreview = document.querySelector(
+					'.tutor-asisgnment-upload-file-preview'
+				);
+				const assignmentEditFilePreview = document.getElementById( 'tutor-student-assignment-edit-file-preview' );
+
 				for (let i = 0; i < fileUploadField.files.length; i++) {
 					let file = fileUploadField.files[i];
-					fileCard += `<div class="tutor-instructor-card">
+					let editWrapClass = assignmentEditFilePreview ? 'tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15' : '';
+					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
                                         <div class="text-regular-body color-text-title">
                                             ${file.name}
@@ -225,9 +240,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
                                     </div>
                                 </div>`;
 				}
-				document.querySelector(
-					'.tutor-asisgnment-upload-file-preview'
-				).innerHTML = fileCard;
+				if (assignmentFilePreview) {
+					assignmentFilePreview.innerHTML = fileCard;
+				}
+				if (assignmentEditFilePreview) {
+					assignmentEditFilePreview.insertAdjacentHTML('beforeend', fileCard);
+				}
 			}
 		}
 	}
