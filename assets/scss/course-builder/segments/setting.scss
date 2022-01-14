@@ -1,4 +1,6 @@
 /* Course settings module */
+
+
 #wpcontent,
 #tutor-frontend-course-builder {
     .tutor-certificate-template {
@@ -15,7 +17,10 @@
         line-height: 24px;
     }
     .tutor-form-toggle .tutor-form-toggle-control {
-        margin: 0 2px 0px 0px !important;
+        margin: 0 10px 0px 0px !important;
+    }
+    .tutor-form-toggle { 
+        
     }
     .select2-container {
         li.select2-selection__choice {  
@@ -42,13 +47,13 @@
     .tutor-modal-body {
         align-items: unset !important;
     }
-    .tutor-attachments-metabox {
-        .tutor-attachment-cards {
-            .filesize {
-                margin-top: -5px;
-            }
-        }
-    }
+    // .tutor-attachments-metabox {
+    //     .tutor-attachment-cards {
+    //         .filesize {
+    //             margin-top: -5px;
+    //         }
+    //     }
+    // }
     .tutor-course-available-instructors {
         display: flex;
         flex-wrap: wrap;
