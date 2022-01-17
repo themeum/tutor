@@ -2,6 +2,13 @@ jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
 
+// const input = document.getElementById('tutor-course-builder-course-title-field');
+// const inputTooltip = document.getElementById('tutor-course-builder-course-title-field-tooltip');
+
+// input.addEventListener('keyup', function() {
+// 	console.log(input.value.lenght, input.value);
+// })
+
 document.addEventListener('DOMContentLoaded', (event) => {
 	const sidebar = document.querySelector(
 		'.tutor-lesson-sidebar.tutor-desktop-sidebar'
@@ -200,6 +207,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	const fileUploadField = document.getElementById(
 		'tutor-assignment-file-upload'
 	);
+
 	if (fileUploadField) {
 		fileUploadField.addEventListener('change', tutorAssignmentFileHandler);
 	}
@@ -210,9 +218,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				message = 'Select one or more files.';
 			} else {
 				let fileCard = '';
+				const assignmentFilePreview = document.querySelector(
+					'.tutor-asisgnment-upload-file-preview'
+				);
+				const assignmentEditFilePreview = document.getElementById( 'tutor-student-assignment-edit-file-preview' );
+
 				for (let i = 0; i < fileUploadField.files.length; i++) {
 					let file = fileUploadField.files[i];
-					fileCard += `<div class="tutor-instructor-card">
+					let editWrapClass = assignmentEditFilePreview ? 'tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15' : '';
+					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
                                         <div class="text-regular-body color-text-title">
                                             ${file.name}
@@ -226,9 +240,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
                                     </div>
                                 </div>`;
 				}
-				document.querySelector(
-					'.tutor-asisgnment-upload-file-preview'
-				).innerHTML = fileCard;
+				if (assignmentFilePreview) {
+					assignmentFilePreview.innerHTML = fileCard;
+				}
+				if (assignmentEditFilePreview) {
+					assignmentEditFilePreview.insertAdjacentHTML('beforeend', fileCard);
+				}
 			}
 		}
 	}

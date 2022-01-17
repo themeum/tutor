@@ -28,7 +28,6 @@
 // Table Base Structure
 table.tutor-ui-table {
 	margin: 0;
-	padding: 0;
 	&,
 	tr,
 	th,
@@ -319,7 +318,7 @@ table.tutor-ui-table {
 		.course-meta {
 			margin-top: 5px;
 
-			span:not(:last-child) {
+			> span:not(:last-child) {
 				margin-right: 10px;
 			}
 		}
