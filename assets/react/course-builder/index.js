@@ -1,11 +1,11 @@
-import './topic';
-import './lesson';
-import './quiz';
 import './assignment';
 import './attachment';
-import './video-picker';
-import './instructor-multi';
 import './content-drip';
+import './instructor-multi';
+import './lesson';
+import './quiz';
+import './topic';
+import './video-picker';
 
 window.jQuery(document).ready(function($) {
 	$('.tutor-certificate-template-tab [data-tutor-tab-target]').click(function() {
@@ -41,7 +41,7 @@ window.addEventListener(_tutorobject.content_change_event, () => console.log(_tu
  * @return {Number}
  */
 
-function getRemainingLength(maxLength = 350, inputElement) {
+function getRemainingLength(maxLength = 60, inputElement) {
 	return maxLength - (inputElement.value.trim().length || 0);
 }
 
@@ -49,7 +49,7 @@ function getRemainingLength(maxLength = 350, inputElement) {
  * Update the course title input tooltip value in 'keyup'
  * and set the data initially
  */
-const maxLength = 350;
+const maxLength = 120;
 const courseCreateTitle = document.getElementById('tutor-course-create-title');
 const courseTitleTooltip = courseCreateTitle.previousElementSibling;
 courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);

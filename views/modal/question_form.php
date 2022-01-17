@@ -86,7 +86,7 @@ $settings = maybe_unserialize($question->question_settings);
         <div class="tutor-input-group tutor-mb-15">
             <div class="tutor-bs-row tutor-bs-align-items-center">
                 <div class="tutor-bs-col-sm-6 tutor-bs-col-md-4">
-                    <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" class="tutor-form-control tutor-mb-10" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php echo $question->question_mark; ?>">
+                    <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" class="tutor-form-control" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php echo $question->question_mark; ?>">
                 </div>
                 <div class="tutor-bs-col-sm-6 tutor-bs-col-md-4 tutor-mt-4 tutor-mb-4">
                     <label class="tutor-form-toggle tutor-text-nowrap">
