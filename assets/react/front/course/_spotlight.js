@@ -1,3 +1,4 @@
+import ajaxHandler from '../../admin-dashboard/segments/filter';
 jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
@@ -288,4 +289,34 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			contSect.classList.add('no-before');
 		}
 	}
+	//remove file
+	const removeButton = document.querySelectorAll('.tutor-attachment-file-close a');
+	removeButton.forEach( (item) => {
+		item.onclick = async (event) => {
+			event.preventDefault();
+			const currentTarget = event.currentTarget;
+			let fileName = currentTarget.dataset.name;
+			let id = currentTarget.dataset.id;
+			const formData = new FormData();
+			formData.set('action', 'tutor_remove_assignment_attachment');
+			formData.set('assignment_comment_id', id);
+			formData.set('file_name', fileName);
+			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+			const span = currentTarget.querySelector('span');
+			span.classList.add('tutor-updating-message');
+			const post = await ajaxHandler(formData);
+			if (post.ok) {
+				const response = await post.json();
+				if (!response) {
+					tutor_toast(__("Warning", "tutor"), __(`Attachment remove failed`, "tutor"), "error");
+				} else {
+					currentTarget.closest( '.tutor-instructor-card').remove();
+				}
+			} else {
+				alert(post.statusText);
+				span.classList.remove('tutor-updating-message');
+			}
+			
+		}
+	});
 });
