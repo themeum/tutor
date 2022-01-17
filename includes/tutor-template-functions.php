@@ -1480,6 +1480,6 @@ if ( ! function_exists( 'tutor_enrolled_course_progress' ) ) {
         $query_vars     = $wp_query->query_vars;
         if ( isset( $query_vars[ 'tutor_dashboard_page' ] ) && 'enrolled-courses' === $query_vars['tutor_dashboard_page'] ) {
             tutor_load_template_from_custom_path( tutor()->path . 'templates/loop/enrolled-course-progress.php', '', false );
-        } 
+        }
     }
 }

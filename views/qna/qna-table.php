@@ -68,7 +68,7 @@ $view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
                                                 <?php echo $qna->display_name; ?>
                                             </div>
                                             <div class="tutor-text-medium-small tutor-color-text-hints" style="margin-top : -2px">
-                                                3 min ago
+                                                <?php echo human_time_diff( strtotime( $qna->comment_date ) ); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -88,7 +88,7 @@ $view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
                                                 <div class="tutor-qna-content tutor-text-bold-body tutor-color-text-primary">
                                                     <?php
                                                         $limit = 60;
-                                                        $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content; 
+                                                        $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content;
                                                         echo $content;
                                                     ?>
                                                 </div>
