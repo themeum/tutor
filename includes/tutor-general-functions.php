@@ -429,7 +429,7 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		$html = ob_get_clean();
 
 		if ( $echo ) {
-			echo tutor_kses_html($html);
+			echo tutor_kses_html( $html );
 		} else {
 			return $html;
 		}
@@ -581,7 +581,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 		$html = '<div class="tutor-alert tutor-alert-' . $type . '">' . $msg . '</div>';
 
 		if ( $echo ) {
-			echo tutor_kses_html($html);
+			echo tutor_kses_html( $html );
 		}
 		return $html;
 	}
@@ -686,7 +686,7 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 		}
 
 		if ( $echo ) {
-			echo tutor_kses_html($output);
+			echo tutor_kses_html( $output );
 		} else {
 			return $output;
 		}
@@ -798,8 +798,8 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 
 if(!function_exists('tutor_kses_allowed_html')) {
 	function tutor_kses_allowed_html($allowed_tags, $context) {
-		$tags = array('input', 'style', 'script', 'select', 'form', 'option', 'optgroup');
-		$atts = array('min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'title', 'role', 'placeholder', 'value', 'data-*');
+		$tags = array('input', 'style', 'script', 'select', 'form', 'option', 'optgroup', 'iframe', 'bdi');
+		$atts = array('min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'role', 'placeholder', 'value', 'data-*', 'src', 'width', 'height', 'frameborder', 'allow', 'title');
 
 		foreach($tags as $tag) {
 			$tag_attrs = array();
@@ -823,12 +823,13 @@ if(!function_exists('tutor_kses_allowed_css')) {
 }
 
 if(!function_exists('tutor_kses_html')) {
-	function tutor_kses_html($content) {
+	function tutor_kses_html( $content ) {
 		add_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html', 10, 2 );
 		add_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
 
 		$content = preg_replace('/<!--(.|\s)*?-->/', '', $content);
 		$content = wp_kses_post( $content );
+		$content = str_replace('&amp;', '&', $content);
 
 		remove_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
 		remove_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html' );

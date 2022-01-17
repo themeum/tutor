@@ -35,7 +35,7 @@ $bio                   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile
 			</div>
 			<div class="content">
 				<p>
-					<?php echo $fname ? $fname : '________'; ?>&nbsp;
+					<?php echo $fname ? esc_html( $fname )  : '________'; ?>&nbsp;
 				</p>
 			</div>
 		</div>
@@ -45,7 +45,7 @@ $bio                   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile
 			</div>
 			<div class="content">
 				<p>
-					<?php echo $lname ? $lname : '________'; ?>&nbsp;
+					<?php echo $lname ? esc_html( $lname ) : '________'; ?>&nbsp;
 				</p>
 			</div>
 		</div>
@@ -54,7 +54,7 @@ $bio                   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile
 				<span><?php _e( 'Username', 'tutor' ); ?></span>
 			</div>
 			<div class="content">
-				<p><?php echo $uname; ?>&nbsp;</p>
+				<p><?php echo esc_html( $uname ); ?>&nbsp;</p>
 			</div>
 		</div>
 		<div class="tutor-dashboard-profile-item">
@@ -62,7 +62,7 @@ $bio                   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile
 				<span><?php _e( 'Email', 'tutor' ); ?></span>
 			</div>
 			<div class="content">
-				<p><?php echo $email; ?>&nbsp;</p>
+				<p><?php echo esc_html( $email ); ?>&nbsp;</p>
 			</div>
 		</div>
 		<div class="tutor-dashboard-profile-item">
@@ -70,7 +70,7 @@ $bio                   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile
 				<span><?php _e( 'Phone Number', 'tutor' ); ?></span>
 			</div>
 			<div class="content">
-				<p><?php echo $phone ? esc_attr( $phone ) : '________'; ?>&nbsp;</p>
+				<p><?php echo $phone ? esc_html( $phone ) : '________'; ?>&nbsp;</p>
 			</div>
 		</div>
 
@@ -79,7 +79,7 @@ $bio                   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile
 				<span><?php _e( 'Bio', 'tutor' ); ?></span>
 			</div>
 			<div class="content">
-				<p><?php echo $bio ? $bio : '________'; ?>&nbsp;</p>
+				<p><?php echo $bio ? esc_html( $bio ) : '________'; ?>&nbsp;</p>
 			</div>
 		</div>
 

@@ -84,7 +84,7 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 							$topic_summery = get_the_content();
 							?>
 
-							<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
+							<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo esc_attr( $topic_id ) ; ?>">
 								<div class="tutor-topics-title <?php echo $topic_summery ? 'has-summery' : ''; ?>">
 									<h3>
 										<?php
@@ -162,34 +162,21 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 					}
 					?>
 				</div>
-
 			</div>
-
 		</div>
 
 		<?php do_action( 'tutor_lesson/single/after/lesson_sidebar' ); ?>
-
-
 		<!-- END: Sidebar -->
-
-
-
-
 	</div>
 	<div id="tutor-single-entry-content" class="tutor-lesson-content tutor-single-entry-content tutor-single-entry-content-<?php the_ID(); ?>">
-
-		<?php // tutor_lesson_content(); ?>
-
 		<?php
+			$jsonData                                 = array();
+			$jsonData['post_id']                      = get_the_ID();
+			$jsonData['best_watch_time']              = 0;
+			$jsonData['autoload_next_course_content'] = (bool) get_tutor_option( 'autoload_next_course_content' );
 
-		$jsonData                                 = array();
-		$jsonData['post_id']                      = get_the_ID();
-		$jsonData['best_watch_time']              = 0;
-		$jsonData['autoload_next_course_content'] = (bool) get_tutor_option( 'autoload_next_course_content' );
-
+			do_action( 'tutor_lesson/single/before/content' ); 
 		?>
-
-		<?php do_action( 'tutor_lesson/single/before/content' ); ?>
 
 		<div class="tutor-single-page-top-bar">
 			<div class="tutor-topbar-item tutor-hide-sidebar-bar">
@@ -207,22 +194,17 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 			</div>
 		</div>
 
-
 		<div class="tutor-lesson-content-area">
 			<input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ) ); ?>">
-			<?php tutor_lesson_video(); ?>
-			<?php the_content(); ?>
-			<?php get_tutor_posts_attachments(); ?>
-			<?php tutor_next_previous_pagination(); ?>
+			<?php 
+				tutor_lesson_video();
+				the_content();
+				get_tutor_posts_attachments();
+				tutor_next_previous_pagination(); 
+			?>
 		</div>
 
 		<?php do_action( 'tutor_lesson/single/after/content' ); ?>
-
-
-
-
-
-
 	</div>
 </div>
 <?php
