@@ -355,7 +355,7 @@ $s_content            = $content;
 														<div class="text-regular-small">Size: 230KB;</div>
 													</div>
 													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
-														<a href="<?php echo esc_url( $attachment->url ); ?>" target="_blank">
+														<a href="<?php echo esc_url( $attachment->url ); ?>" data-id="<?php echo esc_attr( $assignment_comment_id ); ?>" data-name="<?php echo esc_attr( $attachment->name ); ?>" target="_blank">
 															<span class="ttr-cross-filled color-design-brand"></span>
 														</a>
 													</div>
