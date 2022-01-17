@@ -49,7 +49,7 @@ function getRemainingLength(maxLength = 60, inputElement) {
  * Update the course title input tooltip value in 'keyup'
  * and set the data initially
  */
-const maxLength = 120;
+const maxLength = 60;
 const courseCreateTitle = document.getElementById('tutor-course-create-title');
 const courseTitleTooltip = courseCreateTitle.previousElementSibling;
 courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
