@@ -87,7 +87,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 	<!-- Course builder body -->
 	<div class="tutor-bs-container">
 		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-lg-8 tutor-mb-30">
+			<div class="tutor-bs-col-12 tutor-bs-col-lg-8 tutor-mb-30 tutor-pr-30">
 				<input type="hidden" value="tutor_add_course_builder" name="tutor_action" />
 				<input type="hidden" name="course_ID" id="course_ID" value="<?php echo get_the_ID(); ?>">
 				<input type="hidden" name="post_ID" id="post_ID" value="<?php echo get_the_ID(); ?>">
@@ -279,7 +279,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 			</div>
 
 			<!-- Course builder tips right sidebar -->
-			<div class="tutor-bs-col-12 tutor-bs-col-lg-4 tutor-mb-30">
+			<div class="tutor-bs-col-12 tutor-bs-col-lg-4 tutor-mb-30 tutor-pl-40">
 				<div class="tutor-course-builder-upload-tips">
 					<h3 class="text-regular-body tutor-mb-20">
 						<strong>
