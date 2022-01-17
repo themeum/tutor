@@ -37,7 +37,7 @@ class Dashboard {
 			/**
 			 * Get course which currently in edit, or insert new course
 			 */
-			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
+			$course_ID = (int) tutor_utils()->array_get( 'course_ID', $_GET );
 
 			if ( $course_ID ) {
 				$post_id = $course_ID;

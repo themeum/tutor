@@ -184,7 +184,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo tutor_kses_html( $content );
 		} else {
 			return $content;
 		}
@@ -196,7 +196,9 @@ class Course extends Tutor_Base {
 		include tutor()->path . 'views/metabox/course-additional-data.php';
 		$content = ob_get_clean();
 
-		if (!$echo){
+		if ( $echo ) {
+			echo tutor_kses_html( $content );
+		} else {
 			return $content;
 		}
 		
@@ -209,7 +211,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo tutor_kses_html( $content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		} else {
 			return $content;
 		}
@@ -351,7 +353,7 @@ class Course extends Tutor_Base {
 
 		if ( $additional_data_edit ) {
 			if ( ! empty( $_POST['video']['source'] ) ) { // Video
-				$video = tutor_utils()->array_get( 'video', tutor_sanitize_data($_POST) );
+				$video = tutor_utils()->array_get( 'video', $_POST );
 				update_post_meta( $post_ID, '_video', $video );
 			} else {
 				delete_post_meta( $post_ID, '_video' );
@@ -506,7 +508,7 @@ class Course extends Tutor_Base {
 	public function tutor_delete_announcement() {
 		tutor_utils()->checking_nonce( 'get' );
 
-		$announcement_id = (int) sanitize_text_field( $_GET['topic_id'] );
+		$announcement_id = (int) $_GET['topic_id'];
 
 		wp_delete_post( $announcement_id );
 		wp_safe_redirect( wp_get_referer() );
@@ -527,7 +529,7 @@ class Course extends Tutor_Base {
 			exit( __( 'Please Sign In first', 'tutor' ) );
 		}
 
-		$course_id = (int) sanitize_text_field( $_POST['tutor_course_id'] );
+		$course_id = (int) $_POST['tutor_course_id'];
 		$user_id   = get_current_user_id();
 
 		/**
@@ -575,7 +577,7 @@ class Course extends Tutor_Base {
 			die( __( 'Please Sign-In', 'tutor' ) );
 		}
 
-		$course_id = (int) sanitize_text_field( $_POST['course_id'] );
+		$course_id = (int) $_POST['course_id'];
 
 		do_action( 'tutor_course_complete_before', $course_id );
 		/**

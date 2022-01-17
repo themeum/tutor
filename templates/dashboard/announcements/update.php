@@ -22,7 +22,7 @@
                     <select class="ignore-nice-select" name="tutor_announcement_course" id="tutor-announcement-course-id" required>
                         <?php if ( $courses ) : ?>
                             <?php foreach ( $courses as $course ) : ?>
-                                <option value="<?php echo $course->ID; ?>">
+                                <option value="<?php echo esc_attr( $course->ID ); ?>">
                                     <?php echo esc_html( $course->post_title ); ?>
                                 </option>
                             <?php endforeach; ?>

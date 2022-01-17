@@ -355,7 +355,7 @@ if ( ! defined( 'ABSPATH' ) )
                 $i++;
             }
 
-            echo $html;
+            echo tutor_kses_html( $html );
         }
 
 

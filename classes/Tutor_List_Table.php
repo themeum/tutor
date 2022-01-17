@@ -397,7 +397,7 @@ class Tutor_List_Table {
 		}
 
 		$content = str_replace( 'OPTIONS_PLACEHOLDER', $options, $markup );
-		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $content;
 	}
 
 	/**
@@ -421,7 +421,7 @@ class Tutor_List_Table {
 			$options .= '<option value="' . $order . '" ' . selected( $selected, $order, false ) . '> ' . __( $order, 'tutor' ) . ' </option>';
 		}
 		$content = str_replace( 'OPTION_PLACEHOLDER', $options, $markup );
-		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $content;
 	}
 	/**
 	 * @since 1.8.0
@@ -440,7 +440,7 @@ class Tutor_List_Table {
 				<i class="tutor-icon-calendar"></i>
 			</div>
 			';
-		echo $markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $markup;
 	}
 
 	/**
@@ -599,7 +599,7 @@ class Tutor_List_Table {
 
 		$out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>';
 
-		return $out; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return $out;
 
 	}
 
@@ -965,7 +965,7 @@ class Tutor_List_Table {
 		}
 		$this->_pagination = '<div class="tablenav-pages' . $page_class . '">' . $output . '</div>';
 
-		echo $this->_pagination; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $this->_pagination;
 	}
 
 	/**

@@ -78,7 +78,7 @@ class Lesson extends Tutor_Base {
 	public function save_lesson_meta( $post_ID ) {
 		// Course
 		if ( isset( $_POST['selected_course'] ) ) {
-			$course_id = (int) sanitize_text_field( $_POST['selected_course'] );
+			$course_id = (int) $_POST['selected_course'];
 			if ( $course_id ) {
 				update_post_meta( $post_ID, '_tutor_course_id_for_lesson', $course_id );
 			}
@@ -118,7 +118,7 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		$lesson_id = (int) tutor_utils()->avalue_dot( 'lesson_id', tutor_sanitize_data($_POST) );
-		$topic_id  = (int) sanitize_text_field( $_POST['topic_id'] );
+		$topic_id  = (int) $_POST['topic_id'];
 
 		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -168,7 +168,7 @@ class Lesson extends Tutor_Base {
 		$lesson_id            = (int) sanitize_text_field( tutor_utils()->avalue_dot( 'lesson_id', $_POST ) );
 		$topic_id             = (int) sanitize_text_field( tutor_utils()->avalue_dot( 'current_topic_id', $_POST ) );
 		$course_id            = tutor_utils()->get_course_id_by( 'topic', $topic_id );
-		$_lesson_thumbnail_id = (int) sanitize_text_field( tutor_utils()->avalue_dot( '_lesson_thumbnail_id', $_POST ) );
+		$_lesson_thumbnail_id = (int) tutor_utils()->avalue_dot( '_lesson_thumbnail_id', $_POST );
 
 		if ( ! tutils()->can_user_manage( 'topic', $topic_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
@@ -225,7 +225,7 @@ class Lesson extends Tutor_Base {
 	public function tutor_delete_lesson_by_id(){
 		tutor_utils()->checking_nonce();
 
-		$lesson_id = (int) sanitize_text_field( tutor_utils()->avalue_dot( 'lesson_id', $_POST ) );
+		$lesson_id = (int) tutor_utils()->avalue_dot( 'lesson_id', $_POST );
 
 		if(!tutor_utils()->can_user_manage('lesson', $lesson_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -321,7 +321,7 @@ class Lesson extends Tutor_Base {
 			die( __( 'Please Sign-In', 'tutor' ) );
 		}
 
-		$lesson_id = (int) sanitize_text_field( $_POST['lesson_id'] );
+		$lesson_id = (int) $_POST['lesson_id'];
 
 		do_action( 'tutor_lesson_completed_before', $lesson_id );
 		/**
@@ -338,7 +338,7 @@ class Lesson extends Tutor_Base {
 	public function tutor_render_lesson_content(){
 		tutor_utils()->checking_nonce();
 
-		$lesson_id = (int) sanitize_text_field( tutor_utils()->avalue_dot( 'lesson_id', $_POST ) );
+		$lesson_id = (int) tutor_utils()->avalue_dot( 'lesson_id', $_POST );
 
 		$ancestors = get_post_ancestors($lesson_id);
 		$course_id = !empty($ancestors) ? array_pop($ancestors): $lesson_id;

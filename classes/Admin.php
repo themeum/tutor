@@ -241,8 +241,8 @@ class Admin {
 			return;
 		}
 
-		if (!empty($_GET['post'])) {
-			$get_post_id = (int) sanitize_text_field($_GET['post']);
+		if (! empty($_GET['post']) ) {
+			$get_post_id = (int) $_GET['post'];
 			$get_post = get_post($get_post_id);
 			$tutor_post_types = array(tutor()->course_post_type, tutor()->lesson_post_type);
 

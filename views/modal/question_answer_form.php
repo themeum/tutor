@@ -126,7 +126,7 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
 			<h4><?php _e( 'Answer title', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="">
 				</div>
 			</div>
 		</div> <!-- /.tutor-quiz-builder-group -->
@@ -135,7 +135,7 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
 			<h4><?php _e( 'Matched Answer title', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][matched_answer_title]" value="">
 				</div>
 			</div>
 			<p class="help"></p>
