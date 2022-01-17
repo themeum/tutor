@@ -95,9 +95,9 @@ class Lesson extends Tutor_Base {
 
 		// Attachments
 		$attachments = array();
-		if ( ! empty( $_POST['tutor_attachments'] ) ) {
-			$attachments = tutor_utils()->sanitize_array( $_POST['tutor_attachments'] );
-			$attachments = array_unique( $attachments );
+		if ( ! empty($_POST['tutor_attachments'])){
+			$attachments = tutor_utils()->sanitize_array($_POST['tutor_attachments']);
+			$attachments = array_unique($attachments);
 		}
 
 		/**
@@ -128,7 +128,7 @@ class Lesson extends Tutor_Base {
 		 * If Lesson Not Exists, provide dummy
 		 */
 		$post_arr = array(
-			'ID'           => 0,
+			'ID' 		   => 0,
 			'post_content' => '',
 			'post_type'    => $this->lesson_post_type,
 			'post_title'   => __( 'Draft Lesson', 'tutor' ),
@@ -137,7 +137,7 @@ class Lesson extends Tutor_Base {
 			'post_parent'  => $topic_id,
 		);
 
-		$post = $lesson_id ? get_post( $lesson_id ) : (object) $post_arr;
+		$post = $lesson_id ? get_post($lesson_id) : (object)$post_arr;
 
 		ob_start();
 		include tutor()->path . 'views/modal/edit-lesson.php';
@@ -154,13 +154,13 @@ class Lesson extends Tutor_Base {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-		
+
 		$lesson_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('lesson_id', $_POST));
 		$topic_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('current_topic_id', $_POST));
 		$current_topic_id = $topic_id;
 		$course_id = tutor_utils()->get_course_id_by('topic', $topic_id);
 		$_lesson_thumbnail_id = (int) sanitize_text_field(tutor_utils()->avalue_dot('_lesson_thumbnail_id', $_POST));
-		
+
 		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
@@ -340,12 +340,12 @@ class Lesson extends Tutor_Base {
 
 		$lesson_id = (int) sanitize_text_field( tutor_utils()->avalue_dot( 'lesson_id', $_POST ) );
 
-		$ancestors = get_post_ancestors( $lesson_id );
-		$course_id = ! empty( $ancestors ) ? array_pop( $ancestors ) : $lesson_id;
+		$ancestors = get_post_ancestors($lesson_id);
+		$course_id = !empty($ancestors) ? array_pop($ancestors): $lesson_id;
 
 		// Course must be public or current user must be enrolled to access this lesson
 		if(get_post_meta($course_id, '_tutor_is_public_course', true)!=='yes' && !tutor_utils()->is_enrolled($course_id)){
-			
+
 			$is_admin = tutor_utils()->has_user_role('administrator');
 			$allowed = $is_admin ? true : tutor_utils()->is_instructor_of_this_course(get_current_user_id(), $course_id);
 
@@ -364,7 +364,8 @@ class Lesson extends Tutor_Base {
 		wp_reset_postdata();
 
 		$html = ob_get_clean();
-		wp_send_json_success( array( 'html' => $html ) );
+
+		wp_send_json_success(array('html' => $html));
 	}
 
 	/**

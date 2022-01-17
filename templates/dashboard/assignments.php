@@ -28,10 +28,12 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 
 ?>
 
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php esc_html_e( 'Assignment', 'tutor' ); ?></div>
+
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignments">
 	<div class="tutor-bs-row">
 		<div class="tutor-bs-col-12 tutor-bs-col-lg-6">
-			<label class="tutor-bs-d-block">
+			<label class="tutor-bs-d-block tutor-form-label">
 				<?php esc_html_e( 'Courses', 'tutor' ); ?>
 			</label>
 			<select class="tutor-form-select tutor-announcement-course-sorting">
@@ -50,90 +52,91 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 			</select>
 		</div>
 		<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
-			<label class="tutor-bs-d-block"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
+			<label class="tutor-bs-d-block tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
 			<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
 				<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 				<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 			</select>
 		</div>
 		<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
-			<label class="tutor-bs-d-block"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
+			<label class="tutor-bs-d-block tutor-form-label"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
 			<div class="tutor-v2-date-picker"></div>
 		</div>
 	</div>
 	<br/>
-
-	<table class="tutor-ui-table tutor-ui-table-responsive table-assignment">
-		<thead>
-			<tr>
-				<th>
-					<span class="text-regular-small tutor-color-text-subsued">
-						<?php esc_html_e( 'Assignment Name', 'tutor' ); ?>
-					</span>
-				</th>
-				<th>
-					<div class="inline-flex-center tutor-color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
-					</div>
-				</th>
-				<th>
-					<div class="inline-flex-center tutor-color-text-subsued">
-						<span class="text-regular-small"><?php esc_html_e( 'Total Submit', 'tutor' ); ?></span>
-					</div>
-				</th>
-				<th class="tutor-shrink"></th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php
-			$submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments/submitted' );
-			if ( is_array( $assignments->results ) && count( $assignments->results ) ) :
-				foreach ( $assignments->results as $item ) :
-				$max_mark      = tutor_utils()->get_assignment_option( $item->ID, 'total_mark' );
-				$course_id     = tutor_utils()->get_course_id_by( 'assignment', $item->ID );
-				$comment_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $item->ID ) );
-				// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish.
-				?>
-					<tr>
-						<td data-th="Course Name">
-							<div class="tutor-color-text-primary td-course tutor-text-medium-body">
-								<a href="#"><?php esc_html_e( $item->post_title ); ?></a>
-								<div class="course-meta">
-									<span class="color-text-subsued tutor-text-regular-caption">
-										<strong class="text-medium-caption"><?php esc_html_e( 'Course', 'tutor' ); ?>: </strong>
-										<a href='<?php echo esc_url( get_the_permalink( $course_id ) ); ?>' target="_blank"><?php echo esc_html_e( get_the_title( $course_id ) ); ?> </a>
-									</span>
+	<div class="tutor-ui-table-wrapper tutor-mb-42">
+		<table class="tutor-ui-table tutor-ui-table-responsive table-assignment">
+			<thead>
+				<tr>
+					<th>
+						<span class="text-regular-small tutor-color-text-subsued">
+							<?php esc_html_e( 'Assignment Name', 'tutor' ); ?>
+						</span>
+					</th>
+					<th>
+						<div class="inline-flex-center tutor-color-text-subsued">
+							<span class="text-regular-small"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
+						</div>
+					</th>
+					<th>
+						<div class="inline-flex-center tutor-color-text-subsued">
+							<span class="text-regular-small"><?php esc_html_e( 'Total Submit', 'tutor' ); ?></span>
+						</div>
+					</th>
+					<th class="tutor-shrink"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				$submitted_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments/submitted' );
+				if ( is_array( $assignments->results ) && count( $assignments->results ) ) :
+					foreach ( $assignments->results as $item ) :
+					$max_mark      = tutor_utils()->get_assignment_option( $item->ID, 'total_mark' );
+					$course_id     = tutor_utils()->get_course_id_by( 'assignment', $item->ID );
+					$comment_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'tutor_assignment' AND comment_post_ID = %d", $item->ID ) );
+					// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish.
+					?>
+						<tr>
+							<td data-th="Course Name">
+								<div class="tutor-color-text-primary td-course tutor-text-medium-body">
+									<a href="#"><?php esc_html_e( $item->post_title ); ?></a>
+									<div class="course-meta">
+										<span class="color-text-subsued tutor-text-regular-caption">
+											<strong class="text-medium-caption"><?php esc_html_e( 'Course', 'tutor' ); ?>: </strong>
+											<a href='<?php echo esc_url( get_the_permalink( $course_id ) ); ?>' target="_blank"><?php echo esc_html_e( get_the_title( $course_id ) ); ?> </a>
+										</span>
+									</div>
 								</div>
-							</div>
-						</td>
-						<td data-th="Total Points">
-							<span class="tutor-color-text-primary tutor-text-medium-caption">
-								<?php echo esc_html_e( $max_mark ); ?>
-							</span>
-						</td>
-						<td data-th="Total SUbmits">
-							<span class="tutor-color-text-primary tutor-text-medium-caption">
-								<?php echo esc_html_e( $comment_count ); ?>
-							</span>
-						</td>
-						<td data-th="Details URL">
-							<div class="inline-flex-center td-action-btns">
-								<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="btn-outline tutor-btn">
-									<?php esc_html_e( 'Details', 'tutor' ); ?>
-								</a>
-							</div>
+							</td>
+							<td data-th="Total Points">
+								<span class="tutor-color-text-primary tutor-text-medium-caption">
+									<?php echo esc_html_e( $max_mark ); ?>
+								</span>
+							</td>
+							<td data-th="Total SUbmits">
+								<span class="tutor-color-text-primary tutor-text-medium-caption">
+									<?php echo esc_html_e( $comment_count ); ?>
+								</span>
+							</td>
+							<td data-th="Details URL">
+								<div class="inline-flex-center td-action-btns">
+									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="btn-outline tutor-btn">
+										<?php esc_html_e( 'Details', 'tutor' ); ?>
+									</a>
+								</div>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php else : ?>
+					<tr>
+						<td colspan="100%">
+							<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 						</td>
 					</tr>
-				<?php endforeach; ?>
-			<?php else : ?>
-				<tr>
-					<td colspan="100%">
-						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-					</td>
-				</tr>
-			<?php endif; ?>
-		</tbody>
-	</table>
+				<?php endif; ?>
+			</tbody>
+		</table>
+	</div>
 	<?php
 		$pagination_data = array(
 			'total_items' => $assignments->count,

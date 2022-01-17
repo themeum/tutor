@@ -122,7 +122,11 @@ if ( '' !== $category_slug ) {
 	);
 }
 
+add_filter( 'posts_search', '_tutor_search_by_title_only', 500, 2 );
+
 $the_query = new WP_Query( $args );
+
+remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
 
 $available_status = array(
 	'publish' => __( 'Publish', 'tutor' ),
@@ -179,7 +183,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								</span>
 								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
-						</th>	
+						</th>
 						<th>
 							<div class="text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Course Categories', 'tutor' ); ?>
@@ -195,7 +199,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</div>
 						</th>
-						<th class="tutor-shrink"></th>											
+						<th class="tutor-shrink"></th>
 					</tr>
 				</thead>
 				<tbody class="tutor-text-500">
@@ -231,25 +235,25 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										</a>
 										<div class="course-meta">
 										<span class="color-text-hints tutor-text-medium-small">
-											<?php esc_html_e( 'Topic:', 'tutor' ); ?> 
+											<?php esc_html_e( 'Topic:', 'tutor' ); ?>
 											<strong class="tutor-color-text-primary">
 												<?php echo esc_html( $count_topic ); ?>
 											</strong>
 										</span>
 										<span class="color-text-hints tutor-text-medium-small">
-											<?php esc_html_e( 'Lesson:', 'tutor' ); ?> 
+											<?php esc_html_e( 'Lesson:', 'tutor' ); ?>
 											<strong class="tutor-color-text-primary">
 												<?php echo esc_html( $count_lesson ); ?>
 											</strong>
 										</span>
 										<span class="color-text-hints tutor-text-medium-small">
-											<?php esc_html_e( 'Quiz:', 'tutor' ); ?> 
+											<?php esc_html_e( 'Quiz:', 'tutor' ); ?>
 											<strong class="tutor-color-text-primary">
 												<?php echo esc_html( $count_quiz ); ?>
 											</strong>
 										</span>
 										<span class="color-text-hints tutor-text-medium-small">
-											<?php esc_html_e( 'Assignment:', 'tutor' ); ?> 
+											<?php esc_html_e( 'Assignment:', 'tutor' ); ?>
 											<strong class="tutor-color-text-primary">
 												<?php echo esc_html( $count_assignment ); ?>
 											</strong>
@@ -310,7 +314,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											<option value="publish" <?php selected( $key, $post->post_status, 'selected' ); ?>>
 												<?php echo esc_html( $value ); ?>
 											</option>
-										<?php endforeach; ?>	
+										<?php endforeach; ?>
 										</select>
 										<i class="icon1 ttr-eye-fill-filled"></i>
 										<i class="icon2 ttr-angle-down-filled"></i>
@@ -329,7 +333,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="popup-menu" style="width: 220px;">
 										<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 											<li>
-												<a href="<?php echo esc_url( $post->guid ); ?>" target="_blank">
+												<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
 													<i class="ttr-eye-fill-filled"></i>
 													<span class="text-regular-body tutor-color-text-white">
 														<?php esc_html_e( 'View Course', 'tutor' ); ?>
@@ -338,7 +342,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											</li>
 											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
-												<a href="#" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
+												<a href="javascript:void(0)" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
 													<i class="ttr-delete-fill-filled tutor-color-design-white"></i>
 													<span class="text-regular-body tutor-color-text-white">
 													<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>

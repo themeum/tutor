@@ -15,7 +15,7 @@
                         <?php echo $attachment->title; ?>
                     </a>
                     <?php if($size_below): ?>
-                        <span class="filesize"><?php _e('Size', 'tutor'); ?>: <?php echo $attachment->size; ?></span>
+                        <span class="filesize" style="margin-top: -5px;"><?php _e('Size', 'tutor'); ?>: <?php echo $attachment->size; ?></span>
                     <?php endif; ?>
                     <input type="hidden" name="<?php echo isset($data['name']) ? $data['name'] : ''; ?>" value="<?php echo $attachment->id; ?>">
                 </div>
@@ -35,6 +35,6 @@
 <?php if ( isset( $data['add_button'] ) && true === $data['add_button'] ): ?>
     <button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutorUploadAttachmentBtn" data-name="<?php echo isset( $data['name'] ) ? esc_attr( $data['name'] ) : ''; ?>">
         <span class="btn-icon ttr-attach-filled tutor-icon-24"></span>
-        <span><?php esc_html_e( 'Add Attachment', 'tutor' ); ?></span>
+        <span><?php esc_html_e( 'Upload Attachments', 'tutor' ); ?></span>
     </button>
 <?php endif; ?>

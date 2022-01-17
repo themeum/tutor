@@ -199,6 +199,8 @@ gulp.task("copy", function () {
 			"!./v2-library/_src/**",
 			"!./v2-library/bundle/*.*",
 			"!./v2-library/bundle/fonts/tutor-v2-icon/demo-files/**",
+			"!./v2-library/bundle/fonts/tutor-v2-icon/*.html",
+			"!./v2-library/bundle/fonts/lineawesome@1.3.0/**",
 			"!./v2-library/src/**",
 			"!./test/**",
 			"!./.docz/**",

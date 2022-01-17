@@ -399,3 +399,12 @@
 		}
 	}
 }
+
+.tutor-course-listing-item {
+	.tutor-updating-message {
+		@include spinner($lineColor: #ababab, $lineBgColor: #fdfdfd, $size: 17px);
+		&:before {
+			content: '' !important;
+		}
+	}
+}

@@ -138,14 +138,21 @@
 		position: relative;
 		display: inline-block;
 
-		.tutor-popover-toggle-btn .btn-icon {
-			transition: 250ms;
+		.tutor-popover-toggle-btn {
+			transition: unset;
+			.btn-icon {
+				transition: 250ms;
+			}
 		}
 
 		&.is-active {
-			.tutor-popover-toggle-btn .btn-icon {
-				transform: rotate(-180deg);
+			.tutor-popover-toggle-btn {
+				border-color: $color-brand;
 				color: $color-brand;
+				.btn-icon {
+					transform: rotate(-180deg);
+					color: $color-brand;
+				}
 			}
 		}
 	}
@@ -173,7 +180,7 @@
 .tutor-meeting-list {
 	margin: 0;
 	padding: 0;
-	padding-top: 10px;
+	padding-top: 13px;
 	padding-bottom: 10px;
 	box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.12);
 	background: #fff;
@@ -188,6 +195,8 @@
 		&:last-child {
 			border-top: 1px solid $stroke-light-30;
 			margin-top: 20px;
+			padding-top: 10px;
+			padding-bottom: 6px;
 		}
 	}
 
@@ -203,32 +212,32 @@
 		pointer-events: none;
 	}
 
-	.tooltip {
-		display: inline-block;
+	.tutor-tooltip {
 		position: absolute;
-		color: #2a2d35;
-		color: $text-hints;
+		background: #212327;
+		color: #fff;
 		border: 1px solid;
 		width: max-content;
 		height: auto;
 		font-size: 12px;
-		top: calc(-50% - 10px);
-		left: 50%;
-		transform: translateX(-50%);
-		padding: 2px 4px;
-		border-radius: 6px;
+		line-height: 1.5;
+		transform: translateY(-50%);
+		padding: 3px 8px;
+		border-radius: 8px;
+		left: calc(100% + 5px);
+		top: 50%;
 
 		&:before {
 			--bw: 4px;
 			content: '';
 			position: absolute;
-			bottom: calc(-2 * var(--bw));
-			left: 50%;
-			transform: translateX(-50%);
+			top: 50%;
+			left: calc(-2 * var(--bw));
+			transform: translateY(-50%);
 			border-width: var(--bw);
 			border-style: solid;
 			border-color: transparent;
-			border-top-color: inherit;
+			border-right-color: #212327;
 		}
 	}
 

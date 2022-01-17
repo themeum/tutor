@@ -108,6 +108,12 @@
 	text-overflow: ellipsis;
 }
 
+.tutor-nowrap-ellipsis {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .tutor-text-hover-underline {
 	cursor: pointer;
 

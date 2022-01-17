@@ -63,8 +63,8 @@
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 			<div class="tutor-qa-sticky-bar">
 				<div>
-					<a class="qna-back-button" href="<?php echo $back_url; ?>">
-						<i class="ttr-previous-line"></i> <?php _e( 'Back', 'tutor' ); ?>
+					<a class="qna-back-button tutor-text-regular-body tutor-color-text-subsued" href="<?php echo $back_url; ?>">
+						<i class="ttr-previous-line tutor-icon-30 tutor-mr-10"></i> <?php _e( 'Back', 'tutor' ); ?>
 					</a>
 				</div>
 				<div class="tutor-qna-badges tutor-qna-badges-wrapper">

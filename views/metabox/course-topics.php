@@ -7,7 +7,7 @@
     </div>
 
     <div class="new-topic-btn-wrap">
-        <button data-tutor-modal-target="tutor-modal-add-topic" class="create_new_topic_btn tutor-btn bordered-btn"> 
+        <button data-tutor-modal-target="tutor-modal-add-topic" class="create_new_topic_btn tutor-btn tutor-btn-md bordered-btn"> 
             <i class="ttr-plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php _e('Add new topic', 'tutor'); ?>
         </button>
     </div>
@@ -30,7 +30,7 @@
         <div class="tutor-modal-root">
             <div class="tutor-modal-inner">
                 <div class="tutor-modal-header">
-                    <h3 class="tutor-modal-title">
+                    <h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
                         <?php _e('Quiz', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
@@ -62,18 +62,16 @@
                 <div class="tutor-modal-footer">
                     <div class="tutor-bs-row">
                         <div class="tutor-bs-col">
-                            <div class="tutor-btn-group">
-                                <button type="button" data-action="back" class="tutor-btn tutor-is-default">
-                                    <?php _e('Back', 'tutor'); ?>
-                                </button>
-                                <button type="button" data-action="next" class="tutor-btn tutor-is-primary">
-                                    <?php _e('Save & Next', 'tutor'); ?>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="tutor-bs-col-auto">
                             <button data-tutor-modal-close class="tutor-btn tutor-is-default">
                                 <?php _e('Cancel', 'tutor'); ?>
+                            </button>
+                        </div>
+                        <div class="tutor-bs-col-auto">
+                            <button type="button" data-action="back" class="tutor-btn tutor-is-default tutor-mr-10">
+                                <?php _e('Back', 'tutor'); ?>
+                            </button>
+                            <button type="button" data-action="next" class="tutor-btn tutor-is-primary">
+                                <?php _e('Save & Next', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-bs-col">
@@ -92,7 +90,7 @@
         <div class="tutor-modal-root">
             <div class="tutor-modal-inner">
                 <div class="tutor-modal-header">
-                    <h3 class="tutor-modal-title">
+                    <h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
                         <?php _e('Lesson', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
@@ -107,13 +105,13 @@
                 <div class="tutor-modal-footer">
                     <div class="tutor-bs-row">
                         <div class="tutor-bs-col">
-                            <button type="button" class="tutor-btn update_lesson_modal_btn">
-                                <?php _e('Update Lesson', 'tutor'); ?>
+                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                                <?php _e('Cancel', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-bs-col-auto">
-                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
-                                <?php _e('Cancel', 'tutor'); ?>
+                            <button type="button" class="tutor-btn update_lesson_modal_btn">
+                                <?php _e('Update Lesson', 'tutor'); ?>
                             </button>
                         </div>
                     </div>
@@ -127,7 +125,7 @@
         <div class="tutor-modal-root">
             <div class="tutor-modal-inner">
                 <div class="tutor-modal-header">
-                    <h3 class="tutor-modal-title">
+                    <h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
                         <?php _e('Assignment', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
@@ -140,13 +138,13 @@
                 <div class="tutor-modal-footer">
                     <div class="tutor-bs-row">
                         <div class="tutor-bs-col">
-                            <button type="button" class="tutor-btn update_assignment_modal_btn">
-                                <?php _e('Update Assignment', 'tutor'); ?>
+                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                                <?php _e('Cancel', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-bs-col-auto">
-                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
-                                <?php _e('Cancel', 'tutor'); ?>
+                            <button type="button" class="tutor-btn update_assignment_modal_btn">
+                                <?php _e('Update Assignment', 'tutor'); ?>
                             </button>
                         </div>
                     </div>

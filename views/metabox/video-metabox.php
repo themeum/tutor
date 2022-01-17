@@ -1,20 +1,20 @@
 <?php
+
 /**
  * Don't change it, it's supporting modal in other place
  * if get_the_ID() empty, then it's means we are passing $post variable from another place
  */
-if ( get_the_ID() ) {
-	global $post;
-}
+if (get_the_ID())
+    global $post;
 
 $video          = maybe_unserialize(get_post_meta($post->ID, '_video', true));
-$videoSource    = tutor_utils()->avalue_dot('source', $video);
+$videoSource    = tutor_utils()->avalue_dot('source', $video, 'html5');
 $runtimeHours   = tutor_utils()->avalue_dot('runtime.hours', $video);
 $runtimeMinutes = tutor_utils()->avalue_dot('runtime.minutes', $video);
 $runtimeSeconds = tutor_utils()->avalue_dot('runtime.seconds', $video);
 $sourceVideoID  = tutor_utils()->avalue_dot('source_video_id', $video);
 $poster         = tutor_utils()->avalue_dot('poster', $video);
-$videoAttachment= $sourceVideoID ? tutor_utils()->get_attachment_data($sourceVideoID) : null;
+$videoAttachment = $sourceVideoID ? tutor_utils()->get_attachment_data($sourceVideoID) : null;
 
 $video_sources  = array(
     'html5'     => array('title' => __('HTML 5 (mp4)', 'tutor'), 'icon' => 'html5'),
@@ -25,10 +25,17 @@ $video_sources  = array(
 );
 
 $supported_sources = tutor_utils()->get_option('supported_video_sources', array());
-is_string($supported_sources) ? $supported_sources=array($supported_sources) : 0;
+is_string($supported_sources) ? $supported_sources = array($supported_sources) : 0;
 
-if(!is_array($supported_sources) || !count($supported_sources)) {
-    _e('No video source selected from settings!', 'tutor');
+if (!is_array($supported_sources) || !count($supported_sources)) {
+    $notice = __('No video source selected from settings!', 'tutor');
+    echo "<div class='tutor-alert tutor-warning'>
+        <div class='tutor-alert-text'>
+            <span class='tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10'></span>
+            <span>{$notice}</span>
+        </div>
+    </div>";
+    // _e('No video source selected from settings!', 'tutor');
     return;
 }
 ?>
@@ -37,30 +44,30 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
 <div class="tutor-mb-30">
     <label class="text-medium-body color-text-primary tutor-pb-10">
         <?php
-        if ($post->post_type === tutor()->course_post_type){
+        if ($post->post_type === tutor()->course_post_type) {
             _e('Course Intro Video', 'tutor');
-        }else{
+        } else {
             _e('Video Source', 'tutor');
         }
         ?>
     </label>
     <div class="tutor-input-group tutor-mb-15 tutor-mt-10 tutor-bs-d-block">
         <div class="tutor-video-upload-wrap g-0">
-            <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo $videoSource; ?>">
+            <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo empty($videoSource) ? 'html5' : $videoSource; ?>">
                 <i class="ttr-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
                 <i class="ttr-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
                 <i class="ttr-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
             </div>
             <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source" noDropdown>
-                <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
+                <!-- <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option> -->
                 <?php
-                    foreach($video_sources as $value=>$source){
-                        if(in_array($value, $supported_sources)){
-                            echo '<option value="'.$value.'" '.selected($value, $videoSource).'  data-icon="'.$source['icon'].'">
-                                    '.$source['title'].'
+                foreach ($video_sources as $value => $source) {
+                    if (in_array($value, $supported_sources)) {
+                        echo '<option value="' . $value . '" ' . selected($value, $videoSource) . '  data-icon="' . $source['icon'] . '">
+                                    ' . $source['title'] . '
                                 </option>';
-                        }
                     }
+                }
                 ?>
             </select>
 
@@ -75,25 +82,25 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
                         <button class="video_upload_btn tutor-btn tutor-btn-secondary tutor-btn-md">
                             <?php _e('Browse File', 'tutor'); ?>
                         </button>
-                        <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>" >
+                        <input type="hidden" class="input_source_video_id" name="video[source_video_id]" value="<?php echo $sourceVideoID; ?>">
                     </div>
                 </div>
 
                 <div class="html5-video-data">
                     <?php
-                        // Load Attachment card segment
-                        tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/attachments.php', array(
-                            'attachments' => array($videoAttachment ? $videoAttachment : (object)array('id'=>0, 'url'=>'', 'title'=>'', 'size'=>'')),
-                            'size_below' => true,
-                            'no_control' => true
-                        ), false);
+                    // Load Attachment card segment
+                    tutor_load_template_from_custom_path(tutor()->path . '/views/fragments/attachments.php', array(
+                        'attachments' => array($videoAttachment ? $videoAttachment : (object)array('id' => 0, 'url' => '', 'title' => '', 'size' => '')),
+                        'size_below' => true,
+                        'no_control' => true
+                    ), false);
 
-                        echo '<h4>'.__('Upload Video Poster', 'tutor').'</h4>';
-                        // Load thumbnail segment
-                        tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/thumbnail-uploader.php', array(
-                            'media_id' => tutor_utils()->avalue_dot('poster', $video),
-                            'input_name' => 'video[poster]'
-                        ), false);
+                    echo '<h4>' . __('Upload Video Poster', 'tutor') . '</h4>';
+                    // Load thumbnail segment
+                    tutor_load_template_from_custom_path(tutor()->path . '/views/fragments/thumbnail-uploader.php', array(
+                        'media_id' => tutor_utils()->avalue_dot('poster', $video),
+                        'input_name' => 'video[poster]'
+                    ), false);
                     ?>
                 </div>
             </div>
@@ -111,14 +118,14 @@ if(!is_array($supported_sources) || !count($supported_sources)) {
             </div>
 
             <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_embedded tutor-dashed-uploader" style="display: <?php echo $videoSource === 'embedded' ? 'block' : 'none'; ?>;">
-                <textarea class="tutor-form-control" name="video[source_embedded]" placeholder="<?php _e('Place your embedded code here', 'tutor'); ?>"><?php echo tutor_utils()->avalue_dot('source_embedded', $video);?></textarea>
+                <textarea class="tutor-form-control" name="video[source_embedded]" placeholder="<?php _e('Place your embedded code here', 'tutor'); ?>"><?php echo tutor_utils()->avalue_dot('source_embedded', $video); ?></textarea>
             </div>
         </div>
     </div>
 </div>
 
 <!-- For Lesson -->
-<?php if ( $post->post_type !== tutor()->course_post_type): ?>
+<?php if ($post->post_type !== tutor()->course_post_type) : ?>
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Video playback time', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15 tutor-option-field-video-duration">
