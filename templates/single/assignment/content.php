@@ -41,6 +41,7 @@ function tutor_assignment_convert_seconds( $seconds ) {
 $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
 $content              = get_the_content();
 $s_content            = $content;
+$allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' );
 ?>
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
@@ -288,7 +289,7 @@ $s_content            = $content;
 						<div class="tutor-assignment-text-area tutor-pt-20">
 							<!-- <textarea  name="assignment_answer" class="tutor-form-control"></textarea> -->
 							<?php
-								$assignment_comment_id = isset( $_GET['update-assignment'] ) ?  sanitize_text_field( $_GET['update-assignment'] ) : 0;
+								$assignment_comment_id = isset( $_GET['update-assignment'] ) ? sanitize_text_field( $_GET['update-assignment'] ) : 0;
 								$content               = $assignment_comment_id ? get_comment( $assignment_comment_id ) : '';
 								$args                  = tutor_utils()->text_editor_config();
 								$args['tinymce']       = array(
@@ -307,7 +308,7 @@ $s_content            = $content;
 						<?php if ( $allowed_upload_files ) { ?>
 							<div class="tutor-assignment-attachment tutor-mt-30 tutor-py-20 tutor-px-15 tutor-py-sm-30 tutor-px-sm-30">
 								<div class="text-regular-caption tutor-color-text-subsued">
-									<?php _e( 'Attach assignment files', 'tutor' ); ?>
+									<?php _e( "Attach assignment files (Max: $allow_to_upload file)", 'tutor' ); ?>
 								</div>
 								<div class="tutor-attachment-files tutor-mt-12">
 									<div class="tutor-assignment-upload-btn tutor-mt-10 tutor-mt-md-0">
@@ -342,10 +343,10 @@ $s_content            = $content;
 									<div class="tutor-bs-row tutor-bs-gy-3" id="tutor-student-assignment-edit-file-preview">
 									<?php
 										$submitted_attachments = get_comment_meta( $assignment_comment_id, 'uploaded_attachments' );
-										if ( is_array( $submitted_attachments ) && count( $submitted_attachments ) ) :
+									if ( is_array( $submitted_attachments ) && count( $submitted_attachments ) ) :
 										foreach ( $submitted_attachments as $attach ) :
-											$attachments =  json_decode( $attach );
-										?>
+											$attachments = json_decode( $attach );
+											?>
 											<?php foreach ( $attachments as $attachment ) : ?>
 												<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15">
 													<div class="tutor-icard-content">
