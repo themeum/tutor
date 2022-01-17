@@ -111,6 +111,14 @@
             width: 135px;
         }
     }
+    label.tutor-form-label {
+        margin-bottom: 14px !important;
+    }
+    label.tutor-amount-field {
+        padding: 0px 20px 0px 0px;
+    }
+    #tutor-course-create-title-tooltip-wrapper {
+    }
     .tutor-zoom-meeting-modal-wrap {
         #tutor-zoom-meeting-modal-form {
             .tutor-react-datepicker .react-datepicker__input-container input,
@@ -131,11 +139,22 @@
                 // margin-top: -2px;
             }
             .tutor-topic-title {
-                padding: 5px 5px;
+                align-items: flex-start;
+                padding: 10px 5px;
                 background: #F4F6F9;
+                span.ttr-humnurger-filled {
+                    display: block;
+                    align-self: flex-start;
+                    // margin-top: 1px;
+                }
                 .topic-inner-title {
                     align-self: center;
-                    line-height: 1.2;
+                    line-height: 1.5;
+                    padding-right: 20px;
+                    margin-top: -2px;
+                }
+                i {
+                    display: block;
                 }
                 .tutor-topic-btn-hover i {
                     &:hover {
@@ -274,5 +293,15 @@
                 }
             }
         }
+    }
+}
+#tutor-frontend-course-builder {
+    .filesize {
+        margin-top: -8px !important;
+    }
+}
+#wpcontent {
+    .filesize {
+        margin-top: -2px !important;
     }
 }
