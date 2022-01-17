@@ -218,7 +218,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
 		let alreadyUploaded = document.querySelectorAll('#tutor-student-assignment-edit-file-preview .tutor-instructor-card').length;
 		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
-
+		if (fileUploadField.files.length > allowedToUpload) {
+			tutor_toast(__("Warning", "tutor"), __(`Max ${maxAllowedFiles} file allowed to upload`, "tutor"), "error");
+			return;
+		}
 		if ('files' in fileUploadField) {
 			if (fileUploadField && fileUploadField.files.length == 0) {
 				message = 'Select one or more files.';
