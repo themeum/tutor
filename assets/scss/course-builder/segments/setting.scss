@@ -111,11 +111,15 @@
             width: 135px;
         }
     }
-    tutor_zoom_timepicker tutor-form-control
     .tutor-zoom-meeting-modal-wrap {
         #tutor-zoom-meeting-modal-form {
+            .react-datepicker__input-container,
             .tutor_zoom_timepicker {
                 height: 48px !important;
+            }
+            .tutor-icon-clock {
+                font-size: 18px;
+                top: 15px;
             }
         }
     }
