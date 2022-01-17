@@ -3,6 +3,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Tutor input sanitization
+ */
+
+if ( ! function_exists( 'tutor_sanitize_data' ) ) {
+	/**
+	 * Escaping for Sanitize data.
+	 *
+	 * @since 1.9.13
+	 *
+	 * @param  string $input.
+	 * @param  string $type.
+	 * @return string
+	 */
+	function tutor_sanitize_data( $input = null, $type = null ) {
+		$array  = array();
+		$object = new stdClass();
+
+		if ( is_string( $input ) ) {
+
+			if ( 'textarea' == $type ) {
+				$input = sanitize_textarea_field( $input );
+			} elseif ( 'kses' == $type ) {
+				$input = wp_kses_post( $input );
+			} else {
+				$input = sanitize_text_field( $input );
+			}
+
+			return $input;
+
+		} elseif ( is_object( $input ) && count( get_object_vars( $input ) ) ) {
+
+			foreach ( $input as $key => $value ) {
+				if ( is_object( $value ) ) {
+					$object->$key = tutor_sanitize_data( $value );
+				} else {
+					$key          = sanitize_text_field( $key );
+					$value        = sanitize_text_field( $value );
+					$object->$key = $value;
+				}
+			}
+			return $object;
+		} elseif ( is_array( $input ) && count( $input ) ) {
+			foreach ( $input as $key => $value ) {
+				if ( is_array( $value ) ) {
+					$array[ $key ] = tutor_sanitize_data( $value );
+				} else {
+					$key           = sanitize_text_field( $key );
+					$value         = sanitize_text_field( $value );
+					$array[ $key ] = $value;
+				}
+			}
+
+			return $array;
+		}
+	}
+}
+
 if ( ! function_exists( 'tutor_placeholder_img_src' ) ) {
 	function tutor_placeholder_img_src() {
 		$src = tutor()->url . 'assets/images/placeholder.png';
@@ -46,8 +104,8 @@ if ( ! function_exists( 'tutor_course_categories_dropdown' ) ) {
 		$categories = tutor_utils()->get_course_categories();
 
 		$output  = '';
-		$output .= "<select name='{$name}' {$multiple_select} class='{$classes}' data-placeholder='" . __( 'Search Course Category. ex. Design, Development, Business', 'tutor' ) . "'>";
-		$output .= "<option value=''>" . __( 'Select a category', 'tutor' ) . '</option>';
+		$output .= '<select name="' . $name . '" ' . $multiple_select . ' class="' . $classes . '" data-placeholder="' . __( 'Search Course Category. ex. Design, Development, Business', 'tutor' ) . '">';
+		$output .= '<option value="">' . __( 'Select a category', 'tutor' ) . '</option>';
 		$output .= _generate_categories_dropdown_option( $post_ID, $categories, $args );
 		$output .= '</select>';
 
@@ -91,8 +149,8 @@ if ( ! function_exists( 'tutor_course_tags_dropdown' ) ) {
 		$tags = tutor_utils()->get_course_tags();
 
 		$output  = '';
-		$output .= "<select name='{$name}' {$multiple_select} class='{$classes}' data-placeholder='" . __( 'Search Course Tags. ex. Design, Development, Business', 'tutor' ) . "'>";
-		$output .= "<option value=''>" . __( 'Select a tag', 'tutor' ) . '</option>';
+		$output .= '<select name=' . $name . ' ' . $multiple_select . ' class="' . $classes . '" data-placeholder="' . __( 'Search Course Tags. ex. Design, Development, Business', 'tutor' ) . '">';
+		$output .= '<option value="">' . __( 'Select a tag', 'tutor' ) . '</option>';
 		$output .= _generate_tags_dropdown_option( $post_ID, $tags, $args );
 		$output .= '</select>';
 
@@ -138,7 +196,7 @@ if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
 				}
 			}
 
-			$output .= "<option value='{$category->term_id}' " . selected( $has_in_term, true, false ) . " >   {$depth_seperator} {$category->name}</option> ";
+			$output .= '<option value="' . $category->term_id . '" ' . selected( $has_in_term, true, false ) . '>  ' . $depth_seperator . ' ' . $category->name . '</option>';
 
 			if ( tutor_utils()->count( $childrens ) ) {
 				$depth++;
@@ -176,7 +234,7 @@ if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
 
 			$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
 
-			$output .= "<option value='{$tag->name}' " . selected( $has_in_term, true, false ) . ">{$tag->name}</option> ";
+			$output .= '<option value="' . $tag->name . '" ' . selected( $has_in_term, true, false ) . '>' . $tag->name . '</option>';
 
 		}
 
@@ -190,7 +248,7 @@ if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
  * @return string
  *
  * Generate course categories checkbox
- * @since v.1.3.4
+ * @since  v.1.3.4
  */
 
 if ( ! function_exists( 'tutor_course_categories_checkbox' ) ) {
@@ -221,7 +279,7 @@ if ( ! function_exists( 'tutor_course_categories_checkbox' ) ) {
  * @return string
  *
  * Generate course tags checkbox
- * @since v.1.3.4
+ * @since  v.1.3.4
  */
 
 if ( ! function_exists( 'tutor_course_tags_checkbox' ) ) {
@@ -264,12 +322,12 @@ if ( ! function_exists( '__tutor_generate_categories_checkbox' ) ) {
 		$input_name = tutor_utils()->array_get( 'name', $args );
 
 		if ( tutor_utils()->count( $categories ) ) {
-			$output .= "<ul class='tax-input-course-category'>";
+			$output .= '<ul class="tax-input-course-category">';
 			foreach ( $categories as $category_id => $category ) {
 				$childrens   = tutor_utils()->array_get( 'children', $category );
 				$has_in_term = has_term( $category->term_id, 'course-category', $post_ID );
 
-				$output .= "<li class='tax-input-course-category-item tax-input-course-category-item-{$category->term_id} '><label class='course-category-checkbox'> <input type='checkbox' name='{$input_name}' value='{$category->term_id}' " . checked( $has_in_term, true, false ) . " /> <span>{$category->name}</span> </label>";
+				$output .= '<li class="tax-input-course-category-item tax-input-course-category-item-' . $category->term_id . '"><label class="course-category-checkbox"> <input type="checkbox" name="' . $input_name . '" value="' . $category->term_id . '" ' . checked( $has_in_term, true, false ) . '/> <span>' . $category->name . '</span> </label>';
 
 				if ( tutor_utils()->count( $childrens ) ) {
 					$output .= __tutor_generate_categories_checkbox( $post_ID, $childrens, $args );
@@ -301,11 +359,11 @@ if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
 		$input_name = tutor_utils()->array_get( 'name', $args );
 
 		if ( tutor_utils()->count( $tags ) ) {
-			$output .= "<ul class='tax-input-course-tag'>";
+			$output .= '<ul class="tax-input-course-tag">';
 			foreach ( $tags as $tag ) {
 				$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
 
-				$output .= "<li class='tax-input-course-tag-item tax-input-course-tag-item-{$tag->term_id} '><label class='course-tag-checkbox'> <input type='checkbox' name='{$input_name}' value='{$tag->term_id}' " . checked( $has_in_term, true, false ) . " /> <span>{$tag->name}</span> </label>";
+				$output .= '<li class="tax-input-course-tag-item tax-input-course-tag-item-' . $tag->term_id . '"><label class="course-tag-checkbox"> <input type="checkbox" name="' . $input_name . '" value="' . $tag->term_id . '" ' . checked( $has_in_term, true, false ) . ' /> <span>' . $tag->name . '</span> </label>';
 
 				$output .= ' </li>';
 			}
@@ -339,7 +397,7 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 				</h3>
 			</div>
 			<div class="tutor-course-builder-section-content">
-				<?php echo $content; ?>
+				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</div>
 		</div>
 		<?php
@@ -367,7 +425,7 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 				<meta charset="<?php bloginfo( 'charset' ); ?>" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="profile" href="https://gmpg.org/xfn/11" />
-				<?php wp_head(); ?>
+			<?php wp_head(); ?>
 			</head>
 
 			<body <?php body_class(); ?>>
@@ -555,7 +613,6 @@ if ( ! function_exists( 'tutor_flash_set' ) ) {
 
 if ( ! function_exists( 'tutor_flash_get' ) ) {
 	function tutor_flash_get( $key = null ) {
-
 		if ( $key ) {
 			// ensure session is started
 			if ( session_status() !== PHP_SESSION_ACTIVE ) {
@@ -604,7 +661,7 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 	function tutor_action_field( $action = '', $echo = true ) {
 		$output = '';
 		if ( $action ) {
-			$output = "<input type='hidden' name='tutor_action' value='{$action}'>";
+			$output = '<input type="hidden" name="tutor_action" value="' . $action . '">';
 		}
 
 		if ( $echo ) {

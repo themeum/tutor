@@ -10,8 +10,9 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 class Withdraw {
 
@@ -182,7 +183,7 @@ class Withdraw {
 	public function tutor_make_an_withdraw() {
 		global $wpdb;
 
-		//Checking nonce
+		// Checking nonce
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
@@ -195,6 +196,9 @@ class Withdraw {
 		$formatted_balance = tutor_utils()->tutor_price( $earning_sum->balance );
 		$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 
+		$saved_withdraw_account        = tutor_utils()->get_user_withdraw_method();
+		$formatted_balance             = tutor_utils()->tutor_price( $earning_sum->balance );
+		$formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
 
 		if ( ! tutor_utils()->count( $saved_withdraw_account ) ) {
 			$no_withdraw_method = apply_filters( 'tutor_no_withdraw_method_msg', __( 'Please save withdraw method ', 'tutor' ) );
@@ -212,6 +216,18 @@ class Withdraw {
 			wp_send_json_error( array( 'msg' => $insufficient_balence ) );
 		}
 
+		$date = date( 'Y-m-d H:i:s', tutor_time() );
+
+		$withdraw_data = apply_filters(
+			'tutor_pre_withdraw_data',
+			array(
+				'user_id'     => $user_id,
+				'amount'      => $withdraw_amount,
+				'method_data' => maybe_serialize( $saved_withdraw_account ),
+				'status'      => 'pending',
+				'created_at'  => $date,
+			)
+		);
 
         $date = date( "Y-m-d H:i:s", tutor_time() );
 
@@ -236,7 +252,6 @@ class Withdraw {
 		 */
 		$earning = tutor_utils()->get_earning_sum();
 		$new_available_balance = tutor_utils()->tutor_price( $earning->balance );
-
 
 		do_action( 'tutor_withdraw_after' );
 

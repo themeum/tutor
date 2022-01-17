@@ -5,7 +5,7 @@
  * @version 1.4.3
  */
 
-if (!defined('ABSPATH'))
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 global $post;
 global $wpdb;
@@ -38,7 +38,7 @@ function tutor_assignment_convert_seconds($seconds){
 }
 ?>
 
-<?php do_action('tutor_assignment/single/before/content'); ?>
+<?php do_action( 'tutor_assignment/single/before/content' ); ?>
 
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
     <div class="tutor-topbar-left-item d-flex"> 
@@ -567,4 +567,4 @@ function tutor_assignment_convert_seconds($seconds){
 	</div>
 </div>
 
-<?php do_action('tutor_assignment/single/after/content'); ?>
+<?php do_action( 'tutor_assignment/single/after/content' ); ?>

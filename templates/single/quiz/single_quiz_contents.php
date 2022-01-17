@@ -4,7 +4,7 @@
  * @version 1.4.3
  */
 
-$course = tutor_utils()->get_course_by_quiz(get_the_ID());
+$course = tutor_utils()->get_course_by_quiz( get_the_ID() );
 ?>
 
 <div class="tutor-single-page-top-bar d-flex justify-content-between">
@@ -56,13 +56,13 @@ $course = tutor_utils()->get_course_by_quiz(get_the_ID());
 
 
 <div class="tutor-quiz-single-wrap ">
-    <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
+	<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 	<?php
-	if ($course){
+	if ( $course ) {
 		tutor_single_quiz_top();
 		tutor_single_quiz_body();
-	}else{
+	} else {
 		tutor_single_quiz_no_course_belongs();
 	}
 	?>

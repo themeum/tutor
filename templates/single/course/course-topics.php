@@ -11,8 +11,9 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 $topics = tutor_utils()->get_topics();
 $course_id = get_the_ID();
@@ -131,4 +132,4 @@ do_action('tutor_course/single/before/topics');
 		</div>
 <?php endif; ?>
 
-<?php do_action('tutor_course/single/after/topics'); ?>
+<?php do_action( 'tutor_course/single/after/topics' ); ?>

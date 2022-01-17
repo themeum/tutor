@@ -11,11 +11,12 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 global $post, $authordata;
-$profile_url = tutor_utils()->profile_url($authordata->ID);
+$profile_url = tutor_utils()->profile_url( $authordata->ID );
 ?>
 
 <header class="tutor-course-details-header tutor-mb-42">
