@@ -124,6 +124,9 @@ if ( is_array( $attempt_info ) ) {
 	if ( 'hours' == $attempt_info['time_limit']['time_type'] ) {
 		$attempt_type = 'minutes';
 	}
+	if ( 'minutes' == $attempt_info['time_limit']['time_type'] ) {
+		$attempt_type = 'minutes';
+	}
 
 	// Taken duration
 	$seconds                = strtotime( $attempt_data->attempt_ended_at ) - strtotime( $attempt_data->attempt_started_at );
