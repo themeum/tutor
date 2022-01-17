@@ -122,11 +122,11 @@ if ( '' !== $category_slug ) {
 	);
 }
 
-add_filter( 'posts_search', '__search_by_title_only', 500, 2 );
+add_filter( 'posts_search', '_tutor_search_by_title_only', 500, 2 );
 
 $the_query = new WP_Query( $args );
 
-remove_filter( 'posts_search', '__search_by_title_only', 500 );
+remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
 
 $available_status = array(
 	'publish' => __( 'Publish', 'tutor' ),

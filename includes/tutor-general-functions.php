@@ -720,7 +720,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	}
 }
 
-if ( ! function_exists( '__search_by_title_only' ) ) {
+if ( ! function_exists( '_tutor_search_by_title_only' ) ) {
 	/**
 	 * Search SQL filter for matching against post title only.
 	 *
@@ -729,7 +729,7 @@ if ( ! function_exists( '__search_by_title_only' ) ) {
 	 * @param   string      $search
 	 * @param   WP_Query    $wp_query
 	 */
-	function __search_by_title_only( $search, $wp_query ) {
+	function _tutor_search_by_title_only( $search, $wp_query ) {
 		if ( ! empty( $search ) && ! empty( $wp_query->query_vars['search_terms'] ) ) {
 			global $wpdb;
 
