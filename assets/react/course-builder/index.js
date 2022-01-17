@@ -52,9 +52,13 @@ function getRemainingLength(maxLength = 60, inputElement) {
 const maxLength = 120;
 const courseCreateTitle = document.getElementById('tutor-course-create-title');
 const courseTitleTooltip = courseCreateTitle?.previousElementSibling;
-courseTitleTooltip?.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
+if (courseTitleTooltip) {
+	courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
+}
 
-courseCreateTitle.addEventListener('keyup', (e) => {
-	const remainingLength = getRemainingLength(maxLength, courseCreateTitle);
-	courseTitleTooltip?.innerHTML = remainingLength;
-});
+if (courseCreateTitle) {
+	courseCreateTitle.addEventListener('keyup', (e) => {
+		const remainingLength = getRemainingLength(maxLength, courseCreateTitle);
+		courseTitleTooltip.innerHTML = remainingLength;
+	});
+}
