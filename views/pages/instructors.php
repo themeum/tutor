@@ -104,7 +104,7 @@ $filters = array(
 				<th class="tutor-table-rows-sorting">
 					<div class="inline-flex-center tutor-color-text-subsued">
 						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
-						<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-18"></span>
+						<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
@@ -231,7 +231,7 @@ $filters = array(
 	<div class="tutor-modal-inner">
 	<form action="" method="post" id="tutor-new-instructor-form" autocomplete="off">
 	  <div class="tutor-modal-header">
-		<h3 class="tutor-modal-title">
+		<h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
 			<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
 		</h3>
 	  </div>

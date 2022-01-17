@@ -1,4 +1,151 @@
 /* Course settings module */
+
+
+#wpcontent,
+#tutor-frontend-course-builder {
+    .tutor-certificate-template {
+        .template-item {
+            .template-radio-field {
+                height: 100% !important;
+            }
+        }
+    }
+    .tutor-btn {
+        font-family: 'Inter', sans-serif;
+        padding: 7px 20px;
+        font-size: 15px;
+        line-height: 24px;
+    }
+    .tutor-form-toggle .tutor-form-toggle-control {
+        margin: 0 10px 0px 0px !important;
+    }
+    .tutor-form-toggle { 
+        
+    }
+    .select2-container {
+        li.select2-selection__choice {  
+            background: #eff1f7;
+        }
+    }
+    .tutor_add_content_wrap {
+        button {
+            padding: 2px 12px !important;
+            &:not(:last-child) {
+                margin-right: 14px !important;
+            }
+        }
+    }
+    p.tutor-input-feedback,
+    div.tutor-input-feedback {
+        font-size: 13px;
+        color: #5B616F;
+        i.tutor-input-feedback-icon {
+            font-size: 20px;
+            color: #B4B7C0;
+        }
+    }
+    .tutor-modal-body {
+        align-items: unset !important;
+    }
+    // .tutor-attachments-metabox {
+    //     .tutor-attachment-cards {
+    //         .filesize {
+    //             margin-top: -5px;
+    //         }
+    //     }
+    // }
+    .tutor-course-available-instructors {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+        .added-instructor-item {
+            margin: 0 !important;
+            max-width: calc(50% - 20px) !important;
+            flex-basis: calc(50% - 20px) !important;
+            @include breakpoint-max(mobile) {
+                max-width: 100% !important;
+                flex-basis: 100% !important;
+            }
+            .instructor-icon  {
+                height: auto !important;
+                max-width: 45px;
+            }
+            .instructor-name {
+                width: calc(100% - 45px);
+                flex-basis: calc(100% - 45px);
+                .instructor-intro {
+                    display: flex;
+                    align-items: center;
+                    .instructor-img {}
+                    .instructor-email {
+                        margin-top: -4px;
+                    }
+                }
+            }
+        }
+    }
+    #tutor_course_instructor_modal {
+        .tutor-modal-body {
+            padding: 40px 40px;
+        }
+        #tutor-course-available-instructors {
+            gap : 10px;
+        }
+    }
+    .tutor-quiz-advance-settings p.help {
+        line-height: 1.34;
+        margin-top: 10px;
+    }
+    .tutor-form-group input:not([type=submit]):focus {
+        border: 0px solid transparent !important;
+    }
+
+    .tutor-quiz-builder-modal-wrap {
+        .select-header {
+            align-items: center;
+        }
+    }
+    .tutor_assignment_modal_form {
+        .tutor-form-select {
+            width: 135px;
+        }
+    }
+    .tutor-zoom-meeting-modal-wrap {
+        #tutor-zoom-meeting-modal-form {
+            .tutor-react-datepicker .react-datepicker__input-container input,
+            .tutor_zoom_timepicker {
+                // height: 48px !important;
+                // padding-right: 25px;
+                // font-size: 15px;
+            }
+            .tutor-icon-clock {
+                color: black;
+            }
+        }
+    }
+
+    #tutor-course-content-wrap {
+        .tutor-topics-top {
+            .course-move-handle {
+                // margin-top: -2px;
+            }
+            .tutor-topic-title {
+                padding: 5px 5px;
+                background: #F4F6F9;
+                .topic-inner-title {
+                    align-self: center;
+                    line-height: 1.2;
+                }
+                .tutor-topic-btn-hover i {
+                    &:hover {
+                        color: $design-brand;
+                    }
+                }
+            }
+        }
+    }
+}
 #tutor-metabox-course-settings-tabs {
     background-color: #fff;
     border: 1px solid $stroke-light-30;
@@ -48,7 +195,8 @@
                         text-decoration: none;
                         text-transform: capitalize;
                         border-left: 3px solid transparent;
-
+                        display: flex;
+                        align-items: center;
                         &:focus {
                             box-shadow: none;
                         }
@@ -64,8 +212,8 @@
                         }
 
                         i {
-                            font-size: 20px;
-                            margin-right: 3px;
+                            font-size: 26px;
+                            margin-right: 3px;  
                         }
                     }
 
@@ -86,7 +234,7 @@
         }
 
         .settings-tabs-container {
-            padding: 30px;
+            padding: 30px 40px 0px 40px;
             background: white;
             @include propertyWithPrefix(flex, 1);
             border-top-right-radius: 6px;
@@ -97,7 +245,6 @@
                 font-style: normal;
                 font-weight: 500;
                 font-size: 16px;
-                color: #212327;
             }
             input.tutor-form-check-input {
                 margin-top: 0;

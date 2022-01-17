@@ -1,75 +1,88 @@
 table.my-quiz-attempts {
-    tr {
-        th {
-            white-space: unset;
-            &:first-child {
-                width: 30%;
-            }
-            span {
-                line-height: 131%;
-                display: inline-block;
-            }
-        }
-    }
-    tbody {
-        tr {
-            td {
-                .td-statement-info {
-                    padding-right: 20px;
-                }
-            }
-        }
-    }
+	thead {
+		th {
+			@include breakpoint-min(desktop-lg) {
+				&:last-child {
+					> * {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+	tr {
+		th {
+			white-space: unset;
+			padding-top: 16px;
+			padding-bottom: 16px;
+			&:first-child {
+				width: 30%;
+			}
+			span {
+				line-height: 131%;
+				display: inline-block;
+			}
+		}
+	}
+	tbody {
+		tr {
+			td {
+				.td-statement-info {
+					padding-right: 20px;
+				}
+			}
+		}
+	}
 }
 
-
 .tutor-quiz-attempt-history {
+	table {
+		background: 1px solid #dcdfe5;
+		border-collapse: collapse;
 
-    table {
-        background: 1px solid #dcdfe5;
-        border-collapse: collapse;
+		tr {
+			th {
+				background: #fafbfc;
+			}
 
-        tr {
-            th {
-                background: #fafbfc;
-            }
+			th,
+			td {
+				vertical-align: middle;
+				border: 1px solid #dcdfe5;
+			}
 
-            th, td {
-                vertical-align: middle;
-                border: 1px solid #dcdfe5;
-            }
+			td:first-child {
+				padding: 15px 13px !important;
+			}
 
-            td:first-child {
-                padding: 15px 13px !important;
-            }
+			td:last-child {
+				text-align: center;
+				a {
+					display: block;
+					padding: 10px;
+				}
+			}
+		}
 
-            td:last-child {
-                text-align: center;
-                a {
-                    display: block;
-                    padding: 10px;
-                }
-            }
-        }
+		a {
+			color: var(--tutor-primary-color);
+			font-weight: 700;
+			line-height: 24px;
 
-        a {
-            color: var(--tutor-primary-color);
-            font-weight: 700;
-            line-height: 24px;
-            
-            &:hover {
-                color: var(--tutor-primary-hover-color);
-            }
-        }
+			&:hover {
+				color: var(--tutor-primary-hover-color);
+			}
+		}
 
-        span {
-            &.result-fail, &.result-pass {
-                width: auto;
-                height: auto;
-                line-height: 19px;
-                padding: 0 6.5px;
-                margin-right: 4px;
-            }
-        }
-    }
+		span {
+			&.result-fail,
+			&.result-pass {
+				width: auto;
+				height: auto;
+				line-height: 19px;
+				padding: 0 6.5px;
+				margin-right: 4px;
+			}
+		}
+	}
 }

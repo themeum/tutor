@@ -26,7 +26,7 @@ $reviews     = tutor_utils()->get_reviews_by_instructor( get_current_user_id(), 
 $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 ?>
 	<div class="tutor-dashboard-content-inner">
-		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e( 'Reviews', 'tutor' ); ?></div>
+		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-15"><?php _e( 'Reviews', 'tutor' ); ?></div>
 		<?php if ( current_user_can( tutor()->instructor_role ) ) : ?>
 			<div class="tutor-dashboard-inline-links">
 				<ul>
@@ -88,7 +88,7 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 								<div class="text-medium-caption tutor-color-text-primary">
 								<?php
 								$date = explode( ',', tutor_get_formated_date( null, $review->comment_date ) );
-								echo $date[0] . ',<br />' . $date[1];
+								echo '<span>'.$date[0].'</span>' . '<br />' . '<span class="tutor-fweight-400">'.$date[1].'</span>';
 								?>
 								</div>
 							</td>

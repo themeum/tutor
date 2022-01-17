@@ -128,7 +128,7 @@
 							id="tutor-backend-filter-search"
 							name="search"
 							placeholder="<?php esc_html_e( 'Search...' ); ?>"
-							value="<?php esc_html_e( $search ); ?>" />
+							value="<?php esc_html_e( wp_unslash( $search ) ); ?>" />
 					</div>
 				</form>
 			</div>

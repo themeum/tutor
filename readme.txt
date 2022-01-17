@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 2.0.0
+Stable tag: 2.0.0-alpha1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,7 +241,15 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
+<<<<<<< HEAD
 = 2.0.0 - February 01, 2022 =
+=======
+= 2.0.0-alpha1 - January 14 2022
+
+Change Log : Coming soon
+
+= 2.0.0 - January 01, 2022 =
+>>>>>>> f071bba184f2bfdc5994e6168220973b8a1c5311
 
 New: Certificate builder in frontend dashboard
 Update: Overall Design System

@@ -12,12 +12,12 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 }
 ?>
 
-<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-30">
+<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-45">
 	<thead>
 		<tr>
 			<?php
 			foreach ( $table_columns as $key => $column ) {
-				echo '<th><span class="text-regular-small tutor-color-text-subsued">' . $column . '</span></th>';
+				echo '<th><div class="text-regular-small tutor-color-text-subsued">' . $column . '</div></th>';
 			}
 			?>
 		</tr>
@@ -87,20 +87,23 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 													$attempt_user = get_userdata( $attempt->user_id );
 													$user_name    = $attempt_user ? $attempt_user->display_name : '';
 													if ( $context == 'backend-dashboard-students-attempts' ) {
-														?>
-																	<div>
-																		<span class="tutor-text-regular-small tutor-color-text-title">
-																			<?php _e( 'Student', 'tutor' ); ?>
-																		</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
-																	</div>
-																<?php
+													?>
+															<div>
+																<span class="tutor-text-regular-small tutor-color-text-title">
+																	<?php _e( 'Student', 'tutor' ); ?>
+																</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
+															</div>
+													<?php
 													} else {
-														?>
-															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> 
-															<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( $attempt->user_email ); ?>">
-																<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
+													?>
+														<?php if(!empty($user_name)) :
+															?>
+															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
+															<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( isset( $attempt_user->user_email )? $attempt_user->user_email:'' ); ?>">
+																<?php echo esc_attr( isset($attempt_user->display_name) ? $attempt_user->display_name : $user_name ); ?>
 															</span>
-														<?php
+
+														<?php endif;
 													}
 													?>
 												</div>
@@ -135,7 +138,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo $attempt->total_marks; ?>
+												<?php echo round($attempt->total_marks); ?>
 											</span>
 										</td>
 									<?php
@@ -165,7 +168,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								?>
 										<td data-th="<?php echo $column; ?>">
 											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo $attempt->earned_marks . ' (' . $earned_percentage . '%)'; ?>
+												<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '%)'; ?>
 											</span>
 										</td>
 									<?php

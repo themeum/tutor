@@ -7,7 +7,7 @@
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
-	$is_instructor      = tutor_utils()->is_instructor();
+	$is_instructor      = tutor_utils()->is_instructor(null, true);
 	$total_count        = count( $profile_completion );
 	$incomplete_count   = count(
 		array_filter(
@@ -20,7 +20,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$complete_count     = $total_count - $incomplete_count;
 
 	if ( $is_instructor ) {
-		if ( $total_count && $incomplete_count && $incomplete_count <= $total_count ) {
+		if ( isset($total_count) && isset($incomplete_count) && $incomplete_count <= $total_count ) {
 			?>
 			<div class="profile-completion tutor-mb-40">
 				<div class="tutor-bs-row tutor-bs-align-items-center">
@@ -81,7 +81,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			<?php
 		}
 	} else {
-		if ( ! $profile_completion['_tutor_profile_photo'] ) {
+		if ( ! $profile_completion['_tutor_profile_photo']['is_set'] ) {
 			$alert_message = sprintf(
 				'<div class="tutor-alert tutor-primary">
 			<div class="tutor-alert-text">
@@ -225,10 +225,10 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 
 <?php if ( ! tutor_utils()->is_instructor() ) : ?>
 	<div class="tutor-frontend-dashboard-course-porgress">
-		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
-			<?php esc_html_e( 'In Progress Course', 'tutor' ); ?>
-		</div>
-		<?php if ( is_array( $courses_in_progress ) && $courses_in_progress->have_posts() ) : ?>
+		<?php if ( $courses_in_progress->have_posts() ) : ?>
+			<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
+				<?php esc_html_e( 'In Progress Course', 'tutor' ); ?>
+			</div>
 			<?php
 			while ( $courses_in_progress->have_posts() ) :
 				$courses_in_progress->the_post();
@@ -240,7 +240,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 			<div class="tutor-frontend-dashboard-course-porgress-cards tutor-mb-20">
 				<div class="tutor-frontend-dashboard-course-porgress-card tutor-frontend-dashboard-course-porgress-card-horizontal tutor-course-listing-item tutor-course-listing-item-sm tutor-bs-justify-content-start">
 					<div class="tutor-course-listing-item-head tutor-bs-d-flex">
-						<a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink"> 
+						<a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink">
 							<div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty( esc_url( $tutor_course_img ) ) ? $placeholder_img : esc_url( $tutor_course_img ); ?>)"></div>
 						</a>
 					</div>
@@ -262,7 +262,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 						</div>
 						<div class="list-item-steps tutor-mt-14">
 							<span class="tutor-text-regular-caption tutor-color-text-hints">
-								<?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?> 
+								<?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?>
 							</span>
 							<span class="tutor-text-medium-caption tutor-color-text-primary">
 								<span>
@@ -271,7 +271,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 								<?php esc_html_e( 'of', 'tutor' ); ?>
 								<span>
 									<?php echo esc_html( $course_progress['total_count'] ); ?>
-								</span> 
+								</span>
 								<?php echo esc_html( _n( 'lesson', 'lessons', $completed_number, 'tutor' ) ); ?>
 							</span>
 						</div>
@@ -287,7 +287,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 						</div>
 					</div>
 				</div>
-			</div>				
+			</div>
 			<?php endwhile; ?>
 			<?php wp_reset_postdata(); ?>
 		<?php else : ?>
@@ -325,13 +325,13 @@ if ( count( $instructor_course ) ) {
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
-								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-18"></span>
+								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled tutor-icon-18"></span>
+								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
 					</tr>
@@ -376,6 +376,6 @@ if ( count( $instructor_course ) ) {
 				</tbody>
 			</table>
 		</div>
-		<?php
+	<?php
 }
 ?>

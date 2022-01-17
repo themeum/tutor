@@ -480,10 +480,10 @@ window.jQuery(document).ready(function ($) {
         $.ajax({
             url: window._tutorobject.ajaxurl,
             type: 'POST',
-            data: { 
-                question_id: question_id, 
-                question_type: question_type, 
-                action: 'tutor_quiz_builder_change_type' 
+            data: {
+                question_id: question_id,
+                question_type: question_type,
+                action: 'tutor_quiz_builder_change_type'
             },
             success: function (data) {
                 if (data.success) {
@@ -521,7 +521,7 @@ window.jQuery(document).ready(function ($) {
                     tutor_toast('Error', get_response_message(data), 'error');
                     return;
                 }
-                
+
                 $('.tutor_select_value_holder').trigger('change');
 			},
 			complete: function () {
@@ -549,10 +549,10 @@ window.jQuery(document).ready(function ($) {
 		$.ajax({
 			url: window._tutorobject.ajaxurl,
 			type: 'POST',
-			data: { 
-                answer_id: answer_id, 
-                inputValue: inputValue, 
-                action: 'tutor_mark_answer_as_correct' 
+			data: {
+                answer_id: answer_id,
+                inputValue: inputValue,
+                action: 'tutor_mark_answer_as_correct'
             },
 		});
 	});
