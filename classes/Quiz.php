@@ -673,15 +673,15 @@ class Quiz {
 
 		ob_start();
 		?>
-		<div id="tutor-quiz-<?php echo esc_attr( $quiz_id ); ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo $quiz_id; ?>">
+		<div id="tutor-quiz-<?php echo esc_attr( $quiz_id ); ?>" class="course-content-item tutor-quiz tutor-quiz-<?php echo esc_attr( $quiz_id ); ?>">
 			<div class="tutor-lesson-top">
 				<i class="tutor-icon-move"></i>
-				<a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id; ?>"> 
+				<a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo esc_attr( $quiz_id ); ?>" data-topic-id="<?php echo esc_attr( $topic_id ); ?>"> 
 					<i class=" tutor-icon-doubt"></i>[<?php _e( 'QUIZ', 'tutor' ); ?>]&nbsp;
 					<?php echo stripslashes( $quiz_title ); ?> 
 				</a>
 				<?php do_action( 'tutor_course_builder_before_quiz_btn_action', $quiz_id ); ?>
-				<a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo $quiz_id; ?>"><i class="tutor-icon-garbage"></i></a>
+				<a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo esc_attr( $quiz_id ); ?>"><i class="tutor-icon-garbage"></i></a>
 			</div>
 		</div>
 		<?php
@@ -1166,13 +1166,13 @@ class Quiz {
 						if ( $question_type === 'true_false' || $question_type === 'single_choice' ) {
 							?>
 							<span class="tutor-quiz-answers-mark-correct-wrap">
-								<input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e( 'Mark as correct', 'tutor' ); ?>" <?php checked( 1, $answer->is_correct ); ?> >
+								<input type="radio" name="mark_as_correct[<?php echo esc_attr( $answer->belongs_question_id ); ?>]" value="<?php echo esc_attr( $answer->answer_id ); ?>" title="<?php _e( 'Mark as correct', 'tutor' ); ?>" <?php checked( 1, $answer->is_correct ); ?> >
 							</span>
 							<?php
 						} elseif ( $question_type === 'multiple_choice' ) {
 							?>
 							<span class="tutor-quiz-answers-mark-correct-wrap">
-								<input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e( 'Mark as correct', 'tutor' ); ?>" <?php checked( 1, $answer->is_correct ); ?> >
+								<input type="checkbox" name="mark_as_correct[<?php echo esc_attr( $answer->belongs_question_id ); ?>]" value="<?php echo esc_attr( $answer->answer_id ); ?>" title="<?php _e( 'Mark as correct', 'tutor' ); ?>" <?php checked( 1, $answer->is_correct ); ?> >
 							</span>
 							<?php
 						}

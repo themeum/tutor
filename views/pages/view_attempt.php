@@ -132,49 +132,40 @@ $user    = get_userdata( $user_id );
 						?>
 					</h4>
 				</div>
-
 			</div>
-
 		</div>
-
 	</div>
-
 
 	<div class="attempt-review-notice-wrap">
 		<?php
-		if ( is_array( $answers ) && count( $answers ) ) {
-			$question_no     = 0;
-			$required_review = array();
+			if ( is_array( $answers ) && count( $answers ) ) {
+				$question_no     = 0;
+				$required_review = array();
 
-			foreach ( $answers as $answer ) {
-				$question_no++;
-				if ( $answer->question_type === 'open_ended' || $answer->question_type === 'short_answer' ) {
-					$required_review[] = $question_no;
+				foreach ( $answers as $answer ) {
+					$question_no++;
+					if ( $answer->question_type === 'open_ended' || $answer->question_type === 'short_answer' ) {
+						$required_review[] = $question_no;
+					}
+				}
+
+				if ( count( $required_review ) ) {
+					echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>' . __( 'Reminder:', 'tutor' ) . ' </strong> ' . sprintf( __( 'Please review answers for question no. %s', 'tutor' ), implode( ', ', $required_review ) ) . '</p>';
 				}
 			}
-
-			if ( count( $required_review ) ) {
-				echo '<p class="attempt-review-notice"> <i class="tutor-icon-warning-2"></i> <strong>' . __( 'Reminder:', 'tutor' ) . ' </strong> ' . sprintf( __( 'Please review answers for question no. %s', 'tutor' ), implode( ', ', $required_review ) ) . '</p>';
+			
+			if ( (bool) $attempt->is_manually_reviewed ) {
+				?>
+					<p class="attempt-review-at">
+						<span class="circle-arrow">&circlearrowright; </span>
+						<strong>
+							<?php _e( 'Manually reviewed at: ', 'tutor' ); ?>
+						</strong>
+						<?php echo date_i18n( get_option( 'date_format' ), strtotime( $attempt->manually_reviewed_at ) ) . ' ' . date_i18n( get_option( 'time_format' ), strtotime( $attempt->manually_reviewed_at ) ); ?>
+					</p>
+				<?php
 			}
-		}
-
-
 		?>
-
-		<?php
-		if ( (bool) $attempt->is_manually_reviewed ) {
-			?>
-			<p class="attempt-review-at">
-				<span class="circle-arrow">&circlearrowright; </span>
-				<strong>
-					<?php _e( 'Manually reviewed at: ', 'tutor' ); ?>
-				</strong>
-				<?php echo date_i18n( get_option( 'date_format' ), strtotime( $attempt->manually_reviewed_at ) ) . ' ' . date_i18n( get_option( 'time_format' ), strtotime( $attempt->manually_reviewed_at ) ); ?>
-			</p>
-			<?php
-		}
-		?>
-
 	</div>
 
 	<?php

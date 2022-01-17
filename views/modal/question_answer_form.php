@@ -18,11 +18,11 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo $question_id; ?>][true_false]" value="true" checked="checked">
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][true_false]" value="true" checked="checked">
 						<?php _e( 'True', 'tutor' ); ?>
 					</label>
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo $question_id; ?>][true_false]" value="false">
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][true_false]" value="false">
 						<?php _e( 'False', 'tutor' ); ?>
 					</label>
 				</div>
@@ -38,7 +38,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
 					<div class="quiz-modal-field-wrap">
-						<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+						<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="">
 					</div>
 				</div>
 			</div>
@@ -50,7 +50,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
 					<div class="tutor-media-upload-wrap">
-						<input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="">
+						<input type="hidden" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][image_id]" value="">
 						<div class="tutor-media-preview">
 							<a href="javascript:;" class="tutor-media-upload-btn"><i class="tutor-icon-image1"></i></a>
 						</div>
@@ -67,19 +67,19 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" checked="checked">
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text" checked="checked">
 						<?php _e( 'Only text', 'tutor' ); ?>
 					</label>
 				</div>
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image">
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="image">
 						<?php _e( 'Only Image', 'tutor' ); ?>
 					</label>
 				</div>
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image">
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text_image">
 						<?php _e( 'Text &amp; Image both', 'tutor' ); ?>
 					</label>
 				</div>
@@ -93,7 +93,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<h4><?php _e( 'Question Title', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="">
 				</div>
 			</div>
 			<p class="help"><?php _e( 'Please make sure to use the <strong>{dash}</strong> variable in your question title to show the blanks in your question. You can use multiple <strong>{dash}</strong> variables in one question.', 'tutor' ); ?></p>
@@ -103,7 +103,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<h4><?php _e( 'Correct Answer(s)', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_two_gap_match]" value="">
 				</div>
 			</div>
 			<p class="help"><?php _e( 'Separate multiple answers by a vertical bar <strong>|</strong>. 1 answer per <strong>{dash}</strong> variable is defined in the question. Example: Apple | Banana | Orange', 'tutor' ); ?></p>
@@ -118,7 +118,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<h4><?php _e( 'Answer title', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="">
 				</div>
 			</div>
 		</div> <!-- /.tutor-quiz-builder-group -->
@@ -127,7 +127,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<h4><?php _e( 'Matched Answer title', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][matched_answer_title]" value="">
 				</div>
 			</div>
 			<p class="help"></p>
@@ -141,7 +141,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<h4><?php _e( 'Answer title', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="">
 				</div>
 			</div>
 			<p class="help"></p>
@@ -150,7 +150,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<h4><?php _e( 'Matched Answer title', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][matched_answer_title]" value="">
 				</div>
 			</div>
 			<p class="help"></p>
@@ -161,7 +161,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
 					<div class="tutor-media-upload-wrap">
-						<input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="">
+						<input type="hidden" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][image_id]" value="">
 						<div class="tutor-media-preview">
 							<a href="javascript:;" class="tutor-media-upload-btn"><i class="tutor-icon-image1"></i></a>
 						</div>
@@ -177,19 +177,19 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" checked="checked">
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text" checked="checked">
 						<?php _e( 'Only text', 'tutor' ); ?>
 					</label>
 				</div>
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image">
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="image">
 						<?php _e( 'Only Image', 'tutor' ); ?>
 					</label>
 				</div>
 				<div class="tutor-quiz-builder-col auto-width">
 					<label>
-						<input type="radio" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image">
+						<input type="radio" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_view_format]" value="text_image">
 						<?php _e( 'Text &amp; Image both', 'tutor' ); ?>
 					</label>
 				</div>
@@ -206,7 +206,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
 					<div class="tutor-media-upload-wrap">
-						<input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="">
+						<input type="hidden" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][image_id]" value="">
 						<div class="tutor-media-preview">
 							<a href="javascript:;" class="tutor-media-upload-btn"><i class="tutor-icon-image1"></i></a>
 						</div>
@@ -221,7 +221,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<h4><?php _e( 'Image matched text', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="">
 				</div>
 			</div>
 		</div> <!-- /.tutor-quiz-builder-group -->
@@ -236,7 +236,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
 					<div class="tutor-media-upload-wrap">
-						<input type="hidden" name="quiz_answer[<?php echo $question_id; ?>][image_id]" value="">
+						<input type="hidden" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][image_id]" value="">
 						<div class="tutor-media-preview">
 							<a href="javascript:;" class="tutor-media-upload-btn"><i class="tutor-icon-image1"></i></a>
 						</div>
@@ -252,7 +252,7 @@ if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
 			<h4><?php _e( 'Answer input value', 'tutor' ); ?></h4>
 			<div class="tutor-quiz-builder-row">
 				<div class="tutor-quiz-builder-col">
-					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+					<input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="">
 				</div>
 			</div>
 			<p class="help"><?php _e( 'The answers that students enter should match with this text. Write in <strong>small caps</strong>', 'tutor' ); ?></p>

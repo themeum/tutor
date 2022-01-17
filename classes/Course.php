@@ -245,7 +245,7 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo tutor_kses_html($content);
+			echo tutor_kses_html( $content );
 		} else {
 			return $content;
 		}

@@ -93,13 +93,13 @@ if ( $submitted_assignment ) {
 		<form action="" method="post" class="tutor-form-submit-through-ajax" data-toast_success_message="<?php esc_attr_e( 'Assignment evaluated', 'tutor' ); ?>">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 			<input type="hidden" value="tutor_evaluate_assignment_submission" name="tutor_action"/>
-			<input type="hidden" value="<?php echo $assignment_submitted_id; ?>" name="assignment_submitted_id"/>
+			<input type="hidden" value="<?php echo esc_attr( $assignment_submitted_id ); ?>" name="assignment_submitted_id"/>
 			<div class="tutor-assignment-evaluate-row">
 				<div class="tutor-option-field-label">
 					<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 				</div>
 				<div class="tutor-option-field input-mark">
-					<input type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>">
+					<input type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? esc_attr( $given_mark ) : 0; ?>">
 					<p class="desc"><?php echo wp_sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), '<code>' . $max_mark . '</code>' ); ?></p>
 				</div>
 			</div>
