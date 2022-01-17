@@ -1,3 +1,11 @@
+readyState_complete(() => {
+	// typeof resetConfirmation === 'function' ? resetConfirmation() : '';
+	// typeof modalResetOpen === 'function' ? modalResetOpen() : '';
+});
+const modalConfirmation = document.getElementById('tutor-modal-bulk-action');
+
+console.log(modalConfirmation);
+
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "interactive") {
     export_settings_all();
@@ -237,11 +245,33 @@ const export_single_settings = () => {
   }
 };
 
+
+const modalResetOpen = () => {
+	const modalResetOpen = document.querySelectorAll('.apply_settings');
+	let confirmButton = modalConfirmation && modalConfirmation.querySelector('.reset_to_default');
+	let modalHeading = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-title');
+	let modalMessage = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-message');
+	modalResetOpen.forEach((modalOpen, index) => {
+		modalOpen.disabled = false;
+		modalOpen.onclick = (e) => {
+			confirmButton.dataset.reset = modalOpen.dataset.reset;
+			modalHeading.innerText = modalOpen.dataset.heading;
+			confirmButton.dataset.resetFor = modalOpen.previousElementSibling.innerText;
+			modalMessage.innerText = modalOpen.dataset.message;
+		}
+	})
+}
+//data-tutor-modal-target="tutor-modal-bulk-action"
+// data-reset="general" data-heading="Reset to Default Settings?"
+// data-message="WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution."
 const apply_single_settings = () => {
   const apply_settings = selectorElements(".apply_settings");
   if (apply_settings) {
     for (let i = 0; i < apply_settings.length; i++) {
+
       apply_settings[i].onclick = function () {
+        // modalResetOpen();
+        // modalConfirmation.
         let apply_id = apply_settings[i].dataset.id;
         var formData = new FormData();
         formData.append("action", "tutor_apply_settings");
