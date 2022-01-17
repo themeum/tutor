@@ -27,9 +27,13 @@
 	}
 
 	.tutor-modal-close {
-		font-size: 28px;
 		background: none;
 		border: none;
+		span {
+			font-size: 28px;
+			color: #9CA0AC;
+			margin-top: 4px;
+		}
 	}
 
 	.tutor-modal-header {
@@ -234,7 +238,7 @@
 	}
 
 	.tutor-modal-header {
-		padding: 24px 30px;
+		padding: 14px 30px;
 
 		.tutor-modal-title {
 			margin: 0;
@@ -247,14 +251,15 @@
 		background-color: #f1f1f1;
 	}
 	.tutor-modal-footer {
-		padding: 30px;
+		padding: 20px 30px;
 	}
 }
 
 // modal steps
 
 .tutor-modal-steps {
-	padding: 30px 27px;
+	padding: 20px 27px;
+    border-bottom: 1px solid #cdcfd5;
 	ul {
 		list-style: none;
 		display: flex;
@@ -357,7 +362,11 @@
 		}
 	}
 }
-
+.tutor-quiz-builder-modal-wrap {
+	.tutor-modal-header {
+		border: unset !important;
+	}
+}
 // modal tabs
 
 .tutor-modal-tabs {
