@@ -93,3 +93,60 @@ $fontWeights: 100, 200, 300, 400, 500, 600, 700, 800, 900;
 		font-weight: #{$fWeight};
 	}
 }
+
+// Tutor font weights
+$fontWeights: 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36;
+@each $fWeight in $fontWeights {
+	.tutor-fweight-#{$fWeight} {
+		font-weight: #{$fWeight};
+	}
+}
+
+// Responsive Font-size utility
+@for $i from 10 through 60 {
+	@if $i % 2 == 0 {
+		.tutor-ftsz-#{$i} {
+			font-size: #{$i}px;
+		}
+	}
+}
+
+@include breakpoint-max(desktop-lg) {
+	@for $lg from 10 through 60 {
+		@if $lg % 2 == 0 {
+			.tutor-ftsz-lg-#{$lg} {
+				font-size: #{$lg}px !important;
+			}
+		}
+	}
+}
+
+@include breakpoint-max(desktop) {
+	@for $md from 10 through 60 {
+		@if $md % 2 == 0 {
+			.tutor-ftsz-md-#{$md} {
+				font-size: #{$md}px !important;
+			}
+		}
+	}
+}
+
+@include breakpoint-max(tablet) {
+	@for $sm from 10 through 60 {
+		@if $sm % 2 == 0 {
+			.tutor-ftsz-sm-#{$sm} {
+				font-size: #{$sm}px !important;
+			}
+		}
+	}
+}
+
+@include breakpoint-max(mobile) {
+	@for $xs from 10 through 60 {
+		@if $xs % 2 == 0 {
+			.tutor-ftsz-xs-#{$xs} {
+				font-size: #{$xs}px !important;
+			}
+		}
+	}
+}
