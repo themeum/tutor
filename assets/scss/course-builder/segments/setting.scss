@@ -102,11 +102,26 @@
     }
 
     .tutor-quiz-builder-modal-wrap {
-        
+        .select-header {
+            align-items: center;
+        }
     }
     .tutor_assignment_modal_form {
         .tutor-form-select {
             width: 135px;
+        }
+    }
+    .tutor-zoom-meeting-modal-wrap {
+        #tutor-zoom-meeting-modal-form {
+            .tutor-react-datepicker .react-datepicker__input-container input,
+            .tutor_zoom_timepicker {
+                // height: 48px !important;
+                // padding-right: 25px;
+                // font-size: 15px;
+            }
+            .tutor-icon-clock {
+                color: black;
+            }
         }
     }
 
