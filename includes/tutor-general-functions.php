@@ -397,14 +397,14 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 				</h3>
 			</div>
 			<div class="tutor-course-builder-section-content">
-				<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php echo $content; ?>
 			</div>
 		</div>
 		<?php
 		$html = ob_get_clean();
 
 		if ( $echo ) {
-			echo $html;
+			echo tutor_kses_html( $html );
 		} else {
 			return $html;
 		}
@@ -560,7 +560,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 					</div>
 				</div>';
 		if ( $echo ) {
-			echo $html;
+			echo tutor_kses_html( $html );
 		}
 		return $html;
 	}
@@ -665,7 +665,7 @@ if ( ! function_exists( 'tutor_action_field' ) ) {
 		}
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html( $output );
 		} else {
 			return $output;
 		}
@@ -854,6 +854,10 @@ if ( ! function_exists( 'get_request' ) ) {
 	}
 }
 
+if(!function_exists('tutor_kses_allowed_html')) {
+	function tutor_kses_allowed_html($allowed_tags, $context) {
+		$tags = array('input', 'style', 'script', 'select', 'form', 'option', 'optgroup', 'iframe', 'bdi');
+		$atts = array('min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'role', 'placeholder', 'value', 'data-*', 'src', 'width', 'height', 'frameborder', 'allow', 'title');
 
 
 

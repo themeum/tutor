@@ -1739,7 +1739,7 @@ class Utils {
 		}
 
 		if ( $echo ) {
-			echo $tutor_lesson_type_icon;
+			echo tutor_kses_html( $tutor_lesson_type_icon );
 		}
 
 		return $tutor_lesson_type_icon;
@@ -1854,10 +1854,11 @@ class Utils {
 			if ( $video && $this->array_get( 'source', $video ) !== '-1' ) {
 
 				$not_empty = ! empty( $video['source_video_id'] ) ||
-					! empty( $video['source_external_url'] ) ||
-					! empty( $video['source_youtube'] ) ||
-					! empty( $video['source_vimeo'] ) ||
-					! empty( $video['source_embedded'] );
+							! empty( $video['source_external_url'] ) ||
+							! empty( $video['source_youtube'] ) ||
+							! empty( $video['source_vimeo'] ) ||
+							! empty( $video['source_embedded'] ) || 
+							! empty( $video['source_shortcode'] );
 
 				return $not_empty ? $video : false;
 			}
@@ -3438,7 +3439,7 @@ class Utils {
 		$output .= '</div>';
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html( $output );
 		}
 
 		return $output;

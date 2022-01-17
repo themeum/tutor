@@ -173,7 +173,7 @@ class Quiz {
 		$user_id = get_current_user_id();
 		$user    = get_userdata( $user_id );
 
-		$quiz_id = (int) sanitize_text_field( $_POST['quiz_id'] );
+		$quiz_id = (int) $_POST['quiz_id'];
 
 		$quiz   = get_post( $quiz_id );
 		$course = tutor_utils()->get_course_by_quiz( $quiz_id );
@@ -280,7 +280,7 @@ class Quiz {
 	public static function tutor_quiz_attemp_submit() {
 		tutor_utils()->checking_nonce();
 
-		$attempt_id = (int) sanitize_text_field( tutor_utils()->avalue_dot( 'attempt_id', $_POST ) );
+		$attempt_id = (int) tutor_utils()->avalue_dot( 'attempt_id', $_POST );
 		$attempt    = tutor_utils()->get_attempt( $attempt_id );
 		$course_id  = tutor_utils()->get_course_by_quiz( $attempt->quiz_id )->ID;
 
@@ -488,7 +488,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$quiz_id    = (int) sanitize_text_field( $_POST['quiz_id'] );
+		$quiz_id    = (int) $_POST['quiz_id'];
 		$attempt    = tutor_utils()->is_started_quiz( $quiz_id );
 		$attempt_id = $attempt->attempt_id;
 
@@ -514,7 +514,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$quiz_id = (int) sanitize_text_field( $_POST['quiz_id'] );
+		$quiz_id = (int) $_POST['quiz_id'];
 
 		// if(!tutor_utils()->can_user_manage('quiz', $quiz_id)) {
 		// 	wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -702,7 +702,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$quiz_id = (int) sanitize_text_field( $_POST['quiz_id'] );
+		$quiz_id = (int) $_POST['quiz_id'];
 		$post    = get_post( $quiz_id );
 
 		if ( ! tutils()->can_user_manage( 'quiz', $quiz_id ) ) {
@@ -841,7 +841,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$question_data = tutor_sanitize_data( $_POST['tutor_quiz_question'] );
+		$question_data = $_POST['tutor_quiz_question'];
 
 		foreach ( $question_data as $question_id => $question ) {
 
@@ -1049,7 +1049,7 @@ class Quiz {
 
 		global $wpdb;
 
-		$answer_id = (int) sanitize_text_field( $_POST['tutor_quiz_answer_id'] );
+		$answer_id = (int) $_POST['tutor_quiz_answer_id'];
 
 		if(!tutor_utils()->can_user_manage('quiz_answer', $answer_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -1241,7 +1241,7 @@ class Quiz {
 
 		tutor_utils()->checking_nonce();
 
-		$quiz_id = (int) sanitize_text_field( tutor_utils()->avalue_dot( 'quiz_id', $_POST ) );
+		$quiz_id = (int) tutor_utils()->avalue_dot( 'quiz_id', $_POST );
 
 		if(!tutor_utils()->has_enrolled_content_access('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied.', 'tutor')) );

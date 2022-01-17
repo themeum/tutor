@@ -395,9 +395,9 @@ class Ajax {
 
 		try {
 			$creds = array(
-				'user_login'    => trim( wp_unslash( $username ) ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				'user_password' => $password, // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-				'remember'      => isset( $_POST['rememberme'] ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				'user_login'    => trim( wp_unslash( $username ) ), 
+				'user_password' => $password, 
+				'remember'      => isset( $_POST['rememberme'] ), 
 			);
 
 			$validation_error = new \WP_Error();
