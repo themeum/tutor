@@ -99,7 +99,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 													<?php
 													} else {
 													?>	
-														<?php if(!empty($user_name)) : ?>
+														<?php if(!empty($user_name) && isset( $attempt->user_email ) ) : ?>
 															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> 
 															<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( $attempt->user_email ); ?>">
 																<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
