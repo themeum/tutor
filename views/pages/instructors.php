@@ -231,7 +231,7 @@ $filters = array(
 	<div class="tutor-modal-inner">
 	<form action="" method="post" id="tutor-new-instructor-form" autocomplete="off">
 	  <div class="tutor-modal-header">
-		<h3 class="tutor-modal-title">
+		<h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
 			<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
 		</h3>
 	  </div>

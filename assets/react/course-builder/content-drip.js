@@ -1,7 +1,5 @@
 window.jQuery(document).ready(function($){
 
-    console.log('Content drip sc');
-
     // Update content drip data instantly on change.
     // So lesson, quiz, assignment modal can get data without pressing course update/publish
     $('#course_setting_content_drip, [name="_tutor_course_settings[content_drip_type]"]').change(function(){

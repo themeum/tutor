@@ -83,7 +83,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
-				<div class="tutor-modal-header">
+				<div class="tutor-modal-header tutor-text-bold-h6 tutor-color-text-title">
 					<button data-tutor-modal-close class="tutor-modal-close tutor-color-text-hints">
 						<span class="ttr-line-cross-line tutor-icon-40"></span>
 					</button>
