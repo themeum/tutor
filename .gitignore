@@ -31,3 +31,4 @@ assets/**/*.map
 *.log
 *.map
 */bundle/*
+/languages/tutor.pot
