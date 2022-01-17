@@ -87,7 +87,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 		</div>
 		<div class="tutor-topbar-cross-icon flex-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
-			<a href="<?php echo get_the_permalink( $course_id ); ?>">
+			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
 				<span class="ttr-line-cross-line tutor-color-text-white flex-center"></span>
 			</a>
 		</div>
@@ -617,13 +617,13 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 						<?php endif; ?>
 					</div>
 				</div>
-
+				<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
 				<div class="tutor-assignment-footer tutor-pt-30 tutor-pt-sm-45">
-					<a class="tutor-btn tutor-btn-primary tutor-btn-lg" href="<?php echo get_the_permalink( $next_id ); ?>">
-						<?php _e( 'Continue Lesson', 'tutor' ); ?>
+					<a class="tutor-btn tutor-btn-primary tutor-btn-lg" href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
+						<?php esc_html_e( 'Continue Lesson', 'tutor' ); ?>
 					</a>
 				</div>
-
+				<?php endif; ?>
 				<?php
 			} else {
 				?>
