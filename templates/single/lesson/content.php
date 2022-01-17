@@ -10,8 +10,9 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 global $post;
 global $previous_id;
@@ -35,8 +36,8 @@ $jsonData['post_id'] = get_the_ID();
 $jsonData['best_watch_time'] = 0;
 $jsonData['autoload_next_course_content'] = (bool) get_tutor_option('autoload_next_course_content');
 
-$best_watch_time = tutor_utils()->get_lesson_reading_info(get_the_ID(), 0, 'video_best_watched_time');
-if ($best_watch_time > 0){
+$best_watch_time = tutor_utils()->get_lesson_reading_info( get_the_ID(), 0, 'video_best_watched_time' );
+if ( $best_watch_time > 0 ) {
 	$jsonData['best_watch_time'] = $best_watch_time;
 }
 
@@ -175,4 +176,4 @@ $is_comment_enabled = tutor_utils()->get_option('enable_comment_for_lesson') && 
     </div>
 </div>
 
-<?php do_action('tutor_lesson/single/after/content'); ?>
+<?php do_action( 'tutor_lesson/single/after/content' ); ?>

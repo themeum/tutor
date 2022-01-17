@@ -1,10 +1,11 @@
 <?php
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
-class Ajax{
+class Ajax {
 	public function __construct() {
 
 		add_action('wp_ajax_sync_video_playback', array($this, 'sync_video_playback'));
@@ -12,8 +13,8 @@ class Ajax{
 		add_action('wp_ajax_tutor_place_rating', array($this, 'tutor_place_rating'));
 		add_action('wp_ajax_delete_tutor_review', array($this, 'delete_tutor_review'));
 
-		add_action('wp_ajax_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
-		add_action('wp_ajax_nopriv_tutor_course_add_to_wishlist', array($this, 'tutor_course_add_to_wishlist'));
+		add_action( 'wp_ajax_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
+		add_action( 'wp_ajax_nopriv_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
 
 		/**
 		 * Get all addons
@@ -27,16 +28,18 @@ class Ajax{
 
 		/**
 		 * Ajax login
+		 *
 		 * @since  v.1.6.3
 		 */
-		add_action('wp_ajax_nopriv_tutor_user_login', array($this, 'process_ajax_login'));
+		add_action( 'wp_ajax_nopriv_tutor_user_login', array( $this, 'process_ajax_login' ) );
 
 		/**
 		 * Announcement
+		 *
 		 * @since  v.1.7.9
 		 */
-		add_action("wp_ajax_tutor_announcement_create", array($this,'create_or_update_annoucement'));
-        add_action("wp_ajax_tutor_announcement_delete", array($this,'delete_annoucement'));
+		add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_annoucement' ) );
+		add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_annoucement' ) );
 	}
 
 
@@ -46,13 +49,13 @@ class Ajax{
 	 *
 	 * @since v.1.0.0
 	 */
-	public function sync_video_playback(){
+	public function sync_video_playback() {
 		tutor_utils()->checking_nonce();
 
-		$user_id = get_current_user_id();
-		$post_id = isset($_POST['post_id']) ? sanitize_text_field($_POST['post_id']) : 0;
-		$duration = sanitize_text_field($_POST['duration']);
-		$currentTime = sanitize_text_field($_POST['currentTime']);
+		$user_id     = get_current_user_id();
+		$post_id     = isset( $_POST['post_id'] ) ? sanitize_text_field( $_POST['post_id'] ) : 0;
+		$duration    = sanitize_text_field( $_POST['duration'] );
+		$currentTime = sanitize_text_field( $_POST['currentTime'] );
 
 		if(!tutor_utils()->has_enrolled_content_access('lesson', $post_id)) {
 			wp_send_json_error(array('message'=>__('Access Denied', 'tutor')));
@@ -62,36 +65,36 @@ class Ajax{
 		/**
 		 * Update posts attached video
 		 */
-		$video = tutor_utils()->get_video($post_id);
+		$video = tutor_utils()->get_video( $post_id );
 
-		if ($duration) {
-			$video['duration_sec'] = $duration; //secs
+		if ( $duration ) {
+			$video['duration_sec'] = $duration; // secs
 			$video['playtime']     = tutor_utils()->playtime_string( $duration );
 			$video['runtime']      = tutor_utils()->playtime_array( $duration );
 		}
-		tutor_utils()->update_video($post_id, $video);
+		tutor_utils()->update_video( $post_id, $video );
 
 		/**
 		 * Sync Lesson Reading Info by Users
 		 */
 
-		$best_watch_time = tutor_utils()->get_lesson_reading_info($post_id, $user_id, 'video_best_watched_time');
-		if ($best_watch_time < $currentTime){
-			tutor_utils()->update_lesson_reading_info($post_id, $user_id, 'video_best_watched_time', $currentTime);
+		$best_watch_time = tutor_utils()->get_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time' );
+		if ( $best_watch_time < $currentTime ) {
+			tutor_utils()->update_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time', $currentTime );
 		}
 
-		if (tutor_utils()->avalue_dot('is_ended', $_POST)){
-			tutor_utils()->mark_lesson_complete($post_id);
+		if ( tutor_utils()->avalue_dot( 'is_ended', $_POST ) ) {
+			tutor_utils()->mark_lesson_complete( $post_id );
 		}
 		exit();
 	}
 
-	public function sync_video_playback_noprev(){
+	public function sync_video_playback_noprev() {
 
 	}
 
 
-	public function tutor_place_rating(){
+	public function tutor_place_rating() {
 		global $wpdb;
 
 		tutor_utils()->checking_nonce();
@@ -100,8 +103,8 @@ class Ajax{
 		$course_id = sanitize_text_field(tutor_utils()->avalue_dot('course_id', $_POST));
 		$review = sanitize_textarea_field(tutor_utils()->avalue_dot('review', $_POST));
 
-		!$rating ? $rating = 0 : 0;
-		$rating>5 ? $rating = 5 : 0;
+		! $rating ? $rating   = 0 : 0;
+		$rating > 5 ? $rating = 5 : 0;
 
 		$user_id = get_current_user_id();
 		$user = get_userdata($user_id);
@@ -112,7 +115,7 @@ class Ajax{
 			exit;
 		}
 
-		do_action('tutor_before_rating_placed');
+		do_action( 'tutor_before_rating_placed' );
 
 		$previous_rating_id = $wpdb->get_var($wpdb->prepare(
 			"SELECT comment_ID 
@@ -126,44 +129,63 @@ class Ajax{
 		));
 
 		$review_ID = $previous_rating_id;
-		if ( $previous_rating_id){
-			$wpdb->update( $wpdb->comments, array('comment_content' =>  $review ),
-				array('comment_ID' => $previous_rating_id)
+		if ( $previous_rating_id ) {
+			$wpdb->update(
+				$wpdb->comments,
+				array( 'comment_content' => $review ),
+				array( 'comment_ID' => $previous_rating_id )
 			);
 
-			$rating_info = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = %d AND meta_key = 'tutor_rating'; ", $previous_rating_id));
-			if ($rating_info){
-				$wpdb->update( $wpdb->commentmeta, array('meta_value' => $rating), array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating') );
-			}else{
-				$wpdb->insert( $wpdb->commentmeta, array('comment_id' => $previous_rating_id, 'meta_key' => 'tutor_rating', 'meta_value' => $rating) );
+			$rating_info = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->commentmeta} WHERE comment_id = %d AND meta_key = 'tutor_rating'; ", $previous_rating_id ) );
+			if ( $rating_info ) {
+				$wpdb->update(
+					$wpdb->commentmeta,
+					array( 'meta_value' => $rating ),
+					array(
+						'comment_id' => $previous_rating_id,
+						'meta_key'   => 'tutor_rating',
+					)
+				);
+			} else {
+				$wpdb->insert(
+					$wpdb->commentmeta,
+					array(
+						'comment_id' => $previous_rating_id,
+						'meta_key'   => 'tutor_rating',
+						'meta_value' => $rating,
+					)
+				);
 			}
-		}else{
+		} else {
 			$data = array(
-				'comment_post_ID'   => esc_sql( $course_id ) ,
-				'comment_approved'  => 'approved',
-				'comment_type'      => 'tutor_course_rating',
-				'comment_date'      => $date,
-				'comment_date_gmt'  => get_gmt_from_date($date),
-				'user_id'           => $user_id,
-				'comment_author'    => $user->user_login,
-				'comment_agent'     => 'TutorLMSPlugin',
+				'comment_post_ID'  => esc_sql( $course_id ),
+				'comment_approved' => 'approved',
+				'comment_type'     => 'tutor_course_rating',
+				'comment_date'     => $date,
+				'comment_date_gmt' => get_gmt_from_date( $date ),
+				'user_id'          => $user_id,
+				'comment_author'   => $user->user_login,
+				'comment_agent'    => 'TutorLMSPlugin',
 			);
-			if ($review){
+			if ( $review ) {
 				$data['comment_content'] = $review;
 			}
 
-			$wpdb->insert($wpdb->comments, $data);
+			$wpdb->insert( $wpdb->comments, $data );
 			$comment_id = (int) $wpdb->insert_id;
-			$review_ID = $comment_id;
+			$review_ID  = $comment_id;
 
-			if ($comment_id){
-				$result = $wpdb->insert( $wpdb->commentmeta, array(
-					'comment_id' => $comment_id,
-					'meta_key' => 'tutor_rating',
-					'meta_value' => $rating
-				) );
+			if ( $comment_id ) {
+				$result = $wpdb->insert(
+					$wpdb->commentmeta,
+					array(
+						'comment_id' => $comment_id,
+						'meta_key'   => 'tutor_rating',
+						'meta_value' => $rating,
+					)
+				);
 
-				do_action('tutor_after_rating_placed', $comment_id);
+				do_action( 'tutor_after_rating_placed', $comment_id );
 			}
 		}
 
@@ -361,6 +383,7 @@ class Ajax{
 
 	/**
 	 * Process ajax login
+	 *
 	 * @since v.1.6.3
 	 */
 	public function process_ajax_login(){
@@ -409,7 +432,7 @@ class Ajax{
 					'message' => $user->get_error_message()
 				) );
 			} else {
-				//since 1.9.8 do enroll if guest attempt to enroll
+				// since 1.9.8 do enroll if guest attempt to enroll
 				do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
 				
 				wp_send_json_success(array(
@@ -424,6 +447,7 @@ class Ajax{
 
 	/**
 	 * Create/Update announcement
+	 *
 	 * @since  v.1.7.9
 	 */
 	public function create_or_update_annoucement() {   
@@ -438,28 +462,33 @@ class Ajax{
 		if(!tutor_utils()->can_user_manage('course', $course_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
-        
-        //set data and sanitize it
-        $form_data = array(
-			'post_type' => 'tutor_announcements',
-			'post_title' => $announcement_title,
+
+		// set data and sanitize it
+		$form_data = array(
+			'post_type'    => 'tutor_announcements',
+			'post_title'   => $announcement_title,
 			'post_content' => $announcement_summary,
-			'post_parent' => $course_id,
-			'post_status' => 'publish'
-        );
+			'post_parent'  => $course_id,
+			'post_status'  => 'publish',
+		);
 
-        if (isset($_POST['announcement_id'])) {
-            $form_data['ID'] = sanitize_text_field($_POST['announcement_id']);
-        }
+		if ( isset( $_POST['announcement_id'] ) ) {
+			$form_data['ID'] = sanitize_text_field( $_POST['announcement_id'] );
+		}
 
-        //validation message set
-        if (empty($form_data['post_parent'])) {
-            $error['post_parent'] = __('Course name required','tutor'); 
+		// validation message set
+		if ( empty( $form_data['post_parent'] ) ) {
+			$error['post_parent'] = __( 'Course name required', 'tutor' );
 
 		}
-		
-        if (empty($form_data['post_title'])) {
-            $error['post_title'] = __('Announcement title required','tutor'); 
+
+		if ( empty( $form_data['post_title'] ) ) {
+			$error['post_title'] = __( 'Announcement title required', 'tutor' );
+		}
+
+		if ( empty( $form_data['post_content'] ) ) {
+			$error['post_content'] = __( 'Announcement summary required', 'tutor' );
+
 		}
 		
         if (empty($form_data['post_content'])) {
@@ -493,6 +522,7 @@ class Ajax{
 
 	/**
 	 * Delete announcement
+	 *
 	 * @since  v.1.7.9
 	 */
     public function delete_annoucement() {

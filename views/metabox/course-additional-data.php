@@ -2,16 +2,16 @@
 $course_id = get_the_ID();
 
 // Extract: $duration, $durationHours, $durationMinutes, $durationSeconds
-extract(tutor_utils()->get_course_duration($course_id, true));
+extract( tutor_utils()->get_course_duration( $course_id, true ) );
 
-$benefits = get_post_meta($course_id, '_tutor_course_benefits', true);
-$requirements = get_post_meta($course_id, '_tutor_course_requirements', true);
-$target_audience = get_post_meta($course_id, '_tutor_course_target_audience', true);
-$material_includes = get_post_meta($course_id, '_tutor_course_material_includes', true);
+$benefits          = get_post_meta( $course_id, '_tutor_course_benefits', true );
+$requirements      = get_post_meta( $course_id, '_tutor_course_requirements', true );
+$target_audience   = get_post_meta( $course_id, '_tutor_course_target_audience', true );
+$material_includes = get_post_meta( $course_id, '_tutor_course_material_includes', true );
 ?>
 
 
-<?php do_action('tutor_course_metabox_before_additional_data'); ?>
+<?php do_action( 'tutor_course_metabox_before_additional_data' ); ?>
 
 <div class="tutor-mb-30">
     <label class="text-medium-body tutor-font-size-16 color-text-primary">
@@ -65,4 +65,4 @@ $material_includes = get_post_meta($course_id, '_tutor_course_material_includes'
 
 <input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
 
-<?php do_action('tutor_course_metabox_after_additional_data'); ?>
+<?php do_action( 'tutor_course_metabox_after_additional_data' ); ?>

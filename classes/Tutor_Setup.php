@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) )
             }
             return $final_arr;
         }
-        
+
 
         public function tutor_setup_action(){
             tutor_utils()->checking_nonce();
@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) )
                         if ($_POST[$key] == '') {
                             unset($options[$key]);
                         } else {
-                            $options[$key] = $_POST[$key];
+                            $options[$key] = tutor_sanitize_data($_POST[$key]);
                         }
                     }
                 } else {
@@ -69,7 +69,7 @@ if ( ! defined( 'ABSPATH' ) )
                 }
             }
             update_option('tutor_withdraw_options', $payments);
-            
+
             // Add wizard flug
             update_option('tutor_wizard', 'active');
 
@@ -95,7 +95,7 @@ if ( ! defined( 'ABSPATH' ) )
         }
 
         public function tutor_setup_generator() {
-            
+
             $i = 1;
             $html = '';
             $options = (array) maybe_unserialize(get_option('tutor_option'));
@@ -152,11 +152,11 @@ if ( ! defined( 'ABSPATH' ) )
                                                 $html .= '<span class="label-on">'.__('ON', 'tutor').'</span>';
                                             $html .= '</label>';
                                         break;
-                    
+
                                         case 'text':
-                                            $html .= '<input type="text" name="'.$key.'" class="lesson-permalink" value="'.(isset($options[$key]) ? $options[$key] : '').'" />';    
+                                            $html .= '<input type="text" name="'.$key.'" class="lesson-permalink" value="'.(isset($options[$key]) ? $options[$key] : '').'" />';
                                         break;
-                    
+
                                         case 'rows':
                                             $html .= '<div class="content">';
                                                 $html .= '<div class="course-per-row">';
@@ -187,7 +187,7 @@ if ( ! defined( 'ABSPATH' ) )
                                                 $html .= '</div>';
                                             $html .= '</div>';
                                         break;
-                                        
+
                                         case 'radio':
                                             if ( isset($field['options']) ) {
                                                 foreach ($field['options'] as $k => $val) {
@@ -196,7 +196,7 @@ if ( ! defined( 'ABSPATH' ) )
                                                 }
                                             }
                                         break;
-                                        
+
                                         case 'slider':
                                             $available_times = array(
                                                 'seconds'   => __( 'seconds' , 'tutor' ),
@@ -231,11 +231,11 @@ if ( ! defined( 'ABSPATH' ) )
                                                                 $html .= '<h5>'.$val['desc'].'</h5>';
                                                             $html .= '</label>';
                                                         $html .= '</div>';
-                                                        
+
                                                         if (isset($options[$key]) && $options[$key] == $val['value']) {
                                                             $selected_data .= '<div class="selected">';
                                                             $selected_data .= '<h3>'.$val['title'].'</h3>';
-                                                            $selected_data .= '<h5>'.$val['desc'].'</h5>';    
+                                                            $selected_data .= '<h5>'.$val['desc'].'</h5>';
                                                             $selected_data .= '</div>';
                                                         }
                                                     }
@@ -311,7 +311,7 @@ if ( ! defined( 'ABSPATH' ) )
 
                                         case 'attempt':
                                             $html .= '<div class="tutor-setting course-setting-wrapper">';
-                                                
+
                                                 $html .= '<input type="hidden" name="quiz_attempts_allowed" value="'.$options[$key].'">';
 
                                                 $html .= '<div class="content">';
@@ -336,7 +336,7 @@ if ( ! defined( 'ABSPATH' ) )
                                                 $html .= '</div>';
                                             $html .= '</div>';
                                         break;
-                                        
+
                                         default:
                                             # code...
                                             break;
@@ -541,8 +541,8 @@ if ( ! defined( 'ABSPATH' ) )
                             'class' => 'tutor-show-hide',
                             'desc' => __('Choose your preferred withdrawal method from the options.', 'tutor')
                         ),
-          
-                        
+
+
                     )
                 ),
 
@@ -551,7 +551,7 @@ if ( ! defined( 'ABSPATH' ) )
 
             return $general_fields;
         }
-        
+
         public function tutor_setup_wizard_settings() {
 
             $options = (array) maybe_unserialize(get_option('tutor_option'));
@@ -721,7 +721,7 @@ if ( ! defined( 'ABSPATH' ) )
             <div class="tutor-wizard-container">
                 <div class="tutor-wrapper-type tutor-setup-wizard-type">
                     <div class="wizard-type-header">
-                        <div class="logo"><img src="<?php echo tutor()->url.'assets/images/tutor-logo.svg'; ?>" /></div>
+                        <div class="logo"><img src="<?php echo esc_url( tutor()->url.'assets/images/tutor-logo.svg' ); ?>" /></div>
                         <div class="title"><?php _e('Let’s get the platform up and running', 'tutor'); ?></div>
                         <div class="subtitle"><?php _e('Pick a category for your LMS platform. You can always update this later.', 'tutor'); ?></div>
                     </div>
@@ -730,7 +730,7 @@ if ( ! defined( 'ABSPATH' ) )
                             <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-0">
-                                <img src="<?php echo tutor()->url.'assets/images/single-marketplace.svg'; ?>" />
+                                <img src="<?php echo esc_url( tutor()->url.'assets/images/single-marketplace.svg' ); ?>" />
                                 <div class="title"><?php _e( 'Individual', 'tutor' ); ?></div>
                                 <div class="subtitle"><?php _e( 'Share solo journey as an educator and spared knowledge', 'tutor' ); ?></div>
                                 <div class="action">
@@ -745,7 +745,7 @@ if ( ! defined( 'ABSPATH' ) )
                             <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-1">
-                                <img src="<?php echo tutor()->url.'assets/images/multiple-marketplace.svg'; ?>" />
+                                <img src="<?php echo esc_url( tutor()->url.'assets/images/multiple-marketplace.svg' ); ?>" />
                                 <div class="title"><?php _e( 'Marketplace', 'tutor' ); ?></div>
                                 <div class="subtitle"><?php _e( 'Create an eLearning platform to let anyone earn by teaching online', 'tutor' ); ?></div>
                                 <div class="action">

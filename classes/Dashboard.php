@@ -10,8 +10,9 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 class Dashboard {
 
@@ -25,25 +26,30 @@ class Dashboard {
 	 * @param $template
 	 * @param $variables
 	 */
-	public function tutor_load_template_before($template, $variables){
+	public function tutor_load_template_before( $template, $variables ) {
 		global $wp_query;
 
-		$tutor_dashboard_page = tutor_utils()->array_get('query_vars.tutor_dashboard_page', $wp_query);
-		if ($tutor_dashboard_page === 'create-course') {
+		$tutor_dashboard_page = tutor_utils()->array_get( 'query_vars.tutor_dashboard_page', $wp_query );
+		if ( $tutor_dashboard_page === 'create-course' ) {
 			global $post;
 			wp_reset_query();
-
 
 			/**
 			 * Get course which currently in edit, or insert new course
 			 */
-			$course_ID = (int) sanitize_text_field(tutor_utils()->array_get('course_ID', $_GET));
+			$course_ID = (int) sanitize_text_field( tutor_utils()->array_get( 'course_ID', $_GET ) );
 
-			if ($course_ID){
+			if ( $course_ID ) {
 				$post_id = $course_ID;
-			}else{
+			} else {
 				$post_type = tutor()->course_post_type;
-				$post_id = wp_insert_post( array( 'post_title' => __( 'Auto Draft', 'tutor' ), 'post_type' => $post_type, 'post_status' => 'draft' ) );
+				$post_id   = wp_insert_post(
+					array(
+						'post_title'  => __( 'Auto Draft', 'tutor' ),
+						'post_type'   => $post_type,
+						'post_status' => 'draft',
+					)
+				);
 			}
 
 			$post = get_post( $post_id );
@@ -51,17 +57,17 @@ class Dashboard {
 		}
 	}
 
-	public function tutor_load_template_after(){
+	public function tutor_load_template_after() {
 		global $wp_query;
 
-		$tutor_dashboard_page = tutor_utils()->array_get('query_vars.tutor_dashboard_page', $wp_query);
-		if ($tutor_dashboard_page === 'create-course'){
+		$tutor_dashboard_page = tutor_utils()->array_get( 'query_vars.tutor_dashboard_page', $wp_query );
+		if ( $tutor_dashboard_page === 'create-course' ) {
 			wp_reset_query();
 		}
 	}
 
-	public function should_tutor_load_template($bool, $template){
-		if ($template === 'dashboard.create-course' && ! tutor()->has_pro){
+	public function should_tutor_load_template( $bool, $template ) {
+		if ( $template === 'dashboard.create-course' && ! tutor()->has_pro ) {
 			return false;
 		}
 		return $bool;

@@ -156,7 +156,7 @@
 		<?php
 	}
 	?>
-    <input type="hidden" id="tutor_topics_lessons_sorting" name="tutor_topics_lessons_sorting" value="" />
+	<input type="hidden" id="tutor_topics_lessons_sorting" name="tutor_topics_lessons_sorting" value="" />
 </div>
 
 
@@ -201,11 +201,11 @@
                                 </div>
                             </div>
 							<?php
-						}
-
 					}
 				}
-            ?></div>
-        </div>
+			}
+			?>
+			</div>
+		</div>
 	<?php }
 ?>

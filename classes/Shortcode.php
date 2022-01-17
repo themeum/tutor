@@ -241,18 +241,15 @@ class Shortcode {
 		if ( $show_filter ) {
 			$limit           = 8;
 			$course_taxonomy = 'course-category';
-			$course_cats     = $wpdb->get_results(
-				$wpdb->prepare(
-					" SElECT * FROM {$wpdb->terms} AS term
-					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
-						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-					ORDER BY term.term_id DESC
-					LIMIT %d
-				",
-					$course_taxonomy,
-					$limit
-				)
-			);
+			$course_cats     = $wpdb->get_results($wpdb->prepare(
+				"SELECT * FROM {$wpdb->terms} AS term
+				INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
+					ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
+				ORDER BY term.term_id DESC
+				LIMIT %d",
+				$course_taxonomy,
+				$limit
+			));
 
 			$all_cats = $wpdb->get_var(
 				$wpdb->prepare(
@@ -347,11 +344,12 @@ class Shortcode {
 	public function load_filtered_instructor() {
 		tutor_utils()->checking_nonce();
 
-		$attributes   = (array) tutor_utils()->array_get( 'attributes', $_POST, array() );
+		$_post 		  = tutor_sanitize_data($_POST);
+		$attributes   = (array) tutor_utils()->array_get( 'attributes', $_post, array() );
 		$current_page = (int) sanitize_text_field( tutor_utils()->array_get( 'current_page', $attributes, 1 ) );
-		$keyword      = (string) sanitize_text_field( tutor_utils()->array_get( 'keyword', $_POST, '' ) );
+		$keyword      = (string) sanitize_text_field( tutor_utils()->array_get( 'keyword', $_post, '' ) );
 
-		$category = (array) tutor_utils()->array_get( 'category', $_POST, array() );
+		$category = (array) tutor_utils()->array_get( 'category', $_post, array() );
 		$category = array_filter(
 			$category,
 			function( $cat ) {

@@ -1,13 +1,15 @@
 # TutorLMS Changelog
 
-### 2.0.0 - January 01, 2022
+### 2.0.0 - February 01, 2022
 
 * Update: Overall Design System
 
 
-### 1.9.13 - December 20, 2021
+### 1.9.13 - January 10, 2022
 
-* Update: Security Update
+* Update: User Input field sanitization is made stronger to ensure SQL Injection
+* Update: HTML output of user provided input is more secure now
+* Update: XSS vulnerability protection is made stronger than before
 
 
 ### 1.9.12 - December 14, 2021

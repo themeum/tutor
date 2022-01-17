@@ -10,8 +10,8 @@
 		<?php echo esc_html( $label_title ); ?>
 	</label>
 	<?php
-}else{
-	//Check if multi option exists
+} else {
+	// Check if multi option exists
 	foreach ( $field['options'] as $field_option_key => $field_option ) {
 		?>
 		<label>

@@ -119,29 +119,30 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             </div>
         </div>
 		<?php
-	}elseif ($question_type === 'answer_sorting'){ ?>
+	} elseif ( $question_type === 'answer_sorting' ) {
+		?>
 
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Answer title', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][answer_title]" value="">
-                </div>
-            </div>
-        </div> <!-- /.tutor-quiz-builder-group -->
+		<div class="tutor-quiz-builder-group">
+			<h4><?php _e( 'Answer title', 'tutor' ); ?></h4>
+			<div class="tutor-quiz-builder-row">
+				<div class="tutor-quiz-builder-col">
+					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="">
+				</div>
+			</div>
+		</div> <!-- /.tutor-quiz-builder-group -->
 
-        <div class="tutor-quiz-builder-group">
-            <h4><?php _e('Matched Answer title', 'tutor'); ?></h4>
-            <div class="tutor-quiz-builder-row">
-                <div class="tutor-quiz-builder-col">
-                    <input type="text" name="quiz_answer[<?php echo esc_attr( $question_id ); ?>][matched_answer_title]" value="">
-                </div>
-            </div>
-            <p class="help"></p>
-        </div> <!-- /.tutor-quiz-builder-group -->
+		<div class="tutor-quiz-builder-group">
+			<h4><?php _e( 'Matched Answer title', 'tutor' ); ?></h4>
+			<div class="tutor-quiz-builder-row">
+				<div class="tutor-quiz-builder-col">
+					<input type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="">
+				</div>
+			</div>
+			<p class="help"></p>
+		</div> <!-- /.tutor-quiz-builder-group -->
 
 		<?php
-	}elseif($question_type === 'matching'){
+	} elseif ( $question_type === 'matching' ) {
 		?>
         <div class="tutor-mb-30">
             <label class="tutor-form-label">
@@ -225,7 +226,8 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             </div>
         </div>
 		<?php
-	}elseif($question_type === 'image_answering'){ ?>
+	} elseif ( $question_type === 'image_answering' ) {
+		?>
 
         <div class="tutor-mb-30">
             <label class="tutor-form-label">

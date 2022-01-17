@@ -6,20 +6,20 @@
  * @author themeum
  * @url https://themeum.com
  *
- *
  * @package TutorLMS/Templates
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
-$attachments = tutor_utils()->get_attachments();
-$open_mode_view = apply_filters('tutor_pro_attachment_open_mode', null)=='view' ? ' target="_blank" ' : null;
+$attachments    = tutor_utils()->get_attachments();
+$open_mode_view = apply_filters( 'tutor_pro_attachment_open_mode', null ) == 'view' ? ' target="_blank" ' : null;
 
-do_action('tutor_global/before/attachments');
+do_action( 'tutor_global/before/attachments' );
 
-if (is_array($attachments) && count($attachments)){
+if ( is_array( $attachments ) && count( $attachments ) ) {
 	?>
     <div class="tutor-exercise-files tutor-mt-20">
         <?php
@@ -46,4 +46,4 @@ if (is_array($attachments) && count($attachments)){
     tutor_utils()->tutor_empty_state(__('No Attchment Found', 'tutor'));
 }
 
-do_action('tutor_global/after/attachments'); ?>
+do_action( 'tutor_global/after/attachments' ); ?>

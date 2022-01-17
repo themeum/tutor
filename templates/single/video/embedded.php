@@ -11,7 +11,7 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 	
 global $previous_id;
@@ -22,7 +22,7 @@ $previous_id = $contents->previous_id;
 $next_id = $contents->next_id;
 $video_info = tutor_utils()->get_video_info();
 
-do_action('tutor_lesson/single/before/video/embedded');
+do_action( 'tutor_lesson/single/before/video/embedded' );
 ?>
 <?php if($video_info ) { ?>
 <div class="course-players">

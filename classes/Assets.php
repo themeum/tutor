@@ -2,12 +2,11 @@
 
 namespace TUTOR;
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Assets
-{
+class Assets {
 
 	public function __construct()
 	{
@@ -19,8 +18,8 @@ class Assets
 		/**
 		 * Front and backend script enqueue
 		 */
-		add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
-		add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
 
 		add_action('admin_enqueue_scripts', array($this, 'load_meta_data'));
 		add_action('wp_enqueue_scripts', array($this, 'load_meta_data'));
@@ -28,19 +27,19 @@ class Assets
 		/**
 		 * Text domain loading
 		 */
-		add_action('admin_enqueue_scripts', array($this, 'tutor_script_text_domain'), 100);
-		add_action('wp_enqueue_scripts', array($this, 'tutor_script_text_domain'), 100);
-		add_filter('tutor_localize_data', array($this, 'modify_localize_data'));
+		add_action( 'admin_enqueue_scripts', array( $this, 'tutor_script_text_domain' ), 100 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'tutor_script_text_domain' ), 100 );
+		add_filter( 'tutor_localize_data', array( $this, 'modify_localize_data' ) );
 
 		/**
 		 * register translateable function to load
 		 * handled script with text domain attached to
 		 *
 		 * @since 1.9.0
-		 */
-		add_action('admin_head', array($this, 'tutor_add_mce_button'));
-		add_filter('get_the_generator_html', array($this, 'tutor_generator_tag'), 10, 2);
-		add_filter('get_the_generator_xhtml', array($this, 'tutor_generator_tag'), 10, 2);
+		*/
+		add_action( 'admin_head', array( $this, 'tutor_add_mce_button' ) );
+		add_filter( 'get_the_generator_html', array( $this, 'tutor_generator_tag' ), 10, 2 );
+		add_filter( 'get_the_generator_xhtml', array( $this, 'tutor_generator_tag' ), 10, 2 );
 
 		/**
 		 * Add translation support for external tinyMCE button
@@ -54,8 +53,8 @@ class Assets
 		 *
 		 * @since v1.9.9
 		 */
-		add_filter('body_class', array($this, 'add_identifier_class_to_body'));
-		add_filter('admin_body_class', array($this, 'add_identifier_class_to_body'));
+		add_filter( 'body_class', array( $this, 'add_identifier_class_to_body' ) );
+		add_filter( 'admin_body_class', array( $this, 'add_identifier_class_to_body' ) );
 	}
 
 	private function get_default_localized_data()
@@ -67,17 +66,17 @@ class Assets
 		$base_path = rtrim($base_path, '/') . '/';
 
 		return array(
-			'ajaxurl'                      => admin_url('admin-ajax.php'),
+			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => get_home_url(),
-			'site_title'                   => get_bloginfo('title'),
+			'site_title'                   => get_bloginfo( 'title' ),
 			'base_path'                    => tutor()->basepath,
 			'tutor_url'                    => tutor()->url,
-			'tutor_pro_url'                => function_exists('tutor_pro') ? tutor_pro()->url : null,
+			'tutor_pro_url'                => function_exists( 'tutor_pro' ) ? tutor_pro()->url : null,
 			'nonce_key'                    => tutor()->nonce,
-			tutor()->nonce                 => wp_create_nonce(tutor()->nonce_action),
+			tutor()->nonce                 => wp_create_nonce( tutor()->nonce_action ),
 			'loading_icon_url'             => get_admin_url() . 'images/wpspin_light.gif',
 			'placeholder_img_src'          => tutor_placeholder_img_src(),
-			'enable_lesson_classic_editor' => get_tutor_option('enable_lesson_classic_editor'),
+			'enable_lesson_classic_editor' => get_tutor_option( 'enable_lesson_classic_editor' ),
 			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),
 			'wp_date_format'               => tutor_js_date_format_against_wp(),
 			'is_admin'                     => is_admin(),
@@ -100,8 +99,8 @@ class Assets
 		wp_enqueue_script('wp-color-picker');
 		wp_enqueue_style('wp-color-picker');
 
-		wp_enqueue_script('jquery-ui-slider');
-		wp_enqueue_script('jquery-ui-datepicker');
+		wp_enqueue_script( 'jquery-ui-slider' );
+		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		wp_enqueue_script('tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array('jquery'), TUTOR_VERSION, true);
 		wp_enqueue_script('tutor-admin', tutor()->url . 'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), TUTOR_VERSION, true);
@@ -119,10 +118,10 @@ class Assets
 		 * condition updated @since v.1.7.4
 		 */
 
-		if (is_single()) {
-			if (function_exists('et_pb_is_pagebuilder_used')) {
-				$is_page_builder_used = et_pb_is_pagebuilder_used(get_the_ID());
-				if (!$is_page_builder_used) {
+		if ( is_single() ) {
+			if ( function_exists( 'et_pb_is_pagebuilder_used' ) ) {
+				$is_page_builder_used = et_pb_is_pagebuilder_used( get_the_ID() );
+				if ( ! $is_page_builder_used ) {
 					wp_enqueue_editor();
 				}
 			} else {
@@ -133,17 +132,17 @@ class Assets
 		/**
 		 * Initializing quicktags script to use in wp_editor();
 		 */
-		wp_enqueue_script('quicktags');
+		wp_enqueue_script( 'quicktags' );
 
-		$tutor_dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
-		if ($tutor_dashboard_page_id === get_the_ID()) {
+		$tutor_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
+		if ( $tutor_dashboard_page_id === get_the_ID() ) {
 			wp_enqueue_media();
 		}
 
 		/**
 		 * Enabling Sorting, draggable, droppable...
 		 */
-		wp_enqueue_script('jquery-ui-sortable');
+		wp_enqueue_script( 'jquery-ui-sortable' );
 		/**
 		 * Tutor Icon
 		 */
@@ -189,15 +188,15 @@ class Assets
 		}
 
 		// Load date picker for announcement at frontend
-		wp_enqueue_script('jquery-ui-datepicker');
+		wp_enqueue_script( 'jquery-ui-datepicker' );
 	}
 
 	public function modify_localize_data($localize_data)
 	{
 		global $post;
 
-		if (is_admin()) {
-			if (!empty($_GET['taxonomy']) && ($_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag')) {
+		if ( is_admin() ) {
+			if ( ! empty( $_GET['taxonomy'] ) && ( $_GET['taxonomy'] === 'course-category' || $_GET['taxonomy'] === 'course-tag' ) ) {
 				$localize_data['open_tutor_admin_menu'] = true;
 			}
 		} else {
@@ -221,12 +220,12 @@ class Assets
 			}
 
 			// Including player assets if video exists
-			if (tutor_utils()->has_video_in_single()) {
+			if ( tutor_utils()->has_video_in_single() ) {
 				$localize_data['post_id']         = get_the_ID();
 				$localize_data['best_watch_time'] = 0;
 
-				$best_watch_time = tutor_utils()->get_lesson_reading_info(get_the_ID(), 0, 'video_best_watched_time');
-				if ($best_watch_time > 0) {
+				$best_watch_time = tutor_utils()->get_lesson_reading_info( get_the_ID(), 0, 'video_best_watched_time' );
+				if ( $best_watch_time > 0 ) {
 					$localize_data['best_watch_time'] = $best_watch_time;
 				}
 			}
@@ -338,10 +337,10 @@ class Assets
 	{
 		switch ($type) {
 			case 'html':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . esc_attr(TUTOR_VERSION) . '">';
+				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '">';
 				break;
 			case 'xhtml':
-				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . esc_attr(TUTOR_VERSION) . '" />';
+				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '" />';
 				break;
 		}
 		return $gen;
@@ -353,11 +352,10 @@ class Assets
 	 *
 	 * @since 1.9.0
 	 */
-	function tutor_script_text_domain()
-	{
-		wp_set_script_translations('tutor-frontend', 'tutor', tutor()->path . 'languages/');
-		wp_set_script_translations('tutor-admin', 'tutor', tutor()->path . 'languages/');
-		wp_set_script_translations('tutor-course-builder', 'tutor', tutor()->path . 'languages/');
+	function tutor_script_text_domain() {
+		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**
@@ -365,8 +363,7 @@ class Assets
 	 *
 	 * @since 1.9.7
 	 */
-	function tutor_tinymce_translate()
-	{
+	function tutor_tinymce_translate() {
 		$locales['tutor_button'] = tutor()->path . 'includes/tinymce_translate.php';
 		return $locales;
 	}
@@ -375,12 +372,12 @@ class Assets
 	{
 
 		// Add course editor identifier class
-		if (is_admin()) {
+		if ( is_admin() ) {
 			$screen = get_current_screen();
-			if (is_object($screen) && $screen->base == 'post' && $screen->id == 'courses') {
+			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == 'courses' ) {
 				return $screen->is_block_editor ? 'gutenberg' : 'classic';
 			}
-		} elseif (tutor_utils()->is_tutor_frontend_dashboard('create-course')) {
+		} elseif ( tutor_utils()->is_tutor_frontend_dashboard( 'create-course' ) ) {
 			return 'frontend';
 		}
 
