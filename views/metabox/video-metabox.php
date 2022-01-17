@@ -28,7 +28,9 @@ $supported_sources = tutor_utils()->get_option('supported_video_sources', array(
 is_string($supported_sources) ? $supported_sources = array($supported_sources) : 0;
 
 if (!is_array($supported_sources) || !count($supported_sources)) {
-    _e('No video source selected from settings!', 'tutor');
+    $notice = __('No video source selected from settings!', 'tutor');
+    echo "<div class='tutor-alert tutor-warning'><div class='tutor-alert-text'><span class='tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10'></span><span>{$notice}</span></div><div class='tutor-alert-btns'><span class='tutor-alert-close tutor-icon-28 tutor-color-black-40 ttr-cross-filled'></span></div></div>";
+    // _e('No video source selected from settings!', 'tutor');
     return;
 }
 ?>
