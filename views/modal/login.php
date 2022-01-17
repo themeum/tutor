@@ -18,8 +18,6 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
 
                     <input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo get_the_ID(); ?>">
                     <input type="hidden" name="tutor_action" value="tutor_user_login" />
-                    <!-- <input type="hidden" name="redirect_to" value="<?php //echo tutor()->current_url; 
-                                                                        ?>" /> -->
                     <input type="hidden" name="redirect_to" value="<?php echo tutor()->current_url ?>" />
 
                     <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-20">
