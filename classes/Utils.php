@@ -9285,4 +9285,24 @@ class Utils {
 		$size = size_format( filesize( get_attached_file( $attachment_id ) ), 2 );
 		return (int) $size;
 	}
+
+	public function get_video_sources(bool $key_title_only) {
+
+		$video_sources  = array(
+			'html5'     	=> array('title' => __('HTML 5 (mp4)', 'tutor'), 'icon' => 'html5'),
+			'external_url'  => array('title' => __('External URL', 'tutor'), 'icon' => 'link'),
+			'youtube'   	=> array('title' => __('Youtube', 'tutor'), 'icon' => 'youtube'),
+			'vimeo'     	=> array('title' => __('Vimeo', 'tutor'), 'icon' => 'vimeo'),
+			'embedded'  	=> array('title' => __('Embedded', 'tutor'), 'icon' => 'code'),
+			'shortcode' 	=> array('title' => __('Shortcode', 'tutor'), 'icon' => 'code'),
+		);
+
+		if($key_title_only) {
+			foreach($video_sources as $key=>$data) {
+				$video_sources[$key] = $data['title'];
+			}
+		}
+
+		return $video_sources;
+	}
 }

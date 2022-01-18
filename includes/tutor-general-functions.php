@@ -859,8 +859,42 @@ if(!function_exists('tutor_kses_allowed_html')) {
 		$tags = array('input', 'style', 'script', 'select', 'form', 'option', 'optgroup', 'iframe', 'bdi');
 		$atts = array('min', 'max', 'maxlength', 'type', 'method', 'enctype', 'action', 'selected', 'class', 'id', 'disabled', 'checked', 'readonly', 'name', 'aria-*', 'style', 'role', 'placeholder', 'value', 'data-*', 'src', 'width', 'height', 'frameborder', 'allow', 'title');
 
+		foreach($tags as $tag) {
+			$tag_attrs = array();
 
+			foreach($atts as $att) {
+				$tag_attrs[$att] = true;
+			}
 
+			$allowed_tags[$tag] = $tag_attrs;
+		}
+		
+		return $allowed_tags;
+	}
+}
+
+if(!function_exists('tutor_kses_allowed_css')) {
+	function tutor_kses_allowed_css( $styles ) {
+		$styles[] = 'display';
+		return $styles;
+	}
+}
+
+if(!function_exists('tutor_kses_html')) {
+	function tutor_kses_html( $content ) {
+		add_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html', 10, 2 );
+		add_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
+
+		$content = preg_replace('/<!--(.|\s)*?-->/', '', $content);
+		$content = wp_kses_post( $content );
+		$content = str_replace('&amp;', '&', $content);
+
+		remove_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
+		remove_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html' );
+		
+		return $content;
+	}
+}
 
 /**
  * @return array
