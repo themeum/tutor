@@ -29,7 +29,6 @@
                 margin: 0;
                 line-height: 40px;
                 padding-left: 15px;
-                padding-right: 10px;
                 .topic-inner-title {
                     font-style: normal;
                     font-weight: 500;
@@ -45,12 +44,12 @@
                     cursor: pointer;
                     &.expand-collapse-wrap {
                         &.is-expanded {
-                            background: #F9F9F9;
+                            background: #FBFBFD;
                         }
                     }
 
                     &:not(.topic-inner-title){
-                        width: 30px;
+                        width: 40px;
                         text-align: center;
                     }
 
@@ -63,7 +62,7 @@
             }
 
             .tutor-topics-body {
-                background: #F9F9F9;;
+                background: #FBFBFD;
                 padding: 15px 20px;
 
                 .course-content-item {
