@@ -1,10 +1,8 @@
 readyState_complete(() => {
-	// typeof resetConfirmation === 'function' ? resetConfirmation() : '';
-	// typeof modalResetOpen === 'function' ? modalResetOpen() : '';
+  // typeof resetConfirmation === 'function' ? resetConfirmation() : '';
+  // typeof modalResetOpen === 'function' ? modalResetOpen() : '';
 });
-const modalConfirmation = document.getElementById('tutor-modal-bulk-action');
 
-console.log(modalConfirmation);
 
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "interactive") {
@@ -15,10 +13,10 @@ document.addEventListener("readystatechange", (event) => {
     import_history_data();
     export_single_settings();
     reset_default_options();
-    apply_single_settings();
+    modal_opener_single_settings();
     const historyData = document.querySelector('.history_data');
     if (typeof historyData !== 'undefined' && null !== historyData) {
-      setInterval(() => { load_saved_data() }, 100000);
+      // setInterval(() => { load_saved_data() }, 100000);
     }
   }
 });
@@ -79,7 +77,7 @@ function tutor_option_history_load(history_data) {
 						<span class="tutor-badge-label tutor-ml-15${badgeStatus}"> ${value.datatype}</span> </p>
 					</div>
 					<div class="tutor-option-field-input">
-						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="${key}">Apply</button>
+						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution."  data-id="${key}">Apply</button>
 
           <div class="tutor-popup-opener tutor-ml-16">
             <button
@@ -97,7 +95,7 @@ function tutor_option_history_load(history_data) {
               </a>
             </li>
             <li>
-              <a class="delete_single_settings" data-id="${key}">
+              <a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${key}">
                 <span class="icon ttr-delete-fill-filled tutor-color-design-white"></span>
                 <span class="text-regular-body tutor-color-text-white">Delete</span>
               </a>
@@ -116,7 +114,7 @@ function tutor_option_history_load(history_data) {
   null !== historyData ? historyData.innerHTML = heading + output : '';
   export_single_settings();
   // popupToggle();
-  apply_single_settings();
+  modal_opener_single_settings();
 }
 /* import and list dom */
 
@@ -246,81 +244,94 @@ const export_single_settings = () => {
 };
 
 
-const modalResetOpen = () => {
-	const modalResetOpen = document.querySelectorAll('.apply_settings');
-	let confirmButton = modalConfirmation && modalConfirmation.querySelector('.reset_to_default');
-	let modalHeading = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-title');
-	let modalMessage = modalConfirmation && modalConfirmation.querySelector('.tutor-modal-message');
-	modalResetOpen.forEach((modalOpen, index) => {
-		modalOpen.disabled = false;
-		modalOpen.onclick = (e) => {
-			confirmButton.dataset.reset = modalOpen.dataset.reset;
-			modalHeading.innerText = modalOpen.dataset.heading;
-			confirmButton.dataset.resetFor = modalOpen.previousElementSibling.innerText;
-			modalMessage.innerText = modalOpen.dataset.message;
-		}
-	})
-}
-//data-tutor-modal-target="tutor-modal-bulk-action"
-// data-reset="general" data-heading="Reset to Default Settings?"
-// data-message="WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution."
-const apply_single_settings = () => {
-  const apply_settings = selectorElements(".apply_settings");
-  if (apply_settings) {
-    for (let i = 0; i < apply_settings.length; i++) {
+const modalConfirmation = (modalOpener) => {
+  let modalElement = document.getElementById(modalOpener.dataset.tutorModalTarget);
+  let confirmButton = modalElement && modalElement.querySelector('[data-reset]');
+  let modalHeading = modalElement && modalElement.querySelector('.tutor-modal-title');
+  let modalMessage = modalElement && modalElement.querySelector('.tutor-modal-message');
 
-      apply_settings[i].onclick = function () {
-        // modalResetOpen();
-        // modalConfirmation.
-        let apply_id = apply_settings[i].dataset.id;
-        var formData = new FormData();
-        formData.append("action", "tutor_apply_settings");
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-        formData.append("apply_id", apply_id);
+  confirmButton.removeAttribute("data-reset-for");
+  confirmButton.classList.remove('reset_to_default');
 
-        const xhttp = new XMLHttpRequest();
-        xhttp.open("POST", _tutorobject.ajaxurl, true);
-        xhttp.send(formData);
+  confirmButton.innerText = modalOpener.dataset.btntext;
+  confirmButton.dataset.reset = '';
+  modalHeading.innerText = modalOpener.dataset.heading;
+  modalMessage.innerText = modalOpener.dataset.message;
 
-        xhttp.onreadystatechange = function () {
-          if (xhttp.readyState === 4) {
-            tutor_toast("Success", "Applied settings successfully!", "success");
-            console.log(xhttp.response);
-          }
-        };
-      };
+  confirmButton.onclick = () => {
+    if (modalOpener.classList.contains('apply_settings')) {
+      console.log(modalOpener.classList);
+      apply_settings_xhttp_request(modalOpener, modalElement);
+    }
+    if (modalOpener.classList.contains('delete_single_settings')) {
+      console.log(modalOpener.classList);
+      delete_settings_xhttp_request(modalOpener, modalElement);
     }
   }
+}
+
+const modal_opener_single_settings = () => {
+  const apply_settings = selectorElements(".apply_settings");
+  if (apply_settings) {
+    apply_settings.forEach((applyButton) => {
+      modalConfirmation(applyButton);
+    })
+  }
 };
+
+
+const apply_settings_xhttp_request = (modelOpener, modalElement) => {
+  let apply_id = modelOpener.dataset.id;
+  var formData = new FormData();
+  formData.append("action", "tutor_apply_settings");
+  formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+  formData.append("apply_id", apply_id);
+
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", _tutorobject.ajaxurl, true);
+
+  xhttp.send(formData);
+
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState === 4) {
+      modalElement.classList.remove('tutor-is-active');
+      tutor_toast("Success", "Applied settings successfully!", "success");
+    }
+  };
+}
 
 const delete_history_data = () => {
   const delete_settings = selectorElements(".delete_single_settings");
   if (delete_settings) {
-    for (let i = 0; i < delete_settings.length; i++) {
-      delete_settings[i].onclick = function () {
-        let delete_id = delete_settings[i].dataset.id;
-        var formData = new FormData();
-        formData.append("action", "tutor_delete_single_settings");
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-        formData.append("time", Date.now());
-        formData.append("delete_id", delete_id);
-
-        const xhttp = new XMLHttpRequest();
-        xhttp.open("POST", _tutorobject.ajaxurl, true);
-        xhttp.send(formData);
-        xhttp.onreadystatechange = function () {
-          if (xhttp.readyState === 4) {
-            console.log(JSON.parse(xhttp.response));
-
-            tutor_option_history_load(xhttp.responseText);
-            delete_history_data();
-
-            setTimeout(function () {
-              tutor_toast('Success', "Data deleted successfully!", 'success');
-            }, 200);
-          }
-        };
-      };
-    }
+    delete_settings.forEach((deleteButton) => {
+      console.log(deleteButton);
+      modalConfirmation(deleteButton);
+    })
   }
 };
+
+const delete_settings_xhttp_request = (modelOpener, modalElement) => {
+  let delete_id = modelOpener.dataset.id;
+  var formData = new FormData();
+  formData.append("action", "tutor_delete_single_settings");
+  formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+  formData.append("time", Date.now());
+  formData.append("delete_id", delete_id);
+
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", _tutorobject.ajaxurl, true);
+  xhttp.send(formData);
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState === 4) {
+      console.log(JSON.parse(xhttp.response));
+      modalElement.classList.remove('tutor-is-active');
+
+      tutor_option_history_load(xhttp.responseText);
+      delete_history_data();
+
+      setTimeout(function () {
+        tutor_toast('Success', "Data deleted successfully!", 'success');
+      }, 200);
+    }
+  };
+}

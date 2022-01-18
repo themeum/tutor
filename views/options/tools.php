@@ -63,7 +63,7 @@
 		</div>
 	</div>
 </section>
-<?php //echo $this->view_template( 'common/modal-confirm.php', array() ); ?>
+<?php echo $this->view_template( 'common/modal-confirm.php', array() ); ?>
 
 <style>
 	#wpbody-content {

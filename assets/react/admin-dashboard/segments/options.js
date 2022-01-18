@@ -171,7 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						if (success) {
 							// Disableing save btn after saved successfully
-							document.getElementById('save_tutor_option').disabled = true;
+							if(document.getElementById('save_tutor_option')){
+								document.getElementById('save_tutor_option').disabled = true;
+							}
 							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
 							return;
 						}
