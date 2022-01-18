@@ -71,7 +71,7 @@ tutor_alert(
 						<span class="tutor-badge-label tutor-ml-15<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
 					</div>
 					<div class="tutor-option-field-input">
-						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-id="<?php echo $key; ?>">Apply</button>
+						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." data-id="<?php echo $key; ?>">Apply</button>
 						<div class="tutor-popup-opener tutor-ml-16">
 							<button
 							type="button"
@@ -88,7 +88,7 @@ tutor_alert(
 								</a>
 							</li>
 							<li>
-								<a class="delete_single_settings" data-id="<?php echo $key; ?>">
+								<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="<?php echo $key; ?>">
 									<span class="icon ttr-delete-fill-filled tutor-color-design-white"></span>
 									<span class="text-regular-body tutor-color-text-white">Delete</span>
 								</a>
