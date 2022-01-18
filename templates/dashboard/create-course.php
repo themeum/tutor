@@ -58,7 +58,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 				</div>
 				<div class="tutor-col-auto">
 					<div class="tutor-dashboard-builder-header-right">
-						<a href="<?php esc_url( get_the_permalink( $course_id ) ); ?>" target="_blank"><i class="tutor-icon-glasses"></i><?php _e( 'Preview', 'tutor' ); ?></a>
+						<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>" target="_blank"><i class="tutor-icon-glasses"></i><?php _e( 'Preview', 'tutor' ); ?></a>
 						<?php
 						if ( $can_publish_course ) {
 							?>
@@ -91,18 +91,18 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 						$expires = get_user_meta( $user_id, 'tutor_frontend_course_message_expires', true );
 						$message = get_user_meta( $user_id, 'tutor_frontend_course_action_message', true );
 
-					if ( $message && $expires && $expires > time() ) {
-						?>
+						if ( $message && $expires && $expires > time() ) {
+							?>
 							<div class="tutor-alert tutor-alert-info">
 								<?php echo esc_html( $message ); ?>
 							</div>
 							<?php
-					}
+						}
 
-					if ( $message || $expires ) {
-						delete_user_meta( $user_id, 'tutor_frontend_course_message_expires' );
-						delete_user_meta( $user_id, 'tutor_frontend_course_action_message' );
-					}
+						if ( $message || $expires ) {
+							delete_user_meta( $user_id, 'tutor_frontend_course_message_expires' );
+							delete_user_meta( $user_id, 'tutor_frontend_course_action_message' );
+						}
 					?>
 					<!--alert message end -->
 					<?php do_action( 'tutor/dashboard_course_builder_form_field_before' ); ?>
