@@ -133,7 +133,8 @@ jQuery(document).ready(function($){
         } else {
             content = $('#'+inputid).val();
         }
-
+        content = $('#'+inputid).val();
+        
         var form_data = $(this).closest('form').serializeObject();
         form_data.lesson_content = content;
 
@@ -481,6 +482,8 @@ jQuery(document).ready(function($){
             content = $('#'+inputid).val();
         }
         
+        content = $('#'+inputid).val();
+
         var form_data = $(this).closest('form').serializeObject();
         form_data.assignment_content = content;
         
