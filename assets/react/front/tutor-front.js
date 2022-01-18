@@ -1286,13 +1286,15 @@ jQuery(document).ready(function ($) {
 
         var $that = $(this);
         var content;
-        var editor = tinyMCE.get('tutor_lesson_modal_editor');
+        var inputid = 'tutor_lesson_modal_editor';
+        var editor = tinyMCE.get(inputid);
         if (editor) {
             content = editor.getContent();
         } else {
             content = $('#' + inputid).val();
         }
-
+        content = $('#' + inputid).val();
+        
         var form_data = $(this).closest('form').serializeObject();
         form_data.lesson_content = content;
 
@@ -1476,12 +1478,15 @@ jQuery(document).ready(function ($) {
 
         var $that = $(this);
         var content;
-        var editor = tinyMCE.get('tutor_assignments_modal_editor');
+        var inputid = 'tutor_assignments_modal_editor';
+        var editor = tinyMCE.get(inputid);
         if (editor) {
             content = editor.getContent();
         } else {
             content = $('#' + inputid).val();
         }
+
+        content = $('#' + inputid).val();
 
         var form_data = $(this).closest('form').serializeObject();
         form_data.assignment_content = content;
