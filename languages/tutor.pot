@@ -2753,6 +2753,7 @@ msgstr ""
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Copied!"
 msgstr ""
+<<<<<<< HEAD
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Required Plugin(s)"
@@ -5166,6 +5167,10 @@ msgstr ""
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Copied!"
 msgstr ""
+=======
+=======
+>>>>>>> 4e5aa2cbcc320c5ad5aec102f1a6f5b06038a077
+>>>>>>> 5bc779ce0f71ebbdee4597707be9fbdd78498d65
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Required Plugin(s)"
@@ -6198,4 +6203,8 @@ msgstr ""
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Copied!"
 msgstr ""
+<<<<<<< HEAD
 >>>>>>> 984092a4b2275ddd4b1117111d9cb2ac911abd2a
+=======
+>>>>>>> 06e761d9bd791cbcba711b4461727abb2ce05375
+>>>>>>> 5bc779ce0f71ebbdee4597707be9fbdd78498d65
