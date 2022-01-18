@@ -1,17 +1,5 @@
 <img src=".github/tutor-github.png" alt="TutorLMS" width="100%"/>
 
-
-[![WordPress plugin](https://img.shields.io/wordpress/plugin/v/tutor.svg)](https://wordpress.org/plugins/tutor/)
-[![WordPress](https://img.shields.io/wordpress/v/tutor.svg)](https://wordpress.org/plugins/tutor/)
-[![WordPress rating](https://img.shields.io/wordpress/plugin/r/tutor.svg)](https://wordpress.org/support/plugin/tutor/reviews/)
-[![WordPress](https://img.shields.io/wordpress/plugin/dt/tutor.svg)](https://wordpress.org/plugins/tutor/advanced/)
-[![Wordpress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/tutor.svg)](https://wordpress.org/plugins/tutor/)
-
-
-[TutorLMS](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository) is a complete, 
-feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
-
-
 ## What is Tutor LMS 2.0 Beta?
 Tutor LMS 2.0 beta version is built to experience Tutor LMS 2.0 before it is officially released. As this is a beta version, please don’t expect everything to work properly.
 
@@ -41,7 +29,7 @@ To get the free version of the Tutor LMS 2.0 :
 8. Navigate to the Tutor LMS GitHub.  
 9. Download the Tutor 2.0 install zip file
 10. Create a backup version of your entire site before you plan to install it. Ideal usage, we reiterate, would be to install it on a test site to see and try out the new features without breaking anything.
-11. Download the Pro Tutor LMS 2.0 Beta file
+11. Download the [Pro Tutor LMS 2.0 Beta](https://www.themeum.com/account/downloads/) file
 12. Follow along to download the pro version of Tutor LMS 2.0. 
 
 Note: The pro version is only available to the pro users of Tutor LMS and can only be availed by them. Check the previous section to download the free release if you do not own Tutor Pro. 
