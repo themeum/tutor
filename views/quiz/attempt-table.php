@@ -46,70 +46,6 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 							}
 						}
 					}
-<<<<<<< HEAD
-				}
-				?>
-					<tr>
-					<?php
-					foreach ( $table_columns as $key => $column ) {
-						switch ( $key ) {
-							case 'checkbox':
-								?>
-										<td data-th="<?php _e( 'Mark', 'tutor' ); ?>">
-											<div class="td-checkbox d-flex ">
-												<input id="tutor-admin-list-<?php echo $attempt->attempt_id; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $attempt->attempt_id; ?>" />
-											</div>
-										</td>
-									<?php
-								break;
-
-							case 'date':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<div class="td-statement-info">
-												<span class="text-regular-small tutor-color-text-primary">
-													<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
-												</span>
-											</div>
-										</td>
-									<?php
-								break;
-
-							case 'quiz_info':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<div class="td-statement-info">
-												<span class="tutor-text-regular-small tutor-color-text-primary">
-													<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
-												</span>
-												<div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
-													<div class="tutor-text-medium-body tutor-color-text-primary" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
-														<?php echo get_the_title( $attempt->course_id ); ?>
-													</div>
-													<?php
-													$attempt_user = get_userdata( $attempt->user_id );
-													$user_name    = $attempt_user ? $attempt_user->display_name : '';
-													if ( $context == 'backend-dashboard-students-attempts' ) {
-													?>
-															<div>
-																<span class="tutor-text-regular-small tutor-color-text-title">
-																	<?php _e( 'Student', 'tutor' ); ?>
-																</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
-															</div>
-													<?php
-													} else {
-													?>
-														<?php if(!empty($user_name)) :
-															?>
-															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
-															<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( isset( $attempt_user->user_email )? $attempt_user->user_email:'' ); ?>">
-																<?php echo esc_attr( isset($attempt_user->display_name) ? $attempt_user->display_name : $user_name ); ?>
-															</span>
-
-														<?php endif;
-													}
-													?>
-=======
 					?>
 						<tr>
 						<?php
@@ -175,7 +111,6 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 														?>
 													</div>
 													<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
->>>>>>> 06e761d9bd791cbcba711b4461727abb2ce05375
 												</div>
 											</div>
 										</td>

@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 2.0.0-alpha1
+Stable tag: 1.9.13
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,17 +241,28 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 2.0.0-alpha1 - January 14 2022
+= 2.0.0-beta - January 18 2022
 
-Change Log : Coming soon
-
-= 2.0.0 - January 01, 2022 =
-
-New: Certificate builder in frontend dashboard
-Update: Overall Design System
-Update: Backend dashboard settings rearranged
-Update: Primary table columns data type is now bigint
-Update: Disbaling quiz details attempt feature removed
+New: Visually appealing appearance with a more unified design system
+New: Edit email template content from the editor without having to override the plugin
+New: Exclusive in-house designed email templates for each event
+New: Personalized dashboard for instructors and students focused towards task automation
+New: ​​Notification bar on top of the dashboard to let learners and instructors stay updated
+New: Improved Analytics with more extensive statistics 
+New: New Q/A features for instant and more engaging communication
+New: Event calendar with handy features to organize events, schedule assignments, and more. 
+New: New Assignment features with the option to retake and add instructor's feedback. 
+New: Announcement tab in the course detail page
+New: Preview certificate before downloading upon completing the course 
+New: Use preset or custom color palettes to configure entire site's colors 
+New: Brand new Quiz interface with a new student window and other handy settings 
+New: Collect all of your reviews and ratings in one centralized location
+Update: Dynamic membership plan on the right sidebar of the course details page
+Update: Enhanced Instructor list and public profile layouts with Backend & Frontend preview
+Update: Flexible Gradebook with easy grading point system setup
+Update: More intuitive certificate setup page with guided creation process
+Update: Enhanced course catalog features with extensive course page
+Update: Improved accessibility and responsiveness across all device
 
 = 1.9.13 - December 20, 2021 =
 
