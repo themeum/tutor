@@ -116,7 +116,9 @@ class Options_V2 {
 	 * Export settings
 	 */
 	public function tutor_export_settings() {
-		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
+		$tutor_option = get_option( 'tutor_option' );
+		// pr($tutor_option);die;
+		wp_send_json_success( maybe_unserialize( $tutor_option ) );
 	}
 
 	/**
@@ -218,11 +220,12 @@ class Options_V2 {
 
 	public function tutor_import_settings() {
 		tutor_utils()->checking_nonce();
-		// pr($_REQUEST);
+		// pr($_REQUEST);die;
 		$request = $this->get_request_data( 'tutor_options' );
+		$request = json_decode(stripslashes($request), true);
 
 		$time    = $this->get_request_data( 'time' );
-		$request = json_decode( str_replace( '\"', '"', $request ), true );
+		//pr(json_decode(stripslashes($request), true));die;
 
 		$save_import_data['datetime']             = $time;
 		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
@@ -281,6 +284,8 @@ class Options_V2 {
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
 
 		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
+
+		$option['email_footer_text'] = wp_unslash( $option['email_footer_text'] );
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
