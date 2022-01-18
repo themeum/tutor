@@ -114,6 +114,7 @@ include __DIR__ . '/header.php';
 $attempt_info = @unserialize( $attempt_data->attempt_info );
 
 if ( is_array( $attempt_info ) ) {
+    $attempt_type = '';
 	// Allowed duration
 	if ( isset( $attempt_info['time_limit'] ) ) {
 		$attempt_duration = tutor_utils()->second_to_formated_time( $attempt_info['time_limit']['time_limit_seconds'], $attempt_info['time_limit']['time_type'] );
@@ -453,13 +454,15 @@ if ( is_array( $attempt_info ) ) {
                                                     foreach ($original_saved_answers as $key => $original_saved_answer){
                                                         $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
                                                         $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
-                                                        foreach ($provided_answer_order as $provided_answer_order);
-                                                        ?>
-                                                        <div class="image-matching-item">
-                                                            <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
-                                                            <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
-                                                        </div>
-                                                        <?php
+                                                        if ( is_array( $provided_answer_order ) && count( $provided_answer_order ) ) {
+                                                            foreach ($provided_answer_order as $provided_answer_order);
+                                                            ?>
+                                                            <div class="image-matching-item">
+                                                                <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
+                                                                <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
+                                                            </div>
+                                                            <?php
+                                                        }
                                                     }
                                                     echo '</div>';
                                                 }elseif ($answer->question_type === 'image_answering'){
@@ -511,9 +514,9 @@ if ( is_array( $attempt_info ) ) {
                                                         $correct_answer = $wpdb->get_results( $wpdb->prepare(
                                                             "SELECT answer_title, image_id, answer_view_format
                                                             FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                            WHERE belongs_question_id = %d AND
+                                                            WHERE belongs_question_id = %d
                                                                 AND belongs_question_type='single_choice'
-                                                                is_correct = 1",
+                                                                AND is_correct = 1",
                                                                 $answer->question_id
                                                             ) );
 

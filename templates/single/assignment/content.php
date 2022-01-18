@@ -5,6 +5,8 @@
  * @version 1.4.3
  */
 
+use \TUTOR_ASSIGNMENTS\Assignments;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -41,6 +43,7 @@ function tutor_assignment_convert_seconds( $seconds ) {
 $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
 $content              = get_the_content();
 $s_content            = $content;
+$allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' );
 ?>
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
@@ -86,7 +89,7 @@ $s_content            = $content;
 		</div>
 		<div class="tutor-topbar-cross-icon flex-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
-			<a href="<?php echo get_the_permalink( $course_id ); ?>">
+			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
 				<span class="ttr-line-cross-line tutor-color-text-white flex-center"></span>
 			</a>
 		</div>
@@ -288,7 +291,7 @@ $s_content            = $content;
 						<div class="tutor-assignment-text-area tutor-pt-20">
 							<!-- <textarea  name="assignment_answer" class="tutor-form-control"></textarea> -->
 							<?php
-								$assignment_comment_id = isset( $_GET['update-assignment'] ) ?  sanitize_text_field( $_GET['update-assignment'] ) : 0;
+								$assignment_comment_id = isset( $_GET['update-assignment'] ) ? sanitize_text_field( $_GET['update-assignment'] ) : 0;
 								$content               = $assignment_comment_id ? get_comment( $assignment_comment_id ) : '';
 								$args                  = tutor_utils()->text_editor_config();
 								$args['tinymce']       = array(
@@ -307,7 +310,7 @@ $s_content            = $content;
 						<?php if ( $allowed_upload_files ) { ?>
 							<div class="tutor-assignment-attachment tutor-mt-30 tutor-py-20 tutor-px-15 tutor-py-sm-30 tutor-px-sm-30">
 								<div class="text-regular-caption tutor-color-text-subsued">
-									<?php _e( 'Attach assignment files', 'tutor' ); ?>
+									<?php _e( "Attach assignment files (Max: $allow_to_upload file)", 'tutor' ); ?>
 								</div>
 								<div class="tutor-attachment-files tutor-mt-12">
 									<div class="tutor-assignment-upload-btn tutor-mt-10 tutor-mt-md-0">
@@ -342,10 +345,10 @@ $s_content            = $content;
 									<div class="tutor-bs-row tutor-bs-gy-3" id="tutor-student-assignment-edit-file-preview">
 									<?php
 										$submitted_attachments = get_comment_meta( $assignment_comment_id, 'uploaded_attachments' );
-										if ( is_array( $submitted_attachments ) && count( $submitted_attachments ) ) :
+									if ( is_array( $submitted_attachments ) && count( $submitted_attachments ) ) :
 										foreach ( $submitted_attachments as $attach ) :
-											$attachments =  json_decode( $attach );
-										?>
+											$attachments = json_decode( $attach );
+											?>
 											<?php foreach ( $attachments as $attachment ) : ?>
 												<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15">
 													<div class="tutor-icard-content">
@@ -355,7 +358,7 @@ $s_content            = $content;
 														<div class="text-regular-small">Size: 230KB;</div>
 													</div>
 													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
-														<a href="<?php echo esc_url( $attachment->url ); ?>" target="_blank">
+														<a href="<?php echo esc_url( $attachment->url ); ?>" data-id="<?php echo esc_attr( $assignment_comment_id ); ?>" data-name="<?php echo esc_attr( $attachment->name ); ?>" target="_blank">
 															<span class="ttr-cross-filled color-design-brand"></span>
 														</a>
 													</div>
@@ -537,13 +540,18 @@ $s_content            = $content;
 					<div class="tutor-ar-body tutor-pt-25 tutor-pb-40 tutor-px-15 tutor-px-md-30">
 						<div class="tutor-ar-header d-flex justify-content-between align-items-center">
 							<div class="tutor-ar-title tutor-text-medium-h6 tutor-color-text-primary">
-								<?php esc_html_e( 'Your Assigment', 'tutor' ); ?>
+								<?php esc_html_e( 'Your Assignment', 'tutor' ); ?>
 							</div>
-							<div class="tutor-ar-btn">
-							<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">
+							<?php
+								$evaluated = Assignments::is_evaluated( $post_id );
+							if ( ! $evaluated ) :
+								?>
+								<div class="tutor-ar-btn">
+								<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
-							</a>
-							</div>
+								</a>
+								</div>
+							<?php endif; ?>
 						</div>
 						<div class="text-regular-body tutor-color-text-subsued tutor-pt-18">
 							<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
@@ -616,13 +624,13 @@ $s_content            = $content;
 						<?php endif; ?>
 					</div>
 				</div>
-
+				<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
 				<div class="tutor-assignment-footer tutor-pt-30 tutor-pt-sm-45">
-					<a class="tutor-btn tutor-btn-primary tutor-btn-lg" href="<?php echo get_the_permalink( $next_id ); ?>">
-						<?php _e( 'Continue Lesson', 'tutor' ); ?>
+					<a class="tutor-btn tutor-btn-primary tutor-btn-lg" href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
+						<?php esc_html_e( 'Continue Lesson', 'tutor' ); ?>
 					</a>
 				</div>
-
+				<?php endif; ?>
 				<?php
 			} else {
 				?>

@@ -20,7 +20,7 @@ $user_id = $get_user->ID;
 $my_courses = tutor_utils()->get_enrolled_courses_by_user($user_id);
 ?>
 
-<div class="tutor-courses ">
+<div class="tutor-course-listing-grid tutor-course-listing-grid-3 tutor-course-listing-filter-grid-2">
 	<?php
 	if ($my_courses && $my_courses->have_posts()):
 		while ($my_courses->have_posts()):

@@ -225,7 +225,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 
 <?php if ( ! tutor_utils()->is_instructor() ) : ?>
 	<div class="tutor-frontend-dashboard-course-porgress">
-		<?php if ( $courses_in_progress->have_posts() ) : ?>
+		<?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
 			<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
 				<?php esc_html_e( 'In Progress Course', 'tutor' ); ?>
 			</div>

@@ -1,3 +1,4 @@
+import ajaxHandler from '../../admin-dashboard/segments/filter';
 jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
@@ -10,6 +11,7 @@ jQuery(document).ready(function($) {
 // })
 
 document.addEventListener('DOMContentLoaded', (event) => {
+	const { __, _x, _n, _nx } = wp.i18n;
 	const sidebar = document.querySelector(
 		'.tutor-lesson-sidebar.tutor-desktop-sidebar'
 	);
@@ -213,18 +215,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 	function tutorAssignmentFileHandler() {
 		let message = '';
+		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
+		let alreadyUploaded = document.querySelectorAll('#tutor-student-assignment-edit-file-preview .tutor-instructor-card').length;
+		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
+		if (fileUploadField.files.length > allowedToUpload) {
+			tutor_toast(__("Warning", "tutor"), __(`Max ${maxAllowedFiles} file allowed to upload`, "tutor"), "error");
+			return;
+		}
 		if ('files' in fileUploadField) {
-			if (fileUploadField.files.length == 0) {
+			if (fileUploadField && fileUploadField.files.length == 0) {
 				message = 'Select one or more files.';
 			} else {
+				if (fileUploadField.files.length > allowedToUpload) {
+					tutor_toast(__("Warning", "tutor"), __(`Max ${maxAllowedFiles} file allowed to upload`, "tutor"), "error");
+				}
 				let fileCard = '';
 				const assignmentFilePreview = document.querySelector(
 					'.tutor-asisgnment-upload-file-preview'
 				);
 				const assignmentEditFilePreview = document.getElementById( 'tutor-student-assignment-edit-file-preview' );
 
-				for (let i = 0; i < fileUploadField.files.length; i++) {
+				for (let i = 0; i < allowedToUpload; i++) {
 					let file = fileUploadField.files[i];
+					if (!file) {
+						continue;
+					}
 					let editWrapClass = assignmentEditFilePreview ? 'tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15' : '';
 					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
@@ -277,4 +292,34 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			contSect.classList.add('no-before');
 		}
 	}
+	//remove file
+	const removeButton = document.querySelectorAll('.tutor-attachment-file-close a');
+	removeButton.forEach( (item) => {
+		item.onclick = async (event) => {
+			event.preventDefault();
+			const currentTarget = event.currentTarget;
+			let fileName = currentTarget.dataset.name;
+			let id = currentTarget.dataset.id;
+			const formData = new FormData();
+			formData.set('action', 'tutor_remove_assignment_attachment');
+			formData.set('assignment_comment_id', id);
+			formData.set('file_name', fileName);
+			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+			const span = currentTarget.querySelector('span');
+			span.classList.add('tutor-updating-message');
+			const post = await ajaxHandler(formData);
+			if (post.ok) {
+				const response = await post.json();
+				if (!response) {
+					tutor_toast(__("Warning", "tutor"), __(`Attachment remove failed`, "tutor"), "error");
+				} else {
+					currentTarget.closest( '.tutor-instructor-card').remove();
+				}
+			} else {
+				alert(post.statusText);
+				span.classList.remove('tutor-updating-message');
+			}
+			
+		}
+	});
 });
