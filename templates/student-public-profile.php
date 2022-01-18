@@ -21,7 +21,7 @@ if ( ! is_object( $get_user ) || ! property_exists( $get_user, 'ID' ) ) {
 }
 
 $user_id       = $get_user->ID;
-$is_instructor = tutor_utils()->is_instructor( $user_id );
+$is_instructor = tutor_utils()->is_instructor( $user_id, true );
 
 $profile_layout = tutor_utils()->get_option( 'public_profile_layout', 'private' );
 
