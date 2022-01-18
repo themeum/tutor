@@ -114,6 +114,7 @@ include __DIR__ . '/header.php';
 $attempt_info = @unserialize( $attempt_data->attempt_info );
 
 if ( is_array( $attempt_info ) ) {
+    $attempt_type = '';
 	// Allowed duration
 	if ( isset( $attempt_info['time_limit'] ) ) {
 		$attempt_duration = tutor_utils()->second_to_formated_time( $attempt_info['time_limit']['time_limit_seconds'], $attempt_info['time_limit']['time_type'] );
