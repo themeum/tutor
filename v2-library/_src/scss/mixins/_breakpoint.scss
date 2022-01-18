@@ -1,4 +1,4 @@
-// Media Query Mixins ( mobile - 576, tablet - 768, desktop - 992, desktop-lg - 1200 )
+// Media Query Mixins ( xs->mobile - 576, sm->tablet - 768, md->desktop - 992, lg->desktop-lg - 1200 )
 
 // @include breakpoint-min(tablet) { ... }
 @mixin breakpoint-min($size) {

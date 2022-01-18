@@ -77,7 +77,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 						<?php
 						}
 						?>
-						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="ttr-line-cross-line tutor-font-size-24 tutor-ml-15" title="<?php _e('Exit', 'tutor'); ?>"></a>
+						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="ttr-line-cross-line tutor-ml-15" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;"></a>
 					</div>
 				</div>
 			</div>
@@ -159,11 +159,11 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 					<div class="tutor-course-builder-section-content">
 						<div class="tutor-mb-30">
 							<label class="tutor-course-field-label tutor-font-size-16 color-text-primary"><?php _e('Course Title', 'tutor'); ?></label>
-							<div class="tooltip-wrap tutor-bs-d-block">
+							<div id="tutor-course-create-title-tooltip-wrapper" class="tooltip-wrap tutor-bs-d-block">
 								<span class="tooltip-txt tooltip-right tutor-mt-10">
-									<?php _e('350', 'tutor'); ?>
+									<?php _e('60', 'tutor'); ?>
 								</span>
-								<input id="tutor-course-create-title" type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>" maxlength="350">
+								<input id="tutor-course-create-title" type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>" maxlength="60">
 							</div>
 						</div>
 
