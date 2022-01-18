@@ -8,8 +8,8 @@
 
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Lesson Name', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
-            <input type="text" name="lesson_title" class="tutor-form-control tutor-mb-10" value="<?php echo stripslashes($post->post_title); ?>"/>
+        <div class="tutor-input-group">
+            <input type="text" name="lesson_title" class="tutor-form-control" value="<?php echo stripslashes($post->post_title); ?>"/>
             <div class="tutor-input-feedback tutor-has-icon">
                 <i class="ttr-info-circle-outline-filled tutor-input-feedback-icon"></i>
                 <?php _e('Lesson titles are displayed publicly wherever required.', 'tutor'); ?>
@@ -31,7 +31,7 @@
                 }
             ?>
         </label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group">
             <?php
                 wp_editor(stripslashes($post->post_content), 'tutor_lesson_modal_editor', array( 'editor_height' => 150));
             ?>
@@ -44,7 +44,7 @@
 
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Feature Image', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group">
             <?php 
                 $lesson_thumbnail_id = '';
                 if (has_post_thumbnail($post->ID)){
