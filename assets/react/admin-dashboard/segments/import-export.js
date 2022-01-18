@@ -122,6 +122,29 @@ const export_settings_all = () => {
   const export_settings = selectorElement("#export_settings"); //document.querySelector("#export_settings");
   if (export_settings) {
     export_settings.onclick = (e) => {
+      var formData = new FormData();
+      formData.append("action", "tutor_export_settings");
+      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+      const xhttp = new XMLHttpRequest();
+      xhttp.open("POST", _tutorobject.ajaxurl, true);
+      xhttp.send(formData);
+
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4) {
+          console.log(JSON.parse(xhttp.response));
+          let fileName = "tutor_options_" + time_now();
+          json_download(xhttp.response, fileName);
+        }
+      };
+    };
+  }
+}
+
+
+const export_settings_all_X = () => {
+  const export_settings = selectorElement("#export_settings"); //document.querySelector("#export_settings");
+  if (export_settings) {
+    export_settings.onclick = (e) => {
       if (!e.detail || e.detail == 1) {
         e.preventDefault();
         fetch(_tutorobject.ajaxurl, {
@@ -198,7 +221,7 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
   var fr = new FileReader();
   fr.readAsText(files.item(0));
   fr.onload = function (e) {
-    var tutor_options = JSON.stringify(e.target.result);
+    var tutor_options = e.target.result;
     var formData = new FormData();
     formData.append("action", "tutor_import_settings");
     formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
@@ -271,7 +294,7 @@ const modalConfirmation = (modalOpener) => {
 
   confirmButton.onclick = (e) => {
     if (!e.detail || e.detail == 1) {
-      
+
       if (modalOpener.classList.contains('tutor_import_options')) {
         import_history_data_xhttp(modalOpener, modalElement);
       }
