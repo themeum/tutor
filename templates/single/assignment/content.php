@@ -5,6 +5,8 @@
  * @version 1.4.3
  */
 
+use \TUTOR_ASSIGNMENTS\Assignments;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -538,13 +540,18 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					<div class="tutor-ar-body tutor-pt-25 tutor-pb-40 tutor-px-15 tutor-px-md-30">
 						<div class="tutor-ar-header d-flex justify-content-between align-items-center">
 							<div class="tutor-ar-title tutor-text-medium-h6 tutor-color-text-primary">
-								<?php esc_html_e( 'Your Assigment', 'tutor' ); ?>
+								<?php esc_html_e( 'Your Assignment', 'tutor' ); ?>
 							</div>
-							<div class="tutor-ar-btn">
-							<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">
+							<?php
+								$evaluated = Assignments::is_evaluated( $post_id );
+							if ( ! $evaluated ) :
+								?>
+								<div class="tutor-ar-btn">
+								<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
-							</a>
-							</div>
+								</a>
+								</div>
+							<?php endif; ?>
 						</div>
 						<div class="text-regular-body tutor-color-text-subsued tutor-pt-18">
 							<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
