@@ -16,7 +16,7 @@ document.addEventListener('click', (e) => {
 	}
 
 	if ((e.target.hasAttribute(attr) || e.target.closest(`[${attr}]`))) {
-		console.log(enterPressed);
+		// console.log(enterPressed);
 		e.preventDefault();
 		const id = e.target.hasAttribute(attr)
 			? e.target.getAttribute(attr)

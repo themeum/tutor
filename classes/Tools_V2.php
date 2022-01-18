@@ -323,7 +323,7 @@ class Tools_V2 {
 			'tutor_pages'   => array(
 				'label'    => __( 'Tutor Pages', 'tutor' ),
 				'slug'     => 'tutor_pages',
-				
+
 				'desc'     => __( 'Tutor Pages Settings', 'tutor' ),
 				'template' => 'tutor_pages',
 				'icon'     => 'ttr-review-line',
@@ -525,6 +525,18 @@ class Tools_V2 {
 	public function template( $section = array() ) {
 		ob_start();
 		include tutor()->path . "views/options/template/{$section['template']}.php";
+		return ob_get_clean();
+	}
+	/**
+	 * Load template inside template dirctory
+	 *
+	 * @param  mixed $template_slug
+	 * @param  mixed $section
+	 * @return void
+	 */
+	public function view_template( $template_slug, $section = array() ) {
+		ob_start();
+		require tutor()->path . "views/options/template/{$template_slug}";
 		return ob_get_clean();
 	}
 }
