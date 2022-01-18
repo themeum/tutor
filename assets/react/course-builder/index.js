@@ -51,40 +51,14 @@ function getRemainingLength(maxLength = 60, inputElement) {
  */
 const maxLength = 60;
 const courseCreateTitle = document.getElementById('tutor-course-create-title');
-<<<<<<< HEAD
 const courseTitleTooltip = courseCreateTitle?.previousElementSibling;
 if (courseTitleTooltip) {
 	courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
 }
 
 if (courseCreateTitle) {
-=======
-const courseCreateTitleTooptip = document.querySelector('#tutor-course-create-title-tooltip-wrapper .tooltip-txt');
-
-const courseTitleTooltip = courseCreateTitle.previousElementSibling;
-courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
-
-if(courseCreateTitle && courseCreateTitleTooptip) {
-
-	document.addEventListener('click', (e) => {
-		if (e.target === courseCreateTitle) {
-			if(courseCreateTitle === document.activeElement) {
-				courseCreateTitleTooptip.style.opacity = '1';
-				courseCreateTitleTooptip.style.visibility = 'visible';
-			} 
-		} else {
-			courseCreateTitleTooptip.style.opacity = '0';
-			courseCreateTitleTooptip.style.visibility = 'hidden';
-		}
-	})
-
->>>>>>> 1e716974ff48abc5125d4c50b59f153851ddaf14
 	courseCreateTitle.addEventListener('keyup', (e) => {
 		const remainingLength = getRemainingLength(maxLength, courseCreateTitle);
 		courseTitleTooltip.innerHTML = remainingLength;
 	});
-<<<<<<< HEAD
-=======
-
->>>>>>> 1e716974ff48abc5125d4c50b59f153851ddaf14
 }
