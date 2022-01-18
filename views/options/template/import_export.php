@@ -7,8 +7,8 @@ tutor_alert(
 	__( 'Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.', 'tutor' ),
 	'warning'
 );
+// pr(get_option( 'tutor_option' ));
 ?>
-
 
 <div class="tutor-option-single-item">
 	<h4>Export</h4>
@@ -46,7 +46,7 @@ tutor_alert(
 				</div>
 			</div>
 			<div class="tutor-option-field-input tutor-mt-15">
-				<button class="tutor-btn tutor-is-sm" id="import_options">Update Settings</button>
+				<button class="tutor-btn tutor-is-sm tutor_import_options" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Import Settings" data-heading="Import from Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." id="import_options">Update Settings</button>
 			</div>
 		</div>
 	</div>
@@ -120,7 +120,7 @@ tutor_alert(
 				</span></div>
 			</div>
 			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-outline tutor-is-sm" id="reset_options">Reset All Settings</button>
+				<button class="tutor-btn tutor-is-outline tutor-is-sm tutor-reset-all" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Reset Settings" data-heading="Reset All Settings?" data-message="WARNING! This will reset all settings to default, please proceed with caution." id="reset_options">Reset All Settings</button>
 			</div>
 		</div>
 	</div>

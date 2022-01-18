@@ -437,7 +437,7 @@ class Options_V2 {
 						'fields'     => array(
 							/**
 							 * TODO
-							 * 
+							 *
 							 * This option will be implemented on future
 							 * release
 							 *

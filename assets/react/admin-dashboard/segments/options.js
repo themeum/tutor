@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 
-	var exporter = document.querySelector('#export_settings');
+	/* var exporter = document.querySelector('#export_settings');
 	!exporter
 		? 0
 		: exporter.addEventListener('click', (e) => {
@@ -387,5 +387,5 @@ document.addEventListener('DOMContentLoaded', function() {
 						document.body.removeChild(element);
 					})
 					.catch((err) => console.log(err));
-		  });
+		  }); */
 });
