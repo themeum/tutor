@@ -197,6 +197,14 @@ final class Tutor {
 		 */
 
 		add_action( 'activated_plugin', array( $this, 'activated_tutor' ), 10, 2 );
+		/**
+		 * Adds Report issue toolbar
+		 *
+		 * @param WP_Admin_Bar $wp_admin_bar Toolbar instance.
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'admin_bar_menu', array( $this, 'toolbar_link_to_mypage' ), 999 );
 	}
 
 	/**
@@ -692,6 +700,24 @@ final class Tutor {
 		}
 		return $bool;
 	}
-
+	/**
+	 * Add a tool bar link on admin bar
+	 *
+	 * @param mixed $wp_admin_bar | admin bar instance.
+	 *
+	 * @since v2.0.0
+	 */
+	public function toolbar_link_to_mypage( $wp_admin_bar ) {
+		$args = array(
+			'id'    	=> 'tutor_report_link',
+			'title' 	=> __( 'Report Tutor LMS 2.0.0 Beta Issues', 'tutor' ),
+			'href'  	=> 'https://forms.gle/xHw7TQSLGAcmbySy9',
+			'meta'  	=> array(
+				'class' => 'tutor-report-issue',
+				'target' => '_blank'
+			),
+		);
+		$wp_admin_bar->add_node( $args );
+	}
 
 }
