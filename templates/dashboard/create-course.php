@@ -266,7 +266,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 					<div class="tutor-form-col-12">
 						<div class="tutor-form-group">
 							<div class="tutor-form-field tutor-course-builder-btn-group">
-								<button type="submit" class="tutor-btn" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save course as draft', 'tutor'); ?></button>
+								<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save course as draft', 'tutor'); ?></button>
 								<?php if ($can_publish_course) { ?>
 									<button class="tutor-btn" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
 								<?php } else { ?>
