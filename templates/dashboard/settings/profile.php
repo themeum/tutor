@@ -114,74 +114,72 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label>
+				<label class="tutor-form-label">
 					<?php esc_html_e( 'First Name', 'tutor' ); ?>
-					<input class="tutor-form-control" type="text" name="first_name" value="<?php esc_attr_e( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
 				</label>
+				<input class="tutor-form-control" type="text" name="first_name" value="<?php esc_attr_e( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
 			</div>
 
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label>
+				<label class="tutor-form-label">
 					<?php esc_html_e( 'Last Name', 'tutor' ); ?>
-					<input class="tutor-form-control" type="text" name="last_name" value="<?php esc_attr_e( $user->last_name ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>">
 				</label>
+				<input class="tutor-form-control" type="text" name="last_name" value="<?php esc_attr_e( $user->last_name ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>">
 			</div>
 		</div>
 
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label>
+				<label class="tutor-form-label">
 					<?php esc_html_e( 'User Name', 'tutor' ); ?>
-					<input class="tutor-form-control" type="text" disabled="disabled" value="<?php esc_attr_e( $user->user_login ); ?>">
 				</label>
+				<input class="tutor-form-control" type="text" disabled="disabled" value="<?php esc_attr_e( $user->user_login ); ?>">
 			</div>
 
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label>
+				<label class="tutor-form-label">
 					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
-					<input class="tutor-form-control" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_number" value="<?php esc_html_e( filter_var( get_user_meta( $user->ID, 'phone_number', true ), FILTER_SANITIZE_NUMBER_INT ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
 				</label>
+				<input class="tutor-form-control" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_number" value="<?php esc_html_e( filter_var( get_user_meta( $user->ID, 'phone_number', true ), FILTER_SANITIZE_NUMBER_INT ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
 			</div>
 		</div>
 
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-mb-30">
-				<label>
+				<label class="tutor-form-label">
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
-					<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php esc_attr_e( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
 				</label>
+				<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php esc_attr_e( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
 			</div>
 		</div>
 
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-mb-30">
-				<label>
+				<label class="tutor-form-label">
 					<?php _e( 'Bio', 'tutor' ); ?>
-					<textarea class="tutor-form-control" name="tutor_profile_bio"><?php echo strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ); ?></textarea>
 				</label>
+				<textarea class="tutor-form-control" name="tutor_profile_bio"><?php echo strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ); ?></textarea>
 			</div>
 		</div>
 
 		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label>
+				<label class="tutor-form-label">
 					<?php _e( 'Display name publicly as', 'tutor' ); ?>
 
-					<select class="tutor-form-select" name="display_name">
-						<?php
-						foreach ( $public_display as $id => $item ) {
-							?>
-									<option <?php selected( $user->display_name, $item ); ?>><?php esc_html_e( $item ); ?></option>
-								<?php
-						}
-						?>
-					</select>
 				</label>
-				<p>
-					<small>
-						<?php esc_html_e( 'The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor' ); ?>
-					</small>
-				</p>
+				<select class="tutor-form-select" name="display_name">
+					<?php
+					foreach ( $public_display as $id => $item ) {
+						?>
+								<option <?php selected( $user->display_name, $item ); ?>><?php esc_html_e( $item ); ?></option>
+							<?php
+					}
+					?>
+				</select>
+				<div class="tutor-text-regular-caption tutor-mt-20">
+					<?php esc_html_e( 'The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor' ); ?>
+				</div>
 			</div>
 		</div>
 
