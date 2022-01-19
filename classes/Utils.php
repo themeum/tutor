@@ -4602,7 +4602,7 @@ class Utils {
 				'is_pro' => false,
 			),
 			'open_ended'        => array(
-				'name'   => __( 'Open Ended/Essay', 'tutor' ),
+				'name'   => __( 'Open Ended', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>',
 				'is_pro' => false,
 			),

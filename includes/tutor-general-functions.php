@@ -334,7 +334,7 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
 				<h3>
-					<i class="ttr-angle-down-filled"></i>
+					<i class="ttr-angle-up-filled"></i>
 					<span><?php echo $title; ?></span>
 				</h3>
 			</div>
