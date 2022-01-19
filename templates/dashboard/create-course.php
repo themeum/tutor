@@ -53,7 +53,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 						<button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
 							<!-- @TODO: Icon must be chenged -->
 							<i class="tutor-icon-save"></i>
-							<span><?php _e('Save', 'tutor'); ?></span>
+							<!-- chenged icon -->
+							<!-- <span class="ttr-save-line tutor-icon-save tutor-color-text-subsued"></span> -->
+							<span class="tutor-color-text-subsued"><?php _e('Save', 'tutor'); ?></span>
 						</button>
 					</div>
 				</div>
@@ -77,7 +79,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 						<?php
 						}
 						?>
-						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="ttr-line-cross-line tutor-ml-15" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;"></a>
+						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="ttr-line-cross-line tutor-ml-15" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;color: #9CA0AC;"></a>
 					</div>
 				</div>
 			</div>
@@ -151,7 +153,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 				<div class="tutor-course-builder-section tutor-course-builder-info">
 					<div class="tutor-course-builder-section-title">
 						<h3>
-							<i class="color-text-brand ttr-angle-down-filled tutor-icon-26"></i>
+							<i class="color-text-brand ttr-angle-up-filled tutor-icon-26"></i>
 							<span><?php esc_html_e('Course Info', 'tutor'); ?></span>
 						</h3>
 					</div>
@@ -214,7 +216,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 									<label class="tutor-form-label tutor-font-size-16"><?php _e('Course Price', 'tutor'); ?></label>
 								</div>
 								<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
-									<div class="tutor-form-check tutor-bs-align-items-center tutor-mb-15">
+									<div class="tutor-form-check tutor-bs-align-items-center">
 										<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
 										<label for="tutor_price_paid" class="tutor-amount-field">
 											<span class="tutor-input-prepand">
@@ -225,7 +227,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 									</div>
 								</div>
 								<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
-									<div class="tutor-form-check tutor-bs-align-items-center tutor-mb-15">
+									<div class="tutor-form-check tutor-bs-align-items-center">
 										<input type="radio" id="tutor_price_free" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> />
 										<label for="tutor_price_free" class="tutor-font-size-15">
 											<?php _e('Free', 'tutor'); ?>
@@ -266,7 +268,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 					<div class="tutor-form-col-12">
 						<div class="tutor-form-group">
 							<div class="tutor-form-field tutor-course-builder-btn-group">
-								<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save course as draft', 'tutor'); ?></button>
+								<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save as Draft', 'tutor'); ?></button>
 								<?php if ($can_publish_course) { ?>
 									<button class="tutor-btn" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
 								<?php } else { ?>

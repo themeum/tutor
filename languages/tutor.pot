@@ -7240,6 +7240,8 @@ msgstr ""
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Copied!"
 msgstr ""
+<<<<<<< HEAD
+=======
 
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Required Plugin(s)"
@@ -7584,3 +7586,4 @@ msgstr ""
 #: assets/js/tutor-front.js:1, assets/js/tutor-admin.js:1, assets/js/tutor-course-builder.js:1, assets/js/tutor-setup.js:1
 msgid "Copied!"
 msgstr ""
+>>>>>>> 06e761d9bd791cbcba711b4461727abb2ce05375
