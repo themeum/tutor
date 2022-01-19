@@ -57,9 +57,9 @@ navTabLists.forEach((list) => {
             }
 
             //enable if tinymce content changed
-            if (null !== tinymce && typeof tinymce !== 'undefined') {
+            if (typeof(tinyMCE) !== "undefined" && null !== (tinyMCE)) {
                 tinymce.activeEditor.on("change", function (e) {
-                    if(document.getElementById('save_tutor_option')){
+                    if (document.getElementById('save_tutor_option')) {
                         document.getElementById('save_tutor_option').disabled = false;
                     }
                 });

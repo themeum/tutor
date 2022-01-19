@@ -136,7 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	const inputEmailFields = document.querySelectorAll('[type="email"]');
 	const inputNumberFields = document.querySelectorAll('[type="number"]');
-	checkEmailFields(inputEmailFields);
+	if(inputEmailFields){
+		checkEmailFields(inputEmailFields);
+	} else {
+		formSubmit = true;
+	}
+		formSubmit = true;
+
 
 	$('#save_tutor_option').click(function(e) {
 		e.preventDefault();
@@ -165,7 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					beforeSend: function() {
 						button.addClass('tutor-updating-message');
 					},
-					success: function(resp) {
+					success: function (resp) {
+
 						const { data = {}, success } = resp || {};
 						const { message = __('Something Went Wrong!', 'tutor') } = data;
 
