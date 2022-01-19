@@ -305,3 +305,17 @@ a {
 		box-shadow: none !important;
 	}
 }
+
+.tutor-btn-ghost {
+	display: flex;
+	&.tutor-btn-ghost-fd {
+		&:hover {
+			color: $design-brand;
+		}
+	}
+	&.tutor-btn-ghost-wp {
+		&:hover {
+			color: $brand-wordpress;
+		}
+	}
+}

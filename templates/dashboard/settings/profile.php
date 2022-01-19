@@ -73,9 +73,9 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		</div>
 		<div id="tutor_photo_meta_area">
 			<img src="<?php echo esc_url( tutor()->url . '/assets/images/' ); ?>info-icon.svg" />
-			<span><?php esc_html_e( 'Profile Photo Size', 'tutor' ); ?>: <span><?php esc_html_e( '200x200', 'tutor' ); ?></span> <?php esc_html_e( 'pixels', 'tutor' ); ?>,</span>
+			<span><?php esc_html_e( 'Profile Photo Size', 'tutor' ); ?>: <span><?php esc_html_e( '200x200', 'tutor' ); ?></span> <?php esc_html_e( 'pixels', 'tutor' ); ?></span>
 			<span>&nbsp;&nbsp;&nbsp;&nbsp;<?php esc_html_e( 'Cover Photo Size', 'tutor' ); ?>: <span><?php esc_html_e( '700x430', 'tutor' ); ?></span> <?php esc_html_e( 'pixels', 'tutor' ); ?> </span>
-			<span class="loader-area"><?php esc_html_e( 'Saving...', 'tutor' ); ?></span>
+			<!-- <span class="loader-area"><?php esc_html_e( 'Saving...', 'tutor' ); ?></span> -->
 		</div>
 		<div id="tutor_profile_area" data-fallback="<?php esc_attr_e( $profile_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $profile_photo_src ); ?>)">
 			<div class="tutor_overlay">
