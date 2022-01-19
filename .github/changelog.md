@@ -1,10 +1,14 @@
 # TutorLMS Changelog
 
-### 1.9.14 - January 11, 2022
+### 1.9.14 - January 19, 2022
 
 * New: Now you can add Videos using a Shortcode
 * Fix: Issue of HTML codes disappearing after saving a Quiz
 * Fix: Issue regarding video not working using Embedded code
+* Fix: Presto Player Shortcode wasn't saving in the video source
+* Update: Better user input field sanitization ensure SQL Injection
+* Update: Better security of HTML output of user-provided input
+* Update: XSS vulnerability protection is made stronger
 
 
 ### 1.9.13 - January 10, 2022
