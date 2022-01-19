@@ -15,7 +15,7 @@ const tutorIconsV2 = {
 // Tutor v2 icons
 const { angleRight, magnifyingGlass, warning } = tutorIconsV2;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	var $ = window.jQuery;
 	const { __ } = wp.i18n;
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		// );
 		let image_delete = image_upload_wrap.querySelector('.delete-btn');
 
-		image_uploader[i].onclick = function(e) {
+		image_uploader[i].onclick = function (e) {
 			e.preventDefault();
 
 			var image_frame = wp.media({
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				upload_previewer.src = image_input.value = image_url;
 			}); */
 
-			image_frame.on('insert', function(selection) {
+			image_frame.on('insert', function (selection) {
 				var state = image_frame.state();
 				selection = selection || state.get('selection');
 				if (!selection) return;
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		};
 
-		image_delete.onclick = function() {
+		image_delete.onclick = function () {
 			input_file.value = '';
 			email_title_logo.src = '';
 		};
@@ -87,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		return re.test(String(email).toLowerCase());
 	};
 
-	$(window).on('click', function(e) {
+	$(window).on('click', function (e) {
 		$('.tutor-notification, .search_result').removeClass('show');
 	});
 
-	$('.tutor-notification-close').click(function(e) {
+	$('.tutor-notification-close').click(function (e) {
 		$('.tutor-notification').removeClass('show');
 	});
 
@@ -136,31 +136,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	const inputEmailFields = document.querySelectorAll('[type="email"]');
 	const inputNumberFields = document.querySelectorAll('[type="number"]');
-	if(inputEmailFields){
+	if (0 !== inputEmailFields.length) {
 		checkEmailFields(inputEmailFields);
 	} else {
 		formSubmit = true;
 	}
-		formSubmit = true;
 
-
-	$('#save_tutor_option').click(function(e) {
+	$('#save_tutor_option').click(function (e) {
 		e.preventDefault();
 		$('#tutor-option-form').submit();
 	});
 
-	$('#tutor-option-form').submit(function(e) {
+	$('#tutor-option-form').submit(function (e) {
 		e.preventDefault();
 		var button = $('#save_tutor_option');
 		var $form = $(this);
 		var data = $form.serializeObject();
 
-		if (typeof inputNumberFields !== 'undefined') {
+		// if (typeof inputNumberFields !== 'undefined') {
+		if (0 !== inputNumberFields.length) {
 			checkNumberFieldsOnSubmit(inputNumberFields);
 		}
-		if (typeof inputEmailFields !== 'undefined') {
+		// if (typeof inputEmailFields !== 'undefined') {
+		if (0 !== inputEmailFields.length) {
 			checkEmailFieldsOnSubmit(inputEmailFields);
 		}
+
+		// console.log(formSubmit);
 
 		if (true === formSubmit) {
 			if (!e.detail || e.detail == 1) {
@@ -168,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					url: window._tutorobject.ajaxurl,
 					type: 'POST',
 					data: data,
-					beforeSend: function() {
+					beforeSend: function () {
 						button.addClass('tutor-updating-message');
 					},
 					success: function (resp) {
@@ -178,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						if (success) {
 							// Disableing save btn after saved successfully
-							if(document.getElementById('save_tutor_option')){
+							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}
 							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
@@ -187,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						tutor_toast('Error!', message, 'error');
 					},
-					complete: function() {
+					complete: function () {
 						button.removeClass('tutor-updating-message');
 					},
 				});
@@ -226,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return output;
 	}
 
-	$('#search_settings').on('input', function(e) {
+	$('#search_settings').on('input', function (e) {
 		e.preventDefault();
 
 		if (e.target.value) {
@@ -239,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					keyword: searchKey,
 				},
 				// beforeSend: function () {},
-				success: function(data) {
+				success: function (data) {
 					// console.log(data.data);
 					// return false;
 					var output = '',
@@ -254,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						field_key = '',
 						result = data.data.fields;
 
-					Object.values(result).forEach(function(item, index, arr) {
+					Object.values(result).forEach(function (item, index, arr) {
 						item_text = item.label;
 						section_slug = item.section_slug;
 						section_label = item.section_label;
@@ -283,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					output = '';
 					// console.log("working");
 				},
-				complete: function() {
+				complete: function () {
 					// Active navigation element
 					navigationTrigger();
 				},
