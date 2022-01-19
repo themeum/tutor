@@ -266,16 +266,6 @@ class Tools_V2 {
 							),
 							array(
 								array(
-									'key'     => 'site_url',
-									'type'    => 'info_row',
-									'label'   => __( 'Site URL', 'tutor' ),
-									'status'  => 'default',
-									'default' => $this->status( 'site_url' ),
-
-								),
-							),
-							array(
-								array(
 									'key'     => 'tutor_version',
 									'type'    => 'info_col',
 									'label'   => __( 'Tutor version', 'tutor' ),
