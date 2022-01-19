@@ -22,7 +22,6 @@
 
 	$attempt_remaining = (int) $attempts_allowed - (int) $attempted_count;
 	$quiz_answers      = array();
-
 if ( $attempted_count !== 0 ) {
 	?>
 		<div id="tutor-quiz-image-matching-choice" class="tutor-quiz-wrap tutor-quiz-wrap-<?php the_ID(); ?>">

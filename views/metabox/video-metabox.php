@@ -124,9 +124,9 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
 
 <!-- For Lesson -->
 <?php if ($post->post_type !== tutor()->course_post_type) : ?>
-    <div class="tutor-mb-30">
+    <div class="tutor-mb-20">
         <label class="tutor-form-label"><?php _e('Video playback time', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15 tutor-option-field-video-duration">
+        <div class="tutor-input-group tutor-option-field-video-duration">
             <div class="tutor-bs-row">
                 <div class="tutor-bs-col-4">
                     <input class="tutor-form-control" type="number" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]" min="0">

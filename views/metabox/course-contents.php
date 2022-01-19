@@ -32,7 +32,7 @@
         <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
             <div class="tutor-topics-top">
                 <div class="tutor-topic-title">
-                    <i class="ttr-humnurger-filled tutor-icon-24 course-move-handle"></i>
+                    <span class="ttr-humnurger-filled tutor-icon-24 course-move-handle"></span>
                     <span class="topic-inner-title tutor-text-bold-body tutor-color-text-primary"><?php echo stripslashes($topic->post_title); ?></span>
                     <span class="tutor-topic-inline-edit-btn tutor-topic-btn-hover tutor-font-size-24">
                         <i class="color-text-hints ttr-edit-filled tutor-icon-24" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>

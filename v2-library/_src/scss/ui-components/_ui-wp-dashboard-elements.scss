@@ -145,11 +145,11 @@
 				@include propertyWithPrefix(justify-content, center);
 				width: 30px;
 				height: 30px;
-				font-size: 20px;
+				font-size: 40px;
 				border-radius: 50%;
 				overflow: hidden;
-				background: #2D8CFF;
-				color: white;
+				// background: #2D8CFF;
+				color: #2e8cff;
 			}
 
 			&:nth-child(2) {
