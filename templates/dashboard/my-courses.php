@@ -8,6 +8,13 @@
 $shortcode_arg = isset($GLOBALS['tutor_shortcode_arg']) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
 $courseCols = $shortcode_arg === null ? tutor_utils()->get_option('courses_col_per_row', 4) : $shortcode_arg;
 !isset($active_tab) ? $active_tab = 'my-courses' : 0;
+$per_page = tutor_utils()->get_option('pagination_per_page');
+$paged    = (isset($_GET['current_page']) && is_numeric($_GET['current_page']) && $_GET['current_page'] >= 1) ? $_GET['current_page'] : 1;
+$offset     = ( $per_page * $paged ) - $per_page;
+$status = $active_tab == 'my-courses' ? array('publish') : array('pending');
+$courses_per_page = tutor_utils()->get_courses_by_instructor(null, $status, $offset, $per_page);
+$my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
+
 ?>
 
 <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-15"><?php esc_html_e('My Courses', 'tutor'); ?></div>
@@ -37,16 +44,14 @@ $courseCols = $shortcode_arg === null ? tutor_utils()->get_option('courses_col_p
 
     <!-- Course list -->
     <?php
-    $status = $active_tab == 'my-courses' ? array('publish') : array('pending');
-    $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
     $placeholder_img = tutor()->url . 'assets/images/placeholder.png';
 
-    if (is_array($my_courses) && count($my_courses)) {
+    if (is_array($courses_per_page) && count($courses_per_page)) {
         global $post;
     ?>
         <div class="tutor-course-listing-grid tutor-course-listing-grid-3">
             <?php
-            foreach ($my_courses as $post) :
+            foreach ($courses_per_page as $post) :
                 setup_postdata($post);
 
                 $avg_rating = tutor_utils()->get_course_rating()->rating_avg;
@@ -147,6 +152,22 @@ $courseCols = $shortcode_arg === null ? tutor_utils()->get_option('courses_col_p
                 </div>
             <?php endforeach;
             wp_reset_postdata(); ?>
+        </div>
+        <div class="tutor-mt-20">
+            <?php
+            if (count($my_courses) > $per_page) {
+                $pagination_data = array(
+                    'total_items' => count($my_courses),
+                    'per_page'    => $per_page,
+                    'paged'       => $paged,
+                );
+                tutor_load_template_from_custom_path(
+                    tutor()->path . 'templates/dashboard/elements/pagination.php',
+                    $pagination_data
+                );
+            }
+            ?>
+
         </div>
     <?php
     } else {
