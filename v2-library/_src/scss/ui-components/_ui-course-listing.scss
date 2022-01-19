@@ -89,6 +89,16 @@
 				color: $design-white;
 			}
 		}
+
+		.list-item-title > a {
+			display: block !important;
+			display: -webkit-box !important;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: normal;
+		}
 	}
 
 	&-body {
