@@ -1743,6 +1743,9 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+readyState_complete(function () {// typeof resetConfirmation === 'function' ? resetConfirmation() : '';
+  // typeof modalResetOpen === 'function' ? modalResetOpen() : '';
+});
 document.addEventListener("readystatechange", function (event) {
   if (event.target.readyState === "interactive") {
     export_settings_all();
@@ -1753,13 +1756,10 @@ document.addEventListener("readystatechange", function (event) {
     import_history_data();
     export_single_settings();
     reset_default_options();
-    apply_single_settings();
+    modal_opener_single_settings();
     var historyData = document.querySelector('.history_data');
 
-    if (typeof historyData !== 'undefined' && null !== historyData) {
-      setInterval(function () {
-        load_saved_data();
-      }, 100000);
+    if (typeof historyData !== 'undefined' && null !== historyData) {// setInterval(() => { load_saved_data() }, 100000);
     }
   }
 });
@@ -1815,7 +1815,7 @@ function tutor_option_history_load(history_data) {
           value = _ref2[1];
 
       var badgeStatus = value.datatype == "saved" ? " label-primary-wp" : " label-refund";
-      output = "<div class=\"tutor-option-field-row\">\n\t\t\t\t\t<div class=\"tutor-option-field-label\">\n\t\t\t\t\t\t<p class=\"text-medium-small\">".concat(value.history_date, "\n\t\t\t\t\t\t<span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\"> ").concat(value.datatype, "</span> </p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"tutor-option-field-input\">\n\t\t\t\t\t\t<button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\" data-id=\"").concat(key, "\">Apply</button>\n\n          <div class=\"tutor-popup-opener tutor-ml-16\">\n            <button\n            type=\"button\"\n            class=\"popup-btn\"\n            data-tutor-popup-target=\"popup-").concat(key, "\"\n            >\n            <span class=\"toggle-icon\"></span>\n            </button>\n            <ul id=\"popup-").concat(key, "\" class=\"popup-menu\">\n            <li>\n              <a class=\"export_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon ttr-msg-archive-filled tutor-color-design-white\"></span>\n                <span class=\"text-regular-body tutor-color-text-white\">Download</span>\n              </a>\n            </li>\n            <li>\n              <a class=\"delete_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon ttr-delete-fill-filled tutor-color-design-white\"></span>\n                <span class=\"text-regular-body tutor-color-text-white\">Delete</span>\n              </a>\n            </li>\n            </ul>\n          </div>\n          </div>\n        </div>") + output;
+      output = "<div class=\"tutor-option-field-row\">\n\t\t\t\t\t<div class=\"tutor-option-field-label\">\n\t\t\t\t\t\t<p class=\"text-medium-small\">".concat(value.history_date, "\n\t\t\t\t\t\t<span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\"> ").concat(value.datatype, "</span> </p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"tutor-option-field-input\">\n\t\t\t\t\t\t<button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\"  data-tutor-modal-target=\"tutor-modal-bulk-action\" data-btntext=\"Yes, Restore Settings\" data-heading=\"Restore Previous Settings?\" data-message=\"WARNING! This will overwrite all existing settings, please proceed with caution.\"  data-id=\"").concat(key, "\">Apply</button>\n\n          <div class=\"tutor-popup-opener tutor-ml-16\">\n            <button\n            type=\"button\"\n            class=\"popup-btn\"\n            data-tutor-popup-target=\"popup-").concat(key, "\"\n            >\n            <span class=\"toggle-icon\"></span>\n            </button>\n            <ul id=\"popup-").concat(key, "\" class=\"popup-menu\">\n            <li>\n              <a class=\"export_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon ttr-msg-archive-filled tutor-color-design-white\"></span>\n                <span class=\"text-regular-body tutor-color-text-white\">Download</span>\n              </a>\n            </li>\n            <li>\n              <a class=\"delete_single_settings\"  data-tutor-modal-target=\"tutor-modal-bulk-action\" data-btntext=\"Yes, Delete Settings\" data-heading=\"Delete This Settings?\" data-message=\"WARNING! This will remove the settings history data from your system, please proceed with caution.\" data-id=\"").concat(key, "\">\n                <span class=\"icon ttr-delete-fill-filled tutor-color-design-white\"></span>\n                <span class=\"text-regular-body tutor-color-text-white\">Delete</span>\n              </a>\n            </li>\n            </ul>\n          </div>\n          </div>\n        </div>") + output;
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
@@ -1826,7 +1826,7 @@ function tutor_option_history_load(history_data) {
   null !== historyData ? historyData.innerHTML = heading + output : '';
   export_single_settings(); // popupToggle();
 
-  apply_single_settings();
+  modal_opener_single_settings();
 }
 /* import and list dom */
 
@@ -1877,22 +1877,27 @@ var reset_default_options = function reset_default_options() {
 
   if (reset_options) {
     reset_options.onclick = function () {
-      var formData = new FormData();
-      formData.append("action", "tutor_option_default_save");
-      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", _tutorobject.ajaxurl, true);
-      xhttp.send(formData);
-
-      xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4) {
-          setTimeout(function () {
-            tutor_toast("Success", "Reset all settings to default successfully!", "success");
-          }, 200);
-        }
-      };
+      modalConfirmation(reset_options);
     };
   }
+};
+
+var reset_all_settings_xhttp = function reset_all_settings_xhttp(modalOpener, modalElement) {
+  var formData = new FormData();
+  formData.append("action", "tutor_option_default_save");
+  formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", _tutorobject.ajaxurl, true);
+  xhttp.send(formData);
+
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState === 4) {
+      setTimeout(function () {
+        modalElement.classList.remove('tutor-is-active');
+        tutor_toast("Success", "Reset all settings to default successfully!", "success");
+      }, 200);
+    }
+  };
 };
 
 var import_history_data = function import_history_data() {
@@ -1900,47 +1905,48 @@ var import_history_data = function import_history_data() {
 
   if (import_options) {
     import_options.onclick = function (e) {
-      if (!e.detail || e.detail == 1) {
-        var fileElem = selectorElement("#drag-drop-input");
-        var files = fileElem.files;
-
-        if (files.length <= 0) {
-          tutor_toast('Failed', 'Please add a correctly formated json file', 'error');
-          return false;
-        }
-
-        var fr = new FileReader();
-        fr.readAsText(files.item(0));
-
-        fr.onload = function (e) {
-          var tutor_options = e.target.result;
-          var formData = new FormData();
-          formData.append("action", "tutor_import_settings");
-          formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-          formData.append("time", time_now());
-          formData.append("tutor_options", tutor_options);
-          var xhttp = new XMLHttpRequest();
-          xhttp.open("POST", _tutorobject.ajaxurl);
-          xhttp.send(formData);
-
-          xhttp.onreadystatechange = function () {
-            if (xhttp.readyState === 4) {
-              tutor_option_history_load(xhttp.responseText);
-              delete_history_data(); // import_history_data();
-
-              setTimeout(function () {
-                tutor_toast("Success", "Data imported successfully!", "success");
-                fileElem.parentNode.parentNode.querySelector('.file-info').innerText = '';
-                fileElem.value = '';
-              }, 200);
-            }
-          };
-        };
-      }
-
-      ;
+      modalConfirmation(import_options);
     };
   }
+};
+
+var import_history_data_xhttp = function import_history_data_xhttp(modalOpener, modalElement) {
+  var fileElem = selectorElement("#drag-drop-input");
+  var files = fileElem.files;
+
+  if (files.length <= 0) {
+    tutor_toast('Failed', 'Please add a correctly formated json file', 'error');
+    return false;
+  }
+
+  var fr = new FileReader();
+  fr.readAsText(files.item(0));
+
+  fr.onload = function (e) {
+    var tutor_options = JSON.stringify(e.target.result);
+    var formData = new FormData();
+    formData.append("action", "tutor_import_settings");
+    formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+    formData.append("time", time_now());
+    formData.append("tutor_options", tutor_options);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", _tutorobject.ajaxurl);
+    xhttp.send(formData);
+
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4) {
+        modalElement.classList.remove('tutor-is-active');
+        tutor_option_history_load(xhttp.responseText);
+        delete_history_data(); // import_history_data();
+
+        setTimeout(function () {
+          tutor_toast("Success", "Data imported successfully!", "success");
+          fileElem.parentNode.parentNode.querySelector('.file-info').innerText = '';
+          fileElem.value = '';
+        }, 200);
+      }
+    };
+  };
 };
 
 var export_single_settings = function export_single_settings() {
@@ -1948,24 +1954,28 @@ var export_single_settings = function export_single_settings() {
 
   if (single_settings) {
     var _loop = function _loop(i) {
-      single_settings[i].onclick = function () {
-        var export_id = single_settings[i].dataset.id;
-        var formData = new FormData();
-        formData.append("action", "tutor_export_single_settings");
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-        formData.append("time", Date.now());
-        formData.append("export_id", export_id);
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", _tutorobject.ajaxurl, true);
-        xhttp.send(formData);
+      single_settings[i].onclick = function (e) {
+        if (!e.detail || e.detail == 1) {
+          var export_id = single_settings[i].dataset.id;
+          var formData = new FormData();
+          formData.append("action", "tutor_export_single_settings");
+          formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+          formData.append("time", Date.now());
+          formData.append("export_id", export_id);
+          var xhttp = new XMLHttpRequest();
+          xhttp.open("POST", _tutorobject.ajaxurl, true);
+          xhttp.send(formData);
 
-        xhttp.onreadystatechange = function () {
-          if (xhttp.readyState === 4) {
-            // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
-            var fileName = export_id;
-            json_download(xhttp.response, fileName);
-          }
-        };
+          xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4) {
+              // let fileName = "tutor_options_" + _tutorobject.tutor_time_now;
+              var fileName = export_id;
+              json_download(xhttp.response, fileName);
+            }
+          };
+        }
+
+        ;
       };
     };
 
@@ -1975,69 +1985,103 @@ var export_single_settings = function export_single_settings() {
   }
 };
 
-var apply_single_settings = function apply_single_settings() {
+var modalConfirmation = function modalConfirmation(modalOpener) {
+  var modalElement = document.getElementById(modalOpener.dataset.tutorModalTarget);
+  var confirmButton = modalElement && modalElement.querySelector('[data-reset]');
+  var modalHeading = modalElement && modalElement.querySelector('.tutor-modal-title');
+  var modalMessage = modalElement && modalElement.querySelector('.tutor-modal-message');
+  confirmButton.removeAttribute("data-reset-for");
+  confirmButton.classList.remove('reset_to_default');
+  confirmButton.innerText = modalOpener.dataset.btntext;
+  confirmButton.dataset.reset = '';
+  modalHeading.innerText = modalOpener.dataset.heading;
+  modalMessage.innerText = modalOpener.dataset.message;
+
+  confirmButton.onclick = function (e) {
+    if (!e.detail || e.detail == 1) {
+      if (modalOpener.classList.contains('tutor_import_options')) {
+        import_history_data_xhttp(modalOpener, modalElement);
+      }
+
+      if (modalOpener.classList.contains('tutor-reset-all')) {
+        reset_all_settings_xhttp(modalOpener, modalElement);
+      }
+
+      if (modalOpener.classList.contains('apply_settings')) {
+        apply_settings_xhttp_request(modalOpener, modalElement);
+      }
+
+      if (modalOpener.classList.contains('delete_single_settings')) {
+        delete_settings_xhttp_request(modalOpener, modalElement);
+      }
+    }
+  };
+};
+
+var modal_opener_single_settings = function modal_opener_single_settings() {
   var apply_settings = selectorElements(".apply_settings");
 
   if (apply_settings) {
-    var _loop2 = function _loop2(i) {
-      apply_settings[i].onclick = function () {
-        var apply_id = apply_settings[i].dataset.id;
-        var formData = new FormData();
-        formData.append("action", "tutor_apply_settings");
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-        formData.append("apply_id", apply_id);
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", _tutorobject.ajaxurl, true);
-        xhttp.send(formData);
-
-        xhttp.onreadystatechange = function () {
-          if (xhttp.readyState === 4) {
-            tutor_toast("Success", "Applied settings successfully!", "success");
-            console.log(xhttp.response);
-          }
-        };
+    apply_settings.forEach(function (applyButton) {
+      applyButton.onclick = function () {
+        modalConfirmation(applyButton);
       };
-    };
-
-    for (var i = 0; i < apply_settings.length; i++) {
-      _loop2(i);
-    }
+    });
   }
+};
+
+var apply_settings_xhttp_request = function apply_settings_xhttp_request(modelOpener, modalElement) {
+  var apply_id = modelOpener.dataset.id;
+  var formData = new FormData();
+  formData.append("action", "tutor_apply_settings");
+  formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+  formData.append("apply_id", apply_id);
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", _tutorobject.ajaxurl, true);
+  xhttp.send(formData);
+
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState === 4) {
+      modalElement.classList.remove('tutor-is-active');
+      tutor_toast("Success", "Applied settings successfully!", "success");
+    }
+  };
 };
 
 var delete_history_data = function delete_history_data() {
   var delete_settings = selectorElements(".delete_single_settings");
 
   if (delete_settings) {
-    var _loop3 = function _loop3(i) {
-      delete_settings[i].onclick = function () {
-        var delete_id = delete_settings[i].dataset.id;
-        var formData = new FormData();
-        formData.append("action", "tutor_delete_single_settings");
-        formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
-        formData.append("time", Date.now());
-        formData.append("delete_id", delete_id);
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", _tutorobject.ajaxurl, true);
-        xhttp.send(formData);
-
-        xhttp.onreadystatechange = function () {
-          if (xhttp.readyState === 4) {
-            console.log(JSON.parse(xhttp.response));
-            tutor_option_history_load(xhttp.responseText);
-            delete_history_data();
-            setTimeout(function () {
-              tutor_toast('Success', "Data deleted successfully!", 'success');
-            }, 200);
-          }
-        };
+    delete_settings.forEach(function (deleteButton) {
+      deleteButton.onclick = function () {
+        modalConfirmation(deleteButton);
       };
-    };
-
-    for (var i = 0; i < delete_settings.length; i++) {
-      _loop3(i);
-    }
+    });
   }
+};
+
+var delete_settings_xhttp_request = function delete_settings_xhttp_request(modelOpener, modalElement) {
+  var delete_id = modelOpener.dataset.id;
+  var formData = new FormData();
+  formData.append("action", "tutor_delete_single_settings");
+  formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+  formData.append("time", Date.now());
+  formData.append("delete_id", delete_id);
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", _tutorobject.ajaxurl, true);
+  xhttp.send(formData);
+
+  xhttp.onreadystatechange = function () {
+    if (xhttp.readyState === 4) {
+      console.log(JSON.parse(xhttp.response));
+      modalElement.classList.remove('tutor-is-active');
+      tutor_option_history_load(xhttp.responseText);
+      delete_history_data();
+      setTimeout(function () {
+        tutor_toast('Success', "Data deleted successfully!", 'success');
+      }, 200);
+    }
+  };
 };
 
 /***/ }),
@@ -2173,7 +2217,9 @@ navTabLists.forEach(function (list) {
 
       if (null !== tinymce && typeof tinymce !== 'undefined') {
         tinymce.activeEditor.on("change", function (e) {
-          document.getElementById('save_tutor_option').disabled = false;
+          if (document.getElementById('save_tutor_option')) {
+            document.getElementById('save_tutor_option').disabled = false;
+          }
         });
       }
     }
@@ -2357,7 +2403,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (success) {
               // Disableing save btn after saved successfully
-              document.getElementById('save_tutor_option').disabled = true;
+              if (document.getElementById('save_tutor_option')) {
+                document.getElementById('save_tutor_option').disabled = true;
+              }
+
               tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
               return;
             }
@@ -2518,36 +2567,37 @@ document.addEventListener('DOMContentLoaded', function () {
       console.warn("scrollTargetEl Not found!");
     }
   }
+  /* var exporter = document.querySelector('#export_settings');
+  !exporter
+  	? 0
+  	: exporter.addEventListener('click', (e) => {
+  			e.preventDefault();
+  			fetch(_tutorobject.ajaxurl, {
+  				method: 'POST',
+  				credentials: 'same-origin',
+  				headers: {
+  					'Content-Type': 'application/x-www-form-urlencoded',
+  					'Cache-Control': 'no-cache',
+  				},
+  				body: new URLSearchParams({
+  					action: 'tutor_export_settings',
+  				}),
+  			})
+  				.then((response) => response.json())
+  				.then((response) => {
+  					const file = new Blob([JSON.stringify(response)], {
+  						type: 'application/json',
+  					});
+  						let url = URL.createObjectURL(file);
+  					let element = document.createElement('a');
+  					element.setAttribute('href', url);
+  					element.setAttribute('download', 'tutor_options');
+  					element.click();
+  					document.body.removeChild(element);
+  				})
+  				.catch((err) => console.log(err));
+  	  }); */
 
-  var exporter = document.querySelector('#export_settings');
-  !exporter ? 0 : exporter.addEventListener('click', function (e) {
-    e.preventDefault();
-    fetch(_tutorobject.ajaxurl, {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Cache-Control': 'no-cache'
-      },
-      body: new URLSearchParams({
-        action: 'tutor_export_settings'
-      })
-    }).then(function (response) {
-      return response.json();
-    }).then(function (response) {
-      var file = new Blob([JSON.stringify(response)], {
-        type: 'application/json'
-      });
-      var url = URL.createObjectURL(file);
-      var element = document.createElement('a');
-      element.setAttribute('href', url);
-      element.setAttribute('download', 'tutor_options');
-      element.click();
-      document.body.removeChild(element);
-    })["catch"](function (err) {
-      return console.log(err);
-    });
-  });
 });
 
 /***/ }),
@@ -2757,7 +2807,10 @@ var resetConfirmation = function resetConfirmation() {
             });
             setTimeout(function () {
               tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success');
-              document.getElementById('save_tutor_option').disabled = false;
+
+              if (document.getElementById('save_tutor_option')) {
+                document.getElementById('save_tutor_option').disabled = false;
+              }
             }, 300);
           }
         };
@@ -2774,7 +2827,9 @@ var elementByName = function elementByName(key) {
 
 if (null !== optionForm) {
   optionForm.addEventListener('input', function (event) {
-    document.getElementById('save_tutor_option').disabled = false;
+    if (document.getElementById('save_tutor_option')) {
+      document.getElementById('save_tutor_option').disabled = false;
+    }
   });
 }
 

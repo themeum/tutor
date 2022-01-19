@@ -1,50 +1,44 @@
 <img src=".github/tutor-github.png" alt="TutorLMS" width="100%"/>
 
-
-[![WordPress plugin](https://img.shields.io/wordpress/plugin/v/tutor.svg)](https://wordpress.org/plugins/tutor/)
-[![WordPress](https://img.shields.io/wordpress/v/tutor.svg)](https://wordpress.org/plugins/tutor/)
-[![WordPress rating](https://img.shields.io/wordpress/plugin/r/tutor.svg)](https://wordpress.org/support/plugin/tutor/reviews/)
-[![WordPress](https://img.shields.io/wordpress/plugin/dt/tutor.svg)](https://wordpress.org/plugins/tutor/advanced/)
-[![Wordpress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/tutor.svg)](https://wordpress.org/plugins/tutor/)
+## What is Tutor LMS 2.0 Beta?
+Tutor LMS 2.0 beta version is built to experience Tutor LMS 2.0 before it is officially released. As this is a beta version, please don’t expect everything to work properly.
 
 
-[TutorLMS](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository) is a complete, 
-feature-packed and robust WordPress LMS plugin to create & sell courses online easily. All the features of this learning management system hits all the checkpoints for a full-fledged online course marketplace. You can create challenging and fun quizzes, interactive lessons, powerful reports and stats making Tutor potentially the best free WordPress LMS plugin. Manage, administer and monetize your education, online school, and online courses without having to write a single line of code.
+## Installing Tutor LMS Beta version
+We strongly recommend that you do not install beta releases on live sites.
 
+Use them in a test environment so you can try out the new features, see what breaks without worrying about the consequences, and give us feedback. It is paramount that you follow these guidelines when installing the version, because as the name suggests it is in the stage of development and is not entirely stable, yet.
 
-### [Changelog](./.github/changelog.md)
+We will be taking valuable feedback from the version users to get firsthand insight on key improvements.
 
+Follow along the next few steps to find out how you can get about installing the version for testing.
+Requirements
+Before getting started with installing Tutor LMS beta on your WordPress site, please make sure you have the following requirements. 
 
-### Documentation
-[https://docs.themeum.com/tutor-lms/](https://docs.themeum.com/tutor-lms/?utm_source=github_repository)
+## System Requirements
+1. PHP – 7.0 (or later)
+2. Database – MariaDB – 10.1 or later / MySQL – 5.7 or later
+3. WordPress 5.5 or higher
+4. Browser – Chrome, Firefox, Safari
+5. Internet Explorer is not supported
+6. Server Modules – mod_rewrite, cURL, fsockopen
 
+7. Download the free Tutor LMS 2.0 Beta file
+To get the free version of the Tutor LMS 2.0 : 
 
-### Reporting a Bug
+8. Navigate to the Tutor LMS GitHub.  
+9. Download the Tutor 2.0 install zip file
+10. Create a backup version of your entire site before you plan to install it. Ideal usage, we reiterate, would be to install it on a test site to see and try out the new features without breaking anything.
+11. Download the [Pro Tutor LMS 2.0 Beta](https://www.themeum.com/account/downloads/) file
+12. Follow along to download the pro version of Tutor LMS 2.0. 
 
-Bugs can be reported at [https://github.com/themeum/tutor/issues/new](https://github.com/themeum/tutor/issues/new)
+Note: The pro version is only available to the pro users of Tutor LMS and can only be availed by them. Check the previous section to download the free release if you do not own Tutor Pro. 
 
-### Installation
+Log in to your Themeum account and navigate to the downloads page.
+Click on download under the release file and the zip file should start downloading for you.
+Installing the Tutor LMS Beta Plugins (Both Free & Pro)
+The installation process for both the free and pro versions is the same since we are installing a zip file. Once again we urge you to create a back of your site or use a test environment before going ahead with the installation.
 
-#### Minimum Requirements
-
-* PHP version 5.6.0 or greater (PHP 7.1 or greater is recommended)
-* MySQL version 5.0 or greater (MySQL 5.6 or greater is recommended)
-
-#### Automatic installation
-
-The automatic installation is the easiest way to install any plugin in WordPress. You can perform an automatic installation of Tutor by logging in to your WordPress dashboard, navigating to the “Plugins” menu and click on the “Add New” button.
-
-This will open up a page showing all the available plugins in WordPress. In the search field, type Tutor. The search result will show you our Tutor plugin, you can then see the detailed info by clicking on “More Details” and to install just click on the “Install Now” button.
-
-#### Manual installation
-
-To install Tutor manually, you need to download the plugin and upload it to your webserver via any FTP application.
-
-The WordPress codex contains [instructions on how to do this here](https://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
-
-### Available Addon's in the [TutorLMS Pro Version](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository)
-
-Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS Pro Version](https://www.themeum.com/product/tutor-lms/?utm_source=github_repository), then you will get automatically all addons.
 
 
 <table>
@@ -170,3 +164,17 @@ Our all premium addons comes with Premium Plugins. When you purchase [TutorLMS P
         </tr>
     </tbody>
 </table>
+
+## FAQ
+
+1. Is it safe to use Tutor LMS 2.0 Beta on your production site? 
+
+    Tutor LMS 2.0 Beta is an experimental build meant for testing purposes. We strongly recommend you not to use Tutor LMS 2.0 Beta on your production sites. Use it on staging environments and remember to backup your entire website before updating.
+
+2. Will I get any support for Tutor LMS 2.0 Beta?
+
+    Since this is an experimental release and should not be used on production sites, we won’t be providing any support for Tutor LMS 2.0 Beta.
+
+3. Where can I report bugs or provide feedback?
+
+    In the description section, you’ll see a form with the text [Report an Issue](https://forms.gle/xHw7TQSLGAcmbySy9). In this form, you can fill in your issues or provide your feedback regarding the Beta release. 

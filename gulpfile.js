@@ -14,6 +14,8 @@ var gulp = require("gulp"),
 
 
 var onError = function (err) {
+	console.log('++++++++++++');
+	console.log(err);
 	notify.onError({
 		title: "Gulp",
 		subtitle: "Failure!",
@@ -125,8 +127,9 @@ function i18n_makepot(callback, target_dir) {
 					// Parse the string
 
 					var string = found[n];
-					var first_quote = string.indexOf("'")+1;
-					var second_quote = string.indexOf("'", first_quote);
+					var delemeter = string.indexOf('__("')===0 ? '"' : "'";
+					var first_quote = string.indexOf(delemeter)+1;
+					var second_quote = string.indexOf(delemeter, first_quote);
 					var text = string.slice(first_quote, second_quote);
 
 					if(added_texts.indexOf(text)>-1) {
@@ -229,7 +232,7 @@ exports.build = gulp.series(
 	"clean-zip",
 	"clean-build",
 	"makepot",
-	i18n_makepot,
+	// i18n_makepot,
 	"copy",
 	"make-zip"
 );

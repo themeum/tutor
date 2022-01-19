@@ -338,23 +338,18 @@ class Quiz {
 						} elseif ( $question_type === 'multiple_choice' ) {
 
 							$given_answer = (array) ( $answers );
+							
+							$given_answer = array_filter( $given_answer, function($id) {
+								return is_numeric($id) && $id>0;
+							} );
 
-							$given_answer = array_filter(
-								$given_answer,
-								function( $id ) {
-									return is_numeric( $id ) && $id > 0;
-								}
-							);
-
-							$get_original_answers = (array) $wpdb->get_col(
-								$wpdb->prepare(
-									"SELECT
-									answer_id
-								FROM
-									{$wpdb->prefix}tutor_quiz_question_answers
-								WHERE
-									belongs_question_id = %d
-									AND belongs_question_type = %s
+							$get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
+								"SELECT 
+									answer_id 
+								FROM 
+									{$wpdb->prefix}tutor_quiz_question_answers 
+								WHERE belongs_question_id = %d 
+									AND belongs_question_type = %s 
 									AND is_correct = 1 ;
 								",
 									$question->question_id,

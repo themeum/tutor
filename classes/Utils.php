@@ -7978,7 +7978,7 @@ class Utils {
 
 				! is_array( $course_ids ) ? $course_ids = array() : 0;
 				$course_id                              = array_filter(
-					$courses_ids,
+					$course_ids,
 					function ( $id ) {
 						return ( $id && is_numeric( $id ) );
 					}
