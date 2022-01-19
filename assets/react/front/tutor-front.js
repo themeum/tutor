@@ -1285,15 +1285,11 @@ jQuery(document).ready(function ($) {
         event.preventDefault();
 
         var $that = $(this);
-        var content;
         var inputid = 'tutor_lesson_modal_editor';
         var editor = tinyMCE.get(inputid);
-        if (editor) {
-            content = editor.getContent();
-        } else {
-            content = $('#' + inputid).val();
-        }
-        content = $('#' + inputid).val();
+        var content = editor ? editor.getContent() : $('#' + inputid).val();
+
+        console.log(content);
         
         var form_data = $(this).closest('form').serializeObject();
         form_data.lesson_content = content;
@@ -1477,16 +1473,11 @@ jQuery(document).ready(function ($) {
         event.preventDefault();
 
         var $that = $(this);
-        var content;
         var inputid = 'tutor_assignments_modal_editor';
         var editor = tinyMCE.get(inputid);
-        if (editor) {
-            content = editor.getContent();
-        } else {
-            content = $('#' + inputid).val();
-        }
-
-        content = $('#' + inputid).val();
+        var content = editor ? editor.getContent() : $('#' + inputid).val();
+        
+        console.log(content);
 
         var form_data = $(this).closest('form').serializeObject();
         form_data.assignment_content = content;
