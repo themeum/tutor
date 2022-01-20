@@ -347,8 +347,7 @@ class Quiz {
 									answer_id 
 								FROM 
 									{$wpdb->prefix}tutor_quiz_question_answers 
-								WHERE 
-									belongs_question_id = %d 
+								WHERE belongs_question_id = %d 
 									AND belongs_question_type = %s 
 									AND is_correct = 1 ;
 								", 

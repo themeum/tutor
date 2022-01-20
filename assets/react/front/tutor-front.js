@@ -705,7 +705,7 @@ jQuery(document).ready(function($) {
 	 * Assignment answer validation
 	 */
 	$(document).on('submit', '#tutor_assignment_submit_form', function(e) {
-		var assignment_answer = $('textarea[name="assignment_answer"]').val();
+		var assignment_answer = tinymce.activeEditor.getContent();
 		if (assignment_answer.trim().length < 1) {
 			$('#form_validation_response').html(
 				'<div class="tutor-error-msg">' + __('Assignment answer can not be empty', 'tutor') + '</div>',

@@ -15,6 +15,7 @@ $max_mark  = tutor_utils()->get_assignment_option( $assignment_id, 'total_mark' 
 $pass_mark = tutor_utils()->get_assignment_option( $assignment_id, 'pass_mark' );
 $format    = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 $deadline  = tutor_utils()->get_assignment_deadline_date( $assignment_id, $format, __( 'No Limit', 'tutor' ) );
+$comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->comment_parent:null;
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
@@ -26,7 +27,8 @@ $deadline  = tutor_utils()->get_assignment_deadline_date( $assignment_id, $forma
 
     <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
         <div class="text-regular-small tutor-color-text-subsued tutor-mb-10">
-            <?php esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($assignments_submitted[0]->comment_parent); ?>
+            <?php
+            esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($comment_parent); ?>
         </div>
         <div class="text-medium-h6">
             <?php echo get_the_title($assignment_id); ?>
@@ -100,7 +102,7 @@ $deadline  = tutor_utils()->get_assignment_deadline_date( $assignment_id, $forma
                         $not_evaluated             = $given_mark === '';
                         $status                    = 'pending';
                         $button_text               = __('Evaluate', 'tutor');
-                        
+
                         if (!empty($given_mark) || !$not_evaluated) {
                             $status = (int)$given_mark >= (int)$pass_mark ? 'pass' : 'fail';
                             $button_text = __('Details', 'tutor');

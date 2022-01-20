@@ -334,7 +334,7 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
 				<h3>
-					<i class="ttr-angle-down-filled"></i>
+					<i class="ttr-angle-up-filled"></i>
 					<span><?php echo $title; ?></span>
 				</h3>
 			</div>
@@ -718,6 +718,38 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 
 		return date( $require_format, $user_date );
 	}
+}
+
+if ( ! function_exists( '_tutor_search_by_title_only' ) ) {
+	/**
+	 * Search SQL filter for matching against post title only.
+	 *
+	 * @link    http://wordpress.stackexchange.com/a/11826/1685
+	 *
+	 * @param   string      $search
+	 * @param   WP_Query    $wp_query
+	 */
+	function _tutor_search_by_title_only( $search, $wp_query ) {
+		if ( ! empty( $search ) && ! empty( $wp_query->query_vars['search_terms'] ) ) {
+			global $wpdb;
+
+			$q = $wp_query->query_vars;
+			$n = ! empty( $q['exact'] ) ? '' : '%';
+
+			$search = array();
+
+			foreach ( ( array ) $q['search_terms'] as $term )
+				$search[] = $wpdb->prepare( "$wpdb->posts.post_title LIKE %s", $n . $wpdb->esc_like( $term ) . $n );
+
+			if ( ! is_user_logged_in() )
+				$search[] = "$wpdb->posts.post_password = ''";
+
+			$search = ' AND ' . implode( ' AND ', $search );
+		}
+
+		return $search;
+	}
+
 }
 
 if ( ! function_exists( 'pr' ) ) {

@@ -22,36 +22,6 @@
                 <input class="tutor-form-control" type="password" name="previous_password">
             </div>
         </div>
-        
-        <div class="tutor-bs-row">
-            <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
-                <div class="tutor-password-strength-checker">
-                    <div class="tutor-password-field">
-                        <label class="field-label tutor-form-label" for="new-password-1">
-                            <?php esc_html_e('New Password', 'tutor'); ?>
-                        </label>
-                        <div class="field-group">
-                            <input
-                                class="password-checker tutor-form-control"
-                                id="new-password-1"
-                                type="password"
-                                name="new_password"
-                                placeholder="Type Password"
-                            />
-                            <span class="show-hide-btn"></span>
-                        </div>
-                    </div>
-                    <div class="tutor-passowrd-strength-hint">
-                        <div class="indicator">
-                            <span class="weak"></span>
-                            <span class="medium"></span>
-                            <span class="strong"></span>
-                        </div>
-                        <div class="text tutor-text-regular-caption tutor-color-text-hints"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 		<!-- <div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
