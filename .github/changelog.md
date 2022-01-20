@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.9.14 - January 19, 2022
+### 1.9.14 - January 20, 2022
 
 * New: Now you can add Videos using a Shortcode
 * Fix: Issue of HTML codes disappearing after saving a Quiz
