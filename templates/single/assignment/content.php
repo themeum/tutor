@@ -271,7 +271,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			<?php
 		}
 
-		if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now or $time_duration['value'] == 0 ) ) {
+		if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now || $time_duration['value'] == 0 ) ) {
 			?>
 
 			<div class="tutor-assignment-submission tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
@@ -536,6 +536,31 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				</div>
 				<?php } ?>
 
+				<?php
+					/**
+					 * If user not submitted assignment and assignment expired
+					 * then show expire message
+					 *
+					 * @since v2.0.0
+					 */
+					if ( ! $is_submitted && 0 != $time_duration['value'] && ( $now > $remaining_time ) ) : ?>
+						<div class="tutor-mb-40">
+						<?php
+							$alert_template = tutor()->path . 'templates/global/alert.php';
+						if ( file_exists( $alert_template ) ) {
+							tutor_load_template_from_custom_path(
+								$alert_template,
+								array(
+									'alert_class' => 'tutor-alert tutor-danger',
+									'message'     => __( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor_pro' ),
+									'icon'        => ' ttr-cross-circle-outline-filled',
+								)
+							);
+						}
+						?>
+						</div>
+					<?php endif; ?>
+
 				<div class="tutor-assignment-details tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
 					<div class="tutor-ar-body tutor-pt-25 tutor-pb-40 tutor-px-15 tutor-px-md-30">
 						<div class="tutor-ar-header d-flex justify-content-between align-items-center">
@@ -544,7 +569,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							</div>
 							<?php
 								$evaluated = Assignments::is_evaluated( $post_id );
-							if ( ! $evaluated ) :
+							if ( ! $evaluated && ( $remaining_time > $now || $time_duration['value'] == 0 ) ) :
 								?>
 								<div class="tutor-ar-btn">
 								<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">
