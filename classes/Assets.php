@@ -242,7 +242,7 @@ class Assets {
 	{
 
 		// Fonts
-		wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'v2-library/bundle/fonts/lineawesome@1.3.0/css/line-awesome.min.css', array(), TUTOR_VERSION);
+		// wp_enqueue_style('tutor-lineawesome-fonts', tutor()->url . 'v2-library/bundle/fonts/lineawesome@1.3.0/css/line-awesome.min.css', array(), TUTOR_VERSION);
 		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), TUTOR_VERSION);
 		wp_enqueue_style('tutor-inter-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap', array(), TUTOR_VERSION);
 		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css', array(), TUTOR_VERSION);
@@ -408,7 +408,7 @@ class Assets {
 			$screen = function_exists('get_current_screen') ? get_current_screen() : null;
 			$base = ($screen && is_object($screen) && property_exists($screen, 'base')) ? $screen->base : '';
 			$index = strpos($base, 'tutor');
-			
+
 			if($index===0 || $index>0) {
 				$to_add[] = 'tutor-backend';
 
@@ -429,7 +429,7 @@ class Assets {
 		} else {
 			$classes .= implode(' ', $to_add);
 		}
-		
+
 		return $classes;
 	}
 }
