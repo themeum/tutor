@@ -21,7 +21,7 @@ select.tutor-form-select {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-	background-image: url(svgArrow($text-primary));
+	background-image: url(svgArrow($text-hints));
 	outline: none;
 	font-family: inherit;
 	@extend .color-text-primary;
