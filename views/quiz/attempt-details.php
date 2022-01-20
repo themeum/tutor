@@ -24,6 +24,8 @@ function show_correct_answer( $answers= array() ){
     if(!empty($answers)){
 
 		echo '<div class="correct-answer-wrap">';
+
+            $multi_texts = array();
             foreach ($answers as $key => $ans) {
                 $type = isset($ans->answer_view_format) ? $ans->answer_view_format : 'text_image';
 
@@ -48,7 +50,7 @@ function show_correct_answer( $answers= array() ){
 
                     case 'text':
                         if(isset($ans->answer_title)) {
-                            echo '<span class="text-medium-caption tutor-color-text-primary">'
+                            $multi_texts[] = '<span class="text-medium-caption tutor-color-text-primary">'
                                 .stripslashes($ans->answer_title).
                             '</span>';
                         }
@@ -65,6 +67,8 @@ function show_correct_answer( $answers= array() ){
                         echo '</div>';
                         break;
                 }
+                
+                echo count($multi_texts) ? implode(', ', $multi_texts) : '';
 
                 if (isset($ans->answer_two_gap_match)) {
                         echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
@@ -513,8 +517,8 @@ if ( is_array( $attempt_info ) ) {
                                                             $correct_answer = $wpdb->get_results( $wpdb->prepare(
                                                                 "SELECT answer_title, image_id, answer_view_format
                                                                 FROM {$wpdb->prefix}tutor_quiz_question_answers
-                                                                WHERE belongs_question_id = %d AND
-                                                                    AND belongs_question_type='single_choice'
+                                                                WHERE belongs_question_id = %d
+                                                                    AND belongs_question_type='single_choice' AND 
                                                                     is_correct = 1",
                                                                     $answer->question_id
                                                                 ) );
