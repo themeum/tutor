@@ -48,7 +48,17 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							</li>
 						</div>
 						<div class="list-item-title tutor-text-regular-body tutor-mt-18">
-							<span class="tutor-color-text-hints"><?php $complete_count > ( $total_count / 2 ) ? _e( 'You are almost done', 'tutor' ) : _e( 'Please complete profile' ); ?></span>:&nbsp;
+							<?php
+								$profile_complete_text = "Please complete profile";
+								if($complete_count > ( $total_count / 2 ) && $complete_count < $total_count) {
+									$profile_complete_text = 'You are almost done';
+								} else if($complete_count === $total_count) {
+									$profile_complete_text = 'Thanks for completing your profile';
+								}
+								$profile_complete_status = _e($profile_complete_text, 'tutor');
+								
+							?>
+							<span class="tutor-color-text-hints"><?php $profile_complete_status ?></span>:&nbsp;
 							<span class="tutor-color-text-primary">
 								<?php echo $complete_count . '/' . $total_count; ?>
 							</span>

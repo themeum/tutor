@@ -12,217 +12,221 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 }
 ?>
 
-<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts  tutor-mt-45">
-	<thead>
-		<tr>
+<div class="tutor-ui-table-wrapper tutor-my-40">
+	<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
+		<thead>
+			<tr>
+				<?php
+				foreach ( $table_columns as $key => $column ) {
+					echo '<th><div class="text-regular-small tutor-color-text-subsued">' . $column . '</div></th>';
+				}
+				?>
+			</tr>
+		</thead>
+		<tbody>
 			<?php
-			foreach ( $table_columns as $key => $column ) {
-				echo '<th><div class="text-regular-small tutor-color-text-subsued">' . $column . '</div></th>';
-			}
-			?>
-		</tr>
-	</thead>
-	<tbody>
-		<?php
-		if ( is_array( $attempt_list ) && count( $attempt_list ) ) {
-			foreach ( $attempt_list as $attempt ) {
-				$attempt_action    = tutor_utils()->get_tutor_dashboard_page_permalink( 'my-quiz-attempts/attempts-details/?attempt_id=' . $attempt->attempt_id );
-				$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
-				$passing_grade     = (int) tutor_utils()->get_quiz_option( $attempt->quiz_id, 'passing_grade', 0 );
-				$answers           = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
-
-				$correct   = 0;
-				$incorrect = 0;
-				if ( is_array( $answers ) && count( $answers ) > 0 ) {
-					foreach ( $answers as $answer ) {
-						if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-							$correct++;
-						} else {
-							if ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
+			if ( is_array( $attempt_list ) && count( $attempt_list ) ) {
+				foreach ( $attempt_list as $attempt ) {
+					$attempt_action    = tutor_utils()->get_tutor_dashboard_page_permalink( 'my-quiz-attempts/attempts-details/?attempt_id=' . $attempt->attempt_id );
+					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
+					$passing_grade     = (int) tutor_utils()->get_quiz_option( $attempt->quiz_id, 'passing_grade', 0 );
+					$answers           = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
+	
+					$correct   = 0;
+					$incorrect = 0;
+					if ( is_array( $answers ) && count( $answers ) > 0 ) {
+						foreach ( $answers as $answer ) {
+							if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
+								$correct++;
 							} else {
-								$incorrect++;
+								if ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
+								} else {
+									$incorrect++;
+								}
 							}
 						}
 					}
-				}
-				?>
-					<tr>
-					<?php
-					foreach ( $table_columns as $key => $column ) {
-						switch ( $key ) {
-							case 'checkbox':
-								?>
-										<td data-th="<?php _e( 'Mark', 'tutor' ); ?>">
-											<div class="td-checkbox d-flex ">
-												<input id="tutor-admin-list-<?php echo $attempt->attempt_id; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $attempt->attempt_id; ?>" />
-											</div>
-										</td>
-									<?php
-								break;
-
-							case 'date':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<div class="td-statement-info">
-												<span class="text-regular-small tutor-color-text-primary">
-													<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
-												</span>
-											</div>
-										</td>
-									<?php
-								break;
-
-							case 'quiz_info':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<div class="td-statement-info">
-												<span class="tutor-text-regular-small tutor-color-text-primary">
-													<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
-												</span>
-												<div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
-													<div class="tutor-text-medium-body tutor-color-text-primary" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
-														<?php echo get_the_title( $attempt->course_id ); ?>
-													</div>
-													<?php
-													$attempt_user = get_userdata( $attempt->user_id );
-													$user_name    = $attempt_user ? $attempt_user->display_name : '';
-													if ( $context == 'backend-dashboard-students-attempts' ) {
-													?>
-															<div>
-																<span class="tutor-text-regular-small tutor-color-text-title">
-																	<?php _e( 'Student', 'tutor' ); ?>
-																</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
-															</div>
-													<?php
-													} else {
-													?>
-														<?php if(!empty($user_name)) :
-															?>
-															<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
-															<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( isset( $attempt_user->user_email )? $attempt_user->user_email:'' ); ?>">
-																<?php echo esc_attr( isset($attempt_user->display_name) ? $attempt_user->display_name : $user_name ); ?>
-															</span>
-
-														<?php endif;
-													}
-													?>
-												</div>
-												<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
-											</div>
-										</div>
-									</td>
-								<?php
-								break;
-
-							case 'course':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo get_the_title( $attempt->course_id ); ?>
-											</span>
-										</td>
-									<?php
-								break;
-
-							case 'question':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo count( $answers ); ?>
-											</span>
-										</td>
-									<?php
-								break;
-
-							case 'total_marks':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo round($attempt->total_marks); ?>
-											</span>
-										</td>
-									<?php
-								break;
-
-							case 'correct_answer':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo $correct; ?>
-											</span>
-										</td>
-									<?php
-								break;
-
-							case 'incorrect_answer':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo $incorrect; ?>
-											</span>
-										</td>
-									<?php
-								break;
-
-							case 'earned_marks':
-								?>
-										<td data-th="<?php echo $column; ?>">
-											<span class="text-medium-caption tutor-color-text-primary">
-												<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '%)'; ?>
-											</span>
-										</td>
-									<?php
-								break;
-
-							case 'result':
-								?>
-										<td data-th="<?php echo $column; ?>">
-									<?php
-									if ( $attempt->attempt_status === 'review_required' ) {
-										echo '<span class="tutor-badge-label label-warning">' . __( 'Pending', 'tutor' ) . '</span>';
-									} else {
-										echo $earned_percentage >= $passing_grade ?
-											'<span class="tutor-badge-label label-success">' . __( 'Pass', 'tutor' ) . '</span>' :
-											'<span class="tutor-badge-label label-danger">' . __( 'Fail', 'tutor' ) . '</span>';
-									}
+					?>
+						<tr>
+						<?php
+						foreach ( $table_columns as $key => $column ) {
+							switch ( $key ) {
+								case 'checkbox':
 									?>
-										</td>
-										<?php
-								break;
-
-							case 'details':
-								$url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
-								?>
-											<td data-th="See Details">
-												<div class="inline-flex-center td-action-btns">
-													<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
-												<?php
-												if ( $attempt->attempt_status === 'review_required' && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
-													esc_html_e( 'Review', 'tutor' );
-												} else {
-													esc_html_e( 'Details', 'tutor-pro' );
-												}
-												?>
-													</a>
+											<td data-th="<?php _e( 'Mark', 'tutor' ); ?>">
+												<div class="td-checkbox d-flex ">
+													<input id="tutor-admin-list-<?php echo $attempt->attempt_id; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $attempt->attempt_id; ?>" />
 												</div>
 											</td>
 										<?php
-								break;
+									break;
+	
+								case 'date':
+									?>
+											<td data-th="<?php echo $column; ?>">
+												<div class="td-statement-info">
+													<span class="text-regular-small tutor-color-text-primary">
+														<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
+													</span>
+												</div>
+											</td>
+										<?php
+									break;
+	
+								case 'quiz_info':
+									?>
+											<td data-th="<?php echo $column; ?>">
+												<div class="td-statement-info">
+													<span class="tutor-text-regular-small tutor-color-text-primary">
+														<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
+													</span>
+													<div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
+														<div class="tutor-text-medium-body tutor-color-text-primary" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
+															<?php echo get_the_title( $attempt->course_id ); ?>
+														</div>
+														<?php
+														$attempt_user = get_userdata( $attempt->user_id );
+														$user_name    = $attempt_user ? $attempt_user->display_name : '';
+														if ( $context == 'backend-dashboard-students-attempts' ) {
+															$attempt_user = get_userdata( $attempt->user_id );
+															$user_name    = $attempt_user ? $attempt_user->display_name : '';
+	
+														?>
+																<div>
+																	<span class="tutor-text-regular-small tutor-color-text-title">
+																		<?php _e( 'Student', 'tutor' ); ?>
+																	</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
+																</div>
+														<?php
+														} else {
+														?>	
+															<?php if(!empty($user_name) && isset( $attempt->user_email ) ) : ?>
+																<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> 
+																<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( $attempt->user_email ); ?>">
+																	<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
+																</span>
+	
+															<?php endif;
+														}
+														?>
+													</div>
+													<?php do_action( 'tutor_quiz/table/after/course_title', $attempt, $context ); ?>
+												</div>
+											</div>
+										</td>
+									<?php
+									break;
+	
+								case 'course':
+									?>
+											<td data-th="<?php echo $column; ?>">
+												<span class="text-medium-caption tutor-color-text-primary">
+													<?php echo get_the_title( $attempt->course_id ); ?>
+												</span>
+											</td>
+										<?php
+									break;
+	
+								case 'question':
+									?>
+											<td data-th="<?php echo $column; ?>">
+												<span class="text-medium-caption tutor-color-text-primary">
+													<?php echo count( $answers ); ?>
+												</span>
+											</td>
+										<?php
+									break;
+	
+								case 'total_marks':
+									?>
+											<td data-th="<?php echo $column; ?>">
+												<span class="text-medium-caption tutor-color-text-primary">
+													<?php echo round($attempt->total_marks); ?>
+												</span>
+											</td>
+										<?php
+									break;
+	
+								case 'correct_answer':
+									?>
+											<td data-th="<?php echo $column; ?>">
+												<span class="text-medium-caption tutor-color-text-primary">
+													<?php echo $correct; ?>
+												</span>
+											</td>
+										<?php
+									break;
+	
+								case 'incorrect_answer':
+									?>
+											<td data-th="<?php echo $column; ?>">
+												<span class="text-medium-caption tutor-color-text-primary">
+													<?php echo $incorrect; ?>
+												</span>
+											</td>
+										<?php
+									break;
+	
+								case 'earned_marks':
+									?>
+											<td data-th="<?php echo $column; ?>">
+												<span class="text-medium-caption tutor-color-text-primary">
+													<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '%)'; ?>
+												</span>
+											</td>
+										<?php
+									break;
+	
+								case 'result':
+									?>
+											<td data-th="<?php echo $column; ?>">
+										<?php
+										if ( $attempt->attempt_status === 'review_required' ) {
+											echo '<span class="tutor-badge-label label-warning">' . __( 'Pending', 'tutor' ) . '</span>';
+										} else {
+											echo $earned_percentage >= $passing_grade ?
+												'<span class="tutor-badge-label label-success">' . __( 'Pass', 'tutor' ) . '</span>' :
+												'<span class="tutor-badge-label label-danger">' . __( 'Fail', 'tutor' ) . '</span>';
+										}
+										?>
+											</td>
+											<?php
+									break;
+	
+								case 'details':
+									$url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
+									?>
+												<td data-th="See Details">
+													<div class="inline-flex-center td-action-btns">
+														<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+													<?php
+													if ( $attempt->attempt_status === 'review_required' && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
+														esc_html_e( 'Review', 'tutor' );
+													} else {
+														esc_html_e( 'Details', 'tutor-pro' );
+													}
+													?>
+														</a>
+													</div>
+												</td>
+											<?php
+									break;
+							}
 						}
-					}
-					?>
+						?>
+						</tr>
+						<?php
+				}
+			} else {
+				?>
+					<tr>
+						<td colspan="100%" class="column-empty-state">
+							<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+						</td>
 					</tr>
 					<?php
 			}
-		} else {
 			?>
-				<tr>
-					<td colspan="100%" class="column-empty-state">
-						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-					</td>
-				</tr>
-				<?php
-		}
-		?>
-	</tbody>
-</table>
+		</tbody>
+	</table>
+</div>

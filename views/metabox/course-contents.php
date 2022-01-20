@@ -32,7 +32,7 @@
         <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
             <div class="tutor-topics-top">
                 <div class="tutor-topic-title">
-                    <i class="ttr-humnurger-filled tutor-icon-24 course-move-handle"></i>
+                    <span class="ttr-humnurger-filled tutor-icon-24 course-move-handle"></span>
                     <span class="topic-inner-title tutor-text-bold-body tutor-color-text-primary"><?php echo stripslashes($topic->post_title); ?></span>
                     <span class="tutor-topic-inline-edit-btn tutor-topic-btn-hover tutor-font-size-24">
                         <i class="color-text-hints ttr-edit-filled tutor-icon-24" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>
@@ -41,7 +41,7 @@
                         <i class="color-text-hints ttr-delete-stroke-filled tutor-icon-24"></i>
                     </span>
                     <span class="expand-collapse-wrap tutor-topic-btn-hover tutor-font-size-24">
-                        <i class="color-text-brand ttr-angle-down-filled tutor-icon-26"></i>
+                        <i class="color-text-brand pops ttr-angle-down-filled tutor-icon-26"></i>
                     </span>
                 </div>
                 <?php 
@@ -97,7 +97,7 @@
                                     <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?> 
                                     </a>
-                                    <div>
+                                    <div class="tutor-course-content-top-right-action">
                                         <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                             <span class="color-text-hints ttr-edit-filled tutor-font-size-24"></span>
                                         </a>
@@ -113,11 +113,11 @@
 							?>
                             <div id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
                                 <div class="tutor-course-content-top">
-                                    <span class="color-text-hints ttr-humnurger-filled tutor-font-size-24 tutor-pr-10"></span>
+                                    <span class="color-text-hints ttr-humnurger-filled tutor-font-size-24 tutor-pr-6"></span>
                                     <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                         <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?> 
                                     </a>
-                                    <div>
+                                    <div class="tutor-course-content-top-right-action">
                                         <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                             <span class="color-text-hints ttr-edit-filled tutor-font-size-24"></span>
                                         </a>

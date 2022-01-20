@@ -171,7 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						if (success) {
 							// Disableing save btn after saved successfully
-							document.getElementById('save_tutor_option').disabled = true;
+							if(document.getElementById('save_tutor_option')){
+								document.getElementById('save_tutor_option').disabled = true;
+							}
 							tutor_toast('Success!', __('Settings Saved', 'tutor'), 'success');
 							return;
 						}
@@ -355,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 
-	var exporter = document.querySelector('#export_settings');
+	/* var exporter = document.querySelector('#export_settings');
 	!exporter
 		? 0
 		: exporter.addEventListener('click', (e) => {
@@ -385,5 +387,5 @@ document.addEventListener('DOMContentLoaded', function() {
 						document.body.removeChild(element);
 					})
 					.catch((err) => console.log(err));
-		  });
+		  }); */
 });
