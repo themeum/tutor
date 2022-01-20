@@ -75,9 +75,9 @@
                             </button>
                         </div>
                         <div class="tutor-bs-col">
-                            <buttn class="tutor-btn quiz-modal-question-save-btn">
+                            <button class="tutor-btn quiz-modal-question-save-btn">
                                 <?php _e('Add To Questions', 'tutor'); ?>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -1,9 +1,9 @@
 <?php
 namespace TUTOR;
 
-
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 class Quiz_Attempts_List {
 
@@ -230,12 +230,12 @@ class Quiz_Attempts_List {
 		return false === $update ? false : true;
 	}
 
-	function column_default($item, $column_name){
-		switch($column_name){
+	function column_default( $item, $column_name ) {
+		switch ( $column_name ) {
 			case 'unknown_col':
 				return $item->$column_name;
 			default:
-				//return print_r($item,true); //Show the whole array for troubleshooting purposes
+				// return print_r($item,true); //Show the whole array for troubleshooting purposes
 		}
 	}
 
@@ -243,8 +243,8 @@ class Quiz_Attempts_List {
 		/*
 		$actions = array();
 
-		$actions['answer'] = sprintf('<a href="?page=%s&sub_page=%s&attempt_id=%s">'.__('Review', 'tutor').'</a>',$_REQUEST['page'],'view_attempt',$item->attempt_id);
-		//$actions['delete'] = sprintf('<a href="?page=%s&action=%s&attempt_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->attempt_id);
+		$actions['answer'] = sprintf( '<a href="?page=%s&sub_page=%s&attempt_id=%s">' . __( 'Review', 'tutor' ) . '</a>', sanitize_text_field( $_REQUEST['page'] ), 'view_attempt', $item->attempt_id );
+		// $actions['delete'] = sprintf('<a href="?page=%s&action=%s&attempt_id=%s">Delete</a>',$_REQUEST['page'],'delete',$item->attempt_id);
 
 		$quiz_title = "<p><strong>{$item->display_name}</strong></p>";
 		$quiz_title .= "<p>{$item->user_email}</p>";
@@ -255,8 +255,9 @@ class Quiz_Attempts_List {
 			$quiz_title .= "<span>{$attempt_started_at}</span>";
 		}
 
-		//Return the title contents
-		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
+		// Return the title contents
+		return sprintf(
+			'%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
 			$quiz_title,
 			$item->attempt_id,
 			$this->row_actions($actions)
@@ -280,24 +281,24 @@ class Quiz_Attempts_List {
 		return $item->post_title;
 	}
 
-	function column_cb($item){
+	function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("instructor")
-			/*$2%s*/ $item->attempt_id                //The value of the checkbox should be the record's id
+			/*$1%s*/ $this->_args['singular'],  // Let's simply repurpose the table's singular label ("instructor")
+			/*$2%s*/ $item->attempt_id                // The value of the checkbox should be the record's id
 		);
 	}
 
-	function column_course($item) {
-		$quiz = tutor_utils()->get_course_by_quiz($item->quiz_id);
+	function column_course( $item ) {
+		$quiz = tutor_utils()->get_course_by_quiz( $item->quiz_id );
 
-		if ($quiz) {
+		if ( $quiz ) {
 			$title = get_the_title( $quiz->ID );
-			return "<a href='" . admin_url( "post.php?post={$quiz->ID}&action=edit" ) . "'>{$title}</a>";
+			return '<a href="' . admin_url( "post.php?post={$quiz->ID}&action=edit" ) . '">' . $title . '</a>';
 		}
 	}
 
-	function column_total_questions($item) {
+	function column_total_questions( $item ) {
 		echo $item->total_questions;
 	}
 
@@ -307,22 +308,22 @@ class Quiz_Attempts_List {
 
 	function column_full_result($item){
 
-	    if ($item->attempt_status === 'review_required'){
-            $output = '<span class="result-review-required">' . __('Under Review', 'tutor') . '</span>';
-        }else {
+		if ( $item->attempt_status === 'review_required' ) {
+			$output = ' <span class="result-review-required">' . __( 'Under Review', 'tutor' ) . '</span>';
+		} else {
 
-            $pass_mark_percent = tutor_utils()->get_quiz_option($item->quiz_id, 'passing_grade', 0);
-            $earned_percentage = $item->earned_marks > 0 ? (number_format(($item->earned_marks * 100) / $item->total_marks)) : 0;
+			$pass_mark_percent = tutor_utils()->get_quiz_option( $item->quiz_id, 'passing_grade', 0 );
+			$earned_percentage = $item->earned_marks > 0 ? ( number_format( ( $item->earned_marks * 100 ) / $item->total_marks ) ) : 0;
 
-            $output = $item->earned_marks .__( ' out of ', 'tutor' ). " {$item->total_marks} <br />";
-            $output .= "({$earned_percentage}%) ".__( ' pass ', 'tutor' )." ({$pass_mark_percent}%) <br />";
+			$output  = $item->earned_marks . __( ' out of ', 'tutor' ) . $item->total_marks . '<br/>';
+			$output .= '(' . $earned_percentage . '%)' . __( ' pass ', 'tutor' ) . '(' . $pass_mark_percent . ' %)<br/>';
 
-            if ($earned_percentage >= $pass_mark_percent) {
-                $output .= '<span class="result-pass">' . __('Pass', 'tutor') . '</span>';
-            } else {
-                $output .= '<span class="result-fail">' . __('Fail', 'tutor') . '</span>';
-            }
-        }
+			if ( $earned_percentage >= $pass_mark_percent ) {
+				$output .= '<span class="result-pass"> ' . __( 'Pass', 'tutor' ) . '</span>';
+			} else {
+				$output .= '<span class="result-fail"> ' . __( 'Fail', 'tutor' ) . '</span>';
+			}
+		}
 		return $output;
 	}
 
@@ -366,29 +367,29 @@ class Quiz_Attempts_List {
 				</span>";
 	}
 
-	function get_columns(){
+	function get_columns() {
 		$columns = array(
-			'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
-			'student'           => __('Students', 'tutor'),
-			'quiz'              => __('Quiz', 'tutor'),
-			'course'            => __('Course', 'tutor'),
-			'total_questions'   => __('Total Questions', 'tutor'),
-			'earned_marks'      => __('Earned Points', 'tutor'),
-			//'attempt_status'      => __('Attempt Status', 'tutor'),
+			'cb'              => '<input type="checkbox"/> ', // Render a checkbox instead of text
+			'student'         => __( 'Students', 'tutor' ),
+			'quiz'            => __( 'Quiz', 'tutor' ),
+			'course'          => __( 'Course', 'tutor' ),
+			'total_questions' => __( 'Total Questions', 'tutor' ),
+			'earned_marks'    => __( 'Earned Points', 'tutor' ),
+			// 'attempt_status'      => __('Attempt Status', 'tutor'),
 		);
 		return $columns;
 	}
 
 	function get_sortable_columns() {
 		$sortable_columns = array(
-			//'display_name'     => array('title',false),     //true means it's already sorted
+			// 'display_name'     => array('title',false),     //true means it's already sorted
 		);
 		return $sortable_columns;
 	}
 
 	function get_bulk_actions() {
 		$actions = array(
-			'delete'    => 'Delete'
+			'delete' => 'Delete',
 		);
 		return $actions;
 	}
@@ -396,13 +397,13 @@ class Quiz_Attempts_List {
 	function process_bulk_action() {
 		global $wpdb;
 
-		//Detect when a bulk action is being triggered...
-		if( 'delete' === $this->current_action() ) {
-			if ( empty($_GET['attempt']) || ! is_array($_GET['attempt'])){
+		// Detect when a bulk action is being triggered...
+		if ( 'delete' === $this->current_action() ) {
+			if ( empty( $_GET['attempt'] ) || ! is_array( $_GET['attempt'] ) ) {
 				return;
 			}
 
-			$attempt_ids = array_map('sanitize_text_field', $_GET['attempt']);
+			$attempt_ids = array_map( 'sanitize_text_field', $_GET['attempt'] );
 			$attempt_ids = array_map( 'absint', $attempt_ids );
 
 			tutor_utils()->delete_quiz_attempt( $attempt_ids );

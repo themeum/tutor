@@ -14,8 +14,8 @@
 get_tutor_header();
 
 global $post;
-$currentPost = $post;
-$enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
+$currentPost           = $post;
+$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 
 ?>
 
@@ -32,5 +32,9 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
         </div>
     </div>
 <?php do_action('tutor_assignment/single/after/wrap');
+
+	</div>
+<?php
+do_action( 'tutor_assignment/single/after/wrap' );
 
 get_tutor_footer();

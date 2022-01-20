@@ -13,7 +13,7 @@
 
 
 
-do_action('tutor_course/single/enrolled/before/instructors');
+do_action( 'tutor_course/single/enrolled/before/instructors' );
 
 $instructors = tutor_utils()->get_instructors_by_course();
 
@@ -75,4 +75,4 @@ if($instructors && count($instructors)) {
 	<?php
 }
 
-do_action('tutor_course/single/enrolled/after/instructors');
+do_action( 'tutor_course/single/enrolled/after/instructors' );

@@ -104,7 +104,7 @@ class Taxonomies{
 				<div class="form-field term-thumbnail-wrap">
 					<div id="course-category_thumbnail" style="float: left; margin-right: 10px;"><img src="<?php echo esc_url( $image ); ?>" width="60px" height="60px" /></div>
 					<div style="line-height: 60px;">
-						<input type="hidden" id="course-category_thumbnail_id" name="course_category_thumbnail_id" value="<?php echo esc_attr( $thumbnail_id ); ?>" />
+						<input type="hidden" id="course-category_thumbnail_id" name="course_category_thumbnail_id" value="<?php echo $thumbnail_id; ?>" />
 						<button type="button" class="upload_image_button button"><?php esc_html_e( 'Upload/Add image', 'tutor' ); ?></button>
 						<button type="button" class="remove_image_button button"><?php esc_html_e( 'Remove image', 'tutor' ); ?></button>
 					</div>
@@ -210,10 +210,10 @@ class Taxonomies{
 
 			// Prevent esc_url from breaking spaces in urls for image embeds. Ref: https://core.trac.wordpress.org/ticket/23605 .
 			$image    = str_replace( ' ', '%20', $image );
-			$columns .= '<img src="' . esc_url( $image ) . '" alt="' . esc_attr__( 'Thumbnail', 'tutor' ) . '" class="wp-post-image" height="48" width="48" />';
+			$columns .= '<img src="' . esc_url( $image ) . '" alt="' . __( 'Thumbnail', 'tutor' ) . '" class="wp-post-image" height="48" width="48" />';
 		}
 		if ( 'handle' === $column ) {
-			$columns .= '<input type="hidden" name="term_id" value="' . esc_attr( $id ) . '" />';
+			$columns .= '<input type="hidden" name="term_id" value="' . $id . '" />';
 		}
 		return $columns;
 	}

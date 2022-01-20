@@ -1743,7 +1743,7 @@ class Utils {
 		}
 
 		if ( $echo ) {
-			echo $tutor_lesson_type_icon;
+			echo tutor_kses_html( $tutor_lesson_type_icon );
 		}
 
 		return $tutor_lesson_type_icon;
@@ -1858,10 +1858,11 @@ class Utils {
 			if ( $video && $this->array_get( 'source', $video ) !== '-1' ) {
 
 				$not_empty = ! empty( $video['source_video_id'] ) ||
-					! empty( $video['source_external_url'] ) ||
-					! empty( $video['source_youtube'] ) ||
-					! empty( $video['source_vimeo'] ) ||
-					! empty( $video['source_embedded'] );
+							! empty( $video['source_external_url'] ) ||
+							! empty( $video['source_youtube'] ) ||
+							! empty( $video['source_vimeo'] ) ||
+							! empty( $video['source_embedded'] ) || 
+							! empty( $video['source_shortcode'] );
 
 				return $not_empty ? $video : false;
 			}
@@ -2787,9 +2788,10 @@ class Utils {
 	 * @since v.1.0.0
 	 * @updated v.1.4.2
 	 */
-	public function input_old( $input = '', $old_data = null ) {
-		if ( ! $old_data ) {
-			$old_data = $_REQUEST;
+	public function input_old($input = '', $old_data = null)
+	{
+		if (!$old_data) {
+			$old_data = tutor_sanitize_data($_REQUEST);
 		}
 		$value = $this->avalue_dot( $input, $old_data );
 		if ( $value ) {
@@ -2970,9 +2972,9 @@ class Utils {
 			$status = ' AND inst_status.meta_value IN (' . implode( ',', $status ) . ')';
 		}
 
-		$cat_ids     = array_filter(
-			$cat_ids = array(),
-			function ( $id ) {
+		$cat_ids = array_filter(
+			$cat_ids,
+			function( $id ) {
 				return is_numeric( $id );
 			}
 		);
@@ -3436,12 +3438,12 @@ class Utils {
 			}
 		}
 
-		$output .= "<div class='tutor-rating-gen-input'><input type='hidden' name='tutor_rating_gen_input' value='{$current_rating}' /> </div>";
+		$output .= '<div class="tutor-rating-gen-input"><input type="hidden" name="tutor_rating_gen_input" value="' . $current_rating . '" /></div>';
 
 		$output .= '</div>';
 
 		if ( $echo ) {
-			echo $output;
+			echo tutor_kses_html( $output );
 		}
 
 		return $output;
@@ -3552,7 +3554,7 @@ class Utils {
 		$initial_avatar = strtoupper( $first_char . $second_char );
 
 		$bg_color       = '#' . substr( md5( $initial_avatar ), 0, 6 );
-		$initial_avatar = "<span class='tutor-text-avatar' style='background-color: {$bg_color}; color: #fff8e5'>{$initial_avatar}</span>";
+		$initial_avatar = '<span class="tutor-text-avatar" style="background-color: ' . $bg_color . '; color: #fff8e5">' . $initial_avatar . '</span>';
 
 		return $initial_avatar;
 	}
@@ -6584,7 +6586,7 @@ class Utils {
 		$status      = str_replace( 'wc-', '', $status );
 		$status_name = ucwords( str_replace( '-', ' ', $status ) );
 
-		return "<span class='label-order-status label-status-{$status}'>$status_name</span>";
+		return '<span class="label-order-status label-status-' . $status . '">' . $status_name . '</span>';
 	}
 
 	/**
@@ -9286,5 +9288,25 @@ class Utils {
 	public function get_attachment_file_size( int $attachment_id ): int {
 		$size = size_format( filesize( get_attached_file( $attachment_id ) ), 2 );
 		return (int) $size;
+	}
+
+	public function get_video_sources(bool $key_title_only) {
+
+		$video_sources  = array(
+			'html5'     	=> array('title' => __('HTML 5 (mp4)', 'tutor'), 'icon' => 'html5'),
+			'external_url'  => array('title' => __('External URL', 'tutor'), 'icon' => 'link'),
+			'youtube'   	=> array('title' => __('Youtube', 'tutor'), 'icon' => 'youtube'),
+			'vimeo'     	=> array('title' => __('Vimeo', 'tutor'), 'icon' => 'vimeo'),
+			'embedded'  	=> array('title' => __('Embedded', 'tutor'), 'icon' => 'code'),
+			'shortcode' 	=> array('title' => __('Shortcode', 'tutor'), 'icon' => 'code'),
+		);
+
+		if($key_title_only) {
+			foreach($video_sources as $key=>$data) {
+				$video_sources[$key] = $data['title'];
+			}
+		}
+
+		return $video_sources;
 	}
 }
