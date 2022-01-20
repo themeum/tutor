@@ -53,7 +53,7 @@
             </div>
         </div>
 
-		<div class="tutor-bs-row">
+		<!-- <div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
 				<div class="tutor-password-strength-checker">
 					<div class="tutor-password-field">
@@ -81,7 +81,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 
 		<div class="tutor-bs-row">
