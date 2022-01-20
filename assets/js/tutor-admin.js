@@ -1836,6 +1836,29 @@ var export_settings_all = function export_settings_all() {
 
   if (export_settings) {
     export_settings.onclick = function (e) {
+      var formData = new FormData();
+      formData.append("action", "tutor_export_settings");
+      formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", _tutorobject.ajaxurl, true);
+      xhttp.send(formData);
+
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4) {
+          console.log(JSON.parse(xhttp.response));
+          var fileName = "tutor_options_" + time_now();
+          json_download(xhttp.response, fileName);
+        }
+      };
+    };
+  }
+};
+
+var export_settings_all_X = function export_settings_all_X() {
+  var export_settings = selectorElement("#export_settings"); //document.querySelector("#export_settings");
+
+  if (export_settings) {
+    export_settings.onclick = function (e) {
       if (!e.detail || e.detail == 1) {
         e.preventDefault();
         fetch(_tutorobject.ajaxurl, {
@@ -1923,7 +1946,7 @@ var import_history_data_xhttp = function import_history_data_xhttp(modalOpener, 
   fr.readAsText(files.item(0));
 
   fr.onload = function (e) {
-    var tutor_options = JSON.stringify(e.target.result);
+    var tutor_options = e.target.result;
     var formData = new FormData();
     formData.append("action", "tutor_import_settings");
     formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
@@ -2170,61 +2193,63 @@ readyState_complete(function () {
   if (null !== loadNavItem) {
     document.title = loadNavItem.querySelector('.nav-label').innerText + ' ‹ ' + _tutorobject.site_title;
   }
-});
-addBodyClass(window.location);
-navTabLists.forEach(function (list) {
-  list.addEventListener('click', function (e) {
-    var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
-    var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
 
-    if (dataTab) {
-      // Set page title on changing nav tabs
-      document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title; // remove active from other buttons
+  navTabLists.forEach(function (list) {
+    list.addEventListener('click', function (e) {
+      var dataTab = e.target.parentElement.dataset.tab || e.target.dataset.tab;
+      var pageSlug = e.target.parentElement.dataset.page || e.target.dataset.page;
 
-      navTabItems.forEach(function (item) {
-        item.classList.remove('active');
-        document.body.classList.remove(item.dataset.tab);
+      if (dataTab) {
+        // Set page title on changing nav tabs
+        document.title = e.target.innerText + ' ‹ ' + _tutorobject.site_title; // remove active from other buttons
 
-        if (e.target.dataset.tab) {
-          document.body.classList.add(e.target.dataset.tab);
-          e.target.classList.add('active');
-        } else {
-          e.target.parentElement.classList.add('active');
-        }
-      }); // hide other tab contents
+        navTabItems.forEach(function (item) {
+          item.classList.remove('active');
+          document.body.classList.remove(item.dataset.tab);
 
-      navPages.forEach(function (content) {
-        content.classList.remove('active');
-      }); // add active to the current content
-
-      var currentContent = document.querySelector("#".concat(dataTab));
-      currentContent.classList.add('active'); // History push
-
-      var url = new URL(window.location);
-      var params = new URLSearchParams({
-        page: pageSlug,
-        tab_page: dataTab
-      });
-      var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());
-      window.history.pushState({}, '', pushUrl);
-      addBodyClass(window.location);
-      var loadingSpinner = document.getElementById(dataTab).querySelector('.loading-spinner');
-
-      if (loadingSpinner) {
-        document.getElementById(dataTab).querySelector('.loading-spinner').remove();
-      } //enable if tinymce content changed
-
-
-      if (null !== tinymce && typeof tinymce !== 'undefined') {
-        tinymce.activeEditor.on("change", function (e) {
-          if (document.getElementById('save_tutor_option')) {
-            document.getElementById('save_tutor_option').disabled = false;
+          if (e.target.dataset.tab) {
+            document.body.classList.add(e.target.dataset.tab);
+            e.target.classList.add('active');
+          } else {
+            e.target.parentElement.classList.add('active');
           }
+        }); // hide other tab contents
+
+        navPages.forEach(function (content) {
+          content.classList.remove('active');
+        }); // add active to the current content
+
+        var currentContent = document.querySelector("#".concat(dataTab));
+        currentContent.classList.add('active'); // History push
+
+        var url = new URL(window.location);
+        var params = new URLSearchParams({
+          page: pageSlug,
+          tab_page: dataTab
         });
+        var pushUrl = "".concat(url.origin + url.pathname, "?").concat(params.toString());
+        window.history.pushState({}, '', pushUrl);
+        addBodyClass(window.location);
+        var loadingSpinner = document.getElementById(dataTab).querySelector('.loading-spinner');
+
+        if (loadingSpinner) {
+          document.getElementById(dataTab).querySelector('.loading-spinner').remove();
+        }
+
+        console.log(typeof tinyMCE != "undefined"); //enable if tinymce content changed
+
+        if (tinymce && 'undefined' !== typeof tinymce && null !== tinymce) {
+          tinymce.activeEditor.on("change", function (e) {
+            if (document.getElementById('save_tutor_option')) {
+              document.getElementById('save_tutor_option').disabled = false;
+            }
+          });
+        }
       }
-    }
+    });
   });
 });
+addBodyClass(window.location);
 
 /***/ }),
 
@@ -2364,7 +2389,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var inputEmailFields = document.querySelectorAll('[type="email"]');
   var inputNumberFields = document.querySelectorAll('[type="number"]');
-  checkEmailFields(inputEmailFields);
+
+  if (0 !== inputEmailFields.length) {
+    checkEmailFields(inputEmailFields);
+  } else {
+    formSubmit = true;
+  }
+
   $('#save_tutor_option').click(function (e) {
     e.preventDefault();
     $('#tutor-option-form').submit();
@@ -2373,15 +2404,17 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     var button = $('#save_tutor_option');
     var $form = $(this);
-    var data = $form.serializeObject();
+    var data = $form.serializeObject(); // if (typeof inputNumberFields !== 'undefined') {
 
-    if (typeof inputNumberFields !== 'undefined') {
+    if (0 !== inputNumberFields.length) {
       checkNumberFieldsOnSubmit(inputNumberFields);
-    }
+    } // if (typeof inputEmailFields !== 'undefined') {
 
-    if (typeof inputEmailFields !== 'undefined') {
+
+    if (0 !== inputEmailFields.length) {
       checkEmailFieldsOnSubmit(inputEmailFields);
-    }
+    } // console.log(formSubmit);
+
 
     if (true === formSubmit) {
       if (!e.detail || e.detail == 1) {
