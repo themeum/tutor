@@ -10,8 +10,9 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 global $previous_id;
 global $next_id;
@@ -36,7 +37,7 @@ if ( preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\
     }
 }
 
-do_action('tutor_lesson/single/before/video/vimeo');
+do_action( 'tutor_lesson/single/before/video/vimeo' );
 ?>
 
 <?php if($video_id ): ?>

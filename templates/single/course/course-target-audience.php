@@ -12,15 +12,15 @@
  */
 
 
-do_action('tutor_course/single/before/audience');
+do_action( 'tutor_course/single/before/audience' );
 
 $target_audience = tutor_course_target_audience();
 
-if ( empty($target_audience)){
+if ( empty( $target_audience ) ) {
 	return;
 }
 
-if (is_array($target_audience) && count($target_audience)){
+if ( is_array( $target_audience ) && count( $target_audience ) ) {
 	?>
 
 	<div class="tutor-course-details-widget tutor-mt-40">
@@ -40,5 +40,4 @@ if (is_array($target_audience) && count($target_audience)){
 
 <?php } ?>
 
-<?php do_action('tutor_course/single/after/audience'); ?>
-
+<?php do_action( 'tutor_course/single/after/audience' ); ?>
