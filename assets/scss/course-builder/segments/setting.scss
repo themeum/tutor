@@ -2,7 +2,9 @@
 .select2-container .select2-search__field {
     padding: 12px 3px 8px 6px !important;
 }
-
+.tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover {
+    opacity: 1;
+}
 #wpcontent,
 #tutor-frontend-course-builder {
     .tutor-certificate-template {
@@ -12,11 +14,76 @@
             }
         }
     }
+    .tutor-modal { 
+        .tutor-modal-footer {
+            button[data-tutor-modal-close],
+            button[data-action="back"] {
+                color: #757C8E;
+                background: #E3E6EB;
+                border: 1px solid #E3E6EB;
+                &:hover {
+                    border-color: transparent;
+                    background: #d7dbe1;
+                    color: #656c7c;
+                }
+            }
+        }
+        .tutor-delete-attachment.tutor-icon-line-cross {
+            margin-left: 5px;
+        }
+        .date-range-input i.tutor-icon-clock,
+        .date-range-input i.tutor-icon-lock {
+            font-size: 18px;
+            position: absolute;
+            right: 10px;
+            top: 14px;
+        }
+        .tutorUploadAttachmentBtn {
+            margin-top: 0px;
+        }
+        .tutor-quiz-answer {
+            align-items: center;
+        }
+        i.tutor-icon-block.tutor-icon-plus-square-button,
+        i.tutor-icon-block.tutor-icon-plus {
+            background-color: #3e64de;
+        }
+        .tutor-select-options {
+            padding: 23px 10px 9px;
+            p {
+                margin-bottom: 15px;
+            }
+        }
+        .add_question_answers_option {
+            i {
+                margin-right: 8px;
+            }
+        }
+    }
+    .btn-csv-download svg {
+        fill: #757c8e;
+        top: -2px;
+        width: 16px;
+        height: 16px;
+    }
+    .tutorUploadAttachmentBtn {
+        margin-top: 15px;
+    }
+    .tutor-course-content-top {
+        .ttr-humnurger-filled {
+            color: rgba(117, 124, 142, 0.63) !important;
+            margin-top: 2px;
+        }
+    }
     .tutor-btn {
         font-family: 'Inter', sans-serif;
-        padding: 7px 20px;
         font-size: 15px;
         line-height: 24px;
+    }
+    .tutor-add-instructor-btn,
+    .tutorUploadAttachmentBtn,
+    .create_new_topic_btn {
+        padding: 7px 20px;
     }
     .tutor-form-toggle .tutor-form-toggle-control {
         margin: 0 10px 0px 0px !important;
@@ -112,6 +179,9 @@
         .select-header {
             align-items: center;
         }
+        .tutor-quiz-item .tutor-quiz-item-label .tutor-quiz-item-draggable {
+            padding: 0 5px 0 14px;
+        }
     }
     .tutor_assignment_modal_form {
         .tutor-form-select {
@@ -166,6 +236,9 @@
                     // display: block;
                     align-self: flex-start;
                     padding-top: 15px;
+                }
+                span.ttr-humnurger-filled.course-move-handle {
+                    margin-right: 0 !important;
                 }
                 .topic-inner-title {
                     // align-self: center;
@@ -320,6 +393,9 @@
     }
 }
 #tutor-frontend-course-builder {
+    p {
+        margin-bottom: 0px;
+    }
     .filesize {
         margin-top: -8px;
     }

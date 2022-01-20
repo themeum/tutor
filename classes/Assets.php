@@ -66,6 +66,9 @@ class Assets
 		$base_path = (is_array($parsed) && isset($parsed['path'])) ? $parsed['path'] : '/';
 		$base_path = rtrim($base_path, '/') . '/';
 
+		$post_id   = get_the_ID();
+		$post_type = get_post_type( $post_id );
+
 		return array(
 			'ajaxurl'                      => admin_url('admin-ajax.php'),
 			'home_url'                     => get_home_url(),
@@ -84,7 +87,8 @@ class Assets
 			'is_admin_bar_showing'         => is_admin_bar_showing(),
 			'addons_data'                  => tutor_utils()->prepare_free_addons_data(),
 			'content_change_event'         => 'tutor_content_changed_event',
-			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) || isset( $_GET['post_type'] ) && 'courses' === $_GET['post_type'] ? true : false
+			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) || isset( $_GET['post_type'] ) && 'courses' === $_GET['post_type'] ? true : false,
+			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 		);
 	}
 

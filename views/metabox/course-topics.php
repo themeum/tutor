@@ -7,7 +7,7 @@
     </div>
 
     <div class="new-topic-btn-wrap">
-        <button data-tutor-modal-target="tutor-modal-add-topic" class="create_new_topic_btn tutor-btn tutor-btn-md bordered-btn"> 
+        <button data-tutor-modal-target="tutor-modal-add-topic" class="tutor-mt-15 create_new_topic_btn tutor-btn tutor-btn-md bordered-btn"> 
             <i class="ttr-plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php _e('Add new topic', 'tutor'); ?>
         </button>
     </div>
@@ -75,7 +75,7 @@
                             </button>
                         </div>
                         <div class="tutor-bs-col">
-                            <buttn class="tutor-btn tutor-is-xs quiz-modal-question-save-btn">
+                            <buttn class="tutor-btn quiz-modal-question-save-btn">
                                 <?php _e('Add To Questions', 'tutor'); ?>
                             </a>
                         </div>

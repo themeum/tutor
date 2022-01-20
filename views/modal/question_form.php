@@ -5,8 +5,9 @@ $settings = maybe_unserialize($question->question_settings);
 
 <div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>">
     <div class="question-form-header">
-        <a href="javascript:;" class="back-to-quiz-questions-btn" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id; ?>">
-            <i class="tutor-icon-next-2"></i> <?php _e('Back', 'tutor'); ?>
+        <a href="javascript:;" class="back-to-quiz-questions-btn tutor-bs-d-flex tutor-bs-align-items-center" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id; ?>">
+            <span class="tutor-icon-next-2 tutor-color-design-dark ttr-previous-line" style="font-size: 30px; margin-right: 5px;"></span> 
+            <span class="tutro-text-regular-caption tutor-color-text-primary" style="font-weight: 400;"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>
     <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>"/>
@@ -15,7 +16,7 @@ $settings = maybe_unserialize($question->question_settings);
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Write your question here', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
-            <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" class="tutor-form-control tutor-mb-10" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($question->question_title) ); ?>">
+            <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" class="tutor-form-control" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($question->question_title) ); ?>">
         </div>
     </div>
 
@@ -24,7 +25,7 @@ $settings = maybe_unserialize($question->question_settings);
         <label class="tutor-form-label"><?php _e('Select your question type', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
             <div class="tutor-bs-row tutor-bs-align-items-center">
-                <div class="tutor-bs-col-12 tutor-bs-col-md-4">
+                <div class="tutor-bs-col-12 tutor-bs-col-md-12">
                     <div class="question-type-select">
                         <?php 
                             $question_types = tutor_utils()->get_question_types(); 
@@ -59,15 +60,15 @@ $settings = maybe_unserialize($question->question_settings);
                         </div>
                     </div>
                 </div>
-                <div class="tutor-bs-col-12 tutor-bs-col-md-8">
+                <div class="tutor-bs-col-12 tutor-bs-col-md-12 tutor-mt-20">
                     <div class="tutor-bs-row tutor-bs-align-items-center">
-                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-6 tutor-mt-4 tutor-mb-4">
+                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-4 tutor-mt-4 tutor-mb-4">
                             <label class="tutor-form-toggle tutor-text-nowrap">
                                 <input type="checkbox" class="tutor-form-toggle-input"  value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][answer_required]" <?php checked('1', tutor_utils()->avalue_dot('answer_required', $settings)); ?> />
                                 <span class="tutor-form-toggle-control"></span> <?php _e('Answer Required', 'tutor'); ?>
                             </label>
                         </div>
-                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-6 tutor-mt-4 tutor-mb-4">
+                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-4 tutor-mt-4 tutor-mb-4">
                             <label class="tutor-form-toggle tutor-text-nowrap">
                                 <input type="checkbox" class="tutor-form-toggle-input" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][randomize_question]" <?php checked('1', tutor_utils()->avalue_dot('randomize_question', $settings)); ?> />
                                 <span class="tutor-form-toggle-control"></span> <?php _e('Randomize', 'tutor'); ?>

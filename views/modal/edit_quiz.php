@@ -24,7 +24,7 @@
             foreach ($questions as $question) {
                 $id_target = 'quiz-popup-menu-' . $question->question_id;
                 ?>
-                <div class="tutor-quiz-item tutor-mb-15 quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
+                <div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
                     <div class="tutor-quiz-item-label">
                         <span class="tutor-quiz-item-draggable ttr-drag-line tutor-icon-24 question-sorting"></span>
                         <h6 class="tutor-quiz-item-name">
@@ -76,7 +76,7 @@
 <div id="quiz-builder-tab-settings" class="quiz-builder-tab-container">
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Time Limit', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group">
             <div class="tutor-bs-row tutor-bs-align-items-center">
                 <div class="tutor-bs-col-sm-4 tutor-bs-col-md-3">
                     <input type="number" class="tutor-form-control" min="0" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
@@ -106,7 +106,7 @@
 
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Quiz Feedback Mode', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group">
             <div class="text-regular-small tutor-color-text-hints tutor-mb-10">
                 (<?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>)
             </div>
@@ -139,7 +139,7 @@
     
     <div class="tutor-mb-30 tutor-quiz-slider">
         <label class="tutor-form-label"><?php _e('Attempts Allowed', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group">
             <?php
                 $default_attempts_allowed = tutor_utils()->get_option('quiz_attempts_allowed');
                 $attempts_allowed = (int) tutor_utils()->get_quiz_option($quiz_id, 'attempts_allowed', $default_attempts_allowed);
@@ -157,8 +157,8 @@
 
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Passing Grade (%)', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
-            <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
+        <div class="tutor-input-group">
+            <input type="number" class="tutor-form-control" name="quiz_option[passing_grade]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'passing_grade', 80) ?>" size="10" min="0"/>
             <p class="tutor-input-feedback">
                 <?php _e('Set the passing percentage for this quiz', 'tutor'); ?>
             </p>
@@ -169,8 +169,8 @@
         <label class="tutor-form-label">
             <?php _e('Max questions allowed to answer', 'tutor'); ?>
         </label>
-        <div class="tutor-input-group tutor-mb-15">
-            <input type="number" class="tutor-form-control tutor-mb-10" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
+        <div class="tutor-input-group">
+            <input type="number" class="tutor-form-control" name="quiz_option[max_questions_for_answer]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'max_questions_for_answer', 10) ?>" min="1"/>
             <p class="tutor-input-feedback">
                 <?php _e('This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount greater than available question, then all questions will be available for a student to answer.', 'tutor'); ?>
             </p>
@@ -210,7 +210,7 @@
                     </p>
                 </div>
 
-                <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-mb-30">
+                <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-mb-35">
                     <h4><?php _e('Question Layout', 'tutor'); ?></h4>
                     <select class="tutor-form-select" name="quiz_option[question_layout_view]">
                         <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
@@ -220,7 +220,7 @@
                     </select>
                 </div>
 
-                <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-mb-30">
+                <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-mb-35">
                     <h4><?php _e('Questions Order', 'tutor'); ?></h4>
                     <select class="tutor-form-select" name="quiz_option[questions_order]">
                         <option value="rand" <?php selected('rand', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>

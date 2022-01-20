@@ -31,3 +31,5 @@ assets/**/*.map
 *.log
 *.map
 */bundle/*
+v2-library/bundle/main.min.css
+v2-library/bundle/main.min.js

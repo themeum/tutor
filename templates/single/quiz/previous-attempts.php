@@ -15,7 +15,6 @@ if(isset($_GET['view_quiz_attempt_id'])) {
     if ($attempt_id) {
         $user_id = get_current_user_id();
         $attempt_data = tutils()->get_attempt($attempt_id);
-
         tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-details.php', array(
             'attempt_id' => $attempt_id,
             'attempt_data' => $attempt_data,

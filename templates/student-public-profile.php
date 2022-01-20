@@ -21,7 +21,7 @@ if ( ! is_object( $get_user ) || ! property_exists( $get_user, 'ID' ) ) {
 }
 
 $user_id       = $get_user->ID;
-$is_instructor = tutor_utils()->is_instructor( $user_id );
+$is_instructor = tutor_utils()->is_instructor( $user_id, true );
 
 $profile_layout = tutor_utils()->get_option( 'public_profile_layout', 'private' );
 
@@ -159,36 +159,36 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 				<?php tutor_load_template( 'profile.bio' ); ?>
 				
 				<?php
-					if ( $is_instructor ) {
-						?>
+				if ( $is_instructor ) {
+					?>
 							<h3><?php _e( 'Courses', 'tutor' ); ?></h3>
-							<?php
-								add_filter(
-									'courses_col_per_row',
-									function() {
-										return 3;
-									}
-								);
+						<?php
+							add_filter(
+								'courses_col_per_row',
+								function() {
+									return 3;
+								}
+							);
 
-								tutor_load_template( 'profile.courses_taken' );
-							?>
-							<?php
-					} else {
-						if(tutor_utils()->get_option('show_courses_completed_by_student')){
-							echo '<h3 class="tutor-mt-30">' . __('Course Completed', 'tutor') . '</h3>';
-							tutor_load_template('profile.enrolled_course');
-						}
-
-						if(tutor_utils()->get_option('students_own_review_show_at_profile')){
-							echo '<h3 class="tutor-mt-30">' . __('Reviews Wrote', 'tutor') . '</h3>';
-							tutor_load_template('profile.reviews_wrote');
-						}
+							tutor_load_template( 'profile.courses_taken' );
+						?>
+						<?php
+				} else {
+					if ( tutor_utils()->get_option( 'show_courses_completed_by_student' ) ) {
+						echo '<h3 class="tutor-mt-30">' . __( 'Course Completed', 'tutor' ) . '</h3>';
+						tutor_load_template( 'profile.enrolled_course' );
 					}
+
+					if ( tutor_utils()->get_option( 'students_own_review_show_at_profile' ) ) {
+						echo '<h3 class="tutor-mt-30">' . __( 'Reviews Wrote', 'tutor' ) . '</h3>';
+						tutor_load_template( 'profile.reviews_wrote' );
+					}
+				}
 				?>
 			</div>
 		</div>
 	</div>
-<?php 
+<?php
 
 do_action( 'tutor_student/after/wrap' );
 get_footer();
