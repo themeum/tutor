@@ -3153,8 +3153,8 @@ jQuery(document).ready(function ($) {
     var assignment_answer = tinymce.activeEditor.getContent();
 
     if (assignment_answer.trim().length < 1) {
-      $('#form_validation_response').html('<div class="tutor-error-msg">' + __('Assignment answer can not be empty', 'tutor') + '</div>');
       e.preventDefault();
+      tutor_toast(__("Warning", "tutor"), __('Assignment answer is required.', 'tutor'), "error");
     }
   });
   /**
