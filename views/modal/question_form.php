@@ -5,8 +5,9 @@ $settings = maybe_unserialize( $question->question_settings );
 
 <div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>">
     <div class="question-form-header">
-        <a href="javascript:;" class="back-to-quiz-questions-btn" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id; ?>">
-            <i class="tutor-icon-next-2"></i> <?php _e('Back', 'tutor'); ?>
+        <a href="javascript:;" class="back-to-quiz-questions-btn tutor-bs-d-flex tutor-bs-align-items-center" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id; ?>">
+            <span class="tutor-icon-next-2 tutor-color-design-dark ttr-previous-line" style="font-size: 30px; margin-right: 5px;"></span> 
+            <span class="tutro-text-regular-caption tutor-color-text-primary" style="font-weight: 400;"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>
     <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>"/>
@@ -15,7 +16,7 @@ $settings = maybe_unserialize( $question->question_settings );
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Write your question here', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
-            <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" class="tutor-form-control tutor-mb-10" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($question->question_title) ); ?>">
+            <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" class="tutor-form-control" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars( stripslashes($question->question_title) ); ?>">
         </div>
     </div>
 

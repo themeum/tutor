@@ -108,6 +108,7 @@ textarea.tutor-form-control {
 	padding: 20px;
 	min-height: 180px;
 	resize: vertical;
+	line-height: inherit;
 
 	&.tutor-textarea-auto-height {
 		min-height: 71px;
@@ -364,6 +365,7 @@ input.tutor-form-check-input {
 			width: 40px;
 			height: 24px;
 			background-color: var(--tutor-border-color-alt);
+			background-color: $black-10;
 			border-radius: 12px;
 			vertical-align: top;
 			cursor: pointer;

@@ -138,6 +138,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 		</table>
 	</div>
 	<?php
+	if($assignments->count > $per_page) {
 		$pagination_data = array(
 			'total_items' => $assignments->count,
 			'per_page'    => $per_page,
@@ -147,5 +148,6 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 			tutor()->path . 'templates/dashboard/elements/pagination.php',
 			$pagination_data
 		);
+	}
 	?>
 </div>
