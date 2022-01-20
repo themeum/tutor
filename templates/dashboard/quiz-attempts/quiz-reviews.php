@@ -19,7 +19,7 @@
 ?>
 
 <div class="wrap">
-	<div class="tutor-quiz-attempt-details-wrapper">
+	<div class="tutor-quiz-attempt-details-wrapper ">
 		<?php
 			tutor_load_template_from_custom_path(
 				tutor()->path . '/views/quiz/attempt-details.php',
