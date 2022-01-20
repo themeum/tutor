@@ -49,14 +49,14 @@ $is_user_admin                = current_user_can( 'administrator' );
 					<?php esc_html_e( 'Lesson List', 'tutor' ); ?>
 				</span>
 			</div>
-			<?php if ( $enable_q_and_a_on_course && ( $is_enrolled || $is_instructor_of_this_course || $is_user_admin ) ) { ?>
-			<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
-				<span class="ttr-question-filled"></span>
-				<span class="text-medium-caption tutor-color-text-title">
-					<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
-				</span>
-			</div>
-			<?php } ?>
+			<?php if ( $enable_q_and_a_on_course && ( $is_enrolled || $is_instructor_of_this_course || $is_user_admin ) ): ?>
+				<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
+					<span class="ttr-question-filled"></span>
+					<span class="text-medium-caption tutor-color-text-title">
+						<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
+					</span>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<div class="tutor-sidebar-tabs-content">
