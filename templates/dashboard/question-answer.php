@@ -22,9 +22,10 @@ $view_option        = get_user_meta( get_current_user_id(), 'tutor_qa_view_as', 
 $view_as            = $is_instructor ? ($view_option ? $view_option : 'instructor') : 'student';
 $as_instructor_url  = add_query_arg( array('view_as'=>'instructor'), tutor()->current_url );
 $as_student_url     = add_query_arg( array('view_as'=>'student'), tutor()->current_url );
+$qna_tabs           = \Tutor\Q_and_A::tabs_key_value();
+$active_tab         = isset($_GET['tab']) ? sanitize_text_field( $_GET['tab'] ) : 'all';
 ?>
-<!-- tutor-bs-row tutor-bs-align-items-center 
-style="width: calc(100% + 30px)" -->
+
 <div class="tutor-frontend-dashboard-qna-header tutor-mb-24">
     <div class="tutor-qna-header">
         <div class="tutor-text-medium-h5 tutor-color-text-primary"><?php _e('Question & Answer', 'tutor'); ?></div>
@@ -38,11 +39,18 @@ style="width: calc(100% + 30px)" -->
                 <span class="tutor-form-toggle-label tutor-form-toggle-unchecked"><?php _e('Instructor', 'tutor'); ?></span>
             </label>
         </div>
-        <!-- <div class="tutor-bs-col">
-            <div class="tutor-bs-row">
-                
-            </div>
-        </div> -->
+        <div class="tutor-bs-row">
+            <?php _e('Sort By', 'tutor'); ?>: 
+            <select class="tutor-form-select tutor-select-redirector">
+                <?php 
+                    foreach($qna_tabs as $tab) {
+                        echo '<option value="'.$tab['url'].'" '.($active_tab==$tab['key'] ? 'selected="selected"' : '').'>
+                                '.$tab['title'].' ('.$tab['value'].')'.'
+                            </option>';
+                    }
+                ?>
+            </select>
+        </div>
     <?php endif; ?>
 </div>
 
@@ -51,8 +59,9 @@ style="width: calc(100% + 30px)" -->
     $current_page = max( 1, tutor_utils()->avalue_dot('current_page', $_GET) );
     $offset = ($current_page-1)*$per_page;
 
-    $total_items = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, null, null, true) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id(), null, true );
-    $questions = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id() );
+    $q_status = isset($_GET['tab']) ? sanitize_text_field( $_GET['tab'] ) : null;
+    $total_items = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, null, $q_status, true) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id(), null, true );
+    $questions = $view_as=='instructor' ? tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, null, $q_status) : tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, get_current_user_id() );
 
     tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
         'qna_list' => $questions,

@@ -215,7 +215,7 @@ class Q_and_A {
 					'key'   => $tab,
 					'title' => __( ucwords( $tab ), 'tutor' ),
 					'value' => $stats[ $tab ],
-					'url'   => $url . '&data=' . $tab,
+					'url'   => add_query_arg( array('tab'=>$tab), $url ),
 				);
 			},
 			$tabs
