@@ -15,7 +15,7 @@ $col_classes = array(
         <?php
             tutor_load_template( 'dashboard.settings.nav-bar', ['active_setting_nav'=>'withdrawal'] );
         ?>
-        <h3><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></h3>
+        <div class="tutor-text-medium-h6 tutor-color-text-primary tutor-mt-30"><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></div>
     </div>
 
     <form id="tutor-withdraw-account-set-form" action="" method="post">
@@ -73,7 +73,7 @@ $col_classes = array(
                                 <div class="<?php echo esc_attr( $field_count ) > 1 ? 'tutor-bs-col-12 tutor-bs-col-sm-6' : 'tutor-bs-col-12'; ?> tutor-mb-30">
                                     <?php
                                     if ( ! empty( $field['label'] ) ) {
-                                        echo wp_kses_post( "<label class='color-text-subsued' for='field_{$method_id}_$field_name'>{$field['label']}</label>" );
+                                        echo wp_kses_post( "<label class='tutor-form-label tutor-color-text-hints' for='field_{$method_id}_$field_name'>{$field['label']}</label>" );
                                     }
 
                                     $passing_data = apply_filters( 'tutor_withdraw_account_field_type_data', array(
@@ -105,7 +105,7 @@ $col_classes = array(
                                     }
 
                                     if ( ! empty( $field['desc'] ) ) {
-                                        echo wp_kses_post("<p class='withdraw-field-desc tutor-color-text-subsued'>{$field['desc']}</p>");
+                                        echo wp_kses_post("<div class='tutor-text-regular-caption tutor-color-text-subsued withdraw-field-desc tutor-mt-4'>{$field['desc']}</div>");
                                     }
                                     ?>
                                 </div>
@@ -116,7 +116,7 @@ $col_classes = array(
 
                         <?php do_action( "tutor_withdraw_set_account_{$method_id}_after" ); ?>
 
-                        <div class="withdraw-account-save-btn-wrap">
+                        <div class="withdraw-account-save-btn-wrap tutor-mt-30">
                             <button type="submit" class="tutor_set_withdraw_account_btn tutor-btn" name="withdraw_btn_submit">
                                 <?php esc_html_e( 'Save Withdrawal Account', 'tutor' ); ?>
                             </button>
