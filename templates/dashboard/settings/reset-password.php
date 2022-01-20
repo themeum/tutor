@@ -18,7 +18,7 @@
 
         <div class="tutor-bs-row">
             <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
-                <label> <?php esc_html_e('Current Password', 'tutor'); ?> </label>
+                <label class="tutor-form-label tutor-color-text-subsued"> <?php esc_html_e('Current Password', 'tutor'); ?> </label>
                 <input class="tutor-form-control" type="password" name="previous_password">
             </div>
         </div>
@@ -62,11 +62,11 @@
 					</label>
 					<div class="field-group tutor-input-group">
 						<input
-						class="tutor-form-control"
-						id="cpassword-field-icon-1"
-						type="password"
-						placeholder="Type Password"
-						name="confirm_new_password"
+							class="tutor-form-control"
+							id="cpassword-field-icon-1"
+							type="password"
+							placeholder="Type Password"
+							name="confirm_new_password"
 						/>
 						<span class="validation-icon valid-btn ttr-mark-filled" style="display:none"></span>
 					</div>

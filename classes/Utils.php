@@ -627,8 +627,10 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ) ) {
+	public function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX) {
 		global $wpdb;
+		$offset 	= sanitize_text_field( $offset );
+		$limit 		= sanitize_text_field( $limit );
 		$instructor_id    = $this->get_user_id( $instructor_id );
 		$course_post_type = tutor()->course_post_type;
 
@@ -650,11 +652,13 @@ class Utils {
 						   AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
 			WHERE	1 = 1 {$where_post_status}
 					AND $wpdb->posts.post_type = %s
-			ORDER BY $wpdb->posts.post_date DESC;
+			ORDER BY $wpdb->posts.post_date DESC LIMIT %d, %d;
 			",
 				$instructor_id,
 				'_tutor_instructor_course_id',
-				$course_post_type
+				$course_post_type,
+				$offset,
+				$limit
 			),
 			OBJECT
 		);
@@ -4602,7 +4606,7 @@ class Utils {
 				'is_pro' => false,
 			),
 			'open_ended'        => array(
-				'name'   => __( 'Open Ended/Essay', 'tutor' ),
+				'name'   => __( 'Open Ended', 'tutor' ),
 				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>',
 				'is_pro' => false,
 			),

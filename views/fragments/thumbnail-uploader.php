@@ -20,9 +20,9 @@
 		</div>
 		<div class="thumbnail-input">
 			<p class="text-regular-body tutor-color-text-subsued">
-				<?php _e( 'Size', 'tutor' ); ?>: <span class="tutor-text-regular-caption"><?php _e( '700x430 pixels', 'tutor' ); ?>;</span>
+				<?php _e( 'Size', 'tutor' ); ?>: <span class="tutor-text-semi-caption"><?php _e( '700x430 pixels', 'tutor' ); ?>;</span>
 				<br />
-				<?php _e( 'File Support', 'tutor' ); ?>: <span class="tutor-text-regular-caption"><?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?></span>
+				<?php _e( 'File Support', 'tutor' ); ?>: <span class="tutor-text-semi-caption"><?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?></span>
 			</p>
 
 			<button type="button" class="tutor-btn tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">
