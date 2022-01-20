@@ -149,7 +149,10 @@ class Options_V2 {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 
 		$delete_id = $this->get_request_data( 'delete_id' );
+		// pr(array_keys($tutor_settings_log));
 		unset( $tutor_settings_log[ $delete_id ] );
+		// pr(array_keys($tutor_settings_log));
+
 
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
@@ -227,7 +230,7 @@ class Options_V2 {
 		$time    = $this->get_request_data( 'time' );
 		//pr(json_decode(stripslashes($request), true));die;
 
-		$save_import_data['datetime']             = $time;
+		$save_import_data['datetime']             = (int) $time;
 		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
 		$save_import_data['datatype']             = 'imported';
 		$save_import_data['dataset']              = $request['data'];
@@ -295,19 +298,20 @@ class Options_V2 {
 		$save_import_data['history_date']         = date( 'j M, Y, g:i a', $time );
 		$save_import_data['datatype']             = 'saved';
 		$save_import_data['dataset']              = $option;
-		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
+		$import_data[ 'tutor-saved-' . $time ] 	  = $save_import_data;
 		$update_option                            = array();
 		$get_option_data                          = get_option( 'tutor_settings_log', array() );
 
 		if ( ! empty( $get_option_data ) ) {
 			$update_option = array_merge( $import_data, $get_option_data );
 		} else {
-			$update_option = array_merge( $import_data );
+			$update_option = array_merge( $update_option, $import_data );
 		}
 
 		update_option( 'tutor_settings_log', $update_option );
 
 		update_option( 'tutor_option', $option );
+		update_option( 'tutor_option_update_time', date( 'j M, Y, g:i a', $time ) );
 
 		do_action( 'tutor_option_save_after' );
 

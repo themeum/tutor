@@ -34,7 +34,7 @@ class Tools_V2 {
 		wp_send_json_success( $tutor_settings_log[ $apply_id ] );
 	}
 
-	public function tutor_delete_single_settings() {
+	/* public function tutor_delete_single_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$delete_id          = $this->get_request_data( 'delete_id' );
 		unset( $tutor_settings_log[ $delete_id ] );
@@ -42,7 +42,7 @@ class Tools_V2 {
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
 		wp_send_json_success( $tutor_settings_log );
-	}
+	} */
 
 	public function get_request_data( $var ) {
 		return isset( $_REQUEST[ $var ] ) ? $_REQUEST[ $var ] : null;
