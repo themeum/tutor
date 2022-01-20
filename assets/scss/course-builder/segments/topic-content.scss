@@ -22,23 +22,19 @@
             margin-bottom: 15px;
             border: 1px solid $stroke-light-30;
             overflow: hidden;
-
             .tutor-topic-title {
                 @include valueWithPrefix(display, flex);
-                align-items: center;
                 font-size: 16px;
                 font-weight: 300;
                 margin: 0;
                 line-height: 40px;
-                padding-left: 15px;
-                
+                padding-left: 6px;
                 .topic-inner-title {
                     font-style: normal;
-                    font-weight: bold;
+                    font-weight: 500;
                     font-size: 16px;
                     color: $black-main;
                     @include propertyWithPrefix(flex, 1);
-                    
                     a {
                         color: #393c40;
                     }
@@ -46,15 +42,14 @@
             
                 &>span {
                     cursor: pointer;
-
                     &.expand-collapse-wrap {
                         &.is-expanded {
-                            background: #F9F9F9;
+                            background: #FBFBFD;
                         }
                     }
 
                     &:not(.topic-inner-title){
-                        width: 30px;
+                        width: 40px;
                         text-align: center;
                     }
 
@@ -67,7 +62,7 @@
             }
 
             .tutor-topics-body {
-                background: #F9F9F9;;
+                background: #FBFBFD;
                 padding: 15px 20px;
 
                 .course-content-item {
@@ -81,8 +76,10 @@
             
                     .tutor-course-content-top {
                         display: flex;
-                        align-items: center;
-                        
+                        align-items: flex-start;
+                        .tutor-course-content-top-right-action {
+                            margin-top: 2px;
+                        }
                         a {
                             color: #393c40;
                             font-weight: 400;

@@ -189,7 +189,9 @@ const resetConfirmation = () => {
 						});
 						setTimeout(() => {
 							tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success');
-							document.getElementById('save_tutor_option').disabled = false;
+							if(document.getElementById('save_tutor_option')){
+								document.getElementById('save_tutor_option').disabled = false;
+							}
 						}, 300)
 					}
 
@@ -208,6 +210,8 @@ const elementByName = (key) => {
 
 if (null !== optionForm) {
 	optionForm.addEventListener('input', (event) => {
-		document.getElementById('save_tutor_option').disabled = false;
+		if(document.getElementById('save_tutor_option')){
+			document.getElementById('save_tutor_option').disabled = false;
+		}
 	});
 }
