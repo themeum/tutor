@@ -12,6 +12,7 @@
 			&:active,
 			&:focus {
 				text-decoration: none;
+				opacity: 1 !important;
 			}
 
 			// &::before {
@@ -36,7 +37,6 @@
 			&:hover {
 				&::before {
 					opacity: 1;
-					-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
 					color: var(--tutor-primary-hover-color);
 				}
 			}

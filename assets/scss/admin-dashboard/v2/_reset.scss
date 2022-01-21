@@ -9,6 +9,10 @@ body {
 
 a {
 	text-decoration: none;
+	&:focus,
+	&:hover {
+		opacity: 1;
+	}
 }
 
 .tutor-backend-settings-page {
