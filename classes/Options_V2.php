@@ -147,13 +147,8 @@ class Options_V2 {
 	 */
 	public function tutor_delete_single_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
-
 		$delete_id = $this->get_request_data( 'delete_id' );
-		// pr(array_keys($tutor_settings_log));
 		unset( $tutor_settings_log[ $delete_id ] );
-		// pr(array_keys($tutor_settings_log));
-
-
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
 		wp_send_json_success( $tutor_settings_log );
@@ -175,8 +170,10 @@ class Options_V2 {
 	 */
 	public function tutor_default_settings() {
 		$attr = $this->get_setting_fields();
+
 		foreach ( $attr as $sections ) {
-			foreach ( $sections['sections'] as $section ) {
+
+			foreach ( $sections as $section ) {
 				foreach ( $section['blocks'] as $blocks ) {
 					foreach ( $blocks['fields'] as $field ) {
 						if ( isset( $field['default'] ) ) {
@@ -327,12 +324,31 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		$attr = $this->get_setting_fields();
+		$tutor_default_option = get_option( 'tutor_default_option' );
+		$tutor_saved_option = get_option( 'tutor_option' );
+		// ($tutor_default_option[$field['key']] == $attr_default[ $field['key'] ]) ? $tutor_default_option[$field['key']] : $field['default'];
+		foreach ( $attr as $sections ) {
 
-		$default_options = tutor_utils()->sanitize_recursively( $this->tutor_default_settings() );
+			foreach ( $sections as $section ) {
+				foreach ( $section['blocks'] as $blocks ) {
+					foreach ( $blocks['fields'] as $field ) {
+						if ( isset( $tutor_default_option[$field['key']] ) ) {
+							$attr_default[ $field['key'] ] = $tutor_saved_option[$field['key']];
+						// }elseif(null !== $field['key']){
+						}else{
+							$attr_default[ $field['key'] ] = $field['default'];
+						}
+					}
+				}
+			}
+		}
 
-		update_option( 'tutor_option', $default_options );
+		// pr($tutor_default_option);
+		// pr($attr_default);
+		update_option( 'tutor_option', $tutor_default_option );
 
-		wp_send_json_success( $default_options );
+		wp_send_json_success( $tutor_default_option );
 	}
 
 	public function load_settings_page() {
