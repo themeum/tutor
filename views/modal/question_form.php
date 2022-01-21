@@ -25,7 +25,7 @@ $settings = maybe_unserialize( $question->question_settings );
         <label class="tutor-form-label"><?php _e('Select your question type', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-15">
             <div class="tutor-bs-row tutor-bs-align-items-center">
-                <div class="tutor-bs-col-12 tutor-bs-col-md-4">
+                <div class="tutor-bs-col-12 tutor-bs-col-md-12">
                     <div class="question-type-select">
                         <?php 
                             $question_types = tutor_utils()->get_question_types(); 
@@ -60,15 +60,15 @@ $settings = maybe_unserialize( $question->question_settings );
                         </div>
                     </div>
                 </div>
-                <div class="tutor-bs-col-12 tutor-bs-col-md-8">
+                <div class="tutor-bs-col-12 tutor-bs-col-md-12 tutor-mt-20">
                     <div class="tutor-bs-row tutor-bs-align-items-center">
-                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-6 tutor-mt-4 tutor-mb-4">
+                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-4 tutor-mt-4 tutor-mb-4">
                             <label class="tutor-form-toggle tutor-text-nowrap">
                                 <input type="checkbox" class="tutor-form-toggle-input"  value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][answer_required]" <?php checked('1', tutor_utils()->avalue_dot('answer_required', $settings)); ?> />
                                 <span class="tutor-form-toggle-control"></span> <?php _e('Answer Required', 'tutor'); ?>
                             </label>
                         </div>
-                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-6 tutor-mt-4 tutor-mb-4">
+                        <div class="tutor-bs-col-sm-4 tutor-bs-col-md-4 tutor-mt-4 tutor-mb-4">
                             <label class="tutor-form-toggle tutor-text-nowrap">
                                 <input type="checkbox" class="tutor-form-toggle-input" value="1" name="tutor_quiz_question[<?php echo $question_id; ?>][randomize_question]" <?php checked('1', tutor_utils()->avalue_dot('randomize_question', $settings)); ?> />
                                 <span class="tutor-form-toggle-control"></span> <?php _e('Randomize', 'tutor'); ?>
