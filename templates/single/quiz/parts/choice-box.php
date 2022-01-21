@@ -49,7 +49,7 @@
 						?>
 							<div class="quiz-question-ans-choice">
 								<label for="<?php echo $answer->answer_id; ?>">
-									<input class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]" type="<?php echo $choice_type; ?>" value="<?php echo $answer->answer_id; ?>">
+									<input class="tutor-form-check-input" id="<?php echo $answer->answer_id; ?>" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>]<?php echo esc_html( 'multiple_choice' === $question_type ? '[]' : '' ); ?>" type="<?php echo $choice_type; ?>" value="<?php echo $answer->answer_id; ?>">
 									<span class="text-regular-body tutor-color-text-primary">
 									<?php
 										echo $answer_title;
