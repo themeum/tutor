@@ -28,7 +28,9 @@
                 font-weight: 300;
                 margin: 0;
                 line-height: 40px;
-                padding-left: 6px;
+                > span {
+                    padding: 12px 0px 11px 6px;
+                }
                 .topic-inner-title {
                     font-style: normal;
                     font-weight: 500;
@@ -49,8 +51,12 @@
                     }
 
                     &:not(.topic-inner-title){
+                        // width: 35px;
+                        // text-align: center;
                         width: 35px;
                         text-align: center;
+                        display: flex;
+                        justify-content: center;
                     }
 
                     &.tutor-icon-garbage {
@@ -66,7 +72,7 @@
                 padding: 15px 20px;
 
                 .course-content-item {
-                    padding: 10px 10px 5px 10px;
+                    padding: 10px 10px 11px 10px;
                     border: 1px solid $stroke-light-30;
                     box-sizing: border-box;
                     box-shadow: 0px 2px 4px rgba(216, 223, 234, 0.4);
@@ -79,6 +85,12 @@
                         align-items: flex-start;
                         .tutor-course-content-top-right-action {
                             margin-top: 2px;
+                            display: flex;
+                            > a {
+                                &:not(:last-child) {
+                                    margin-right: 3px;
+                                }
+                            }
                         }
                         a {
                             color: #393c40;
