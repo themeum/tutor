@@ -7,152 +7,7 @@
 }
 #wpcontent,
 #tutor-frontend-course-builder {
-	<<<<<<< head .tutor-certificate-template {
-		.template-item {
-			.template-radio-field {
-				height: 100% !important;
-			}
-		}
-	}
-	.tutor-modal {
-		.tutor-modal-footer {
-			button[data-tutor-modal-close],
-			button[data-action='back'] {
-				color: #757c8e;
-				background: #e3e6eb;
-				&:hover {
-					border-color: transparent;
-					background: #d7dbe1;
-					color: #656c7c;
-				}
-			}
-		}
-		.tutor-delete-attachment.tutor-icon-line-cross {
-			margin-left: 5px;
-		}
-		.date-range-input i.tutor-icon-clock,
-		.date-range-input i.tutor-icon-lock {
-			font-size: 18px;
-			position: absolute;
-			right: 10px;
-			top: 14px;
-		}
-		.tutorUploadAttachmentBtn {
-			margin-top: 0px;
-		}
-	}
-	.btn-csv-download svg {
-		fill: #757c8e;
-	}
-	.tutorUploadAttachmentBtn {
-		margin-top: 15px;
-	}
-	.tutor-course-content-top {
-		.ttr-humnurger-filled {
-			color: rgba(117, 124, 142, 0.63) !important;
-			margin-top: 2px;
-		}
-	}
-	.tutor-btn {
-		font-family: 'Inter', sans-serif;
-		font-size: 15px;
-		line-height: 24px;
-	}
-	.tutor-add-instructor-btn,
-	.tutorUploadAttachmentBtn,
-	.create_new_topic_btn {
-		padding: 7px 20px;
-	}
-	.tutor-form-toggle .tutor-form-toggle-control {
-		margin: 0 10px 0px 0px !important;
-	}
-	.tutor-form-toggle {
-	}
-	.select2-container {
-		li.select2-selection__choice {
-			background: #eff1f7;
-		}
-	}
-	.tutor_add_content_wrap {
-		button {
-			padding: 2px 12px !important;
-			&:not(:last-child) {
-				margin-right: 14px !important;
-			}
-		}
-	}
-	p.tutor-input-feedback,
-	div.tutor-input-feedback {
-		font-size: 13px;
-		color: #5b616f;
-		i.tutor-input-feedback-icon {
-			font-size: 20px;
-			color: #b4b7c0;
-		}
-	}
-	.tutor-modal-body {
-		align-items: unset !important;
-	}
-	// .tutor-attachments-metabox {
-	//     .tutor-attachment-cards {
-	//         .filesize {
-	//             margin-top: -5px;
-	//         }
-	//     }
-	// }
-	.tutor-course-available-instructors {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 20px;
-		justify-content: space-between;
-		.added-instructor-item {
-			margin: 0 !important;
-			max-width: calc(50% - 20px) !important;
-			flex-basis: calc(50% - 20px) !important;
-			@include breakpoint-max(mobile) {
-				max-width: 100% !important;
-				flex-basis: 100% !important;
-			}
-			.instructor-icon {
-				height: auto !important;
-				max-width: 45px;
-			}
-			.instructor-name {
-				width: calc(100% - 45px);
-				flex-basis: calc(100% - 45px);
-				.instructor-intro {
-					display: flex;
-					align-items: center;
-					.instructor-img {
-					}
-					.instructor-email {
-						margin-top: -4px;
-					}
-				}
-			}
-		}
-	}
-	.tutor-lesson-modal-wrap {
-		.filesize {
-			margin: 0px !important;
-		}
-	}
-	#tutor_course_instructor_modal {
-		.tutor-modal-body {
-			padding: 40px 40px;
-		}
-		#tutor-course-available-instructors {
-			gap: 10px;
-		}
-	}
-	.tutor-quiz-advance-settings p.help {
-		line-height: 1.34;
-		margin-top: 10px;
-	}
-	.tutor-form-group input:not([type='submit']):focus {
-		border: 0px solid transparent !important;
-	}
-	======= .tutor-certificate-template {
+	.tutor-certificate-template {
 		.template-item {
 			.template-radio-field {
 				height: 100% !important;
@@ -322,7 +177,8 @@
 	.tutor-form-group input:not([type='submit']):focus {
 		border: 0px solid transparent !important;
 	}
-	>>>>>>>e424f780f3ae359ee657c4ab9cac0eded58ce6fb .tutor-quiz-builder-modal-wrap {
+
+	.tutor-quiz-builder-modal-wrap {
 		.select-header {
 			align-items: center;
 		}
