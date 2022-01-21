@@ -62,7 +62,7 @@
 		}
 		.profile-pic {
 			border-radius: 50%;
-			height: 200px;
+			height: 115px;
 			width: 200px;
 			border: none !important;
 		}
@@ -79,16 +79,16 @@
 	}
 	&.tutor-user-public-profile-pp-circle {
 		.profile-name {
-			padding-left: 63px;
-			padding-bottom: 50px;
-			span {
-				font-weight: 300;
-			}
+			// padding-left: 63px;
+			// padding-bottom: 50px;
+			// span {
+			// 	font-weight: 300;
+			// }
 		}
 		.profile-pic {
 			border-radius: 50%;
-			height: 200px;
-			width: 200px;
+			height: 160px;
+			width: 160px;
 		}
 		.pp-area {
 			top: -147px;
@@ -117,7 +117,7 @@
 		overflow: hidden;
 		height: 414px;
 		margin-top: 30px;
-		margin-bottom: -90px;
+		margin-bottom: -100px;
 
 		.cover-area {
 			position: relative;
@@ -142,10 +142,11 @@
 
 		.pp-area {
 			position: relative;
-			padding-left: 49px;
+			padding-left: 40px;
 			top: -141px;
-			@include valueWithPrefix(display, flex);
-			@include propertyWithPrefix(align-items, center);
+			display: flex;
+			align-items: center;
+			gap: 30px;
 
 			.profile-pic {
 				background-position: center center;
@@ -165,17 +166,17 @@
 					margin: 0;
 				}
 
-				& > span {
-					font-style: normal;
-					font-size: 15px;
-					color: #fff;
-					margin-right: 10px;
+				// & > span {
+				// 	font-style: normal;
+				// 	font-size: 15px;
+				// 	color: #fff;
+				// 	margin-right: 10px;
 
-					& > span {
-						color: white;
-						font-weight: 500;
-					}
-				}
+				// 	& > span {
+				// 		color: white;
+				// 		font-weight: 500;
+				// 	}
+				// }
 			}
 
 			.profile-rating-media {
