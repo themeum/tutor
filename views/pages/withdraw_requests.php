@@ -149,7 +149,7 @@ $filters = array(
 												<span class="tutor-color-text-primary tutor-text-medium-body">
 													<?php echo esc_html( $user_data->display_name ); ?>
 												</span>
-												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID ) ); ?>" class="tutor-ml-10 d-flex" target="_blank">
+												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-10 d-flex" target="_blank">
 													<span class="ttr-detail-link-filled tutor-color-text-primary" style="font-size:18px;"></span>
 												</a>
 											</div>

@@ -22,7 +22,7 @@ if ( ! is_object( $get_user ) || ! property_exists( $get_user, 'ID' ) ) {
 
 // Prepare data
 $user_id        = $get_user->ID;
-$is_instructor  = tutor_utils()->is_instructor( $user_id, true );
+$is_instructor  = isset($_GET['view']) && $_GET['view']==='instructor';
 $layout_key     = $is_instructor ? 'public_profile_layout' : 'student_public_profile_layout';
 $profile_layout = tutor_utils()->get_option($layout_key , 'private' );
 $user_type		= $is_instructor ? 'instructor' : 'student';

@@ -33,7 +33,7 @@ if ( ! is_array( $reviews ) || ! count( $reviews ) ) { ?>
 	<div class="tutor-reviews-list">
 		<?php
 		foreach ( $reviews as $review ) {
-			$profile_url = tutor_utils()->profile_url( $review->user_id );
+			$profile_url = tutor_utils()->profile_url( $review->user_id, false );
 			?>
 			<div class="tutor-review-individual-item tutor-review-<?php echo esc_url( $review->comment_ID ); ?>">
 				<div class="review-left">

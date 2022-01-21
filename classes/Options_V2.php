@@ -351,7 +351,7 @@ class Options_V2 {
 		$pages       = tutor_utils()->get_pages();
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
 		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
-		$student_url = tutor_utils()->profile_url();
+		$student_url = tutor_utils()->profile_url(0, false);
 
 		$methods_array     = array();
 		$withdrawl_methods = apply_filters( 'tutor_withdrawal_methods_all', array() );

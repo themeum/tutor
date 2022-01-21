@@ -155,7 +155,7 @@ $filters = array(
 									<span class="tutor-color-text-primary tutor-text-medium-body">
 										<?php echo esc_html( $list->display_name ); ?>
 									</span>
-									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
+									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
 										<span class="ttr-detail-link-filled tutor-mt-5"></span>
 									</a>
 								</div>
