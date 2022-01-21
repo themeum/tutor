@@ -60,11 +60,14 @@
             }
         }
     }
-    .btn-csv-download svg {
-        fill: #757c8e;
-        top: -2px;
-        width: 16px;
-        height: 16px;
+    .btn-csv-download {
+        margin-right: 2px !important;
+        svg {
+            fill: #757c8e;
+            top: 0  px;
+            width: 16px;
+            height: 16px;
+        }
     }
     .tutorUploadAttachmentBtn {
         margin-top: 15px;
