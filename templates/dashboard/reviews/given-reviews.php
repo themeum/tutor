@@ -46,7 +46,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 		<div class="tutor-dashboard-reviews">
 			<?php
 			foreach ( $reviews as $review ) {
-				$profile_url = tutor_utils()->profile_url( $review->user_id );
+				$profile_url = tutor_utils()->profile_url( $review->user_id, false );
 				$update_id   = 'tutor_review_update_' . $review->comment_ID;
 				$delete_id   = 'tutor_review_delete_' . $review->comment_ID;
 				$row_id      = 'tutor_review_row_' . $review->comment_ID;
