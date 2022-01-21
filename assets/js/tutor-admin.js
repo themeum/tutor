@@ -1731,18 +1731,6 @@ window.addEventListener('resize', toolTipOnWindowResize);
   \****************************************************************/
 /***/ (() => {
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 readyState_complete(function () {// typeof resetConfirmation === 'function' ? resetConfirmation() : '';
   // typeof modalResetOpen === 'function' ? modalResetOpen() : '';
 });
@@ -1757,6 +1745,7 @@ document.addEventListener("readystatechange", function (event) {
     export_single_settings();
     reset_default_options();
     modal_opener_single_settings();
+    load_saved_data();
     var historyData = document.querySelector('.history_data');
 
     if (typeof historyData !== 'undefined' && null !== historyData) {// setInterval(() => { load_saved_data() }, 100000);
@@ -1798,24 +1787,25 @@ var load_saved_data = function load_saved_data() {
 
   xhttp.onreadystatechange = function () {
     if (xhttp.readyState === 4) {
-      tutor_option_history_load(xhttp.response);
+      var historyData = JSON.parse(xhttp.response);
+      historyData = historyData.data; // console.log(historyData);
+      // console.log(Object.entries(historyData));
+
+      tutor_option_history_load(Object.entries(historyData));
       delete_history_data();
     }
   };
 };
 
-function tutor_option_history_load(history_data) {
-  var dataset = JSON.parse(history_data).data;
+function tutor_option_history_load(dataset) {
   var output = "";
 
   if (null !== dataset && 0 !== dataset.length) {
-    Object.entries(dataset).forEach(function (_ref) {
-      var _ref2 = _slicedToArray(_ref, 2),
-          key = _ref2[0],
-          value = _ref2[1];
-
-      var badgeStatus = value.datatype == "saved" ? " label-primary-wp" : " label-refund";
-      output = "<div class=\"tutor-option-field-row\">\n\t\t\t\t\t<div class=\"tutor-option-field-label\">\n\t\t\t\t\t\t<p class=\"text-medium-small\">".concat(value.history_date, "\n\t\t\t\t\t\t<span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\"> ").concat(value.datatype, "</span> </p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"tutor-option-field-input\">\n\t\t\t\t\t\t<button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\"  data-tutor-modal-target=\"tutor-modal-bulk-action\" data-btntext=\"Yes, Restore Settings\" data-heading=\"Restore Previous Settings?\" data-message=\"WARNING! This will overwrite all existing settings, please proceed with caution.\"  data-id=\"").concat(key, "\">Apply</button>\n\n          <div class=\"tutor-popup-opener tutor-ml-16\">\n            <button\n            type=\"button\"\n            class=\"popup-btn\"\n            data-tutor-popup-target=\"popup-").concat(key, "\"\n            >\n            <span class=\"toggle-icon\"></span>\n            </button>\n            <ul id=\"popup-").concat(key, "\" class=\"popup-menu\">\n            <li>\n              <a class=\"export_single_settings\" data-id=\"").concat(key, "\">\n                <span class=\"icon ttr-msg-archive-filled tutor-color-design-white\"></span>\n                <span class=\"text-regular-body tutor-color-text-white\">Download</span>\n              </a>\n            </li>\n            <li>\n              <a class=\"delete_single_settings\"  data-tutor-modal-target=\"tutor-modal-bulk-action\" data-btntext=\"Yes, Delete Settings\" data-heading=\"Delete This Settings?\" data-message=\"WARNING! This will remove the settings history data from your system, please proceed with caution.\" data-id=\"").concat(key, "\">\n                <span class=\"icon ttr-delete-fill-filled tutor-color-design-white\"></span>\n                <span class=\"text-regular-body tutor-color-text-white\">Delete</span>\n              </a>\n            </li>\n            </ul>\n          </div>\n          </div>\n        </div>") + output;
+    dataset.forEach(function (value) {
+      var dataKey = value[0];
+      var dataValue = value[1];
+      var badgeStatus = dataValue.datatype == "saved" ? " label-primary-wp" : " label-refund";
+      output += "<div class=\"tutor-option-field-row\">\n\t\t\t\t\t<div class=\"tutor-option-field-label\">\n\t\t\t\t\t\t<p class=\"text-medium-small\">".concat(dataValue.history_date, "\n\t\t\t\t\t\t<span class=\"tutor-badge-label tutor-ml-15").concat(badgeStatus, "\"> ").concat(dataValue.datatype, "</span> </p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"tutor-option-field-input\">\n\t\t\t\t\t\t<button class=\"tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings\"  data-tutor-modal-target=\"tutor-modal-bulk-action\" data-btntext=\"Yes, Restore Settings\" data-heading=\"Restore Previous Settings?\" data-message=\"WARNING! This will overwrite all existing settings, please proceed with caution.\"  data-id=\"").concat(dataKey, "\">Apply</button>\n\n          <div class=\"tutor-popup-opener tutor-ml-16\">\n            <button\n            type=\"button\"\n            class=\"popup-btn\"\n            data-tutor-popup-target=\"popup-").concat(dataKey, "\"\n            >\n            <span class=\"toggle-icon\"></span>\n            </button>\n            <ul id=\"popup-").concat(dataKey, "\" class=\"popup-menu\">\n            <li>\n              <a class=\"export_single_settings\" data-id=\"").concat(dataKey, "\">\n                <span class=\"icon ttr-msg-archive-filled tutor-color-design-white\"></span>\n                <span class=\"text-regular-body tutor-color-text-white\">Download</span>\n              </a>\n            </li>\n            <li>\n              <a class=\"delete_single_settings\"  data-tutor-modal-target=\"tutor-modal-bulk-action\" data-btntext=\"Yes, Delete Settings\" data-heading=\"Delete This Settings?\" data-message=\"WARNING! This will remove the settings history data from your system, please proceed with caution.\" data-id=\"").concat(dataKey, "\">\n                <span class=\"icon ttr-delete-fill-filled tutor-color-design-white\"></span>\n                <span class=\"text-regular-body tutor-color-text-white\">Delete</span>\n              </a>\n            </li>\n            </ul>\n          </div>\n          </div>\n        </div>");
     });
   } else {
     output += "<div class=\"tutor-option-field-row\"><div class=\"tutor-option-field-label\"><p class=\"text-medium-small\">No settings data found.</p></div></div>";
@@ -1959,7 +1949,9 @@ var import_history_data_xhttp = function import_history_data_xhttp(modalOpener, 
     xhttp.onreadystatechange = function () {
       if (xhttp.readyState === 4) {
         modalElement.classList.remove('tutor-is-active');
-        tutor_option_history_load(xhttp.responseText);
+        var historyData = JSON.parse(xhttp.response);
+        historyData = historyData.data;
+        tutor_option_history_load(Object.entries(historyData));
         delete_history_data(); // import_history_data();
 
         setTimeout(function () {
@@ -2096,9 +2088,11 @@ var delete_settings_xhttp_request = function delete_settings_xhttp_request(model
 
   xhttp.onreadystatechange = function () {
     if (xhttp.readyState === 4) {
-      console.log(JSON.parse(xhttp.response));
+      // console.log(JSON.parse(xhttp.response));
       modalElement.classList.remove('tutor-is-active');
-      tutor_option_history_load(xhttp.responseText);
+      var historyData = JSON.parse(xhttp.response);
+      historyData = historyData.data;
+      tutor_option_history_load(Object.entries(historyData));
       delete_history_data();
       setTimeout(function () {
         tutor_toast('Success', "Data deleted successfully!", 'success');
@@ -2234,9 +2228,8 @@ readyState_complete(function () {
 
         if (loadingSpinner) {
           document.getElementById(dataTab).querySelector('.loading-spinner').remove();
-        }
+        } //enable if tinymce content changed
 
-        console.log(typeof tinyMCE != "undefined"); //enable if tinymce content changed
 
         if (tinymce && 'undefined' !== typeof tinymce && null !== tinymce) {
           tinymce.activeEditor.on("change", function (e) {
