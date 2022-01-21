@@ -1,5 +1,5 @@
 <div class="tutor-option-main-title">
-	<h2>Import/Export</h2>
+	<h2><?php _e('Import/Export','tutor'); ?></h2>
 </div>
 
 <?php
@@ -11,17 +11,17 @@ tutor_alert(
 ?>
 
 <div class="tutor-option-single-item">
-	<h4>Export</h4>
+	<h4><?php _e('Export','tutor'); ?></h4>
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="label tutor-text-regular-h6 tutor-color-text-primary">Current Settings</div>
+				<div class="label tutor-text-regular-h6 tutor-color-text-primary"><?php _e('Current Settings','tutor'); ?></div>
 				<div class="desc tutor-text-medium-small tutor-color-text-subsued">
-					<span style="font-weight: 500">Last Update: </span>20 July, 2020, 12:47 pm
+					<span style="font-weight: 500"><?php _e('Last Update','tutor'); ?>: </span> <?php echo get_option('tutor_option_update_time'); ?>
 				</div>
 			</div>
 			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-outline tutor-is-sm" id="export_settings">Export Settings</button>
+				<button class="tutor-btn tutor-is-outline tutor-is-sm" id="export_settings"><?php _e('Export Settings','tutor'); ?></button>
 			</div>
 		</div>
 	</div>
@@ -29,35 +29,35 @@ tutor_alert(
 
 
 <div class="tutor-option-single-item item-variation-dragndrop import-setting">
-	<h4>Import Settings</h4>
+	<h4><?php _e('Import Settings','tutor'); ?></h4>
 
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row tutor-bs-d-block d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
 					<span class="ttr-upload-icon-line tutor-icon-80 tutor-color-brand-wordpress"></span>
-					<div class="title">Drag &amp; Drop your JSON File here </div>
-					<div class="subtitle"><span>File Format:</span> .json <br> Or</div>
+					<div class="title"><?php _e('Drag &amp; Drop your JSON File here','tutor'); ?> </div>
+					<div class="subtitle"><span><?php _e('File Format','tutor'); ?>:</span> .json <br> <?php _e('Or','tutor'); ?></div>
 					<label for="drag-drop-input" class="tutor-btn tutor-is-sm">
 						<input type="file" name="drag-drop-input" id="drag-drop-input" accept="">
-						<span>Browse File</span>
+						<span><?php _e('Browse File','tutor'); ?></span>
 					</label>
 					<span class="file-info"></span>
 				</div>
 			</div>
 			<div class="tutor-option-field-input tutor-mt-15">
-				<button class="tutor-btn tutor-is-sm tutor_import_options" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Import Settings" data-heading="Import from Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." id="import_options">Update Settings</button>
+				<button class="tutor-btn tutor-is-sm tutor_import_options" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Import Settings','tutor'); ?>" data-heading="<?php _e('Import from Previous Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will overwrite all existing settings, please proceed with caution.','tutor'); ?>" id="import_options"><?php _e('Update Settings','tutor'); ?></button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <div class="tutor-option-single-item item-variation-table settings-history">
-	<h4>Settings History</h4>
+	<h4><?php _e('Settings History','tutor'); ?></h4>
 	<div class="item-wrapper history_data">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<p>Date</p>
+				<p><?php _e('Date','tutor'); ?></p>
 			</div>
 		</div>
 		<?php if ( $tutor_options = get_option( 'tutor_settings_log', array() ) ) : ?>
@@ -71,7 +71,7 @@ tutor_alert(
 						<span class="tutor-badge-label tutor-ml-15<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
 					</div>
 					<div class="tutor-option-field-input">
-						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." data-id="<?php echo $key; ?>">Apply</button>
+						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Restore Settings','tutor'); ?>" data-heading="<?php _e('Restore Previous Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will overwrite all existing settings, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>"><?php _e('Apply','tutor'); ?></button>
 						<div class="tutor-popup-opener tutor-ml-16">
 							<button
 							type="button"
@@ -84,13 +84,13 @@ tutor_alert(
 							<li>
 								<a class="export_single_settings" data-id="<?php echo $key; ?>">
 									<span class="icon ttr-msg-archive-filled tutor-color-design-white"></span>
-									<span class="text-regular-body tutor-color-text-white">Download</span>
+									<span class="text-regular-body tutor-color-text-white"><?php _e('Download','tutor'); ?></span>
 								</a>
 							</li>
 							<li>
-								<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="<?php echo $key; ?>">
+								<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Delete Settings','tutor'); ?>" data-heading="<?php _e('Delete This Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will remove the settings history data from your system, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>">
 									<span class="icon ttr-delete-fill-filled tutor-color-design-white"></span>
-									<span class="text-regular-body tutor-color-text-white">Delete</span>
+									<span class="text-regular-body tutor-color-text-white"><?php _e('Delete','tutor'); ?></span>
 								</a>
 							</li>
 							</ul>
@@ -110,17 +110,17 @@ tutor_alert(
 
 
 <div class="tutor-option-single-item">
-	<h4>Reset Settings</h4>
+	<h4><?php _e('Reset Settings','tutor'); ?></h4>
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="text-regular-h6 tutor-color-text-primary"> Reset Everything to Default</div>
+				<div class="text-regular-h6 tutor-color-text-primary"><?php _e('Reset Everything to Default','tutor'); ?></div>
 				<div class="text-medium-small tutor-color-text-subsued">
-					<span style="font-weight: 500">Reset subtitle
+					<span style="font-weight: 500"> <?php _e('It will revert all settings to initial setup.','tutor'); ?>
 				</span></div>
 			</div>
 			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-is-outline tutor-is-sm tutor-reset-all" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Reset Settings" data-heading="Reset All Settings?" data-message="WARNING! This will reset all settings to default, please proceed with caution." id="reset_options">Reset All Settings</button>
+				<button class="tutor-btn tutor-is-outline tutor-is-sm tutor-reset-all" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Reset Settings','tutor'); ?>" data-heading="<?php _e('Reset All Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will reset all settings to default, please proceed with caution.','tutor') ?>" id="reset_options"><?php _e('Reset All Settings','tutor'); ?></button>
 			</div>
 		</div>
 	</div>
