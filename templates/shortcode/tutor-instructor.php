@@ -7,7 +7,7 @@
 			if ( 'pp-left-middle' !== $layout ) :
 				?>
 			<div class="tutor-course-col-<?php echo $column_count; ?>">
-				<a href="<?php echo esc_url( tutor_utils()->profile_url( $instructor->ID ) ); ?>" class="tutor-course tutor-course-loop tutor-instructor-list tutor-instructor-list-<?php echo $layout; ?> tutor-instructor-list-<?php esc_attr_e( $instructor->ID ); ?>">
+				<a href="<?php echo esc_url( tutor_utils()->profile_url( $instructor->ID, true ) ); ?>" class="tutor-course tutor-course-loop tutor-instructor-list tutor-instructor-list-<?php echo $layout; ?> tutor-instructor-list-<?php esc_attr_e( $instructor->ID ); ?>">
 					<div class="tutor-instructor-cover-photo" style="background-image:url(<?php echo esc_url( tutor_utils()->get_cover_photo_url( $instructor->ID ) ); ?>)"></div>
 					<div class="tutor-instructor-profile-photo" style="background-image:url(<?php echo esc_url( get_avatar_url( $instructor->ID, array( 'size' => 500 ) ) ); ?>)"></div>                    
 					<div class="tutor-instructor-rating">
@@ -31,7 +31,7 @@
 			</div>
 			<?php else : ?>
 				<div  class="tutor-course-col-<?php esc_html_e( $column_count ); ?>">
-					<a href="<?php echo esc_url( tutor_utils()->profile_url( $instructor->ID ) ); ?>" style="text-decoration: none;">
+					<a href="<?php echo esc_url( tutor_utils()->profile_url( $instructor->ID, true ) ); ?>" style="text-decoration: none;">
 						<div class="tutor-instructor-left-middle">
 							<div class="tutor-instructor-profile-photo">
 								<img src="<?php echo esc_url( get_avatar_url( $instructor->ID ) ); ?>" alt="instructor-image">

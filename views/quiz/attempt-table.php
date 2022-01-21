@@ -17,9 +17,13 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 		<thead>
 			<tr>
 				<?php
-				foreach ( $table_columns as $key => $column ) {
-					echo '<th><div class="text-regular-small tutor-color-text-subsued">' . $column . '</div></th>';
-				}
+					foreach ( $table_columns as $key => $column ) {
+						echo '<th>
+							<div class="text-regular-small tutor-color-text-subsued">
+								' . $column . '
+							</div>
+						</th>';
+					}
 				?>
 			</tr>
 		</thead>
@@ -179,18 +183,18 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 	
 								case 'result':
 									?>
-											<td data-th="<?php echo $column; ?>">
-										<?php
-										if ( $attempt->attempt_status === 'review_required' ) {
-											echo '<span class="tutor-badge-label label-warning">' . __( 'Pending', 'tutor' ) . '</span>';
-										} else {
-											echo $earned_percentage >= $passing_grade ?
-												'<span class="tutor-badge-label label-success">' . __( 'Pass', 'tutor' ) . '</span>' :
-												'<span class="tutor-badge-label label-danger">' . __( 'Fail', 'tutor' ) . '</span>';
-										}
-										?>
-											</td>
+										<td data-th="<?php echo $column; ?>">
 											<?php
+												if ( $attempt->attempt_status === 'review_required' && !$attempt->is_manually_reviewed ) {
+													echo '<span class="tutor-badge-label label-warning">' . __( 'Pending', 'tutor' ) . '</span>';
+												} else {
+													echo $earned_percentage >= $passing_grade ?
+														'<span class="tutor-badge-label label-success">' . __( 'Pass', 'tutor' ) . '</span>' :
+														'<span class="tutor-badge-label label-danger">' . __( 'Fail', 'tutor' ) . '</span>';
+												}
+											?>
+										</td>
+									<?php
 									break;
 	
 								case 'details':

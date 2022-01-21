@@ -13,7 +13,7 @@
 
 global $post, $authordata;
 
-$profile_url = tutor_utils()->profile_url($authordata->ID);
+$profile_url = tutor_utils()->profile_url($authordata->ID, true);
 ?>
 
 <div class="list-item-author tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-30">

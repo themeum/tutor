@@ -34,10 +34,10 @@ class Rewrite_Rules extends Tutor_Base {
 		 *
 		 * @since v2.0.0
 		 */
-		$enable_public_profile = tutor_utils()->get_option( 'public_profile_layout' );
-		if ( 'private' !== $enable_public_profile ) {
-			$vars[] = 'tutor_student_username';
-		}
+		// $enable_public_profile = tutor_utils()->get_option( 'public_profile_layout' );
+		// if ( 'private' !== $enable_public_profile ) {
+			$vars[] = 'tutor_profile_username';
+		// }
 
 		return $vars;
 	}
@@ -61,7 +61,7 @@ class Rewrite_Rules extends Tutor_Base {
 			//Private Video URL
 			"video-url/(.+?)/?$" => "index.php?post_type={$this->lesson_post_type}&lesson_video=true&name=" . $wp_rewrite->preg_index(1),
 			//Student Public Profile URL
-			"profile/(.+?)/?$" => "index.php?tutor_student_username=" . $wp_rewrite->preg_index(1),
+			"profile/(.+?)/?$" => "index.php?tutor_profile_username=" . $wp_rewrite->preg_index(1),
 		);
 
 		//Student Dashboard URL
