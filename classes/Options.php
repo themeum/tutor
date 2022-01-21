@@ -59,8 +59,9 @@ class Options {
 
 		do_action('tutor_option_save_before');
 
-		$option = (array)tutor_utils()->array_get('tutor_option', $_POST, array());
-		
+		$option = (array) tutils()->array_get('tutor_option', $_POST, array());
+		$option = tutor_sanitize_data($option);
+
 		foreach ( $option as $key => $value ) {
 			if ( 'lesson_permalink_base' === $key ) {
 				$option['lesson_permalink_base'] = $this->tutor_sanitize_settings_options( 'lesson_permalink_base' );
@@ -72,9 +73,9 @@ class Options {
 				$option['email_from_address'] = $this->tutor_sanitize_settings_options( 'email_from_address' );
 			}
 		}
-		
+
 		$option = apply_filters('tutor_option_input', $option);
-		
+
 		update_option('tutor_option', $option);
 
 		do_action('tutor_option_save_after');
@@ -91,7 +92,7 @@ class Options {
 		$lesson_sample_url_text = __( "/course/sample-course/<code>lessons</code>/sample-lesson/", 'tutor' );
 		$lesson_url 			= site_url().$lesson_sample_url_text;
 
-		$student_url = site_url().'/'._x( 'profile', 'tutor student profile', 'tutor' ).'/'.$current_user->display_name ; 
+		$student_url = site_url().'/'._x( 'profile', 'tutor student profile', 'tutor' ).'/'.$current_user->display_name ;
 
 		$attempts_allowed = array();
 		$attempts_allowed['unlimited'] = __('Unlimited' , 'tutor');
@@ -102,7 +103,8 @@ class Options {
 			'external_url' => __('External URL', 'tutor'),
 			'youtube' => __('Youtube', 'tutor'),
 			'vimeo' => __('Vimeo', 'tutor'),
-			'embedded' => __('Embedded', 'tutor')
+			'embedded' => __('Embedded', 'tutor'),
+			'shortcode' => __('Shortcode', 'tutor')
 		);
 
 		$course_filters = array(
@@ -738,13 +740,13 @@ class Options {
 								'default'   => '',
 							),
 							//tutor button style options
-							
+
 							'tutor_button_primary' => array(
 								'type' => 'color',
 								'label' => __('Button Primary Color','tutor'),
 								'default' => ''
-							),							
-							
+							),
+
 							'tutor_button_danger' => array(
 								'type' => 'color',
 								'label' => __('Button Danger Color','tutor'),
@@ -819,13 +821,13 @@ class Options {
 	public function generate_field($field = array()){
 		ob_start();
 		include tutor()->path.'views/options/option_field.php';
-		return ob_get_clean();
+		echo ob_get_clean();
 	}
 
 	public function field_type($field = array()){
 		ob_start();
-		include tutor()->path."views/options/field-types/{$field['type']}.php";
-		return ob_get_clean();
+		include tutor()->path.'views/options/field-types/'.$field['type'].'.php';
+		echo ob_get_clean();
 	}
 
 	public function generate(){

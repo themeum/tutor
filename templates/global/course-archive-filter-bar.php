@@ -4,20 +4,20 @@
  * @version 1.4.3
  */
 
-    $sort_by = '';
-    isset($_GET["tutor_course_filter"]) ? $sort_by = $_GET["tutor_course_filter"] : 0;
-    isset($_POST["tutor_course_filter"]) ? $sort_by = $_POST["tutor_course_filter"] : 0;
+	$sort_by = '';
+	isset( $_GET['tutor_course_filter'] ) ? $sort_by  = tutor_sanitize_data( $_GET['tutor_course_filter'] ) : 0;
+	isset( $_POST['tutor_course_filter'] ) ? $sort_by = tutor_sanitize_data( $_POST['tutor_course_filter'] ) : 0;
 ?>
 
 
 <div class="tutor-course-filter-wrap">
-    <div class="tutor-course-archive-results-wrap">
+	<div class="tutor-course-archive-results-wrap">
 		<?php
             $courseCount = tutor_utils()->get_archive_page_course_count();
             $count_text = $courseCount>1 ? __("%s Courses", "tutor") : __("%s Course", "tutor");
             echo sprintf($count_text, "<strong>{$courseCount}</strong>");
 		?>
-    </div>
+	</div>
 
     <div class="tutor-course-archive-filters-wrap">
         <form class="tutor-course-filter-form" method="get">

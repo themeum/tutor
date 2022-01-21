@@ -1,6 +1,6 @@
 <?php
 global $wpdb;
-$settings = maybe_unserialize($question->question_settings);
+$settings = maybe_unserialize( $question->question_settings );
 ?>
 
 <div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>">

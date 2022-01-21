@@ -7,7 +7,6 @@
  * @author Themeum
  * @url https://themeum.com
  *
- *
  * @package TutorLMS/Templates
  * @version 1.6.4
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Display Permission denied 
+ * Display Permission denied
  *
  * @since v.1.0.0
  * @author themeum
@@ -8,14 +8,15 @@
  *
  * @package TutorLMS/Templates
  * @version 1.4.3
- * 
- * Template content and design updated 
- * 
+ *
+ * Template content and design updated
+ *
  * @version 1.9.6
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 get_header();
 
@@ -56,7 +57,7 @@ get_header();
             </a>
         </div>
 
-    </div>
+	</div>
 
 </div>
 

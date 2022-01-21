@@ -16,7 +16,7 @@ get_tutor_header();
 global $post;
 $currentPost = $post;
 
-$enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
+$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 ?>
 
 <?php do_action('tutor_lesson/single/before/wrap'); ?>

@@ -8,13 +8,13 @@
  * @author Themeum
  * @url https://themeum.com
  *
- *
  * @package TutorLMS/Templates
  * @version 1.6.4
  */
 
-if ( ! defined( 'ABSPATH' ) )
-exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 $user_id = get_current_user_id();
 $attempt_id = (int) sanitize_text_field($_GET['view_quiz_attempt_id']);

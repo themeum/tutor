@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.8
 Requires PHP: 7.0
-Stable tag: 1.9.13
+Stable tag: 1.9.14
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,7 +241,11 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 2.0.0-beta - January 18 2022
+= 2.0.0-beta.2 - January 21, 2022
+
+Update: Bug fixes and optimizations
+
+= 2.0.0-beta - January 18, 2022
 
 New: Visually appealing appearance with a more unified design system
 New: Edit email template content from the editor without having to override the plugin
@@ -263,6 +267,16 @@ Update: Flexible Gradebook with easy grading point system setup
 Update: More intuitive certificate setup page with guided creation process
 Update: Enhanced course catalog features with extensive course page
 Update: Improved accessibility and responsiveness across all device
+
+= 1.9.14 - January 20, 2022 =
+
+New: Now you can add Videos using a Shortcode
+Fix: Issue of HTML codes disappearing after saving a Quiz
+Fix: Issue regarding video not working using Embedded code
+Fix: Presto Player Shortcode wasn't saving in the video source
+Update: Better user input field sanitization ensure SQL Injection
+Update: Better security of HTML output of user-provided input
+Update: XSS vulnerability protection is made stronger
 
 = 1.9.13 - December 20, 2021 =
 
