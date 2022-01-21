@@ -11,16 +11,17 @@
 
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 class Course_Widget extends \WP_Widget {
-	
+
 	function __construct() {
 		parent::__construct(
 			'tutor_course_widget', // Base ID
 			esc_html__( 'Tutor Course', 'tutor' ), // Name
-			array( 'description' => esc_html__( 'Display courses wherever widget support is available.', 'tutor' ), ) // Args
+			array( 'description' => esc_html__( 'Display courses wherever widget support is available.', 'tutor' ) ) // Args
 		);
 	}
 
@@ -41,34 +42,34 @@ class Course_Widget extends \WP_Widget {
 		$course_post_type = tutor()->course_post_type;
 
 		$form_args = $instance;
-		unset($form_args['title']);
+		unset( $form_args['title'] );
 
 		$default_args = array(
-			'post_type'         => $course_post_type,
-			'post_status'       => 'publish',
+			'post_type'   => $course_post_type,
+			'post_status' => 'publish',
 
-			'id'       => '',
-			'exclude_ids'       => '',
-			'category'       => '',
+			'id'          => '',
+			'exclude_ids' => '',
+			'category'    => '',
 
-			'orderby'           => 'ID',
-			'order'             => 'DESC',
-			'count'     => '6',
+			'orderby'     => 'ID',
+			'order'       => 'DESC',
+			'count'       => '6',
 		);
 
-		$a = array_merge($default_args, $form_args);
+		$a = array_merge( $default_args, $form_args );
 
-		if ( ! empty($a['id'])){
-			$ids = (array) explode(',', $a['id']);
+		if ( ! empty( $a['id'] ) ) {
+			$ids           = (array) explode( ',', $a['id'] );
 			$a['post__in'] = $ids;
 		}
 
-		if ( ! empty($a['exclude_ids'])){
-			$exclude_ids = (array) explode(',', $a['exclude_ids']);
+		if ( ! empty( $a['exclude_ids'] ) ) {
+			$exclude_ids       = (array) explode( ',', $a['exclude_ids'] );
 			$a['post__not_in'] = $exclude_ids;
 		}
-		if ( ! empty($a['category'])){
-			$category = (array) explode(',', $a['category']);
+		if ( ! empty( $a['category'] ) ) {
+			$category = (array) explode( ',', $a['category'] );
 
 			$a['tax_query'] = array(
 				array(
@@ -82,12 +83,11 @@ class Course_Widget extends \WP_Widget {
 		$a['posts_per_page'] = (int) $a['count'];
 
 		wp_reset_query();
-		query_posts($a);
+		query_posts( $a );
 		ob_start();
-		tutor_load_template('widget.courses');
+		tutor_load_template( 'widget.courses' );
 		$output = ob_get_clean();
 		wp_reset_query();
-
 
 		echo $output;
 
@@ -102,60 +102,72 @@ class Course_Widget extends \WP_Widget {
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form( $instance ) {
-		$title = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'New title', 'tutor' );
-		$id = ! empty( $instance['id'] ) ? $instance['id'] : '';
+		$title       = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'New title', 'tutor' );
+		$id          = ! empty( $instance['id'] ) ? $instance['id'] : '';
 		$exclude_ids = ! empty( $instance['exclude_ids'] ) ? $instance['exclude_ids'] : '';
-		$category = ! empty( $instance['category'] ) ? $instance['category'] : '';
-		$orderby = ! empty( $instance['orderby'] ) ? $instance['orderby'] : '';
-		$order = ! empty( $instance['order'] ) ? $instance['order'] : '';
-		$count = ! empty( $instance['count'] ) ? $instance['count'] : '6';
+		$category    = ! empty( $instance['category'] ) ? $instance['category'] : '';
+		$orderby     = ! empty( $instance['orderby'] ) ? $instance['orderby'] : '';
+		$order       = ! empty( $instance['order'] ) ? $instance['order'] : '';
+		$count       = ! empty( $instance['count'] ) ? $instance['count'] : '6';
 		?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_attr_e( 'Title:', 'tutor' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
+				<?php _e( 'Title', 'tutor' ); ?>:
+			</label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'id' ) ); ?>"><?php esc_attr_e( 'ID:', 'tutor' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'id' ) ); ?>">
+				<?php _e( 'ID', 'tutor' ); ?>:
+			</label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'id' ) ); ?>" type="text" value="<?php echo esc_attr( $id ); ?>"> <br />
-			<span style="color: #AAAAAA"><?php _e('Place single course id or comma (,) separated course ids', 'tutor'); ?></span>
+			<span style="color: #AAAAAA">
+				<?php _e( 'Place single course id or comma (,) separated course ids', 'tutor' ); ?>
+			</span>
 		</p>
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>"><?php esc_attr_e( 'Exclude IDS:', 'tutor' ); ?></label>
-			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>" name="<?php echo esc_attr(
-				$this->get_field_name( 'exclude_ids' ) ); ?>" type="text" value="<?php echo esc_attr( $exclude_ids ); ?>"> <br />
-			<span style="color: #AAAAAA"><?php _e('Place comma (,) separated courses ids which you like to exclude from the query', 'tutor');
-			?></span>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>" name="<?php echo esc_attr($this->get_field_name( 'exclude_ids' )); ?>" type="text" value="<?php echo esc_attr( $exclude_ids ); ?>"> <br />
+			<span style="color: #AAAAAA">
+				<?php _e( 'Place comma (,) separated courses ids which you like to exclude from the query', 'tutor' ); ?>
+			</span>
 		</p>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>"><?php esc_attr_e( 'Category:', 'tutor' ); ?></label>
-			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>" name="<?php echo esc_attr(
-				$this->get_field_name( 'category' ) ); ?>" type="text" value="<?php echo esc_attr( $category ); ?>"> <br />
-			<span style="color: #AAAAAA"><?php _e('Place comma (,) separated category ids', 'tutor');
-				?></span>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>">
+				<?php _e( 'Category', 'tutor' ); ?>:
+			</label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>" name="<?php echo esc_attr($this->get_field_name( 'category' )); ?>" type="text" value="<?php echo esc_attr( $category ); ?>"> <br />
+			<span style="color: #AAAAAA">
+				<?php _e( 'Place comma (,) separated category ids', 'tutor' ); ?>
+			</span>
 		</p>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>"><?php esc_attr_e( 'OrderBy', 'tutor' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>">
+				<?php _e( 'OrderBy', 'tutor' ); ?>
+			</label>
 
-			<select class="widefat" name="<?php echo esc_attr($this->get_field_name( 'orderby' ) ); ?>" >
-				<option value="ID" <?php selected('ID', $orderby) ?> >ID</option>
-				<option value="title" <?php selected('title', $orderby) ?> >title</option>
-				<option value="rand" <?php selected('rand', $orderby) ?> >rand</option>
-				<option value="date" <?php selected('date', $orderby) ?> >date</option>
-				<option value="menu_order" <?php selected('menu_order', $orderby) ?> >menu_order</option>
-				<option value="post__in" <?php selected('post__in', $orderby) ?> >post__in</option>
+			<select class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'orderby' ) ); ?>" >
+				<option value="ID" <?php selected( 'ID', $orderby ); ?> >ID</option>
+				<option value="title" <?php selected( 'title', $orderby ); ?> >title</option>
+				<option value="rand" <?php selected( 'rand', $orderby ); ?> >rand</option>
+				<option value="date" <?php selected( 'date', $orderby ); ?> >date</option>
+				<option value="menu_order" <?php selected( 'menu_order', $orderby ); ?> >menu_order</option>
+				<option value="post__in" <?php selected( 'post__in', $orderby ); ?> >post__in</option>
 			</select> <br />
 		</p>
 
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'order' ) ); ?>"><?php esc_attr_e( 'order', 'tutor' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'order' ) ); ?>">
+				<?php _e( 'Order', 'tutor' ); ?>
+			</label>
 
-			<select class="widefat" name="<?php echo esc_attr($this->get_field_name( 'order' ) ); ?>" >
-				<option value="DESC" <?php selected('DESC', $order) ?> >DESC</option>
-				<option value="ASC" <?php selected('ASC', $order) ?> >ASC</option>
+			<select class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'order' ) ); ?>" >
+				<option value="DESC" <?php selected( 'DESC', $order ); ?> >DESC</option>
+				<option value="ASC" <?php selected( 'ASC', $order ); ?> >ASC</option>
 			</select> <br />
 		</p>
 
@@ -166,7 +178,7 @@ class Course_Widget extends \WP_Widget {
 				<?php _e('Total results you like to show', 'tutor'); ?>
 			</span>
 		</p>
-		
+
 		<?php
 	}
 
@@ -181,18 +193,15 @@ class Course_Widget extends \WP_Widget {
 	 * @return array Updated safe values to be saved.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = array();
-		$instance['title']          = ( ! empty( $new_instance['title'] ) ) ? sanitize_text_field( $new_instance['title'] ) : '';
-		$instance['id']             = ( ! empty( $new_instance['id'] ) ) ? sanitize_text_field( $new_instance['id'] ) : '';
-		$instance['exclude_ids']    = ( ! empty( $new_instance['exclude_ids'] ) ) ? sanitize_text_field( $new_instance['exclude_ids'] ) : '';
-		$instance['category']       = ( ! empty( $new_instance['category'] ) ) ? sanitize_text_field( $new_instance['category'] ) : '';
-		$instance['orderby']        = ( ! empty( $new_instance['orderby'] ) ) ? sanitize_text_field( $new_instance['orderby'] ) : '';
-		$instance['order']          = ( ! empty( $new_instance['order'] ) ) ? sanitize_text_field( $new_instance['order'] ) : '';
-		$instance['count']          = ( ! empty( $new_instance['count'] ) ) ? sanitize_text_field( $new_instance['count'] ) : '';
+		$instance                = array();
+		$instance['title']       = ( ! empty( $new_instance['title'] ) ) ? sanitize_text_field( $new_instance['title'] ) : '';
+		$instance['id']          = ( ! empty( $new_instance['id'] ) ) ? sanitize_text_field( $new_instance['id'] ) : '';
+		$instance['exclude_ids'] = ( ! empty( $new_instance['exclude_ids'] ) ) ? sanitize_text_field( $new_instance['exclude_ids'] ) : '';
+		$instance['category']    = ( ! empty( $new_instance['category'] ) ) ? sanitize_text_field( $new_instance['category'] ) : '';
+		$instance['orderby']     = ( ! empty( $new_instance['orderby'] ) ) ? sanitize_text_field( $new_instance['orderby'] ) : '';
+		$instance['order']       = ( ! empty( $new_instance['order'] ) ) ? sanitize_text_field( $new_instance['order'] ) : '';
+		$instance['count']       = ( ! empty( $new_instance['count'] ) ) ? sanitize_text_field( $new_instance['count'] ) : '';
 
 		return $instance;
 	}
-
-
-
 }

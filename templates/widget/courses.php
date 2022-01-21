@@ -10,7 +10,7 @@
 if ( have_posts() ) :
 	while ( have_posts() ) : the_post();
 		?>
-		<div class="<?php echo tutor_widget_course_loop_classes(); ?>">
+		<div class="<?php echo esc_attr( tutor_widget_course_loop_classes() ); ?>">
 			<?php tutor_load_template('loop.course'); ?>
 		</div>
 	<?php

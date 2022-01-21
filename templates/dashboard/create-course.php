@@ -61,24 +61,18 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 				</div>
 				<div class="tutor-bs-col tutor-mt-10 tutor-mb-10">
 					<div class="tutor-dashboard-builder-header-right tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
-						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" href="<?php the_permalink($course_id); ?>" target="_blank">
+						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
 							<?php _e('Preview', 'tutor'); ?>
 						</a>
-						<?php
-						if ($can_publish_course) {
-						?>
+						<?php if ($can_publish_course): ?>
 							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-ml-15" type="submit" name="course_submit_btn" value="publish_course">
 								<?php _e('Publish', 'tutor'); ?>
 							</button>
-						<?php
-						} else {
-						?>
+						<?php else: ?>
 							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-ml-15" type="submit" name="course_submit_btn" value="submit_for_review" title="<?php _e('Submit for Review', 'tutor'); ?>">
 								<?php _e('Submit', 'tutor'); ?>
 							</button>
-						<?php
-						}
-						?>
+						<?php endif; ?>
 						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="ttr-line-cross-line tutor-ml-15" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;color: #9CA0AC;"></a>
 					</div>
 				</div>

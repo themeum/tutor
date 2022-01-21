@@ -26,8 +26,8 @@ if ($product) {
     }
 } else {
 	?>
-    <p class="tutor-alert-warning">
-		<?php _e('Please make sure that your product exists and valid for this course', 'tutor'); ?>
-    </p>
+	<p class="tutor-alert-warning">
+		<?php _e( 'Please make sure that your product exists and valid for this course', 'tutor' ); ?>
+	</p>
 	<?php
 }

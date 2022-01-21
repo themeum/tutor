@@ -19,10 +19,10 @@ $rating = $isLoggedIn ? tutor_utils()->get_reviews_by_user(0, 0, 150, false, get
 			_e('Write a review', 'tutor');
 		}
 		?>
-    </a>
-    <div class="tutor-write-review-form" style="display: none;">
+	</a>
+	<div class="tutor-write-review-form" style="display: none;">
 		<?php
-		if($isLoggedIn) {
+		if ( $isLoggedIn ) {
 			?>
             <form method="post">
                 <div class="tutor-star-rating-container">
@@ -47,5 +47,5 @@ $rating = $isLoggedIn ? tutor_utils()->get_reviews_by_user(0, 0, 150, false, get
 			<?php
 		}
 		?>
-    </div>
+	</div>
 </div>

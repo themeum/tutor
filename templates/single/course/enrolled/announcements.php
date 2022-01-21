@@ -10,7 +10,7 @@
  * @version 1.4.3
  */
 
-$announcements = tutor_utils()->get_announcements(get_the_ID());
+$announcements = tutor_utils()->get_announcements( get_the_ID() );
 ?>
 
 <?php do_action('tutor_course/announcements/before'); ?>
@@ -54,4 +54,4 @@ $announcements = tutor_utils()->get_announcements(get_the_ID());
 	</div>
 <?php endif; ?>
 
-<?php do_action('tutor_course/announcements/after'); ?>
+<?php do_action( 'tutor_course/announcements/after' ); ?>

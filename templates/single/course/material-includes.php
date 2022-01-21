@@ -12,15 +12,15 @@
  */
 
 
-do_action('tutor_course/single/before/material_includes');
+do_action( 'tutor_course/single/before/material_includes' );
 
 $materials = tutor_course_material_includes();
 
-if ( empty($materials)){
+if ( empty( $materials ) ) {
 	return;
 }
 
-if (is_array($materials) && count($materials)){
+if ( is_array( $materials ) && count( $materials ) ) {
 	?>
 	<div class="tutor-course-details-widget tutor-mt-40">
 		<div class="tutor-course-details-widget-title tutor-mb-16">

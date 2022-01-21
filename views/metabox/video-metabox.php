@@ -16,13 +16,7 @@ $sourceVideoID  = tutor_utils()->avalue_dot('source_video_id', $video);
 $poster         = tutor_utils()->avalue_dot('poster', $video);
 $videoAttachment = $sourceVideoID ? tutor_utils()->get_attachment_data($sourceVideoID) : null;
 
-$video_sources  = array(
-    'html5'     => array('title' => __('HTML 5 (mp4)', 'tutor'), 'icon' => 'html5'),
-    'external_url' => array('title' => __('External URL', 'tutor'), 'icon' => 'link'),
-    'youtube'   => array('title' => __('Youtube', 'tutor'), 'icon' => 'youtube'),
-    'vimeo'     => array('title' => __('Vimeo', 'tutor'), 'icon' => 'vimeo'),
-    'embedded'  => array('title' => __('Embedded', 'tutor'), 'icon' => 'code')
-);
+$video_sources  = tutor_utils()->get_video_sources(false);
 
 $supported_sources = tutor_utils()->get_option('supported_video_sources', array());
 is_string($supported_sources) ? $supported_sources = array($supported_sources) : 0;
@@ -107,6 +101,10 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
 
             <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_external_url tutor-dashed-uploader" style="display: <?php echo $videoSource === 'external_url' ? 'block' : 'none'; ?>;">
                 <input class="tutor-form-control" type="text" name="video[source_external_url]" value="<?php echo tutor_utils()->avalue_dot('source_external_url', $video); ?>" placeholder="<?php _e('Paste External Video URL', 'tutor'); ?>">
+            </div>
+
+            <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_shortcode tutor-dashed-uploader" style="display: <?php echo $videoSource === 'shortcode' ? 'block' : 'none'; ?>;">
+                <input class="tutor-form-control" type="text" name="video[source_shortcode]" value="<?php echo tutor_utils()->avalue_dot('source_shortcode', $video); ?>" placeholder="<?php _e('Paste Shortcode', 'tutor'); ?>">
             </div>
 
             <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_youtube tutor-dashed-uploader" style="display: <?php echo $videoSource === 'youtube' ? 'block' : 'none'; ?>;">
