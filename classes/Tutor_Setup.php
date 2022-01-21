@@ -380,6 +380,15 @@ if ( ! defined( 'ABSPATH' ) )
                             'lable' => __('Public Profile', 'tutor'),
                             'desc' => __('Allow users to have a public profile to showcase awards and completed courses.', 'tutor'),
                         ),
+                        'student_public_profile_layout' => array(
+                            'type' => 'switch',
+                            'data' => array(
+                                'off' => 'private',
+                                'on' => tutor_utils()->get_option( 'public_profile_layout', 'pp-rectangle' )
+                            ),
+                            'lable' => __('Public Profile', 'tutor'),
+                            'desc' => __('Allow users to have a public profile to showcase awards and completed courses.', 'tutor'),
+                        ),
                         'enable_spotlight_mode' => array(
                             'type' => 'switch',
                             'lable' => __('Spotlight Mode', 'tutor'),

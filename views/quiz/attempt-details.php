@@ -49,10 +49,14 @@ function show_correct_answer( $answers= array() ){
                         break;
 
                     case 'text':
-                        if(isset($ans->answer_title)) {
-                            $multi_texts[$ans->answer_title] = '<span class="text-medium-caption tutor-color-text-primary">'
+                        $ans_string = '<span class="text-medium-caption tutor-color-text-primary">'
                                 .esc_html( $ans->answer_title ).
                             '</span>';
+
+                        if(isset($ans->answer_title) && !isset($ans->answer_two_gap_match)) {
+                            $multi_texts[$ans->answer_title] = $ans_string;
+                        } else {
+                            echo $ans_string;
                         }
                         break;
 
@@ -75,7 +79,6 @@ function show_correct_answer( $answers= array() ){
                     echo '</div>';
                 }
             }
-            
             echo count($multi_texts) ? implode(', ', $multi_texts) : '';
 
 		echo '</div>';
@@ -317,12 +320,11 @@ if ( is_array( $attempt_info ) ) {
                             $answer_i++;
                             $question_type = tutor_utils()->get_question_types($answer->question_type);
     
-    
                             $answer_status = null;
                             if ( (bool) (isset( $answer->is_correct ) ? $answer->is_correct : '') ) {
                                 $answer_status = 'correct';
                             } else {
-                                if ($answer->question_type === 'open_ended' || $answer->question_type === 'short_answer'){
+                                if (in_array($answer->question_type, array('open_ended', 'short_answer', 'image_answering'))){
                                     if ( (bool) $attempt_data->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
                                         $answer_status = 'wrong';
                                     } else {
@@ -596,6 +598,32 @@ if ( is_array( $attempt_info ) ) {
                                                             ) );
     
                                                             show_correct_answer($correct_answer);
+                                                        }
+
+                                                        // Image Answering
+                                                        elseif ($answer->question_type === 'image_answering'){
+    
+                                                            $correct_answer = $wpdb->get_results( $wpdb->prepare(
+                                                                "SELECT answer_title, image_id, answer_two_gap_match
+                                                                FROM {$wpdb->prefix}tutor_quiz_question_answers
+                                                                WHERE belongs_question_id = %d
+                                                                    AND belongs_question_type='image_answering'
+                                                                ORDER BY answer_order ASC;",
+                                                                $answer->question_id
+                                                            ) );
+
+                                                            !is_array($correct_answer) ? $correct_answer=array() : 0;
+                                                            
+                                                            echo '<div class="answer-image-matched-wrap">';
+                                                            foreach ($correct_answer as $image_answer){
+                                                                ?>
+                                                                    <div class="image-matching-item">
+                                                                        <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $image_answer->image_id); ?>" /> </p>
+                                                                        <p class="dragged-caption"><?php echo $image_answer->answer_title; ?></p>
+                                                                    </div>
+                                                                <?php
+                                                            }
+                                                            echo '</div>';
                                                         }
                                                     }
                                                     ?>&nbsp;
