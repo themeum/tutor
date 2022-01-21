@@ -102,4 +102,10 @@ window.jQuery(document).ready(function ($) {
             val > max ? $(this).val(max) : 0;
         }
     });
+
+    // Open location on dropdoqn change
+    $(document).on('change', '.tutor-select-redirector', function(){
+        let url = $(this).val();
+        window.location.assign(url);
+    });
 });

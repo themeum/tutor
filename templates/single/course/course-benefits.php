@@ -7,18 +7,17 @@
  * @author Themeum
  * @url https://themeum.com
  *
- *
  * @package TutorLMS/Templates
  * @version 1.4.3
  */
 
 
 
-do_action('tutor_course/single/before/benefits');
+do_action( 'tutor_course/single/before/benefits' );
 
 
 $course_benefits = tutor_course_benefits();
-if ( empty($course_benefits)){
+if ( empty( $course_benefits ) ) {
 	return;
 }
 ?>

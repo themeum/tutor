@@ -140,4 +140,3 @@
 
 <?php do_action('tutor_after_instructor_reg_form');?>
 <?php endif; ?>
-

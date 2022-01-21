@@ -116,7 +116,9 @@ class Options_V2 {
 	 * Export settings
 	 */
 	public function tutor_export_settings() {
-		wp_send_json_success( (array) maybe_unserialize( get_option( 'tutor_option' ) ) );
+		$tutor_option = get_option( 'tutor_option' );
+		// pr($tutor_option);die;
+		wp_send_json_success( maybe_unserialize( $tutor_option ) );
 	}
 
 	/**
@@ -218,11 +220,12 @@ class Options_V2 {
 
 	public function tutor_import_settings() {
 		tutor_utils()->checking_nonce();
-		// pr($_REQUEST);
+		// pr($_REQUEST);die;
 		$request = $this->get_request_data( 'tutor_options' );
+		$request = json_decode(stripslashes($request), true);
 
 		$time    = $this->get_request_data( 'time' );
-		$request = json_decode( str_replace( '\"', '"', $request ), true );
+		//pr(json_decode(stripslashes($request), true));die;
 
 		$save_import_data['datetime']             = $time;
 		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
@@ -281,6 +284,8 @@ class Options_V2 {
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
 
 		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
+
+		$option['email_footer_text'] = wp_unslash( $option['email_footer_text'] );
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
@@ -578,13 +583,7 @@ class Options_V2 {
 								'default'     => array( 'youtube', 'vimeo' ),
 								'label'       => __( 'Preferred Video Source', 'tutor' ),
 								'label_title' => __( 'Preferred Video Source', 'tutor' ),
-								'options'     => array(
-									'html5'        => __( 'HTML 5 (mp4)', 'tutor' ),
-									'external_url' => __( 'External URL', 'tutor' ),
-									'youtube'      => __( 'Youtube', 'tutor' ),
-									'vimeo'        => __( 'Vimeo', 'tutor' ),
-									'embedded'     => __( 'Embedded', 'tutor' ),
-								),
+								'options'     => tutor_utils()->get_video_sources(true),
 								'desc'        => __( 'Choose video sources you\'d like to support.', 'tutor' ),
 							),
 						),
@@ -857,8 +856,33 @@ class Options_V2 {
 							array(
 								'key'           => 'public_profile_layout',
 								'type'          => 'group_radio_full_3',
-								'label'         => __( 'Public Profile Layout', 'tutor' ),
-								'desc'          => __( 'Choose a layout design for a user’s public profile', 'tutor' ),
+								'label'         => __( 'Instructor Public Profile Layout', 'tutor' ),
+								'desc'          => __( 'Choose a layout design for a instructor’s public profile', 'tutor' ),
+								'default'       => 'pp-rectangle',
+								'group_options' => array(
+									'private'      => array(
+										'title' => 'Private',
+										'image' => 'profile-layout/profile-private.svg',
+									),
+									'pp-circle'    => array(
+										'title' => 'Modern',
+										'image' => 'profile-layout/profile-modern.svg',
+									),
+									'no-cp'        => array(
+										'title' => 'Minimal',
+										'image' => 'profile-layout/profile-minimal.svg',
+									),
+									'pp-rectangle' => array(
+										'title' => 'Classic',
+										'image' => 'profile-layout/profile-classic.svg',
+									),
+								),
+							),
+							array(
+								'key'           => 'student_public_profile_layout',
+								'type'          => 'group_radio_full_3',
+								'label'         => __( 'Student Public Profile Layout', 'tutor' ),
+								'desc'          => __( 'Choose a layout design for a student’s public profile', 'tutor' ),
 								'default'       => 'pp-rectangle',
 								'group_options' => array(
 									'private'      => array(
