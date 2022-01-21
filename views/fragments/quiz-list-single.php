@@ -4,7 +4,7 @@
         <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $data['quiz_id']; ?>" data-topic-id="<?php echo $data['topic_id']; ?>"> 
             <?php echo stripslashes($data['quiz_title']); ?> 
         </a>
-        <div>
+        <div class="tutor-course-content-top-right-action">
             <?php do_action('tutor_course_builder_before_quiz_btn_action', $data['quiz_id']); ?>
             <a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo $data['quiz_id']; ?>" data-topic-id="<?php echo $data['topic_id']; ?>"> 
                 <span class="color-text-hints ttr-edit-filled tutor-font-size-24"></span>
