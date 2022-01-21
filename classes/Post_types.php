@@ -4,14 +4,14 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 class Post_types{
-	
+
 	public $course_post_type;
 	public $lesson_post_type;
 
 	public function __construct() {
 		$this->course_post_type = tutor()->course_post_type;
 		$this->lesson_post_type = tutor()->lesson_post_type;
-		
+
 		add_action( 'init', array($this, 'register_course_post_types') );
 		add_action( 'init', array($this, 'register_lesson_post_types') );
 		add_action( 'init', array($this, 'register_quiz_post_types') );
@@ -38,7 +38,7 @@ class Post_types{
 		 */
 		add_action( 'admin_menu', array( $this, 'remove_course_post_menu' ) );
 	}
-	
+
 	public function register_course_post_types() {
 		$course_post_type = $this->course_post_type;
 		$courses_base_slug = apply_filters('tutor_courses_base_slug', $course_post_type);
@@ -214,7 +214,7 @@ class Post_types{
 
 		register_post_type($lesson_post_type, $args );
 	}
-	
+
 	public function register_quiz_post_types() {
 		$labels = array(
 			'name'               => _x( 'Quizzes', 'post type general name', 'tutor' ),
@@ -334,7 +334,7 @@ class Post_types{
 		$post             = get_post();
 		$post_type        = get_post_type( $post );
 		$post_type_object = get_post_type_object( $post_type );
-		
+
 		$course_post_type = tutor()->course_post_type;
 
 		$messages[$course_post_type] = array(
@@ -344,7 +344,7 @@ class Post_types{
 			3  => __( 'Custom field deleted.', 'tutor' ),
 			4  => __( 'Course updated.', 'tutor' ),
 			/* translators: %s: date and time of the revision */
-			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Course restored to revision from %s', 'tutor' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			5  => isset( $_GET['revision'] ) ? sprintf( __( 'Course restored to revision from %s', 'tutor' ), wp_post_revision_title( (int) tutor_sanitize_data($_GET['revision']), false ) ) : false,
 			6  => __( 'Course published.', 'tutor' ),
 			7  => __( 'Course saved.', 'tutor' ),
 			8  => __( 'Course submitted.', 'tutor' ),

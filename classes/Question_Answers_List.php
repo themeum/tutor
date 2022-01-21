@@ -1,11 +1,12 @@
 <?php
 namespace TUTOR;
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
-if (! class_exists('Tutor_List_Table')){
-	include_once tutor()->path.'classes/Tutor_List_Table.php';
+if ( ! class_exists( 'Tutor_List_Table' ) ) {
+	include_once tutor()->path . 'classes/Tutor_List_Table.php';
 }
 
 class Question_Answers_List extends \Tutor_List_Table {

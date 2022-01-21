@@ -12,15 +12,15 @@
  */
 
 
-do_action('tutor_course/single/before/requirements');
+do_action( 'tutor_course/single/before/requirements' );
 
 $course_requirements = tutor_course_requirements();
 
-if ( empty($course_requirements)){
+if ( empty( $course_requirements ) ) {
 	return;
 }
 
-if (is_array($course_requirements) && count($course_requirements)){
+if ( is_array( $course_requirements ) && count( $course_requirements ) ) {
 	?>
 
 	<div class="tutor-course-details-widget tutor-mt-40">
@@ -38,4 +38,4 @@ if (is_array($course_requirements) && count($course_requirements)){
 
 <?php } ?>
 
-<?php do_action('tutor_course/single/after/requirements'); ?>
+<?php do_action( 'tutor_course/single/after/requirements' ); ?>

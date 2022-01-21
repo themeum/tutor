@@ -11,7 +11,7 @@
  * @version 1.4.3
  */
 
-do_action('tutor_course/single/before/tags');
+do_action( 'tutor_course/single/before/tags' );
 
 $course_tags = get_tutor_course_tags();
 if(is_array($course_tags) && count($course_tags)){ ?>
@@ -33,4 +33,4 @@ if(is_array($course_tags) && count($course_tags)){ ?>
 <?php
 }
 
-do_action('tutor_course/single/after/tags'); ?>
+do_action( 'tutor_course/single/after/tags' ); ?>

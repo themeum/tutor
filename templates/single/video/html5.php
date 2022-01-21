@@ -10,8 +10,9 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
 
 global $previous_id;
 global $next_id;
@@ -21,10 +22,11 @@ $contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
 $previous_id = $contents->previous_id;
 $next_id = $contents->next_id;
 $video_info = tutor_utils()->get_video_info();
-$poster = tutor_utils()->avalue_dot('poster', $video_info);
-$poster_url = $poster ? wp_get_attachment_url($poster) : '';
 
-do_action('tutor_lesson/single/before/video/html5');
+$poster     = tutor_utils()->avalue_dot( 'poster', $video_info );
+$poster_url = $poster ? wp_get_attachment_url( $poster ) : '';
+
+do_action( 'tutor_lesson/single/before/video/html5' );
 ?>
 
 <?php if($video_info ) { ?>
@@ -57,4 +59,4 @@ do_action('tutor_lesson/single/before/video/html5');
 </div>
 <?php } ?>
 <?php
-do_action('tutor_lesson/single/after/video/html5'); ?>
+do_action( 'tutor_lesson/single/after/video/html5' ); ?>
