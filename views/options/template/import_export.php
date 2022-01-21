@@ -7,7 +7,7 @@ tutor_alert(
 	__( 'Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.', 'tutor' ),
 	'warning'
 );
-// pr(get_option( 'tutor_option' ));
+// pr(get_option( 'tutor_default_option' ));
 ?>
 
 
