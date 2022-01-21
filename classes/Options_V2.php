@@ -147,10 +147,8 @@ class Options_V2 {
 	 */
 	public function tutor_delete_single_settings() {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
-
 		$delete_id = $this->get_request_data( 'delete_id' );
 		unset( $tutor_settings_log[ $delete_id ] );
-
 		update_option( 'tutor_settings_log', $tutor_settings_log );
 
 		wp_send_json_success( $tutor_settings_log );
@@ -172,8 +170,10 @@ class Options_V2 {
 	 */
 	public function tutor_default_settings() {
 		$attr = $this->get_setting_fields();
+
 		foreach ( $attr as $sections ) {
-			foreach ( $sections['sections'] as $section ) {
+
+			foreach ( $sections as $section ) {
 				foreach ( $section['blocks'] as $blocks ) {
 					foreach ( $blocks['fields'] as $field ) {
 						if ( isset( $field['default'] ) ) {
@@ -227,7 +227,7 @@ class Options_V2 {
 		$time    = $this->get_request_data( 'time' );
 		//pr(json_decode(stripslashes($request), true));die;
 
-		$save_import_data['datetime']             = $time;
+		$save_import_data['datetime']             = (int) $time;
 		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
 		$save_import_data['datatype']             = 'imported';
 		$save_import_data['dataset']              = $request['data'];
@@ -295,19 +295,20 @@ class Options_V2 {
 		$save_import_data['history_date']         = date( 'j M, Y, g:i a', $time );
 		$save_import_data['datatype']             = 'saved';
 		$save_import_data['dataset']              = $option;
-		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
+		$import_data[ 'tutor-saved-' . $time ] 	  = $save_import_data;
 		$update_option                            = array();
 		$get_option_data                          = get_option( 'tutor_settings_log', array() );
 
 		if ( ! empty( $get_option_data ) ) {
 			$update_option = array_merge( $import_data, $get_option_data );
 		} else {
-			$update_option = array_merge( $import_data );
+			$update_option = array_merge( $update_option, $import_data );
 		}
 
 		update_option( 'tutor_settings_log', $update_option );
 
 		update_option( 'tutor_option', $option );
+		update_option( 'tutor_option_update_time', date( 'j M, Y, g:i a', $time ) );
 
 		do_action( 'tutor_option_save_after' );
 
@@ -323,12 +324,31 @@ class Options_V2 {
 		tutor_utils()->checking_nonce();
 
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
+		$attr = $this->get_setting_fields();
+		$tutor_default_option = get_option( 'tutor_default_option' );
+		$tutor_saved_option = get_option( 'tutor_option' );
+		// ($tutor_default_option[$field['key']] == $attr_default[ $field['key'] ]) ? $tutor_default_option[$field['key']] : $field['default'];
+		foreach ( $attr as $sections ) {
 
-		$default_options = tutor_utils()->sanitize_recursively( $this->tutor_default_settings() );
+			foreach ( $sections as $section ) {
+				foreach ( $section['blocks'] as $blocks ) {
+					foreach ( $blocks['fields'] as $field ) {
+						if ( isset( $tutor_default_option[$field['key']] ) ) {
+							$attr_default[ $field['key'] ] = $tutor_saved_option[$field['key']];
+						// }elseif(null !== $field['key']){
+						}else{
+							$attr_default[ $field['key'] ] = $field['default'];
+						}
+					}
+				}
+			}
+		}
 
-		update_option( 'tutor_option', $default_options );
+		// pr($tutor_default_option);
+		// pr($attr_default);
+		update_option( 'tutor_option', $tutor_default_option );
 
-		wp_send_json_success( $default_options );
+		wp_send_json_success( $tutor_default_option );
 	}
 
 	public function load_settings_page() {
