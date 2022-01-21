@@ -14,10 +14,9 @@ document.addEventListener("readystatechange", (event) => {
     export_single_settings();
     reset_default_options();
     modal_opener_single_settings();
-    load_saved_data();
     const historyData = document.querySelector('.history_data');
     if (typeof historyData !== 'undefined' && null !== historyData) {
-      // setInterval(() => { load_saved_data() }, 100000);
+      setInterval(() => { load_saved_data() }, 100000);
     }
   }
 });
@@ -153,33 +152,6 @@ const export_settings_all = () => {
 }
 
 
-const export_settings_all_X = () => {
-  const export_settings = selectorElement("#export_settings"); //document.querySelector("#export_settings");
-  if (export_settings) {
-    export_settings.onclick = (e) => {
-      if (!e.detail || e.detail == 1) {
-        e.preventDefault();
-        fetch(_tutorobject.ajaxurl, {
-          method: "POST",
-          credentials: "same-origin",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Cache-Control": "no-cache",
-          },
-          body: new URLSearchParams({
-            action: "tutor_export_settings",
-          }),
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            let fileName = "tutor_options_" + time_now();
-            json_download(JSON.stringify(response), fileName);
-          })
-          .catch((err) => console.log(err));
-      };
-    }
-  }
-};
 /**
  *
  * @returns time by second

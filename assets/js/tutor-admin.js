@@ -1745,10 +1745,12 @@ document.addEventListener("readystatechange", function (event) {
     export_single_settings();
     reset_default_options();
     modal_opener_single_settings();
-    load_saved_data();
     var historyData = document.querySelector('.history_data');
 
-    if (typeof historyData !== 'undefined' && null !== historyData) {// setInterval(() => { load_saved_data() }, 100000);
+    if (typeof historyData !== 'undefined' && null !== historyData) {
+      setInterval(function () {
+        load_saved_data();
+      }, 100000);
     }
   }
 });
@@ -1840,38 +1842,6 @@ var export_settings_all = function export_settings_all() {
           json_download(xhttp.response, fileName);
         }
       };
-    };
-  }
-};
-
-var export_settings_all_X = function export_settings_all_X() {
-  var export_settings = selectorElement("#export_settings"); //document.querySelector("#export_settings");
-
-  if (export_settings) {
-    export_settings.onclick = function (e) {
-      if (!e.detail || e.detail == 1) {
-        e.preventDefault();
-        fetch(_tutorobject.ajaxurl, {
-          method: "POST",
-          credentials: "same-origin",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Cache-Control": "no-cache"
-          },
-          body: new URLSearchParams({
-            action: "tutor_export_settings"
-          })
-        }).then(function (response) {
-          return response.json();
-        }).then(function (response) {
-          var fileName = "tutor_options_" + time_now();
-          json_download(JSON.stringify(response), fileName);
-        })["catch"](function (err) {
-          return console.log(err);
-        });
-      }
-
-      ;
     };
   }
 };
