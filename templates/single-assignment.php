@@ -33,8 +33,4 @@ $enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
     </div>
 <?php do_action('tutor_assignment/single/after/wrap');
 
-	</div>
-<?php
-do_action( 'tutor_assignment/single/after/wrap' );
-
 get_tutor_footer();

@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $wp_query;
 global $post, $authordata;
 
-$profile_url = tutor_utils()->profile_url( $authordata->ID );
+$profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 ?>
 <div class="tutor-single-course-segment tutor-single-course-lead-info">
 
@@ -61,7 +61,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID );
 					</div>
 					<div class="tutor-single-course-author-name">
 						<span><?php _e( 'by', 'tutor' ); ?></span>
-						<a href="<?php echo esc_url( tutor_utils()->profile_url( $authordata->ID ) ); ?>"><?php echo get_the_author(); ?></a>
+						<a href="<?php echo esc_url( tutor_utils()->profile_url( $authordata->ID, true ) ); ?>"><?php echo get_the_author(); ?></a>
 					</div>
 				</li>
 			<?php } ?>

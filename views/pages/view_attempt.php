@@ -18,10 +18,10 @@ if ( 0 === $quiz_id ) {
 }
 
 $quiz_attempt_info = tutor_utils()->quiz_attempt_info( $attempt->attempt_info );
-$answers           = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
+$answers = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
 
 $user_id = tutor_utils()->avalue_dot( 'user_id', $attempt );
-$user    = get_userdata( $user_id );
+$user = get_userdata( $user_id );
 ?>
 
 <div class="tutor-quiz-attempt-details-wrapper">
@@ -35,6 +35,11 @@ $user    = get_userdata( $user_id );
 				'context'      => 'backend-dashboard-students-attempts',
 			)
 		);
+	?>
+</div>
+
+<div class="wrap">
+	<?php
 		/**
 		 * Load Instructor Feedback template
 		 * pass quiz id
@@ -45,5 +50,5 @@ $user    = get_userdata( $user_id );
 			tutor()->path . 'views/quiz/instructor-feedback.php',
 			array( 'attempt_data' => $attempt_data )
 		);
-		?>
+	?>
 </div>

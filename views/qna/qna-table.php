@@ -1,9 +1,9 @@
 <?php
-extract($data); // $qna_list, $context, $qna_pagination
+extract($data); // $qna_list, $context, $qna_pagination, $view_as
 
 $page_key = 'qna-table';
 $table_columns = include __DIR__ . '/contexts.php';
-$view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
+$view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
 ?>
 
 <table class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-ui-table tutor-ui-table-responsive qna-list-table">

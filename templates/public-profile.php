@@ -12,7 +12,7 @@
  * @version 1.4.3
  */
 
-$user_name = sanitize_text_field( get_query_var( 'tutor_student_username' ) );
+$user_name = sanitize_text_field( get_query_var( 'tutor_profile_username' ) );
 $get_user  = tutor_utils()->get_user_by_login( $user_name );
 
 if ( ! is_object( $get_user ) || ! property_exists( $get_user, 'ID' ) ) {
@@ -20,10 +20,12 @@ if ( ! is_object( $get_user ) || ! property_exists( $get_user, 'ID' ) ) {
 	exit;
 }
 
-$user_id       = $get_user->ID;
-$is_instructor = tutor_utils()->is_instructor( $user_id, true );
-
-$profile_layout = tutor_utils()->get_option( 'public_profile_layout', 'private' );
+// Prepare data
+$user_id        = $get_user->ID;
+$is_instructor  = isset($_GET['view']) && $_GET['view']==='instructor';
+$layout_key     = $is_instructor ? 'public_profile_layout' : 'student_public_profile_layout';
+$profile_layout = tutor_utils()->get_option($layout_key , 'private' );
+$user_type		= $is_instructor ? 'instructor' : 'student';
 
 if ( 'private' === $profile_layout && $is_instructor ) {
 	// Disable profile access then.
@@ -31,51 +33,52 @@ if ( 'private' === $profile_layout && $is_instructor ) {
 	exit;
 }
 
-// Set layout for non instructor.
- ! $is_instructor ? $profile_layout = 'pp-circle' : 0; // For now.
-
+// Prepare social media URLs od the user
 $tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
-
 foreach ( $tutor_user_social_icons as $key => $social_icon ) {
-	$url                                    = get_user_meta( $user_id, $key, true );
+	$url = get_user_meta( $user_id, $key, true );
 	$tutor_user_social_icons[ $key ]['url'] = $url;
 }
 
+// Load theme header
 get_header();
 ?>
 
 <?php
-	// Rating content.
 	ob_start();
-if ( $is_instructor ) {
-	$instructor_rating = tutor_utils()->get_instructor_ratings( $user_id );
-	?>
-		<div class="tutor-rating-container">      
-			<div class="ratings">
-				<span class="rating-generated">
-					<?php tutor_utils()->star_rating_generator( $instructor_rating->rating_avg ); ?>
-				</span>
-				<span class='rating-digits'>
-					<?php echo esc_html( number_format( $instructor_rating->rating_avg, 2 ) ); ?>
-				</span> 
-				<span class='rating-total-meta text-hints tutor-text-regular-caption'>
-					(<?php echo esc_html( number_format( $instructor_rating->rating_count, 2 ) ); ?>)
-				</span>
+	
+	// Rating content.
+	if ( $is_instructor ) {
+		$instructor_rating = tutor_utils()->get_instructor_ratings( $user_id );
+		?>
+			<div class="tutor-rating-container">      
+				<div class="ratings">
+					<span class="rating-generated">
+						<?php tutor_utils()->star_rating_generator( $instructor_rating->rating_avg ); ?>
+					</span>
+					<span class='rating-digits'>
+						<?php echo esc_html( number_format( $instructor_rating->rating_avg, 2 ) ); ?>
+					</span> 
+					<span class='rating-total-meta text-hints tutor-text-regular-caption'>
+						(<?php echo esc_html( number_format( $instructor_rating->rating_count, 2 ) ); ?>)
+					</span>
+				</div>
 			</div>
-		</div>
 		<?php
-}
+	}
 	$rating_content = ob_get_clean();
+
+
 	// Social media content
 	ob_start();
-foreach ( $tutor_user_social_icons as $key => $social_icon ) {
-	$url = $social_icon['url'];
-	echo ! empty( $url ) ? '<a href="' . $url . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' : '';
-}
+	foreach ( $tutor_user_social_icons as $key => $social_icon ) {
+		$url = $social_icon['url'];
+		echo ! empty( $url ) ? '<a href="' . $url . '" target="_blank" rel="noopener noreferrer nofollow" class="' . $social_icon['icon_classes'] . '" title="' . $social_icon['label'] . '"></a>' : '';
+	}
 	$social_media = ob_get_clean();
 ?>
 
-<?php do_action( 'tutor_student/before/wrap' ); ?>
+<?php do_action( 'tutor_profile/'.$user_type.'/before/wrap' ); ?>
 <?php $user_identifier = $is_instructor ? 'tutor-instructor' : 'tutor-student'; ?>
 	<div <?php tutor_post_class( 'tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-' . $profile_layout . ' ' . $user_identifier ); ?> >
 		<div class="tutor-bs-container photo-area">
@@ -190,5 +193,5 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 	</div>
 <?php
 
-do_action( 'tutor_student/after/wrap' );
+do_action( 'tutor_profile/'.$user_type.'/after/wrap' );
 get_footer();

@@ -39,18 +39,20 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field( $_GET['tab'] ) 
                 <span class="tutor-form-toggle-label tutor-form-toggle-unchecked"><?php _e('Instructor', 'tutor'); ?></span>
             </label>
         </div>
-        <div class="tutor-bs-row">
-            <?php _e('Sort By', 'tutor'); ?>: 
-            <select class="tutor-form-select tutor-select-redirector">
-                <?php 
-                    foreach($qna_tabs as $tab) {
-                        echo '<option value="'.$tab['url'].'" '.($active_tab==$tab['key'] ? 'selected="selected"' : '').'>
-                                '.$tab['title'].' ('.$tab['value'].')'.'
-                            </option>';
-                    }
-                ?>
-            </select>
-        </div>
+        <?php if($view_as=='instructor'): ?>
+            <div class="tutor-bs-row">
+                <?php _e('Sort By', 'tutor'); ?>: 
+                <select class="tutor-form-select tutor-select-redirector">
+                    <?php 
+                        foreach($qna_tabs as $tab) {
+                            echo '<option value="'.$tab['url'].'" '.($active_tab==$tab['key'] ? 'selected="selected"' : '').'>
+                                    '.$tab['title'].' ('.$tab['value'].')'.'
+                                </option>';
+                        }
+                    ?>
+                </select>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 
@@ -66,6 +68,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field( $_GET['tab'] ) 
     tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
         'qna_list' => $questions,
         'context' => 'frontend-dashboard-qna-table-'.$view_as,
+        'view_as' => $view_as,
         'qna_pagination' => array(
             'base' => '?current_page=%#%',
             'total_items' => $total_items,
