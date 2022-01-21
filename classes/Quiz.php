@@ -370,7 +370,6 @@ class Quiz {
 						$given_answer = array_filter( $given_answer, function($id) {
 							return is_numeric($id) && $id>0;
 						} );
-
 						$get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
 							"SELECT 
 								answer_id 
