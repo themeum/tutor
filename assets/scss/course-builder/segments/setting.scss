@@ -60,11 +60,14 @@
             }
         }
     }
-    .btn-csv-download svg {
-        fill: #757c8e;
-        top: -2px;
-        width: 16px;
-        height: 16px;
+    .btn-csv-download {
+        margin-right: 2px !important;
+        svg {
+            fill: #757c8e;
+            top: 0  px;
+            width: 16px;
+            height: 16px;
+        }
     }
     .tutorUploadAttachmentBtn {
         margin-top: 15px;
@@ -226,32 +229,28 @@
             .tutor-topic-title {
                 background: #F4F6F9;
                 > span {
-                    padding: 8px 0px;
+                    // padding: 8px 0px;
                 }
                 span.ttr-humnurger-filled,
                 .topic-inner-title {
-                    padding-top: 10px;
                 }
                 span.ttr-humnurger-filled {
-                    // display: block;
                     align-self: flex-start;
-                    padding-top: 15px;
                 }
                 span.ttr-humnurger-filled.course-move-handle {
                     margin-right: 0 !important;
                 }
                 .topic-inner-title {
-                    // align-self: center;
                     line-height: 1.3;
                     padding-right: 20px;
-                    padding-bottom: 13px;
-                    padding-top: 17px;
+                    margin-top: 2px;
                 }
                 span.expand-collapse-wrap {
                     i {
-                        margin-top: 4px;
-                        display: block;
+                        margin-top: -2px;
+                        margin-right: 6px;
                     }
+                    display: block;
                 }
                 .tutor-topic-btn-hover i {
                     &:hover {
