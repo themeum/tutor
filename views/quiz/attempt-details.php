@@ -50,8 +50,8 @@ function show_correct_answer( $answers= array() ){
 
                     case 'text':
                         if(isset($ans->answer_title)) {
-                            $multi_texts[] = '<span class="text-medium-caption tutor-color-text-primary">'
-                                .stripslashes($ans->answer_title).
+                            $multi_texts[$ans->answer_title] = '<span class="text-medium-caption tutor-color-text-primary">'
+                                .esc_html( $ans->answer_title ).
                             '</span>';
                         }
                         break;
@@ -68,7 +68,6 @@ function show_correct_answer( $answers= array() ){
                         break;
                 }
                 
-                echo count($multi_texts) ? implode(', ', $multi_texts) : '';
 
                 if (isset($ans->answer_two_gap_match)) {
                         echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
@@ -76,6 +75,9 @@ function show_correct_answer( $answers= array() ){
                     echo '</div>';
                 }
             }
+            
+            echo count($multi_texts) ? implode(', ', $multi_texts) : '';
+
 		echo '</div>';
     }
 }
