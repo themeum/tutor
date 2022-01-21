@@ -10,13 +10,13 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 	<nav class="tutor-ui-pagination tutor-ui-pagination-wp">
 		<div classs="tutor-pagination-hints">
 			<div class="text-regular-caption tutor-color-text-subsued">
-			<?php esc_html_e( 'Page', 'tutor' ); ?> 
+			<?php esc_html_e( 'Page', 'tutor' ); ?>
 			<span class="text-medium-caption tutor-color-text-primary">
 				<?php echo esc_html( $data['paged'] ); ?>
 			</span>
-			<?php esc_html_e( 'of', 'tutor' ); ?> 
+			<?php esc_html_e( 'of', 'tutor' ); ?>
 			<span class="text-medium-caption tutor-color-text-primary">
-				<?php echo esc_html( ceil( $data['total_items'] / $data['per_page'] ) ); ?>
+				<?php echo esc_html( ceil( 0 < $data['per_page']) ? $data['total_items'] / $data['per_page'] : ''  ); ?>
 			</span>
 			</div>
 		</div>
@@ -33,7 +33,7 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 						'base'      => !empty( $data['base'] ) ? $data['base'] : $base,
 						'format'    => '?paged=%#%',
 						'current'   => $paged,
-						'total'     => ceil( $data['total_items'] / $per_page ),
+						'total'     => ceil( 0 < $per_page ? $data['total_items'] / $per_page : '' ),
 						'prev_text' => '<span class="ttr-angle-left-filled"></span>',
 						'next_text' => '<span class="ttr-angle-right-filled"></span>',
 					)
