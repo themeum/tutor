@@ -1382,27 +1382,6 @@ class Options_V2 {
 							),
 						),
 					),
-					'student_profile' => array(
-						'label'      => __( 'Student Profile', 'tutor' ),
-						'slug'       => 'student_profile',
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'     => 'students_own_review_show_at_profile',
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Show reviews on profile', 'tutor' ),
-								'default' => 'on',
-								'desc'    => __( 'Enable to show reviews shared by students on their profile. ', 'tutor' ) . '<br />' . $student_url,
-							),
-							array(
-								'key'     => 'show_courses_completed_by_student',
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Show completed courses', 'tutor' ),
-								'default' => 'on',
-								'desc'    => __( 'Completed courses will be shown on student profiles. <br/> For example, you can see this link-', 'tutor' ) . $student_url,
-							),
-						),
-					),
 					'video_player'    => array(
 						'label'      => __( 'Video Player', 'tutor' ),
 						'slug'       => 'video_player',

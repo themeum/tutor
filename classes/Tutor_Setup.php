@@ -511,24 +511,6 @@ if ( ! defined( 'ABSPATH' ) )
                     )
                 ),
 
-
-                'profile' => array(
-                    'lable' => __('Profile Settings', 'tutor'),
-                    'attr' => array(
-                        'students_own_review_show_at_profile' => array(
-                            'type' => 'switch',
-                            'lable' => __('Show Reviews on Profile', 'tutor'),
-                            'desc' => __('Choose whether you want to show students’ ratings and reviews.', 'tutor'),
-                        ),
-                        'show_courses_completed_by_student' => array(
-                            'type' => 'switch',
-                            'lable' => __('Show Completed Courses', 'tutor'),
-                            'desc' => __('Choose whether you want to display a list of a student’s completed courses.', 'tutor'),
-                        )
-                    )
-                ),
-
-
                 'payment' => array(
                     'lable' => __('Payment Settings ', 'tutor'),
                     'attr' => array(
