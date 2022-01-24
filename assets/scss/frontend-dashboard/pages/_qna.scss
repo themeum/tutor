@@ -105,6 +105,15 @@
 		.tutor-qna-toggle-area {
 		}
 	}
+	.tutor-qna-filter {
+		display: grid;
+		grid-template-columns: 70px 227px;
+		align-items: center;
+		gap: 10px;
+		.tutor-form-select.tutor-select-redirector {
+			height: 40px;
+		}
+	}
 }
 table {
 	td[data-th='Question'] {
