@@ -5,6 +5,8 @@
  * @version 1.6.4
  */
 
+use TUTOR\Instructor;
+
 if (isset($_GET['question_id'])) {
     tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
         'question_id' => $_GET['question_id'],
@@ -26,8 +28,8 @@ $qna_tabs           = \Tutor\Q_and_A::tabs_key_value();
 $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'all';
 ?>
 
-<div class="tutor-frontend-dashboard-qna-header tutor-mb-24">
-    <div class="tutor-qna-header">
+<div class="tutor-frontend-dashboard-qna-header tutor-mb-32">
+    <div class="tutor-qna-header tutor-bs-d-flex tutor-bs-align-items-center">
         <div class="tutor-text-medium-h5 tutor-color-text-primary"><?php _e('Question & Answer', 'tutor'); ?></div>
     </div>
     <?php if ($is_instructor) : ?>
@@ -40,18 +42,20 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
             </label>
         </div>
     <?php endif; ?>
-    <div class="tutor-bs-row">
-        <?php _e('Sort By', 'tutor'); ?>:
-        <select class="tutor-form-select tutor-select-redirector">
-            <?php
-            foreach ($qna_tabs as $tab) {
-                echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
-                                ' . $tab['title'] . ' (' . $tab['value'] . ')' . '
-                            </option>';
-            }
-            ?>
-        </select>
-    </div>
+    <!-- <div class="tutor-bs-row"> -->
+        <div class="tutor-qna-filter <?php echo $is_instructor ? 'tutor-mt-22' : '' ?>" <?php if(!$is_instructor){ ?> style="justify-content: flex-end;" <?php } ?> >
+            <span class="tutor-text-regular-caption tutor-color-text-subsued"><?php _e('Sort By', 'tutor'); ?>:</span>
+            <select class="tutor-form-select tutor-select-redirector">
+                <?php
+                foreach ($qna_tabs as $tab) {
+                    echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
+                                    ' . $tab['title'] . ' (<span>' .$tab['value']. '</span> )' . '
+                                </option>';
+                }
+                ?>
+            </select>
+        </div>
+    <!-- </div> -->
 </div>
 
 <?php
