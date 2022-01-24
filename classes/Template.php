@@ -57,9 +57,9 @@ class Template extends Tutor_Base {
 			'wp_loaded',
 			function() {
 				if ( ! is_admin() && isset( $_GET['course-spotlight-v2'] ) && $_GET['course-spotlight-v2'] == 1 ) {
-					get_header();
+					tutor_utils()->tutor_custom_header();
 					include tutor()->path . '/views/course-spotlight-v2-static.php';
-					get_footer();
+					tutor_utils()->tutor_custom_footer();
 					exit;
 				}
 			}
