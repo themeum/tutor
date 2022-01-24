@@ -16,7 +16,7 @@ document.addEventListener("readystatechange", (event) => {
     modal_opener_single_settings();
     const historyData = document.querySelector('.history_data');
     if (typeof historyData !== 'undefined' && null !== historyData) {
-      // setInterval(() => { load_saved_data() }, 100000);
+      setInterval(() => { load_saved_data() }, 100000);
     }
   }
 });
@@ -58,44 +58,55 @@ const load_saved_data = () => {
   xhttp.send(formData);
   xhttp.onreadystatechange = function () {
     if (xhttp.readyState === 4) {
-      tutor_option_history_load(xhttp.response);
+      let historyData = JSON.parse(xhttp.response);
+      historyData = historyData.data;
+      // console.log(historyData);
+
+// console.log(Object.entries(historyData));
+
+      tutor_option_history_load(Object.entries(historyData));
       delete_history_data();
     }
   };
 };
 
-function tutor_option_history_load(history_data) {
-  var dataset = JSON.parse(history_data).data;
+function tutor_option_history_load(dataset) {
+
   var output = "";
   if (null !== dataset && 0 !== dataset.length) {
-    Object.entries(dataset).forEach(([key, value]) => {
-      let badgeStatus =
-        value.datatype == "saved" ? " label-primary-wp" : " label-refund";
-      output = `<div class="tutor-option-field-row">
+
+
+    dataset.forEach((value) => {
+
+      let dataKey = value[0];
+      let dataValue = value[1];
+
+      let badgeStatus = dataValue.datatype == "saved" ? " label-primary-wp" : " label-refund";
+      output += `<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
-						<p class="text-medium-small">${value.history_date}
-						<span class="tutor-badge-label tutor-ml-15${badgeStatus}"> ${value.datatype}</span> </p>
+						<p class="text-medium-small">${dataValue.history_date}
+						<span class="tutor-badge-label tutor-ml-15${badgeStatus}"> ${dataValue.datatype}</span> </p>
 					</div>
 					<div class="tutor-option-field-input">
-						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution."  data-id="${key}">Apply</button>
+						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution."  data-id="${dataKey}">Apply</button>
 
           <div class="tutor-popup-opener tutor-ml-16">
             <button
             type="button"
             class="popup-btn"
-            data-tutor-popup-target="popup-${key}"
+            data-tutor-popup-target="popup-${dataKey}"
             >
             <span class="toggle-icon"></span>
             </button>
-            <ul id="popup-${key}" class="popup-menu">
+            <ul id="popup-${dataKey}" class="popup-menu">
             <li>
-              <a class="export_single_settings" data-id="${key}">
+              <a class="export_single_settings" data-id="${dataKey}">
                 <span class="icon ttr-msg-archive-filled tutor-color-design-white"></span>
                 <span class="text-regular-body tutor-color-text-white">Download</span>
               </a>
             </li>
             <li>
-              <a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${key}">
+              <a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
                 <span class="icon ttr-delete-fill-filled tutor-color-design-white"></span>
                 <span class="text-regular-body tutor-color-text-white">Delete</span>
               </a>
@@ -103,7 +114,7 @@ function tutor_option_history_load(history_data) {
             </ul>
           </div>
           </div>
-        </div>`+ output;
+        </div>`;
     });
   } else {
     output += `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p class="text-medium-small">No settings data found.</p></div></div>`;
@@ -141,33 +152,6 @@ const export_settings_all = () => {
 }
 
 
-const export_settings_all_X = () => {
-  const export_settings = selectorElement("#export_settings"); //document.querySelector("#export_settings");
-  if (export_settings) {
-    export_settings.onclick = (e) => {
-      if (!e.detail || e.detail == 1) {
-        e.preventDefault();
-        fetch(_tutorobject.ajaxurl, {
-          method: "POST",
-          credentials: "same-origin",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Cache-Control": "no-cache",
-          },
-          body: new URLSearchParams({
-            action: "tutor_export_settings",
-          }),
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            let fileName = "tutor_options_" + time_now();
-            json_download(JSON.stringify(response), fileName);
-          })
-          .catch((err) => console.log(err));
-      };
-    }
-  }
-};
 /**
  *
  * @returns time by second
@@ -233,7 +217,9 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
     xhttp.onreadystatechange = function () {
       if (xhttp.readyState === 4) {
         modalElement.classList.remove('tutor-is-active');
-        tutor_option_history_load(xhttp.responseText);
+        let historyData = JSON.parse(xhttp.response);
+        historyData = historyData.data;
+        tutor_option_history_load(Object.entries(historyData));
         delete_history_data();
         // import_history_data();
         setTimeout(function () {
@@ -367,10 +353,11 @@ const delete_settings_xhttp_request = (modelOpener, modalElement) => {
   xhttp.send(formData);
   xhttp.onreadystatechange = function () {
     if (xhttp.readyState === 4) {
-      console.log(JSON.parse(xhttp.response));
+      // console.log(JSON.parse(xhttp.response));
       modalElement.classList.remove('tutor-is-active');
-
-      tutor_option_history_load(xhttp.responseText);
+      let historyData = JSON.parse(xhttp.response);
+      historyData = historyData.data;
+      tutor_option_history_load(Object.entries(historyData));
       delete_history_data();
 
       setTimeout(function () {

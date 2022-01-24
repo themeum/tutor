@@ -296,6 +296,11 @@ class Quiz {
 		$attempt_answers = isset( $_POST['attempt'] ) ? tutor_sanitize_data( $_POST['attempt'] ) : false;
 		$attempt_answers = is_array($attempt_answers) ? $attempt_answers : array();
 
+		// Check if has access to the attempt
+		if ( ! $attempt || $user_id != $attempt->user_id ) {
+			die( 'Operation not allowed, attempt not found or permission denied' );
+		}
+
 		// Before ook
 		do_action( 'tutor_quiz/attempt_analysing/before', $attempt_id );
 
@@ -311,6 +316,7 @@ class Quiz {
 				return (int)$id;
 			});
 
+			// Calculate and set the total marks in attempt table for this question
 			if ( is_array( $question_ids ) && count( $question_ids ) ) {
 				$question_ids_string  = implode(',', $question_ids );
 				
@@ -321,7 +327,7 @@ class Quiz {
 					WHERE question_id IN({$question_ids_string});" 
 				);
 				
-				// Set the the total mark in the attempt table
+				// Set the the total mark in the attempt table for the question
 				$wpdb->update( 
 					$wpdb->prefix . 'tutor_quiz_attempts', 
 					array( 'total_marks' => $total_question_marks ), 
@@ -329,14 +335,9 @@ class Quiz {
 				);
 			}
 
-			if ( ! $attempt || $user_id != $attempt->user_id ) {
-				die( 'Operation not allowed, attempt not found or permission denied' );
-			}
-
-			$quiz_answers = tutor_utils()->avalue_dot( 'quiz_question', $attempt_answer );
-
-			$total_marks     = 0;
+			$total_marks = 0;
 			$review_required = false;
+			$quiz_answers = tutor_utils()->avalue_dot( 'quiz_question', $attempt_answer );
 
 			if ( tutor_utils()->count($quiz_answers)) {
 
@@ -354,8 +355,13 @@ class Quiz {
 							exit;
 						}
 
-						$given_answer          = $answers;
-						$is_answer_was_correct = (bool) $wpdb->get_var( $wpdb->prepare( "SELECT is_correct FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id = %d ", $answers ) );
+						$given_answer = $answers;
+						$is_answer_was_correct = (bool) $wpdb->get_var( $wpdb->prepare( 
+							"SELECT is_correct 
+							FROM {$wpdb->prefix}tutor_quiz_question_answers 
+							WHERE answer_id = %d ", 
+							$answers 
+						) );
 
 					} elseif ( $question_type === 'multiple_choice' ) {
 
@@ -364,7 +370,6 @@ class Quiz {
 						$given_answer = array_filter( $given_answer, function($id) {
 							return is_numeric($id) && $id>0;
 						} );
-
 						$get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
 							"SELECT 
 								answer_id 
@@ -389,8 +394,15 @@ class Quiz {
 						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
 						$given_answer = maybe_serialize( $given_answer );
 
-						$get_original_answer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND belongs_question_type = %s ;", $question->question_id, $question_type ) );
-						$gap_answer          = (array) explode( '|', $get_original_answer->answer_two_gap_match );
+						$get_original_answer = $wpdb->get_row( $wpdb->prepare( 
+							"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers 
+							WHERE belongs_question_id = %d 
+								AND belongs_question_type = %s ;", 
+								$question->question_id, 
+								$question_type 
+							) );
+							
+						$gap_answer = (array) explode( '|', $get_original_answer->answer_two_gap_match );
 
 						$gap_answer = array_map( 'sanitize_text_field', $gap_answer );
 						if ( strtolower( $given_answer ) == strtolower( maybe_serialize( $gap_answer ) ) ) {
@@ -429,8 +441,10 @@ class Quiz {
 						$db_answer = $wpdb->get_col(
 							$wpdb->prepare(
 								"SELECT answer_title
-							FROM {$wpdb->prefix}tutor_quiz_question_answers
-							WHERE belongs_question_id = %d AND belongs_question_type = 'image_answering' ORDER BY answer_order asc ;",
+								FROM {$wpdb->prefix}tutor_quiz_question_answers
+								WHERE belongs_question_id = %d 
+									AND belongs_question_type = 'image_answering' 
+									ORDER BY answer_order asc ;",
 								$question_id
 							)
 						);
@@ -458,11 +472,12 @@ class Quiz {
 					/*
 					check if question_type open ended or short ans the set is_correct default value null before saving
 						*/
-					if ( $question_type === 'open_ended' || $question_type === 'short_answer' ) {
+					if ( in_array($question_type, array('open_ended', 'short_answer', 'image_answering'))) {
 						$answers_data['is_correct'] = null;
 					}
 					
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
+					$review_required = true;
 				}
 			}
 

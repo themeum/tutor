@@ -71,7 +71,7 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 				<?php
 				foreach ( $reviews->results as $review ) {
 					$user_data    = get_userdata( $review->user_id );
-					$profile_url  = tutor_utils()->profile_url( $review->user_id );
+					// $profile_url  = tutor_utils()->profile_url( $review->user_id );
 					$avatar_url   = get_avatar_url( $review->user_id );
 					$student_name = $user_data->display_name;
 					?>

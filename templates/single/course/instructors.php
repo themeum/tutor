@@ -31,7 +31,7 @@ if($instructors && count($instructors)) {
 					</div>
 					<div class="tutor-ins-rest">
 						<div class="tutor-ins-title  tutor-text-medium-body  tutor-color-text-primary">
-							<a href="<?php echo tutor_utils()->profile_url($instructor->ID); ?>"><?php echo $instructor->display_name; ?></a>
+							<a href="<?php echo tutor_utils()->profile_url($instructor->ID, true); ?>"><?php echo $instructor->display_name; ?></a>
 						</div>
 						<?php if ( ! empty($instructor->tutor_profile_job_title)): ?>
 							<div class="tutor-ins-designation tutor-text-regular-caption tutor-color-text-hints tutor-mt-3">

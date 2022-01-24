@@ -34,7 +34,6 @@
 		foreach ( $questions as $question ) {
 			$question_i++;
 			$question_settings = maybe_unserialize( $question->question_settings );
-
 			$style_display = ( $question_layout_view !== 'question_below_each_other' && $question_i == 1 ) ? 'block' : 'none';
 			if ( $question_layout_view === 'question_below_each_other' ) {
 				$style_display = 'block';
@@ -60,8 +59,7 @@
 
 						$answers            = tutor_utils()->get_answers_by_quiz_question( $question->question_id, $rand_choice );
 						$show_question_mark = (bool) tutor_utils()->avalue_dot( 'show_question_mark', $question_settings );
-						$answer_required    = (bool) tutor_utils()->array_get( 'answer_required', $question_settings );
-
+						$answer_required    = (bool) tutor_utils()->array_get( 'answer_required', $question_settings );	
 						echo '<div class="quiz-question-title tutor-text-medium-h4 tutor-color-text-primary tutor-mb-20">';
 					if ( ! $hide_question_number_overview ) {
 						echo $question_i . '. ';
@@ -89,6 +87,7 @@
 
 					// Fill In The Blank
 					if ( $question_type === 'fill_in_the_blank' ) {
+						
 						require 'fill-in-the-blank.php';
 					}
 

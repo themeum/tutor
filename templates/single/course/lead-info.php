@@ -16,7 +16,7 @@ if (!defined('ABSPATH'))
     exit;
 
 global $post, $authordata;
-$profile_url = tutor_utils()->profile_url( $authordata->ID );
+$profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 ?>
 
 <header class="tutor-course-details-header tutor-mb-42">

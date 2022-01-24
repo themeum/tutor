@@ -111,7 +111,7 @@ jQuery(document).ready(function($) {
 				const video_data = that.video_data();
 				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
-					const { best_watch_time } = video_data;
+					const { best_watch_time=0 } = video_data || {};
 					if (best_watch_time > 0 && instance.duration > Math.round(best_watch_time)) {
 						instance.media.currentTime = best_watch_time;
 					}
@@ -266,7 +266,7 @@ jQuery(document).ready(function($) {
 
 						//disable buttons
 						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').addClass(
-							'tutor-btn-disable',
+							'tutor-btn-disable tutor-no-hover',
 						);
 						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').prop(
 							'disabled',
