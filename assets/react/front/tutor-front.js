@@ -111,7 +111,7 @@ jQuery(document).ready(function($) {
 				const video_data = that.video_data();
 				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
-					const { best_watch_time } = video_data;
+					const { best_watch_time=0 } = video_data || {};
 					if (best_watch_time > 0 && instance.duration > Math.round(best_watch_time)) {
 						instance.media.currentTime = best_watch_time;
 					}
