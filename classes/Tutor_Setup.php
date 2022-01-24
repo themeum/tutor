@@ -52,12 +52,12 @@ if ( ! defined( 'ABSPATH' ) )
                     unset($options[$key]);
                 }
             }
-            // pr($options_preset);die;
 
+            // die(pr($options_preset));
 
             update_option('tutor_default_option', $options_preset);
-            update_option('tutor_option', $options);
 
+            update_option('tutor_option', $options);
 
             // Payment Settings
             $payments = (array) maybe_unserialize(get_option('tutor_withdraw_options'));
@@ -76,7 +76,7 @@ if ( ! defined( 'ABSPATH' ) )
             update_option('tutor_withdraw_options', $payments);
 
             // Add wizard flug
-            update_option('tutor_wizard', 'active');
+            // update_option('tutor_wizard', 'active');
 
             wp_send_json_success(array('status' => 'success'));
         }
@@ -151,7 +151,7 @@ if ( ! defined( 'ABSPATH' ) )
                                             $html .= '<label for="'.$key.'" class="switch-label input-switch-label">';
                                                 $html .= '<span class="label-off">'.__('OFF', 'tutor').'</span>';
                                                 $html .= '<div class="switchbox-wrapper">';
-                                                        $html .= '<input '.$data_attr.' id="'.$key.'" class="input-switchbox" type="checkbox" name="'.$key.'" value="1" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
+                                                        $html .= '<input '.$data_attr.' id="'.$key.'" class="input-switchbox" type="checkbox" name="'.$key.'" value="on" '.(isset($options[$key]) && $options[$key] ? 'checked' : '').'/>';
                                                         $html .= '<span class="switchbox-icon"></span>';
                                                 $html .= '</div>';
                                                 $html .= '<span class="label-on">'.__('ON', 'tutor').'</span>';
@@ -380,19 +380,19 @@ if ( ! defined( 'ABSPATH' ) )
                             'type' => 'switch',
                             'data' => array(
                                 'off' => 'private',
-                                'on' => tutor_utils()->get_option( 'public_profile_layout', 'pp-rectangle' )
+                                'on' => 'pp-rectangle'
                             ),
-                            'lable' => __('Public Profile', 'tutor'),
-                            'desc' => __('Allow users to have a public profile to showcase awards and completed courses.', 'tutor'),
+                            'lable' => __('Instructor Profile', 'tutor'),
+                            'desc' => __('Allow users to have a instructor profile to showcase awards and completed courses.', 'tutor'),
                         ),
                         'student_public_profile_layout' => array(
                             'type' => 'switch',
                             'data' => array(
                                 'off' => 'private',
-                                'on' => tutor_utils()->get_option( 'student_public_profile_layout', 'pp-rectangle' )
+                                'on' => 'pp-rectangle'
                             ),
-                            'lable' => __('Public Profile', 'tutor'),
-                            'desc' => __('Allow users to have a public profile to showcase awards and completed courses.', 'tutor'),
+                            'lable' => __('Student Profile', 'tutor'),
+                            'desc' => __('Allow users to have a student profile to showcase awards and completed courses.', 'tutor'),
                         ),
                         'enable_spotlight_mode' => array(
                             'type' => 'switch',
@@ -510,24 +510,6 @@ if ( ! defined( 'ABSPATH' ) )
                         ),
                     )
                 ),
-
-
-                'profile' => array(
-                    'lable' => __('Profile Settings', 'tutor'),
-                    'attr' => array(
-                        'students_own_review_show_at_profile' => array(
-                            'type' => 'switch',
-                            'lable' => __('Show Reviews on Profile', 'tutor'),
-                            'desc' => __('Choose whether you want to show students’ ratings and reviews.', 'tutor'),
-                        ),
-                        'show_courses_completed_by_student' => array(
-                            'type' => 'switch',
-                            'lable' => __('Show Completed Courses', 'tutor'),
-                            'desc' => __('Choose whether you want to display a list of a student’s completed courses.', 'tutor'),
-                        )
-                    )
-                ),
-
 
                 'payment' => array(
                     'lable' => __('Payment Settings ', 'tutor'),
@@ -731,6 +713,7 @@ if ( ! defined( 'ABSPATH' ) )
 
         public function tutor_setup_wizard_type() {
             $course_marketplace = tutor_utils()->get_option('enable_course_marketplace');
+            $course_marketplace = 1 === $course_marketplace ? 'on' : 'off';
             ?>
             <div class="tutor-wizard-container">
                 <div class="tutor-wrapper-type tutor-setup-wizard-type">
