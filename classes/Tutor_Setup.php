@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) )
 
         public function tutor_setup_action(){
             tutor_utils()->checking_nonce();
-    
+
             $options = (array) maybe_unserialize(get_option('tutor_option'));
             if (!isset($_POST['action']) || $_POST['action'] != 'setup_action' || !current_user_can( 'manage_options' )) {
                 return;
@@ -47,10 +47,15 @@ if ( ! defined( 'ABSPATH' ) )
                             $options[$key] = tutor_sanitize_data($_POST[$key]);
                         }
                     }
+                    $options_preset[$key] = tutor_sanitize_data($_POST[$key]);
                 } else {
                     unset($options[$key]);
                 }
             }
+            // pr($options_preset);die;
+
+
+            update_option('tutor_default_option', $options_preset);
             update_option('tutor_option', $options);
 
 
@@ -106,7 +111,7 @@ if ( ! defined( 'ABSPATH' ) )
             $full_width_fields = array('rows', 'slider', 'radio', 'range', 'payments', 'dropdown');
 
             foreach ($field_arr as $key_parent => $field_parent) {
-                
+
                 $html .= '<li class="'.($i==1 ? "active" : "").'">';
                     $html .= '<div class="tutor-setup-content-heading heading">';
                         $html .= '<div class="setup-section-title tutor-text-medium-h6  tutor-color-text-primary">'.$field_parent['lable'].'</div>';
@@ -312,7 +317,7 @@ if ( ! defined( 'ABSPATH' ) )
                                         case 'attempt':
                                             $html .= '<div class="tutor-setting course-setting-wrapper">';
 
-                                                $html .= '<input type="hidden" name="quiz_attempts_allowed" value="'.$options[$key].'">';
+                                                $html .= '<input type="hidden" name="quiz_attempts_allowed" value="'. (isset($options[$key]) ? $options[$key] : 'off') .'">';
 
                                                 $html .= '<div class="content">';
                                                     $html .= '<div class="course-per-page attempts-allowed">';
@@ -376,6 +381,15 @@ if ( ! defined( 'ABSPATH' ) )
                             'data' => array(
                                 'off' => 'private',
                                 'on' => tutor_utils()->get_option( 'public_profile_layout', 'pp-rectangle' )
+                            ),
+                            'lable' => __('Public Profile', 'tutor'),
+                            'desc' => __('Allow users to have a public profile to showcase awards and completed courses.', 'tutor'),
+                        ),
+                        'student_public_profile_layout' => array(
+                            'type' => 'switch',
+                            'data' => array(
+                                'off' => 'private',
+                                'on' => tutor_utils()->get_option( 'student_public_profile_layout', 'pp-rectangle' )
                             ),
                             'lable' => __('Public Profile', 'tutor'),
                             'desc' => __('Allow users to have a public profile to showcase awards and completed courses.', 'tutor'),
@@ -576,11 +590,11 @@ if ( ! defined( 'ABSPATH' ) )
                             <input type="hidden" name="action" value="setup_action">
 
                             <?php $course_marketplace = tutor_utils()->get_option('enable_course_marketplace'); ?>
-                            <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="<?php echo ($course_marketplace ? 1 : 0); ?>">
-                            
+                            <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="<?php echo ($course_marketplace ? 'on' : 'off'); ?>">
+
                             <?php $earning = tutor_utils()->get_option('enable_tutor_earning'); ?>
-                            <input type="hidden" name="enable_tutor_earning" class="enable_tutor_earning_data" value="<?php echo ($earning ? 1 : 0); ?>">
-                            
+                            <input type="hidden" name="enable_tutor_earning" class="enable_tutor_earning_data" value="<?php echo ($earning ? 'on' : 'off'); ?>">
+
                             <ul class="tutor-setup-content">
                                 <?php $this->tutor_setup_generator(); ?>
                                 <li>
@@ -727,7 +741,7 @@ if ( ! defined( 'ABSPATH' ) )
                     </div>
                     <div class="wizard-type-body">
                         <div class="wizard-type-item">
-                            <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="0" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
+                            <input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="off" <?php if(!$course_marketplace){ echo 'checked'; } ?> />
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-0">
                                 <img src="<?php echo esc_url( tutor()->url.'assets/images/single-marketplace.svg' ); ?>" />
@@ -742,7 +756,7 @@ if ( ! defined( 'ABSPATH' ) )
                         </div>
 
                         <div class="wizard-type-item">
-                            <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="1" <?php if($course_marketplace){ echo 'checked'; } ?>/>
+                            <input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="on" <?php if($course_marketplace){ echo 'checked'; } ?>/>
                             <span class="icon"></span>
                             <label for="enable_course_marketplace-1">
                                 <img src="<?php echo esc_url( tutor()->url.'assets/images/multiple-marketplace.svg' ); ?>" />

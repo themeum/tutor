@@ -270,7 +270,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 										</p>
 										<a
-										href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author ) ); ?>"
+										href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>"
 										class="btn-text btn-detail-link tutor-color-design-dark" target="_blank"
 										>
 										<span class="ttr-detail-link-filled"></span>

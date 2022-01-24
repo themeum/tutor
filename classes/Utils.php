@@ -235,8 +235,14 @@ class Utils
 	 *
 	 * @since v.1.0.0
 	 */
-	public function profile_url($student_id = 0)
+	public function profile_url($student_id = 0, $instructor_view=false, $fallback_url='#')
 	{
+		$instructor_profile = tutor_utils()->get_option( 'public_profile_layout' )!='private';
+		$student_profile = tutor_utils()->get_option( 'student_public_profile_layout' )!='private';
+		if(($instructor_view && !$instructor_profile) || (!$instructor_view && !$student_profile)) {
+			return $fallback_url;
+		}
+		
 		$site_url   = trailingslashit(home_url()) . 'profile/';
 		$student_id = $this->get_user_id($student_id);
 		$user_name  = '';
@@ -259,7 +265,7 @@ class Utils
 			$user_name = 'user_name';
 		}
 
-		return $site_url . $user_name;
+		return add_query_arg( array('view' => $instructor_view ? 'instructor' : 'student'), $site_url . $user_name );
 	}
 
 	/**

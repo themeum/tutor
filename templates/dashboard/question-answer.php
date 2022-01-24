@@ -17,7 +17,7 @@ if (isset($_GET['view_as']) && in_array($_GET['view_as'], array('student', 'inst
     update_user_meta(get_current_user_id(), 'tutor_qa_view_as', $_GET['view_as']);
 }
 
-$is_instructor      = tutor_utils()->is_instructor();
+$is_instructor      = tutor_utils()->is_instructor(null, true);
 $view_option        = get_user_meta(get_current_user_id(), 'tutor_qa_view_as', true);
 $view_as            = $is_instructor ? ($view_option ? $view_option : 'instructor') : 'student';
 $as_instructor_url  = add_query_arg(array('view_as' => 'instructor'), tutor()->current_url);
@@ -39,19 +39,19 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
                 <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'instructor' ? 'checked' : 'unchecked'; ?>"><?php _e('Instructor', 'tutor'); ?></span>
             </label>
         </div>
-        <div class="tutor-bs-row">
-            <?php _e('Sort By', 'tutor'); ?>:
-            <select class="tutor-form-select tutor-select-redirector">
-                <?php
-                foreach ($qna_tabs as $tab) {
-                    echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
+    <?php endif; ?>
+    <div class="tutor-bs-row">
+        <?php _e('Sort By', 'tutor'); ?>:
+        <select class="tutor-form-select tutor-select-redirector">
+            <?php
+            foreach ($qna_tabs as $tab) {
+                echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
                                 ' . $tab['title'] . ' (' . $tab['value'] . ')' . '
                             </option>';
-                }
-                ?>
-            </select>
-        </div>
-    <?php endif; ?>
+            }
+            ?>
+        </select>
+    </div>
 </div>
 
 <?php
@@ -66,9 +66,9 @@ $questions = $view_as == 'instructor' ? tutor_utils()->get_qa_questions($offset,
 tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
     'qna_list' => $questions,
     'context' => 'frontend-dashboard-qna-table-' . $view_as,
+    'view_as' => $view_as,
     'qna_pagination' => array(
         'base' => '?current_page=%#%',
-        'view_as' => $view_as,
         'total_items' => $total_items,
         'per_page' => $per_page,
         'paged' => $current_page

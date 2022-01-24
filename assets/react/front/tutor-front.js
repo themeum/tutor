@@ -266,7 +266,7 @@ jQuery(document).ready(function($) {
 
 						//disable buttons
 						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').addClass(
-							'tutor-btn-disable',
+							'tutor-btn-disable tutor-no-hover',
 						);
 						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').prop(
 							'disabled',

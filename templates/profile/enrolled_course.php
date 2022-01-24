@@ -13,7 +13,7 @@ if ( ! $show_enrolled_course){
     return;
 }
 
-$user_name = sanitize_text_field(get_query_var('tutor_student_username'));
+$user_name = sanitize_text_field(get_query_var('tutor_profile_username'));
 $get_user = tutor_utils()->get_user_by_login($user_name);
 $user_id = $get_user->ID;
 
