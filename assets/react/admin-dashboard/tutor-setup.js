@@ -46,7 +46,7 @@ jQuery(document).ready(function ($) {
 			}
 		}
 		const enable = $("input[name='enable_course_marketplace'").val()
-		showHide(enable ? enable : 0)
+		showHide(enable ? enable : 'off')
 	}
 
 	$(".tutor-setup-title li").on("click", function (e) {
@@ -79,15 +79,16 @@ jQuery(document).ready(function ($) {
 	* Marketplace Type
 	* ---------------------- */
 	$("input[type=radio][name=enable_course_marketplace]").change(function () {
-		if (this.value == "0") {
-			$("input[name=enable_course_marketplace]").val("");
-			$("input[name=enable_tutor_earning]").val("");
-		} else if (this.value == "1") {
-			$("input[name=enable_course_marketplace]").val("1");
-			$("input[name=enable_tutor_earning]").val("1");
+		console.log('change', this.value);
+		var wizardForm = $('form#tutor-setup-form');
+		if (this.value == "0" || this.value == "off") {
+			wizardForm.find("input[name=enable_course_marketplace]").val("off");
+			wizardForm.find("input[name=enable_tutor_earning]").val("off");
+		} else if (this.value == "1" || this.value == "on") {
+			wizardForm.find("input[name=enable_course_marketplace]").val("on");
+			wizardForm.find("input[name=enable_tutor_earning]").val("on");
 		}
-	}
-	);
+	});
 
 	/* ---------------------
 	* Wizard Action
@@ -264,14 +265,14 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Select Option
 	* ---------------------- */
-	$(document).on('click', function(e) {
-		if(!e.target.closest('.grade-calculation')) {
+	$(document).on('click', function (e) {
+		if (!e.target.closest('.grade-calculation')) {
 			if ($(".grade-calculation .options-container") && $(".grade-calculation .options-container").hasClass('active')) {
 				$(".grade-calculation .options-container").removeClass('active');
 			}
 		}
 	});
-	
+
 	$(".selected").on("click", function () {
 		$(".options-container").toggleClass("active");
 	});
