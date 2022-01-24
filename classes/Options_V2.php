@@ -327,7 +327,8 @@ class Options_V2 {
 		$attr = $this->get_setting_fields();
 		$tutor_default_option = get_option( 'tutor_default_option' );
 		$tutor_saved_option = get_option( 'tutor_option' );
-		// ($tutor_default_option[$field['key']] == $attr_default[ $field['key'] ]) ? $tutor_default_option[$field['key']] : $field['default'];
+
+		// pr($tutor_saved_option);die;
 		foreach ( $attr as $sections ) {
 
 			foreach ( $sections as $section ) {
@@ -335,20 +336,19 @@ class Options_V2 {
 					foreach ( $blocks['fields'] as $field ) {
 						if ( isset( $tutor_default_option[$field['key']] ) ) {
 							$attr_default[ $field['key'] ] = $tutor_saved_option[$field['key']];
-						// }elseif(null !== $field['key']){
 						}else{
-							$attr_default[ $field['key'] ] = $field['default'];
+							if(null!==$field['key']){
+								$attr_default[ $field['key'] ] = $field['default'];
+							}
 						}
 					}
 				}
 			}
 		}
 
-		// pr($tutor_default_option);
-		// pr($attr_default);
-		update_option( 'tutor_option', $tutor_default_option );
+		update_option( 'tutor_option', $attr_default );
 
-		wp_send_json_success( $tutor_default_option );
+		wp_send_json_success( $attr_default );
 	}
 
 	public function load_settings_page() {
@@ -669,13 +669,13 @@ class Options_V2 {
 										'id'      => 'revenue-instructor',
 										'type'    => 'ratio',
 										'title'   => 'Instructor Takes',
-										'default' => 0,
+										'default' => 20,
 									),
 									'earning_admin_commission' => array(
 										'id'      => 'revenue-admin',
 										'type'    => 'ratio',
 										'title'   => 'Admin Takes',
-										'default' => 100,
+										'default' => 80,
 									),
 								),
 								'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce', 'tutor' ),
