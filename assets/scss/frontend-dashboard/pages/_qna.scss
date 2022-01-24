@@ -51,10 +51,10 @@
 
 	&.current-view-student {
 		.tutor-form-toggle-label.tutor-form-toggle-checked {
-			color: var(--tutor-primary-color) !important;
+			color: var(--tutor-primary-color);
 		}
 		.tutor-form-toggle-label.tutor-form-toggle-unchecked {
-			color: var(--tutor-border-color) !important;
+			color: #C0C3CB;
 		}
 		.tutor-form-toggle-control:before {
 			background: var(--tutor-primary-color);
