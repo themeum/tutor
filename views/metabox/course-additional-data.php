@@ -56,12 +56,14 @@ $material_includes = get_post_meta( $course_id, '_tutor_course_material_includes
     <textarea class="tutor-form-control tutor-textarea-auto-height tutor-mt-10" name="course_requirements" rows="2" placeholder="<?php esc_attr_e( 'Additional requirements or special instructions for the students (One per line)', 'tutor' ); ?>"><?php echo $requirements; ?></textarea>
 </div>
 
-<div class="tutor-mb-30">
-    <label class="tutor-form-label tutor-font-size-16 color-text-primary"><?php _e( 'Course Tag', 'tutor' ); ?></label>
-    <div class="tutor-input-group tutor-mb-15">
-        <?php echo tutor_course_tags_dropdown($course_id, array('classes' => 'tutor_select2')); ?>
+<?php if(!is_admin()): ?>
+    <div class="tutor-mb-30">
+        <label class="tutor-form-label tutor-font-size-16 color-text-primary"><?php _e( 'Course Tag', 'tutor' ); ?></label>
+        <div class="tutor-input-group tutor-mb-15">
+            <?php echo tutor_course_tags_dropdown($course_id, array('classes' => 'tutor_select2')); ?>
+        </div>
     </div>
-</div>
+<?php endif; ?>
 
 <input type="hidden" name="_tutor_course_additional_data_edit" value="true" />
 

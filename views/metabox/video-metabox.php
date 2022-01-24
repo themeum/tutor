@@ -52,7 +52,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
                 <i class="ttr-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
                 <i class="ttr-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
             </div>
-            <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source" noDropdown>
+            <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown" noDropdown>
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>
                 <?php
                 foreach ($video_sources as $value => $source) {

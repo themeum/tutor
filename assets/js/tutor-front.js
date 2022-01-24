@@ -680,7 +680,7 @@ window.selectSearchField = function (selectElement) {
   if (typeof readyState_complete !== 'undefined' && readyState_complete) {
     readyState_complete(function () {
       tutorFormSelect.forEach(function (element) {
-        if (!element.hasAttribute("noDropdown")) {
+        if (!element.hasAttribute("noDropdown") && !element.classList.contains('no-tutor-dropdown')) {
           var initialSelectedItem = element.options[element.selectedIndex]; // console.log(element.options[element.selectedIndex].text);
 
           element.style.display = 'none';
