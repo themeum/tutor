@@ -1,5 +1,5 @@
 <?php
-extract($data); // $qna_list, $context, $qna_pagination
+extract($data); // $qna_list, $context, $qna_pagination, $view_as
 
 $page_key = 'qna-table';
 $table_columns = include __DIR__ . '/contexts.php';

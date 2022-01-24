@@ -54,7 +54,6 @@ readyState_complete(() => {
                     document.getElementById(dataTab).querySelector('.loading-spinner').remove();
                 }
 
-                console.log(typeof(tinyMCE) != "undefined");
                 //enable if tinymce content changed
                 if (tinymce && 'undefined' !== typeof tinymce && null !== tinymce) {
                     tinymce.activeEditor.on("change", function (e) {

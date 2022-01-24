@@ -2761,7 +2761,7 @@ jQuery(document).ready(function ($) {
               action: 'tutor_quiz_timeout'
             }; //disable buttons
 
-            $('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').addClass('tutor-btn-disable');
+            $('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').addClass('tutor-btn-disable tutor-no-hover');
             $('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').prop('disabled', true); //add alert text
 
             $('.time-remaining span').css('color', '#F44337');

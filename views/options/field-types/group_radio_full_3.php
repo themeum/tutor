@@ -20,8 +20,8 @@ $field_id = esc_attr( 'field_' . $field_key );
 				foreach ( $field['group_options'] as $option_key => $option ) :
 					$option_value = $this->get( $field['key'], tutils()->array_get( 'default', $field ) );
 					?>
-					<label for="profile-<?php echo esc_attr( $option_key ); ?>">
-						<input type="radio" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" id="profile-<?php echo esc_attr( $option_key ); ?>" <?php echo esc_attr( checked( $option_value, $option_key ) ); ?> value="<?php echo esc_attr( $option_key ); ?>">
+					<label>
+						<input type="radio" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" <?php echo esc_attr( checked( $option_value, $option_key ) ); ?> value="<?php echo esc_attr( $option_key ); ?>">
 						<span class="icon-wrapper">
 							<img src="<?php echo esc_url( tutor()->url . 'assets/images/images-v2/' . $option['image'] ); ?>" alt="icon">
 						</span>
