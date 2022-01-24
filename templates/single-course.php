@@ -32,6 +32,8 @@ do_action('tutor_course/single/before/wrap');
                                 ?>
                                 <div class="tab-body-item <?php echo $key=='info' ? 'is-active' : ''; ?>" id="tutor-course-details-tab-<?php echo $key; ?>">
                                     <?php
+                                        do_action( 'tutor_course/single/tab/'.$key.'/before' );
+                                        
                                         $method = $subpage['method'];
                                         if(is_string($method)) {
                                             $method();
@@ -40,6 +42,8 @@ do_action('tutor_course/single/before/wrap');
                                             $_method = $method[1];
                                             $_object->$_method(get_the_ID());
                                         }
+
+                                        do_action( 'tutor_course/single/tab/'.$key.'/after' );
                                     ?>
                                 </div>
                                 <?php

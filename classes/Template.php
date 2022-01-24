@@ -407,8 +407,8 @@ class Template extends Tutor_Base {
 	public function student_public_profile( $template ) {
 		global $wp_query;
 		$query_var = $wp_query->query_vars;
-		if ( ! empty( $wp_query->query['tutor_student_username'] ) ) {
-			$template = tutor_get_template( 'student-public-profile' );
+		if ( ! empty( $wp_query->query['tutor_profile_username'] ) ) {
+			$template = tutor_get_template( 'public-profile' );
 		}
 
 		return $template;
@@ -423,10 +423,10 @@ class Template extends Tutor_Base {
 	public function student_public_profile_title() {
 		global $wp_query;
 
-		if ( ! empty( $wp_query->query['tutor_student_username'] ) ) {
+		if ( ! empty( $wp_query->query['tutor_profile_username'] ) ) {
 			global $wpdb;
 
-			$user_name = sanitize_text_field( $wp_query->query['tutor_student_username'] );
+			$user_name = sanitize_text_field( $wp_query->query['tutor_profile_username'] );
 			$user      = $wpdb->get_row( $wpdb->prepare( "SELECT display_name from {$wpdb->users} WHERE user_login = %s limit 1; ", $user_name ) );
 
 			if ( ! empty( $user->display_name ) ) {

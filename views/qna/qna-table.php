@@ -1,9 +1,9 @@
 <?php
-extract($data); // $qna_list, $context, $qna_pagination
+extract($data); // $qna_list, $context, $qna_pagination, $view_as
 
 $page_key = 'qna-table';
 $table_columns = include __DIR__ . '/contexts.php';
-$view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
+$view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
 ?>
 
 <table class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-ui-table tutor-ui-table-responsive qna-list-table">
@@ -68,7 +68,7 @@ $view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
                                                 <?php echo $qna->display_name; ?>
                                             </div>
                                             <div class="tutor-text-medium-small tutor-color-text-hints" style="margin-top : -2px">
-                                                <?php echo human_time_diff( strtotime( $qna->comment_date ) ); ?>
+                                                <?php echo human_time_diff(strtotime($qna->comment_date)); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -87,9 +87,9 @@ $view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
                                             <div class="tutor-qna-desc">
                                                 <div class="tutor-qna-content tutor-text-bold-body tutor-color-text-primary">
                                                     <?php
-                                                        $limit = 60;
-                                                        $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content;
-                                                        echo $content;
+                                                    $limit = 60;
+                                                    $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content;
+                                                    echo $content;
                                                     ?>
                                                 </div>
                                                 <div class="">
@@ -229,16 +229,17 @@ $view_as = isset($_GET['view_as']) ? $_GET['view_as'] : 'instructor';
         ?>
     </tbody>
 </table>
-
-<div class="tutor-mt-50">
-    <?php
-    $pagination_data = array(
-        'base'        => !empty($qna_pagination['base']) ? $qna_pagination['base'] : null,
-        'total_items' => $qna_pagination['total_items'],
-        'per_page'    => $qna_pagination['per_page'],
-        'paged'       => $qna_pagination['paged'],
-    );
-    $pagination_template = tutor()->path . 'views/elements/pagination.php';
-    tutor_load_template_from_custom_path($pagination_template, $pagination_data);
-    ?>
-</div>
+<?php if ($qna_pagination['total_items'] > $qna_pagination['per_page']) : ?>
+    <div class="tutor-mt-50">
+        <?php
+        $pagination_data = array(
+            'base'        => !empty($qna_pagination['base']) ? $qna_pagination['base'] : null,
+            'total_items' => $qna_pagination['total_items'],
+            'per_page'    => $qna_pagination['per_page'],
+            'paged'       => $qna_pagination['paged'],
+        );
+        $pagination_template = tutor()->path . 'views/elements/pagination.php';
+        tutor_load_template_from_custom_path($pagination_template, $pagination_data);
+        ?>
+    </div>
+<?php endif; ?>

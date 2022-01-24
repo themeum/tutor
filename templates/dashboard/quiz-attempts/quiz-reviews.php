@@ -30,18 +30,19 @@
 					'context'      => 'frontend-dashboard-students-attempts',
 				)
 			);
-			?>
+		?>
 	</div>
+
 	<?php
-	/**
-	 * Load Instructor Feedback template
-	 * pass quiz id
-	 *
-	 * @since v2.0.0
-	 */
-	tutor_load_template_from_custom_path(
-		tutor()->path . 'views/quiz/instructor-feedback.php',
-		array( 'attempt_data' => $attempt_data )
-	);
+		/**
+		 * Load Instructor Feedback template
+		 * pass quiz id
+		 *
+		 * @since v2.0.0
+		 */
+		tutor_load_template_from_custom_path(
+			tutor()->path . 'views/quiz/instructor-feedback.php',
+			array( 'attempt_data' => $attempt_data )
+		);
 	?>
 </div>

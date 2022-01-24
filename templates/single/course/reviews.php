@@ -92,7 +92,7 @@ $rating = tutor_utils()->get_course_rating();
 		<ul class="review-list tutor-m-0">
 			<?php
 			foreach ( $reviews as $review ) {
-				$profile_url = tutor_utils()->profile_url( $review->user_id );
+				$profile_url = tutor_utils()->profile_url( $review->user_id, false );
 				?>
 					<li>
 						<div>
