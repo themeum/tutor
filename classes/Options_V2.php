@@ -327,7 +327,8 @@ class Options_V2 {
 		$attr = $this->get_setting_fields();
 		$tutor_default_option = get_option( 'tutor_default_option' );
 		$tutor_saved_option = get_option( 'tutor_option' );
-		// ($tutor_default_option[$field['key']] == $attr_default[ $field['key'] ]) ? $tutor_default_option[$field['key']] : $field['default'];
+
+		// pr($tutor_saved_option);die;
 		foreach ( $attr as $sections ) {
 
 			foreach ( $sections as $section ) {
@@ -335,20 +336,19 @@ class Options_V2 {
 					foreach ( $blocks['fields'] as $field ) {
 						if ( isset( $tutor_default_option[$field['key']] ) ) {
 							$attr_default[ $field['key'] ] = $tutor_saved_option[$field['key']];
-						// }elseif(null !== $field['key']){
 						}else{
-							$attr_default[ $field['key'] ] = $field['default'];
+							if(null!==$field['key']){
+								$attr_default[ $field['key'] ] = $field['default'];
+							}
 						}
 					}
 				}
 			}
 		}
 
-		// pr($tutor_default_option);
-		// pr($attr_default);
-		update_option( 'tutor_option', $tutor_default_option );
+		update_option( 'tutor_option', $attr_default );
 
-		wp_send_json_success( $tutor_default_option );
+		wp_send_json_success( $attr_default );
 	}
 
 	public function load_settings_page() {
@@ -669,13 +669,13 @@ class Options_V2 {
 										'id'      => 'revenue-instructor',
 										'type'    => 'ratio',
 										'title'   => 'Instructor Takes',
-										'default' => 0,
+										'default' => 20,
 									),
 									'earning_admin_commission' => array(
 										'id'      => 'revenue-admin',
 										'type'    => 'ratio',
 										'title'   => 'Admin Takes',
-										'default' => 100,
+										'default' => 80,
 									),
 								),
 								'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce', 'tutor' ),
@@ -1379,27 +1379,6 @@ class Options_V2 {
 										'desc'         => __( 'Choose a color for the background of table elements ', 'tutor' ),
 									),
 								),
-							),
-						),
-					),
-					'student_profile' => array(
-						'label'      => __( 'Student Profile', 'tutor' ),
-						'slug'       => 'student_profile',
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'     => 'students_own_review_show_at_profile',
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Show reviews on profile', 'tutor' ),
-								'default' => 'on',
-								'desc'    => __( 'Enable to show reviews shared by students on their profile. ', 'tutor' ) . '<br />' . $student_url,
-							),
-							array(
-								'key'     => 'show_courses_completed_by_student',
-								'type'    => 'toggle_switch',
-								'label'   => __( 'Show completed courses', 'tutor' ),
-								'default' => 'on',
-								'desc'    => __( 'Completed courses will be shown on student profiles. <br/> For example, you can see this link-', 'tutor' ) . $student_url,
 							),
 						),
 					),

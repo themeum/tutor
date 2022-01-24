@@ -5739,33 +5739,6 @@ class Utils
 	}
 
 	/**
-	 * @return mixed|void
-	 *
-	 * Get user permalink for dashboard
-	 *
-	 * @since v.1.0.0
-	 */
-	public function user_profile_permalinks()
-	{
-		$permalinks = array(
-			'courses_taken' => __('Courses Taken', 'tutor'),
-		);
-
-		$show_enrolled_course      = tutor_utils()->get_option('show_courses_completed_by_student');
-		$enable_show_reviews_wrote = tutor_utils()->get_option('students_own_review_show_at_profile', true);
-
-		if ($show_enrolled_course) {
-			$permalinks['enrolled_course'] = __('Enrolled Course', 'tutor');
-		}
-
-		if ($enable_show_reviews_wrote) {
-			$permalinks['reviews_wrote'] = __('Reviews Written', 'tutor');
-		}
-
-		return apply_filters('tutor_public_profile/permalinks', $permalinks);
-	}
-
-	/**
 	 * @return bool|false|string
 	 *
 	 * Student registration form
