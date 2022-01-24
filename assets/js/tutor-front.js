@@ -2597,7 +2597,10 @@ jQuery(document).ready(function ($) {
         var video_data = that.video_data();
         player.on('ready', function (event) {
           var instance = event.detail.plyr;
-          var best_watch_time = video_data.best_watch_time;
+
+          var _ref = video_data || {},
+              _ref$best_watch_time = _ref.best_watch_time,
+              best_watch_time = _ref$best_watch_time === void 0 ? 0 : _ref$best_watch_time;
 
           if (best_watch_time > 0 && instance.duration > Math.round(best_watch_time)) {
             instance.media.currentTime = best_watch_time;
