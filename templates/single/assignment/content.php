@@ -259,8 +259,10 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 										<?php echo esc_html( $file_size ? $file_size . 'KB' : '' ); ?>
 									</div>
 								</div>
-								<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
-									<span class="ttr-download-line"></span>
+								<div class="tutor-avatar tutor-is-xs flex-center">
+									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank">
+										<span class="ttr-download-line"></span>
+									</a>
 								</div>
 							</div>					
 						<?php endforeach; ?>
@@ -543,10 +545,11 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					 *
 					 * @since v2.0.0
 					 */
-					if ( ! $is_submitted && 0 != $time_duration['value'] && ( $now > $remaining_time ) ) : ?>
+				if ( ! $is_submitted && 0 != $time_duration['value'] && ( $now > $remaining_time ) ) :
+					?>
 						<div class="tutor-mb-40">
 						<?php
-							$alert_template = tutor()->path . 'templates/global/alert.php';
+						$alert_template = tutor()->path . 'templates/global/alert.php';
 						if ( file_exists( $alert_template ) ) {
 							tutor_load_template_from_custom_path(
 								$alert_template,
