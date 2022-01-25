@@ -398,21 +398,6 @@ if ( ! defined( 'ABSPATH' ) )
                             'lable' => __('Student Profile', 'tutor'),
                             'desc' => __('Allow users to have a student profile to showcase awards and completed courses.', 'tutor'),
                         ),
-                        'enable_spotlight_mode' => array(
-                            'type' => 'switch',
-                            'lable' => __('Spotlight Mode', 'tutor'),
-                            'desc' => __('Create a focused learning environment. Block out all the distractions around your course content.', 'tutor'),
-                        ),
-                        'disable_default_player_youtube' => array(
-                            'type' => 'switch',
-                            'lable' => __('YouTube Player', 'tutor'),
-                            'desc' => __('Toggle to use the default YouTube player.', 'tutor'),
-                        ),
-                        'disable_default_player_vimeo' => array(
-                            'type' => 'switch',
-                            'lable' => __('Vimeo Player', 'tutor'),
-                            'desc' => __('Toggle to use the default Vimeo player.', 'tutor'),
-                        ),
                         'lesson_permalink_base' => array(
                             'type' => 'text',
                             'max' => 50,
