@@ -5,7 +5,7 @@ window.selectSearchField = (selectElement) => {
 
 
             tutorFormSelect.forEach(element => {
-                if (!element.hasAttribute("noDropdown")) {
+                if (!element.hasAttribute("noDropdown") && !element.classList.contains('no-tutor-dropdown')) {
 
                     let initialSelectedItem = element.options[element.selectedIndex];
                     // console.log(element.options[element.selectedIndex].text);

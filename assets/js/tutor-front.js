@@ -680,7 +680,7 @@ window.selectSearchField = function (selectElement) {
   if (typeof readyState_complete !== 'undefined' && readyState_complete) {
     readyState_complete(function () {
       tutorFormSelect.forEach(function (element) {
-        if (!element.hasAttribute("noDropdown")) {
+        if (!element.hasAttribute("noDropdown") && !element.classList.contains('no-tutor-dropdown')) {
           var initialSelectedItem = element.options[element.selectedIndex]; // console.log(element.options[element.selectedIndex].text);
 
           element.style.display = 'none';
@@ -2597,7 +2597,10 @@ jQuery(document).ready(function ($) {
         var video_data = that.video_data();
         player.on('ready', function (event) {
           var instance = event.detail.plyr;
-          var best_watch_time = video_data.best_watch_time;
+
+          var _ref = video_data || {},
+              _ref$best_watch_time = _ref.best_watch_time,
+              best_watch_time = _ref$best_watch_time === void 0 ? 0 : _ref$best_watch_time;
 
           if (best_watch_time > 0 && instance.duration > Math.round(best_watch_time)) {
             instance.media.currentTime = best_watch_time;

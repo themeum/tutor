@@ -12,15 +12,17 @@
  * @version 1.4.3
  */
 
+ // Get the accessed user data
 $user_name = sanitize_text_field( get_query_var( 'tutor_profile_username' ) );
 $get_user  = tutor_utils()->get_user_by_login( $user_name );
 
+// Show not found page if user not exists
 if ( ! is_object( $get_user ) || ! property_exists( $get_user, 'ID' ) ) {
 	wp_redirect( get_home_url() . '/404' );
 	exit;
 }
 
-// Prepare data
+// Prepare meta data to render the page based on user and view type
 $user_id        = $get_user->ID;
 $is_instructor  = isset($_GET['view']) && $_GET['view']==='instructor';
 $layout_key     = $is_instructor ? 'public_profile_layout' : 'student_public_profile_layout';
@@ -164,7 +166,7 @@ get_header();
 				<?php
 				if ( $is_instructor ) {
 					?>
-							<h3><?php _e( 'Courses', 'tutor' ); ?></h3>
+						<h3><?php _e( 'Courses', 'tutor' ); ?></h3>
 						<?php
 							add_filter(
 								'courses_col_per_row',
@@ -176,16 +178,6 @@ get_header();
 							tutor_load_template( 'profile.courses_taken' );
 						?>
 						<?php
-				} else {
-					if ( tutor_utils()->get_option( 'show_courses_completed_by_student' ) ) {
-						echo '<h3 class="tutor-mt-30">' . __( 'Course Completed', 'tutor' ) . '</h3>';
-						tutor_load_template( 'profile.enrolled_course' );
-					}
-
-					if ( tutor_utils()->get_option( 'students_own_review_show_at_profile' ) ) {
-						echo '<h3 class="tutor-mt-30">' . __( 'Reviews Wrote', 'tutor' ) . '</h3>';
-						tutor_load_template( 'profile.reviews_wrote' );
-					}
 				}
 				?>
 			</div>

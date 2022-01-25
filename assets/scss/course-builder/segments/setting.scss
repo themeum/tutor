@@ -59,6 +59,13 @@
 				margin-right: 8px;
 			}
 		}
+		.tutor-attachment-cards {
+			> div {
+				&:last-child {
+					margin-bottom: 25px;
+				}
+			}
+		}
 	}
 	.btn-csv-download {
 		margin-right: 2px !important;
@@ -75,9 +82,13 @@
 	.tutor-course-content-top {
 		.ttr-humnurger-filled {
 			color: rgba(117, 124, 142, 0.63) !important;
-			margin-top: 2px;
+			margin-top: 3px;
+		}
+		> a {
+			margin-top: 1px;
 		}
 	}
+
 	.tutor-btn {
 		font-family: 'Inter', sans-serif;
 		font-size: 15px;
@@ -402,5 +413,10 @@
 #wpcontent {
 	.filesize {
 		margin-top: -2px;
+	}
+	.tutor-course-content-top {
+		> a {
+			margin-top: 4px;
+		}
 	}
 }
