@@ -110,7 +110,7 @@ class Student {
 			if ( ! $redirect_page){
 				$redirect_page = tutor_utils()->tutor_dashboard_url();
 			}
-			wp_redirect($redirect_page);
+			wp_redirect(apply_filters('tutor_student_register_redirect_url', $redirect_page, $user));
 			die();
 		}else{
 			$this->error_msgs = $user_id->get_error_messages();
