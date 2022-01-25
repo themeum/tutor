@@ -832,9 +832,17 @@ table.tutor-ui-table {
 			}
 		}
 	}
-	@include breakpoint-minmax(1200, 1400) {
-		&.table-dashboard-course-list {
+	&.table-dashboard-course-list {
+		@include breakpoint-minmax(1200, 1400) {
 			overflow-x: unset;
+		}
+	}
+	&.tutor-ui-table-analytics-student-details tr {
+		@include breakpoint-min(desktop-lg) {
+			th:first-child,
+			td:first-child {
+				width: 135px;
+			}
 		}
 	}
 } // end of table.tutor-ui-table
