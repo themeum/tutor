@@ -46,7 +46,7 @@ jQuery(document).ready(function ($) {
 			}
 		}
 		const enable = $("input[name='enable_course_marketplace'").val()
-		showHide(enable ? enable : 'off')
+		showHide('on' == enable ? 'on' : 'off')
 	}
 
 	$(".tutor-setup-title li").on("click", function (e) {
@@ -190,7 +190,7 @@ jQuery(document).ready(function ($) {
 			data: formData,
 			success: function (data) {
 				if (data.success) {
-					window.location = that.data("url");
+					// window.location = that.data("url");
 				}
 			}
 		});
@@ -320,7 +320,7 @@ jQuery(document).ready(function ($) {
 	});
 
 	function showHide(val) {
-		if (val == 1) {
+		if (val == 'on') {
 			$('.tutor-show-hide').addClass('active')
 			$('.tutor-setup-title li.instructor').removeClass('hide-this')
 			$('.tutor-setup-content li').eq($('.tutor-setup-title li.instructor')).removeClass('hide-this')
