@@ -111,7 +111,7 @@ if ( ! defined( 'ABSPATH' ) )
             $full_width_fields = array('rows', 'slider', 'radio', 'range', 'payments', 'dropdown');
 
             foreach ($field_arr as $key_parent => $field_parent) {
-
+// pr($key_parent);
                 $html .= '<li class="'.($i==1 ? "active" : "").'">';
                     $html .= '<div class="tutor-setup-content-heading heading">';
                         $html .= '<div class="setup-section-title tutor-text-medium-h6  tutor-color-text-primary">'.$field_parent['lable'].'</div>';
@@ -355,7 +355,11 @@ if ( ! defined( 'ABSPATH' ) )
 
                         }
                     $html .= '</div>';
+                if('payments'!== $field['type']){
                     $html .= $this->tutor_setup_wizard_action();
+                }else{
+                    $html .= $this->tutor_setup_wizard_action_final();
+                }
                 $html .= '</li>';
                 $i++;
             }
@@ -445,7 +449,7 @@ if ( ! defined( 'ABSPATH' ) )
                     )
                 ),
 
-
+/*
                 'quiz' => array(
                     'lable' => __('Quiz Settings', 'tutor'),
                     'attr' => array(
@@ -493,7 +497,7 @@ if ( ! defined( 'ABSPATH' ) )
                         )
                     )
                 ),
-
+ */
 
                 'instructor' => array(
                     'lable' => __('Instructor Settings', 'tutor'),
@@ -559,11 +563,11 @@ if ( ! defined( 'ABSPATH' ) )
                         <ul class="tutor-setup-title">
                             <li data-url="general" class="general active current"><?php _e('General', 'tutor'); ?></li>
                             <li data-url="course" class="course"><?php _e('Course', 'tutor'); ?></li>
-                            <li data-url="quiz" class="quiz"><?php _e('Quiz', 'tutor'); ?></li>
+                            <!-- <li data-url="quiz" class="quiz"><?php //_e('Quiz', 'tutor'); ?></li> -->
                             <li data-url="instructor" class="instructor"><?php _e('Instructor', 'tutor'); ?></li>
-                            <li data-url="profile" class="profile"><?php _e('Profile', 'tutor'); ?></li>
+                            <!-- <li data-url="profile" class="profile"><?php //_e('Profile', 'tutor'); ?></li> -->
                             <li data-url="payment" class="payment"><?php _e('Payment', 'tutor'); ?></li>
-                            <li data-url="finish" class="finish"><?php _e('Finish', 'tutor'); ?></li>
+                            <!-- <li data-url="finish" class="finish"><?php //_e('Finish', 'tutor'); ?></li> -->
                         </ul>
 
 
@@ -590,10 +594,10 @@ if ( ! defined( 'ABSPATH' ) )
                                             <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a target="_blank" href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
-                                            <button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
+                                            <button class="tutor-btn tutor-btn-primary tutor-btn-md primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
                                                 <?php _e('Create a New Course', 'tutor'); ?>
                                             </button>
-                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-redirect" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
+                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
                                                 <?php _e('Explore Addons', 'tutor'); ?>
                                             </button>
                                         </div>
@@ -620,6 +624,25 @@ if ( ! defined( 'ABSPATH' ) )
                 $html .= '<div class="tutor-setup-btn-wrapper">';
                     $html .= '<button class="tutor-btn tutor-btn-md tutor-setup-next">';
                         $html .= '<span>'.__('Next', 'tutor').'</span>&nbsp;<span>&#8594;</span>';
+                    $html .= '</button>';
+                $html .= '</div>';
+            $html .= '</div>';
+
+            return $html;
+        }
+        public function tutor_setup_wizard_action_final() {
+            $html = '<div class="tutor-setup-content-footer footer">';
+                $html .= '<div class="tutor-setup-btn-wrapper">';
+                    $html .= '<button class="tutor-btn tutor-btn-disable-outline tutor-btn-md tutor-setup-previous">';
+                        $html .= '<span>&#8592;</span>&nbsp;<span>'.__('Previous', 'tutor').'</span>';
+                    $html .= '</button>';
+                $html .= '</div>';
+                $html .= '<div class="tutor-setup-btn-wrapper">';
+                    $html .= '<button class="tutor-setup-skip">'.__('Skip This Step', 'tutor').'</button>';
+                $html .= '</div>';
+                $html .= '<div class="tutor-setup-btn-wrapper">';
+                    $html .= '<button class="tutor-btn tutor-btn-md tutor-redirect tutor-setup-next">';
+                        $html .= '<span>'.__('Finish Setup', 'tutor').'</span>&nbsp;<span>&#8594;</span>';
                     $html .= '</button>';
                 $html .= '</div>';
             $html .= '</div>';
