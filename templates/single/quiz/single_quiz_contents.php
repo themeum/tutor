@@ -55,6 +55,7 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
 </div>
 
 
+<?php ob_start(); ?>
 <div class="tutor-quiz-single-wrap ">
 	<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
@@ -67,3 +68,4 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
 	}
 	?>
 </div>
+<?php echo apply_filters( 'tutor_quiz/single/wrapper', ob_get_clean() ); ?>

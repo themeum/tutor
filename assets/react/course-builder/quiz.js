@@ -468,7 +468,7 @@ window.jQuery(document).ready(function ($) {
         var answer_wrapper = $('#tutor_quiz_builder_answer_wrapper');
         answer_wrapper.html(
             `<div style="text-align:center">
-                <i class="tutor-updating-message"></i>
+                <span class="tutor-updating-message"></span>
             </div>`
         );
 

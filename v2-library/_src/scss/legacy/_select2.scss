@@ -60,6 +60,8 @@ body.tutor-screen-course-builder{
             .select2-selection__choice__remove {
                 margin-left: 11px;
                 float: right;
+                position: static;
+                border: none;
             }
         }
 

@@ -19,11 +19,11 @@
         <div class="tutor-bs-row">
             <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
                 <label class="tutor-form-label tutor-color-text-subsued"> <?php esc_html_e('Current Password', 'tutor'); ?> </label>
-                <input class="tutor-form-control" type="password" name="previous_password">
+                <input class="tutor-form-control" type="password" name="previous_password" placeholder="Current Password">
             </div>
         </div>
 
-		<!-- <div class="tutor-bs-row">
+		<div class="tutor-bs-row">
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
 				<div class="tutor-password-strength-checker">
 					<div class="tutor-password-field">
@@ -51,7 +51,7 @@
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 
 
 		<div class="tutor-bs-row">

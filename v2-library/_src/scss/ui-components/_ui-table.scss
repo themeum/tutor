@@ -832,4 +832,9 @@ table.tutor-ui-table {
 			}
 		}
 	}
-}
+	@include breakpoint-minmax(1200, 1400) {
+		&.table-dashboard-course-list {
+			overflow-x: unset;
+		}
+	}
+} // end of table.tutor-ui-table
