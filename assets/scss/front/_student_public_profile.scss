@@ -117,7 +117,7 @@
 		overflow: hidden;
 		height: 414px;
 		margin-top: 30px;
-		margin-bottom: -100px;
+		// margin-bottom: -100px;
 
 		.cover-area {
 			position: relative;
@@ -147,6 +147,9 @@
 			display: flex;
 			align-items: center;
 			gap: 30px;
+			@include breakpoint-max(992) {
+				gap: 10px;
+			}
 
 			.profile-pic {
 				background-position: center center;
@@ -308,7 +311,7 @@
 		}
 	}
 
-	@media (max-width: 767px) {
+	@media (max-width: 991px) {
 		.profile-name {
 			span {
 				color: #757575 !important;
@@ -477,6 +480,67 @@
 			width: 100%;
 			float: none;
 			padding: 10px 0;
+		}
+	}
+}
+
+// FDash > Analytics > Student > Details
+.tutor-user-public-profile {
+	@include breakpoint-min(992) {
+		.photo-area {
+			margin-bottom: -90px;
+		}
+	}
+	.student-details-table-wrapper {
+		@include breakpoint-max(992) {
+			margin-top: 40px;
+		}
+	}
+}
+
+.tutor-analytics-statements {
+	.tutor-react-datepicker .react-datepicker__input-container input {
+		margin-bottom: 0;
+		background: #ddd;
+	}
+}
+
+.tutor-analytics-students-wrapper {
+	display: grid;
+	grid-auto-flow: row;
+	grid-gap: 10px;
+	@media (min-width: 992px) {
+		grid-template-columns: repeat(3, 1fr);
+		grid-gap: 30px;
+	}
+	.tutor-react-datepicker .react-datepicker__input-container input {
+		margin-bottom: 0;
+	}
+}
+
+.analytics-profile-authormeta {
+	gap: 20px;
+	@include breakpoint-min(1200) {
+		display: flex;
+		gap: 40px;
+		> *:first-child {
+			position: relative;
+			&:before {
+				content: '';
+				position: absolute;
+				width: 4px;
+				height: 4px;
+				background: #c4c4c4;
+				border-radius: 50%;
+				right: -20px;
+				top: 50%;
+				transform: translateY(-50%);
+			}
+		}
+	}
+	@include breakpoint-max(1200) {
+		> * {
+			display: block;
 		}
 	}
 }
