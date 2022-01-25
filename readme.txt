@@ -241,9 +241,30 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 2.0.0-beta.2 - January 21, 2022
+= 2.0.0-beta.2 - January 24, 2022
 
-Update: Bug fixes and optimizations
+New: Student and instructor public profile layout option in settings
+Update: Add translation security to the export page
+Update: Confirmation modal added to import, delete & apply history data
+Fix: Student can submit quiz even after time expired issue fixed
+Fix: Student can upload multiple files while submitting Assignment
+Fix: Fixed Fatal error if users didn't have the compatible Tutor Pro installed
+Fix: Gradebook broken message issue fixed 
+Fix: PHP notice and warning errors fixed
+Fix: Quiz attempt details table doesn't show all contents properly
+Fix: Division by zero on pagination is fixed
+Fix: Sorting fixed after ajax action on Import & delete history data
+Fix: Line-awesome static (404) link removed
+Fix: TinyMCE editor null checking fixed
+Fix: Removed duplicate site title of Tools status page
+Fix: Time type added to quiz attempt
+Fix: Slash (\) is removed to filter and search the title on each listing
+Fix: Removed array checking on an object in dashboard list page
+Fix: Issue for login page if there is no redirection page issue is fixed
+Fix: Replaced Q&A static date to dynamic date
+Fix: Fixed wrong display name on quiz attempt table
+Fix: Settings page input field enter modal issue fixed
+Fix: Pre-requisites not showing up on course page 
 
 = 2.0.0-beta - January 18, 2022
 
