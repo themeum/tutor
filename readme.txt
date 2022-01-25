@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 2.0.0-beta.2 - January 24, 2022
+= 2.0.0-beta.2 - January 25, 2022
 
 New: Student and instructor public profile layout option in settings
 Update: Add translation security to the export page

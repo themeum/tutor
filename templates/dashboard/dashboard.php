@@ -42,7 +42,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							}
 							?>
 							<li>
-								<span class="tutor-dashboard-round-icon">
+								<span class="tutor-round-icon">
 									<i class="ttr-award-filled"></i>
 								</span>
 							</li>
