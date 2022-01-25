@@ -149,7 +149,7 @@
 		}
 		&-icon {
 			@extend .tutor-icon-30;
-			color: $design-brand;
+			color: var(--tutor-primary-color);
 			width: 30px;
 			height: 30px;
 		}
