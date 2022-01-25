@@ -35,7 +35,7 @@
 			<div class="quiz-time-remaining d-flex">
 				<?php if ( $remaining_time_secs > 0 ) : ?>
 					<div class="quiz-time-remaining-progress-circle">
-						<svg viewBox="0 0 50 50" width="50" height="50" style="--quizeProgress: 30;">
+						<svg viewBox="0 0 50 50" width="50" height="50" style="--quizeProgress: 0;">
 							<circle cx="0" cy="0" r="7"></circle>
 							<circle cx="0" cy="0" r="7"></circle>
 						</svg>

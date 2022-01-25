@@ -320,7 +320,27 @@ jQuery(document).ready(function($) {
 				}
 				time_now = time_now + 1000;
 				$tutor_quiz_time_update.html(countdown_human);
+
+				/**
+				 * dynamically update progress indicator
+				 *
+				 * @since v2.0.0
+				 */
+				if ( distance ) {
+					let newDistance = distance / 1000;
+					let totalTime = attempt_meta.time_limit.time_limit_seconds;
+					let progress = Math.ceil((newDistance * 100 ) / totalTime);
+					let svgWrapper = document.querySelector('.quiz-time-remaining-progress-circle');
+					let svg = document.querySelector('.quiz-time-remaining-progress-circle svg');
+					if ( progress <= 0 ) {
+						progress = 0;
+						// if time out red the progress circle
+						svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
+					}
+					svg.setAttribute('style', `--quizeProgress: ${100 - progress}`);
+				}
 			}, 1000);
+
 		} else {
 			$tutor_quiz_time_update.html(__('No Limit', 'tutor'));
 		}
