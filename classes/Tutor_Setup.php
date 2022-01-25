@@ -567,7 +567,7 @@ if ( ! defined( 'ABSPATH' ) )
                             <li data-url="instructor" class="instructor"><?php _e('Instructor', 'tutor'); ?></li>
                             <!-- <li data-url="profile" class="profile"><?php //_e('Profile', 'tutor'); ?></li> -->
                             <li data-url="payment" class="payment"><?php _e('Payment', 'tutor'); ?></li>
-                            <!-- <li data-url="finish" class="finish"><?php //_e('Finish', 'tutor'); ?></li> -->
+                            <li data-url="finish" style="display:none" class="finish"><?php _e('Finish', 'tutor'); ?></li>
                         </ul>
 
 
@@ -594,12 +594,12 @@ if ( ! defined( 'ABSPATH' ) )
                                             <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a target="_blank" href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
-                                            <button class="tutor-btn tutor-btn-primary tutor-btn-md primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
+                                            <a class="tutor-btn tutor-btn-primary tutor-btn-md primary-btn" href="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
                                                 <?php _e('Create a New Course', 'tutor'); ?>
-                                            </button>
-                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
+                                            </a>
+                                            <a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" href="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
                                                 <?php _e('Explore Addons', 'tutor'); ?>
-                                            </button>
+                                            </a>
                                         </div>
                                     </div>
                                 </li>
