@@ -327,8 +327,11 @@ jQuery(document).ready(function($) {
 				 * @since v2.0.0
 				 */
 				if ( distance ) {
+					// convert distance in sec
 					let newDistance = distance / 1000;
+					// get total time duration in sec
 					let totalTime = attempt_meta.time_limit.time_limit_seconds;
+					//calculate progress
 					let progress = Math.ceil((newDistance * 100 ) / totalTime);
 					let svgWrapper = document.querySelector('.quiz-time-remaining-progress-circle');
 					let svg = document.querySelector('.quiz-time-remaining-progress-circle svg');
