@@ -31,11 +31,13 @@ window.selectSearchField = (selectElement) => {
 
                         e.stopPropagation();
                         dropDown.classList.toggle('is-active');
-                        searchInput.focus();
+
+                        setTimeout(() => {
+                            searchInput.focus();
+                        },100)
 
                         dropDown.onclick = (e) => {
                             e.stopPropagation();
-
                         }
 
                     }
