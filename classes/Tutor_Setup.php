@@ -642,7 +642,7 @@ if ( ! defined( 'ABSPATH' ) )
                 $html .= '</div>';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
                     $html .= '<button class="tutor-btn tutor-btn-md tutor-redirect tutor-setup-next">';
-                        $html .= '<span>'.__('Finish Setup', 'tutor').'</span>&nbsp;<span>&#8594;</span>';
+                        $html .= '<span>'.__('Finish Setup', 'tutor');
                     $html .= '</button>';
                 $html .= '</div>';
             $html .= '</div>';
