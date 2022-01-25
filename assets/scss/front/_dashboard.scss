@@ -384,12 +384,12 @@
 	width: 100%;
 }
 
-.date-range-input input {
-	border-radius: 0 !important;
-	margin: 0 !important;
-	border-right: none !important;
-	font-size: 14px;
-}
+// .date-range-input input {
+// 	border-radius: 0 !important;
+// 	margin: 0 !important;
+// 	border-right: none !important;
+// 	font-size: 14px;
+// }
 
 .date-range-input:last-child {
 	margin-right: 0;
@@ -662,4 +662,10 @@ table.tutor-dashboard-statement-table p.small-text {
 }
 .tutor-table-rows-sorting {
 	cursor: pointer;
+}
+
+.tutor-zoom-meeting-modal-wrap {
+	.tutor-react-datepicker .react-datepicker__input-container input {
+		height: 48px;
+	}
 }
