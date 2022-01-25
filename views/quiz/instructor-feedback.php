@@ -18,8 +18,8 @@ if ( $attempt_info ) {
 <div class="wrap">
 	<div class="quiz-attempt-answers-wrap">
 		<div class="attempt-answers-header tutor-mb-10">
-			<div class="attempt-header-quiz">
-				<h3><?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?></h3>
+			<div class="attempt-header-quiz tutor-mt-24">
+				<span class="color-text-primary text-medium-body"><?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?></span>
 			</div>
 		</div>
 		<div class="tutor-instructor-feedback-wrap tutor-mb-15">
