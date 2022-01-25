@@ -702,7 +702,9 @@ window.selectSearchField = function (selectElement) {
             dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
             e.stopPropagation();
             dropDown.classList.toggle('is-active');
-            searchInput.focus();
+            setTimeout(function () {
+              searchInput.focus();
+            }, 100);
 
             dropDown.onclick = function (e) {
               e.stopPropagation();
