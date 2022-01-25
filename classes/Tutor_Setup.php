@@ -522,7 +522,6 @@ if ( ! defined( 'ABSPATH' ) )
                         'commission_split' => array(
                             'type' => 'range',
                             'lable' => __('Commission Rate', 'tutor'),
-                            'class' => 'tutor-show-hide',
                             'tooltip' => __('Control revenue sharing between admin and instructor.', 'tutor')
                         ),
                         'earning_instructor_commission' => array(
@@ -534,7 +533,6 @@ if ( ! defined( 'ABSPATH' ) )
                         'withdraw_split' => array(
                             'type' => 'payments',
                             'lable' => __('Payment Withdrawal Method', 'tutor'),
-                            'class' => 'tutor-show-hide',
                             'desc' => __('Choose your preferred withdrawal method from the options.', 'tutor')
                         ),
 
@@ -798,7 +796,7 @@ if ( ! defined( 'ABSPATH' ) )
 
         public function enqueue_scripts() {
             if (isset($_GET['page']) && $_GET['page'] == 'tutor-setup') {
-                wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
+                wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.css', array(), TUTOR_VERSION );
                 wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), TUTOR_VERSION );
                 wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), TUTOR_VERSION );
                 wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), TUTOR_VERSION, true );
