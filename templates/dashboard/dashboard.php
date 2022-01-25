@@ -156,7 +156,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	<div class="tutor-bs-row tutor-dashboard-cards-container">
 		<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 			<p>
-				<span class="tutor-round-icon">
+				<span class="tutor-dashboard-round-icon">
 					<i class="ttr-book-open-filled"></i>
 				</span>
 				<span class="tutor-dashboard-info-val"><?php echo esc_html( $enrolled_course_count ); ?></span>
@@ -166,7 +166,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		</div>
 		<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 			<p>
-				<span class="tutor-round-icon">
+				<span class="tutor-dashboard-round-icon">
 					<i class="ttr-college-graduation-filled"></i>
 				</span>
 				<span class="tutor-dashboard-info-val"><?php echo esc_html( $active_course_count ); ?></span>
@@ -176,7 +176,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		</div>
 		<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 			<p>
-				<span class="tutor-round-icon">
+				<span class="tutor-dashboard-round-icon">
 					<i class="ttr-award-filled"></i>
 				</span>
 				<span class="tutor-dashboard-info-val"><?php echo esc_html( $completed_course_count ); ?></span>
@@ -190,7 +190,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			?>
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 				<p>
-					<span class="tutor-round-icon">
+					<span class="tutor-dashboard-round-icon">
 						<i class="ttr-user-graduate-filled"></i>
 					</span>
 					<span class="tutor-dashboard-info-val"><?php echo esc_html( $total_students ); ?></span>
@@ -200,7 +200,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 				<p>
-					<span class="tutor-round-icon">
+					<span class="tutor-dashboard-round-icon">
 						<i class="ttr-box-open-filled"></i>
 					</span>
 					<span class="tutor-dashboard-info-val"><?php echo esc_html( count( $my_courses ) ); ?></span>
@@ -210,7 +210,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 				<p>
-					<span class="tutor-round-icon">
+					<span class="tutor-dashboard-round-icon">
 						<i class="ttr-coins-filled"></i>
 					</span>
 					<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></span>

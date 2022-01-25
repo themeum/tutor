@@ -256,6 +256,10 @@ class Options_V2 {
 
 		} else {
 			if ( ! empty( $import_data ) ) {
+
+				// echo count($import_data);
+
+
 				update_option( 'tutor_settings_log', $import_data );
 			}
 
@@ -304,6 +308,9 @@ class Options_V2 {
 		} else {
 			$update_option = array_merge( $update_option, $import_data );
 		}
+
+		$update_option = array_slice($update_option, 0, 10 );
+		// pr(array_keys($update_option));die;
 
 		update_option( 'tutor_settings_log', $update_option );
 
