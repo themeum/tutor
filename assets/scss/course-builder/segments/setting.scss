@@ -5,6 +5,7 @@
 .tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover {
 	opacity: 1;
 }
+
 #wpcontent,
 #tutor-frontend-course-builder {
 	.tutor-certificate-template {
@@ -15,22 +16,12 @@
 		}
 	}
 	.tutor-modal {
-		.tutor-modal-footer {
-			button[data-tutor-modal-close],
-			button[data-action='back'] {
-				color: #757c8e;
-				background: #e3e6eb;
-				border: 1px solid #e3e6eb;
-				&:hover {
-					border-color: transparent;
-					background: #d7dbe1;
-					color: #656c7c;
-				}
-			}
-		}
 		.tutor-delete-attachment.tutor-icon-line-cross {
 			margin-left: 5px;
 		}
+        .tutor-modal-icon {
+            margin: 0 auto !important;
+        }
 		.date-range-input i.tutor-icon-clock,
 		.date-range-input i.tutor-icon-lock {
 			font-size: 18px;

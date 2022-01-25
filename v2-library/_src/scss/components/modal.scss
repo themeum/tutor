@@ -11,6 +11,21 @@
 	overflow-y: auto;
 	transition: 200ms;
 
+	.tutor-modal-footer,
+	.tutor-modal-delete-footer {
+		button[data-tutor-modal-close],
+		button[data-action='back'] {
+			color: #656c7c !important;
+			background: #e3e6eb !important;
+			border: 1px solid #e3e6eb !important;
+			&:hover {
+				color: #323438 !important;
+				border-color: transparent !important;
+				background: #d7dbe1 !important;
+			}
+		}
+	}
+
 	&.tutor-is-active {
 		visibility: visible;
 		opacity: 1;
