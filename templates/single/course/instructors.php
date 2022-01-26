@@ -50,7 +50,7 @@ if($instructors && count($instructors)) {
 					?>
 					<div class="tutor-ins-meta tutor-bs-d-flex">
 						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center">
-							<span class="tutor-icon-30 ttr-user-filled"></span>
+							<span class="tutor-icon-30 tutor-icon-user-filled"></span>
 							<span class="text-bold-body tutor-color-text-primary tutor-mr-4">
 								<?php echo tutor_utils()->get_total_students_by_instructor($instructor->ID); ?>
 							</span>
@@ -59,7 +59,7 @@ if($instructors && count($instructors)) {
 							</span>
 						</div>
 						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center ">
-							<span class="tutor-icon-30 ttr-mortarboard-line"></span>
+							<span class="tutor-icon-30 tutor-icon-mortarboard-line"></span>
 							<span class="text-bold-body tutor-color-text-primary tutor-mr-4">
 								<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?>
 							</span>

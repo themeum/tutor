@@ -36,7 +36,7 @@ if ( is_array( $attachments ) && count( $attachments ) ) {
                     </div>
                 </div>
                 <div class="tutor-avatar tutor-is-xs flex-center tutor-bs-flex-shrink-0">
-                    <span class="tutor-icon-24 ttr-download-line tutor-color-design-brand"></span>
+                    <span class="tutor-icon-24 tutor-icon-download-line tutor-color-design-brand"></span>
                 </div>
             </div>
         </a> 

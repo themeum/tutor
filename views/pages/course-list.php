@@ -165,7 +165,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<span class="text-regular-small">
 									<?php esc_html_e( 'Date', 'tutor' ); ?>
 								</span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled  tutor-icon-18"></span>
+								<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
@@ -173,7 +173,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<span class="text-regular-small">
 									<?php esc_html_e( 'Title', 'tutor' ); ?>
 								</span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled  tutor-icon-18"></span>
+								<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
@@ -181,7 +181,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<span class="text-regular-small">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 								</span>
-								<span class="a-to-z-sort-icon ttr-ordering-a-to-z-filled  tutor-icon-18"></span>
+								<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>
 						<th>
@@ -273,7 +273,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>"
 										class="btn-text btn-detail-link tutor-color-design-dark" target="_blank"
 										>
-										<span class="ttr-detail-link-filled"></span>
+										<span class="tutor-icon-detail-link-filled"></span>
 										</a>
 									</div>
 								</td>
@@ -316,8 +316,8 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											</option>
 										<?php endforeach; ?>
 										</select>
-										<i class="icon1 ttr-eye-fill-filled"></i>
-										<i class="icon2 ttr-angle-down-filled"></i>
+										<i class="icon1 tutor-icon-eye-fill-filled"></i>
+										<i class="icon2 tutor-icon-angle-down-filled"></i>
 										</div>
 										<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="btn-outline tutor-btn">
 											<?php esc_html_e( 'Edit', 'tutor' ); ?>
@@ -334,7 +334,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
-													<i class="ttr-eye-fill-filled"></i>
+													<i class="tutor-icon-eye-fill-filled"></i>
 													<span class="text-regular-body tutor-color-text-white">
 														<?php esc_html_e( 'View Course', 'tutor' ); ?>
 													</span>
@@ -343,7 +343,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 											<li>
 												<a href="javascript:void(0)" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
-													<i class="ttr-delete-fill-filled tutor-color-design-white"></i>
+													<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
 													<span class="text-regular-body tutor-color-text-white">
 													<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
 													</span>
