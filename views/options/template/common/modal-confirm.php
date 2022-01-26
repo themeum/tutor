@@ -11,7 +11,7 @@
 <div id="tutor-modal-bulk-action" class="tutor-modal tutor-modal-confirmation">
 	<span class="tutor-modal-overlay"></span>
 	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="las la-times"></span>
+		<span class="ttr-line-cross-line"></span>
 	</button>
 	<div class="tutor-modal-root">
 		<div class="tutor-modal-inner">

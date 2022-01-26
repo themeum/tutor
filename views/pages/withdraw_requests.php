@@ -327,13 +327,15 @@ $filters = array(
 			/**
 			 * Prepare pagination data & load template
 			 */
-			$pagination_data     = array(
-				'total_items' => $total,
-				'per_page'    => $per_page,
-				'paged'       => $paged,
-			);
-			$pagination_template = tutor()->path . 'views/elements/pagination.php';
-			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+			if($total > $per_page) {
+				$pagination_data     = array(
+					'total_items' => $total,
+					'per_page'    => $per_page,
+					'paged'       => $paged,
+				);
+				$pagination_template = tutor()->path . 'views/elements/pagination.php';
+				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+			}
 			?>
 	</div>
 
@@ -341,7 +343,7 @@ $filters = array(
 	<div id="tutor-admin-withdraw-approve" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
 		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="las la-times"></span>
+			<span class="ttr-line-cross-line"></span>
 		</button>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
@@ -400,7 +402,7 @@ $filters = array(
 	<div id="tutor-admin-withdraw-reject" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
 		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="las la-times"></span>
+			<span class="ttr-line-cross-line"></span>
 		</button>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">

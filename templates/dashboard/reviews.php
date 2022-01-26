@@ -12,7 +12,7 @@
  * @version 1.4.3
  */
 
-if ( ! tutor_utils()->is_instructor() ) {
+if ( ! tutor_utils()->is_instructor(0, true) ) {
 	include __DIR__ . '/reviews/given-reviews.php';
 	return;
 }
@@ -120,19 +120,17 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 			</div>
 		<?php endif; ?>
 	</div>
+	<br/>
 <?php
-if ( $reviews->count ) {
-	?>
-	<div class="tutor-pagination">
-		<?php
-		echo paginate_links(
-			array(
-				'format'  => '?current_page=%#%',
-				'current' => $current_page,
-				'total'   => ceil( $reviews->count / $per_page ),
-			)
-		);
-		?>
-	</div>
-	<?php
-}
+
+
+
+$pagination_data = array(
+	'total_items' => $reviews->count,
+	'per_page'    => $per_page,
+	'paged'       => $current_page,
+);
+$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+
+?>
