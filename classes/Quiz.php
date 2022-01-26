@@ -39,7 +39,7 @@ class Quiz {
 	private $allowed_html = array( 'img', 'b', 'i', 'br', 'a', 'audio', 'video', 'source' );
 
 	public function __construct() {
-		
+
 		add_action('save_post_tutor_quiz', array($this, 'save_quiz_meta'));
 		add_action('wp_ajax_remove_quiz_from_post', array($this, 'remove_quiz_from_post'));
 
@@ -134,7 +134,7 @@ class Quiz {
 			update_post_meta( $post_ID, 'tutor_quiz_option', $quiz_option );
 		}
 	}
-	
+
 	public function remove_quiz_from_post(){
 		tutor_utils()->checking_nonce();
 
@@ -279,7 +279,7 @@ class Quiz {
 	 */
 	public static function tutor_quiz_attemp_submit() {
 
-		// Check logged in 
+		// Check logged in
 		if ( ! is_user_logged_in() ) {
 			die( 'Please sign in to do this operation' );
 		}
@@ -319,19 +319,19 @@ class Quiz {
 			// Calculate and set the total marks in attempt table for this question
 			if ( is_array( $question_ids ) && count( $question_ids ) ) {
 				$question_ids_string  = implode(',', $question_ids );
-				
+
 				// Get total marks of the questions from question table
-				$total_question_marks = $wpdb->get_var( 
-					"SELECT SUM(question_mark) 
-					FROM {$wpdb->prefix}tutor_quiz_questions 
-					WHERE question_id IN({$question_ids_string});" 
+				$total_question_marks = $wpdb->get_var(
+					"SELECT SUM(question_mark)
+					FROM {$wpdb->prefix}tutor_quiz_questions
+					WHERE question_id IN({$question_ids_string});"
 				);
-				
+
 				// Set the the total mark in the attempt table for the question
-				$wpdb->update( 
-					$wpdb->prefix . 'tutor_quiz_attempts', 
-					array( 'total_marks' => $total_question_marks ), 
-					array( 'attempt_id' => $attempt_id ) 
+				$wpdb->update(
+					$wpdb->prefix . 'tutor_quiz_attempts',
+					array( 'total_marks' => $total_question_marks ),
+					array( 'attempt_id' => $attempt_id )
 				);
 			}
 
@@ -356,27 +356,27 @@ class Quiz {
 						}
 
 						$given_answer = $answers;
-						$is_answer_was_correct = (bool) $wpdb->get_var( $wpdb->prepare( 
-							"SELECT is_correct 
-							FROM {$wpdb->prefix}tutor_quiz_question_answers 
-							WHERE answer_id = %d ", 
-							$answers 
+						$is_answer_was_correct = (bool) $wpdb->get_var( $wpdb->prepare(
+							"SELECT is_correct
+							FROM {$wpdb->prefix}tutor_quiz_question_answers
+							WHERE answer_id = %d ",
+							$answers
 						) );
 
 					} elseif ( $question_type === 'multiple_choice' ) {
 
 						$given_answer = (array) ( $answers );
-						
+
 						$given_answer = array_filter( $given_answer, function($id) {
 							return is_numeric($id) && $id>0;
 						} );
 						$get_original_answers = (array) $wpdb->get_col($wpdb->prepare(
-							"SELECT 
-								answer_id 
-							FROM 
-								{$wpdb->prefix}tutor_quiz_question_answers 
-							WHERE belongs_question_id = %d 
-								AND belongs_question_type = %s 
+							"SELECT
+								answer_id
+							FROM
+								{$wpdb->prefix}tutor_quiz_question_answers
+							WHERE belongs_question_id = %d
+								AND belongs_question_type = %s
 								AND is_correct = 1 ;
 							",
 								$question->question_id,
@@ -394,14 +394,14 @@ class Quiz {
 						$given_answer = (array) array_map( 'sanitize_text_field', $answers );
 						$given_answer = maybe_serialize( $given_answer );
 
-						$get_original_answer = $wpdb->get_row( $wpdb->prepare( 
-							"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers 
-							WHERE belongs_question_id = %d 
-								AND belongs_question_type = %s ;", 
-								$question->question_id, 
-								$question_type 
+						$get_original_answer = $wpdb->get_row( $wpdb->prepare(
+							"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers
+							WHERE belongs_question_id = %d
+								AND belongs_question_type = %s ;",
+								$question->question_id,
+								$question_type
 							) );
-							
+
 						$gap_answer = (array) explode( '|', $get_original_answer->answer_two_gap_match );
 
 						$gap_answer = array_map( 'sanitize_text_field', $gap_answer );
@@ -442,8 +442,8 @@ class Quiz {
 							$wpdb->prepare(
 								"SELECT answer_title
 								FROM {$wpdb->prefix}tutor_quiz_question_answers
-								WHERE belongs_question_id = %d 
-									AND belongs_question_type = 'image_answering' 
+								WHERE belongs_question_id = %d
+									AND belongs_question_type = 'image_answering'
 									ORDER BY answer_order asc ;",
 								$question_id
 							)
@@ -475,7 +475,7 @@ class Quiz {
 					if ( in_array($question_type, array('open_ended', 'short_answer', 'image_answering'))) {
 						$answers_data['is_correct'] = null;
 					}
-					
+
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 					$review_required = true;
 				}
@@ -574,7 +574,7 @@ class Quiz {
 	 */
 
 	public function review_quiz_answer() {
-		
+
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
@@ -620,12 +620,12 @@ class Quiz {
 					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ),
 				);
 			}
-			
+
 			if ($question->question_type === 'open_ended' || $question->question_type === 'short_answer' ){
                 $attempt_update_data['attempt_status'] = 'attempt_ended';
-            }				
+            }
 			$wpdb->update($wpdb->prefix.'tutor_quiz_attempts', $attempt_update_data, array('attempt_id' => $attempt_id ));
-		
+
 		} elseif($mark_as === 'incorrect') {
 
 			$answer_update_data = array(
@@ -658,7 +658,7 @@ class Quiz {
             'attempt_id' => $attempt_id,
             'user_id' => $student_id,
 			'context' => $context,
-			'back_url' => isset($_POST['back_url']) ? esc_url( $_POST['back_url'] )  : null 
+			'back_url' => isset($_POST['back_url']) ? esc_url( $_POST['back_url'] )  : null
         ));
 		wp_send_json_success( array('html' => ob_get_clean()) );
 	}
@@ -680,7 +680,7 @@ class Quiz {
 		// Check edit privilege
 		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
 			wp_send_json_error( array(
-				'message'=>__('Access Denied', 'tutor'), 
+				'message'=>__('Access Denied', 'tutor'),
 				'data'=>$_POST
 			));
 		}
@@ -708,10 +708,10 @@ class Quiz {
 
 		// Generate quiz modal to show in modal
 		$output = $this->tutor_load_quiz_builder_modal(array(
-			'topic_id'=> $topic_id, 
+			'topic_id'=> $topic_id,
 			'quiz_id'=>$quiz_id
 		), true);
-		
+
 		// Generate quiz list to show under topic as sub list
 		ob_start();
 		tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
@@ -722,7 +722,7 @@ class Quiz {
 		$output_quiz_row = ob_get_clean();
 
 		wp_send_json_success(array(
-			'output' => $output, 
+			'output' => $output,
 			'output_quiz_row' => $output_quiz_row
 		));
 	}
@@ -775,9 +775,9 @@ class Quiz {
 
 		$data 		= array_merge($_POST, $params);
 		$quiz_id 	= isset($data['quiz_id']) ? sanitize_text_field ($data['quiz_id']) : 0;
-		$topic_id 	= sanitize_text_field( $data['topic_id'] ); 
+		$topic_id 	= isset($data['topic_id'])?sanitize_text_field( $data['topic_id'] ):0;
 		$quiz 		= $quiz_id ? get_post($quiz_id) : null;
-		
+
 		if($quiz_id && !tutor_utils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Quiz Permission Denied', 'tutor')) );
 		}
@@ -810,7 +810,7 @@ class Quiz {
 		if(!tutor_utils()->can_user_manage('quiz', $quiz_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
-		
+
 		// If question ID not provided, then create new before rendering the form
 		if ( ! $question_id){
 			$next_question_id = tutor_utils()->quiz_next_question_id();
@@ -847,14 +847,14 @@ class Quiz {
 					'true_false' => true
 				)
 			);
-			
+
 			$this->tutor_save_quiz_answer_options($question_array, $answer_array, false);
 		}
 
 		// Now get all data by this question id
 		$question = $wpdb->get_row($wpdb->prepare(
-			"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions 
-			WHERE question_id = %d ", 
+			"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions
+			WHERE question_id = %d ",
 			$question_id
 		));
 
@@ -928,7 +928,7 @@ class Quiz {
 		global $wpdb;
 
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
-		
+
 		if(!tutor_utils()->can_user_manage('question', $question_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
@@ -961,7 +961,7 @@ class Quiz {
 			$old_answer = tutor_utils()->get_answer_by_id($answer_id);
 			foreach ($old_answer as $old_answer);
 		}
-		
+
 		ob_start();
 		include  tutor()->path.'views/modal/question_answer_form.php';
 		$output = ob_get_clean();
@@ -1132,19 +1132,19 @@ class Quiz {
 
 		// Get question data by question ID
 		$question = $wpdb->get_row($wpdb->prepare(
-			"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions 
-			WHERE question_id = %d ", 
+			"SELECT * FROM {$wpdb->prefix}tutor_quiz_questions
+			WHERE question_id = %d ",
 			$question_id
 		));
 
 		// Get answers by question ID
 		$answers = $wpdb->get_results($wpdb->prepare(
-			"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers 
-			where belongs_question_id = %d AND 
-				belongs_question_type = %s 
-			order by answer_order asc ;", 
-			$question_id, 
-			esc_sql( $question_type ) 
+			"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers
+			where belongs_question_id = %d AND
+				belongs_question_type = %s
+			order by answer_order asc ;",
+			$question_id,
+			esc_sql( $question_type )
 		));
 
 		ob_start();
@@ -1159,7 +1159,7 @@ class Quiz {
 
 		global $wpdb;
 		$answer_id = sanitize_text_field($_POST['answer_id']);
-		
+
 		if(!tutor_utils()->can_user_manage('quiz_answer', $answer_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
@@ -1235,7 +1235,7 @@ class Quiz {
 				$update = $wpdb->query( $wpdb->prepare(
 					"UPDATE {$wpdb->tutor_quiz_question_answers}
 						SET is_correct = 0
-						WHERE belongs_question_id = %d 
+						WHERE belongs_question_id = %d
 							AND answer_id != %d
 					",
 					$question_id,
@@ -1245,7 +1245,7 @@ class Quiz {
 		}
 
 	    $inputValue = sanitize_text_field($_POST['inputValue']);
-		
+
 		if(!tutor_utils()->can_user_manage('quiz_answer', $answer_id)) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
 		}
@@ -1302,7 +1302,7 @@ class Quiz {
 		global $wpdb;
 		$attempt_details = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT *FROM {$wpdb->prefix}tutor_quiz_attempts 
+				"SELECT *FROM {$wpdb->prefix}tutor_quiz_attempts
 					WHERE attempt_id = %d",
 				$attempt_id
 			)
