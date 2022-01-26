@@ -95,7 +95,7 @@ registerBlockType('tutor-gutenberg/instructor-registration', {
 });
 
 //Dashboard Header Menu
-if ('true' === _tutorobject.is_wp_version_5_9) {
+if ('true' === _tutor_gutenberg_block_data.is_wp_version_5_9) {
     registerBlockType('tutor-gutenberg/dashboard-menu', {
         title: 'Dashboard Menu',
         icon: 'welcome-learn-more',

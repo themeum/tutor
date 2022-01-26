@@ -34,7 +34,7 @@
                         <?php _e('Quiz', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="las la-times"></span>
+                        <span class="ttr-line-cross-line"></span>
                     </button>
                 </div>
                 
@@ -94,7 +94,7 @@
                         <?php _e('Lesson', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="las la-times"></span>
+                        <span class="ttr-line-cross-line"></span>
                     </button>
                 </div>
 
@@ -129,7 +129,7 @@
                         <?php _e('Assignment', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="las la-times"></span>
+                        <span class="ttr-line-cross-line"></span>
                     </button>
                 </div>
                 <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
