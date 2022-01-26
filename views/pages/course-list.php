@@ -372,13 +372,15 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 		/**
 		 * Prepare pagination data & load template
 		 */
-		$pagination_data     = array(
-			'total_items' => $the_query->found_posts,
-			'per_page'    => $limit,
-			'paged'       => $paged_filter,
-		);
-		$pagination_template = tutor()->path . 'views/elements/pagination.php';
-		tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+		if($the_query->found_posts > $limit) {
+			$pagination_data     = array(
+				'total_items' => $the_query->found_posts,
+				'per_page'    => $limit,
+				'paged'       => $paged_filter,
+			);
+			$pagination_template = tutor()->path . 'views/elements/pagination.php';
+			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+		}
 		?>
 	</div>
 </div>

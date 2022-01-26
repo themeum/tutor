@@ -18,7 +18,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<?php echo $title; ?>
 					</div>
 					<button data-tutor-modal-close class="tutor-modal-close">
-						<span class="las la-times"></span>
+						<span class="ttr-line-cross-line"></span>
 					</button>
 				</div>
 
@@ -147,7 +147,7 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner tutor-modal-close-inner">
 				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="las la-times"></span>
+					<span class="ttr-line-cross-line"></span>
 				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-icon">
@@ -328,18 +328,20 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 		 * Prepare pagination data & load template
 		 */
 		$limit           = tutor_utils()->get_option( 'pagination_per_page' );
-		$pagination_data = array(
-			'total_items' => $the_query->found_posts,
-			'per_page'    => $limit,
-			'paged'       => $paged,
-		);
-
-		$pagination_template = tutor()->path . 'views/elements/pagination.php';
-		if ( is_admin() ) {
-			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-		} else {
-			$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
-			tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+		if($the_query->found_posts > $limit) {
+			$pagination_data = array(
+				'total_items' => $the_query->found_posts,
+				'per_page'    => $limit,
+				'paged'       => $paged,
+			);
+	
+			$pagination_template = tutor()->path . 'views/elements/pagination.php';
+			if ( is_admin() ) {
+				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+			} else {
+				$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+				tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+			}
 		}
 
 		?>
