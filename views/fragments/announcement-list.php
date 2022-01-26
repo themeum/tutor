@@ -18,7 +18,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<?php echo $title; ?>
 					</div>
 					<button data-tutor-modal-close class="tutor-modal-close">
-						<span class="las la-times"></span>
+						<span class="ttr-line-cross-line"></span>
 					</button>
 				</div>
 
@@ -147,7 +147,7 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner tutor-modal-close-inner">
 				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="las la-times"></span>
+					<span class="ttr-line-cross-line"></span>
 				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-icon">

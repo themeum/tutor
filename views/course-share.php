@@ -20,7 +20,7 @@
         <div class="tutor-modal-inner tutor-modal-close-inner">
             <div class="tutor-modal-body" style="padding:40px">
 				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="las la-times"></span>
+					<span class="ttr-line-cross-line"></span>
 				</button>
                 <div class="tutor-text-medium-h5 color-text-primary tutor-mb-15">
                     <?php _e('Share Course', 'tutor'); ?>
