@@ -12,7 +12,7 @@
  * @version 1.4.3
  */
 
-get_header();
+tutor_utils()->tutor_custom_header();
 
 
 if ( ! empty($template_part_name)){
@@ -21,4 +21,4 @@ if ( ! empty($template_part_name)){
 	tutor_load_template($template);
 }
 
-get_footer();
+tutor_utils()->tutor_custom_footer();

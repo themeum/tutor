@@ -14,7 +14,7 @@
 // Prepare the nav items
 $course_nav_item = apply_filters( 'tutor_course/single/nav_items', tutor_utils()->course_nav_items(), get_the_ID() );
 
-get_header();
+tutor_utils()->tutor_custom_header();
 do_action('tutor_course/single/before/wrap');
 ?>
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
@@ -73,4 +73,4 @@ do_action('tutor_course/single/before/wrap');
 <?php do_action('tutor_course/single/after/wrap'); ?>
 
 <?php
-get_footer();
+tutor_utils()->tutor_custom_footer();
