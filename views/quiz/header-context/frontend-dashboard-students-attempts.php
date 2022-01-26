@@ -1,7 +1,7 @@
 <?php if(!empty($back_url)): ?>
     <div class="tutor-color-text-primary back">
         <a href="<?php echo $back_url; ?>">
-            <span class="ttr-previous-line"></span> <span class="text"><?php _e('Back', 'tutor'); ?></span>
+            <span class="tutor-icon-previous-line"></span> <span class="text"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>
 <?php endif; ?>

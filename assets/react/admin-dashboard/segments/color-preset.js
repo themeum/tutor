@@ -46,13 +46,13 @@ const otherColorsPreview = () => {
 			otherColors.classList.toggle('expanded');
 			if (otherColors.classList.contains('expanded')) {
 				otherColors.style.height = toggleHeight;
-				moreButton.querySelector('i').classList.remove('ttr-plus-filled');
-				moreButton.querySelector('i').classList.add('ttr-minus-filled');
+				moreButton.querySelector('i').classList.remove('tutor-icon-plus-filled');
+				moreButton.querySelector('i').classList.add('tutor-icon-minus-filled');
 				moreButton.querySelector('span').innerText = 'Show Less';
 			} else {
 				otherColors.style.height = initHeight - 10 + 'px';
-				moreButton.querySelector('i').classList.remove('ttr-minus-filled');
-				moreButton.querySelector('i').classList.add('ttr-plus-filled');
+				moreButton.querySelector('i').classList.remove('tutor-icon-minus-filled');
+				moreButton.querySelector('i').classList.add('tutor-icon-plus-filled');
 				moreButton.querySelector('span').innerText = 'Show More';
 			}
 		};

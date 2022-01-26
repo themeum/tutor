@@ -1,114 +1,119 @@
 .tutor-mobile-sidebar {
-    display: none !important;
+	display: none !important;
 }
 
 @include breakpoint-max(1200) {
-    .tutor-desktop-sidebar {
-        display: none;
-    }
-    .tutor-mobile-sidebar {
-        display: block !important;
-    }
+	.tutor-desktop-sidebar {
+		display: none;
+	}
+	.tutor-mobile-sidebar {
+		display: block !important;
+	}
 }
 
 .tutor-lesson-sidebar {
-    flex: 0 0 400px;
-    background: #fff;
-    border: 1px solid $stroke-light-30;
-    border: 1px solid #cdcfd5;
-    border-bottom: none;
-    .tutor-sidebar-tabs-wrap {
-        .tutor-lessons-tab-area {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            max-height: 60px;
-            >div.active {
-                // border: 0px solid $stroke-light-30;
-                background: $color-white;
-                span:first-child {
-                    color: $design-brand;
-                }
-            }
-            >div {
-                text-align: center;
-                padding: 12.5px 0px;
-                cursor: pointer;
-                position: relative;
-                background: $bg-gray-10;
-                border-bottom-right-radius: 20px;
-                border-bottom-left-radius: 20px;
-                // > * {
-                // 	pointer-events: none;
-                // }
-                &:first-child {
-                    border-bottom-left-radius: 0px;
-                }
-                &:last-child {
-                    border-bottom-right-radius: 0px;
-                }
-                span {
-                    color: $black-50;
-                    &:not(:last-child) {
-                        margin-right: 4px;
-                    }
-                }
-                span:first-child {
-                    font-size: 32px;
-                }
-            }
-            .tutor-lessons-tab {}
-            .tutor-quiz-tab {}
-        }
-        .tutor-sidebar-tabs-content {
-            >div {
-                display: none;
-                &.active {
-                    display: block;
-                }
-            }
-            .tutor-lesson-sidebar-tab-item {}
-            #tutor-lesson-sidebar-tab-content {
-                .tutor-topics-in-single-lesson {
-                    >div {
-                        padding: 18px 18px;
-                    }
-                    .tutor-topics-title {
-                        border-bottom: 1px solid #ddd;
-                        .tutor-topics-title-left {}
-                        .tutor-topics-title-right {}
-                    }
-                    .tutor-lessons-under-topic {
-                        [class^='ttr-'],
-                        [class*=' ttr-'] {
-                            font-size: 20px;
-                        }
-                        span.text-regular-caption {
-                            line-height: 140%;
-                        }
-                        border-bottom: 1px solid #ddd;
-                        .tutor-single-lesson-items {
-                            .tutor-single-lesson-items-left {
-                                >*:not(:last-child) {
-                                    margin-right: 5px;
-                                }
-                            }
-                            .tutor-single-lesson-items-left {
-                                max-width: 270px;
-                            }
-                            .tutor-single-lesson-items-right {
-                                >*:not(:last-child) {
-                                    margin-right: 10px;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            #sideabr-qna-tab-content {}
-        }
-    }
+	flex: 0 0 400px;
+	background: #fff;
+	border: 1px solid $stroke-light-30;
+	border: 1px solid #cdcfd5;
+	border-bottom: none;
+	.tutor-sidebar-tabs-wrap {
+		.tutor-lessons-tab-area {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			max-height: 60px;
+			> div.active {
+				// border: 0px solid $stroke-light-30;
+				background: $color-white;
+				span:first-child {
+					color: $design-brand;
+				}
+			}
+			> div {
+				text-align: center;
+				padding: 12.5px 0px;
+				cursor: pointer;
+				position: relative;
+				background: $bg-gray-10;
+				border-bottom-right-radius: 20px;
+				border-bottom-left-radius: 20px;
+				// > * {
+				// 	pointer-events: none;
+				// }
+				&:first-child {
+					border-bottom-left-radius: 0px;
+				}
+				&:last-child {
+					border-bottom-right-radius: 0px;
+				}
+				span {
+					color: $black-50;
+					&:not(:last-child) {
+						margin-right: 4px;
+					}
+				}
+				span:first-child {
+					font-size: 32px;
+				}
+			}
+			.tutor-lessons-tab {
+			}
+			.tutor-quiz-tab {
+			}
+		}
+		.tutor-sidebar-tabs-content {
+			> div {
+				display: none;
+				&.active {
+					display: block;
+				}
+			}
+			.tutor-lesson-sidebar-tab-item {
+			}
+			#tutor-lesson-sidebar-tab-content {
+				.tutor-topics-in-single-lesson {
+					> div {
+						padding: 18px 18px;
+					}
+					.tutor-topics-title {
+						border-bottom: 1px solid #ddd;
+						.tutor-topics-title-left {
+						}
+						.tutor-topics-title-right {
+						}
+					}
+					.tutor-lessons-under-topic {
+						[class^='tutor-icon-'],
+						[class*=' tutor-icon-'] {
+							font-size: 20px;
+						}
+						span.text-regular-caption {
+							line-height: 140%;
+						}
+						border-bottom: 1px solid #ddd;
+						.tutor-single-lesson-items {
+							.tutor-single-lesson-items-left {
+								> *:not(:last-child) {
+									margin-right: 5px;
+								}
+							}
+							.tutor-single-lesson-items-left {
+								max-width: 270px;
+							}
+							.tutor-single-lesson-items-right {
+								> *:not(:last-child) {
+									margin-right: 10px;
+								}
+							}
+						}
+					}
+				}
+			}
+			#sideabr-qna-tab-content {
+			}
+		}
+	}
 }
-
 
 /* tutor-lesson-sidebar */
 
