@@ -8,7 +8,7 @@
 
     <div class="new-topic-btn-wrap">
         <button data-tutor-modal-target="tutor-modal-add-topic" class="tutor-mt-15 create_new_topic_btn tutor-btn tutor-btn-md bordered-btn"> 
-            <i class="ttr-plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php _e('Add new topic', 'tutor'); ?>
+            <i class="tutor-icon plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php _e('Add new topic', 'tutor'); ?>
         </button>
     </div>
 
@@ -34,7 +34,7 @@
                         <?php _e('Quiz', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="ttr-line-cross-line"></span>
+                        <span class="tutor-icon line-cross-line"></span>
                     </button>
                 </div>
                 
@@ -94,7 +94,7 @@
                         <?php _e('Lesson', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="ttr-line-cross-line"></span>
+                        <span class="tutor-icon line-cross-line"></span>
                     </button>
                 </div>
 
@@ -129,7 +129,7 @@
                         <?php _e('Assignment', 'tutor'); ?>
                     </h3>
                     <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="ttr-line-cross-line"></span>
+                        <span class="tutor-icon line-cross-line"></span>
                     </button>
                 </div>
                 <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">

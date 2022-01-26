@@ -88,7 +88,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 			}
 			?>
 			<div class="more_button tutor-font-size-16">
-				<i class="ttr-plus-filled"></i>
+				<i class="tutor-icon plus-filled"></i>
 				<span>Show More</span>
 			</div>
 		</div>

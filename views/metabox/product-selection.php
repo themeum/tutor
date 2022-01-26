@@ -21,7 +21,7 @@
 			?>
 		</select>
 		<p class="tutor-input-feedback tutor-has-icon">
-			<i class="ttr-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19"></i>
+			<i class="tutor-icon info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19"></i>
 			<?php echo $info_text; ?>
 		</p>
 	</div>

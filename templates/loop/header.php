@@ -23,7 +23,7 @@
         }
         
 		echo wp_kses_post('<a href="javascript:;" class="'.$action_class.' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'.$course_id.'">
-            <i class="'.($is_wishlisted ? 'ttr-fav-full-filled' : 'ttr-fav-line-filled').'"></i>
+            <i class="'.($is_wishlisted ? 'tutor-icon fav-full-filled' : 'tutor-icon fav-line-filled').'"></i>
         </a>');
 	?>
 </div>

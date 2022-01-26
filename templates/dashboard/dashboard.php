@@ -43,7 +43,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							?>
 							<li>
 								<span class="tutor-round-icon">
-									<i class="ttr-award-filled"></i>
+									<i class="tutor-icon award-filled"></i>
 								</span>
 							</li>
 						</div>
@@ -72,9 +72,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 								?>
 									<li class="tutor-bs-d-flex tutor-bs-align-items-center">
 									<?php if ( $is_set ) : ?>
-											<span class="icon ttr-tick-circle-outline-filled not-empty tutor-mr-8"></span>
+											<span class="icon tutor-icon tick-circle-outline-filled not-empty tutor-mr-8"></span>
 										<?php else : ?>
-											<span class="ttr-cross-circle-outline-filled empty tutor-mr-5"></span>
+											<span class="tutor-icon cross-circle-outline-filled empty tutor-mr-5"></span>
 										<?php endif; ?>
 
 										<span class="<?php echo $is_set ? 'tutor-color-text-title' : 'tutor-color-text-hints'; ?>">
@@ -95,7 +95,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			$alert_message = sprintf(
 				'<div class="tutor-alert tutor-primary">
 			<div class="tutor-alert-text">
-				<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+				<span class="tutor-alert-icon tutor-icon-34 tutor-icon circle-outline-info-filled tutor-mr-10"></span>
 				<span>
 					%s
 				</span>
@@ -113,13 +113,13 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			echo $alert_message;
 			// echo '<div class="tutor-alert tutor-warning">
 			// <div class="tutor-alert-text">
-			// <span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+			// <span class="tutor-alert-icon tutor-icon-34 tutor-icon circle-outline-info-filled tutor-mr-10"></span>
 			// <span>
 			// {$profile_completion["_tutor_profile_photo"]["label_html"]}
 			// </span>
 			// </div>
 			// <div class="tutor-alert-btns">
-			// <span class="tutor-alert-close tutor-icon-28 tutor-color-black-40 ttr-cross-filled"></span>
+			// <span class="tutor-alert-close tutor-icon-28 tutor-color-black-40 tutor-icon cross-filled"></span>
 			// </div>
 			// </div>';
 
@@ -157,7 +157,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 			<p>
 				<span class="tutor-dashboard-round-icon">
-					<i class="ttr-book-open-filled"></i>
+					<i class="tutor-icon book-open-filled"></i>
 				</span>
 				<span class="tutor-dashboard-info-val"><?php echo esc_html( $enrolled_course_count ); ?></span>
 				<span><?php esc_html_e( 'Enrolled Courses', 'tutor' ); ?></span>
@@ -167,7 +167,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 			<p>
 				<span class="tutor-dashboard-round-icon">
-					<i class="ttr-college-graduation-filled"></i>
+					<i class="tutor-icon college-graduation-filled"></i>
 				</span>
 				<span class="tutor-dashboard-info-val"><?php echo esc_html( $active_course_count ); ?></span>
 				<span><?php esc_html_e( 'Active Courses', 'tutor' ); ?></span>
@@ -177,7 +177,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 			<p>
 				<span class="tutor-dashboard-round-icon">
-					<i class="ttr-award-filled"></i>
+					<i class="tutor-icon award-filled"></i>
 				</span>
 				<span class="tutor-dashboard-info-val"><?php echo esc_html( $completed_course_count ); ?></span>
 				<span><?php esc_html_e( 'Completed Courses', 'tutor' ); ?></span>
@@ -191,7 +191,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 				<p>
 					<span class="tutor-dashboard-round-icon">
-						<i class="ttr-user-graduate-filled"></i>
+						<i class="tutor-icon user-graduate-filled"></i>
 					</span>
 					<span class="tutor-dashboard-info-val"><?php echo esc_html( $total_students ); ?></span>
 					<span><?php esc_html_e( 'Total Students', 'tutor' ); ?></span>
@@ -201,7 +201,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 				<p>
 					<span class="tutor-dashboard-round-icon">
-						<i class="ttr-box-open-filled"></i>
+						<i class="tutor-icon box-open-filled"></i>
 					</span>
 					<span class="tutor-dashboard-info-val"><?php echo esc_html( count( $my_courses ) ); ?></span>
 					<span><?php esc_html_e( 'Total Courses', 'tutor' ); ?></span>
@@ -211,7 +211,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-6 tutor-bs-col-lg-4">
 				<p>
 					<span class="tutor-dashboard-round-icon">
-						<i class="ttr-coins-filled"></i>
+						<i class="tutor-icon coins-filled"></i>
 					</span>
 					<span class="tutor-dashboard-info-val"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></span>
 					<span><?php esc_html_e( 'Total Earnings', 'tutor' ); ?></span>
@@ -335,13 +335,13 @@ if ( count( $instructor_course ) ) {
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
-								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+								<span class="tutor-icon ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-text-subsued">
 								<span class="text-regular-small"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
-								<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+								<span class="tutor-icon ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
 					</tr>

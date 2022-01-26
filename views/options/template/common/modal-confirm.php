@@ -11,7 +11,7 @@
 <div id="tutor-modal-bulk-action" class="tutor-modal tutor-modal-confirmation">
 	<span class="tutor-modal-overlay"></span>
 	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="ttr-line-cross-line"></span>
+		<span class="tutor-icon line-cross-line"></span>
 	</button>
 	<div class="tutor-modal-root">
 		<div class="tutor-modal-inner">
@@ -24,7 +24,7 @@
 				</div>
 				<div class="tutor-alert tutor-warning tutor-mt-30">
 					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-icon-34  ttr-warning-filled tutor-mr-10"></span>
+						<span class="tutor-alert-icon tutor-icon-34  tutor-icon warning-filled tutor-mr-10"></span>
 						<span class="color-warning-100 tutor-modal-message">Null</span>
 					</div>
 				</div>

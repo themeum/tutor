@@ -80,7 +80,7 @@
 		margin-top: 15px;
 	}
 	.tutor-course-content-top {
-		.ttr-humnurger-filled {
+		.tutor-icon humnurger-filled {
 			color: rgba(117, 124, 142, 0.63) !important;
 			margin-top: 3px;
 		}
@@ -242,13 +242,13 @@
 				> span {
 					// padding: 8px 0px;
 				}
-				span.ttr-humnurger-filled,
+				span.tutor-icon humnurger-filled,
 				.topic-inner-title {
 				}
-				span.ttr-humnurger-filled {
+				span.tutor-icon humnurger-filled {
 					align-self: flex-start;
 				}
-				span.ttr-humnurger-filled.course-move-handle {
+				span.tutor-icon humnurger-filled.course-move-handle {
 					margin-right: 0 !important;
 				}
 				.topic-inner-title {
