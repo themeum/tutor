@@ -124,7 +124,7 @@ do_action('tutor_dashboard/before/wrap');
 					if (tutor_utils()->get_option('enable_become_instructor_btn')) {
 					?>
 						<a id="tutor-become-instructor-button" style="vertical-align:middle" class="tutor-btn tutor-btn-tertiary tutor-is-outline" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
-							<i class="tutor-icon-man-user"></i> &nbsp; <?php _e('Become an instructor', 'tutor'); ?>
+							<i class="tutor-icon-man-user-filled tutor-icon-24"></i> &nbsp; <?php _e('Become an instructor', 'tutor'); ?>
 						</a>
 					<?php
 					}
@@ -134,7 +134,7 @@ do_action('tutor_dashboard/before/wrap');
 						$course_type = tutor()->course_post_type;
 					?>
 						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
-							<i class="tutor-icon-plus-square-button tutor-mr-10"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
+							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
 						</a>
 					<?php
 					} elseif ($instructor_status == 'pending') {
