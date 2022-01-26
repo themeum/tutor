@@ -42,11 +42,11 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                 <div class="tutor-topbar-left-item d-flex"> 
                     <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
                         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                            <span class="ttr-icon-light-left-line tutor-color-text-white flex-center"></span>
+                            <span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
                         </a>
                     </div>
                     <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-                        <span class="ttr-quiz-filled tutor-color-text-white tutor-mr-5"></span>
+                        <span class="tutor-icon-quiz-filled tutor-color-text-white tutor-mr-5"></span>
                         <span class="tutor-text-regular-caption tutor-color-design-white">
                             <?php 
                                 esc_html_e( 'Quiz: ', 'tutor' );
@@ -80,7 +80,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                     <div class="tutor-topbar-cross-icon flex-center">
                         <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
                         <a href="<?php echo get_the_permalink($course_id); ?>">
-                            <span class="ttr-line-cross-line tutor-color-text-white flex-center"></span>
+                            <span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>
                         </a>
                     </div>
                 </div>
@@ -89,7 +89,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
             <div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
                 <div class="tutor-mobile-top-nav d-grid">
                     <a href="<?php echo get_the_permalink($previous_id); ?>">
-                        <span class="tutor-top-nav-icon ttr-previous-line design-lightgrey"></span>
+                        <span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
                     </a>
                     <div class="tutor-top-nav-title tutor-text-regular-body  tutor-color-text-primary">
                         <?php 

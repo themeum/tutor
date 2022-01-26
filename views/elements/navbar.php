@@ -18,7 +18,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 				?>
 				<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 					<button  data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>"  class="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
-						<span class="btn-icon ttr-plus-bold-filled"></span>
+						<span class="btn-icon tutor-icon-plus-bold-filled"></span>
 						<span><?php echo esc_html( $data['button_title'] ); ?></span>
 					</button>
 				<?php endif; ?>
@@ -26,7 +26,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 			<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 				<a class="tutor-pl-10" href="<?php echo esc_url( $data['button_url'] ); ?>">
 					<button class="tutor-btn tutor-btn-icon tutor-btn-wordpress-outline tutor-no-hover tutor-btn-sm">
-						<span class="btn-icon ttr-plus-bold-filled"></span>
+						<span class="btn-icon tutor-icon-plus-bold-filled"></span>
 						<span><?php echo esc_html( $data['button_title'] ); ?></span>
 					</button>
 				</a>
