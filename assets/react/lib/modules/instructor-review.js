@@ -43,18 +43,23 @@ window.jQuery(document).ready($ => {
 
         var data = form.serializeObject();
         
-        // Validat
+        // Validate
         if(!rating || rating==0 || !review) {
             alert(__('Rating and review required', 'tutor'));
             return;
         }
+
+        const btnInnerHtml = $that.html().trim();
+        const { width : btnWidth, height : btnHeight } = $that.get(0).getBoundingClientRect();
+        const btnStyles =  {width: `${btnWidth}px`, height: `${btnHeight}px`};
 
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
             data: data,
             beforeSend: function () {
-                $that.addClass('updating-icon');
+                $that.css(btnStyles);
+                $that.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
             },
             success: function (response) {
                 const {success, data={}} = response || {};
@@ -76,7 +81,7 @@ window.jQuery(document).ready($ => {
                 }, 3000);
             },
             complete: function() {
-                $that.removeClass('updating-icon');
+                $that.html(btnInnerHtml)
             }
         });
     });

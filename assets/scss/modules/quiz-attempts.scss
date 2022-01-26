@@ -42,57 +42,127 @@
 }
 
 .tutor-quiz-attempt-details-wrapper {
-	.back {
-		position: relative;
-		a {
-			font-size: 16px;
-			color: #5b616f;
-			.tutor-icon-previous-line {
-				font-size: 20px;
-				line-height: 0px;
-				color: #1a1b1e;
-			}
-		}
-	}
+    .back {
+        position: relative;
+        a {
+            font-size: 16px;
+            color: #5B616F;
+            .ttr-previous-line {
+                font-size: 20px;
+                line-height: 0px;
+                color: #1A1B1E;
+            }
+        }
+    }
+    .my-quiz-attempts {
+        thead {
+            @include breakpoint-min(1200) {
+                tr {
+                    th.date {
+                        width: 20% !important;
+                    }
+                    th.question {
+                        width: 10%;
+                    }
+                    th.total-marks {
+                        width: 10%;
+                    }
+                    th.pass-marks {
+                        width: 10%;
+                    }
+                    th.correct-answer {
+                        width: 10%;
+                    }
+                    th.incorrect-answer {
+                        width: 10%;
+                    }
+                    th.earned-marks {
+                        width: 19%;
+                    }
+                    th.result {
+                        width: 11%;
+                    }
+                }
+            }
+            th:last-child {
+                > * {
+                    display: block !important;
+                }
+            }
+        }
+        tbody {
+            tr {
+                td {
+                    div.tutor-table-date-time {
+                        font-size: 13px;
+                        font-weight: 500;
+                        line-height: 21px;
+                    }
+                }
+            }
+        }
+    }
 }
-
 .tutor-quiz-attempt-details {
-	.tutor-icon-rounded {
-		@include valueWithPrefix(display, inline-flex);
-		@include propertyWithPrefix(align-items, center);
-		@include propertyWithPrefix(justify-content, center);
-		width: 32px;
-		height: 32px;
-		overflow: hidden;
-		border-radius: 50%;
-		-webkit-box-sizing: border-box;
-		box-sizing: border-box;
-		border-width: 1px;
-		border-style: solid;
-		font-size: 13px;
-		cursor: pointer;
+    .tutor-icon-rounded {
+        @include valueWithPrefix(display, inline-flex);
+        @include propertyWithPrefix(align-items, center);
+        @include propertyWithPrefix(justify-content, center);
+        width: 32px;
+        height: 32px;
+        overflow: hidden;
+        border-radius: 50%;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border-width: 1px;
+        border-style: solid;
+        font-size: 13px;
+        cursor: pointer;
 
-		&.tutor-text-danger {
-			border-color: var(--tutor-danger);
-		}
+        &.tutor-text-danger {
+            border-color: var(--tutor-danger);
+        }
 
 		&.tutor-text-success {
 			border-color: var(--tutor-success);
 		}
 
-		&:not(:hover) {
-			opacity: 0.8;
-		}
-	}
-
-	tr {
-		&:not(:hover) {
-			&.tutor-quiz-answer-status-correct {
-				.tutor-icon-rounded.tutor-text-danger {
-					color: #cdcfd5 !important;
-					border-color: #cdcfd5 !important;
-				}
-			}
+        &:not(:hover) {
+            opacity: .8;
+        }
+    }
+    thead {
+        @include breakpoint-min(1200) {
+            tr {
+                th.no {
+                    width: 3%;
+                }
+                th.type {
+                    width: 3%;
+                }
+                th.questions {
+                    width: 20%;
+                }
+                th.given-answer {
+                    width: 20%;
+                }
+                th.correct-answer {
+                    width: 40%;
+                }
+                th.answer {
+                    width: 5%;
+                }
+            }
+        }
+    }
+    tr {
+        &:not(:hover) {
+            &.tutor-quiz-answer-status-correct {
+                .tutor-icon-rounded.tutor-text-danger {
+                    color: #CDCFD5 !important;
+                    border-color: #CDCFD5 !important;
+                }
+            }
 
 			&.tutor-quiz-answer-status-wrong {
 				.tutor-icon-rounded.tutor-text-success {
@@ -101,13 +171,14 @@
 				}
 			}
 
-			&.tutor-quiz-answer-status-pending {
-				.tutor-icon-rounded.tutor-text-success,
-				.tutor-icon-rounded.tutor-text-danger {
-					color: #cdcfd5 !important;
-					border-color: #cdcfd5 !important;
-				}
-			}
-		}
-	}
+            &.tutor-quiz-answer-status-pending {
+                .tutor-icon-rounded.tutor-text-success, .tutor-icon-rounded.tutor-text-danger {
+                    color: #CDCFD5 !important;
+                    border-color: #CDCFD5 !important;
+                }
+            }
+        }
+        td {
+        }
+    }
 }

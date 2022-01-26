@@ -3,8 +3,9 @@
 ?>
 <?php if(!empty($back_url)): ?>
     <div class="tutor-color-text-primary back">
-        <a href="<?php echo $back_url; ?>">
-            <span class="tutor-icon-previous-line"></span> <span class="text"><?php _e('Back', 'tutor'); ?></span>
+        <a class="tutor-back-btn" href="<?php echo $back_url; ?>">
+            <span class="ttr-previous-line tutor-color-design-dark"></span>
+            <span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>
 <?php endif; ?>
