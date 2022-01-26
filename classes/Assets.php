@@ -280,9 +280,17 @@ class Assets {
 	{
 		$colors = array(
 			'tutor_primary_color'       => '--tutor-primary-color',
-			'tutor_primary_text_color'  => '--tutor-primary-text-color',
 			'tutor_primary_hover_color' => '--tutor-primary-hover-color',
 			'tutor_text_color'          => '--tutor-text-color',
+			'tutor_background_color'	=> '--tutor-background-color',
+			'tutor_border_color'		=> '--tutor-border-color',
+			'tutor_success_color'		=> '--tutor-success-color',
+			'tutor_warning_color'		=> '--tutor-warning-color',
+			'tutor_danger_color'		=> '--tutor-danger-color',
+			'tutor_disable_color'		=> '--tutor-disable-color',
+			'tutor_table_background_color' => '--tutor-table-background-color',
+
+			'tutor_primary_text_color'  => '--tutor-primary-text-color',
 			'tutor_light_color'         => '--tutor-light-color',
 			'tutor_button_primary'      => '--tutor-primary-button-color',
 			'tutor_button_danger'       => '--tutor-danger-button-color',
