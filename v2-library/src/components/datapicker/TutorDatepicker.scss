@@ -545,3 +545,20 @@
 		}
 	}
 }
+
+// Focus Styles
+.tutor-v2-date-picker-fd {
+	.tutor-react-datepicker .react-datepicker__input-container input {
+		&:focus {
+			border-color: #3e64de;
+		}
+	}
+}
+
+.tutor-v2-date-picker-wp {
+	.tutor-react-datepicker .react-datepicker__input-container input {
+		&:focus {
+			border-color: #1973aa;
+		}
+	}
+}

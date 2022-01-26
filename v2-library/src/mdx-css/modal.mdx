@@ -16,18 +16,21 @@ import "../docz-essential.css";
 Use ```"data-tutor-modal-target=MODAL_ID"``` to open a modal. <br/>
 example: ```"<button data-tutor-modal-target="YOUR_MODAL_ID" className="tutor-btn">Open modal</button>"```
 
+* use ```.tutor-modal.tutor-modal-is-close-inside-header``` with the close icon inside header```.tutor-modal-header```
+* use ```.tutor-modal.tutor-modal-is-close-inside-inner``` with the close icon inside inner ```.tutor-modal-inner```
+
 #### Close a modal
 
 Use ```"data-tutor-modal-close=true"``` to close a modal. <br/>
 example: ```"<button data-tutor-modal-close='true' className="tutor-btn">Cancel</button>"```
 
-## Modal - close inside header
-Use `className="tutor-modal tutor-modal-close-in-header"`
+## Modal - close inside header/inner
+Use `className="tutor-modal tutor-modal-is-close-inside-inner"`
 
 <Playground>
-    <button data-tutor-modal-target="tutor-modal-close-in-header-1" className="tutor-btn">Open modal</button>
+    <button data-tutor-modal-target="tutor-modal-is-close-inside-header-1" className="tutor-btn">Open modal</button>
 
-    <div id="tutor-modal-close-in-header-1" className="tutor-modal tutor-modal-close-in-header">
+    <div id="tutor-modal-is-close-inside-header-1" className="tutor-modal tutor-modal-is-close-inside-inner">
        <span className="tutor-modal-overlay"></span>
         <div className="tutor-modal-root">
             <div className="tutor-modal-inner">
@@ -53,14 +56,14 @@ Use `className="tutor-modal tutor-modal-close-in-header"`
 <Playground>
     <button data-tutor-modal-target="modal-sticky-1" className="tutor-btn">Open modal</button>
 
-    <div id="modal-sticky-1" className="tutor-modal modal-sticky-header-footer">
+    <div id="modal-sticky-1" className="tutor-modal modal-sticky-header-footer utor-modal-is-close-inside-header">
        <span className="tutor-modal-overlay"></span>
         <div className="tutor-modal-root">
             <div className="tutor-modal-inner">
                 <div className="tutor-modal-header">
                     <h3 className="tutor-modal-title">Add Lesson</h3>
                     <button data-tutor-modal-close className="tutor-modal-close">
-                        <span className="las la-times"></span>
+                        <span className="ttr-line-cross-line tutor-icon-40"></span>
                     </button>
                 </div>
                 <div className="tutor-modal-body-alt">
