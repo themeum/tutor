@@ -86,29 +86,81 @@
 			}
 		}
 	}
+	.tutor-modal-text-rating  {
+		font-weight: 500;
+	}
 	.tutor-ratings {
 		.tutor-rating-stars {
-			> span {
-				font-size: 22px;
+			.tutor-star-rating-group {
+				i {
+					font-size: 22px;
+				}
+			}
+		}
+		&.tutor-ratings-modal {
+			.tutor-rating-stars {
+				.tutor-star-rating-group {
+					i {
+						font-size: 50px;
+						color : #C0C3CB;
+					}
+					i.tutor-icon-star-full {
+						color : #ED9700;
+					}
+				}
 			}
 		}
 		.tutor-rating-text {
 			margin-left: 4px;
 		}
+		
+	}
+	.tutor-modal-inner {
+		.tutor-modal-close {
+			right: 20px;
+			top: 20px;
+		}
+		textarea.tutor-form-control {
+			min-height: 140px;
+			// max-height: 250px;
+			resize: none;
+			background: #FFFFFF;
+			border: 1px solid #C0C3CB;
+			color: #757C8E;
+			font-weight: normal;
+			font-size: 15px;
+			line-height: 24px;
+		}
+		.tutor-modal-text-wrap {
+			max-width: 420px;
+			margin: 0px !important;
+		}
+		.tutor-modal-delete-footer {
+			margin-top: 39px;
+			button {
+				height: 40px;
+				padding: 10px 20px;
+			}
+			button {
+				&:last-child {
+					margin-left: 15px !important;
+				}
+			}
+		}
 	}
 }
 
 .tutor-edit-review-modal-wrap {
-	.modal-close-wrap {
-		a {
-			&.modal-close-btn {
-				color: #222222;
-				background: none;
-				font-size: 20px;
-				top: 8px;
-			}
-		}
-	}
+	// .modal-close-wrap {
+	// 	a {
+	// 		&.modal-close-btn {
+	// 			color: #222222;
+	// 			background: none;
+	// 			font-size: 20px;
+	// 			top: 8px;
+	// 		}
+	// 	}
+	// }
 }
 
 .tutor-ui-table.tutor-ui-table-responsive.table-reviews {
