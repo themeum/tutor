@@ -19,9 +19,9 @@
 		.tutor-delete-attachment.tutor-icon-line-cross {
 			margin-left: 5px;
 		}
-        .tutor-modal-icon {
-            margin: 0 auto !important;
-        }
+		.tutor-modal-icon {
+			margin: 0 auto !important;
+		}
 		.date-range-input i.tutor-icon-clock,
 		.date-range-input i.tutor-icon-lock {
 			font-size: 18px;
@@ -35,7 +35,7 @@
 		.tutor-quiz-answer {
 			align-items: center;
 		}
-		i.tutor-icon-block.tutor-icon-plus-square-button,
+		i.tutor-icon-block.tutor-icon-plus-square-filled,
 		i.tutor-icon-block.tutor-icon-plus {
 			background-color: #3e64de;
 		}
@@ -71,7 +71,7 @@
 		margin-top: 15px;
 	}
 	.tutor-course-content-top {
-		.ttr-humnurger-filled {
+		.tutor-icon-humnurger-filled {
 			color: rgba(117, 124, 142, 0.63) !important;
 			margin-top: 3px;
 		}
@@ -233,13 +233,13 @@
 				> span {
 					// padding: 8px 0px;
 				}
-				span.ttr-humnurger-filled,
+				span.tutor-icon-humnurger-filled,
 				.topic-inner-title {
 				}
-				span.ttr-humnurger-filled {
+				span.tutor-icon-humnurger-filled {
 					align-self: flex-start;
 				}
-				span.ttr-humnurger-filled.course-move-handle {
+				span.tutor-icon-humnurger-filled.course-move-handle {
 					margin-right: 0 !important;
 				}
 				.topic-inner-title {
@@ -410,4 +410,7 @@
 			margin-top: 4px;
 		}
 	}
+    .tutor-question-answer-image {
+        display: flex;
+    }
 }

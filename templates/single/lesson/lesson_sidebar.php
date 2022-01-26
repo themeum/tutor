@@ -44,14 +44,14 @@ $is_user_admin                = current_user_can( 'administrator' );
 	<div class="tutor-sidebar-tabs-wrap">
 		<div class="tutor-lessons-tab-area tutor-<?php echo esc_html( isset( $context ) ? $context : 'desktop' ); ?>-sidebar-area">
 			<div data-sidebar-tab="tutor-lesson-sidebar-tab-content" class="tutor-sidebar-tab-item tutor-lessons-tab <?php echo $enable_q_and_a_on_course ? 'active' : ''; ?> flex-center">
-				<span class="ttr-education-filled"></span>
+				<span class="tutor-icon-education-filled"></span>
 				<span class="text-medium-caption tutor-color-text-title">
 					<?php esc_html_e( 'Lesson List', 'tutor' ); ?>
 				</span>
 			</div>
 			<?php if ( $enable_q_and_a_on_course && ( $is_enrolled || $is_instructor_of_this_course || $is_user_admin ) ): ?>
 				<div data-sidebar-tab="sideabr-qna-tab-content" class="tutor-sidebar-tab-item tutor-quiz-tab flex-center">
-					<span class="ttr-question-filled"></span>
+					<span class="tutor-icon-question-filled"></span>
 					<span class="text-medium-caption tutor-color-text-title">
 						<?php esc_html_e( 'Question & Answer', 'tutor' ); ?>
 					</span>
@@ -78,7 +78,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 										<?php the_title(); ?> 
 										<?php if ( $topic_summery ): ?>
 											<div class="tooltip-wrap" style="vertical-align:middle">
-												<i class="ttr-circle-outline-info-filled tutor-icon-24 color-black-40"></i>
+												<i class="tutor-icon-circle-outline-info-filled tutor-icon-24 color-black-40"></i>
 												<span class="tooltip-txt tooltip-bottom">
 													<?php echo $topic_summery; ?>
 												</span>
@@ -108,7 +108,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items">
 													<a href="<?php echo get_permalink( $quiz->ID ); ?>" class="tutor-single-quiz-a d-flex justify-content-between" data-quiz-id="<?php echo $quiz->ID; ?>">
 														<div class="tutor-single-lesson-items-left d-flex">
-															<span class="ttr-quiz-filled"></span>
+															<span class="tutor-icon-quiz-filled"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
 														<?php echo $quiz->post_title; ?>
 															</span>
@@ -142,7 +142,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items">
 													<a href="<?php echo get_permalink( $post->ID ); ?>" class="tutor-single-assignment-a d-flex justify-content-between" data-assignment-id="<?php echo $post->ID; ?>">
 														<div class="tutor-single-lesson-items-left d-flex">
-															<span class="ttr-assignment-filled"></span>
+															<span class="tutor-icon-assignment-filled"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
 														<?php echo $post->post_title; ?>
 															</span>
@@ -167,7 +167,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items">
 													<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="sidebar-single-zoom-meeting-a d-flex justify-content-between">
 														<div class="tutor-single-lesson-items-left d-flex">
-															<span class="ttr-zoom"></span>
+															<span class="tutor-icon-zoom"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
 															<?php echo esc_html( $post->post_title ); ?>
 															</span>
@@ -200,7 +200,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 														<div class="tutor-single-lesson-items-left d-flex">
 														<?php
 															$tutor_lesson_type_icon = $play_time ? 'youtube-brand' : 'document-file';
-															echo "<span class='ttr-$tutor_lesson_type_icon'></span>";
+															echo "<span class='tutor-icon-$tutor_lesson_type_icon'></span>";
 														?>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
 															<?php the_title(); ?>
