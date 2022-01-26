@@ -6,7 +6,7 @@ $settings = maybe_unserialize( $question->question_settings );
 <div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>">
     <div class="question-form-header">
         <a href="javascript:;" class="back-to-quiz-questions-btn tutor-bs-d-flex tutor-bs-align-items-center" data-quiz-id="<?php echo $quiz_id; ?>" data-topic-id="<?php echo $topic_id; ?>">
-            <span class="tutor-icon-next-2 tutor-color-design-dark ttr-previous-line" style="font-size: 30px; margin-right: 5px;"></span> 
+            <span class="tutor-icon-next-2 tutor-color-design-dark tutor-icon previous-line" style="font-size: 30px; margin-right: 5px;"></span> 
             <span class="tutro-text-regular-caption tutor-color-text-primary" style="font-weight: 400;"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>

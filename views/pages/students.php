@@ -76,25 +76,25 @@ $filters = array(
 				<th class="tutor-table-rows-sorting">
 				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
-					<span class="ttr-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+					<span class="tutor-icon ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 				</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
 				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
-					<span class="ttr-order-down-filled up-down-icon"></span>
+					<span class="tutor-icon order-down-filled up-down-icon"></span>
 				</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
 				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
-					<span class="ttr-order-down-filled up-down-icon"></span>
+					<span class="tutor-icon order-down-filled up-down-icon"></span>
 				</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
 				<div class="inline-flex-center tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
-					<span class="ttr-order-down-filled up-down-icon"></span>
+					<span class="tutor-icon order-down-filled up-down-icon"></span>
 				</div>
 				</th>
 				<th class="tutor-shrink"></th>
@@ -117,7 +117,7 @@ $filters = array(
 									<?php esc_html_e( $list->display_name ); ?>
 								</span>
 								<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
-									<span class="ttr-detail-link-filled tutor-mt-5"></span>
+									<span class="tutor-icon detail-link-filled tutor-mt-5"></span>
 								</a>
 							</div>
 						</td>

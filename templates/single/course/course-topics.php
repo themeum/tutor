@@ -74,7 +74,7 @@ do_action( 'tutor_course/single/before/topics' );
 											$topic_content_icon                                     = $play_time ? 'tutor-icon-youtube' : 'tutor-icon-document-alt';
 											$post->post_type === 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-doubt' : 0;
 											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-clipboard' : 0;
-											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'ttr-zoom-brand' : 0;
+											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon zoom-brand' : 0;
 
 																						$is_locked = false;
 										?>
@@ -118,7 +118,7 @@ do_action( 'tutor_course/single/before/topics' );
 												<span class="text-regular-caption tutor-color-text-hints">
 													<?php echo $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : ''; ?>
 												</span>
-												<!-- <span class="<?php echo $is_locked ? ' ttr-lock-stroke-filled' : 'ttr-eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20"></span> -->
+												<!-- <span class="<?php echo $is_locked ? ' tutor-icon lock-stroke-filled' : 'tutor-icon eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20"></span> -->
 											</div>
 										</li>
 									<?php endwhile; ?>

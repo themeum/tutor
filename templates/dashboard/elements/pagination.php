@@ -32,8 +32,8 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 						'format'    => '?current_page=%#%',
 						'current'   => $paged,
 						'total'     => ceil( $data['total_items'] / $per_page ),
-						'prev_text' => '<span class="ttr-angle-left-filled"></span>',
-						'next_text' => '<span class="ttr-angle-right-filled"></span>',
+						'prev_text' => '<span class="tutor-icon angle-left-filled"></span>',
+						'next_text' => '<span class="tutor-icon angle-right-filled"></span>',
 					)
 				);
 			?>

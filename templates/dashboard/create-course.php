@@ -54,7 +54,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 							<!-- @TODO: Icon must be chenged -->
 							<i class="tutor-icon-save"></i>
 							<!-- chenged icon -->
-							<!-- <span class="ttr-save-line tutor-icon-save tutor-color-text-subsued"></span> -->
+							<!-- <span class="tutor-icon save-line tutor-icon-save tutor-color-text-subsued"></span> -->
 							<span class="tutor-color-text-subsued"><?php _e('Save', 'tutor'); ?></span>
 						</button>
 					</div>
@@ -73,7 +73,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 								<?php _e('Submit', 'tutor'); ?>
 							</button>
 						<?php endif; ?>
-						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="ttr-line-cross-line tutor-ml-15" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;color: #9CA0AC;"></a>
+						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="tutor-icon line-cross-line tutor-ml-15" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;color: #9CA0AC;"></a>
 					</div>
 				</div>
 			</div>
@@ -109,7 +109,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 							<div class="tutor-modal-root">
 								<div class="tutor-modal-inner tutor-modal-close-inner">
 									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="ttr-line-cross-line"></span>
+										<span class="tutor-icon line-cross-line"></span>
 									</button>
 									<div class="tutor-text-center tutor-mt-80 tutor-px-50 tutor-pb-md-100 tutor-pb-50">
 										<div class="tutor-modal-icon tutor-flex-center">
@@ -144,7 +144,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 				<div class="tutor-course-builder-section tutor-course-builder-info">
 					<div class="tutor-course-builder-section-title">
 						<h3>
-							<i class="color-text-brand ttr-angle-up-filled tutor-icon-26"></i>
+							<i class="color-text-brand tutor-icon angle-up-filled tutor-icon-26"></i>
 							<span><?php esc_html_e('Course Info', 'tutor'); ?></span>
 						</h3>
 					</div>

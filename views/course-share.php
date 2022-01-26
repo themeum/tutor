@@ -12,7 +12,7 @@
 ?>
 
 <a data-tutor-modal-target="tutor-course-share-opener" href="#" class="action-btn tutor-text-regular-body tutor-color-text-primary">
-    <span class="ttr-share-filled"></span> <?php _e('Share', 'tutor'); ?>
+    <span class="tutor-icon share-filled"></span> <?php _e('Share', 'tutor'); ?>
 </a>
 <div id="tutor-course-share-opener" class="tutor-modal">
     <span class="tutor-modal-overlay"></span>
@@ -20,7 +20,7 @@
         <div class="tutor-modal-inner tutor-modal-close-inner">
             <div class="tutor-modal-body" style="padding:40px">
 				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="ttr-line-cross-line"></span>
+					<span class="tutor-icon line-cross-line"></span>
 				</button>
                 <div class="tutor-text-medium-h5 color-text-primary tutor-mb-15">
                     <?php _e('Share Course', 'tutor'); ?>

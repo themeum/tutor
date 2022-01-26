@@ -153,7 +153,7 @@ class Course extends Tutor_Base {
 			return $content;
 		}
 			
-		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon tutor-color-design-warning ttr-circle-outline-info-filled"></span></div><div class="tutor-text-medium-caption  tutor-color-text-primary">Fully Booked</div></div>';
+		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon tutor-color-design-warning tutor-icon circle-outline-info-filled"></span></div><div class="tutor-text-medium-caption  tutor-color-text-primary">Fully Booked</div></div>';
 	}
 
 	function restrict_media( $where ) {
@@ -1062,7 +1062,7 @@ class Course extends Tutor_Base {
         if ($completed_lesson < $lesson_count){
             return '<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
-							<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+							<span class="tutor-alert-icon tutor-icon-34 tutor-icon circle-outline-info-filled tutor-mr-10"></span>
 							<span>'.__('Complete all lessons to mark this course as complete', 'tutor').'</span>
 						</div>
 					</div>';
@@ -1104,7 +1104,7 @@ class Course extends Tutor_Base {
         if ( ! $is_pass){
 			return '<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
-							<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+							<span class="tutor-alert-icon tutor-icon-34 tutor-icon circle-outline-info-filled tutor-mr-10"></span>
 							<span>'.sprintf(__('You have to pass %s quizzes to complete this course.', 'tutor'), $required_quiz_pass).'</span>
 						</div>
 					</div>';

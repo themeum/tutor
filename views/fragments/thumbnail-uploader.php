@@ -26,7 +26,7 @@
 			</p>
 
 			<button type="button" class="tutor-btn tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">
-				<span class="tutor-btn-icon ttr-image-filled"></span>
+				<span class="tutor-btn-icon tutor-icon image-filled"></span>
 				<span><?php _e( 'Upload Image', 'tutor' ); ?></span>
 			</button>
 		</div>

@@ -680,7 +680,7 @@ window.selectSearchField = function (selectElement) {
   if (typeof readyState_complete !== 'undefined' && readyState_complete) {
     readyState_complete(function () {
       tutorFormSelect.forEach(function (element) {
-        if (!element.hasAttribute("noDropdown") && !element.classList.contains('no-tutor-dropdown')) {
+        if (!element.hasAttribute('noDropdown') && !element.classList.contains('no-tutor-dropdown')) {
           var initialSelectedItem = element.options[element.selectedIndex]; // console.log(element.options[element.selectedIndex].text);
 
           element.style.display = 'none';
@@ -752,7 +752,7 @@ window.selectSearchField = function (selectElement) {
                 noItemFound = false;
             resultFilter = e.target.value.toUpperCase();
             resultList.forEach(function (item) {
-              textToSearch = item.querySelector(".text-regular-caption");
+              textToSearch = item.querySelector('.text-regular-caption');
               txtValue = textToSearch.textContent || textToSearch.innerText;
 
               if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
@@ -776,7 +776,7 @@ window.selectSearchField = function (selectElement) {
               });
 
               if (false == hasNoItem) {
-                appendNoItemText.insertAdjacentHTML("beforeend", noItemText);
+                appendNoItemText.insertAdjacentHTML('beforeend', noItemText);
                 hasNoItem = true;
               }
             } else {
@@ -808,7 +808,7 @@ window.selectSearchField = function (selectElement) {
     Array.from(options).forEach(function (item) {
       optionsList += "\n            <div class=\"tutor-dropdown-select-option\">\n                <label>\n                    <div class=\"text-regular-caption color-text-title tutor-admin-report-frequency\" data-key=\"".concat(item.value, "\">").concat(item.text, "</div>\n                </label>\n            </div>\n            ");
     });
-    var markupDD = "\n        <div class=\"tutor-dropdown-select select-dropdown\">\n            <div class=\"tutor-dropdown-select-options-container\">\n                <div class=\"tutor-input-search\">\n                    <div class=\"tutor-input-group tutor-form-control-has-icon tutor-form-control-lg\">\n                        <span class=\"ttr-search-filled tutor-input-group-icon color-black-50\"></span>\n                        <input\n                        type=\"search\"\n                        class=\"tutor-form-control\"\n                        placeholder=\"Search ...\"\n                        />\n                    </div>\n                </div>\n                <div class=\"tutor-frequencies\">\n                    ".concat(optionsList, "\n                </div>\n            </div>\n            <div class=\"tutor-dropdown-select-selected\">\n                <div class=\"text-medium-body color-text-primary\"> ").concat(window.wp.i18n.__('Select One', 'tutor'), "\t</div>\n            </div>\n        </div>\n        ");
+    var markupDD = "\n        <div class=\"tutor-dropdown-select select-dropdown\">\n            <div class=\"tutor-dropdown-select-options-container\">\n                <div class=\"tutor-input-search\">\n                    <div class=\"tutor-input-group tutor-form-control-has-icon tutor-form-control-lg\">\n                        <span class=\"tutor-icon search-filled tutor-input-group-icon color-black-50\"></span>\n                        <input\n                        type=\"search\"\n                        class=\"tutor-form-control\"\n                        placeholder=\"Search ...\"\n                        />\n                    </div>\n                </div>\n                <div class=\"tutor-frequencies\">\n                    ".concat(optionsList, "\n                </div>\n            </div>\n            <div class=\"tutor-dropdown-select-selected\">\n                <div class=\"text-medium-body color-text-primary\"> ").concat(window.wp.i18n.__('Select One', 'tutor'), "\t</div>\n            </div>\n        </div>\n        ");
     return markupDD;
   };
 };
@@ -859,7 +859,7 @@ window.jQuery(document).ready(function ($) {
 
         var error_message = (response.data || {}).message || __('Invalid username or password!', 'tutor');
 
-        error_container.html("\n                    <div class=\"tutor-alert tutor-warning tutor-mt-28\">\n                        <div class=\"tutor-alert-text\">\n                            <span class=\"tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10\"></span>\n                            <span>\n                                ".concat(error_message, "\n                            </span>\n                        </div>\n                    </div>\n                "));
+        error_container.html("\n                    <div class=\"tutor-alert tutor-warning tutor-mt-28\">\n                        <div class=\"tutor-alert-text\">\n                            <span class=\"tutor-alert-icon tutor-icon-34 tutor-icon circle-outline-info-filled tutor-mr-10\"></span>\n                            <span>\n                                ".concat(error_message, "\n                            </span>\n                        </div>\n                    </div>\n                "));
       },
       error: function error() {
         tutor_toast(__('Error!', 'tutor'), (0,_helper_response__WEBPACK_IMPORTED_MODULE_0__.get_response_message)(), 'error');
@@ -1396,7 +1396,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
     var allowedToUpload = maxAllowedFiles - alreadyUploaded;
 
     if (fileUploadField.files.length > allowedToUpload) {
-      tutor_toast(__("Warning", "tutor"), __("Max ".concat(maxAllowedFiles, " file allowed to upload"), "tutor"), "error");
+      tutor_toast(__('Warning', 'tutor'), __("Max ".concat(maxAllowedFiles, " file allowed to upload"), 'tutor'), 'error');
       return;
     }
 
@@ -1405,7 +1405,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
         message = 'Select one or more files.';
       } else {
         if (fileUploadField.files.length > allowedToUpload) {
-          tutor_toast(__("Warning", "tutor"), __("Max ".concat(maxAllowedFiles, " file allowed to upload"), "tutor"), "error");
+          tutor_toast(__('Warning', 'tutor'), __("Max ".concat(maxAllowedFiles, " file allowed to upload"), 'tutor'), 'error');
         }
 
         var fileCard = '';
@@ -1420,7 +1420,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
           }
 
           var editWrapClass = assignmentEditFilePreview ? 'tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15' : '';
-          fileCard += "<div class=\"tutor-instructor-card ".concat(editWrapClass, "\">\n                                    <div class=\"tutor-icard-content\">\n                                        <div class=\"text-regular-body color-text-title\">\n                                            ").concat(file.name, "\n                                        </div>\n                                        <div class=\"text-regular-small\">Size: ").concat(file.size, "</div>\n                                    </div>\n                                    <div onclick=\"(() => {\n\t\t\t\t\t\t\t\t\t\tthis.closest('.tutor-instructor-card').remove();\n\t\t\t\t\t\t\t\t\t})()\" class=\"tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center\">\n                                        <span class=\"ttr-cross-filled color-design-brand\"></span>\n                                    </div>\n                                </div>");
+          fileCard += "<div class=\"tutor-instructor-card ".concat(editWrapClass, "\">\n                                    <div class=\"tutor-icard-content\">\n                                        <div class=\"text-regular-body color-text-title\">\n                                            ").concat(file.name, "\n                                        </div>\n                                        <div class=\"text-regular-small\">Size: ").concat(file.size, "</div>\n                                    </div>\n                                    <div onclick=\"(() => {\n\t\t\t\t\t\t\t\t\t\tthis.closest('.tutor-instructor-card').remove();\n\t\t\t\t\t\t\t\t\t})()\" class=\"tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center\">\n                                        <span class=\"tutor-icon cross-filled color-design-brand\"></span>\n                                    </div>\n                                </div>");
         }
 
         if (assignmentFilePreview) {
@@ -1452,12 +1452,12 @@ document.addEventListener('DOMContentLoaded', function (event) {
     if (dots.style.display === 'none') {
       lessText.style.display = 'block';
       dots.style.display = 'inline';
-      btnText.innerHTML = "<span class='btn-icon ttr-plus-filled color-design-brand'></span><span class='color-text-primary'>Show More</span>";
+      btnText.innerHTML = "<span class='btn-icon tutor-icon plus-filled color-design-brand'></span><span class='color-text-primary'>Show More</span>";
       moreText.style.display = 'none';
     } else {
       lessText.style.display = 'none';
       dots.style.display = 'none';
-      btnText.innerHTML = "<span class='btn-icon ttr-minus-filled color-design-brand'></span><span class='color-text-primary'>Show Less</span>";
+      btnText.innerHTML = "<span class='btn-icon tutor-icon minus-filled color-design-brand'></span><span class='color-text-primary'>Show Less</span>";
       moreText.style.display = 'block';
       contSect.classList.add('no-before');
     }
@@ -1502,7 +1502,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
                 response = _context.sent;
 
                 if (!response) {
-                  tutor_toast(__("Warning", "tutor"), __("Attachment remove failed", "tutor"), "error");
+                  tutor_toast(__('Warning', 'tutor'), __("Attachment remove failed", 'tutor'), 'error');
                 } else {
                   currentTarget.closest('.tutor-instructor-card').remove();
                 }
@@ -1548,7 +1548,7 @@ window.jQuery(document).ready(function ($) {
       type: 'POST',
       data: {
         course_id: course_id,
-        'action': 'tutor_course_add_to_wishlist'
+        action: 'tutor_course_add_to_wishlist'
       },
       beforeSend: function beforeSend() {
         $that.addClass('tutor-updating-message tutor-m-0');
@@ -1556,9 +1556,9 @@ window.jQuery(document).ready(function ($) {
       success: function success(data) {
         if (data.success) {
           if (data.data.status === 'added') {
-            $that.find('i').addClass('ttr-fav-full-filled').removeClass('ttr-fav-line-filled');
+            $that.find('i').addClass('tutor-icon fav-full-filled').removeClass('tutor-icon fav-line-filled');
           } else {
-            $that.find('i').addClass('ttr-fav-line-filled').removeClass('ttr-fav-full-filled');
+            $that.find('i').addClass('tutor-icon fav-line-filled').removeClass('tutor-icon fav-full-filled');
           }
         } else {
           window.location = data.data.redirect_to;
@@ -2117,11 +2117,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 jQuery(document).ready(function ($) {
   /**
-   * 
+   *
    * Instructor list filter
-   * 
+   *
    * @since  v.1.8.4
-  */
+   */
   // Get values on course category selection
   $('.tutor-instructor-filter').each(function () {
     var root = $(this);
@@ -2169,7 +2169,7 @@ jQuery(document).ready(function ($) {
     }).on('click', '.tutor-instructor-ratings i', function (e) {
       var rating = e.target.dataset.value;
       run_instructor_filter('rating_filter', rating);
-    }).on('change', "#tutor-instructor-relevant-sort", function (e) {
+    }).on('change', '#tutor-instructor-relevant-sort', function (e) {
       var short_by = e.target.value;
       run_instructor_filter('short_by', short_by);
     }).on('click', '.selected-cate-list [data-cat_id]', function () {
@@ -2194,7 +2194,7 @@ jQuery(document).ready(function ($) {
       var root = $(this).closest('.tutor-instructor-filter');
       root.find('input[type="checkbox"]').prop('checked', false);
       root.find('[name="keyword"]').val('');
-      var stars = document.querySelectorAll(".tutor-instructor-ratings i"); //remove star selection
+      var stars = document.querySelectorAll('.tutor-instructor-ratings i'); //remove star selection
 
       var _iterator = _createForOfIteratorHelper(stars),
           _step;
@@ -2207,9 +2207,9 @@ jQuery(document).ready(function ($) {
             star.classList.remove('active');
           }
 
-          if (star.classList.contains('ttr-star-full-filled')) {
-            star.classList.remove('ttr-star-full-filled');
-            star.classList.add('ttr-star-line-filled');
+          if (star.classList.contains('tutor-icon star-full-filled')) {
+            star.classList.remove('tutor-icon star-full-filled');
+            star.classList.add('tutor-icon star-line-filled');
           }
         }
       } catch (err) {
@@ -2269,13 +2269,13 @@ jQuery(document).ready(function ($) {
           term_id: term_id
         },
         beforeSend: function beforeSend() {
-          $(".tutor-show-more-loading").html("<img src='".concat(window._tutorobject.loading_icon_url, "'>"));
+          $('.tutor-show-more-loading').html("<img src='".concat(window._tutorobject.loading_icon_url, "'>"));
         },
         success: function success(response) {
           console.log(response);
 
           if (response.success && response.data.categories.length) {
-            $(".tutor-instructor-category-show-more").css("display", "block");
+            $('.tutor-instructor-category-show-more').css('display', 'block');
 
             var _iterator2 = _createForOfIteratorHelper(response.data.categories),
                 _step2;
@@ -2283,8 +2283,8 @@ jQuery(document).ready(function ($) {
             try {
               for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
                 var res = _step2.value;
-                var wrapper = $(".tutor-instructor-categories-wrapper .course-category-filter");
-                $(".tutor-instructor-category-show-more .text-medium-caption").attr('data-id', res.term_id);
+                var wrapper = $('.tutor-instructor-categories-wrapper .course-category-filter');
+                $('.tutor-instructor-category-show-more .text-medium-caption').attr('data-id', res.term_id);
                 wrapper.append("<div class=\"tutor-form-check tutor-mb-25\">\n                                    <input\n                                        id=\"item-a\"\n                                        type=\"checkbox\"\n                                        class=\"tutor-form-check-input tutor-form-check-square\"\n                                        name=\"category\"\n                                        value=\"".concat(res.term_id, "\"/>\n                                    <label for=\"item-a\">\n                                        ").concat(res.name, "\n                                    </label>\n                                </div>\n                                "));
               }
             } catch (err) {
@@ -2295,15 +2295,15 @@ jQuery(document).ready(function ($) {
           }
 
           if (false === response.data.show_more) {
-            $(".tutor-instructor-category-show-more").css("display", "none");
+            $('.tutor-instructor-category-show-more').css('display', 'none');
 
-            if (document.querySelector(".course-category-filter").classList.contains('tutor-show-more-blur')) {
-              document.querySelector(".course-category-filter").classList.remove("tutor-show-more-blur");
+            if (document.querySelector('.course-category-filter').classList.contains('tutor-show-more-blur')) {
+              document.querySelector('.course-category-filter').classList.remove('tutor-show-more-blur');
             }
           }
         },
         complete: function complete() {
-          $(".tutor-show-more-loading").html("");
+          $('.tutor-show-more-loading').html("");
         },
         error: function error(err) {
           alert(err);
@@ -2313,12 +2313,12 @@ jQuery(document).ready(function ($) {
   });
   /**
    * Show start active as per click
-   * 
+   *
    * @since v2.0.0
    */
 
-  var stars = document.querySelectorAll(".tutor-instructor-ratings i");
-  var rating_range = document.querySelector(".tutor-instructor-rating-filter");
+  var stars = document.querySelectorAll('.tutor-instructor-ratings i');
+  var rating_range = document.querySelector('.tutor-instructor-rating-filter');
 
   var _iterator3 = _createForOfIteratorHelper(stars),
       _step3;
@@ -2340,10 +2340,10 @@ jQuery(document).ready(function ($) {
               _star.classList.remove('active');
             }
 
-            if (_star.classList.contains('ttr-star-full-filled')) {
-              _star.classList.remove('ttr-star-full-filled');
+            if (_star.classList.contains('tutor-icon star-full-filled')) {
+              _star.classList.remove('tutor-icon star-full-filled');
 
-              _star.classList.add('ttr-star-line-filled');
+              _star.classList.add('tutor-icon star-line-filled');
             }
           } //show stars active as click
 
@@ -2357,8 +2357,8 @@ jQuery(document).ready(function ($) {
 
         for (var i = 0; i < length; i++) {
           stars[i].classList.add('active');
-          stars[i].classList.remove('ttr-star-line-filled');
-          stars[i].classList.add('ttr-star-full-filled');
+          stars[i].classList.remove('tutor-icon star-line-filled');
+          stars[i].classList.add('tutor-icon star-full-filled');
         }
 
         rating_range.innerHTML = "0.0 - ".concat(length, ".0");
@@ -2789,9 +2789,9 @@ jQuery(document).ready(function ($) {
                     $(alertDiv).addClass('time-over');
                   }
 
-                  if ($("".concat(alertDiv, " .flash-info span:first-child")).hasClass('ttr-warning-outline-circle-filled')) {
-                    $("".concat(alertDiv, " .flash-info span:first-child")).removeClass('ttr-warning-outline-circle-filled');
-                    $("".concat(alertDiv, " .flash-info span:first-child")).addClass('ttr-cross-circle-outline-filled');
+                  if ($("".concat(alertDiv, " .flash-info span:first-child")).hasClass('tutor-icon warning-outline-circle-filled')) {
+                    $("".concat(alertDiv, " .flash-info span:first-child")).removeClass('tutor-icon warning-outline-circle-filled');
+                    $("".concat(alertDiv, " .flash-info span:first-child")).addClass('tutor-icon cross-circle-outline-filled');
                   }
 
                   $tutor_quiz_time_update.toggleClass('tutor-quiz-time-expired');
@@ -3159,7 +3159,7 @@ jQuery(document).ready(function ($) {
 
     if (assignment_answer.trim().length < 1) {
       e.preventDefault();
-      tutor_toast(__("Warning", "tutor"), __('Assignment answer is required.', 'tutor'), "error");
+      tutor_toast(__('Warning', 'tutor'), __('Assignment answer is required.', 'tutor'), 'error');
     }
   });
   /**
@@ -3226,10 +3226,10 @@ jQuery(document).ready(function ($) {
 
 
   $('.tutor-course-builder-section-title').on('click', function () {
-    if ($(this).find('i').hasClass('ttr-angle-up-filled')) {
-      $(this).find('i').removeClass('ttr-angle-up-filled').addClass('ttr-angle-down-filled');
+    if ($(this).find('i').hasClass('tutor-icon angle-up-filled')) {
+      $(this).find('i').removeClass('tutor-icon angle-up-filled').addClass('tutor-icon angle-down-filled');
     } else {
-      $(this).find('i').removeClass('ttr-angle-down-filled').addClass('ttr-angle-up-filled');
+      $(this).find('i').removeClass('tutor-icon angle-down-filled').addClass('tutor-icon angle-up-filled');
     }
 
     $(this).next('div').slideToggle();

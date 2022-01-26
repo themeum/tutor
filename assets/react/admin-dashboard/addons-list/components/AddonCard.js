@@ -45,7 +45,7 @@ const AddonCard = ({ addon, addonId }) => {
 						? addon.ext_required.map((extension, index) => {
 								return (
 									<div className="extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
-										<span className="addon-icon ttr-bullet-point-filled"></span>
+										<span className="addon-icon tutor-icon bullet-point-filled"></span>
 										<span className="plugin-title" dangerouslySetInnerHTML={{ __html: extension }} />
 									</div>
 								);
@@ -54,7 +54,7 @@ const AddonCard = ({ addon, addonId }) => {
 						? addon.plugins_required.map((plugin, index) => {
 								return (
 									<div className="plugins-wrapper tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
-										<span className="addon-icon ttr-bullet-point-filled"></span>
+										<span className="addon-icon tutor-icon bullet-point-filled"></span>
 										<span className="plugin-title">{plugin}</span>
 									</div>
 								);

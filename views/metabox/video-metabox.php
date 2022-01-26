@@ -25,7 +25,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
     $notice = __('No video source selected from settings!', 'tutor');
     echo "<div class='tutor-alert tutor-warning'>
         <div class='tutor-alert-text'>
-            <span class='tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10'></span>
+            <span class='tutor-alert-icon tutor-icon-34 tutor-icon circle-outline-info-filled tutor-mr-10'></span>
             <span>{$notice}</span>
         </div>
     </div>";
@@ -48,9 +48,9 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
     <div class="tutor-input-group tutor-mb-15 tutor-mt-10 tutor-bs-d-block">
         <div class="tutor-video-upload-wrap g-0">
             <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo empty($videoSource) ? 'html5' : $videoSource; ?>">
-                <i class="ttr-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
-                <i class="ttr-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
-                <i class="ttr-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
+                <i class="tutor-icon html5-stroke-brand tutor-icon-24" data-for="html5"></i>
+                <i class="tutor-icon youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
+                <i class="tutor-icon vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
             </div>
             <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown" noDropdown>
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>

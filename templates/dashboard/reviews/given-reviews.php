@@ -71,11 +71,11 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							</div>
 							<div class="tutor-given-review-action tutor-text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center">
 								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-bs-d-flex tutor-bs-align-items-center">
-									<i class="ttr-edit-filled tutor-icon-24 tutor-mr-3"></i>
+									<i class="tutor-icon edit-filled tutor-icon-24 tutor-mr-3"></i>
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 								</span>
 								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-bs-d-flex tutor-bs-align-items-center">
-									<i class="ttr-delete-stroke-filled tutor-icon-24 tutor-mr-3"></i>
+									<i class="tutor-icon delete-stroke-filled tutor-icon-24 tutor-mr-3"></i>
 									<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 								</span>
 							</div>
@@ -95,7 +95,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										<?php esc_html_e( 'Update Review' ); ?>
 									</h3>
 									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="ttr-line-cross-line"></span>
+										<span class="tutor-icon line-cross-line"></span>
 									</button>
 								</div>
 								
@@ -138,7 +138,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					<div id="<?php echo $delete_id; ?>" class="tutor-modal">
 						<span class="tutor-modal-overlay"></span>
 						<button data-tutor-modal-close class="tutor-modal-close">
-							<span class="ttr-line-cross-line"></span>
+							<span class="tutor-icon line-cross-line"></span>
 						</button>
 						<div class="tutor-modal-root">
 							<div class="tutor-modal-inner">

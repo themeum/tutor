@@ -62,7 +62,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		<input type="hidden" class="upload_max_filesize" value="<?php echo $max_filesize; ?>">
 		<div id="tutor_cover_area" data-fallback="<?php esc_attr_e( $cover_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $cover_photo_src ); ?>)">
 			<span class="tutor_cover_deleter">
-				<span class="dashboard-profile-delete ttr-delete-fill-filled"></span>
+				<span class="dashboard-profile-delete tutor-icon delete-fill-filled"></span>
 			</span>
 			<div class="tutor_overlay">
 				<button class="tutor_cover_uploader">
@@ -88,10 +88,10 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			</div>
 
 			<span class="tutor_pp_uploader profile-uploader">
-				<i class="profile-upload-icon ttr-image-filled"></i> <?php esc_html_e( 'Upload Photo', 'tutor' ); ?>
+				<i class="profile-upload-icon tutor-icon image-filled"></i> <?php esc_html_e( 'Upload Photo', 'tutor' ); ?>
 			</span>
 			<span class="tutor_pp_deleter profile-uploader">
-				<i class="profile-upload-icon ttr-delete-fill-filled"></i> <?php esc_html_e( 'Delete', 'tutor' ); ?>
+				<i class="profile-upload-icon tutor-icon delete-fill-filled"></i> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 			</span>
 
 			<div></div>
