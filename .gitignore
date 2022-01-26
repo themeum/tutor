@@ -34,4 +34,5 @@ assets/**/*.map
 */bundle/*
 assets/js/tutor-front.js
 v2-library/bundle/main.min.css
+v2-library/bundle/main.min.map
 v2-library/bundle/main.min.js
