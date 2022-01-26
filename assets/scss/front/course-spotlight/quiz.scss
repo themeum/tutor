@@ -237,7 +237,8 @@
         #tutor-quiz-image-multiple-choice {
             .tutor-image-checkbox {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                // grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(160px,210px));
                 gap: 20px;
                 label.tutor-form-check-input {
                     cursor: pointer;
@@ -364,7 +365,7 @@
                     @include breakpoint-max(mobile) {
                         margin-top: 20px;
                     }
-                    span {
+                    > span {
                         margin: 0px 20px;
                     }
                     .tutor-quiz-dotted-box {
