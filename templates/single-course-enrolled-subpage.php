@@ -13,7 +13,7 @@
 
 global $wp_query;
 
-get_header();
+tutor_utils()->tutor_custom_header();
 
 do_action( 'tutor_course/single/enrolled/before/wrap' );
 $course_subpage = $wp_query->query_vars['course_subpage'];
@@ -44,4 +44,4 @@ $course_subpage = $wp_query->query_vars['course_subpage'];
 </div>
 <?php
 do_action( 'tutor_course/single/enrolled/after/wrap' );
-get_footer();
+tutor_utils()->tutor_custom_footer();
