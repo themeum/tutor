@@ -111,7 +111,7 @@ jQuery(document).ready(function($) {
 				const video_data = that.video_data();
 				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
-					const { best_watch_time=0 } = video_data || {};
+					const { best_watch_time = 0 } = video_data || {};
 					if (best_watch_time > 0 && instance.duration > Math.round(best_watch_time)) {
 						instance.media.currentTime = best_watch_time;
 					}
@@ -266,11 +266,11 @@ jQuery(document).ready(function($) {
 
 						//disable buttons
 						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').addClass(
-							'tutor-btn-disable tutor-no-hover',
+							'tutor-btn-disable tutor-no-hover'
 						);
 						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').prop(
 							'disabled',
-							true,
+							true
 						);
 
 						//add alert text
@@ -294,8 +294,8 @@ jQuery(document).ready(function($) {
 												attemptRemaining +
 												'/' +
 												attemptAllowed,
-											'tutor',
-										),
+											'tutor'
+										)
 									);
 								} else {
 									// if attempt not remaining
@@ -303,14 +303,18 @@ jQuery(document).ready(function($) {
 										$(alertDiv).removeClass('time-remaining-warning');
 										$(alertDiv).addClass('time-over');
 									}
-									if ($(`${alertDiv} .flash-info span:first-child`).hasClass('ttr-warning-outline-circle-filled')) {
-										$(`${alertDiv} .flash-info span:first-child`).removeClass('ttr-warning-outline-circle-filled');
-										$(`${alertDiv} .flash-info span:first-child`).addClass('ttr-cross-circle-outline-filled');
+									if (
+										$(`${alertDiv} .flash-info span:first-child`).hasClass('tutor-icon-warning-outline-circle-filled')
+									) {
+										$(`${alertDiv} .flash-info span:first-child`).removeClass(
+											'tutor-icon-warning-outline-circle-filled'
+										);
+										$(`${alertDiv} .flash-info span:first-child`).addClass('tutor-icon-cross-circle-outline-filled');
 									}
 									$tutor_quiz_time_update.toggleClass('tutor-quiz-time-expired');
 									$('#tutor-start-quiz').hide();
 									$(`${alertDiv} .tutor-quiz-alert-text`).html(
-										`${__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')}`,
+										`${__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')}`
 									);
 								}
 							},
@@ -604,7 +608,7 @@ jQuery(document).ready(function($) {
 					tutor_toast(
 						__('Request Successful', 'tutor'),
 						__('Your request has been submitted. Please wait for the administrator’s response.', 'tutor'),
-						'success',
+						'success'
 					);
 					setTimeout(function() {
 						location.reload();
@@ -708,7 +712,7 @@ jQuery(document).ready(function($) {
 		var assignment_answer = tinymce.activeEditor.getContent();
 		if (assignment_answer.trim().length < 1) {
 			e.preventDefault();
-			tutor_toast(__("Warning", "tutor"), __( 'Assignment answer is required.' , 'tutor' ), "error");
+			tutor_toast(__('Warning', 'tutor'), __('Assignment answer is required.', 'tutor'), 'error');
 		}
 	});
 
@@ -723,7 +727,7 @@ jQuery(document).ready(function($) {
 			.html(
 				$(this)
 					.val()
-					.replace(/.*(\/|\\)/, ''),
+					.replace(/.*(\/|\\)/, '')
 			);
 	});
 
@@ -740,7 +744,7 @@ jQuery(document).ready(function($) {
 			var $parent = $that.closest('.tutor-topics-in-single-lesson');
 			$parent.toggleClass('tutor-topic-active');
 			$parent.find('.tutor-lessons-under-topic').slideToggle();
-		},
+		}
 	);
 
 	$('.tutor-single-lesson-items.active')
@@ -797,17 +801,17 @@ jQuery(document).ready(function($) {
 		if (
 			$(this)
 				.find('i')
-				.hasClass('ttr-angle-up-filled')
+				.hasClass('tutor-icon-angle-up-filled')
 		) {
 			$(this)
 				.find('i')
-				.removeClass('ttr-angle-up-filled')
-				.addClass('ttr-angle-down-filled');
+				.removeClass('tutor-icon-angle-up-filled')
+				.addClass('tutor-icon-angle-down-filled');
 		} else {
 			$(this)
 				.find('i')
-				.removeClass('ttr-angle-down-filled')
-				.addClass('ttr-angle-up-filled');
+				.removeClass('tutor-icon-angle-down-filled')
+				.addClass('tutor-icon-angle-up-filled');
 		}
 		$(this)
 			.next('div')
@@ -1094,7 +1098,7 @@ jQuery(document).ready(function($) {
 						title: __('Abandon Quiz?', 'tutor'),
 						description: __(
 							'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.',
-							'tutor',
+							'tutor'
 						),
 						buttons: {
 							keep: {

@@ -1,46 +1,45 @@
 .answer-image-matched-wrap {
-    display: block;
-    .image-matching-item {
-        display: flex;
-        align-items: center;
-        &:not(:last-child) {
-            margin-bottom: 12px;
-        }
-        img {
-            max-width: 35px;
-        }
-        .dragged-caption {
-            font-size: 14px;
-            margin-left: 12px;
-        }
-    }
+	display: block;
+	.image-matching-item {
+		display: flex;
+		align-items: center;
+		&:not(:last-child) {
+			margin-bottom: 12px;
+		}
+		img {
+			max-width: 35px;
+		}
+		.dragged-caption {
+			font-size: 14px;
+			margin-left: 12px;
+		}
+	}
 }
 
 .correct-answer-wrap {
-    .matching-type {
-        @include valueWithPrefix(display, flex);
-        @include propertyWithPrefix(align-items, center);
+	.matching-type {
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(align-items, center);
 
-        &:not(:last-child) {
-            margin-bottom: 12px;
-        }
-    }
+		&:not(:last-child) {
+			margin-bottom: 12px;
+		}
+	}
 
-    .text-image-type {
-        @include valueWithPrefix(display, flex);
-        @include propertyWithPrefix(align-items, center);
+	.text-image-type {
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(align-items, center);
 
-        .image {
-            margin-right: 12px;
-        }
-    }
+		.image {
+			margin-right: 12px;
+		}
+	}
 
-    img {
-        max-width: 35px;
-        max-height: 35px;
-    }
+	img {
+		max-width: 35px;
+		max-height: 35px;
+	}
 }
-
 
 .tutor-quiz-attempt-details-wrapper {
     .back {
@@ -124,9 +123,9 @@
             border-color: var(--tutor-danger);
         }
 
-        &.tutor-text-success {
-            border-color: var(--tutor-success);
-        }
+		&.tutor-text-success {
+			border-color: var(--tutor-success);
+		}
 
         &:not(:hover) {
             opacity: .8;
@@ -165,12 +164,12 @@
                 }
             }
 
-            &.tutor-quiz-answer-status-wrong {
-                .tutor-icon-rounded.tutor-text-success {
-                    color: #CDCFD5 !important;
-                    border-color: #CDCFD5 !important;
-                }
-            }
+			&.tutor-quiz-answer-status-wrong {
+				.tutor-icon-rounded.tutor-text-success {
+					color: #cdcfd5 !important;
+					border-color: #cdcfd5 !important;
+				}
+			}
 
             &.tutor-quiz-answer-status-pending {
                 .tutor-icon-rounded.tutor-text-success, .tutor-icon-rounded.tutor-text-danger {

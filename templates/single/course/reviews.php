@@ -67,7 +67,7 @@ $rating = tutor_utils()->get_course_rating();
 					<div class="rating-progress">
 						<div class="tutor-ratings tutor-is-sm">
 							<div class="tutor-rating-stars">
-								<span class="ttr-star-line-filled"></span>
+								<span class="tutor-icon-star-line-filled"></span>
 							</div>
 							<div class="tutor-rating-text  tutor-text-medium-body  tutor-color-text-primary">
 								<?php echo $key; ?>

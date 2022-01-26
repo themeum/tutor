@@ -8,17 +8,17 @@ var el = wp.element.createElement,
  */
 
 
-registerBlockType( 'tutor-gutenberg/student-registration', {
+registerBlockType('tutor-gutenberg/student-registration', {
     title: 'Student Registration',
     icon: 'welcome-learn-more',
     category: 'tutor',
-    edit: function( props ) {
+    edit: function (props) {
         var dataHtml;
         jQuery.ajax({
-            url : ajaxurl,
-            type : 'POST',
+            url: ajaxurl,
+            type: 'POST',
             async: false,
-            data : {shortcode: 'tutor_student_registration_form',  action : 'render_block_tutor'},
+            data: { shortcode: 'tutor_student_registration_form', action: 'render_block_tutor' },
             success: function (response) {
                 dataHtml = response.data;
             },
@@ -31,11 +31,11 @@ registerBlockType( 'tutor-gutenberg/student-registration', {
         })
     },
 
-    save: function() {
+    save: function () {
         return null;
         //return el( 'div', { }, '[tutor_student_registration_form]' );
     },
-} );
+});
 
 /*
 registerBlockType( 'tutor-gutenberg/student-dashboard', {
@@ -68,17 +68,17 @@ registerBlockType( 'tutor-gutenberg/student-dashboard', {
 
 //tutor_instructor_registration_form
 
-registerBlockType( 'tutor-gutenberg/instructor-registration', {
+registerBlockType('tutor-gutenberg/instructor-registration', {
     title: 'Instructor Registration',
     icon: 'welcome-learn-more',
     category: 'tutor',
-    edit: function( props ) {
+    edit: function (props) {
         var dataHtml;
         jQuery.ajax({
-            url : ajaxurl,
-            type : 'POST',
+            url: ajaxurl,
+            type: 'POST',
             async: false,
-            data : {shortcode: 'tutor_instructor_registration_form',  action : 'render_block_tutor'},
+            data: { shortcode: 'tutor_instructor_registration_form', action: 'render_block_tutor' },
             success: function (response) {
                 dataHtml = response.data;
             },
@@ -89,7 +89,36 @@ registerBlockType( 'tutor-gutenberg/instructor-registration', {
             }
         })
     },
-    save: function() {
+    save: function () {
         return null;
     },
-} );
+});
+
+//Dashboard Header Menu
+if ('true' === _tutor_gutenberg_block_data.is_wp_version_5_9) {
+    registerBlockType('tutor-gutenberg/dashboard-menu', {
+        title: 'Dashboard Menu',
+        icon: 'welcome-learn-more',
+        category: 'tutor',
+        edit: function (props) {
+            var dataHtml;
+            jQuery.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                async: false,
+                data: { shortcode: 'tutor_dashboard_menu', action: 'render_block_tutor' },
+                success: function (response) {
+                    dataHtml = response.data;
+                },
+            });
+            return el('div', {
+                dangerouslySetInnerHTML: {
+                    __html: dataHtml
+                }
+            })
+        },
+        save: function () {
+            return null;
+        },
+    });
+}

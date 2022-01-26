@@ -21,17 +21,17 @@
 
 	$default_meta = array(
 		array(
-			'icon_class' => 'ttr-student-line-1',
+			'icon_class' => 'tutor-icon-student-line-1',
 			'label'      => __( 'Total Enrolled', 'tutor' ),
 			'value'      => tutor_utils()->get_option( 'enable_course_total_enrolled' ) ? tutor_utils()->count_enrolled_users_by_course() : null,
 		),
 		array(
-			'icon_class' => 'ttr-clock-filled',
+			'icon_class' => 'tutor-icon-clock-filled',
 			'label'      => __( 'Duration', 'tutor' ),
 			'value'      => get_tutor_option( 'enable_course_duration' ) ? get_tutor_course_duration_context() : null,
 		),
 		array(
-			'icon_class' => 'ttr-refresh-l',
+			'icon_class' => 'tutor-icon-refresh-l',
 			'label'      => __( 'Last Updated', 'tutor' ),
 			'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null,
 		),
@@ -40,7 +40,7 @@
 	// Add level if enabled
 	if(tutor_utils()->get_option('enable_course_level', true, true)) {
 		array_unshift($default_meta, array(
-			'icon_class' => 'ttr-level-line',
+			'icon_class' => 'tutor-icon-level-line',
 			'label'      => __( 'Level', 'tutor' ),
 			'value'      => get_tutor_course_level( get_the_ID() ),
 		));
@@ -144,7 +144,7 @@
 
 			?>
 				<div class="text-regular-caption tutor-color-text-hints tutor-mt-12 tutor-bs-d-flex tutor-bs-justify-content-center">
-					<span class="tutor-icon-26 tutor-color-success ttr-purchase-filled tutor-mr-6"></span>
+					<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-6"></span>
 					<span class="tutor-enrolled-info-text">
 					<?php esc_html_e( 'You enrolled this course on', 'tutor' ); ?>
 						<span class="text-bold-small tutor-color-success tutor-ml-3 tutor-enrolled-info-date">
@@ -175,7 +175,7 @@
 				?>
 					<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
-							<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+							<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
 							<span>
 							<?php esc_html_e( 'This course is full right now. We limit the number of students to create an optimized and productive group dynamic.', 'tutor' ); ?>
 							</span>
