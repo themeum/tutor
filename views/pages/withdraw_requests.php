@@ -343,7 +343,7 @@ $filters = array(
 	<div id="tutor-admin-withdraw-approve" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
 		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="las la-times"></span>
+			<span class="ttr-line-cross-line"></span>
 		</button>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
@@ -402,7 +402,7 @@ $filters = array(
 	<div id="tutor-admin-withdraw-reject" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
 		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="las la-times"></span>
+			<span class="ttr-line-cross-line"></span>
 		</button>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">

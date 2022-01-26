@@ -52,8 +52,12 @@ class Gutenberg {
 		// Check if WP version is equal to or greater than 5.9.
 		global $wp_version;
 		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			wp_localize_script( 'tutor-student-registration-block', '_tutor_gutenberg_block_data', array(
+                'is_wp_version_5_9' => 'true',
+            ) );
+
 			register_block_type( 'tutor-gutenberg/dashboard-menu', array(
-				'editor_script'   => 'tutor-dashboard-menu-block',
+				'editor_script'   => 'tutor-student-registration-block',
 				'render_callback' => array( $this, 'render_block_tutor_dashboard_menu' ),
 			) );
 		}
