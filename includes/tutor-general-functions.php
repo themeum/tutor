@@ -908,3 +908,12 @@ if (!function_exists('get_tutor_all_withdrawal_methods')) {
 		return apply_filters( 'tutor_withdrawal_methods_all', array() );
 	}
 }
+
+
+if(!function_exists('tutor_log')) {
+	function tutor_log($data) {
+		ob_start();
+		var_dump($data);
+		error_log(ob_get_clean());
+	}
+}

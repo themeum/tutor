@@ -803,7 +803,7 @@ class Quiz {
 
 		global $wpdb;
 		$quiz_id = sanitize_text_field($_POST['quiz_id']);
-		//$topic_id =  isset( $_POST['topic_id'] ) ? sanitize_text_field( $_POST['topic_id'] ) : 0;
+		$topic_id =  isset( $_POST['topic_id'] ) ? (int)$_POST['topic_id'] : 0;
 		$question_id = sanitize_text_field(tutor_utils()->avalue_dot('question_id', $_POST));
 
 		// check if the user can manage the quiz
