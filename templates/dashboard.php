@@ -14,7 +14,7 @@
 
 $is_by_short_code = isset($is_shortcode) && $is_shortcode === true;
 if (!$is_by_short_code && !defined('OTLMS_VERSION')) {
-	get_header();
+	tutor_utils()->tutor_custom_header();
 }
 
 global $wp_query;
@@ -51,19 +51,19 @@ $footer_links = array(
 		'title'      => $is_instructor ? __('Dashboard', 'tutor') : __('Courses', 'tutor'),
 		'url'        => $footer_url_1,
 		'is_active'  => $footer_url_1 == $current_url,
-		'icon_class' => 'ttr ttr-dashboard-filled',
+		'icon_class' => 'ttr tutor-icon-dashboard-filled',
 	),
 	array(
 		'title'      => $is_instructor ? __('Q&A', 'tutor') : __('Quiz Attempts' . 'tutor'),
 		'url'        => $footer_url_2,
 		'is_active'  => $footer_url_2 == $current_url,
-		'icon_class' => $is_instructor ? 'ttr  ttr-question-filled' : 'ttr ttr-quiz-attempt-filled',
+		'icon_class' => $is_instructor ? 'ttr  tutor-icon-question-filled' : 'ttr tutor-icon-quiz-attempt-filled',
 	),
 	array(
 		'title'      => __('Menu', 'tutor'),
 		'url'        => '#',
 		'is_active'  => false,
-		'icon_class' => 'ttr ttr-menu-line tutor-dashboard-menu-toggler',
+		'icon_class' => 'ttr tutor-icon-menu-line tutor-dashboard-menu-toggler',
 	),
 );
 
@@ -270,5 +270,5 @@ do_action('tutor_dashboard/before/wrap');
 
 <?php
 if (!$is_by_short_code && !defined('OTLMS_VERSION')) {
-	get_footer();
+	tutor_utils()->tutor_custom_footer();
 }

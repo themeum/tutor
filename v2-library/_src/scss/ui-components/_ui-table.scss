@@ -202,8 +202,8 @@ table.tutor-ui-table {
 					width: 60.6%;
 				}
 			}
-			.ttr-ordering-a-to-z-filled,
-			.ttr-ordering-z-to-a-filled {
+			.tutor-icon-ordering-a-to-z-filled,
+			.tutor-icon-ordering-z-to-a-filled {
 				cursor: pointer;
 			}
 		}
@@ -739,7 +739,7 @@ table.tutor-ui-table-data-td-target {
 
 	// angle-down icon
 	.is-active {
-		[class^='ttr-']:before {
+		[class^='tutor-icon-']:before {
 			content: '\e941';
 		}
 		box-shadow: -1px 0 0 #e7e8ef;

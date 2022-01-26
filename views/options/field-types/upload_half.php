@@ -29,7 +29,7 @@ $field_id     = 'field_' . $field['key'];
 				<input type="hidden" class="input_file" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option )_value; ?>">
 				<input type="file" class="image_uploader" id="<?php echo esc_attr( $field_id ); ?>" accept=".jpg, .jpeg, .png, .svg">
 				<!-- <span class="tutor-btn-icon las la-image"></span> -->
-				<span class="tutor-btn-icon ttr-image-filled"></span>
+				<span class="tutor-btn-icon tutor-icon-image-filled"></span>
 				<span>Upload Image</span>
 			</label>
 		</div>

@@ -172,7 +172,7 @@ if ( is_array( $attempt_info ) ) {
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </p>
                                     <a href="#" class="btn-text btn-detail-link tutor-color-design-dark">
-                                        <span class="ttr-detail-link-filled"></span>
+                                        <span class="tutor-icon-detail-link-filled"></span>
                                     </a>
                                 </div>
                             </td>

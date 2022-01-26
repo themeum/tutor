@@ -1,7 +1,7 @@
 /**
  * Tutor accrodion
  */
-(function tutorAccordion() {
+(window.tutorAccordion = (func) => {
 	const accordionItemHeaders = document.querySelectorAll('.tutor-accordion-item-header');
 	if (accordionItemHeaders.length) {
 		accordionItemHeaders.forEach((accordionItemHeader) => {

@@ -111,7 +111,7 @@ if ( ! defined( 'ABSPATH' ) )
             $full_width_fields = array('rows', 'slider', 'radio', 'range', 'payments', 'dropdown');
 
             foreach ($field_arr as $key_parent => $field_parent) {
-
+// pr($key_parent);
                 $html .= '<li class="'.($i==1 ? "active" : "").'">';
                     $html .= '<div class="tutor-setup-content-heading heading">';
                         $html .= '<div class="setup-section-title tutor-text-medium-h6  tutor-color-text-primary">'.$field_parent['lable'].'</div>';
@@ -355,7 +355,11 @@ if ( ! defined( 'ABSPATH' ) )
 
                         }
                     $html .= '</div>';
+                if('payments'!== $field['type']){
                     $html .= $this->tutor_setup_wizard_action();
+                }else{
+                    $html .= $this->tutor_setup_wizard_action_final();
+                }
                 $html .= '</li>';
                 $i++;
             }
@@ -394,21 +398,6 @@ if ( ! defined( 'ABSPATH' ) )
                             'lable' => __('Student Profile', 'tutor'),
                             'desc' => __('Allow users to have a student profile to showcase awards and completed courses.', 'tutor'),
                         ),
-                        'enable_spotlight_mode' => array(
-                            'type' => 'switch',
-                            'lable' => __('Spotlight Mode', 'tutor'),
-                            'desc' => __('Create a focused learning environment. Block out all the distractions around your course content.', 'tutor'),
-                        ),
-                        'disable_default_player_youtube' => array(
-                            'type' => 'switch',
-                            'lable' => __('YouTube Player', 'tutor'),
-                            'desc' => __('Toggle to use the default YouTube player.', 'tutor'),
-                        ),
-                        'disable_default_player_vimeo' => array(
-                            'type' => 'switch',
-                            'lable' => __('Vimeo Player', 'tutor'),
-                            'desc' => __('Toggle to use the default Vimeo player.', 'tutor'),
-                        ),
                         'lesson_permalink_base' => array(
                             'type' => 'text',
                             'max' => 50,
@@ -445,7 +434,7 @@ if ( ! defined( 'ABSPATH' ) )
                     )
                 ),
 
-
+/*
                 'quiz' => array(
                     'lable' => __('Quiz Settings', 'tutor'),
                     'attr' => array(
@@ -493,7 +482,7 @@ if ( ! defined( 'ABSPATH' ) )
                         )
                     )
                 ),
-
+ */
 
                 'instructor' => array(
                     'lable' => __('Instructor Settings', 'tutor'),
@@ -522,7 +511,6 @@ if ( ! defined( 'ABSPATH' ) )
                         'commission_split' => array(
                             'type' => 'range',
                             'lable' => __('Commission Rate', 'tutor'),
-                            'class' => 'tutor-show-hide',
                             'tooltip' => __('Control revenue sharing between admin and instructor.', 'tutor')
                         ),
                         'earning_instructor_commission' => array(
@@ -534,7 +522,6 @@ if ( ! defined( 'ABSPATH' ) )
                         'withdraw_split' => array(
                             'type' => 'payments',
                             'lable' => __('Payment Withdrawal Method', 'tutor'),
-                            'class' => 'tutor-show-hide',
                             'desc' => __('Choose your preferred withdrawal method from the options.', 'tutor')
                         ),
 
@@ -559,16 +546,16 @@ if ( ! defined( 'ABSPATH' ) )
                         <ul class="tutor-setup-title">
                             <li data-url="general" class="general active current"><?php _e('General', 'tutor'); ?></li>
                             <li data-url="course" class="course"><?php _e('Course', 'tutor'); ?></li>
-                            <li data-url="quiz" class="quiz"><?php _e('Quiz', 'tutor'); ?></li>
+                            <!-- <li data-url="quiz" class="quiz"><?php //_e('Quiz', 'tutor'); ?></li> -->
                             <li data-url="instructor" class="instructor"><?php _e('Instructor', 'tutor'); ?></li>
-                            <li data-url="profile" class="profile"><?php _e('Profile', 'tutor'); ?></li>
+                            <!-- <li data-url="profile" class="profile"><?php //_e('Profile', 'tutor'); ?></li> -->
                             <li data-url="payment" class="payment"><?php _e('Payment', 'tutor'); ?></li>
-                            <li data-url="finish" class="finish"><?php _e('Finish', 'tutor'); ?></li>
+                            <li data-url="finish" style="display:none" class="finish"><?php _e('Finish', 'tutor'); ?></li>
                         </ul>
 
 
                         <form id="tutor-setup-form" method="post">
-		                    <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+                            <?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
                             <input type="hidden" name="action" value="setup_action">
 
                             <?php $course_marketplace = tutor_utils()->get_option('enable_course_marketplace'); ?>
@@ -590,12 +577,12 @@ if ( ! defined( 'ABSPATH' ) )
                                             <p><?php _e( 'If you need further assistance, please don’t hesitate to contact us via our <a target="_blank" href="https://www.themeum.com/contact-us/">contact form.</a>', 'tutor' ); ?></p>
                                         </div>
                                         <div class="tutor-setup-content-footer footer">
-                                            <button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-redirect primary-btn" data-url="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
+                                            <a class="tutor-btn tutor-btn-primary tutor-btn-md primary-btn" href="<?php echo admin_url('post-new.php?post_type=courses'); ?>">
                                                 <?php _e('Create a New Course', 'tutor'); ?>
-                                            </button>
-                                            <button class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-redirect" data-url="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
+                                            </a>
+                                            <a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" href="<?php echo admin_url('admin.php?page=tutor-addons'); ?>">
                                                 <?php _e('Explore Addons', 'tutor'); ?>
-                                            </button>
+                                            </a>
                                         </div>
                                     </div>
                                 </li>
@@ -620,6 +607,25 @@ if ( ! defined( 'ABSPATH' ) )
                 $html .= '<div class="tutor-setup-btn-wrapper">';
                     $html .= '<button class="tutor-btn tutor-btn-md tutor-setup-next">';
                         $html .= '<span>'.__('Next', 'tutor').'</span>&nbsp;<span>&#8594;</span>';
+                    $html .= '</button>';
+                $html .= '</div>';
+            $html .= '</div>';
+
+            return $html;
+        }
+        public function tutor_setup_wizard_action_final() {
+            $html = '<div class="tutor-setup-content-footer footer">';
+                $html .= '<div class="tutor-setup-btn-wrapper">';
+                    $html .= '<button class="tutor-btn tutor-btn-disable-outline tutor-btn-md tutor-setup-previous">';
+                        $html .= '<span>&#8592;</span>&nbsp;<span>'.__('Previous', 'tutor').'</span>';
+                    $html .= '</button>';
+                $html .= '</div>';
+                $html .= '<div class="tutor-setup-btn-wrapper">';
+                    $html .= '<button class="tutor-setup-skip">'.__('Skip This Step', 'tutor').'</button>';
+                $html .= '</div>';
+                $html .= '<div class="tutor-setup-btn-wrapper">';
+                    $html .= '<button class="tutor-btn tutor-btn-md tutor-redirect tutor-setup-next">';
+                        $html .= '<span>'.__('Finish Setup', 'tutor');
                     $html .= '</button>';
                 $html .= '</div>';
             $html .= '</div>';
@@ -798,7 +804,7 @@ if ( ! defined( 'ABSPATH' ) )
 
         public function enqueue_scripts() {
             if (isset($_GET['page']) && $_GET['page'] == 'tutor-setup') {
-                wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
+                wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.css', array(), TUTOR_VERSION );
                 wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), TUTOR_VERSION );
                 wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), TUTOR_VERSION );
                 wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), TUTOR_VERSION, true );
