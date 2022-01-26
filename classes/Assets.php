@@ -59,6 +59,7 @@ class Assets {
 
 	private function get_default_localized_data()
 	{
+		global $wp_version;
 		$home_url = get_home_url();
 		$parsed   = parse_url($home_url);
 

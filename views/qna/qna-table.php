@@ -179,7 +179,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
                                             <span class="tutor-modal-overlay"></span>
                                             <button data-tutor-modal-close class="tutor-modal-close">
-                                                <span class="las la-times"></span>
+                                                <span class="ttr-line-cross-line"></span>
                                             </button>
                                             <div class="tutor-modal-root">
                                                 <div class="tutor-modal-inner">
