@@ -398,21 +398,6 @@ if ( ! defined( 'ABSPATH' ) )
                             'lable' => __('Student Profile', 'tutor'),
                             'desc' => __('Allow users to have a student profile to showcase awards and completed courses.', 'tutor'),
                         ),
-                        'enable_spotlight_mode' => array(
-                            'type' => 'switch',
-                            'lable' => __('Spotlight Mode', 'tutor'),
-                            'desc' => __('Create a focused learning environment. Block out all the distractions around your course content.', 'tutor'),
-                        ),
-                        'disable_default_player_youtube' => array(
-                            'type' => 'switch',
-                            'lable' => __('YouTube Player', 'tutor'),
-                            'desc' => __('Toggle to use the default YouTube player.', 'tutor'),
-                        ),
-                        'disable_default_player_vimeo' => array(
-                            'type' => 'switch',
-                            'lable' => __('Vimeo Player', 'tutor'),
-                            'desc' => __('Toggle to use the default Vimeo player.', 'tutor'),
-                        ),
                         'lesson_permalink_base' => array(
                             'type' => 'text',
                             'max' => 50,
@@ -526,7 +511,6 @@ if ( ! defined( 'ABSPATH' ) )
                         'commission_split' => array(
                             'type' => 'range',
                             'lable' => __('Commission Rate', 'tutor'),
-                            'class' => 'tutor-show-hide',
                             'tooltip' => __('Control revenue sharing between admin and instructor.', 'tutor')
                         ),
                         'earning_instructor_commission' => array(
@@ -538,7 +522,6 @@ if ( ! defined( 'ABSPATH' ) )
                         'withdraw_split' => array(
                             'type' => 'payments',
                             'lable' => __('Payment Withdrawal Method', 'tutor'),
-                            'class' => 'tutor-show-hide',
                             'desc' => __('Choose your preferred withdrawal method from the options.', 'tutor')
                         ),
 
@@ -821,7 +804,7 @@ if ( ! defined( 'ABSPATH' ) )
 
         public function enqueue_scripts() {
             if (isset($_GET['page']) && $_GET['page'] == 'tutor-setup') {
-                wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
+                wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.css', array(), TUTOR_VERSION );
                 wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), TUTOR_VERSION );
                 wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), TUTOR_VERSION );
                 wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), TUTOR_VERSION, true );
