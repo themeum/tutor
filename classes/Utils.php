@@ -9333,4 +9333,17 @@ class Utils {
 
 		return $video_sources;
 	}
+
+	/**
+	 * Convert date to wp timezone compatible date. Timezone will be get from settings
+	 *
+	 * @param string $date | string date time to conver.
+	 *
+	 * @return string | date time 
+	 */
+	public function convert_date_into_wp_timezone( string $date ): string {
+		$date = new \DateTime( $date );
+		$date->setTimezone( wp_timezone() );
+		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
+	}
 }
