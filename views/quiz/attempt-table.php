@@ -14,6 +14,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 
 <div class="tutor-ui-table-wrapper tutor-my-40">
 	<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
+		<?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) { ?>
 		<thead>
 			<tr>
 				<?php
@@ -27,6 +28,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 				?>
 			</tr>
 		</thead>
+		<?php } ?>
 		<tbody>
 			<?php
 			if ( is_array( $attempt_list ) && count( $attempt_list ) ) {
@@ -35,7 +37,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
 					$passing_grade     = (int) tutor_utils()->get_quiz_option( $attempt->quiz_id, 'passing_grade', 0 );
 					$answers           = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
-	
+
 					$correct   = 0;
 					$incorrect = 0;
 					if ( is_array( $answers ) && count( $answers ) > 0 ) {
@@ -64,7 +66,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											</td>
 										<?php
 									break;
-	
+
 								case 'date':
 									?>
 											<td data-th="<?php echo $column; ?>">
@@ -76,7 +78,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											</td>
 										<?php
 									break;
-	
+
 								case 'quiz_info':
 									?>
 											<td data-th="<?php echo $column; ?>">
@@ -94,7 +96,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 														if ( $context == 'backend-dashboard-students-attempts' ) {
 															$attempt_user = get_userdata( $attempt->user_id );
 															$user_name    = $attempt_user ? $attempt_user->display_name : '';
-	
+
 														?>
 																<div>
 																	<span class="tutor-text-regular-small tutor-color-text-title">
@@ -103,13 +105,13 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 																</div>
 														<?php
 														} else {
-														?>	
+														?>
 															<?php if(!empty($user_name) && isset( $attempt->user_email ) ) : ?>
-																<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span> 
+																<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
 																<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( $attempt->user_email ); ?>">
 																	<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
 																</span>
-	
+
 															<?php endif;
 														}
 														?>
@@ -120,7 +122,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 										</td>
 									<?php
 									break;
-	
+
 								case 'course':
 									?>
 											<td data-th="<?php echo $column; ?>">
@@ -130,7 +132,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											</td>
 										<?php
 									break;
-	
+
 								case 'question':
 									?>
 											<td data-th="<?php echo $column; ?>">
@@ -140,7 +142,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											</td>
 										<?php
 									break;
-	
+
 								case 'total_marks':
 									?>
 											<td data-th="<?php echo $column; ?>">
@@ -150,7 +152,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											</td>
 										<?php
 									break;
-	
+
 								case 'correct_answer':
 									?>
 											<td data-th="<?php echo $column; ?>">
@@ -160,7 +162,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											</td>
 										<?php
 									break;
-	
+
 								case 'incorrect_answer':
 									?>
 											<td data-th="<?php echo $column; ?>">
@@ -170,7 +172,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											</td>
 										<?php
 									break;
-	
+
 								case 'earned_marks':
 									?>
 											<td data-th="<?php echo $column; ?>">
@@ -180,7 +182,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 											</td>
 										<?php
 									break;
-	
+
 								case 'result':
 									?>
 										<td data-th="<?php echo $column; ?>">
@@ -196,7 +198,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 										</td>
 									<?php
 									break;
-	
+
 								case 'details':
 									$url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
 									?>
