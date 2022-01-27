@@ -182,7 +182,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
                         <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-5"><?php esc_html_e( $order_status_text ); ?></span>
                     </td>
                     <td data-th="Download" class="tutor-export-purchase-history" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
-                        <a><span class="ttr-receipt-line tutor-color-text-title" style="font-size:24px"></span></a>
+                        <a><span class="tutor-icon-receipt-line tutor-color-text-title" style="font-size:24px"></span></a>
                     </td>
                 </tr>
                 <?php } ?>

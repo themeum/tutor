@@ -45,7 +45,7 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 		</div>
 		<?php
 		if ($has_readmore) :
-			echo '<div class="tutor-showmore-btn tutor-mt-22" data-showmore="true"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showmore"><span class="btn-icon ttr-plus-filled tutor-color-design-brand"></span><span class="tutor-color-text-subsued">Show More</span></button><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showless"><span class="btn-icon ttr-minus-filled tutor-color-design-brand"></span><span class="tutor-color-text-subsued">Show Less</span></button></div>';
+			echo '<div class="tutor-showmore-btn tutor-mt-22" data-showmore="true"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showmore"><span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand"></span><span class="tutor-color-text-subsued">Show More</span></button><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showless"><span class="btn-icon tutor-icon-minus-filled tutor-color-design-brand"></span><span class="tutor-color-text-subsued">Show Less</span></button></div>';
 		endif;
 		?>
 	</div>

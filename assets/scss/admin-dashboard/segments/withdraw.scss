@@ -1,97 +1,95 @@
-
 .tutor-admin-page-wrapper {
-    .tutor-admin-page-content-wrapper.tutor-withdraw-wrapper{
-        .td-avatar-detials {
-            .ttr-detail-link-filled {
-                font-size: 20px;
-            }
-        }
-        table {
-            td {
-                ul.tutor-table-inside-table {
-                    text-decoration: none;
-                    li {
-                        display: flex;
-                        span:first-child {
-                            width: 37%;
-                        }
-                        span:last-child {
-                            width: 50%;
-                        }
-                    }
-                }
-                .tooltip-wrap {
-                    .tooltip-txt {
-                        max-width: 400px;
-                        min-width: 230px;
-                        padding: 0px 0px;
-                        display: flex;
-                        > div {
-                            height: 32px;
-                            border-radius: 0px 10px 10px 0px;
-                        }
-                        .withdraw-tutor-tooltip-content {
-                            flex-basis: 100%;
-                            padding: 1px 11px;
-                        }
-                        .withdraw-tutor-copy-to-clipboard {
-                            padding: 0px 5px 0px 3px;
-                            flex-basis: 100px;
-                            background: $text-title;
-                            // svg {
-                            //     margin-right: 5px;
-                            // }
-                            span {
-                                font-size: 18px;
-                                padding: 0px 3px 0px 0px;
-                            }
-                        }
-                    }
-                }
-            }
-            td.tutor-withdraw-btns {
-                @include breakpoint-min(1200px) {
-                    width: 16%;
-                    button {
-                        max-width: 80px;
-                    }
-                }
-            }
-        }
-        #tutor-admin-withdraw-approve,
-        #tutor-admin-withdraw-reject {
-            .tutor-modal-root {
-                .tutor-modal-icon {
-                    margin-bottom: 25px;
-                }
-                #tutor-admin-withdraw-approve-content,
-                #tutor-admin-withdraw-reject-content
-                {
-                    margin-bottom: 25px;
-                }
-                .tutor-modal-btns.tutor-btn-group {
-                    @include breakpoint-max(600) {
-                        button:not(:last-child) {
-                            margin-bottom: 15px;
-                        }
-                    }
-                    button {
-                        padding: 3px 30px;
-                    }
-                }
-            }
-        }
-        #tutor-admin-withdraw-reject {
-            input, 
-                button,
-                input.tutor-form-control,
-                input.tutor-form-control,
-                textarea.tutor-form-control,
-                select.tutor-form-select:focus {
-                    &:focus {
-                        border: 2px solid #1973AA;
-                    }
-                }
-        }
-    }
+	.tutor-admin-page-content-wrapper.tutor-withdraw-wrapper {
+		.td-avatar-detials {
+			.tutor-icon-detail-link-filled {
+				font-size: 20px;
+			}
+		}
+		table {
+			td {
+				ul.tutor-table-inside-table {
+					text-decoration: none;
+					li {
+						display: flex;
+						span:first-child {
+							width: 37%;
+						}
+						span:last-child {
+							width: 50%;
+						}
+					}
+				}
+				.tooltip-wrap {
+					.tooltip-txt {
+						max-width: 400px;
+						min-width: 230px;
+						padding: 0px 0px;
+						display: flex;
+						> div {
+							height: 32px;
+							border-radius: 0px 10px 10px 0px;
+						}
+						.withdraw-tutor-tooltip-content {
+							flex-basis: 100%;
+							padding: 1px 11px;
+						}
+						.withdraw-tutor-copy-to-clipboard {
+							padding: 0px 5px 0px 3px;
+							flex-basis: 100px;
+							background: $text-title;
+							// svg {
+							//     margin-right: 5px;
+							// }
+							span {
+								font-size: 18px;
+								padding: 0px 3px 0px 0px;
+							}
+						}
+					}
+				}
+			}
+			td.tutor-withdraw-btns {
+				@include breakpoint-min(1200px) {
+					width: 16%;
+					button {
+						max-width: 80px;
+					}
+				}
+			}
+		}
+		#tutor-admin-withdraw-approve,
+		#tutor-admin-withdraw-reject {
+			.tutor-modal-root {
+				.tutor-modal-icon {
+					margin-bottom: 25px;
+				}
+				#tutor-admin-withdraw-approve-content,
+				#tutor-admin-withdraw-reject-content {
+					margin-bottom: 25px;
+				}
+				.tutor-modal-btns.tutor-btn-group {
+					@include breakpoint-max(600) {
+						button:not(:last-child) {
+							margin-bottom: 15px;
+						}
+					}
+					button {
+						padding: 3px 30px;
+					}
+				}
+			}
+		}
+		#tutor-admin-withdraw-reject {
+			input,
+			button,
+			input.tutor-form-control,
+			input.tutor-form-control,
+			textarea.tutor-form-control,
+			select.tutor-form-select:focus {
+				&:focus {
+					border: 2px solid #1973aa;
+				}
+			}
+		}
+	}
 }

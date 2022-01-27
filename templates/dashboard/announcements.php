@@ -87,7 +87,7 @@ $image_base = tutor()->url . '/assets/images/';
 		<label class="tutor-bs-d-block tutor-mb-10">
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
-		<select class="tutor-form-select tutor-announcement-course-sorting">
+		<select class="tutor-form-select tutor-form-select-sm tutor-announcement-course-sorting">
 
 			<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
 
