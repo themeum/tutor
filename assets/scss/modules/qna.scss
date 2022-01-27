@@ -15,7 +15,7 @@ $sidebar_width: 360px;
 		background-color: #fff !important;
 	}
 	td {
-		div.ttr-angle-down-filled {
+		div.tutor-icon-angle-down-filled {
 			font-size: 20px;
 		}
 	}
@@ -91,8 +91,8 @@ $sidebar_width: 360px;
 				display: inline-block;
 				margin-right: 5px;
 
-				&[class^='ttr-'],
-				&[class*=' ttr-'] {
+				&[class^='tutor-icon-'],
+				&[class*=' tutor-icon-'] {
 					font-size: 24px;
 				}
 			}
@@ -323,11 +323,11 @@ $sidebar_width: 360px;
 }
 
 table.qna-list-table {
-	.ttr-msg-important-filled {
+	.tutor-icon-msg-important-filled {
 		color: #9ca0ac;
 	}
 
-	.ttr-msg-important-fill-filled {
+	.tutor-icon-msg-important-fill-filled {
 		color: #ed9700;
 	}
 

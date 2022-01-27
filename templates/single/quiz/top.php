@@ -124,7 +124,7 @@ do_action('tutor_quiz/single/before/top');
 					<div id="tutor-quiz-skip-to-next" class="tutor-modal">
 						<span class="tutor-modal-overlay"></span>
 						<button data-tutor-modal-close class="tutor-modal-close">
-							<span class="ttr-line-cross-line"></span>
+							<span class="tutor-icon-line-cross-line"></span>
 						</button>
 						<div class="tutor-modal-root">
 							<div class="tutor-modal-inner">

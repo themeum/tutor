@@ -11,7 +11,7 @@
 <div class="tutor-modal" id="tutor-common-confirmation-modal">
 	<span class="tutor-modal-overlay"></span>
 	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="ttr-line-cross-line"></span>
+		<span class="tutor-icon-line-cross-line"></span>
 	</button>
 	<div class="tutor-modal-root">
 		<div class="tutor-modal-inner">

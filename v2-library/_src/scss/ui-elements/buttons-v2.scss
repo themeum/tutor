@@ -305,7 +305,18 @@ a {
 		box-shadow: none !important;
 	}
 }
-
+.tutor-back-btn {
+	display: flex;
+	align-items: center;
+	span:first-child {
+		font-size: 30px !important; 
+		margin-right: 5px;
+		margin-left: -5px;
+	}
+	span:last-child {
+		font-weight: 400;
+	}
+}
 .tutor-btn-ghost {
 	display: flex;
 	&.tutor-btn-ghost-fd {

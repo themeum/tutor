@@ -2711,11 +2711,11 @@ class Utils {
 				),
 				'settings'    => array(
 					'title' => __( 'Settings', 'tutor' ),
-					'icon'  => 'ttr-settings-filled',
+					'icon'  => 'tutor-icon-settings-filled',
 				),
 				'logout'      => array(
 					'title' => __( 'Logout', 'tutor' ),
-					'icon'  => 'ttr-signout-filled',
+					'icon'  => 'tutor-icon-signout-filled',
 				),
 			)
 		);
@@ -3436,12 +3436,12 @@ class Utils {
 			$intRating = (int) $current_rating;
 
 			if ( $intRating >= $i ) {
-				$output .= '<i class="ttr-star-full-filled" data-rating-value="' . $i . '"></i>';
+				$output .= '<i class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></i>';
 			} else {
 				if ( ( $current_rating - $i ) == -0.5 ) {
-					$output .= '<i class="ttr-star-half-filled" data-rating-value="' . $i . '"></i>';
+					$output .= '<i class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></i>';
 				} else {
-					$output .= '<i class="ttr-star-line-filled" data-rating-value="' . $i . '"></i>';
+					$output .= '<i class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></i>';
 				}
 			}
 		}
@@ -3464,13 +3464,13 @@ class Utils {
 			<div class="tutor-rating-stars">
 				<?php
 				for ( $i = 1; $i <= 5; $i++ ) {
-					$class = 'ttr-star-line-filled';
+					$class = 'tutor-icon-star-line-filled';
 
 					if ( $i <= round( $current_rating ) ) {
-						$class = 'ttr-star-full-filled';
+						$class = 'tutor-icon-star-full-filled';
 					}
 
-					// ToDo: Add half start later. ttr-star-half-filled
+					// ToDo: Add half start later. tutor-icon-star-half-filled
 					echo '<span class="' . $class . '"></span>';
 				}
 				?>
@@ -3499,12 +3499,12 @@ class Utils {
 			$intRating = (int) $current_rating;
 
 			if ( $intRating >= $i ) {
-				$output .= '<span class="ttr-star-full-filled" data-rating-value="' . $i . '"></span>';
+				$output .= '<span class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></span>';
 			} else {
 				if ( ( $current_rating - $i ) == -0.5 ) {
-					$output .= '<span class="ttr-star-half-filled" data-rating-value="' . $i . '"></span>';
+					$output .= '<span class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></span>';
 				} else {
-					$output .= '<span class="ttr-star-line-filled" data-rating-value="' . $i . '"></span>';
+					$output .= '<span class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></span>';
 				}
 			}
 		}
@@ -9188,22 +9188,22 @@ class Utils {
 			'my-courses'    => array(
 				'title'    => __( 'My Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'ttr-space-filled',
+				'icon'     => 'tutor-icon-space-filled',
 			),
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'ttr-speaker-filled',
+				'icon'     => 'tutor-icon-speaker-filled',
 			),
 			'withdraw'      => array(
 				'title'    => __( 'Withdrawals', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'ttr-wallet-filled',
+				'icon'     => 'tutor-icon-wallet-filled',
 			),
 			'quiz-attempts' => array(
 				'title'    => __( 'Quiz Attempts', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'ttr-quiz-filled',
+				'icon'     => 'tutor-icon-quiz-filled',
 			),
 		);
 	}
@@ -9220,35 +9220,35 @@ class Utils {
 		return array(
 			'index'            => array(
 				'title' => __( 'Dashboard', 'tutor' ),
-				'icon'  => 'ttr-dashboard-filled',
+				'icon'  => 'tutor-icon-dashboard-filled',
 			),
 			'my-profile'       => array(
 				'title' => __( 'My Profile', 'tutor' ),
-				'icon'  => 'ttr-man-user-filled',
+				'icon'  => 'tutor-icon-man-user-filled',
 			),
 			'enrolled-courses' => array(
 				'title' => __( 'Enrolled  Courses', 'tutor' ),
-				'icon'  => 'ttr-college-graduation-filled',
+				'icon'  => 'tutor-icon-college-graduation-filled',
 			),
 			'wishlist'         => array(
 				'title' => __( 'Wishlist', 'tutor' ),
-				'icon'  => 'ttr-fav-full-filled',
+				'icon'  => 'tutor-icon-fav-full-filled',
 			),
 			'reviews'          => array(
 				'title' => __( 'Reviews', 'tutor' ),
-				'icon'  => 'ttr-star-full-filled',
+				'icon'  => 'tutor-icon-star-full-filled',
 			),
 			'my-quiz-attempts' => array(
 				'title' => __( 'My Quiz Attempts', 'tutor' ),
-				'icon'  => 'ttr-quiz-attempt-filled',
+				'icon'  => 'tutor-icon-quiz-attempt-filled',
 			),
 			'purchase_history' => array(
 				'title' => __( 'Order History', 'tutor' ),
-				'icon'  => 'ttr-cart-filled',
+				'icon'  => 'tutor-icon-cart-filled',
 			),
 			'question-answer'  => array(
 				'title' => __( 'Question & Answer', 'tutor' ),
-				'icon'  => 'ttr-question-filled',
+				'icon'  => 'tutor-icon-question-filled',
 			),
 		);
 	}

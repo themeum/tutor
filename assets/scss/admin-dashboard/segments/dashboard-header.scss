@@ -1,23 +1,23 @@
 .tutor-wp-dashboard-header {
-    min-height: 60px;
-    height: auto;
-    .back {
-        position: relative;
-        a {
-            font-size: 16px;
-            line-height: 0px;
-            font-weight: 400;
-            color: #212327;
-            .ttr-previous-line {
-                font-size: 20px;
-                line-height: 0px;
-                position: absolute;
-            }
-            .text {
-                position: absolute;
-                left: 25px;
-                top: 0;
-            }
-        }
-    }
+	min-height: 60px;
+	height: auto;
+	.back {
+		position: relative;
+		a {
+			font-size: 16px;
+			line-height: 0px;
+			font-weight: 400;
+			color: #212327;
+			.tutor-icon-previous-line {
+				font-size: 20px;
+				line-height: 0px;
+				position: absolute;
+			}
+			.text {
+				position: absolute;
+				left: 25px;
+				top: 0;
+			}
+		}
+	}
 }

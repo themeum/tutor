@@ -16,7 +16,7 @@
     <?php
     $course_id = get_the_ID();
     $cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : '#';
-    $enroll_btn = '<div  class="tutor-loop-cart-btn-wrap"><a href="'.$cart_url.'" class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"><span class="btn-icon ttr-cart-line-filled"></span><span>'.__('View Cart', 'tutor'). '</span></a></div>';
+    $enroll_btn = '<div  class="tutor-loop-cart-btn-wrap"><a href="'.$cart_url.'" class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"><span class="btn-icon tutor-icon-cart-line-filled"></span><span>'.__('View Cart', 'tutor'). '</span></a></div>';
     $default_price = apply_filters('tutor-loop-default-price', __('Free', 'tutor'));
     $price_html = '<div class="price"> '.$default_price.$enroll_btn. '</div>';
     if (tutor_utils()->is_course_purchasable()) {
