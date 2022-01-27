@@ -53,8 +53,9 @@ $sidebar_width: 360px;
 			height: 80px !important;
 			width: 100%;
 			border: none;
-			border-bottom: 1px solid #cdcfd5;
-			border-radius: 0 !important;
+			// border-bottom: 1px solid #cdcfd5;
+			border: 1px solid $stroke-light-30;
+			border-radius: 6px;
 			padding: 15px;
 			resize: none;
 
@@ -67,7 +68,7 @@ $sidebar_width: 360px;
 		}
 
 		div {
-			padding: 15px;
+			padding: 15px 0px 0px 0px;
 		}
 	}
 
@@ -82,15 +83,18 @@ $sidebar_width: 360px;
 			font-size: 16px;
 			color: #5b616f;
 			cursor: pointer;
-
 			&:hover {
 				color: #393a3d;
 			}
-
+			> *:first-child {
+				width: 20px;
+			}
+			.tutor-loading-spinner,
+			i {
+				margin-right: 5px;
+			}
 			i {
 				display: inline-block;
-				margin-right: 5px;
-
 				&[class^='tutor-icon-'],
 				&[class*=' tutor-icon-'] {
 					font-size: 24px;
@@ -103,10 +107,9 @@ $sidebar_width: 360px;
 	.tutor-qa-sticky-bar {
 		@include valueWithPrefix(display, flex);
 		background: white;
-		padding: 21px 15px;
+		padding: 21px 0px 15px 0px;
 		position: sticky;
 		top: 32px;
-		margin-left: -19px;
 		z-index: 9;
 
 		& > div {
@@ -213,7 +216,7 @@ $sidebar_width: 360px;
 		}
 
 		.tutor-qa-reply {
-			border: 1px solid $stroke-light-30;
+			// border: 1px solid $stroke-light-30;
 			border-radius: 6px;
 			bottom: 20px;
 			overflow: hidden;

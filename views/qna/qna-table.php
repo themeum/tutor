@@ -176,13 +176,13 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         </div>
 
                                         <!-- Delete confirmation modal -->
-                                        <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
+                                        <div id="<?php echo $id_string_delete; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
                                             <span class="tutor-modal-overlay"></span>
-                                            <button data-tutor-modal-close class="tutor-modal-close">
-                                                <span class="tutor-icon-line-cross-line"></span>
-                                            </button>
                                             <div class="tutor-modal-root">
                                                 <div class="tutor-modal-inner">
+                                                    <button data-tutor-modal-close class="tutor-modal-close">
+                                                        <span class="tutor-icon-line-cross-line"></span>
+                                                    </button>
                                                     <div class="tutor-modal-body tutor-text-center">
                                                         <div class="tutor-modal-icon">
                                                             <img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
@@ -195,7 +195,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                                 <?php esc_html_e('All the replies also will be deleted.', 'tutor'); ?>
                                                             </p>
                                                         </div>
-                                                        <div class="tutor-modal-btns tutor-btn-group">
+                                                        <div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
                                                             <button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
                                                                 <?php esc_html_e('Cancel', 'tutor'); ?>
                                                             </button>

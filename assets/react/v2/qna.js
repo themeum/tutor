@@ -15,12 +15,18 @@ window.jQuery(document).ready($=>{
     // Change badge
     $(document).on('click', '.tutor-qna-badges-wrapper [data-action]', function(e){
         e.preventDefault();
-
+        var $that = $(this);
         let row = $(this).closest('tr');
         let qna_action = $(this).data('action');
         let question_id = $(this).closest('[data-question_id]').data('question_id');
         let button = $(this);
 
+        const btnInnerHtml = $that.html().trim();
+        const { width : btnWidth, height : btnHeight } = $that.get(0).getBoundingClientRect();
+        const btnStyles =  {width: `${btnWidth}px`, height: `${btnHeight}px`};
+        const prevIcon = $that.find('i');
+        console.log('that -> ', $that);
+        console.log('find -> ', $that.find('i'));
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -29,8 +35,17 @@ window.jQuery(document).ready($=>{
                 qna_action, 
                 action: 'tutor_qna_single_action'
             },
-            beforeSend:()=>{
-                button.addClass('tutor-updating-message');
+            beforeSend:() => {
+                // button.addClass('tutor-updating-message');
+                // $that.css(btnStyles);
+                if($that.get(0).nodeName == 'I') {
+                    $that.remove();
+                    $that.insertBefore(`<div class="tutor-loading-spinner" style="--size: 18px"></div>`);
+                } else {
+                    $that.find('i').remove();
+                    $that.prepend(`<div class="tutor-loading-spinner" style="--size: 18px"></div>`);
+                }
+                // $that.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
             },
             success: resp=>{
                 if(!resp.success) {
@@ -74,7 +89,15 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete:()=>{
-                button.removeClass('tutor-updating-message');
+                // button.removeClass('tutor-updating-message');
+                if($that.get(0).nodeName == 'I') {
+                    $that.parent().find('.tutor-loading-spinner').remove();
+                    $that.prepend(prevIcon);
+                } else {
+                    $that.find('.tutor-loading-spinner').remove();
+                    $that.prepend(prevIcon);
+                }
+                // $that.html(btnInnerHtml);
             }
         });
     });

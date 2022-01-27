@@ -25,13 +25,13 @@
 
 <div class="tutor-qna-single-question" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
 	<!-- Delete modal -->
-	<div id="<?php echo $modal_id; ?>" class="tutor-modal">
+	<div id="<?php echo $modal_id; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
 		<span class="tutor-modal-overlay"></span>
-		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="tutor-icon-line-cross-line"></span>
-		</button>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
+				<button data-tutor-modal-close class="tutor-modal-close">
+					<span class="tutor-icon-line-cross-line"></span>
+				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-icon">
 						<img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
@@ -44,7 +44,7 @@
 							<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
 						</p>
 					</div>
-					<div class="tutor-modal-btns tutor-btn-group">
+					<div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
 						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
@@ -62,12 +62,13 @@
 		<!-- Show header action bar if it is single question in backend/frontend dashboard -->
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 			<div class="tutor-qa-sticky-bar">
-				<div>
-					<a class="qna-back-button tutor-text-regular-body tutor-color-text-subsued" href="<?php echo $back_url; ?>">
-						<i class="tutor-color-design-dark tutor-icon-previous-line tutor-icon-30 tutor-mr-10"></i> <?php _e( 'Back', 'tutor' ); ?>
+				<div class="tutor-color-text-primary back">
+					<a class="tutor-back-btn" href="<?php echo $back_url; ?>">
+						<span class="tutor-icon-previous-line tutor-color-design-dark"></span>
+						<span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
 					</a>
 				</div>
-				<div class="tutor-qna-badges tutor-qna-badges-wrapper">
+				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
 
 					<!-- Show meta data actions if it is instructor view -->
 					<?php if ( ! $is_user_asker ) : ?>
@@ -144,7 +145,7 @@
 		<div class="tutor-qa-reply" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 			<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 			<div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center">
-				<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-is-xs tutor-ml-15">
+				<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-btn-md tutor-ml-15">
 					<?php esc_html_e( 'Reply', 'tutor' ); ?> 
 				</button>
 			</div>
