@@ -152,7 +152,8 @@ if ( is_array( $attempt_info ) ) {
         <tr>
             <?php
                 foreach($table_1_columns as $key => $column) {
-                    echo '<th><span class="text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
+                    $class_name = join('-', explode(' ', strtolower($column)));
+                    echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
                 }
             ?>
         </tr>
@@ -171,7 +172,7 @@ if ( is_array( $attempt_info ) ) {
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </p>
                                     <a href="#" class="btn-text btn-detail-link tutor-color-design-dark">
-                                        <span class="ttr-detail-link-filled"></span>
+                                        <span class="tutor-icon-detail-link-filled"></span>
                                     </a>
                                 </div>
                             </td>
@@ -181,11 +182,16 @@ if ( is_array( $attempt_info ) ) {
                         case 'date' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
+                                <div class="tutor-table-date-time tutor-color-text-primary">
                                     <?php
-                                        echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at)).' '.date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
+                                        echo date_i18n(get_option('date_format'), strtotime($attempt_data->attempt_started_at));
                                     ?>
-                                </span>
+                                </div>
+                                <div class="tutor-table-date-time tutor-color-text-primary">
+                                    <?php
+                                        echo date_i18n(get_option('time_format'), strtotime($attempt_data->attempt_started_at));
+                                    ?>
+                                </div>
                             </td>
                             <?php
                             break;
@@ -308,7 +314,8 @@ if ( is_array( $attempt_info ) ) {
                     <tr>
                         <?php
                             foreach($table_2_columns as $key => $column) {
-                                echo '<th><span class="text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
+                                $class_name = join('--', explode(' ', strtolower($column)));
+                                echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'. $column .'</span></th>';
                             }
                         ?>
                     </tr>
@@ -367,7 +374,7 @@ if ( is_array( $attempt_info ) ) {
                                             case 'questions' :
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>">
-                                                    <span class="text-medium-small">
+                                                    <span class="text-medium-small tutor-bs-d-flex tutor-bs-align-items-center">
                                                         <?php echo stripslashes($answer->question_title); ?>
                                                     </span>
                                                 </td>
@@ -626,7 +633,7 @@ if ( is_array( $attempt_info ) ) {
                                                             echo '</div>';
                                                         }
                                                     }
-                                                    ?>&nbsp;
+                                                    ?>
                                                 </td>
                                                 <?php
                                                 break;

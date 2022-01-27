@@ -49,7 +49,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
                 <?php
                 foreach ($qna_tabs as $tab) {
                     echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
-                                    ' . $tab['title'] . ' (<span>' .$tab['value']. '</span> )' . '
+                                    ' . $tab['title'] . '(' .$tab['value']. ')' . '
                                 </option>';
                 }
                 ?>

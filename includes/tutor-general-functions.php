@@ -392,7 +392,7 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
 				<h3>
-					<i class="ttr-angle-up-filled"></i>
+					<i class="tutor-icon-angle-up-filled"></i>
 					<span><?php echo $title; ?></span>
 				</h3>
 			</div>
@@ -432,7 +432,7 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 				<div id="tutor-page-wrap" class="tutor-site-wrap site">
 				<?php
 		} else {
-			get_header();
+			tutor_utils()->tutor_custom_header();
 		}
 	}
 }
@@ -450,7 +450,7 @@ if ( ! function_exists( 'get_tutor_footer' ) ) {
 			</html>
 			<?php
 		} else {
-			get_footer();
+			tutor_utils()->tutor_custom_footer();
 		}
 	}
 }
@@ -555,7 +555,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 
 		$html = '<div class="asas tutor-alert tutor-' . esc_attr( $type ) . '">
 					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-icon-34 ttr-circle-outline-info-filled tutor-mr-10"></span>
+						<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
 						<span>' . esc_attr( $msg ) . '</span>
 					</div>
 				</div>';
@@ -906,5 +906,14 @@ if(!function_exists('tutor_kses_html')) {
 if (!function_exists('get_tutor_all_withdrawal_methods')) {
 	function get_tutor_all_withdrawal_methods() {
 		return apply_filters( 'tutor_withdrawal_methods_all', array() );
+	}
+}
+
+
+if(!function_exists('tutor_log')) {
+	function tutor_log($data) {
+		ob_start();
+		var_dump($data);
+		error_log(ob_get_clean());
 	}
 }

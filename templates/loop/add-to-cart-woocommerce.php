@@ -63,7 +63,7 @@ if ( isset( $args['attributes']['aria-label'] ) ) {
 
 	<?php
 		echo apply_filters( 'tutor_course_restrict_new_entry', apply_filters( 'woocommerce_loop_add_to_cart_link', // WPCS: XSS ok.
-			sprintf( '<a href="%s" data-quantity="%s" class="%s" %s><span class="btn-icon ttr-cart-line-filled"></span><span class="cart-text">%s</span></a>',
+			sprintf( '<a href="%s" data-quantity="%s" class="%s" %s><span class="btn-icon tutor-icon-cart-line-filled"></span><span class="cart-text">%s</span></a>',
 				esc_url( $product->add_to_cart_url() ),
 				esc_attr( isset( $args['quantity'] ) ? $args['quantity'] : 1 ),
 				esc_attr( isset( $args['class'] ) ? $args['class'] : 'button' ),

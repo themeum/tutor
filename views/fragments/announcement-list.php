@@ -18,7 +18,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<?php echo $title; ?>
 					</div>
 					<button data-tutor-modal-close class="tutor-modal-close">
-						<span class="las la-times"></span>
+						<span class="tutor-icon-line-cross-line"></span>
 					</button>
 				</div>
 
@@ -85,12 +85,12 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 			<div class="tutor-modal-inner">
 				<div class="tutor-modal-header tutor-text-bold-h6 tutor-color-text-title">
 					<button data-tutor-modal-close class="tutor-modal-close tutor-color-text-hints">
-						<span class="ttr-line-cross-line tutor-icon-40"></span>
+						<span class="tutor-icon-line-cross-line tutor-icon-40"></span>
 					</button>
 				</div>
 				<div class="tutor-modal-body tutor-bs-align-items-start">
 					<div class="view-announcement-icon bg-primary-40 tutor-color-brand-wordpress">
-						<span class="ttr-speaker-filled tutor-color-design-brand"></span>
+						<span class="tutor-icon-speaker-filled tutor-color-design-brand"></span>
 					</div>
 					<div class="text-bold-h5 tutor-color-text-primary tutor-mt-35 pr-lg-5">
 						<?php echo $announcement->post_title; ?>
@@ -147,7 +147,7 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner tutor-modal-close-inner">
 				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="las la-times"></span>
+					<span class="tutor-icon-line-cross-line"></span>
 				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-icon">
@@ -277,13 +277,13 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										<ul class="popup-menu" id="<?php echo $update_modal_id; ?>_action">
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
-													<i class="ttr-edit-filled tutor-color-design-white"></i>
+													<i class="tutor-icon-edit-filled tutor-color-design-white"></i>
 													<span class="text-regular-body tutor-color-text-white"><?php _e( 'Edit', 'tutor' ); ?></span>
 												</a>
 											</li>
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
-													<i class="ttr-delete-fill-filled tutor-color-design-white"></i>
+													<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
 													<span class="text-regular-body tutor-color-text-white"><?php _e( 'Delete', 'tutor' ); ?></span>
 												</a>
 											</li>
@@ -320,8 +320,8 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 		// 'current'   => $paged,
 		// 'total'     => $the_query->max_num_pages,
 		// 'type'      => 'array',
-		// 'previous_text' => '<span class="ttr-angle-left-filled"></span>',
-		// 'next_text' => '<span class="ttr-angle-right-filled"></span>'
+		// 'previous_text' => '<span class="tutor-icon-angle-left-filled"></span>',
+		// 'next_text' => '<span class="tutor-icon-angle-right-filled"></span>'
 		// ));
 
 		/**

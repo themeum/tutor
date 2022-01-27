@@ -41,7 +41,7 @@
 
             if ( $maximum_students == $total_enrolled && $maximum_students != 0) {
                 $price_html = '<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between"><div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
-                $restrict = '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon tutor-color-design-warning ttr-circle-outline-info-filled"></span></div><div class="text-medium-caption tutor-color-text-primary">'. __('Fully Booked', 'tutor') .'</div></div></div>';
+                $restrict = '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon tutor-color-design-warning tutor-icon-circle-outline-info-filled"></span></div><div class="text-medium-caption tutor-color-text-primary">'. __('Fully Booked', 'tutor') .'</div></div></div>';
                 echo wp_kses_post($price_html);
                 echo wp_kses_post($restrict);
             }
