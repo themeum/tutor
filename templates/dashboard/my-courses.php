@@ -121,7 +121,7 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                     <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
                         <span class="tutor-modal-overlay"></span>
                         <button data-tutor-modal-close class="tutor-modal-close">
-                            <span class="las la-times"></span>
+                            <span class="ttr-line-cross-line"></span>
                         </button>
                         <div class="tutor-modal-root">
                             <div class="tutor-modal-inner">
