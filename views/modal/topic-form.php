@@ -7,7 +7,7 @@
                     <?php echo $data['modal_title']; ?>
                 </h3>
                 <button data-tutor-modal-close class="tutor-modal-close">
-                    <span class="las la-times"></span>
+                    <span class="ttr-line-cross-line"></span>
                 </button>
             </div>
             <div class="tutor-modal-body-alt">

@@ -95,7 +95,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										<?php esc_html_e( 'Update Review' ); ?>
 									</h3>
 									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="las la-times"></span>
+										<span class="ttr-line-cross-line"></span>
 									</button>
 								</div>
 								
@@ -109,11 +109,9 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 											tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
 										?>
 									</div>
-									<textarea class="tutor-form-control tutor-mt-10" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>">
-																																		   <?php
-																																			esc_html_e( stripslashes( $review->comment_content ) );
-																																			?>
-									</textarea>
+									<textarea class="tutor-form-control tutor-mt-10" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php
+										esc_html_e( stripslashes( $review->comment_content ) );
+									?></textarea>
 								</div>
 
 								<div class="tutor-modal-footer">
@@ -140,7 +138,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					<div id="<?php echo $delete_id; ?>" class="tutor-modal">
 						<span class="tutor-modal-overlay"></span>
 						<button data-tutor-modal-close class="tutor-modal-close">
-							<span class="las la-times"></span>
+							<span class="ttr-line-cross-line"></span>
 						</button>
 						<div class="tutor-modal-root">
 							<div class="tutor-modal-inner">
