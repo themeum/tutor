@@ -71,11 +71,11 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							</div>
 							<div class="tutor-given-review-action tutor-text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center">
 								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-bs-d-flex tutor-bs-align-items-center">
-									<i class="ttr-edit-filled tutor-icon-24 tutor-mr-3"></i>
+									<i class="tutor-icon-edit-filled tutor-icon-24 tutor-mr-3"></i>
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 								</span>
 								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-bs-d-flex tutor-bs-align-items-center">
-									<i class="ttr-delete-stroke-filled tutor-icon-24 tutor-mr-3"></i>
+									<i class="tutor-icon-delete-stroke-filled tutor-icon-24 tutor-mr-3"></i>
 									<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 								</span>
 							</div>
@@ -86,8 +86,8 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					</div>
 
 					<!-- Edit Modal -->
-					<form class="tutor-modal modal-sticky-header-footer" id="<?php echo esc_html( $update_id ); ?>">
-						<span class="tutor-modal-overlay"></span>
+					<form class="tutor-modal tutor-modal-is-close-inside-inner modal-sticky-header-footer" id="<?php echo esc_html( $update_id ); ?>">
+						<!-- <span class="tutor-modal-overlay"></span>
 						<div class="tutor-modal-root">
 							<div class="tutor-modal-inner">
 								<div class="tutor-modal-header">
@@ -95,7 +95,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										<?php esc_html_e( 'Update Review' ); ?>
 									</h3>
 									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="las la-times"></span>
+										<span class="tutor-icon-line-cross-line"></span>
 									</button>
 								</div>
 								
@@ -109,41 +109,82 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 											tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
 										?>
 									</div>
-									<textarea class="tutor-form-control tutor-mt-10" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>">
-																																		   <?php
-																																			esc_html_e( stripslashes( $review->comment_content ) );
-																																			?>
-									</textarea>
+									<textarea class="tutor-form-control tutor-mt-10" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php
+										esc_html_e( stripslashes( $review->comment_content ) );
+									?></textarea>
 								</div>
 
 								<div class="tutor-modal-footer">
 									<div class="tutor-bs-row">
 										<div class="tutor-bs-col">
 											<div class="tutor-btn-group">
-												<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
-													<?php esc_html_e( 'Update Review', 'tutor' ); ?>
+												<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
+													<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 												</button>
 											</div>
 										</div>
 										<div class="tutor-bs-col-auto">
-											<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
-												<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+											<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
+												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
 											</button>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
+						<!-- <div id="tutor_review_edit" class="tutor-modal tutor-is-active"> -->
+							<span class="tutor-modal-overlay"></span>
+							<div class="tutor-modal-root">
+								<div class="tutor-modal-inner">
+									<button data-tutor-modal-close="" class="tutor-modal-close">
+										<span class="tutor-icon-cross-filled"></span>
+									</button>
+									<div class="tutor-modal-body tutor-text-center">
+										<div class="tutor-rating-modal-title tutor-text-regular-h4 tutor-color-text-title tutor-mb-16">
+											How would you rate this course?
+										</div>
+										<div class="tutor-modal-text-rating tuor-text-medium-body tutor-color-text-primary tutor-mb-12">
+											Average
+										</div>
+										<input type="hidden" name="course_id" value="<?php echo esc_html( $review->comment_post_ID ); ?>"/>
+										<input type="hidden" name="review_id" value="<?php echo esc_html( $review->comment_ID ); ?>"/>
+										<input type="hidden" name="action" value="tutor_place_rating"/>
+
+										<div class="tutor-star-rating-container">
+											<div class="tutor-ratings tutor-ratings-modal">
+												<div class="tutor-rating-stars">
+													<?php
+														tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
+													?>
+												</div>
+											</div>
+										</div>
+										<textarea class="tutor-form-control tutor-mt-28" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php esc_html_e( stripslashes( $review->comment_content ) ); ?></textarea>
+										<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
+												<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
+													<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+												</button>
+												<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
+													<?php esc_html_e( 'Update Review', 'tutor' ); ?>
+												</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						<!-- </div> -->
 					</form>
 
 					<!-- Delete Modal -->
-					<div id="<?php echo $delete_id; ?>" class="tutor-modal">
+					<div id="<?php echo $delete_id; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
 						<span class="tutor-modal-overlay"></span>
 						<button data-tutor-modal-close class="tutor-modal-close">
-							<span class="las la-times"></span>
+							<span class="tutor-icon-line-cross-line"></span>
 						</button>
 						<div class="tutor-modal-root">
 							<div class="tutor-modal-inner">
+								<button data-tutor-modal-close class="tutor-modal-close">
+									<span class="tutor-icon-cross-filled"></span>
+								</button>
 								<div class="tutor-modal-body tutor-text-center">
 									<div class="tutor-modal-icon">
 										<img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
@@ -156,7 +197,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 											<?php esc_html_e( 'Are you sure you want to delete this review permanently from the site? Please confirm your choice.', 'tutor' ); ?>
 										</p>
 									</div>
-									<div class="tutor-modal-btns tutor-btn-group">
+									<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
 										<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
 											<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 										</button>

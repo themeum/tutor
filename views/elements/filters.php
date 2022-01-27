@@ -41,7 +41,7 @@
 
 					?>
 				<a href="<?php echo esc_url( $url ); ?>" class="tutor-admin-page-refresh">
-					<i class="color-wordpress ttr-refresh-1-filled"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
+					<i class="color-wordpress tutor-icon-refresh-1-filled"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
 				</a>
 			</div>
 			<?php
@@ -121,7 +121,7 @@
 					<?php esc_html_e( 'Search', 'tutor' ); ?>
 					</label>
 					<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
-						<span class="ttr-search-filled tutor-input-group-icon tutor-color-black-50"></span>
+						<span class="tutor-icon-search-filled tutor-input-group-icon tutor-color-black-50"></span>
 						<input
 							type="search"
 							class="tutor-form-control"

@@ -26,7 +26,7 @@
                 ?>
                 <div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
                     <div class="tutor-quiz-item-label">
-                        <span class="tutor-quiz-item-draggable ttr-drag-line tutor-icon-24 question-sorting"></span>
+                        <span class="tutor-quiz-item-draggable tutor-icon-drag-line tutor-icon-24 question-sorting"></span>
                         <h6 class="tutor-quiz-item-name">
                             <?php echo stripslashes($question->question_title); ?>
                         </h6>
@@ -45,13 +45,13 @@
                             <ul class="popup-menu" id="<?php echo $id_target; ?>">
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="ttr-edit-filled tutor-icon-24 tutor-mr-5 tutor-color-design-white"></span>
+                                        <span class="tutor-icon-edit-filled tutor-icon-24 tutor-mr-5 tutor-color-design-white"></span>
                                         <span class="text-regular-body tutor-color-text-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="ttr-delete-fill-filled tutor-icon-24 tutor-mr-5 tutor-color-design-white"></span>
+                                        <span class="tutor-icon-delete-fill-filled tutor-icon-24 tutor-mr-5 tutor-color-design-white"></span>
                                         <span class="text-regular-body tutor-color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>
@@ -185,7 +185,7 @@
             <div class="tutor-bs-col">
                 <div class="tutor-bs-row tutor-bs-align-items-center">
                     <div class="tutor-bs-col-auto">
-                        <span><i class="ttr-settings-filled"></i></span>
+                        <span><i class="tutor-icon-settings-filled"></i></span>
                     </div>
                     <div class="tutor-bs-col tutor-padding-0 tutor-text-medium-h6 tutor-color-text-title">
                         <?php _e('Advance Settings', 'tutor'); ?>
@@ -193,7 +193,7 @@
                 </div>
             </div>
             <div class="tutor-bs-col-auto">
-                <i class="ttr-angle-down-filled tutor-mr-30"></i>
+                <i class="tutor-icon-angle-down-filled tutor-mr-30"></i>
             </div>
         </div>
 

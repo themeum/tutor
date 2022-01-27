@@ -17,7 +17,7 @@
             ?>
              <div class="filter-widget-search">
                 <div class="tutor-input-group tutor-form-control-has-icon tutor-from-control">
-                    <span class="ttr-search-filled tutor-input-group-icon tutor-color-black-50"></span>
+                    <span class="tutor-icon-search-filled tutor-input-group-icon tutor-color-black-50"></span>
                     <input type="Search" class="tutor-form-control" name="keyword" placeholder="<?php _e('Search...'); ?>"/>
                 </div>
             </div>

@@ -92,7 +92,7 @@ $filters = array(
 								<span>
 									<?php esc_html_e( 'Request By', 'tutor' ); ?>
 								</span>
-								<span class="ttr-ordering-a-to-z-filled tutor-icon-18 a-to-z-sort-icon tutor-color-text-subsued"></span>
+								<span class="tutor-icon-ordering-a-to-z-filled tutor-icon-18 a-to-z-sort-icon tutor-color-text-subsued"></span>
 							</div>
 						</th>
 						<th>
@@ -150,7 +150,7 @@ $filters = array(
 													<?php echo esc_html( $user_data->display_name ); ?>
 												</span>
 												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-10 d-flex" target="_blank">
-													<span class="ttr-detail-link-filled tutor-color-text-primary" style="font-size:18px;"></span>
+													<span class="tutor-icon-detail-link-filled tutor-color-text-primary" style="font-size:18px;"></span>
 												</a>
 											</div>
 											<span class="color-text-title tutor-text-regular-small">
@@ -188,7 +188,7 @@ $filters = array(
 														<?php echo esc_html( $details['account_number']['value'] ); ?>
 													</div>
 													<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-text-regular-small flex-center">
-														<span class="icon ttr-copy-filled"></span>
+														<span class="icon tutor-icon-copy-filled"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
 												</div>
@@ -215,7 +215,7 @@ $filters = array(
 														<?php echo esc_html( $details['iban']['value'] ); ?>
 													</div>
 													<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-text-regular-small flex-center">
-														<span class="icon ttr-copy-filled"></span>
+														<span class="icon tutor-icon-copy-filled"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
 												</div>
@@ -244,7 +244,7 @@ $filters = array(
 												<?php echo esc_html( $details['paypal_email']['value'] ); ?>
 											</div>
 											<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-text-regular-small flex-center">
-												<span class="icon ttr-copy-filled"></span>
+												<span class="icon tutor-icon-copy-filled"></span>
 												Copy
 											</div>
 										</div>
@@ -288,7 +288,7 @@ $filters = array(
 										</div>
 										<div class="tooltip-wrap">
 											<span class="text-medium-small tutor-color-text-primary">
-												<i class="ttr-circle-outline-info-filled"></i>
+												<i class="tutor-icon-circle-outline-info-filled"></i>
 											</span>
 											<div class="tutor-tooltip-wrap-area tutor-text-regular-small tooltip-txt tooltip-left">
 												<div class="withdraw-tutor-tooltip-content tutor-text-regular-small flex-center">
@@ -343,7 +343,7 @@ $filters = array(
 	<div id="tutor-admin-withdraw-approve" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
 		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="las la-times"></span>
+			<span class="tutor-icon-line-cross-line"></span>
 		</button>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
@@ -402,7 +402,7 @@ $filters = array(
 	<div id="tutor-admin-withdraw-reject" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
 		<button data-tutor-modal-close class="tutor-modal-close">
-			<span class="las la-times"></span>
+			<span class="tutor-icon-line-cross-line"></span>
 		</button>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
