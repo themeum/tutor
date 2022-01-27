@@ -21,12 +21,6 @@
         'posts_per_page' => -1,
     ));
     
-	// if ( !count($query_topics)){
-	// 	echo '<span class="color-text-warning tutor-bs-d-block tutor-mb-20">'.
-    //             __('Add a topic to build your course', 'tutor')
-    //         .'</span>';
-	// }
-
 	foreach ($query_topics as $topic){
 		?>
         <div id="tutor-topics-<?php echo $topic->ID; ?>" class="tutor-topics-wrap" data-topic-id="<?php echo $topic->ID; ?>">
