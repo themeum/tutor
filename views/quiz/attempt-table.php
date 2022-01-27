@@ -19,10 +19,10 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 				<?php
 					foreach ( $table_columns as $key => $column ) {
 						echo '<th>
-							<div class="text-regular-small tutor-color-text-subsued">
-								' . $column . '
-							</div>
-						</th>';
+								<div class="text-regular-small tutor-color-text-subsued">
+									' . $column . '
+								</div>
+							</th>';
 					}
 				?>
 			</tr>

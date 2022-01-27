@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			?>
 			<div class="tab-header-item-seemore tutor-bs-ml-auto">
 				<div class="tab-header-item-seemore-toggle" data-seemore-target="course-details-tab-seemore-1">
-					<?php _e('More', 'tutor'); ?> <span class="icon-seemore ttr-line-cross-line tutor-icon-20 tutor-color-text-brand"></span>
+					<?php _e('More', 'tutor'); ?> <span class="icon-seemore tutor-icon-line-cross-line tutor-icon-20 tutor-color-text-brand"></span>
 				</div>
 				<div id="course-details-tab-seemore-1" class="tab-header-item-seemore-popup">
 					<ul class="tutor-m-0">

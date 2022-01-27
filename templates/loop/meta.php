@@ -20,13 +20,13 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
         if(!empty($course_duration)) { 
     ?>
     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-        <span class="meta-icon ttr-clock-filled tutor-color-text-hints"></span>
+        <span class="meta-icon tutor-icon-clock-filled tutor-color-text-hints"></span>
         <span><?php echo wp_kses_post( $course_duration ); ?></span>
     </div>
     <?php } ?>
     <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
     <div class="tutor-bs-d-flex tutor-bs-align-items-center">
-        <span class="meta-icon ttr-user-filled tutor-color-text-hints"></span>
+        <span class="meta-icon tutor-icon-user-filled tutor-color-text-hints"></span>
         <span><?php echo esc_html( $course_students ); ?></span>
     </div>
     <?php endif; ?>
