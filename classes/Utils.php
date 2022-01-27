@@ -4471,6 +4471,7 @@ class Utils {
 				"SELECT 	{$wpdb->posts}.ID,
 						post_author,
 						post_date,
+						post_date_gmt,
 						post_content,
 						post_title,
 						display_name
