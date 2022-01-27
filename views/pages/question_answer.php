@@ -29,7 +29,8 @@
 	/**
 	 * Determine active tab
 	 */
-	$active_tab = isset( $_GET['data'] ) && $_GET['data'] !== '' ? esc_html__( $_GET['data'] ) : 'all';
+
+	$active_tab = isset( $_GET['tab'] ) && $_GET['tab'] !== '' ? esc_html__( $_GET['tab'] ) : 'all';
 
 	$navbar_data = array(
 		'page_title' => __('Question & Answer', 'tutor'),
@@ -47,7 +48,7 @@
 ?>
 
 <div class="wrap tutor-mt-50">
-	<?php 
+	<?php
 		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
 			'qna_list' => $qna_list,
 			'context' => 'backend-dashboard-qna-table',
