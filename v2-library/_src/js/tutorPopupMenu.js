@@ -66,7 +66,11 @@ document.addEventListener('click', async (e) => {
 		await navigator.clipboard.writeText(content);
 		const copiedTxt = await navigator.clipboard.readText();
 
-		showToolTip(e.target, 'Copied');
+		if (content) {
+			showToolTip(e.target, 'Copied');
+		} else {
+			showToolTip(e.target, 'Nothing Found!');
+		}
 	}
 });
 
