@@ -3438,7 +3438,7 @@ class Utils {
 			if ( $intRating >= $i ) {
 				$output .= '<i class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></i>';
 			} else {
-				if ( ( $current_rating - $i ) == -0.5 ) {
+				if ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<i class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></i>';
 				} else {
 					$output .= '<i class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></i>';
@@ -3501,7 +3501,7 @@ class Utils {
 			if ( $intRating >= $i ) {
 				$output .= '<span class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></span>';
 			} else {
-				if ( ( $current_rating - $i ) == -0.5 ) {
+				if ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<span class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></span>';
 				} else {
 					$output .= '<span class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></span>';
