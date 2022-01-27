@@ -17,6 +17,7 @@ tutor_utils()->tutor_custom_header();
 
 do_action( 'tutor_course/single/enrolled/before/wrap' );
 $course_subpage = $wp_query->query_vars['course_subpage'];
+
 ?>
 
 <div <?php tutor_post_class( 'tutor-single-anouncement-wrap tutor-page-wrap' ); ?>>
