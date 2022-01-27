@@ -38,10 +38,10 @@ window.jQuery(document).ready(function ($) {
 
         $.ajax({
             url: _tutorobject.ajaxurl,
-            type: 'GET',
+            type: 'POST',
             data: data,
             beforeSend: function () {
-                $that.css(btnStyles);
+                $that.css('updating-icon');
             },
             success: function (data) {
                 if (data.success) {
@@ -64,7 +64,7 @@ window.jQuery(document).ready(function ($) {
                 tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
             },
             complete: function () {
-                $that.html(btnInnerHtml)
+                $that.html('updating-icon')
             }
         })
     });
