@@ -208,8 +208,13 @@
 			color: $design-brand;
 		}
 	}
-	.tutor-btn > * {
-		pointer-events: none;
+	.tutor-btn {
+		> * {
+			pointer-events: none;
+		}
+		.btn-icon.tutor-icon-24.tutor-icon-copy-text {
+			margin-bottom: -1px;
+		}
 	}
 
 	.tutor-tooltip {
