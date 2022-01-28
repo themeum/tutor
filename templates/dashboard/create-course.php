@@ -52,9 +52,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 						</div>
 						<button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
 							<!-- @TODO: Icon must be chenged -->
-							<i class="tutor-icon-save"></i>
-							<!-- chenged icon -->
-							<!-- <span class="tutor-icon-save-line tutor-icon-save tutor-color-text-subsued"></span> -->
+							<i class="tutor-icon-save-line"></i>
 							<span class="tutor-color-text-subsued"><?php _e('Save', 'tutor'); ?></span>
 						</button>
 					</div>

@@ -178,9 +178,9 @@
                                 <div class="tutor-course-content-top">
                                     <i class="fas fa-bars"></i>
                                     <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $lesson->ID; ?>"
-                                       data-topic-id="<?php echo $topic->ID; ?>"><i class="tutor-icon-clipboard"></i> <?php echo
+                                       data-topic-id="<?php echo $topic->ID; ?>"><i class="tutor-icon-clipboard-line"></i> <?php echo
 										stripslashes($lesson->post_title); ?> </a>
-                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage-line"></i></a>
                                 </div>
                             </div>
 							<?php
@@ -191,7 +191,7 @@
                                 <div class="tutor-course-content-top">
                                     <i class="fas fa-bars"></i>
                                     <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo is_object($topic) ? $topic->ID : ''; ?>"><?php echo stripslashes($lesson->post_title); ?> </a>
-                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage"></i></a>
+                                    <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>"><i class="tutor-icon-garbage-line"></i></a>
                                 </div>
                             </div>
 							<?php

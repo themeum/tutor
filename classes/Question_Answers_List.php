@@ -33,7 +33,7 @@ class Question_Answers_List extends \Tutor_List_Table {
 
 		$current_page 	= $this->get_pagenum();
 		
-		$question_status= !empty($_GET['data']) ? $_GET['data'] : null;
+		$question_status= !empty($args['tab']) ? $args['tab'] : null;
 		$items 			= tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term, null, null, null, $question_status, false, $args);
 		$total_items 	= tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term, null, null, null, $question_status, true, $args);
 

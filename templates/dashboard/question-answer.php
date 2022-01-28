@@ -30,7 +30,9 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
 
 <div class="tutor-frontend-dashboard-qna-header tutor-mb-32">
     <div class="tutor-qna-header tutor-bs-d-flex tutor-bs-align-items-center">
-        <div class="tutor-text-medium-h5 tutor-color-text-primary"><?php _e('Question & Answer', 'tutor'); ?></div>
+        <div class="tutor-text-medium-h5 tutor-color-text-primary">
+            <?php _e('Question & Answer', 'tutor'); ?>
+        </div>
     </div>
     <?php if ($is_instructor) : ?>
         <div class="tutor-bs-col-auto">
@@ -49,8 +51,8 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
                 <?php
                 foreach ($qna_tabs as $tab) {
                     echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
-                                    ' . $tab['title'] . '(' .$tab['value']. ')' . '
-                                </option>';
+                        ' . $tab['title'] . '(' .$tab['value']. ')' . '
+                    </option>';
                 }
                 ?>
             </select>

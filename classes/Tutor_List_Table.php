@@ -437,7 +437,7 @@ class Tutor_List_Table {
 			<div class="alignright assignment-date-box">
 				<label>' . __( 'Date', 'tutor' ) . '</label>
 				<input type="" class="tutor_date_picker tutor-assignment-date-sorting" placeholder="' . $placeholder . '" value="' . $date_input . '">
-				<i class="tutor-icon-calendar"></i>
+				<i class="tutor-icon-calender-bold-filled"></i>
 			</div>
 			';
 		echo $markup;
@@ -1368,7 +1368,7 @@ class Tutor_List_Table {
 					<div class="menu-label"><?php _e( 'Date', 'tutor' ); ?></div>
 					<div class="date-range-input">
 						<input type="text" class="tutor_date_picker tutor-announcement-date-sorting" id="tutor-announcement-datepicker" placeholder="<?php _e( get_option( 'date_format' ), 'tutor' ); ?>" value="<?php echo '' !== $date_filter ? tutor_get_formated_date( get_option( 'date_format' ), $date_filter ) : ''; ?>" autocomplete="off" />
-						<i class="tutor-icon-calendar"></i>
+						<i class="tutor-icon-calender-bold-filled"></i>
 					</div>
 				</div>
 
@@ -1376,7 +1376,9 @@ class Tutor_List_Table {
 					<div class="menu-label"><?php _e( 'Search', 'tutor' ); ?></div>
 					<div style="position:relative;">
 						<input type="text" name="search" class="tutor-report-search tutor-announcement-search-field" value="<?php echo esc_attr( $search_filter ); ?>" autocomplete="off" placeholder="<?php _e( 'Search', 'tutor' ); ?>" />
-						<button class="tutor-report-search-btn tutor-announcement-search-sorting"><i class="tutor-icon-magnifying-glass-1"></i></button>
+						<button class="tutor-report-search-btn tutor-announcement-search-sorting">
+							<i class="tutor-icon-magnifying-glass-line"></i>
+						</button>
 					</div>
 				</div>
 

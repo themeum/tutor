@@ -37,7 +37,7 @@ if ( $total_categories && $total_categories > $limit ) {
 				</span>
 			</div>
 			<div class="tutor-instructor-customize-clear clear-instructor-filter">
-				<i class="tutor-icon-line-cross design-dark"></i>
+				<i class="tutor-icon-line-cross-line design-dark"></i>
 				<span className="color-text-hints tutor-text-regular-body">
 					<?php esc_html_e( 'Clear', 'tutor' ); ?>
 				</span>
@@ -124,7 +124,7 @@ if ( $total_categories && $total_categories > $limit ) {
 		<div class="filter-mobile">
 			<div class="mobile-filter-container">
 				<div class="keyword-field mobile-screen">
-					<i class="tutor-icon-magnifying-glass-1"></i>
+					<i class="tutor-icon-magnifying-glass-line"></i>
 					<input type="text" name="keyword" placeholder="<?php _e( 'Search any instructor...', 'tutor' ); ?>"/>
 				</div>
 				<i class="tutor-icon-filter-tool-black-shape"></i>
@@ -136,7 +136,7 @@ if ( $total_categories && $total_categories > $limit ) {
 						<div class="expand-instructor-filter"></div>
 						<span>Category</span>
 						<span class="clear-instructor-filter">
-							<i class="tutor-icon-line-cross"></i> <span><?php esc_html_e( 'Clear All', 'tutor' ); ?></span>
+							<i class="tutor-icon-line-cross-line"></i> <span><?php esc_html_e( 'Clear All', 'tutor' ); ?></span>
 						</span>
 					</div>
 

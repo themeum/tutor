@@ -52,7 +52,7 @@ window.jQuery(document).ready(function($){
                         </div>
                         <div>
                             ${!size_placement_below ? size_info : ''}
-                            <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross"></span>
+                            <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross-line"></span>
                         </div>
                     </div>`;
                     
