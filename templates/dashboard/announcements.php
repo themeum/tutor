@@ -63,7 +63,7 @@ $image_base = tutor()->url . '/assets/images/';
 	<!--notice-->
 	<div class="tutor-component-three-col-action new-announcement-wrap">
 		<div class="tutor-announcement-big-icon">
-			<i class="tutor-icon-speaker"></i>
+			<i class="tutor-icon-speaker-filled"></i>
 		</div>
 		<div>
 			<span class=" tutor-color-text-subsued"><?php esc_html_e( 'Create Announcement', 'tutor' ); ?></span>

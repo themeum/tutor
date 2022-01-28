@@ -190,8 +190,7 @@ class Q_and_A {
 	 * @since v2.0.0
 	 */
 	public static function tabs_key_value() {
-		$url = get_pagenum_link();
-
+		
 		$stats = array(
 			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, null, true ),
 			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'read', true ),
@@ -200,25 +199,17 @@ class Q_and_A {
 			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'archived', true ),
 		);
 
-		$tabs = array(
-			'all',
-			'read',
-			'unread',
-			'important',
-			'archived',
-		);
-
 		// Assign value, url etc to the tab array
 		$tabs = array_map(
-			function( $tab ) use ( $stats, $url ) {
+			function( $tab ) use ( $stats ) {
 				return array(
 					'key'   => $tab,
 					'title' => __( ucwords( $tab ), 'tutor' ),
 					'value' => $stats[ $tab ],
-					'url'   => add_query_arg( array('tab' => $tab), $url ),
+					'url'   => add_query_arg( array('tab' => $tab), remove_query_arg( 'tab' ) ),
 				);
 			},
-			$tabs
+			array_keys($stats)
 		);
 
 		return $tabs;

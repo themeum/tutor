@@ -83,7 +83,7 @@ $filters = array(
 	<div class="tutor-dashboard-content-inner tutor-mt-10 tutor-mb-24 tutor-pr-20">
 		<div class="tutor-component-three-col-action new-announcement-wrap">
 			<div class="tutor-announcement-big-icon">
-				<i class="tutor-icon-speaker"></i>
+				<i class="tutor-icon-speaker-filled"></i>
 			</div>
 			<div>
 				<p class="text-regular-h5 tutor-color-text-primary">

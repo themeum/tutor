@@ -17,7 +17,6 @@
 	$qna_list = $qna['items'];
 	$qna_pagination = $qna['pagination'];
 
-
 	$filters = array(
 		'bulk_action'   => true,
 		'bulk_actions'  => $qna_object->get_bulk_actions(),
