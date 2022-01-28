@@ -15,8 +15,10 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
                     <?php _e('Hi, Welcome back!', 'tutor'); ?>
                 </div>
                 <form>
-
-                    <input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo get_the_ID(); ?>">
+                    <?php if(is_single_course()): ?>
+                        <input type="hidden" name="tutor_course_enroll_attempt" value="<?php echo get_the_ID(); ?>">
+                    <?php endif; ?>
+                    
                     <input type="hidden" name="tutor_action" value="tutor_user_login" />
                     <input type="hidden" name="redirect_to" value="<?php echo tutor()->current_url ?>" />
 
@@ -30,9 +32,9 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
 
                     </div>
                     <?php
-                    do_action("tutor_login_form_middle");
-                    do_action("login_form");
-                    apply_filters("login_form_middle", '', '');
+                        do_action("tutor_login_form_middle");
+                        do_action("login_form");
+                        apply_filters("login_form_middle", '', '');
                     ?>
                     <div class="d-flex justify-content-between align-items-center tutor-mb-40">
                         <div class="tutor-form-check">
@@ -51,9 +53,18 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
                         <?php _e('Sign In', 'tutor'); ?>
                     </button>
                     <?php if (get_option('users_can_register', false)) : ?>
+                        <?php 
+                            $url_arg = array(
+                                'redirect_to' => tutor()->current_url,
+                            );
+
+                            if(is_single_course()) {
+                                $url_arg['enrol_course_id'] = get_the_ID();
+                            }
+                        ?>
                         <div class="tutor-text-center tutor-text-regular-body tutor-color-text-subsued tutor-mt-18">
                             <?php _e('Don\'t have an account?', 'tutor'); ?>&nbsp;
-                            <a href="<?php echo add_query_arg(array('redirect_to' => tutor()->current_url), tutor_utils()->student_register_url()); ?>" class="tutor-fweight-500 td-none tutor-color-design-brand">
+                            <a href="<?php echo add_query_arg($url_arg, tutor_utils()->student_register_url()); ?>" class="tutor-fweight-500 td-none tutor-color-design-brand">
                                 <?php _e('Registration Now', 'tutor'); ?>
                             </a>
                         </div>

@@ -145,9 +145,9 @@ class Q_and_A {
 	private function get_asker_id($question_id) {
 		global $wpdb;
 		$author_id = $wpdb->get_var($wpdb->prepare(
-			"SELECT user_id 
-			FROM {$wpdb->comments} 
-			WHERE comment_ID=%d", 
+			"SELECT user_id
+			FROM {$wpdb->comments}
+			WHERE comment_ID=%d",
 			$question_id
 		));
 
@@ -166,13 +166,13 @@ class Q_and_A {
 		// Get who asked the question
 		$asker_id 	   = $this->get_asker_id($question_id);
 		$self 		   = $asker_id==get_current_user_id();
-		
+
 		// Get the existing value from meta
 		$action        = sanitize_text_field( $_POST['qna_action'] );
-		
+
 		// If current user asker, then make it unread for self
 		// If it is instructor, then make unread for instructor side
-		$meta_key      = 'tutor_qna_' . $action . ($self ? '_'.get_current_user_id() : ''); 
+		$meta_key      = 'tutor_qna_' . $action . ($self ? '_'.get_current_user_id() : '');
 		$current_value = (int) get_comment_meta( $question_id, $meta_key, true );
 		$new_value     = $current_value == 1 ? 0 : 1;
 
@@ -190,8 +190,7 @@ class Q_and_A {
 	 * @since v2.0.0
 	 */
 	public static function tabs_key_value() {
-		$url = get_pagenum_link();
-
+		
 		$stats = array(
 			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, null, true ),
 			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'read', true ),
@@ -200,25 +199,17 @@ class Q_and_A {
 			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'archived', true ),
 		);
 
-		$tabs = array(
-			'all',
-			'read',
-			'unread',
-			'important',
-			'archived',
-		);
-
 		// Assign value, url etc to the tab array
 		$tabs = array_map(
-			function( $tab ) use ( $stats, $url ) {
+			function( $tab ) use ( $stats ) {
 				return array(
 					'key'   => $tab,
 					'title' => __( ucwords( $tab ), 'tutor' ),
 					'value' => $stats[ $tab ],
-					'url'   => add_query_arg( array('tab'=>$tab), $url ),
+					'url'   => add_query_arg( array('tab' => $tab), remove_query_arg( 'tab' ) ),
 				);
 			},
-			$tabs
+			array_keys($stats)
 		);
 
 		return $tabs;

@@ -70,7 +70,7 @@ global $wp_query;
 
 	<div class="tutor-single-course-segment  tutor-course-enrolled-wrap">
 		<p>
-			<i class="tutor-icon-purchase"></i>
+			<i class="tutor-icon-purchase-filled"></i>
 			<?php
 				$enrolled = tutor_utils()->is_enrolled();
 

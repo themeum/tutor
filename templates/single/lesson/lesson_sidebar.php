@@ -167,7 +167,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 												<div class="tutor-single-lesson-items">
 													<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="sidebar-single-zoom-meeting-a d-flex justify-content-between">
 														<div class="tutor-single-lesson-items-left d-flex">
-															<span class="tutor-icon-zoom"></span>
+															<span class="tutor-icon-zoom-brand"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
 															<?php echo esc_html( $post->post_title ); ?>
 															</span>

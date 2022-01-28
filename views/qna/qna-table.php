@@ -7,6 +7,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
 ?>
 
 <table class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-ui-table tutor-ui-table-responsive qna-list-table">
+<?php if (is_array($qna_list) && count($qna_list)) { ?>
     <thead>
         <tr>
             <?php
@@ -20,6 +21,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
             ?>
         </tr>
     </thead>
+    <?php } ?>
     <tbody>
         <?php
         $current_user_id = get_current_user_id();

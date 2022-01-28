@@ -67,7 +67,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
 
             <div class="tutor-mt-15 video-metabox-source-item video_source_wrap_html5 tutor-dashed-uploader <?php echo $sourceVideoID ? 'tutor-has-video' : ''; ?>" style="display: <?php echo $videoSource === 'html5' ? 'block' : 'none'; ?>;">
                 <div class="video-metabox-source-html5-upload">
-                    <p class="video-upload-icon"><i class="tutor-icon-upload"></i></p>
+                    <p class="video-upload-icon"><i class="tutor-icon-upload-icon-line"></i></p>
                     <p><strong><?php _e('Drag & Drop Your Video', 'tutor'); ?></strong></p>
                     <p><?php _e('File Format: ', 'tutor'); ?> <span class="color-text-primary">.mp4</span></p>
                     <p class="color-text-primary"><?php _e('or', 'tutor'); ?></p>
