@@ -253,7 +253,7 @@ $answer_two_gap_match = ! empty( $old_answer->answer_two_gap_match ) ? stripslas
 	?>
 
 	<div class="tutor-quiz-answers-form-footer  tutor-quiz-builder-form-row">
-		<button type="button" id="quiz-answer-edit-btn" class="tutor-answer-edit-btn"><i class="tutor-icon-pencil"></i> <?php _e( 'Update Answer', 'tutor' ); ?></button>
+		<button type="button" id="quiz-answer-edit-btn" class="tutor-answer-edit-btn"><i class="tutor-icon-pencil-line"></i> <?php _e( 'Update Answer', 'tutor' ); ?></button>
 	</div>
 
 </div>

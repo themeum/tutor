@@ -26,7 +26,7 @@ window.jQuery(document).ready($=>{
                     var isTrue = quiz_answers.indexOf($input.val()) > -1; // $input.attr('data-is-correct') == '1';
                     if (!isTrue) {
                         if ($input.prop("checked")) {
-                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-line-cross"></i> ${__('Incorrect, Please try again', 'tutor')}</span>`);
+                            $input.closest('.quiz-answer-input-bottom').addClass('wrong-answer').append(`<span class="wrong-right-text"><i class="tutor-icon-line-cross-line"></i> ${__('Incorrect, Please try again', 'tutor')}</span>`);
                         }
                         validatedTrue = false;
                     }
@@ -75,7 +75,7 @@ window.jQuery(document).ready($=>{
                             .closest('.quiz-question-ans-choice')
                             .addClass('right-answer')
                             .append(`<span class="wrong-right-text">
-                                        <i class="tutor-icon-checkbox-pen-outline"></i>
+                                        <i class="tutor-icon-pencil-line"></i>
                                         ${__('Correct Answer', 'tutor')}
                                     </span>`)
                             .find('.wrong-right-text:eq(1)')

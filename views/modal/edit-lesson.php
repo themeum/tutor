@@ -25,7 +25,7 @@
                 if (get_tutor_option('enable_lesson_classic_editor')){
                     ?>
                         <a class="tutor-ml-10" target="_blank" href="<?php echo esc_url(get_admin_url()); ?>post.php?post=<?php echo $post->ID; ?>&action=edit" >
-                            <i class="tutor-icon-classic-editor"></i> <?php echo __('WP Editor', 'tutor'); ?>
+                            <i class="tutor-icon-edit-filled"></i> <?php echo __('WP Editor', 'tutor'); ?>
                         </a>
                     <?php
                 }
