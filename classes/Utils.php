@@ -4602,20 +4602,12 @@ class Utils {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
-<<<<<<< HEAD
-				'icon'   => '<span class="tooltip-btn tutor-mr-5 tutor-bs-d-flex" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no"></i></span>',
-=======
 				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no-filled"></i></span>',
->>>>>>> 272555f59e95ee5d5ca8d37d11122a3a41f575b8
 				'is_pro' => false,
 			),
 			'single_choice'     => array(
 				'name'   => __( 'Single Choice', 'tutor' ),
-<<<<<<< HEAD
-				'icon'   => '<span class="tooltip-btn tutor-mr-5 tutor-bs-d-flex" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark"></i></span>',
-=======
 				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark-filled"></i></span>',
->>>>>>> 272555f59e95ee5d5ca8d37d11122a3a41f575b8
 				'is_pro' => false,
 			),
 			'multiple_choice'   => array(
@@ -4630,7 +4622,7 @@ class Utils {
 			),
 			'fill_in_the_blank' => array(
 				'name'   => __( 'Fill In The Blanks', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5 tutor-bs-d-flex" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-fill-gaps"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-v1-fill-gaps"></i></span>',
 				'is_pro' => false,
 			),
 			'short_answer'      => array(
@@ -4645,7 +4637,7 @@ class Utils {
 			),
 			'image_matching'    => array(
 				'name'   => __( 'Image Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5 tutor-bs-d-flex" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_answering'   => array(
