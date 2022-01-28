@@ -88,16 +88,23 @@ $sidebar_width: 360px;
 			}
 			> *:first-child {
 				width: 20px;
+				height: 20px;
+				margin-top: -4px;
 			}
-			.tutor-loading-spinner,
-			i {
-				margin-right: 5px;
+			.tutor-loading-spinner, i {
+				margin-right: 6px;
 			}
 			i {
 				display: inline-block;
 				&[class^='tutor-icon-'],
 				&[class*=' tutor-icon-'] {
 					font-size: 24px;
+				}
+				&:before {
+					width: 18px;
+					height: 18px;
+					left: 1px;
+					top: 3px;
 				}
 			}
 		}

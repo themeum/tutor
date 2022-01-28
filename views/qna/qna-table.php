@@ -57,7 +57,21 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                 <td data-th="<?php echo $column; ?>">
                                     <div class="td-avatar">
                                         <div class="tooltip-wrap tutor-qna-badges-wrapper">
-                                            <i data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled" class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled' : 'tutor-icon-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer" data-action="important"></i>
+                                            <span 
+                                                data-state-class-0="tutor-icon-msg-important-filled" 
+                                                data-state-class-1="tutor-icon-msg-important-fill-filled"
+                                                data-action="important"
+                                                data-state-class-selector="i"
+                                            >
+                                                <i
+                                                    class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled' : 'tutor-icon-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer"
+                                                >
+                                                </i>
+                                            </span>
+                                            <!-- <i data-state-class-0="tutor-icon-msg-important-filled" 
+                                            data-state-class-1="tutor-icon-msg-important-fill-filled" 
+                                            class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled' : 'tutor-icon-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer" data-action="important"></i>
+                                             -->
                                             <span class="tooltip-txt tooltip-bottom">
                                                 <?php $is_important ? _e('This conversation is important', 'tutor') : _e('Mark this conversation as important', 'tutor'); ?>
                                             </span>

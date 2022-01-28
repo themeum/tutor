@@ -21,31 +21,16 @@ window.jQuery(document).ready($=>{
         let question_id = $(this).closest('[data-question_id]').data('question_id');
         let button = $(this);
 
-        const btnInnerHtml = $that.html().trim();
-        const { width : btnWidth, height : btnHeight } = $that.get(0).getBoundingClientRect();
-        const btnStyles =  {width: `${btnWidth}px`, height: `${btnHeight}px`};
-        const prevIcon = $that.find('i');
-        console.log('that -> ', $that);
-        console.log('find -> ', $that.find('i'));
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
             data: {
-                question_id, 
+                question_id,
                 qna_action, 
                 action: 'tutor_qna_single_action'
             },
             beforeSend:() => {
-                // button.addClass('tutor-updating-message');
-                // $that.css(btnStyles);
-                if($that.get(0).nodeName == 'I') {
-                    $that.remove();
-                    $that.insertBefore(`<div class="tutor-loading-spinner" style="--size: 18px"></div>`);
-                } else {
-                    $that.find('i').remove();
-                    $that.prepend(`<div class="tutor-loading-spinner" style="--size: 18px"></div>`);
-                }
-                // $that.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
+                $that.find('i').addClass('tutor-loading-spinner');
             },
             success: resp=>{
                 if(!resp.success) {
@@ -62,11 +47,8 @@ window.jQuery(document).ready($=>{
                     var remove_class = button.data( new_value==1 ? 'state-class-0' : 'state-class-1' );
                     var add_class = button.data( new_value==1 ? 'state-class-1' : 'state-class-0' );
 
-                    console.log(remove_class, add_class);
-
                     var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
                     class_element.removeClass(remove_class).addClass(add_class);
-                    
                     // Toggle active class
                     class_element[new_value==1 ? 'addClass' : 'removeClass']('active');
                 }
@@ -77,7 +59,6 @@ window.jQuery(document).ready($=>{
                     // Get toggle text
                     var new_text = button.data( new_value==1 ? 'state-text-1' : 'state-text-0' );
                 
-                    console.log(button.data('state-text-selector'));
                     var text_element = button.data('state-text-selector') ? button.find(button.data('state-text-selector')) : button;
                     text_element.text(new_text);
                 }
@@ -89,15 +70,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete:()=>{
-                // button.removeClass('tutor-updating-message');
-                if($that.get(0).nodeName == 'I') {
-                    $that.parent().find('.tutor-loading-spinner').remove();
-                    $that.prepend(prevIcon);
-                } else {
-                    $that.find('.tutor-loading-spinner').remove();
-                    $that.prepend(prevIcon);
-                }
-                // $that.html(btnInnerHtml);
+                $that.find('i').removeClass('tutor-loading-spinner');
             }
         });
     });

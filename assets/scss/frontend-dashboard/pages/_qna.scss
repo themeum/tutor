@@ -126,6 +126,24 @@ table {
 			}
 		}
 	}
+	td[data-th='Student'] {
+		.tutor-qna-badges-wrapper {
+			span {
+				> *:first-child {
+					width: 20px;
+					height: 20px;
+				}
+				i {
+					&:before {
+						width: 18px;
+						height: 18px;
+						left: 1px;
+						top: 3px;
+					}
+				}
+			}
+		}
+	}
 }
 table.frontend-dashboard-qna-table-student {
 	@include breakpoint-min(1200) {
