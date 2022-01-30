@@ -5,6 +5,10 @@
  * @version 1.4.3
  */
 
+$per_page     = tutor_utils()->get_option('statement_show_per_page', 20);
+$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
+$offset       = ( $current_page - 1 ) * $per_page;
+
 $earning_sum                   = tutor_utils()->get_earning_sum();
 $min_withdraw                  = tutor_utils()->get_option( 'min_withdraw_amount' );
 $formatted_min_withdraw_amount = tutor_utils()->tutor_price( $min_withdraw );
@@ -15,7 +19,7 @@ $withdraw_method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $save
 $user_id               = get_current_user_id();
 $balance_formatted     = tutor_utils()->tutor_price( $earning_sum->balance );
 $is_balance_sufficient = true; // $earning_sum->balance >= $min_withdraw;
-$all_histories         = tutor_utils()->get_withdrawals_history( $user_id, array( 'status' => array( 'pending', 'approved', 'rejected' ) ) );
+$all_histories         = tutor_utils()->get_withdrawals_history( $user_id, array( 'status' => array( 'pending', 'approved', 'rejected' ) ), $offset, $per_page );
 $image_base   = tutor()->url . '/assets/images/';
 $method_icons = array(
 	'bank_transfer_withdraw' => $image_base . 'icon-bank.svg',
@@ -170,14 +174,14 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 
 		<?php
 	}
-	?>
-
-	<?php
+	
 	if ( is_array( $all_histories->results ) && count ( $all_histories->results ) ) {
 		?>
 		<div class="withdraw-history-table-wrap tutor-tooltip-inside tutor-mt-40">
 			<div class="withdraw-history-table-title">
-				<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"> <?php esc_html_e( 'Withdrawal History', 'tutor' ); ?></div>
+				<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"> 
+					<?php esc_html_e( 'Withdrawal History', 'tutor' ); ?>
+				</div>
 			</div>
 
 			<table class="tutor-ui-table tutor-ui-table-responsive">
@@ -301,5 +305,22 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	} else {
 		tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() );
 	}
+	?>
+</div>
+
+<div class="tutor-mt-25">
+	<?php 
+		if(count($all_histories->results) >= $per_page) {
+			$pagination_data = array(
+				'total_items' => $all_histories->count,
+				'per_page'    => $per_page,
+				'paged'       => $current_page,
+			);
+
+			tutor_load_template_from_custom_path(
+				tutor()->path . 'templates/dashboard/elements/pagination.php',
+				$pagination_data
+			);
+		}
 	?>
 </div>

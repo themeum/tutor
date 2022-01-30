@@ -58,11 +58,12 @@ class Frontend {
 		$changed_dashboard_id = apply_filters( 'wpml_object_id', get_tutor_option('tutor_dashboard_page_id'), 'page' );
 
 
-// pr(get_queried_object_id());
+		// pr(get_queried_object_id());
 
-vd(get_page_template_slug());
-pr($changed_dashboard_id);
-		vd(tutor_utils()->is_tutor_dashboard());
+		/* tutor_vd(get_page_template_slug());
+		pr($changed_dashboard_id);
+		tutor_vd(tutor_utils()->is_tutor_dashboard()); */
+
 		// pr(!tutor_utils()->is_tutor_frontend_dashboard($changed_dashboard_id));
 		// die('not a good page ');
 
