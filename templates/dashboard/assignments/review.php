@@ -34,9 +34,12 @@ if ( ! $assignment_submitted_id ) {
 		?>
 
 	<div class="submitted-assignment-title tutor-mb-15">
-		<a class="prev-btn" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
-			<span class="assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?>
+		<a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
+			<!-- <span class="assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?> -->
+			<span class="color-text-primary assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-10"></span>
+			<span class="tutor-color-text-subsued"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
 		</a>
+		<!-- <a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>"></a> -->
 	</div>
 
 	<div class="tutor-assignment-review-header">

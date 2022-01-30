@@ -361,7 +361,7 @@ if ( is_array( $attempt_info ) ) {
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-                                                    <div class="tooltip-wrap tooltip-icon-">
+                                                    <div class="tooltip-wrap tooltip-icon- tutor-bs-d-flex">
                                                         <?php echo $question_type['icon']; ?>
                                                         <span class="tooltip-txt tooltip-top">
                                                             <?php echo $type['name']; ?>
