@@ -187,7 +187,7 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_pages();
+		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true,'post_status'    => 'publish', 'numberposts' => -1,  ) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
@@ -208,7 +208,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function course_archive_page_url() {
-		 $course_post_type = tutor()->course_post_type;
+		$course_post_type = tutor()->course_post_type;
 		$course_page_url   = trailingslashit( home_url() ) . $course_post_type;
 
 		$course_archive_page = $this->get_option( 'course_archive_page' );
@@ -2752,6 +2752,7 @@ class Utils {
 	 */
 	public function tutor_dashboard_nav_ui_items() {
 		$nav_items = $this->tutor_dashboard_pages();
+
 
 		foreach ( $nav_items as $key => $nav_item ) {
 			if ( is_array( $nav_item ) ) {
