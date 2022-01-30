@@ -824,14 +824,14 @@ if ( ! function_exists( 'pr' ) ) {
 	}
 }
 
-if ( ! function_exists( 'vd' ) ) {
+if ( ! function_exists( 'tutor_vd' ) ) {
 	/**
 	 * Function to var_dump
 	 *
 	 * @param  array $var .
 	 * @return array
 	 */
-	function vd( $var ) {
+	function tutor_vd( $var ) {
 		$template = PHP_SAPI !== 'cli' && PHP_SAPI !== 'phpdbg' ? '<pre class="pr">%s</pre>' : "\n%s\n\n";
 		printf( $template, trim( var_dump( $var, true ) ) );
 

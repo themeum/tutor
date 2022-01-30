@@ -6255,7 +6255,7 @@ class Utils {
 	 *
 	 * @return object
 	 */
-	public function get_withdrawals_history( $user_id = 0, $filter = array() ) {
+	public function get_withdrawals_history( $user_id = 0, $filter = array(), $start=0, $limit=20 ) {
 		global $wpdb;
 
 		$filter = (array) $filter;
@@ -6263,21 +6263,12 @@ class Utils {
 
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
-		$query_by_pagination = '';
-
+		
 		if ( ! empty( $status ) ) {
 			$status = (array) $status;
 			$status = "'" . implode( "','", $status ) . "'";
 
 			$query_by_status_sql = " AND status IN({$status}) ";
-		}
-
-		if ( ! empty( $per_page ) ) {
-			if ( empty( $start ) ) {
-				$start = 0;
-			}
-
-			$query_by_pagination = " LIMIT {$start}, {$per_page} ";
 		}
 
 		if ( $user_id ) {
@@ -6339,28 +6330,22 @@ class Utils {
 
 					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
 				{$order_query}
-				{$query_by_pagination}
+				LIMIT %d, %d
 			",
 				1,
 				$search_query,
 				$search_query,
 				$search_query,
-				$search_query
+				$search_query,
+				$start,
+				$limit
 			)
 		);
 
 		$withdraw_history = array(
-			'count'   => 0,
-			'results' => null,
+			'count'   => $count ? $count : 0,
+			'results' => is_array($results) ? $results : array(),
 		);
-
-		if ( $count ) {
-			$withdraw_history['count'] = $count;
-		}
-
-		if ( tutor_utils()->count( $results ) ) {
-			$withdraw_history['results'] = $results;
-		}
 
 		return (object) $withdraw_history;
 	}
