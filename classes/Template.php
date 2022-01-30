@@ -314,8 +314,10 @@ class Template extends Tutor_Base {
 				}
 
 				$dashboard_page        = tutor_utils()->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
+
 				$get_dashboard_config  = tutor_utils()->tutor_dashboard_permalinks();
 				$target_dashboard_page = tutor_utils()->array_get( $dashboard_page, $get_dashboard_config );
+
 
 				if ( isset( $target_dashboard_page['login_require'] ) && $target_dashboard_page['login_require'] === false ) {
 					$template = tutor_load_template_part( "template-part.{$dashboard_page}" );
@@ -328,6 +330,7 @@ class Template extends Tutor_Base {
 
 						global $wp;
 						$full_path = explode( '/', trim( str_replace( get_home_url(), '', home_url( $wp->request ) ), '/' ) );
+						
 						$template  = tutor_get_template( end( $full_path ) == 'create-course' ? implode( '/', $full_path ) : 'dashboard' );
 
 						/**
