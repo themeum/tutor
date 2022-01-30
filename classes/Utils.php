@@ -3438,7 +3438,7 @@ class Utils {
 			if ( $intRating >= $i ) {
 				$output .= '<i class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></i>';
 			} else {
-				if ( ( $current_rating - $i ) == -0.5 ) {
+				if ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<i class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></i>';
 				} else {
 					$output .= '<i class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></i>';
@@ -3501,7 +3501,7 @@ class Utils {
 			if ( $intRating >= $i ) {
 				$output .= '<span class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></span>';
 			} else {
-				if ( ( $current_rating - $i ) == -0.5 ) {
+				if ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<span class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></span>';
 				} else {
 					$output .= '<span class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></span>';
@@ -4471,6 +4471,7 @@ class Utils {
 				"SELECT 	{$wpdb->posts}.ID,
 						post_author,
 						post_date,
+						post_date_gmt,
 						post_content,
 						post_title,
 						display_name
@@ -9335,6 +9336,19 @@ class Utils {
 	}
 
 	/**
+	 * Convert date to wp timezone compatible date. Timezone will be get from settings
+	 *
+	 * @param string $date | string date time to conver.
+	 *
+	 * @return string | date time 
+	 */
+	public function convert_date_into_wp_timezone( string $date ): string {
+		$date = new \DateTime( $date );
+		$date->setTimezone( wp_timezone() );
+		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
+	}
+
+	/*
 	 * Tutor Custom Header
 	 */
 	public function tutor_custom_header() {
@@ -9359,7 +9373,7 @@ class Utils {
 	}
 
 	/**
-	 * Tutor Custom Header
+	 * Tutor Custom Footer
 	 */
 	public function tutor_custom_footer() {
 		global $wp_version;
