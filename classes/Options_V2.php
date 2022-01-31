@@ -288,14 +288,13 @@ class Options_V2 {
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
 
 		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
+		$old_dashboard_id = get_tutor_option('tutor_dashboard_page_id');
+
+		$dashboard_update_id = isset($option['tutor_dashboard_page_id']) && $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
 
 		if(isset($option['email_footer_text'])){
 			$option['email_footer_text'] = wp_unslash( $option['email_footer_text'] );
 		}
-		$dashboard_update_id = isset($option['tutor_dashboard_page_id']) && $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
-		// echo $option['tutor_dashboard_page_id'] . ' - - ' . get_tutor_option('tutor_dashboard_page_id').' - ' .($option['tutor_dashboard_page_id'] !== get_tutor_option('tutor_dashboard_page_id'));
-
-
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
@@ -324,9 +323,9 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_after' );
 
-echo $dashboard_update_id;
+		// echo $dashboard_update_id . ' - ' . $old_dashboard_id;
 
-		if( $dashboard_update_id !== get_tutor_option('tutor_dashboard_page_id') ){
+		if( $dashboard_update_id !== $old_dashboard_id ){
 			global $wp_rewrite;
 			$wp_rewrite->set_permalink_structure('/%postname%/');
 			update_option( "rewrite_rules", false );
