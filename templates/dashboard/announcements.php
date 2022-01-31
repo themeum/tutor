@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package TutorLMS/Templates
  * @version 1.7.9
  */
-$per_page = 10;
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
 
 $order_filter  = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
@@ -129,4 +129,4 @@ $image_base = tutor()->url . '/assets/images/';
 			'paged'         => $paged,
 		)
 	);
-	?>
+?>

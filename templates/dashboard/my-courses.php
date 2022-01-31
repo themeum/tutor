@@ -8,7 +8,7 @@
 $shortcode_arg = isset($GLOBALS['tutor_shortcode_arg']) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
 $courseCols = $shortcode_arg === null ? tutor_utils()->get_option('courses_col_per_row', 4) : $shortcode_arg;
 !isset($active_tab) ? $active_tab = 'my-courses' : 0;
-$per_page = tutor_utils()->get_option('pagination_per_page');
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = (isset($_GET['current_page']) && is_numeric($_GET['current_page']) && $_GET['current_page'] >= 1) ? $_GET['current_page'] : 1;
 $offset     = ( $per_page * $paged ) - $per_page;
 $status = $active_tab == 'my-courses' ? array('publish') : array('pending');
