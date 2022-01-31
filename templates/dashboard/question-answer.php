@@ -61,7 +61,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
 </div>
 
 <?php
-$per_page = tutor_utils()->get_option('pagination_per_page');
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max(1, tutor_utils()->avalue_dot('current_page', $_GET));
 $offset = ($current_page - 1) * $per_page;
 

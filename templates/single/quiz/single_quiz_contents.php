@@ -29,7 +29,7 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
             the_title(); 
             echo wp_kses_post( '</span>' );
         } elseif ($post->post_type === 'tutor_zoom_meeting'){
-            echo wp_kses_post( '<span class="tutor-icon-zoom-brand tutor-color-text-white tutor-mr-5"></span>' );
+            echo wp_kses_post( '<span class="tutor-icon-zoom tutor-color-text-white tutor-mr-5"></span>' );
             echo wp_kses_post( '<span class="text-regular-caption tutor-color-design-white">' );
             esc_html_e( 'Zoom Meeting: ', 'tutor' );
             the_title(); 
