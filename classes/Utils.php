@@ -187,7 +187,7 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_pages();
+		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true,'post_status'    => 'publish', 'numberposts' => -1,  ) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
@@ -208,7 +208,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function course_archive_page_url() {
-		 $course_post_type = tutor()->course_post_type;
+		$course_post_type = tutor()->course_post_type;
 		$course_page_url   = trailingslashit( home_url() ) . $course_post_type;
 
 		$course_archive_page = $this->get_option( 'course_archive_page' );
@@ -2753,6 +2753,7 @@ class Utils {
 	public function tutor_dashboard_nav_ui_items() {
 		$nav_items = $this->tutor_dashboard_pages();
 
+
 		foreach ( $nav_items as $key => $nav_item ) {
 			if ( is_array( $nav_item ) ) {
 
@@ -3438,7 +3439,7 @@ class Utils {
 			if ( $intRating >= $i ) {
 				$output .= '<i class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></i>';
 			} else {
-				if ( ( $current_rating - $i ) == -0.5 ) {
+				if ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<i class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></i>';
 				} else {
 					$output .= '<i class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></i>';
@@ -3501,7 +3502,7 @@ class Utils {
 			if ( $intRating >= $i ) {
 				$output .= '<span class="tutor-icon-star-full-filled" data-rating-value="' . $i . '"></span>';
 			} else {
-				if ( ( $current_rating - $i ) == -0.5 ) {
+				if ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<span class="tutor-icon-star-half-filled" data-rating-value="' . $i . '"></span>';
 				} else {
 					$output .= '<span class="tutor-icon-star-line-filled" data-rating-value="' . $i . '"></span>';
@@ -4471,6 +4472,7 @@ class Utils {
 				"SELECT 	{$wpdb->posts}.ID,
 						post_author,
 						post_date,
+						post_date_gmt,
 						post_content,
 						post_title,
 						display_name
@@ -6253,7 +6255,7 @@ class Utils {
 	 *
 	 * @return object
 	 */
-	public function get_withdrawals_history( $user_id = 0, $filter = array() ) {
+	public function get_withdrawals_history( $user_id = 0, $filter = array(), $start=0, $limit=20 ) {
 		global $wpdb;
 
 		$filter = (array) $filter;
@@ -6261,21 +6263,12 @@ class Utils {
 
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
-		$query_by_pagination = '';
-
+		
 		if ( ! empty( $status ) ) {
 			$status = (array) $status;
 			$status = "'" . implode( "','", $status ) . "'";
 
 			$query_by_status_sql = " AND status IN({$status}) ";
-		}
-
-		if ( ! empty( $per_page ) ) {
-			if ( empty( $start ) ) {
-				$start = 0;
-			}
-
-			$query_by_pagination = " LIMIT {$start}, {$per_page} ";
 		}
 
 		if ( $user_id ) {
@@ -6337,28 +6330,22 @@ class Utils {
 
 					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
 				{$order_query}
-				{$query_by_pagination}
+				LIMIT %d, %d
 			",
 				1,
 				$search_query,
 				$search_query,
 				$search_query,
-				$search_query
+				$search_query,
+				$start,
+				$limit
 			)
 		);
 
 		$withdraw_history = array(
-			'count'   => 0,
-			'results' => null,
+			'count'   => $count ? $count : 0,
+			'results' => is_array($results) ? $results : array(),
 		);
-
-		if ( $count ) {
-			$withdraw_history['count'] = $count;
-		}
-
-		if ( tutor_utils()->count( $results ) ) {
-			$withdraw_history['results'] = $results;
-		}
 
 		return (object) $withdraw_history;
 	}
@@ -9335,6 +9322,19 @@ class Utils {
 	}
 
 	/**
+	 * Convert date to wp timezone compatible date. Timezone will be get from settings
+	 *
+	 * @param string $date | string date time to conver.
+	 *
+	 * @return string | date time 
+	 */
+	public function convert_date_into_wp_timezone( string $date ): string {
+		$date = new \DateTime( $date );
+		$date->setTimezone( wp_timezone() );
+		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
+	}
+
+	/*
 	 * Tutor Custom Header
 	 */
 	public function tutor_custom_header() {
@@ -9359,7 +9359,7 @@ class Utils {
 	}
 
 	/**
-	 * Tutor Custom Header
+	 * Tutor Custom Footer
 	 */
 	public function tutor_custom_footer() {
 		global $wp_version;

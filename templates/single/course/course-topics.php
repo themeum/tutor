@@ -74,7 +74,7 @@ do_action( 'tutor_course/single/before/topics' );
 											$topic_content_icon                                     = $play_time ? 'tutor-icon-youtube-brand' : 'tutor-icon-document-alt-filled';
 											$post->post_type === 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-question-mark-circle-filled' : 0;
 											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-clipboard-line' : 0;
-											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-zoom-brand' : 0;
+											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-zoom' : 0;
 
 																						$is_locked = false;
 										?>
