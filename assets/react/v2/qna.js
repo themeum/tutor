@@ -51,6 +51,7 @@ window.jQuery(document).ready($=>{
                     class_element.removeClass(remove_class).addClass(add_class);
                     // Toggle active class
                     class_element[new_value==1 ? 'addClass' : 'removeClass']('active');
+                    console.log(class_element)
                 }
                 
                 // Toggle text if togglable text defined

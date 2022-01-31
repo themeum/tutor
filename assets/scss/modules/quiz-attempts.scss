@@ -156,6 +156,13 @@
         }
     }
     tr {
+        td[data-th="Type"] {
+            .tooltip-wrap.tooltip-icon- {
+                span:first-child {
+                    display: flex;
+                }
+            }
+        }
         &:not(:hover) {
             &.tutor-quiz-answer-status-correct {
                 .tutor-icon-rounded.tutor-text-danger {

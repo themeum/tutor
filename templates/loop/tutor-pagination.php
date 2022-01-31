@@ -37,35 +37,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 	
 ?>
 <nav class="tutor-course-list-pagination tutor-ui-pagination">
-<div class="tutor-pagination-hints">
-	<div class="text-regular-caption tutor-color-text-subsued">
-		<?php _e('Page', 'tutor'); ?> 
-		<span class="text-medium-caption tutor-color-text-primary">
-		<?php echo esc_html( $paged ); ?> 
-		</span>
-		<?php _e('of', 'tutor'); ?>
-		<span className="text-medium-caption tutor-color-text-primary">
-		<?php echo esc_html( $pages ); ?>
-		</span>
+	<div class="tutor-pagination-hints">
+		<div class="text-regular-caption tutor-color-text-subsued">
+			<?php _e('Page', 'tutor'); ?> 
+			<span class="text-medium-caption tutor-color-text-primary">
+			<?php echo esc_html( $paged ); ?> 
+			</span>
+			<?php _e('of', 'tutor'); ?>
+			<span className="text-medium-caption tutor-color-text-primary">
+			<?php echo esc_html( $pages ); ?>
+			</span>
+		</div>
 	</div>
-</div>
-<ul class="tutor-pagination-numbers">
-	<?php
-		if($paged > 1 ){
-			echo wp_kses_post("<a href='".get_pagenum_link(1)."' class='prev page-numbers'><span class='tutor-icon-angle-left-filled'></span></a>");
-		}
+	<ul class="tutor-pagination-numbers">
+		<?php
+			if($paged > 1 ){
+				echo wp_kses_post("<a href='".get_pagenum_link(1)."' class='prev page-numbers'><span class='tutor-icon-angle-left-filled'></span></a>");
+			}
 
-		for ($i=1; $i <= $pages; $i++){
-            if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) || $pages <= $showitems )){
-                echo ($paged == $i)? "<span class='page-numbers current'>".$i."</span>":"<a href='".get_pagenum_link($i)."' class='page-numbers'>".$i."</a>";
-            }
-         }
- 
-        if ($paged < $pages) {
-            echo wp_kses_post("<a href=\"".get_pagenum_link($paged + 1)."\" class='next page-numbers'><span class='tutor-icon-angle-right-filled'></span></a>");
-        }
-	?>
-</ul>
+			for ($i=1; $i <= $pages; $i++){
+				if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) || $pages <= $showitems )){
+					echo ($paged == $i)? "<span class='page-numbers current'>".$i."</span>":"<a href='".get_pagenum_link($i)."' class='page-numbers'>".$i."</a>";
+				}
+			}
+	
+			if ($paged < $pages) {
+				echo wp_kses_post("<a href=\"".get_pagenum_link($paged + 1)."\" class='next page-numbers'><span class='tutor-icon-angle-right-filled'></span></a>");
+			}
+		?>
+	</ul>
 </nav>
 <?php } }  ?>
 
