@@ -14,7 +14,8 @@
 	.tutor-modal-footer,
 	.tutor-modal-delete-footer {
 		button[data-tutor-modal-close],
-		button[data-action='back'] {
+		button[data-action='back'],
+		.tutor-modal-delete-footer {
 			color: #656c7c !important;
 			background: #e3e6eb !important;
 			border: 1px solid #e3e6eb !important;
