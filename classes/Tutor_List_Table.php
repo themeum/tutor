@@ -1468,13 +1468,13 @@ class Tutor_List_Table {
 
 			// Comments column uses HTML in the display name with screen reader text.
 			// Instead of using esc_attr(), we strip tags to get closer to a user-friendly string.
-			$data = 'data-colname="' . wp_strip_all_tags( $column_display_name ) . '"';
+			$data = 'data-colname="' . esc_attr( wp_strip_all_tags( $column_display_name ) ) . '"';
 
-			$attributes = 'class="' . $classes . '" ' . $data;
+			$attributes = 'class="' . esc_attr( $classes ) . '" ' . $data;
 
 			if ( 'cb' === $column_name ) {
 				echo '<th scope="row" class="check-column">';
-				echo $this->column_cb( $item );
+				echo tutor_kses_html( $this->column_cb( $item ) );
 				echo '</th>';
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {
 				echo call_user_func(
@@ -1485,14 +1485,14 @@ class Tutor_List_Table {
 					$primary
 				);
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				echo '<td ' . $attributes . '>';
-				echo call_user_func( array( $this, 'column_' . $column_name ), $item );
-				echo $this->handle_row_actions( $item, $column_name, $primary );
+				echo '<td ' . $attributes . '>'; // esc_attr used already
+				echo tutor_kses_html( call_user_func( array( $this, 'column_' . $column_name ), $item ) );
+				echo tutor_kses_html( $this->handle_row_actions( $item, $column_name, $primary ) );
 				echo '</td>';
 			} else {
-				echo '<td ' . $attributes . '>';
-				echo $this->column_default( $item, $column_name );
-				echo $this->handle_row_actions( $item, $column_name, $primary );
+				echo '<td ' . $attributes . '>'; // esc_attr used already 
+				echo tutor_kses_html( $this->column_default( $item, $column_name ) );
+				echo tutor_kses_html( $this->handle_row_actions( $item, $column_name, $primary ) );
 				echo '</td>';
 			}
 		}

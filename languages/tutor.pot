@@ -125,11 +125,11 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: classes/Admin.php:60, classes/Admin.php:60, classes/Course.php:494, classes/Options.php:595, classes/Quiz_Attempts_List.php:117, templates/student-public-profile.php:103, views/pages/students.php:8
+#: classes/Admin.php:60, classes/Admin.php:60, classes/Course.php:495, classes/Options.php:595, classes/Quiz_Attempts_List.php:117, templates/student-public-profile.php:103, views/pages/students.php:8
 msgid "Students"
 msgstr ""
 
-#: classes/Admin.php:63, classes/Admin.php:63, classes/Course.php:194, classes/Course.php:263, classes/Options.php:556, views/pages/instructors.php:29
+#: classes/Admin.php:63, classes/Admin.php:63, classes/Course.php:194, classes/Course.php:264, classes/Options.php:556, views/pages/instructors.php:29
 msgid "Instructors"
 msgstr ""
 
@@ -201,7 +201,7 @@ msgstr ""
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
 
-#: classes/Ajax.php:66, classes/Ajax.php:119, classes/Ajax.php:206, classes/Ajax.php:270, classes/Ajax.php:349, classes/Ajax.php:392, classes/Ajax.php:413, classes/Ajax.php:526, classes/Ajax.php:598, classes/Course.php:434, classes/Course.php:469, classes/Course.php:712, classes/Course.php:764, classes/Course.php:801, classes/Course.php:821, classes/Instructor.php:250, classes/Lesson.php:124, classes/Lesson.php:164, classes/Lesson.php:220, classes/Quiz.php:148, classes/Quiz.php:560, classes/Quiz.php:652, classes/Quiz.php:707, classes/Quiz.php:750, classes/Quiz.php:792, classes/Quiz.php:815, classes/Quiz.php:910, classes/Quiz.php:933, classes/Quiz.php:954, classes/Quiz.php:1082, classes/Quiz.php:1127, classes/Quiz.php:1208, classes/Quiz.php:1268, classes/Quiz.php:1293, classes/Q_and_A.php:71
+#: classes/Ajax.php:66, classes/Ajax.php:119, classes/Ajax.php:206, classes/Ajax.php:270, classes/Ajax.php:349, classes/Ajax.php:392, classes/Ajax.php:413, classes/Ajax.php:526, classes/Ajax.php:598, classes/Course.php:435, classes/Course.php:470, classes/Course.php:713, classes/Course.php:765, classes/Course.php:802, classes/Course.php:822, classes/Instructor.php:250, classes/Lesson.php:124, classes/Lesson.php:164, classes/Lesson.php:220, classes/Quiz.php:148, classes/Quiz.php:560, classes/Quiz.php:652, classes/Quiz.php:709, classes/Quiz.php:752, classes/Quiz.php:794, classes/Quiz.php:817, classes/Quiz.php:912, classes/Quiz.php:935, classes/Quiz.php:956, classes/Quiz.php:1084, classes/Quiz.php:1129, classes/Quiz.php:1210, classes/Quiz.php:1270, classes/Quiz.php:1295, classes/Q_and_A.php:71
 msgid "Access Denied"
 msgstr ""
 
@@ -281,75 +281,75 @@ msgstr ""
 msgid "Fully booked"
 msgstr ""
 
-#: classes/Course.php:190, classes/Course.php:262
+#: classes/Course.php:190, classes/Course.php:263
 msgid "Course Builder"
 msgstr ""
 
-#: classes/Course.php:191, classes/Course.php:264
+#: classes/Course.php:191, classes/Course.php:265
 msgid "Additional Data"
 msgstr ""
 
-#: classes/Course.php:192, classes/Course.php:261
+#: classes/Course.php:192, classes/Course.php:262
 msgid "Video"
 msgstr ""
 
-#: classes/Course.php:202, classes/Course.php:1366, views/options/options_generator.php:2
+#: classes/Course.php:202, classes/Course.php:1367, views/options/options_generator.php:2
 msgid "Tutor Settings"
 msgstr ""
 
-#: classes/Course.php:479
+#: classes/Course.php:480
 msgid "Topic has been updated"
 msgstr ""
 
-#: classes/Course.php:493, classes/Options.php:449, classes/Post_types.php:172, templates/single/course/course-topics.php:39
+#: classes/Course.php:494, classes/Options.php:449, classes/Post_types.php:172, templates/single/course/course-topics.php:39
 msgid "Lessons"
 msgstr ""
 
-#: classes/Course.php:495, templates/course-filter/filters.php:74, templates/dashboard/earning/statement.php:29
+#: classes/Course.php:496, templates/course-filter/filters.php:74, templates/dashboard/earning/statement.php:29
 msgid "Price"
 msgstr ""
 
-#: classes/Course.php:524
+#: classes/Course.php:525
 msgid "free"
 msgstr ""
 
-#: classes/Course.php:574
+#: classes/Course.php:575
 msgid "Please Sign In first"
 msgstr ""
 
-#: classes/Course.php:622, classes/Lesson.php:310
+#: classes/Course.php:623, classes/Lesson.php:310
 msgid "Please Sign-In"
 msgstr ""
 
-#: classes/Course.php:747
+#: classes/Course.php:748
 msgid "No instructor available or you have already added maximum instructors"
 msgstr ""
 
-#: classes/Course.php:751
+#: classes/Course.php:752
 msgid "To add unlimited multiple instructors in your course, get %1$sTutor LMS Pro%2$s"
 msgstr ""
 
-#: classes/Course.php:1196
+#: classes/Course.php:1197
 msgid "complete all lessons to mark this course as complete"
 msgstr ""
 
-#: classes/Course.php:1233
+#: classes/Course.php:1234
 msgid "You have to pass %s quizzes to complete this course."
 msgstr ""
 
-#: classes/Course.php:1345
+#: classes/Course.php:1346
 msgid "Make This Course Public"
 msgstr ""
 
-#: classes/Course.php:1347
+#: classes/Course.php:1348
 msgid "No enrollment required."
 msgstr ""
 
-#: classes/Course.php:1355
+#: classes/Course.php:1356
 msgid "Disable Q&A"
 msgstr ""
 
-#: classes/Course.php:1415
+#: classes/Course.php:1416
 msgid "Invalid Course ID or Access Denied."
 msgstr ""
 
@@ -1824,11 +1824,11 @@ msgstr ""
 msgid "Preview course"
 msgstr ""
 
-#: classes/Question_Answers_List.php:47, classes/Question_Answers_List.php:79, classes/Quiz.php:1153, templates/dashboard/question-answer.php:28, views/modal/question_form.php:142, views/pages/answer.php:11, templates/dashboard/question-answer/answers.php:13
+#: classes/Question_Answers_List.php:47, classes/Question_Answers_List.php:79, classes/Quiz.php:1155, templates/dashboard/question-answer.php:28, views/modal/question_form.php:142, views/pages/answer.php:11, templates/dashboard/question-answer/answers.php:13
 msgid "Answer"
 msgstr ""
 
-#: classes/Question_Answers_List.php:76, classes/Quiz.php:824, templates/dashboard/question-answer.php:25, views/pages/view_attempt.php:185, templates/dashboard/my-quiz-attempts/attempts-details.php:215, templates/dashboard/quiz-attempts/quiz-reviews.php:232
+#: classes/Question_Answers_List.php:76, classes/Quiz.php:826, templates/dashboard/question-answer.php:25, views/pages/view_attempt.php:185, templates/dashboard/my-quiz-attempts/attempts-details.php:215, templates/dashboard/quiz-attempts/quiz-reviews.php:232
 msgid "Question"
 msgstr ""
 
@@ -1840,39 +1840,39 @@ msgstr ""
 msgid "Quiz has been timeout already"
 msgstr ""
 
-#: classes/Quiz.php:680, classes/Quiz.php:768, views/metabox/course-contents.php:117, views/metabox/course-contents.php:206
+#: classes/Quiz.php:680, classes/Quiz.php:770, views/metabox/course-contents.php:117, views/metabox/course-contents.php:206
 msgid "QUIZ"
 msgstr ""
 
-#: classes/Quiz.php:893
+#: classes/Quiz.php:895
 msgid "Please make sure you have added more than one option and saved them"
 msgstr ""
 
-#: classes/Quiz.php:889
+#: classes/Quiz.php:891
 msgid "Please select the correct answer"
 msgstr ""
 
-#: classes/Quiz.php:1014, views/modal/question_answer_form.php:22
+#: classes/Quiz.php:1016, views/modal/question_answer_form.php:22
 msgid "True"
 msgstr ""
 
-#: classes/Quiz.php:1021, views/modal/question_answer_form.php:26
+#: classes/Quiz.php:1023, views/modal/question_answer_form.php:26
 msgid "False"
 msgstr ""
 
-#: classes/Quiz.php:1137
+#: classes/Quiz.php:1139
 msgid "Answer options &amp; mark correct"
 msgstr ""
 
-#: classes/Quiz.php:1140
+#: classes/Quiz.php:1142
 msgid "Make sure you’re saving the answers in the right order. Students will have to match this order exactly."
 msgstr ""
 
-#: classes/Quiz.php:1175, classes/Quiz.php:1169, views/modal/question_form.php:164, views/modal/question_form.php:158, views/pages/view_attempt.php:328, templates/dashboard/quiz-attempts/quiz-reviews.php:404
+#: classes/Quiz.php:1177, classes/Quiz.php:1171, views/modal/question_form.php:164, views/modal/question_form.php:158, views/pages/view_attempt.php:328, templates/dashboard/quiz-attempts/quiz-reviews.php:404
 msgid "Mark as correct"
 msgstr ""
 
-#: classes/Quiz.php:1325
+#: classes/Quiz.php:1327
 msgid "Access Denied."
 msgstr ""
 
