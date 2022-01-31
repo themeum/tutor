@@ -14,7 +14,7 @@ $start_date  = isset( $_GET['start_date']) ? sanitize_text_field( $_GET['start_d
 $end_date    = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date'] ) : '';
 
 $paged       = ( isset( $_GET['current_page'] ) && is_numeric( $_GET['current_page'] ) && $_GET['current_page'] >= 1 ) ? $_GET['current_page'] : 1;
-$per_page    = tutor_utils()->get_option( 'pagination_per_page' );
+$per_page    = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset      = ( $per_page * $paged ) - $per_page;
 
     if ( '' !== $start_date ) {
