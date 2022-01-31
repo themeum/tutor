@@ -11,7 +11,7 @@
  * @version 1.4.3
  */
 
-get_header();
+tutor_utils()->tutor_custom_header();
 
 do_action('tutor_course/single/before/wrap');
 ?>
@@ -19,7 +19,7 @@ do_action('tutor_course/single/before/wrap');
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
     <div class="tutor-container">
         <div class="tutor-row">
-            <div class="tutor-col-8 tutor-col-md-100">
+            <div class="tutor-col-8 tutor-col-md-8">
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
 	            <?php tutor_course_lead_info(); ?>
 	            <?php tutor_course_content(); ?>
@@ -47,4 +47,4 @@ do_action('tutor_course/single/before/wrap');
 <?php do_action('tutor_course/single/after/wrap'); ?>
 
 <?php
-get_footer();
+tutor_utils()->tutor_custom_footer();

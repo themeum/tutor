@@ -457,7 +457,7 @@ if ( ! function_exists( 'get_tutor_header' ) ) {
 				<div id="tutor-page-wrap" class="tutor-site-wrap site">
 			<?php
 		} else {
-			get_header();
+			tutor_utils()->tutor_custom_header();
 		}
 	}
 }
@@ -475,7 +475,7 @@ if ( ! function_exists( 'get_tutor_footer' ) ) {
 			</html>
 			<?php
 		} else {
-			get_footer();
+			tutor_utils()->tutor_custom_footer();
 		}
 	}
 }

@@ -224,7 +224,7 @@ if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) 
 															$_thumbnail_url = $builder_course_img_src;
 														}
 													?>
-													<img src="<?php echo esc_url( $_thumbnail_url ); ?>" class="thumbnail-img" data-placeholder-src="<?php echo esc_url( $builder_course_img_src ); ?>">
+													<img width="280" src="<?php echo esc_url( $_thumbnail_url ); ?>" class="thumbnail-img" data-placeholder-src="<?php echo esc_url( $builder_course_img_src ); ?>">
 													<a href="javascript:;" class="tutor-course-thumbnail-delete-btn" style="display:<?php echo $post_thumbnail_id ? 'block' : 'none'; ?>;">
 														<i class="tutor-icon-line-cross"></i>
 													</a>

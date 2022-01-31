@@ -11,7 +11,7 @@
  * @version 1.6.7
  */
 
-get_header();
+tutor_utils()->tutor_custom_header();
 
 do_action('tutor_course/single/instructor/before/wrap');
 ?>
@@ -47,4 +47,4 @@ do_action('tutor_course/single/instructor/before/wrap');
 <?php do_action('tutor_course/single/instructor/after/wrap'); ?>
 
 <?php
-get_footer();
+tutor_utils()->tutor_custom_footer();
