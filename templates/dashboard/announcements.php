@@ -84,10 +84,10 @@ $image_base = tutor()->url . '/assets/images/';
 <!--Filter-->
 <div class="tutor-bs-row tutor-mb-30 tutor-mt-42" style="width: calc(100% + 30px);">
 	<div class="tutor-bs-col-12 tutor-bs-col-lg-6 tutor-mt-10 tutor-mt-lg-0">
-		<label class="tutor-bs-d-block tutor-mb-10">
+		<label class="tutor-bs-d-block tutor-mb-10 tutor-form-label">
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
-		<select class="tutor-form-select tutor-form-select-sm tutor-announcement-course-sorting">
+		<select class="tutor-form-select tutor-form-control-sm tutor-announcement-course-sorting">
 
 			<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
 
@@ -104,15 +104,15 @@ $image_base = tutor()->url . '/assets/images/';
 	</div>
 
 	<div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-mt-10 tutor-mt-lg-0">
-		<label class="tutor-bs-d-block tutor-mb-10"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
-		<select class="tutor-form-select tutor-announcement-order-sorting" data-search="no">
+		<label class="tutor-bs-d-block tutor-mb-10 tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
+		<select class="tutor-form-select tutor-announcement-order-sorting tutor-form-control-sm" data-search="no">
 			<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 			<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 		</select>
 	</div>
 
 	<div class="tutor-bs-col-6 tutor-bs-col-lg-3 tutor-mt-10 tutor-mt-lg-0">
-		<label class="tutor-bs-d-block tutor-mb-10"><?php esc_html_e( 'Date', 'tutor' ); ?></label>
+		<label class="tutor-form-label tutor-bs-d-block tutor-mb-10"><?php esc_html_e( 'Date', 'tutor' ); ?></label>
 		<div class="tutor-v2-date-picker"></div>
 	</div>
 </div>
