@@ -314,8 +314,10 @@ if ( is_array( $attempt_info ) ) {
                     <tr>
                         <?php
                             foreach($table_2_columns as $key => $column) {
-                                $class_name = join('--', explode(' ', strtolower($column)));
-                                echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'. $column .'</span></th>';
+                                if($key !== 'manual_review' ){
+                                    $class_name = join('--', explode(' ', strtolower($column)));
+                                    echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'. $column .'</span></th>';
+                                }
                             }
                         ?>
                     </tr>
@@ -346,6 +348,7 @@ if ( is_array( $attempt_info ) ) {
                             <tr class="<?php echo 'tutor-quiz-answer-status-'.$answer_status; ?>">
                                 <?php foreach($table_2_columns as $key => $column): ?>
                                     <?php
+                                     if($key !== 'manual_review' ){
                                         switch($key) {
                                             case 'no' :
                                                 ?>
@@ -672,6 +675,7 @@ if ( is_array( $attempt_info ) ) {
                                                 </td>
                                                 <?php
                                         }
+                                    }
                                     ?>
                                 <?php endforeach; ?>
                             </tr>
