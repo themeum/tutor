@@ -12,7 +12,7 @@
  * @version 1.5.8
  */
 
-get_header();
+tutor_utils()->tutor_custom_header();
 
 $course_filter = (bool) tutor_utils()->get_option('course_archive_filter', false);
 $supported_filters = tutor_utils()->get_option('supported_course_filters', array());
@@ -37,4 +37,4 @@ if ($course_filter && count($supported_filters)) {
 		</div>
 	<?php
 }
-get_footer(); ?>
+tutor_utils()->tutor_custom_footer(); ?>

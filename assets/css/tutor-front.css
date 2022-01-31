@@ -1049,6 +1049,11 @@ body {
           align-items: center;
 }
 
+.single-courses .tutor-row {
+  -ms-flex-wrap: unset;
+      flex-wrap: unset;
+}
+
 @media (max-width: 991px) {
   .tutor-col-auto,
   .tutor-col,
@@ -1103,7 +1108,9 @@ body {
   margin-bottom: 45px;
 }
 
-.tutor-full-width-course-top h4, .tutor-full-width-course-top h5, .tutor-full-width-course-top h6 {
+.tutor-full-width-course-top h4,
+.tutor-full-width-course-top h5,
+.tutor-full-width-course-top h6 {
   color: #000;
   font-weight: 500;
 }
@@ -1131,7 +1138,7 @@ body {
 }
 
 .tutor-single-course-rating {
-  color: #F8C51C;
+  color: #f8c51c;
   font-size: 16px;
 }
 
@@ -1265,8 +1272,8 @@ body {
 
 .tutor-single-course-meta.tutor-lead-meta {
   margin-bottom: 33px;
-  border-top: 1px solid #DCDFE5;
-  border-bottom: 1px solid #DCDFE5;
+  border-top: 1px solid #dcdfe5;
+  border-bottom: 1px solid #dcdfe5;
 }
 
 @media (max-width: 991px) {
@@ -1320,7 +1327,7 @@ body {
 }
 
 .tutor-single-course-meta.tutor-lead-meta ul li a:not(:last-child):after {
-  content: ',';
+  content: ",";
   margin-right: 4px;
 }
 
@@ -1341,7 +1348,7 @@ body {
     font-weight: 700;
   }
   .tutor-single-course-meta.tutor-lead-meta ul li span::after {
-    content: ':';
+    content: ":";
     color: var(--tutor-text-color);
   }
 }
@@ -1408,7 +1415,7 @@ body {
 }
 
 .tutor-course-topics-contents .tutor-course-topic {
-  border: 1px solid #DCE4E6;
+  border: 1px solid #dce4e6;
   margin-bottom: 20px;
   border-radius: 5px;
   overflow: hidden;
@@ -1420,7 +1427,7 @@ body {
 }
 
 .tutor-course-lesson {
-  border-top: 1px solid #DCE4E6;
+  border-top: 1px solid #dce4e6;
 }
 
 .tutor-course-lesson h5 {
@@ -1503,13 +1510,17 @@ table.course-single-gradebooks .datetime {
 
 .tutor-course-lessons .tutor-course-lesson h5 i.tutor-lesson-thumbnail-icon:after {
   position: absolute;
-  content: '';
+  content: "";
   left: 0;
   top: 0;
   height: 100%;
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: -1;
+}
+
+.theme-twentytwentytwo .select2-container .select2-selection {
+  padding: 0.2rem;
 }
 
 /* ***********************      */
@@ -10629,5 +10640,3 @@ Withdraw Method
     row-gap: 50px;
   }
 }
-
-/*# sourceMappingURL=tutor-front.css.map */

@@ -12,7 +12,7 @@
  */
 
 /*
-get_header();
+tutor_utils()->tutor_custom_header();
 
 global $post;
 $currentPost = $post;
@@ -34,7 +34,7 @@ $currentPost = $post;
 /*
 do_action('tutor_lesson/single/after/wrap');
 
-get_footer();*/
+tutor_utils()->tutor_custom_footer();*/
 
 
 

@@ -33,7 +33,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 	$tutor_user_social_icons[ $key ]['url'] = $url;
 }
 
-get_header();
+tutor_utils()->tutor_custom_header();
 ?>
 
 <?php
@@ -191,4 +191,4 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 <?php do_action( 'tutor_student/after/wrap' ); ?>
 
 <?php
-get_footer();
+tutor_utils()->tutor_custom_footer();

@@ -21,7 +21,7 @@ if(tutils()->get_option('disable_tutor_native_login')) {
     exit;
 }
     
-get_header();
+tutor_utils()->tutor_custom_header();
 
 ?>
 
@@ -44,4 +44,4 @@ get_header();
 
 
 <?php
-get_footer();
+tutor_utils()->tutor_custom_footer();

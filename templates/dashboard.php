@@ -13,7 +13,7 @@
 
 $is_by_short_code = isset( $is_shortcode ) && $is_shortcode === true;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
-	get_header();
+	tutor_utils()->tutor_custom_header();
 }
 
 global $wp_query;
@@ -220,5 +220,5 @@ do_action( 'tutor_dashboard/before/wrap' );
 
 <?php
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
-	get_footer();
+	tutor_utils()->tutor_custom_footer();
 }

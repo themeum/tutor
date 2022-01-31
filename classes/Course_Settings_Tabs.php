@@ -14,18 +14,12 @@ class Course_Settings_Tabs {
 
 	public function __construct() {
 		$this->course_post_type    = tutor()->course_post_type;
-		$isGutenberg               = apply_filters( 'use_block_editor_for_post_type', true, 'courses' );
-		$this->is_gutenberg_enable = $isGutenberg;
+		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
+            
+        add_action( 'tutor/frontend_course_edit/after/description', array( $this, 'display' ), 10, 0 );
 
-		if ( $isGutenberg ) {
-			// MetaBox
-			add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
-		} else {
-			add_action( 'edit_form_after_editor', array( $this, 'display' ), 10, 0 );
-		}
-		add_action( 'tutor/frontend_course_edit/after/description', array( $this, 'display' ), 10, 0 );
-
-		add_action( 'tutor_save_course', array( $this, 'save_course' ), 10, 2 );
+        add_action( 'tutor_save_course', array( $this, 'save_course' ), 10, 2 );
+        add_action( 'tutor_save_course_settings', array( $this, 'save_course' ), 10, 2 );
 	}
 
 	public function register_meta_box() {

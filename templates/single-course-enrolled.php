@@ -11,7 +11,7 @@
  * @version 1.4.3
  */
 
-get_header();
+tutor_utils()->tutor_custom_header();
 
 do_action('tutor_course/single/enrolled/before/wrap');
 ?>
@@ -48,4 +48,4 @@ do_action('tutor_course/single/enrolled/before/wrap');
 <?php do_action('tutor_course/single/enrolled/after/wrap'); ?>
 
 <?php
-get_footer();
+tutor_utils()->tutor_custom_footer();

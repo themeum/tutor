@@ -113,7 +113,7 @@ msgstr ""
 msgid "Pro"
 msgstr ""
 
-#: classes/Admin.php:54, classes/Admin.php:54, classes/Admin.php:489, classes/Gutenberg.php:58
+#: classes/Admin.php:54, classes/Admin.php:54, classes/Admin.php:489, classes/Gutenberg.php:71
 msgid "Tutor LMS"
 msgstr ""
 
@@ -353,27 +353,27 @@ msgstr ""
 msgid "Invalid Course ID or Access Denied."
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:32, classes/Options.php:225, classes/Tutor_Setup.php:400, views/metabox/course/settings-tabs.php:13
+#: classes/Course_Settings_Tabs.php:26, classes/Options.php:225, classes/Tutor_Setup.php:400, views/metabox/course/settings-tabs.php:13
 msgid "Course Settings"
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:38, classes/Options.php:122, classes/Options.php:125, classes/Options.php:224, classes/Tutor_Setup.php:561, classes/WooCommerce.php:294
+#: classes/Course_Settings_Tabs.php:32, classes/Options.php:122, classes/Options.php:125, classes/Options.php:224, classes/Tutor_Setup.php:561, classes/WooCommerce.php:294
 msgid "General"
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:39, classes/Options.php:126, classes/Tutor_Setup.php:361
+#: classes/Course_Settings_Tabs.php:33, classes/Options.php:126, classes/Tutor_Setup.php:361
 msgid "General Settings"
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:45
+#: classes/Course_Settings_Tabs.php:39
 msgid "Maximum Students"
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:46, classes/Options.php:138, classes/Options.php:145, classes/Options.php:165, classes/Options.php:172, classes/Options.php:179, classes/Options.php:186, classes/Options.php:199, classes/Options.php:230, classes/Options.php:248, classes/Options.php:265, classes/Options.php:298, classes/Options.php:316, classes/Options.php:322, classes/Options.php:458, classes/Options.php:565, classes/Options.php:579, classes/Options.php:586, classes/Options.php:611, classes/Options.php:618, classes/Options.php:636, classes/Options.php:660, classes/User.php:193
+#: classes/Course_Settings_Tabs.php:40, classes/Options.php:138, classes/Options.php:145, classes/Options.php:165, classes/Options.php:172, classes/Options.php:179, classes/Options.php:186, classes/Options.php:199, classes/Options.php:230, classes/Options.php:248, classes/Options.php:265, classes/Options.php:298, classes/Options.php:316, classes/Options.php:322, classes/Options.php:458, classes/Options.php:565, classes/Options.php:579, classes/Options.php:586, classes/Options.php:611, classes/Options.php:618, classes/Options.php:636, classes/Options.php:660, classes/User.php:193
 msgid "Enable"
 msgstr ""
 
-#: classes/Course_Settings_Tabs.php:48
+#: classes/Course_Settings_Tabs.php:42
 msgid "Number of students that can enrol in this course. Set 0 for no limits."
 msgstr ""
 
