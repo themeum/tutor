@@ -57,7 +57,7 @@ readyState_complete(() => {
 
                 //enable if tinymce content changed
                 if (typeof(tinyMCE) != "undefined") {
-                    tinymce.activeEditor.on("change", function (e) {
+                    tinyMCE.activeEditor.on("change", function (e) {
                         if (document.getElementById('save_tutor_option')) {
                             document.getElementById('save_tutor_option').disabled = false;
                         }
