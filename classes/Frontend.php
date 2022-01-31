@@ -65,6 +65,7 @@ class Frontend {
 				$wp_rewrite->set_permalink_structure('/%postname%/');
 				update_option( "rewrite_rules", false );
 				$wp_rewrite->flush_rules( true );
+				flush_rewrite_rules();
 			}
 		}
 	}
