@@ -678,10 +678,12 @@ class Quiz {
 				<i class="tutor-icon-move"></i>
 				<a href="javascript:;" class="open-tutor-quiz-modal" data-quiz-id="<?php echo esc_attr( $quiz_id ); ?>" data-topic-id="<?php echo esc_attr( $topic_id ); ?>"> 
 					<i class=" tutor-icon-doubt"></i>[<?php _e( 'QUIZ', 'tutor' ); ?>]&nbsp;
-					<?php echo stripslashes( $quiz_title ); ?> 
+					<?php echo esc_html( stripslashes( $quiz_title ) ); ?> 
 				</a>
 				<?php do_action( 'tutor_course_builder_before_quiz_btn_action', $quiz_id ); ?>
-				<a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo esc_attr( $quiz_id ); ?>"><i class="tutor-icon-garbage"></i></a>
+				<a href="javascript:;" class="tutor-delete-quiz-btn" data-quiz-id="<?php echo esc_attr( $quiz_id ); ?>">
+					<i class="tutor-icon-garbage"></i>
+				</a>
 			</div>
 		</div>
 		<?php

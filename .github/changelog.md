@@ -1,5 +1,11 @@
 # TutorLMS Changelog
 
+### 1.9.15 - January 31, 2022
+
+* Update: Added Compatibility with WordPress 5.9 and Block Based Theme
+* Fix: Security issue and XSS vulnerabillity fixes
+
+
 ### 1.9.14 - January 20, 2022
 
 * New: Now you can add Videos using a Shortcode
