@@ -310,7 +310,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 
 <div class="tutor-mt-25">
 	<?php 
-		if(count($all_histories->results) >= $per_page) {
+		if($all_histories->count >= $per_page) {
 			$pagination_data = array(
 				'total_items' => $all_histories->count,
 				'per_page'    => $per_page,
