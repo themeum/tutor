@@ -58,6 +58,11 @@
 		.individual-star-rating-wrap {
 			display: flex;
 			align-items: center;
+			.tutor-rating-stars {
+				span {
+					font-size: 22px;
+				}
+			}
 		}
 
 		p {
@@ -101,7 +106,7 @@
 			.tutor-rating-stars {
 				.tutor-star-rating-group {
 					i {
-						font-size: 50px;
+						font-size: 60px;
 					}
 					i.tutor-icon-star-line-filled {
 						color : #C0C3CB;
