@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 1.9.15 - January 31, 2022 =
+= 1.9.15 - February 01, 2022 =
 
 Update: Added Compatibility with WordPress 5.9 and Block Based Theme
 Fix: Security issue and XSS vulnerabillity fixes

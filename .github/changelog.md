@@ -1,6 +1,6 @@
 # TutorLMS Changelog
 
-### 1.9.15 - January 31, 2022
+### 1.9.15 - February 01, 2022
 
 * Update: Added Compatibility with WordPress 5.9 and Block Based Theme
 * Fix: Security issue and XSS vulnerabillity fixes
