@@ -13,13 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Tutor_List_Table' ) ) {
-	include_once tutor()->path . 'classes/Tutor_List_Table.php';
-}
-
 use TUTOR\Backend_Page_Trait;
 
-class Instructors_List extends \Tutor_List_Table {
+class Instructors_List {
 
 	const INSTRUCTOR_LIST_PAGE = 'tutor-instructors';
 

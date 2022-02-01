@@ -314,8 +314,10 @@ if ( is_array( $attempt_info ) ) {
                     <tr>
                         <?php
                             foreach($table_2_columns as $key => $column) {
-                                $class_name = join('--', explode(' ', strtolower($column)));
-                                echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'. $column .'</span></th>';
+                                if($key !== 'manual_review' ){
+                                    $class_name = join('--', explode(' ', strtolower($column)));
+                                    echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'. $column .'</span></th>';
+                                }
                             }
                         ?>
                     </tr>
@@ -346,6 +348,7 @@ if ( is_array( $attempt_info ) ) {
                             <tr class="<?php echo 'tutor-quiz-answer-status-'.$answer_status; ?>">
                                 <?php foreach($table_2_columns as $key => $column): ?>
                                     <?php
+                                     if($key !== 'manual_review' ){
                                         switch($key) {
                                             case 'no' :
                                                 ?>
@@ -361,7 +364,7 @@ if ( is_array( $attempt_info ) ) {
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-                                                    <div class="tooltip-wrap tooltip-icon-">
+                                                    <div class="tooltip-wrap tooltip-icon- tutor-bs-d-flex">
                                                         <?php echo $question_type['icon']; ?>
                                                         <span class="tooltip-txt tooltip-top">
                                                             <?php echo $type['name']; ?>
@@ -664,14 +667,15 @@ if ( is_array( $attempt_info ) ) {
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap">
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-10 tutor-icon-rounded tutor-text-success">
-                                                        <i class="tutor-icon-mark"></i>
+                                                        <i class="tutor-icon-mark-filled"></i>
                                                     </a>
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" data-context="<?php echo $context; ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-text-danger">
-                                                        <i class="tutor-icon-line-cross"></i>
+                                                        <i class="tutor-icon-line-cross-line"></i>
                                                     </a>
                                                 </td>
                                                 <?php
                                         }
+                                    }
                                     ?>
                                 <?php endforeach; ?>
                             </tr>

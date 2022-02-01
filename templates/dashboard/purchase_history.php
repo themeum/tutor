@@ -14,12 +14,12 @@ $start_date  = isset( $_GET['start_date']) ? sanitize_text_field( $_GET['start_d
 $end_date    = isset( $_GET['end_date']) ? sanitize_text_field( $_GET['end_date'] ) : '';
 
 $paged       = ( isset( $_GET['current_page'] ) && is_numeric( $_GET['current_page'] ) && $_GET['current_page'] >= 1 ) ? $_GET['current_page'] : 1;
-$per_page    = tutor_utils()->get_option( 'pagination_per_page' );
+$per_page    = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset      = ( $per_page * $paged ) - $per_page;
 
     if ( '' !== $start_date ) {
         $start_date = tutor_get_formated_date( 'Y-m-d', $start_date );
-    } 
+    }
     if ( '' !== $end_date ) {
         $end_date = tutor_get_formated_date( 'Y-m-d', $end_date );
     }
@@ -28,12 +28,12 @@ $offset      = ( $per_page * $paged ) - $per_page;
 <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php esc_html_e( 'Order History', 'tutor' ); ?></div>
 <div class="tutor-purchase-history">
     <!--filter buttons tabs-->
-    <?php 
+    <?php
         /**
          * Prepare filter period buttons
-         * 
+         *
          * Array structure is required as below
-         * 
+         *
          * @since 2.0.0
          */
         $filter_period = array(
@@ -56,12 +56,12 @@ $offset      = ( $per_page * $paged ) - $per_page;
 
         /**
          * Calendar date buttons
-         * 
+         *
          * Array structure is required as below
-         * 
+         *
          * @since 2.0.0
          */
-        
+
         $filter_period_calendar = array(
             'filter_period'   => $filter_period,
             'filter_calendar' => true
@@ -69,7 +69,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
 
         $filter_period_calendar_template = tutor()->path . 'views/elements/purchase-history-filter.php';
         tutor_load_template_from_custom_path( $filter_period_calendar_template, $filter_period_calendar );
-        
+
         $orders       = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $per_page );
         $total_orders = tutor_utils()->get_total_orders_by_user_id( $user_id, $time_period, $start_date, $end_date );
         $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
@@ -81,6 +81,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
 <!-- Purchase history table -->
 <div class="tutor-ui-table-wrapper">
     <table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-purchase-history">
+        <?php if ( tutor_utils()->count ( $orders ) ) { ?>
         <thead class="tutor-text-sm tutor-text-400">
             <th>
                 <div class="text-regular-small tutor-color-text-subsued">
@@ -109,6 +110,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
             </th>
             <th class="tutor-shrink"></th>
         </thead>
+        <?php } ?>
         <tbody>
             <?php
                 if ( tutor_utils()->count ( $orders ) ) {
@@ -154,7 +156,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
                             $order_status       = '';
                             $order_status_text  = $status;
                         }
-                        
+
             ?>
                 <tr>
                     <td data-th="Order ID" class="v-align-top">
@@ -162,7 +164,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
                             #<?php esc_html_e( $order->ID ); ?>
                         </div>
                     </td>
-                    <td data-th="Course Name"> 
+                    <td data-th="Course Name">
                         <?php
                             $courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
                             if ( tutor_utils()->count( $courses ) ) {

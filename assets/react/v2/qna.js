@@ -15,7 +15,7 @@ window.jQuery(document).ready($=>{
     // Change badge
     $(document).on('click', '.tutor-qna-badges-wrapper [data-action]', function(e){
         e.preventDefault();
-
+        var $that = $(this);
         let row = $(this).closest('tr');
         let qna_action = $(this).data('action');
         let question_id = $(this).closest('[data-question_id]').data('question_id');
@@ -25,12 +25,12 @@ window.jQuery(document).ready($=>{
             url: _tutorobject.ajaxurl,
             type: 'POST',
             data: {
-                question_id, 
+                question_id,
                 qna_action, 
                 action: 'tutor_qna_single_action'
             },
-            beforeSend:()=>{
-                button.addClass('tutor-updating-message');
+            beforeSend:() => {
+                $that.find('i').addClass('tutor-loading-spinner');
             },
             success: resp=>{
                 if(!resp.success) {
@@ -47,13 +47,11 @@ window.jQuery(document).ready($=>{
                     var remove_class = button.data( new_value==1 ? 'state-class-0' : 'state-class-1' );
                     var add_class = button.data( new_value==1 ? 'state-class-1' : 'state-class-0' );
 
-                    console.log(remove_class, add_class);
-
                     var class_element = button.data('state-class-selector') ? button.find(button.data('state-class-selector')) : button;
                     class_element.removeClass(remove_class).addClass(add_class);
-                    
                     // Toggle active class
                     class_element[new_value==1 ? 'addClass' : 'removeClass']('active');
+                    console.log(class_element)
                 }
                 
                 // Toggle text if togglable text defined
@@ -62,7 +60,6 @@ window.jQuery(document).ready($=>{
                     // Get toggle text
                     var new_text = button.data( new_value==1 ? 'state-text-1' : 'state-text-0' );
                 
-                    console.log(button.data('state-text-selector'));
                     var text_element = button.data('state-text-selector') ? button.find(button.data('state-text-selector')) : button;
                     text_element.text(new_text);
                 }
@@ -74,7 +71,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete:()=>{
-                button.removeClass('tutor-updating-message');
+                $that.find('i').removeClass('tutor-loading-spinner');
             }
         });
     });

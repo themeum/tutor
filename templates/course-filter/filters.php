@@ -106,7 +106,7 @@
         <div class="filter-widget-input">
             <div class="tutor-clear-all-filter">
                 <a href="#" onclick="window.location.reload()">
-                    <i class="tutor-icon-cross"></i> <?php esc_html_e( 'Clear All Filter', 'tutor' ); ?>
+                    <i class="tutor-icon-cross-filled"></i> <?php esc_html_e( 'Clear All Filter', 'tutor' ); ?>
                 </a>
             </div>
         </div>

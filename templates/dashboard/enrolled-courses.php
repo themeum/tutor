@@ -9,7 +9,7 @@
 /**
  * Pagination info
  */
-$per_page = tutor_utils()->get_option('pagination_per_page');
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = (isset($_GET['current_page']) && is_numeric($_GET['current_page']) && $_GET['current_page'] >= 1) ? $_GET['current_page'] : 1;
 $offset     = ($per_page * $paged) - $per_page;
 

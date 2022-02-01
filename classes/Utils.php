@@ -187,7 +187,7 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_pages();
+		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true,'post_status'    => 'publish', 'numberposts' => -1,  ) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
@@ -208,7 +208,7 @@ class Utils {
 	 * @since v.1.0.0
 	 */
 	public function course_archive_page_url() {
-		 $course_post_type = tutor()->course_post_type;
+		$course_post_type = tutor()->course_post_type;
 		$course_page_url   = trailingslashit( home_url() ) . $course_post_type;
 
 		$course_archive_page = $this->get_option( 'course_archive_page' );
@@ -2753,6 +2753,7 @@ class Utils {
 	public function tutor_dashboard_nav_ui_items() {
 		$nav_items = $this->tutor_dashboard_pages();
 
+
 		foreach ( $nav_items as $key => $nav_item ) {
 			if ( is_array( $nav_item ) ) {
 
@@ -4603,12 +4604,12 @@ class Utils {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'single_choice'     => array(
 				'name'   => __( 'Single Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'multiple_choice'   => array(
@@ -4623,7 +4624,7 @@ class Utils {
 			),
 			'fill_in_the_blank' => array(
 				'name'   => __( 'Fill In The Blanks', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-fill-gaps"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-v1-fill-gaps"></i></span>',
 				'is_pro' => false,
 			),
 			'short_answer'      => array(
@@ -4638,7 +4639,7 @@ class Utils {
 			),
 			'image_matching'    => array(
 				'name'   => __( 'Image Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_answering'   => array(
@@ -5851,19 +5852,19 @@ class Utils {
 		$icons = array(
 			'facebook' => array(
 				'share_class' => 's_facebook',
-				'icon_html'   => '<i class="tutor-icon-facebook"></i>',
+				'icon_html'   => '<i class="tutor-icon-facebook tutor-icon-24"></i>',
 				'text'        => __( 'Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
-				'icon_html'   => '<i class="tutor-icon-twitter"></i>',
+				'icon_html'   => '<i class="tutor-icon-twitter-brand tutor-icon-24"></i>',
 				'text'        => __( 'Twitter', 'tutor' ),
 				'color'       => '#4CA0EB',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
-				'icon_html'   => '<i class="tutor-icon-linkedin"></i>',
+				'icon_html'   => '<i class="tutor-icon-linkedin-brand tutor-icon-24"></i>',
 				'text'        => __( 'Linkedin', 'tutor' ),
 				'color'       => '#3967B6',
 			),
@@ -5889,22 +5890,22 @@ class Utils {
 			 '_tutor_profile_twitter'  => array(
 				 'label'        => __( 'Twitter', 'tutor' ),
 				 'placeholder'  => 'https://twitter.com/username',
-				 'icon_classes' => 'tutor-icon-twitter',
+				 'icon_classes' => 'tutor-icon-twitter-brand',
 			 ),
 			 '_tutor_profile_linkedin' => array(
 				 'label'        => __( 'Linkedin', 'tutor' ),
 				 'placeholder'  => 'https://linkedin.com/username',
-				 'icon_classes' => 'tutor-icon-linkedin',
+				 'icon_classes' => 'tutor-icon-linkedin-brand',
 			 ),
 			 '_tutor_profile_website'  => array(
 				 'label'        => __( 'Website', 'tutor' ),
 				 'placeholder'  => 'https://example.com/',
-				 'icon_classes' => 'tutor-icon-earth',
+				 'icon_classes' => 'tutor-icon-earth-filled',
 			 ),
 			 '_tutor_profile_github'   => array(
 				 'label'        => __( 'Github', 'tutor' ),
 				 'placeholder'  => 'https://github.com/username',
-				 'icon_classes' => 'tutor-icon-github-logo',
+				 'icon_classes' => 'tutor-icon-github-logo-brand',
 			 ),
 		 );
 
@@ -6254,7 +6255,7 @@ class Utils {
 	 *
 	 * @return object
 	 */
-	public function get_withdrawals_history( $user_id = 0, $filter = array() ) {
+	public function get_withdrawals_history( $user_id = 0, $filter = array(), $start=0, $limit=20 ) {
 		global $wpdb;
 
 		$filter = (array) $filter;
@@ -6262,21 +6263,12 @@ class Utils {
 
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
-		$query_by_pagination = '';
-
+		
 		if ( ! empty( $status ) ) {
 			$status = (array) $status;
 			$status = "'" . implode( "','", $status ) . "'";
 
 			$query_by_status_sql = " AND status IN({$status}) ";
-		}
-
-		if ( ! empty( $per_page ) ) {
-			if ( empty( $start ) ) {
-				$start = 0;
-			}
-
-			$query_by_pagination = " LIMIT {$start}, {$per_page} ";
 		}
 
 		if ( $user_id ) {
@@ -6338,28 +6330,22 @@ class Utils {
 
 					AND (user_tbl.display_name LIKE %s OR user_tbl.user_login LIKE %s OR user_tbl.user_nicename LIKE %s OR user_tbl.user_email LIKE %s)
 				{$order_query}
-				{$query_by_pagination}
+				LIMIT %d, %d
 			",
 				1,
 				$search_query,
 				$search_query,
 				$search_query,
-				$search_query
+				$search_query,
+				$start,
+				$limit
 			)
 		);
 
 		$withdraw_history = array(
-			'count'   => 0,
-			'results' => null,
+			'count'   => $count ? $count : 0,
+			'results' => is_array($results) ? $results : array(),
 		);
-
-		if ( $count ) {
-			$withdraw_history['count'] = $count;
-		}
-
-		if ( tutor_utils()->count( $results ) ) {
-			$withdraw_history['results'] = $results;
-		}
 
 		return (object) $withdraw_history;
 	}
@@ -7459,11 +7445,11 @@ class Utils {
 
 		$html = '';
 		if ( $is_completed ) {
-			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark"></i> ' . __( 'Completed', 'tutor' ) . ' </span>';
+			$html = '<span class="course-completion-status course-completed"><i class="tutor-icon-mark-filled"></i> ' . __( 'Completed', 'tutor' ) . ' </span>';
 		} else {
 			$is_in_progress = tutor_utils()->get_completed_lesson_count_by_course( $course_id, $user_id );
 			if ( $is_in_progress ) {
-				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-button-1"></i> ' . __( 'In Progress', 'tutor' ) . ' </span>';
+				$html = '<span class="course-completion-status course-inprogress"><i class="tutor-icon-refresh-l"></i> ' . __( 'In Progress', 'tutor' ) . ' </span>';
 			} else {
 				$html = '<span class="course-completion-status course-not-taken"><i class="tutor-icon-spinner"></i> ' . __( 'Not Taken', 'tutor' ) . ' </span>';
 			}

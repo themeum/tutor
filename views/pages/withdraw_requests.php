@@ -35,11 +35,9 @@ $args          = array(
 	'status'   => 'all' === $active_tab ? '' : $active_tab,
 	'date'     => $date,
 	'order'    => $order,
-	'start'    => $offset,
-	'per_page' => $per_page,
 	'search'   => $search_term,
 );
-$withdraw_list = tutor_utils()->get_withdrawals_history( null, $args );
+$withdraw_list = tutor_utils()->get_withdrawals_history( null, $args, $offset, $per_page);
 $total         = $withdraw_list->count;
 
 /**
