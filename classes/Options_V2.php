@@ -290,7 +290,7 @@ class Options_V2 {
 		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
 		$old_dashboard_id = get_tutor_option('tutor_dashboard_page_id');
 
-		$dashboard_update_id = isset($option['tutor_dashboard_page_id']) && $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
+		$dashboard_update_id = isset($option['tutor_dashboard_page_id']) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
 
 		if(isset($option['email_footer_text'])){
 			$option['email_footer_text'] = wp_unslash( $option['email_footer_text'] );
@@ -389,7 +389,8 @@ class Options_V2 {
 			return $this->setting_fields;
 		}
 
-		$pages       = tutor_utils()->get_pages();
+		$pages       = tutor_utils()->get_not_translated_pages();
+
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
 		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url(0, false);
