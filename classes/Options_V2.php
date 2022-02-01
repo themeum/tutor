@@ -389,7 +389,7 @@ class Options_V2 {
 			return $this->setting_fields;
 		}
 
-		$pages       = tutor_utils()->get_not_translated_pages();
+		$pages       = tutor_utils()->get_pages();
 
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
 		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';

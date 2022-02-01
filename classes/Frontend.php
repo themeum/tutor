@@ -20,7 +20,7 @@ class Frontend {
 	public function __construct() {
 		add_action( 'after_setup_theme', array( $this, 'remove_admin_bar' ) );
 		add_filter( 'nav_menu_link_attributes', array( $this, 'add_menu_atts' ), 10, 3 );
-		add_action( 'init', array( $this, 'wpml_switch_dashboard' ), 10, 3 );
+		// add_action( 'init', array( $this, 'wpml_switch_dashboard' ), 10, 3 );
 	}
 
 	/**
@@ -53,14 +53,13 @@ class Frontend {
 	 */
 	function wpml_switch_dashboard() {
 		if ( function_exists('icl_object_id') ) {
-			$tutor_option = get_option( 'tutor_option' );
 			$previous_dashboard = get_tutor_option('tutor_dashboard_page_id');
-
 			$changed_dashboard_id = apply_filters( 'wpml_object_id', $previous_dashboard, 'page' );
-			if(isset($changed_dashboard_id) && null !== $changed_dashboard_id){
+			// echo $previous_dashboard.' - '.$changed_dashboard_id;
+			if(isset($changed_dashboard_id) && $previous_dashboard !== $changed_dashboard_id){
+				$tutor_option = get_option( 'tutor_option' );
 				$tutor_option['tutor_dashboard_page_id'] = $changed_dashboard_id;
 				update_option('tutor_option',$tutor_option);
-
 				global $wp_rewrite;
 				$wp_rewrite->set_permalink_structure('/%postname%/');
 				update_option( "rewrite_rules", false );
