@@ -5,11 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Tutor_List_Table' ) ) {
-	include_once tutor()->path . 'classes/Tutor_List_Table.php';
-}
-
-class Question_Answers_List extends \Tutor_List_Table {
+class Question_Answers_List {
 
 	use Backend_Page_Trait;
 
@@ -31,9 +27,9 @@ class Question_Answers_List extends \Tutor_List_Table {
 			$search_term = sanitize_text_field($args['search']);
 		}
 
-		$current_page 	= $this->get_pagenum();
-		
-		$question_status= !empty($_GET['data']) ? $_GET['data'] : null;
+		$current_page 	= isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 1;
+
+		$question_status= !empty($args['tab']) ? $args['tab'] : null;
 		$items 			= tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term, null, null, null, $question_status, false, $args);
 		$total_items 	= tutor_utils()->get_qa_questions(($current_page-1)*$per_page, $per_page, $search_term, null, null, null, $question_status, true, $args);
 

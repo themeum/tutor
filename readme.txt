@@ -241,6 +241,19 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
+= 2.0.0-beta.3 - January 31, 2022
+
+Fix: Email notification error generating from tutor login modal
+Fix: Bulk delete option for quiz attempt not working
+Fix: Zoom & Announcement Time Calculation is not working
+Fix: Minimal GradeBook percentage was showing the wrong calculations
+Fix: The users were unable to switch the Q&A tab
+Fix: Quiz Export button was not showing up
+Fix: Quiz attempt table matching data was showing wrong information
+Fix: Pagination issues on the dashboard withdrawal tab
+Fix: Second Zoom live lesson not working properly
+Fix: Download certificate button issue without course completion
+
 = 2.0.0-beta.2 - January 25, 2022
 
 New: Student and instructor public profile layout option in settings

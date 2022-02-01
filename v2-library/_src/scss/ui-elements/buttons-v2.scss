@@ -308,8 +308,9 @@ a {
 .tutor-back-btn {
 	display: flex;
 	align-items: center;
+	max-width: 100px;
 	span:first-child {
-		font-size: 30px !important; 
+		font-size: 30px !important;
 		margin-right: 5px;
 		margin-left: -5px;
 	}

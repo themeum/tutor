@@ -3,8 +3,8 @@ window.jQuery(document).ready($ => {
     const {__} = wp.i18n;
 
     function toggle_star_(star){
-        star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full').removeClass('tutor-icon-star-line');
-        star.nextAll().filter('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+        star.add(star.prevAll()).filter('i').addClass('tutor-icon-star-full-filled').removeClass('tutor-icon-star-line-filled');
+        star.nextAll().filter('i').removeClass('tutor-icon-star-full-filled').addClass('tutor-icon-star-line-filled');
     }
 
     /**
@@ -26,7 +26,7 @@ window.jQuery(document).ready($ => {
         var rating = parseInt(value);
         
         var selected = $(this).find('[data-rating-value="'+rating+'"]');
-        (rating && selected && selected.length>0) ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full').addClass('tutor-icon-star-line');
+        (rating && selected && selected.length>0) ? toggle_star_(selected) : $(this).find('i').removeClass('tutor-icon-star-full-filled').addClass('tutor-icon-star-line-filled');
     });
 
     $(document).on('click', '.tutor_submit_review_btn', function (e) {

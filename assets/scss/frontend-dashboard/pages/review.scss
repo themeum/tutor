@@ -102,6 +102,8 @@
 				.tutor-star-rating-group {
 					i {
 						font-size: 50px;
+					}
+					i.tutor-icon-star-line-filled {
 						color : #C0C3CB;
 					}
 					i.tutor-icon-star-full {
@@ -116,10 +118,6 @@
 		
 	}
 	.tutor-modal-inner {
-		.tutor-modal-close {
-			right: 20px;
-			top: 20px;
-		}
 		textarea.tutor-form-control {
 			min-height: 140px;
 			// max-height: 250px;

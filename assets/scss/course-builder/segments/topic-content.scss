@@ -124,9 +124,6 @@
 				@include valueWithPrefix(display, flex);
 				@include propertyWithPrefix(flex-wrap, wrap);
 
-				button {
-				}
-
 				& > span > button,
 				& > button {
 					font-style: normal;
@@ -135,8 +132,7 @@
 					margin-top: 3px;
 					margin-bottom: 3px;
 
-					&,
-					.tutor-icon-plus-square-filled {
+					& {
 						font-size: 13px;
 					}
 

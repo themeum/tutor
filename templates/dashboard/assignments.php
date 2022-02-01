@@ -14,7 +14,7 @@
 
 global $wpdb;
 
-$per_page     = tutor_utils()->get_option( 'pagination_per_page' );
+$per_page     = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
@@ -120,7 +120,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 							</td>
 							<td data-th="Details URL">
 								<div class="inline-flex-center td-action-btns">
-									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="btn-outline tutor-btn">
+									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</a>
 								</div>
