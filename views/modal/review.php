@@ -6,11 +6,11 @@
 ?>
 <form class="tutor-modal tutor-is-active tutor-course-review-popup-form">
     <span class="tutor-modal-overlay"></span>
-    <button data-tutor-modal-close class="tutor-modal-close">
-        <span class="tutor-icon-line-cross-line"></span>
-    </button>
     <div class="tutor-modal-root">
         <div class="tutor-modal-inner">
+            <button data-tutor-modal-close class="tutor-modal-close">
+                <span class="tutor-icon-line-cross-line"></span>
+            </button>
             <div class="tutor-modal-body tutor-text-center">
                 <input type="hidden" name="course_id" value="<?php echo $course_id; ?>"> 
                 <input type="hidden" name="review_id" value="<?php echo isset($review_id) ? $review_id : ''; ?>"/>
