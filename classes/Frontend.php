@@ -52,24 +52,14 @@ class Frontend {
 	 * @return void
 	 */
 	function wpml_switch_dashboard() {
-		$tutor_option = get_option( 'tutor_option' );
-		$previous_dashboard = get_tutor_option('tutor_dashboard_page_id');
-
-		$changed_dashboard_id = apply_filters( 'wpml_object_id', get_tutor_option('tutor_dashboard_page_id'), 'page' );
-
-
-		// pr(get_queried_object_id());
-
-		/* tutor_vd(get_page_template_slug());
-		pr($changed_dashboard_id);
-		tutor_vd(tutor_utils()->is_tutor_dashboard()); */
-
-		// pr(!tutor_utils()->is_tutor_frontend_dashboard($changed_dashboard_id));
-		// die('not a good page ');
-
-		/* $changed_dashboard_id = apply_filters( 'wpml_object_id', get_tutor_option('tutor_dashboard_page_id'), 'page' );
-
-		$tutor_option['tutor_dashboard_page_id'] = $changed_dashboard_id;
-		update_option('tutor_option',$tutor_option); */
+			$wpml_installed = (int) get_option( 'wpml_installed');
+			if( empty(get_option( 'rewrite_rules' )) || (false == $wpml_installed && function_exists('icl_object_id'))){
+				global $wp_rewrite;
+				$wp_rewrite->set_permalink_structure('/%postname%/');
+				update_option( "rewrite_rules", false );
+				$wp_rewrite->flush_rules( true );
+				flush_rewrite_rules();
+				update_option( 'wpml_installed', true);
+			}
 	}
 }

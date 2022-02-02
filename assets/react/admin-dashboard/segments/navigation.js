@@ -54,9 +54,10 @@ readyState_complete(() => {
                     document.getElementById(dataTab).querySelector('.loading-spinner').remove();
                 }
 
+
                 //enable if tinymce content changed
-                if (tinymce && 'undefined' !== typeof tinymce && null !== tinymce) {
-                    tinymce.activeEditor.on("change", function (e) {
+                if (typeof(tinyMCE) != "undefined") {
+                    tinyMCE.activeEditor.on("change", function (e) {
                         if (document.getElementById('save_tutor_option')) {
                             document.getElementById('save_tutor_option').disabled = false;
                         }
