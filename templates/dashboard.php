@@ -169,6 +169,7 @@ do_action('tutor_dashboard/before/wrap');
 						if ($disable && 'reviews' === $dashboard_key) {
 							continue;
 						}
+
 						$menu_title = $dashboard_page;
 						$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key);
 						$separator  = false;
@@ -182,7 +183,7 @@ do_action('tutor_dashboard/before/wrap');
 							}
 							// Add new menu item property "url" for custom link
 							if (isset($dashboard_page['url'])) {
-								$menu_link = $dashboard_page['url'];
+								echo $menu_link = $dashboard_page['url'];
 							}
 							if (isset($dashboard_page['type']) && $dashboard_page['type'] == 'separator') {
 								$separator = true;
@@ -224,7 +225,7 @@ do_action('tutor_dashboard/before/wrap');
 						 */
 						$other_location      = '';
 						$from_other_location = apply_filters('load_dashboard_template_part_from_other_location', $other_location);
-
+echo 'location';
 						if ($from_other_location == '') {
 							tutor_load_template('dashboard.' . $dashboard_page_name);
 						} else {
