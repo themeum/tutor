@@ -5,7 +5,7 @@ $settings = maybe_unserialize($question->question_settings);
 
 <div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>">
     <div class="question-form-header">
-        <a href="javascript:;" class="tutor-back-btn" data-quiz-id="<?php echo isset($quiz_id) ? $quiz_id : ''; ?>" data-topic-id="<?php echo isset($topic_id) ? $topic_id : ''; ?>">
+        <a href="javascript:;" class="tutor-back-btn back-to-quiz-questions-btn" data-quiz-id="<?php echo isset($quiz_id) ? $quiz_id : ''; ?>" data-topic-id="<?php echo isset($topic_id) ? $topic_id : ''; ?>">
             <span class="tutor-icon-previous-line tutor-color-design-dark"></span>
             <span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
         </a>
@@ -33,9 +33,11 @@ $settings = maybe_unserialize($question->question_settings);
                         ?>
 
                         <div class="select-header">
-                            <span class="lead-option"><?php echo $question_types[$current_type]['icon'];
-                                                        echo $question_types[$current_type]['name']; ?> </span>
-                            <span class="select-dropdown"><i class="tutor-icon-icon-light-down-line"></i> </span>
+                            <span class="lead-option">
+                                <?php echo $question_types[$current_type]['icon'];
+                                echo $question_types[$current_type]['name']; ?> 
+                            </span>
+                            <span class="select-dropdown"><i class="tutor-icon-icon-light-down-line tutor-icon-18"></i> </span>
                             <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo $question_id; ?>][question_type]" value="<?php echo $question->question_type; ?>">
                         </div>
 

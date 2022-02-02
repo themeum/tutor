@@ -4632,52 +4632,52 @@ class Utils {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-quiz-type-icon tutor-icon-yes-no-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'single_choice'     => array(
 				'name'   => __( 'Single Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-quiz-type-icon tutor-icon-mark-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'multiple_choice'   => array(
 				'name'   => __( 'Multiple Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Multiple Choicee"><i class="tutor-quiz-type-icon tutor-icon-multiple-choice-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'open_ended'        => array(
 				'name'   => __( 'Open Ended', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-quiz-type-icon tutor-icon-open-ended-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'fill_in_the_blank' => array(
 				'name'   => __( 'Fill In The Blanks', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-v1-fill-gaps"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-quiz-type-icon tutor-icon-fill-gaps-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'short_answer'      => array(
 				'name'   => __( 'Short Answer', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Short Answer"><i class="tutor-icon-block tutor-icon-short-ans"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Short Answer"><i class="tutor-quiz-type-icon tutor-icon-short-ans-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'matching'          => array(
 				'name'   => __( 'Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Matching"><i class="tutor-icon-block tutor-icon-matching"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Matching"><i class="tutor-quiz-type-icon tutor-icon-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_matching'    => array(
 				'name'   => __( 'Image Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-quiz-type-icon tutor-icon-image-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_answering'   => array(
 				'name'   => __( 'Image Answering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Answering"><i class="tutor-icon-block tutor-icon-image-ans"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Answering"><i class="tutor-quiz-type-icon tutor-icon-camera-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'ordering'          => array(
 				'name'   => __( 'Ordering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Ordering"><i class="tutor-quiz-type-icon tutor-icon-ordering-z-to-a-filled"></i></span>',
 				'is_pro' => true,
 			),
 		);
@@ -5880,19 +5880,19 @@ class Utils {
 		$icons = array(
 			'facebook' => array(
 				'share_class' => 's_facebook',
-				'icon_html'   => '<i class="tutor-icon-facebook tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-facebook tutor-icon-24"></i>',
 				'text'        => __( 'Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
-				'icon_html'   => '<i class="tutor-icon-twitter-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-twitter-brand tutor-icon-24"></i>',
 				'text'        => __( 'Twitter', 'tutor' ),
 				'color'       => '#4CA0EB',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
-				'icon_html'   => '<i class="tutor-icon-linkedin-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-linkedin-brand tutor-icon-24"></i>',
 				'text'        => __( 'Linkedin', 'tutor' ),
 				'color'       => '#3967B6',
 			),

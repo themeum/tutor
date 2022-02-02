@@ -148,11 +148,7 @@ class Assets {
 		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		/**
-		 * Tutor Icon
-		 */
-		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), TUTOR_VERSION);
-
+		
 		// Plyr
 		wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION);
 		wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), TUTOR_VERSION, true);
@@ -239,11 +235,9 @@ class Assets {
 		return $localize_data;
 	}
 
-	public function common_scripts()
-	{
+	public function common_scripts() {
 
 		// Fonts
-		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), TUTOR_VERSION);
 		wp_enqueue_style('tutor-inter-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap', array(), TUTOR_VERSION);
 		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-v2-icon/css/tutor-v2-iconpack.css', array(), TUTOR_VERSION);
 
