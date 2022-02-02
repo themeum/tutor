@@ -187,11 +187,39 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true,'post_status'    => 'publish', 'numberposts' => -1,  ) );
+		$wp_pages = get_posts( array( 'post_type' => 'page', 'post_status'    => 'publish', 'numberposts' => -1,  ) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
 				$pages[ $page->ID ] = $page->post_title;
+			}
+		}
+
+		do_action( 'tutor_utils/get_pages/after' );
+
+		return $pages;
+	}
+	/**
+	 * @return array
+	 *
+	 * Get all pages
+	 *
+	 * @since v.1.0.0
+	 */
+
+	public function get_not_translated_pages() {
+		do_action( 'tutor_utils/get_pages/before' );
+
+		$pages    = array();
+
+		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true, 'post_status'    => 'publish', 'numberposts' => -1,  ) );
+
+		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
+			foreach ( $wp_pages as $page ) {
+				$translate_id = icl_object_id($page->ID,'page', true, ICL_LANGUAGE_CODE);
+				if($page->ID === $translate_id){
+					$pages[ $page->ID ] = $page->post_title;
+				}
 			}
 		}
 
@@ -6263,7 +6291,7 @@ class Utils {
 
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
-		
+
 		if ( ! empty( $status ) ) {
 			$status = (array) $status;
 			$status = "'" . implode( "','", $status ) . "'";
@@ -9326,15 +9354,15 @@ class Utils {
 	 *
 	 * @param string $date | string date time to conver.
 	 *
-	 * @return string | date time 
+	 * @return string | date time
 	 */
 	public function convert_date_into_wp_timezone( string $date ): string {
 		$date = new \DateTime( $date );
 		$date->setTimezone( wp_timezone() );
 		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 	}
-
-	/*
+	
+	/**
 	 * Tutor Custom Header
 	 */
 	public function tutor_custom_header() {
@@ -9359,7 +9387,7 @@ class Utils {
 	}
 
 	/**
-	 * Tutor Custom Footer
+	 * Tutor Custom Header
 	 */
 	public function tutor_custom_footer() {
 		global $wp_version;

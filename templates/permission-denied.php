@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-get_header();
+tutor_utils()->tutor_custom_header();
 
 ?>
 
@@ -62,4 +62,4 @@ get_header();
 </div>
 
 <?php
-get_footer();
+tutor_utils()->tutor_custom_footer();
