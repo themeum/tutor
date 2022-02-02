@@ -9361,8 +9361,8 @@ class Utils {
 		$date->setTimezone( wp_timezone() );
 		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 	}
-
-	/*
+	
+	/**
 	 * Tutor Custom Header
 	 */
 	public function tutor_custom_header() {
@@ -9387,7 +9387,7 @@ class Utils {
 	}
 
 	/**
-	 * Tutor Custom Footer
+	 * Tutor Custom Header
 	 */
 	public function tutor_custom_footer() {
 		global $wp_version;
