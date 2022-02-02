@@ -289,7 +289,7 @@ class Options_V2 {
 
 		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
 
-		$option['email_footer_text'] = wp_unslash( $option['email_footer_text'] );
+		$option['email_footer_text'] = !empty($option['email_footer_text']) ? wp_unslash( $option['email_footer_text'] ) : '';
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
