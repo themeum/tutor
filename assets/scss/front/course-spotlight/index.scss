@@ -66,26 +66,23 @@
                 }
             }
             .tutor-topbar-sidebar-toggle {
-                background: $primary-100;
-                span[class^='ttr'],
-                span[class*=' ttr'] {
+                background: $primary-90;
+                span[class^='tutor-icon'] {
                     font-size: 30px;
                     font-weight: 800;
                 }
             }
             .tutor-topbar-content-title-wrap {
-                span[class^='ttr'],
-                span[class*=' ttr'] {
+                span[class^='tutor-icon'] {
                     font-size: 24px;
                 }
             }
             .tutor-topbar-cross-icon {
                 cursor: pointer;
                 &:hover {
-                    background: $primary-100;
+                    background: $primary-90;
                 }
-                span[class^='ttr'],
-                span[class*=' ttr'] {
+                span[class^='tutor-icon'] {
                     font-size: 30px;
                 }
             }
