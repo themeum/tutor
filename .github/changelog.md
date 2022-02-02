@@ -5,6 +5,12 @@
 * Update: Overall Design System
 
 
+### 1.9.15 - February 01, 2022
+
+* Update: Added Compatibility with WordPress 5.9 and Block Based Theme
+* Fix: Security issue and XSS vulnerabillity fixes
+
+
 ### 1.9.14 - January 20, 2022
 
 * New: Now you can add Videos using a Shortcode

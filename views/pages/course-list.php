@@ -299,7 +299,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										if ( null === $price ) {
 											esc_html_e( 'Free', 'tutor' );
 										} else {
-											echo wp_kses_post( wc_price( $price ) );
+											echo function_exists('wc_price') ? wp_kses_post( wc_price( $price ) ) : '';
 										}
 										// Alert class for course status.
 										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : ( 'private' === $post->post_status ? 'select-default' : 'select-default' ) ) ) );
