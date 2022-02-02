@@ -26,7 +26,7 @@ if ( empty( $course_benefits ) ) {
 	<div class="tutor-course-details-widget tutor-course-details-widget-col-2 tutor-mt-30">
 		<div class="tutor-course-details-widget-title tutor-mb-16">
 			<span class="tutor-color-text-primary tutor-text-medium-h6">
-				<?php _e('What Will I Learn?', 'tutor'); ?>
+				<?php echo esc_html( apply_filters( 'tutor_course_benefit_title', __( 'What Will I Learn?', 'tutor' ) ) ); ?>
 			</span>
 		</div>
 		<ul class="tutor-course-details-widget-list tutor-m-0 tutor-mt-16">
