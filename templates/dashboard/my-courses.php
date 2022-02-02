@@ -12,8 +12,10 @@ $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = (isset($_GET['current_page']) && is_numeric($_GET['current_page']) && $_GET['current_page'] >= 1) ? $_GET['current_page'] : 1;
 $offset     = ( $per_page * $paged ) - $per_page;
 $status = $active_tab == 'my-courses' ? array('publish') : array('pending');
-$courses_per_page = tutor_utils()->get_courses_by_instructor(null, $status, $offset, $per_page);
-$my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
+
+$courses_per_page = tutor_utils()->get_courses_by_instructor_wpml(null, $status, $offset, $per_page);
+// echo count($courses_per_page);
+$my_courses = tutor_utils()->get_courses_by_instructor_wpml(null, $status);
 
 ?>
 
@@ -21,9 +23,11 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
 
 <div class="tutor-dashboard-content-inner my-courses">
     <?php
+    $courses_all = tutor_utils()->is_wpml_active()?tutor_utils()->get_courses_by_instructor_wpml($user->ID):tutor_utils()->get_courses_by_instructor($user->ID);
+    $courses_pending = tutor_utils()->is_wpml_active()?tutor_utils()->get_pending_courses_by_instructor_wpml($user->ID):tutor_utils()->get_pending_courses_by_instructor($user->ID);
     $user = wp_get_current_user();
-    $publish_courses_count = count(tutor_utils()->get_courses_by_instructor($user->ID));
-    $pending_courses_count = count(tutor_utils()->get_pending_courses_by_instructor($user->ID));
+    $publish_courses_count = count($courses_all);
+    $pending_courses_count = count($courses_pending);
     ?>
 
     <!-- Navigation Tab -->
