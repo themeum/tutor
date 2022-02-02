@@ -52,14 +52,22 @@ class Frontend {
 	 * @return void
 	 */
 	function wpml_switch_dashboard() {
-			$wpml_installed = (int) get_option( 'wpml_installed');
-			if( empty(get_option( 'rewrite_rules' )) || (false == $wpml_installed && function_exists('icl_object_id'))){
-				global $wp_rewrite;
-				$wp_rewrite->set_permalink_structure('/%postname%/');
-				update_option( "rewrite_rules", false );
-				$wp_rewrite->flush_rules( true );
-				flush_rewrite_rules();
-				update_option( 'wpml_installed', true);
-			}
+		$previous_dashboard = get_tutor_option('tutor_dashboard_page_id');
+		$changed_dashboard_id = apply_filters( 'wpml_object_id', $previous_dashboard, 'page' );
+		// echo $previous_dashboard.' - '.$changed_dashboard_id;
+		if(isset($changed_dashboard_id) && $previous_dashboard !== $changed_dashboard_id){
+			$tutor_option = get_option( 'tutor_option' );
+			$tutor_option['tutor_dashboard_page_id'] = $changed_dashboard_id;
+			update_option('tutor_option',$tutor_option);
+			$this->rewrite_flush();
+		}
 	}
+
+	public function rewrite_flush() {
+        global $wp_rewrite;
+        $wp_rewrite->set_permalink_structure('/%postname%/');
+        update_option( "rewrite_rules", false );
+        $wp_rewrite->flush_rules( true );
+        flush_rewrite_rules();
+    }
 }
