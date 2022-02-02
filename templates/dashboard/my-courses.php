@@ -23,9 +23,9 @@ $my_courses = tutor_utils()->get_courses_by_instructor_wpml(null, $status);
 
 <div class="tutor-dashboard-content-inner my-courses">
     <?php
+    $user = wp_get_current_user();
     $courses_all = tutor_utils()->is_wpml_active()?tutor_utils()->get_courses_by_instructor_wpml($user->ID):tutor_utils()->get_courses_by_instructor($user->ID);
     $courses_pending = tutor_utils()->is_wpml_active()?tutor_utils()->get_pending_courses_by_instructor_wpml($user->ID):tutor_utils()->get_pending_courses_by_instructor($user->ID);
-    $user = wp_get_current_user();
     $publish_courses_count = count($courses_all);
     $pending_courses_count = count($courses_pending);
     ?>
