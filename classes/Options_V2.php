@@ -288,8 +288,9 @@ class Options_V2 {
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() );
 
 		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
+		$old_dashboard_id = get_tutor_option('tutor_dashboard_page_id');
 
-		$option['email_footer_text'] = wp_unslash( $option['email_footer_text'] );
+		$option['email_footer_text'] = !empty($option['email_footer_text']) ? wp_unslash( $option['email_footer_text'] ) : '';
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
@@ -313,11 +314,20 @@ class Options_V2 {
 		// pr(array_keys($update_option));die;
 
 		update_option( 'tutor_settings_log', $update_option );
-
 		update_option( 'tutor_option', $option );
 		update_option( 'tutor_option_update_time', date( 'j M, Y, g:i a', $time ) );
 
 		do_action( 'tutor_option_save_after' );
+
+		// echo $dashboard_update_id . ' - ' . $old_dashboard_id;
+
+		if( $dashboard_update_id !== $old_dashboard_id ){
+			global $wp_rewrite;
+			$wp_rewrite->set_permalink_structure('/%postname%/');
+			update_option( "rewrite_rules", false );
+			$wp_rewrite->flush_rules( true );
+			flush_rewrite_rules();
+		}
 
 		wp_send_json_success( $option );
 	}
@@ -376,6 +386,7 @@ class Options_V2 {
 		}
 
 		$pages       = tutor_utils()->get_pages();
+
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
 		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url(0, false);
