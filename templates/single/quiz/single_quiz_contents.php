@@ -7,7 +7,7 @@
 $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
 ?>
 
-<div class="tutor-single-page-top-bar d-flex justify-content-between">
+<div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
     <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
             <span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
@@ -45,7 +45,7 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
         ?>
     </div>
 
-    <div class="tutor-topbar-cross-icon flex-center">
+    <div class="tutor-topbar-cross-icon tutor-ml-15 flex-center">
         <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
         <a href="<?php echo get_the_permalink($course_id); ?>">
             <span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>
