@@ -42,8 +42,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 	$tutor_user_social_icons[ $key ]['url'] = $url;
 }
 
-// Load theme header
-get_header();
+tutor_utils()->tutor_custom_header();
 ?>
 
 <?php
@@ -186,4 +185,4 @@ get_header();
 <?php
 
 do_action( 'tutor_profile/'.$user_type.'/after/wrap' );
-get_footer();
+tutor_utils()->tutor_custom_footer();
