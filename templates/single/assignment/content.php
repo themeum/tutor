@@ -675,7 +675,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 									echo 'tutor-btn-disable tutor-no-hover'; }
 							}
 							?>
-							 tutor-btn-lg" id="tutor_assignment_start_btn"
+							tutor-btn-lg" id="tutor_assignment_start_btn"
 				<?php
 				if ( $time_duration['value'] != 0 ) {
 					if ( $now > $remaining_time ) {
@@ -687,7 +687,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							</button>
 						</form>
 
-						<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
+						<?php if ( isset( $next_prev_content_id->next_id ) && 0 !== $next_prev_content_id->next_id ) : ?>
 							<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-10">
 							<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
 						</a>
