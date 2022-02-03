@@ -85,7 +85,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 				<?php
 					do_action( 'tutor_course/single/enrolled/after/lead_info/progress_bar' );
 				?>
-				<!-- <div class="tutor-topbar-complete-btn tutor-ml-30 tutorrr"> -->
+				<!-- <div class="tutor-topbar-complete-btn tutor-ml-24"> -->
 					<?php tutor_lesson_mark_complete_html(); ?>
 				<!-- </div> -->
 			</div>

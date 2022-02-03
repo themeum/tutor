@@ -24,7 +24,7 @@
 			max-height: 60px;
 			> div {
 				text-align: center;
-				padding: 12.5px 0px;
+				padding: 13px 10px;
 				cursor: pointer;
 				position: relative;
 				background: $bg-gray-10;
@@ -44,7 +44,7 @@
 					border-width: 0px 0px 1px 1px;
 				}
 				span {
-					color: $black-50;
+					// color: $black-50;
 					&:not(:last-child) {
 						margin-right: 4px;
 					}
@@ -54,7 +54,8 @@
 				}
 			}
 			> div.active {
-				border-width: 0px !important;
+				// border-width: 0px !important;
+				border-color: transparent;
 				background: $color-white;
 				span:first-child {
 					color: $design-brand;
@@ -77,7 +78,7 @@
 			#tutor-lesson-sidebar-tab-content {
 				.tutor-topics-in-single-lesson {
 					> div {
-						padding: 18px 18px;
+						padding: 14px 16px;
 					}
 					.tutor-topics-title {
 						border-bottom: 1px solid #ddd;
@@ -112,6 +113,7 @@
 									margin-right: 5px;
 								}
 								max-width: 270px;
+								margin-top: 4px;
 								.tutor-icon-zoom,
 								span:first-child {
 									display: flex;
@@ -129,6 +131,7 @@
 								> *:not(:last-child) {
 									margin-right: 10px;
 								}
+								margin-top: 3px;
 							}
 						}
 					}
