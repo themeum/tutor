@@ -58,6 +58,11 @@
 		.individual-star-rating-wrap {
 			display: flex;
 			align-items: center;
+			.tutor-rating-stars {
+				span {
+					font-size: 22px;
+				}
+			}
 		}
 
 		p {
@@ -86,7 +91,7 @@
 			}
 		}
 	}
-	.tutor-modal-text-rating  {
+	.tutor-modal-text-rating {
 		font-weight: 500;
 	}
 	.tutor-ratings {
@@ -101,13 +106,13 @@
 			.tutor-rating-stars {
 				.tutor-star-rating-group {
 					i {
-						font-size: 50px;
+						font-size: 60px;
 					}
 					i.tutor-icon-star-line-filled {
-						color : #C0C3CB;
+						color: #c0c3cb;
 					}
 					i.tutor-icon-star-full {
-						color : #ED9700;
+						color: #ed9700;
 					}
 				}
 			}
@@ -115,16 +120,15 @@
 		.tutor-rating-text {
 			margin-left: 4px;
 		}
-		
 	}
 	.tutor-modal-inner {
 		textarea.tutor-form-control {
 			min-height: 140px;
 			// max-height: 250px;
 			resize: none;
-			background: #FFFFFF;
-			border: 1px solid #C0C3CB;
-			color: #757C8E;
+			background: #ffffff;
+			border: 1px solid #c0c3cb;
+			color: #757c8e;
 			font-weight: normal;
 			font-size: 15px;
 			line-height: 24px;
