@@ -4,7 +4,7 @@
 			$rand_answers = tutor_utils()->get_answers_by_quiz_question( $question->question_id, true );
 		foreach ( $rand_answers as $rand_answer ) {
 			?>
-		<div class="" style="display:flex; flex-direction: column; row-gap: 80px;">
+		<!-- <div class="" style="display:flex; flex-direction: column; row-gap: 80px;"> -->
 			<div class="tutor-quiz-border-box" draggable="true">
 			<?php
 			if ( $question_type === 'matching' ) {
@@ -28,7 +28,7 @@
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
-		</div>
+		<!-- </div> -->
 		<?php } ?>
 	</div>
 	
