@@ -62,12 +62,12 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 				</div>
 
 				<div class="tutor-modal-footer d-flex justify-content-between">
-						<button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
-							<?php _e( 'Publish', 'tutor' ); ?>
-						</button>
-						<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
-							<?php _e( 'Cancel', 'tutor' ); ?>
-						</button>
+					<button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
+						<?php _e( 'Publish', 'tutor' ); ?>
+					</button>
+					<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
+						<?php _e( 'Cancel', 'tutor' ); ?>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -120,15 +120,15 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 					</div>
 					<div class="footer-bottom tutor-mt-sm-60 tutor-mt-20">
 						<div class="footer-btns">
-							<button data-tutor-modal-close class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm tutor-bs-d-none tutor-bs-d-sm-block">
+							<button data-tutor-modal-close class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md tutor-bs-d-none tutor-bs-d-sm-block tutor-modal-btn-cancel">
 								<?php _e( 'Cancel', 'tutor' ); ?>
 							</button>
 						</div>
 						<div class="footer-btns announcement-action-button d-flex justify-content-end tutor-bs-flex-sm-wrap tutor-bs-flex-md-nowrap">
-							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm tutor-btn-disable">
+							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-modal-btn-delete">
 								<?php _e( 'Delete', 'tutor' ); ?>
 							</button>
-							<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn-md">
+							<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-md tutor-modal-btn-edit <?php echo is_admin() ? 'tutor-btn-wordpress' : 'tutor-btn-primary'; ?>">
 								<?php _e( 'Edit', 'tutor' ); ?>
 							</button>
 						</div>
@@ -192,20 +192,20 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</div>
 						</th>
 						<th width="17%">
-							<div class="text-regular-small tutor-color-text-subsued">
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Date', 'tutor-pro'); ?>
 							</div>
 						</th>
 					<?php else : ?>
 						<th width="17%" class="tutor-shrink">
-							<span class="text-regular-small tutor-color-text-subsued">
+							<span class="tutor-text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Date', 'tutor'); ?>
 							</span>
 						</th>
 					<?php endif; ?>
 					<th class="tutor-table-rows-sorting">
-						<div class="inline-flex-center tutor-color-text-subsued">
-							<span class="text-regular-small"><?php esc_html_e( 'Announcements', 'tutor' ); ?></span>
+						<div class="inline-flex-center tutor-color-text-subsued tutor-text-regular-small">
+							<?php esc_html_e( 'Announcements', 'tutor' ); ?>
 						</div>
 					</th>
 					<th class="tutor-shrink"></th>
