@@ -19,8 +19,6 @@ global $next_id;
 
 
 $course_content_id = get_the_ID();
-$course_id = tutor_utils()->get_course_id_by_subcontent($course_content_id);
-
 $content_id = tutor_utils()->get_post_id($course_content_id);
 $contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
 $previous_id = $contents->previous_id;
