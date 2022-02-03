@@ -1,5 +1,7 @@
 <div id="quiz-matching-ans-area" class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo $question_type; ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?> ">
 	<?php
+
+	
 	if ( is_array( $answers ) && count( $answers ) ) {
 		foreach ( $answers as $answer ) {
 			$answer_title                         = stripslashes( $answer->answer_title );
