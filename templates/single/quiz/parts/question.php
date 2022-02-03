@@ -87,7 +87,6 @@
 
 					// Fill In The Blank
 					if ( $question_type === 'fill_in_the_blank' ) {
-						
 						require 'fill-in-the-blank.php';
 					}
 
