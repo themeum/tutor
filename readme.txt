@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://www.themeum.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 7.0
-Stable tag: 1.9.14
+Stable tag: 1.9.15
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -301,6 +301,11 @@ Update: Flexible Gradebook with easy grading point system setup
 Update: More intuitive certificate setup page with guided creation process
 Update: Enhanced course catalog features with extensive course page
 Update: Improved accessibility and responsiveness across all device
+
+= 1.9.15 - February 01, 2022 =
+
+Update: Added Compatibility with WordPress 5.9 and Block Based Theme
+Fix: Security issue and XSS vulnerabillity fixes
 
 = 1.9.14 - January 20, 2022 =
 

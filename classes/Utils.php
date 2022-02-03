@@ -187,11 +187,39 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true,'post_status'    => 'publish', 'numberposts' => -1,  ) );
+		$wp_pages = get_posts( array( 'post_type' => 'page', 'post_status'    => 'publish', 'numberposts' => -1,  ) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
 				$pages[ $page->ID ] = $page->post_title;
+			}
+		}
+
+		do_action( 'tutor_utils/get_pages/after' );
+
+		return $pages;
+	}
+	/**
+	 * @return array
+	 *
+	 * Get all pages
+	 *
+	 * @since v.1.0.0
+	 */
+
+	public function get_not_translated_pages() {
+		do_action( 'tutor_utils/get_pages/before' );
+
+		$pages    = array();
+
+		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true, 'post_status'    => 'publish', 'numberposts' => -1,  ) );
+
+		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
+			foreach ( $wp_pages as $page ) {
+				$translate_id = icl_object_id($page->ID,'page', true, ICL_LANGUAGE_CODE);
+				if($page->ID === $translate_id){
+					$pages[ $page->ID ] = $page->post_title;
+				}
 			}
 		}
 
@@ -625,6 +653,27 @@ class Utils {
 		return $count;
 	}
 
+	public function get_courses_by_instructor_wpml($instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX){
+		$args = array(
+			'posts_per_page'   => $limit,
+			'orderby'          => 'menu_order',
+			'order'            => 'DESC',
+			'post_type'        => tutor()->course_post_type,
+			'post_status'      => $post_status,
+			'suppress_filters'  => false
+		);
+		$pageposts = get_posts( $args );
+
+		return $pageposts;
+
+	}
+
+	public function is_wpml_active(){
+		$dashboard_id = get_tutor_option('tutor_dashboard_page_id');
+		$is_translated = apply_filters( 'wpml_element_has_translations', NULL, $dashboard_id, 'page' );
+		return $is_translated;
+	}
+
 	/**
 	 * @param $instructor_id
 	 *
@@ -669,6 +718,20 @@ class Utils {
 			),
 			OBJECT
 		);
+
+		return $pageposts;
+	}
+
+	public function get_pending_courses_by_instructor_wpml( $instructor_id = 0, $post_status = array( 'pending' ) ) {
+		$args = array(
+			'posts_per_page'   => -1,
+			'orderby'          => 'menu_order',
+			'order'            => 'DESC',
+			'post_type'        => tutor()->course_post_type,
+			'post_status'      => $post_status,
+			'suppress_filters'  => false
+		);
+		$pageposts = get_posts( $args );
 
 		return $pageposts;
 	}
@@ -4604,52 +4667,52 @@ class Utils {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-quiz-type-icon tutor-icon-yes-no-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'single_choice'     => array(
 				'name'   => __( 'Single Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-quiz-type-icon tutor-icon-mark-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'multiple_choice'   => array(
 				'name'   => __( 'Multiple Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Multiple Choicee"><i class="tutor-quiz-type-icon tutor-icon-multiple-choice-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'open_ended'        => array(
 				'name'   => __( 'Open Ended', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-quiz-type-icon tutor-icon-open-ended-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'fill_in_the_blank' => array(
 				'name'   => __( 'Fill In The Blanks', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-v1-fill-gaps"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-quiz-type-icon tutor-icon-fill-gaps-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'short_answer'      => array(
 				'name'   => __( 'Short Answer', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Short Answer"><i class="tutor-icon-block tutor-icon-short-ans"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Short Answer"><i class="tutor-quiz-type-icon tutor-icon-short-ans-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'matching'          => array(
 				'name'   => __( 'Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Matching"><i class="tutor-icon-block tutor-icon-matching"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Matching"><i class="tutor-quiz-type-icon tutor-icon-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_matching'    => array(
 				'name'   => __( 'Image Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-quiz-type-icon tutor-icon-image-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_answering'   => array(
 				'name'   => __( 'Image Answering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Answering"><i class="tutor-icon-block tutor-icon-image-ans"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Answering"><i class="tutor-quiz-type-icon tutor-icon-camera-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'ordering'          => array(
 				'name'   => __( 'Ordering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Ordering"><i class="tutor-quiz-type-icon tutor-icon-ordering-z-to-a-filled"></i></span>',
 				'is_pro' => true,
 			),
 		);
@@ -5852,19 +5915,19 @@ class Utils {
 		$icons = array(
 			'facebook' => array(
 				'share_class' => 's_facebook',
-				'icon_html'   => '<i class="tutor-icon-facebook tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-facebook tutor-icon-24"></i>',
 				'text'        => __( 'Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
-				'icon_html'   => '<i class="tutor-icon-twitter-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-twitter-brand tutor-icon-24"></i>',
 				'text'        => __( 'Twitter', 'tutor' ),
 				'color'       => '#4CA0EB',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
-				'icon_html'   => '<i class="tutor-icon-linkedin-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-linkedin-brand tutor-icon-24"></i>',
 				'text'        => __( 'Linkedin', 'tutor' ),
 				'color'       => '#3967B6',
 			),
@@ -6263,7 +6326,7 @@ class Utils {
 
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
-		
+
 		if ( ! empty( $status ) ) {
 			$status = (array) $status;
 			$status = "'" . implode( "','", $status ) . "'";
@@ -9326,7 +9389,7 @@ class Utils {
 	 *
 	 * @param string $date | string date time to conver.
 	 *
-	 * @return string | date time 
+	 * @return string | date time
 	 */
 	public function convert_date_into_wp_timezone( string $date ): string {
 		$date = new \DateTime( $date );
@@ -9334,7 +9397,7 @@ class Utils {
 		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 	}
 
-	/*
+	/**
 	 * Tutor Custom Header
 	 */
 	public function tutor_custom_header() {
@@ -9359,7 +9422,7 @@ class Utils {
 	}
 
 	/**
-	 * Tutor Custom Footer
+	 * Tutor Custom Header
 	 */
 	public function tutor_custom_footer() {
 		global $wp_version;
