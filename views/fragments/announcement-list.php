@@ -53,8 +53,8 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label" for="tutor_announcement_course">
 							<?php _e( 'Summary', 'tutor' ); ?>
 						</label>
-						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php 
-							echo $summary; 
+						<textarea style="resize: unset;" class="tutor-form-control" rows="6" type="text" name="tutor_announcement_summary" placeholder="<?php _e( 'Summary...', 'tutor' ); ?>" required><?php
+							echo $summary;
 						?></textarea>
 					</div>
 
@@ -218,7 +218,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							$course      = get_post( $announcement->post_parent );
 							$date_format = tutor_get_formated_date( get_option( 'date_format' ), $announcement->post_date );
 							$time_format = tutor_get_formated_date( get_option( 'time_format' ), $announcement->post_date );
-	
+
 							$update_modal_id  = 'tutor_announcement_' . $announcement->ID;
 							$details_modal_id = $update_modal_id . '_details';
 							$delete_modal_id  = $update_modal_id . '_delete';
@@ -233,7 +233,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 											type="checkbox"
 											class="tutor-form-check-input tutor-bulk-checkbox"
 											name="tutor-bulk-checkbox-all"
-											value="<?php esc_attr_e( $announcement->ID ); ?>"	
+											value="<?php esc_attr_e( $announcement->ID ); ?>"
 										/>
 									</div>
 								</td>
@@ -251,7 +251,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									</div>
 								</td>
 							<?php endif; ?>
-	
+
 							<td data-th="<?php esc_html_e( 'Announcement', 'tutor' ); ?>">
 								<div>
 									<div class="td-course tutor-color-text-primary tutor-text-medium-body">
@@ -269,7 +269,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 											<?php esc_html_e( 'Details', 'tutor' ); ?>
 										</button>
 									</div>
-	
+
 									<div class="tutor-popup-opener">
 										<button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
 											<span class="toggle-icon"></span>
@@ -290,10 +290,11 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										</ul>
 									</div>
 								</div>
-	
+
 								<?php
+									$course_title = isset($course->post_title)?$course->post_title:'';
 									tutor_announcement_modal( $update_modal_id, __( 'Edit Announcment', 'tutor' ), $courses, $announcement );
-									tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course->post_title, $date_format, $time_format );
+									tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $date_format, $time_format );
 									tutor_announcement_modal_delete( $delete_modal_id, $announcement->ID, $row_id );
 								?>
 							</td>
@@ -334,7 +335,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 				'per_page'    => $limit,
 				'paged'       => $paged,
 			);
-	
+
 			$pagination_template = tutor()->path . 'views/elements/pagination.php';
 			if ( is_admin() ) {
 				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );

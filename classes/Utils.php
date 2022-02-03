@@ -653,6 +653,27 @@ class Utils {
 		return $count;
 	}
 
+	public function get_courses_by_instructor_wpml($instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX){
+		$args = array(
+			'posts_per_page'   => $limit,
+			'orderby'          => 'menu_order',
+			'order'            => 'DESC',
+			'post_type'        => tutor()->course_post_type,
+			'post_status'      => $post_status,
+			'suppress_filters'  => false
+		);
+		$pageposts = get_posts( $args );
+
+		return $pageposts;
+
+	}
+
+	public function is_wpml_active(){
+		$dashboard_id = get_tutor_option('tutor_dashboard_page_id');
+		$is_translated = apply_filters( 'wpml_element_has_translations', NULL, $dashboard_id, 'page' );
+		return $is_translated;
+	}
+
 	/**
 	 * @param $instructor_id
 	 *
@@ -697,6 +718,20 @@ class Utils {
 			),
 			OBJECT
 		);
+
+		return $pageposts;
+	}
+
+	public function get_pending_courses_by_instructor_wpml( $instructor_id = 0, $post_status = array( 'pending' ) ) {
+		$args = array(
+			'posts_per_page'   => -1,
+			'orderby'          => 'menu_order',
+			'order'            => 'DESC',
+			'post_type'        => tutor()->course_post_type,
+			'post_status'      => $post_status,
+			'suppress_filters'  => false
+		);
+		$pageposts = get_posts( $args );
 
 		return $pageposts;
 	}
@@ -9361,7 +9396,7 @@ class Utils {
 		$date->setTimezone( wp_timezone() );
 		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 	}
-	
+
 	/**
 	 * Tutor Custom Header
 	 */
