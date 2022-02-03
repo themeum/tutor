@@ -56,7 +56,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			</a>
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-			<span class="tutor-icon-assignment-filled tutor-color-text-white tutor-mr-5"></span>
+			<span class="tutor-icon-assignment-filled tutor-icon-24 tutor-color-text-white tutor-mr-5"></span>
 			<span class="text-regular-caption tutor-color-design-white">
 				<?php
 					esc_html_e( 'Assignment: ', 'tutor' );

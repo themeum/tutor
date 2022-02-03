@@ -46,7 +46,7 @@ $enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
                         </a>
                     </div>
                     <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-                        <span class="tutor-icon-quiz-filled tutor-color-text-white tutor-mr-5"></span>
+                        <span class="tutor-icon-quiz-filled tutor-icon-24 tutor-color-text-white tutor-mr-5"></span>
                         <span class="tutor-text-regular-caption tutor-color-design-white">
                             <?php 
                                 esc_html_e( 'Quiz: ', 'tutor' );
