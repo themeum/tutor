@@ -1,10 +1,10 @@
-import './dashboard';
-import './_select_dd_search';
-import './pages/instructor-list-filter';
-import './pages/course-landing';
-import './course/index';
-import './dashboard/export-csv';
 import '../admin-dashboard/segments/lib';
+import './course/index';
+import './dashboard';
+import './dashboard/export-csv';
+import './pages/course-landing';
+import './pages/instructor-list-filter';
+import './_select_dd_search';
 
 readyState_complete(() => {
 	Object.entries(document.getElementsByTagName('a')).forEach((item) => {
@@ -761,7 +761,7 @@ jQuery(document).ready(function($) {
 
 	$(document).on(
 		'click',
-		'.tutor-topics-in-single-lesson .tutor-topics-title h3, .tutor-single-lesson-topic-toggle',
+		'.tutor-topics-in-single-lesson .tutor-topics-title, .tutor-single-lesson-topic-toggle',
 		function(e) {
 			var $that = $(this);
 			var $parent = $that.closest('.tutor-topics-in-single-lesson');

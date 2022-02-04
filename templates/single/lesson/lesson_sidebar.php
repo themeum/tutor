@@ -72,19 +72,21 @@ $is_user_admin                = current_user_can( 'administrator' );
 						?>
 
 						<div class="tutor-topics-in-single-lesson tutor-topics-<?php echo $topic_id; ?>">
-							<div class="tutor-topics-title d-flex justify-content-between">
+							<div class="tutor-topics-title tutor-bs-d-flex justify-content-between">
 								<div class="tutor-topics-title-left">
-									<h3 class="text-medium-h6 tutor-color-text-brand">
-										<?php the_title(); ?> 
+									<div class="tutor-topics-title-inner">
+										<div class="text-medium-h6 tutor-color-text-brand"><?php the_title(); ?></div>
 										<?php if ( $topic_summery ): ?>
-											<div class="tooltip-wrap" style="vertical-align:middle">
-												<i class="tutor-icon-circle-outline-info-filled tutor-icon-24 color-black-40"></i>
-												<span class="tooltip-txt tooltip-bottom">
-													<?php echo $topic_summery; ?>
-												</span>
+											<div class="tutor-topics-title-info">
+												<div class="tooltip-wrap tutor-bs-d-flex">
+													<i class="tutor-icon-circle-outline-info-filled tutor-icon-24 color-black-40"></i>
+													<span class="tooltip-txt tooltip-bottom">
+														<?php echo $topic_summery; ?>
+													</span>
+												</div>
 											</div>
 										<?php endif; ?>
-									</h3>
+									</div>
 								</div>
 								<div class="tutor-topics-title-right align-self-end">
 									<?php if ( isset( $total_contents['contents'] ) && $total_contents['contents'] > 0 ) : ?>
@@ -106,14 +108,14 @@ $is_user_admin                = current_user_can( 'administrator' );
 										?>
 											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
 												<div class="tutor-single-lesson-items">
-													<a href="<?php echo get_permalink( $quiz->ID ); ?>" class="tutor-single-quiz-a d-flex justify-content-between" data-quiz-id="<?php echo $quiz->ID; ?>">
-														<div class="tutor-single-lesson-items-left d-flex">
+													<a href="<?php echo get_permalink( $quiz->ID ); ?>" class="tutor-single-quiz-a tutor-bs-d-flex justify-content-between" data-quiz-id="<?php echo $quiz->ID; ?>">
+														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-quiz-filled"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
 														<?php echo $quiz->post_title; ?>
 															</span>
 														</div>
-														<div class="tutor-single-lesson-items-right d-flex tutor-lesson-right-icons">
+														<div class="tutor-single-lesson-items-right tutor-bs-d-flex tutor-lesson-right-icons">
 															<span class="text-regular-caption tutor-color-text-title">
 																<?php
 																	$time_limit = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
@@ -140,14 +142,14 @@ $is_user_admin                = current_user_can( 'administrator' );
 										?>
 											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>" data-assignment-id="<?php echo $post->ID; ?>">
 												<div class="tutor-single-lesson-items">
-													<a href="<?php echo get_permalink( $post->ID ); ?>" class="tutor-single-assignment-a d-flex justify-content-between" data-assignment-id="<?php echo $post->ID; ?>">
-														<div class="tutor-single-lesson-items-left d-flex">
+													<a href="<?php echo get_permalink( $post->ID ); ?>" class="tutor-single-assignment-a tutor-bs-d-flex justify-content-between" data-assignment-id="<?php echo $post->ID; ?>">
+														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-assignment-filled"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
 														<?php echo $post->post_title; ?>
 															</span>
 														</div>
-														<div class="tutor-single-lesson-items-right d-flex tutor-lesson-right-icons">
+														<div class="tutor-single-lesson-items-right tutor-bs-d-flex tutor-lesson-right-icons">
 														<?php do_action( 'tutor/assignment/right_icon_area', $post ); ?>
 														</div>
 													</a>
@@ -165,14 +167,14 @@ $is_user_admin                = current_user_can( 'administrator' );
 										?>
 											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>" data-zoom-meeting-id="<?php echo $post->ID; ?>">
 												<div class="tutor-single-lesson-items">
-													<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="sidebar-single-zoom-meeting-a d-flex justify-content-between">
-														<div class="tutor-single-lesson-items-left d-flex">
+													<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="sidebar-single-zoom-meeting-a tutor-bs-d-flex justify-content-between">
+														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-zoom"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
 															<?php echo esc_html( $post->post_title ); ?>
 															</span>
 														</div>
-														<div class="tutor-single-lesson-items-right d-flex tutor-lesson-right-icons">
+														<div class="tutor-single-lesson-items-right tutor-bs-d-flex tutor-lesson-right-icons">
 														<?php do_action( 'tutor/zoom/right_icon_area', $post->ID ); ?>
 														</div>
 													</a>
@@ -196,8 +198,8 @@ $is_user_admin                = current_user_can( 'administrator' );
 										?>
 											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
 												<div class="tutor-single-lesson-items">
-													<a href="<?php the_permalink(); ?>" class="tutor-single-lesson-a d-flex justify-content-between" data-lesson-id="<?php the_ID(); ?>">
-														<div class="tutor-single-lesson-items-left d-flex">
+													<a href="<?php the_permalink(); ?>" class="tutor-single-lesson-a tutor-bs-d-flex justify-content-between" data-lesson-id="<?php the_ID(); ?>">
+														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 														<?php
 															$tutor_lesson_type_icon = $play_time ? 'youtube-brand' : 'document-file';
 															echo "<span class='tutor-icon-$tutor_lesson_type_icon'></span>";
@@ -206,7 +208,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 															<?php the_title(); ?>
 															</span>
 														</div>
-														<div class="tutor-single-lesson-items-right d-flex">
+														<div class="tutor-single-lesson-items-right tutor-bs-d-flex">
 															<?php
 															do_action( 'tutor/lesson_list/right_icon_area', $post );
 															if ( $play_time ) {

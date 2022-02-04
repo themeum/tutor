@@ -48,8 +48,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
 
-<div class="tutor-single-page-top-bar d-flex justify-content-between">
-	<div class="tutor-topbar-left-item d-flex">
+<div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
+	<div class="tutor-topbar-left-item tutor-bs-d-flex"> 
 		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
 				<span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
@@ -65,8 +65,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			</span>
 		</div>
 	</div>
-	<div class="tutor-topbar-right-item d-flex align-items-center">
-		<div class="tutor-topbar-assignment-details d-flex align-items-center">
+	<div class="tutor-topbar-right-item tutor-bs-d-flex">
+		<div class="tutor-topbar-assignment-details tutor-bs-d-flex tutor-bs-align-items-center">
 			<?php
 				do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' );
 			?>
@@ -87,7 +87,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				do_action( 'tutor_course/single/enrolled/after/lead_info/progress_bar' );
 			?>
 		</div>
-		<div class="tutor-topbar-cross-icon flex-center">
+		<div class="tutor-topbar-cross-icon tutor-ml-15 flex-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
 				<span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>
