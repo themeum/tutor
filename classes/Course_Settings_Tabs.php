@@ -13,9 +13,9 @@ class Course_Settings_Tabs{
 
     public function __construct() {
         $this->course_post_type = tutor()->course_post_type;
-        
+
         add_action( 'add_meta_boxes', array($this, 'register_meta_box') );
-            
+
         add_action( 'tutor/frontend_course_edit/after/description', array($this, 'display_frontend'), 10, 0 );
 
         add_action('tutor_save_course', array($this, 'save_course'), 10, 2);
@@ -59,14 +59,21 @@ class Course_Settings_Tabs{
             )
         );
 
-        $qa_enabled = get_post_meta(get_the_ID(), '_tutor_enable_qa', true);
-        !$qa_enabled ? $qa_enabled = 'yes' : 0;
+        $q_and_a_global = get_option( 'tutor_option' )['enable_q_and_a_on_course'];
+        $_tutor_enable_qa = get_post_meta(get_the_ID(), '_tutor_enable_qa', true);
+        if($_tutor_enable_qa){
+            $qa_enabled = $_tutor_enable_qa ?  true : false;
+        }elseif(isset($q_and_a_global) && !empty($q_and_a_global)){
+            $qa_enabled = ( 'on' === $q_and_a_global || true === $q_and_a_global )? true : false ;
+        }
+        $qa_enabled = true === $qa_enabled ? $qa_enabled : false;
+
         $filtered['general']['fields']['_tutor_enable_qa'] = array(
             'type'        => 'toggle_switch',
             'label'       => __('Q&A', 'tutor'),
             'options'	  => array(
                 array(
-                    'checked' => $qa_enabled=='yes',
+                    'checked' => $qa_enabled,
                     'value' => 'yes',
                     'hint' => __('Enable Q&A section for your course', 'tutor')
                 )
