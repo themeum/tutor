@@ -664,7 +664,7 @@ class Utils {
 			'order'            => 'DESC',
 			'post_type'        => tutor()->course_post_type,
 			'post_status'      => $post_status,
-			'suppress_filters'  => false
+			'suppress_filters'  => !$this->is_wpml_active()
 		);
 		$pageposts = get_posts( $args );
 
@@ -733,7 +733,7 @@ class Utils {
 			'order'            => 'DESC',
 			'post_type'        => tutor()->course_post_type,
 			'post_status'      => $post_status,
-			'suppress_filters'  => false
+			'suppress_filters'  => !$this->is_wpml_active()
 		);
 		$pageposts = get_posts( $args );
 
