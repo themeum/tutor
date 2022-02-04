@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		let message = '';
 		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
 		let alreadyUploaded = document.querySelectorAll(
-			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card'
+			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card',
 		).length;
 		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
 		if (fileUploadField.files.length > allowedToUpload) {
