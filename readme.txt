@@ -241,7 +241,7 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
-= 2.0.0-rc.1 - February 09, 2022
+= 2.0.0-rc - February 09, 2022
 
 New: Added pagination in frontend course list
 Fix: WPML compatibility in dashboard page
