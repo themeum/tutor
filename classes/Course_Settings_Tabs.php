@@ -62,7 +62,7 @@ class Course_Settings_Tabs{
         $q_and_a_global = get_option( 'tutor_option' )['enable_q_and_a_on_course'];
         $_tutor_enable_qa = get_post_meta(get_the_ID(), '_tutor_enable_qa', true);
         if($_tutor_enable_qa){
-            $qa_enabled = $_tutor_enable_qa ?  true : false;
+            $qa_enabled = 'yes'===$_tutor_enable_qa ?  true : false;
         }elseif(isset($q_and_a_global) && !empty($q_and_a_global)){
             $qa_enabled = ( 'on' === $q_and_a_global || true === $q_and_a_global )? true : false ;
         }
