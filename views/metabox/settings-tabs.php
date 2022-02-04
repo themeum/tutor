@@ -26,7 +26,7 @@ $args = $this->args;
 					echo "<li class='{$active}'>
 							<a href='{$url}' data-target='#settings-tab-{$key}'>
 								{$icon} {$label}
-							</a> 
+							</a>
 						</li>";
 				} ?>
             </ul>
@@ -34,7 +34,7 @@ $args = $this->args;
 
         <div class="settings-tabs-container">
 			<?php
-			
+
 			$i = 0;
 
 			foreach ($args as $key => $tab){
@@ -47,13 +47,13 @@ $args = $this->args;
 				// Set first tab as active
 				$active = $i ===1 ? 'active' : '';
 				$display = $i ===1 ? 'block' : 'none' ;
-				
+
 				echo "<div id='settings-tab-{$key}' class='settings-tab-wrap {$active}' style='display: {$display};'>";
 
 					do_action("tutor_course/settings_tab_content/before", $key, $tab);
 					do_action("tutor_course/settings_tab_content/before/{$key}", $tab);
 
-					
+
 					if (tutor_utils()->count($fields)){
 						foreach ($fields as $field_key => $field){
 							$type = tutor_utils()->array_get('type', $field);
@@ -105,7 +105,7 @@ $args = $this->args;
 														<?php
 													}
 													break;
-	
+
 											case 'checkbox' :
 											case 'toggle_switch' :
 												foreach($field['options'] as $option) {
@@ -118,7 +118,7 @@ $args = $this->args;
 															<input id="<?php echo $id_string; ?>" type="checkbox" class="tutor-form-check-input" value="<?php echo isset($option['value']) ? $option['value'] : ''; ?>" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
 															<label for="<?php echo $id_string; ?>" class="text-medium-caption">
 																<?php echo $option['label_title']; ?>
-																<?php 
+																<?php
 																	if(!empty($option['hint'])) {
 																		echo '<span class="tutor-bs-d-block tutor-text-regular-small">'.$option['hint'].'</span>';
 																	}
@@ -132,7 +132,7 @@ $args = $this->args;
 																<input id="<?php echo $id_string; ?>" type="checkbox" class="tutor-form-toggle-input" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
 																<span class="tutor-form-toggle-control"></span> <?php echo isset( $option['label_title'] ) ? $option['label_title'] : ''; ?>
 															</label>
-														<?php 
+														<?php
 
 														if(!empty($option['hint'])) {
 															?>
@@ -179,7 +179,7 @@ $args = $this->args;
 							<?php
 						}
 					}
-					
+
 					/**
 					 * Handling Callback
 					 */

@@ -50,31 +50,31 @@
 						$question_type = $question->question_type;
 
 						$rand_choice = false;
-					if ( $question_type == 'single_choice' || $question_type == 'multiple_choice' ) {
-						$choice = maybe_unserialize( $question->question_settings );
-						if ( isset( $choice['randomize_question'] ) ) {
-							$rand_choice = $choice['randomize_question'] == 1 ? true : false;
+						if ( $question_type == 'single_choice' || $question_type == 'multiple_choice' ) {
+							$choice = maybe_unserialize( $question->question_settings );
+							if ( isset( $choice['randomize_question'] ) ) {
+								$rand_choice = $choice['randomize_question'] == 1 ? true : false;
+							}
 						}
-					}
 
 						$answers            = tutor_utils()->get_answers_by_quiz_question( $question->question_id, $rand_choice );
 						$show_question_mark = (bool) tutor_utils()->avalue_dot( 'show_question_mark', $question_settings );
 						$answer_required    = (bool) tutor_utils()->array_get( 'answer_required', $question_settings );	
 						echo '<div class="quiz-question-title tutor-text-medium-h4 tutor-color-text-primary tutor-mb-20">';
-					if ( ! $hide_question_number_overview ) {
-						echo $question_i . '. ';
-					}
-						echo stripslashes( $question->question_title );
+							if ( ! $hide_question_number_overview ) {
+								echo $question_i . '. ';
+							}
+							echo stripslashes( $question->question_title );
 						echo '</div>';
 
-					if ( $show_question_mark ) {
-						echo '<p class="question-marks"> ' . __( 'Marks : ', 'tutor' ) . $question->question_mark . ' </p>';
-					}
+						if ( $show_question_mark ) {
+							echo '<p class="question-marks"> ' . __( 'Marks : ', 'tutor' ) . $question->question_mark . ' </p>';
+						}
 
 						$question_description = nl2br( stripslashes( $question->question_description ) );
-					if ( $question_description ) {
-						echo "<div class='matching-quiz-question-desc'><span class='text-regular-caption tutor-color-text-subsued'>{$question_description}</span></div>";
-					}
+						if ( $question_description ) {
+							echo "<div class='matching-quiz-question-desc'><span class='text-regular-caption tutor-color-text-subsued'>{$question_description}</span></div>";
+						}
 					?>
 					</div>
 					<!-- Quiz Answer -->
