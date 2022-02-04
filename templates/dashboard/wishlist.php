@@ -5,7 +5,11 @@
  */
 
 global $post;
-$wishlists = tutor_utils()->get_wishlist(); 
+$per_page     = tutor_utils()->get_option('statement_show_per_page', 20);
+$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
+$offset       = ( $current_page - 1 ) * $per_page;
+$wishlists    = tutor_utils()->get_wishlist(null, $offset, $per_page); 
+$total_wishlists_count = count(tutor_utils()->get_wishlist(null)); 
 ?>
 
 <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e('Wishlist', 'tutor'); ?></div>
@@ -38,4 +42,20 @@ $wishlists = tutor_utils()->get_wishlist();
 	<?php else: ?>
 		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 	<?php endif; ?>
+</div>
+<div class="tutor-mt-25">
+	<?php 
+		if($total_wishlists_count >= $per_page) {
+			$pagination_data = array(
+				'total_items' => $total_wishlists_count,
+				'per_page'    => $per_page,
+				'paged'       => $current_page,
+			);
+
+			tutor_load_template_from_custom_path(
+				tutor()->path . 'templates/dashboard/elements/pagination.php',
+				$pagination_data
+			);
+		}
+	?>
 </div>
