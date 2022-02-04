@@ -243,12 +243,14 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 = 2.0.0-rc.1 - February 09, 2022
 
+New: Added pagination in frontend course list
 Fix: WPML compatibility in dashboard page
 Fix: WP 5.9 compatibility
 Fix: Missing icon fonts and font conflicts
 Fix: Enabling course as public is not showing start learning button
 Fix: Hiding quiz time not working
 Fix: Hiding quiz question number not working
+Fix: Most of the known frontend issues
 
 = 2.0.0-beta.3 - January 31, 2022
 
