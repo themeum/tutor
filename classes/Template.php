@@ -311,7 +311,7 @@ class Template extends Tutor_Base {
 				 * @since v.1.1.2
 				 */
 				if (tutor_utils()->array_get('tutor_dashboard_page', $wp_query->query_vars) === 'logout'){
-					$redirect = get_permalink($student_dashboard_page_id);
+					$redirect = apply_filters( 'tutor_dashboard_logout_redirect_url', get_permalink($student_dashboard_page_id) );
 					wp_logout();
 					wp_redirect($redirect);
 					die();
