@@ -22,38 +22,43 @@
 			display: grid;
 			grid-template-columns: 1fr 1fr;
 			max-height: 60px;
-			> div.active {
-				// border: 0px solid $stroke-light-30;
-				background: $color-white;
-				span:first-child {
-					color: $design-brand;
-				}
-			}
 			> div {
 				text-align: center;
-				padding: 12.5px 0px;
+				padding: 13px 10px;
 				cursor: pointer;
 				position: relative;
 				background: $bg-gray-10;
-				border-bottom-right-radius: 20px;
-				border-bottom-left-radius: 20px;
-				// > * {
-				// 	pointer-events: none;
-				// }
+				border-bottom-right-radius: 10px;
+				border-bottom-left-radius: 10px;
+				&:first-child,
+				&:last-child {
+					border-style: solid;
+					border-color: $stroke-light-30;;
+				}
 				&:first-child {
 					border-bottom-left-radius: 0px;
+					border-width: 0px 1px 1px 0px;
 				}
 				&:last-child {
 					border-bottom-right-radius: 0px;
+					border-width: 0px 0px 1px 1px;
 				}
 				span {
-					color: $black-50;
+					// color: $black-50;
 					&:not(:last-child) {
 						margin-right: 4px;
 					}
 				}
 				span:first-child {
 					font-size: 32px;
+				}
+			}
+			> div.active {
+				// border-width: 0px !important;
+				border-color: transparent;
+				background: $color-white;
+				span:first-child {
+					color: $design-brand;
 				}
 			}
 			.tutor-lessons-tab {
@@ -73,11 +78,22 @@
 			#tutor-lesson-sidebar-tab-content {
 				.tutor-topics-in-single-lesson {
 					> div {
-						padding: 18px 18px;
+						padding: 14px 16px;
 					}
 					.tutor-topics-title {
 						border-bottom: 1px solid #ddd;
 						.tutor-topics-title-left {
+							.tutor-topics-title-inner {
+								display: flex;
+								align-items: center;
+								cursor: pointer;
+							}
+							.tutor-topics-title-info {
+								i {
+									margin-top: 1px;
+									margin-left: 5px;
+								}
+							}
 						}
 						.tutor-topics-title-right {
 						}
@@ -96,14 +112,26 @@
 								> *:not(:last-child) {
 									margin-right: 5px;
 								}
-							}
-							.tutor-single-lesson-items-left {
 								max-width: 270px;
+								margin-top: 4px;
+								.tutor-icon-zoom,
+								span:first-child {
+									display: flex;
+									color: $black-40;
+									font-size: 18px;
+								}
+								.lesson_title {
+									margin-top: -2px;
+									&:first-letter {
+										text-transform: capitalize;
+									}
+								}
 							}
 							.tutor-single-lesson-items-right {
 								> *:not(:last-child) {
 									margin-right: 10px;
 								}
+								margin-top: 3px;
 							}
 						}
 					}

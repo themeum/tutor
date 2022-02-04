@@ -120,15 +120,17 @@
 							<div class="tutor-qna-user">
 								<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
 								<div>
-									<strong><?php echo $answer->display_name; ?></strong>
-									<small class="text-muted">
-									<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
-									</small>
+									<div class="tutor-text-medium-h6 tutor-color-text-title">
+										<?php echo $answer->display_name; ?>
+									</div>
+									<div class="tutor-text-regular-caption tutor-color-text-hints text-muted">
+										<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
+									</div>
 								</div>
 							</div>
 
-							<div class="tutor-qna-text">
-							<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
+							<div class="tutor-qna-text tutor-text-regular-caption">
+								<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
 							</div>
 
 						<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
@@ -142,10 +144,10 @@
 			}
 			?>
 		</div>
-		<div class="tutor-qa-reply" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+		<div class="tutor-qa-reply tutor-mt-10 tutor-mb-5" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 			<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 			<div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center">
-				<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-btn-md tutor-ml-15">
+				<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-btn-sm tutor-ml-15">
 					<?php esc_html_e( 'Reply', 'tutor' ); ?> 
 				</button>
 			</div>
