@@ -5740,7 +5740,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_wishlist( $user_id = 0 ) {
+	public function get_wishlist( $user_id = 0, int $offset = 0, int $limit = PHP_INT_MAX ) {
 		global $wpdb;
 
 		$user_id          = $this->get_user_id( $user_id );
@@ -5756,12 +5756,14 @@ class Utils {
 					AND post_status = %s
 					AND $wpdb->usermeta.meta_key = %s
 					AND $wpdb->usermeta.user_id = %d
-	    	ORDER BY $wpdb->usermeta.umeta_id DESC;
+	    	ORDER BY $wpdb->usermeta.umeta_id DESC LIMIT %d, %d;
 			",
 				$course_post_type,
 				'publish',
 				'_tutor_course_wishlist',
-				$user_id
+				$user_id,
+				$offset,
+				$limit
 			),
 			OBJECT
 		);
