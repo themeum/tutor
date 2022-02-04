@@ -161,7 +161,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										</div>
 										<textarea class="tutor-form-control tutor-mt-28" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php esc_html_e( stripslashes( $review->comment_content ) ); ?></textarea>
 										<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
-												<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
+												<button data-tutor-modal-close type="button" data-action="back" class="tutor-modal-close-btn tutor-btn tutor-is-default">
 													<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 												</button>
 												<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
@@ -177,9 +177,6 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					<!-- Delete Modal -->
 					<div id="<?php echo $delete_id; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
 						<span class="tutor-modal-overlay"></span>
-						<button data-tutor-modal-close class="tutor-modal-close">
-							<span class="tutor-icon-line-cross-line"></span>
-						</button>
 						<div class="tutor-modal-root">
 							<div class="tutor-modal-inner">
 								<button data-tutor-modal-close class="tutor-modal-close">
@@ -198,7 +195,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										</p>
 									</div>
 									<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
-										<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+										<button data-tutor-modal-close class="tutor-modal-close-btn tutor-btn tutor-is-outline tutor-is-default">
 											<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 										</button>
 										<button class="tutor-btn tutor-list-ajax-action" data-request_data='{"review_id":<?php echo $review->comment_ID; ?>,"action":"delete_tutor_review"}' data-delete_element_id="<?php echo $row_id; ?>">

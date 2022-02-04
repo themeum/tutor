@@ -1,3 +1,4 @@
+
 .tutor-dashboard-cards-container {
 	width: calc(100% + 30px);
 	// @include breakpoint-min(desktop) {
@@ -63,6 +64,25 @@
 				}
 				margin-top: 0px;
 				margin-bottom: -6px;
+			}
+		}
+	}
+}
+.tutor-frontend-dashboard-course-porgress {
+	.tutor-frontend-dashboard-course-porgress-cards {
+		.tutor-course-listing-item-body {
+			.tutor-ratings {
+				display: flex;
+				align-items: center;
+				.tutor-rating-text {
+					margin-top: 0px;
+				}
+				.tutor-star-rating-group {
+					display: flex;
+					i {
+						color: var(--tutor-warning);
+					}
+				}
 			}
 		}
 	}

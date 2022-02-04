@@ -130,7 +130,7 @@
 					}
                 ?></div>
 
-                <div class="tutor_add_content_wrap" data-topic_id="<?php echo $topic->ID; ?>">
+                <div class="tutor_add_content_wrap tutor_add_content_wrap_btn_sm" data-topic_id="<?php echo $topic->ID; ?>">
                     <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
 
                     <button class="tutor-btn tutor-is-outline tutor-is-sm open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
