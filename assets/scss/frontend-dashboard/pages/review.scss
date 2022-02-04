@@ -99,6 +99,7 @@
 			.tutor-star-rating-group {
 				i {
 					font-size: 22px;
+					color: var(--tutor-warning);
 				}
 			}
 		}
@@ -107,12 +108,6 @@
 				.tutor-star-rating-group {
 					i {
 						font-size: 60px;
-					}
-					i.tutor-icon-star-line-filled {
-						color: #c0c3cb;
-					}
-					i.tutor-icon-star-full {
-						color: #ed9700;
 					}
 				}
 			}

@@ -51,7 +51,6 @@ window.jQuery(document).ready($=>{
                     class_element.removeClass(remove_class).addClass(add_class);
                     // Toggle active class
                     class_element[new_value==1 ? 'addClass' : 'removeClass']('active');
-                    console.log(class_element)
                 }
                 
                 // Toggle text if togglable text defined
@@ -87,6 +86,10 @@ window.jQuery(document).ready($=>{
         let answer      = form.find('textarea').val();
         let back_url    = $(this).data('back_url');
 
+        const btnInnerHtml = button.html().trim();
+        const { width : btnWidth, height : btnHeight } = button.get(0).getBoundingClientRect();
+        const btnStyles =  {width: `${btnWidth}px`, height: `${btnHeight}px`};
+
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
@@ -99,7 +102,9 @@ window.jQuery(document).ready($=>{
                 action: 'tutor_qna_create_update'
             },
             beforeSend: () =>{
-                button.addClass('tutor-updating-message');
+                // button.addClass('tutor-updating-message');
+                button.css(btnStyles);
+                button.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
             },
             success: resp => {
                 if(!resp.success) {
@@ -122,7 +127,8 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete: () =>{
-                button.removeClass('tutor-updating-message');
+                // button.removeClass('tutor-updating-message');
+                button.html(btnInnerHtml)
             }
         })
     });

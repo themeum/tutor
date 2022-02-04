@@ -10,20 +10,20 @@
 	overflow: hidden;
 	overflow-y: auto;
 	transition: 200ms;
-
-	.tutor-modal-footer,
-	.tutor-modal-delete-footer {
+	.tutor-modal-close-btn {
+		color: #656c7c !important;
+		background: #e3e6eb !important;
+		border: 1px solid #e3e6eb !important;
+		&:hover {
+			color: #323438 !important;
+			border-color: transparent !important;
+			background: #d7dbe1 !important;
+		}
+	}
+	.tutor-modal-footer {
 		button[data-tutor-modal-close],
-		button[data-action='back'],
-		.tutor-modal-delete-footer {
-			color: #656c7c !important;
-			background: #e3e6eb !important;
-			border: 1px solid #e3e6eb !important;
-			&:hover {
-				color: #323438 !important;
-				border-color: transparent !important;
-				background: #d7dbe1 !important;
-			}
+		button[data-action='back'] {
+			@extend .tutor-modal-close-btn;
 		}
 	}
 
@@ -637,10 +637,11 @@
 		}
 		.tutor-modal-close {
 			position: absolute;
-			right: 10px;
-			top: 10px;
+			right: 20px;
+			top: 20px;
 			color: $black-50;
 			@extend .tutor-icon-30;
+			margin: 0px;
 		}
 	}
 
