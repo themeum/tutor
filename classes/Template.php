@@ -298,9 +298,9 @@ class Template extends Tutor_Base {
 		global $wp_query;
 		if ( $wp_query->is_page ) {
 			$student_dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
-			// $student_dashboard_page_id = apply_filters( 'tutor_dashboard_page_id_filter', $student_dashboard_page_id );
+			$student_dashboard_page_id = apply_filters( 'tutor_dashboard_page_id_filter', $student_dashboard_page_id );
 
-			if ( $student_dashboard_page_id === get_the_ID() ) {
+			if ( $student_dashboard_page_id == get_the_ID() ) {
 				/**
 				 * Handle if logout URL
 				 *

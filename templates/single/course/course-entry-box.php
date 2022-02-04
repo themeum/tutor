@@ -49,7 +49,7 @@
 	// Right sidebar meta data
 	$sidebar_meta = apply_filters('tutor/course/single/sidebar/metadata', $default_meta, get_the_ID());
 
-	$login_class = ! is_user_logged_in() ? 'tutor-course-entry-box-login' : '';
+	$login_class = (!is_user_logged_in() && !$is_public) ? 'tutor-course-entry-box-login' : '';
 	$login_url   = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
 ?>
 
@@ -167,6 +167,16 @@
 			} else {
 				esc_html_e( 'No Content to Access', 'tutor' );
 			}
+		} else if ( $is_public ) {
+			// Get the first content url
+			$first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID(), tutor()->lesson_post_type );
+			!$first_lesson_url ? $first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID() ) : 0;
+
+			?>
+				<a href="<?php echo esc_url( $first_lesson_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full">
+					<?php esc_html_e( 'Start Learning', 'tutor' ); ?>
+				</a>
+			<?php
 		} else {
 			// The course enroll options like purchase or free enrolment
 			$price = apply_filters( 'get_tutor_course_price', null, get_the_ID() );
@@ -181,22 +191,10 @@
 							</span>
 						</div>
 					</div>
-					<?php
-			} elseif ( $is_purchasable && $price ) {
-				if ( $tutor_course_sell_by ) {
-					// Load template based on monetization option
-					tutor_load_template( 'single.course.add-to-cart-' . $tutor_course_sell_by );
-				} elseif ( $is_public ) {
-					// Get the first content url
-					$first_lesson_url                       = tutor_utils()->get_course_first_lesson( get_the_ID(), tutor()->lesson_post_type );
-					! $first_lesson_url ? $first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID() ) : 0;
-
-					?>
-						<a href="<?php echo esc_url( $first_lesson_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full">
-						<?php esc_html_e( 'Start Learning', 'tutor' ); ?>
-						</a>
-						<?php
-				}
+				<?php
+			} elseif ( $is_purchasable && $price && $tutor_course_sell_by ) {
+				// Load template based on monetization option
+				tutor_load_template( 'single.course.add-to-cart-' . $tutor_course_sell_by );
 			} else {
 				ob_start();
 				?>
@@ -216,10 +214,10 @@
 						</form>
 					</div>
 					<div class="text-regular-caption tutor-color-text-hints tutor-mt-12 tutor-text-center">
-					<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
+						<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
 					</div>
-					<?php
-					echo apply_filters( 'tutor/course/single/entry-box/free', ob_get_clean(), get_the_ID() );
+				<?php
+				echo apply_filters( 'tutor/course/single/entry-box/free', ob_get_clean(), get_the_ID() );
 			}
 		}
 		?>

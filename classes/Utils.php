@@ -187,7 +187,11 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_posts( array( 'post_type' => 'page', 'post_status'    => 'publish', 'numberposts' => -1,  ) );
+		$wp_pages = get_posts( array( 
+			'post_type' => 'page', 
+			'post_status'    => 'publish', 
+			'numberposts' => -1,  
+		) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
@@ -8398,7 +8402,8 @@ class Utils {
 			}
 
 			if ( $wp_query->queried_object && $wp_query->queried_object->ID ) {
-				return $wp_query->queried_object->ID == tutor_utils()->get_option( 'tutor_dashboard_page_id' );
+				$d_id = apply_filters( 'tutor_dashboard_page_id_filter', tutor_utils()->get_option( 'tutor_dashboard_page_id' ) );
+				return $wp_query->queried_object->ID == $d_id;
 			}
 		}
 
