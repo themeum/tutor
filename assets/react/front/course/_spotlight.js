@@ -3,11 +3,11 @@ jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
 
-const askNewQna = document.querySelector('.tutor-ask-new-qna-btn');
-const askNewQnaTextArea = document.querySelector('.tutor-quesanswer-askquestion textarea');
-askNewQna.addEventListener('click', function () {
-	askNewQnaTextArea.classList.toggle('ask-new-qna-text-area-show');
-})
+// const askNewQna = document.querySelector('.tutor-ask-new-qna-btn');
+// const askNewQnaTextArea = document.querySelector('.tutor-quesanswer-askquestion textarea');
+// askNewQna.addEventListener('click', function () {
+// 	askNewQnaTextArea.classList.toggle('ask-new-qna-text-area-show');
+// })
 
 document.addEventListener('DOMContentLoaded', (event) => {
 	const { __, _x, _n, _nx } = wp.i18n;
