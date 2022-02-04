@@ -35,8 +35,8 @@ if ( $attempted_count !== 0 ) {
 			$question_layout_view                           = tutor_utils()->get_quiz_option( $quiz_id, 'question_layout_view' );
 			! $question_layout_view ? $question_layout_view = 'single_question' : 0;
 
-			$hide_quiz_time_display        = (bool) tutor_utils()->avalue_dot( 'hide_quiz_time_display', $quiz_attempt_info );
-			$hide_question_number_overview = (bool) tutor_utils()->avalue_dot( 'hide_question_number_overview', $quiz_attempt_info );
+			$hide_quiz_time_display        = (bool) tutor_utils()->get_quiz_option($quiz_id, 'hide_quiz_time_display');
+			$hide_question_number_overview = (bool) tutor_utils()->get_quiz_option($quiz_id, 'hide_question_number_overview');
 
 			$remaining_time_secs = ( strtotime( $is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] );
 
@@ -44,26 +44,26 @@ if ( $attempted_count !== 0 ) {
 			$questions              = tutor_utils()->get_random_questions_by_quiz();
 
 			/* Quiz Meta */
-			include 'parts/meta.php';
+			require __DIR__ . '/parts/meta.php';
 
 			/* Quiz Question & Answer */
 			if ( is_array( $questions ) && count( $questions ) ) {
-				include 'parts/question.php';
+				require __DIR__ . '/parts/question.php';
 			} else {
 				?>
-						<div class="start-quiz-wrap">
-							<form id="tutor-finish-quiz" method="post">
-						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+					<div class="start-quiz-wrap">
+						<form id="tutor-finish-quiz" method="post">
+							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
-								<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
-								<input type="hidden" value="tutor_finish_quiz_attempt" name="tutor_action"/>
+							<input type="hidden" value="<?php echo $quiz_id; ?>" name="quiz_id"/>
+							<input type="hidden" value="tutor_finish_quiz_attempt" name="tutor_action"/>
 
-								<button type="submit" class="tutor-btn" name="finish_quiz_btn" value="finish_quiz">
-									<i class="icon-floppy"></i> <?php _e( 'Finish', 'tutor' ); ?>
-								</button>
-							</form>
-						</div>
-					<?php
+							<button type="submit" class="tutor-btn" name="finish_quiz_btn" value="finish_quiz">
+								<i class="icon-floppy"></i> <?php _e( 'Finish', 'tutor' ); ?>
+							</button>
+						</form>
+					</div>
+				<?php
 			}
 		} elseif ( $previous_attempts ) {
 			do_action( 'tutor_quiz/previous_attempts_html/before', $previous_attempts, $quiz_id );
