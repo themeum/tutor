@@ -23,54 +23,56 @@ window.jQuery(document).ready(function($) {
 	});
 
 	// Ajax action
-	$(document).on('click', '.tutor-list-ajax-action', function() {
-		let $that = $(this);
-		let prompt = $(this).data('prompt');
-		let del = $(this).data('delete_element_id');
-		let redirect = $(this).data('redirect_to');
-		var data = $(this).data('request_data') || {};
-		typeof data == 'string' ? (data = JSON.parse(data)) : 0;
+	$(document).on('click', '.tutor-list-ajax-action', function (e) {
+		if (!e.detail || e.detail == 1) {
+			let $that = $(this);
+			let prompt = $(this).data('prompt');
+			let del = $(this).data('delete_element_id');
+			let redirect = $(this).data('redirect_to');
+			var data = $(this).data('request_data') || {};
+			typeof data == 'string' ? (data = JSON.parse(data)) : 0;
 
-		if (prompt && !window.confirm(prompt)) {
-			return;
+			if (prompt && !window.confirm(prompt)) {
+				return;
+			}
+
+			const btnInnerHtml = $that.html().trim();
+			const { width: btnWidth, height: btnHeight } = $that.get(0).getBoundingClientRect();
+			const btnStyles = { width: `${btnWidth}px`, height: `${btnHeight}px` };
+
+			$.ajax({
+				url: _tutorobject.ajaxurl,
+				type: 'POST',
+				data: data,
+				beforeSend: function () {
+					$that.css(btnStyles);
+					$that.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
+				},
+				success: function (data) {
+					if (data.success) {
+						if (del) {
+							$('#' + del).fadeOut(function () {
+								$(this).remove();
+							});
+						}
+
+						if (redirect) {
+							window.location.assign(redirect);
+						}
+						return;
+					}
+
+					let { message = __('Something Went Wrong!', 'tutor') } = data.data || {};
+					tutor_toast('Error!', message, 'error');
+				},
+				error: function () {
+					tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
+				},
+				complete: function () {
+					$that.html(btnInnerHtml);
+				},
+			});
 		}
-
-		const btnInnerHtml = $that.html().trim();
-		const { width: btnWidth, height: btnHeight } = $that.get(0).getBoundingClientRect();
-		const btnStyles = { width: `${btnWidth}px`, height: `${btnHeight}px` };
-
-		$.ajax({
-			url: _tutorobject.ajaxurl,
-			type: 'POST',
-			data: data,
-			beforeSend: function() {
-				$that.css(btnStyles);
-				$that.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
-			},
-			success: function(data) {
-				if (data.success) {
-					if (del) {
-						$('#' + del).fadeOut(function() {
-							$(this).remove();
-						});
-					}
-
-					if (redirect) {
-						window.location.assign(redirect);
-					}
-					return;
-				}
-
-				let { message = __('Something Went Wrong!', 'tutor') } = data.data || {};
-				tutor_toast('Error!', message, 'error');
-			},
-			error: function() {
-				tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
-			},
-			complete: function() {
-				$that.html(btnInnerHtml);
-			},
-		});
 	});
 
 	// Textarea auto height

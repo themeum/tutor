@@ -187,7 +187,11 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_posts( array( 'post_type' => 'page', 'post_status'    => 'publish', 'numberposts' => -1,  ) );
+		$wp_pages = get_posts( array( 
+			'post_type' => 'page', 
+			'post_status'    => 'publish', 
+			'numberposts' => -1,  
+		) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
@@ -660,7 +664,7 @@ class Utils {
 			'order'            => 'DESC',
 			'post_type'        => tutor()->course_post_type,
 			'post_status'      => $post_status,
-			'suppress_filters'  => false
+			'suppress_filters'  => !$this->is_wpml_active()
 		);
 		$pageposts = get_posts( $args );
 
@@ -729,7 +733,7 @@ class Utils {
 			'order'            => 'DESC',
 			'post_type'        => tutor()->course_post_type,
 			'post_status'      => $post_status,
-			'suppress_filters'  => false
+			'suppress_filters'  => !$this->is_wpml_active()
 		);
 		$pageposts = get_posts( $args );
 
@@ -5740,7 +5744,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_wishlist( $user_id = 0 ) {
+	public function get_wishlist( $user_id = 0, int $offset = 0, int $limit = PHP_INT_MAX ) {
 		global $wpdb;
 
 		$user_id          = $this->get_user_id( $user_id );
@@ -5756,12 +5760,14 @@ class Utils {
 					AND post_status = %s
 					AND $wpdb->usermeta.meta_key = %s
 					AND $wpdb->usermeta.user_id = %d
-	    	ORDER BY $wpdb->usermeta.umeta_id DESC;
+	    	ORDER BY $wpdb->usermeta.umeta_id DESC LIMIT %d, %d;
 			",
 				$course_post_type,
 				'publish',
 				'_tutor_course_wishlist',
-				$user_id
+				$user_id,
+				$offset,
+				$limit
 			),
 			OBJECT
 		);
@@ -8398,7 +8404,8 @@ class Utils {
 			}
 
 			if ( $wp_query->queried_object && $wp_query->queried_object->ID ) {
-				return $wp_query->queried_object->ID == tutor_utils()->get_option( 'tutor_dashboard_page_id' );
+				$d_id = apply_filters( 'tutor_dashboard_page_id_filter', tutor_utils()->get_option( 'tutor_dashboard_page_id' ) );
+				return $wp_query->queried_object->ID == $d_id;
 			}
 		}
 

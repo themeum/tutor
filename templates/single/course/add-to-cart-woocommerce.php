@@ -15,7 +15,20 @@ if ($product) {
             </a>
         <?php
     } else {
+        $sale_price = $product->get_sale_price();
+        $regular_price = $product->get_regular_price();
+        $
         ?>
+        <div class="tutor-course-sidebar-card-pricing tutor-bs-d-flex align-items-end tutor-bs-justify-content-between">
+            <div>
+                <span className="tutor-text-bold-h4 tutor-color-text-primary">
+                    <?php echo  . ($sale_price ? $sale_price : $regular_price); ?>
+                </span>
+                <del className="tutor-text-regular-caption tutor-color-text-hints tutor-ml-7">
+                    <?php echo  get_woocommerce_currency_symbol() . ; ?>
+                </del>
+            </div>
+        </div>
         <form action="<?php echo esc_url( apply_filters( 'tutor_course_add_to_cart_form_action', get_permalink( get_the_ID() ) ) ); ?>" method="post" enctype="multipart/form-data">
             <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>"  class="tutor-btn tutor-btn-icon tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24 tutor-add-to-cart-button">
                 <span class="btn-icon tutor-icon-cart-filled"></span>
