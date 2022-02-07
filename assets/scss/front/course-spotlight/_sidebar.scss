@@ -14,8 +14,7 @@
 .tutor-lesson-sidebar {
 	flex: 0 0 400px;
 	background: #fff;
-	border: 1px solid $stroke-light-30;
-	border: 1px solid #cdcfd5;
+	border: 2px solid $stroke-light-30;
 	border-bottom: none;
 	.tutor-sidebar-tabs-wrap {
 		.tutor-lessons-tab-area {
@@ -67,15 +66,21 @@
 			}
 		}
 		.tutor-sidebar-tabs-content {
+			height: calc(100vh - 156px);
+			position: relative;
 			> div {
 				display: none;
 				&.active {
 					display: block;
 				}
 			}
-			.tutor-lesson-sidebar-tab-item {
+			#sideabr-qna-tab-content {
+				overflow: auto;
+				height: calc(100% - 60px);
 			}
 			#tutor-lesson-sidebar-tab-content {
+				overflow: auto;
+				height: 100%;
 				.tutor-topics-in-single-lesson {
 					> div {
 						padding: 14px 16px;
@@ -137,8 +142,7 @@
 					}
 				}
 			}
-			#sideabr-qna-tab-content {
-			}
+			
 		}
 	}
 }
