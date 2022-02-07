@@ -147,7 +147,7 @@
 		<div class="tutor-qa-reply tutor-mt-10 tutor-mb-5" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 			<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 			<div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center">
-				<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-btn tutor-btn-sm tutor-ml-15">
+				<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm tutor-ml-15">
 					<?php esc_html_e( 'Reply', 'tutor' ); ?> 
 				</button>
 			</div>

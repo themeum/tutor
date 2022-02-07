@@ -75,6 +75,12 @@ window.jQuery(document).ready($=>{
         });
     });
 
+    $(document).on('click', '#sideabr-qna-tab-content .tutor-qa-new a.sidebar-ask-new-qna-btn', function(e) {
+        $('#sideabr-qna-tab-content .tutor-qa-new textarea').show();
+        $(this).hide();
+        $('#sideabr-qna-tab-content .tutor-qa-new button').show();
+    })
+
     // Save/update question/reply
     $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button', function(){
         let button      = $(this);

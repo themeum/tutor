@@ -451,9 +451,6 @@ table.qna-list-table {
 		max-width: 100%;
 		margin-bottom: 10px;
 	}
-	.tutor-ask-new-qna-btn {
-		width: 100%;
-	}
 	.tutor-qna-single-question .tutor-qa-reply div {
 		padding: 10px 0px 0px 0px;
 	}
@@ -462,10 +459,15 @@ table.qna-list-table {
 		padding: 30px 15px;
 		.tutor-quesanswer-askquestion {
 			// margin-top: 0px;
-			textarea.ask-new-qna-text-area-show {
+			button,
+			a.sidebar-ask-new-qna-btn {
+				width: 100%;
+			}
+			button {
 				display: none;
 			}
 			textarea {
+				display: none;
 				margin-bottom: 10px;
 			}
 		}
