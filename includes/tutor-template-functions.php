@@ -1275,22 +1275,22 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         $durationMinutes = tutor_utils()->avalue_dot( 'minutes', $duration );
         $durationSeconds = tutor_utils()->avalue_dot( 'seconds', $duration );
 
-        $hour_format   = $short_form ? __( 'h', 'tutor' ) : ($durationHours>1 ? __('hours', 'tutor') : __( 'hour', 'tutor' ));
-        $minute_format = $short_form ? __( 'm', 'tutor' ) : ($durationMinutes>1 ? __('minutes', 'tutor') : __( 'minute', 'tutor' ));
-        $second_format = $short_form ? __( 's', 'tutor' ) : ($durationSeconds>1 ? __('seconds', 'tutor') : __( 'second', 'tutor' ));
+        $hour_format   = $short_form ? __( 'h', 'tutor' ) : ' '.($durationHours>1 ? __('hours', 'tutor') : __( 'hour', 'tutor' ));
+        $minute_format = $short_form ? __( 'm', 'tutor' ) : ' '.($durationMinutes>1 ? __('minutes', 'tutor') : __( 'minute', 'tutor' ));
+        $second_format = $short_form ? __( 's', 'tutor' ) : ' '.($durationSeconds>1 ? __('seconds', 'tutor') : __( 'second', 'tutor' ));
 
         if ( $duration ) {
             $output = '';
             if ( $durationHours > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value">' . $hour_format . '</span> ';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value color-text-subsued tutor-mr-5">' . $hour_format . '</span>';
             }
 
             if ( $durationMinutes > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value">' . $minute_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value color-text-subsued tutor-mr-5">' . $minute_format . '</span>';
             }
 
             if ( !$durationHours && !$durationMinutes && $durationSeconds > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value">' . $second_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value color-text-subsued tutor-mr-5">' . $second_format . '</span>';
             }
 
 			return $output;
