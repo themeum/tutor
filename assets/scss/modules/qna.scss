@@ -456,13 +456,9 @@ table.qna-list-table {
 		text-align: center;
 	}
 	button {
-		margin-top: 20px;
-	}
-	a.sidebar-ask-new-qna-btn {
-		display: none;
+		// margin-top: 20px;
 	}
 }
-
 #sideabr-qna-tab-content {
 	.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat {
 		max-width: 100%;
@@ -475,19 +471,32 @@ table.qna-list-table {
 		margin-top: 10px;
 		padding: 16px 15px;
 		.tutor-quesanswer-askquestion {
-			button,
 			a.sidebar-ask-new-qna-btn {
-				width: 100%;
-				display: block;
-				margin-top: 0px !important;
-			}
-			button {
-				display: none;
+				// display: none;
 			}
 			textarea {
 				display: none;
 				margin-bottom: 10px !important;
 			}
+			button {
+
+			}
+			a.sidebar-ask-new-qna-btn { 
+				width: 100%;
+				margin-top: 0px !important;
+			}
+			a.sidebar-ask-new-qna-btn {
+				display: block;
+			}
+			.sidebar-ask-new-qna-submit {
+				width: 100%;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				> button {
+					display: none;
+				}
+			}
+
 		}
 	}
 	.tutor-qa-reply {

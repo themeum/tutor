@@ -78,11 +78,11 @@ window.jQuery(document).ready($=>{
     $(document).on('click', '#sideabr-qna-tab-content .tutor-qa-new a.sidebar-ask-new-qna-btn', function(e) {
         $('#sideabr-qna-tab-content .tutor-qa-new textarea').show();
         $(this).hide();
-        $('#sideabr-qna-tab-content .tutor-qa-new button').show();
+        $('#sideabr-qna-tab-content .tutor-qa-new .sidebar-ask-new-qna-submit > button').show();
     })
 
     // Save/update question/reply
-    $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button', function(){
+    $(document).on('click', '.tutor-qa-reply button, .tutor-qa-new button.sidebar-ask-new-qna-submit-btn', function(){
         let button      = $(this);
         let form        = button.closest('[data-question_id]');
 
