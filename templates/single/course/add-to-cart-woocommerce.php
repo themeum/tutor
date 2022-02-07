@@ -17,16 +17,18 @@ if ($product) {
     } else {
         $sale_price = $product->get_sale_price();
         $regular_price = $product->get_regular_price();
-        $
+        $symbol = get_woocommerce_currency_symbol();
         ?>
         <div class="tutor-course-sidebar-card-pricing tutor-bs-d-flex align-items-end tutor-bs-justify-content-between">
             <div>
-                <span className="tutor-text-bold-h4 tutor-color-text-primary">
-                    <?php echo  . ($sale_price ? $sale_price : $regular_price); ?>
+                <span class="tutor-text-bold-h4 tutor-color-text-primary">
+                    <?php echo $symbol . ($sale_price ? $sale_price : $regular_price); ?>
                 </span>
-                <del className="tutor-text-regular-caption tutor-color-text-hints tutor-ml-7">
-                    <?php echo  get_woocommerce_currency_symbol() . ; ?>
-                </del>
+                <?php if($regular_price && $sale_price && $sale_price!=$regular_price): ?>
+                    <del class="tutor-text-regular-caption tutor-color-text-hints tutor-ml-7">
+                        <?php echo $symbol . $regular_price; ?>
+                    </del>
+                <?php endif; ?>
             </div>
         </div>
         <form action="<?php echo esc_url( apply_filters( 'tutor_course_add_to_cart_form_action', get_permalink( get_the_ID() ) ) ); ?>" method="post" enctype="multipart/form-data">
