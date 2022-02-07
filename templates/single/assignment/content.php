@@ -663,7 +663,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			} else {
 				?>
 				<div class="tutor-assignment-footer tutor-pt-30 tutor-pt-sm-45">
-					<div class="tutor-assignment-footer-btn tutor-btn-group d-flex justify-content-between">
+					<div class="tutor-assignment-footer-btn d-flex justify-content-between">
 						<form action="" method="post" id="tutor_assignment_start_form">
 						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 						<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
