@@ -171,7 +171,7 @@ if ( is_array( $attempt_info ) ) {
                                     <p class="tutor-text-medium-body  tutor-color-text-primary">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </p>
-                                    <a href="#" class="btn-text btn-detail-link tutor-color-design-dark">
+                                    <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="btn-text btn-detail-link tutor-color-design-dark">
                                         <span class="tutor-icon-detail-link-filled"></span>
                                     </a>
                                 </div>
