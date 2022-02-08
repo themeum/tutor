@@ -76,9 +76,17 @@ window.jQuery(document).ready($=>{
     });
 
     $(document).on('click', '#sideabr-qna-tab-content .tutor-qa-new a.sidebar-ask-new-qna-btn', function(e) {
-        $('#sideabr-qna-tab-content .tutor-qa-new textarea').show();
-        $(this).hide();
-        $('#sideabr-qna-tab-content .tutor-qa-new .sidebar-ask-new-qna-submit > button').show();
+        $('.tutor-quesanswer-askquestion').addClass('tutor-quesanswer-askquestion-expand');
+        $('#sideabr-qna-tab-content').css({
+            'height' : 'calc(100% - 140px)'
+        });
+    })
+
+    $(document).on('click', '#sideabr-qna-tab-content .tutor-qa-new .sidebar-ask-new-qna-cancel-btn', function(e) {
+        $('.tutor-quesanswer-askquestion').removeClass('tutor-quesanswer-askquestion-expand');
+        $('#sideabr-qna-tab-content').css({
+            'height' : 'calc(100% - 60px)'
+        });
     })
 
     // Save/update question/reply
