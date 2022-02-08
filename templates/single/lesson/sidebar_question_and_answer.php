@@ -35,6 +35,21 @@ foreach ( $questions as $question ) {
 		false
 	);
 }
+
+if(!count($questions)) : ?>
+	<div class="tutor-empty-state-wrapper">
+        <div class="tutor-empty-state td-empty-state tutor-p-30 tutor-text-center">
+			<img src="http://tutorv2.local/wp-content/plugins/tutor/assets/images/empty-q&a.svg" alt="No Data Available in this Section" width="85%">
+			<div class="tutor-text-regular-h6 tutor-color-text-subsued tutor-text-center tutor-mt-20">
+				No questions yet
+			</div>
+			<div class="tutor-text-regular-caption tutor-color-text-hints tutor-mt-10">
+				Describe what you’re trying to achieve and where you’re getting stuck
+			</div>
+		</div>
+	</div>
+<?php endif;
+
 tutor_load_template_from_custom_path(
 	tutor()->path . '/views/qna/qna-new.php',
 	array(

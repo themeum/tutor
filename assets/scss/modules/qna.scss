@@ -412,19 +412,12 @@ table.qna-list-table {
 
 	.tutor-qa-new {
 		&[data-context='course-single-qna-sidebar'] {
-			// background: #f4f6f9;
-			// padding: 15px;
-			// position: sticky;
-			// bottom: 0;
-			// margin: -15px;
-
 			background: #f4f6f9;
 			padding: 15px;
 			bottom: 15px;
 			margin: -15px;
 			position: absolute;
 			width: 100%;
-
 		}
 	}
 
@@ -447,16 +440,13 @@ table.qna-list-table {
 		}
 	}
 }
-// .tutor-quesanswer-askquestion {
-// 	margin-top: 10px;
-// }
+
 .tutor-quesanswer-askquestion {
 	button, 
 	a.sidebar-ask-new-qna-btn {
 		text-align: center;
 	}
 	button {
-		// margin-top: 20px;
 	}
 }
 #sideabr-qna-tab-content {
