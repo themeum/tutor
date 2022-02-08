@@ -106,7 +106,6 @@
 
 			if ( is_array( $answers ) && count( $answers ) ) {
 				$reply_count = count( $answers ) - 1;
-
 				foreach ( $answers as $answer ) {
 					if ( ! isset( $avata_url[ $answer->user_id ] ) ) {
 						// Get avatar url if not already got

@@ -470,33 +470,56 @@ table.qna-list-table {
 	.tutor-qa-new {
 		margin-top: 10px;
 		padding: 16px 15px;
+		.sidebar-ask-new-qna-submit {
+			display: none;
+		}
+		// .tutor-quesanswer-askquestion {
+		// 	a.sidebar-ask-new-qna-btn {
+		// 		// display: none;
+		// 	}
+		// 	textarea {
+		// 		display: none;
+		// 		margin-bottom: 10px !important;
+		// 	}
+		// 	button {
+
+		// 	}
+		// 	a.sidebar-ask-new-qna-btn { 
+		// 		width: 100%;
+		// 		margin-top: 0px !important;
+		// 	}
+		// 	a.sidebar-ask-new-qna-btn {
+		// 		display: block;
+		// 	}
+		// 	.sidebar-ask-new-qna-submit {
+		// 		width: 100%;
+		// 		display: grid;
+		// 		grid-template-columns: 1fr 1fr;
+		// 		> button {
+		// 			display: none;
+		// 		}
+		// 	}
+
+		// }
 		.tutor-quesanswer-askquestion {
-			a.sidebar-ask-new-qna-btn {
-				// display: none;
-			}
 			textarea {
 				display: none;
-				margin-bottom: 10px !important;
-			}
-			button {
-
-			}
-			a.sidebar-ask-new-qna-btn { 
-				width: 100%;
-				margin-top: 0px !important;
-			}
-			a.sidebar-ask-new-qna-btn {
-				display: block;
 			}
 			.sidebar-ask-new-qna-submit {
-				width: 100%;
-				display: grid;
 				grid-template-columns: 1fr 1fr;
-				> button {
+				gap: 15px;
+			}
+			&.tutor-quesanswer-askquestion-expand {
+				.sidebar-ask-new-qna-btn {
 					display: none;
 				}
+				textarea {
+					display: block;
+				}
+				.sidebar-ask-new-qna-submit {
+					display: grid;
+				}
 			}
-
 		}
 	}
 	.tutor-qa-reply {
