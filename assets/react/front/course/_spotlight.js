@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		if (uploadedFileSize > uploadSizeLimit) {
 			tutor_toast(
 				__('Warning', 'tutor'),
-				__(`Max ${Math.floor(uploadSizeLimit / 1000000)}MB is allowed to upload`, 'tutor'),
+				__(`File size exceeds maximum limit ${Math.floor(uploadSizeLimit / 1000000)} MB.`, 'tutor'),
 				'error',
 			);
 			return;
