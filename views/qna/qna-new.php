@@ -8,11 +8,11 @@
         <!-- <div class="tutor-bs-d-flex tutor-bs-justify-content-end"> -->
         <?php if('course-single-qna-sidebar'==$data['context']):?>
             <div class="sidebar-ask-new-qna-submit tutor-mt-10">
+                <button class="sidebar-ask-new-qna-cancel-btn tutor-modal-close-btn tutor-btn tutor-btn-md">
+                    <?php _e('Cancel', 'tutor'); ?>
+                </button>
                 <button class="sidebar-ask-new-qna-submit-btn tutor-btn tutor-btn-primary tutor-btn-md">
                     <?php _e('Submit My Question', 'tutor'); ?>
-                </button>
-                <button class="sidebar-ask-new-qna-cancel-btn tutor-btn tutor-btn-primary tutor-btn-md">
-                    <?php _e('Cancel', 'tutor'); ?>
                 </button>
             </div>
             <div class="tutor-bs-d-flex tutor-bs-justify-content-center">
