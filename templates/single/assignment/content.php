@@ -323,6 +323,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 													<?php _e( 'Choose file', 'tutor' ); ?>
 												</a>
 											</label>
+											<input type="hidden" name="tutor_assignment_upload_limit" value="<?php echo $file_upload_limit * 1000000?>">
 										</form>
 									</div>
 									<div class="tutor-input-type-size">

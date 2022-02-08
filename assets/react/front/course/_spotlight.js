@@ -170,6 +170,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		fileUploadField.addEventListener('change', tutorAssignmentFileHandler);
 	}
 	function tutorAssignmentFileHandler() {
+		const uploadedFileSize = [...fileUploadField.files].reduce((sum, file) => sum + file.size, 0); // byte
+		const uploadSizeLimit = parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
 		let message = '';
 		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
 		let alreadyUploaded = document.querySelectorAll(
@@ -180,6 +182,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			tutor_toast(__('Warning', 'tutor'), __(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'), 'error');
 			return;
 		}
+		if (uploadedFileSize > uploadSizeLimit) {
+			tutor_toast(
+				__('Warning', 'tutor'),
+				__(`File size exceeds maximum limit ${Math.floor(uploadSizeLimit / 1000000)} MB.`, 'tutor'),
+				'error',
+			);
+			return;
+		}
+
 		if ('files' in fileUploadField) {
 			if (fileUploadField && fileUploadField.files.length == 0) {
 				message = 'Select one or more files.';

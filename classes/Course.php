@@ -202,8 +202,6 @@ class Course extends Tutor_Base {
 		} else {
 			return $content;
 		}
-		
-		echo $content;
 	}
 
 	public function video_metabox( $echo = true ) {
