@@ -156,7 +156,7 @@
 
 				do_action( 'tutor_course/single/actions_btn_group/after' );
 
-		} elseif ( $is_privileged_user ) {
+		} /* elseif ( $is_privileged_user ) {
 			// The user is not enrolled but privileged to access course content
 			if ( $lesson_url ) {
 				?>
@@ -167,7 +167,7 @@
 			} else {
 				esc_html_e( 'No Content to Access', 'tutor' );
 			}
-		} else if ( $is_public ) {
+		} */ else if ( $is_public ) {
 			// Get the first content url
 			$first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID(), tutor()->lesson_post_type );
 			!$first_lesson_url ? $first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID() ) : 0;
