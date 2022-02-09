@@ -5,31 +5,26 @@
  * @version 1.4.3
  */
 
+$user = wp_get_current_user();
 $shortcode_arg = isset($GLOBALS['tutor_shortcode_arg']) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
 $courseCols = $shortcode_arg === null ? tutor_utils()->get_option('courses_col_per_row', 4) : $shortcode_arg;
 !isset($active_tab) ? $active_tab = 'my-courses' : 0;
 $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = (isset($_GET['current_page']) && is_numeric($_GET['current_page']) && $_GET['current_page'] >= 1) ? $_GET['current_page'] : 1;
-$offset     = ( $per_page * $paged ) - $per_page;
+$offset     = $per_page * ($paged === 1 ? 0: $paged);
 $status = $active_tab == 'my-courses' ? array('publish') : array('pending');
 
-$courses_per_page = tutor_utils()->get_courses_by_instructor_wpml(null, $status, $offset, $per_page);
-// echo count($courses_per_page);
-$my_courses = tutor_utils()->get_courses_by_instructor_wpml(null, $status);
+$courses_all = tutor_utils()->get_courses_by_instructor_wpml($user->ID);
+$courses_pending = tutor_utils()->get_pending_courses_by_instructor_wpml($user->ID);
+$publish_courses_count = count($courses_all);
+$pending_courses_count = count($courses_pending);
 
+$courses_per_page = tutor_utils()->get_courses_by_instructor_wpml($user->ID, $status, $offset, $per_page);
 ?>
 
 <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-15"><?php esc_html_e('My Courses', 'tutor'); ?></div>
 
 <div class="tutor-dashboard-content-inner my-courses">
-    <?php
-    $user = wp_get_current_user();
-    $courses_all = tutor_utils()->get_courses_by_instructor_wpml($user->ID);
-    $courses_pending = tutor_utils()->get_pending_courses_by_instructor_wpml($user->ID);
-    $publish_courses_count = count($courses_all);
-    $pending_courses_count = count($courses_pending);
-    ?>
-
     <!-- Navigation Tab -->
     <div class="tutor-dashboard-inline-links">
         <ul>
@@ -159,9 +154,9 @@ $my_courses = tutor_utils()->get_courses_by_instructor_wpml(null, $status);
         </div>
         <div class="tutor-mt-20">
             <?php
-            if (count($my_courses) > $per_page) {
+            if ($publish_courses_count > $per_page) {
                 $pagination_data = array(
-                    'total_items' => count($my_courses),
+                    'total_items' => $publish_courses_count,
                     'per_page'    => $per_page,
                     'paged'       => $paged,
                 );
