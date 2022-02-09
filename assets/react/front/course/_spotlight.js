@@ -89,33 +89,37 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	commentSideLine();
 	const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
 	const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
-	if (spotlightTabs && spotlightTabContent) {
-		spotlightTabs.forEach((tab) => {
-			tab.addEventListener('click', (event) => {
-				clearSpotlightTabActiveClass();
-				event.currentTarget.classList.add('is-active');
-				let id = event.currentTarget.getAttribute('data-tutor-spotlight-tab-target');
-				let query_string = event.currentTarget.getAttribute('data-tutor-query-string');
-				// console.log(query_string);
-				const tabConent = event.currentTarget.parentNode.nextElementSibling;
-				tabConent.querySelector('#' + id).classList.add('is-active');
-				if (id === 'tutor-course-spotlight-tab-3') {
-					commentSideLine();
-				}
-				let url = new URL(window.location);
-				url.searchParams.set('page_tab', query_string);
-				window.history.pushState({}, '', url);
-			});
+
+	window.addEventListener('click', (event) => {
+		const currentItem = event.target;
+		const isValidCurrentItem = currentItem.classList.contains('tab-header-item');
+		if (isValidCurrentItem) {
+			clearSpotlightTabActiveClass(spotlightTabs, spotlightTabContent);
+			currentItem.classList.add('is-active');
+			let id = currentItem.getAttribute('data-tutor-spotlight-tab-target');
+			let query_string = currentItem.getAttribute('data-tutor-query-string');
+			// console.log(query_string);
+			const tabConent = currentItem.parentNode.nextElementSibling;
+			tabConent.querySelector('#' + id).classList.add('is-active');
+			if (id === 'tutor-course-spotlight-tab-3') {
+				commentSideLine();
+			}
+			let url = new URL(window.location);
+			url.searchParams.set('page_tab', query_string);
+			window.history.pushState({}, '', url);
+		}
+	});
+	const clearSpotlightTabActiveClass = () => {
+		const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
+		const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
+
+		spotlightTabs.forEach((item) => {
+			item.classList.remove('is-active');
 		});
-		const clearSpotlightTabActiveClass = () => {
-			spotlightTabs.forEach((item) => {
-				item.classList.remove('is-active');
-			});
-			spotlightTabContent.forEach((item) => {
-				item.classList.remove('is-active');
-			});
-		};
-	}
+		spotlightTabContent.forEach((item) => {
+			item.classList.remove('is-active');
+		});
+	};
 	/* commenting */
 
 	// quize drag n drop functionality
