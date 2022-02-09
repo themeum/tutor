@@ -3,23 +3,10 @@ jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
 
-<<<<<<< HEAD
-// const askNewQna = document.querySelector('.tutor-ask-new-qna-btn');
-// const askNewQnaTextArea = document.querySelector('.tutor-quesanswer-askquestion textarea');
-// askNewQna.addEventListener('click', function () {
-// 	askNewQnaTextArea.classList.toggle('ask-new-qna-text-area-show');
-// })
-
-=======
->>>>>>> 792d85230ff258a421e70aab47f82546e4033f35
 document.addEventListener('DOMContentLoaded', (event) => {
 	const { __, _x, _n, _nx } = wp.i18n;
-	const sidebar = document.querySelector(
-		'.tutor-lesson-sidebar.tutor-desktop-sidebar'
-	);
-	const sidebarToggle = document.querySelector(
-		'.tutor-sidebar-toggle-anchor'
-	);
+	const sidebar = document.querySelector('.tutor-lesson-sidebar.tutor-desktop-sidebar');
+	const sidebarToggle = document.querySelector('.tutor-sidebar-toggle-anchor');
 	if (sidebar && sidebarToggle) {
 		sidebarToggle.addEventListener('click', () => {
 			if (getComputedStyle(sidebar).flex === '0 0 400px') {
@@ -35,8 +22,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	const sidebarTabeHandler = function(sideBarTabs) {
 		sideBarTabs.forEach((tab) => {
 			tab.addEventListener('click', (event) => {
-				const tabConent =
-					event.currentTarget.parentNode.nextElementSibling;
+				const tabConent = event.currentTarget.parentNode.nextElementSibling;
 				clearActiveClass(tabConent);
 				event.currentTarget.classList.add('active');
 				let id = event.currentTarget.getAttribute('data-sidebar-tab');
@@ -47,20 +33,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			for (let i = 0; i < sideBarTabs.length; i++) {
 				sideBarTabs[i].classList.remove('active');
 			}
-			let sidebarTabItems = tabConent.querySelectorAll(
-				'.tutor-lesson-sidebar-tab-item'
-			);
+			let sidebarTabItems = tabConent.querySelectorAll('.tutor-lesson-sidebar-tab-item');
 			for (let i = 0; i < sidebarTabItems.length; i++) {
 				sidebarTabItems[i].classList.remove('active');
 			}
 		};
 	};
-	const desktopSidebar = document.querySelectorAll(
-		'.tutor-desktop-sidebar-area .tutor-sidebar-tab-item'
-	);
-	const mobileSidebar = document.querySelectorAll(
-		'.tutor-mobile-sidebar-area .tutor-sidebar-tab-item'
-	);
+	const desktopSidebar = document.querySelectorAll('.tutor-desktop-sidebar-area .tutor-sidebar-tab-item');
+	const mobileSidebar = document.querySelectorAll('.tutor-mobile-sidebar-area .tutor-sidebar-tab-item');
 	if (desktopSidebar) {
 		sidebarTabeHandler(desktopSidebar);
 	}
@@ -70,9 +50,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	/* end of sidetab tab */
 
 	/* comment text-area focus arrow style */
-	const commentTextarea = document.querySelectorAll(
-		'.tutor-comment-textarea textarea'
-	);
+	const commentTextarea = document.querySelectorAll('.tutor-comment-textarea textarea');
 	if (commentTextarea) {
 		commentTextarea.forEach((item) => {
 			item.addEventListener('focus', () => {
@@ -86,65 +64,35 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 	/* comment text-area focus arrow style */
 	function commentSideLine() {
-		const parentComments = document.querySelectorAll(
-			'.tutor-comments-list.tutor-parent-comment'
-		);
-		const replyComment = document.querySelector(
-			'.tutor-comment-box.tutor-reply-box'
-		);
+		const parentComments = document.querySelectorAll('.tutor-comments-list.tutor-parent-comment');
+		const replyComment = document.querySelector('.tutor-comment-box.tutor-reply-box');
 		if (parentComments) {
 			[...parentComments].forEach((parentComment) => {
-				const childComments = parentComment.querySelectorAll(
-					'.tutor-comments-list.tutor-child-comment'
-				);
-				const commentLine = parentComment.querySelector(
-					'.tutor-comment-line'
-				);
+				const childComments = parentComment.querySelectorAll('.tutor-comments-list.tutor-child-comment');
+				const commentLine = parentComment.querySelector('.tutor-comment-line');
 				const childCommentCount = childComments.length;
 				if (childComments[childCommentCount - 1]) {
-					const lastCommentHeight =
-						childComments[childCommentCount - 1].clientHeight;
+					const lastCommentHeight = childComments[childCommentCount - 1].clientHeight;
 
-					let heightOfLine =
-						lastCommentHeight +
-						replyComment.clientHeight +
-						20 -
-						25 +
-						50;
+					let heightOfLine = lastCommentHeight + replyComment.clientHeight + 20 - 25 + 50;
 					console.log('heightOfLine ', heightOfLine);
-					commentLine.style.setProperty(
-						'height',
-						`calc(100% - ${heightOfLine}px)`
-					);
+					commentLine.style.setProperty('height', `calc(100% - ${heightOfLine}px)`);
 				}
 			});
 		}
 	}
 	commentSideLine();
-	const spotlightTabs = document.querySelectorAll(
-		'.tutor-spotlight-tab.tutor-default-tab .tab-header-item'
-	);
-	const spotlightTabContent = document.querySelectorAll(
-		'.tutor-spotlight-tab .tab-body-item'
-	);
+	const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
+	const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
 	if (spotlightTabs && spotlightTabContent) {
 		document.addEventListener('click', (event) => {
 			const currentItem = event.target;
-			const isValidCurrentItem = currentItem.classList.contains(
-				'tab-header-item'
-			);
+			const isValidCurrentItem = currentItem.classList.contains('tab-header-item');
 			if (isValidCurrentItem) {
-				clearSpotlightTabActiveClass(
-					spotlightTabs,
-					spotlightTabContent
-				);
+				clearSpotlightTabActiveClass(spotlightTabs, spotlightTabContent);
 				currentItem.classList.add('is-active');
-				let id = currentItem.getAttribute(
-					'data-tutor-spotlight-tab-target'
-				);
-				let query_string = currentItem.getAttribute(
-					'data-tutor-query-string'
-				);
+				let id = currentItem.getAttribute('data-tutor-spotlight-tab-target');
+				let query_string = currentItem.getAttribute('data-tutor-query-string');
 				const tabConent = currentItem.parentNode.nextElementSibling;
 				tabConent.querySelector('#' + id).classList.add('is-active');
 				if (id === 'tutor-course-spotlight-tab-3') {
@@ -156,12 +104,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			}
 		});
 		const clearSpotlightTabActiveClass = () => {
-			const spotlightTabs = document.querySelectorAll(
-				'.tutor-spotlight-tab.tutor-default-tab .tab-header-item'
-			);
-			const spotlightTabContent = document.querySelectorAll(
-				'.tutor-spotlight-tab .tab-body-item'
-			);
+			const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
+			const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
 
 			spotlightTabs.forEach((item) => {
 				item.classList.remove('is-active');
@@ -201,9 +145,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		this.classList.remove('tutor-drop-over');
 	}
 	function dragDrop() {
-		const copyElement = document.querySelector(
-			'.tutor-quiz-border-box.tutor-dragging'
-		);
+		const copyElement = document.querySelector('.tutor-quiz-border-box.tutor-dragging');
 		if (this.querySelector('input')) {
 			this.querySelector('input').remove();
 		}
@@ -215,19 +157,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		newInput.setAttribute('value', input.value);
 		newInput.setAttribute('name', inputName);
 		this.appendChild(newInput);
-		const copyContent = copyElement.querySelector(
-			'.tutor-dragging-text-conent'
-		).textContent;
-		this.querySelector(
-			'.tutor-dragging-text-conent'
-		).textContent = copyContent;
+		const copyContent = copyElement.querySelector('.tutor-dragging-text-conent').textContent;
+		this.querySelector('.tutor-dragging-text-conent').textContent = copyContent;
 		this.classList.remove('tutor-drop-over');
 	}
 
 	// tutor assignment file upload
-	const fileUploadField = document.getElementById(
-		'tutor-assignment-file-upload'
-	);
+	const fileUploadField = document.getElementById('tutor-assignment-file-upload');
 
 	if (fileUploadField) {
 		fileUploadField.addEventListener('change', tutorAssignmentFileHandler);
@@ -242,11 +178,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		).length;
 		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
 		if (fileUploadField.files.length > allowedToUpload) {
-			tutor_toast(
-				__('Warning', 'tutor'),
-				__(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'),
-				'error'
-			);
+			tutor_toast(__('Warning', 'tutor'), __(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'), 'error');
 			return;
 		}
 		if (uploadedFileSize > uploadSizeLimit) {
@@ -263,31 +195,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				message = 'Select one or more files.';
 			} else {
 				if (fileUploadField.files.length > allowedToUpload) {
-					tutor_toast(
-						__('Warning', 'tutor'),
-						__(
-							`Max ${maxAllowedFiles} file allowed to upload`,
-							'tutor'
-						),
-						'error'
-					);
+					tutor_toast(__('Warning', 'tutor'), __(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'), 'error');
 				}
 				let fileCard = '';
-				const assignmentFilePreview = document.querySelector(
-					'.tutor-asisgnment-upload-file-preview'
-				);
-				const assignmentEditFilePreview = document.getElementById(
-					'tutor-student-assignment-edit-file-preview'
-				);
+				const assignmentFilePreview = document.querySelector('.tutor-asisgnment-upload-file-preview');
+				const assignmentEditFilePreview = document.getElementById('tutor-student-assignment-edit-file-preview');
 
 				for (let i = 0; i < allowedToUpload; i++) {
 					let file = fileUploadField.files[i];
 					if (!file) {
 						continue;
 					}
-					let editWrapClass = assignmentEditFilePreview
-						? 'tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15'
-						: '';
+					let editWrapClass = assignmentEditFilePreview ? 'tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15' : '';
 					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
                                         <div class="text-regular-body color-text-title">
@@ -306,10 +225,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					assignmentFilePreview.innerHTML = fileCard;
 				}
 				if (assignmentEditFilePreview) {
-					assignmentEditFilePreview.insertAdjacentHTML(
-						'beforeend',
-						fileCard
-					);
+					assignmentEditFilePreview.insertAdjacentHTML('beforeend', fileCard);
 				}
 			}
 		}
@@ -343,9 +259,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 	//remove file
-	const removeButton = document.querySelectorAll(
-		'.tutor-attachment-file-close a'
-	);
+	const removeButton = document.querySelectorAll('.tutor-attachment-file-close a');
 	removeButton.forEach((item) => {
 		item.onclick = async (event) => {
 			event.preventDefault();
@@ -356,21 +270,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			formData.set('action', 'tutor_remove_assignment_attachment');
 			formData.set('assignment_comment_id', id);
 			formData.set('file_name', fileName);
-			formData.set(
-				window.tutor_get_nonce_data(true).key,
-				window.tutor_get_nonce_data(true).value
-			);
+			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 			const span = currentTarget.querySelector('span');
 			span.classList.add('tutor-updating-message');
 			const post = await ajaxHandler(formData);
 			if (post.ok) {
 				const response = await post.json();
 				if (!response) {
-					tutor_toast(
-						__('Warning', 'tutor'),
-						__(`Attachment remove failed`, 'tutor'),
-						'error'
-					);
+					tutor_toast(__('Warning', 'tutor'), __(`Attachment remove failed`, 'tutor'), 'error');
 				} else {
 					currentTarget.closest('.tutor-instructor-card').remove();
 				}
