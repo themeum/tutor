@@ -4434,7 +4434,7 @@ class Utils {
 							ON answer.comment_parent = question.comment_ID
 					INNER JOIN {$wpdb->commentmeta} question_meta
 							ON answer.comment_parent = question_meta.comment_id
-						   AND question_meta.meta_key = 'tutor_question_title'
+							AND question_meta.meta_key = 'tutor_question_title'
 			WHERE  	answer.comment_ID = %d
 					AND answer.comment_type = %s;
 			",
