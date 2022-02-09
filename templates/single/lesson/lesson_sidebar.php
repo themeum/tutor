@@ -105,8 +105,8 @@ $is_user_admin                = current_user_can( 'administrator' );
 									if ( $post->post_type === 'tutor_quiz' && ! $_is_preview ) {
 										$quiz = $post;
 										?>
-											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>" data-quiz-id="<?php echo $quiz->ID; ?>">
-												<div class="tutor-single-lesson-items">
+											<div class="tutor-lessons-under-topic" data-quiz-id="<?php echo $quiz->ID; ?>">
+												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
 													<a href="<?php echo get_permalink( $quiz->ID ); ?>" class="tutor-single-quiz-a tutor-bs-d-flex justify-content-between" data-quiz-id="<?php echo $quiz->ID; ?>">
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-quiz-filled"></span>
@@ -139,8 +139,8 @@ $is_user_admin                = current_user_can( 'administrator' );
 										 */
 
 										?>
-											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>" data-assignment-id="<?php echo $post->ID; ?>">
-												<div class="tutor-single-lesson-items">
+											<div class="tutor-lessons-under-topic">
+												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
 													<a href="<?php echo get_permalink( $post->ID ); ?>" class="tutor-single-assignment-a tutor-bs-d-flex justify-content-between" data-assignment-id="<?php echo $post->ID; ?>">
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-assignment-filled"></span>
@@ -164,8 +164,8 @@ $is_user_admin                = current_user_can( 'administrator' );
 										 */
 
 										?>
-											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>" data-zoom-meeting-id="<?php echo $post->ID; ?>">
-												<div class="tutor-single-lesson-items">
+											<div class="tutor-lessons-under-topic">
+												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
 													<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="sidebar-single-zoom-meeting-a tutor-bs-d-flex justify-content-between">
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-zoom"></span>
@@ -195,8 +195,8 @@ $is_user_admin                = current_user_can( 'administrator' );
 										}
 										$is_completed_lesson = tutor_utils()->is_completed_lesson();
 										?>
-											<div class="tutor-lessons-under-topic  <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
-												<div class="tutor-single-lesson-items">
+											<div class="tutor-lessons-under-topic">
+												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
 													<a href="<?php the_permalink(); ?>" class="tutor-single-lesson-a tutor-bs-d-flex justify-content-between" data-lesson-id="<?php the_ID(); ?>">
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 														<?php

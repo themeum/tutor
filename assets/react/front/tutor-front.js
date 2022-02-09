@@ -178,7 +178,6 @@ jQuery(document).ready(function($) {
 	 * @since v.1.0.0
 	 */
 	$('.tutorPlayer').each(function() {
-		console.log(this);
 		videoPlayer.init(this);
 	});
 
@@ -222,7 +221,6 @@ jQuery(document).ready(function($) {
 				// i++
 				var distance = countDownDate - time_now;
 				// let timeProgress = (distance/100) * i;
-				// console.log(timeProgress)
 				var days = Math.floor(distance / (1000 * 60 * 60 * 24));
 				var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 				var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -717,7 +715,6 @@ jQuery(document).ready(function($) {
 				$('#tutor_assignment_start_btn').addClass('updating-icon');
 			},
 			success: function(data) {
-				console.log('success');
 				if (data.success) {
 					location.reload();
 				}
