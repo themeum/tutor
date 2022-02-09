@@ -216,7 +216,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 															$lesson_complete_icon = $is_completed_lesson ? 'checked' : '';
 															echo "<input $lesson_complete_icon type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly />";
 															?>
-															
+
 														</div>
 													</a>
 												</div>
