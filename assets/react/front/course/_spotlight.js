@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	/* comment text-area focus arrow style */
-
 	const parentComments = document.querySelectorAll('.tutor-comments-list.tutor-parent-comment');
 	const replyComment = document.querySelector('.tutor-comment-box.tutor-reply-box');
 	function commentSideLine() {
@@ -85,29 +84,36 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
 	if (spotlightTabs && spotlightTabContent) {
 		spotlightTabs.forEach((tab) => {
-			tab.addEventListener('click', (event) => {
-				clearSpotlightTabActiveClass();
-				event.currentTarget.classList.add('is-active');
-				let id = event.currentTarget.getAttribute('data-tutor-spotlight-tab-target');
-				let query_string = event.currentTarget.getAttribute('data-tutor-query-string');
-				// console.log(query_string);
-				const tabConent = event.currentTarget.parentNode.nextElementSibling;
-				tabConent.querySelector('#' + id).classList.add('is-active');
-				if (id === 'tutor-course-spotlight-tab-3') {
-					commentSideLine();
-				}
-				let url = new URL(window.location);
-				url.searchParams.set('page_tab', query_string);
-				window.history.pushState({}, '', url);
-			});
+		  document.addEventListener('click', (event) => {
+			console.log('yo yo pops');
+			const currentItem = event.target;
+			const isValidCurrentItem = currentItem.classList.contains('tab-header-item');
+			if (isValidCurrentItem) {
+			  clearSpotlightTabActiveClass(spotlightTabs, spotlightTabContent);
+			  currentItem.classList.add('is-active');
+			  let id = currentItem.getAttribute('data-tutor-spotlight-tab-target');
+			  let query_string = currentItem.getAttribute('data-tutor-query-string');
+			  const tabConent = currentItem.parentNode.nextElementSibling;
+			  tabConent.querySelector('#' + id).classList.add('is-active');
+			  if (id === 'tutor-course-spotlight-tab-3') {
+				commentSideLine();
+			  }
+			  let url = new URL(window.location);
+			  url.searchParams.set('page_tab', query_string);
+			  window.history.pushState({}, '', url);
+			}
+		  });
 		});
 		const clearSpotlightTabActiveClass = () => {
-			spotlightTabs.forEach((item) => {
-				item.classList.remove('is-active');
-			});
-			spotlightTabContent.forEach((item) => {
-				item.classList.remove('is-active');
-			});
+		  const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
+		  const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
+	
+		  spotlightTabs.forEach((item) => {
+			item.classList.remove('is-active');
+		  });
+		  spotlightTabContent.forEach((item) => {
+			item.classList.remove('is-active');
+		  });
 		};
 	}
 	/* commenting */
