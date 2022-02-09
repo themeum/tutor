@@ -47,7 +47,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
     </label>
     <div class="tutor-input-group tutor-mb-15 tutor-mt-10 tutor-bs-d-block">
         <div class="tutor-video-upload-wrap g-0">
-            <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo empty($videoSource) ? 'html5' : $videoSource; ?>">
+            <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo empty($videoSource) ? '' : $videoSource; ?>">
                 <i class="tutor-icon-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
                 <i class="tutor-icon-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
                 <i class="tutor-icon-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
