@@ -43,6 +43,16 @@
 		}
 	}
 
+	.tutor-lesson-feature-image {
+		img {
+			display: block;
+			width: auto;
+			height: auto;
+			max-width: 100%;
+			margin: 0 auto;
+		}
+	}
+
 	// Video players
 	.course-players {
 		position: relative;

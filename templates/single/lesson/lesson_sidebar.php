@@ -100,7 +100,6 @@ $is_user_admin                = current_user_can( 'administrator' );
 								do_action( 'tutor/lesson_list/before/topic', $topic_id );
 								$lessons = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
 
-							if ( $lessons->have_posts() ) {
 								while ( $lessons->have_posts() ) {
 									$lessons->the_post();
 									if ( $post->post_type === 'tutor_quiz' && ! $_is_preview ) {
@@ -125,7 +124,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 																}
 																$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID )
 																?>
-																<input type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly <?php echo esc_attr( $has_attempt ? 'checked' : '' ); ?>/>
+																<input type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?>/>
 															</span>
 														</div>
 													</a>
@@ -146,7 +145,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-assignment-filled"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
-														<?php echo $post->post_title; ?>
+																<?php echo $post->post_title; ?>
 															</span>
 														</div>
 														<div class="tutor-single-lesson-items-right tutor-bs-d-flex tutor-lesson-right-icons">
@@ -155,7 +154,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 													</a>
 												</div>
 											</div>
-											<?php
+										<?php
 
 									} elseif ( $post->post_type === 'tutor_zoom_meeting' && ! $_is_preview ) {
 										/**
@@ -222,12 +221,10 @@ $is_user_admin                = current_user_can( 'administrator' );
 													</a>
 												</div>
 											</div>
-
-											<?php
+										<?php
 									}
 								}
 								$lessons->reset_postdata();
-							}
 								do_action( 'tutor/lesson_list/after/topic', $topic_id );
 							?>
 						</div>
