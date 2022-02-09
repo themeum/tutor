@@ -13,15 +13,6 @@
 if ( ! defined( 'ABSPATH' ) )
 	exit;
 
-global $previous_id;
-global $next_id;
-$course_content_id = get_the_ID();
-
-$content_id = tutor_utils()->get_post_id($course_content_id);
-$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
-$previous_id = $contents->previous_id;
-$next_id = $contents->next_id;
-
 $disable_default_player_youtube = tutor_utils()->get_option('disable_default_player_youtube');
 $video_info = tutor_utils()->get_video_info();
 $youtube_video_id = tutor_utils()->get_youtube_video_id(tutor_utils()->avalue_dot('source_youtube', $video_info));
@@ -38,8 +29,6 @@ do_action('tutor_lesson/single/before/video/youtube');
                 <iframe src="https://www.youtube.com/embed/<?php echo $youtube_video_id; ?>?&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
             </div>
         <?php endif; ?>
-
-        <?php require __DIR__ . '/video-navigation.php'; ?>
     </div>
 <?php endif; ?>
 
