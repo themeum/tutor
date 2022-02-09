@@ -187,10 +187,10 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_posts( array( 
-			'post_type' => 'page', 
-			'post_status'    => 'publish', 
-			'numberposts' => -1,  
+		$wp_pages = get_posts( array(
+			'post_type' => 'page',
+			'post_status'    => 'publish',
+			'numberposts' => -1,
 		) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
@@ -7782,6 +7782,30 @@ class Utils {
 		$student_data = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT student.{$field_name}
+			FROM   	{$wpdb->posts} enrol
+					INNER JOIN {$wpdb->users} student
+						    ON enrol.post_author = student.id
+			WHERE  	enrol.post_type = %s
+					AND enrol.post_parent = %d
+					AND enrol.post_status = %s;
+			",
+				'tutor_enrolled',
+				$course_id,
+				'completed'
+			)
+		);
+
+		return array_column( $student_data, $field_name );
+	}
+
+	public function get_students_all_data_by_course_id( $course_id = 0 ) {
+
+		global $wpdb;
+		$course_id = $this->get_post_id( $course_id );
+
+		$student_data = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
 			FROM   	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->users} student
 						    ON enrol.post_author = student.id
