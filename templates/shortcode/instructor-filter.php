@@ -127,7 +127,7 @@ if ( $total_categories && $total_categories > $limit ) {
 					<i class="tutor-icon-magnifying-glass-line"></i>
 					<input type="text" name="keyword" placeholder="<?php _e( 'Search any instructor...', 'tutor' ); ?>"/>
 				</div>
-				<i class="tutor-icon-filter-tool-black-shape"></i>
+				<i class="tutor-icon-filter-filled"></i>
 			</div>
 			<div class="mobile-filter-popup">
 

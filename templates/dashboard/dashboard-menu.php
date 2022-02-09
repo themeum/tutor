@@ -1,7 +1,7 @@
 <?php
 /**
  * Markup for Dashboard Menu
- * 
+ *
  * @since 2.0.0
  */
 if ( class_exists( '\TUTOR\Utils' ) && is_user_logged_in() ) : ?>

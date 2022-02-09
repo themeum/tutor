@@ -91,7 +91,7 @@
 			}
 		}
 	}
-	.tutor-modal-text-rating  {
+	.tutor-modal-text-rating {
 		font-weight: 500;
 	}
 	.tutor-ratings {
@@ -115,16 +115,15 @@
 		.tutor-rating-text {
 			margin-left: 4px;
 		}
-		
 	}
 	.tutor-modal-inner {
 		textarea.tutor-form-control {
 			min-height: 140px;
 			// max-height: 250px;
 			resize: none;
-			background: #FFFFFF;
-			border: 1px solid #C0C3CB;
-			color: #757C8E;
+			background: #ffffff;
+			border: 1px solid #c0c3cb;
+			color: #757c8e;
 			font-weight: normal;
 			font-size: 15px;
 			line-height: 24px;

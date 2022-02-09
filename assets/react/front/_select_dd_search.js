@@ -5,8 +5,6 @@ window.selectSearchField = (selectElement) => {
 			tutorFormSelect.forEach((element) => {
 				if (!element.hasAttribute('noDropdown') && !element.classList.contains('no-tutor-dropdown')) {
 					let initialSelectedItem = element.options[element.selectedIndex];
-					// console.log(element.options[element.selectedIndex].text);
-
 					element.style.display = 'none';
 					let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
 					element.insertAdjacentHTML('afterend', ddMarkup(element.options));
@@ -22,7 +20,6 @@ window.selectSearchField = (selectElement) => {
 					selectedLabel.innerText = initialSelectedItem && initialSelectedItem.text;
 
 					selectLabel.onclick = (e) => {
-						dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
 
 						e.stopPropagation();
 						dropDown.classList.toggle('is-active');
@@ -35,6 +32,7 @@ window.selectSearchField = (selectElement) => {
 							e.stopPropagation();
 						};
 					};
+					dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
 
 					resultWrap = searchInputWrap.nextElementSibling;
 					resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');

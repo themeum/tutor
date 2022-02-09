@@ -187,11 +187,43 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true,'post_status'    => 'publish', 'numberposts' => -1,  ) );
+		$wp_pages = get_posts( array(
+			'post_type' => 'page',
+			'post_status'    => 'publish',
+			'numberposts' => -1,
+		) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
 			foreach ( $wp_pages as $page ) {
 				$pages[ $page->ID ] = $page->post_title;
+			}
+		}
+
+		do_action( 'tutor_utils/get_pages/after' );
+
+		return $pages;
+	}
+	/**
+	 * @return array
+	 *
+	 * Get all pages
+	 *
+	 * @since v.1.0.0
+	 */
+
+	public function get_not_translated_pages() {
+		do_action( 'tutor_utils/get_pages/before' );
+
+		$pages    = array();
+
+		$wp_pages = get_posts( array( 'post_type' => 'page', 'suppress_filters' => true, 'post_status'    => 'publish', 'numberposts' => -1,  ) );
+
+		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
+			foreach ( $wp_pages as $page ) {
+				$translate_id = icl_object_id($page->ID,'page', true, ICL_LANGUAGE_CODE);
+				if($page->ID === $translate_id){
+					$pages[ $page->ID ] = $page->post_title;
+				}
 			}
 		}
 
@@ -625,6 +657,28 @@ class Utils {
 		return $count;
 	}
 
+	public function get_courses_by_instructor_wpml($instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX) {
+		$args = array(
+			'posts_per_page'   => $limit,
+			'offset'					 => $offset,
+			'orderby'          => 'menu_order',
+			'order'            => 'DESC',
+			'post_type'        => tutor()->course_post_type,
+			'post_status'      => $post_status,
+			'suppress_filters'  => !$this->is_wpml_active()
+		);
+		$pageposts = get_posts( $args );
+
+		return $pageposts;
+
+	}
+
+	public function is_wpml_active(){
+		$dashboard_id = get_tutor_option('tutor_dashboard_page_id');
+		$is_translated = apply_filters( 'wpml_element_has_translations', NULL, $dashboard_id, 'page' );
+		return $is_translated;
+	}
+
 	/**
 	 * @param $instructor_id
 	 *
@@ -669,6 +723,21 @@ class Utils {
 			),
 			OBJECT
 		);
+
+		return $pageposts;
+	}
+
+	public function get_pending_courses_by_instructor_wpml( $instructor_id = 0, $post_status = array( 'pending' ), int $offset = 0, int $limit = PHP_INT_MAX ) {
+		$args = array(
+			'orderby'          => 'menu_order',
+			'order'            => 'DESC',
+			'post_type'        => tutor()->course_post_type,
+			'post_status'      => $post_status,
+			'suppress_filters' => !$this->is_wpml_active(),
+			'offset'           => $offset,
+			'posts_per_page'   => $limit,
+		);
+		$pageposts = get_posts( $args );
 
 		return $pageposts;
 	}
@@ -4367,7 +4436,7 @@ class Utils {
 							ON answer.comment_parent = question.comment_ID
 					INNER JOIN {$wpdb->commentmeta} question_meta
 							ON answer.comment_parent = question_meta.comment_id
-						   AND question_meta.meta_key = 'tutor_question_title'
+							AND question_meta.meta_key = 'tutor_question_title'
 			WHERE  	answer.comment_ID = %d
 					AND answer.comment_type = %s;
 			",
@@ -4604,52 +4673,52 @@ class Utils {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-icon-block tutor-icon-yes-no-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-quiz-type-icon tutor-icon-yes-no-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'single_choice'     => array(
 				'name'   => __( 'Single Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-icon-block tutor-icon-mark-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-quiz-type-icon tutor-icon-mark-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'multiple_choice'   => array(
 				'name'   => __( 'Multiple Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Multiple Choicee"><i class="tutor-icon-block tutor-icon-multiple-choice"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Multiple Choicee"><i class="tutor-quiz-type-icon tutor-icon-multiple-choice-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'open_ended'        => array(
 				'name'   => __( 'Open Ended', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-icon-block tutor-icon-open-ended"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-quiz-type-icon tutor-icon-open-ended-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'fill_in_the_blank' => array(
 				'name'   => __( 'Fill In The Blanks', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-icon-block tutor-icon-v1-fill-gaps"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-quiz-type-icon tutor-icon-fill-gaps-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'short_answer'      => array(
 				'name'   => __( 'Short Answer', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Short Answer"><i class="tutor-icon-block tutor-icon-short-ans"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Short Answer"><i class="tutor-quiz-type-icon tutor-icon-short-ans-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'matching'          => array(
 				'name'   => __( 'Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Matching"><i class="tutor-icon-block tutor-icon-matching"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Matching"><i class="tutor-quiz-type-icon tutor-icon-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_matching'    => array(
 				'name'   => __( 'Image Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-icon-block tutor-icon-image-matching-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-quiz-type-icon tutor-icon-image-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_answering'   => array(
 				'name'   => __( 'Image Answering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Answering"><i class="tutor-icon-block tutor-icon-image-ans"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Answering"><i class="tutor-quiz-type-icon tutor-icon-camera-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'ordering'          => array(
 				'name'   => __( 'Ordering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Ordering"><i class="tutor-icon-block tutor-icon-ordering"></i></span>',
+				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Ordering"><i class="tutor-quiz-type-icon tutor-icon-ordering-z-to-a-filled"></i></span>',
 				'is_pro' => true,
 			),
 		);
@@ -5677,7 +5746,7 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_wishlist( $user_id = 0 ) {
+	public function get_wishlist( $user_id = 0, int $offset = 0, int $limit = PHP_INT_MAX ) {
 		global $wpdb;
 
 		$user_id          = $this->get_user_id( $user_id );
@@ -5693,12 +5762,14 @@ class Utils {
 					AND post_status = %s
 					AND $wpdb->usermeta.meta_key = %s
 					AND $wpdb->usermeta.user_id = %d
-	    	ORDER BY $wpdb->usermeta.umeta_id DESC;
+	    	ORDER BY $wpdb->usermeta.umeta_id DESC LIMIT %d, %d;
 			",
 				$course_post_type,
 				'publish',
 				'_tutor_course_wishlist',
-				$user_id
+				$user_id,
+				$offset,
+				$limit
 			),
 			OBJECT
 		);
@@ -5852,19 +5923,19 @@ class Utils {
 		$icons = array(
 			'facebook' => array(
 				'share_class' => 's_facebook',
-				'icon_html'   => '<i class="tutor-icon-facebook tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-facebook tutor-icon-24"></i>',
 				'text'        => __( 'Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
-				'icon_html'   => '<i class="tutor-icon-twitter-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-twitter-brand tutor-icon-24"></i>',
 				'text'        => __( 'Twitter', 'tutor' ),
 				'color'       => '#4CA0EB',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
-				'icon_html'   => '<i class="tutor-icon-linkedin-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-linkedin-brand tutor-icon-24"></i>',
 				'text'        => __( 'Linkedin', 'tutor' ),
 				'color'       => '#3967B6',
 			),
@@ -6263,7 +6334,7 @@ class Utils {
 
 		$query_by_status_sql = '';
 		$query_by_user_sql   = '';
-		
+
 		if ( ! empty( $status ) ) {
 			$status = (array) $status;
 			$status = "'" . implode( "','", $status ) . "'";
@@ -7729,6 +7800,30 @@ class Utils {
 		return array_column( $student_data, $field_name );
 	}
 
+	public function get_students_all_data_by_course_id( $course_id = 0 ) {
+
+		global $wpdb;
+		$course_id = $this->get_post_id( $course_id );
+
+		$student_data = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+			FROM   	{$wpdb->posts} enrol
+					INNER JOIN {$wpdb->users} student
+						    ON enrol.post_author = student.id
+			WHERE  	enrol.post_type = %s
+					AND enrol.post_parent = %d
+					AND enrol.post_status = %s;
+			",
+				'tutor_enrolled',
+				$course_id,
+				'completed'
+			)
+		);
+
+		return array_column( $student_data, $field_name );
+	}
+
 	/**
 	 * @param int $course_id
 	 *
@@ -8335,7 +8430,8 @@ class Utils {
 			}
 
 			if ( $wp_query->queried_object && $wp_query->queried_object->ID ) {
-				return $wp_query->queried_object->ID == tutor_utils()->get_option( 'tutor_dashboard_page_id' );
+				$d_id = apply_filters( 'tutor_dashboard_page_id_filter', tutor_utils()->get_option( 'tutor_dashboard_page_id' ) );
+				return $wp_query->queried_object->ID == $d_id;
 			}
 		}
 
@@ -9326,7 +9422,7 @@ class Utils {
 	 *
 	 * @param string $date | string date time to conver.
 	 *
-	 * @return string | date time 
+	 * @return string | date time
 	 */
 	public function convert_date_into_wp_timezone( string $date ): string {
 		$date = new \DateTime( $date );
@@ -9334,7 +9430,7 @@ class Utils {
 		return $date->format( get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
 	}
 
-	/*
+	/**
 	 * Tutor Custom Header
 	 */
 	public function tutor_custom_header() {
@@ -9359,7 +9455,7 @@ class Utils {
 	}
 
 	/**
-	 * Tutor Custom Footer
+	 * Tutor Custom Header
 	 */
 	public function tutor_custom_footer() {
 		global $wp_version;

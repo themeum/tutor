@@ -26,8 +26,7 @@ toggleChange.forEach((element) => {
 jQuery(document).ready(function($) {
 	'use strict';
 
-	const { __, _x, _n, _nx } = wp.i18n;
-	const search_student_placeholder = __('Search students', 'tutor');
+	const { __ } = wp.i18n;
 	/**i
 	 * Color Picker
 	 * @since v.1.2.21
@@ -443,91 +442,6 @@ jQuery(document).ready(function($) {
 				e.preventDefault();
 			}
 		}
-	});
-
-	/**
-	 * Find user/student from select2
-	 * @since v.1.4.0
-	 */
-	$('#select2_search_user_ajax').select2({
-		allowClear: true,
-
-		minimumInputLength: 1,
-		placeholder: search_student_placeholder,
-		language: {
-			inputTooShort: function() {
-				return __('Please add 1 or more character', 'tutor');
-			},
-		},
-		escapeMarkup: function(m) {
-			return m;
-		},
-		ajax: {
-			url: window._tutorobject.ajaxurl,
-			type: 'POST',
-			dataType: 'json',
-			delay: 1000,
-			data: function(params) {
-				return {
-					term: params.term,
-					action: 'tutor_json_search_students',
-				};
-			},
-			processResults: function(data) {
-				var terms = [];
-				if (data) {
-					$.each(data, function(id, text) {
-						terms.push({
-							id: id,
-							text: text,
-						});
-					});
-				}
-				return {
-					results: terms,
-				};
-			},
-			cache: true,
-		},
-	});
-
-	/**
-	 * Confirm Alert for deleting enrollments data
-	 *
-	 * @since v.1.4.0
-	 */
-	$(document).on('click', 'table.enrolments .delete a', function(e) {
-		e.preventDefault();
-
-		var url = $(this).attr('href');
-		var popup;
-
-		var data = {
-			title: __('Delete this enrolment', 'tutor'),
-			description: __(
-				"All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student's enrollment.",
-				'tutor'
-			),
-			buttons: {
-				reset: {
-					title: __('Cancel', 'tutor'),
-					class: 'tutor-btn tutor-is-outline tutor-is-default',
-
-					callback: function() {
-						popup.remove();
-					},
-				},
-				keep: {
-					title: __('Yes, Delete This', 'tutor'),
-					class: 'tutor-btn',
-					callback: function() {
-						window.location.replace(url);
-					},
-				},
-			},
-		};
-
-		popup = new window.tutor_popup($, 'icon-trash', 40).popup(data);
 	});
 
 	/**

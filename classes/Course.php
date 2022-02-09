@@ -184,7 +184,8 @@ class Course extends Tutor_Base {
 		$content = ob_get_clean();
 
 		if ( $echo ) {
-			echo tutor_kses_html( $content );
+			// echo tutor_kses_html( $content ); Doesn't support SVG. It is restored in version 2 and we've got rid of SVG and used icon font instead.
+			echo $content;
 		} else {
 			return $content;
 		}
@@ -201,8 +202,6 @@ class Course extends Tutor_Base {
 		} else {
 			return $content;
 		}
-		
-		echo $content;
 	}
 
 	public function video_metabox( $echo = true ) {

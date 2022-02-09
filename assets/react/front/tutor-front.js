@@ -404,7 +404,7 @@ jQuery(document).ready(function($) {
 	 *
 	 * @updated v.1.4.0
 	 */
-	if (!_tutorobject.enable_lesson_classic_editor) {
+	/* if (!_tutorobject.enable_lesson_classic_editor) {
 		$(document).on('click', '.tutor-single-lesson-a', function(e) {
 			e.preventDefault();
 
@@ -464,7 +464,7 @@ jQuery(document).ready(function($) {
 				},
 			});
 		});
-	}
+	} */
 
 	/**
 	 * @date 05 Feb, 2019

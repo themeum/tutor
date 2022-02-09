@@ -55,7 +55,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 				</a>
 			</div>
 			<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-				<span class="tutor-icon-youtube-brand tutor-color-text-white tutor-mr-5"></span>
+				<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-text-white tutor-mr-5"></span>
 				<span class="text-regular-caption tutor-color-design-white">
 					<?php
 						esc_html_e( 'Lesson: ', 'tutor' );
@@ -117,7 +117,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 			</a>
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-			<span class="tutor-icon-youtube-brand tutor-color-text-white tutor-mr-5"></span>
+			<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-text-white tutor-mr-5"></span>
 			<span class="text-regular-caption tutor-color-design-white">
 				<?php
 					esc_html_e( 'Lesson: ', 'tutor' );
