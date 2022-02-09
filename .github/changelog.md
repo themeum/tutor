@@ -1,8 +1,85 @@
 # TutorLMS Changelog
 
-### 2.0.0 - February 01, 2022
+### 2.0.0-rc - February 09, 2022
 
-* Update: Overall Design System
+* New: Added pagination in frontend course list
+* Fix: WPML compatibility in dashboard page
+* Fix: WP 5.9 compatibility
+* Fix: Missing icon fonts and font conflicts
+* Fix: Enabling course as public is not showing start learning button
+* Fix: Hiding quiz time not working
+* Fix: Hiding quiz question number not working
+* Fix: Most of the known frontend issues
+
+
+### 2.0.0-beta.3 - January 31, 2022
+
+* Fix: Email notification error generating from tutor login modal
+* Fix: Bulk delete option for quiz attempt not working
+* Fix: Zoom & Announcement Time Calculation is not working
+* Fix: Minimal GradeBook percentage was showing the wrong calculations
+* Fix: The users were unable to switch the Q&A tab
+* Fix: Quiz Export button was not showing up
+* Fix: Quiz attempt table matching data was showing wrong information
+* Fix: Pagination issues on the dashboard withdrawal tab
+* Fix: Second Zoom live lesson not working properly
+* Fix: Download certificate button issue without course completion
+
+
+### 2.0.0-beta.2 - January 25, 2022
+
+* New: Student and instructor public profile layout option in settings
+* Update: Add translation security to the export page
+* Update: Confirmation modal added to import, delete & apply history data
+* Fix: Student can submit quiz even after time expired issue fixed
+* Fix: Student can upload multiple files while submitting Assignment
+* Fix: Fixed Fatal error if users didn't have the compatible Tutor Pro installed
+* Fix: Gradebook broken message issue fixed 
+* Fix: PHP notice and warning errors fixed
+* Fix: Quiz attempt details table doesn't show all contents properly
+* Fix: Division by zero on pagination is fixed
+* Fix: Sorting fixed after ajax action on Import & delete history data
+* Fix: Line-awesome static (404) link removed
+* Fix: TinyMCE editor null checking fixed
+* Fix: Removed duplicate site title of Tools status page
+* Fix: Time type added to quiz attempt
+* Fix: Slash is removed to filter and search the title on each listing
+* Fix: Removed array checking on an object in dashboard list page
+* Fix: Issue for login page if there is no redirection page issue is fixed
+* Fix: Replaced Q&A static date to dynamic date
+* Fix: Fixed wrong display name on quiz attempt table
+* Fix: Settings page input field enter modal issue fixed
+* Fix: Pre-requisites not showing up on course page 
+
+
+### 2.0.0-beta - January 18, 2022
+
+* New: Visually appealing appearance with a more unified design system
+* New: Edit email template content from the editor without having to override the plugin
+* New: Exclusive in-house designed email templates for each event
+* New: Personalized dashboard for instructors and students focused towards task automation
+* New: ​​Notification bar on top of the dashboard to let learners and instructors stay updated
+* New: Improved Analytics with more extensive statistics 
+* New: New Q/A features for instant and more engaging communication
+* New: Event calendar with handy features to organize events, schedule assignments, and more. 
+* New: New Assignment features with the option to retake and add instructor's feedback. 
+* New: Announcement tab in the course detail page
+* New: Preview certificate before downloading upon completing the course 
+* New: Use preset or custom color palettes to configure entire site's colors 
+* New: Brand new Quiz interface with a new student window and other handy settings 
+* New: Collect all of your reviews and ratings in one centralized location
+* Update: Dynamic membership plan on the right sidebar of the course details page
+* Update: Enhanced Instructor list and public profile layouts with Backend & Frontend preview
+* Update: Flexible Gradebook with easy grading point system setup
+* Update: More intuitive certificate setup page with guided creation process
+* Update: Enhanced course catalog features with extensive course page
+* Update: Improved accessibility and responsiveness across all device
+
+
+### 1.9.15 - February 01, 2022
+
+* Update: Added Compatibility with WordPress 5.9 and Block Based Theme
+* Fix: Security issue and XSS vulnerabillity fixes
 
 
 ### 1.9.14 - January 20, 2022

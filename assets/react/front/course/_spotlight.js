@@ -3,6 +3,15 @@ jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
 
+<<<<<<< HEAD
+// const askNewQna = document.querySelector('.tutor-ask-new-qna-btn');
+// const askNewQnaTextArea = document.querySelector('.tutor-quesanswer-askquestion textarea');
+// askNewQna.addEventListener('click', function () {
+// 	askNewQnaTextArea.classList.toggle('ask-new-qna-text-area-show');
+// })
+
+=======
+>>>>>>> 792d85230ff258a421e70aab47f82546e4033f35
 document.addEventListener('DOMContentLoaded', (event) => {
 	const { __, _x, _n, _nx } = wp.i18n;
 	const sidebar = document.querySelector(
@@ -119,7 +128,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		'.tutor-spotlight-tab .tab-body-item'
 	);
 	if (spotlightTabs && spotlightTabContent) {
-		// spotlightTabs.forEach((tab) => {
 		document.addEventListener('click', (event) => {
 			const currentItem = event.target;
 			const isValidCurrentItem = currentItem.classList.contains(
@@ -147,7 +155,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				window.history.pushState({}, '', url);
 			}
 		});
-		// });
 		const clearSpotlightTabActiveClass = () => {
 			const spotlightTabs = document.querySelectorAll(
 				'.tutor-spotlight-tab.tutor-default-tab .tab-header-item'
@@ -226,10 +233,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		fileUploadField.addEventListener('change', tutorAssignmentFileHandler);
 	}
 	function tutorAssignmentFileHandler() {
+		const uploadedFileSize = [...fileUploadField.files].reduce((sum, file) => sum + file.size, 0); // byte
+		const uploadSizeLimit = parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
 		let message = '';
 		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
 		let alreadyUploaded = document.querySelectorAll(
-			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card'
+			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card',
 		).length;
 		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
 		if (fileUploadField.files.length > allowedToUpload) {
@@ -240,6 +249,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			);
 			return;
 		}
+		if (uploadedFileSize > uploadSizeLimit) {
+			tutor_toast(
+				__('Warning', 'tutor'),
+				__(`File size exceeds maximum limit ${Math.floor(uploadSizeLimit / 1000000)} MB.`, 'tutor'),
+				'error',
+			);
+			return;
+		}
+
 		if ('files' in fileUploadField) {
 			if (fileUploadField && fileUploadField.files.length == 0) {
 				message = 'Select one or more files.';

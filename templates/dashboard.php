@@ -12,8 +12,8 @@
  * @version 1.4.3
  */
 
-$is_by_short_code = isset($is_shortcode) && $is_shortcode === true;
-if (!$is_by_short_code && !defined('OTLMS_VERSION')) {
+$is_by_short_code = isset( $is_shortcode ) && $is_shortcode === true;
+if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
 	tutor_utils()->tutor_custom_header();
 }
 
@@ -169,6 +169,7 @@ do_action('tutor_dashboard/before/wrap');
 						if ($disable && 'reviews' === $dashboard_key) {
 							continue;
 						}
+
 						$menu_title = $dashboard_page;
 						$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink($dashboard_key);
 						$separator  = false;
@@ -182,7 +183,7 @@ do_action('tutor_dashboard/before/wrap');
 							}
 							// Add new menu item property "url" for custom link
 							if (isset($dashboard_page['url'])) {
-								$menu_link = $dashboard_page['url'];
+								echo $menu_link = $dashboard_page['url'];
 							}
 							if (isset($dashboard_page['type']) && $dashboard_page['type'] == 'separator') {
 								$separator = true;
@@ -269,6 +270,6 @@ do_action('tutor_dashboard/before/wrap');
 <?php do_action('tutor_dashboard/after/wrap'); ?>
 
 <?php
-if (!$is_by_short_code && !defined('OTLMS_VERSION')) {
+if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
 	tutor_utils()->tutor_custom_footer();
 }

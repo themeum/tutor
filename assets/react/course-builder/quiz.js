@@ -500,7 +500,7 @@ window.jQuery(document).ready(function($) {
 		answer_wrapper.html(
 			`<div style="text-align:center">
                 <span class="tutor-updating-message"></span>
-            </div>`
+            </div>`,
 		);
 
 		answer_wrapper.get(0).scrollIntoView({ block: 'center', behavior: 'smooth' });
