@@ -1,4 +1,49 @@
-.tutor-single-lesson-wraper {
+.tutor-course-single-content-wraper {
+
+	// Course content navigation
+	.tutor-single-course-content-prev, .tutor-single-course-content-next {
+		cursor: pointer;
+		width: 31px;
+		height: 215px;
+		background: rgba(0, 0, 0, 0.185);
+		top: 300px;
+		transform: translateY(-50%);
+		position: absolute;
+		backdrop-filter: blur(94px);
+		&:hover{
+			background: rgba(0, 0, 0, 0.247);
+		}
+
+		span {
+			font-size: 40px;
+			color: #ffffff8c;
+		}
+	}
+
+	.tutor-single-course-content-prev {
+		left: 0;
+		border-radius: 0px 6px 6px 0px;
+	}
+
+	.tutor-single-course-content-next {
+		right: 0;
+		border-radius: 6px 0px 0px 6px;
+	}
+
+
+	@include breakpoint-max(768) {
+		.tutor-single-course-content-prev, .tutor-single-course-content-next {
+			width: 31px;
+			height: 120px;
+
+			span {
+				font-size: 30px;
+				color: #ffffff8c;
+			}
+		}
+	}
+
+	// Video players
 	.course-players {
 		position: relative;
 		width: 100%;
@@ -14,47 +59,12 @@
 			border: none;
 		}
 
-		.tutor-lesson-prev,
-		.tutor-lesson-next {
-			cursor: pointer;
-			width: 31px;
-			height: 215px;
-			background: rgba(255, 255, 255, 0.1);
-			top: 50%;
-			transform: translateY(-50%);
-			position: absolute;
-			backdrop-filter: blur(94px);
-
-			span {
-				font-size: 40px;
-				color: #ffffff8c;
-			}
-		}
-		.tutor-lesson-prev {
-			left: 0;
-			border-radius: 0px 6px 6px 0px;
-		}
-		.tutor-lesson-next {
-			right: 0;
-			border-radius: 6px 0px 0px 6px;
-		}
-
 		@include breakpoint-max(768) {
 			height: 500px;
 			width: 100%;
 
 			iframe {
 				width: 100%;
-			}
-
-			.tutor-lesson-prev,
-			.tutor-lesson-next {
-				width: 31px;
-				height: 120px;
-				span {
-					font-size: 30px;
-					color: #ffffff8c;
-				}
 			}
 		}
 

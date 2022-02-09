@@ -14,16 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-global $previous_id;
-global $next_id;
-
-
-$course_content_id = get_the_ID();
-$content_id = tutor_utils()->get_post_id($course_content_id);
-$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
-$previous_id = $contents->previous_id;
-$next_id = $contents->next_id;
-
 $disable_default_player_vimeo = tutor_utils()->get_option('disable_default_player_vimeo');
 
 $video_info = tutor_utils()->get_video_info();
@@ -47,7 +37,6 @@ do_action( 'tutor_lesson/single/before/video/vimeo' );
                 <iframe src="https://player.vimeo.com/video/<?php echo $video_id; ?>?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media" allowfullscreen allowtransparency allow="autoplay"></iframe>
             </div>
         <?php endif; ?>
-        <?php require __DIR__ . '/video-navigation.php'; ?>
     </div>
 <?php endif ?>
 

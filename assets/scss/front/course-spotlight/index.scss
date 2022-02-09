@@ -13,7 +13,7 @@
 }
 
 @import './sidebar';
-.tutor-single-lesson-wraper {
+.tutor-course-single-content-wraper {
     display: flex;
     position: relative;
     width: 100%;
@@ -36,9 +36,11 @@
             border: none;
         }
     }
-    .tutor-single-entry-content {
+    #tutor-single-entry-content {
         flex: 100%;
         padding-bottom: 90px;
+        position: relative;
+        
         // topbar
         .tutor-single-page-top-bar {
             background: $design-brand;
