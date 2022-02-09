@@ -76,13 +76,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	/* comment text-area focus arrow style */
-	const parentComments = document.querySelectorAll(
-		'.tutor-comments-list.tutor-parent-comment'
-	);
-	const replyComment = document.querySelector(
-		'.tutor-comment-box.tutor-reply-box'
-	);
 	function commentSideLine() {
+		const parentComments = document.querySelectorAll(
+			'.tutor-comments-list.tutor-parent-comment'
+		);
+		const replyComment = document.querySelector(
+			'.tutor-comment-box.tutor-reply-box'
+		);
 		if (parentComments) {
 			[...parentComments].forEach((parentComment) => {
 				const childComments = parentComment.querySelectorAll(
@@ -95,12 +95,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				if (childComments[childCommentCount - 1]) {
 					const lastCommentHeight =
 						childComments[childCommentCount - 1].clientHeight;
+
 					let heightOfLine =
 						lastCommentHeight +
 						replyComment.clientHeight +
 						20 -
 						25 +
 						50;
+					console.log('heightOfLine ', heightOfLine);
 					commentLine.style.setProperty(
 						'height',
 						`calc(100% - ${heightOfLine}px)`

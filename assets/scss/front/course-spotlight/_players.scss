@@ -2,7 +2,8 @@
 	.course-players {
 		position: relative;
 		width: 100%;
-		min-height: 350px;
+		// min-height: 150px;
+		// max-height: 250px;
 		height: calc(100vh - 250px);
 		background: black;
 		display: block;
@@ -10,6 +11,7 @@
 		iframe {
 			width: 100%;
 			height: 100%;
+			// max-height: 250px;
 			position: absolute;
 			border: none;
 		}
