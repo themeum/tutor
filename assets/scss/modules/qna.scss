@@ -414,9 +414,10 @@ table.qna-list-table {
 		&[data-context='course-single-qna-sidebar'] {
 			background: #f4f6f9;
 			padding: 15px;
-			position: sticky;
-			bottom: 0;
+			bottom: 15px;
 			margin: -15px;
+			position: absolute;
+			width: 100%;
 		}
 	}
 
@@ -439,34 +440,82 @@ table.qna-list-table {
 		}
 	}
 }
-// .tutor-quesanswer-askquestion {
-// 	margin-top: 10px;
-// }
 
+.tutor-quesanswer-askquestion {
+	button, 
+	a.sidebar-ask-new-qna-btn {
+		text-align: center;
+	}
+	button {
+	}
+}
 #sideabr-qna-tab-content {
-	// .tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat .tutor-qna-text {
-	// 	padding: 8px 15px;
-	// }
 	.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat {
 		max-width: 100%;
 		margin-bottom: 10px;
-	}
-	.tutor-ask-new-qna-btn {
-		width: 100%;
 	}
 	.tutor-qna-single-question .tutor-qa-reply div {
 		padding: 10px 0px 0px 0px;
 	}
 	.tutor-qa-new {
 		margin-top: 10px;
-		padding: 30px 15px;
+		padding: 16px 15px;
+		.sidebar-ask-new-qna-submit {
+			display: none;
+		}
+		// .tutor-quesanswer-askquestion {
+		// 	a.sidebar-ask-new-qna-btn {
+		// 		// display: none;
+		// 	}
+		// 	textarea {
+		// 		display: none;
+		// 		margin-bottom: 10px !important;
+		// 	}
+		// 	button {
+
+		// 	}
+		// 	a.sidebar-ask-new-qna-btn { 
+		// 		width: 100%;
+		// 		margin-top: 0px !important;
+		// 	}
+		// 	a.sidebar-ask-new-qna-btn {
+		// 		display: block;
+		// 	}
+		// 	.sidebar-ask-new-qna-submit {
+		// 		width: 100%;
+		// 		display: grid;
+		// 		grid-template-columns: 1fr 1fr;
+		// 		> button {
+		// 			display: none;
+		// 		}
+		// 	}
+
+		// }
 		.tutor-quesanswer-askquestion {
-			// margin-top: 0px;
-			textarea.ask-new-qna-text-area-show {
+			textarea {
 				display: none;
 			}
-			textarea {
-				margin-bottom: 10px;
+			.sidebar-ask-new-qna-submit {
+				grid-template-columns: 1fr 1fr;
+				gap: 15px;
+			}
+			&.tutor-quesanswer-askquestion-expand {
+				.sidebar-ask-new-qna-btn {
+					display: none;
+				}
+				textarea {
+					display: block;
+				}
+				.sidebar-ask-new-qna-submit {
+					display: grid;
+				}
+			}
+		}
+	}
+	.tutor-qa-reply {
+		textarea {
+			&:focus {
+				border: 1px solid var(--tutor-primary) !important;
 			}
 		}
 	}
