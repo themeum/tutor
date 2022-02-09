@@ -2,16 +2,20 @@
 	.course-players {
 		position: relative;
 		width: 100%;
-		// height: calc(100vh - 250px);
+		min-height: 350px;
+		height: calc(100vh - 250px);
 		background: black;
 		display: block;
-		min-height: 350px;
 
 		iframe {
 			width: 100%;
 			height: 100%;
 			position: absolute;
 			border: none;
+		}
+		.tutorPlayer,
+		.tutorPlayer iframe {
+			height: calc(100vh - 250px);
 		}
 
 		.tutor-lesson-prev,
