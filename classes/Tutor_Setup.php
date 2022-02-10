@@ -602,7 +602,7 @@ if ( ! defined( 'ABSPATH' ) )
                     $html .= '</button>';
                 $html .= '</div>';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
-                    $html .= '<button class="tutor-setup-skip">'.__('Skip This Step', 'tutor').'</button>';
+                    $html .= '<button class="tutor-setup-skip">'.__('Skip this step', 'tutor').'</button>';
                 $html .= '</div>';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
                     $html .= '<button class="tutor-btn tutor-btn-md tutor-setup-next">';
@@ -621,7 +621,7 @@ if ( ! defined( 'ABSPATH' ) )
                     $html .= '</button>';
                 $html .= '</div>';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
-                    $html .= '<button class="tutor-setup-skip">'.__('Skip This Step', 'tutor').'</button>';
+                    $html .= '<button class="tutor-setup-skip">'.__('Skip this step', 'tutor').'</button>';
                 $html .= '</div>';
                 $html .= '<div class="tutor-setup-btn-wrapper">';
                     $html .= '<button class="tutor-btn tutor-btn-md tutor-redirect tutor-setup-next">';

@@ -289,7 +289,10 @@ class Options_V2 {
 
 		$option = tutor_utils()->sanitize_recursively( $option, array( 'email_footer_text' ) );
 
-		$option['email_footer_text'] = wp_unslash( $option['email_footer_text'] );
+		$old_dashboard_id = get_tutor_option('tutor_dashboard_page_id');
+		$dashboard_update_id = isset($option['tutor_dashboard_page_id']) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
+
+		$option['email_footer_text'] = !empty($option['email_footer_text']) ? wp_unslash( $option['email_footer_text'] ) : '';
 
 		$option = apply_filters( 'tutor_option_input', $option );
 
@@ -313,11 +316,20 @@ class Options_V2 {
 		// pr(array_keys($update_option));die;
 
 		update_option( 'tutor_settings_log', $update_option );
-
 		update_option( 'tutor_option', $option );
 		update_option( 'tutor_option_update_time', date( 'j M, Y, g:i a', $time ) );
 
 		do_action( 'tutor_option_save_after' );
+
+		// echo $dashboard_update_id . ' - ' . $old_dashboard_id;
+
+		if( $dashboard_update_id !== $old_dashboard_id ){
+			global $wp_rewrite;
+			$wp_rewrite->set_permalink_structure('/%postname%/');
+			update_option( "rewrite_rules", false );
+			$wp_rewrite->flush_rules( true );
+			flush_rewrite_rules();
+		}
 
 		wp_send_json_success( $option );
 	}
@@ -376,6 +388,7 @@ class Options_V2 {
 		}
 
 		$pages       = tutor_utils()->get_pages();
+
 		$lesson_key  = $this->get( 'lesson_permalink_base', 'lessons' );
 		$lesson_url  = site_url() . '/course/' . 'sample-course/<code>' . $lesson_key . '</code>/sample-lesson/';
 		$student_url = tutor_utils()->profile_url(0, false);
@@ -624,7 +637,7 @@ class Options_V2 {
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-discount-filled-filled',
 				'blocks'   => array(
-					array(
+					/* array(
 						'label'      => false,
 						'block_type' => 'uniform',
 						'fields'     => array(
@@ -637,7 +650,7 @@ class Options_V2 {
 								'desc'        => __( 'Enable monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
 							),
 						),
-					),
+					), */
 					'block_options' => array(
 						'label'      => __( 'Options', 'tutor' ),
 						'slug'       => 'options',
@@ -647,7 +660,7 @@ class Options_V2 {
 								'key'            => 'monetize_by',
 								'type'           => 'select',
 								'label'          => __( 'Select eCommerce Engine', 'tutor' ),
-								'select_options' => false,
+								'select_options' => true,
 								'options'        => apply_filters(
 									'tutor_monetization_options',
 									array(

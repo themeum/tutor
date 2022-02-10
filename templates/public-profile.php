@@ -42,8 +42,7 @@ foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 	$tutor_user_social_icons[ $key ]['url'] = $url;
 }
 
-// Load theme header
-get_header();
+tutor_utils()->tutor_custom_header();
 ?>
 
 <?php
@@ -91,7 +90,7 @@ get_header();
 			<div class="pp-area">
 				<div class="profile-pic" style="background-image:url(<?php echo get_avatar_url( $user_id, array( 'size' => 150 ) ); ?>)"></div>
 				
-				<div class="profile-name">
+				<div class="profile-name tutor-color-white">
 					<div class="profile-rating-media content-for-mobile">
 						<?php echo $rating_content; ?>
 						<div class="tutor-social-container content-for-desktop">
@@ -159,7 +158,7 @@ get_header();
 			<div class="tutor-user-profile-sidebar">
 				<?php // tutor_load_template('profile.badge', ['profile_badges'=>(new )]); ?>
 			</div>
-			<div class="tutor-user-profile-content tutor-bs-d-block">
+			<div class="tutor-user-profile-content tutor-bs-d-block tutor-mt-70">
 				<h3><?php _e( 'Biography', 'tutor' ); ?></h3>
 				<?php tutor_load_template( 'profile.bio' ); ?>
 				
@@ -186,4 +185,4 @@ get_header();
 <?php
 
 do_action( 'tutor_profile/'.$user_type.'/after/wrap' );
-get_footer();
+tutor_utils()->tutor_custom_footer();
