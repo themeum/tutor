@@ -1,167 +1,168 @@
 @import './players';
 
 .tutor-mobile-top-navigation {
-    .tutor-mobile-top-nav {
-        grid-template-columns: 30px auto;
-        .tutor-top-nav-icon {
-            font-size: 30px;
-        }
-        .tutor-top-nav-title {
-            text-align: center;
-        }
-    }
+	.tutor-mobile-top-nav {
+		grid-template-columns: 30px auto;
+		.tutor-top-nav-icon {
+			font-size: 30px;
+		}
+		.tutor-top-nav-title {
+			text-align: center;
+		}
+	}
 }
 
 @import './sidebar';
 .tutor-single-lesson-wraper {
-    display: flex;
-    position: relative;
-    width: 100%;
-    align-items: flex-start;
-    a {
-        text-decoration: none;
-        color: inherit;
-    }
-    a:focus,
-    a:hover {
-        opacity: 1;
-    }
-    input.tutor-form-check-input.tutor-form-check-circle {
-        width: 20px;
-        height: 20px;
-        margin-top: 1px;
-    }
-    .tutor-quiz-btn-grp {
-        button.skip-quiz-btn {
-            border: none;
-        }
-    }
-    .tutor-single-entry-content {
-        flex: 100%;
-        // padding-bottom: 90px;
-        // topbar 2
-        .tutor-single-page-top-bar {
-            background: $design-brand;
-            @include breakpoint-max(mobile) {
-                display: none;
-            }
-            .tutor-lesson-sidebar-hide-bar,
-            .tutor-topbar-content-title-wrap,
-            .tutor-topbar-cross-icon {
-                padding: 15px 12px;
-                @include breakpoint-minmax(1200, 1350) {
-                    .tutor-topbar-title {
-                        white-space: nowrap;
-                        width: 180px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                    }
-                }
-                @include breakpoint-minmax(576, 991) {
-                    .tutor-topbar-title {
-                        white-space: nowrap;
-                        width: 120px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                    }
-                }
-            }
-            .tutor-topbar-sidebar-toggle {
-                background: $primary-90;
-                span[class^='tutor-icon'] {
-                    font-size: 30px;
-                    font-weight: 800;
-                }
-            }
-            .tutor-topbar-content-title-wrap {
-                margin-left: 12px;
-                span[class^='tutor-icon'] {
-                    font-size: 24px;
-                }
-            }
-            .tutor-topbar-cross-icon {
-                cursor: pointer;
-                &:hover {
-                    background: $primary-90;
-                }
-                span[class^='tutor-icon'] {
-                    font-size: 30px;
-                }
-            }
-            .tutor-topbar-right-item {
-                .tutor-topbar-assignment-details {
-                    @include breakpoint-minmax(576, 991) {
-                        .tutor-progress-content {
-                            display: none;
-                        }
-                    }
-                    .tutor-topbar-complete-btn {
-                        .tutor-topbar-mark-btn {
-                            &:hover {
-                                background-color: $color-white;
-                                span {
-                                    color: $primary-main;
-                                }
-                                border-color: $design-white;
-                            }
-                            background-color: transparent;
-                            color: $design-white;
-                            border-color: $design-white;
-                            span.tutor-btn-content {
-                                line-height: 100%;
-                            }
-                            @include breakpoint-minmax(576, 991) {
-                                span.tutor-content-responsive {
-                                    display: none;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        /* tutor-single-page-top-bar */
-        .tutor-mobile-footer-navigation {
-            height: 90px;
-            border: 1px solid $black-05;
-            box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
-            background: $color-white;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1;
-            @include breakpoint-min(576) {
-                display: none;
-            }
-            .tutor-footer-content {
-                flex-basis: 70%;
-                .tutor-footer-progress-bar {
-                    // border-bottom: 4px solid $primary-main;
-                    // border-radius: 2px;
-                }
-            }
-            .tutor-quiz-skip-button {
-                flex-basis: 50%;
-                button {
-                    padding: 0;
-                    border: 0;
-                }
-            }
-            .tutor-footer-complete-btn {
-                button {
-                    padding: 8px 20px;
-                }
-            }
-        }
-        @import './quiz';
-    }
+	display: flex;
+	position: relative;
+	width: 100%;
+	align-items: flex-start;
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
+	a:focus,
+	a:hover {
+		opacity: 1;
+	}
+	input.tutor-form-check-input.tutor-form-check-circle {
+		width: 20px;
+		height: 20px;
+		margin-top: 1px;
+	}
+	.tutor-quiz-btn-grp {
+		button.skip-quiz-btn {
+			border: none;
+		}
+	}
+	.tutor-single-entry-content {
+		flex: 100%;
+		height: calc(100vh - 100px);
+		overflow: auto;
+		border-left: 1px solid $stroke-light-30;
+		.tutor-single-page-top-bar {
+			background: $design-brand;
+			@include breakpoint-max(mobile) {
+				display: none;
+			}
+			.tutor-lesson-sidebar-hide-bar,
+			.tutor-topbar-content-title-wrap,
+			.tutor-topbar-cross-icon {
+				padding: 15px 12px;
+				@include breakpoint-minmax(1200, 1350) {
+					.tutor-topbar-title {
+						white-space: nowrap;
+						width: 180px;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				}
+				@include breakpoint-minmax(576, 991) {
+					.tutor-topbar-title {
+						white-space: nowrap;
+						width: 120px;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				}
+			}
+			.tutor-topbar-sidebar-toggle {
+				background: $primary-90;
+				span[class^='tutor-icon'] {
+					font-size: 30px;
+					font-weight: 800;
+				}
+			}
+			.tutor-topbar-content-title-wrap {
+				margin-left: 12px;
+				span[class^='tutor-icon'] {
+					font-size: 24px;
+				}
+			}
+			.tutor-topbar-cross-icon {
+				cursor: pointer;
+				&:hover {
+					background: $primary-90;
+				}
+				span[class^='tutor-icon'] {
+					font-size: 30px;
+				}
+			}
+			.tutor-topbar-right-item {
+				.tutor-topbar-assignment-details {
+					@include breakpoint-minmax(576, 991) {
+						.tutor-progress-content {
+							display: none;
+						}
+					}
+					.tutor-topbar-complete-btn {
+						.tutor-topbar-mark-btn {
+							&:hover {
+								background-color: $color-white;
+								span {
+									color: $primary-main;
+								}
+								border-color: $design-white;
+							}
+							background-color: transparent;
+							color: $design-white;
+							border-color: $design-white;
+							span.tutor-btn-content {
+								line-height: 100%;
+							}
+							@include breakpoint-minmax(576, 991) {
+								span.tutor-content-responsive {
+									display: none;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		/* tutor-single-page-top-bar */
+		.tutor-mobile-footer-navigation {
+			height: 90px;
+			border: 1px solid $black-05;
+			box-shadow: 0px 0px 16px rgba(176, 182, 209, 0.180862);
+			background: $color-white;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			z-index: 1;
+			@include breakpoint-min(576) {
+				display: none;
+			}
+			.tutor-footer-content {
+				flex-basis: 70%;
+				.tutor-footer-progress-bar {
+					// border-bottom: 4px solid $primary-main;
+					// border-radius: 2px;
+				}
+			}
+			.tutor-quiz-skip-button {
+				flex-basis: 50%;
+				button {
+					padding: 0;
+					border: 0;
+				}
+			}
+			.tutor-footer-complete-btn {
+				button {
+					padding: 8px 20px;
+				}
+			}
+		}
+		@import './quiz';
+	}
 }
 
 @include breakpoint-max(600) {
-    .tutor-topbar-content-title-wrap {
-        align-items: flex-start;
-    }
+	.tutor-topbar-content-title-wrap {
+		align-items: flex-start;
+	}
 }
 
 @import './spotlight';

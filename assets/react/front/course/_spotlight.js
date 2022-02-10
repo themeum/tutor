@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 						20 -
 						25 +
 						50;
-					console.log('heightOfLine ', heightOfLine);
 					commentLine.style.setProperty(
 						'height',
 						`calc(100% - ${heightOfLine}px)`
