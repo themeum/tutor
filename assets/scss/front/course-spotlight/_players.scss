@@ -1,16 +1,18 @@
 .tutor-course-single-content-wraper {
-
 	// Course content navigation
-	.tutor-single-course-content-prev, .tutor-single-course-content-next {
+	.tutor-single-course-content-prev,
+	.tutor-single-course-content-next {
 		cursor: pointer;
 		width: 31px;
 		height: 215px;
 		background: rgba(0, 0, 0, 0.185);
-		top: 300px;
+		top: 0;
+		bottom: 0;
 		transform: translateY(-50%);
 		position: absolute;
 		backdrop-filter: blur(94px);
-		&:hover{
+		margin: auto;
+		&:hover {
 			background: rgba(0, 0, 0, 0.247);
 		}
 
@@ -30,9 +32,9 @@
 		border-radius: 6px 0px 0px 6px;
 	}
 
-
 	@include breakpoint-max(768) {
-		.tutor-single-course-content-prev, .tutor-single-course-content-next {
+		.tutor-single-course-content-prev,
+		.tutor-single-course-content-next {
 			width: 31px;
 			height: 120px;
 
