@@ -13,7 +13,10 @@
 }
 
 @import './sidebar';
-.tutor-single-lesson-wraper {
+
+// .tutor-single-lesson-wraper {
+
+.tutor-course-single-content-wraper {
 	display: flex;
 	position: relative;
 	width: 100%;
@@ -36,7 +39,7 @@
 			border: none;
 		}
 	}
-	.tutor-single-entry-content {
+	#tutor-single-entry-content {
 		flex: 100%;
 		height: calc(100vh - 100px);
 		overflow: auto;

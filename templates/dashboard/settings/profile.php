@@ -66,7 +66,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			</span>
 			<div class="tutor_overlay">
 				<button class="tutor_cover_uploader">
-					<i class="tutor-icon-image-ans"></i>
+					<i class="tutor-icon-camera-filled"></i>
 					<span><?php echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' ); ?></span>
 				</button>
 			</div>
@@ -75,11 +75,11 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			<img src="<?php echo esc_url( tutor()->url . '/assets/images/' ); ?>info-icon.svg" />
 			<span><?php esc_html_e( 'Profile Photo Size', 'tutor' ); ?>: <span><?php esc_html_e( '200x200', 'tutor' ); ?></span> <?php esc_html_e( 'pixels', 'tutor' ); ?></span>
 			<span>&nbsp;&nbsp;&nbsp;&nbsp;<?php esc_html_e( 'Cover Photo Size', 'tutor' ); ?>: <span><?php esc_html_e( '700x430', 'tutor' ); ?></span> <?php esc_html_e( 'pixels', 'tutor' ); ?> </span>
-			<!-- <span class="loader-area"><?php esc_html_e( 'Saving...', 'tutor' ); ?></span> -->
+			<span class="loader-area"><?php esc_html_e( 'Saving...', 'tutor' ); ?></span>
 		</div>
 		<div id="tutor_profile_area" data-fallback="<?php esc_attr_e( $profile_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $profile_photo_src ); ?>)">
 			<div class="tutor_overlay">
-				<i class="tutor-icon-image-ans"></i>
+				<i class="tutor-icon-camera-filled"></i>
 			</div>
 		</div>
 		<div id="tutor_pp_option">

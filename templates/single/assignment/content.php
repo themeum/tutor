@@ -56,7 +56,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			</a>
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-			<span class="tutor-icon-assignment-filled tutor-color-text-white tutor-mr-5"></span>
+			<span class="tutor-icon-assignment-filled tutor-icon-24 tutor-color-text-white tutor-mr-5"></span>
 			<span class="text-regular-caption tutor-color-design-white">
 				<?php
 					esc_html_e( 'Assignment: ', 'tutor' );
@@ -76,7 +76,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				</span>
 				<span class="text-bold-caption">
 					<?php echo $course_stats['completed_count']; ?>
-				</span> 
+				</span>
 				<?php _e( 'of ', 'tutor' ); ?>
 				<span class="text-bold-caption">
 					<?php echo $course_stats['total_count']; ?>
@@ -250,7 +250,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-10">
 								<div class="tutor-icard-content">
 									<div class="text-regular-body color-text-title">
-									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank">
+									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank" download>
 										<?php echo esc_html( $attachment_name ); ?>
 									</a>
 									</div>
@@ -260,11 +260,11 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 									</div>
 								</div>
 								<div class="tutor-avatar tutor-is-xs flex-center">
-									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank">
+									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank" download>
 										<span class="tutor-icon-download-line"></span>
 									</a>
 								</div>
-							</div>					
+							</div>
 						<?php endforeach; ?>
 					<?php endif; ?>
 					</div>
@@ -323,6 +323,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 													<?php _e( 'Choose file', 'tutor' ); ?>
 												</a>
 											</label>
+											<input type="hidden" name="tutor_assignment_upload_limit" value="<?php echo $file_upload_limit * 1000000?>">
 										</form>
 									</div>
 									<div class="tutor-input-type-size">
@@ -334,7 +335,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 											<?php// _e( ' no text on the image.', 'tutor' ); ?>
 										</p>
 										<p class="text-regular-small tutor-color-text-subsued tutor-mt-7">
-											<?php _e( 'Total File Size: Max', 'tutor' ); ?> 
+											<?php _e( 'Total File Size: Max', 'tutor' ); ?>
 											<span class="tutor-color-text-primary">
 												<?php echo $file_upload_limit; ?>
 												<?php _e( 'MB', 'tutor' ); ?>
@@ -463,7 +464,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 										</th>
 										<th>
 										<span class="text-regular-small tutor-color-text-subsued">
-											<?php _e( 'Result', 'tutor' ); ?>	
+											<?php _e( 'Result', 'tutor' ); ?>
 										</span>
 										</th>
 									</tr>
@@ -668,14 +669,14 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 						<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
 						<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
-							<button type="submit" class="tutor-btn tutor-btn-primary 
+							<button type="submit" class="tutor-btn tutor-btn-primary
 							<?php
 							if ( $time_duration['value'] != 0 ) {
 								if ( $now > $remaining_time ) {
 									echo 'tutor-btn-disable tutor-no-hover'; }
 							}
 							?>
-							 tutor-btn-lg" id="tutor_assignment_start_btn" 
+							tutor-btn-lg" id="tutor_assignment_start_btn"
 				<?php
 				if ( $time_duration['value'] != 0 ) {
 					if ( $now > $remaining_time ) {
@@ -687,7 +688,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							</button>
 						</form>
 
-						<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
+						<?php if ( isset( $next_prev_content_id->next_id ) && 0 !== $next_prev_content_id->next_id ) : ?>
 							<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-10">
 							<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
 						</a>

@@ -1063,29 +1063,6 @@ if ( ! function_exists( 'get_tutor_posts_attachments' ) ) {
  *
  * @return mixed
  *
- * Get the lessons with topics
- *
- * @since v.1.0.0
- */
-if ( ! function_exists('tutor_lessons_sidebar')) {
-    function tutor_lessons_sidebar( $echo = true, $context='desktop' ) {
-        ob_start();
-        tutor_load_template( 'single.lesson.lesson_sidebar', array('context' => $context) );
-        $output = apply_filters( 'tutor_lesson/single/lesson_sidebar', ob_get_clean() );
-
-		if ( $echo ) {
-			echo tutor_kses_html( $output );
-		}
-
-		return $output;
-	}
-}
-
-/**
- * @param bool $echo
- *
- * @return mixed
- *
  * Render Lesson Main Content
  * @since v.1.0.0
  */
@@ -1275,22 +1252,22 @@ if ( ! function_exists('get_tutor_course_duration_context')) {
         $durationMinutes = tutor_utils()->avalue_dot( 'minutes', $duration );
         $durationSeconds = tutor_utils()->avalue_dot( 'seconds', $duration );
 
-        $hour_format   = $short_form ? __( 'h', 'tutor' ) : ($durationHours>1 ? __('hours', 'tutor') : __( 'hour', 'tutor' ));
-        $minute_format = $short_form ? __( 'm', 'tutor' ) : ($durationMinutes>1 ? __('minutes', 'tutor') : __( 'minute', 'tutor' ));
-        $second_format = $short_form ? __( 's', 'tutor' ) : ($durationSeconds>1 ? __('seconds', 'tutor') : __( 'second', 'tutor' ));
+        $hour_format   = $short_form ? __( 'h', 'tutor' ) : ' '.($durationHours>1 ? __('hours', 'tutor') : __( 'hour', 'tutor' ));
+        $minute_format = $short_form ? __( 'm', 'tutor' ) : ' '.($durationMinutes>1 ? __('minutes', 'tutor') : __( 'minute', 'tutor' ));
+        $second_format = $short_form ? __( 's', 'tutor' ) : ' '.($durationSeconds>1 ? __('seconds', 'tutor') : __( 'second', 'tutor' ));
 
         if ( $duration ) {
             $output = '';
             if ( $durationHours > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value">' . $hour_format . '</span> ';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationHours . '</span><span class="tutor-meta-value color-text-subsued tutor-mr-5">' . $hour_format . '</span>';
             }
 
             if ( $durationMinutes > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value">' . $minute_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationMinutes . '</span><span class="tutor-meta-value color-text-subsued tutor-mr-5">' . $minute_format . '</span>';
             }
 
             if ( !$durationHours && !$durationMinutes && $durationSeconds > 0 ) {
-                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value">' . $second_format . '</span>';
+                $output .= '<span class="tutor-meta-level">' . ' ' . $durationSeconds . '</span><span class="tutor-meta-value color-text-subsued tutor-mr-5">' . $second_format . '</span>';
             }
 
 			return $output;

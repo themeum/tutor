@@ -20,7 +20,7 @@ if ( isset( $user_id ) && $user_id > 0 ) {
     }
 }
 
-function show_correct_answer( $answers= array() ){
+function render_answer_list( $answers= array() ){
     if(!empty($answers)){
 
 		echo '<div class="correct-answer-wrap">';
@@ -171,7 +171,7 @@ if ( is_array( $attempt_info ) ) {
                                     <p class="tutor-text-medium-body  tutor-color-text-primary">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </p>
-                                    <a href="#" class="btn-text btn-detail-link tutor-color-design-dark">
+                                    <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="btn-text btn-detail-link tutor-color-design-dark">
                                         <span class="tutor-icon-detail-link-filled"></span>
                                     </a>
                                 </div>
@@ -388,8 +388,15 @@ if ( is_array( $attempt_info ) ) {
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>">
                                                     <?php
+                                                        // Single choice
+                                                        if ( $answer->question_type === 'single_choice' ) {
+                                                            $get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
+                                                            render_answer_list($get_answers);
+                                                        }
+    
+
                                                         // True false or single choise
-                                                        if ($answer->question_type === 'true_false' || $answer->question_type === 'single_choice' ){
+                                                        if ($answer->question_type === 'true_false'){
                                                             $get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
                                                             $answer_titles = wp_list_pluck($get_answers, 'answer_title');
                                                             $answer_titles = array_map('stripslashes', $answer_titles);
@@ -400,10 +407,7 @@ if ( is_array( $attempt_info ) ) {
                                                         // Multiple choice
                                                         elseif ($answer->question_type === 'multiple_choice'){
                                                             $get_answers = tutor_utils()->get_answer_by_id(maybe_unserialize($answer->given_answer));
-                                                            $answer_titles = wp_list_pluck($get_answers, 'answer_title');
-                                                            $answer_titles = array_map('stripslashes', $answer_titles);
-    
-                                                            echo '<p class="text-medium-caption tutor-color-text-primary">'.implode('</p><p>', $answer_titles).'</p>';
+                                                            render_answer_list($get_answers);
                                                         }
     
                                                         // Fill in the blank
@@ -423,6 +427,7 @@ if ( is_array( $attempt_info ) ) {
                                                                     }
                                                                     $answer_title = $db_answer->answer_title;
                                                                     foreach($input_data as $replace){
+                                                                        $replace = '<span style="text-decoration:underline;">'.$replace.'</span>';
                                                                         $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
                                                                     }
                                                                     echo str_replace('{dash}', '_____', stripslashes($answer_title));
@@ -442,9 +447,7 @@ if ( is_array( $attempt_info ) ) {
                                                             $ordering_ids = maybe_unserialize($answer->given_answer);
                                                             foreach ($ordering_ids as $ordering_id){
                                                                 $get_answers = tutor_utils()->get_answer_by_id($ordering_id);
-                                                                $answer_titles = wp_list_pluck($get_answers, 'answer_title');
-                                                                $answer_titles = array_map('stripslashes', $answer_titles);
-                                                                echo '<p>'.implode('</p><p>', $answer_titles).'</p>';
+                                                                render_answer_list($get_answers);
                                                             }
                                                         }
     
@@ -537,7 +540,7 @@ if ( is_array( $attempt_info ) ) {
                                                                     $answer->question_id
                                                                 ) );
     
-                                                            show_correct_answer($correct_answer);
+                                                            render_answer_list($correct_answer);
                                                         }
     
                                                         // Multiple choice
@@ -551,7 +554,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            show_correct_answer($correct_answer);
+                                                            render_answer_list($correct_answer);
                                                         }
     
                                                         // Fill in the blanks
@@ -579,7 +582,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            show_correct_answer($correct_answer);
+                                                            render_answer_list($correct_answer);
                                                         }
     
                                                         // Matching
@@ -593,7 +596,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            show_correct_answer($correct_answer);
+                                                            render_answer_list($correct_answer);
                                                         }
     
                                                         // Image matching
@@ -607,7 +610,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            show_correct_answer($correct_answer);
+                                                            render_answer_list($correct_answer);
                                                         }
 
                                                         // Image Answering

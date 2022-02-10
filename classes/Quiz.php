@@ -983,16 +983,16 @@ class Quiz {
 				continue;
 			}
 
-			$question      = tutor_utils()->avalue_dot( $question_id, $questions );
+			$question = tutor_utils()->avalue_dot( $question_id, $questions );
 			$question_type = $question['question_type'];
 
 			// Getting next sorting order
 			$next_order_id = (int) $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT MAX(answer_order)
-				FROM {$wpdb->prefix}tutor_quiz_question_answers
-				where belongs_question_id = %d
-				AND belongs_question_type = %s ",
+						FROM {$wpdb->prefix}tutor_quiz_question_answers
+						where belongs_question_id = %d
+						AND belongs_question_type = %s ",
 					$question_id,
 					esc_sql( $question_type )
 				)
