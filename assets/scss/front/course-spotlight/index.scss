@@ -41,6 +41,7 @@
 		height: calc(100vh - 100px);
 		overflow: auto;
 		border-left: 1px solid $stroke-light-30;
+		border-top: 1px solid $stroke-light-30;
 		.tutor-single-page-top-bar {
 			background: $design-brand;
 			@include breakpoint-max(mobile) {
