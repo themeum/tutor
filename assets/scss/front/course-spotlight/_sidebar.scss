@@ -15,7 +15,7 @@
 	flex: 0 0 400px;
 	background: #fff;
 	border-color: $stroke-light-30;
-	border-width: 1px 1px 0px 0px;
+	border-width: 1px 0px 0px 0px;
 	border-style: solid;
 	border-bottom: none;
 	.tutor-empty-state-wrapper {
@@ -122,14 +122,6 @@
 						[class*=' tutor-icon-'] {
 							font-size: 20px;
 						}
-						// &.active {
-						// 	.tutor-single-lesson-items-left {
-						// 		[class^='tutor-icon-'],
-						// 		[class*=' tutor-icon-'] {
-						// 			color: $design-brand !important;
-						// 		}
-						// 	}
-						// }
 						.tutor-single-lesson-items {
 							&.active {
 								.tutor-single-lesson-items-left {
