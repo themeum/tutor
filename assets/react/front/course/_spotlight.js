@@ -75,7 +75,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					const lastCommentHeight = childComments[childCommentCount - 1].clientHeight;
 
 					let heightOfLine = lastCommentHeight + replyComment.clientHeight + 20 - 25 + 50;
-					console.log('heightOfLine ', heightOfLine);
 					commentLine.style.setProperty('height', `calc(100% - ${heightOfLine}px)`);
 				}
 			});
@@ -170,11 +169,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 	function tutorAssignmentFileHandler() {
 		const uploadedFileSize = [...fileUploadField.files].reduce((sum, file) => sum + file.size, 0); // byte
-		const uploadSizeLimit = parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
+		const uploadSizeLimit =
+			parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
 		let message = '';
 		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
 		let alreadyUploaded = document.querySelectorAll(
-			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card',
+			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card'
 		).length;
 		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
 		if (fileUploadField.files.length > allowedToUpload) {
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			tutor_toast(
 				__('Warning', 'tutor'),
 				__(`File size exceeds maximum limit ${Math.floor(uploadSizeLimit / 1000000)} MB.`, 'tutor'),
-				'error',
+				'error'
 			);
 			return;
 		}
@@ -195,7 +195,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				message = 'Select one or more files.';
 			} else {
 				if (fileUploadField.files.length > allowedToUpload) {
-					tutor_toast(__('Warning', 'tutor'), __(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'), 'error');
+					tutor_toast(
+						__('Warning', 'tutor'),
+						__(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'),
+						'error'
+					);
 				}
 				let fileCard = '';
 				const assignmentFilePreview = document.querySelector('.tutor-asisgnment-upload-file-preview');
