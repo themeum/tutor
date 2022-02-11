@@ -1063,29 +1063,6 @@ if ( ! function_exists( 'get_tutor_posts_attachments' ) ) {
  *
  * @return mixed
  *
- * Get the lessons with topics
- *
- * @since v.1.0.0
- */
-if ( ! function_exists('tutor_lessons_sidebar')) {
-    function tutor_lessons_sidebar( $echo = true, $context='desktop' ) {
-        ob_start();
-        tutor_load_template( 'single.lesson.lesson_sidebar', array('context' => $context) );
-        $output = apply_filters( 'tutor_lesson/single/lesson_sidebar', ob_get_clean() );
-
-		if ( $echo ) {
-			echo tutor_kses_html( $output );
-		}
-
-		return $output;
-	}
-}
-
-/**
- * @param bool $echo
- *
- * @return mixed
- *
  * Render Lesson Main Content
  * @since v.1.0.0
  */

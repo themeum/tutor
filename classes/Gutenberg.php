@@ -60,6 +60,10 @@ class Gutenberg {
 				'editor_script'   => 'tutor-student-registration-block',
 				'render_callback' => array( $this, 'render_block_tutor_dashboard_menu' ),
 			) );
+		} else {
+			wp_localize_script( 'tutor-student-registration-block', '_tutor_gutenberg_block_data', array(
+                'is_wp_version_5_9' => 'false',
+            ) );
 		}
 	}
 

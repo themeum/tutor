@@ -50,6 +50,7 @@ window.jQuery(document).ready(($) => {
 			// let server_max_size = photo_editor.find('.upload_max_filesize').val();
 			// this.verify_filesize(file);
 			if (this.verify_filesize(file)) {
+				const _this = this;
 				$.ajax({
 					url: window._tutorobject.ajaxurl,
 					data: form_data,
@@ -58,7 +59,7 @@ window.jQuery(document).ready(($) => {
 					contentType: false,
 					error: context.error_alert,
 					success: function() {
-						let photoType = this.title_capitalize(name.replace('_', ' '));
+						let photoType = _this.title_capitalize(name.replace('_', ' '));
 						tutor_toast('Success', photoType + ' Changed successfully!', 'success');
 					},
 					complete: function() {
@@ -70,7 +71,7 @@ window.jQuery(document).ready(($) => {
 				return false;
 			}
 
-			// console.log(this.max_filesize,name,file);
+			// console.log(this.max_filesize, name, file);
 		};
 
 		this.title_capitalize = function(string) {
@@ -125,7 +126,7 @@ window.jQuery(document).ready(($) => {
 
 		this.verify_filesize = function(file) {
 			let server_max_size = photo_editor.find('.upload_max_filesize').val();
-			console.log(Number(file.size), Number(server_max_size));
+			// console.log(Number(file.size), Number(server_max_size));
 			if (Number(file.size) > Number(server_max_size)) {
 				return false;
 			}
