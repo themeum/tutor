@@ -217,7 +217,8 @@ final class Tutor {
 		if ( $plugin == tutor()->basename ) {
 			if ( ( ! get_option( 'tutor_wizard' ) ) && version_compare( TUTOR_VERSION, '1.5.6', '>' ) ) {
 				update_option( 'tutor_wizard', 'active' );
-				exit( wp_redirect( admin_url( 'admin.php?page=tutor-setup' ) ) );
+				wp_redirect( admin_url( 'admin.php?page=tutor-setup' ) );
+				exit;
 			}
 		}
 	}
