@@ -174,7 +174,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									?>
 											<td data-th="<?php echo $column; ?>">
 												<span class="text-medium-caption tutor-color-text-primary">
-													<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '%)'; ?>
+													<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '% )'; ?>
 												</span>
 											</td>
 										<?php

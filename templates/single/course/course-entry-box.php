@@ -16,7 +16,7 @@
 
 	// Get login url if
 	$is_tutor_login_disabled = ! tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true );
-	$auth_url                = $is_tutor_login_disabled ? isset( $_SERVER['REQUEST_SCHEME'] ) ? wp_login_url( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) : '' : '';
+	$auth_url                = $is_tutor_login_disabled ? ( isset( $_SERVER['REQUEST_SCHEME'] ) ? wp_login_url( $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) : '' ) : '';
 
 
 	$default_meta = array(
@@ -47,7 +47,7 @@
 	}
 
 	// Right sidebar meta data
-	$sidebar_meta = apply_filters('tutor/course/single/sidebar/metadata', $default_meta, get_the_ID());
+	$sidebar_meta = apply_filters('tutor/course/single/sidebar/metadata', $default_meta, get_the_ID() );
 
 	$login_class = (!is_user_logged_in() && !$is_public) ? 'tutor-course-entry-box-login' : '';
 	$login_url   = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
@@ -67,7 +67,7 @@
 			$completed_lessons   = tutor_utils()->get_completed_lesson_count_by_course();
 			$completed_percent   = tutor_utils()->get_course_completed_percent();
 			$is_completed_course = tutor_utils()->is_completed_course();
-			$completed_anyway 	 = $is_completed_course || $completed_percent>=100;	
+			$completed_anyway 	 = $is_completed_course || $completed_percent >= 100;
 			$retake_course       = is_single_course() && tutor_utils()->get_option( 'course_retake_feature', false ) && $completed_anyway;
 			$course_id           = get_the_ID();
 			$course_progress     = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
@@ -84,7 +84,7 @@
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
 							</span>
-							<span class="progress-percentage"> 
+							<span class="progress-percentage">
 								<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
 								<?php esc_html_e( 'Complete', 'tutor' ); ?>
 							</span>
@@ -228,7 +228,7 @@
 				?>
 				<li class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
 					<div class="flex-center">
-						<span class="tutor-icon-24 <?php echo $meta['icon_class']; ?> tutor-color-text-primary"></span>
+						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-text-primary"></span>
 						<span class="text-regular-caption tutor-color-text-hints tutor-ml-5">
 							<?php echo esc_html( $meta['label'] ); ?>
 						</span>
