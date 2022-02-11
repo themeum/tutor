@@ -1,5 +1,5 @@
 <?php if(!empty($back_url)): ?>
-    <div class="tutor-color-text-primary back">
+    <div class="tutor-color-text-primary back tutor-mb-22">
         <a class="tutor-back-btn" href="<?php echo $back_url; ?>">
             <span class="tutor-icon-previous-line tutor-color-design-dark"></span>
             <span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
@@ -7,7 +7,7 @@
     </div>
 <?php endif; ?>
 
-<div class="text-regular-small tutor-color-text-subsued tutor-mt-30">
+<div class="text-regular-small tutor-color-text-subsued">
     <?php _e('Course', 'tutor'); ?>: <?php echo $course_title; ?>
 </div>
 

@@ -74,6 +74,8 @@ class Q_and_A {
 		$self = $asker_id==$user_id;
 		update_comment_meta( $question_id, 'tutor_qna_read'.($self ? '' : '_'.$asker_id), 0 );
 
+		do_action( 'tutor_after_answer_to_question', $question_id );
+
 		// Provide the html now.
 		ob_start();
 		tutor_load_template_from_custom_path(
@@ -84,6 +86,7 @@ class Q_and_A {
 				'context'     => $context,
 			)
 		);
+
 		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 	}
 
@@ -190,7 +193,7 @@ class Q_and_A {
 	 * @since v2.0.0
 	 */
 	public static function tabs_key_value() {
-		
+
 		$stats = array(
 			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, null, true ),
 			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'read', true ),
