@@ -451,7 +451,7 @@ class Options_V2 {
 							array(
 								'key'         => 'instructor_can_publish_course',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Allow Instructors Publishing Courses', 'tutor' ),
+								'label'       => __( 'Allow Instructors To Publish Courses', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
 								'desc'        => __( 'Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor' ),
@@ -459,10 +459,10 @@ class Options_V2 {
 							array(
 								'key'         => 'enable_become_instructor_btn',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Become Instructor Button', 'tutor' ),
+								'label'       => __( 'Become an Instructor Button', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Uncheck this option to hide the button from student dashboard.', 'tutor' ),
+								'desc'        => __( 'Enable the option to display this button on the student dashboard.', 'tutor' ),
 							),
 						),
 					),
@@ -550,10 +550,10 @@ class Options_V2 {
 							array(
 								'key'         => 'autoload_next_course_content',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Automatically load next course content.', 'tutor' ),
+								'label'       => __( 'Automatically Load Next Course Content.', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Enabling this feature will be load next course content automatically after finishing current video.', 'tutor' ),
+								'desc'        => __( 'Enable this feature to automatically load the next course content after the current one is finished.', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_comment_for_lesson',
@@ -561,7 +561,7 @@ class Options_V2 {
 								'label'       => __( 'Enable Lesson Comment', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Enabling this feature will make students able to post comment on lessons.', 'tutor' ),
+								'desc'        => __( 'Enable this feature to allow students to post comments on lessons.', 'tutor' ),
 							),
 						),
 					),
@@ -595,13 +595,13 @@ class Options_V2 {
 								'type'    => 'toggle_switch',
 								'label'   => __( 'Show Quiz Previous Button', 'tutor' ),
 								'default' => 'on',
-								'desc'    => __( 'Choose whether to show or hide previous button for single question.', 'tutor' ),
+								'desc'    => __( 'Choose whether to show or hide the previous button for each question.', 'tutor' ),
 							),
 							array(
 								'key'     => 'quiz_grade_method',
 								'type'    => 'radio_horizontal_full',
-								'label'   => __( 'Final grade calculation', 'tutor' ),
-								'desc'    => __( 'When multiple attempts are allowed, which method should be used to calculate a student\'s final grade for the quiz.', 'tutor' ),
+								'label'   => __( 'Final Grade Calculation', 'tutor' ),
+								'desc'    => __( 'When multiple attempts are allowed, select which method should be used to calculate a student\'s final grade for the quiz.', 'tutor' ),
 								'default' => 'highest_grade',
 								'options' => array(
 									'highest_grade' => __( 'Highest Grade', 'tutor' ),
@@ -698,7 +698,7 @@ class Options_V2 {
 										'default' => 80,
 									),
 								),
-								'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce', 'tutor' ),
+								'desc'        => __( 'Set how the sales revenue will be shared among admins and instructors.', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_revenue_sharing',
@@ -706,7 +706,7 @@ class Options_V2 {
 								'label'       => __( 'Enable Revenue Sharing', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Allow to share revenue generated from courses with course creators.', 'tutor' ),
+								'desc'        => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
 							),
 							array(
 								'key'     => 'statement_show_per_page',
@@ -776,9 +776,9 @@ class Options_V2 {
 							array(
 								'key'     => 'minimum_days_for_balance_to_be_available',
 								'type'    => 'number',
-								'label'   => __( 'Minimum Days for Balance to be Available', 'tutor' ),
+								'label'   => __( 'Minimum Days Before Balance is Available', 'tutor' ),
 								'default' => '80',
-								'desc'    => __( 'Any income has to stay this amount of days in the platform before it is available for withdrawal.', 'tutor' ),
+								'desc'    => __( 'Any income has to remain this many days in the platform before it is available for withdrawal.', 'tutor' ),
 							),
 							array(
 								'key'     => 'tutor_withdrawal_methods',
@@ -793,7 +793,7 @@ class Options_V2 {
 								'type'    => 'textarea',
 								'label'   => __( 'Bank Instructions', 'tutor' ),
 								'default' => __( 'Write the up to date bank informations of your instructor here.', 'tutor' ),
-								'desc'    => __( 'Allow to get bank instructions to conduct the withdrawal', 'tutor' ),
+								'desc'    => __( 'Write bank instructions for the instructors to conduct withdrawals.', 'tutor' ),
 							),
 						),
 					),
@@ -822,7 +822,7 @@ class Options_V2 {
 									'3' => 'Three',
 									'4' => 'Four',
 								),
-								'desc'    => __( 'Define how many column you want to use to display courses.', 'tutor' ),
+								'desc'    => __( 'Define how many columns you want to use to display courses.', 'tutor' ),
 							),
 							array(
 								'key'         => 'course_archive_filter',
@@ -837,7 +837,7 @@ class Options_V2 {
 								'type'    => 'number',
 								'label'   => __( 'Pagination', 'tutor' ),
 								'default' => '12',
-								'desc'    => __( 'Number of items you want to be displayed "per page" in the pagination', 'tutor' ),
+								'desc'    => __( 'Set the number of items you want to display per page.', 'tutor' ),
 							),
 							array(
 								'key'     => 'supported_course_filters',
@@ -851,7 +851,7 @@ class Options_V2 {
 									'difficulty_level' => __( 'Difficulty Level', 'tutor' ),
 									'price_type'       => __( 'Price Type', 'tutor' ),
 								),
-								'desc'    => __( 'Choose preferred filter options you\'d like to show in course archive page.', 'tutor' ),
+								'desc'    => __( 'Choose preferred filter options you\'d like to show on the course archive page.', 'tutor' ),
 							),
 						),
 					),
@@ -864,7 +864,7 @@ class Options_V2 {
 								'key'           => 'instructor_list_layout',
 								'type'          => 'group_radio',
 								'label'         => __( 'Instructor List Layout', 'tutor' ),
-								'desc'          => __( 'Choose a layout for the list of instructor inside a course page. You can change this any time.', 'tutor' ),
+								'desc'          => __( 'Choose a layout for the list of instructors inside a course page. You can change this at any time.', 'tutor' ),
 								'default'       => 'pp-top-full',
 								'group_options' => array(
 									'vertical'   => array(
@@ -1315,16 +1315,16 @@ class Options_V2 {
 										'preset_exist' => true,
 										'label'        => __( 'Primary Color', 'tutor' ),
 										'default'      => '#3E64DE',
-										'desc'         => __( 'Choose a custom primary color', 'tutor' ),
+										'desc'         => __( 'Choose a primary color', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_primary_hover_color',
 										'type'         => 'color_field',
 										'preset_name'  => 'hover',
 										'preset_exist' => true,
-										'label'        => __( 'Primary Hover color', 'tutor' ),
+										'label'        => __( 'Primary Hover Color', 'tutor' ),
 										'default'      => '#395BCA',
-										'desc'         => __( 'Choose a custom primary hover color', 'tutor' ),
+										'desc'         => __( 'Choose a primary hover color', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_text_color',
@@ -1333,7 +1333,7 @@ class Options_V2 {
 										'preset_exist' => true,
 										'label'        => __( 'Text Color', 'tutor' ),
 										'default'      => '#212327',
-										'desc'         => __( 'Choose a Text Color for your website text', 'tutor' ),
+										'desc'         => __( 'Choose a text color for your website', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_background_color',
@@ -1351,7 +1351,7 @@ class Options_V2 {
 										'preset_exist' => false,
 										'label'        => __( 'Border', 'tutor' ),
 										'default'      => '#CDCFD5',
-										'desc'         => __( 'Choose a light color for your website ', 'tutor' ),
+										'desc'         => __( 'Choose a border color for your website', 'tutor' ),
 									),
 									array(
 										'key'          => 'tutor_success_color',
@@ -1413,7 +1413,7 @@ class Options_V2 {
 								'label'       => __( 'Use Tutor Player for YouTube', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Enable this option to use Tutor LMS video player.', 'tutor' ),
+								'desc'        => __( 'Enable this option to use Tutor LMS video player for YouTube.', 'tutor' ),
 							),
 							array(
 								'key'         => 'disable_default_player_vimeo',
@@ -1421,7 +1421,7 @@ class Options_V2 {
 								'label'       => __( 'Use Tutor Player for Vimeo', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Enable this option to use Tutor LMS video player.', 'tutor' ),
+								'desc'        => __( 'Enable this option to use Tutor LMS video player for Vimeo.', 'tutor' ),
 							),
 						),
 					),
@@ -1444,7 +1444,7 @@ class Options_V2 {
 								'type'    => 'toggle_switch',
 								'label'   => __( 'Gutenberg Editor', 'tutor' ),
 								'default' => 'off',
-								'desc'    => __( 'Allow to create your courses using the Glutenberg Editor.', 'tutor' ),
+								'desc'    => __( 'Enable this to create courses using the Gutenberg Editor.', 'tutor' ),
 							),
 							array(
 								'key'     => 'hide_course_from_shop_page',
@@ -1467,7 +1467,7 @@ class Options_V2 {
 								'label'   => __( 'Instructor Registration Page', 'tutor' ),
 								'default' => '0',
 								'options' => $pages,
-								'desc'    => __( 'This page will be used to sign up new instructors.', 'tutor' ),
+								'desc'    => __( 'Choose the page for instructor registration.', 'tutor' ),
 							),
 							array(
 								'key'     => 'student_register_page',
@@ -1475,7 +1475,7 @@ class Options_V2 {
 								'label'   => __( 'Student Registration Page', 'tutor' ),
 								'default' => '0',
 								'options' => $pages,
-								'desc'    => __( 'Choose the page for student registration page', 'tutor' ),
+								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
 							),
 							array(
 								'key'     => 'lesson_permalink_base',
@@ -1520,7 +1520,7 @@ class Options_V2 {
 								'label'       => __( 'Hide Frontend Admin Bar', 'tutor' ),
 								'label_title' => __( '', 'tutor' ),
 								'default'     => 'off',
-								'desc'        => __( 'Hide admin bar option allow you to hide WordPress admin bar entirely from the frontend. It will still show to administrator roles user', 'tutor' ),
+								'desc'        => __( 'Enable this to hide the WordPress admin bar from the frontend. It will still be visible to admins.', 'tutor' ),
 							),
 							array(
 								'key'         => 'delete_on_uninstall',
