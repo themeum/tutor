@@ -74,6 +74,7 @@
 </section>
 <?php echo $this->view_template( 'common/modal-confirm.php', array() ); ?>
 <style>
+	#wpcontent{overflow: hidden;}
 	.color-picker-input input[type=color]:focus,.color-picker-input input[type=color]:active {box-shadow: none;}
 	.color-preset-input [type="radio"]{position: absolute;opacity: 0;visibility: hidden;z-index: -1;}
 </style>
