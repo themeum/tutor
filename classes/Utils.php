@@ -5418,7 +5418,7 @@ class Utils {
 			$course_ids
 		);
 
-		$course_ids_in = implode( ', ', $course_ids );
+		$course_ids_in = count($course_ids) ? ' AND quiz_attempts.course_id IN ('.implode( ', ', $course_ids ).') ' : '';
 
 		$search_filter = $search_filter ? '%' . $wpdb->esc_like( $search_filter ) . '%' : '';
 		$search_filter = $search_filter ? "AND ( users.user_email LIKE {$search_filter} OR users.display_name LIKE {$search_filter} OR quiz.post_title LIKE {$search_filter} OR course.post_title LIKE {$search_filter} )" : '';
@@ -5426,6 +5426,7 @@ class Utils {
 		$course_filter = $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '';
 		$date_filter   = $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter   = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
+		$user_filter   = $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\' ' : '';
 
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
@@ -5437,12 +5438,12 @@ class Utils {
 							ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course
 							ON course.ID = quiz_attempts.course_id
-			WHERE 	quiz_attempts.course_id IN (" . $course_ids_in . ")
-					AND quiz_attempts.attempt_status != %s
+			WHERE 	quiz_attempts.attempt_status != %s
+					{$course_ids_in}
 					{$search_filter}
 					{$course_filter}
 					{$date_filter}
-					" . ( $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\'' : '' ) . "
+					{$user_filter}
 			ORDER 	BY quiz_attempts.attempt_id $order_filter
 			LIMIT 	%d, %d;
 			",
@@ -5477,7 +5478,7 @@ class Utils {
 		$course_filter = sanitize_text_field( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
 
-		$course_ids_in = implode( ', ', $course_ids );
+		$course_ids_in = count($course_ids) ? ' AND quiz_attempts.course_id IN ('.implode( ', ', $course_ids ).') ' : '';
 		$search_term   = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 		$course_filter = $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '';
@@ -5494,8 +5495,8 @@ class Utils {
 							ON quiz_attempts.user_id = {$wpdb->users}.ID
 					INNER JOIN {$wpdb->posts} AS course
 							ON course.ID = quiz_attempts.course_id
-			WHERE 	quiz_attempts.course_id IN (" . $course_ids_in . ")
-					AND attempt_status != %s
+			WHERE 	attempt_status != %s 
+					{$course_ids_in}
 					{$course_filter}
 					{$date_filter}
 			",
