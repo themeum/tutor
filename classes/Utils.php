@@ -657,9 +657,10 @@ class Utils {
 		return $count;
 	}
 
-	public function get_courses_by_instructor_wpml($instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX){
+	public function get_courses_by_instructor_wpml($instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX) {
 		$args = array(
 			'posts_per_page'   => $limit,
+			'offset'					 => $offset,
 			'orderby'          => 'menu_order',
 			'order'            => 'DESC',
 			'post_type'        => tutor()->course_post_type,
@@ -726,14 +727,15 @@ class Utils {
 		return $pageposts;
 	}
 
-	public function get_pending_courses_by_instructor_wpml( $instructor_id = 0, $post_status = array( 'pending' ) ) {
+	public function get_pending_courses_by_instructor_wpml( $instructor_id = 0, $post_status = array( 'pending' ), int $offset = 0, int $limit = PHP_INT_MAX ) {
 		$args = array(
-			'posts_per_page'   => -1,
 			'orderby'          => 'menu_order',
 			'order'            => 'DESC',
 			'post_type'        => tutor()->course_post_type,
 			'post_status'      => $post_status,
-			'suppress_filters'  => !$this->is_wpml_active()
+			'suppress_filters' => !$this->is_wpml_active(),
+			'offset'           => $offset,
+			'posts_per_page'   => $limit,
 		);
 		$pageposts = get_posts( $args );
 
