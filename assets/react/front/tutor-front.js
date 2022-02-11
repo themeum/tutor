@@ -240,9 +240,12 @@ jQuery(document).ready(function($) {
 				if (seconds) {
 					countdown_human += seconds + 's ';
 				}
+				countdown_human = '' == countdown_human ? '0s' : countdown_human;
 
 				if (distance < 0) {
 					clearInterval(tutor_quiz_interval);
+					$tutor_quiz_time_update.toggleClass('tutor-quiz-time-expired');
+
 					countdown_human = 'EXPIRED';
 					//Set the quiz attempt to timeout in ajax
 					if (_tutorobject.quiz_options.quiz_when_time_expires === 'auto_submit') {
