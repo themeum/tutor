@@ -125,33 +125,35 @@
 					<?php if ( $question_layout_view !== 'question_below_each_other' ) : ?>
 						<div class="tutor-quiz-btn-grp tutor-mt-60 tutor-bs-d-flex">
 							<?php
-							if ( $show_previous_button && $previous_question ) {
-								?>
-									<button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-quiz-answer-previous-btn tutor-mr-20">
-									<?php esc_html_e( 'Back', 'tutor' ); ?>
-									</button>
+								if ( $show_previous_button && $previous_question ) {
+									?>
+										<button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-quiz-answer-previous-btn tutor-mr-20">
+											<?php esc_html_e( 'Back', 'tutor' ); ?>
+										</button>
 									<?php
-							}
+								}
 							?>
-							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
+							<button disabled="disabled" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn tutor-quiz-next-btn-all <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
 								<?php $next_question ? esc_html_e( 'Submit &amp; Next', 'tutor' ) : esc_html_e( 'Submit Quiz', 'tutor' ); ?>
 							</button>
 							<?php if ( ! isset( $question_settings['answer_required'] ) ) : ?>
-							<span class="tutor-ml-30 tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> " style="border: 0px; padding: 0px; margin-left: auto;">
-								<?php esc_html_e( 'Skip Question', 'tutor' ); ?>
-							</span>
+								<span class="tutor-ml-30 tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> " style="border: 0px; padding: 0px; margin-left: auto;">
+									<?php esc_html_e( 'Skip Question', 'tutor' ); ?>
+								</span>
 							<?php endif; ?>
 						</div>
 					<?php endif; ?>
 				</div>
-				<?php
+			<?php
 		}
 
 		if ( $question_layout_view === 'question_below_each_other' ) {
 			?>
 				<div class="quiz-answer-footer-bar tutor-mt-60">
 					<div class="quiz-footer-button">
-						<button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-btn"><?php _e( 'Submit Quiz', 'tutor' ); ?></button>
+						<button type="submit" name="quiz_answer_submit_btn" value="quiz_answer_submit" class="tutor-btn">
+							<?php _e( 'Submit Quiz', 'tutor' ); ?>
+						</button>
 					</div>
 				</div>
 				<?php

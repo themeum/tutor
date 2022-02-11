@@ -13,6 +13,61 @@ const validURL = (str) => {
 	return !!pattern.test(str);
 };
 
+const getResizedFromUploaded=(file, dimension, callback)=> {
+    // Read image as data url
+    let reader = new FileReader();
+    reader.addEventListener('load', ()=> {
+
+        // Read as image to retrieve dimension
+        let image = new Image();
+        image.addEventListener('load', ()=>{
+            let {width, height}=image;
+
+            let left = 0;
+            let top = 0;
+            let w = width;
+            let h = height;
+
+            if(dimension.width==dimension.height) {
+                left = width>height ? (width-height)/2 : 0;
+                top = height>width ? (height-width)/2 : 0;
+
+                w = width>height ? height : width;
+                h = height>width ? width : height;
+            }
+
+            dimension.height = dimension.height || (height/width)*dimension.width;
+
+            let dm_width = dimension.width>width ? width : dimension.width;
+            let dm_height = dimension.width>width ? height : dimension.height;
+
+            // Create the destination canvas
+            let canvas = document.createElement('canvas');
+            canvas.width = dm_width;
+            canvas.height = dm_height;
+            let context = canvas.getContext('2d');
+
+            context.drawImage(image, left, top, w, h, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob(blob=> {
+                blob.name = file.name;
+                blob.lastModified = file.lastModified;
+                
+                let reader2 = new FileReader();
+                reader2.addEventListener('load', ()=> {
+                    callback(blob, reader2.result);
+                })
+                reader2.readAsDataURL(blob);
+
+            }, 'image/jpeg');
+        });
+
+        image.src = reader.result;
+    });
+
+    reader.readAsDataURL(file);
+}
+
 window.jQuery(document).ready(($) => {
 	/**
 	 * Profile Photo and Cover Photo editor
@@ -27,15 +82,8 @@ window.jQuery(document).ready(($) => {
 			this.dialogue_box.trigger('click');
 		};
 
-		this.validate_image = function(file) {
-			return true;
-		};
-
 		this.upload_selected_image = function(name, file) {
-			if (!file || !this.validate_image(file)) {
-				return;
-			}
-
+			
 			var nonce = tutor_get_nonce_data(true);
 
 			var context = this;
@@ -47,31 +95,24 @@ window.jQuery(document).ready(($) => {
 			form_data.append('photo_type', name);
 			form_data.append('photo_file', file, file.name);
 			form_data.append(nonce.key, nonce.value);
-			// let server_max_size = photo_editor.find('.upload_max_filesize').val();
-			// this.verify_filesize(file);
-			if (this.verify_filesize(file)) {
-				const _this = this;
-				$.ajax({
-					url: window._tutorobject.ajaxurl,
-					data: form_data,
-					type: 'POST',
-					processData: false,
-					contentType: false,
-					error: context.error_alert,
-					success: function() {
-						let photoType = _this.title_capitalize(name.replace('_', ' '));
-						tutor_toast('Success', photoType + ' Changed successfully!', 'success');
-					},
-					complete: function() {
-						context.toggle_loader(name, false);
-					},
-				});
-			} else {
-				tutor_toast('Error', 'Maximum file size exceeded!', 'error');
-				return false;
-			}
-
-			// console.log(this.max_filesize, name, file);
+		
+			// Upload the image to server
+			const _this = this;
+			$.ajax({
+				url: window._tutorobject.ajaxurl,
+				data: form_data,
+				type: 'POST',
+				processData: false,
+				contentType: false,
+				error: context.error_alert,
+				success: function() {
+					let photoType = _this.title_capitalize(name.replace('_', ' '));
+					tutor_toast('Success', photoType + ' Changed successfully!', 'success');
+				},
+				complete: function() {
+					context.toggle_loader(name, false);
+				},
+			});
 		};
 
 		this.title_capitalize = function(string) {
@@ -83,10 +124,13 @@ window.jQuery(document).ready(($) => {
 		};
 		this.accept_upload_image = function(context, e) {
 			var file = e.currentTarget.files[0] || null;
-			if (this.verify_filesize(file)) {
-				context.update_preview(e.currentTarget.name, file);
-			}
-			context.upload_selected_image(e.currentTarget.name, file);
+			context.update_preview(e.currentTarget.name, file);
+
+			// Resize 
+			getResizedFromUploaded(file, {width: 1200}, blob=>{
+				context.upload_selected_image(e.currentTarget.name, blob);
+			});
+			
 			$(e.currentTarget).val('');
 		};
 
@@ -115,22 +159,12 @@ window.jQuery(document).ready(($) => {
 			}
 
 			var reader = new FileReader();
-			this.verify_filesize(file);
-
+			
 			reader.onload = function(e) {
 				renderer.css('background-image', 'url(' + e.target.result + ')');
 			};
 
 			reader.readAsDataURL(file);
-		};
-
-		this.verify_filesize = function(file) {
-			let server_max_size = photo_editor.find('.upload_max_filesize').val();
-			// console.log(Number(file.size), Number(server_max_size));
-			if (Number(file.size) > Number(server_max_size)) {
-				return false;
-			}
-			return true;
 		};
 
 		this.toggle_profile_pic_action = function(show) {
