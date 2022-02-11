@@ -637,7 +637,7 @@ class Options_V2 {
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-discount-filled-filled',
 				'blocks'   => array(
-					array(
+					/* array(
 						'label'      => false,
 						'block_type' => 'uniform',
 						'fields'     => array(
@@ -650,7 +650,7 @@ class Options_V2 {
 								'desc'        => __( 'Enable monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
 							),
 						),
-					),
+					), */
 					'block_options' => array(
 						'label'      => __( 'Options', 'tutor' ),
 						'slug'       => 'options',
@@ -660,7 +660,7 @@ class Options_V2 {
 								'key'            => 'monetize_by',
 								'type'           => 'select',
 								'label'          => __( 'Select eCommerce Engine', 'tutor' ),
-								'select_options' => false,
+								'select_options' => true,
 								'options'        => apply_filters(
 									'tutor_monetization_options',
 									array(

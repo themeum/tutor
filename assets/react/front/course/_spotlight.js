@@ -3,12 +3,6 @@ jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
 
-// const askNewQna = document.querySelector('.tutor-ask-new-qna-btn');
-// const askNewQnaTextArea = document.querySelector('.tutor-quesanswer-askquestion textarea');
-// askNewQna.addEventListener('click', function () {
-// 	askNewQnaTextArea.classList.toggle('ask-new-qna-text-area-show');
-// })
-
 document.addEventListener('DOMContentLoaded', (event) => {
 	const { __, _x, _n, _nx } = wp.i18n;
 	const sidebar = document.querySelector('.tutor-lesson-sidebar.tutor-desktop-sidebar');
@@ -69,10 +63,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	/* comment text-area focus arrow style */
-
-	const parentComments = document.querySelectorAll('.tutor-comments-list.tutor-parent-comment');
-	const replyComment = document.querySelector('.tutor-comment-box.tutor-reply-box');
 	function commentSideLine() {
+		const parentComments = document.querySelectorAll('.tutor-comments-list.tutor-parent-comment');
+		const replyComment = document.querySelector('.tutor-comment-box.tutor-reply-box');
 		if (parentComments) {
 			[...parentComments].forEach((parentComment) => {
 				const childComments = parentComment.querySelectorAll('.tutor-comments-list.tutor-child-comment');
@@ -80,6 +73,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				const childCommentCount = childComments.length;
 				if (childComments[childCommentCount - 1]) {
 					const lastCommentHeight = childComments[childCommentCount - 1].clientHeight;
+
 					let heightOfLine = lastCommentHeight + replyComment.clientHeight + 20 - 25 + 50;
 					commentLine.style.setProperty('height', `calc(100% - ${heightOfLine}px)`);
 				}
@@ -90,14 +84,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
 	const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
 	if (spotlightTabs && spotlightTabContent) {
-		spotlightTabs.forEach((tab) => {
-			tab.addEventListener('click', (event) => {
-				clearSpotlightTabActiveClass();
-				event.currentTarget.classList.add('is-active');
-				let id = event.currentTarget.getAttribute('data-tutor-spotlight-tab-target');
-				let query_string = event.currentTarget.getAttribute('data-tutor-query-string');
-				// console.log(query_string);
-				const tabConent = event.currentTarget.parentNode.nextElementSibling;
+		document.addEventListener('click', (event) => {
+			const currentItem = event.target;
+			const isValidCurrentItem = currentItem.classList.contains('tab-header-item');
+			if (isValidCurrentItem) {
+				clearSpotlightTabActiveClass(spotlightTabs, spotlightTabContent);
+				currentItem.classList.add('is-active');
+				let id = currentItem.getAttribute('data-tutor-spotlight-tab-target');
+				let query_string = currentItem.getAttribute('data-tutor-query-string');
+				const tabConent = currentItem.parentNode.nextElementSibling;
 				tabConent.querySelector('#' + id).classList.add('is-active');
 				if (id === 'tutor-course-spotlight-tab-3') {
 					commentSideLine();
@@ -105,9 +100,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				let url = new URL(window.location);
 				url.searchParams.set('page_tab', query_string);
 				window.history.pushState({}, '', url);
-			});
+			}
 		});
 		const clearSpotlightTabActiveClass = () => {
+			const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
+			const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
+
 			spotlightTabs.forEach((item) => {
 				item.classList.remove('is-active');
 			});
@@ -171,11 +169,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 	function tutorAssignmentFileHandler() {
 		const uploadedFileSize = [...fileUploadField.files].reduce((sum, file) => sum + file.size, 0); // byte
-		const uploadSizeLimit = parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
+		const uploadSizeLimit =
+			parseInt(document.querySelector('input[name="tutor_assignment_upload_limit"]')?.value) || 0;
 		let message = '';
 		const maxAllowedFiles = window._tutorobject.assignment_max_file_allowed;
 		let alreadyUploaded = document.querySelectorAll(
-			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card',
+			'#tutor-student-assignment-edit-file-preview .tutor-instructor-card'
 		).length;
 		const allowedToUpload = maxAllowedFiles - alreadyUploaded;
 		if (fileUploadField.files.length > allowedToUpload) {
@@ -186,7 +185,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			tutor_toast(
 				__('Warning', 'tutor'),
 				__(`File size exceeds maximum limit ${Math.floor(uploadSizeLimit / 1000000)} MB.`, 'tutor'),
-				'error',
+				'error'
 			);
 			return;
 		}
@@ -196,7 +195,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				message = 'Select one or more files.';
 			} else {
 				if (fileUploadField.files.length > allowedToUpload) {
-					tutor_toast(__('Warning', 'tutor'), __(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'), 'error');
+					tutor_toast(
+						__('Warning', 'tutor'),
+						__(`Max ${maxAllowedFiles} file allowed to upload`, 'tutor'),
+						'error'
+					);
 				}
 				let fileCard = '';
 				const assignmentFilePreview = document.querySelector('.tutor-asisgnment-upload-file-preview');

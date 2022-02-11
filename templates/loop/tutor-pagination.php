@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 
 		 if( $pages == '' ){
 			$wp_query = '';
-			$pages = $wp_query->max_num_pages;
+			$pages = is_object( $wp_query ) ? $wp_query->max_num_pages : null;
 			if( !$pages ){
 				$pages = 1;
 		}
@@ -72,7 +72,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php do_action('tutor_course/archive/pagination/before');  ?>
 	
 	<?php 
-		if (function_exists("course_listing_pagination")) {
+		if (function_exists("course_listing_pagination") && is_object($wp_query)) {
 			course_listing_pagination( $wp_query->max_num_pages );
 		} 
 	?>

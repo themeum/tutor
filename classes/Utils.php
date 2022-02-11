@@ -187,10 +187,10 @@ class Utils {
 		do_action( 'tutor_utils/get_pages/before' );
 
 		$pages    = array();
-		$wp_pages = get_posts( array( 
-			'post_type' => 'page', 
-			'post_status'    => 'publish', 
-			'numberposts' => -1,  
+		$wp_pages = get_posts( array(
+			'post_type' => 'page',
+			'post_status'    => 'publish',
+			'numberposts' => -1,
 		) );
 
 		if ( is_array( $wp_pages ) && count( $wp_pages ) ) {
@@ -657,9 +657,10 @@ class Utils {
 		return $count;
 	}
 
-	public function get_courses_by_instructor_wpml($instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX){
+	public function get_courses_by_instructor_wpml($instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX) {
 		$args = array(
 			'posts_per_page'   => $limit,
+			'offset'					 => $offset,
 			'orderby'          => 'menu_order',
 			'order'            => 'DESC',
 			'post_type'        => tutor()->course_post_type,
@@ -726,14 +727,15 @@ class Utils {
 		return $pageposts;
 	}
 
-	public function get_pending_courses_by_instructor_wpml( $instructor_id = 0, $post_status = array( 'pending' ) ) {
+	public function get_pending_courses_by_instructor_wpml( $instructor_id = 0, $post_status = array( 'pending' ), int $offset = 0, int $limit = PHP_INT_MAX ) {
 		$args = array(
-			'posts_per_page'   => -1,
 			'orderby'          => 'menu_order',
 			'order'            => 'DESC',
 			'post_type'        => tutor()->course_post_type,
 			'post_status'      => $post_status,
-			'suppress_filters'  => !$this->is_wpml_active()
+			'suppress_filters' => !$this->is_wpml_active(),
+			'offset'           => $offset,
+			'posts_per_page'   => $limit,
 		);
 		$pageposts = get_posts( $args );
 
@@ -4434,7 +4436,7 @@ class Utils {
 							ON answer.comment_parent = question.comment_ID
 					INNER JOIN {$wpdb->commentmeta} question_meta
 							ON answer.comment_parent = question_meta.comment_id
-						   AND question_meta.meta_key = 'tutor_question_title'
+							AND question_meta.meta_key = 'tutor_question_title'
 			WHERE  	answer.comment_ID = %d
 					AND answer.comment_type = %s;
 			",
@@ -7782,6 +7784,30 @@ class Utils {
 		$student_data = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT student.{$field_name}
+			FROM   	{$wpdb->posts} enrol
+					INNER JOIN {$wpdb->users} student
+						    ON enrol.post_author = student.id
+			WHERE  	enrol.post_type = %s
+					AND enrol.post_parent = %d
+					AND enrol.post_status = %s;
+			",
+				'tutor_enrolled',
+				$course_id,
+				'completed'
+			)
+		);
+
+		return array_column( $student_data, $field_name );
+	}
+
+	public function get_students_all_data_by_course_id( $course_id = 0 ) {
+
+		global $wpdb;
+		$course_id = $this->get_post_id( $course_id );
+
+		$student_data = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
 			FROM   	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->users} student
 						    ON enrol.post_author = student.id
