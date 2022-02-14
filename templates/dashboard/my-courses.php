@@ -11,7 +11,7 @@ $courseCols = $shortcode_arg === null ? tutor_utils()->get_option('courses_col_p
 !isset($active_tab) ? $active_tab = 'my-courses' : 0;
 $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = (isset($_GET['current_page']) && is_numeric($_GET['current_page']) && $_GET['current_page'] >= 1) ? $_GET['current_page'] : 1;
-$offset     = $per_page * ($paged == 1 ? 0: $paged-1);
+$offset     = $per_page * ($paged-1);
 $status = $active_tab == 'my-courses' ? array('publish') : array('pending');
 $courses_per_page = tutor_utils()->get_courses_by_instructor($user->ID, $status, $offset, $per_page);
 $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);

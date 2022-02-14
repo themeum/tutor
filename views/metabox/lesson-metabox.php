@@ -7,7 +7,7 @@
 		$courses = tutor_utils()->get_courses_for_instructors();
 		?>
 
-		<select name="selected_course" class="tutor_select2" noDropdown>
+		<select name="selected_course" class="tutor_select2 no-tutor-dropdown">
 			<option value=""><?php _e( 'Select a course', 'tutor' ); ?></option>
 
 			<?php
