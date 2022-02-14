@@ -123,9 +123,9 @@ $is_user_admin                = current_user_can( 'administrator' );
 																	$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
 																	echo esc_html( "{$time_limit} {$time_type}" );
 																}
-																$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID )
+																$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID );
 																?>
-																<input type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly <?php echo esc_attr( $has_attempt ? 'checked' : '' ); ?>/>
+																<input type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly <?php echo esc_attr( $has_attempt ? 'checked' : '' ); ?> >
 															</span>
 														</div>
 													</a>
@@ -215,6 +215,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 																echo "<span class='text-regular-caption tutor-color-text-title'>" . tutor_utils()->get_optimized_duration( $play_time ) . '</span>';
 															}
 															$lesson_complete_icon = $is_completed_lesson ? 'checked' : '';
+
 															echo "<input $lesson_complete_icon type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly />";
 															?>
 
