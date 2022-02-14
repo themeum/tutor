@@ -287,7 +287,14 @@ if ( is_array( $attempt_info ) ) {
                             <td data-th="<?php echo $column; ?>">
                                 <span class="text-medium-caption tutor-color-text-primary">
                                     <?php
-                                        if ($earned_percentage >= $pass_mark_percent){
+                                        $ans_array = is_array($answers) ? $answers : array();
+                                        $has_pending = count(array_filter($ans_array, function($ans){
+                                            return $ans->is_correct===null;
+                                        }));
+
+                                        if($has_pending){
+                                            echo '<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>';
+                                        } else if ($earned_percentage >= $pass_mark_percent){
                                             echo '<span class="tutor-badge-label label-success">'.__('Pass', 'tutor').'</span>';
                                         }else{
                                             echo '<span class="tutor-badge-label label-danger">'.__('Fail', 'tutor').'</span>';
@@ -314,10 +321,8 @@ if ( is_array( $attempt_info ) ) {
                     <tr>
                         <?php
                             foreach($table_2_columns as $key => $column) {
-                                if($key !== 'manual_review' ){
-                                    $class_name = join('--', explode(' ', strtolower($column)));
-                                    echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'. $column .'</span></th>';
-                                }
+                                $class_name = join('--', explode(' ', strtolower($column)));
+                                echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'. $column .'</span></th>';
                             }
                         ?>
                     </tr>
@@ -332,23 +337,14 @@ if ( is_array( $attempt_info ) ) {
                             $answer_status = null;
                             if ( (bool) (isset( $answer->is_correct ) ? $answer->is_correct : '') ) {
                                 $answer_status = 'correct';
-                            } else {
-                                if (in_array($answer->question_type, array('open_ended', 'short_answer', 'image_answering'))){
-                                    if ( (bool) $attempt_data->is_manually_reviewed && (!isset( $answer->is_correct ) || $answer->is_correct == 0 )) {
-                                        $answer_status = 'wrong';
-                                    } else {
-                                        $answer_status = 'pending';
-                                    }
-                                } else {
-                                    $answer_status = 'wrong';
-                                }
+                            } else if (in_array($answer->question_type, array('open_ended', 'short_answer', 'image_answering'))){
+                                $answer_status = $answer->is_correct===null ? 'pending' : 'wrong';
                             }
                             ?>
 
                             <tr class="<?php echo 'tutor-quiz-answer-status-'.$answer_status; ?>">
                                 <?php foreach($table_2_columns as $key => $column): ?>
                                     <?php
-                                     if($key !== 'manual_review' ){
                                         switch($key) {
                                             case 'no' :
                                                 ?>
@@ -670,15 +666,14 @@ if ( is_array( $attempt_info ) ) {
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap">
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-10 tutor-icon-rounded tutor-text-success">
-                                                        <i class="tutor-icon-mark-filled"></i>
+                                                        <i class="tutor-icon-mark-filled tutor-icon-24"></i>
                                                     </a>
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" data-context="<?php echo $context; ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-text-danger">
-                                                        <i class="tutor-icon-line-cross-line"></i>
+                                                        <i class="tutor-icon-line-cross-line tutor-icon-24"></i>
                                                     </a>
                                                 </td>
                                                 <?php
                                         }
-                                    }
                                     ?>
                                 <?php endforeach; ?>
                             </tr>

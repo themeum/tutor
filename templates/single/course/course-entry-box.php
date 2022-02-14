@@ -58,6 +58,8 @@
 	<div class="tutor-course-sidebar-card-body tutor-p-30 <?php echo $login_class; ?>" data-login_url="<?php echo $login_url; ?>">
 		<?php
 		if ( $is_enrolled ) {
+			ob_start();
+
 			// The user is enrolled anyway. No matter manual, free, purchased, woocommerce, edd, membership
 			do_action( 'tutor_course/single/actions_btn_group/before' );
 
@@ -152,36 +154,26 @@
 						</span>
 					</span>
 				</div>
-				<?php
-
-				do_action( 'tutor_course/single/actions_btn_group/after' );
-
-		} /* elseif ( $is_privileged_user ) {
-			// The user is not enrolled but privileged to access course content
-			if ( $lesson_url ) {
-				?>
-					<a href="<?php echo esc_url( $lesson_url ); ?>" class="tutor-mt-5 tutor-mb-5 tutor-is-fullwidth tutor-btn">
-					<?php esc_html_e( 'Continue Lesson', 'tutor' ); ?>
-					</a>
-					<?php
-			} else {
-				esc_html_e( 'No Content to Access', 'tutor' );
-			}
-		} */ else if ( $is_public ) {
+			<?php
+			do_action( 'tutor_course/single/actions_btn_group/after' );
+			echo apply_filters( 'tutor/course/single/entry-box/is_enrolled', ob_get_clean(), get_the_ID() );
+		} else if ( $is_public ) {
 			// Get the first content url
 			$first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID(), tutor()->lesson_post_type );
 			!$first_lesson_url ? $first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID() ) : 0;
-
+			ob_start();
 			?>
 				<a href="<?php echo esc_url( $first_lesson_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full">
 					<?php esc_html_e( 'Start Learning', 'tutor' ); ?>
 				</a>
 			<?php
+			echo apply_filters( 'tutor/course/single/entry-box/is_public', ob_get_clean(), get_the_ID() );
 		} else {
 			// The course enroll options like purchase or free enrolment
 			$price = apply_filters( 'get_tutor_course_price', null, get_the_ID() );
 
 			if ( tutor_utils()->is_course_fully_booked( null ) ) {
+				ob_start();
 				?>
 					<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
@@ -192,9 +184,12 @@
 						</div>
 					</div>
 				<?php
+				echo apply_filters( 'tutor/course/single/entry-box/fully_booked', ob_get_clean(), get_the_ID() );
 			} elseif ( $is_purchasable && $price && $tutor_course_sell_by ) {
 				// Load template based on monetization option
+				ob_start();
 				tutor_load_template( 'single.course.add-to-cart-' . $tutor_course_sell_by );
+				echo apply_filters( 'tutor/course/single/entry-box/purchasable', ob_get_clean(), get_the_ID() );
 			} else {
 				ob_start();
 				?>
