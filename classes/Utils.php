@@ -8703,6 +8703,36 @@ class Utils {
 	 * @param int $student_id student id | required.
 	 * @return int
 	 */
+	public function get_submitted_assignment_count( int $assignment_id, int $student_id ): int {
+		global $wpdb;
+		$assignments = $wpdb->get_var(
+			$wpdb->prepare(
+				" SELECT COUNT(*) FROM {$wpdb->posts} AS assignment
+				INNER JOIN {$wpdb->posts} AS topic
+					ON topic.ID = assignment.post_parent
+				INNER JOIN {$wpdb->posts} AS course
+					ON course.ID = topic.post_parent
+				INNER JOIN {$wpdb->comments} AS submit
+					ON submit.comment_post_ID = assignment.ID
+				WHERE assignment.post_type = %s
+					AND assignment.ID = %d
+					AND submit.user_id = %d
+			",
+				'tutor_assignments',
+				$assignment_id,
+				$student_id
+			)
+		);
+		return $assignments;
+	}
+
+	/**
+	 * Get completed assignment number
+	 *
+	 * @param int $course_id course id | required.
+	 * @param int $student_id student id | required.
+	 * @return int
+	 */
 	public function count_completed_assignment( int $course_id, int $student_id ): int {
 		global $wpdb;
 		$count = $wpdb->get_var(
