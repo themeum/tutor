@@ -99,15 +99,17 @@ $is_user_admin                = current_user_can( 'administrator' );
 							<?php
 								do_action( 'tutor/lesson_list/before/topic', $topic_id );
 								$lessons = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
+								$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 
 								while ( $lessons->have_posts() ) {
 									$lessons->the_post();
-									if ( $post->post_type === 'tutor_quiz' && ! $_is_preview ) {
+									$show_permalink = !$_is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true );
+									if ( $post->post_type === 'tutor_quiz' ) {
 										$quiz = $post;
 										?>
 											<div class="tutor-lessons-under-topic" data-quiz-id="<?php echo $quiz->ID; ?>">
-												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
-													<a href="<?php echo get_permalink( $quiz->ID ); ?>" class="tutor-single-quiz-a tutor-bs-d-flex justify-content-between" data-quiz-id="<?php echo $quiz->ID; ?>">
+												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
+													<a href="<?php echo $show_permalink ? get_permalink( $quiz->ID ) : '#'; ?>" class="tutor-single-quiz-a tutor-bs-d-flex justify-content-between" data-quiz-id="<?php echo $quiz->ID; ?>">
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-quiz-filled"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
@@ -118,30 +120,35 @@ $is_user_admin                = current_user_can( 'administrator' );
 															<span class="text-regular-caption tutor-color-text-title">
 																<?php
 																	$time_limit = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
-																if ( $time_limit ) {
-																	$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
-																	echo esc_html( "{$time_limit} {$time_type}" );
-																}
-																$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID )
+																	if ( $time_limit ) {
+																		$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
+																		echo esc_html( "{$time_limit} {$time_type}" );
+																	}
+																	$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID )
 																?>
-																<input type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?>/>
+
+																<?php if($show_permalink): ?>
+																	<input type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled="disabled" readonly="readonly" <?php echo esc_attr( $has_attempt ? 'checked="checked"' : '' ); ?>/>
+																<?php else: ?>
+																	<i class="tutor-icon-lock-stroke-filled"></i>
+																<?php endif; ?>
 															</span>
 														</div>
 													</a>
 												</div>
 											</div>
-											<?php
-									} elseif ( $post->post_type === 'tutor_assignments' && ! $_is_preview ) {
+										<?php
+											
+									} elseif ( $post->post_type === 'tutor_assignments' ) {
 										/**
 										 * Assignments
 											 *
 										 * @since this block v.1.3.3
 										 */
-
 										?>
 											<div class="tutor-lessons-under-topic">
-												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
-													<a href="<?php echo get_permalink( $post->ID ); ?>" class="tutor-single-assignment-a tutor-bs-d-flex justify-content-between" data-assignment-id="<?php echo $post->ID; ?>">
+												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
+													<a href="<?php echo $show_permalink ? get_permalink( $post->ID ) : '#'; ?>" class="tutor-single-assignment-a tutor-bs-d-flex justify-content-between" data-assignment-id="<?php echo $post->ID; ?>">
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-assignment-filled"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
@@ -149,38 +156,44 @@ $is_user_admin                = current_user_can( 'administrator' );
 															</span>
 														</div>
 														<div class="tutor-single-lesson-items-right tutor-bs-d-flex tutor-lesson-right-icons">
-														<?php do_action( 'tutor/assignment/right_icon_area', $post ); ?>
+															<?php if($show_permalink): ?>
+																<?php do_action( 'tutor/assignment/right_icon_area', $post ); ?>
+															<?php else: ?>
+																<i class="tutor-icon-lock-stroke-filled"></i>
+															<?php endif; ?>
 														</div>
 													</a>
 												</div>
 											</div>
 										<?php
-
-									} elseif ( $post->post_type === 'tutor_zoom_meeting' && ! $_is_preview ) {
+									} elseif ( $post->post_type === 'tutor_zoom_meeting' ) {
 										/**
 										 * Zoom Meeting
 											 *
 										 * @since this block v.1.7.1
 										 */
-
 										?>
 											<div class="tutor-lessons-under-topic">
-												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
-													<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="sidebar-single-zoom-meeting-a tutor-bs-d-flex justify-content-between">
+												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
+													<a href="<?php echo $show_permalink ? esc_url( get_permalink( $post->ID ) ) : '#'; ?>" class="sidebar-single-zoom-meeting-a tutor-bs-d-flex justify-content-between">
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
 															<span class="tutor-icon-zoom"></span>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
-															<?php echo esc_html( $post->post_title ); ?>
+																<?php echo esc_html( $post->post_title ); ?>
 															</span>
 														</div>
 														<div class="tutor-single-lesson-items-right tutor-bs-d-flex tutor-lesson-right-icons">
-														<?php do_action( 'tutor/zoom/right_icon_area', $post->ID ); ?>
+															<?php if($show_permalink): ?>
+																<?php do_action( 'tutor/zoom/right_icon_area', $post->ID ); ?>
+															<?php else: ?>
+																<i class="tutor-icon-lock-stroke-filled"></i>
+															<?php endif; ?>
 														</div>
 													</a>
 												</div>
 											</div>
-											<?php
-
+										<?php
+										
 									} else {
 
 										/**
@@ -196,27 +209,31 @@ $is_user_admin                = current_user_can( 'administrator' );
 										$is_completed_lesson = tutor_utils()->is_completed_lesson();
 										?>
 											<div class="tutor-lessons-under-topic">
-												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID === get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
-													<a href="<?php the_permalink(); ?>" class="tutor-single-lesson-a tutor-bs-d-flex justify-content-between" data-lesson-id="<?php the_ID(); ?>">
+												<div class="tutor-single-lesson-items <?php echo ( $currentPost->ID == get_the_ID() ) ? 'active tutor-color-design-brand' : ''; ?>">
+													<a href="<?php echo $show_permalink ? get_the_permalink() : '#'; ?>" class="tutor-single-lesson-a tutor-bs-d-flex justify-content-between" data-lesson-id="<?php the_ID(); ?>">
 														<div class="tutor-single-lesson-items-left tutor-bs-d-flex">
-														<?php
-															$tutor_lesson_type_icon = $play_time ? 'youtube-brand' : 'document-file';
-															echo "<span class='tutor-icon-$tutor_lesson_type_icon'></span>";
-														?>
+															<?php
+																$tutor_lesson_type_icon = $play_time ? 'youtube-brand' : 'document-file';
+																echo "<span class='tutor-icon-$tutor_lesson_type_icon'></span>";
+															?>
 															<span class="lesson_title tutor-text-regular-caption tutor-color-text-title">
-															<?php the_title(); ?>
+																<?php the_title(); ?>
 															</span>
 														</div>
 														<div class="tutor-single-lesson-items-right tutor-bs-d-flex">
 															<?php
-															do_action( 'tutor/lesson_list/right_icon_area', $post );
-															if ( $play_time ) {
-																echo "<span class='text-regular-caption tutor-color-text-title'>" . tutor_utils()->get_optimized_duration( $play_time ) . '</span>';
-															}
-															$lesson_complete_icon = $is_completed_lesson ? 'checked' : '';
-															echo "<input $lesson_complete_icon type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly />";
-															?>
+																do_action( 'tutor/lesson_list/right_icon_area', $post );
+																if ( $play_time ) {
+																	echo "<span class='text-regular-caption tutor-color-text-title'>" . tutor_utils()->get_optimized_duration( $play_time ) . '</span>';
+																}
+																$lesson_complete_icon = $is_completed_lesson ? 'checked' : '';
 
+																if($show_permalink) {
+																	echo "<input $lesson_complete_icon type='checkbox' class='tutor-form-check-input tutor-form-check-circle' disabled readonly />";
+																} else {
+																	echo '<i class="tutor-icon-lock-stroke-filled"></i>';
+																}
+															?>
 														</div>
 													</a>
 												</div>

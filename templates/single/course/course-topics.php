@@ -56,7 +56,7 @@ do_action( 'tutor_course/single/before/topics' );
 				</div>
 				<?php
 					$topic_contents = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
-				if ( $topic_contents->have_posts() ) {
+					if ( $topic_contents->have_posts() ) {
 					?>
 						<div class="tutor-accordion-item-body">
 							<div class="tutor-accordion-item-body-content">
@@ -69,14 +69,14 @@ do_action( 'tutor_course/single/before/topics' );
 											// Get Lesson video information if any
 											$video     = tutor_utils()->get_video_info();
 											$play_time = $video ? $video->playtime : false;
+											$is_preview = get_post_meta( $post->ID, '_is_preview', true );
 
 											// Determine topic content icon based on lesson, video, quiz etc.
 											$topic_content_icon                                     = $play_time ? 'tutor-icon-youtube-brand' : 'tutor-icon-document-alt-filled';
 											$post->post_type === 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-question-mark-circle-filled' : 0;
 											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-clipboard-line' : 0;
 											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-zoom' : 0;
-
-																						$is_locked = false;
+											$is_locked = !($is_enrolled || $is_preview);
 										?>
 										<li>
 											<div>
@@ -118,7 +118,7 @@ do_action( 'tutor_course/single/before/topics' );
 												<span class="text-regular-caption tutor-color-text-hints">
 													<?php echo $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : ''; ?>
 												</span>
-												<!-- <span class="<?php echo $is_locked ? ' tutor-icon-lock-stroke-filled' : 'tutor-icon-eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20"></span> -->
+												<span class="<?php echo $is_locked ? ' tutor-icon-lock-stroke-filled' : 'tutor-icon-eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20"></span>
 											</div>
 										</li>
 									<?php endwhile; ?>
@@ -127,7 +127,7 @@ do_action( 'tutor_course/single/before/topics' );
 						</div>
 						<?php
 						$topic_contents->reset_postdata();
-				}
+					}
 				?>
 			</div>
 			<?php endwhile; ?>

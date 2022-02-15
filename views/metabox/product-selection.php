@@ -10,7 +10,7 @@
 		</label>
 	</div>
 	<div class="tutor-bs-col-12 tutor-bs-col-md-7 tutor-bs-col-lg-8">
-		<select name="_tutor_course_product_id" class="tutor-form-select tutor_select2" noDropdown>
+		<select name="_tutor_course_product_id" class="tutor-form-select tutor_select2 no-tutor-dropdown">
 			<option value="-1"><?php _e( 'Select a Product' ); ?></option>
 			<?php
 			foreach ( $products as $product ) {
