@@ -1,6 +1,6 @@
 window.jQuery(document).ready($=>{
     const {__} = window.wp.i18n;
-    
+
     function feedback_response($question_wrap) {
         var goNext = false;
 
@@ -53,7 +53,7 @@ window.jQuery(document).ready($=>{
             $checkedInputs.each(function () {
                 var $input = $(this);
                 var isTrue = quiz_answers.indexOf($input.val())>-1; // $input.attr('data-is-correct') == '1';
-                
+
                 // And check if the answer is correct
                 if (!isTrue) {
                     validatedTrue = false;
@@ -108,7 +108,7 @@ window.jQuery(document).ready($=>{
      * @since v.1.6.1
      */
 
-     function tutor_quiz_validation($question_wrap) {
+    function tutor_quiz_validation($question_wrap) {
         var validated = true;
 
         var $required_answer_wrap = $question_wrap.find('.quiz-answer-required');
@@ -161,12 +161,9 @@ window.jQuery(document).ready($=>{
      * @date 22 Feb, 2019
      * @since v.1.0.0
      */
-    console.log($('.tutor-quiz-next-btn-all'));
     $('.tutor-quiz-next-btn-all').prop('disabled', false);
     $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
         e.preventDefault();
-
-        console.log('Here  sdf sdf ');
 
         let counter_el = $('.tutor-quiz-question-counter>span:first-child');
         let current_question = parseInt($(this).closest('[data-question_index]').data('question_index'));
