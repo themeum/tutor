@@ -204,7 +204,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 						</th>
 					<?php endif; ?>
 					<th class="tutor-table-rows-sorting">
-						<div class="inline-flex-center tutor-color-text-subsued tutor-text-regular-small">
+						<div class="tutor-color-text-subsued tutor-text-regular-small">
 							<?php esc_html_e( 'Announcements', 'tutor' ); ?>
 						</div>
 					</th>

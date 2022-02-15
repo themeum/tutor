@@ -102,25 +102,25 @@ $filters = array(
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-					<div class="inline-flex-center tutor-color-text-subsued">
+					<div class=" tutor-color-text-subsued">
 						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
 						<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-					<div class="inline-flex-center tutor-color-text-subsued">
+					<div class=" tutor-color-text-subsued">
 						<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
 						<span class="tutor-icon-order-down-filled up-down-icon"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-					<div class="inline-flex-center tutor-color-text-subsued">
+					<div class=" tutor-color-text-subsued">
 						<span class="text-regular-small"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
 						<span class="tutor-icon-order-down-filled up-down-icon"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-					<div class="inline-flex-center tutor-color-text-subsued">
+					<div class=" tutor-color-text-subsued">
 						<span class="text-regular-small">
 							<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
 						</span>
@@ -128,7 +128,7 @@ $filters = array(
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center tutor-color-text-subsued">
+				<div class=" tutor-color-text-subsued">
 					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
 					<span class="tutor-icon-order-down-filled up-down-icon"></span>
 				</div>
