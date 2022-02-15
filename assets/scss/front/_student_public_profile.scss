@@ -212,7 +212,7 @@
 					color: whitesmoke;
 					cursor: pointer;
 					text-decoration: none;
-					font-size: 12px;
+					font-size: 16px;
 
 					&:hover {
 						color: white;
@@ -419,16 +419,6 @@
 		.tutor-user-profile-sidebar {
 			margin-top: 0 !important;
 		}
-
-		&.tutor-user-public-profile-no-cp {
-			.pp-area {
-				@include propertyWithPrefix(justify-content, left !important);
-
-				* {
-					text-align: left !important;
-				}
-			}
-		}
 	}
 
 	// Content container
@@ -462,7 +452,7 @@
 		}
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 991px) {
 		&.tutor-user-public-profile-no-cp {
 			.pp-area {
 				padding-left: 0 !important;
