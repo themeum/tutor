@@ -82,7 +82,12 @@ select.tutor-form-select {
 
 .tutor-form-select-with-btn {
 	display: flex;
+	align-items: center;
 	gap: 20px;
+	@include breakpoint-max(mobile) {
+		flex-wrap: wrap;
+	}
+
 	select.tutor-form-select {
 	}
 }

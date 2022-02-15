@@ -161,41 +161,41 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="text-regular-small tutor-color-text-subsued">
-								<span class="text-regular-small">
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
+								<span class="tutor-text-regular-small">
 									<?php esc_html_e( 'Date', 'tutor' ); ?>
 								</span>
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="text-regular-small tutor-color-text-subsued">
-								<span class="text-regular-small">
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
+								<span class="tutor-text-regular-small">
 									<?php esc_html_e( 'Title', 'tutor' ); ?>
 								</span>
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="inline-flex-center tutor-color-text-subsued">
-								<span class="text-regular-small">
+							<div class="tutor-color-text-subsued">
+								<span class="tutor-text-regular-small">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 								</span>
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 							</div>
 						</th>
 						<th>
-							<div class="text-regular-small tutor-color-text-subsued">
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Course Categories', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="text-regular-small tutor-color-text-subsued">
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Students', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="text-regular-small tutor-color-text-subsued">
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
 								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</div>
 						</th>
@@ -222,7 +222,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
-									<div class="td-datetime tutor-text-regular-caption tutor-color-text-primary">
+									<div class="td-datetime tutor-tutor-text-regular-caption tutor-color-text-primary">
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>,<br>
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
 									</div>
@@ -288,12 +288,12 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 									?>
 								</td>
 								<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>">
-									  <div class="text-regular-caption tutor-color-text-primary">
+									  <div class="tutor-text-regular-caption tutor-color-text-primary">
 										<?php echo esc_html( $total_student ); ?>
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Price', 'tutor' ); ?>">
-									<div class="text-regular-caption tutor-color-text-primary">
+									<div class="tutor-text-regular-caption tutor-color-text-primary">
 										<?php
 											$price = tutor_utils()->get_course_price( $post->ID );
 										if ( null === $price ) {
@@ -335,7 +335,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											<li>
 												<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
 													<i class="tutor-icon-eye-fill-filled"></i>
-													<span class="text-regular-body tutor-color-text-white">
+													<span class="tutor-text-regular-body tutor-color-text-white">
 														<?php esc_html_e( 'View Course', 'tutor' ); ?>
 													</span>
 												</a>
@@ -344,7 +344,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 											<li>
 												<a href="javascript:void(0)" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
 													<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
-													<span class="text-regular-body tutor-color-text-white">
+													<span class="tutor-text-regular-body tutor-color-text-white">
 													<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
 													</span>
 												</a>
