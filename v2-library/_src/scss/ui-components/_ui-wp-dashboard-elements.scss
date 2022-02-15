@@ -55,14 +55,39 @@
 			}
 
 			&.is-active {
-				color: $brand-wordpress;
+				.filter-btn-name {
+					color: $brand-wordpress;
+				}
 				&:before {
 					transform: scaleY(1);
 				}
 			}
 		}
+		@include breakpoint-max(mobile) {
+			.filter-btn {
+				font-size: 14px;
+				> {
+					* {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+					}
+				}
+				&:not(:first-child) {
+					margin-left: 5px;
+				}
+			}
+		}
 	}
-}
+
+	.tutor-btn.tutor-btn-wordpress-outline.tutor-btn-sm {
+		padding: 5px 10px 5px 8px;
+	}
+
+	@include breakpoint-max(mobile) {
+		overflow-x: auto;
+	}
+} // .tutor-wp-dashboard-header
 
 .tutor-wp-dashboard-filter {
 	gap: 30px;
@@ -95,7 +120,11 @@
 			}
 		}
 	}
-}
+	.tutor-btn.tutor-btn-wordpress-outline.tutor-btn-sm {
+		padding: 7px 10px;
+	}
+} // .tutor-wp-dashboard-filter
+
 .tutor-wp-dashboard-filter-items {
 	// width: 100%;
 	// display: flex;
@@ -130,7 +159,13 @@
 		border-color: $brand-wordpress;
 		box-shadow: unset;
 	}
-}
+
+	@include breakpoint-min(1500) {
+		> div:not(.item-reset) {
+			width: 228px;
+		}
+	}
+} // .tutor-wp-dashboard-filter-items
 
 // Zoom Integration
 .tutor-zoom-integration-card {

@@ -11,8 +11,6 @@
  * @version 1.4.3
  */
 
-get_tutor_header();
-
 global $post;
 $currentPost = $post;
 
@@ -21,7 +19,8 @@ $method_map = array(
     'assignment' => 'tutor_assignment_content',
 );
 
-$content_id = tutor_utils()->get_post_id($course_content_id??null);
+$content_id = tutor_utils()->get_post_id();
+$course_id = tutor_utils()->get_course_id_by_subcontent( $content_id );
 $contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
 $previous_id = $contents->previous_id;
 $next_id = $contents->next_id;
@@ -40,6 +39,11 @@ function tutor_course_single_sidebar( $echo = true, $context='desktop' ) {
 
     return $output;
 }
+
+do_action( 'tutor/course/single/content/before/all', $course_id, $content_id );
+
+get_tutor_header();
+
 ?>
 
 <?php do_action('tutor_'.$context.'/single/before/wrap'); ?>
@@ -51,20 +55,22 @@ function tutor_course_single_sidebar( $echo = true, $context='desktop' ) {
 		    <?php (isset($method_map[$context]) && is_callable($method_map[$context])) ? $method_map[$context]() : 0; ?>
             <?php echo isset($html_content) ? $html_content  : '' ; ?>
             
-            <?php if($previous_id): ?>
-                <div class="tutor-single-course-content-prev flex-center">
-                    <a href="<?php echo get_the_permalink($previous_id); ?>">
-                        <span class="tutor-icon-angle-left-filled"></span>
-                    </a>
-                </div>
-            <?php endif; ?>
+            <?php if($context=='lesson'): ?>
+                <?php if($previous_id): ?>
+                    <div class="tutor-single-course-content-prev flex-center">
+                        <a href="<?php echo get_the_permalink($previous_id); ?>">
+                            <span class="tutor-icon-angle-left-filled"></span>
+                        </a>
+                    </div>
+                <?php endif; ?>
 
-            <?php if($next_id): ?>
-                <div class="tutor-single-course-content-next flex-center">
-                    <a href="<?php echo get_the_permalink($next_id); ?>">
-                        <span class="tutor-icon-angle-right-filled"></span>
-                    </a>
-                </div>
+                <?php if($next_id): ?>
+                    <div class="tutor-single-course-content-next flex-center">
+                        <a href="<?php echo get_the_permalink($next_id); ?>">
+                            <span class="tutor-icon-angle-right-filled"></span>
+                        </a>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
 
             <div class="tutor-course-single-sidebar-wraper tutor-mobile-sidebar">

@@ -161,9 +161,13 @@ window.jQuery(document).ready($=>{
      * @date 22 Feb, 2019
      * @since v.1.0.0
      */
-
-     $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
+    console.log($('.tutor-quiz-next-btn-all'));
+    $('.tutor-quiz-next-btn-all').prop('disabled', false);
+    $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
         e.preventDefault();
+
+        console.log('Here  sdf sdf ');
+
         let counter_el = $('.tutor-quiz-question-counter>span:first-child');
         let current_question = parseInt($(this).closest('[data-question_index]').data('question_index'));
         // Show previous quiz if press previous button

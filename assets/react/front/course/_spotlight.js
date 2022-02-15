@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	}
 
 	const sidebarTabeHandler = function(sideBarTabs) {
+		const tabWrapper = document.querySelector('.tutor-desktop-sidebar-area');
+		if (tabWrapper.children.length < 2) return;
+
 		sideBarTabs.forEach((tab) => {
 			tab.addEventListener('click', (event) => {
 				const tabConent = event.currentTarget.parentNode.nextElementSibling;
@@ -75,7 +78,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					const lastCommentHeight = childComments[childCommentCount - 1].clientHeight;
 
 					let heightOfLine = lastCommentHeight + replyComment.clientHeight + 20 - 25 + 50;
-					console.log('heightOfLine ', heightOfLine);
 					commentLine.style.setProperty('height', `calc(100% - ${heightOfLine}px)`);
 				}
 			});
