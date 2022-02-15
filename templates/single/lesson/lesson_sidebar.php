@@ -76,7 +76,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 								<div class="tutor-topics-title-left">
 									<div class="tutor-topics-title-inner">
 										<div class="text-medium-h6 tutor-color-text-brand"><?php the_title(); ?></div>
-										<?php if ( $topic_summery ): ?>
+										<?php if ( true ): ?>
 											<div class="tutor-topics-title-info">
 												<div class="tooltip-wrap tutor-bs-d-flex">
 													<i class="tutor-icon-circle-outline-info-filled tutor-icon-24 color-black-40"></i>
@@ -88,7 +88,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 										<?php endif; ?>
 									</div>
 								</div>
-								<div class="tutor-topics-title-right align-self-end">
+								<div class="tutor-topics-title-right">
 									<?php if ( isset( $total_contents['contents'] ) && $total_contents['contents'] > 0 ) : ?>
 										<p class="tutor-topic-subtitle tutor-text-regular-caption tutor-color-text-subsued">
 											<?php echo esc_html( isset( $total_contents['completed'] ) ? $total_contents['completed'] : 0 ); ?>/<?php echo esc_html( isset( $total_contents['contents'] ) ? $total_contents['contents'] : 0 ); ?>

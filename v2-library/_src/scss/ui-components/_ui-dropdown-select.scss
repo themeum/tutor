@@ -104,11 +104,11 @@
 	}
 
 	&-selected {
-		padding: 7px 20px;
+		padding: 6px 20px;
 		cursor: pointer;
 		> div:first-child {
 			@extend .text-medium-body;
 			@extend .color-text-primary;
 		}
 	}
-}
+} // .tutor-dropdown-select

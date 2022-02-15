@@ -108,8 +108,8 @@
 						.tutor-topics-title-left {
 							.tutor-topics-title-inner {
 								display: flex;
-								align-items: center;
 								cursor: pointer;
+								max-width: 330px;
 							}
 							.tutor-topics-title-info {
 								i {
@@ -119,6 +119,7 @@
 							}
 						}
 						.tutor-topics-title-right {
+							padding-left: 5px;
 						}
 					}
 					.tutor-lessons-under-topic {
