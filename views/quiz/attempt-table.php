@@ -204,20 +204,20 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'details':
 									$url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
 									?>
-												<td data-th="See Details">
-													<div class="inline-flex-center td-action-btns">
-														<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
-															<?php
-																if ( $attempt->attempt_status === 'review_required' && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
-																	esc_html_e( 'Review', 'tutor' );
-																} else {
-																	esc_html_e( 'Details', 'tutor-pro' );
-																}
-															?>
-														</a>
-													</div>
-												</td>
-											<?php
+										<td data-th="<?php _e('See Details', 'tutor') ?>">
+											<div class="inline-flex-center td-action-btns">
+												<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+													<?php
+														if ( $attempt->attempt_status === 'review_required' && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
+															esc_html_e( 'Review', 'tutor' );
+														} else {
+															esc_html_e( 'Details', 'tutor-pro' );
+														}
+													?>
+												</a>
+											</div>
+										</td>
+									<?php
 									break;
 							}
 						}
@@ -232,7 +232,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 							<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 						</td>
 					</tr>
-					<?php
+				<?php
 			}
 			?>
 		</tbody>
