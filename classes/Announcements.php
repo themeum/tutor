@@ -73,7 +73,7 @@ class Announcements {
 		// check nonce.
 		tutor_utils()->checking_nonce();
 		$action   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : array();
+		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
 		$update   = self::delete_announcements( $action, $bulk_ids );
 		return true === $update ? wp_send_json_success() : wp_send_json_error();
 		exit;

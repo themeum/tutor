@@ -39,7 +39,7 @@ foreach ( $questions as $question ) {
 if(!count($questions)) : ?>
 	<div class="tutor-empty-state-wrapper">
         <div class="tutor-empty-state td-empty-state tutor-p-30 tutor-text-center">
-			<img src="http://tutorv2.local/wp-content/plugins/tutor/assets/images/empty-q&a.svg" alt="No Data Available in this Section" width="85%">
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/empty-q&a.svg' ); ?>" alt="No Data Available in this Section" width="85%">
 			<div class="tutor-text-regular-h6 tutor-color-text-subsued tutor-text-center tutor-mt-20">
 				No questions yet
 			</div>

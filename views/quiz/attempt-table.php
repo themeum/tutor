@@ -42,13 +42,10 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 					$incorrect = 0;
 					if ( is_array( $answers ) && count( $answers ) > 0 ) {
 						foreach ( $answers as $answer ) {
-							if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
+							if ( (bool) $answer->is_correct ) {
 								$correct++;
-							} else {
-								if ( 'open_ended' === $answer->question_type || 'short_answer' === $answer->question_type ) {
-								} else {
-									$incorrect++;
-								}
+							} else if(!($answer->is_correct===null)) {
+								$incorrect++;
 							}
 						}
 					}
@@ -177,7 +174,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									?>
 											<td data-th="<?php echo $column; ?>">
 												<span class="text-medium-caption tutor-color-text-primary">
-													<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '%)'; ?>
+													<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '% )'; ?>
 												</span>
 											</td>
 										<?php
@@ -187,8 +184,13 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									?>
 										<td data-th="<?php echo $column; ?>">
 											<?php
-												if ( $attempt->attempt_status === 'review_required' && !$attempt->is_manually_reviewed ) {
-													echo '<span class="tutor-badge-label label-warning">' . __( 'Pending', 'tutor' ) . '</span>';
+												$ans_array = is_array($answers) ? $answers : array();
+												$has_pending = count(array_filter($ans_array, function($ans){
+													return $ans->is_correct===null;
+												}));
+
+												if($has_pending){
+													echo '<span class="tutor-badge-label label-warning">'.__('Pending', 'tutor').'</span>';
 												} else {
 													echo $earned_percentage >= $passing_grade ?
 														'<span class="tutor-badge-label label-success">' . __( 'Pass', 'tutor' ) . '</span>' :
@@ -202,20 +204,20 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'details':
 									$url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
 									?>
-												<td data-th="See Details">
-													<div class="inline-flex-center td-action-btns">
-														<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+										<td data-th="<?php _e('See Details', 'tutor') ?>">
+											<div class="inline-flex-center td-action-btns">
+												<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
 													<?php
-													if ( $attempt->attempt_status === 'review_required' && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
-														esc_html_e( 'Review', 'tutor' );
-													} else {
-														esc_html_e( 'Details', 'tutor-pro' );
-													}
+														if ( $attempt->attempt_status === 'review_required' && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
+															esc_html_e( 'Review', 'tutor' );
+														} else {
+															esc_html_e( 'Details', 'tutor-pro' );
+														}
 													?>
-														</a>
-													</div>
-												</td>
-											<?php
+												</a>
+											</div>
+										</td>
+									<?php
 									break;
 							}
 						}
@@ -230,7 +232,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 							<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 						</td>
 					</tr>
-					<?php
+				<?php
 			}
 			?>
 		</tbody>
