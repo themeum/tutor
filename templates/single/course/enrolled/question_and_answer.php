@@ -19,7 +19,7 @@ if ( !$enable_q_and_a_on_course || $disable_qa_for_this_course == 'yes') {
 
 do_action('tutor_course/question_and_answer/before');
 
-echo '<h3>'.__('Question & Answer', 'tutor').'</h3>';
+echo '<div class="tutor-text-medium-h6 tutor-color-text-primary tutor-mb-20">'.__('Question & Answer', 'tutor').'</div>';
 
 // New qna form
 tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-new.php', array(

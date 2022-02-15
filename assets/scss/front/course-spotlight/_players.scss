@@ -1,40 +1,51 @@
 .tutor-course-single-content-wraper {
 	// Course content navigation
-	.tutor-single-course-content-prev,
-	.tutor-single-course-content-next {
+	.tutor-single-course-content-prev, .tutor-single-course-content-next {
 		cursor: pointer;
 		width: 31px;
-		height: 215px;
-		background: rgba(0, 0, 0, 0.185);
-		top: 0;
-		bottom: 0;
-		transform: translateY(-50%);
+		height: calc(100vh - 250px);
+		top: 60px;
 		position: absolute;
-		backdrop-filter: blur(94px);
-		margin: auto;
-		&:hover {
-			background: rgba(0, 0, 0, 0.247);
-		}
 
-		span {
-			font-size: 40px;
-			color: #ffffff8c;
+		a{
+			backdrop-filter: blur(94px);
+			margin: auto;
+			display: flex;
+			align-items: center;
+			height: 150px;
+			background: rgba(121, 121, 121, 0.479);
+
+			&:hover {
+				background: rgba(70, 70, 70, 0.479);
+			}
+
+			span {
+				font-size: 40px;
+				color: #ffffff8c;
+				margin: auto;
+				display: block;
+			}
 		}
 	}
 
 	.tutor-single-course-content-prev {
 		left: 0;
-		border-radius: 0px 6px 6px 0px;
+
+		a{
+			border-radius: 0px 6px 6px 0px;
+		}
 	}
 
 	.tutor-single-course-content-next {
 		right: 0;
-		border-radius: 6px 0px 0px 6px;
+
+		a{
+			border-radius: 6px 0px 0px 6px;
+		}
 	}
 
 	@include breakpoint-max(768) {
-		.tutor-single-course-content-prev,
-		.tutor-single-course-content-next {
+		.tutor-single-course-content-prev, .tutor-single-course-content-next {
 			width: 31px;
 			height: 120px;
 
@@ -46,10 +57,13 @@
 	}
 
 	.tutor-lesson-feature-image {
+		height: calc(100vh - 250px);
+		
 		img {
 			display: block;
 			width: auto;
 			height: auto;
+			max-height: 100%;
 			max-width: 100%;
 			margin: 0 auto;
 		}
