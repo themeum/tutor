@@ -65,6 +65,9 @@
 			}
 			.quiz-meta-info-right {
 				.quiz-time-remaining {
+					#tutor-quiz-time-update {
+						width: 40px;
+					}
 					.quiz-time-remaining-progress-circle {
 						svg {
 							width: 50px;
@@ -89,15 +92,17 @@
 						}
 					}
 					.quiz-time-remaining-expired-circle {
+						width: 40px;
 						svg {
 							width: 50px;
 							height: 50px;
 							margin-top: -4px;
 							circle {
+								-webkit-transform: translate(17px, 15px);
 								transform: translate(17px, 15px);
-								stroke: $design-danger;
-								stroke-dasharray: 44;
-								stroke-dasharray: 50;
+								stroke: #f44337;
+								stroke-dashoffset: 0;
+								stroke-dasharray: 75;
 								stroke-width: 2px;
 								fill: #ffffff;
 							}
@@ -324,6 +329,7 @@
 					cursor: pointer;
 					input {
 						margin-right: 8px;
+						margin-top: 1px;
 					}
 				}
 				.tutor-quiz-correct-ans {

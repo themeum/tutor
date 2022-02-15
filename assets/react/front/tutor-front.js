@@ -322,6 +322,10 @@ jQuery(document).ready(function($) {
 				}
 				time_now = time_now + 1000;
 				$tutor_quiz_time_update.html(countdown_human);
+				if(countdown_human == 'EXPIRED') {
+					$tutor_quiz_time_update.addClass('color-text-error');
+				}
+				
 
 				/**
 				 * dynamically update progress indicator
@@ -337,12 +341,18 @@ jQuery(document).ready(function($) {
 					let progress = Math.ceil((newDistance * 100 ) / totalTime);
 					let svgWrapper = document.querySelector('.quiz-time-remaining-progress-circle');
 					let svg = document.querySelector('.quiz-time-remaining-progress-circle svg');
+
+					let StrokeDashOffset = 44 - (44 * (progress / 100));
 					if ( progress <= 0 ) {
 						progress = 0;
 						// if time out red the progress circle
+						svgWrapper.innerHTML = `<svg viewBox="0 0 50 50" width="50" height="50">
+													<circle cx="0" cy="0" r="12"></circle>
+												</svg>`;
 						svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
 					}
-					svg.setAttribute('style', `--quizeProgress: ${100 - progress}`);
+					svg.setAttribute('style', `stroke-dashoffset: ${StrokeDashOffset};`);
+					// svg.setAttribute('style', `--quizeProgress: ${100 - progress}`);
 				}
 			}, 1000);
 
