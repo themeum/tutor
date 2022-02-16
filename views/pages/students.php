@@ -74,28 +74,28 @@ $filters = array(
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center tutor-color-text-subsued">
-					<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
-					<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
-				</div>
+					<div class="tutor-color-text-subsued">
+						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
+						<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center tutor-color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
-					<span class="tutor-icon-order-down-filled up-down-icon"></span>
-				</div>
+					<div class="tutor-color-text-subsued">
+						<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
+						<span class="tutor-icon-order-down-filled up-down-icon"></span>
+					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center tutor-color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
-					<span class="tutor-icon-order-down-filled up-down-icon"></span>
-				</div>
+					<div class="tutor-color-text-subsued">
+						<span class="text-regular-small"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
+						<span class="tutor-icon-order-down-filled up-down-icon"></span>
+					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
-				<div class="inline-flex-center tutor-color-text-subsued">
-					<span class="text-regular-small"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
-					<span class="tutor-icon-order-down-filled up-down-icon"></span>
-				</div>
+					<div class="tutor-color-text-subsued">
+						<span class="text-regular-small"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
+						<span class="tutor-icon-order-down-filled up-down-icon"></span>
+					</div>
 				</th>
 				<th class="tutor-shrink"></th>
 			</tr>

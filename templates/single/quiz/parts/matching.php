@@ -3,7 +3,7 @@
 		<?php
 			$rand_answers = tutor_utils()->get_answers_by_quiz_question( $question->question_id, true );
 		foreach ( $rand_answers as $rand_answer ) { ?>
-			<div class="" style="display:flex; flex-direction: column; row-gap: 80px;">
+			<div class="" style="display:flex; flex-direction: column; row-gap: 10px;">
 				<div class="tutor-draggable">
 					<div class="tutor-quiz-border-box" draggable="true">
 						<?php
@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<?php if ( 'image' === $rand_answer->answer_view_format || 'text_image' === $rand_answer->answer_view_format ) : ?>
-					<div>
+					<div class="tutor-mb-30">
 						<?php
 						if ( isset( $rand_answer->image_id ) ) :
 							$image_url = wp_get_attachment_url( $rand_answer->image_id );

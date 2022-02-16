@@ -26,6 +26,10 @@ $variations: (
 				color: #{$txtColor};
 			}
 
+			&:focus {
+				border-color: #{$txtColor};
+			}
+
 			.icon1:before {
 				content: '#{$icon}';
 			}
@@ -60,6 +64,10 @@ $variations: (
 		z-index: 1;
 		background: transparent;
 		cursor: pointer;
+
+		&:focus {
+			box-shadow: none;
+		}
 	}
 
 	> i {
