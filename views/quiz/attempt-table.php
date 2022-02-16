@@ -35,8 +35,11 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 				foreach ( $attempt_list as $attempt ) {
 					$attempt_action    = tutor_utils()->get_tutor_dashboard_page_permalink( 'my-quiz-attempts/attempts-details/?attempt_id=' . $attempt->attempt_id );
 					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
-					$passing_grade     = (int) tutor_utils()->get_quiz_option( $attempt->quiz_id, 'passing_grade', 0 );
 					$answers           = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
+
+					$attempt_info 	   = @unserialize($attempt->attempt_info);
+					$attempt_info	   = !is_array($attempt_info) ? array() : $attempt_info;
+					$passing_grade	   = isset($attempt_info['passing_grade']) ? (int)$attempt_info['passing_grade'] : 0;
 
 					$correct   = 0;
 					$incorrect = 0;
@@ -204,20 +207,20 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'details':
 									$url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
 									?>
-										<td data-th="<?php _e('See Details', 'tutor') ?>">
-											<div class="inline-flex-center td-action-btns">
-												<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
-													<?php
-														if ( $attempt->attempt_status === 'review_required' && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
-															esc_html_e( 'Review', 'tutor' );
-														} else {
-															esc_html_e( 'Details', 'tutor-pro' );
-														}
-													?>
-												</a>
-											</div>
-										</td>
-									<?php
+												<td data-th="See Details">
+													<div class="inline-flex-center td-action-btns">
+														<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+															<?php
+																if ( $attempt->attempt_status === 'review_required' && ( $context == 'frontend-dashboard-students-attempts' || $context == 'backend-dashboard-students-attempts' ) ) {
+																	esc_html_e( 'Review', 'tutor' );
+																} else {
+																	esc_html_e( 'Details', 'tutor-pro' );
+																}
+															?>
+														</a>
+													</div>
+												</td>
+											<?php
 									break;
 							}
 						}
@@ -232,7 +235,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 							<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 						</td>
 					</tr>
-				<?php
+					<?php
 			}
 			?>
 		</tbody>
