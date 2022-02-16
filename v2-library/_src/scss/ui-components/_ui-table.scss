@@ -5,7 +5,7 @@
 
 @include breakpoint-minmax(1200, 1400) {
 	.tutor-ui-table-wrapper {
-		overflow-x: auto;
+		// overflow-x: auto;
 	}
 }
 
@@ -88,6 +88,10 @@ table.tutor-ui-table {
 	// table utility (individual th/td)
 	.v-align-top {
 		vertical-align: top;
+		.tutor-form-check input.tutor-form-check-input {
+			margin-top: 4px;
+			margin-right: 0;
+		}
 	}
 
 	.v-align-middle {
