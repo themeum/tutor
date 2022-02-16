@@ -112,3 +112,14 @@
 		}
 	}
 } // .tutor-dropdown-select
+
+.wp-admin {
+	.tutor-dropdown-select-options-container.is-active {
+		+ .tutor-dropdown-select-selected {
+			border-color: $brand-wordpress;
+			&::after {
+				color: $brand-wordpress;
+			}
+		}
+	}
+}
