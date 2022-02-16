@@ -86,12 +86,12 @@ $filters = array(
 				<i class="tutor-icon-speaker-filled"></i>
 			</div>
 			<div>
-				<p class="text-regular-h5 tutor-color-text-primary">
-				<?php esc_html_e( 'Create a new announcement and notify your students about it', 'tutor' ); ?>
-				</p>
+				<div class="tutor-text-regular-h5 tutor-color-text-primary">
+					<?php esc_html_e( 'Create a new announcement and notify your students about it', 'tutor' ); ?>
+				</div>
 			</div>
 			<div class="new-announcement-button">
-				<button type="button" class="tutor-btn" data-tutor-modal-target="tutor_announcement_new">
+				<button type="button" class="tutor-btn tutor-btn-wordpress tutor-btn-lg" data-tutor-modal-target="tutor_announcement_new">
 					<?php esc_html_e( 'Add New Announcement', 'tutor' ); ?>
 				</button>
 			</div>

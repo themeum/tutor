@@ -468,3 +468,16 @@
 		text-decoration: underline;
 	}
 }
+
+.tutor-hover {
+	&-wp {
+		&:hover {
+			color: $brand-wordpress;
+		}
+	}
+	&-fd {
+		&:hover {
+			color: $color-brand;
+		}
+	}
+}
