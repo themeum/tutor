@@ -60,10 +60,13 @@ class Quiz_Attempts_List {
 	public function get_quiz_attempts_stat($instructor_id) {
 		global $wpdb;
 
-		$all 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL");
-		$pass 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND earned_marks>=total_marks AND attempt_status!='review_required'");
-		$fail 	 = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND earned_marks<total_marks AND attempt_status!='review_required'");
-		$pending = $wpdb->get_var("SELECT COUNT(attempt_id) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE attempt_ended_at IS NOT NULL AND attempt_status='review_required'");
+		// Get total attempt count. 
+		// Exclude incomplete attempts by checking if attempt_ended_at not null
+		$all = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', null, true );
+
+		$pass = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'pass', true );
+		$fail = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'fail', true );
+		$pending = tutor_utils()->get_quiz_attempts( 0, null, '', '', '', '', 'pending', true );
 
 		return compact('all', 'pass', 'fail', 'pending');
 	}
