@@ -349,8 +349,8 @@ jQuery(document).ready(function($) {
 					if ( progress <= 0 ) {
 						progress = 0;
 						// if time out red the progress circle
-						svgWrapper.innerHTML = `<svg viewBox="0 0 50 50" width="50" height="50">
-													<circle cx="0" cy="0" r="12"></circle>
+						svgWrapper.innerHTML = `<svg viewBox="0 0 30 30" width="30" height="30">
+													<circle cx="0" cy="0" r="10"></circle>
 												</svg>`;
 						svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
 					}
