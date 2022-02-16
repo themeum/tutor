@@ -181,8 +181,8 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 ?>
 
 <!-- Now Load The View -->
-	<div class="tutor-ui-table-wrap">
-		<table class="frontend-dashboard-announcement-table tutor-ui-table">
+	<div class="tutor-ui-table-wrapper">
+		<table class="tutor-ui-table tutor-ui-table-responsive frontend-dashboard-announcement-table">
 			<thead>
 				<tr>
 					<?php if ( is_admin() ) : ?>
@@ -226,7 +226,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 						?>
 						<tr id="<?php echo $row_id; ?>">
 							<?php if ( is_admin() ) : ?>
-								<td data-th="<?php esc_html_e( 'Select', 'tutor' ); ?>">
+								<td data-th="<?php esc_html_e( 'Select', 'tutor' ); ?>" class="v-align-top">
 									<div class="tutor-form-check">
 										<input
 											id="tutor-admin-list-<?php esc_attr_e( $announcement->ID ); ?>"
@@ -237,7 +237,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										/>
 									</div>
 								</td>
-								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" width="17%">
+								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" width="17%" class="v-align-top">
 									<div class="td-datetime">
 										<div class="tutor-text-medium-small tutor-color-text-primary"><?php echo esc_html( $date_format ); ?></div>
 										<div class="tutor-text-regular-small tutor-color-text-primary"><?php echo esc_html( $time_format ); ?></div>
@@ -265,7 +265,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
 								<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
 									<div class="inline-flex-center td-action-btns tutor-mr-5">
-										<button class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
+										<button class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
 											<?php esc_html_e( 'Details', 'tutor' ); ?>
 										</button>
 									</div>
