@@ -27,7 +27,14 @@
 
 // Table Base Structure
 table.tutor-ui-table {
-	margin: 0;
+	* {
+		box-sizing: border-box;
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+	}
 	&,
 	tr,
 	th,
@@ -39,7 +46,7 @@ table.tutor-ui-table {
 	.inline-flex-center {
 		display: inline-flex;
 		align-items: center;
-		justify-content: center;
+		// justify-content: center;
 	}
 
 	&.th-align-top {
@@ -174,7 +181,6 @@ table.tutor-ui-table {
 			padding: 10px;
 			white-space: nowrap;
 			height: 48px;
-			box-sizing: border-box;
 		}
 
 		td {
@@ -430,7 +436,7 @@ table.tutor-ui-table {
 		.btn-detail-link {
 			font-size: 24px;
 			margin-left: -5px;
-			margin-top: 3px;
+			// margin-top: 3px;
 		}
 	}
 
@@ -776,6 +782,12 @@ table.tutor-ui-table-data-td-target {
 				box-shadow: 0 2px 0 -1px $black-03, 0 -2px 0 -1px $black-03;
 			}
 		}
+
+		.list-item-checklist {
+			input.tutor-form-check-input {
+				margin-top: 4px;
+			}
+		}
 	}
 }
 
@@ -857,3 +869,15 @@ table.tutor-ui-table {
 		}
 	}
 } // end of table.tutor-ui-table
+
+// wp-admin tutor-ui-table detail-link-btn
+.wp-admin {
+	table.tutor-ui-table {
+		.tutor-icon-detail-link-filled {
+			color: $black-40;
+			&:hover {
+				color: $brand-wordpress;
+			}
+		}
+	}
+}
