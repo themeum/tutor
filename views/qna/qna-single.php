@@ -98,57 +98,59 @@
 		<?php endif; ?>
 
 		<!-- Show  question anaswer. Both the root level question and reply will go in single loop. Just first one will be considered as root questoin. -->
-		<div class="tutor-qa-chatlist">
-			<?php
-				$current_user_id = get_current_user_id();
-				$avata_url       = array();
-				$is_single       = in_array( $context, array( 'course-single-qna-sidebar', 'course-single-qna-single' ) );
+		<div class="tutor-qa-reply-wrapper">
+			<div class="tutor-qa-chatlist">
+				<?php
+					$current_user_id = get_current_user_id();
+					$avata_url       = array();
+					$is_single       = in_array( $context, array( 'course-single-qna-sidebar', 'course-single-qna-single' ) );
 
-			if ( is_array( $answers ) && count( $answers ) ) {
-				$reply_count = count( $answers ) - 1;
-				foreach ( $answers as $answer ) {
-					if ( ! isset( $avata_url[ $answer->user_id ] ) ) {
-						// Get avatar url if not already got
-						$avata_url[ $answer->user_id ] = get_avatar_url( $answer->user_id );
+				if ( is_array( $answers ) && count( $answers ) ) {
+					$reply_count = count( $answers ) - 1;
+					foreach ( $answers as $answer ) {
+						if ( ! isset( $avata_url[ $answer->user_id ] ) ) {
+							// Get avatar url if not already got
+							$avata_url[ $answer->user_id ] = get_avatar_url( $answer->user_id );
+						}
+
+						$css_class = ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
+						$css_style = ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
+						?>
+							<div class="tutor-qna-chat <?php echo $css_class; ?> " style="<?php echo $css_style; ?>">
+								<div class="tutor-qna-user">
+									<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
+									<div>
+										<div class="tutor-text-medium-h6 tutor-color-text-title">
+											<?php echo $answer->display_name; ?>
+										</div>
+										<div class="tutor-text-regular-caption tutor-color-text-hints">
+											<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
+										</div>
+									</div>
+								</div>
+
+								<div class="tutor-qna-text tutor-text-regular-caption">
+									<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
+								</div>
+
+							<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
+									<div class="tutor-toggle-reply">
+										<span><?php _e( 'Reply', 'tutor' ); ?> <?php echo $reply_count ? '(' . $reply_count . ')' : ''; ?></span>
+									</div>
+								<?php endif; ?>
+							</div>
+							<?php
 					}
-
-					$css_class = ( $current_user_id != $answer->user_id || $answer->comment_parent == 0 ) ? 'tutor-qna-left' : 'tutor-qna-right';
-					$css_style = ( $is_single && $answer->comment_parent != 0 ) ? 'margin-left:14%;' . $reply_hidden : '';
-					?>
-						<div class="tutor-qna-chat <?php echo $css_class; ?> " style="<?php echo $css_style; ?>">
-							<div class="tutor-qna-user">
-								<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
-								<div>
-									<div class="tutor-text-medium-h6 tutor-color-text-title">
-										<?php echo $answer->display_name; ?>
-									</div>
-									<div class="tutor-text-regular-caption tutor-color-text-hints text-muted">
-										<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
-									</div>
-								</div>
-							</div>
-
-							<div class="tutor-qna-text tutor-text-regular-caption">
-								<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
-							</div>
-
-						<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
-								<div class="tutor-toggle-reply">
-									<span><?php _e( 'Reply', 'tutor' ); ?> <?php echo $reply_count ? '(' . $reply_count . ')' : ''; ?></span>
-								</div>
-							<?php endif; ?>
-						</div>
-						<?php
 				}
-			}
-			?>
-		</div>
-		<div class="tutor-qa-reply tutor-mt-10 tutor-mb-5" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
-			<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
-			<div class="tutor-bs-d-flex tutor-bs-justify-content-end tutor-bs-align-items-center">
-				<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm tutor-ml-15">
-					<?php esc_html_e( 'Reply', 'tutor' ); ?> 
-				</button>
+				?>
+			</div>
+			<div class="tutor-qa-reply tutor-mt-10 tutor-mb-5" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
+				<div class="tutor-bs-d-flex tutor-bs-align-items-center">
+					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
+						<?php esc_html_e( 'Reply', 'tutor' ); ?> 
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -160,9 +162,9 @@
 			<div class="tutor-qna-admin-sidebar">
 				<div class="tutor-qna-user">
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
-					<h2><?php echo $question->display_name; ?></h2>
-					<strong><?php echo $question->user_email; ?></strong>
-					<div class="tutor-user-social tutor-bs-d-flex tutor-mt-25" style="column-gap: 21px;">
+					<div class="tutor-text-medium-h4 tutor-color-text-primary tutor-mt-22"><?php echo $question->display_name; ?></div>
+					<div class="tutor-text-medium-body tutor-color-text-subsued tutor-mt-3"><?php echo $question->user_email; ?></div>
+					<div class="tutor-user-social tutor-bs-d-flex tutor-mt-24" style="column-gap: 21px;">
 						<?php 
 							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 
@@ -174,7 +176,7 @@
 								}
 						?>
 							<a href="<?php echo esc_url( $url ); ?>">
-								<i class="color-text-hints <?php echo esc_attr( $social_icon['icon_classes'] ); ?>"></i>
+								<i class="color-text-hints <?php echo esc_attr( $social_icon['icon_classes'] ); ?> tutor-icon-20 tutor-hover-wp"></i>
 							</a>
 						<?php endforeach;?>
 					</div>

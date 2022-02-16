@@ -83,7 +83,7 @@ body {
 	}
 	border: 1px solid #dcdbdc;
 	border-radius: 6px;
-	padding: 27px 35px 27px 30px;
+	padding: 15px;
 	margin-bottom: 15px;
 
 	& > *:first-child {
@@ -98,9 +98,15 @@ body {
 		}
 
 		p {
+			// font-size: 20px;
+			// line-height: 26px;
+			// margin: 0;
+		}
+	}
+
+	@include breakpoint-max(1300) {
+		.tutor-text-regular-h5 {
 			font-size: 20px;
-			line-height: 26px;
-			margin: 0;
 		}
 	}
 }
