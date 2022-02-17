@@ -130,7 +130,7 @@
 								</div>
 
 								<div class="tutor-qna-text tutor-text-regular-caption">
-									<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
+									<?php echo htmlspecialchars( stripslashes( $answer->comment_content ) ); ?>
 								</div>
 
 							<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
