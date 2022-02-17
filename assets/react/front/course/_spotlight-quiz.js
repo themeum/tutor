@@ -234,6 +234,39 @@ window.jQuery(document).ready($=>{
         }
     });
 
+	$(document).on('click', '.tutor-quiz-question-paginate-item', function(e) {
+		e.preventDefault();
+		var $that = $(this);
+		var $question = $($that.attr('href'));
+		$('.quiz-attempt-single-question').hide();
+		$question.show();
+
+		//Active Class
+		$('.tutor-quiz-question-paginate-item').removeClass('active');
+		$that.addClass('active');
+	});
+
+	/**
+	 * Limit Short Answer Question Type
+	 */
+     $(document).on('keyup', 'textarea.question_type_short_answer, textarea.question_type_open_ended', function(e) {
+		var $that = $(this);
+		var value = $that.val();
+		var limit = $that.hasClass('question_type_short_answer')
+			? _tutorobject.quiz_options.short_answer_characters_limit
+			: _tutorobject.quiz_options.open_ended_answer_characters_limit;
+		var remaining = limit - value.length;
+
+		if (remaining < 1) {
+			$that.val(value.substr(0, limit));
+			remaining = 0;
+		}
+        
+		$that
+			.closest('.tutor-quiz-answers-wrap')
+			.find('.characters_remaining')
+			.html(remaining);
+	});
 
     $(document).on('submit', '#tutor-answering-quiz', function (e) {
         var $questions_wrap = $('.quiz-attempt-single-question');
@@ -258,6 +291,7 @@ window.jQuery(document).ready($=>{
             quizSubmitBtn.disabled = true;
         }, 500);
     });
+    
     $(".tutor-quiz-submit-btn").click(function() {
         $("#tutor-answering-quiz").submit();
     });

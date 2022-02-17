@@ -6,6 +6,11 @@ import './pages/course-landing';
 import './pages/instructor-list-filter';
 import './_select_dd_search';
 
+/**
+ * Codes from this file should be decentralized according to relavent file/folder structure.
+ * It's a legacy file. 
+ */
+
 readyState_complete(() => {
 	Object.entries(document.getElementsByTagName('a')).forEach((item) => {
 		let urlString = item[1].getAttribute('href');
@@ -201,180 +206,6 @@ jQuery(document).ready(function($) {
 		$('.tutor-add-question-wrap').toggle();
 	});
 
-	/**
-	 * Quiz attempt
-	 */
-	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
-	var attempt_settings = null;
-
-	if ($tutor_quiz_time_update.length) {
-		attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
-		var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
-		if (attempt_meta.time_limit.time_limit_seconds > 0) {
-
-			//No time Zero limit for
-			var countDownDate =
-				new Date(attempt_settings.attempt_started_at).getTime() + attempt_meta.time_limit.time_limit_seconds * 1000;
-			//var countDownDate = new Date(attempt_settings.attempt_started_at).getTime() + Number(quiz_duration);
-			var time_now = new Date(attempt_meta.date_time_now).getTime();
-
-			var tutor_quiz_interval = setInterval(function() {
-				// let i = 1;
-				// i++
-				var distance = countDownDate - time_now;
-				// let timeProgress = (distance/100) * i;
-				var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-				var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-				var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-				var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-				var countdown_human = '';
-
-				if (days) {
-					countdown_human += days + 'd ';
-				}
-				if (hours) {
-					countdown_human += hours + 'h ';
-				}
-				if (minutes) {
-					countdown_human += minutes + 'm ';
-				}
-				if (seconds) {
-					countdown_human += seconds + 's ';
-				}
-				countdown_human = '' == countdown_human ? '0s' : countdown_human;
-
-				if (distance < 0) {
-					clearInterval(tutor_quiz_interval);
-					$tutor_quiz_time_update.toggleClass('tutor-quiz-time-expired');
-
-					countdown_human = 'EXPIRED';
-					//Set the quiz attempt to timeout in ajax
-					if (_tutorobject.quiz_options.quiz_when_time_expires === 'auto_submit') {
-						/**
-						 * Auto Submit
-						 */
-						$('form#tutor-answering-quiz').submit();
-					} else if (_tutorobject.quiz_options.quiz_when_time_expires === 'auto_abandon') {
-						/**
-						 *
-						 * @type {jQuery}
-						 *
-						 * Current attempt will be cancel with attempt status attempt_timeout
-						 */
-
-						var quiz_id = $('#tutor_quiz_id').val();
-						var tutor_quiz_remaining_time_secs = $('#tutor_quiz_remaining_time_secs').val();
-						var quiz_timeout_data = { quiz_id: quiz_id, action: 'tutor_quiz_timeout' };
-
-						//disable buttons
-						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').addClass(
-							'tutor-btn-disable tutor-no-hover'
-						);
-						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').prop(
-							'disabled',
-							true
-						);
-
-						//add alert text
-						$('.time-remaining span').css('color', '#F44337');
-
-						$.ajax({
-							url: _tutorobject.ajaxurl,
-							type: 'POST',
-							data: quiz_timeout_data,
-							success: function(data) {
-								var attemptAllowed = $('#tutor-quiz-time-expire-wrapper').data('attempt-allowed');
-								var attemptRemaining = $('#tutor-quiz-time-expire-wrapper').data('attempt-remaining');
-
-								var alertDiv = '#tutor-quiz-time-expire-wrapper';
-								$(alertDiv).addClass('tutor-alert-show');
-								// if attempt remaining
-								if (attemptRemaining > 0) {
-									$(`${alertDiv} .tutor-quiz-alert-text`).html(
-										__(
-											'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' +
-												attemptRemaining +
-												'/' +
-												attemptAllowed,
-											'tutor'
-										)
-									);
-								} else {
-									// if attempt not remaining
-									if ($(alertDiv).hasClass('time-remaining-warning')) {
-										$(alertDiv).removeClass('time-remaining-warning');
-										$(alertDiv).addClass('time-over');
-									}
-									if (
-										$(`${alertDiv} .flash-info span:first-child`).hasClass('tutor-icon-warning-outline-circle-filled')
-									) {
-										$(`${alertDiv} .flash-info span:first-child`).removeClass(
-											'tutor-icon-warning-outline-circle-filled'
-										);
-										$(`${alertDiv} .flash-info span:first-child`).addClass('tutor-icon-cross-circle-outline-filled');
-									}
-									$tutor_quiz_time_update.toggleClass('tutor-quiz-time-expired');
-									$('#tutor-start-quiz').hide();
-									$(`${alertDiv} .tutor-quiz-alert-text`).html(
-										`${__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')}`
-									);
-								}
-							},
-							complete: function() {},
-						});
-					}
-				}
-				time_now = time_now + 1000;
-				$tutor_quiz_time_update.html(countdown_human);
-				if(countdown_human == 'EXPIRED') {
-					$tutor_quiz_time_update.addClass('color-text-error');
-				}
-				
-
-				/**
-				 * dynamically update progress indicator
-				 *
-				 * @since v2.0.0
-				 */
-				if ( distance ) {
-					// convert distance in sec
-					let newDistance = distance / 1000;
-					// get total time duration in sec
-					let totalTime = attempt_meta.time_limit.time_limit_seconds;
-					//calculate progress
-					let progress = Math.ceil((newDistance * 100 ) / totalTime);
-					let svgWrapper = document.querySelector('.quiz-time-remaining-progress-circle');
-					let svg = document.querySelector('.quiz-time-remaining-progress-circle svg');
-
-					if(svg && svgWrapper) {
-						let StrokeDashOffset = 44 - (44 * (progress / 100));
-						if ( progress <= 0 ) {
-							progress = 0;
-							// if time out red the progress circle
-							svgWrapper.innerHTML = `<svg viewBox="0 0 50 50" width="50" height="50">
-														<circle cx="0" cy="0" r="12"></circle>
-													</svg>`;
-							svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
-						}
-						svg.setAttribute('style', `stroke-dashoffset: ${StrokeDashOffset};`);
-						// svg.setAttribute('style', `--quizeProgress: ${100 - progress}`);
-					}
-				}
-			}, 1000);
-
-		} else {
-			$tutor_quiz_time_update.html(__('No Limit', 'tutor'));
-		}
-	}
-
-	var $quiz_start_form = $('#tutor-quiz-body form#tutor-start-quiz');
-	if ($quiz_start_form.length) {
-		if (_tutorobject.quiz_options.quiz_auto_start === '1') {
-			$quiz_start_form.submit();
-		}
-	}
-
 	// Quiz Review : Tooltip
 	$('.tooltip-btn').on('hover', function(e) {
 		$(this).toggleClass('active');
@@ -503,40 +334,7 @@ jQuery(document).ready(function($) {
 		$('.tutor-tabs-btn-group a').removeClass('active');
 		$that.addClass('active');
 	});
-
-	$(document).on('click', '.tutor-quiz-question-paginate-item', function(e) {
-		e.preventDefault();
-		var $that = $(this);
-		var $question = $($that.attr('href'));
-		$('.quiz-attempt-single-question').hide();
-		$question.show();
-
-		//Active Class
-		$('.tutor-quiz-question-paginate-item').removeClass('active');
-		$that.addClass('active');
-	});
-
-	/**
-	 * Limit Short Answer Question Type
-	 */
-	$(document).on('keyup', 'textarea.question_type_short_answer, textarea.question_type_open_ended', function(e) {
-		var $that = $(this);
-		var value = $that.val();
-		var limit = $that.hasClass('question_type_short_answer')
-			? _tutorobject.quiz_options.short_answer_characters_limit
-			: _tutorobject.quiz_options.open_ended_answer_characters_limit;
-		var remaining = limit - value.length;
-
-		if (remaining < 1) {
-			$that.val(value.substr(0, limit));
-			remaining = 0;
-		}
-		$that
-			.closest('.tutor-quiz-answers-wrap')
-			.find('.characters_remaining')
-			.html(remaining);
-	});
-
+	
 	/**
 	 *
 	 * @type {jQuery}
