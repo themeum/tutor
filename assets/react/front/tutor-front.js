@@ -211,7 +211,6 @@ jQuery(document).ready(function($) {
 		attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
 		var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
 		if (attempt_meta.time_limit.time_limit_seconds > 0) {
-
 			//No time Zero limit for
 			var countDownDate =
 				new Date(attempt_settings.attempt_started_at).getTime() + attempt_meta.time_limit.time_limit_seconds * 1000;
@@ -269,11 +268,11 @@ jQuery(document).ready(function($) {
 
 						//disable buttons
 						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').addClass(
-							'tutor-btn-disable tutor-no-hover'
+							'tutor-btn-disable tutor-no-hover',
 						);
 						$('.tutor-quiz-answer-next-btn, .tutor-quiz-submit-btn, .tutor-quiz-answer-previous-btn').prop(
 							'disabled',
-							true
+							true,
 						);
 
 						//add alert text
@@ -297,8 +296,8 @@ jQuery(document).ready(function($) {
 												attemptRemaining +
 												'/' +
 												attemptAllowed,
-											'tutor'
-										)
+											'tutor',
+										),
 									);
 								} else {
 									// if attempt not remaining
@@ -310,14 +309,14 @@ jQuery(document).ready(function($) {
 										$(`${alertDiv} .flash-info span:first-child`).hasClass('tutor-icon-warning-outline-circle-filled')
 									) {
 										$(`${alertDiv} .flash-info span:first-child`).removeClass(
-											'tutor-icon-warning-outline-circle-filled'
+											'tutor-icon-warning-outline-circle-filled',
 										);
 										$(`${alertDiv} .flash-info span:first-child`).addClass('tutor-icon-cross-circle-outline-filled');
 									}
 									$tutor_quiz_time_update.toggleClass('tutor-quiz-time-expired');
 									$('#tutor-start-quiz').hide();
 									$(`${alertDiv} .tutor-quiz-alert-text`).html(
-										`${__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')}`
+										`${__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')}`,
 									);
 								}
 							},
@@ -327,29 +326,28 @@ jQuery(document).ready(function($) {
 				}
 				time_now = time_now + 1000;
 				$tutor_quiz_time_update.html(countdown_human);
-				if(countdown_human == 'EXPIRED') {
+				if (countdown_human == 'EXPIRED') {
 					$tutor_quiz_time_update.addClass('color-text-error');
 				}
-				
 
 				/**
 				 * dynamically update progress indicator
 				 *
 				 * @since v2.0.0
 				 */
-				if ( distance ) {
+				if (distance) {
 					// convert distance in sec
 					let newDistance = distance / 1000;
 					// get total time duration in sec
 					let totalTime = attempt_meta.time_limit.time_limit_seconds;
 					//calculate progress
-					let progress = Math.ceil((newDistance * 100 ) / totalTime);
+					let progress = Math.ceil((newDistance * 100) / totalTime);
 					let svgWrapper = document.querySelector('.quiz-time-remaining-progress-circle');
 					let svg = document.querySelector('.quiz-time-remaining-progress-circle svg');
 
-					if(svg && svgWrapper) {
-						let StrokeDashOffset = 44 - (44 * (progress / 100));
-						if ( progress <= 0 ) {
+					if (svg && svgWrapper) {
+						let StrokeDashOffset = 44 - 44 * (progress / 100);
+						if (progress <= 0) {
 							progress = 0;
 							// if time out red the progress circle
 							svgWrapper.innerHTML = `<svg viewBox="0 0 50 50" width="50" height="50">
@@ -362,7 +360,6 @@ jQuery(document).ready(function($) {
 					}
 				}
 			}, 1000);
-
 		} else {
 			$tutor_quiz_time_update.html(__('No Limit', 'tutor'));
 		}
@@ -646,7 +643,7 @@ jQuery(document).ready(function($) {
 					tutor_toast(
 						__('Request Successful', 'tutor'),
 						__('Your request has been submitted. Please wait for the administrator’s response.', 'tutor'),
-						'success'
+						'success',
 					);
 					setTimeout(function() {
 						location.reload();
@@ -764,7 +761,7 @@ jQuery(document).ready(function($) {
 			.html(
 				$(this)
 					.val()
-					.replace(/.*(\/|\\)/, '')
+					.replace(/.*(\/|\\)/, ''),
 			);
 	});
 
@@ -781,7 +778,7 @@ jQuery(document).ready(function($) {
 			var $parent = $that.closest('.tutor-topics-in-single-lesson');
 			$parent.toggleClass('tutor-topic-active');
 			$parent.find('.tutor-lessons-under-topic').slideToggle();
-		}
+		},
 	);
 
 	$('.tutor-single-lesson-items.active')
@@ -1135,7 +1132,7 @@ jQuery(document).ready(function($) {
 						title: __('Abandon Quiz?', 'tutor'),
 						description: __(
 							'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.',
-							'tutor'
+							'tutor',
 						),
 						buttons: {
 							keep: {
