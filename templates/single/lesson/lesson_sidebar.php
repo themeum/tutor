@@ -90,9 +90,9 @@ $is_user_admin                = current_user_can( 'administrator' );
 								</div>
 								<div class="tutor-topics-title-right">
 									<?php if ( isset( $total_contents['contents'] ) && $total_contents['contents'] > 0 ) : ?>
-										<p class="tutor-topic-subtitle tutor-text-regular-caption tutor-color-text-subsued">
+										<div class="tutor-topic-subtitle tutor-text-regular-caption tutor-color-text-subsued">
 											<?php echo esc_html( isset( $total_contents['completed'] ) ? $total_contents['completed'] : 0 ); ?>/<?php echo esc_html( isset( $total_contents['contents'] ) ? $total_contents['contents'] : 0 ); ?>
-										</p>
+										</div>
 									<?php endif; ?>
 								</div>
 							</div>

@@ -48,7 +48,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
 <?php if ( $is_enrolled ) : ?>
 	<div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
-		<div class="tutor-topbar-left-item tutor-bs-d-flex"> 
+		<div class="tutor-topbar-left-item tutor-bs-d-flex">
 			<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
 				<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
 					<span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
@@ -75,7 +75,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 					</span>
 					<span class="text-bold-caption">
 						<?php echo $course_stats['completed_count']; ?>
-					</span> 
+					</span>
 					<?php _e( 'of ', 'tutor' ); ?>
 					<span class="text-bold-caption">
 						<?php echo $course_stats['total_count']; ?>
@@ -137,40 +137,54 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 
 <!-- Load Lesson Video -->
 <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ) ); ?>">
-<?php tutor_lesson_video(); ?>
+<?php tutor_lesson_video();
+
+$referer_url        = isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'';
+$referer_comment_id = explode( '#', $_SERVER['REQUEST_URI'] );
+$url_components     = parse_url( $referer_url );
+isset( $url_components['query'] ) ? parse_str( $url_components['query'], $output ) : null;
+$page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset($output['page_tab']) ?$output['page_tab']: null );
+?>
+
+<style>
+.tutor-actual-comment.viewing{
+	box-shadow: 0 0 10px #cdcfd5;
+	animation: blinkComment 1s infinite;
+}
+@keyframes blinkComment { 50% { box-shadow:0 0 0px #ffffff; }  }
 
 </style>
 <div class="tutor-course-spotlight-wrapper">
 	<div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
 		<div class="tab-header tutor-bs-d-flex justify-content-center">
-			<div class="tab-header-item flex-center is-active" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-1">
+			<div class="tab-header-item flex-center<?php echo (!isset($page_tab) || 'overview'==$page_tab) ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-1" data-tutor-query-string="overview">
 				<span class="tutor-icon-document-alt-filled"></span>
 				<span><?php _e( 'Overview', 'tutor' ); ?></span>
 			</div>
-			<div class="tab-header-item flex-center" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-2">
+			<div class="tab-header-item flex-center<?php echo 'files'==$page_tab ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-2" data-tutor-query-string="files">
 				<span class="tutor-icon-attach-filled"></span>
 				<span><?php _e( 'Exercise Files', 'tutor' ); ?></span>
 			</div>
 			<?php if ( $is_comment_enabled ) : ?>
-				<div class="tab-header-item flex-center" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-3">
+				<div class="tab-header-item flex-center<?php echo 'comments'==$page_tab ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-3" data-tutor-query-string="comments">
 					<span class="tutor-icon-comment-filled"></span>
 					<span><?php _e( 'Comments', 'tutor' ); ?></span>
 				</div>
 			<?php endif; ?>
 		</div>
 		<div class="tab-body">
-			<div class="tab-body-item is-active" id="tutor-course-spotlight-tab-1">
+			<div class="tab-body-item<?php echo (!isset($page_tab) || 'overview'==$page_tab) ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-1" data-tutor-query-string-content="overview">
 				<div class="text-medium-h6 tutor-color-text-primary"><?php _e( 'About Lesson', 'tutor' ); ?></div>
 				<div class="text-regular-body tutor-color-text-subsued tutor-mt-12">
 					<?php the_content(); ?>
 				</div>
 			</div>
-			<div class="tab-body-item" id="tutor-course-spotlight-tab-2">
+			<div class="tab-body-item<?php echo 'files'==$page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-2" data-tutor-query-string-content="files">
 				<div class="text-medium-h6 tutor-color-text-primary"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
 				<?php get_tutor_posts_attachments(); ?>
 			</div>
 			<?php if ( $is_comment_enabled ) : ?>
-				<div class="tab-body-item" id="tutor-course-spotlight-tab-3">
+				<div class="tab-body-item<?php echo 'comments'==$page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-3" data-tutor-query-string-content="comments">
 					<?php require __DIR__ . '/comment.php'; ?>
 				</div>
 			<?php endif; ?>
