@@ -5332,20 +5332,28 @@ class Utils {
 		$date_filter    = $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
 		$date_filter    = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
 		$result_clause  = '';
-		$select_columns = $count_only ? 'COUNT(quiz_attempts.attempt_id)' : 'quiz_attempts.*, quiz.*, users.*';
+		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.*, users.*';
 		$limit_offset   = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		
+		$pass_mark      = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
+		$pending_count  = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
 
 		switch ( $result_state ) {
-			case 'pass':
-				$result_clause = ' AND quiz_attempts.earned_marks>=quiz_attempts.total_marks AND quiz_attempts.attempt_status!=\'review_required\' ';
+			case 'pass': 
+				// Just check if the earned mark is greater than pass mark
+				// It doesn't matter if there is any pending or failed question
+				$result_clause = " AND quiz_attempts.earned_marks>={$pass_mark}  ";
 				break;
 
 			case 'fail':
-				$result_clause = ' AND quiz_attempts.earned_marks<quiz_attempts.total_marks AND quiz_attempts.attempt_status!=\'review_required\' ';
+				// Check if earned marks is less than pass mark and there is no pending question
+				// 
+				$result_clause = " AND quiz_attempts.earned_marks<{$pass_mark} 
+								   AND {$pending_count}=0 ";
 				break;
 
 			case 'pending':
-				$result_clause = ' AND quiz_attempts.attempt_status=\'review_required\'';
+				$result_clause = " AND {$pending_count}>0 ";
 				break;
 		}
 
@@ -5355,7 +5363,8 @@ class Utils {
 					INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
 					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
-			WHERE 	quiz_attempts.attempt_status != %s
+					INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
+			WHERE 	quiz_attempts.attempt_ended_at IS NOT NULL
 					AND (
 							users.user_email LIKE %s
 							OR users.display_name LIKE %s
