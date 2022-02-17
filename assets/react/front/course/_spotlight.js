@@ -1,5 +1,5 @@
 import ajaxHandler from '../../admin-dashboard/segments/filter';
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	$('.tutor-sortable-list').sortable();
 });
 
@@ -19,9 +19,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		});
 	}
 
-	const sidebarTabeHandler = function(sideBarTabs) {
+	const sidebarTabeHandler = function (sideBarTabs) {
 		const tabWrapper = document.querySelector('.tutor-desktop-sidebar-area');
-		if (tabWrapper.children.length < 2) return;
+
+		if (null !== tabWrapper && tabWrapper.children.length < 2) {
+			return;
+		}
 
 		sideBarTabs.forEach((tab) => {
 			tab.addEventListener('click', (event) => {
@@ -32,7 +35,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				tabConent.querySelector('#' + id).classList.add('active');
 			});
 		});
-		const clearActiveClass = function(tabConent) {
+		const clearActiveClass = function (tabConent) {
 			for (let i = 0; i < sideBarTabs.length; i++) {
 				sideBarTabs[i].classList.remove('active');
 			}
@@ -133,27 +136,27 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			});
 		}
 
-		if ( null !== params.page_tab && 'comments' === params.page_tab) {
+		if (null !== params.page_tab && 'comments' === params.page_tab) {
 			openAppropiateTabsAndContent();
 		}
 
 		setTimeout(() => {
 			let lesson_comment_id = window.location.hash.replace('#', '');
-			lesson_comment_id = 'lesson-'+lesson_comment_id;
+			lesson_comment_id = 'lesson-' + lesson_comment_id;
 			if (lesson_comment_id) {
-				let lesson_comment_elem = document.getElementById(""+lesson_comment_id+"");
-				if(null !== lesson_comment_elem){
+				let lesson_comment_elem = document.getElementById("" + lesson_comment_id + "");
+				if (null !== lesson_comment_elem) {
 					lesson_comment_elem.scrollIntoView();
 					lesson_comment_elem.querySelector('.tutor-actual-comment').classList.add('viewing');
-					setTimeout(()=>{
+					setTimeout(() => {
 						lesson_comment_elem.querySelector('.tutor-actual-comment').classList.remove('viewing');
-					},2999)
+					}, 2999)
 				}
 				if (null === params.page_tab || 'comments' === params.page_tab) {
 					openAppropiateTabsAndContent();
 				}
 			}
-		},99)
+		}, 99)
 	}
 	/* commenting */
 
@@ -180,7 +183,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		this.classList.add('tutor-drop-over');
 		event.preventDefault();
 	}
-	function dragEnter() {}
+	function dragEnter() { }
 	function dragLeave() {
 		this.classList.remove('tutor-drop-over');
 	}
