@@ -206,10 +206,12 @@ jQuery(document).ready(function($) {
 	 */
 	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
 	var attempt_settings = null;
+
 	if ($tutor_quiz_time_update.length) {
 		attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
 		var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
 		if (attempt_meta.time_limit.time_limit_seconds > 0) {
+
 			//No time Zero limit for
 			var countDownDate =
 				new Date(attempt_settings.attempt_started_at).getTime() + attempt_meta.time_limit.time_limit_seconds * 1000;
@@ -345,17 +347,19 @@ jQuery(document).ready(function($) {
 					let svgWrapper = document.querySelector('.quiz-time-remaining-progress-circle');
 					let svg = document.querySelector('.quiz-time-remaining-progress-circle svg');
 
-					let StrokeDashOffset = 44 - (44 * (progress / 100));
-					if ( progress <= 0 ) {
-						progress = 0;
-						// if time out red the progress circle
-						svgWrapper.innerHTML = `<svg viewBox="0 0 30 30" width="30" height="30">
-													<circle cx="0" cy="0" r="10"></circle>
-												</svg>`;
-						svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
+					if(svg && svgWrapper) {
+						let StrokeDashOffset = 44 - (44 * (progress / 100));
+						if ( progress <= 0 ) {
+							progress = 0;
+							// if time out red the progress circle
+							svgWrapper.innerHTML = `<svg viewBox="0 0 50 50" width="50" height="50">
+														<circle cx="0" cy="0" r="11"></circle>
+													</svg>`;
+							svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
+						}
+						svg.setAttribute('style', `stroke-dashoffset: ${StrokeDashOffset};`);
+						// svg.setAttribute('style', `--quizeProgress: ${100 - progress}`);
 					}
-					svg.setAttribute('style', `stroke-dashoffset: ${StrokeDashOffset};`);
-					// svg.setAttribute('style', `--quizeProgress: ${100 - progress}`);
 				}
 			}, 1000);
 
