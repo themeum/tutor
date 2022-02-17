@@ -13,6 +13,7 @@ $field_label      = esc_attr( $field['label'] );
 $default          = isset( $field_default ) ? esc_attr( $field_default ) : esc_attr( 'off' );
 $option_value     = $this->get( esc_attr( $field_key . '.' . $field_event ), $default );
 $field_key_event  = sanitize_key( $field_key . '_' . $field_event );
+$field_key_title  = $field_key . ' --> ' . $field_event;
 $field_template   = sanitize_key( $field['template'] );
 $field_id         = sanitize_key( 'field_' . $field_key_event );
 $tooltip_desc     = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
@@ -27,6 +28,8 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . esc_attr( $field_label 
 			<div class="tooltip-wrap tooltip-icon">
 				<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $tooltip_desc ); ?></span>
 			</div>
+			<span style="white-space: nowrap;"><?php //echo $field_key_title;?></span>
+
 		<?php } ?>
 	</div>
 	<div class="tutor-option-field-input d-flex has-btn-after">

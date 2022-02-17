@@ -113,7 +113,7 @@ class Quiz {
 			if ( is_array( $unserialized ) ) {
 				$unserialized['instructor_feedback'] = $feedback;
 
-				do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_details );
+				do_action( 'tutor_quiz/attempt/submitted/feedback', $attempt_details->attempt_id );
 
 				$update = self::update_attempt_info( $attempt_details->attempt_id, serialize( $unserialized ) );
 				if ( $update ) {
