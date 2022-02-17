@@ -444,7 +444,7 @@ jQuery(document).ready(function($) {
 					tutor_toast(
 						__('Request Successful', 'tutor'),
 						__('Your request has been submitted. Please wait for the administrator’s response.', 'tutor'),
-						'success'
+						'success',
 					);
 					setTimeout(function() {
 						location.reload();
@@ -562,7 +562,7 @@ jQuery(document).ready(function($) {
 			.html(
 				$(this)
 					.val()
-					.replace(/.*(\/|\\)/, '')
+					.replace(/.*(\/|\\)/, ''),
 			);
 	});
 
@@ -579,7 +579,7 @@ jQuery(document).ready(function($) {
 			var $parent = $that.closest('.tutor-topics-in-single-lesson');
 			$parent.toggleClass('tutor-topic-active');
 			$parent.find('.tutor-lessons-under-topic').slideToggle();
-		}
+		},
 	);
 
 	$('.tutor-single-lesson-items.active')
@@ -933,7 +933,7 @@ jQuery(document).ready(function($) {
 						title: __('Abandon Quiz?', 'tutor'),
 						description: __(
 							'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.',
-							'tutor'
+							'tutor',
 						),
 						buttons: {
 							keep: {

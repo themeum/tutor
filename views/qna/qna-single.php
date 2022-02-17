@@ -144,7 +144,7 @@
 				}
 				?>
 			</div>
-			<div class="tutor-qa-reply tutor-mt-10 tutor-mb-5" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+			<div class="tutor-qa-reply tutor-mt-10 tutor-mb-5" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? 'display:none;' : ''; ?>">
 				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 				<div class="tutor-bs-d-flex tutor-bs-align-items-center">
 					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
