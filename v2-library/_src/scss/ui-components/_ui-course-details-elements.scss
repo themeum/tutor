@@ -287,7 +287,7 @@
 // Course Details Page
 .tutor-course-details-page {
 	// border: 1px solid;
-	ul {
+	ul.tutor-course-details-widget-list {
 		// margin: 0;
 		padding: 0;
 		list-style: none;
@@ -355,7 +355,7 @@
 	}
 	&.is-active {
 		.showmore-text {
-			display: block;
+			display: inline;
 		}
 		.btn-showmore {
 			display: none !important;

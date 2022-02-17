@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				currentItem.classList.add('is-active');
 				let id = currentItem.getAttribute('data-tutor-spotlight-tab-target');
 				let query_string = currentItem.getAttribute('data-tutor-query-string');
+				console.log(tabConent);
 				const tabConent = currentItem.parentNode.nextElementSibling;
 				tabConent.querySelector('#' + id).classList.add('is-active');
 				if (id === 'tutor-course-spotlight-tab-3') {
@@ -116,6 +117,43 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				item.classList.remove('is-active');
 			});
 		};
+
+
+		const params = new Proxy(new URLSearchParams(window.location.search), {
+			get: (searchParams, prop) => searchParams.get(prop),
+		});
+
+		const openAppropiateTabsAndContent = () => {
+			clearSpotlightTabActiveClass();
+			spotlightTabs.forEach((item) => {
+				'comments' === item.dataset.tutorQueryString ? item.classList.add('is-active') : '';
+			});
+			spotlightTabContent.forEach((item) => {
+				'comments' === item.dataset.tutorQueryStringContent ? item.classList.add('is-active') : '';
+			});
+		}
+
+		if ( null !== params.page_tab && 'comments' === params.page_tab) {
+			openAppropiateTabsAndContent();
+		}
+
+		setTimeout(() => {
+			let lesson_comment_id = window.location.hash.replace('#', '');
+			lesson_comment_id = 'lesson-'+lesson_comment_id;
+			if (lesson_comment_id) {
+				let lesson_comment_elem = document.getElementById(""+lesson_comment_id+"");
+				if(null !== lesson_comment_elem){
+					lesson_comment_elem.scrollIntoView();
+					lesson_comment_elem.querySelector('.tutor-actual-comment').classList.add('viewing');
+					setTimeout(()=>{
+						lesson_comment_elem.querySelector('.tutor-actual-comment').classList.remove('viewing');
+					},2999)
+				}
+				if (null === params.page_tab || 'comments' === params.page_tab) {
+					openAppropiateTabsAndContent();
+				}
+			}
+		},99)
 	}
 	/* commenting */
 

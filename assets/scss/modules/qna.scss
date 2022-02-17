@@ -212,6 +212,7 @@ $sidebar_width: 360px;
 	&:not([data-context='backend-dashboard-qna-single']) {
 		.tutor-qna-left {
 			.tutor-qna-text {
+				min-width: 50px;
 				background: #e3e9f7;
 				color: $black-100;
 			}
