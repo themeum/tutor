@@ -45,7 +45,7 @@
 				<?php if ( $remaining_time_secs < 0 ) : ?>
 					<div class="quiz-time-remaining-expired-circle">
 						<svg viewBox="0 0 50 50" width="50" height="50">
-							<circle cx="0" cy="0" r="12"></circle>
+							<circle cx="0" cy="0" r="11"></circle>
 						</svg>
 					</div>
 				<?php endif; ?>

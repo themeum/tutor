@@ -92,7 +92,7 @@
 </div>
 
 <?php if($question_type!='true_false' && ($question_type!='fill_in_the_blank' || empty($answers))): ?>
-    <a href="javascript:;" class="add_question_answers_option" data-question-id="<?php echo $question_id; ?>">
+    <a href="javascript:;" class="add_question_answers_option tutor-bs-d-flex tutor-bs-align-items-center" data-question-id="<?php echo $question_id; ?>">
         <i class="tutor-icon-plus-bold-filled tutor-icon-18"></i>
         <?php _e('Add An Option', 'tutor'); ?>
     </a>
