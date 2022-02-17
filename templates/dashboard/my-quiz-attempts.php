@@ -24,6 +24,7 @@ $offset        = ( $current_page - 1 ) * $item_per_page;
 $course_filter = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
 $order_filter  = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date_filter   = isset( $_GET['date'] ) ? $_GET['date'] : '';
+$course_id   = isset( $course_id ) ? $course_id : '';
 
 $quiz_attempts = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter );
 

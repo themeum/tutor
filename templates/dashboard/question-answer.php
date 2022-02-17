@@ -26,6 +26,7 @@ $as_instructor_url  = add_query_arg(array('view_as' => 'instructor'), tutor()->c
 $as_student_url     = add_query_arg(array('view_as' => 'student'), tutor()->current_url);
 $qna_tabs           = \Tutor\Q_and_A::tabs_key_value();
 $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'all';
+// pr($qna_tabs);
 ?>
 
 <div class="tutor-frontend-dashboard-qna-header tutor-mb-32">
