@@ -365,7 +365,7 @@ if ( count( $instructor_course ) ) {
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Enrolled', 'tutor' ); ?>">
-									<span class="text-medium-caption tutor-color-text-primary">
+									<span class="tutor-text-medium-caption tutor-color-text-primary">
 										<?php esc_html_e( $enrolled ); ?>
 									</span>
 								</td>

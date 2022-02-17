@@ -123,7 +123,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'course':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="text-medium-caption tutor-color-text-primary">
+												<span class="tutor-text-medium-caption tutor-color-text-primary">
 													<?php echo get_the_title( $attempt->course_id ); ?>
 												</span>
 											</td>
@@ -133,7 +133,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'question':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="text-medium-caption tutor-color-text-primary">
+												<span class="tutor-text-medium-caption tutor-color-text-primary">
 													<?php echo count( $answers ); ?>
 												</span>
 											</td>
@@ -143,7 +143,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'total_marks':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="text-medium-caption tutor-color-text-primary">
+												<span class="tutor-text-medium-caption tutor-color-text-primary">
 													<?php echo round($attempt->total_marks); ?>
 												</span>
 											</td>
@@ -153,7 +153,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'correct_answer':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="text-medium-caption tutor-color-text-primary">
+												<span class="tutor-text-medium-caption tutor-color-text-primary">
 													<?php echo $correct; ?>
 												</span>
 											</td>
@@ -163,7 +163,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'incorrect_answer':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="text-medium-caption tutor-color-text-primary">
+												<span class="tutor-text-medium-caption tutor-color-text-primary">
 													<?php echo $incorrect; ?>
 												</span>
 											</td>
@@ -173,7 +173,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'earned_marks':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="text-medium-caption tutor-color-text-primary">
+												<span class="tutor-text-medium-caption tutor-color-text-primary">
 													<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '% )'; ?>
 												</span>
 											</td>

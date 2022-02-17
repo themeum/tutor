@@ -122,7 +122,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             case 'reply':
                             ?>
                                 <td data-th="<?php echo $column; ?>">
-                                    <div class="text-medium-caption tutor-color-text-primary">
+                                    <div class="tutor-text-medium-caption tutor-color-text-primary">
                                         <?php echo $qna->answer_count; ?>
                                     </div>
                                 </td>

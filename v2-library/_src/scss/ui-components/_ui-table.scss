@@ -461,6 +461,8 @@ table.tutor-ui-table {
 	}
 
 	.td-progress {
+		display: flex;
+		align-items: center;
 		.progress-bar {
 			position: relative;
 			width: 50px;
@@ -506,6 +508,14 @@ table.tutor-ui-table {
 		background-size: 10px;
 		&:focus {
 			box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
+		}
+	}
+
+	// .tutor-ui-table-data-td-target progress checkbox
+	&.tutor-ui-table-data-td-target {
+		input.tutor-form-check-input[type='checkbox'] {
+			border-width: 2px;
+			transform: scale(0.75);
 		}
 	}
 
