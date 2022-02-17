@@ -169,16 +169,16 @@ $offset      = ( $per_page * $paged ) - $per_page;
                             $courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
                             if ( tutor_utils()->count( $courses ) ) {
                                 foreach ( $courses as $course ) {
-                                    echo '<div class="text-medium-caption tutor-color-text-primary">' . esc_html( get_the_title( $course['course_id'] ) ) . '</div>';
+                                    echo '<div class="tutor-text-medium-caption tutor-color-text-primary">' . esc_html( get_the_title( $course['course_id'] ) ) . '</div>';
                                 }
                             }
                         ?>
                     </td>
                     <td data-th="Date">
-                        <span class="text-medium-caption tutor-color-text-primary"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ); ?></span>
+                        <span class="tutor-text-medium-caption tutor-color-text-primary"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ); ?></span>
                     </td>
                     <td data-th="Price">
-                        <span class="text-medium-caption tutor-color-text-primary"><?php echo wp_kses_post( $price ); ?></span>
+                        <span class="tutor-text-medium-caption tutor-color-text-primary"><?php echo wp_kses_post( $price ); ?></span>
                     </td>
                     <td data-th="Status">
                         <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-5"><?php esc_html_e( $order_status_text ); ?></span>
