@@ -295,4 +295,74 @@ window.jQuery(document).ready($=>{
     $(".tutor-quiz-submit-btn").click(function() {
         $("#tutor-answering-quiz").submit();
     });
+
+	//warn user before leave page if quiz is running
+	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
+
+    $(document).on('click', 'a',  function(event) {
+        const href = $(this).attr('href');
+
+        console.log($tutor_quiz_time_update.length, $tutor_quiz_time_update.text());
+        event.preventDefault();
+
+        if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.text() != 'EXPIRED') {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            let popup;
+
+            let data = {
+                title: __('Abandon Quiz?', 'tutor'),
+                description: __(
+                    'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.',
+                    'tutor',
+                ),
+                buttons: {
+                    keep: {
+                        title: __('Yes, leave quiz', 'tutor'),
+                        id: 'leave',
+                        class: 'tutor-btn tutor-is-outline tutor-is-default',
+                        callback: function() {
+                            var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
+                            $.ajax({
+                                url: window._tutorobject.ajaxurl,
+                                type: 'POST',
+                                data: formData,
+                                beforeSend: function() {
+                                    document.querySelector('#tutor-popup-leave').innerHTML = __('Leaving...', 'tutor');
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        location.href = href;
+                                    } else {
+                                        alert(__('Something went wrong', 'tutor'));
+                                    }
+                                },
+                                error: function() {
+                                    alert(__('Something went wrong', 'tutor'));
+                                    popup.remove();
+                                },
+                            });
+                        },
+                    },
+                    reset: {
+                        title: __('Stay here', 'tutor'),
+                        id: 'reset',
+                        class: 'tutor-btn',
+                        callback: function() {
+                            popup.remove();
+                        },
+                    },
+                },
+            };
+
+            popup = new window.tutor_popup($, '', 40).popup(data);
+        }
+    });
+
+	/* Disable start quiz button  */
+	$('body').on('submit', 'form#tutor-start-quiz', function() {
+		$(this)
+			.find('button')
+			.prop('disabled', true);
+	});
 });
