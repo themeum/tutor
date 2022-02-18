@@ -176,7 +176,9 @@ class Q_and_A {
 		// If current user asker, then make it unread for self
 		// If it is instructor, then make unread for instructor side
 		$meta_key      = 'tutor_qna_' . $action . ($self ? '_'.get_current_user_id() : '');
+
 		$current_value = (int) get_comment_meta( $question_id, $meta_key, true );
+
 		$new_value     = $current_value == 1 ? 0 : 1;
 
 		// Update the reverted value

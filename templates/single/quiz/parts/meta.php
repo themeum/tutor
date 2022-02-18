@@ -53,14 +53,12 @@
 				<p class="text-regular-body tutor-color-text-hints tutor-mr-10">
 					<?php esc_html_e( 'Time remaining: ', 'tutor' ); ?>
 				</p>
-				<span id="tutor-quiz-time-update" class="text-medium-body 
-				<?php
-				if ( $remaining_time_secs < 0 ) {
-					echo 'color-text-error';
-				}
-				?>
-				" data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>" data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
-
+				<span id="tutor-quiz-time-update" 
+					class="text-medium-body <?php  $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
+					data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" 
+					data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>" 
+					data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
+				
 				</span>
 			</div>
 		</div>
