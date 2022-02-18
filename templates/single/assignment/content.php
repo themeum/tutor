@@ -223,7 +223,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					<?php _e( 'Description', 'tutor' ); ?>
 				</div>
 
-				<div class="tutor-to-body tutor-text-regular-body tutor-color-text-subsued tutor-pt-12">
+				<div class="tutor-to-body tutor-text-regular-body tutor-color-text-subsued tutor-pt-12 tutor-entry-content">
 					<?php the_content(); ?>
 				</div>
 
