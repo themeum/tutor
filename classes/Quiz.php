@@ -497,6 +497,8 @@ class Quiz {
 
 		// After hook
 		do_action('tutor_quiz/attempt_ended', $attempt_id, $course_id, $user_id);
+
+		return true;
 	}
 
 

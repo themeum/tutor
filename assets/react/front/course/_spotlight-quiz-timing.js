@@ -39,6 +39,8 @@ window.jQuery(document).ready($=>{
 				minutes ? countdown_human += minutes + 'm ' : 0;
 				seconds ? countdown_human += seconds + 's ' : 0;
 
+				console.log(distance, countDownDate - time_now, countDownDate, time_now, attempt_settings.attempt_started_at);
+
                 // If distance is smaller than 0, then clear the interval and show reattempt alert box
 				if (distance < 0) {
 					clearInterval(tutor_quiz_interval);
