@@ -234,6 +234,39 @@ window.jQuery(document).ready($=>{
         }
     });
 
+	$(document).on('click', '.tutor-quiz-question-paginate-item', function(e) {
+		e.preventDefault();
+		var $that = $(this);
+		var $question = $($that.attr('href'));
+		$('.quiz-attempt-single-question').hide();
+		$question.show();
+
+		//Active Class
+		$('.tutor-quiz-question-paginate-item').removeClass('active');
+		$that.addClass('active');
+	});
+
+	/**
+	 * Limit Short Answer Question Type
+	 */
+     $(document).on('keyup', 'textarea.question_type_short_answer, textarea.question_type_open_ended', function(e) {
+		var $that = $(this);
+		var value = $that.val();
+		var limit = $that.hasClass('question_type_short_answer')
+			? _tutorobject.quiz_options.short_answer_characters_limit
+			: _tutorobject.quiz_options.open_ended_answer_characters_limit;
+		var remaining = limit - value.length;
+
+		if (remaining < 1) {
+			$that.val(value.substr(0, limit));
+			remaining = 0;
+		}
+        
+		$that
+			.closest('.tutor-quiz-answers-wrap')
+			.find('.characters_remaining')
+			.html(remaining);
+	});
 
     $(document).on('submit', '#tutor-answering-quiz', function (e) {
         var $questions_wrap = $('.quiz-attempt-single-question');
@@ -258,7 +291,75 @@ window.jQuery(document).ready($=>{
             quizSubmitBtn.disabled = true;
         }, 500);
     });
+    
     $(".tutor-quiz-submit-btn").click(function() {
         $("#tutor-answering-quiz").submit();
     });
+
+	//warn user before leave page if quiz is running
+	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
+
+    $(document).on('click', 'a',  function(event) {
+        const href = $(this).attr('href');
+
+        if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.text() != 'EXPIRED') {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            let popup;
+
+            let data = {
+                title: __('Abandon Quiz?', 'tutor'),
+                description: __(
+                    'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.',
+                    'tutor',
+                ),
+                buttons: {
+                    keep: {
+                        title: __('Yes, leave quiz', 'tutor'),
+                        id: 'leave',
+                        class: 'tutor-btn tutor-is-outline tutor-is-default',
+                        callback: function() {
+                            var formData = $('form#tutor-answering-quiz').serialize() + '&action=' + 'tutor_quiz_abandon';
+                            $.ajax({
+                                url: window._tutorobject.ajaxurl,
+                                type: 'POST',
+                                data: formData,
+                                beforeSend: function() {
+                                    document.querySelector('#tutor-popup-leave').innerHTML = __('Leaving...', 'tutor');
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        location.href = href;
+                                    } else {
+                                        alert(__('Something went wrong', 'tutor'));
+                                    }
+                                },
+                                error: function() {
+                                    alert(__('Something went wrong', 'tutor'));
+                                    popup.remove();
+                                },
+                            });
+                        },
+                    },
+                    reset: {
+                        title: __('Stay here', 'tutor'),
+                        id: 'reset',
+                        class: 'tutor-btn',
+                        callback: function() {
+                            popup.remove();
+                        },
+                    },
+                },
+            };
+
+            popup = new window.tutor_popup($, '', 40).popup(data);
+        }
+    });
+
+	/* Disable start quiz button  */
+	$('body').on('submit', 'form#tutor-start-quiz', function() {
+		$(this)
+			.find('button')
+			.prop('disabled', true);
+	});
 });

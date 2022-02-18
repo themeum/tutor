@@ -574,11 +574,11 @@ class Options_V2 {
 								'key'            => 'quiz_when_time_expires',
 								'type'           => 'radio_vertical',
 								'label'          => __( 'When time expires', 'tutor' ),
-								'default'        => 'grace_period',
+								'default'        => 'auto_abandon',
 								'select_options' => false,
 								'options'        => array(
 									'auto_submit'  => __( 'The current quiz answers are submitted automatically.', 'tutor' ),
-									'grace_period' => __( 'The current quiz answers are submitted by students.', 'tutor' ),
+									// 'grace_period' => __( 'The current quiz answers are submitted by students.', 'tutor' ),
 									'auto_abandon' => __( 'Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor' ),
 								),
 								'desc'           => __( 'Choose which action to follow when the quiz time expires.', 'tutor' ),
