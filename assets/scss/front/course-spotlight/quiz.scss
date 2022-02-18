@@ -66,13 +66,19 @@
 			.quiz-meta-info-right {
 				.quiz-time-remaining {
 					#tutor-quiz-time-update {
-						width: 40px;
+						width: 50px;
+					}
+					.tutor-quiz-time-expired {
+						margin-right: 15px;
 					}
 					.quiz-time-remaining-progress-circle,
 					.quiz-time-remaining-expired-circle {
 						width: 40px;
 						height: 25px;
 						margin-top: 1px;
+						.tutor-quiz-time-expired {
+							margin-right: 25px;
+						}
 					}
 					.quiz-time-remaining-progress-circle {
 						svg {
@@ -186,6 +192,9 @@
 			display: grid;
 			gap: 20px 20px;
 			grid-template-columns: repeat(auto-fit, minmax(163px, 1fr));
+			img {
+				user-select: none;
+			}
 		}
 		#tutor-quiz-image-single-choice {
 			.tutor-image-checkbox {
