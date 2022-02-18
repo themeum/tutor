@@ -59,8 +59,8 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                 <td data-th="<?php echo $column; ?>">
                                     <div class="td-avatar">
                                         <div class="tooltip-wrap tutor-qna-badges-wrapper">
-                                            <span 
-                                                data-state-class-0="tutor-icon-msg-important-filled" 
+                                            <span
+                                                data-state-class-0="tutor-icon-msg-important-filled"
                                                 data-state-class-1="tutor-icon-msg-important-fill-filled"
                                                 data-action="important"
                                                 data-state-class-selector="i"
@@ -70,8 +70,8 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 >
                                                 </i>
                                             </span>
-                                            <!-- <i data-state-class-0="tutor-icon-msg-important-filled" 
-                                            data-state-class-1="tutor-icon-msg-important-fill-filled" 
+                                            <!-- <i data-state-class-0="tutor-icon-msg-important-filled"
+                                            data-state-class-1="tutor-icon-msg-important-fill-filled"
                                             class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled' : 'tutor-icon-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer" data-action="important"></i>
                                              -->
                                             <span class="tooltip-txt tooltip-bottom">
@@ -93,7 +93,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                 break;
 
                             case 'question':
-                                $content = esc_textarea(stripslashes($qna->comment_content));
+                                $content = (stripslashes($qna->comment_content));
                             ?>
                                 <td data-th="<?php echo $column; ?>">
                                     <!-- <td data-th="<?php echo $column; ?>" title="<?php echo $content; ?>"> -->
@@ -105,7 +105,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                     <?php
                                                     $limit = 60;
                                                     $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content;
-                                                    echo $content;
+                                                    echo esc_html($content);
                                                     ?>
                                                 </div>
                                                 <div class="">
@@ -122,7 +122,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             case 'reply':
                             ?>
                                 <td data-th="<?php echo $column; ?>">
-                                    <div class="text-medium-caption tutor-color-text-primary">
+                                    <div class="tutor-text-medium-caption tutor-color-text-primary">
                                         <?php echo $qna->answer_count; ?>
                                     </div>
                                 </td>
