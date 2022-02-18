@@ -302,9 +302,6 @@ window.jQuery(document).ready($=>{
     $(document).on('click', 'a',  function(event) {
         const href = $(this).attr('href');
 
-        console.log($tutor_quiz_time_update.length, $tutor_quiz_time_update.text());
-        event.preventDefault();
-
         if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.text() != 'EXPIRED') {
             event.preventDefault();
             event.stopImmediatePropagation();
