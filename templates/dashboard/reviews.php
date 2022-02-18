@@ -85,7 +85,7 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
-								<div class="text-medium-caption tutor-color-text-primary">
+								<div class="tutor-text-medium-caption tutor-color-text-primary">
 								<?php
 								$date = explode( ',', tutor_get_formated_date( null, $review->comment_date ) );
 								echo '<span>'.$date[0].'</span>' . '<br />' . '<span class="tutor-fweight-400">'.$date[1].'</span>';

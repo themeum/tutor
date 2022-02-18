@@ -265,7 +265,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
 								<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
 									<div class="inline-flex-center td-action-btns tutor-mr-5">
-										<button class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
+										<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress-outline' : 'tutor-btn-disable-outline tutor-btn-outline-fd'?> tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
 											<?php esc_html_e( 'Details', 'tutor' ); ?>
 										</button>
 									</div>

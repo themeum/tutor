@@ -12,11 +12,11 @@ if (isset($data['total_items']) && $data['total_items']) : ?>
 		<div classs="tutor-pagination-hints">
 			<div class="text-regular-caption tutor-color-text-subsued">
 				<?php esc_html_e('Page', 'tutor'); ?>
-				<span class="text-medium-caption tutor-color-text-primary">
+				<span class="tutor-text-medium-caption tutor-color-text-primary">
 					<?php echo esc_html($data['paged']); ?>
 				</span>
 				<?php esc_html_e('of', 'tutor'); ?>
-				<span class="text-medium-caption tutor-color-text-primary">
+				<span class="tutor-text-medium-caption tutor-color-text-primary">
 					<?php echo esc_html(ceil(0 < $data['per_page']) ? ceil($data['total_items'] / $data['per_page']) : ''); ?>
 				</span>
 			</div>

@@ -223,8 +223,12 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								</td>
 								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
 									<div class="td-datetime tutor-text-regular-caption tutor-color-text-primary">
-										<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>,<br>
-										<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
+										<span class="">
+											<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
+										</span><br>
+										<span class="">
+											<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
+										</span>
 									</div>
 								</td>
 
