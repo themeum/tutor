@@ -40,11 +40,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="tutor-pagination-hints">
 		<div class="text-regular-caption tutor-color-text-subsued">
 			<?php _e('Page', 'tutor'); ?> 
-			<span class="text-medium-caption tutor-color-text-primary">
+			<span class="tutor-text-medium-caption tutor-color-text-primary">
 			<?php echo esc_html( $paged ); ?> 
 			</span>
 			<?php _e('of', 'tutor'); ?>
-			<span className="text-medium-caption tutor-color-text-primary">
+			<span className="tutor-text-medium-caption tutor-color-text-primary">
 			<?php echo esc_html( $pages ); ?>
 			</span>
 		</div>
