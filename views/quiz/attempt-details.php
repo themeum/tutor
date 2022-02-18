@@ -153,7 +153,7 @@ if ( is_array( $attempt_info ) ) {
             <?php
                 foreach($table_1_columns as $key => $column) {
                     $class_name = join('-', explode(' ', strtolower($column)));
-                    echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
+                    echo '<th class="'. $class_name .'"><span class="tutor-text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
                 }
             ?>
         </tr>
@@ -168,9 +168,9 @@ if ( is_array( $attempt_info ) ) {
                             <td data-th="<?php echo $column; ?>">
                                 <div class="td-avatar">
                                     <img src="<?php echo esc_url(get_avatar_url($user_id)); ?>" alt="<?php echo esc_attr($user->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
-                                    <p class="tutor-text-medium-body  tutor-color-text-primary">
+                                    <div class="tutor-text-medium-body  tutor-color-text-primary tutor-text-nowrap">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
-                                    </p>
+                                    </div>
                                     <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="btn-text btn-detail-link tutor-color-design-dark">
                                         <span class="tutor-icon-detail-link-filled"></span>
                                     </a>
@@ -360,7 +360,7 @@ if ( is_array( $attempt_info ) ) {
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-                                                    <div class="tooltip-wrap tooltip-icon- tutor-bs-d-flex">
+                                                    <div class="tooltip-wrap tooltip-icon tutor-bs-d-flex">
                                                         <?php echo $question_type['icon']; ?>
                                                         <span class="tooltip-txt tooltip-top">
                                                             <?php echo $type['name']; ?>
