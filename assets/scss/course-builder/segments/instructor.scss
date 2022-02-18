@@ -135,7 +135,14 @@ $inst_gap: 30px;
         border: 1px solid #CDCFD5;
         box-sizing: border-box;
         border-radius: 6px;
-        
+        &.tutor-updating-message {
+            min-height: 60px;
+            &:before {
+                top: 50% !important;
+                left: calc(50% - 10px);
+                position: absolute;
+            }
+        }
         &:empty{
             display: none;
             border: none;

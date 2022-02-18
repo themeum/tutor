@@ -48,7 +48,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php _e('More', 'tutor'); ?> <span class="icon-seemore tutor-icon-line-cross-line tutor-icon-20 tutor-color-text-brand"></span>
 				</div>
 				<div id="course-details-tab-seemore-1" class="tab-header-item-seemore-popup">
-					<ul class="tutor-m-0">
+					<ul class="tutor-m-0 tutor-p-0">
 						<?php
 							$asset_base = tutor()->url . 'assets/images/';
 							foreach($more_items as $key=>$item) {
