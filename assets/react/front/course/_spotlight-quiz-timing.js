@@ -144,7 +144,7 @@ window.jQuery(document).ready($=>{
 							progress = 0;
 							// if time out red the progress circle
 							svgWrapper.innerHTML = `<svg viewBox="0 0 50 50" width="50" height="50">
-														<circle cx="0" cy="0" r="12"></circle>
+														<circle cx="0" cy="0" r="11"></circle>
 													</svg>`;
 							svgWrapper.setAttribute('class', 'quiz-time-remaining-expired-circle');
 						}

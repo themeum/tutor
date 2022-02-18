@@ -38,9 +38,8 @@ window.jQuery(document).ready($=>{
                 beforeSend:()=>{
                     if(!callback){
                         // Don't show if click on add. Then add loading icon should appear
-                        if (!search_container.children().length) {
-                            search_container.addClass('tutor-updating-message');
-                        }
+                        search_container.html('');
+                        search_container.addClass('tutor-updating-message');
                         // search_container.html('<div class="tutor-text-center"><span class="tutor-updating-message"></span></div>');
                     }
                 },
