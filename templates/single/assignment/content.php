@@ -49,7 +49,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
 
 <div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
-	<div class="tutor-topbar-left-item tutor-bs-d-flex"> 
+	<div class="tutor-topbar-left-item tutor-bs-d-flex">
 		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
 				<span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
@@ -388,7 +388,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					<div class="text-medium-h6 tutor-color-text-primary">
 						<?php _e( 'Description', 'tutor' ); ?>
 					</div>
-					<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="short-text">
+					<div class="text-regular-body tutor-color-text-subsued tutor-pt-12 tutor-entry-content" id="short-text">
 						<?php
 						if ( strlen( $s_content ) > 500 ) {
 							echo wp_kses_post( substr_replace( $s_content, '...', 500 ) );
@@ -399,7 +399,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 						<span id="dots"></span>
 					</div>
 					<?php if ( strlen( $s_content ) > 500 ) : ?>
-						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="full-text">
+						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12 tutor-entry-content" id="full-text">
 							<?php
 								echo wp_kses_post( $s_content );
 							?>
@@ -582,7 +582,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 								</div>
 							<?php endif; ?>
 						</div>
-						<div class="text-regular-body tutor-color-text-subsued tutor-pt-18">
+						<div class="text-regular-body tutor-color-text-subsued tutor-pt-18 tutor-entry-content">
 							<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
 						</div>
 						<?php
@@ -628,7 +628,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 						<div class="text-medium-h6 tutor-color-text-primary">
 							<?php _e( 'Description', 'tutor' ); ?>
 						</div>
-						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="short-text">
+						<div class="text-regular-body tutor-color-text-subsued tutor-pt-12 tutor-entry-content" id="short-text">
 							<?php
 							if ( strlen( $s_content ) > 500 ) {
 								echo wp_kses_post( substr_replace( $s_content, '...', 500 ) );
@@ -639,7 +639,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							<span id="dots"></span>
 						</div>
 						<?php if ( strlen( $s_content ) > 500 ) : ?>
-							<div class="text-regular-body tutor-color-text-subsued tutor-pt-12" id="full-text">
+							<div class="text-regular-body tutor-color-text-subsued tutor-pt-12 tutor-entry-content" id="full-text">
 								<?php
 									echo wp_kses_post( $s_content );
 								?>
