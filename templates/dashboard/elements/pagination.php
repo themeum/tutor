@@ -7,7 +7,7 @@
  */
 
 if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
-	<nav class="tutor-ui-pagination tutor-mt-40">
+	<nav class="tutor-ui-pagination tutor-mt-40" <?php echo isset($data['ajax']) ? ' data-tutor_pagination_ajax="'.esc_attr( json_encode($data['ajax']) ).'" ' : ''; ?>>
 		<div classs="tutor-pagination-hints">
 			<div class="text-regular-caption tutor-color-text-subsued">
 			<?php esc_html_e( 'Page', 'tutor' ); ?> 
