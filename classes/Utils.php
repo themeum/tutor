@@ -4673,52 +4673,52 @@ class Utils {
 		$types = array(
 			'true_false'        => array(
 				'name'   => __( 'True/False', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="True/False"><i class="tutor-quiz-type-icon tutor-icon-yes-no-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-icon-yes-no-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'single_choice'     => array(
 				'name'   => __( 'Single Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Single Choice"><i class="tutor-quiz-type-icon tutor-icon-mark-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-mark-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'multiple_choice'   => array(
 				'name'   => __( 'Multiple Choice', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Multiple Choicee"><i class="tutor-quiz-type-icon tutor-icon-multiple-choice-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-multiple-choice-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'open_ended'        => array(
 				'name'   => __( 'Open Ended', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Open/Essay"><i class="tutor-quiz-type-icon tutor-icon-open-ended-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"></span><i class="tutor-quiz-type-icon tutor-icon-open-ended-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'fill_in_the_blank' => array(
 				'name'   => __( 'Fill In The Blanks', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Fill In The Blanks"><i class="tutor-quiz-type-icon tutor-icon-fill-gaps-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn" ><i class="tutor-quiz-type-icon tutor-icon-fill-gaps-filled"></i></span>',
 				'is_pro' => false,
 			),
 			'short_answer'      => array(
 				'name'   => __( 'Short Answer', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Short Answer"><i class="tutor-quiz-type-icon tutor-icon-short-ans-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-short-ans-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'matching'          => array(
 				'name'   => __( 'Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Matching"><i class="tutor-quiz-type-icon tutor-icon-matching-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_matching'    => array(
 				'name'   => __( 'Image Matching', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Matching"><i class="tutor-quiz-type-icon tutor-icon-image-matching-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-image-matching-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'image_answering'   => array(
 				'name'   => __( 'Image Answering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Image Answering"><i class="tutor-quiz-type-icon tutor-icon-camera-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-camera-filled"></i></span>',
 				'is_pro' => true,
 			),
 			'ordering'          => array(
 				'name'   => __( 'Ordering', 'tutor' ),
-				'icon'   => '<span class="tooltip-btn tutor-mr-5" data-tooltip="Ordering"><i class="tutor-quiz-type-icon tutor-icon-ordering-z-to-a-filled"></i></span>',
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-icon-ordering-z-to-a-filled"></i></span>',
 				'is_pro' => true,
 			),
 		);

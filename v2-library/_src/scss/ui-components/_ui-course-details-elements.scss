@@ -347,6 +347,9 @@
 	.showmore-text {
 		display: none;
 	}
+	.showmore-short-text {
+		display: block;
+	}
 	.btn-showmore {
 		display: flex !important;
 	}
@@ -355,7 +358,10 @@
 	}
 	&.is-active {
 		.showmore-text {
-			display: inline;
+			display: block;
+		}
+		.showmore-short-text {
+			display: none;
 		}
 		.btn-showmore {
 			display: none !important;

@@ -45,7 +45,7 @@
 				<?php if ( $remaining_time_secs < 0 ) : ?>
 					<div class="quiz-time-remaining-expired-circle">
 						<svg viewBox="0 0 50 50" width="50" height="50">
-							<circle cx="0" cy="0" r="10"></circle>
+							<circle cx="0" cy="0" r="11"></circle>
 						</svg>
 					</div>
 				<?php endif; ?>
@@ -53,14 +53,12 @@
 				<p class="text-regular-body tutor-color-text-hints tutor-mr-10">
 					<?php esc_html_e( 'Time remaining: ', 'tutor' ); ?>
 				</p>
-				<span id="tutor-quiz-time-update" class="text-medium-body 
-				<?php
-				if ( $remaining_time_secs < 0 ) {
-					echo 'color-text-error';
-				}
-				?>
-				" data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>" data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
-
+				<span id="tutor-quiz-time-update" 
+					class="text-medium-body <?php  $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
+					data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" 
+					data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>" 
+					data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
+				
 				</span>
 			</div>
 		</div>
@@ -68,7 +66,7 @@
 </div>
 
 <div class="quiz-flash-message">
-	<div id="tutor-quiz-time-expire-wrapper" class="tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
+	<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
 		<div class="flash-info d-flex align-items-center">
 			<span class="tutor-icon-warning-outline-circle-filled tutor-color-design-warning tutor-mr-7"></span>
 			<span class="text-regular-caption tutor-color-text-title tutor-quiz-alert-text">

@@ -234,7 +234,7 @@
 						</span>
 					</div>
 					<div>
-						<span class="text-medium-caption tutor-color-text-primary">
+						<span class="tutor-text-medium-caption tutor-color-text-primary">
 							<?php echo wp_kses_post( $meta['value'] ); ?>
 						</span>
 					</div>

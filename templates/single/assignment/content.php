@@ -479,17 +479,17 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 											</div>
 										</td>
 										<td data-th="Total Marks" class="total-marks">
-											<span class="text-medium-caption tutor-color-text-primary">
+											<span class="tutor-text-medium-caption tutor-color-text-primary">
 												<?php esc_html_e( $max_mark, 'tutor' ); ?>
 											</span>
 										</td>
 										<td data-th="Pass Marks" class="pass-marks">
-											<span class="text-medium-caption tutor-color-text-primary">
+											<span class="tutor-text-medium-caption tutor-color-text-primary">
 												<?php esc_html_e( $pass_mark, 'tutor' ); ?>
 											</span>
 										</td>
 										<td data-th="Earned Marks" class="earned-marks">
-											<span class="text-medium-caption tutor-color-text-primary">
+											<span class="tutor-text-medium-caption tutor-color-text-primary">
 												<?php esc_html_e( $given_mark, 'tutor' ); ?>
 											</span>
 										</td>
