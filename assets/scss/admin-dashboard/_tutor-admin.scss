@@ -2487,3 +2487,13 @@ table.tutor-table p {
 		font-size: 18px;
 	}
 }
+
+.tutor-entry-content{
+	> br {
+		display: none;
+	}
+	p:not(:last-child){
+		padding-bottom: 20px;
+		word-wrap: break-word;
+	}
+}
