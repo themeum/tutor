@@ -13,9 +13,15 @@
  * To be loaded for given review list in frontend dashboard
  */
 
-$reviews        = tutor_utils()->get_reviews_by_user( 0, 0, 150, true );
-$review_count   = $reviews->count;
-$reviews        = $reviews->results;
+// Pagination Variable
+$per_page     = tutor_utils()->get_option( 'pagination_per_page', 20 );
+$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', $_GET ) );
+$offset       = ( $current_page - 1 ) * $per_page;
+
+
+$all_reviews        = tutor_utils()->get_reviews_by_user( 0, $offset, $per_page, true );
+$review_count   = $all_reviews->count;
+$reviews        = $all_reviews->results;
 $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 ?>
 
@@ -213,3 +219,15 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 		</div>
 	</div>
 </div>
+<?php
+	if($all_reviews->count > $per_page) {
+		$pagination_data = array(
+			'total_items' => $all_reviews->count,
+			'per_page'    => $per_page,
+			'paged'       => $current_page,
+		);
+		$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+		tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+	}
+
+?>
