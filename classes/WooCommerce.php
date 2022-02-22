@@ -20,14 +20,14 @@ class WooCommerce extends Tutor_Base {
 
 		// Add option settings
 		add_filter( 'tutor_monetization_options', array( $this, 'tutor_monetization_options' ) );
-		
+
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		if ( $monetize_by !== 'wc' ) {
 			return;
 		}
-		
+
 		add_filter( 'tutor/options/attr', array( $this, 'add_options' ) );
-		
+
 		/**
 		 * Is Course Purchasable
 		 */
@@ -91,6 +91,39 @@ class WooCommerce extends Tutor_Base {
 		 * Change woo commerce cart product link if it is tutor product
 		 */
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
+		add_filter( 'woocommerce_order_item_permalink', array( $this, 'filter_order_item_permalink_callback' ), 10, 3 );
+	}
+	function filter_order_item_permalink_callback( $product_permalink, $item, $order ) {
+
+		// For product variations
+		if ( $item->get_variation_id() > 0 ) {
+			$product = $item->get_product();
+
+			$is_visible = $product && $product->is_visible();
+
+			// Get the instance of the parent variable product Object
+			$parent_product = wc_get_product( $item->get_product_id() );
+
+			// Return the parent product permalink (if product is visible)
+			return $is_visible ? $parent_product->get_permalink() : '';
+		}
+
+		$course_id = $this->get_post_id_by_meta_key_and_value( '_tutor_course_product_id', $item->get_product_id() );
+
+		return get_permalink( $course_id );
+	}
+
+	public function get_post_id_by_meta_key_and_value( $key, $value ) {
+		global $wpdb;
+		$meta = $wpdb->get_results( 'SELECT * FROM `' . $wpdb->postmeta . "` WHERE meta_key='" . esc_sql( $key ) . "' AND meta_value='" . esc_sql( $value ) . "'" );
+		if ( is_array( $meta ) && ! empty( $meta ) && isset( $meta[0] ) ) {
+			$meta = $meta[0];
+		}
+		if ( is_object( $meta ) ) {
+			return $meta->post_id;
+		} else {
+			return false;
+		}
 	}
 
 	public function is_course_purchasable( $bool, $course_id ) {
@@ -144,7 +177,7 @@ class WooCommerce extends Tutor_Base {
 
 		return $types;
 	}
-	
+
 	/**
 	 * @param $post_ID
 	 *
@@ -303,7 +336,6 @@ class WooCommerce extends Tutor_Base {
 
 		$product_id    = $item->get_product_id();
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
-
 
 		if ( $if_has_course ) {
 
@@ -517,7 +549,7 @@ class WooCommerce extends Tutor_Base {
 		$order         = wc_get_order( $order_id );
 		$tutor_product = false;
 		$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
-		
+
 		foreach ( $order->get_items() as $item ) {
 			$product_id = $item->get_product_id();
 			// check if product associated with tutor course
@@ -526,7 +558,7 @@ class WooCommerce extends Tutor_Base {
 				$tutor_product = true;
 			}
 		}
-		
+
 		// if tutor product & order status completed
 		if ( $order->has_status( 'completed' ) && $tutor_product ) {
 			wp_safe_redirect( $url );

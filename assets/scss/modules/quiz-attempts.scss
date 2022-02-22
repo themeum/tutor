@@ -132,25 +132,26 @@
 			opacity: 0.8;
 		}
 	}
-	thead {
+
+	tbody {
 		@include breakpoint-min(1200) {
 			tr {
-				th.no {
+				td.no {
 					width: 3%;
 				}
-				th.type {
+				td.type {
 					width: 3%;
 				}
-				th.questions {
+				td.questions {
 					width: 20%;
 				}
-				th.given-answer {
+				td.given-answer {
 					width: 20%;
 				}
-				th.correct-answer {
+				td.correct-answer {
 					width: 40%;
 				}
-				th.answer {
+				td.answer {
 					width: 5%;
 				}
 			}
