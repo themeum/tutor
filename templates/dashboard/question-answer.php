@@ -24,7 +24,7 @@ $view_option        = get_user_meta(get_current_user_id(), 'tutor_qa_view_as', t
 $view_as            = $is_instructor ? ($view_option ? $view_option : 'instructor') : 'student';
 $as_instructor_url  = add_query_arg(array('view_as' => 'instructor'), tutor()->current_url);
 $as_student_url     = add_query_arg(array('view_as' => 'student'), tutor()->current_url);
-$qna_tabs           = \Tutor\Q_and_A::tabs_key_value();
+$qna_tabs           = \Tutor\Q_and_A::tabs_key_value($view_as=='student' ? get_current_user_id() : null);
 $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'all';
 // pr($qna_tabs);
 ?>

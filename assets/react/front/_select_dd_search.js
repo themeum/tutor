@@ -56,7 +56,7 @@ window.selectSearchField = (selectElement) => {
 
 								var onChangeEvent = new Event('change');
 								element.dispatchEvent(onChangeEvent);
-								// jQuery(selectFieldOptions).trigger('change');
+								jQuery(selectFieldOptions).trigger('change');
 							};
 						});
 					}
