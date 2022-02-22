@@ -188,13 +188,14 @@
 			.quiz-question-title {
 			}
 		}
+		img {
+			user-select: none;
+			pointer-events: none;
+		}
 		.matching-quiz-question-desc {
 			display: grid;
 			gap: 20px 20px;
 			grid-template-columns: repeat(auto-fit, minmax(163px, 1fr));
-			img {
-				user-select: none;
-			}
 		}
 		#tutor-quiz-image-single-choice {
 			.tutor-image-checkbox {
