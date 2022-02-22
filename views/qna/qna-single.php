@@ -73,24 +73,24 @@
 					<!-- Show meta data actions if it is instructor view -->
 					<?php if ( ! $is_user_asker ) : ?>
 						<span data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-text-success">
-							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success active' : 'tutor-icon-tick-circle-outline-filled'; ?>"></i>
+							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success active' : 'tutor-icon-tick-circle-outline-filled'; ?>"></i> 
 							<span><?php _e( 'Solved', 'tutor' ); ?></span>
 						</span>
 						<span data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
-							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?>"></i>
+							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?>"></i> 
 							<span><?php _e( 'Important', 'tutor' ); ?></span>
 						</span>
 						<span data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
-							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?>"></i>
+							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?>"></i> 
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 						</span>
 					<?php endif; ?>
 					<span data-action="read" data-state-text-selector="span" data-state-text-0="<?php _e( 'Mark as read', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Mark as Unread', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-unread-filled" data-state-class-1="tutor-icon-msg-read-filled">
-						<i class="<?php echo $is_read ? 'tutor-icon-msg-read-filled active' : 'tutor-icon-msg-unread-filled'; ?>"></i>
+						<i class="<?php echo $is_read ? 'tutor-icon-msg-read-filled active' : 'tutor-icon-msg-unread-filled'; ?>"></i> 
 						<span><?php $is_read ? _e( 'Mark as Unread', 'tutor' ) : _e( 'Mark as read', 'tutor' ); ?></span>
 					</span>
 					<span data-tutor-modal-target="<?php echo $modal_id; ?>">
-						<i class="tutor-icon-delete-fill-filled"></i>
+						<i class="tutor-icon-delete-fill-filled"></i> 
 						<span><?php _e( 'Delete', 'tutor' ); ?></span>
 					</span>
 				</div>
@@ -130,7 +130,7 @@
 								</div>
 
 								<div class="tutor-qna-text tutor-text-regular-caption">
-									<?php echo esc_html( stripslashes( $answer->comment_content ) ); ?>
+									<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
 								</div>
 
 							<?php if ( $is_single && $answer->comment_parent == 0 ) : ?>
@@ -144,11 +144,11 @@
 				}
 				?>
 			</div>
-			<div class="tutor-qa-reply tutor-mt-10 tutor-mb-5" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? 'display:none;' : ''; ?>">
+			<div class="tutor-qa-reply tutor-mt-10 tutor-mb-5" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 				<div class="tutor-bs-d-flex tutor-bs-align-items-center">
 					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
-						<?php esc_html_e( 'Reply', 'tutor' ); ?>
+						<?php esc_html_e( 'Reply', 'tutor' ); ?> 
 					</button>
 				</div>
 			</div>
@@ -165,7 +165,7 @@
 					<div class="tutor-text-medium-h4 tutor-color-text-primary tutor-mt-22"><?php echo $question->display_name; ?></div>
 					<div class="tutor-text-medium-body tutor-color-text-subsued tutor-mt-3"><?php echo $question->user_email; ?></div>
 					<div class="tutor-user-social tutor-bs-d-flex tutor-mt-24" style="column-gap: 21px;">
-						<?php
+						<?php 
 							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 
 							foreach ( $tutor_user_social_icons as $key => $social_icon ) :
@@ -190,7 +190,7 @@
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
 							</div>
-
+							
 						</td>
 					</tr>
 					<tr>
@@ -213,7 +213,7 @@
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
 							</div>
-
+							
 						</td>
 					</tr>
 					<tr>

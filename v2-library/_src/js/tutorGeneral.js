@@ -11,8 +11,8 @@ document.addEventListener('click', function(e) {
 	/**
 	 * Course details showmore toggle
 	 */
-	const dataShomore = e.target.dataset.showmore;
-	if (dataShomore) {
+	const dataShowmore = e.target.dataset.showmore;
+	if (dataShowmore) {
 		e.target.closest('.tutor-has-showmore').classList.toggle('is-active');
 	}
 });
