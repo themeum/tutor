@@ -65,14 +65,14 @@
                     <?php if ( $question_type !== 'true_false' ): ?>
                         <span class="tutor-quiz-answer-edit">
                             <a href="javascript:;">
-                                <i class="tutor-bs-d-flex tutor-icon-pencil-line tutor-icon-22"></i> 
+                                <i class="tutor-icon-pencil-line tutor-icon-22"></i> 
                             </a>
                         </span>
                     <?php endif; ?>
 
                     <?php if($question_type !== 'fill_in_the_blank'): ?>
                         <span class="tutor-quiz-answer-sort-icon">
-                            <i class="tutor-icon-menu-line tutor-icon-24"></i> 
+                            <i class="tutor-bs-d-flex tutor-icon-menu-line tutor-icon-24"></i>
                         </span>
                     <?php endif; ?>
                 </div>
