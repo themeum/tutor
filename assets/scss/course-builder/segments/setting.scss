@@ -8,6 +8,14 @@
 
 #wpcontent,
 #tutor-frontend-course-builder {
+	.tutor-icon-plus-bold-filled.tutor-shortlist-instructor.tutor-updating-message {
+		&:before {
+			vertical-align: unset !important;
+		}
+	}
+	.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
+		margin-right: 0px !important;
+	}
 	.tutor-certificate-template {
 		.template-item {
 			.template-radio-field {
@@ -16,6 +24,10 @@
 		}
 	}
 	.tutor-modal {
+		.tutor-updating-message:before {
+			vertical-align: unset;
+			// line-height: 0;
+		}
 		.tutor-delete-attachment.tutor-icon-line-cross {
 			margin-left: 5px;
 		}
@@ -149,7 +161,7 @@
 			}
 		}
 	}
-	.tutor-lesson-modal-wrap {
+	.tutor-lesson-modal-wrap { background: rebeccapurple;
 		.filesize {
 			margin: 0px !important;
 		}
@@ -160,14 +172,6 @@
 		}
 		#tutor-course-available-instructors {
 			gap: 10px;
-		}
-		.tutor-icon-plus-bold-filled.tutor-shortlist-instructor.tutor-updating-message {
-			&:before {
-				vertical-align: unset;
-			}
-		}
-		.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
-			margin-right: 0px;
 		}
 		.tutor-search-result {
 			&.tutor-updating-message {
