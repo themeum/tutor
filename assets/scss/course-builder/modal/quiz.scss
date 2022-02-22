@@ -175,6 +175,19 @@ a.back-to-quiz-questions-btn {
 				a {
 					display: block;
 					// padding: 0px 9px;
+					i {
+						display: flex;
+					}
+				}
+			}
+			.tutor-quiz-answers-mark-correct-wrap {
+				input {
+					cursor: pointer;
+				}
+			}
+			.tutor-updating-message {
+				i {
+					display: none !important;
 				}
 			}
 		}
