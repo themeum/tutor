@@ -20,11 +20,12 @@ if ( isset( $_GET['view_quiz_attempt_id'] ) ) {
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page' );
 $current_page  = max( 1, tutor_utils()->array_get( 'current_page', $_GET ) );
 $offset        = ( $current_page - 1 ) * $item_per_page;
+
 // Filter params.
 $course_filter = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
 $order_filter  = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date_filter   = isset( $_GET['date'] ) ? $_GET['date'] : '';
-$course_id   = isset( $course_id ) ? $course_id : '';
+$course_id   = isset( $course_id ) ? $course_id : array();
 
 $quiz_attempts = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter );
 
