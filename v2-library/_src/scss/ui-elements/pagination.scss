@@ -170,4 +170,9 @@
 			} // end .pagination-number
 		} // end .tutor-pagination-numbers
 	} // end &.tutor-ui-pagination-wp
+
+	// Hide until page load, will be visible after page load to prevent wrong navigation
+	&[data-tutor_pagination_ajax]{
+		display: none;
+	}
 } // end .tutor-ui-pagination
