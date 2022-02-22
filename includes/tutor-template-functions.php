@@ -852,34 +852,7 @@ if ( ! function_exists('tutor_course_target_reviews_html')) {
         ob_start();
         tutor_load_template( 'single.course.reviews' );
 
-        if(tutor_utils()->is_enrolled()) {
-            tutor_course_target_review_form_html();
-        }
-
         $output = apply_filters( 'tutor_course/single/reviews_html', ob_get_clean() );
-
-		if ( $echo ) {
-			echo tutor_kses_html( $output );
-		}
-		return $output;
-	}
-}
-
-if ( ! function_exists('tutor_course_target_review_form_html')) {
-    function tutor_course_target_review_form_html($echo = true) {
-        $isDisableReview = !tutor_utils()->get_option('enable_course_review');
-        if ($isDisableReview){
-            $output = apply_filters('tutor_review_disabled_text', '');
-
-			if ( $echo ) {
-				echo tutor_kses_html( $output );
-			}
-			return $output;
-		}
-
-		ob_start();
-		tutor_load_template( 'single.course.review-form' );
-		$output = apply_filters( 'tutor_course/single/reviews_form', ob_get_clean() );
 
 		if ( $echo ) {
 			echo tutor_kses_html( $output );

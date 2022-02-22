@@ -21,10 +21,12 @@ $current_page = max(1, (int)tutor_utils()->avalue_dot('current_page', $_POST));
 $offset = ($current_page - 1) * $per_page;
 
 $course_id = isset($_POST['course_id']) ? (int)$_POST['course_id'] : get_the_ID();
+$is_enrolled = tutor_utils()->is_enrolled($course_id, get_current_user_id());
 
 $reviews = tutor_utils()->get_course_reviews($course_id, $offset, $per_page);
 $reviews_total = tutor_utils()->get_course_reviews($course_id, null, null, true);
 $rating = tutor_utils()->get_course_rating($course_id);
+$my_rating = tutor_utils()->get_reviews_by_user(0, 0, 150, false, $course_id);
 
 do_action( 'tutor_course/single/enrolled/before/reviews' );
 ?>
@@ -129,21 +131,68 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 				</ul>
 			</div>
 		</div>
-		
-		<?php 
-			$pagination_data = array(
-				'total_items' => $reviews_total,
-				'per_page'    => $per_page,
-				'paged'       => $current_page,
-				'ajax'		  => array(
-					'action' => 'tutor_single_course_reviews_load_more',
-					'course_id' => $course_id,
-				)
-			);
+	<?php endif; ?>
+	
+	<div class="tutor-bs-row tutor-mt-40 tutor-mb-20">
+		<div class="tutor-bs-col">
+			<?php if($is_enrolled): ?>
+				<button class="tutor-btn write-course-review-link-btn">
+					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-5"></i>
+					<?php
+						$is_new = $my_rating && (!empty($my_rating->rating) || !empty($my_rating->comment_content));
+						$is_new ? _e('Write a review', 'tutor') : _e('Edit review', 'tutor');
+					?>
+				</button>
+			<?php endif; ?>
+		</div>
+		<div class="tutor-bs-col-auto">
+			<?php 
+				$pagination_data = array(
+					'total_items' => $reviews_total,
+					'per_page'    => $per_page,
+					'paged'       => $current_page,
+					'layout'	  => array(
+						'type' => 'prev_next',
+						'prev_text' => __('Back', 'tutor'),
+						'next_text' => __('Load More', 'tutor')
+					),
+					'ajax'		  => array(
+						'action' => 'tutor_single_course_reviews_load_more',
+						'course_id' => $course_id,
+					)
+				);
 
-			$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
-			tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
-		?>
+				$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+				tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+			?>
+		</div>
+	</div>
+
+	<?php if($is_enrolled): ?>
+		<div class="tutor-course-enrolled-review-wrap tutor-mt-15">
+			<div class="tutor-write-review-form" style="display: none;">
+				<form method="post">
+					<div class="tutor-star-rating-container">
+						<input type="hidden" name="course_id" value="<?php echo $course_id; ?>"/>
+						<input type="hidden" name="review_id" value="<?php echo $my_rating ? $my_rating->comment_ID : ''; ?>"/>
+						<input type="hidden" name="action" value="tutor_place_rating"/>
+						<div class="tutor-form-group">
+							<?php
+								tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($my_rating ? $my_rating->rating : 0));
+							?>
+						</div>
+						<div class="tutor-form-group">
+							<textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($my_rating ? $my_rating->comment_content : ''); ?></textarea>
+						</div>
+						<div class="tutor-form-group">
+							<button type="submit" class="tutor_submit_review_btn tutor-btn">
+								<?php _e('Submit Review', 'tutor'); ?>
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 	<?php endif; ?>
 </div>
 
