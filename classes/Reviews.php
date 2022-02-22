@@ -26,6 +26,8 @@ class Reviews {
 		 * Delete reviews action
 		 */
 		add_action( 'wp_ajax_tutor_delete_review', array( $this, 'delete_review' ) );
+		add_action( 'wp_ajax_tutor_single_course_reviews_load_more', array($this, 'tutor_single_course_reviews_load_more') );
+		add_action( 'wp_ajax_nopriv_tutor_single_course_reviews_load_more', array($this, 'tutor_single_course_reviews_load_more') );
 	}
 
 	/**
@@ -59,5 +61,15 @@ class Reviews {
 			)
 		);
 		return $delete ? true : false;
+	}
+
+	public function tutor_single_course_reviews_load_more() {
+		tutor_utils()->checking_nonce();
+
+		ob_start();
+		tutor_load_template( 'single.course.reviews' );
+		$html = ob_get_clean();
+
+		wp_send_json_success( array('html' => $html) );
 	}
 }

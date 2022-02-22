@@ -18,7 +18,7 @@ $course_filter = (bool) tutor_utils()->get_option('course_archive_filter', false
 $supported_filters = tutor_utils()->get_option('supported_course_filters', array());
 
 if ($course_filter && count($supported_filters)) {
-?>	
+?>
 	<div class="tutor-wrap tutor-courses-wrap tutor-bs-container">
 		<div class="tutor-course-listing-filter tutor-filter-course-grid-2 tutor-filter-course-grid-3">
 			<div class="tutor-course-filter tutor-course-filter-container">
@@ -34,9 +34,11 @@ if ($course_filter && count($supported_filters)) {
 <?php
 } else {
 	?>
+	<div class="tutor-wrap tutor-courses-wrap tutor-bs-container">
 		<div class="<?php tutor_container_classes(); ?>">
 			<?php tutor_load_template('archive-course-init'); ?>
 		</div>
+	</div>
 	<?php
 }
 tutor_utils()->tutor_custom_footer(); ?>

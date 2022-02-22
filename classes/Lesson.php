@@ -45,6 +45,18 @@ class Lesson extends Tutor_Base {
 		 * @since v.1.5.3
 		 */
 		add_action( 'tutor_lesson_completed_after', array( $this, 'tutor_lesson_completed_after' ), 999 );
+
+		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array($this, 'tutor_single_course_lesson_load_more') );
+	}
+
+	public function tutor_single_course_lesson_load_more() {
+		tutor_utils()->checking_nonce();
+
+		ob_start();
+		tutor_load_template('single.lesson.comment');
+		$html = ob_get_clean();
+
+		wp_send_json_success( array('html' => $html) );
 	}
 
 	/**

@@ -194,14 +194,14 @@ class Q_and_A {
 	 * @return array
 	 * @since v2.0.0
 	 */
-	public static function tabs_key_value() {
+	public static function tabs_key_value($asker_id=null) {
 
 		$stats = array(
-			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, null, true ),
-			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'read', true ),
-			'unread'    => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'unread', true ),
-			'important' => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'important', true ),
-			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, null, 'archived', true ),
+			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, null, true ),
+			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'read', true ),
+			'unread'    => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'unread', true ),
+			'important' => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'important', true ),
+			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'archived', true ),
 		);
 
 		// Assign value, url etc to the tab array

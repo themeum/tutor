@@ -3686,39 +3686,37 @@ class Utils {
 	 *
 	 * @since v.1.0.0
 	 */
-	public function get_course_reviews( $course_id = 0, $offset = 0, $limit = 150 ) {
+	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only=false ) {
 		$course_id = $this->get_post_id( $course_id );
 		global $wpdb;
 
-		$reviews = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT {$wpdb->comments}.comment_ID,
-					{$wpdb->comments}.comment_post_ID,
-					{$wpdb->comments}.comment_author,
-					{$wpdb->comments}.comment_author_email,
-					{$wpdb->comments}.comment_date,
-					{$wpdb->comments}.comment_content,
-					{$wpdb->comments}.user_id,
-					{$wpdb->commentmeta}.meta_value AS rating,
-					{$wpdb->users}.display_name
+		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
+		
+		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' : 
+			'_reviews.comment_ID,
+			_reviews.comment_post_ID,
+			_reviews.comment_author,
+			_reviews.comment_author_email,
+			_reviews.comment_date,
+			_reviews.comment_content,
+			_reviews.user_id,
+			_rev_meta.meta_value AS rating,
+			_reviewer.display_name';
 
-			FROM 	{$wpdb->comments}
-					INNER JOIN {$wpdb->commentmeta}
-					ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-					LEFT JOIN {$wpdb->users}
-					ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-			WHERE 	{$wpdb->comments}.comment_post_ID = %d
+		$query = $wpdb->prepare(
+			"SELECT {$select_columns}
+			FROM 	{$wpdb->comments} _reviews
+					INNER JOIN {$wpdb->commentmeta} _rev_meta
+					ON _reviews.comment_ID = _rev_meta.comment_id
+					LEFT JOIN {$wpdb->users} _reviewer
+					ON _reviews.user_id = _reviewer.ID
+			WHERE 	_reviews.comment_post_ID = %d
 					AND comment_type = 'tutor_course_rating' AND meta_key = 'tutor_rating'
-			ORDER BY comment_ID DESC
-			LIMIT 	%d, %d;
-			",
-				$course_id,
-				$offset,
-				$limit
-			)
+			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
+			$course_id
 		);
 
-		return $reviews;
+		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query);
 	}
 
 	/**
@@ -4230,8 +4228,11 @@ class Utils {
 		}
 
 		if ( isset( $args['course_id'] ) ) {
+			// Get qa for specific course
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
-		} elseif ( ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
+
+		} elseif (!$asker_id && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
+			// If current user is simple instructor (non admin), then get qa from their courses only
 			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
 			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
 			$in_course_id_query .= " AND _question.comment_post_ID IN($in_ids) ";
