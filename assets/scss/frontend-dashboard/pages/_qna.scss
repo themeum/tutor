@@ -99,9 +99,6 @@
 			justify-content: flex-start;
 			margin-top: 4px;
 		}
-		// .tutor-qna-view-as {
-		// 	margin-right: 12px;
-		// }
 		.tutor-qna-toggle-area {
 		}
 	}
@@ -156,7 +153,7 @@ table.frontend-dashboard-qna-table-student {
 		}
 		td[data-th='Reply'] {
 		}
-		td[data-th='Act∫ion'] {
+		td[data-th='Action'] {
 		}
 	}
 }
@@ -211,9 +208,7 @@ table.frontend-dashboard-qna-table-instructor {
 		}
 
 		td[data-th='Action'] {
-			div {
-				// margin-top: 4px;
-			}
+			div {}
 		}
 
 		td[data-th='Action'] {
@@ -228,14 +223,6 @@ table.frontend-dashboard-qna-table-instructor {
 		align-items: center;
 	}
 	.tutor-qna-badges {
-		span[data-action='important'],
-		span[data-action='archived'],
-		span[data-action='read'],
-		span[data-tutor-modal-target='tutor_qna_delete_single_44'] {
-		}
-		// i.active {
-		// 	color : $design-brand;
-		// }
 		span.tutor-updating-message {
 			i {
 				visibility: hidden;

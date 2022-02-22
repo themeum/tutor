@@ -38,11 +38,15 @@ window.jQuery(document).ready($=>{
                 beforeSend:()=>{
                     if(!callback){
                         // Don't show if click on add. Then add loading icon should appear
-                        search_container.html('<div class="tutor-text-center"><span class="tutor-updating-message"></span></div>');
+                        search_container.html('');
+                        search_container.addClass('tutor-updating-message');
+                        // search_container.html('<div class="tutor-text-center"><span class="tutor-updating-message"></span></div>');
                     }
                 },
                 success: function(resp) {
                     const {search_result, shortlisted, shortlisted_count} = resp.data || {};
+
+                    search_container.removeClass('tutor-updating-message');
                     
                     search_container.html(search_result);
                     shortlist_container.html(shortlisted);

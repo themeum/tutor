@@ -44,7 +44,7 @@
 			+ .tutor-dropdown-select-selected::after {
 				transform: translateY(-50%) rotateX(180deg);
 				transform: translateY(-50%) rotate(-180deg);
-				color: $design-brand;
+				// color: $design-brand;
 			}
 		}
 
@@ -113,12 +113,21 @@
 	}
 } // .tutor-dropdown-select
 
+.tutor-dropdown-select-options-container.is-active {
+	+ .tutor-dropdown-select-selected {
+		border-color: $color-brand;
+		&::after {
+			// color: $color-brand;
+		}
+	}
+}
+
 .wp-admin {
 	.tutor-dropdown-select-options-container.is-active {
 		+ .tutor-dropdown-select-selected {
 			border-color: $brand-wordpress;
 			&::after {
-				color: $brand-wordpress;
+				// color: $brand-wordpress;
 			}
 		}
 	}

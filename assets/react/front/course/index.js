@@ -3,6 +3,7 @@ import './_spotlight';
 import './_wishlist';
 import './_social-share';
 import './_spotlight-quiz';
+import './_spotlight-quiz-timing';
 
 window.jQuery(document).ready($=>{
     // Login require on enrol purchase click

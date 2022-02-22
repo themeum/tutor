@@ -49,7 +49,7 @@ function render_answer_list( $answers= array() ){
                         break;
 
                     case 'text':
-                        $ans_string = '<span class="text-medium-caption tutor-color-text-primary">'
+                        $ans_string = '<span class="tutor-text-medium-caption tutor-color-text-primary">'
                                 .esc_html( $ans->answer_title ).
                             '</span>';
 
@@ -153,7 +153,7 @@ if ( is_array( $attempt_info ) ) {
             <?php
                 foreach($table_1_columns as $key => $column) {
                     $class_name = join('-', explode(' ', strtolower($column)));
-                    echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
+                    echo '<th class="'. $class_name .'"><span class="tutor-text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
                 }
             ?>
         </tr>
@@ -168,9 +168,9 @@ if ( is_array( $attempt_info ) ) {
                             <td data-th="<?php echo $column; ?>">
                                 <div class="td-avatar">
                                     <img src="<?php echo esc_url(get_avatar_url($user_id)); ?>" alt="<?php echo esc_attr($user->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>"/>
-                                    <p class="tutor-text-medium-body  tutor-color-text-primary">
+                                    <div class="tutor-text-medium-body  tutor-color-text-primary tutor-text-nowrap">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
-                                    </p>
+                                    </div>
                                     <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="btn-text btn-detail-link tutor-color-design-dark">
                                         <span class="tutor-icon-detail-link-filled"></span>
                                     </a>
@@ -199,7 +199,7 @@ if ( is_array( $attempt_info ) ) {
                         case 'qeustion_count' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
+                                <span class="tutor-text-medium-caption tutor-color-text-primary">
                                     <?php echo $attempt_data->total_questions; ?>
                                 </span>
                             </td>
@@ -225,7 +225,7 @@ if ( is_array( $attempt_info ) ) {
                         case 'total_marks' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
+                                <span class="tutor-text-medium-caption tutor-color-text-primary">
                                     <?php echo $attempt_data->total_marks; ?>
                                 </span>
                             </td>
@@ -235,7 +235,7 @@ if ( is_array( $attempt_info ) ) {
                         case 'pass_marks' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
+                                <span class="tutor-text-medium-caption tutor-color-text-primary">
                                     <?php
                                         $pass_marks = ($total_marks * $passing_grade) / 100;
                                         echo number_format_i18n($pass_marks, 2);
@@ -251,7 +251,7 @@ if ( is_array( $attempt_info ) ) {
                         case 'correct_answer' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
+                                <span class="tutor-text-medium-caption tutor-color-text-primary">
                                     <?php echo $correct; ?>
                                 </span>
                             </td>
@@ -261,7 +261,7 @@ if ( is_array( $attempt_info ) ) {
                         case 'incorrect_answer' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
+                                <span class="tutor-text-medium-caption tutor-color-text-primary">
                                     <?php echo $incorrect; ?>
                                 </span>
                             </td>
@@ -271,7 +271,7 @@ if ( is_array( $attempt_info ) ) {
                         case 'earned_marks' :
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
+                                <span class="tutor-text-medium-caption tutor-color-text-primary">
                                     <?php
                                         echo $attempt_data->earned_marks;
                                         $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
@@ -285,7 +285,7 @@ if ( is_array( $attempt_info ) ) {
                         case 'result':
                             ?>
                             <td data-th="<?php echo $column; ?>">
-                                <span class="text-medium-caption tutor-color-text-primary">
+                                <span class="tutor-text-medium-caption tutor-color-text-primary">
                                     <?php
                                         $ans_array = is_array($answers) ? $answers : array();
                                         $has_pending = count(array_filter($ans_array, function($ans){
@@ -349,7 +349,7 @@ if ( is_array( $attempt_info ) ) {
                                             case 'no' :
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>">
-                                                    <span class="text-medium-caption tutor-color-text-primary">
+                                                    <span class="tutor-text-medium-caption tutor-color-text-primary">
                                                         <?php echo $answer_i; ?>
                                                     </span>
                                                 </td>
@@ -360,7 +360,7 @@ if ( is_array( $attempt_info ) ) {
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-                                                    <div class="tooltip-wrap tooltip-icon- tutor-bs-d-flex">
+                                                    <div class="tooltip-wrap tooltip-icon tutor-bs-d-flex">
                                                         <?php echo $question_type['icon']; ?>
                                                         <span class="tooltip-txt tooltip-top">
                                                             <?php echo $type['name']; ?>
@@ -397,7 +397,7 @@ if ( is_array( $attempt_info ) ) {
                                                             $answer_titles = wp_list_pluck($get_answers, 'answer_title');
                                                             $answer_titles = array_map('stripslashes', $answer_titles);
     
-                                                            echo '<span class="text-medium-caption tutor-color-text-primary">'.implode('</p><p>', $answer_titles).'</span>';
+                                                            echo '<span class="tutor-text-medium-caption tutor-color-text-primary">'.implode('</p><p>', $answer_titles).'</span>';
                                                         }
     
                                                         // Multiple choice
@@ -521,8 +521,8 @@ if ( is_array( $attempt_info ) ) {
                                                                     AND is_correct = 1",
                                                                 $answer->question_id
                                                             ) );
-    
-                                                            echo '<span class="text-medium-caption tutor-color-text-primary">' . $correct_answer . '</span>';
+
+                                                            echo '<span class="tutor-text-medium-caption tutor-color-text-primary">' . $correct_answer . '</span>';
                                                         }
     
                                                         // Single choice
