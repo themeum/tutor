@@ -2085,6 +2085,11 @@ table.course-single-gradebooks a {
 	padding-top: 50px !important;
 	margin: 0px auto;
 	.tutor-course-filter-loop-container {
+		.tutor-course-list-pagination.tutor-ui-pagination{
+			margin-left: 0;
+			margin-right: 0;
+			width: 100%;
+		}
 		margin-top: 0px;
 	}
 }
