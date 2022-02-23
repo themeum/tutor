@@ -348,7 +348,7 @@ if ( is_array( $attempt_info ) ) {
                                         switch($key) {
                                             case 'no' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="no" data-th="<?php echo $column; ?>">
                                                     <span class="tutor-text-medium-caption tutor-color-text-primary">
                                                         <?php echo $answer_i; ?>
                                                     </span>
@@ -358,7 +358,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'type' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="type" data-th="<?php echo $column; ?>">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
                                                     <div class="tooltip-wrap tooltip-icon tutor-bs-d-flex">
                                                         <?php echo $question_type['icon']; ?>
@@ -372,7 +372,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'questions' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="questions" data-th="<?php echo $column; ?>">
                                                     <span class="text-medium-small tutor-bs-d-flex tutor-bs-align-items-center">
                                                         <?php echo stripslashes($answer->question_title); ?>
                                                     </span>
@@ -382,7 +382,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'given_answer' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="given-answer" data-th="<?php echo $column; ?>">
                                                     <?php
                                                         // Single choice
                                                         if ( $answer->question_type === 'single_choice' ) {
@@ -506,7 +506,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'correct_answer' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="correct-answer" data-th="<?php echo $column; ?>">
                                                     <?php
                                                     if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
     
@@ -642,7 +642,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'answer' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="answer" data-th="<?php echo $column; ?>">
                                                     <?php
                                                         switch($answer_status) {
                                                             case 'correct' :
