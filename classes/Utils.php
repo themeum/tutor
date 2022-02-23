@@ -8450,7 +8450,12 @@ class Utils {
 	public function get_unique_slug( $slug, $post_type = null, $num_assigned = false ) {
 
 		global $wpdb;
-		$existing_slug = $wpdb->get_var( $wpdb->prepare( "SELECT post_name FROM {$wpdb->posts} WHERE post_name=%s" . ( $post_type ? " AND post_type='{$post_type}' LIMIT 1" : '' ), $slug ) );
+		$existing_slug = $wpdb->get_var( $wpdb->prepare( 
+			"SELECT post_name 
+			FROM {$wpdb->posts} 
+			WHERE post_name=%s" . ( $post_type ? " AND post_type='{$post_type}' LIMIT 1" : '' ), 
+			$slug 
+		) );
 
 		if ( ! $existing_slug ) {
 			return $slug;
