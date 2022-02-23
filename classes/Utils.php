@@ -5376,9 +5376,7 @@ class Utils {
 					{$result_clause}
 					{$course_filter}
 					{$date_filter}
-			ORDER 	BY quiz_attempts.attempt_ended_at $order_filter
-			{$limit_offset}",
-			'attempt_started',
+			ORDER 	BY quiz_attempts.attempt_ended_at {$order_filter} {$limit_offset}",
 			$search_filter,
 			$search_filter,
 			$search_filter,
