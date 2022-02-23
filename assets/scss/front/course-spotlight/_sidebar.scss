@@ -16,7 +16,7 @@
 	flex: 0 0 400px;
 	background: #fff;
 	border-color: $stroke-light-30;
-	border-width: 1px 0px 0px 0px;
+	border-width: 1px 1px 0px 0px;
 	border-style: solid;
 	border-bottom: none;
 	.tutor-empty-state-wrapper {
@@ -109,7 +109,11 @@
 							.tutor-topics-title-inner {
 								display: flex;
 								cursor: pointer;
-								max-width: 330px;
+								// max-width: 330px;
+								max-width: 290px;
+								> div:first-child {
+									min-width: 75px;
+								}
 							}
 							.tutor-topics-title-info {
 								i {

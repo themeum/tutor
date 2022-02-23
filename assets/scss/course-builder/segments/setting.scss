@@ -16,6 +16,9 @@
 	.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
 		margin-right: 0px !important;
 	}
+	button.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
+		margin-right: 8px !important;
+	}
 	.tutor-certificate-template {
 		.template-item {
 			.template-radio-field {
