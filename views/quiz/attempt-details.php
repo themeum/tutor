@@ -241,7 +241,7 @@ if ( is_array( $attempt_info ) ) {
                                         echo number_format_i18n($pass_marks, 2);
 
                                         $pass_mark_percent = $passing_grade; // tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
-                                        echo '('.$pass_mark_percent.'%)';
+                                        echo ' ('.$pass_mark_percent.'%)';
                                     ?>
                                 </span>
                             </td>
@@ -275,7 +275,7 @@ if ( is_array( $attempt_info ) ) {
                                     <?php
                                         echo $attempt_data->earned_marks;
                                         $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
-                                        echo '('.$earned_percentage.'%)';
+                                        echo ' ('.$earned_percentage.'%)';
                                     ?>
                                 </span>
                             </td>
