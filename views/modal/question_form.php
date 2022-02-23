@@ -37,7 +37,9 @@ $settings = maybe_unserialize($question->question_settings);
                                 <?php echo $question_types[$current_type]['icon'];
                                 echo $question_types[$current_type]['name']; ?> 
                             </span>
-                            <span class="select-dropdown"><i class="tutor-icon-icon-light-down-line tutor-icon-18"></i> </span>
+                            <span class="select-dropdown">
+                                <i class="tutor-icon-icon-light-down-line tutor-icon-18"></i> 
+                            </span>
                             <input type="hidden" class="tutor_select_value_holder" name="tutor_quiz_question[<?php echo $question_id; ?>][question_type]" value="<?php echo $question->question_type; ?>">
                         </div>
 

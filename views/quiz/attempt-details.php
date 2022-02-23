@@ -316,7 +316,7 @@ if ( is_array( $attempt_info ) ) {
         echo $context!='course-single-previous-attempts' ? '<div class="tutor-text-medium-body tutor-color-text-primary tutor-mt-22">'.__('Quiz Overview', 'tutor').'</div>' : '';
         ?>
         <div class="tutor-ui-table-wrapper tutor-mt-10">
-            <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-30">
+            <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-30 td-align-top">
                 <thead>
                     <tr>
                         <?php
