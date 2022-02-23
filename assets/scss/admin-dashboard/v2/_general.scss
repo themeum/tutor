@@ -14,6 +14,8 @@
 	@extend .text-body;
 	color: $text-subsued;
 
+	overflow-x: auto;
+
 	.tutor-option-header,
 	.tutor-option-form {
 		display: grid;
@@ -27,9 +29,16 @@
 			grid-template-columns: 1fr 825px 1fr;
 		}
 	}
+	.tutor-option-form {
+		@include breakpoint-max(1400) {
+			grid-template-columns: min-content auto;
+		}
+	}
 	@include breakpoint-max(1300) {
 		.tutor-option-header {
 			grid-template-columns: 175px auto auto;
+			grid-template-columns: auto 1fr auto;
+			grid-gap: 15px;
 		}
 	}
 	.tutor-form-control {
@@ -306,11 +315,11 @@
 			padding-bottom: 25px;
 		}
 		.drag-drop-zone {
-            @include getDashedBorder(2px, 18px, $primary-60);
+			@include getDashedBorder(2px, 18px, $primary-60);
 			background-color: $bg-white;
 			border-radius: 6px;
 			text-align: center;
-			border-color: #BDCAF1;
+			border-color: #bdcaf1;
 			color: $text-primary;
 			padding: 25px 30px 38px;
 
