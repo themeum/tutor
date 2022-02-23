@@ -274,12 +274,14 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 		}
 
 		if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now || $time_duration['value'] == 0 ) ) {
+
 			?>
 
 			<div class="tutor-assignment-submission tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
 				<form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 					<input type="hidden" value="tutor_assignment_submit" name="tutor_action" />
+					<input type="hidden" value="<?php echo home_url(wp_parse_url(get_pagenum_link())['path'])?>" name="_wp_http_referer" />
 					<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 
 					<?php $allowed_upload_files = (int) tutor_utils()->get_assignment_option( get_the_ID(), 'upload_files_limit' ); ?>
@@ -606,8 +608,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 														</div>
 														<div class="text-regular-small">Size: <?php echo tutor_utils()->array_get( 'size', $attached_file ); ?></div>
 													</div>
-													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
-														<a href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>" target="_blank">
+													<div class="tutor-avatar tutor-is-xs flex-center">
+														<a download href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>" target="_blank">
 															<span class="tutor-icon-download-line tutor-color-design-brand"></span>
 														</a>
 													</div>
