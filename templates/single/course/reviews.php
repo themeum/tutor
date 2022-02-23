@@ -139,7 +139,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 				<button class="tutor-btn write-course-review-link-btn">
 					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-5"></i>
 					<?php
-						$is_new = $my_rating && (!empty($my_rating->rating) || !empty($my_rating->comment_content));
+						$is_new = !$my_rating || empty($my_rating->rating) || empty($my_rating->comment_content);
 						$is_new ? _e('Write a review', 'tutor') : _e('Edit review', 'tutor');
 					?>
 				</button>
@@ -167,33 +167,33 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 			?>
 		</div>
 	</div>
-
-	<?php if($is_enrolled): ?>
-		<div class="tutor-course-enrolled-review-wrap tutor-mt-15">
-			<div class="tutor-write-review-form" style="display: none;">
-				<form method="post">
-					<div class="tutor-star-rating-container">
-						<input type="hidden" name="course_id" value="<?php echo $course_id; ?>"/>
-						<input type="hidden" name="review_id" value="<?php echo $my_rating ? $my_rating->comment_ID : ''; ?>"/>
-						<input type="hidden" name="action" value="tutor_place_rating"/>
-						<div class="tutor-form-group">
-							<?php
-								tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($my_rating ? $my_rating->rating : 0));
-							?>
-						</div>
-						<div class="tutor-form-group">
-							<textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($my_rating ? $my_rating->comment_content : ''); ?></textarea>
-						</div>
-						<div class="tutor-form-group">
-							<button type="submit" class="tutor_submit_review_btn tutor-btn">
-								<?php _e('Submit Review', 'tutor'); ?>
-							</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	<?php endif; ?>
 </div>
+
+<?php if($is_enrolled): ?>
+	<div class="tutor-course-enrolled-review-wrap tutor-mt-15">
+		<div class="tutor-write-review-form" style="display: none;">
+			<form method="post">
+				<div class="tutor-star-rating-container">
+					<input type="hidden" name="course_id" value="<?php echo $course_id; ?>"/>
+					<input type="hidden" name="review_id" value="<?php echo $my_rating ? $my_rating->comment_ID : ''; ?>"/>
+					<input type="hidden" name="action" value="tutor_place_rating"/>
+					<div class="tutor-form-group">
+						<?php
+							tutor_utils()->star_rating_generator(tutor_utils()->get_rating_value($my_rating ? $my_rating->rating : 0));
+						?>
+					</div>
+					<div class="tutor-form-group">
+						<textarea name="review" placeholder="<?php _e('write a review', 'tutor'); ?>"><?php echo stripslashes($my_rating ? $my_rating->comment_content : ''); ?></textarea>
+					</div>
+					<div class="tutor-form-group">
+						<button type="submit" class="tutor_submit_review_btn tutor-btn">
+							<?php _e('Submit Review', 'tutor'); ?>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+<?php endif; ?>
 
 <?php do_action( 'tutor_course/single/enrolled/after/reviews' ); ?>

@@ -10,7 +10,7 @@
 $paged    = $data['paged'];
 $per_page = $data['per_page'];
 $big      = 999999999;
-
+$total_page = ceil( $data['total_items'] / $per_page );
 
 if(isset($data['layout']) && $data['layout']['type']=='prev_next') {
 	$current_url = tutor()->current_url;
@@ -23,9 +23,12 @@ if(isset($data['layout']) && $data['layout']['type']=='prev_next') {
 				.'</a>';
 		}
 
-		echo '<a class="tutor-btn tutor-btn-tertiary tutor-is-outline page-numbers tutor-mr-5" href="'.add_query_arg( array('current_page' => $paged+1), $current_url ).'">'.
+		if($paged<$total_page){
+			echo '<a class="tutor-btn tutor-btn-tertiary tutor-is-outline page-numbers tutor-mr-5" href="'.add_query_arg( array('current_page' => $paged+1), $current_url ).'">'.
 					(empty($data['layout']['next_text']) ? __('Next', 'tutor') : $data['layout']['next_text'])
 				.'</a>';
+		}
+		
 	echo '</nav>';
 
 	return;
@@ -51,7 +54,7 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 					array(
 						'format'    => '?current_page=%#%',
 						'current'   => $paged,
-						'total'     => ceil( $data['total_items'] / $per_page ),
+						'total'     => $total_page,
 						'prev_text' => '<span class="tutor-icon-angle-left-filled"></span>',
 						'next_text' => '<span class="tutor-icon-angle-right-filled"></span>',
 					)
