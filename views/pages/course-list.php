@@ -283,12 +283,8 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								</td>
 								<td data-th="<?php esc_html_e( 'Course Category', 'tutor' ); ?>">
 									<?php
-										$terms       = wp_get_post_terms( $post->ID, 'course-category' );
-										$total_terms = count( $terms ) - 1;
-									foreach ( $terms as $key => $term ) {
-										$separator = $key < $total_terms ? ', ' : '';
-										echo esc_html( $term->name . $separator );
-									}
+										$terms = wp_get_post_terms( $post->ID, 'course-category' );
+										echo implode(', ', array_column($terms, 'name')) . '&nbsp;';
 									?>
 								</td>
 								<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>">

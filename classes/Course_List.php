@@ -236,30 +236,35 @@ class Course_List {
 		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
 
 		if ( '' === $action || '' === $bulk_ids ) {
-			return wp_send_json_error();
-		} elseif ( 'delete' === $action ) {
+			wp_send_json_error(array('message' => __('Please select appropriate action', 'tutor')));
+			exit;
+		} 
+		
+		if ( 'delete' === $action ) {
 			// Do action before delete.
 			do_action( 'before_tutor_course_bulk_action_delete', $bulk_ids );
 
 			$delete_courses = self::delete_course( $bulk_ids );
 
 			do_action( 'after_tutor_course_bulk_action_delete', $bulk_ids );
-			return $delete_courses ? wp_send_json_success() : wp_send_json_error();
-		} else {
-			/**
-			 * Do action before course update
-			 *
-			 * @param string $action (publish | pending | draft | trash).
-			 * @param array $bulk_ids, course id.
-			 */
-			do_action( 'before_tutor_course_bulk_action_update', $action, $bulk_ids );
-
-			$update_status = self::update_course_status( $action, $bulk_ids );
-
-			do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
-
-			return $update_status ? wp_send_json_success() : wp_send_json_error();
+			$delete_courses ? wp_send_json_success() : wp_send_json_error(array('message' => __('Could not delete selected courses', 'tutor')));
+			exit;
 		}
+		
+		/**
+		 * Do action before course update
+		 *
+		 * @param string $action (publish | pending | draft | trash).
+		 * @param array $bulk_ids, course id.
+		 */
+		do_action( 'before_tutor_course_bulk_action_update', $action, $bulk_ids );
+
+		$update_status = self::update_course_status( $action, $bulk_ids );
+
+		do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
+
+		$update_status ? wp_send_json_success() : wp_send_json_error(array('message' => 'Could not update course status', 'tutor'));
+		
 		exit;
 	}
 
@@ -273,9 +278,10 @@ class Course_List {
 		tutor_utils()->checking_nonce();
 		$status = sanitize_text_field( $_POST['status'] );
 		$id     = sanitize_text_field( $_POST['id'] );
-		$update = self::update_course_status( $status, $id );
-		// return $update ? wp_send_json_success( $update ) : wp_send_json_error();
-		return wp_send_json( $update );
+		
+		self::update_course_status( $status, $id );
+
+		wp_send_json_success();
 		exit;
 	}
 
@@ -320,8 +326,9 @@ class Course_List {
 				1
 			)
 		);
-		// Delete post meta.
-		self::permanently_delete_course_meta( $bulk_ids );
+
+		// Delete course meta.
+		$delete ? self::permanently_delete_course_meta( $bulk_ids ) : 0;
 
 		return false === $delete ? false : true;
 	}
@@ -339,16 +346,17 @@ class Course_List {
 		$post_table = $wpdb->posts;
 		$status     = sanitize_text_field( $status );
 		$bulk_ids   = sanitize_text_field( $bulk_ids );
+
 		$update     = $wpdb->query(
 			$wpdb->prepare(
 				"UPDATE {$post_table}
 				SET post_status = %s
-				WHERE ID IN ($bulk_ids)
-			",
+				WHERE ID IN ($bulk_ids)",
 				$status
 			)
 		);
-		return $update ? true : false;
+
+		return true;
 	}
 	/**
 	 * Count quiz for a course
