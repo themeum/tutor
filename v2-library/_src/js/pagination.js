@@ -18,7 +18,7 @@ window.jQuery(document).ready($=>{
 
         let url_string = $(this).attr('href');
         let url = new URL(url_string);
-        let page_num = url.searchParams.get("current_page");
+        let page_num = parseInt(url.searchParams.get("current_page"));
 
         let data = $(this).closest('[data-tutor_pagination_ajax]').data('tutor_pagination_ajax');
         data.current_page = page_num;
@@ -34,8 +34,25 @@ window.jQuery(document).ready($=>{
                 let {success, data={}} = resp || {};
                 let {html} = data;
 
-                if(success && html) {
-                    replace_me.replaceWith(html);
+                if(success) {
+                    let append_root = replace_me.find('.tutor-pagination-content-appendable');
+                    if(append_root.length) {
+
+                        if(!html) {
+                            link_el.remove();
+                            return;
+                        }
+
+                        // Append the conntent
+                        append_root.append(html);
+
+                        // Update pagination data since pagination template is not supposed to be loaded here
+                        url.searchParams.set('current_page', page_num+1);
+                        link_el.attr('href', url.toString());
+                    } else {
+                        replace_me.replaceWith(html);
+                    }
+                    
                     $('[data-tutor_pagination_ajax]').css('display', 'flex');
                     window.dispatchEvent(new Event(_tutorobject.content_change_event));
 
