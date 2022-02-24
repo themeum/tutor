@@ -20,13 +20,13 @@
 
             $product_id = tutor_utils()->get_course_product_id($course_id);
             $product    = wc_get_product( $product_id );
-            
+
             $total_enrolled = tutor_utils()->count_enrolled_users_by_course($course_id);
             $maximum_students = tutor_utils()->get_course_settings($course_id, 'maximum_students');
 
             if ($maximum_students != 0 && $total_enrolled != $maximum_students){
                 $total_booked = 100 / $maximum_students * $total_enrolled;
-                $b_total = $total_booked;
+                $b_total = number_format((float) $total_booked, 2, '.', '');
 
                 $price_html = '<div class="list-item-price-with-booking tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between"><div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
                 $percet_html = '<div class="list-item-booking tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><div class="circle-progress progress-full" style="--pro:'.$b_total .'%;"></div></div><div class="tutor-text-medium-caption tutor-color-text-primary">'.$b_total . __('% Booked', 'tutor') . '</div></div></div>';
