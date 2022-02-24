@@ -42,6 +42,13 @@ table.tutor-ui-table {
 		border: none;
 	}
 
+	th,
+	td {
+		* {
+			word-break: break-word;
+		}
+	}
+
 	// Table utility classes
 	.inline-flex-center {
 		display: inline-flex;
@@ -49,6 +56,7 @@ table.tutor-ui-table {
 		// justify-content: center;
 	}
 
+	// table alignment utility table.th-aligh-top
 	&.th-align-top {
 		th {
 			vertical-align: top;
@@ -85,7 +93,7 @@ table.tutor-ui-table {
 		}
 	}
 
-	// table utility (individual th/td)
+	// table alignment utility (individual th/td) table th.v-aligh-top
 	.v-align-top {
 		vertical-align: top;
 		.tutor-form-check input.tutor-form-check-input {

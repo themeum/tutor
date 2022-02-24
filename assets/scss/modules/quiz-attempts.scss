@@ -137,10 +137,10 @@
 		@include breakpoint-min(1200) {
 			tr {
 				td.no {
-					width: 3%;
+					width: 8%;
 				}
 				td.type {
-					width: 3%;
+					width: 7%;
 				}
 				td.questions {
 					width: 20%;
@@ -149,10 +149,10 @@
 					width: 20%;
 				}
 				td.correct-answer {
-					width: 40%;
+					width: 30%;
 				}
 				td.answer {
-					width: 5%;
+					width: 15%;
 				}
 			}
 		}
