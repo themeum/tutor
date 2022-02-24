@@ -5376,9 +5376,7 @@ class Utils {
 					{$result_clause}
 					{$course_filter}
 					{$date_filter}
-			ORDER 	BY quiz_attempts.attempt_ended_at $order_filter
-			{$limit_offset}",
-			'attempt_started',
+			ORDER 	BY quiz_attempts.attempt_ended_at {$order_filter} {$limit_offset}",
 			$search_filter,
 			$search_filter,
 			$search_filter,
@@ -8452,7 +8450,12 @@ class Utils {
 	public function get_unique_slug( $slug, $post_type = null, $num_assigned = false ) {
 
 		global $wpdb;
-		$existing_slug = $wpdb->get_var( $wpdb->prepare( "SELECT post_name FROM {$wpdb->posts} WHERE post_name=%s" . ( $post_type ? " AND post_type='{$post_type}' LIMIT 1" : '' ), $slug ) );
+		$existing_slug = $wpdb->get_var( $wpdb->prepare( 
+			"SELECT post_name 
+			FROM {$wpdb->posts} 
+			WHERE post_name=%s" . ( $post_type ? " AND post_type='{$post_type}' LIMIT 1" : '' ), 
+			$slug 
+		) );
 
 		if ( ! $existing_slug ) {
 			return $slug;
