@@ -1,5 +1,11 @@
 # TutorLMS Changelog
 
+### 2.0.0 - March 15, 2022
+
+* New: Overall design update and optimizations
+* New: Email template builder
+
+
 ### 2.0.0-rc - February 22, 2022
 
 * New: Now go to the next or previous lesson with a dedicated button
