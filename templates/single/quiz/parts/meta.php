@@ -50,11 +50,12 @@
 					</div>
 				<?php endif; ?>
 
-				<p class="text-regular-body tutor-color-text-hints tutor-mr-10">
+				<p class="text-regular-body tutor-color-text-hints tutor-text-nowrap tutor-nowrap-nocut tutor-mr-10">
 					<?php esc_html_e( 'Time remaining: ', 'tutor' ); ?>
 				</p>
+				
 				<span id="tutor-quiz-time-update" 
-					class="text-medium-body <?php  $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
+					class="text-medium-body tutor-text-nowrap tutor-nowrap-nocut <?php  $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
 					data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" 
 					data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>" 
 					data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
