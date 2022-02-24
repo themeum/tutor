@@ -203,6 +203,34 @@
 		.tutor-quiz-item .tutor-quiz-item-label .tutor-quiz-item-draggable {
 			padding: 0 5px 0 14px;
 		}
+		.tutor-quiz-item-type {
+			.tooltip-btn {
+				display: flex;
+			}
+		}
+		.question-type-select {
+			.lead-option {
+				display: flex;
+    			align-items: center;
+				margin-top: 2px;
+				span {
+					display: flex;
+    				margin-top: -1px;
+				}
+			}
+			.select-dropdown {
+				i {
+					display: flex;
+				}
+			}
+			.tutor-select-options {
+				span {
+					i {
+						margin-top: -2px;
+					}
+				}
+			}
+		}
 	}
 	.tutor_assignment_modal_form {
 		.tutor-form-select {
