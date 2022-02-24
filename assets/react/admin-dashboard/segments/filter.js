@@ -105,7 +105,8 @@ document.addEventListener("DOMContentLoaded", function () {
           if (response.success) {
             location.reload();
           } else {
-            tutor_toast(__("Failed", "tutor"), __("Something went wrong, please try again ", "tutor"), "error");
+            let {message=__("Something went wrong, please try again ", "tutor")} = response.data || {}
+            tutor_toast(__("Failed", "tutor"), message, "error");
           }
 
         }

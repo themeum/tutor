@@ -20,7 +20,7 @@ if ( isset( $user_id ) && $user_id > 0 ) {
     }
 }
 
-function render_answer_list( $answers= array() ){
+function tutor_render_answer_list( $answers= array() ){
     if(!empty($answers)){
 
 		echo '<div class="correct-answer-wrap">';
@@ -82,6 +82,30 @@ function render_answer_list( $answers= array() ){
             echo count($multi_texts) ? implode(', ', $multi_texts) : '';
 
 		echo '</div>';
+    }
+}
+
+function tutor_render_fill_in_the_blank_answer($get_db_answers_by_question, $answer_titles) {
+
+    // Loop through the answers
+    foreach ($get_db_answers_by_question as $db_answer){
+        $count_dash_fields = substr_count($db_answer->answer_title, '{dash}');
+
+        if ($count_dash_fields){
+            $dash_string = array();
+            $input_data = array();
+            for($i=0; $i<$count_dash_fields; $i++){
+                $ans_title = (!empty($answer_titles[$i]) && !ctype_space($answer_titles[$i])) ? $answer_titles[$i] : null;
+                $input_data[] = $ans_title ? "<span class='filled_dash_unser'>{$ans_title}</span>" : "______";
+            }
+
+            $answer_title = $db_answer->answer_title;
+            foreach($input_data as $replace){
+                $replace = '<span style="text-decoration:underline;">'.$replace.'</span>';
+                $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
+            }
+            echo str_replace('{dash}', '_____', stripslashes($answer_title));
+        }
     }
 }
 
@@ -387,7 +411,7 @@ if ( is_array( $attempt_info ) ) {
                                                         // Single choice
                                                         if ( $answer->question_type === 'single_choice' ) {
                                                             $get_answers = tutor_utils()->get_answer_by_id($answer->given_answer);
-                                                            render_answer_list($get_answers);
+                                                            tutor_render_answer_list($get_answers);
                                                         }
     
 
@@ -403,7 +427,7 @@ if ( is_array( $attempt_info ) ) {
                                                         // Multiple choice
                                                         elseif ($answer->question_type === 'multiple_choice'){
                                                             $get_answers = tutor_utils()->get_answer_by_id(maybe_unserialize($answer->given_answer));
-                                                            render_answer_list($get_answers);
+                                                            tutor_render_answer_list($get_answers);
                                                         }
     
                                                         // Fill in the blank
@@ -411,24 +435,7 @@ if ( is_array( $attempt_info ) ) {
                                                             $answer_titles = maybe_unserialize($answer->given_answer);
                                                             $get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
     
-                                                            // Loop through the answers
-                                                            foreach ($get_db_answers_by_question as $db_answer){
-                                                                $count_dash_fields = substr_count($db_answer->answer_title, '{dash}');
-    
-                                                                if ($count_dash_fields){
-                                                                    $dash_string = array();
-                                                                    $input_data = array();
-                                                                    for($i=0; $i<$count_dash_fields; $i++){
-                                                                        $input_data[] =  isset($answer_titles[$i]) ? "<span class='filled_dash_unser'>{$answer_titles[$i]}</span>" : "______";
-                                                                    }
-                                                                    $answer_title = $db_answer->answer_title;
-                                                                    foreach($input_data as $replace){
-                                                                        $replace = '<span style="text-decoration:underline;">'.$replace.'</span>';
-                                                                        $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
-                                                                    }
-                                                                    echo str_replace('{dash}', '_____', stripslashes($answer_title));
-                                                                }
-                                                            }
+                                                            echo tutor_render_fill_in_the_blank_answer($get_db_answers_by_question, $answer_titles);
                                                         }
     
                                                         // Open ended or short answer
@@ -443,7 +450,7 @@ if ( is_array( $attempt_info ) ) {
                                                             $ordering_ids = maybe_unserialize($answer->given_answer);
                                                             foreach ($ordering_ids as $ordering_id){
                                                                 $get_answers = tutor_utils()->get_answer_by_id($ordering_id);
-                                                                render_answer_list($get_answers);
+                                                                tutor_render_answer_list($get_answers);
                                                             }
                                                         }
     
@@ -536,7 +543,7 @@ if ( is_array( $attempt_info ) ) {
                                                                     $answer->question_id
                                                                 ) );
     
-                                                            render_answer_list($correct_answer);
+                                                            tutor_render_answer_list($correct_answer);
                                                         }
     
                                                         // Multiple choice
@@ -550,7 +557,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            render_answer_list($correct_answer);
+                                                            tutor_render_answer_list($correct_answer);
                                                         }
     
                                                         // Fill in the blanks
@@ -562,9 +569,10 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            if($correct_answer){
-                                                                echo implode(', ', explode('|', stripslashes($correct_answer)));
-                                                            }
+                                                            $answer_titles = explode('|', stripslashes($correct_answer));
+                                                            $get_db_answers_by_question = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+    
+                                                            echo tutor_render_fill_in_the_blank_answer($get_db_answers_by_question, $answer_titles);
                                                         }
     
                                                         // Ordering
@@ -578,7 +586,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            render_answer_list($correct_answer);
+                                                            tutor_render_answer_list($correct_answer);
                                                         }
     
                                                         // Matching
@@ -592,7 +600,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            render_answer_list($correct_answer);
+                                                            tutor_render_answer_list($correct_answer);
                                                         }
     
                                                         // Image matching
@@ -606,7 +614,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            render_answer_list($correct_answer);
+                                                            tutor_render_answer_list($correct_answer);
                                                         }
 
                                                         // Image Answering
