@@ -37,6 +37,8 @@ window.jQuery(document).ready($=>{
                 if(success && html) {
                     replace_me.replaceWith(html);
                     $('[data-tutor_pagination_ajax]').css('display', 'flex');
+                    window.dispatchEvent(new Event(_tutorobject.content_change_event));
+
                 } else {
                     tutor_toast(__('Error', 'tutor'), get_response_message(data), 'error');
                 }
