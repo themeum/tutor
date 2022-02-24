@@ -529,7 +529,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 
 				<?php
-				if ( $is_reviewed_by_instructor ) {
+				$instructor_note = get_comment_meta( $submitted_assignment->comment_ID, 'instructor_note', true );
+				if ( !empty($instructor_note) && $is_reviewed_by_instructor ) {
 					?>
 				<div class="tutor-instructor-note tutor-my-30 tutor-py-20 tutor-px-25 tutor-py-sm-30 tutor-px-sm-35">
 					<div class="tutor-in-title tutor-text-medium-h6 tutor-color-text-primary">
