@@ -87,6 +87,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		}
 	}
 	commentSideLine();
+	window.addEventListener(_tutorobject.content_change_event, commentSideLine);
+
 	const spotlightTabs = document.querySelectorAll('.tutor-spotlight-tab.tutor-default-tab .tab-header-item');
 	const spotlightTabContent = document.querySelectorAll('.tutor-spotlight-tab .tab-body-item');
 	if (spotlightTabs && spotlightTabContent) {
