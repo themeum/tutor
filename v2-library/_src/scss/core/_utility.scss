@@ -108,8 +108,10 @@
 
 .tutor-text-nowrap {
 	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	&:not(.tutor-nowrap-nocut) {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 }
 
 .tutor-nowrap-ellipsis {
