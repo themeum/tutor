@@ -89,6 +89,9 @@ window.jQuery(document).ready($ => {
     // Show review form on opn (Single course)
     $(document).on('click', '.write-course-review-link-btn', function (e) {
         e.preventDefault();
-        $(this).closest('.tutor-pagination-wrapper-replacable').find('.tutor-write-review-form').slideToggle();
+        $(this) .closest('.tutor-pagination-wrapper-replacable')
+                .next()
+                .filter('.tutor-course-enrolled-review-wrap')
+                .find('.tutor-write-review-form').slideToggle();
     });
 });

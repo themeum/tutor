@@ -1,15 +1,33 @@
 # TutorLMS Changelog
 
-### 2.0.0-rc - February 09, 2022
+### 2.0.0 - March 15, 2022
 
-* New: Added pagination in frontend course list
-* Fix: WPML compatibility in dashboard page
-* Fix: WP 5.9 compatibility
-* Fix: Missing icon fonts and font conflicts
-* Fix: Enabling course as public is not showing start learning button
-* Fix: Hiding quiz time not working
+* New: Overall design update and optimizations
+* New: Email template builder
+
+
+### 2.0.0-rc - February 22, 2022
+
+* New: Now go to the next or previous lesson with a dedicated button
+* New: Load more button for list of submitted reviews
+* Update: The grace period is now removed from the setting as it was redundant
+* Update: Setup wizard skip option now redirects to courses page
+* Update: Introducing WP 5.9 Compatibility for Tutor LMS 2.0
+* Update: Introducing WPML Compatibility for Tutor LMS 2.0
+* Update: PHP-8 compatibility for Tutor LMS 2.0 
+* Fix: My course pagination issue in the dashboard section
+* Fix: Blocked instructors showing up as a new Instructor in the report overview
+* Fix: Quiz attempts remained in review and no result is showing pending
+* Fix: Course is showing after expiration (Paid Membership Pro)
+* Fix: Quiz abandon modal not showing in on-page navigation when clicking on any link
+* Fix: Quiz reattempt button not showing upon timeout if grace period was enabled
+* Fix: Fixed pagination issue on courses page (Course archive)
+* Fix: Improved design of course details page.
+* Fix: Improved design of dashboard course listing page.
+* Fix: Missing icon fonts and font conflicts for multiple places
+* Fix: Enabling course as public is not showing start button
+* Fix: Hiding quiz time was not working properly
 * Fix: Hiding quiz question number not working
-* Fix: Most of the known frontend issues
 
 
 ### 2.0.0-beta.3 - January 31, 2022
