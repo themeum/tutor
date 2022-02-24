@@ -64,7 +64,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 							switch ( $key ) {
 								case 'checkbox':
 									?>
-											<td data-th="<?php _e( 'Mark', 'tutor' ); ?>">
+											<td data-th="<?php _e( 'Mark', 'tutor' ); ?>" class="v-align-top">
 												<div class="td-checkbox d-flex ">
 													<input id="tutor-admin-list-<?php echo $attempt->attempt_id; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $attempt->attempt_id; ?>" />
 												</div>

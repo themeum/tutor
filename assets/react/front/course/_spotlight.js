@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				currentItem.classList.add('is-active');
 				let id = currentItem.getAttribute('data-tutor-spotlight-tab-target');
 				let query_string = currentItem.getAttribute('data-tutor-query-string');
-				console.log(tabConent);
+
 				const tabConent = currentItem.parentNode.nextElementSibling;
 				tabConent.querySelector('#' + id).classList.add('is-active');
 				if (id === 'tutor-course-spotlight-tab-3') {
@@ -141,9 +141,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		}
 
 		setTimeout(() => {
-			let lesson_comment_id = window.location.hash.replace('#', '');
-			lesson_comment_id = 'lesson-' + lesson_comment_id;
-			if (lesson_comment_id) {
+			let url_comment_id = window.location.hash.replace('#', '');
+			let lesson_comment_id = 'lesson-' + url_comment_id;
+			if (url_comment_id) {
 				let lesson_comment_elem = document.getElementById("" + lesson_comment_id + "");
 				if (null !== lesson_comment_elem) {
 					lesson_comment_elem.scrollIntoView();
@@ -153,6 +153,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					}, 2999)
 				}
 				if (null === params.page_tab || 'comments' === params.page_tab) {
+					console.log(lesson_comment_id);
 					openAppropiateTabsAndContent();
 				}
 			}
