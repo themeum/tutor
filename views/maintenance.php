@@ -1,4 +1,9 @@
-<style type="text/css">
+
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.0">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<title><?php echo get_option('blogname'); ?></title>
+	<style type="text/css">
 	html, body {
 		margin: 0 auto;
 		font-family: 'Roboto', sans-serif;
@@ -42,17 +47,6 @@
 </style>
 
 
-<!doctype html>
-<html <?php language_attributes(); ?>>
-<head>
-	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.0">
-	<link rel="profile" href="http://gmpg.org/xfn/11">
-	<title><?php echo get_option('blogname'); ?></title>
-</head>
-
-<body>
-
 <main>
 	<svg xmlns="http://www.w3.org/2000/svg" width="100" height="70" viewBox="0 0 100 68">
 		<g id="large">
@@ -67,5 +61,3 @@
 	<h1>Under Maintenance</h1>
 	<h2>Sorry for the inconvenience.</h2>
 </main>
-
-</body>
