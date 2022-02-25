@@ -14,7 +14,6 @@ class Tools {
 
 
 		add_action('tutor_option_save_after', array($this, 'tutor_option_save_after'));
-		add_action('init', array($this, 'check_if_maintenance'));
 
         /**
          * Add setup wizard link in the tools menu
@@ -22,6 +21,7 @@ class Tools {
          */
 		add_filter('tutor_tool_pages', array($this, 'tutor_tool_pages_add_wizard'));
 		add_action('admin_init', array($this, 'redirect_to_wizard_page'));
+		add_action('init', array($this, 'check_if_maintenance'));
 	}
 
 	/**
@@ -65,17 +65,23 @@ class Tools {
 	}
 
 	public function check_if_maintenance(){
-		if ( ! is_admin() && ! $this->is_wplogin() && !is_user_logged_in()) {
+
+		if ( ! is_admin() && ! $this->is_wplogin() ) {
 			$mode = get_tutor_option( 'enable_tutor_maintenance_mode' );
 			$maintenance_mode = (bool) $mode;
+		// var_dump(is_user_logged_in(),$this->is_wplogin(),is_admin());
 
-			if ( false===$maintenance_mode || $mode==='off' ){
+			if ( false === $maintenance_mode || $mode === 'off' || is_admin() ){
 				return;
 			}
 
-			header( 'Retry-After: 600' );
-			include tutor()->path.'views/maintenance.php';
-			die();
+			if( current_user_can('editor') || current_user_can('administrator') ) {
+				// die;
+// var_dump(! is_admin() && ! $this->is_wplogin()); die;
+				header( 'Retry-After: 600' );
+				include tutor()->path.'views/maintenance.php';
+			}
+			// die();
 		}
 	}
 
