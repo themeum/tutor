@@ -273,15 +273,13 @@ $filters = array(
 								</div>
 								<?php elseif ( 'approved' === $list->status ) : ?>
 									<div class="tutor-text-medium-small tutor-color-text-hints">
-										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
-										,<br>
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 									</div>
 								<?php elseif ( 'rejected' === $list->status ) : ?>
 									<div class="tutor-bs-d-flex ">
 										<div class="tutor-text-medium-small tutor-color-text-hints">
-											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
-											,<br>
+											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 										</div>
 										<div class="tooltip-wrap tutor-ml-lg-20 tutor-ml-0">

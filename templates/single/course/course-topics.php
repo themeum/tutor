@@ -79,9 +79,9 @@ do_action( 'tutor_course/single/before/topics' );
 											$is_locked = !($is_enrolled || $is_preview);
 										?>
 										<li>
-											<div>
+											<div class="tutor-courses-lession-list-single-item">
 												<span class="<?php echo $topic_content_icon; ?> tutor-icon-24 tutor-color-black-30 tutor-mr-14"></span>
-												<span class="text-regular-body tutor-color-text-primary">
+												<span class="tutor-text-regular-body tutor-color-text-primary">
 													<?php
 														$lesson_title = '';
 
