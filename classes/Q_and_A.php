@@ -168,14 +168,14 @@ class Q_and_A {
 
 		// Get who asked the question
 		$asker_id 	   = $this->get_asker_id($question_id);
-		$self 		   = $asker_id==get_current_user_id();
+		$asker_prefix  = $_POST['context']!='frontend-dashboard-qna-table-student' ? '_'.get_current_user_id() : '';
 
 		// Get the existing value from meta
 		$action        = sanitize_text_field( $_POST['qna_action'] );
 
 		// If current user asker, then make it unread for self
 		// If it is instructor, then make unread for instructor side
-		$meta_key      = 'tutor_qna_' . $action . ($self ? '_'.get_current_user_id() : '');
+		$meta_key      = 'tutor_qna_' . $action . $asker_prefix;
 
 		$current_value = (int) get_comment_meta( $question_id, $meta_key, true );
 

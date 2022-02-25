@@ -4265,27 +4265,29 @@ class Utils {
 			$meta_clause .= ' AND ' . implode( ' AND ', $meta_array );
 		}
 
+		$asker_prefix = $asker_id===null ? '' : '_'.$asker_id;
+
 		// Assign read, unread, archived, important identifier
 		switch ( $question_status ) {
 			case 'read':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value=1) ';
 				break;
 
 			case 'unread':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value!=1) ';
 				break;
 
 			case 'archived':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_archived\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_archived'.$asker_prefix.'\' AND _meta.meta_value=1) ';
 				break;
 
 			case 'important':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important'.$asker_prefix.'\' AND _meta.meta_value=1) ';
 				break;
 		}
 
-		$columns_select = $count_only ? '_question.comment_ID' :
-			"_question.comment_ID,
+		$columns_select = $count_only ? 'COUNT(DISTINCT _question.comment_ID)' :
+			"DISTINCT _question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
@@ -4304,7 +4306,7 @@ class Utils {
 		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
 
 		$query = $wpdb->prepare(
-			"SELECT DISTINCT {$columns_select}
+			"SELECT  {$columns_select}
 			FROM {$wpdb->comments} _question
 					INNER JOIN {$wpdb->posts} _course
 							ON _question.comment_post_ID = _course.ID
@@ -4326,7 +4328,9 @@ class Utils {
 		);
 
 		if ( $count_only ) {
-			return count( $wpdb->get_results( $query ) );
+			// echo '<br/><br/><br/>';
+			// echo htmlspecialchars($query);
+			return $wpdb->get_var( $query );
 		}
 
 		$query = $wpdb->get_results( $query );
