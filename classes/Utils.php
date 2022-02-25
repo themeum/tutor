@@ -5414,7 +5414,7 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null ) {
+	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only=false ) {
 		global $wpdb;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
@@ -5437,9 +5437,10 @@ class Utils {
 		$date_filter   = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
 		$user_filter   = $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\' ' : '';
 
-		$query = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT quiz_attempts.*, users.*, quiz.*
+		$limit_offset = $count_only ? '' : " LIMIT 	{$start}, {$limit} ";
+		$select_col = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, users.*, quiz.* ';
+
+		$query = "SELECT {$select_col}
 			FROM	{$wpdb->prefix}tutor_quiz_attempts AS quiz_attempts
 					INNER JOIN {$wpdb->posts} AS quiz
 							ON quiz_attempts.quiz_id = quiz.ID
@@ -5447,73 +5448,15 @@ class Utils {
 							ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course
 							ON course.ID = quiz_attempts.course_id
-			WHERE 	quiz_attempts.attempt_status != %s
+			WHERE 	quiz_attempts.attempt_status != 'attempt_started'
 					{$course_ids_in}
 					{$search_filter}
 					{$course_filter}
 					{$date_filter}
 					{$user_filter}
-			ORDER 	BY quiz_attempts.attempt_id $order_filter
-			LIMIT 	%d, %d;
-			",
-				'attempt_started',
-				$start,
-				$limit
-			)
-		);
+			ORDER 	BY quiz_attempts.attempt_id {$order_filter} {$limit_offset};";
 
-		return $query;
-	}
-
-	/**
-	 * This method is not being in used
-	 *
-	 * to get total number of attempt above method is enough
-	 *
-	 * @since 1.9.5
-	 */
-	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '', $course_filter = '', $date_filter = '' ) {
-		global $wpdb;
-
-		$course_ids = array_map(
-			function ( $id ) {
-				return "'" . esc_sql( $id ) . "'";
-			},
-			$course_ids
-		);
-
-		// Sanitization.
-		$search_term   = sanitize_text_field( $search_term );
-		$course_filter = sanitize_text_field( $course_filter );
-		$date_filter   = sanitize_text_field( $date_filter );
-
-		$course_ids_in = count($course_ids) ? ' AND quiz_attempts.course_id IN ('.implode( ', ', $course_ids ).') ' : '';
-		$search_term   = '%' . $wpdb->esc_like( $search_term ) . '%';
-
-		$course_filter = $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '';
-		$date_filter   = $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter   = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
-
-		$count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(attempt_id)
-			FROM  	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-					INNER JOIN {$wpdb->posts} quiz
-							ON quiz_attempts.quiz_id = quiz.ID
-					INNER JOIN {$wpdb->users}
-							ON quiz_attempts.user_id = {$wpdb->users}.ID
-					INNER JOIN {$wpdb->posts} AS course
-							ON course.ID = quiz_attempts.course_id
-			WHERE 	attempt_status != %s 
-					{$course_ids_in}
-					{$course_filter}
-					{$date_filter}
-			",
-				'attempt_started'
-			)
-		);
-
-		return (int) $count;
+		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query);
 	}
 
 	/**
