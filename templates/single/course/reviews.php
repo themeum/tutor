@@ -105,7 +105,6 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 			<div class="tutor-ratingsreviews-reviews">
 				<ul class="review-list tutor-m-0 tutor-pagination-content-appendable">
 					<?php
-<<<<<<< HEAD
 					foreach ( $reviews as $review ) {
 						$profile_url = tutor_utils()->profile_url( $review->user_id, false );
 						?>
@@ -134,9 +133,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 							</li>
 						<?php
 					}
-=======
 						tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews));
->>>>>>> 9a98b389848a035531c98775053df62da39c155d
 					?>
 				</ul>
 			</div>

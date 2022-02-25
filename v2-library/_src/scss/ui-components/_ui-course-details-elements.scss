@@ -450,12 +450,20 @@
 		}
 		padding: 15px;
 
-		> div {
+		> div,
+		> .tutor-courses-lession-list-single-item {
 			display: flex;
-			align-items: center;
 			a {
 				color: inherit;
 			}
+		}
+	}
+	// .tutor-courses-lession-list-single-item
+	&-single-item {
+		[class^='tutor-icon-'] {
+			margin-top: 1px;
+		}
+		[class^='tutor-text-'] {
 		}
 	}
 }
