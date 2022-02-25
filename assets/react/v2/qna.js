@@ -30,7 +30,7 @@ window.jQuery(document).ready($=>{
                 action: 'tutor_qna_single_action'
             },
             beforeSend:() => {
-                $that.find('i').addClass('tutor-loading-spinner');
+                $that.find('span:first').addClass('tutor-updating-message');
             },
             success: resp=>{
                 if(!resp.success) {
@@ -70,7 +70,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete:()=>{
-                $that.find('i').removeClass('tutor-loading-spinner');
+                $that.find('span:first').removeClass('tutor-updating-message');
             }
         });
     });

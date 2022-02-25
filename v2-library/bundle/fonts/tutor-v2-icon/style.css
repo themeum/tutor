@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'tutor-v2-iconpack';
-  src:  url('fonts/tutor-v2-iconpack.eot?o17dqk');
-  src:  url('fonts/tutor-v2-iconpack.eot?o17dqk#iefix') format('embedded-opentype'),
-    url('fonts/tutor-v2-iconpack.ttf?o17dqk') format('truetype'),
-    url('fonts/tutor-v2-iconpack.woff?o17dqk') format('woff'),
-    url('fonts/tutor-v2-iconpack.svg?o17dqk#tutor-v2-iconpack') format('svg');
+  src:  url('fonts/tutor-v2-iconpack.eot?bb2860');
+  src:  url('fonts/tutor-v2-iconpack.eot?bb2860#iefix') format('embedded-opentype'),
+    url('fonts/tutor-v2-iconpack.ttf?bb2860') format('truetype'),
+    url('fonts/tutor-v2-iconpack.woff?bb2860') format('woff'),
+    url('fonts/tutor-v2-iconpack.svg?bb2860#tutor-v2-iconpack') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.tutor-icon-spinner:before {
+  content: "\e964";
+}
 .tutor-icon-facebook:before {
   content: "\e963";
 }

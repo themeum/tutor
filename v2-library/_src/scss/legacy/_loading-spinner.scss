@@ -7,6 +7,10 @@
 		display: none;
 	}
 
+	&.tutor-icon-24, &.tutor-font-size-24 {
+		font-size: inherit !important;
+	}
+
 	/* 
         position: relative;
         @include spinner($design-brand, #f1f1f1, 20px);
@@ -17,15 +21,13 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		vertical-align: top;
-		content: '\e92f' !important;
-		font-family: 18px;
-		-webkit-animation: spin 2s infinite linear;
-		animation: spinner 2s infinite linear;
+		content: '\e964' !important;
+		-webkit-animation: spinner 1.5s infinite linear;
+		animation: spinner 1.5s infinite linear;
 		margin-right: 10px;
-		line-height: 0;
 		width: auto;
 		height: auto;
-		font-size: 24px;
+		font-size: inherit;
 	}
 
 	// @include spinner();
