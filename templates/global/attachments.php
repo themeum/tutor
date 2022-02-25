@@ -39,11 +39,11 @@ if ( is_array( $attachments ) && count( $attachments ) ) {
                     <span class="tutor-icon-24 tutor-icon-download-line tutor-color-design-brand"></span>
                 </div>
             </div>
-        </a> 
+        </a>
         <?php } ?>
     </div>
 <?php } else {
-    tutor_utils()->tutor_empty_state(__('No Attchment Found', 'tutor'));
+    tutor_utils()->tutor_empty_state(__('No Attachment Found', 'tutor'));
 }
 
 do_action( 'tutor_global/after/attachments' ); ?>

@@ -1581,15 +1581,17 @@ class Options_V2 {
 	 */
 	public function generate_field( $field = array() ) {
 		ob_start();
-		include tutor()->path . "views/options/field-types/{$field['type']}.php";
-
+		if(isset($field['type'])){
+			include tutor()->path . "views/options/field-types/{$field['type']}.php";
+		}
 		return ob_get_clean();
 	}
 
 	public function field_type( $field = array() ) {
 		ob_start();
-		include tutor()->path . "views/options/field-types/{$field['type']}.php";
-
+		if(isset($field['type'])){
+			include tutor()->path . "views/options/field-types/{$field['type']}.php";
+		}
 		return ob_get_clean();
 	}
 
@@ -1602,7 +1604,9 @@ class Options_V2 {
 	public function template( $section = array() ) {
 		ob_start();
 		$blocks = $section['blocks'];
-		include tutor()->path . "views/options/template/{$section['template']}.php";
+		if(isset($section['template'])){
+			include tutor()->path . "views/options/template/{$section['template']}.php";
+		}
 		return ob_get_clean();
 	}
 
@@ -1615,7 +1619,9 @@ class Options_V2 {
 	 */
 	public function view_template( $template_slug, $section = array() ) {
 		ob_start();
-		require tutor()->path . "views/options/template/{$template_slug}";
+		if(isset($template_slug)){
+			require tutor()->path . "views/options/template/{$template_slug}";
+		}
 		return ob_get_clean();
 	}
 
