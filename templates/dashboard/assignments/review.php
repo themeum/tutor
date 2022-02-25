@@ -75,8 +75,12 @@ if ( ! $assignment_submitted_id ) {
 	<hr>
 
 	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-30 tutor-mb-15">
-		<h5 class="text-medium-h6 tutor-mb-5"><?php esc_html_e( 'Assignment Description:', 'tutor' ); ?></h5>
-		<p class="text-regular-body color-text-subsued tutor-mb-25"><?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?></p>
+		<h5 class="text-medium-h6 tutor-mb-5">
+			<?php esc_html_e( 'Assignment Description:', 'tutor' ); ?>
+		</h5>
+		<p class="text-regular-body color-text-subsued tutor-mb-5">
+			<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
+		</p>
 		<?php
 		$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
 		if ( $attached_files && is_array( json_decode( $attached_files ) ) ) :
