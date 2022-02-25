@@ -453,6 +453,9 @@
 		> div {
 			display: flex;
 			align-items: center;
+			a {
+				color: inherit;
+			}
 		}
 	}
 }
@@ -464,6 +467,7 @@
 	border: 1px solid #cdcfd5;
 	border-radius: 6px;
 
+	// .tutor-ratingsreviews-ratings
 	&-ratings {
 		display: grid;
 		@include breakpoint-min(tablet) {
@@ -528,13 +532,14 @@
 		}
 	}
 
+	// .tutor-ratingsreviews-reviews
 	&-reviews {
 		.review-list {
 			list-style: none;
 			padding: 0;
 			margin: 0;
 			> li {
-				--col: 11%;
+				--col: 22%;
 				display: grid;
 				@include breakpoint-min(450) {
 					grid-template-columns: auto 1fr;
@@ -547,6 +552,9 @@
 					grid-template-columns: var(--col) calc(100% - var(--col));
 					padding-left: 35px;
 					padding-right: 40px;
+				}
+				a {
+					color: inherit;
 				}
 			}
 			.tutor-rating-text {

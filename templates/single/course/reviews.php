@@ -56,12 +56,12 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 	<?php else: ?>
 		<div class="tutor-ratingsreviews">
 			<div class="tutor-ratingsreviews-ratings">
-				<div class="tutor-ratingsreviews-ratings-avg">
-					<div class="text-medium-h1 tutor-color-text-primary">
+				<div class="tutor-ratingsreviews-ratings-avg tutor-text-center">
+					<div class="text-medium-h1 tutor-color-text-primary tutor-mb-18">
 						<?php echo number_format( $rating->rating_avg, 1 ); ?>
 					</div>
-					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-bs-d-block' ); ?>
-					<div class="tutor-total-ratings-text tutor-text-regular-body text-subsued">
+					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-bs-d-block', 'lg' ); ?>
+					<div class="tutor-total-ratings-text tutor-text-regular-body text-subsued tutor-mt-10">
 						<span class="tutor-rating-text-part">
 							<?php esc_html_e( 'Total ', 'tutor' ); ?>
 						</span>
@@ -105,7 +105,38 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 			<div class="tutor-ratingsreviews-reviews">
 				<ul class="review-list tutor-m-0 tutor-pagination-content-appendable">
 					<?php
+<<<<<<< HEAD
+					foreach ( $reviews as $review ) {
+						$profile_url = tutor_utils()->profile_url( $review->user_id, false );
+						?>
+							<li>
+								<div>
+									<div class="">
+										<img class="tutor-avatar-circle tutor-50" src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="student avatar" />
+									</div>
+									<div class="tutor-text-regular-body tutor-color-text-primary tutor-mt-16">
+										<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-reviewer-name">
+										<?php echo esc_html( $review->display_name ); ?>
+										</a>
+									</div>
+									<div class="tutor-text-regular-small tutor-color-text-hints">
+										<span class="tutor-review-time">
+											<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
+										</span>
+									</div>
+								</div>
+								<div>
+								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
+									<div class="tutor-text-regular-caption tutor-color-text-subsued tutor-mt-10 tutor-review-comment">
+									<?php echo htmlspecialchars( $review->comment_content ); ?>
+									</div>
+								</div>
+							</li>
+						<?php
+					}
+=======
 						tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews));
+>>>>>>> 9a98b389848a035531c98775053df62da39c155d
 					?>
 				</ul>
 			</div>

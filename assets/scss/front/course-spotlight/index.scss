@@ -5,6 +5,9 @@
 		padding-bottom: 0px;
 	}
 }
+.site-content {
+	padding-bottom: 0px;
+}
 
 .tutor-mobile-top-navigation {
 	.tutor-mobile-top-nav {
@@ -53,7 +56,7 @@
 		.tutor-single-page-top-bar {
 			background: $design-brand;
 			@include breakpoint-max(mobile) {
-				display: none;
+				display: none !important;
 			}
 			.tutor-lesson-sidebar-hide-bar,
 			.tutor-topbar-content-title-wrap,

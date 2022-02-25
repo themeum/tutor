@@ -42,6 +42,7 @@
 }
 
 .tutor-quiz-attempt-details-wrapper {
+	
 	.back {
 		position: relative;
 		a {
@@ -105,6 +106,12 @@
 }
 
 .tutor-quiz-attempt-details {
+	th,
+	td {
+		* {
+			word-break: break-word;
+		}
+	}
 	.tutor-icon-rounded {
 		@include valueWithPrefix(display, inline-flex);
 		@include propertyWithPrefix(align-items, center);
