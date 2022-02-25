@@ -56,7 +56,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 									$profile_complete_text = 'Thanks for completing your profile';
 								}
 								$profile_complete_status = _e($profile_complete_text, 'tutor');
-								
+
 							?>
 							<span class="tutor-color-text-hints"><?php $profile_complete_status ?></span>:&nbsp;
 							<span class="tutor-color-text-primary">
@@ -233,7 +233,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 ?>
 
 
-<?php if ( ! tutor_utils()->is_instructor() ) : ?>
+<?php if ( tutor_utils()->is_instructor() ) : ?>
 	<div class="tutor-frontend-dashboard-course-porgress">
 		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
 			<?php esc_html_e( 'In Progress Course', 'tutor' ); ?>
