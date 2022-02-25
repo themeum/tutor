@@ -247,7 +247,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							$attachment_name = substr( $attachment_name, strrpos( $attachment_name, '/' ) + 1 );
 							$file_size       = tutor_utils()->get_attachment_file_size( $attachment_id );
 							?>
-							<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-10">
+							<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-10 tutor-ml-3">
 								<div class="tutor-icard-content">
 									<div class="text-regular-body color-text-title">
 									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank" download>

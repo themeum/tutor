@@ -3527,10 +3527,11 @@ class Utils {
 		return $output;
 	}
 
-	public function star_rating_generator_v2( $current_rating, $total_count = null, $show_avg_rate = false, $parent_class = '' ) {
+	public function star_rating_generator_v2( $current_rating, $total_count = null, $show_avg_rate = false, $parent_class = '', $screen_size = '' ) {
 		$current_rating = number_format( $current_rating, 2, '.', '' );
+		$css_class = isset($screen_size) ? "{$parent_class} tutor-is-{$screen_size}" : "{$parent_class}";
 		?>
-		<div class="tutor-ratings <?php echo $parent_class; ?>">
+		<div class="tutor-ratings <?php echo $css_class; ?>">
 			<div class="tutor-rating-stars">
 				<?php
 				for ( $i = 1; $i <= 5; $i++ ) {
