@@ -27,13 +27,13 @@ $order_filter  = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date_filter   = isset( $_GET['date'] ) ? $_GET['date'] : '';
 $course_id   = isset( $course_id ) ? $course_id : array();
 
-$quiz_attempts = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter );
+$quiz_attempts = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter, get_current_user_id() );
 
 ?>
 
 <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e( 'My Quiz Attempts', 'tutor' ); ?></div>
 <?php
-$quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids( $course_id, '', $course_filter, $date_filter );
+$quiz_attempts_count = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter, get_current_user_id(), true );
 
 tutor_load_template_from_custom_path(
 	tutor()->path . '/views/quiz/attempt-table.php',
