@@ -182,7 +182,6 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 				</div>
 			</div>
 		</div>
-
 		<?php do_action( 'tutor_profile_edit_input_after', $user ); ?>
 
 		<div class="tutor-bs-row">
