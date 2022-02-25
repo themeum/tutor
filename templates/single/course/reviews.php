@@ -133,6 +133,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 							</li>
 						<?php
 					}
+						tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews));
 					?>
 				</ul>
 			</div>
