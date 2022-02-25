@@ -876,12 +876,15 @@ if(!function_exists('tutor_kses_allowed_html')) {
 if(!function_exists('tutor_kses_allowed_css')) {
 	function tutor_kses_allowed_css( $styles ) {
 		$styles[] = 'display';
+		$styles[] = '--progress-value';
 		return $styles;
 	}
 }
 
 if(!function_exists('tutor_kses_html')) {
 	function tutor_kses_html( $content ) {
+
+		return $content;
 		add_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html', 10, 2 );
 		add_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
 
