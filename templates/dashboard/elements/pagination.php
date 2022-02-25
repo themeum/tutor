@@ -12,20 +12,14 @@ $per_page = $data['per_page'];
 $big      = 999999999;
 $total_page = ceil( $data['total_items'] / $per_page );
 
-if(isset($data['layout']) && $data['layout']['type']=='prev_next') {
+if(isset($data['layout']) && $data['layout']['type']=='load_more') {
 	$current_url = tutor()->current_url;
 	
 	echo '<nav '.(isset($data['ajax']) ? ' data-tutor_pagination_ajax="'.esc_attr( json_encode($data['ajax']) ).'" ' : '').'>';
 		
-		if($paged>1) {
-			echo '<a class="tutor-btn tutor-btn-secondary page-numbers tutor-mr-5" href="'.add_query_arg( array('current_page' => $paged-1), $current_url ).'">'.
-					(empty($data['layout']['prev_text']) ? __('Previous', 'tutor') : $data['layout']['prev_text'])
-				.'</a>';
-		}
-
 		if($paged<$total_page){
 			echo '<a class="tutor-btn tutor-btn-tertiary tutor-is-outline page-numbers tutor-mr-5" href="'.add_query_arg( array('current_page' => $paged+1), $current_url ).'">'.
-					(empty($data['layout']['next_text']) ? __('Next', 'tutor') : $data['layout']['next_text'])
+					$data['layout']['load_more_text']
 				.'</a>';
 		}
 		

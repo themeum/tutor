@@ -28,6 +28,12 @@ $reviews_total = tutor_utils()->get_course_reviews($course_id, null, null, true)
 $rating = tutor_utils()->get_course_rating($course_id);
 $my_rating = tutor_utils()->get_reviews_by_user(0, 0, 150, false, $course_id);
 
+if(isset($_POST['course_id'])) {
+	// It's load more
+	tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews));
+	return;
+}
+
 do_action( 'tutor_course/single/enrolled/before/reviews' );
 ?>
 
@@ -97,8 +103,9 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 			</div>
 			
 			<div class="tutor-ratingsreviews-reviews">
-				<ul class="review-list tutor-m-0">
+				<ul class="review-list tutor-m-0 tutor-pagination-content-appendable">
 					<?php
+<<<<<<< HEAD
 					foreach ( $reviews as $review ) {
 						$profile_url = tutor_utils()->profile_url( $review->user_id, false );
 						?>
@@ -127,6 +134,9 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 							</li>
 						<?php
 					}
+=======
+						tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews));
+>>>>>>> 9a98b389848a035531c98775053df62da39c155d
 					?>
 				</ul>
 			</div>
@@ -152,9 +162,8 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 					'per_page'    => $per_page,
 					'paged'       => $current_page,
 					'layout'	  => array(
-						'type' => 'prev_next',
-						'prev_text' => __('Back', 'tutor'),
-						'next_text' => __('Load More', 'tutor')
+						'type' => 'load_more',
+						'load_more_text' => __('Load More', 'tutor')
 					),
 					'ajax'		  => array(
 						'action' => 'tutor_single_course_reviews_load_more',

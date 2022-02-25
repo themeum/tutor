@@ -2118,6 +2118,12 @@ table.course-single-gradebooks a {
 	}
 }
 
+.list-item-button {
+	.ajax_add_to_cart.added{
+		display: none;
+	}
+
+}
 .list-item-button.booking-available {
 	.btn-icon {
 		height: 0px !important;
