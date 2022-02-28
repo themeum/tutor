@@ -872,10 +872,17 @@ class Quiz {
 		tutor_utils()->checking_nonce();
 
 		global $wpdb;
-
 		$question_data = $_POST['tutor_quiz_question'];
+		$requires_answeres = array('multiple_choice', 'single_choice', 'fill_in_the_blank', 'matching', 'image_matching', 'image_answering', 'ordering');
 
 		foreach ( $question_data as $question_id => $question ) {
+			
+			// Make sure the quiz has answers
+
+			if(in_array($question['question_type'], $requires_answeres) && empty($this->get_answers_by_q_id($question_id, $question['question_type']))) {
+				wp_send_json_error( array('message' => __('Please make sure the question has answer')) );
+				exit;
+			}
 
 			if(!tutor_utils()->can_user_manage('question', $question_id)) {
 				continue;
@@ -1068,7 +1075,10 @@ class Quiz {
 		}
 
 		// Send response to browser if not internal call
-		$response ? wp_send_json_success() : 0;
+		if($response) {
+			wp_send_json_success();
+			exit;
+		}
 	}
 
 	/**
@@ -1121,6 +1131,19 @@ class Quiz {
 		wp_send_json_success();
 	}
 
+	private function get_answers_by_q_id($question_id, $question_type) {
+		global $wpdb;
+		
+		return $wpdb->get_results($wpdb->prepare(
+			"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers
+			where belongs_question_id = %d AND
+				belongs_question_type = %s
+			order by answer_order asc ;",
+			$question_id,
+			esc_sql( $question_type )
+		));
+	}
+
 	public function tutor_quiz_builder_change_type(){
 		tutor_utils()->checking_nonce();
 
@@ -1140,14 +1163,7 @@ class Quiz {
 		));
 
 		// Get answers by question ID
-		$answers = $wpdb->get_results($wpdb->prepare(
-			"SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers
-			where belongs_question_id = %d AND
-				belongs_question_type = %s
-			order by answer_order asc ;",
-			$question_id,
-			esc_sql( $question_type )
-		));
+		$answers = $this->get_answers_by_q_id($question_id, $question_type);
 
 		ob_start();
 		require tutor()->path . '/views/modal/question_answer_list.php';

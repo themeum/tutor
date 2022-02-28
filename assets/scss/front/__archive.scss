@@ -268,6 +268,11 @@ div[class*='tutor-course-col'] {
 	align-items: center;
 	justify-content: space-between;
 	flex-wrap: wrap;
+	.tutor-dropdown-select-selected {
+		height: 48px;
+		display: flex;
+		align-items: center;
+	}
 }
 
 .tutor-course-filter-form {
@@ -2095,15 +2100,15 @@ table.course-single-gradebooks a {
 }
 
 .tutor-course-archive-filters-wrap select {
-	font-family: var(--body-font);
-	font-weight: 600;
-	font-size: 16px;
-	line-height: 21px;
-	border: 1px solid #e1e7ec;
-	border-radius: 4px;
-	padding: 12px 19px;
-	color: #57586e;
-	outline: none;
+	// font-family: var(--body-font);
+	// font-weight: 600;
+	// font-size: 16px;
+	// line-height: 21px;
+	// border: 1px solid #e1e7ec;
+	// border-radius: 4px;
+	// padding: 12px 19px;
+	// color: #57586e;
+	// outline: none;
 }
 
 .list-item-price {

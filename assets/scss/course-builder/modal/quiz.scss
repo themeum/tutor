@@ -15,6 +15,13 @@ a.back-to-quiz-questions-btn {
 	// display: block;
 }
 
+// #quiz-builder-tab-questions {
+// 	.tutor-quiz-type-icon {
+// 		display: flex;
+// 		justify-content: center;
+// 	}
+// }
+
 // Show add to question button when quiz editor opened
 &.tutor-has-question-from {
 	.modal-container {
@@ -174,7 +181,20 @@ a.back-to-quiz-questions-btn {
 			.tutor-quiz-answer-edit {
 				a {
 					display: block;
-					padding: 0px 9px;
+					// padding: 0px 9px;
+					i {
+						display: flex;
+					}
+				}
+			}
+			.tutor-quiz-answers-mark-correct-wrap {
+				input {
+					cursor: pointer;
+				}
+			}
+			.tutor-updating-message {
+				i {
+					display: none !important;
 				}
 			}
 		}

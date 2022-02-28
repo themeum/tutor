@@ -6,7 +6,7 @@ $table_columns = include __DIR__ . '/contexts.php';
 $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
 ?>
 
-<table class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-ui-table tutor-ui-table-responsive qna-list-table">
+<table data-qna_context="<?php echo $context; ?>" class="frontend-dashboard-qna-table-<?php echo $view_as; ?> tutor-ui-table tutor-ui-table-responsive qna-list-table">
 <?php if (is_array($qna_list) && count($qna_list)) { ?>
     <thead>
         <tr>
@@ -32,7 +32,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                 $row_id             = 'tutor_qna_row_' . $qna->comment_ID;
                 $menu_id            = 'tutor_qna_menu_id_' . $qna->comment_ID;
                 $is_self            = $current_user_id == $qna->user_id;
-                $key_slug           = $is_self ? '_' . $current_user_id : '';
+                $key_slug           = $context != 'frontend-dashboard-qna-table-student' ? '_' . $current_user_id : '';
 
                 $meta               = $qna->meta;
                 $is_solved          = (int)tutor_utils()->array_get('tutor_qna_solved' . $key_slug, $meta, 0);

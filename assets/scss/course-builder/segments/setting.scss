@@ -8,6 +8,17 @@
 
 #wpcontent,
 #tutor-frontend-course-builder {
+	// .tutor-icon-plus-bold-filled.tutor-shortlist-instructor.tutor-updating-message {
+	// 	&:before {
+	// 		vertical-align: unset !important;
+	// 	}
+	// }
+	.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
+		margin-right: 0px !important;
+	}
+	button.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
+		margin-right: 8px !important;
+	}
 	.tutor-certificate-template {
 		.template-item {
 			.template-radio-field {
@@ -16,6 +27,11 @@
 		}
 	}
 	.tutor-modal {
+		.tutor-updating-message:before {
+			vertical-align: unset;
+			line-height: unset;
+			// display: flex;
+		}
 		.tutor-delete-attachment.tutor-icon-line-cross {
 			margin-left: 5px;
 		}
@@ -161,14 +177,6 @@
 		#tutor-course-available-instructors {
 			gap: 10px;
 		}
-		.tutor-icon-plus-bold-filled.tutor-shortlist-instructor.tutor-updating-message {
-			&:before {
-				vertical-align: unset;
-			}
-		}
-		.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
-			margin-right: 0px;
-		}
 		.tutor-search-result {
 			&.tutor-updating-message {
 				min-height: 60px;
@@ -194,6 +202,34 @@
 		}
 		.tutor-quiz-item .tutor-quiz-item-label .tutor-quiz-item-draggable {
 			padding: 0 5px 0 14px;
+		}
+		.tutor-quiz-item-type {
+			.tooltip-btn {
+				display: flex;
+			}
+		}
+		.question-type-select {
+			.lead-option {
+				display: flex;
+    			align-items: center;
+				margin-top: 2px;
+				span {
+					display: flex;
+    				margin-top: -1px;
+				}
+			}
+			.select-dropdown {
+				i {
+					display: flex;
+				}
+			}
+			.tutor-select-options {
+				span {
+					i {
+						margin-top: -2px;
+					}
+				}
+			}
 		}
 	}
 	.tutor_assignment_modal_form {
@@ -410,14 +446,14 @@
 	p {
 		margin-bottom: 0px;
 	}
-	.filesize {
-		margin-top: -8px;
-	}
+	// .filesize {
+	// 	margin-top: -8px;
+	// }
 }
 #wpcontent {
-	.filesize {
-		margin-top: -2px;
-	}
+	// .filesize {
+	// 	margin-top: -2px;
+	// }
 	.tutor-course-content-top {
 		> a {
 			margin-top: 4px;

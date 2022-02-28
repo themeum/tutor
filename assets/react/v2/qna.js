@@ -20,6 +20,7 @@ window.jQuery(document).ready($=>{
         let qna_action = $(this).data('action');
         let question_id = $(this).closest('[data-question_id]').data('question_id');
         let button = $(this);
+        let context = button.closest('[data-qna_context]').data('qna_context');
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -27,10 +28,11 @@ window.jQuery(document).ready($=>{
             data: {
                 question_id,
                 qna_action, 
+                context,
                 action: 'tutor_qna_single_action'
             },
             beforeSend:() => {
-                $that.find('i').addClass('tutor-loading-spinner');
+                $that.find('span:first').addClass('tutor-updating-message');
             },
             success: resp=>{
                 if(!resp.success) {
@@ -70,7 +72,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete:()=>{
-                $that.find('i').removeClass('tutor-loading-spinner');
+                $that.find('span:first').removeClass('tutor-updating-message');
             }
         });
     });

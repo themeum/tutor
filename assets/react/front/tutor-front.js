@@ -527,7 +527,7 @@ jQuery(document).ready(function($) {
 			type: 'POST',
 			data: form_data,
 			beforeSend: function() {
-				$('#tutor_assignment_start_btn').addClass('updating-icon');
+				$('#tutor_assignment_start_btn').addClass('tutor-updating-message');
 			},
 			success: function(data) {
 				if (data.success) {
@@ -535,7 +535,7 @@ jQuery(document).ready(function($) {
 				}
 			},
 			complete: function() {
-				$('#tutor_assignment_start_btn').removeClass('updating-icon');
+				$('#tutor_assignment_start_btn').removeClass('tutor-updating-message');
 			},
 		});
 	});
