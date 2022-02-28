@@ -61,12 +61,25 @@ class Upgrader {
 
 
 	public function in_plugin_update_message( $args, $response ) {
-		$upgrade_notice = strip_tags( tutils()->array_get( 'upgrade_notice', $response ) );
-		if ( $upgrade_notice ) {
-			$upgrade_notice = '<span class="version"><code>v.' . $response->new_version . '</code></span> <br />' . $upgrade_notice;
+		?>
+			</p>
+			<p class="tutor-v2-upgrade-notice">
+				<h3 style="margin-top:0">Before You Update</h3>
 
-			echo apply_filters( 'tutor_in_plugin_update_message', ($upgrade_notice ? '</p> <div class="tutor_plugin_update_notice">' . $upgrade_notice . '</div> <p class="dummy">' : '') );
-		}
+				Please make a Backup before you upgrade to the latest Tutor LMS! Make sure you are using:
+
+				<ul style="list-style-type: disc; list-style-position: inside; padding-left: 45px;">
+					<li>WordPress version: At least 4.5</li>
+					<li>PHP version: At least 7.0</li>
+				</ul>
+
+				We made sure the latest Tutor LMS works with your essential plugins, but there is always room for improvements. The latest update includes substantial changes to the plugin. Make sure you first update your website in a staging environment.
+
+				<h3>Compatibility Alert</h3>
+				In our testing, we made the latest Tutor LMS work with all our plugins. Some plugins may not work with the latest version of Tutor LMS. To avoid issues, make sure they are all up to date and compatible.
+			</p>
+			<p style="display:none;">
+		<?php
 	}
 
 

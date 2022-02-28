@@ -2301,28 +2301,20 @@
 	display: none;
   }
   
-  #tutor-update .tutor_plugin_update_notice {
-	padding: 20px 0 !important;
+  .tutor-v2-upgrade-notice {
+	border-top: 1px solid gray;
+    padding-top: 0px !important;
+    margin-top: 15px !important;
   }
-  
-  #tutor-update .tutor_plugin_update_notice {
-	font-weight: 400;
-	background: #fff8e5 !important;
-	border-left: 4px solid #ffb900;
-	border-top: 1px solid #ffb900;
-	padding: 9px 0 9px 12px !important;
-	margin: 0 -12px 0 -16px !important;
+
+  .tutor-v2-upgrade-notice ~ p:empty{
+	  display: none;
   }
-  
-  #tutor-update .tutor_plugin_update_notice .version::before {
-	content: "\f348";
-	display: inline-block;
-	font: 400 18px/1 dashicons;
-	speak: none;
-	margin: 0 8px 0 -2px;
-	vertical-align: top;
+
+  .tutor-v2-upgrade-notice::before{
+	  content: '' !important;
   }
-  
+
   /**
   Content Drip (Pro)
    */
