@@ -20,7 +20,7 @@ class Frontend {
 	public function __construct() {
 		add_action( 'after_setup_theme', array( $this, 'remove_admin_bar' ) );
 		add_filter( 'nav_menu_link_attributes', array( $this, 'add_menu_atts' ), 10, 3 );
-		add_action('pre_get_posts', array($this, 'tutor_offset_courses'));
+		// add_action('pre_get_posts', array($this, 'tutor_offset_courses'));
 	}
 	function tutor_offset_courses($query){
 		if (!is_admin() && $query->is_main_query() && is_archive(tutor()->course_post_type)) $query->set('offset', 0);
