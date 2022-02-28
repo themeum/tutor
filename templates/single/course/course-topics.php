@@ -74,14 +74,14 @@ do_action( 'tutor_course/single/before/topics' );
 											// Determine topic content icon based on lesson, video, quiz etc.
 											$topic_content_icon                                     = $play_time ? 'tutor-icon-youtube-brand' : 'tutor-icon-document-alt-filled';
 											$post->post_type === 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-question-mark-circle-filled' : 0;
-											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-clipboard-line' : 0;
+											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-document-alt-filled' : 0;
 											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-zoom' : 0;
 											$is_locked = !($is_enrolled || $is_preview);
 										?>
 										<li>
-											<div>
+											<div class="tutor-courses-lession-list-single-item">
 												<span class="<?php echo $topic_content_icon; ?> tutor-icon-24 tutor-color-black-30 tutor-mr-14"></span>
-												<span class="text-regular-body tutor-color-text-primary">
+												<span class="tutor-text-regular-body tutor-color-text-primary">
 													<?php
 														$lesson_title = '';
 

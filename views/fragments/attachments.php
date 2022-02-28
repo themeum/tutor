@@ -23,7 +23,7 @@
                     <?php if(!$size_below): ?>
                         <span class="filesize"><?php _e('Size', 'tutor'); ?>: <?php echo $attachment->size; ?></span>
                     <?php endif; ?>
-                    <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross-line"></span>
+                    <span class="tutor-delete-attachment tutor-action-icon tutor-icon-line-cross-line tutor-icon-18"></span>
                 </div>
             </div>
             <?php 

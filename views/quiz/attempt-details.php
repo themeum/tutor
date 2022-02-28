@@ -20,7 +20,7 @@ if ( isset( $user_id ) && $user_id > 0 ) {
     }
 }
 
-function tutor_render_answer_list( $answers= array() ){
+function tutor_render_answer_list( $answers= array(), $dump_data=false ){
     if(!empty($answers)){
 
 		echo '<div class="correct-answer-wrap">';
@@ -35,7 +35,7 @@ function tutor_render_answer_list( $answers= array() ){
 
                 switch ($type) {
                     case 'text_image':
-                        echo '<div class="text-image-type">';
+                        echo '<div class="text-image-type tutor-mb-3">';
                             if(isset($ans->image_id)){
                                 $img_url = wp_get_attachment_image_url($ans->image_id);
                                 if($img_url){
@@ -87,6 +87,8 @@ function tutor_render_answer_list( $answers= array() ){
 
 function tutor_render_fill_in_the_blank_answer($get_db_answers_by_question, $answer_titles) {
 
+    $spaces = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
     // Loop through the answers
     foreach ($get_db_answers_by_question as $db_answer){
         $count_dash_fields = substr_count($db_answer->answer_title, '{dash}');
@@ -96,15 +98,16 @@ function tutor_render_fill_in_the_blank_answer($get_db_answers_by_question, $ans
             $input_data = array();
             for($i=0; $i<$count_dash_fields; $i++){
                 $ans_title = (!empty($answer_titles[$i]) && !ctype_space($answer_titles[$i])) ? $answer_titles[$i] : null;
-                $input_data[] = $ans_title ? "<span class='filled_dash_unser'>{$ans_title}</span>" : "______";
+                $input_data[] = $ans_title ? "<span class='filled_dash_unser'>{$ans_title}</span>" : $spaces;
             }
 
             $answer_title = $db_answer->answer_title;
-            foreach($input_data as $replace){
+            
+            foreach($input_data as $index=>$replace){
                 $replace = '<span style="text-decoration:underline;">'.$replace.'</span>';
                 $answer_title = preg_replace('/{dash}/i', $replace, $answer_title, 1);
             }
-            echo str_replace('{dash}', '_____', stripslashes($answer_title));
+            echo str_replace('{dash}', "<span class='filled_dash_unser'>{$spaces}</span>", stripslashes($answer_title));
         }
     }
 }
@@ -177,7 +180,11 @@ if ( is_array( $attempt_info ) ) {
             <?php
                 foreach($table_1_columns as $key => $column) {
                     $class_name = join('-', explode(' ', strtolower($column)));
-                    echo '<th class="'. $class_name .'"><span class="tutor-text-regular-small tutor-color-text-subsued">'.$column.'</span></th>';
+                    echo '<th class="'. $class_name .'">
+                            <span class="tutor-text-regular-small tutor-color-text-subsued">'.
+                                $column.
+                            '</span>
+                        </th>';
                 }
             ?>
         </tr>
@@ -265,7 +272,7 @@ if ( is_array( $attempt_info ) ) {
                                         echo number_format_i18n($pass_marks, 2);
 
                                         $pass_mark_percent = $passing_grade; // tutor_utils()->get_quiz_option($attempt_data->quiz_id, 'passing_grade', 0);
-                                        echo '('.$pass_mark_percent.'%)';
+                                        echo ' ('.$pass_mark_percent.'%)';
                                     ?>
                                 </span>
                             </td>
@@ -299,7 +306,7 @@ if ( is_array( $attempt_info ) ) {
                                     <?php
                                         echo $attempt_data->earned_marks;
                                         $earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format(($attempt_data->earned_marks * 100) / $attempt_data->total_marks)) : 0;
-                                        echo '('.$earned_percentage.'%)';
+                                        echo ' ('.$earned_percentage.'%)';
                                     ?>
                                 </span>
                             </td>
@@ -340,7 +347,7 @@ if ( is_array( $attempt_info ) ) {
         echo $context!='course-single-previous-attempts' ? '<div class="tutor-text-medium-body tutor-color-text-primary tutor-mt-22">'.__('Quiz Overview', 'tutor').'</div>' : '';
         ?>
         <div class="tutor-ui-table-wrapper tutor-mt-10">
-            <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-30">
+            <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-30 td-align-top">
                 <thead>
                     <tr>
                         <?php
@@ -359,9 +366,14 @@ if ( is_array( $attempt_info ) ) {
                             $question_type = tutor_utils()->get_question_types($answer->question_type);
     
                             $answer_status = 'wrong';
+
+                            // If already correct, then show it
                             if ((bool)$answer->is_correct) {
                                 $answer_status = 'correct';
-                            } else if (in_array($answer->question_type, array('open_ended', 'short_answer', 'image_answering'))){
+                            } 
+                            
+                            // Image answering also needs review since the answer texts are not meant to match exactly
+                            else if (in_array($answer->question_type, array('open_ended', 'short_answer', 'image_answering'))){
                                 $answer_status = $answer->is_correct===null ? 'pending' : 'wrong';
                             }
                             ?>
@@ -372,7 +384,7 @@ if ( is_array( $attempt_info ) ) {
                                         switch($key) {
                                             case 'no' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="no" data-th="<?php echo $column; ?>">
                                                     <span class="tutor-text-medium-caption tutor-color-text-primary">
                                                         <?php echo $answer_i; ?>
                                                     </span>
@@ -382,7 +394,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'type' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="type" data-th="<?php echo $column; ?>">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
                                                     <div class="tooltip-wrap tooltip-icon tutor-bs-d-flex">
                                                         <?php echo $question_type['icon']; ?>
@@ -396,7 +408,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'questions' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="questions" data-th="<?php echo $column; ?>">
                                                     <span class="text-medium-small tutor-bs-d-flex tutor-bs-align-items-center">
                                                         <?php echo stripslashes($answer->question_title); ?>
                                                     </span>
@@ -406,7 +418,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'given_answer' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="given-answer" data-th="<?php echo $column; ?>">
                                                     <?php
                                                         // Single choice
                                                         if ( $answer->question_type === 'single_choice' ) {
@@ -421,7 +433,9 @@ if ( is_array( $attempt_info ) ) {
                                                             $answer_titles = wp_list_pluck($get_answers, 'answer_title');
                                                             $answer_titles = array_map('stripslashes', $answer_titles);
     
-                                                            echo '<span class="tutor-text-medium-caption tutor-color-text-primary">'.implode('</p><p>', $answer_titles).'</span>';
+                                                            echo '<span class="tutor-text-medium-caption tutor-color-text-primary">'.
+                                                                    implode('</p><p>', $answer_titles).
+                                                                '</span>';
                                                         }
     
                                                         // Multiple choice
@@ -460,52 +474,60 @@ if ( is_array( $attempt_info ) ) {
                                                             $ordering_ids = maybe_unserialize($answer->given_answer);
                                                             $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
     
+                                                            $answers = array();
+
                                                             foreach ($original_saved_answers as $key => $original_saved_answer){
                                                                 $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
                                                                 $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
                                                                 if(tutor_utils()->count($provided_answer_order)){
                                                                     foreach ($provided_answer_order as $provided_answer_order);
-                                                                    echo stripslashes($original_saved_answer->answer_title)  .' - '. stripslashes($provided_answer_order->answer_two_gap_match).'<br />';
+                                                                    $original_saved_answer->answer_two_gap_match = $provided_answer_order->answer_two_gap_match;
+                                                                    $answers[] = $original_saved_answer;
                                                                 }
                                                             }
+
+                                                            tutor_render_answer_list( $answers );
                                                         }
     
-                                                    elseif ($answer->question_type === 'image_matching'){
-    
-                                                        $ordering_ids = maybe_unserialize($answer->given_answer);
-                                                        $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
-    
-                                                        echo '<div class="answer-image-matched-wrap">';
-                                                        foreach ($original_saved_answers as $key => $original_saved_answer){
-                                                            $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
-                                                            $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
-                                                            foreach ($provided_answer_order as $provided_answer_order);
-                                                            ?>
-                                                            <div class="image-matching-item">
-                                                                <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $original_saved_answer->image_id); ?>" /> </p>
-                                                                <p class="dragged-caption"><?php echo stripslashes($provided_answer_order->answer_title); ?></p>
-                                                            </div>
-                                                            <?php
+                                                        elseif ($answer->question_type === 'image_matching'){
+        
+                                                            $ordering_ids = maybe_unserialize($answer->given_answer);
+                                                            $original_saved_answers = tutor_utils()->get_answers_by_quiz_question($answer->question_id);
+        
+                                                            $answers = array();
+
+                                                            foreach ($original_saved_answers as $key => $original_saved_answer){
+                                                                $provided_answer_order_id = isset($ordering_ids[$key]) ? $ordering_ids[$key] : 0;
+                                                                $provided_answer_order = tutor_utils()->get_answer_by_id($provided_answer_order_id);
+                                                                foreach ($provided_answer_order as $provided_answer_order);
+                                                                
+                                                                if($provided_answer_order->answer_title) {
+                                                                    $original_saved_answer->answer_view_format = 'text_image';
+                                                                    $original_saved_answer->answer_title = $provided_answer_order->answer_title;
+                                                                    $answers[] = $original_saved_answer;
+                                                                }
+                                                            }
+
+                                                            tutor_render_answer_list( $answers );
                                                         }
-                                                        echo '</div>';
-                                                    }elseif ($answer->question_type === 'image_answering'){
-    
-                                                        $ordering_ids = maybe_unserialize($answer->given_answer);
-    
-                                                        echo '<div class="answer-image-matched-wrap">';
-                                                        foreach ($ordering_ids as $answer_id => $image_answer){
-                                                            $db_answers = tutor_utils()->get_answer_by_id($answer_id);
-                                                            foreach ($db_answers as $db_answer);
-                                                            ?>
-                                                            <div class="image-matching-item">
-                                                                <p class="dragged-img-rap"><img src="<?php echo wp_get_attachment_image_url( $db_answer->image_id); ?>" /> </p>
-                                                                <p class="dragged-caption"><?php echo $image_answer; ?></p>
-                                                            </div>
-                                                            <?php
+                                                        
+                                                        elseif ($answer->question_type === 'image_answering'){
+        
+                                                            $ordering_ids = maybe_unserialize($answer->given_answer);
+
+                                                            $answers = array();
+        
+                                                            foreach ($ordering_ids as $answer_id => $image_answer){
+                                                                $db_answers = tutor_utils()->get_answer_by_id($answer_id);
+                                                                foreach ($db_answers as $db_answer);
+                                                                $db_answer->answer_title = $image_answer;
+                                                                $db_answer->answer_view_format = 'text_image';
+                                                                $answers[] = $db_answer;
+                                                                
+                                                            }
+
+                                                            tutor_render_answer_list( $answers );
                                                         }
-                                                        echo '</div>';
-                                                    }
-    
                                                     ?>
                                                 </td>
                                                 <?php
@@ -513,7 +535,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'correct_answer' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="correct-answer" data-th="<?php echo $column; ?>">
                                                     <?php
                                                     if (($answer->question_type != 'open_ended' && $answer->question_type != 'short_answer')) {
     
@@ -529,7 +551,9 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
 
-                                                            echo '<span class="tutor-text-medium-caption tutor-color-text-primary">' . $correct_answer . '</span>';
+                                                            echo '<span class="tutor-text-medium-caption tutor-color-text-primary">' . 
+                                                                    $correct_answer . 
+                                                                '</span>';
                                                         }
     
                                                         // Single choice
@@ -614,7 +638,7 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            tutor_render_answer_list($correct_answer);
+                                                            tutor_render_answer_list($correct_answer, true);
                                                         }
 
                                                         // Image Answering
@@ -650,7 +674,7 @@ if ( is_array( $attempt_info ) ) {
     
                                             case 'answer' :
                                                 ?>
-                                                <td data-th="<?php echo $column; ?>">
+                                                <td class="answer" data-th="<?php echo $column; ?>">
                                                     <?php
                                                         switch($answer_status) {
                                                             case 'correct' :

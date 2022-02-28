@@ -42,6 +42,7 @@
 }
 
 .tutor-quiz-attempt-details-wrapper {
+	
 	.back {
 		position: relative;
 		a {
@@ -105,6 +106,12 @@
 }
 
 .tutor-quiz-attempt-details {
+	th,
+	td {
+		* {
+			word-break: break-word;
+		}
+	}
 	.tutor-icon-rounded {
 		@include valueWithPrefix(display, inline-flex);
 		@include propertyWithPrefix(align-items, center);
@@ -132,26 +139,27 @@
 			opacity: 0.8;
 		}
 	}
-	thead {
+
+	tbody {
 		@include breakpoint-min(1200) {
 			tr {
-				th.no {
-					width: 3%;
+				td.no {
+					width: 8%;
 				}
-				th.type {
-					width: 3%;
+				td.type {
+					width: 7%;
 				}
-				th.questions {
+				td.questions {
 					width: 20%;
 				}
-				th.given-answer {
+				td.given-answer {
 					width: 20%;
 				}
-				th.correct-answer {
-					width: 40%;
+				td.correct-answer {
+					width: 30%;
 				}
-				th.answer {
-					width: 5%;
+				td.answer {
+					width: 15%;
 				}
 			}
 		}

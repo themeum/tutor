@@ -49,6 +49,7 @@ table.tutor-ui-table {
 		// justify-content: center;
 	}
 
+	// table alignment utility table.th-aligh-top
 	&.th-align-top {
 		th {
 			vertical-align: top;
@@ -85,7 +86,7 @@ table.tutor-ui-table {
 		}
 	}
 
-	// table utility (individual th/td)
+	// table alignment utility (individual th/td) table th.v-aligh-top
 	.v-align-top {
 		vertical-align: top;
 		.tutor-form-check input.tutor-form-check-input {
@@ -431,6 +432,7 @@ table.tutor-ui-table {
 			width: 34px;
 			height: 34px;
 			border-radius: 50%;
+			overflow: hidden;
 		}
 		.btn-text {
 			text-decoration: none;

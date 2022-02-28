@@ -77,7 +77,7 @@ $filters = array(
 <div class="wrap">
 	<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-50">
 		<div class="tutor-ui-table-wrapper">
-			<table class="tutor-ui-table tutor-ui-table-responsive">
+			<table class="tutor-ui-table tutor-ui-table-responsive tutor-withdraw-request">
 				<thead class="tutor-text-sm tutor-text-400">
 					<tr>
 						<th>
@@ -272,21 +272,19 @@ $filters = array(
 									</button>
 								</div>
 								<?php elseif ( 'approved' === $list->status ) : ?>
-									<div>
-										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
-										,<br>
+									<div class="tutor-text-medium-small tutor-color-text-hints">
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 									</div>
 								<?php elseif ( 'rejected' === $list->status ) : ?>
 									<div class="tutor-bs-d-flex ">
-										<div>
-											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
-											,<br>
+										<div class="tutor-text-medium-small tutor-color-text-hints">
+											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 										</div>
-										<div class="tooltip-wrap">
-											<span class="text-medium-small tutor-color-text-primary">
-												<i class="tutor-icon-circle-outline-info-filled"></i>
+										<div class="tooltip-wrap tutor-ml-lg-20 tutor-ml-0">
+											<span class="tutor-text-medium-small tutor-color-text-primary">
+												<i class="tutor-icon-circle-outline-info-filled tutor-color-black-20 tutor-icon-20"></i>
 											</span>
 											<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-left">
 												<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center">
@@ -298,7 +296,7 @@ $filters = array(
 										</div>
 									</div>
 								<?php else : ?>
-									<div>
+									<div class="tutor-text-medium-small tutor-color-text-hints">
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
 										<br>
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>

@@ -49,13 +49,13 @@
                         if ($question_type === 'true_false' || $question_type === 'single_choice')
                         {
                             ?>
-                            <span class="tutor-quiz-answers-mark-correct-wrap">
+                            <span class="tutor-quiz-answers-mark-correct-wrap tutor-mr-5">
                                 <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                             </span>
                             <?php
                         } elseif ($question_type === 'multiple_choice'){
                             ?>
-                            <span class="tutor-quiz-answers-mark-correct-wrap">
+                            <span class="tutor-quiz-answers-mark-correct-wrap tutor-mr-5">
                                 <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                             </span>
                             <?php
@@ -65,23 +65,23 @@
                     <?php if ( $question_type !== 'true_false' ): ?>
                         <span class="tutor-quiz-answer-edit">
                             <a href="javascript:;">
-                                <i class="tutor-icon-pencil-line tutor-icon-18"></i> 
+                                <i class="tutor-icon-pencil-line tutor-icon-22"></i> 
                             </a>
                         </span>
                     <?php endif; ?>
 
                     <?php if($question_type !== 'fill_in_the_blank'): ?>
-                        <span class="tutor-quiz-answer-sort-icon tutor-ml-10">
-                            <i class="tutor-icon-menu-line tutor-icon-24"></i> 
+                        <span class="tutor-quiz-answer-sort-icon">
+                            <i class="tutor-bs-d-flex tutor-icon-menu-line tutor-icon-24"></i>
                         </span>
                     <?php endif; ?>
                 </div>
 
                 <?php if ( $question_type !== 'true_false' && $question_type !== 'fill_in_the_blank' ): ?>
-                    <div class="tutor-quiz-answer-trash-wrap">
-                        <a href="javascript:;" class="answer-trash-btn" data-answer-id="<?php echo $answer->answer_id; ?>">
-                        <i class="tutor-icon-garbage-line tutor-icon-18"></i> 
-                    </a>
+                    <div class="tutor-quiz-answer-trash-wrap tutor-bs-d-flex">
+                        <a href="javascript:;" class="answer-trash-btn answer-trash-btn tutor-bs-d-flex tutor-bs-align-items-center" data-answer-id="<?php echo $answer->answer_id; ?>">
+                            <i class="tutor-icon-garbage-line tutor-icon-24"></i>
+                        </a>
                     </div>
                 <?php endif; ?>
             </div>

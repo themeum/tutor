@@ -3527,10 +3527,11 @@ class Utils {
 		return $output;
 	}
 
-	public function star_rating_generator_v2( $current_rating, $total_count = null, $show_avg_rate = false, $parent_class = '' ) {
+	public function star_rating_generator_v2( $current_rating, $total_count = null, $show_avg_rate = false, $parent_class = '', $screen_size = '' ) {
 		$current_rating = number_format( $current_rating, 2, '.', '' );
+		$css_class = isset($screen_size) ? "{$parent_class} tutor-is-{$screen_size}" : "{$parent_class}";
 		?>
-		<div class="tutor-ratings <?php echo $parent_class; ?>">
+		<div class="tutor-ratings <?php echo $css_class; ?>">
 			<div class="tutor-rating-stars">
 				<?php
 				for ( $i = 1; $i <= 5; $i++ ) {
@@ -4264,27 +4265,29 @@ class Utils {
 			$meta_clause .= ' AND ' . implode( ' AND ', $meta_array );
 		}
 
+		$asker_prefix = $asker_id===null ? '' : '_'.$asker_id;
+
 		// Assign read, unread, archived, important identifier
 		switch ( $question_status ) {
 			case 'read':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value=1) ';
 				break;
 
 			case 'unread':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read\' AND _meta.meta_value!=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_read'.$asker_prefix.'\' AND _meta.meta_value!=1) ';
 				break;
 
 			case 'archived':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_archived\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_archived'.$asker_prefix.'\' AND _meta.meta_value=1) ';
 				break;
 
 			case 'important':
-				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important\' AND _meta.meta_value=1) ';
+				$qna_types_caluse = ' AND (_meta.meta_key=\'tutor_qna_important'.$asker_prefix.'\' AND _meta.meta_value=1) ';
 				break;
 		}
 
-		$columns_select = $count_only ? '_question.comment_ID' :
-			"_question.comment_ID,
+		$columns_select = $count_only ? 'COUNT(DISTINCT _question.comment_ID)' :
+			"DISTINCT _question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
@@ -4303,7 +4306,7 @@ class Utils {
 		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
 
 		$query = $wpdb->prepare(
-			"SELECT DISTINCT {$columns_select}
+			"SELECT  {$columns_select}
 			FROM {$wpdb->comments} _question
 					INNER JOIN {$wpdb->posts} _course
 							ON _question.comment_post_ID = _course.ID
@@ -4325,7 +4328,9 @@ class Utils {
 		);
 
 		if ( $count_only ) {
-			return count( $wpdb->get_results( $query ) );
+			// echo '<br/><br/><br/>';
+			// echo htmlspecialchars($query);
+			return $wpdb->get_var( $query );
 		}
 
 		$query = $wpdb->get_results( $query );
@@ -5413,7 +5418,7 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null ) {
+	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only=false ) {
 		global $wpdb;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
@@ -5436,9 +5441,10 @@ class Utils {
 		$date_filter   = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
 		$user_filter   = $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\' ' : '';
 
-		$query = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT quiz_attempts.*, users.*, quiz.*
+		$limit_offset = $count_only ? '' : " LIMIT 	{$start}, {$limit} ";
+		$select_col = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, users.*, quiz.* ';
+
+		$query = "SELECT {$select_col}
 			FROM	{$wpdb->prefix}tutor_quiz_attempts AS quiz_attempts
 					INNER JOIN {$wpdb->posts} AS quiz
 							ON quiz_attempts.quiz_id = quiz.ID
@@ -5446,73 +5452,15 @@ class Utils {
 							ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course
 							ON course.ID = quiz_attempts.course_id
-			WHERE 	quiz_attempts.attempt_status != %s
+			WHERE 	quiz_attempts.attempt_status != 'attempt_started'
 					{$course_ids_in}
 					{$search_filter}
 					{$course_filter}
 					{$date_filter}
 					{$user_filter}
-			ORDER 	BY quiz_attempts.attempt_id $order_filter
-			LIMIT 	%d, %d;
-			",
-				'attempt_started',
-				$start,
-				$limit
-			)
-		);
+			ORDER 	BY quiz_attempts.attempt_id {$order_filter} {$limit_offset};";
 
-		return $query;
-	}
-
-	/**
-	 * This method is not being in used
-	 *
-	 * to get total number of attempt above method is enough
-	 *
-	 * @since 1.9.5
-	 */
-	public function get_total_quiz_attempts_by_course_ids( $course_ids = array(), $search_term = '', $course_filter = '', $date_filter = '' ) {
-		global $wpdb;
-
-		$course_ids = array_map(
-			function ( $id ) {
-				return "'" . esc_sql( $id ) . "'";
-			},
-			$course_ids
-		);
-
-		// Sanitization.
-		$search_term   = sanitize_text_field( $search_term );
-		$course_filter = sanitize_text_field( $course_filter );
-		$date_filter   = sanitize_text_field( $date_filter );
-
-		$course_ids_in = count($course_ids) ? ' AND quiz_attempts.course_id IN ('.implode( ', ', $course_ids ).') ' : '';
-		$search_term   = '%' . $wpdb->esc_like( $search_term ) . '%';
-
-		$course_filter = $course_filter != '' ? " AND quiz_attempts.course_id = $course_filter " : '';
-		$date_filter   = $date_filter != '' ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter   = $date_filter != '' ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
-
-		$count = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(attempt_id)
-			FROM  	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-					INNER JOIN {$wpdb->posts} quiz
-							ON quiz_attempts.quiz_id = quiz.ID
-					INNER JOIN {$wpdb->users}
-							ON quiz_attempts.user_id = {$wpdb->users}.ID
-					INNER JOIN {$wpdb->posts} AS course
-							ON course.ID = quiz_attempts.course_id
-			WHERE 	attempt_status != %s 
-					{$course_ids_in}
-					{$course_filter}
-					{$date_filter}
-			",
-				'attempt_started'
-			)
-		);
-
-		return (int) $count;
+		return $count_only ? $wpdb->get_var($query) : $wpdb->get_results($query);
 	}
 
 	/**

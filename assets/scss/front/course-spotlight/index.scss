@@ -1,5 +1,14 @@
 @import './players';
 
+.lesson-template-default {
+	.site-content {
+		padding-bottom: 0px;
+	}
+}
+.site-content {
+	padding-bottom: 0px;
+}
+
 .tutor-mobile-top-navigation {
 	.tutor-mobile-top-nav {
 		grid-template-columns: 30px auto;
@@ -13,8 +22,6 @@
 }
 
 @import './sidebar';
-
-// .tutor-single-lesson-wraper {
 
 .tutor-course-single-content-wraper {
 	display: flex;
@@ -44,12 +51,12 @@
 		flex: 100%;
 		height: calc(100vh - 100px);
 		overflow: auto;
-		border-left: 1px solid $stroke-light-30;
+		// border-left: 1px solid $stroke-light-30;
 		border-top: 1px solid $stroke-light-30;
 		.tutor-single-page-top-bar {
 			background: $design-brand;
 			@include breakpoint-max(mobile) {
-				display: none;
+				display: none !important;
 			}
 			.tutor-lesson-sidebar-hide-bar,
 			.tutor-topbar-content-title-wrap,
