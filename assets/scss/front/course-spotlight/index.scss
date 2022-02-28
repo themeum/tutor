@@ -54,7 +54,7 @@
 		// border-left: 1px solid $stroke-light-30;
 		border-top: 1px solid $stroke-light-30;
 		.tutor-single-page-top-bar {
-			background: $design-brand;
+			background: var(--tutor-primary-color);
 			@include breakpoint-max(mobile) {
 				display: none !important;
 			}
@@ -80,7 +80,7 @@
 				}
 			}
 			.tutor-topbar-sidebar-toggle {
-				background: $primary-90;
+				background: var(--tutor-primary-color);
 				span[class^='tutor-icon'] {
 					font-size: 30px;
 					font-weight: 800;
