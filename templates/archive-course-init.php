@@ -31,7 +31,8 @@
         /**
          * No course found
          */
-        tutor_load_template('course-none');
+        // tutor_load_template('course-none');
+        tutor_utils()->tutor_empty_state(tutor_utils()->not_found_text());
 
     endif;
 
