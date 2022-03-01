@@ -2090,12 +2090,13 @@ table.course-single-gradebooks a {
 	padding-top: 50px !important;
 	margin: 0px auto;
 	.tutor-course-filter-loop-container {
-		.tutor-course-list-pagination.tutor-ui-pagination{
+		.tutor-course-list-pagination.tutor-ui-pagination {
 			margin-left: 0;
 			margin-right: 0;
 			width: 100%;
 		}
 		margin-top: 0px;
+		position: relative;
 	}
 }
 
@@ -2124,10 +2125,9 @@ table.course-single-gradebooks a {
 }
 
 .list-item-button {
-	.ajax_add_to_cart.added{
+	.ajax_add_to_cart.added {
 		display: none;
 	}
-
 }
 .list-item-button.booking-available {
 	.btn-icon {
@@ -2152,4 +2152,21 @@ table.course-single-gradebooks a {
 		width: 90%;
 		margin: 50px auto 0px;
 	}
+}
+
+.loading-spinner {
+	position: absolute;
+	inset: 0;
+	border-radius: 3px;
+	z-index: 10;
+
+	@include spinner(#1973aa, #eee);
+}
+.loading-spinner::before {
+	width: 50px;
+	height: 50px;
+	top: 200px;
+}
+.loading-spinner.hide {
+	display: none;
 }

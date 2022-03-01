@@ -278,7 +278,8 @@ window.jQuery(document).ready(function($) {
 		var course_id = $('#post_ID').val();
 		var topic_id = $(this)
 			.closest('.tutor-quiz-builder-modal-wrap')
-			.data('topic-id-of-quiz');
+			.attr('data-topic-id-of-quiz');
+
 		var quiz_id = modal.find('[name="quiz_id"]').val();
 
 		if (current_tab == 'quiz-builder-tab-quiz-info' || current_tab == 'quiz-builder-tab-settings') {

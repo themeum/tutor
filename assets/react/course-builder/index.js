@@ -52,17 +52,17 @@ function getRemainingLength(maxLength = 60, inputElement) {
 const maxLength = 60;
 const courseCreateTitle = document.getElementById('tutor-course-create-title');
 const courseTitleTooltip = courseCreateTitle?.previousElementSibling;
+const courseCreateTitleTooptip = document.querySelector('#tutor-course-create-title-tooltip-wrapper .tooltip-txt');
+
 if (courseTitleTooltip) {
 	courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
 }
-
-const courseCreateTitleTooptip = document.querySelector('#tutor-course-create-title-tooltip-wrapper .tooltip-txt');
 
 courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
 
 if(courseCreateTitle && courseCreateTitleTooptip) {
 
-	document.addEventListener('click', (e) => { console.log("ei target ", e.target);
+	document.addEventListener('click', (e) => { 
 		if (e.target === courseCreateTitle) {
 			if(courseCreateTitle === document.activeElement) {
 				courseCreateTitleTooptip.style.opacity = '1';

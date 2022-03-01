@@ -18,7 +18,7 @@
     ) );
 ?>
 
-<div class="tutor-pagination-wrapper-replacable tutor-single-course-lesson-comments">
+<div class="tutor-pagination-wrapper-replacable tutor-single-course-lesson-comments" data-lesson_id="<?php echo $lesson_id; ?>">
 	<div class="text-medium-h6 tutor-color-text-primary">
 		<?php _e( 'Join the conversation', 'tutor' ); ?>
 	</div>
