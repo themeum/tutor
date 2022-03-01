@@ -4333,7 +4333,7 @@ class Utils {
 			return $wpdb->get_var( $query );
 		}
 
-		echo htmlspecialchars($query);
+		// echo htmlspecialchars($query);
 
 		$query = $wpdb->get_results( $query );
 
