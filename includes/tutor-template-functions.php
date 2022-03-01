@@ -1067,30 +1067,6 @@ if ( ! function_exists( 'tutor_lesson_mark_complete_html' ) ) {
 	}
 }
 
-/**
- * @param bool $echo
- *
- * @return mixed
- *
- * @show progress bar about course complete
- *
- * @since v.1.0.0
- */
-
-if ( ! function_exists( 'tutor_course_completing_progress_bar' ) ) {
-	function tutor_course_completing_progress_bar( $echo = true ) {
-		ob_start();
-		tutor_load_template( 'single.course.enrolled.completing-progress' );
-		$output = apply_filters( 'tutor_course/single/completing-progress-bar', ob_get_clean() );
-
-		if ( $echo ) {
-			echo tutor_kses_html( $output );
-		}
-
-		return $output;
-	}
-}
-
 function tutor_course_question_and_answer( $echo = true ) {
 	ob_start();
 	tutor_load_template( 'single.course.enrolled.question_and_answer' );

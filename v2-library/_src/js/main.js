@@ -9,4 +9,3 @@ import './tutorGeneral';
 import './tutorAccordion';
 import './tutorAccordionRadioFields';
 import './tutorDropdownSelect';
-// import './pagination';
