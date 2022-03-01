@@ -20,28 +20,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	global $wp_query;
 
-	function course_listing_pagination( $pages = '', $range = 4 ) {  
-		$showitems = ( $range * 2 )+1;  
+	function course_listing_pagination( $pages = '', $range = 4 ) {
+		$showitems = ( $range * 2 )+1;
 		global $paged;
 		if(empty( $paged )) $paged = 1;
-	 
+
 		 if( $pages == '' ){
 			$wp_query = '';
 			$pages = is_object( $wp_query ) ? $wp_query->max_num_pages : null;
 			if( !$pages ){
 				$pages = 1;
 		}
-	}   
-	 
+	}
+
 	if( 1 != $pages ){
-	
+
 ?>
 <nav class="tutor-course-list-pagination tutor-ui-pagination">
 	<div class="tutor-pagination-hints">
 		<div class="text-regular-caption tutor-color-text-subsued">
-			<?php _e('Page', 'tutor'); ?> 
+			<?php _e('Page', 'tutor'); ?>
 			<span class="tutor-text-medium-caption tutor-color-text-primary">
-			<?php echo esc_html( $paged ); ?> 
+			<?php echo esc_html( $paged ); ?>
 			</span>
 			<?php _e('of', 'tutor'); ?>
 			<span className="tutor-text-medium-caption tutor-color-text-primary">
@@ -60,7 +60,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					echo ($paged == $i)? "<span class='page-numbers current'>".$i."</span>":"<a href='".get_pagenum_link($i)."' class='page-numbers'>".$i."</a>";
 				}
 			}
-	
+
 			if ($paged < $pages) {
 				echo wp_kses_post("<a href=\"".get_pagenum_link($paged + 1)."\" class='next page-numbers'><span class='tutor-icon-angle-right-filled'></span></a>");
 			}
@@ -70,11 +70,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php } }  ?>
 
 <?php do_action('tutor_course/archive/pagination/before');  ?>
-	
-	<?php 
+
+	<?php
 		if (function_exists("course_listing_pagination") && is_object($wp_query)) {
 			course_listing_pagination( $wp_query->max_num_pages );
-		} 
+		}
 	?>
 
 <?php do_action('tutor_course/archive/pagination/after');  ?>
