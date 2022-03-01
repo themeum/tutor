@@ -4232,7 +4232,7 @@ class Utils {
 			// Get qa for specific course
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
-		} elseif (!$asker_id && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
+		} elseif (!$asker_id && $question_id===null && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
 			// If current user is simple instructor (non admin), then get qa from their courses only
 			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
 			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
@@ -4332,6 +4332,8 @@ class Utils {
 			// echo htmlspecialchars($query);
 			return $wpdb->get_var( $query );
 		}
+
+		echo htmlspecialchars($query);
 
 		$query = $wpdb->get_results( $query );
 
