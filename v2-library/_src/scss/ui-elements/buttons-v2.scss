@@ -59,6 +59,7 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 	&:not(.tutor-is-outline):not(.tutor-no-hover) {
 		&.tutor-btn-wordpress:hover {
 			background: $brand-wordpress-hover;
+			border-color: $brand-wordpress-hover;
 		}
 		&.tutor-btn-secondary:hover {
 			background: darken($primary-40, 2);
