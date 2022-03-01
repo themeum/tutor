@@ -258,34 +258,51 @@ class Tools_V2 {
 								array(
 									'key'     => 'tutor_version',
 									'type'    => 'info_col',
-									'label'   => __( 'Tutor version', 'tutor' ),
+									'label'   => __( 'MySQL version', 'tutor' ),
 									'status'  => 'default',
 									'default' => $this->status( 'tutor_version' ),
-
+								),
+								array(
+									'key'     => 'tutor_version',
+									'type'    => 'info_col',
+									'label'   => __( 'Database Size', 'tutor' ),
+									'status'  => 'default',
+									'default' => $this->status( 'tutor_version' ),
 								),
 								array(
 									'key'     => 'wordpress_memory_limit',
 									'type'    => 'info_col',
-									'label'   => __( 'WordPress memory limit', 'tutor' ),
+									'label'   => __( 'Default timezone is UTC', 'tutor' ),
 									'status'  => 'default',
 									'default' => $this->status( 'wordpress_memory_limit' ),
-
 								),
 								array(
 									'key'     => 'wordpress_cron',
 									'type'    => 'info_col',
-									'label'   => __( 'WordPress corn', 'tutor' ),
+									'label'   => __( 'fsockopen/cURL', 'tutor' ),
 									'status'  => 'default',
 									'default' => $this->status( 'wordpress_cron' ),
-
 								),
 								array(
 									'key'     => 'external_object_cache',
 									'type'    => 'info_col',
-									'label'   => __( 'External object cache', 'tutor' ),
+									'label'   => __( 'DOMDocument', 'tutor' ),
 									'status'  => 'default',
 									'default' => $this->status( 'external_object_cache' ),
-
+								),
+								array(
+									'key'     => 'external_object_cache',
+									'type'    => 'info_col',
+									'label'   => __( 'GZip', 'tutor' ),
+									'status'  => 'default',
+									'default' => $this->status( 'external_object_cache' ),
+								),
+								array(
+									'key'     => 'external_object_cache',
+									'type'    => 'info_col',
+									'label'   => __( 'Multibyte string', 'tutor' ),
+									'status'  => 'default',
+									'default' => $this->status( 'external_object_cache' ),
 								),
 							),
 						),
