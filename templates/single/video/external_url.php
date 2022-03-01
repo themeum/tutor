@@ -23,6 +23,7 @@ do_action( 'tutor_lesson/single/before/video/external_url' );
 
 <?php if($video_info ): ?>
     <div class="course-players">
+        <div class="loading-spinner"></div>
         <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData??null)); ?>">
 
         <video poster="<?php echo $poster_url; ?>" class="tutorPlayer" playsinline controls >

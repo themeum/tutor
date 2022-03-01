@@ -1,6 +1,6 @@
 <?php
     $filter_object = new \TUTOR\Course_Filter();
-    
+
     $filter_prices=array(
         'free'=> __( 'Free', 'tutor' ),
         'paid'=> __( 'Paid', 'tutor' ),
@@ -10,7 +10,7 @@
     $supported_filters = tutor_utils()->get_option('supported_course_filters', array());
     $supported_filters = array_keys($supported_filters);
 ?>
-<form>  
+<form>
     <?php do_action( 'tutor_course_filter/before' ); ?>
     <?php
         if ( in_array( 'search', $supported_filters ) ) {
@@ -86,9 +86,9 @@
                 <?php _e('Price', 'tutor'); ?>
             </div>
             <div class="filter-widget-checkboxes">
-                <?php 
+                <?php
                     foreach($filter_prices as $value=>$title){
-                        ?>  
+                        ?>
                         <div class="tutor-form-check tutor-mb-18">
                             <input type="checkbox" class="tutor-form-check-input" id="<?php echo esc_html( $value ); ?>" name="tutor-course-filter-price" value="<?php echo esc_html( $value ); ?>"/>&nbsp;
                             <label for="<?php echo esc_html( $value ); ?>">
@@ -106,7 +106,7 @@
         <div class="filter-widget-input">
             <div class="tutor-clear-all-filter">
                 <a href="#" onclick="window.location.reload()">
-                    <i class="tutor-icon-cross-filled"></i> <?php esc_html_e( 'Clear All Filter', 'tutor' ); ?>
+                    <i class="tutor-icon-cross-filled"></i> <?php esc_html_e( 'Clear All Filters', 'tutor' ); ?>
                 </a>
             </div>
         </div>

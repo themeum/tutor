@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Course extends Tutor_Base {
-	
+
 	private $additional_meta=array(
 		'_tutor_enable_qa',
 		'_tutor_is_public_course'
@@ -14,11 +14,11 @@ class Course extends Tutor_Base {
 
 	public function __construct() {
 		parent::__construct();
-		
+
 		add_action('add_meta_boxes', array($this, 'register_meta_box') );
 		add_action('save_post_'.$this->course_post_type, array($this, 'save_course_meta'), 10, 2);
 		add_action('wp_ajax_tutor_save_topic', array($this, 'tutor_save_topic'));
-		
+
 		//Add Column
 		add_filter( "manage_{$this->course_post_type}_posts_columns", array($this, 'add_column'), 10,1 );
 		add_action( "manage_{$this->course_post_type}_posts_custom_column" , array($this, 'custom_lesson_column'), 10, 2 );
@@ -90,13 +90,13 @@ class Course extends Tutor_Base {
          */
         add_filter('tutor_course/single/complete_form', array($this, 'tutor_lms_hide_course_complete_btn'));
 		add_filter('get_gradebook_generate_form_html', array($this, 'get_generate_greadbook'));
-		
+
         /**
          * Add social share content in header
          * @since v.1.6.3
          */
 		add_action('wp_head', array($this, 'social_share_content'));
-		
+
         /**
          * Delete course data after deleted course
          * @since v.1.6.6
@@ -145,15 +145,15 @@ class Course extends Tutor_Base {
 		 */
 		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
 	}
-	
+
 	public function restrict_new_student_entry($content) {
 
 		if(!tutor_utils()->is_course_fully_booked()) {
 			// No restriction if not fully booked
 			return $content;
 		}
-			
-		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="btn-icon tutor-color-design-warning tutor-icon-circle-outline-info-filled"></span></div><div class="tutor-text-medium-caption  tutor-color-text-primary">Fully Booked</div></div>';
+
+		return '<div class="list-item-booking booking-full tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><span class="tutor-icon-24 tutor-mr-5 tutor-color-design-warning tutor-icon-circle-outline-info-filled"></span></div><div class="tutor-text-medium-caption tutor-color-text-primary">Fully Booked</div></div>';
 	}
 
 	function restrict_media( $where ) {
@@ -172,7 +172,7 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box(){
 		$coursePostType = tutor()->course_post_type;
-		
+
 		add_meta_box( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array($this, 'course_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-additional-data', __( 'Additional Data', 'tutor' ), array($this, 'course_additional_data_meta_box'), $coursePostType );
 		add_meta_box( 'tutor-course-videos', __( 'Video', 'tutor' ), array($this, 'video_metabox'), $coursePostType );
@@ -223,12 +223,12 @@ class Course extends Tutor_Base {
 	 */
 	public function register_meta_box_in_frontend(){
 		global $post;
-		
+
 		do_action('tutor_course_builder_metabox_before', get_the_ID());
 
         course_builder_section_wrap($this->video_metabox($echo = false), __( 'Video', 'tutor' ) );
 		do_action('tutor/frontend_course_edit/after/video', $post);
-		
+
         course_builder_section_wrap($this->course_meta_box($echo = false), __( 'Course Builder', 'tutor' ) );
 		do_action('tutor/frontend_course_edit/after/course_builder', $post);
 
@@ -408,7 +408,7 @@ class Course extends Tutor_Base {
 		$topic_title   = sanitize_text_field( $_POST['topic_title'] );
 		$topic_summery = wp_kses_post( $_POST['topic_summery'] );
 		$next_topic_order_id = tutor_utils()->get_next_topic_order_id($course_id);
-		
+
 		// Validate if user can manage the topic
 		if(!tutor_utils()->can_user_manage('course', $course_id) || ($topic_id && !tutor_utils()->can_user_manage('topic', $topic_id))) {
 			wp_send_json_error( array('message'=>__('Access Denied', 'tutor')) );
@@ -429,7 +429,7 @@ class Course extends Tutor_Base {
 
 		ob_start();
 		include  tutor()->path.'views/metabox/course-contents.php';
-		
+
 		wp_send_json_success(array(
 			'topic_title' => $topic_title,
 			'course_contents' => ob_get_clean()
@@ -485,7 +485,7 @@ class Course extends Tutor_Base {
 
 	public function tutor_delete_topic() {
 
-		tutor_utils()->checking_nonce(); 
+		tutor_utils()->checking_nonce();
 
 		global $wpdb;
 		$topic_id = sanitize_text_field(!empty($_POST['topic_id']) ? $_POST['topic_id'] : '');
@@ -650,7 +650,7 @@ class Course extends Tutor_Base {
 			}
 		}
 	}
-	
+
 	public function tutor_delete_dashboard_course(){
 		tutor_utils()->checking_nonce();
 
@@ -952,7 +952,7 @@ class Course extends Tutor_Base {
 
 		// Whether enrolment require
 		$is_enrolled = tutor_utils()->is_enrolled();
-		
+
 		return array_filter($items, function($item) use($is_enrolled) {
 			if(isset($item['require_enrolment']) && $item['require_enrolment']) {
 				return $is_enrolled;
