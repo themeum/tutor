@@ -2,12 +2,21 @@
 $variations: (
 	'wordpress' $brand-wordpress $text-white $brand-wordpress,
 	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
-	'primary' $primary-main $text-white $primary-main,
+	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-color),
 	'secondary' $primary-40 $primary-main $primary-40,
 	'tertiary' transparent $primary-main $primary-main,
 	'disable' $black-08 $text-hints $black-08,
 	'disable-outline' transparent $text-hints $stroke-light-30
 );
+// $variations: (
+// 	'wordpress' $brand-wordpress $text-white $brand-wordpress,
+// 	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
+// 	'primary' $primary-main $text-white $primary-main,
+// 	'secondary' $primary-40 $primary-main $primary-40,
+// 	'tertiary' transparent $primary-main $primary-main,
+// 	'disable' $black-08 $text-hints $black-08,
+// 	'disable-outline' transparent $text-hints $stroke-light-30
+// );
 
 // BTN .tutor-btn-primary/secondary/tertiary
 @each $suffix, $bgColor, $txtColor, $border in $variations {
