@@ -1,13 +1,13 @@
 window.jQuery(document).ready($ => {
 
-    const {__} = window.wp.i18n;
+    const { __ } = window.wp.i18n;
 
     /**
      * Retake course
      *
      * @since v1.9.5
      */
-     $('.tutor-course-retake-button').prop('disabled', false).click(function(e) {
+    $('.tutor-course-retake-button').prop('disabled', false).click(function (e) {
         e.preventDefault();
 
         var url = $(this).attr('href');
@@ -15,13 +15,13 @@ window.jQuery(document).ready($ => {
 
         var data = {
             title: __('Override Previous Progress', 'tutor'),
-            description : __('Before continue, please decide whether to keep progress or reset.', 'tutor'),
-            buttons : {
+            description: __('Before continue, please decide whether to keep progress or reset.', 'tutor'),
+            buttons: {
                 reset: {
                     title: __('Reset Data', 'tutor'),
                     class: 'tutor-btn tutor-is-outline tutor-is-default',
 
-                    callback: function(button) {
+                    callback: function (button) {
 
                         $.ajax({
                             url: window._tutorobject.ajaxurl,
@@ -30,17 +30,17 @@ window.jQuery(document).ready($ => {
                                 action: 'tutor_reset_course_progress',
                                 course_id: course_id,
                             },
-                            beforeSend: ()=>{
+                            beforeSend: () => {
                                 button.prop('disabled', true).addClass('tutor-updating-message');
                             },
-                            success: function(response) {
-                                if(response.success) {
+                            success: function (response) {
+                                if (response.success) {
                                     window.location.assign(response.data.redirect_to);
                                 } else {
                                     alert((response.data || {}).message || __('Something went wrong', 'tutor'));
                                 }
                             },
-                            complete: function() {
+                            complete: function () {
                                 button.prop('disabled', false).removeClass('tutor-updating-message');
                             }
                         });
@@ -49,7 +49,7 @@ window.jQuery(document).ready($ => {
                 keep: {
                     title: __('Keep Data', 'tutor'),
                     class: 'tutor-btn',
-                    callback: function() {
+                    callback: function () {
                         window.location.assign(url);
                     }
                 }
@@ -61,5 +61,8 @@ window.jQuery(document).ready($ => {
 });
 
 readyState_complete(() => {
-    document.querySelector('.course-players .loading-spinner').remove();
+    let loadingSpinner = document.querySelector('.course-players .loading-spinner');
+    if (null !== loadingSpinner) {
+        loadingSpinner.remove();
+    }
 });
