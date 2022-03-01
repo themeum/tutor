@@ -47,7 +47,7 @@ window.jQuery(document).ready(($) => {
 				$btn.html(btnInnerHtml);
 			},
 			error: function(data) {
-				tutor_toast(__('Something Went Wrong!', 'tutor'));
+				tutor_toast(__('Error!', 'tutor'), __('Something Went Wrong!', 'tutor'), 'error');
 			},
 		});
 	});
