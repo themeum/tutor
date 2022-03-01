@@ -5,10 +5,9 @@ import './dashboard/export-csv';
 import './pages/course-landing';
 import './pages/instructor-list-filter';
 import './_select_dd_search';
-
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.
- * It's a legacy file. 
+ * It's a legacy file.
  */
 
 readyState_complete(() => {
@@ -334,7 +333,7 @@ jQuery(document).ready(function($) {
 		$('.tutor-tabs-btn-group a').removeClass('active');
 		$that.addClass('active');
 	});
-	
+
 	/**
 	 *
 	 * @type {jQuery}
