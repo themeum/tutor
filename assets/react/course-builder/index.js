@@ -42,7 +42,7 @@ window.addEventListener(_tutorobject.content_change_event, () => console.log(_tu
  */
 
 function getRemainingLength(maxLength = 60, inputElement) {
-	return maxLength - (inputElement.value.trim().length || 0);
+	return maxLength - (inputElement.value.length || 0);
 }
 
 /**
@@ -56,7 +56,24 @@ if (courseTitleTooltip) {
 	courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
 }
 
-if (courseCreateTitle) {
+const courseCreateTitleTooptip = document.querySelector('#tutor-course-create-title-tooltip-wrapper .tooltip-txt');
+
+courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
+
+if(courseCreateTitle && courseCreateTitleTooptip) {
+
+	document.addEventListener('click', (e) => { console.log("ei target ", e.target);
+		if (e.target === courseCreateTitle) {
+			if(courseCreateTitle === document.activeElement) {
+				courseCreateTitleTooptip.style.opacity = '1';
+				courseCreateTitleTooptip.style.visibility = 'visible';
+			} 
+		} else {
+			courseCreateTitleTooptip.style.opacity = '0';
+			courseCreateTitleTooptip.style.visibility = 'hidden';
+		}
+	})
+	
 	courseCreateTitle.addEventListener('keyup', (e) => {
 		const remainingLength = getRemainingLength(maxLength, courseCreateTitle);
 		courseTitleTooltip.innerHTML = remainingLength;
