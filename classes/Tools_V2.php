@@ -74,6 +74,7 @@ class Tools_V2 {
 	 * @return void
 	 */
 	private function get_tools_fields() {
+		global $wpdb;
 
 		if ( $this->tools_fields ) {
 			// Return fields if already prepared
@@ -260,49 +261,42 @@ class Tools_V2 {
 									'type'    => 'info_col',
 									'label'   => __( 'MySQL version', 'tutor' ),
 									'status'  => 'default',
-									'default' => $this->status( 'tutor_version' ),
-								),
-								array(
-									'key'     => 'tutor_version',
-									'type'    => 'info_col',
-									'label'   => __( 'Database Size', 'tutor' ),
-									'status'  => 'default',
-									'default' => $this->status( 'tutor_version' ),
+									'default' => sprintf( 'Server: %s, Client: %s', $wpdb->dbh->server_info, $wpdb->dbh->client_info ),
 								),
 								array(
 									'key'     => 'wordpress_memory_limit',
 									'type'    => 'info_col',
 									'label'   => __( 'Default timezone is UTC', 'tutor' ),
 									'status'  => 'default',
-									'default' => $this->status( 'wordpress_memory_limit' ),
+									'default' => $this->status( 'default_timezone_is_utc' ),
 								),
 								array(
 									'key'     => 'wordpress_cron',
 									'type'    => 'info_col',
 									'label'   => __( 'fsockopen/cURL', 'tutor' ),
 									'status'  => 'default',
-									'default' => $this->status( 'wordpress_cron' ),
+									'default' => $this->status( 'fsockopen_curl' ),
 								),
 								array(
 									'key'     => 'external_object_cache',
 									'type'    => 'info_col',
 									'label'   => __( 'DOMDocument', 'tutor' ),
 									'status'  => 'default',
-									'default' => $this->status( 'external_object_cache' ),
+									'default' => $this->status( 'dom_document' ),
 								),
 								array(
 									'key'     => 'external_object_cache',
 									'type'    => 'info_col',
 									'label'   => __( 'GZip', 'tutor' ),
 									'status'  => 'default',
-									'default' => $this->status( 'external_object_cache' ),
+									'default' => $this->status( 'gzip' ),
 								),
 								array(
 									'key'     => 'external_object_cache',
 									'type'    => 'info_col',
 									'label'   => __( 'Multibyte string', 'tutor' ),
 									'status'  => 'default',
-									'default' => $this->status( 'external_object_cache' ),
+									'default' => $this->status( 'multibyte_string' ),
 								),
 							),
 						),
@@ -468,7 +462,7 @@ class Tools_V2 {
 
 		$data['default_timezone_is_utc'] = ( 'UTC' !== $environment['default_timezone'] )
 			? sprintf( esc_html__( 'Default timezone is %s - it should be UTC', 'tutor' ), esc_html( $environment['default_timezone'] ) )
-			: '-';
+			: '✓';
 
 		$data['fsockopen_curl'] = $environment['fsockopen_or_curl_enabled']
 			? '✓'
