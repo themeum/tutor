@@ -8,7 +8,7 @@ import './_select_dd_search';
 
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.
- * It's a legacy file. 
+ * It's a legacy file.
  */
 
 readyState_complete(() => {
@@ -334,7 +334,7 @@ jQuery(document).ready(function($) {
 		$('.tutor-tabs-btn-group a').removeClass('active');
 		$that.addClass('active');
 	});
-	
+
 	/**
 	 *
 	 * @type {jQuery}
@@ -879,7 +879,11 @@ jQuery(document).ready(function($) {
 								.attr('data-href', $(this).attr('href'))
 								.attr('href', '#');
 						});
+
 				},
+				complete: function (c) {
+					selectSearchField('.tutor-form-select');
+				}
 			});
 		});
 

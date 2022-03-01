@@ -1,4 +1,5 @@
 window.selectSearchField = (selectElement) => {
+	console.log('select running');
 	const tutorFormSelect = document.querySelectorAll(selectElement);
 	if (typeof readyState_complete !== 'undefined' && readyState_complete) {
 		readyState_complete(() => {
