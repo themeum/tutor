@@ -122,8 +122,16 @@ $is_user_admin                = current_user_can( 'administrator' );
 																	$time_limit = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
 																	if ( $time_limit ) {
 																		$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
-																		echo esc_html( "{$time_limit} {$time_type}" );
+
+																		$time_type=='minutes' ? $time_limit=$time_limit*60 : 0;
+																		$time_type=='hours' ? $time_limit=$time_limit*3660 : 0;
+																		$time_type=='days' ? $time_limit=$time_limit*86400 : 0;
+																		$time_type=='weeks' ? $time_limit=$time_limit*86400*7 : 0;
+
+																		// To Fix: If time larger than 24 hours, the hour portion starts from 0 again. Fix later.
+																		echo gmdate('H:i:s', $time_limit);
 																	}
+																	
 																	$has_attempt = tutor_utils()->has_attempted_quiz( get_current_user_id(), $quiz->ID )
 																?>
 
