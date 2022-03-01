@@ -26,10 +26,10 @@
             list-style: none;
             margin: 0 0 -1px;
             padding: 0;
-    
+
             li {
                 display: inline-block;
-                
+
                 a {
                     display: block;
                     font-size: 16px;
@@ -38,20 +38,39 @@
                     color: var(--tutor-light-color);
                     border-bottom: 2px solid transparent;
                 }
-    
+
                 &:not(:first-child) a {
                     margin-left: 20px;
                 }
-    
+
                 &.active a {
                     border-bottom: 2px solid var(--tutor-primary-color);
                     color: var(--tutor-text-color);
                 }
             }
         }
-    } 
+    }
 }
 
-.tutor-course-tab-info {
+.course-players{
+    position: relative;
+    overflow: hidden;
 
+    .loading-spinner {
+        position: absolute;
+        inset: 0;
+        background: $bg-gray-10;
+        border-radius: 3px;
+        z-index: 10;
+
+        @include spinner(#1973aa, #eee);
+    }
+    .loading-spinner::before {
+        width: 50px;
+        height: 50px;
+        top: calc(50% - 25px);
+    }
+    .loading-spinner.hide {
+        display: none;
+    }
 }

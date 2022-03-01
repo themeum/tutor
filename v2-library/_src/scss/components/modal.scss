@@ -359,13 +359,13 @@
 				color: var(--tutor-text-primary);
 				.tutor-modal-step-btn {
 					&::before {
-						background-color: var(--tutor-primary);
+						background-color: var(--tutor-primary-color);
 					}
 					color: transparent;
 					background-size: 10px;
 					background-position: 5px center;
 					background-repeat: no-repeat;
-					background-color: var(--tutor-primary);
+					background-color: var(--tutor-primary-color);
 					background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg fill='none' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 9'%3e%3cpath d='M.436496 4.58374C.391263 4.5367.355238 4.4816.330285 4.4213c-.049755-.13438-.049755-.28214 0-.41652a.499923.499923 0 01.106211-.16244l.753894-.72265c.04436-.05197.09989-.09326.16244-.12079.06021-.02724.1255-.04143.19159-.04165.07162-.00139.14269.01282.20826.04165.06482.02883.1235.06983.17285.12079L4.1997 5.39802 9.08124.516483c.04802-.050643.10527-.091641.16869-.120789.06572-.028338.13668-.042529.20825-.041652a.472749.472749 0 01.19453.043062c.06105.02801.11542.068706.15951.119379l.75388.733067c.0457.04668.0818.10187.1062.16244.0498.13438.0498.28213 0 .41651-.0249.0603-.061.1154-.1062.16244L4.56623 7.95958c-.04471.05213-.10011.09403-.16244.12287-.13338.05508-.28314.05508-.41651 0-.06233-.02884-.11773-.07074-.16244-.12287L.436496 4.58374z' fill='%23fff'/%3e%3c/svg%3e");
 				}
 			}
@@ -563,7 +563,7 @@
 			text-decoration: none;
 			color: var(--tutor-primary);
 			&:hover {
-				color: var(--tutor-primary-hover);
+				color: var(--tutor-primary-hover-color);
 			}
 		}
 	}

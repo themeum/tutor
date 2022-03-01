@@ -37,7 +37,8 @@ window.jQuery(document).ready(function($) {
 				}
 
 				// Close Modal
-				modal.removeClass('tutor-is-active', $('#tutor-course-content-wrap'));
+				// modal.removeClass('tutor-is-active', $('#tutor-course-content-wrap'));
+				modal.removeClass('tutor-is-active');
 
 				// Show updated contents
 				if (topic_id) {

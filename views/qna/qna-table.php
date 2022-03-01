@@ -13,10 +13,10 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
             <?php
             foreach ($table_columns as $key => $column) {
                 echo '<th>
-                            <span class="text-regular-small tutor-color-text-subsued" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
-                    $column
+                    <span class="text-regular-small tutor-color-text-subsued" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
+                        $column
                     . '</span>
-                        </th>';
+                </th>';
             }
             ?>
         </tr>

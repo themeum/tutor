@@ -87,7 +87,17 @@
 
 	.tutor-earning-withdraw-form-wrap {
 		display: none;
-
+		.tutor-icon-line-cross-line.close-withdraw-form-btn {
+			position: absolute;
+			right: 70px;
+			top: 70px;
+			font-size: 24px;
+			cursor: pointer;
+			@include breakpoint-max(mobile) {
+				right: 30px;
+   				top: 60px;
+			}
+		}
 		& > div {
 			width: 100%;
 			height: 100%;
@@ -120,14 +130,20 @@
 
 				& > div {
 					padding: 50px 70px;
-
+					@include breakpoint-max(mobile) {
+						padding: 40px 20px;
+					}
 					&:first-child {
 						& > .tutor-icon-line-cross {
 							position: absolute;
+							right: 70px;
+							top: 70px;
+							font-size: 24px;
 							cursor: pointer;
-							top: 30px;
-							right: 30px;
-							font-size: 20px;
+							@include breakpoint-max(mobile) {
+								right: 30px;
+								top: 60px;
+							}
 						}
 
 						tr,
@@ -211,6 +227,9 @@
 			& > button {
 				&:last-child {
 					float: right;
+				}
+				@include breakpoint-max(mobile) {
+					padding: 10px 25px;
 				}
 			}
 		}
