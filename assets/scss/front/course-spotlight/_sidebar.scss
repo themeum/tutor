@@ -75,7 +75,7 @@
 				border-color: transparent;
 				background: $color-white;
 				span:first-child {
-					color: $design-brand;
+					color: var(--tutor-primary-color);
 				}
 			}
 			.tutor-lessons-tab {

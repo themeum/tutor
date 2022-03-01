@@ -20,7 +20,6 @@ window.selectSearchField = (selectElement) => {
 					selectedLabel.innerText = initialSelectedItem && initialSelectedItem.text;
 
 					selectLabel.onclick = (e) => {
-
 						e.stopPropagation();
 						dropDown.classList.toggle('is-active');
 
