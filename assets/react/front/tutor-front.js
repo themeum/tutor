@@ -443,7 +443,7 @@ jQuery(document).ready(function($) {
 					tutor_toast(
 						__('Request Successful', 'tutor'),
 						__('Your request has been submitted. Please wait for the administrator’s response.', 'tutor'),
-						'success',
+						'success'
 					);
 					setTimeout(function() {
 						location.reload();
@@ -561,7 +561,7 @@ jQuery(document).ready(function($) {
 			.html(
 				$(this)
 					.val()
-					.replace(/.*(\/|\\)/, ''),
+					.replace(/.*(\/|\\)/, '')
 			);
 	});
 
@@ -578,7 +578,7 @@ jQuery(document).ready(function($) {
 			var $parent = $that.closest('.tutor-topics-in-single-lesson');
 			$parent.toggleClass('tutor-topic-active');
 			$parent.find('.tutor-lessons-under-topic').slideToggle();
-		},
+		}
 	);
 
 	$('.tutor-single-lesson-items.active')
@@ -859,7 +859,7 @@ jQuery(document).ready(function($) {
 			var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier);
 			filter_criteria.action = 'tutor_course_filter_ajax';
 
-			loop_container.html('<center><img src="' + window._tutorobject.loading_icon_url + '"/></center>');
+			loop_container.html('<div class="loading-spinner"></div>');
 			$(this)
 				.closest('form')
 				.find('.tutor-clear-all-filter')
