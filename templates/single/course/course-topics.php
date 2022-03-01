@@ -28,7 +28,7 @@ do_action( 'tutor_course/single/before/topics' );
 		<div class="text-medium-h6 tutor-color-text-primary">
 			<span>
 				<?php
-					$title = __( 'Course Curriculm', 'tutor' );
+					$title = __( 'Course Curriculum', 'tutor' );
 					echo esc_html( apply_filters( 'tutor_course_topics_title', $title ) );
 				?>
 			</span>

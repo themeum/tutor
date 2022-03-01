@@ -4,7 +4,7 @@ window.jQuery(document).ready($ => {
 
     /**
      * Retake course
-     * 
+     *
      * @since v1.9.5
      */
      $('.tutor-course-retake-button').prop('disabled', false).click(function(e) {
@@ -27,7 +27,7 @@ window.jQuery(document).ready($ => {
                             url: window._tutorobject.ajaxurl,
                             type: 'POST',
                             data: {
-                                action: 'tutor_reset_course_progress', 
+                                action: 'tutor_reset_course_progress',
                                 course_id: course_id,
                             },
                             beforeSend: ()=>{
@@ -53,9 +53,13 @@ window.jQuery(document).ready($ => {
                         window.location.assign(url);
                     }
                 }
-            } 
+            }
         };
-        
+
         new window.tutor_popup($, 'icon-gear', 40).popup(data);
     });
+});
+
+readyState_complete(() => {
+    document.querySelector('.course-players .loading-spinner').remove();
 });

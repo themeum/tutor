@@ -73,7 +73,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 						</span>
 					</div>
 				</div>
-				
+
 				<div class="tutor-ratingsreviews-ratings-all">
 					<?php foreach ( $rating->count_by_value as $key => $value ) : ?>
 						<?php $rating_count_percent = ( $value > 0 ) ? ( $value * 100 ) / $rating->rating_count : 0; ?>
@@ -101,45 +101,15 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 					<?php endforeach; ?>
 				</div>
 			</div>
-			
+
 			<div class="tutor-ratingsreviews-reviews">
 				<ul class="review-list tutor-m-0 tutor-pagination-content-appendable">
-					<?php
-					foreach ( $reviews as $review ) {
-						$profile_url = tutor_utils()->profile_url( $review->user_id, false );
-						?>
-							<li>
-								<div>
-									<div class="">
-										<img class="tutor-avatar-circle tutor-50" src="<?php echo get_avatar_url( $review->user_id ); ?>" alt="student avatar" />
-									</div>
-									<div class="tutor-text-regular-body tutor-color-text-primary tutor-mt-16">
-										<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-reviewer-name">
-										<?php echo esc_html( $review->display_name ); ?>
-										</a>
-									</div>
-									<div class="tutor-text-regular-small tutor-color-text-hints">
-										<span class="tutor-review-time">
-											<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ); ?>
-										</span>
-									</div>
-								</div>
-								<div>
-								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
-									<div class="tutor-text-regular-caption tutor-color-text-subsued tutor-mt-10 tutor-review-comment">
-									<?php echo htmlspecialchars( $review->comment_content ); ?>
-									</div>
-								</div>
-							</li>
-						<?php
-					}
-						tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews));
-					?>
+					<?php tutor_load_template('single.course.reviews-loop', array('reviews' => $reviews)); ?>
 				</ul>
 			</div>
 		</div>
 	<?php endif; ?>
-	
+
 	<div class="tutor-bs-row tutor-mt-40 tutor-mb-20">
 		<div class="tutor-bs-col">
 			<?php if($is_enrolled): ?>
@@ -153,7 +123,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 			<?php endif; ?>
 		</div>
 		<div class="tutor-bs-col-auto">
-			<?php 
+			<?php
 				$pagination_data = array(
 					'total_items' => $reviews_total,
 					'per_page'    => $per_page,

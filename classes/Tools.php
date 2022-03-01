@@ -51,10 +51,6 @@ class Tools {
 		}
 	}
 
-	/**
-	 * Enable Maintenance Mode
-	 */
-
 	public function tutor_option_save_after(){
 		$maintenance_mode = (bool) get_tutor_option('enable_tutor_maintenance_mode');
 		if ($maintenance_mode){
@@ -66,12 +62,10 @@ class Tools {
 
 	public function check_if_maintenance(){
 		if ( ! is_admin() && ! $this->is_wplogin()) {
-			$mode = get_tutor_option( 'enable_tutor_maintenance_mode' );
-			$maintenance_mode = (bool) $mode;
-			if ( !$maintenance_mode || $mode=='off' ){
+			$maintenance_mode = (bool) get_tutor_option('enable_tutor_maintenance_mode');
+			if ( false === $maintenance_mode || current_user_can('administrator') ){
 				return;
 			}
-
 			header( 'Retry-After: 600' );
 			include tutor()->path.'views/maintenance.php';
 			die();
