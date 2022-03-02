@@ -20,7 +20,7 @@ class Tools {
          * Add setup wizard link in the tools menu
          * @since v.1.5.7
          */
-		add_filter('tutor_tool_pages', array($this, 'tutor_tool_pages_add_wizard'));
+		// add_filter('tutor_tool_pages', array($this, 'tutor_tool_pages_add_wizard'));
 		add_action('admin_init', array($this, 'redirect_to_wizard_page'));
 	}
 
