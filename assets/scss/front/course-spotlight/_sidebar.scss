@@ -14,7 +14,9 @@
 
 .tutor-course-single-sidebar-wraper {
 	flex: 0 0 400px;
-	max-width: 400px;
+	@include breakpoint-min(1200) {
+		max-width: 400px;
+	}
 	background: #fff;
 	border-color: $stroke-light-30;
 	border-width: 1px 1px 0px 0px;
@@ -160,6 +162,7 @@
 									font-size: 18px;
 								}
 								.lesson_title {
+									max-width: 220px;
 									margin-top: -2px;
 									&:first-letter {
 										text-transform: capitalize;
