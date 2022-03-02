@@ -1,7 +1,5 @@
-window.jQuery(document).ready($ => {
-
-    const { __ } = window.wp.i18n;
-
+window.jQuery(document).ready(($) => {
+	const { __ } = window.wp.i18n;
     /**
      * Retake course
      *
@@ -9,10 +7,9 @@ window.jQuery(document).ready($ => {
      */
     $('.tutor-course-retake-button').prop('disabled', false).click(function (e) {
         e.preventDefault();
-
-        var url = $(this).attr('href');
-        var course_id = $(this).data('course_id');
-
+		var url = $(this).attr('href');
+		var course_id = $(this).data('course_id');
+		
         var data = {
             title: __('Override Previous Progress', 'tutor'),
             description: __('Before continue, please decide whether to keep progress or reset.', 'tutor'),

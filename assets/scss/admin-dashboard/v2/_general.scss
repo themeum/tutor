@@ -12,9 +12,9 @@
 	}
 
 	@extend .text-body;
-	color: $text-subsued;
+	color: var(--tutor-text-subsued);
 
-	overflow-x: auto;
+	// overflow-x: auto;
 
 	.tutor-option-header,
 	.tutor-option-form {
@@ -119,7 +119,7 @@
 .tutor-option-header {
 	align-items: center;
 	min-height: 60px;
-	background: $bg-white;
+	background: var(--tutor-bg-white);
 	> div {
 		&:nth-child(3) {
 			justify-self: flex-end;
@@ -131,7 +131,7 @@
 		font-weight: 500;
 		font-size: 24px;
 		line-height: 34px;
-		color: $text-primary;
+		color: var(--tutor-text-primary);
 	}
 	.tutor-input-group {
 		.tutor-form-control {
@@ -177,7 +177,7 @@
 .tutor-option-nav-item h4,
 .tutor-option-single-item h4 {
 	@extend .text-regular-body;
-	color: $text-subsued;
+	color: var(--tutor-text-subsued);
 }
 
 .tutor-option-main-title {
@@ -187,7 +187,7 @@
 	margin-bottom: 15px;
 	h2 {
 		@extend .text-medium-h5;
-		color: $text-primary;
+		color: var(--tutor-text-primary);
 	}
 	a,
 	.modal-reset-open {
@@ -214,7 +214,7 @@
 		margin-bottom: 12px;
 	}
 	.item-wrapper {
-		background: $bg-white;
+		background: var(--tutor-bg-white);
 		border: 1px solid #d3d4d9;
 		box-sizing: border-box;
 		border-radius: 6px;
@@ -262,10 +262,10 @@
 					position: absolute;
 					inset: -13px -17px -1px -17px;
 					z-index: -1;
-					background: $black-05;
+					background: var(--tutor-black-05);
 					border-radius: 6px 6px 0 0;
 					opacity: 0.8;
-					border: 1px solid $stroke-light-30;
+					border: 1px solid var(--tutor-stroke-light-30);
 				}
 			}
 		}
@@ -295,13 +295,13 @@
 		.tutor-option-field-row {
 			padding-top: 8px;
 			padding-bottom: 8px;
-			border-color: $stroke-light-30;
+			border-color: var(--tutor-stroke-light-30);
 			> div:nth-child(2) {
 				font-weight: 600;
 			}
 			[class^='tutor-text'] {
 				&.success {
-					color: $text-success;
+					color: var(--tutor-text-success);
 				}
 			}
 		}
@@ -309,22 +309,22 @@
 
 	&.item-variation-dragndrop {
 		.item-wrapper {
-			background: $bg-white;
-			border: 1px solid $stroke-light-30;
+			background: var(--tutor-bg-white);
+			border: 1px solid var(--tutor-stroke-light-30);
 			padding: 28px;
 			padding-bottom: 25px;
 		}
 		.drag-drop-zone {
-			@include getDashedBorder(2px, 18px, $primary-60);
-			background-color: $bg-white;
+			@include getDashedBorder(2px, 18px, var(--tutor-primary-60));
+			background-color: var(--tutor-bg-white);
 			border-radius: 6px;
 			text-align: center;
 			border-color: #bdcaf1;
-			color: $text-primary;
+			color: var(--tutor-text-primary);
 			padding: 25px 30px 38px;
 
 			&.dragover {
-				box-shadow: inset 0 0 0 2px $black-20;
+				box-shadow: inset 0 0 0 2px var(--tutor-black-20);
 				transition: 100ms linear;
 
 				position: relative;
@@ -378,7 +378,7 @@
 				margin-top: 8px;
 				padding-left: 0;
 				> span {
-					color: $text-hints;
+					color: var(--tutor-text-hints);
 				}
 			}
 			label.tutor-btn.tutor-is-sm {
@@ -391,9 +391,9 @@
 
 				&:hover,
 				&:focus {
-					background: darken($color: #e9edfb, $amount: 2);
-					box-shadow: 0 0 0 3px lighten($color: #e9edfb, $amount: 3);
-					border-color: lighten($color: #3e64de, $amount: 36);
+					background: darken(#e9edfb, 2);
+					box-shadow: 0 0 0 3px lighten(#e9edfb, 3);
+					border-color: lighten(#3e64de, 36);
 				}
 			}
 
@@ -564,7 +564,7 @@
 				background-color: inherit;
 				border-color: #bababa;
 				&:focus {
-					border-color: $brand-wordpress;
+					border-color: var(--tutor-brand-wordpress);
 				}
 			}
 			.code-copy-btn {
@@ -572,8 +572,8 @@
 				line-height: 1.23;
 				font-weight: 600;
 				background: transparent;
-				border: 1px solid $brand-wordpress;
-				color: $brand-wordpress;
+				border: 1px solid var(--tutor-brand-wordpress);
+				color: var(--tutor-brand-wordpress);
 				padding: 5px 7px;
 				display: flex;
 				align-items: center;
@@ -587,8 +587,8 @@
 				}
 				&:hover,
 				&:focus {
-					background: $brand-wordpress;
-					color: $text-white;
+					background: var(--tutor-brand-wordpress);
+					color: var(--tutor-text-white);
 				}
 				&:focus {
 					box-shadow: 0 0 0 3px var(--tutor-primary-lighter);
@@ -602,7 +602,7 @@
 	label,
 	.label {
 		@extend .text-medium-body;
-		color: $text-primary;
+		color: var(--tutor-text-primary);
 		display: block;
 	}
 	em {
@@ -695,7 +695,7 @@
 	// .logo-upload (delete icon)
 	.logo-upload {
 		margin-top: 12px;
-		background: $bg-white;
+		background: var(--tutor-bg-white);
 		border: 1px solid #bababa;
 		border-radius: 6px;
 		padding: 20px;
@@ -707,20 +707,21 @@
 			height: 24px;
 			border-radius: 50%;
 			@include svg-delete-icon;
-			background-color: $design-danger;
+			background-color: var(--tutor-design-danger);
 			background-repeat: no-repeat;
 			background-position: 50%;
 			cursor: pointer;
 			top: -12px;
 			right: -12px;
 			&:hover {
-				background-color: darken($color: $design-danger, $amount: 6);
+				// background-color: darken(var(--tutor-design-danger), 6);
+				background-color: darken($design-danger, 6);
 			}
 		}
 
 		.logo-preview {
-			background: $black-05;
-			border: 2px solid $black-05;
+			background: var(--tutor-black-05);
+			border: 2px solid var(--tutor-black-05);
 			border-radius: 3px;
 			position: relative;
 			margin-right: 38px;
@@ -787,7 +788,7 @@
 
 	.layout-label {
 		@include getTypography(400, 15px, 160%);
-		color: $text-primary;
+		color: var(--tutor-text-primary);
 	}
 } // end of .tutor-option-field-input
 
@@ -903,20 +904,20 @@
 			--padding: 13px;
 			&:not(:last-child) {
 				padding-bottom: var(--padding);
-				border-color: $stroke-light-30;
+				border-color: var(--tutor-stroke-light-30);
 			}
 			&:not(:first-child) {
 				padding-top: var(--padding);
 
 				.tutor-option-field-label:last-child {
-					color: $text-primary;
+					color: var(--tutor-text-primary);
 				}
 			}
 		}
 	}
 
 	.tutor-option-field-label {
-		color: $text-subsued;
+		color: var(--tutor-text-subsued);
 		> p {
 			display: inline-flex;
 			align-items: center;
@@ -924,14 +925,14 @@
 		.icon-link {
 			text-decoration: none;
 			font-size: 16px;
-			color: $black-30;
+			color: var(--tutor-black-30);
 			font-size: 24px;
 			margin-left: 2px;
 		}
 		.icon-check {
 			font-size: 16px;
-			background: $design-success;
-			color: $text-white;
+			background: var(--tutor-design-success);
+			color: var(--tutor-text-white);
 			border-radius: 50%;
 			margin-right: 2px;
 		}
@@ -946,7 +947,7 @@
 .loading-spinner {
 	position: absolute;
 	inset: 0;
-	background: $bg-gray-10;
+	background: var(--tutor-bg-gray-10);
 	border-radius: 3px;
 	z-index: 10;
 
@@ -968,5 +969,24 @@
 
 	&.tutor-modal .tutor-alert.tutor-warning {
 		border-radius: 6px !important;
+	}
+}
+
+// tutor-ui-table-certificate-settings
+.tutor-ui-table-certificate-settings {
+	.tutor-option-field-input {
+		[class^='tutor-icon-'] {
+			border-radius: 50%;
+			width: 32px;
+			height: 32px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: background 0.3s ease;
+			&:hover {
+				background: var(--tutor-black-03);
+			}
+		}
 	}
 }

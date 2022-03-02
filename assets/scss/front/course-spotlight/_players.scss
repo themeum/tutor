@@ -1,20 +1,20 @@
 .tutor-course-single-content-wraper {
 	// Course content navigation
 	.tutor-single-course-content-prev, .tutor-single-course-content-next {
-		cursor: pointer;
 		width: 31px;
-		height: calc(100vh - 250px);
+		height: calc(100vh - 290px);
 		top: 60px;
 		position: absolute;
 
-		a{
+		a {
 			backdrop-filter: blur(94px);
 			margin: auto;
 			display: flex;
 			align-items: center;
 			height: 150px;
 			background: rgba(121, 121, 121, 0.479);
-
+			position: relative;
+    		top: 20px;
 			&:hover {
 				background: rgba(70, 70, 70, 0.479);
 			}
@@ -47,7 +47,12 @@
 	@include breakpoint-max(768) {
 		.tutor-single-course-content-prev, .tutor-single-course-content-next {
 			width: 31px;
-			height: 500px;
+			height: 400px;
+
+			a{
+				position: relative;
+				top: 50px;
+			}
 
 			span {
 				font-size: 30px;
@@ -86,7 +91,7 @@
 			position: absolute;
 			border: none;
 		}
-		.tutorPlayer,
+		// .tutorPlayer,
 		.tutorPlayer iframe {
 			height: calc(100vh - 250px);
 		}
