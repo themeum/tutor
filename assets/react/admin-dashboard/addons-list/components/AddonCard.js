@@ -4,8 +4,6 @@ import { useAddonsUpdate } from '../context/AddonsContext';
 const { __ } = wp.i18n;
 
 const AddonCard = ({ addon, addonId }) => {
-	const author = 'Themeum';
-	const url = 'https://www.themeum.com';
 	const { handleOnChange, addonLoading } = useAddonsUpdate();
 	// const addonIsLoading = addonLoading[addonId];
 	// console.log(addonLoading);
@@ -23,12 +21,6 @@ const AddonCard = ({ addon, addonId }) => {
 				</div>
 				<div className="addon-title tutor-mt-20">
 					<div className="text-medium-h5 color-text-primary tutor-mb-4">{addon.name}</div>
-					<div className="text-medium-small color-text-hints tutor-mt-5">
-						By{' '}
-						<a href={url} className="color-brand-wordpress">
-							{author}
-						</a>
-					</div>
 				</div>
 				<div className="addon-des text-regular-body color-text-subsued tutor-mt-20">{addon.description}</div>
 			</div>
