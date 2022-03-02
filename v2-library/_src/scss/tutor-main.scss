@@ -2,18 +2,25 @@
 
 // @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
 
-body {
-	font-family: 'Inter', sans-serif !important;
-	letter-spacing: -0.2px;
-
-	&.tutor-backend {
-		background: #e9eaed !important; // Provided by Rajin vai.
-	}
-}
-
 // vendors
 .tutor-prefix {
 	@import './vendors/bootstrap-grid';
 }
 
 @import './main_contents.scss';
+
+.tutor-font-family {
+	font-family: 'Inter', sans-serif !important;
+	letter-spacing: -0.2px;
+}
+
+.tutor-backend {
+	background: #e9eaed !important; // Provided by Rajin vai.
+	#wpbody-content {
+		@extend .tutor-font-family;
+	}
+}
+
+.tutor-course-details-page {
+	@extend .tutor-font-family;
+}

@@ -27,7 +27,7 @@ window.jQuery(document).ready($=>{
             type: 'POST',
             data: {
                 question_id,
-                qna_action, 
+                qna_action,
                 context,
                 action: 'tutor_qna_single_action'
             },
@@ -54,13 +54,13 @@ window.jQuery(document).ready($=>{
                     // Toggle active class
                     class_element[new_value==1 ? 'addClass' : 'removeClass']('active');
                 }
-                
+
                 // Toggle text if togglable text defined
                 if(button.data('state-text-0')) {
-                        
+
                     // Get toggle text
                     var new_text = button.data( new_value==1 ? 'state-text-1' : 'state-text-0' );
-                
+
                     var text_element = button.data('state-text-selector') ? button.find(button.data('state-text-selector')) : button;
                     text_element.text(new_text);
                 }
@@ -132,6 +132,7 @@ window.jQuery(document).ready($=>{
                 if(question_id) {
                     $('.tutor-qna-single-question').filter('[data-question_id="'+question_id+'"]').replaceWith(resp.data.html);
                 } else {
+                    $('.tutor-empty-state-wrapper').remove();
                     $('.tutor-qna-single-question').eq(0).before(resp.data.html);
                 }
                 //on successful reply make the textarea empty
@@ -143,8 +144,8 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete: () =>{
-                // button.removeClass('tutor-updating-message');
                 button.html(btnInnerHtml)
+                $('.tutor-qna-single-wrapper').find('.tutor-qa-reply').hide();
             }
         })
     });
