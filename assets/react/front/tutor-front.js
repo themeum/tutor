@@ -878,7 +878,11 @@ jQuery(document).ready(function($) {
 								.attr('data-href', $(this).attr('href'))
 								.attr('href', '#');
 						});
+
 				},
+				complete: function (c) {
+					selectSearchField('.tutor-form-select');
+				}
 			});
 		});
 

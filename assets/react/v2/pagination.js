@@ -1,12 +1,15 @@
-import { get_response_message } from "../../../assets/react/helper/response";
+import { get_response_message } from "../helper/response";
 
 window.jQuery(document).ready($=>{    
     const {__} = wp.i18n;
 
+    console.log('Pagination js loaded');
     $('[data-tutor_pagination_ajax]').css('display', 'flex');
     
     $(document).on('click', '[data-tutor_pagination_ajax] a.page-numbers', function(e){
         e.preventDefault();
+
+        console.log('Pagination a clicked', e);
 
         let link_el = $(this);
         let replace_me = $(this).closest('.tutor-pagination-wrapper-replacable');
