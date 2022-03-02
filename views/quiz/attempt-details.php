@@ -610,7 +610,9 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            tutor_render_answer_list($correct_answer);
+                                                            foreach($correct_answer as $ans) {
+                                                                tutor_render_answer_list(array($ans));
+                                                            }
                                                         }
     
                                                         // Matching
