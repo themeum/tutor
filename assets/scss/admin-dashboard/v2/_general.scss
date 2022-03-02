@@ -970,3 +970,22 @@
 		border-radius: 6px !important;
 	}
 }
+
+// tutor-ui-table-certificate-settings
+.tutor-ui-table-certificate-settings {
+	.tutor-option-field-input {
+		[class^='tutor-icon-'] {
+			border-radius: 50%;
+			width: 32px;
+			height: 32px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: background 0.3s ease;
+			&:hover {
+				background: var(--tutor-black-03);
+			}
+		}
+	}
+}

@@ -1,7 +1,9 @@
-readyState_complete(() => {
-	// typeof resetConfirmation === 'function' ? resetConfirmation() : '';
-	// typeof modalResetOpen === 'function' ? modalResetOpen() : '';
-});
+if (typeof readyState_complete !== 'undefined' && readyState_complete) {
+	readyState_complete(() => {
+		// typeof resetConfirmation === 'function' ? resetConfirmation() : '';
+		// typeof modalResetOpen === 'function' ? modalResetOpen() : '';
+	});
+}
 
 document.addEventListener('readystatechange', (event) => {
 	if (event.target.readyState === 'interactive') {
