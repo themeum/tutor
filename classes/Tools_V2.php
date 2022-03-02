@@ -64,7 +64,11 @@ class Tools_V2 {
 
 	public function load_tools_page() {
 		$tools_fields = $this->get_tools_fields();
-		$active_tab   = tutor_utils()->array_get( 'sub_page', $_GET, 'status' );
+		$tutor_setup  = array( 'tutor-setup' => $tools_fields['tutor-setup'] );
+		unset( $tools_fields['tutor-setup'] );
+		$tools_fields = array_merge( $tools_fields, $tutor_setup );
+
+		$active_tab = tutor_utils()->array_get( 'sub_page', $_GET, 'status' );
 		include tutor()->path . '/views/options/tools.php';
 	}
 
@@ -83,12 +87,13 @@ class Tools_V2 {
 
 		$attr_tools = array(
 			'status'        => array(
-				'label'    => __( 'Status', 'tutor' ),
-				'slug'     => 'status',
-				'desc'     => __( 'Status Settings', 'tutor' ),
-				'template' => 'status',
-				'icon'     => 'tutor-icon-chart-filled',
-				'blocks'   => array(
+				'label'     => __( 'Status', 'tutor' ),
+				'slug'      => 'status',
+				'desc'      => __( 'Status Settings', 'tutor' ),
+				'template'  => 'status',
+				'view_path' => tutor()->path . 'views/options/template/',
+				'icon'      => 'tutor-icon-chart-filled',
+				'blocks'    => array(
 					'wordpress_environment' => array(
 						'label'      => __( 'WordPress environment', 'tutor' ),
 						'slug'       => 'wordpress_environment',
@@ -304,21 +309,23 @@ class Tools_V2 {
 				),
 			),
 			'import_export' => array(
-				'label'    => __( 'Import/Export', 'tutor' ),
-				'slug'     => 'import_export',
-				'desc'     => __( 'Import/Export Settings', 'tutor' ),
-				'template' => 'import_export',
-				'icon'     => 'tutor-icon-import-export-filled',
-				'blocks'   => array(),
+				'label'     => __( 'Import/Export', 'tutor' ),
+				'slug'      => 'import_export',
+				'desc'      => __( 'Import/Export Settings', 'tutor' ),
+				'template'  => 'import_export',
+				'view_path' => tutor()->path . 'views/options/template/',
+				'icon'      => 'tutor-icon-import-export-filled',
+				'blocks'    => array(),
 			),
 			'tutor_pages'   => array(
-				'label'    => __( 'Tutor Pages', 'tutor' ),
-				'slug'     => 'tutor_pages',
+				'label'     => __( 'Tutor Pages', 'tutor' ),
+				'slug'      => 'tutor_pages',
 
-				'desc'     => __( 'Tutor Pages Settings', 'tutor' ),
-				'template' => 'tutor_pages',
-				'icon'     => 'tutor-icon-review-line',
-				'blocks'   => array(
+				'desc'      => __( 'Tutor Pages Settings', 'tutor' ),
+				'template'  => 'tutor_pages',
+				'view_path' => tutor()->path . 'views/options/template/',
+				'icon'      => 'tutor-icon-review-line',
+				'blocks'    => array(
 					'block' => array(),
 				),
 			),
@@ -333,7 +340,7 @@ class Tools_V2 {
 			),
 		);
 
-		$attr_tools = apply_filters( 'tutor/tools/extend/attr', apply_filters( 'tutor/tools/attr', $attr_tools ) );
+		$attr_tools = apply_filters( 'tutor/tools/extend/attr', apply_filters( 'tutor/tools/attr', apply_filters( 'tutor_tool_pages', $attr_tools ) ) );
 
 		$this->tools_fields = $attr_tools;
 
@@ -515,7 +522,7 @@ class Tools_V2 {
 
 	public function template( $section = array() ) {
 		ob_start();
-		include tutor()->path . "views/options/template/{$section['template']}.php";
+		include $section['view_path'] . $section['template'] . '.php';
 		return ob_get_clean();
 	}
 	/**
