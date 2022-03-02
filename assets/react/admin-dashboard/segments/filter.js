@@ -162,12 +162,11 @@ document.addEventListener("DOMContentLoaded", function () {
    * On change status
    * update course status
    */
-  const availableStatus = ["publish", "pending", "trash", "draft", "private"];
   const courseStatusUpdate = document.querySelectorAll(".tutor-admin-course-status-update");
   for (let status of courseStatusUpdate) {
     status.onchange = async (e) => {
       const target = e.target;
-      const newStatus = availableStatus[target.selectedIndex];
+      const newStatus = e.currentTarget.value;
       const prevStatus = target.dataset.status;
       if (newStatus === prevStatus) {
         return;
@@ -182,15 +181,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const response = await post.json();
       if (response) {
         target.dataset.status = newStatus;
-        let putStatus = "select-default";
-        newStatus === "publish"
-          ? (putStatus = "select-success")
-          : newStatus === "pending"
-            ? (putStatus = "select-warning")
-            : newStatus === 'trash'
-              ? (putStatus = "select-danger")
-              : "select-default";
-
+        let putStatus = target.getElementsByTagName('OPTION')[target.selectedIndex].dataset.status_class;
+        
         // add new status class
         target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
 
