@@ -1,17 +1,17 @@
-import './segments/lib';
-import './segments/navigation';
-import './segments/image-preview';
-import './segments/options';
-import './segments/import-export';
+import '../front/_select_dd_search';
+import './addons-list/addons-list-main';
 import './segments/addonlist';
 import './segments/color-preset';
-import './segments/reset';
-import './addons-list/addons-list-main';
-import './segments/filter';
-import './segments/withdraw';
-import ajaxHandler from './segments/filter';
 import './segments/editor_full';
-import '../front/_select_dd_search';
+import './segments/filter';
+import ajaxHandler from './segments/filter';
+import './segments/image-preview';
+import './segments/import-export';
+import './segments/lib';
+import './segments/navigation';
+import './segments/options';
+import './segments/reset';
+import './segments/withdraw';
 
 const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
 toggleChange.forEach((element) => {
@@ -184,7 +184,7 @@ jQuery(document).ready(function($) {
 			},
 			success: function success(data) {
 				if (!data.success) {
-					if (data.data.errors.errors) {
+					if (data?.data?.errors.errors) {
 						for (let v of Object.values(data.data.errors.errors)) {
 							//responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
 							responseContainer.append(`
