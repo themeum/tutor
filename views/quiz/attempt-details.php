@@ -74,7 +74,7 @@ function tutor_render_answer_list( $answers= array(), $dump_data=false ){
                 
 
                 if (isset($ans->answer_two_gap_match)) {
-                        echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
+                        // echo '<div class="matching-separator">&nbsp;-&nbsp;</div>';
                         echo '<div class="image-match">'.stripslashes($ans->answer_two_gap_match).'</div>';
                     echo '</div>';
                 }
@@ -610,7 +610,9 @@ if ( is_array( $attempt_info ) ) {
                                                                 $answer->question_id
                                                             ) );
     
-                                                            tutor_render_answer_list($correct_answer);
+                                                            foreach($correct_answer as $ans) {
+                                                                tutor_render_answer_list(array($ans));
+                                                            }
                                                         }
     
                                                         // Matching

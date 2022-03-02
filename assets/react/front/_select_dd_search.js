@@ -1,140 +1,138 @@
 window.selectSearchField = (selectElement) => {
 	console.log('select running');
 	const tutorFormSelect = document.querySelectorAll(selectElement);
-	if (typeof readyState_complete !== 'undefined' && readyState_complete) {
-		readyState_complete(() => {
-			tutorFormSelect.forEach((element) => {
-				if (!element.hasAttribute('noDropdown') && !element.classList.contains('no-tutor-dropdown')) {
-					let initialSelectedItem = element.options[element.selectedIndex];
-					element.style.display = 'none';
-					let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
-					element.insertAdjacentHTML('afterend', ddMarkup(element.options));
-					searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
-					searchInput = searchInputWrap && searchInputWrap.querySelector('input');
-					if (element.options.length < 5) {
-						searchInputWrap.style.display = 'none';
-					}
+	// if (typeof readyState_complete !== 'undefined' && readyState_complete) {
+	(() => {
+		tutorFormSelect.forEach((element) => {
+			if (!element.hasAttribute('noDropdown') && !element.classList.contains('no-tutor-dropdown')) {
+				let initialSelectedItem = element.options[element.selectedIndex];
+				element.style.display = 'none';
+				let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
+				element.insertAdjacentHTML('afterend', ddMarkup(element.options));
+				searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
+				searchInput = searchInputWrap && searchInputWrap.querySelector('input');
+				if (element.options.length < 5) {
+					searchInputWrap.style.display = 'none';
+				}
 
-					dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
-					const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
-					const selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
-					selectedLabel.innerText = initialSelectedItem && initialSelectedItem.text;
+				dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
+				const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
+				const selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
+				selectedLabel.innerText = initialSelectedItem && initialSelectedItem.text;
 
-					selectLabel.onclick = (e) => {
+				selectLabel.onclick = (e) => {
+					e.stopPropagation();
+					dropDown.classList.toggle('is-active');
 
+					setTimeout(() => {
+						searchInput.focus();
+					}, 100);
+
+					dropDown.onclick = (e) => {
 						e.stopPropagation();
-						dropDown.classList.toggle('is-active');
-
-						setTimeout(() => {
-							searchInput.focus();
-						}, 100);
-
-						dropDown.onclick = (e) => {
-							e.stopPropagation();
-						};
 					};
-					dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
+				};
+				dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
 
-					resultWrap = searchInputWrap.nextElementSibling;
-					resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');
+				resultWrap = searchInputWrap.nextElementSibling;
+				resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');
 
-					if (resultList) {
-						resultList.forEach((item) => {
-							item.onclick = (e) => {
-								let selectFieldOptions = Array.from(element.options);
-								selectFieldOptions.forEach((option, i) => {
-									if (option.value === e.target.dataset.key) {
-										dropDown.classList.toggle('is-active');
-										selectedLabel.innerText = e.target.innerText;
-										selectedLabel.dataset.value = option.value;
-										element.value = option.value;
-										const save_tutor_option = document.getElementById('save_tutor_option');
-										if (save_tutor_option) {
-											save_tutor_option.disabled = false;
-										}
+				if (resultList) {
+					resultList.forEach((item) => {
+						item.onclick = (e) => {
+							let selectFieldOptions = Array.from(element.options);
+							selectFieldOptions.forEach((option, i) => {
+								if (option.value === e.target.dataset.key) {
+									dropDown.classList.toggle('is-active');
+									selectedLabel.innerText = e.target.innerText;
+									selectedLabel.dataset.value = option.value;
+									element.value = option.value;
+									const save_tutor_option = document.getElementById('save_tutor_option');
+									if (save_tutor_option) {
+										save_tutor_option.disabled = false;
 									}
-								});
+								}
+							});
 
-								var onChangeEvent = new Event('change');
-								element.dispatchEvent(onChangeEvent);
-								jQuery(selectFieldOptions).trigger('change');
-							};
-						});
-					}
+							var onChangeEvent = new Event('change');
+							element.dispatchEvent(onChangeEvent);
+							jQuery(selectFieldOptions).trigger('change');
+						};
+					});
+				}
 
-					const countHiddenItems = (list) => {
-						let result = 0;
-						list.forEach((item) => {
-							if (item.style.display !== 'none') {
-								result += 1;
-							}
-						});
-						return result;
-					};
+				const countHiddenItems = (list) => {
+					let result = 0;
+					list.forEach((item) => {
+						if (item.style.display !== 'none') {
+							result += 1;
+						}
+					});
+					return result;
+				};
 
-					searchInput.oninput = (e) => {
-						let txtValue,
-							noItemFound = false;
-						resultFilter = e.target.value.toUpperCase();
-						resultList.forEach((item) => {
-							textToSearch = item.querySelector('.text-regular-caption');
-							txtValue = textToSearch.textContent || textToSearch.innerText;
-							if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
-								item.style.display = '';
-								noItemFound = 'false';
-								// console.log('found');
-							} else {
-								noItemFound = 'true';
-								item.style.display = 'none';
-								// console.log('not found');
-							}
-						});
+				searchInput.oninput = (e) => {
+					let txtValue,
+						noItemFound = false;
+					resultFilter = e.target.value.toUpperCase();
+					resultList.forEach((item) => {
+						textToSearch = item.querySelector('.text-regular-caption');
+						txtValue = textToSearch.textContent || textToSearch.innerText;
+						if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
+							item.style.display = '';
+							noItemFound = 'false';
+							// console.log('found');
+						} else {
+							noItemFound = 'true';
+							item.style.display = 'none';
+							// console.log('not found');
+						}
+					});
 
-						// console.log(countHiddenItems(resultList), noItemFound);
+					// console.log(countHiddenItems(resultList), noItemFound);
 
-						let noItemText = `
+					let noItemText = `
                     <div class="tutor-dropdown-select-option noItem">
                         <label>No item found</label>
                     </div>
                     `;
 
-						let appendNoItemText = dropDown.querySelector('.tutor-frequencies');
-						if (0 == countHiddenItems(resultList)) {
-							let hasNoItem = false;
-							appendNoItemText.querySelectorAll('.tutor-dropdown-select-option').forEach((item) => {
-								if (item.classList.contains('noItem') == true) {
-									hasNoItem = true;
-								}
-							});
-							if (false == hasNoItem) {
-								appendNoItemText.insertAdjacentHTML('beforeend', noItemText);
+					let appendNoItemText = dropDown.querySelector('.tutor-frequencies');
+					if (0 == countHiddenItems(resultList)) {
+						let hasNoItem = false;
+						appendNoItemText.querySelectorAll('.tutor-dropdown-select-option').forEach((item) => {
+							if (item.classList.contains('noItem') == true) {
 								hasNoItem = true;
 							}
-						} else {
-							if (null !== dropDown.querySelector('.noItem')) {
-								dropDown.querySelector('.noItem').remove();
-							}
+						});
+						if (false == hasNoItem) {
+							appendNoItemText.insertAdjacentHTML('beforeend', noItemText);
+							hasNoItem = true;
 						}
-					};
-				}
-			});
-
-			let otherDropDown = document.querySelectorAll('.tutor-dropdown-select-options-container');
-			document.onclick = (e) => {
-				dd_hide_dom_click(otherDropDown);
-			};
+					} else {
+						if (null !== dropDown.querySelector('.noItem')) {
+							dropDown.querySelector('.noItem').remove();
+						}
+					}
+				};
+			}
 		});
-	}
 
-	const dd_hide_dom_click = (elem) => {
+		let otherDropDown = document.querySelectorAll('.tutor-dropdown-select-options-container');
+		document.onclick = (e) => {
+			dd_hide_dom_click(otherDropDown);
+		};
+	})();
+
+	function dd_hide_dom_click(elem) {
 		if (elem) {
 			elem.forEach((elemItem) => {
 				elemItem.classList.remove('is-active');
 			});
 		}
-	};
+	}
 
-	const ddMarkup = (options) => {
+	function ddMarkup(options) {
 		let optionsList = '';
 		Array.from(options).forEach((item) => {
 			optionsList += `
@@ -169,7 +167,25 @@ window.selectSearchField = (selectElement) => {
         </div>
         `;
 		return markupDD;
-	};
+	}
 };
 
-selectSearchField('.tutor-form-select');
+const callback = function(mutationsList) {
+	for (let mutation of mutationsList) {
+		if (mutation.type == 'childList') {
+			if (mutation.addedNodes.length) {
+				if (mutation.target.id === 'tutor-course-filter-loop-container') {
+					window.selectSearchField('.tutor-form-select');
+				}
+			}
+		}
+	}
+};
+
+const observer = new MutationObserver(callback);
+
+const targetNode = document.querySelector('body');
+const config = { attributes: true, childList: true, subtree: true };
+observer.observe(targetNode, config);
+
+window.selectSearchField('.tutor-form-select');

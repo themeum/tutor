@@ -32,26 +32,27 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                 $row_id             = 'tutor_qna_row_' . $qna->comment_ID;
                 $menu_id            = 'tutor_qna_menu_id_' . $qna->comment_ID;
                 $is_self            = $current_user_id == $qna->user_id;
-                $key_slug           = $context != 'frontend-dashboard-qna-table-student' ? '_' . $current_user_id : '';
+                $key_slug           = $context == 'frontend-dashboard-qna-table-student' ? '_' . $current_user_id : '';
 
                 $meta               = $qna->meta;
                 $is_solved          = (int)tutor_utils()->array_get('tutor_qna_solved' . $key_slug, $meta, 0);
                 $is_important       = (int)tutor_utils()->array_get('tutor_qna_important' . $key_slug, $meta, 0);
                 $is_archived        = (int)tutor_utils()->array_get('tutor_qna_archived' . $key_slug, $meta, 0);
                 $is_read            = (int)tutor_utils()->array_get('tutor_qna_read' . $key_slug, $meta, 0);
-        ?>
+                
+                ?>
                 <tr id="<?php echo $row_id; ?>" data-question_id="<?php echo $qna->comment_ID; ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
                     <?php
                     foreach ($table_columns as $key => $column) {
                         switch ($key) {
                             case 'checkbox':
-                    ?>
+                                ?>
                                 <td data-th="<?php _e('Mark', 'tutor'); ?>" class="tutor-shrink">
                                     <div class="td-checkbox tutor-bs-d-flex tutor-bs-align-items-center">
                                         <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" style="margin-top:0" />
                                     </div>
                                 </td>
-                            <?php
+                                <?php
                                 break;
 
                             case 'student':
