@@ -211,11 +211,11 @@
 		.question-type-select {
 			.lead-option {
 				display: flex;
-    			align-items: center;
+				align-items: center;
 				margin-top: 2px;
 				span {
 					display: flex;
-    				margin-top: -1px;
+					margin-top: -1px;
 				}
 			}
 			.select-dropdown {
@@ -247,7 +247,7 @@
 	}
 	.tutor-zoom-meeting-modal-wrap {
 		#tutor-zoom-meeting-modal-form {
-			.tutor-react-datepicker .react-datepicker__input-container input,
+			// .tutor-react-datepicker .react-datepicker__input-container input,
 			.tutor_zoom_timepicker,
 			.tutor-dropdown-select-selected {
 				height: 48px !important;
@@ -459,7 +459,7 @@
 			margin-top: 4px;
 		}
 	}
-    .tutor-question-answer-image {
-        display: flex;
-    }
+	.tutor-question-answer-image {
+		display: flex;
+	}
 }
