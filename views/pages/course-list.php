@@ -129,11 +129,11 @@ $the_query = new WP_Query( $args );
 remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
 
 $available_status = array(
-	'publish' => __( 'Publish', 'tutor' ),
-	'pending' => __( 'Pending', 'tutor' ),
-	'trash'   => __( 'Trash', 'tutor' ),
-	'draft'   => __( 'Draft', 'tutor' ),
-	'private' => __( 'Private', 'tutor' ),
+	'publish' => array(__( 'Publish', 'tutor' ), 'select-success'),
+	'pending' => array(__( 'Pending', 'tutor' ), 'select-warning'),
+	'trash'   => array(__( 'Trash', 'tutor' ), 'select-danger'),
+	'draft'   => array(__( 'Draft', 'tutor' ), 'select-default'),
+	'private' => array(__( 'Private', 'tutor' ), 'select-default'),
 );
 
 ?>
@@ -309,15 +309,15 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
 									<div class="inline-flex-center td-action-btns">
 										<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
-										<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-admin-course-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>">
-										<?php foreach ( $available_status as $key => $value ) : ?>
-											<option value="publish" <?php selected( $key, $post->post_status, 'selected' ); ?>>
-												<?php echo esc_html( $value ); ?>
-											</option>
-										<?php endforeach; ?>
-										</select>
-										<i class="icon1 tutor-icon-eye-fill-filled"></i>
-										<i class="icon2 tutor-icon-angle-down-filled"></i>
+											<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-admin-course-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>">
+												<?php foreach ( $available_status as $key => $value ) : ?>
+													<option data-status_class="<?php echo esc_attr( $value[1] ); ?>" value="<?php echo $key; ?>" <?php selected( $key, $post->post_status, 'selected' ); ?>>
+														<?php echo esc_html( $value[0] ); ?>
+													</option>
+												<?php endforeach; ?>
+											</select>
+											<i class="icon1 tutor-icon-eye-fill-filled"></i>
+											<i class="icon2 tutor-icon-angle-down-filled"></i>
 										</div>
 										<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="btn-outline tutor-btn">
 											<?php esc_html_e( 'Edit', 'tutor' ); ?>

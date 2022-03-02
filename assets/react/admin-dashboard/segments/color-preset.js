@@ -11,21 +11,23 @@ const otherColorRows = otherColors && otherColors.querySelectorAll('.tutor-optio
 const otherColorsExpanded = document.querySelector('.other_colors.expanded');
 const designNav = document.querySelectorAll('.tutor-option-nav-item');
 
-readyState_complete(() => {
-	if (typeof otherColorsPreview === 'function') {
-		otherColorsPreview();
-	}
+if (typeof readyState_complete !== 'undefined' && readyState_complete) {
+	readyState_complete(() => {
+		if (typeof otherColorsPreview === 'function') {
+			otherColorsPreview();
+		}
 
-	designNav.forEach((item) => {
-		item.onclick = () => {
-			setTimeout(() => {
-				if ('design' === item.children[0].dataset.tab) {
-					otherColorsPreview();
-				}
-			});
-		};
+		designNav.forEach((item) => {
+			item.onclick = () => {
+				setTimeout(() => {
+					if ('design' === item.children[0].dataset.tab) {
+						otherColorsPreview();
+					}
+				});
+			};
+		});
 	});
-});
+}
 
 const otherColorsPreview = () => {
 	let itemsHeight = (initHeight = 0);
