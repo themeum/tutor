@@ -168,7 +168,7 @@ class Q_and_A {
 
 		// Get who asked the question
 		$asker_id 	   = $this->get_asker_id($question_id);
-		$asker_prefix  = $_POST['context']!='frontend-dashboard-qna-table-student' ? '_'.get_current_user_id() : '';
+		$asker_prefix  = $_POST['context']=='frontend-dashboard-qna-table-student' ? '_'.get_current_user_id() : '';
 
 		// Get the existing value from meta
 		$action        = sanitize_text_field( $_POST['qna_action'] );
