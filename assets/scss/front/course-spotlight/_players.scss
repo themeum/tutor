@@ -3,18 +3,19 @@
 	.tutor-single-course-content-prev, .tutor-single-course-content-next {
 		cursor: pointer;
 		width: 31px;
-		height: calc(100vh - 250px);
+		height: calc(100vh - 290px);
 		top: 60px;
 		position: absolute;
 
-		a{
+		a {
 			backdrop-filter: blur(94px);
 			margin: auto;
 			display: flex;
 			align-items: center;
 			height: 150px;
 			background: rgba(121, 121, 121, 0.479);
-
+			position: relative;
+    		top: 20px;
 			&:hover {
 				background: rgba(70, 70, 70, 0.479);
 			}
@@ -86,7 +87,7 @@
 			position: absolute;
 			border: none;
 		}
-		.tutorPlayer,
+		// .tutorPlayer,
 		.tutorPlayer iframe {
 			height: calc(100vh - 250px);
 		}

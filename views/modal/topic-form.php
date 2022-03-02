@@ -27,7 +27,7 @@
                         <textarea name="topic_summery" class="tutor-form-control tutor-mb-10"><?php echo !empty($data['summary']) ? $data['summary'] : ''; ?></textarea>
                         <p class="tutor-input-feedback tutor-has-icon">
                             <i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
-                            <?php _e('The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor'); ?>
+                            <?php _e('Add a summary of short text to prepare students for the activities for the topic. The text is shown on the course page beside the tooltip beside the topic name.', 'tutor'); ?>
                         </p>
                         <input type="hidden" name="topic_course_id" value="<?php echo $data['course_id']; ?>">
                         <input type="hidden" name="topic_id" value="<?php echo $data['topic_id']; ?>">
