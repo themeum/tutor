@@ -33,13 +33,11 @@ window.jQuery(document).ready($=>{
 				var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 // Concat fragments to human redable time
-				var countdown_human = '0s';
+				var countdown_human = '';
 				days ? countdown_human += days + 'd ' : 0;
 				hours ? countdown_human += hours + 'h ' : 0;
 				minutes ? countdown_human += minutes + 'm ' : 0;
 				seconds ? countdown_human += seconds + 's ' : 0;
-
-				console.log(distance, countDownDate - time_now, countDownDate, time_now, attempt_settings.attempt_started_at);
 
                 // If distance is smaller than 0, then clear the interval and show reattempt alert box
 				if (distance < 0) {
