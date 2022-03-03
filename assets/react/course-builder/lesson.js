@@ -98,10 +98,10 @@ window.jQuery(document).ready(function($){
     });
 
     // Video source 
-    $(document).on('change', '.tutor_lesson_video_source', function(e){
-        let val = $(this).val(); console.log( $(this).nextAll() );
+    $(document).on('change', '.tutor_lesson_video_source', function(e) {
+        let val = $(this).val();
         $(this).nextAll().hide().filter('.video_source_wrap_'+val).show();
-        $(this).prev().filter('[data-video_source]').attr('data-video_source', val);
+        $(this).prevAll().filter('[data-video_source]').attr('data-video_source', val);
     });
 
     // Update lesson
