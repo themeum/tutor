@@ -341,7 +341,7 @@ class Lesson extends Tutor_Base {
 		 */
 		tutor_utils()->mark_lesson_complete( $lesson_id );
 
-		do_action( 'tutor_lesson_completed_after', $lesson_id, $user_id );
+		do_action( 'tutor_lesson_completed_email_after', $lesson_id, $user_id );
 	}
 
 	/**

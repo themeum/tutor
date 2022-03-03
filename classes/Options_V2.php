@@ -399,6 +399,7 @@ class Options_V2 {
 		foreach ( $withdrawl_methods as $key => $method ) {
 			$methods_array[ $key ] = $method['method_name'];
 		}
+		$course_archive_page_id = get_page_by_title('Courses');
 		$attr = array(
 			'general'      => array(
 				'label'    => __( 'General', 'tutor' ),
@@ -1457,7 +1458,7 @@ class Options_V2 {
 								'key'     => 'course_archive_page',
 								'type'    => 'select',
 								'label'   => __( 'Course Archive Page', 'tutor' ),
-								'default' => '0',
+								'default' => $course_archive_page_id ?? '0',
 								'options' => $pages,
 								'desc'    => __( 'This page will be used to list all the published courses.', 'tutor' ),
 							),
@@ -1581,15 +1582,15 @@ class Options_V2 {
 	 */
 	public function generate_field( $field = array() ) {
 		ob_start();
-		if(isset($field['type'])){
+		if ( isset( $field['type'] ) ) {
 			include tutor()->path . "views/options/field-types/{$field['type']}.php";
 		}
-		return ob_get_clean();
+		echo ob_get_clean();
 	}
 
 	public function field_type( $field = array() ) {
 		ob_start();
-		if(isset($field['type'])){
+		if ( isset( $field['type'] ) ) {
 			include tutor()->path . "views/options/field-types/{$field['type']}.php";
 		}
 		return ob_get_clean();
@@ -1604,7 +1605,7 @@ class Options_V2 {
 	public function template( $section = array() ) {
 		ob_start();
 		$blocks = $section['blocks'];
-		if(isset($section['template'])){
+		if ( isset( $section['template'] ) ) {
 			include tutor()->path . "views/options/template/{$section['template']}.php";
 		}
 		return ob_get_clean();
@@ -1619,7 +1620,7 @@ class Options_V2 {
 	 */
 	public function view_template( $template_slug, $section = array() ) {
 		ob_start();
-		if(isset($template_slug)){
+		if ( isset( $template_slug ) ) {
 			require tutor()->path . "views/options/template/{$template_slug}";
 		}
 		return ob_get_clean();
