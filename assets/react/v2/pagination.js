@@ -1,11 +1,10 @@
 import { get_response_message } from "../helper/response";
 
-window.jQuery(document).ready($=>{    
+window.jQuery(document).ready($=>{
     const {__} = wp.i18n;
 
-    console.log('Pagination js loaded');
     $('[data-tutor_pagination_ajax]').css('display', 'flex');
-    
+
     $(document).on('click', '[data-tutor_pagination_ajax] a.page-numbers', function(e){
         e.preventDefault();
 
@@ -55,7 +54,7 @@ window.jQuery(document).ready($=>{
                     } else {
                         replace_me.replaceWith(html);
                     }
-                    
+
                     $('[data-tutor_pagination_ajax]').css('display', 'flex');
                     window.dispatchEvent(new Event(_tutorobject.content_change_event));
 
