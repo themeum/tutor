@@ -9382,7 +9382,7 @@ class Utils {
 			),
 			'external_url' => array(
 				'title' => __( 'External URL', 'tutor' ),
-				'icon'  => 'link',
+				'icon'  => 'external_url',
 			),
 			'youtube'      => array(
 				'title' => __( 'Youtube', 'tutor' ),
@@ -9394,7 +9394,7 @@ class Utils {
 			),
 			'embedded'     => array(
 				'title' => __( 'Embedded', 'tutor' ),
-				'icon'  => 'code',
+				'icon'  => 'embedded',
 			),
 			'shortcode'    => array(
 				'title' => __( 'Shortcode', 'tutor' ),
