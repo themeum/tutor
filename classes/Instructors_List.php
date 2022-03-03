@@ -123,6 +123,8 @@ class Instructors_List {
 		tutor_utils()->checking_nonce();
 		$action   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
 		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
+		isset( $_POST['bulkIds'] ) ? $bulk_ids=sanitize_text_field( $_POST['bulkIds'] ) : 0;
+
 		if ( '' === $action || '' === $bulk_ids ) {
 			return wp_send_json_error();
 		}
