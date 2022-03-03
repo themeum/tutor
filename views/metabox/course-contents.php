@@ -23,7 +23,7 @@
 
     // Actually all kind of contents. 
     // This keyword '_tutor_course_id_for_lesson' used just to support backward compatibillity
-    $query_contents = get_posts(array(
+    /* $query_contents = get_posts(array(
         'post_parent'    => 0,
         'posts_per_page' => -1,
         'orderby'        => 'menu_order',
@@ -35,7 +35,7 @@
                 'compare' => '=',
             ),
         ),
-    ));
+    )); */
 
 	foreach ($query_topics as $topic){
 		?>
@@ -107,7 +107,7 @@
 	<input type="hidden" id="tutor_topics_lessons_sorting" name="tutor_topics_lessons_sorting" value="" />
 </div>
 
-<?php if ( count( $query_contents ) > count( $attached_lesson_ids ) ): ?>
+<?php /* if ( count( $query_contents ) > count( $attached_lesson_ids ) ): ?>
     <div class="tutor-untopics-lessons tutor-course-builder-content-container">
         <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
@@ -118,4 +118,4 @@
             ?>
         </div>
     </div>
-<?php endif; ?>
+<?php endif; */ ?>
