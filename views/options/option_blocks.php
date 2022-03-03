@@ -10,11 +10,43 @@
 <?php if ( $blocks['block_type'] == 'uniform' ) : ?>
 
 	<div class="tutor-option-single-item <?php echo isset( $blocks['class'] ) ? esc_attr( $blocks['class'] ) : ( isset( $blocks['slug'] ) ? esc_attr( $blocks['slug'] ) : null ); ?>">
+	<?php
+	$check_allowed = array( 'email_to_students' );
+	if ( in_array( $blocks['slug'], $check_allowed ) ) {
+		?>
+		<div style="display: flex;justify-content: end;">
+			<label><input type="checkbox" class="check_block_checkbox"> Check all</label>
+			<script>
+				setTimeout(()=>{
+					let checkAllElem = document.querySelector('.check_block_checkbox');
+					let allCheckedElem = document.querySelectorAll('#email_notification input[type=checkbox].tutor-form-toggle-input');
+					checkAllElem.onchange = (item) => {
+						if(true === checkAllElem.checked){
+							allCheckedElem.forEach((item)=>{
+								item.change
+								item.checked = true;
+								item.setAttribute('value','on');
+								console.log(item.previousElementSibling);
+								item.previousElementSibling.setAttribute('value', 'on');
+							})
+						}else{
+							allCheckedElem.forEach((item)=>{
+								item.checked = false;
+								item.removeAttribute("checked");
+								item.setAttribute('value','off');
+								item.previousElementSibling.setAttribute('value', 'off');
+							})
+						}
+					}
+				})
+			</script>
+		</div>
+		<?php } ?>
 		<?php echo isset( $blocks['label'] ) ? '<h4>' . esc_attr( $blocks['label'] ) . '</h4>' : ''; ?>
 		<div class="item-wrapper">
 			<?php
 			foreach ( $blocks['fields'] as $field ) :
-				echo $this->generate_field( $field );
+				$this->generate_field( $field );
 			endforeach;
 			?>
 		</div>
