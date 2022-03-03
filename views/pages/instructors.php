@@ -85,9 +85,9 @@ $filters = array(
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
 	$available_status = array(
-		'pending'  => 'warning',
-		'approved' => 'success',
-		'blocked'  => 'danger',
+		'pending'  => array(__('Pending', 'tutor'), 'select-warning'),
+		'approved' => array(__('Approved', 'tutor'), 'select-success'),
+		'blocked'  => array(__('Blocked', 'tutor'), 'select-danger'),
 	);
 	?>
 
@@ -176,12 +176,12 @@ $filters = array(
 								<?php echo esc_html( tutor_utils()->get_option( 'earning_instructor_commission' ) . '%' ); ?>
 								</span>
 							</td>
-							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>" class="tutor-instructor-status-update"  data-id="<?php echo esc_attr( $list->ID ); ?>">
-								<div class="tutor-form-select-with-icon select-<?php echo esc_html( $available_status[ $list->status ] ); ?>">
-									<select>
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+								<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
+									<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
 										<?php foreach ( $available_status as $key => $status ) : ?>
-											<option value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $status ); ?>" <?php selected( $list->status, $key ); ?>>
-												<?php echo esc_html( tutor_utils()->translate_dynamic_text( $key ) ); ?>
+											<option data-status_class="<?php echo $available_status[$key][1]; ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $status ); ?>" <?php selected( $list->status, $key ); ?>>
+												<?php echo esc_html( $available_status[ $key ][0] ); ?>
 											</option>
 										<?php endforeach; ?>
 									</select>
