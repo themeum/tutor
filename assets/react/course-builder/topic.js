@@ -82,7 +82,7 @@ window.jQuery(document).ready(function($) {
 				topic_id,
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.find('i').addClass('tutor-updating-message-v2');
 			},
 			success: function(data) {
 				// To Do: Load updated topic list here
@@ -94,7 +94,7 @@ window.jQuery(document).ready(function($) {
 				tutor_toast('Error!', (data.data || {}).message || __('Something Went Wrong', 'tutor'), 'error');
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.find('i').removeClass('tutor-updating-message-v2');
 			},
 		});
 	});

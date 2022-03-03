@@ -757,7 +757,6 @@ class Quiz {
 			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
 
 			wp_delete_post( $quiz_id, true );
-			delete_post_meta( $quiz_id, '_tutor_course_id_for_lesson' );
 
 			do_action( 'tutor_delete_quiz_after', $quiz_id );
 

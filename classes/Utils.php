@@ -856,36 +856,6 @@ class Utils {
 
 	/**
 	 * @param int $course_id
-	 * @param int $limit
-	 *
-	 * @return \WP_Query
-	 *
-	 * Get lesson
-	 *
-	 * @since v.1.0.0
-	 */
-	public function get_lesson( $course_id = 0, $limit = 10 ) {
-		$course_id        = $this->get_post_id( $course_id );
-		$lesson_post_type = tutor()->lesson_post_type;
-
-		$args = array(
-			'post_status'    => 'publish',
-			'post_type'      => $lesson_post_type,
-			'posts_per_page' => $limit,
-			'meta_query'     => array(
-				array(
-					'key'     => '_tutor_course_id_for_lesson',
-					'value'   => $course_id,
-					'compare' => '=',
-				),
-			),
-		);
-
-		return get_posts( $args );
-	}
-
-	/**
-	 * @param int $course_id
 	 *
 	 * @return int
 	 *
@@ -8431,7 +8401,7 @@ class Utils {
 
 		// Convert single id to array
 		! is_array( $ancestor_ids ) ? $ancestor_ids = array( $ancestor_ids ) : 0;
-		$ancestor_ids                               = implode( ',', $ancestor_ids );
+		$ancestor_ids = implode( ',', $ancestor_ids );
 
 		switch ( $content_type ) {
 
@@ -8456,6 +8426,21 @@ class Utils {
 						// Assign id array to the variable
 						is_array( $content_ids ) ? $ids = $content_ids : 0;
 						break 2;
+				}
+				break;
+
+			default : 
+				switch ( $ancestor_type ) {
+					// Get lesson, quiz, assignment IDs by course ID
+					case 'topic' :
+						$content_ids = $wpdb->get_col(
+							"SELECT content.ID FROM {$wpdb->posts} content
+							INNER JOIN {$wpdb->posts} topic ON topic.ID=content.post_parent
+							WHERE topic.ID IN ({$ancestor_ids})"
+						);
+						
+						is_array($content_ids) ? $ids=$content_ids : 0;
+						break;
 				}
 		}
 

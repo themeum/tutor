@@ -9,7 +9,6 @@
 <div class="course-contents tutor-course-builder-content-container">
 
 	<?php
-	$query_lesson = tutor_utils()->get_lesson($course_id, -1);
 	$attached_lesson_ids = array();
 
     // tutor_utils()->get_topics function doesn't work correctly for multi instructor case. Rather use get_posts.
@@ -19,6 +18,23 @@
         'orderby'        => 'menu_order',
         'order'          => 'ASC',
         'posts_per_page' => -1,
+    ));
+
+
+    // Actually all kind of contents. 
+    // This keyword '_tutor_course_id_for_lesson' used just to support backward compatibillity
+    $query_contents = get_posts(array(
+        'post_parent'    => 0,
+        'posts_per_page' => -1,
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+        'meta_query'     => array(
+            array(
+                'key'     => '_tutor_course_id_for_lesson',
+                'value'   => $course_id,
+                'compare' => '=',
+            ),
+        ),
     ));
 
 	foreach ($query_topics as $topic){
@@ -64,70 +80,8 @@
                         'order'          => 'ASC',
                     )));
 
-                    $counter = array(
-                        'lesson' => 0,
-                        'quiz' => 0,
-                        'assignment' => 0
-                    );
-
-					foreach ($contents->posts as $content){
-						$attached_lesson_ids[] = $content->ID;
-
-						if ($content->post_type === 'tutor_quiz'){
-							$quiz = $content;
-                            $counter['quiz']++;
-                            tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
-                                'quiz_id' => $quiz->ID,
-                                'topic_id' => $topic->ID,
-                                'quiz_title' => __('Quiz', 'tutor').' '.$counter['quiz'].': '. $quiz->post_title,
-                            ), false);
-
-						} elseif ($content->post_type === 'tutor_assignments'){
-                            $counter['assignment']++;
-							?>
-                            <div id="tutor-assignment-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
-                                <div class="tutor-course-content-top">
-                                    <span class="color-text-hints tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-10"></span>
-                                    <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?>
-                                    </a>
-                                    <div class="tutor-course-content-top-right-action">
-                                        <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                            <span class="color-text-hints tutor-icon-edit-filled tutor-font-size-24"></span>
-                                        </a>
-                                        <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                            <span class="color-text-hints tutor-icon-delete-stroke-filled tutor-font-size-24"></span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-							<?php
-                        } else if($content->post_type=='lesson') {
-                            $counter['lesson']++;
-							?>
-                            <div id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
-                                <div class="tutor-course-content-top">
-                                    <span class="color-text-hints tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-6"></span>
-                                    <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                        <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?>
-                                    </a>
-                                    <div class="tutor-course-content-top-right-action">
-                                        <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                            <span class="color-text-hints tutor-icon-edit-filled tutor-font-size-24"></span>
-                                        </a>
-                                        <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                            <span class="color-text-hints tutor-icon-delete-stroke-filled tutor-font-size-24"></span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-							<?php
-						} else {
-                            !isset($counter[$content->post_type]) ? $counter[$content->post_type]=0 : 0;
-                            $counter[$content->post_type]++;
-                            do_action( 'tutor/course/builder/content/'.$content->post_type, $content, $topic, $course_id, $counter[$content->post_type] );
-                        }
-					}
+                    $course_contents = $contents->posts;
+					require __DIR__ . '/course-content-single.php';
                 ?></div>
 
                 <div class="tutor_add_content_wrap tutor_add_content_wrap_btn_sm" data-topic_id="<?php echo $topic->ID; ?>">
@@ -153,57 +107,15 @@
 	<input type="hidden" id="tutor_topics_lessons_sorting" name="tutor_topics_lessons_sorting" value="" />
 </div>
 
-
-<?php if ( count( $query_lesson ) > count( $attached_lesson_ids ) ): ?>
+<?php if ( count( $query_contents ) > count( $attached_lesson_ids ) ): ?>
     <div class="tutor-untopics-lessons tutor-course-builder-content-container">
         <h3><?php _e( 'Un-assigned lessons' ); ?></h3>
 
         <div class="tutor-lessons ">
             <?php
-            foreach ( $query_lesson as $lesson ) {
-                if ( ! in_array( $lesson->ID, $attached_lesson_ids ) ) {
-
-                    if ($lesson->post_type === 'tutor_quiz'){
-                        $quiz = $lesson;
-                        tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
-                            'quiz_id' => $quiz->ID,
-                            'topic_id' => $topic->ID,
-                            'quiz_title' => $quiz->post_title,
-                        ), false);
-                    }elseif($lesson->post_type === 'tutor_assignments'){
-                        ?>
-                        <div id="tutor-assignment-<?php echo $lesson->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo
-                        $lesson->ID; ?>">
-                            <div class="tutor-course-content-top">
-                                <i class="fas fa-bars"></i>
-                                <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                    <i class="tutor-icon-clipboard-line"></i> <?php echo stripslashes($lesson->post_title); ?> 
-                                </a>
-                                <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>">
-                                    <i class="tutor-icon-garbage-line"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <?php
-                    } else{
-                        ?>
-                        <div id="tutor-lesson-<?php echo $lesson->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo
-                        $lesson->ID; ?>">
-                            <div class="tutor-course-content-top">
-                                <i class="fas fa-bars"></i>
-                                <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $lesson->ID; ?>" data-topic-id="<?php echo (isset($topic) && is_object($topic)) ? $topic->ID : ''; ?>">
-                                    <?php echo stripslashes($lesson->post_title); ?> 
-                                </a>
-                                <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $lesson->ID; ?>">
-                                    <i class="tutor-icon-garbage-line"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <?php
-                }
-            }
-        }
-        ?>
+                $course_contents = $query_contents;
+                require __DIR__ . '/course-content-single.php';
+            ?>
         </div>
     </div>
 <?php endif; ?>
