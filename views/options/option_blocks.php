@@ -12,7 +12,7 @@
 	<div class="tutor-option-single-item <?php echo isset( $blocks['class'] ) ? esc_attr( $blocks['class'] ) : ( isset( $blocks['slug'] ) ? esc_attr( $blocks['slug'] ) : null ); ?>">
 	<?php
 	$check_allowed = array( 'email_to_students' );
-	if ( in_array( $blocks['slug'], $check_allowed ) ) {
+	if ( isset($blocks['slug']) && in_array( $blocks['slug'], $check_allowed ) ) {
 		?>
 		<div style="display: flex;justify-content: end;">
 			<label><input type="checkbox" class="check_block_checkbox"> Check all</label>
