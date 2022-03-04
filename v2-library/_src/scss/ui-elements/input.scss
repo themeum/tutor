@@ -47,6 +47,7 @@ input.tutor-form-control {
 
 	&:focus {
 		border-color: var(--tutor-primary-color);
+		box-shadow: unset;
 	}
 
 	&::placeholder {
