@@ -309,7 +309,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
 									<div class="inline-flex-center td-action-btns">
 										<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
-											<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-admin-course-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>">
+											<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
 												<?php foreach ( $available_status as $key => $value ) : ?>
 													<option data-status_class="<?php echo esc_attr( $value[1] ); ?>" value="<?php echo $key; ?>" <?php selected( $key, $post->post_status, 'selected' ); ?>>
 														<?php echo esc_html( $value[0] ); ?>

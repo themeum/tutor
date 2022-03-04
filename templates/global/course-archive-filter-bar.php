@@ -22,7 +22,7 @@
 
     <div class="tutor-course-archive-filters-wrap">
         <form class="tutor-course-filter-form" method="get">
-            <select class="tutor-form-select no-tutor-dropdown" name="tutor_course_filter">
+            <select class="tutor-form-select" name="tutor_course_filter">
                 <option value="newest_first" <?php selected("newest_first", $sort_by); ?> ><?php esc_html_e("Release Date (newest first)", "tutor");
 					?></option>
                 <option value="oldest_first" <?php selected("oldest_first", $sort_by); ?>><?php esc_html_e("Release Date (oldest first)", "tutor"); ?></option>

@@ -494,6 +494,15 @@ class Course extends Tutor_Base {
 			wp_send_json_error(array('message' => 'Access Forbidden'));
 		}
 
+		// Assign course ID to orphan content IDs since the topic will be deleted.
+		$course_id = tutor_utils()->get_course_id_by('topic', $topic_id);
+		$content_ids = tutor_utils()->get_course_content_ids_by(null, 'topic', $topic_id);
+		foreach($content_ids as $content_id) {
+			update_post_meta( $content_id, '_tutor_course_id_for_lesson', $course_id ); 
+			// Actually all kind of contents. 
+			// This keyword '_tutor_course_id_for_lesson' used just to support backward compatibillity
+		}
+
 		// Set contents under the topic orphan
 		$wpdb->update($wpdb->posts, array('post_parent' => 0), array('post_parent' => $topic_id));
 
