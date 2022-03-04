@@ -42,7 +42,7 @@ window.addEventListener(_tutorobject.content_change_event, () => console.log(_tu
  */
 
 function getRemainingLength(maxLength = 60, inputElement) {
-	return maxLength - (inputElement.value.length || 0);
+	return maxLength - (((inputElement || {}).value || {}).length || 0);
 }
 
 /**
