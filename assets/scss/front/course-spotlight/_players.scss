@@ -1,6 +1,7 @@
 .tutor-course-single-content-wraper {
 	// Course content navigation
-	.tutor-single-course-content-prev, .tutor-single-course-content-next {
+	.tutor-single-course-content-prev,
+	.tutor-single-course-content-next {
 		width: 31px;
 		height: calc(100vh - 290px);
 		top: 60px;
@@ -14,7 +15,7 @@
 			height: 150px;
 			background: rgba(121, 121, 121, 0.479);
 			position: relative;
-    		top: 20px;
+			top: 20px;
 			&:hover {
 				background: rgba(70, 70, 70, 0.479);
 			}
@@ -31,7 +32,7 @@
 	.tutor-single-course-content-prev {
 		left: 0;
 
-		a{
+		a {
 			border-radius: 0px 6px 6px 0px;
 		}
 	}
@@ -39,17 +40,18 @@
 	.tutor-single-course-content-next {
 		right: 0;
 
-		a{
+		a {
 			border-radius: 6px 0px 0px 6px;
 		}
 	}
 
 	@include breakpoint-max(768) {
-		.tutor-single-course-content-prev, .tutor-single-course-content-next {
+		.tutor-single-course-content-prev,
+		.tutor-single-course-content-next {
 			width: 31px;
 			height: 400px;
 
-			a{
+			a {
 				position: relative;
 				top: 50px;
 			}
@@ -80,9 +82,13 @@
 		width: 100%;
 		// min-height: 150px;
 		// max-height: 250px;
-		height: calc(100vh - 250px);
 		background: black;
 		display: block;
+		aspect-ratio: 16 / 9;
+
+		@include breakpoint-min(1600) {
+			max-height: calc(100vh - 250px);
+		}
 
 		iframe {
 			width: 100%;
@@ -91,6 +97,7 @@
 			position: absolute;
 			border: none;
 		}
+
 		// .tutorPlayer,
 		.tutorPlayer iframe {
 			height: calc(100vh - 250px);
