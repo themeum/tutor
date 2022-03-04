@@ -11,7 +11,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 
 
 
-<div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-mt-10">
+<div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-mt-10 tutor-mb-30">
     <?php
         $course_duration = get_tutor_course_duration_context( get_the_ID(), true );
         $course_students = tutor_utils()->count_enrolled_users_by_course();
@@ -32,7 +32,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
     <?php endif; ?>
 </div>
 
-<div class="list-item-author tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-30">
+<div class="list-item-author tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-auto">
 	<div class="tutor-avatar">
 		<a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
 	</div>

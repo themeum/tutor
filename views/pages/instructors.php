@@ -224,24 +224,24 @@ $filters = array(
 	</div>
 </div>
 
-<div id="tutor-instructor-add-new" class="tutor-modal">
+<div id="tutor-instructor-add-new" class="tutor-modal modal-sticky-header-footer tutor-modal-is-close-inside-header">
   <span class="tutor-modal-overlay"></span>
-  <button data-tutor-modal-close class="tutor-modal-close">
-	<span class="tutor-icon-line-cross-line"></span>
-  </button>
   <div class="tutor-modal-root">
 	<div class="tutor-modal-inner">
 	<form action="" method="post" id="tutor-new-instructor-form" autocomplete="off">
 	  <div class="tutor-modal-header">
-		<h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
+		<div class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
 			<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
-		</h3>
+		</div>
+		<button data-tutor-modal-close class="tutor-modal-close">
+			<span class="tutor-icon-line-cross-line"></span>
+		</button>
 	  </div>
 		  <div class="tutor-modal-body-alt tutor-bg-gray-10">
 			
 				<?php tutor_nonce_field(); ?>
 				<?php do_action( 'tutor_add_new_instructor_form_fields_before' ); ?>
-				<div class="tutor-bs-row tutor-mx-0">
+				<div class="tutor-bs-row ">
 					<div class="tutor-bs-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'First Name', 'tutor' ); ?>
@@ -259,7 +259,7 @@ $filters = array(
 						</div>
 					</div>
 				</div>
-				<div class="tutor-bs-row tutor-mx-0">
+				<div class="tutor-bs-row ">
 					<div class="tutor-bs-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'User Name', 'tutor' ); ?>
@@ -277,7 +277,7 @@ $filters = array(
 						</div>
 					</div>
 				</div>
-				<div class="tutor-bs-row tutor-mx-0">
+				<div class="tutor-bs-row ">
 					<div class="tutor-bs-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Email Address', 'tutor' ); ?>
@@ -287,7 +287,7 @@ $filters = array(
 						</div>
 					</div>
 				</div>
-				<div class="tutor-bs-row tutor-mx-0">
+				<div class="tutor-bs-row ">
 					<div class="tutor-bs-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Password', 'tutor' ); ?>
@@ -308,7 +308,7 @@ $filters = array(
 					</div>
 				</div>	
 				<?php do_action( 'tutor_add_new_instructor_form_fields_after' ); ?>
-				<div class="tutor-bs-row tutor-mx-0">
+				<div class="tutor-bs-row ">
 					<div class="tutor-bs-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Bio', 'tutor' ); ?>
@@ -317,11 +317,11 @@ $filters = array(
 							</span>
 						</label>
 						<div class="tutor-input-group tutor-mb-15">
-							<textarea  name="tutor_profile_bio" rows="3" style="width: 100%;" placeholder="<?php esc_html_e( 'Write Your Bio...', 'tutor' ); ?>"></textarea>
+							<textarea  name="tutor_profile_bio" class="tutor-form-control" rows="3" style="width: 100%;" placeholder="<?php esc_html_e( 'Write Your Bio...', 'tutor' ); ?>"></textarea>
 						</div>
 					</div>
 				</div>
-				<div class="tutor-bs-row tutor-mx-0" id="tutor-new-instructor-form-response"></div>
+				<div class="tutor-bs-row " id="tutor-new-instructor-form-response"></div>
 			  </div>
 			<div class="tutor-modal-footer">
 				<div class="tutor-bs-d-flex tutor-bs-justify-content-between">

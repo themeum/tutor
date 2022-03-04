@@ -469,6 +469,7 @@
 	}
 }
 
+// .tutor-hover-*
 .tutor-hover {
 	&-wp {
 		&:hover {
@@ -480,8 +481,26 @@
 			color: $color-brand;
 		}
 	}
-} // .tutor-hover-*
+}
 
 .tutor-ws-nowrap {
 	white-space: nowrap;
+}
+
+.tutor-mt-auto {
+	margin-top: auto;
+}
+
+.tutor-mb-auto {
+	margin-bottom: auto;
+}
+
+.tutor-mx-auto {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.tutor-my-auto {
+	margin-top: auto;
+	margin-bottom: auto;
 }
