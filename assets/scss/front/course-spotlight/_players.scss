@@ -12,6 +12,9 @@
 			display: flex;
 			align-items: center;
 			height: 150px;
+			@include breakpoint-max(768) {
+				height: 60px;
+			}
 			background: rgba(121, 121, 121, 0.479);
 			position: relative;
     		top: 20px;
