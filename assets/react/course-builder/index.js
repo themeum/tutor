@@ -58,8 +58,6 @@ if (courseTitleTooltip) {
 	courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
 }
 
-courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
-
 if(courseCreateTitle && courseCreateTitleTooptip) {
 
 	document.addEventListener('click', (e) => { 
