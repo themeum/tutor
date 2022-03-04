@@ -1,3 +1,4 @@
+import './segments/lib';
 import '../front/_select_dd_search';
 import './addons-list/addons-list-main';
 import './segments/addonlist';
@@ -7,7 +8,6 @@ import './segments/filter';
 import ajaxHandler from './segments/filter';
 import './segments/image-preview';
 import './segments/import-export';
-import './segments/lib';
 import './segments/navigation';
 import './segments/options';
 import './segments/reset';
