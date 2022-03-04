@@ -68,3 +68,14 @@
 	background-position: 90% 10%;
 	background-size: 12px;
 }
+
+// @include tutorLineClamp($lineNumber);
+@mixin tutorLineClamp($lineNumber: 2) {
+	display: block !important;
+	display: -webkit-box !important;
+	-webkit-line-clamp: $lineNumber;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+}
