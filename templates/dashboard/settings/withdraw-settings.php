@@ -73,7 +73,9 @@ $col_classes = array(
                                 <div class="<?php echo esc_attr( $field_count ) > 1 ? 'tutor-bs-col-12 tutor-bs-col-sm-6' : 'tutor-bs-col-12'; ?> tutor-mb-30">
                                     <?php
                                     if ( ! empty( $field['label'] ) ) {
-                                        echo wp_kses_post( "<label class='tutor-form-label tutor-color-text-hints' for='field_{$method_id}_$field_name'>{$field['label']}</label>" );
+                                        echo "<label class='tutor-form-label tutor-color-text-hints' for='field_{$method_id}_$field_name'>
+                                                ". htmlspecialchars($field['label']) ."
+                                            </label>";
                                     }
 
                                     $passing_data = apply_filters( 'tutor_withdraw_account_field_type_data', array(

@@ -25,7 +25,7 @@ $field_id = esc_attr( 'field_' . $field_key );
 					<label for="items-per-row-<?php echo esc_attr( $option_key ); ?>" class="items-per-row-label">
 						<input type="radio" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" id="items-per-row-<?php echo esc_attr( $option_key ); ?>" <?php echo esc_attr( checked( $option_value, $option_key ) ); ?> value="<?php echo esc_attr( $option_key ); ?>" />
 						<span class="icon-wrapper icon-col">
-							<?php echo wp_kses_post( str_repeat( '<span></span>', $i++ ) ); ?>
+							<?php echo str_repeat( '<span></span>', $i++ ); ?>
 						</span>
 						<span class="title"><?php echo esc_attr( $option ); ?></span>
 					</label>

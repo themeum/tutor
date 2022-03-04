@@ -6,7 +6,7 @@
     <?php wp_editor('', 'tutor_assignment_editor_config'); ?>
 </div>
 
-<div class="course-contents tutor-course-builder-content-container">
+<div class="course-contents">
 
 	<?php
 
