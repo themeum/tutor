@@ -34,18 +34,25 @@
 }
 
 .tutor-course-listing-item {
-	background: $bg-white;
-	// display: grid;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	background: var(--tutor-bg-white, #fff);
+	border: 1px solid #cdcfd5;
+	border-radius: 7px;
+	// display: grid;
+	// display: flex;
+	// flex-direction: column;
+	// justify-content: space-between;
+
 	a {
 		text-decoration: none;
 		color: inherit;
 	}
+
 	img {
 		max-width: 100%;
 	}
+
 	.list-item-meta {
 		gap: 10px;
 		@include breakpoint-min(desktop-lg) {
@@ -59,6 +66,10 @@
 	.course-listing-thumbnail {
 		height: 250px;
 		width: 100%;
+	}
+
+	.list-item-title > a {
+		@include tutorLineClamp(3);
 	}
 
 	&-head {
@@ -76,7 +87,7 @@
 			width: 38px;
 			height: 38px;
 			background: rgba(33, 35, 39, 0.4);
-			color: $design-white;
+			color: var(--tutor-design-white, #fff);
 			border: none;
 			border-radius: 50%;
 			font-size: 20px;
@@ -85,25 +96,17 @@
 				background: rgba(27, 27, 27, 0.4);
 			}
 			&:hover {
-				background: $design-brand;
-				color: $design-white;
+				background: var(--tutor-design-brand, blue);
+				color: var(--tutor-design-white, #fff);
 			}
-		}
-
-		.list-item-title > a {
-			display: block !important;
-			display: -webkit-box !important;
-			-webkit-line-clamp: 3;
-			-webkit-box-orient: vertical;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: normal;
 		}
 	}
 
 	&-body {
-		border-left: 1px solid #cdcfd5;
-		border-right: 1px solid #cdcfd5;
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+
 		.list-item-author {
 			gap: 10px;
 		}
@@ -116,14 +119,15 @@
 	}
 
 	&-footer {
-		border-left: 1px solid #cdcfd5;
-		border-right: 1px solid #cdcfd5;
-		border-bottom: 1px solid #cdcfd5;
-		border-bottom-left-radius: 6px;
-		border-bottom-right-radius: 6px;
+		margin-top: auto;
+		// border-left: 1px solid #cdcfd5;
+		// border-right: 1px solid #cdcfd5;
+		border-top: 1px solid #cdcfd5;
+		// border-bottom-left-radius: 6px;
+		// border-bottom-right-radius: 6px;
 		display: grid;
 		&.has-border {
-			border-top: 1px solid $stroke-light-20;
+			border-top: 1px solid var(--tutor-stroke-light-20, #ccc);
 		}
 
 		.list-item-price-with-booking {
@@ -149,7 +153,7 @@
 				height: var(--w);
 				padding: var(--pd);
 				border-radius: 50%;
-				background: conic-gradient($design-brand var(--pro), 0, $primary-60 100%);
+				background: conic-gradient(var(--tutor-design-brand) var(--pro), 0, var(--tutor-primary-60) 100%);
 
 				&:before {
 					content: '';
@@ -160,7 +164,7 @@
 				}
 
 				&.progress-full {
-					background: conic-gradient($design-error var(--pro), 0, $primary-60 100%);
+					background: conic-gradient(var(--tutor-design-error) var(--pro), 0, var(--tutor-primary-60) 100%);
 				}
 			}
 			&.booking-full {
@@ -172,7 +176,7 @@
 
 		.list-item-button {
 			.tutor-btn.tutor-btn-ghost {
-				color: $text-primary;
+				color: var(--tutor-text-primary);
 				.btn-icon {
 					border-radius: 50%;
 					font-size: 25px;
@@ -189,7 +193,7 @@
 				}
 
 				&:hover .btn-icon {
-					background: $primary-30;
+					background: var(--tutor-primary-30);
 				}
 			}
 		}
@@ -223,25 +227,28 @@
 		}
 	}
 
-	&,
 	&.tutor-mycourses-card {
 		border: 1px solid #cdcfd5;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
+		// display: flex;
+		// flex-direction: column;
+		// justify-content: space-between;
 		border-radius: 6px;
+
 		.tutor-course-listing-thumbnail {
 			height: 160px;
 		}
+
 		.tutor-course-listing-item-head {
 			margin: -1px;
 			// border-radius: unset;
 		}
+
 		.tutor-course-listing-item-body,
 		.tutor-course-listing-item-footer {
 			border-right: none;
 			border-left: none;
 		}
+
 		.tutor-course-listing-item-footer {
 			border-bottom: none;
 		}
