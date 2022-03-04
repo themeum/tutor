@@ -7869,15 +7869,26 @@ class Utils {
 			case 'lesson':
 			case 'quiz':
 			case 'assignment':
-				$course_id = $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT post_parent
-					FROM 	{$wpdb->posts}
-					WHERE 	ID = (SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d);
-					",
+				$topic_id = $wpdb->get_var($wpdb->prepare(
+					"SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d",
+					$object_id
+				));
+
+				if(!$topic_id) {
+					$course_id = $wpdb->get_var($wpdb->prepare(
+						"SELECT meta_value 
+						FROM {$wpdb->prefix}postmeta 
+						WHERE post_id=%d AND meta_key='_tutor_course_id_for_lesson'",
 						$object_id
-					)
-				);
+					));
+				} else {
+					$course_id = $wpdb->get_var($wpdb->prepare(
+						"SELECT post_parent
+						FROM 	{$wpdb->posts}
+						WHERE 	ID = (SELECT post_parent FROM {$wpdb->posts} WHERE ID = %d);",
+						$object_id
+					));
+				}
 				break;
 
 			case 'assignment_submission':
