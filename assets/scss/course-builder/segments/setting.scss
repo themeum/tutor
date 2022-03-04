@@ -8,11 +8,13 @@
 
 #wpcontent,
 #tutor-frontend-course-builder {
-	// .tutor-icon-plus-bold-filled.tutor-shortlist-instructor.tutor-updating-message {
-	// 	&:before {
-	// 		vertical-align: unset !important;
-	// 	}
-	// }
+	.tutor-topic-title {
+		.tutor-updating-message {
+			&:before {
+				vertical-align: unset !important;
+			}
+		}
+	}
 	.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
 		margin-right: 0px !important;
 	}

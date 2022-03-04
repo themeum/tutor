@@ -144,6 +144,26 @@ class Course extends Tutor_Base {
 		 * @since 1.9.8
 		 */
 		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
+	
+		add_action( 'wp_ajax_tutor_update_course_content_parent', array($this, 'tutor_update_course_content_parent') );
+	}
+
+	public function tutor_update_course_content_parent() {
+		tutor_utils()->checking_nonce();
+
+		$topic_id = (int)tutor_utils()->array_get('parent_topic_id', $_POST);
+		$content_id = (int)tutor_utils()->array_get('content_id', $_POST);
+
+		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
+			wp_send_json_success(array('message' => __('Access Denied!', 'tutor')));
+			exit;
+		}
+
+		// Update the parent topic id of the content
+		global $wpdb;
+		$wpdb->update($wpdb->posts, array( 'post_parent' => $topic_id ), array( 'ID' => $content_id ));
+
+		wp_send_json_success();
 	}
 
 	public function restrict_new_student_entry($content) {
@@ -492,6 +512,15 @@ class Course extends Tutor_Base {
 
 		if(!$topic_id || !is_numeric($topic_id) || !tutor_utils()->can_user_manage('topic', $topic_id)) {
 			wp_send_json_error(array('message' => 'Access Forbidden'));
+		}
+
+		// Assign course ID to orphan content IDs since the topic will be deleted.
+		$course_id = tutor_utils()->get_course_id_by('topic', $topic_id);
+		$content_ids = tutor_utils()->get_course_content_ids_by(null, 'topic', $topic_id);
+		foreach($content_ids as $content_id) {
+			update_post_meta( $content_id, '_tutor_course_id_for_lesson', $course_id ); 
+			// Actually all kind of contents. 
+			// This keyword '_tutor_course_id_for_lesson' used just to support backward compatibillity
 		}
 
 		// Set contents under the topic orphan

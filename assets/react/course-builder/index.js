@@ -42,7 +42,7 @@ window.addEventListener(_tutorobject.content_change_event, () => console.log(_tu
  */
 
 function getRemainingLength(maxLength = 60, inputElement) {
-	return maxLength - (inputElement.value.length || 0);
+	return maxLength - (((inputElement || {}).value || {}).length || 0);
 }
 
 /**
@@ -57,8 +57,6 @@ const courseCreateTitleTooptip = document.querySelector('#tutor-course-create-ti
 if (courseTitleTooltip) {
 	courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
 }
-
-courseTitleTooltip.innerHTML = getRemainingLength(maxLength, courseCreateTitle);
 
 if(courseCreateTitle && courseCreateTitleTooptip) {
 

@@ -65,7 +65,7 @@ window.jQuery(document).ready(function($) {
 	/**
 	 * Confirmation for deleting Topic
 	 */
-	$(document).on('click', '.tutor-topics-wrap .topic-delete-btn', function(e) {
+	$(document).on('click', '.tutor-topics-wrap .topic-delete-btn i', function(e) {
 		var $that = $(this);
 		var container = $(this).closest('.tutor-topics-wrap');
 		var topic_id = container.attr('data-topic-id');
@@ -82,7 +82,7 @@ window.jQuery(document).ready(function($) {
 				topic_id,
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('tutor-updating-message-v2');
 			},
 			success: function(data) {
 				// To Do: Load updated topic list here
@@ -94,7 +94,7 @@ window.jQuery(document).ready(function($) {
 				tutor_toast('Error!', (data.data || {}).message || __('Something Went Wrong', 'tutor'), 'error');
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('tutor-updating-message-v2');
 			},
 		});
 	});

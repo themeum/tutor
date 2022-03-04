@@ -1,5 +1,9 @@
+import { get_response_message } from "../helper/response";
+
 (function($){
     window.enable_sorting_topic_lesson=function(){
+        const { __ } = wp.i18n;
+
         if (jQuery().sortable) {
             $(".course-contents").sortable({
                 handle: ".course-move-handle",
@@ -7,6 +11,7 @@
                     ui.placeholder.css('visibility', 'visible');
                 },
                 stop: function (e, ui) {
+                    console.log('e1', e, ui)
                     tutor_sorting_topics_and_lesson();
                 },
             });
@@ -17,7 +22,30 @@
                     ui.placeholder.css('visibility', 'visible');
                 },
                 stop: function (e, ui) {
+                    // Store new updated order as input value
                     tutor_sorting_topics_and_lesson();
+
+                    // Update parent topic id fro the dropped content
+                    let parent_topic_id = ui.item.closest('[data-topic-id]').attr('data-topic-id');
+                    let content_id = ui.item.attr('data-course_content_id');
+
+                    $.ajax({
+                        url: window._tutorobject.ajaxurl,
+                        type: 'POST',
+                        data: {
+                            parent_topic_id,
+                            content_id,
+                            action: 'tutor_update_course_content_parent',
+                        },
+                        success: function(r){
+                            if(!r.success) {
+                                tutor_toast(__('Error', 'tutor'), get_response_message(r), 'error');
+                            }
+                        },
+                        error: function(){
+
+                        }
+                    })
                 },
             });
         }
@@ -39,6 +67,7 @@
             });
             topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
         });
+
         $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
     }
 
@@ -98,10 +127,10 @@ window.jQuery(document).ready(function($){
     });
 
     // Video source 
-    $(document).on('change', '.tutor_lesson_video_source', function(e){
-        let val = $(this).val(); console.log( $(this).nextAll() );
+    $(document).on('change', '.tutor_lesson_video_source', function(e) {
+        let val = $(this).val();
         $(this).nextAll().hide().filter('.video_source_wrap_'+val).show();
-        $(this).prev().filter('[data-video_source]').attr('data-video_source', val);
+        $(this).prevAll().filter('[data-video_source]').attr('data-video_source', val);
     });
 
     // Update lesson

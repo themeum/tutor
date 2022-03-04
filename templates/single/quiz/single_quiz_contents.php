@@ -15,33 +15,31 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
         <?php
-
-        if ($post->post_type === 'tutor_quiz') {
-            echo wp_kses_post( '<span class="tutor-icon-quiz-filled tutor-color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption tutor-color-design-white">' );
-            esc_html_e( 'Quiz: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } elseif ($post->post_type === 'tutor_assignments'){
-            echo wp_kses_post( '<span class="tutor-icon-assignment-filled tutor-color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption tutor-color-design-white">' );
-            esc_html_e( 'Assignment: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } elseif ($post->post_type === 'tutor_zoom_meeting'){
-            echo wp_kses_post( '<span class="tutor-icon-zoom tutor-color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption tutor-color-design-white">' );
-            esc_html_e( 'Zoom Meeting: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        } else{
-            echo wp_kses_post( '<span class="tutor-icon-youtube-brand tutor-color-text-white tutor-mr-5"></span>' );
-            echo wp_kses_post( '<span class="text-regular-caption tutor-color-design-white">' );
-            esc_html_e( 'Lesson: ', 'tutor' );
-            the_title(); 
-            echo wp_kses_post( '</span>' );
-        }
-
+            if ($post->post_type === 'tutor_quiz') {
+                echo '<span class="tutor-icon-quiz-filled tutor-color-text-white tutor-mr-5"></span>';
+                echo '<span class="text-regular-caption tutor-color-design-white">';
+                    esc_html_e( 'Quiz: ', 'tutor' );
+                    the_title(); 
+                echo '</span>';
+            } elseif ($post->post_type === 'tutor_assignments'){
+                echo '<span class="tutor-icon-assignment-filled tutor-color-text-white tutor-mr-5"></span>';
+                echo '<span class="text-regular-caption tutor-color-design-white">';
+                    esc_html_e( 'Assignment: ', 'tutor' );
+                    the_title(); 
+                echo '</span>';
+            } elseif ($post->post_type === 'tutor_zoom_meeting'){
+                echo '<span class="tutor-icon-zoom tutor-color-text-white tutor-mr-5"></span>';
+                echo '<span class="text-regular-caption tutor-color-design-white">';
+                    esc_html_e( 'Zoom Meeting: ', 'tutor' );
+                    the_title(); 
+                echo '</span>';
+            } else{
+                echo '<span class="tutor-icon-youtube-brand tutor-color-text-white tutor-mr-5"></span>';
+                echo '<span class="text-regular-caption tutor-color-design-white">';
+                    esc_html_e( 'Lesson: ', 'tutor' );
+                    the_title(); 
+                echo '</span>';
+            }
         ?>
     </div>
 
@@ -51,21 +49,19 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
             <span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>
         </a>
     </div>
-
 </div>
 
 
 <?php ob_start(); ?>
 <div class="tutor-quiz-single-wrap ">
 	<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
-
 	<?php
-	if ( $course ) {
-		tutor_single_quiz_top();
-		tutor_single_quiz_body();
-	} else {
-		tutor_single_quiz_no_course_belongs();
-	}
+        if ( $course ) {
+            tutor_single_quiz_top();
+            tutor_single_quiz_body();
+        } else {
+            tutor_single_quiz_no_course_belongs();
+        }
 	?>
 </div>
 <?php echo apply_filters( 'tutor_quiz/single/wrapper', ob_get_clean() ); ?>
