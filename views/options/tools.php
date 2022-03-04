@@ -18,6 +18,7 @@
 			</div> -->
 		</div>
 	</header>
+	<?php //pr($tools_fields); ?>
 	<div class="tutor-option-body">
 		<div class="tutor-option-form tutor-bs-py-4 tutor-bs-px-3">
 			<div class="tutor-option-tabs">
@@ -47,6 +48,7 @@
 				<?php
 				foreach ( $tools_fields as $key => $section ) {
 					$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';
+					// pr($section);
 					?>
 						<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
 						<?php

@@ -32,12 +32,12 @@ window.jQuery(document).ready($=>{
 				var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 				var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Concat fragments to human redable time
-				var countdown_human = '';
-				days ? countdown_human += days + 'd ' : 0;
-				hours ? countdown_human += hours + 'h ' : 0;
-				minutes ? countdown_human += minutes + 'm ' : 0;
-				seconds ? countdown_human += seconds + 's ' : 0;
+				// Concat fragments to human redable time
+                var countdown_human = '';
+                days ? countdown_human += days + 'd ' : 0;
+                countdown_human += (hours || 0) + 'h ';
+                countdown_human += (minutes || 0) + 'm ';
+                countdown_human += (seconds || 0) + 's ';
 
                 // If distance is smaller than 0, then clear the interval and show reattempt alert box
 				if (distance < 0) {
@@ -117,6 +117,8 @@ window.jQuery(document).ready($=>{
 
                 // Update the alert content based on timing
 				$tutor_quiz_time_update.html(countdown_human);
+				// clearTimeout(tutor_quiz_interval);
+				// return;
 				if(countdown_human == 'EXPIRED') {
 					$tutor_quiz_time_update.addClass('color-text-error');
 				}

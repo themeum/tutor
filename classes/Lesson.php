@@ -88,14 +88,6 @@ class Lesson extends Tutor_Base {
 	 * Saving lesson meta and assets
 	 */
 	public function save_lesson_meta( $post_ID ) {
-		// Course
-		if ( isset( $_POST['selected_course'] ) ) {
-			$course_id = (int) $_POST['selected_course'];
-			if ( $course_id ) {
-				update_post_meta( $post_ID, '_tutor_course_id_for_lesson', $course_id );
-			}
-		}
-
 		//Video
 		$video_source = sanitize_text_field( tutor_utils()->array_get('video.source', $_POST) );
 		if ( $video_source === '-1'){
@@ -207,7 +199,6 @@ class Lesson extends Tutor_Base {
 
 			if ( $lesson_id ) {
 				do_action( 'tutor/lesson/created', $lesson_id );
-				update_post_meta( $lesson_id, '_tutor_course_id_for_lesson', $course_id );
 			} else {
 				wp_send_json_error( array( 'message' => __( 'Couldn\'t create lesson.', 'tutor' ) ) );
 			}
@@ -244,7 +235,6 @@ class Lesson extends Tutor_Base {
 		}
 
 		wp_delete_post( $lesson_id, true );
-		delete_post_meta( $lesson_id, '_tutor_course_id_for_lesson' );
 		wp_send_json_success();
 	}
 
@@ -341,7 +331,7 @@ class Lesson extends Tutor_Base {
 		 */
 		tutor_utils()->mark_lesson_complete( $lesson_id );
 
-		do_action( 'tutor_lesson_completed_after', $lesson_id, $user_id );
+		do_action( 'tutor_lesson_completed_email_after', $lesson_id, $user_id );
 	}
 
 	/**
