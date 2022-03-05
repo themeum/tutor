@@ -11,6 +11,3 @@ if ( ! function_exists('tutor_astra_scripts')){
         wp_enqueue_style('tutor_astra', $dir_url.'assets/css/style.css');
     }
 }
-
-
-

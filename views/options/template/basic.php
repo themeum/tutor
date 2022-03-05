@@ -7,6 +7,8 @@ foreach ( $section['blocks'] as $blocks ) :
 		?>
 		<div class="tutor-option-single-item"><?php echo $this->blocks( $blocks ); ?> </div>
 	<?php else : ?>
-		<?php echo $this->blocks( $blocks ); ?>
+		<?php 
+			echo $this->blocks( $blocks );	
+		?>
 	<?php endif; ?>
 <?php endforeach; ?>
