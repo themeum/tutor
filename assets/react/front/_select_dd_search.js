@@ -39,6 +39,7 @@ window.selectSearchField = (selectElement) => {
 				if (resultList) {
 					resultList.forEach((item) => {
 						item.onclick = (e) => {
+							e.stopPropagation();
 							let selectFieldOptions = Array.from(element.options);
 							selectFieldOptions.forEach((option, i) => {
 								if (option.value === e.target.dataset.key) {
