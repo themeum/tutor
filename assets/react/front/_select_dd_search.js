@@ -39,6 +39,7 @@ window.selectSearchField = (selectElement) => {
 				if (resultList) {
 					resultList.forEach((item) => {
 						item.onclick = (e) => {
+							e.stopPropagation();
 							let selectFieldOptions = Array.from(element.options);
 							selectFieldOptions.forEach((option, i) => {
 								if (option.value === e.target.dataset.key) {
@@ -169,22 +170,22 @@ window.selectSearchField = (selectElement) => {
 	}
 };
 
-const callback = function(mutationsList) {
-	for (let mutation of mutationsList) {
-		if (mutation.type == 'childList') {
-			if (mutation.addedNodes.length) {
-				if (mutation.target.id === 'tutor-course-filter-loop-container') {
-					window.selectSearchField('.tutor-form-select');
-				}
-			}
-		}
-	}
-};
+// const callback = function(mutationsList) {
+// 	for (let mutation of mutationsList) {
+// 		if (mutation.type == 'childList') {
+// 			if (mutation.addedNodes.length) {
+// 				if (mutation.target.id === 'tutor-course-filter-loop-container') {
+// 					window.selectSearchField('.tutor-form-select');
+// 				}
+// 			}
+// 		}
+// 	}
+// };
 
-const observer = new MutationObserver(callback);
+// const observer = new MutationObserver(callback);
 
-const targetNode = document.querySelector('body');
-const config = { attributes: true, childList: true, subtree: true };
-observer.observe(targetNode, config);
+// const targetNode = document.querySelector('body');
+// const config = { attributes: true, childList: true, subtree: true };
+// observer.observe(targetNode, config);
 
 window.selectSearchField('.tutor-form-select');

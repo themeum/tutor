@@ -102,11 +102,11 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		<?php
 		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo wp_kses_post( '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">' );
+			echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
 			foreach ( $errors as $error_key => $error_value ) {
-				echo wp_kses_post( "<li>{$error_value}</li>" );
+				echo "<li>{$error_value}</li>";
 			}
-			echo wp_kses_post( '</ul></div>' );
+			echo '</ul></div>';
 		}
 		?>
 

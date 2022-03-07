@@ -51,8 +51,9 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
                 <i class="tutor-icon-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
                 <i class="tutor-icon-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
                 <i class="tutor-icon-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
-                <i class="tutor-icon-eye-close-f tutor-icon-24" data-for="embedded"></i>
-                <i class="tutor-icon-detail-link-filled tutor-icon-24" data-for="external_url"></i>
+                <i class="tutor-icon-coding-filled tutor-icon-24" data-for="shortcode"></i>
+                <i class="tutor-icon-link-filled tutor-icon-24" data-for="external_url"></i>
+                <i class="tutor-icon-coding-filled tutor-icon-24" data-for="embedded"></i>
             </div>
             <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown no-tutor-dropdown">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>

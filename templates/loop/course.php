@@ -11,7 +11,6 @@
  * @version 1.4.3
  */
 
-
 do_action('tutor_course/loop/before_content');
 
 do_action('tutor_course/loop/badge');

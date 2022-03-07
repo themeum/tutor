@@ -26,4 +26,5 @@ do_action( 'tutor_lesson/single/before/video/embedded' );
         <?php echo tutor_utils()->array_get('source_embedded', $video_info); ?>
     </div>
 <?php endif; ?>
+
 <?php do_action('tutor_lesson/single/after/video/embedded'); ?>

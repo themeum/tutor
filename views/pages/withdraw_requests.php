@@ -251,7 +251,7 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Amount', 'tutor' ); ?>">
 								<div class="tutor-text-medium-caption tutor-color-text-primary">
-									<?php echo wp_kses_post( tutor_utils()->tutor_price( $list->amount ) ); ?>
+									<?php echo tutor_utils()->tutor_price( $list->amount ); ?>
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
