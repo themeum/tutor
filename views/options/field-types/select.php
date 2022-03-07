@@ -7,6 +7,7 @@
  */
 $field_key = sanitize_key( $field['key'] );
 $field_id  = sanitize_key( 'field_' . $field_key );?>
+$dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
@@ -18,7 +19,7 @@ $field_id  = sanitize_key( 'field_' . $field_key );?>
 			if ( ! empty( $field['options'] ) ) {
 				foreach ( $field['options'] as $option_key => $option ) {
 					?>
-					<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $this->get( $field['key'], ( isset( $field['default'] ) ? esc_attr( $field['default'] ) : null ) ), $option_key ); ?>><?php echo esc_attr( $option ); ?></option>
+					<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $dashboard_page_id, $option_key ); ?>><?php echo esc_attr( $option ); ?></option>
 					<?php
 				}
 			}
