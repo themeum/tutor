@@ -865,7 +865,6 @@ jQuery(document).ready(function ($) {
 		var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier);
 		filter_criteria.page = page;
 		filter_criteria.action = 'tutor_course_filter_ajax';
-		console.log(filter_criteria);
 
 		loop_container.html('<div class="loading-spinner"></div>');
 		$(this)

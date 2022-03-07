@@ -36,7 +36,7 @@ if ( have_posts() ) :
 		tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() );
 
 	endif;
-	if ( 'tutor_course_filter_ajax' === $_POST['action'] ) {
+	if ( isset($_POST['action']) && 'tutor_course_filter_ajax' === $_POST['action'] ) {
 		tutor_load_template( 'loop.tutor-pagination_ajax' );
 	} else {
 		tutor_course_archive_pagination();
