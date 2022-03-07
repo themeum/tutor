@@ -25,7 +25,7 @@ if (isset($data['total_items']) && $data['total_items']) : ?>
 			<?php
 			// Pagination.
 			$paged    = $data['paged'];
-			$per_page = $data['per_page'];
+			$per_page = (int)$data['per_page'];
 			$big      = 999999999;
 			$base     = str_replace($big, '%#%', esc_url(admin_url($big) . 'admin.php?paged=%#%'));
 
@@ -34,7 +34,7 @@ if (isset($data['total_items']) && $data['total_items']) : ?>
 					'base'      => !empty($data['base']) ? $data['base'] : $base,
 					'format'    => '?paged=%#%',
 					'current'   => $paged,
-					'total'     => ceil(0 < $per_page ? $data['total_items'] / $per_page : ''),
+					'total'     => $per_page ? ceil($data['total_items'] / $per_page) : 1,
 					'prev_text' => '<span class="tutor-icon-angle-left-filled"></span>',
 					'next_text' => '<span class="tutor-icon-angle-right-filled"></span>',
 				)
