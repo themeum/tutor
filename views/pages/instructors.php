@@ -85,9 +85,9 @@ $filters = array(
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	tutor_load_template_from_custom_path( $filters_template, $filters );
 	$available_status = array(
-		'pending'  => array(__('Pending', 'tutor'), 'select-warning'),
-		'approved' => array(__('Approved', 'tutor'), 'select-success'),
-		'blocked'  => array(__('Blocked', 'tutor'), 'select-danger'),
+		'pending'  => array( __( 'Pending', 'tutor' ), 'select-warning' ),
+		'approved' => array( __( 'Approved', 'tutor' ), 'select-success' ),
+		'blocked'  => array( __( 'Blocked', 'tutor' ), 'select-danger' ),
 	);
 	?>
 
@@ -180,7 +180,7 @@ $filters = array(
 								<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
 									<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
 										<?php foreach ( $available_status as $key => $status ) : ?>
-											<option data-status_class="<?php echo $available_status[$key][1]; ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $status ); ?>" <?php selected( $list->status, $key ); ?>>
+											<option data-status_class="<?php echo $available_status[ $key ][1]; ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
 												<?php echo esc_html( $available_status[ $key ][0] ); ?>
 											</option>
 										<?php endforeach; ?>
@@ -202,7 +202,7 @@ $filters = array(
 								<?php tutor_utils()->tutor_empty_state( __( 'No instructor found', 'tutor' ) ); ?>
 							</td>
 						</tr>
-				<?php endif; ?>	
+				<?php endif; ?>
 			</tbody>
 		</table>
 		</div>
@@ -211,16 +211,16 @@ $filters = array(
 			/**
 			 * Prepare pagination data & load template
 			 */
-			if($total > $per_page) {
-				$pagination_data     = array(
-					'total_items' => $total,
-					'per_page'    => $per_page,
-					'paged'       => $paged,
-				);
-				$pagination_template = tutor()->path . 'views/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
-			?>
+		if ( $total > $per_page ) {
+			$pagination_data     = array(
+				'total_items' => $total,
+				'per_page'    => $per_page,
+				'paged'       => $paged,
+			);
+			$pagination_template = tutor()->path . 'views/elements/pagination.php';
+			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+		}
+		?>
 	</div>
 </div>
 
@@ -238,7 +238,7 @@ $filters = array(
 		</button>
 	  </div>
 		  <div class="tutor-modal-body-alt tutor-bg-gray-10">
-			
+
 				<?php tutor_nonce_field(); ?>
 				<?php do_action( 'tutor_add_new_instructor_form_fields_before' ); ?>
 				<div class="tutor-bs-row ">
@@ -303,10 +303,10 @@ $filters = array(
 						</label>
 						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
 							<span class="tutor-icon-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
-							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.' ,'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
+							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.', 'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
 						</div>
 					</div>
-				</div>	
+				</div>
 				<?php do_action( 'tutor_add_new_instructor_form_fields_after' ); ?>
 				<div class="tutor-bs-row ">
 					<div class="tutor-bs-col">
@@ -387,13 +387,13 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 							?>
 						</div>
 						<div class="text-regular-body tutor-color-text-title tutor-mt-8">
-							<?php esc_html_e( 'Username:', 'tutor' ); ?> 
+							<?php esc_html_e( 'Username:', 'tutor' ); ?>
 							<span class="tutor-color-text-primary">
 								<?php echo esc_html( $instructor_data->user_login ); ?>
 							</span>
 						</div>
 						<div class="text-regular-body tutor-color-text-title tutor-mt-3">
-							<?php esc_html_e( 'Email:', 'tutor' ); ?> 
+							<?php esc_html_e( 'Email:', 'tutor' ); ?>
 							<span class="tutor-color-text-primary">
 								<?php echo esc_html( $instructor_data->user_email ); ?>
 							</span>
@@ -406,16 +406,16 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
 								</a>
 								<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-10" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>	
+									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>
 								</a>
 								<?php elseif ( 'approved' === $instructor_status ) : ?>
 									<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-10" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>	
+									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>
 									</a>
 								<?php elseif ( 'blocked' === $instructor_status ) : ?>
 									<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
 									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
-								</a>									
+								</a>
 							<?php endif; ?>
 						<?php else : ?>
 							<div class="tutor-alert tutor-danger">
@@ -443,7 +443,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 								</div>
 							</div>
 						</div>
-				</div>	
+				</div>
 			<?php endif; ?>
 		</div>
 	</div>

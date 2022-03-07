@@ -123,43 +123,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			});
 		};
 
-
-		const params = new Proxy(new URLSearchParams(window.location.search), {
-			get: (searchParams, prop) => searchParams.get(prop),
-		});
-
-		const openAppropiateTabsAndContent = () => {
-			clearSpotlightTabActiveClass();
-			spotlightTabs.forEach((item) => {
-				'comments' === item.dataset.tutorQueryString ? item.classList.add('is-active') : '';
-			});
-			spotlightTabContent.forEach((item) => {
-				'comments' === item.dataset.tutorQueryStringContent ? item.classList.add('is-active') : '';
-			});
-		}
-
-		if (null !== params.page_tab && 'comments' === params.page_tab) {
-			openAppropiateTabsAndContent();
-		}
-
-		setTimeout(() => {
-			let url_comment_id = window.location.hash.replace('#', '');
-			let lesson_comment_id = 'lesson-' + url_comment_id;
-			if (url_comment_id) {
-				let lesson_comment_elem = document.getElementById("" + lesson_comment_id + "");
-				if (null !== lesson_comment_elem) {
-					lesson_comment_elem.scrollIntoView();
-					lesson_comment_elem.querySelector('.tutor-actual-comment').classList.add('viewing');
-					setTimeout(() => {
-						lesson_comment_elem.querySelector('.tutor-actual-comment').classList.remove('viewing');
-					}, 2999)
-				}
-				if (null === params.page_tab || 'comments' === params.page_tab) {
-					console.log(lesson_comment_id);
-					openAppropiateTabsAndContent();
-				}
-			}
-		}, 99)
 	}
 	/* commenting */
 
