@@ -51,7 +51,16 @@
 		</div>
 	</div>
 
+<?php elseif ( $blocks['block_type'] == 'isolate' ) : ?>
 
+<div class="tutor-option-single-item <?php echo esc_attr( $blocks['slug'] ); ?>">
+	<?php echo $blocks['label'] ? '<h4>' . esc_attr( $blocks['label'] ) . '</h4>' : ''; ?>
+	<?php foreach ( $blocks['fields'] as $field ) : ?>
+		<div class="item-wrapper">
+			<?php echo $this->generate_field( $field ); ?>
+		</div>
+	<?php endforeach; ?>
+</div>
 
 <?php elseif ($blocks['block_type'] == 'notification') : ?>
 

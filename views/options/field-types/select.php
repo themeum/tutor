@@ -8,8 +8,8 @@
  */
 $field_key = sanitize_key( $field['key'] );
 $dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
-$field_id  = sanitize_key( 'field_' . $field_key );?>
-$dashboard_page_id = (int) tutor_utils()->get_option('tutor_dashboard_page_id');
+$field_id  = sanitize_key( 'field_' . $field_key );
+?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
