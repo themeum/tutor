@@ -23,20 +23,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 function course_listing_pagination( $pages = '', $range = 4 ) {
 	$showitems = ( $range * 2 ) + 1;
 	global $paged;
+	$paged = $_POST['page'];
 	if ( empty( $paged ) ) {
 		$paged = 1;
 	}
 
 	if ( $pages == '' ) {
-		$wp_query = '';
-		$pages    = is_object( $wp_query ) ? $wp_query->max_num_pages : null;
+		/* $wp_query = '';
+		$pages    = is_object( $wp_query ) ? $wp_query->max_num_pages : null; */
+		$pages = $_POST['page'];
 		if ( ! $pages ) {
 			$pages = 1;
 		}
 	}
 
 	if ( 1 != $pages ) {
-
 		?>
 <nav class="tutor-course-list-pagination tutor-ui-pagination">
 	<div class="tutor-pagination-hints">
