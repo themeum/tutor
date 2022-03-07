@@ -11,6 +11,3 @@ if ( ! function_exists('tutor_storefront_scripts')){
 		wp_enqueue_style('tutor_storefront', $dir_url.'assets/css/style.css');
 	}
 }
-
-
-
