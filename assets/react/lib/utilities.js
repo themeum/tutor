@@ -36,6 +36,8 @@ window.jQuery(document).ready(function($) {
 				return;
 			}
 
+			e.preventDefault();
+
 			const btnInnerHtml = $that.html().trim();
 			const { width: btnWidth, height: btnHeight } = $that.get(0).getBoundingClientRect();
 			const btnStyles = { width: `${btnWidth}px`, height: `${btnHeight}px` };
