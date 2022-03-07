@@ -899,6 +899,7 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
+	ajaxFilterArchive(e);
 
 	// Alter pagination
 	loop_container.on('click', '.tutor-pagination-wrap a', function (e) {
