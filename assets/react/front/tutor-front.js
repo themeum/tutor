@@ -861,7 +861,7 @@ jQuery(document).ready(function ($) {
 		});
 
 
-	const ajaxFilterArchive = (e, page = null) => {
+	const ajaxFilterArchive = (e=null, page = null) => {
 		var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier);
 		filter_criteria.page = page;
 		filter_criteria.action = 'tutor_course_filter_ajax';
@@ -898,7 +898,7 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	ajaxFilterArchive(e);
+	ajaxFilterArchive();
 
 	// Alter pagination
 	loop_container.on('click', '.tutor-pagination-wrap a', function (e) {
