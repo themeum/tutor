@@ -22,7 +22,6 @@ class Course_Filter {
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
 		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? sanitize_text_field( $_post['page'] ) : 1;
-
 		$args = array(
 			'post_status'    => 'publish',
 			'post_type'      => 'courses',
