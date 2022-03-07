@@ -427,6 +427,7 @@ class Options_V2
 					array(
 						'label'      => false,
 						'block_type' => 'uniform',
+						'slug'       => 'general-page',
 						'fields'     => array(
 							array(
 								'key'     => 'tutor_dashboard_page_id',

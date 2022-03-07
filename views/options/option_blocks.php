@@ -10,7 +10,7 @@
 <?php if ($blocks['block_type'] == 'uniform') : ?>
 	<div class="tutor-option-single-item <?php echo isset($blocks['class']) ? esc_attr($blocks['class']) : (isset($blocks['slug']) ? esc_attr($blocks['slug']) : null); ?>">
 		<?php
-		$check_allowed = array('email_to_students');
+		/* $check_allowed = array('email_to_students');
 		if (isset($blocks['slug']) && in_array($blocks['slug'], $check_allowed)) {
 		?>
 			<div style="display: flex;justify-content: end;">
@@ -40,7 +40,7 @@
 					})
 				</script>
 			</div>
-		<?php } ?>
+		<?php } */ ?>
 		<?php echo isset($blocks['label']) ? '<h4>' . esc_attr($blocks['label']) . '</h4>' : ''; ?>
 		<div class="item-wrapper">
 			<?php
@@ -53,14 +53,14 @@
 
 <?php elseif ( $blocks['block_type'] == 'isolate' ) : ?>
 
-<div class="tutor-option-single-item <?php echo esc_attr( $blocks['slug'] ); ?>">
-	<?php echo $blocks['label'] ? '<h4>' . esc_attr( $blocks['label'] ) . '</h4>' : ''; ?>
-	<?php foreach ( $blocks['fields'] as $field ) : ?>
-		<div class="item-wrapper">
-			<?php echo $this->generate_field( $field ); ?>
-		</div>
-	<?php endforeach; ?>
-</div>
+	<div class="tutor-option-single-item <?php echo $blocks['slug']; ?>">
+		<?php echo $blocks['label'] ? '<h4>' . $blocks['label'] . '</h4>' : ''; ?>
+		<?php foreach ( $blocks['fields'] as $field ) : ?>
+			<div class="item-wrapper">
+				<?php echo $this->generate_field( $field ); ?>
+			</div>
+		<?php endforeach; ?>
+	</div>
 
 <?php elseif ($blocks['block_type'] == 'notification') : ?>
 
