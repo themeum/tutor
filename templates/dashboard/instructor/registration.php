@@ -36,11 +36,11 @@
         <?php
             $errors = apply_filters('tutor_instructor_register_validation_errors', array());
             if (is_array($errors) && count($errors)){
-                echo wp_kses_post('<div class="tutor-alert-warning"><ul class="tutor-required-fields">');
+                echo '<div class="tutor-alert-warning"><ul class="tutor-required-fields">';
                 foreach ($errors as $error_key => $error_value){
-                    echo wp_kses_post("<li>{$error_value}</li>");
+                    echo "<li>{$error_value}</li>";
                 }
-                echo wp_kses_post('</ul></div>');
+                echo '</ul></div>';
             }
         ?>
 

@@ -22,8 +22,8 @@
             $action_class = apply_filters('tutor_popup_login_class', 'cart-required-login');
         }
         
-		echo wp_kses_post('<a href="javascript:;" class="'.$action_class.' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'.$course_id.'">
+		echo '<a href="javascript:;" class="'. esc_attr( $action_class ) .' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'. esc_attr( $course_id ) .'">
             <i class="'.($is_wishlisted ? 'tutor-icon-fav-full-filled' : 'tutor-icon-fav-line-filled').'"></i>
-        </a>');
+        </a>';
 	?>
 </div>
