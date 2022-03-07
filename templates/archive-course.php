@@ -11,7 +11,6 @@
  * @package TutorLMS/Templates
  * @version 1.5.8
  */
-
 tutor_utils()->tutor_custom_header();
 
 $course_filter = (bool) tutor_utils()->get_option('course_archive_filter', false);
@@ -26,7 +25,7 @@ if ($course_filter && count($supported_filters)) {
 					<?php tutor_load_template('course-filter.filters'); ?>
 				</div>
 			</div>
-			<div id="tutor-course-filter-loop-container" class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container" data-column_per_row="<?php echo esc_html(tutor_utils()->get_option( 'courses_col_per_row', 3 )); ?>">
+			<div id="tutor-course-filter-loop-container" class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container" data-column_per_row="<?php echo esc_html(tutor_utils()->get_option( 'courses_col_per_row', 3 )); ?>"><div style="background-color: #fff;" class="loading-spinner"></div>
 				<?php tutor_load_template('archive-course-init'); ?>
 			</div><!-- .wrap -->
 		</div>
