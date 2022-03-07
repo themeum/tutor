@@ -121,9 +121,9 @@ class Instructors_List {
 	public function instructor_bulk_action() {
 		// check nonce.
 		tutor_utils()->checking_nonce();
-		$action   = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
-		$bulk_ids = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
-		isset( $_POST['bulkIds'] ) ? $bulk_ids=sanitize_text_field( $_POST['bulkIds'] ) : 0;
+		$action                                = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
+		$bulk_ids                              = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
+		isset( $_POST['bulkIds'] ) ? $bulk_ids = sanitize_text_field( $_POST['bulkIds'] ) : 0;
 
 		if ( '' === $action || '' === $bulk_ids ) {
 			return wp_send_json_error();
@@ -139,7 +139,9 @@ class Instructors_List {
 			do_action( 'tutor_after_instructor_delete', $bulk_ids );
 		}
 
-		return true === $response ? wp_send_json_success() : wp_send_json_error();
+		$message = 'Instructor status updated';
+
+		return true === $response ? wp_send_json_success(array('status'=>$message)) : wp_send_json_error();
 		exit;
 	}
 
@@ -158,7 +160,7 @@ class Instructors_List {
 		$update           = $wpdb->query(
 			$wpdb->prepare(
 				" UPDATE {$instructor_table}
-					SET meta_value = %s 
+					SET meta_value = %s
 					WHERE user_id IN ($user_ids)
 						AND meta_key = %s
 				",
@@ -201,12 +203,14 @@ class Instructors_List {
 		global $wpdb;
 		$course_post_type = tutor()->course_post_type;
 
-		$total_course = (int) $wpdb->get_var( $wpdb->prepare( 
-			"SELECT count(ID) from {$wpdb->posts} 
-			WHERE post_author=%d AND post_type=%s ", 
-			$item->ID, 
-			$course_post_type 
-		) );
+		$total_course = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(ID) from {$wpdb->posts}
+			WHERE post_author=%d AND post_type=%s ",
+				$item->ID,
+				$course_post_type
+			)
+		);
 
 		echo $total_course;
 	}
@@ -286,10 +290,10 @@ class Instructors_List {
 				$actions['approved'] = sprintf( '<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf( '<a data-title="' .('').'" data-prompt-message="' . __( 'Are you sure, want to block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
+				$actions['blocked'] = sprintf( '<a data-title="' . ( '' ) . '" data-prompt-message="' . __( 'Are you sure, want to block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf( '<a data-title="'.('').'" data-prompt-message="' . __( 'Are you sure, want to approve?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a data-title="' . ( '' ) . '" data-prompt-message="' . __( 'Are you sure, want to approve?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 		}
 

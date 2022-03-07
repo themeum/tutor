@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (newStatus === prevStatus) {
         return;
       }
+      console.log(status);
 
       const icon1 = target.nextElementSibling;
       icon1.classList.add('tutor-updating-message-v2');
@@ -38,11 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (response) {
         target.dataset.status = newStatus;
         let putStatus = target.getElementsByTagName('OPTION')[target.selectedIndex].dataset.status_class;
-        
+        let message = response.data ? response.data.status : "Course status updated ";
         // add new status class
         target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
 
-        tutor_toast(__("Updated", "tutor"), __("Course status updated ", "tutor"), "success");
+        tutor_toast(__("Updated", "tutor"), __(message, "tutor"), "success");
       } else {
         tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
       }
