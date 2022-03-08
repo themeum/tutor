@@ -21,7 +21,7 @@ $field_id  = sanitize_key( 'field_' . $field_key );
 			if ( ! empty( $field['options'] ) ) {
 				foreach ( $field['options'] as $option_key => $option ) {
 					?>
-					<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $this->get( $field['key'], ( isset( $field['default'] ) ? $field['default'] : null ) ), $option_key ); ?>><?php echo esc_attr( $option ); ?></option>
+					<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $this->get( $field['key'], ( isset( $field['default'] ) ?  $field['default']  : null ) ), $option_key ); ?>><?php echo  esc_attr($option); ?></option>
 					<?php
 				}
 			}

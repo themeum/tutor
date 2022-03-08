@@ -888,7 +888,8 @@ jQuery(document).ready(function ($) {
 
 			},
 			complete: function (c) {
-				selectSearchField('.tutor-form-select');
+
+				selectSearchField('[name=tutor_course_filter]');
 
 				$('.course-archive-page .page-numbers').on('click', function (pe) {
 					pe.preventDefault();
