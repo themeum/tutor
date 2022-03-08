@@ -861,7 +861,7 @@ jQuery(document).ready(function ($) {
 		});
 
 
-	const ajaxFilterArchive = (e=null, page = null) => {
+	const ajaxFilterArchive = (e = null, page = null) => {
 		var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier);
 		filter_criteria.page = page;
 		filter_criteria.action = 'tutor_course_filter_ajax';
@@ -888,11 +888,12 @@ jQuery(document).ready(function ($) {
 
 			},
 			complete: function (c) {
-				selectSearchField('.tutor-form-select');
 
-				$('.page-numbers').on('click', function (ec) {
-					ec.preventDefault();
-					ajaxFilterArchive(ec, $(this).data('pagenumber'))
+				selectSearchField('[name=tutor_course_filter]');
+
+				$('.course-archive-page .page-numbers').on('click', function (pe) {
+					pe.preventDefault();
+					ajaxFilterArchive(pe, $(this).data('pagenumber'))
 				})
 			}
 		});
