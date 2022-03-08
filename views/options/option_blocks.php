@@ -6,6 +6,7 @@
  * @package Tutor LMS
  * @since 2.0
  */
+// pr($blocks);
 ?>
 <?php if ($blocks['block_type'] == 'uniform') : ?>
 	<div class="tutor-option-single-item <?php echo isset($blocks['class']) ? esc_attr($blocks['class']) : (isset($blocks['slug']) ? esc_attr($blocks['slug']) : null); ?>">
