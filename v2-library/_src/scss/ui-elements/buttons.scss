@@ -60,8 +60,8 @@ button {
 		border-color: var(--tutor-primary-color);
 		color: var(--tutor-primary-color);
 		&:not(.tutor-no-hover):hover {
-			background-color: var(--tutor-primary-hover-color);
-			border-color: var(--tutor-primary-hover-color);
+			background-color: var(--tutor-primary-main);
+			border-color: var(--tutor-primary-main);
 			color: var(--tutor-white);
 		}
 		&.tutor-is-default {
@@ -109,8 +109,8 @@ button {
 		border-color: var(--tutor-primary);
 		color: var(--tutor-white);
 		&:not(.tutor-no-hover):hover {
-			background-color: var(--tutor-primary-hover-color);
-			border-color: var(--tutor-primary-hover-color);
+			background-color: var(--tutor-primary-main);
+			border-color: var(--tutor-primary-main);
 			color: var(--tutor-white);
 		}
 
@@ -349,8 +349,8 @@ button {
 		border-color: var(--tutor-primary);
 		color: var(--tutor-primary);
 		&:not(.tutor-no-hover):hover {
-			background-color: var(--tutor-primary-hover-color);
-			border-color: var(--tutor-primary-hover-color);
+			background-color: var(--tutor-primary-color);
+			border-color: var(--tutor-primary-color);
 			color: var(--tutor-white);
 		}
 		&.tutor-is-default {
@@ -398,8 +398,8 @@ button {
 		border-color: var(--tutor-primary);
 		color: var(--tutor-white);
 		&:not(.tutor-no-hover):hover {
-			background-color: var(--tutor-primary-hover-color);
-			border-color: var(--tutor-primary-hover-color);
+			background-color: var(--tutor-primary-color);
+			border-color: var(--tutor-primary-color);
 			color: var(--tutor-white);
 		}
 
