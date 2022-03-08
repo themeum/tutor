@@ -62,7 +62,7 @@ function course_listing_pagination( $pages = '', $range = 4 ) {
 
 		for ( $i = 1; $i <= $pages; $i++ ) {
 			if ( 1 != $pages && ( ! ( $i >= $paged + $range + 1 || $i <= $paged - $range - 1 ) || $pages <= $showitems ) ) {
-				echo ( $paged == $i ) ? "<span class='page-numbers current'>" . $i . '</span>' : "<a data-pagenumber='$i' href='" . get_pagenum_link( $i ) . "' class='page-numbers'>" . $i . '</a>';
+				echo ( $paged == $i ) ? "<span class='page-numbers current'>" . $i . '</span>' : "<a data-pagenumber='$i' href='javascript:void(0)' class='page-numbers'>" . $i . '</a>';
 			}
 		}
 
