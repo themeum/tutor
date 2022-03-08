@@ -57,7 +57,7 @@ get_tutor_header();
             
             <?php if($context=='lesson'): ?>
                 <?php if($previous_id): ?>
-                    <div class="tutor-single-course-content-prev flex-center">
+                    <div class="tutor-single-course-content-prev flex-center" style="display:none;">
                         <a href="<?php echo get_the_permalink($previous_id); ?>">
                             <span class="tutor-icon-angle-left-filled"></span>
                         </a>
@@ -65,7 +65,7 @@ get_tutor_header();
                 <?php endif; ?>
 
                 <?php if($next_id): ?>
-                    <div class="tutor-single-course-content-next flex-center">
+                    <div class="tutor-single-course-content-next flex-center" style="display:none;">
                         <a href="<?php echo get_the_permalink($next_id); ?>">
                             <span class="tutor-icon-angle-right-filled"></span>
                         </a>
