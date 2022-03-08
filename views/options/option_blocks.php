@@ -41,7 +41,8 @@
 					})
 				</script>
 			</div>
-		<?php } */ ?>
+		<?php } */
+		?>
 		<?php echo isset($blocks['label']) ? '<h4>' . esc_attr($blocks['label']) . '</h4>' : ''; ?>
 		<div class="item-wrapper">
 			<?php
