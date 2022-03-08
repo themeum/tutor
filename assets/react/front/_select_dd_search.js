@@ -7,6 +7,7 @@ window.selectSearchField = (selectElement) => {
 				let initialSelectedItem = element.options[element.selectedIndex];
 				element.style.display = 'none';
 				let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
+				console.log(element);
 				element.insertAdjacentHTML('afterend', ddMarkup(element.options));
 				searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
 				searchInput = searchInputWrap && searchInputWrap.querySelector('input');
@@ -188,4 +189,4 @@ window.selectSearchField = (selectElement) => {
 // const config = { attributes: true, childList: true, subtree: true };
 // observer.observe(targetNode, config);
 
-window.selectSearchField('.tutor-form-select');
+selectSearchField('.tutor-form-select');

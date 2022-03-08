@@ -18,7 +18,7 @@ $video_info = tutor_utils()->get_video_info();
 do_action('tutor_lesson/single/before/video');
 
 $source_key = is_object($video_info) ? 'source_'.$video_info->source : null;
-$has_source = $source_key ? $video_info->$source_key : null;
+$has_source = (is_object($video_info) && $video_info->source_video_id) || ($source_key ? $video_info->$source_key : null);
 
 if ($has_source){
     tutor_load_template('single.video.'.$video_info->source);
