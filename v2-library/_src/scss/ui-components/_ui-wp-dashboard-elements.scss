@@ -167,7 +167,7 @@
 	}
 } // .tutor-wp-dashboard-filter-items
 
-// Zoom Integration
+// Zoom Integration .tutor-zoom-integration-card
 .tutor-zoom-integration-card {
 	.tutor-zoom-no-meetings {
 		margin: 15px;
@@ -197,11 +197,12 @@
 		}
 	}
 
-	// max-width: 1367px;
+	// .tutor-zoom-integration-card-body max-width: 1367px;
 	&-body {
 		border-top: 1px solid $stroke-light-30;
 		border-bottom: 1px solid $stroke-light-30;
 		display: grid;
+		@include responsiveGrid(200px, auto);
 		grid-gap: 15px;
 		align-items: center;
 
@@ -209,25 +210,15 @@
 			display: inline-flex;
 		}
 
-		@include breakpoint-min(1500) {
-			// grid-template-columns: 275px 410px 195px 228px auto;
-			@include responsiveGrid(200px, auto);
-		}
+		// @include breakpoint-min(1500) {
+		// 	// grid-template-columns: 275px 410px 195px 228px auto;
+		// 	@include responsiveGrid(200px, auto);
+		// }
 
 		@include breakpoint-min(desktop-lg) {
 			.list-item {
 				&:last-child {
 					justify-self: flex-end;
-				}
-			}
-		}
-
-		@include breakpoint-max(1499) {
-			grid-template-columns: repeat(auto-fit, minmax(140px, auto));
-			.list-item {
-				&.list-item-buttons {
-					// grid-area: 2 / span 4;
-					// display: inline-flex;
 				}
 			}
 		}
@@ -252,6 +243,7 @@
 			background: #2d8cff;
 		}
 	}
+
 	.tutor-btn.tutor-is-circle {
 		color: $design-grey;
 		background: transparent;
@@ -259,4 +251,4 @@
 			background: $black-05;
 		}
 	}
-}
+} //end of .tutor-zoom-integration-card
