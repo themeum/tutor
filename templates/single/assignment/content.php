@@ -476,7 +476,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 										<td data-th="Date" class="date">
 											<div class="td-statement-info">
 												<span class="text-medium-small tutor-color-text-primary">
-													<?php esc_html_e( date( 'F j Y g:i a', strtotime( $submitted_assignment->comment_date ) ), 'tutor' ); ?>
+													<?php esc_html_e( tutor_utils()->convert_date_into_wp_timezone( $submitted_assignment->comment_date ) ) ?>
 												</span>
 											</div>
 										</td>

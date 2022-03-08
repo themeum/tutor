@@ -9,7 +9,8 @@ $uid  = get_current_user_id();
 $user = get_userdata( $uid );
 
 $profile_settings_link = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings' );
-$rdate                 = date( 'D d M Y, h:i:s a', strtotime( $user->user_registered ) );
+
+$rdate                 = tutor_utils()->convert_date_into_wp_timezone(date_i18n( 'D d M Y, h:i:s a', strtotime( $user->user_registered ) ));
 $fname                 = $user->first_name;
 $lname                 = $user->last_name;
 $uname                 = $user->user_login;
@@ -33,6 +34,7 @@ $profile_data = array(
 <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25 tutor-capitalize-text"><?php _e( 'My Profile', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
 	<?php
+
 	foreach ( $profile_data as $key => $data ) {
 		$first_name_class = ($data[0] == 'First Name' || $data[0] == 'Last Name') ? 'tutor-capitalize-text' : '';
 		?>
