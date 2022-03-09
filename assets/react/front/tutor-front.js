@@ -846,7 +846,7 @@ jQuery(document).ready(function ($) {
 	 * @since  v.1.7.2
 	 */
 	var filter_container = $('.tutor-course-filter-container form');
-	var loop_container = $('.tutor-course-filter-loop-container');
+	var loop_container = $('.course-archive-page .tutor-course-filter-loop-container');
 	var filter_modifier = {};
 
 	// Sidebar checkbox value change
