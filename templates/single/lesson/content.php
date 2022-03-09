@@ -147,13 +147,13 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 ?>
 
 <style>
-.tutor-actual-comment.viewing{
-	box-shadow: 0 0 10px #cdcfd5;
-	animation: blinkComment 1s infinite;
-}
-@keyframes blinkComment { 50% { box-shadow:0 0 0px #ffffff; }  }
-
+	.tutor-actual-comment.viewing{
+		box-shadow: 0 0 10px #cdcfd5;
+		animation: blinkComment 1s infinite;
+	}
+	@keyframes blinkComment { 50% { box-shadow:0 0 0px #ffffff; }  }
 </style>
+
 <div class="tutor-course-spotlight-wrapper">
 	<div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
 		<div class="tab-header tutor-bs-d-flex justify-content-center">
@@ -174,8 +174,10 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 		</div>
 		<div class="tab-body">
 			<div class="tab-body-item<?php echo (!isset($page_tab) || 'overview'==$page_tab) ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-1" data-tutor-query-string-content="overview">
-				<div class="text-medium-h6 tutor-color-text-primary"><?php _e( 'About Lesson', 'tutor' ); ?></div>
-				<div class="text-regular-body tutor-color-text-subsued tutor-mt-12">
+				<div class="text-medium-h6 tutor-color-text-primary">
+					<?php _e( 'About Lesson', 'tutor' ); ?>
+				</div>
+				<div class="text-regular-body tutor-color-text-subsued tutor-mt-12" style="min-height:293px;">
 					<?php the_content(); ?>
 				</div>
 			</div>

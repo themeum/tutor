@@ -1475,7 +1475,7 @@ class Options_V2
 								'key'     => 'course_archive_page',
 								'type'    => 'select',
 								'label'   => __('Course Archive Page', 'tutor'),
-								'default' => $course_archive_page_id ?? '0',
+								'default' => $course_archive_page_id->ID ?? '0',
 								'options' => $pages,
 								'desc'    => __('This page will be used to list all the published courses.', 'tutor'),
 							),

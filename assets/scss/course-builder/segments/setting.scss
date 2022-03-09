@@ -108,8 +108,7 @@
 	.tutor-form-toggle .tutor-form-toggle-control {
 		margin: 0 10px 0px 0px !important;
 	}
-	.tutor-form-toggle {
-	}
+
 	.select2-container {
 		li.select2-selection__choice {
 			background: #eff1f7;
@@ -158,8 +157,6 @@
 				.instructor-intro {
 					display: flex;
 					align-items: center;
-					.instructor-img {
-					}
 					.instructor-email {
 						margin-top: -4px;
 					}
@@ -245,8 +242,7 @@
 	label.tutor-amount-field {
 		padding: 0px 20px 0px 0px;
 	}
-	#tutor-course-create-title-tooltip-wrapper {
-	}
+
 	.tutor-zoom-meeting-modal-wrap {
 		#tutor-zoom-meeting-modal-form {
 			// .tutor-react-datepicker .react-datepicker__input-container input,
@@ -256,6 +252,8 @@
 				padding-right: 25px;
 				font-size: 15px;
 				box-sizing: border-box;
+				padding-top: 0;
+				padding-bottom: 0;
 			}
 			.tutor-dropdown-select-selected {
 				display: flex;
@@ -278,16 +276,9 @@
 
 	#tutor-course-content-wrap {
 		.tutor-topics-top {
-			.course-move-handle {
-			}
 			.tutor-topic-title {
 				background: #f4f6f9;
-				> span {
-					// padding: 8px 0px;
-				}
-				span.tutor-icon-humnurger-filled,
-				.topic-inner-title {
-				}
+
 				span.tutor-icon-humnurger-filled {
 					align-self: flex-start;
 				}
