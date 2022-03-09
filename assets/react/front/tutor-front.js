@@ -905,7 +905,9 @@ jQuery(document).ready(function ($) {
 		});
 	}
 
-	ajaxFilterArchive();
+	if(loop_container.length > 0){
+		ajaxFilterArchive();
+	}
 
 	// Alter pagination
 	loop_container.on('click', '.tutor-pagination-wrap a', function (e) {
