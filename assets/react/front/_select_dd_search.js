@@ -6,8 +6,8 @@ window.selectSearchField = (selectElement) => {
 			if (!element.hasAttribute('noDropdown') && !element.classList.contains('no-tutor-dropdown')) {
 				let initialSelectedItem = element.options[element.selectedIndex];
 				element.style.display = 'none';
-				let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
-				console.log(element);
+				let searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDownOthers, dropDown;
+
 				element.insertAdjacentHTML('afterend', ddMarkup(element.options));
 				searchInputWrap = element.nextElementSibling.querySelector('.tutor-input-search');
 				searchInput = searchInputWrap && searchInputWrap.querySelector('input');
@@ -15,6 +15,7 @@ window.selectSearchField = (selectElement) => {
 					searchInputWrap.style.display = 'none';
 				}
 
+				dropDownOthers = document.querySelectorAll('.tutor-dropdown-select-options-container.is-active');
 				dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
 				const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
 				const selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
@@ -22,15 +23,36 @@ window.selectSearchField = (selectElement) => {
 
 				selectLabel.onclick = (e) => {
 					e.stopPropagation();
+
+
+
+					dropDownOthers.forEach((otherDD) => {
+						// if (otherDD.classList.contains('is-active')) {
+							if(!otherDD.isConnected){
+								otherDD.classList.remove('is-active');
+							}
+						// }
+					})
+
+					/*
+					if (dropDown.classList.contains('is-active')) {
+						dropDown.classList.remove('is-active');
+					} else {
+						dropDown.classList.add('is-active');
+					} */
+
 					dropDown.classList.toggle('is-active');
 
 					setTimeout(() => {
 						searchInput.focus();
 					}, 100);
 
+					// console.log(dropDown.isConnected);
+
 					dropDown.onclick = (e) => {
 						e.stopPropagation();
 					};
+
 				};
 				dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
 
@@ -119,10 +141,20 @@ window.selectSearchField = (selectElement) => {
 			}
 		});
 
+
+		const selectDdMarkup = document.querySelectorAll('.tutor-dropdown-select.select-dropdown');
+		selectDdMarkup.forEach((item) => {
+			if (item.nextElementSibling) {
+				console.log(item.nextElementSibling);
+				item.nextElementSibling.remove();
+			}
+		})
+
 		let otherDropDown = document.querySelectorAll('.tutor-dropdown-select-options-container');
 		document.onclick = (e) => {
 			dd_hide_dom_click(otherDropDown);
 		};
+
 	})();
 
 	function dd_hide_dom_click(elem) {

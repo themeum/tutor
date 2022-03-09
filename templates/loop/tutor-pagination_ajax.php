@@ -52,10 +52,13 @@ function course_listing_pagination( $pages = '', $range = 4 ) {
 			</span>
 		</div>
 	</div>
+	<?php //echo $paged; ?>
 	<ul class="tutor-pagination-numbers course-archive-page">
 		<?php
+
 		if ( $paged > 1 ) {
-			echo "<a data-pagenumber='1' href='" . esc_url( get_pagenum_link( 1 ) ) . "' class='prev page-numbers'>
+			echo "<a data-pagenumber='" .( $paged - 1 )."' href='javascript:void(0)' class='prev page-numbers'>
+
 					<span class='tutor-icon-angle-left-filled'></span>
 				</a>";
 		}
@@ -67,7 +70,7 @@ function course_listing_pagination( $pages = '', $range = 4 ) {
 		}
 
 		if ( $paged < $pages ) {
-			echo '<a data-pagenumber="' . ($paged + 1).'" href="' . esc_url( get_pagenum_link( $paged + 1 ) ) . '" class="next page-numbers">
+			echo '<a data-pagenumber="' . ($paged + 1).'" href="javascript:void(0)" class="next page-numbers">
 					<span class="tutor-icon-angle-right-filled"></span>
 				</a>';
 		}
