@@ -28,7 +28,7 @@ class Shortcode {
 		add_shortcode( 'tutor_dashboard', array( $this, 'tutor_dashboard' ) );
 		add_shortcode( 'tutor_instructor_registration_form', array( $this, 'instructor_registration_form' ) );
 		add_shortcode( 'tutor_course', array( $this, 'tutor_course' ) );
-		
+
 		// Check if WP version is equal to or greater than 5.9.
 		global $wp_version;
 		if ( version_compare( $wp_version, '5.9', '>=' ) && function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
