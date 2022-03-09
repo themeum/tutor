@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'tutor-v2-iconpack';
-	src: url('./fonts/tutor-v2-iconpack.eot?tt4upp');
-	src: url('./fonts/tutor-v2-iconpack.eot?tt4upp#iefix') format('embedded-opentype'),
-		url('./fonts/tutor-v2-iconpack.ttf?tt4upp') format('truetype'),
-		url('./fonts/tutor-v2-iconpack.woff?tt4upp') format('woff'),
-		url('./fonts/tutor-v2-iconpack.svg?tt4upp#tutor-v2-iconpack') format('svg');
+	src: url('./fonts/tutor-v2-iconpack.eot?7z2750');
+	src: url('./fonts/tutor-v2-iconpack.eot?7z2750#iefix') format('embedded-opentype'),
+		url('./fonts/tutor-v2-iconpack.ttf?7z2750') format('truetype'),
+		url('./fonts/tutor-v2-iconpack.woff?7z2750') format('woff'),
+		url('./fonts/tutor-v2-iconpack.svg?7z2750#tutor-v2-iconpack') format('svg');
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -26,6 +26,22 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.tutor-icon-spinner-filled .path1:before {
+	content: '\e9df';
+	color: rgb(33, 35, 39);
+	opacity: 0.2;
+}
+.tutor-icon-spinner-filled .path2:before {
+	content: '\e9e0';
+	margin-left: -1em;
+	color: rgb(33, 35, 39);
+}
+.tutor-icon-facebook-brand:before {
+	content: '\e9f4';
+}
+.tutor-icon-shortcode-filled:before {
+	content: '\ea37';
+}
 .tutor-icon-learndash-filled:before {
 	content: '\e963';
 }
