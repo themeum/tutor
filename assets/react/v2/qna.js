@@ -32,7 +32,7 @@ window.jQuery(document).ready($=>{
                 action: 'tutor_qna_single_action'
             },
             beforeSend:() => {
-                $that.find('span:first').addClass('tutor-updating-message');
+                $that.find('i').addClass('tutor-loading-spinner');
             },
             success: resp=>{
                 if(!resp.success) {
@@ -72,7 +72,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete:()=>{
-                $that.find('span:first').removeClass('tutor-updating-message');
+                $that.find('i').removeClass('tutor-loading-spinner');
             }
         });
     });
