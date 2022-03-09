@@ -23,23 +23,7 @@ window.selectSearchField = (selectElement) => {
 
 				selectLabel.onclick = (e) => {
 					e.stopPropagation();
-
-
-
-					dropDownOthers.forEach((otherDD) => {
-						// if (otherDD.classList.contains('is-active')) {
-							if(!otherDD.isConnected){
-								otherDD.classList.remove('is-active');
-							}
-						// }
-					})
-
-					/*
-					if (dropDown.classList.contains('is-active')) {
-						dropDown.classList.remove('is-active');
-					} else {
-						dropDown.classList.add('is-active');
-					} */
+					dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
 
 					dropDown.classList.toggle('is-active');
 
@@ -47,7 +31,6 @@ window.selectSearchField = (selectElement) => {
 						searchInput.focus();
 					}, 100);
 
-					// console.log(dropDown.isConnected);
 
 					dropDown.onclick = (e) => {
 						e.stopPropagation();
