@@ -42,4 +42,27 @@ window.jQuery(document).ready($=>{
             }
         });
     });
+
+    // Set navigation menu position
+    $(window).resize(function(){
+        let height = 500;
+        let top='50px';
+        
+        if($('.course-players-parent').length) {
+            height=$('.course-players-parent').height()-100;
+            top='50px';
+        }
+        
+        if($('.tutor-lesson-feature-image').length){
+            height=$('.tutor-lesson-feature-image').height();
+            top='0px';
+        }
+
+        $('.tutor-single-course-content-next, .tutor-single-course-content-prev')
+            .css('height', height+'px')
+            .show()
+            .find('a')
+            .css('top', top);
+
+    }).trigger('resize');
 });
