@@ -433,6 +433,7 @@
 	justify-content: center;
 	align-items: center;
 }
+
 .tutor-flex-end {
 	display: flex;
 	align-items: center;
@@ -485,6 +486,10 @@
 
 .tutor-ws-nowrap {
 	white-space: nowrap;
+}
+
+.tutor-m-auto {
+	margin: auto;
 }
 
 .tutor-mt-auto {
