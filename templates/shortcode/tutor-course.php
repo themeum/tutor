@@ -10,6 +10,9 @@ $course_per_page   = $GLOBALS['tutor_shortcode_arg']['course_per_page'];
 $course_filter     = $GLOBALS['tutor_shortcode_arg']['include_course_filter'] === null ? (bool) tutor_utils()->get_option( 'course_archive_filter', false ) : $GLOBALS['tutor_shortcode_arg']['include_course_filter'];
 $supported_filters = tutor_utils()->get_option( 'supported_course_filters', array() );
 $show_pagination   = $GLOBALS['tutor_shortcode_arg']['show_pagination'];
+// pr($the_query);
+echo '<div class="course_template_shortcode" data-course_per_page="'.$course_per_page.'" data-column_per_row="'.$column_per_row.'">';
+// echo '<div class="loading-spinner" style="background: #fff;"></div>';
 
 if ( $course_filter && count( $supported_filters ) ) { ?>
 	<div class="tutor-course-filter-wrapper">
@@ -18,6 +21,7 @@ if ( $course_filter && count( $supported_filters ) ) { ?>
 		</div>
 		<div>
 			<div id="tutor-course-filter-loop-container" class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container" data-column_per_row="<?php echo esc_attr( $column_per_row ); ?>" data-course_per_page="<?php echo esc_attr( $course_per_page ); ?>">
+			<div class="loading-spinner" style="background: #fff;"></div>
 			<?php
 }
 
@@ -59,5 +63,6 @@ if ( $course_filter && count( $supported_filters ) ) {
 		</div>
 	</div>
 <?php }
+		echo '</div>';
 
 ?>
