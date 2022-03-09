@@ -556,6 +556,7 @@
 // Focus Styles
 .tutor-v2-date-picker-fd {
 	.tutor-react-datepicker .react-datepicker__input-container input {
+		height: 48px;
 		&:focus {
 			border-color: #3e64de;
 		}

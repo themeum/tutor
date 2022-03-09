@@ -52,24 +52,24 @@ function course_listing_pagination( $pages = '', $range = 4 ) {
 			</span>
 		</div>
 	</div>
-	<ul class="tutor-pagination-numbers">
+	<ul class="tutor-pagination-numbers course-archive-page">
 		<?php
 		if ( $paged > 1 ) {
 			echo "<a data-pagenumber='1' href='" . esc_url( get_pagenum_link( 1 ) ) . "' class='prev page-numbers'>
-						<span class='tutor-icon-angle-left-filled'></span>
-					</a>";
+					<span class='tutor-icon-angle-left-filled'></span>
+				</a>";
 		}
 
 		for ( $i = 1; $i <= $pages; $i++ ) {
 			if ( 1 != $pages && ( ! ( $i >= $paged + $range + 1 || $i <= $paged - $range - 1 ) || $pages <= $showitems ) ) {
-				echo ( $paged == $i ) ? "<span class='page-numbers current'>" . $i . '</span>' : "<a data-pagenumber='$i' href='" . get_pagenum_link( $i ) . "' class='page-numbers'>" . $i . '</a>';
+				echo ( $paged == $i ) ? "<span class='page-numbers current'>" . $i . '</span>' : "<a data-pagenumber='$i' href='javascript:void(0)' class='page-numbers'>" . $i . '</a>';
 			}
 		}
 
 		if ( $paged < $pages ) {
 			echo '<a data-pagenumber="' . ($paged + 1).'" href="' . esc_url( get_pagenum_link( $paged + 1 ) ) . '" class="next page-numbers">
-						<span class="tutor-icon-angle-right-filled"></span>
-					</a>';
+					<span class="tutor-icon-angle-right-filled"></span>
+				</a>';
 		}
 		?>
 	</ul>
