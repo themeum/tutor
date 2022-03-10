@@ -86,6 +86,7 @@
 			.tutor-quiz-tab {
 			}
 		}
+
 		.tutor-sidebar-tabs-content {
 			height: calc(100vh - 156px);
 			position: relative;
@@ -178,7 +179,13 @@
 						}
 					}
 				}
-			}
-		}
+			} // end of #tutor-lesson-sidebar-tab-content
+		} // end of .tutor-sidebar-tabs-content
+	}
+}
+
+.tutor-single-lesson-items {
+	input.tutor-form-check-input[type='checkbox'].tutor-form-check-circle {
+		background-size: 80%;
 	}
 }
