@@ -368,28 +368,34 @@ jQuery(document).ready(function ($) {
 	 * @since v.1.2.0
 	 */
 	$(document).on('submit', '#tutor-withdraw-account-set-form', function (e) {
-		e.preventDefault();
+		if (!e.detail || e.detail == 1) {
+			e.preventDefault();
+			var $form = $(this);
+			var $btn = $form.find('.tutor_set_withdraw_account_btn');
+			var data = $form.serializeObject();
+			$btn.prop("disabled", true);
 
-		var $form = $(this);
-		var $btn = $form.find('.tutor_set_withdraw_account_btn');
-		var data = $form.serializeObject();
+			$.ajax({
+				url: _tutorobject.ajaxurl,
+				type: 'POST',
+				data: data,
+				beforeSend: function () {
+					$btn.addClass('tutor-updating-message');
+				},
+				success: function (data) {
+					if (data.success) {
+						tutor_toast('Success!', data.data.msg, 'success');
+					}
+				},
+				complete: function () {
+					$btn.removeClass('tutor-updating-message');
+					setTimeout(() => {
+						$btn.prop("disabled", false);
+					}, 2000);
+				},
+			});
 
-		$.ajax({
-			url: _tutorobject.ajaxurl,
-			type: 'POST',
-			data: data,
-			beforeSend: function () {
-				$btn.addClass('updating-icon');
-			},
-			success: function (data) {
-				if (data.success) {
-					tutor_toast('Success!', data.data.msg, 'success');
-				}
-			},
-			complete: function () {
-				$btn.removeClass('updating-icon');
-			},
-		});
+		}
 	});
 
 	/**

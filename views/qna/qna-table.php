@@ -39,7 +39,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                 $is_important       = (int)tutor_utils()->array_get('tutor_qna_important' . $key_slug, $meta, 0);
                 $is_archived        = (int)tutor_utils()->array_get('tutor_qna_archived' . $key_slug, $meta, 0);
                 $is_read            = (int)tutor_utils()->array_get('tutor_qna_read' . $key_slug, $meta, 0);
-                
+
                 ?>
                 <tr id="<?php echo $row_id; ?>" data-question_id="<?php echo $qna->comment_ID; ?>" class="<?php echo $is_read ? 'is-qna-read' : ''; ?>">
                     <?php
