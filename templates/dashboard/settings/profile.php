@@ -65,8 +65,8 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 				<span class="dashboard-profile-delete tutor-icon-delete-fill-filled"></span>
 			</span>
 			<div class="tutor_overlay">
-				<button class="tutor_cover_uploader">
-					<i class="tutor-icon-camera-filled"></i>
+				<button class="tutor_cover_uploader tutor-bs-d-flex tutor-bs-align-items-center">
+					<i class="tutor-icon-camera-filled tutor-icon-24"></i>
 					<span><?php echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' ); ?></span>
 				</button>
 			</div>
@@ -79,7 +79,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		</div>
 		<div id="tutor_profile_area" data-fallback="<?php esc_attr_e( $profile_placeholder ); ?>" style="background-image:url(<?php echo esc_url( $profile_photo_src ); ?>)">
 			<div class="tutor_overlay">
-				<i class="tutor-icon-camera-filled"></i>
+				<i class="tutor-icon-camera-filled tutor-icon-24"></i>
 			</div>
 		</div>
 		<div id="tutor_pp_option">
