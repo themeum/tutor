@@ -5885,7 +5885,7 @@ class Utils {
 			 '_tutor_profile_facebook' => array(
 				 'label'        => __( 'Facebook', 'tutor' ),
 				 'placeholder'  => 'https://facebook.com/username',
-				 'icon_classes' => 'tutor-icon-facebook',
+				 'icon_classes' => 'tutor-icon-facebook-brand',
 			 ),
 			 '_tutor_profile_twitter'  => array(
 				 'label'        => __( 'Twitter', 'tutor' ),
