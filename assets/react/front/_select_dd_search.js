@@ -128,8 +128,9 @@ window.selectSearchField = (selectElement) => {
 		const selectDdMarkup = document.querySelectorAll('.tutor-dropdown-select.select-dropdown');
 		selectDdMarkup.forEach((item) => {
 			if (item.nextElementSibling) {
-				console.log(item.nextElementSibling);
-				item.nextElementSibling.remove();
+				if(item.nextElementSibling.classList.contains('select-dropdown')){
+					item.nextElementSibling.remove();
+				}
 			}
 		})
 
