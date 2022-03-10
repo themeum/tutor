@@ -13,12 +13,19 @@
 			}
 		}
 	}
+
+	// .tutor-course-details-header
 	&-header {
 		a {
 			text-decoration: none;
 		}
 	}
+
+	// .tutor-course-details-page-main
 	&-page-main {
+		.plyr--video {
+			border-radius: 6px;
+		}
 	}
 	&-page-main-left {
 	}
@@ -386,6 +393,7 @@
 
 // Course Details - Accordion
 .tutor-accordion {
+	// .tutor-accordion-item
 	&-item {
 		background-color: #fff;
 		/* stroke/light30 */
@@ -397,6 +405,8 @@
 			margin-bottom: 20px;
 		}
 	}
+
+	// .tutor-accordion-item-header
 	&-item-header {
 		padding: 15px 20px;
 		min-height: 58px;
@@ -405,12 +415,14 @@
 		position: relative;
 		cursor: pointer;
 		transition: 200ms;
-		@extend .text-medium-h6;
+		// @extend .text-medium-h6;
 		@extend .color-text-title;
+		@include getTypography(600, 18px, 160%);
 		&::after {
 			content: '\e940';
 			font-family: 'tutor-v2-iconpack' !important;
 			font-size: 2rem;
+			font-weight: normal;
 			position: absolute;
 			right: 1rem;
 			transition: 150ms;
@@ -423,11 +435,15 @@
 			}
 		}
 	}
+
+	// .tutor-accordion-item-body
 	&-item-body {
 		max-height: 0;
 		overflow: hidden;
 		transition: max-height 0.25s linear;
 	}
+
+	// .tutor-accordion-item-body-content
 	&-item-body-content {
 		@extend .text-regular-body;
 		@extend .color-text-primary;
@@ -440,14 +456,19 @@
 	list-style: none;
 	margin: 0 -15px;
 	padding: 0;
+
 	li {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-top: 1px solid $stroke-light-30;
-		&:not(:last-child) {
-			border-bottom: 1px solid $stroke-light-30;
+		&:not(:first-child) {
+			border-top: 1px solid $stroke-light-30;
 		}
+
+		&:not(:last-child) {
+			// border-bottom: 1px solid $stroke-light-30;
+		}
+
 		padding: 15px;
 
 		> div,

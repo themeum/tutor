@@ -38,7 +38,7 @@ if($instructors && count($instructors)) {
 								<?php echo $instructor->tutor_profile_job_title; ?>
 							</div>
 						<?php endif; ?>
-						<div class="tutor-ins-summary tutor-text-regular-body text-subsued tutor-mt-18">
+						<div class="tutor-ins-summary tutor-text-regular-body tutor-color-text-subsued tutor-mt-18">
 							<?php echo htmlspecialchars($instructor->tutor_profile_bio); ?>
 						</div>
 					</div>
