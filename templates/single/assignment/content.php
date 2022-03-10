@@ -334,7 +334,6 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 											<span class="tutor-color-text-primary">
 												<?php esc_html_e( 'Any standard Image, Document, Presentation, Sheet, PDF or Text file is allowed', 'tutor' ); ?>
 											</span>
-											<?php// _e( ' no text on the image.', 'tutor' ); ?>
 										</p>
 										<p class="text-regular-small tutor-color-text-subsued tutor-mt-7">
 											<?php _e( 'Total File Size: Max', 'tutor' ); ?>
