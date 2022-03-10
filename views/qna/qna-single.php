@@ -89,10 +89,6 @@
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 						</span>
 					<?php endif; ?>
-					<span data-action="read" data-state-text-selector="span" data-state-text-0="<?php _e( 'Mark as read', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Mark as Unread', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-unread-filled" data-state-class-1="tutor-icon-msg-read-filled">
-						<i class="<?php echo $is_read ? 'tutor-icon-msg-read-filled active' : 'tutor-icon-msg-unread-filled'; ?>"></i>
-						<span><?php $is_read ? _e( 'Mark as Unread', 'tutor' ) : _e( 'Mark as read', 'tutor' ); ?></span>
-					</span>
 					<span data-tutor-modal-target="<?php echo $modal_id; ?>">
 						<i class="tutor-icon-delete-fill-filled"></i>
 						<span><?php _e( 'Delete', 'tutor' ); ?></span>
