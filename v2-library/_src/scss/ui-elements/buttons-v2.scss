@@ -341,3 +341,14 @@ a {
 		}
 	}
 }
+
+.tutor-icon-spinner-filled {
+	display: inline-block;
+	animation: rotateSpinner 0.8s linear infinite;
+}
+
+@keyframes rotateSpinner {
+	to {
+		transform: rotate(360deg);
+	}
+}
