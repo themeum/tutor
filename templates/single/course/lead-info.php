@@ -36,9 +36,8 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 
     <div class="tutor-course-details-title tutor-text-bold-h4 tutor-color-text-primary tutor-mt-10">
         <?php do_action('tutor_course/single/title/before'); ?>
-        <h1 class="tutor-course-header-h1">
-            <?php the_title(); ?>
-        </h1>
+            <div class="tutor-text-bold-h4 tutor-ftsz-lg-30"><?php the_title(); ?>
+        </div>
     </div>
     <div class="tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-mt-28">
         <div class="tutor-course-details-category tutor-text-medium-body tutor-color-text-primary tutor-bs-d-flex tutor-bs-align-items-end">
