@@ -94,11 +94,6 @@
 		margin-top: 15px;
 	}
 }
-@include breakpoint-min(992) {
-	.tutor-btn-group .tutor-btn {
-		margin-left: 35px !important;
-	}
-}
 
 .tutor-dp-plan-switch {
 	input {
