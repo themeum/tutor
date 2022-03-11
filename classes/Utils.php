@@ -3662,8 +3662,8 @@ class Utils {
 		global $wpdb;
 
 		$limit_offset = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
-		
-		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' : 
+
+		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
 			'_reviews.comment_ID,
 			_reviews.comment_post_ID,
 			_reviews.comment_author,
@@ -5312,12 +5312,12 @@ class Utils {
 		$result_clause  = '';
 		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.*, users.*';
 		$limit_offset   = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
-		
+
 		$pass_mark      = "(((SUBSTRING_INDEX(SUBSTRING_INDEX(quiz_attempts.attempt_info, '\"passing_grade\";s:2:\"', -1), '\"', 1))/100)*quiz_attempts.total_marks)";
 		$pending_count  = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
 
 		switch ( $result_state ) {
-			case 'pass': 
+			case 'pass':
 				// Just check if the earned mark is greater than pass mark
 				// It doesn't matter if there is any pending or failed question
 				$result_clause = " AND quiz_attempts.earned_marks>={$pass_mark}  ";
@@ -5325,8 +5325,8 @@ class Utils {
 
 			case 'fail':
 				// Check if earned marks is less than pass mark and there is no pending question
-				// 
-				$result_clause = " AND quiz_attempts.earned_marks<{$pass_mark} 
+				//
+				$result_clause = " AND quiz_attempts.earned_marks<{$pass_mark}
 								   AND {$pending_count}=0 ";
 				break;
 
@@ -7876,8 +7876,8 @@ class Utils {
 
 				if(!$topic_id) {
 					$course_id = $wpdb->get_var($wpdb->prepare(
-						"SELECT meta_value 
-						FROM {$wpdb->prefix}postmeta 
+						"SELECT meta_value
+						FROM {$wpdb->prefix}postmeta
 						WHERE post_id=%d AND meta_key='_tutor_course_id_for_lesson'",
 						$object_id
 					));
@@ -8381,11 +8381,11 @@ class Utils {
 	public function get_unique_slug( $slug, $post_type = null, $num_assigned = false ) {
 
 		global $wpdb;
-		$existing_slug = $wpdb->get_var( $wpdb->prepare( 
-			"SELECT post_name 
-			FROM {$wpdb->posts} 
-			WHERE post_name=%s" . ( $post_type ? " AND post_type='{$post_type}' LIMIT 1" : '' ), 
-			$slug 
+		$existing_slug = $wpdb->get_var( $wpdb->prepare(
+			"SELECT post_name
+			FROM {$wpdb->posts}
+			WHERE post_name=%s" . ( $post_type ? " AND post_type='{$post_type}' LIMIT 1" : '' ),
+			$slug
 		) );
 
 		if ( ! $existing_slug ) {
@@ -8440,7 +8440,7 @@ class Utils {
 				}
 				break;
 
-			default : 
+			default :
 				switch ( $ancestor_type ) {
 					// Get lesson, quiz, assignment IDs by course ID
 					case 'topic' :
@@ -8449,7 +8449,7 @@ class Utils {
 							INNER JOIN {$wpdb->posts} topic ON topic.ID=content.post_parent
 							WHERE topic.ID IN ({$ancestor_ids})"
 						);
-						
+
 						is_array($content_ids) ? $ids=$content_ids : 0;
 						break;
 				}
