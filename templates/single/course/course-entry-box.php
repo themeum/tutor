@@ -226,7 +226,7 @@
 				if ( ! $meta['value'] ) {
 					continue;}
 				?>
-				<li class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+				<li class="tutor-bs-d-flex tutor-bs-align-items-start tutor-bs-align-items-xl-center tutor-bs-justify-content-between">
 					<div class="flex-center">
 						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-text-primary"></span>
 						<span class="text-regular-caption tutor-color-text-hints tutor-ml-5">

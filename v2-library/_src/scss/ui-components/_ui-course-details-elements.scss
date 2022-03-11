@@ -23,10 +23,12 @@
 
 	// .tutor-course-details-page-main
 	&-page-main {
-		.plyr--video {
+		.plyr--video,
+		.tutor-course-thumbnail-bg img {
 			border-radius: 6px;
 		}
 	}
+
 	&-page-main-left {
 	}
 }
