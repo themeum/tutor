@@ -1,9 +1,10 @@
 .tutor-dropdown-select {
-	--h: 58px;
+	--h: 40px;
 	// width: 305px;
 	display: flex;
 	// flex-direction: column;
 	position: relative;
+	height: var(--h, 40px);
 
 	label {
 		cursor: pointer;
@@ -84,7 +85,7 @@
 			content: '\e93e';
 			font-family: 'tutor-v2-iconpack' !important;
 			font-size: 30px;
-			color: #7A7A7A;
+			color: #7a7a7a;
 		}
 	}
 
@@ -130,6 +131,25 @@
 			&::after {
 				// color: $brand-wordpress;
 			}
+		}
+	}
+}
+
+// .tutor-form-group-select-*
+.tutor-form-group-select {
+	&-sm {
+		.tutor-dropdown-select {
+			height: 40px;
+		}
+	}
+	&-md {
+		.tutor-dropdown-select {
+			height: 48px;
+		}
+	}
+	&-lg {
+		.tutor-dropdown-select {
+			height: 54px;
 		}
 	}
 }
