@@ -102,7 +102,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				let query_string = currentItem.getAttribute('data-tutor-query-string');
 
 				const tabConent = currentItem.parentNode.nextElementSibling;
-				tabConent.querySelector('#' + id).classList.add('is-active');
+				if(null !== tabConent.querySelector('#' + id)){
+					tabConent.querySelector('#' + id).classList.add('is-active');
+				}
 				if (id === 'tutor-course-spotlight-tab-3') {
 					commentSideLine();
 				}

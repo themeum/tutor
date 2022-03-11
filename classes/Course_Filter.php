@@ -108,6 +108,7 @@ class Course_Filter {
 		$GLOBALS['tutor_shortcode_arg'] = array(
 			'column_per_row'  => $col_per_row <= 0 ? 3 : $col_per_row,
 			'course_per_page' => $courses_per_page,
+			'shortcode_enabled' => isset($_post['page_shortcode'])?true:false,
 		);
 
 		tutor_load_template( 'archive-course-init' );

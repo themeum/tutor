@@ -11,7 +11,7 @@ $course_filter     = $GLOBALS['tutor_shortcode_arg']['include_course_filter'] ==
 $supported_filters = tutor_utils()->get_option( 'supported_course_filters', array() );
 $show_pagination   = $GLOBALS['tutor_shortcode_arg']['show_pagination'];
 // pr($the_query);
-echo '<div class="course_template_shortcode" data-course_per_page="'.$course_per_page.'" data-column_per_row="'.$column_per_row.'">';
+echo '<div class="course_template_shortcode" data-page_shortcode="true" data-course_per_page="'.$course_per_page.'" data-column_per_row="'.$column_per_row.'">';
 // echo '<div class="loading-spinner" style="background: #fff;"></div>';
 
 if ( $course_filter && count( $supported_filters ) ) { ?>
