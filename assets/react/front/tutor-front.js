@@ -855,6 +855,7 @@ jQuery(document).ready(function ($) {
 	var loop_container = $('.tutor-course-filter-loop-container');
 	var column_per_row = $('.course_template_shortcode').data('column_per_row');
 	var course_per_page = $('.course_template_shortcode').data('course_per_page');
+	var page_shortcode = $('.course_template_shortcode').data('page_shortcode');
 	var filter_modifier = {};
 
 	// Sidebar checkbox value change
@@ -872,11 +873,12 @@ jQuery(document).ready(function ($) {
 	const ajaxFilterArchive = (e = null, page = null) => {
 		var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier);
 		filter_criteria.page = page;
+		filter_criteria.page_shortcode = page_shortcode;
 		filter_criteria.column_per_row = column_per_row;
 		filter_criteria.course_per_page = course_per_page;
 		filter_criteria.action = 'tutor_course_filter_ajax';
 
-		// console.log(filter_criteria);
+		console.log(filter_criteria);
 
 		loop_container.html('<div class="loading-spinner"></div>');
 		$(this)
