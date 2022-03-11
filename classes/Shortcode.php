@@ -182,6 +182,7 @@ class Shortcode {
 		$GLOBALS['the_custom_query'] = $the_query;
 
 		$GLOBALS['tutor_shortcode_arg'] = array(
+			'shortcode_enabled' => true,
 			'include_course_filter' => isset( $atts['course_filter'] ) ? $atts['course_filter'] === 'on' : null,
 			'column_per_row'        => isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
 			'course_per_page'       => $a['posts_per_page'],
