@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 $supported_filters = tutor_utils()->get_option( 'supported_course_filters', array() );
-$shortcode         = true === $GLOBALS['tutor_shortcode_arg']['shortcode_enabled'] ? true : false;
+$shortcode         = isset($GLOBALS['tutor_shortcode_arg']['shortcode_enabled']) && true === $GLOBALS['tutor_shortcode_arg']['shortcode_enabled'] ? true : false;
 
 if ( true === $shortcode ) {
 	$courseCols    = isset( $GLOBALS['tutor_shortcode_arg']['column_per_row'] ) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
