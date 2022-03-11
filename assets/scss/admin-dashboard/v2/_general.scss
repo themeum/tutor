@@ -298,6 +298,7 @@
 			border-color: var(--tutor-stroke-light-30);
 			> div:nth-child(2) {
 				font-weight: 600;
+				word-break: break-word;
 			}
 			[class^='tutor-text'] {
 				&.success {
