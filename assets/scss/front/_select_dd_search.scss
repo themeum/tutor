@@ -14,7 +14,10 @@
 	}
 	.tutor-dropdown-select-selected {
 		margin-bottom: 0;
-		// height: 40px;
+		display: grid;
+		// height: var(--h, 48px);
+		align-items: center;
+
 		@extend .tutor-text-ellipsis;
 		> * {
 			@extend .tutor-text-ellipsis;
