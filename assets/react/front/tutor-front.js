@@ -878,7 +878,6 @@ jQuery(document).ready(function ($) {
 		filter_criteria.course_per_page = course_per_page;
 		filter_criteria.action = 'tutor_course_filter_ajax';
 
-		console.log(filter_criteria);
 
 		loop_container.html('<div class="loading-spinner"></div>');
 		$(this)
