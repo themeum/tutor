@@ -1,10 +1,6 @@
 .tutor-dropdown-select {
-	--h: 40px;
-	// width: 305px;
 	display: flex;
-	// flex-direction: column;
 	position: relative;
-	height: var(--h, 40px);
 
 	label {
 		cursor: pointer;
@@ -28,7 +24,7 @@
 		transition: all 100ms;
 		order: 1;
 		position: absolute;
-		top: 100%;
+		top: calc(100% + 5px);
 		z-index: 10;
 		background: #ffffff;
 		/* stroke/light30 */
