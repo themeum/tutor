@@ -11,7 +11,7 @@
     );
 ?>
 
-<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="action-btn tutor-text-regular-body tutor-color-text-primary">
+<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-text-regular-body tutor-color-text-primary tutor-course-wishlist-btn">
     <span class="tutor-icon-share-filled"></span> <?php _e('Share', 'tutor'); ?>
 </a>
 <div id="tutor-course-share-opener" class="tutor-modal">

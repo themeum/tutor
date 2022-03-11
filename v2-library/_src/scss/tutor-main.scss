@@ -15,7 +15,15 @@
 }
 
 .tutor-backend {
-	background: #e9eaed !important; // Provided by Rajin vai.
+	background: #e9eaed !important;
+	&.tutor-screen-course-builder {
+		&.tutor-screen-course-builder-classic {
+			&.sticky-menu #adminmenuwrap {
+				max-height: calc(100vh - 30px);
+				overflow-y: auto;
+			}
+		}
+	}
 	#wpbody-content {
 		@extend .tutor-font-family;
 	}

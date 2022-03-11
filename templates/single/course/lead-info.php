@@ -73,7 +73,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
             </div>
         </div>
         <div class="tutor-course-details-action-btns tutor-mt-10 tutor-mt-sm-0">
-            <a href="#" class="action-btn tutor-text-regular-body tutor-color-text-primary tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
+            <a href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-text-regular-body tutor-color-text-primary tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
                 <i class="tutor-icon-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
 

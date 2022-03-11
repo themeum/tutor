@@ -21,7 +21,7 @@
 					</span>
 					<span class="instructor-name"> <?php echo esc_attr( $instructor->display_name ) . ' ' . $authorTag; ?> </span>
 					<span class="instructor-control">
-						<a href="javascript:;" class="tutor-instructor-delete-btn">
+						<a href="javascript:;" class="tutor-instructor-delete-btn tutor-action-icon tutor-btn tutor-is-circle tutor-is-outline tutor-btn-ghost">
 							<i class="tutor-icon-line-cross-line tutor-icon-18"></i>
 						</a>
 					</span>
