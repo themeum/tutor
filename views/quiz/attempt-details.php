@@ -341,6 +341,25 @@ if ( is_array( $attempt_info ) ) {
         </tr>
     </tbody>
 </table>
+<?php
+// instructor feedback.
+global $wp_query;
+$query_vars = $wp_query->query_vars;
+$page_name = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
+$attempt_info = unserialize( $attempt_data->attempt_info );
+$feedback = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
+// don't show on instructor quiz attempt since below already have feedback box area.
+if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
+	?>
+    <div class="tutor-quiz-attempt-note tutor-instructor-note tutor-my-30 tutor-py-20 tutor-px-25 tutor-py-sm-30 tutor-px-sm-35">
+        <div class="tutor-in-title tutor-text-medium-h6 tutor-color-text-primary">
+            <?php esc_html_e( 'Instructor Note', 'tutor' ); ?>					
+        </div>
+		<div class="tutor-in-body tutor-text-regular-body tutor-color-text-subsued tutor-pt-10 tutor-pt-sm-18">
+			<?php echo wp_kses_post( $feedback ); ?>					
+        </div>
+	</div>
+<?php } ?>
 
 <?php
     if (is_array($answers) && count($answers)){

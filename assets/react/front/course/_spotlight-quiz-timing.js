@@ -160,9 +160,9 @@ window.jQuery(document).ready($=>{
 		}
 	}
 
-	var $quiz_start_form = $('#tutor-quiz-body form#tutor-start-quiz');
+	var $quiz_start_form = $('form#tutor-start-quiz');
 	if ($quiz_start_form.length) {
-		if (_tutorobject.quiz_options.quiz_auto_start === '1') {
+		if (_tutorobject.quiz_options.quiz_auto_start == 1) {
 			$quiz_start_form.submit();
 		}
 	}

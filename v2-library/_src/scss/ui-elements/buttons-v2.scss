@@ -2,7 +2,7 @@
 $variations: (
 	'wordpress' $brand-wordpress $text-white $brand-wordpress,
 	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
-	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-color),
+	'primary' var(--tutor-primary-main) var(--tutor-color-white) var(--tutor-primary-main),
 	'secondary' $primary-40 $primary-main $primary-40,
 	'tertiary' transparent $primary-main $primary-main,
 	'disable' $black-08 $text-hints $black-08,
@@ -61,7 +61,6 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 }
 
 .tutor-btn {
-	// font-family: 'SF Pro Display', sans-serif;
 	border-radius: 6px;
 	white-space: nowrap;
 	word-break: keep-all;
@@ -316,6 +315,7 @@ a {
 		box-shadow: none !important;
 	}
 }
+
 .tutor-back-btn {
 	display: flex;
 	align-items: center;
@@ -329,6 +329,7 @@ a {
 		font-weight: 400;
 	}
 }
+
 .tutor-btn-ghost {
 	display: flex;
 	&.tutor-btn-ghost-fd {
@@ -340,5 +341,16 @@ a {
 		&:hover {
 			color: $brand-wordpress;
 		}
+	}
+}
+
+.tutor-icon-spinner-filled {
+	display: inline-block;
+	animation: rotateSpinner 0.8s linear infinite;
+}
+
+@keyframes rotateSpinner {
+	to {
+		transform: rotate(360deg);
 	}
 }

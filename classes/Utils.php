@@ -5852,7 +5852,7 @@ class Utils {
 		$icons = array(
 			'facebook' => array(
 				'share_class' => 's_facebook',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-facebook tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-facebook-brand tutor-icon-24"></i>',
 				'text'        => __( 'Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
@@ -5885,7 +5885,7 @@ class Utils {
 			 '_tutor_profile_facebook' => array(
 				 'label'        => __( 'Facebook', 'tutor' ),
 				 'placeholder'  => 'https://facebook.com/username',
-				 'icon_classes' => 'tutor-icon-facebook',
+				 'icon_classes' => 'tutor-icon-facebook-brand',
 			 ),
 			 '_tutor_profile_twitter'  => array(
 				 'label'        => __( 'Twitter', 'tutor' ),

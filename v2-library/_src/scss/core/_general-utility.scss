@@ -26,6 +26,7 @@
 	top: 0;
 	z-index: 1020;
 }
+
 .visually-hidden,
 .visually-hidden-focusable:not(:focus):not(:focus-within) {
 	position: absolute;
@@ -433,6 +434,7 @@
 	justify-content: center;
 	align-items: center;
 }
+
 .tutor-flex-end {
 	display: flex;
 	align-items: center;
@@ -485,6 +487,10 @@
 
 .tutor-ws-nowrap {
 	white-space: nowrap;
+}
+
+.tutor-m-auto {
+	margin: auto;
 }
 
 .tutor-mt-auto {

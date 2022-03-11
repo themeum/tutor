@@ -14,6 +14,7 @@
 		"docz-init": "docz build && node doczcp.js",
 		"docz-watch": "docz dev",
 		"watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\" \"npm run docz-watch\"",
+		"no-docz-watch": "npm run build-dev && concurrently \"npm run css-watch\" \"npm run js-watch\"",
 		"lib-watch": "concurrently \"npm run css-watch\" \"npm run js-watch\" \"npm run docz-watch\"",
 		"rm-lang": "rm ./languages/tutor.pot || echo \"No tutor pot yet\""
 	},

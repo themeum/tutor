@@ -13,14 +13,14 @@
 ?>
 <?php
     $course_id = get_the_ID();
-    $enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-icon- tutor-btn-disable-outline tutor-btn-md tutor-btn-full">' . __('Enroll Course', 'tutor') . '</a>' ) . '</div>';
+    $enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-btn-full">' . __('Enroll Course', 'tutor') . '</a>' ) . '</div>';
     $free_html = $enroll_btn;
     if (tutor_utils()->is_course_purchasable()) {
             $enroll_btn = tutor_course_loop_add_to_cart(false);
 
             $product_id = tutor_utils()->get_course_product_id($course_id);
             $product    = wc_get_product( $product_id );
-
+            $add_to_cart_text = $product->add_to_cart_text();
             $total_enrolled = tutor_utils()->count_enrolled_users_by_course($course_id);
             $maximum_students = tutor_utils()->get_course_settings($course_id, 'maximum_students');
 
@@ -30,7 +30,7 @@
 
                 $price_html = '<div class="list-item-price-with-booking tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between"><div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
                 $percet_html = '<div class="list-item-booking tutor-bs-d-flex tutor-bs-align-items-center"><div class="booking-progress tutor-bs-d-flex"><div class="circle-progress progress-full" style="--pro:'.$b_total .'%;"></div></div><div class="tutor-text-medium-caption tutor-color-text-primary">'.$b_total . __('% Booked', 'tutor') . '</div></div></div>';
-                $cart_html = '<div class="list-item-button tutor-mt-15 booking-available"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-md tutor-btn-full">'.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </button></div>';
+                $cart_html = '<div class="list-item-button tutor-mt-15 booking-available"><div class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-md tutor-btn-full tutor-color-text-primary"> <span class="tutor-icon-cart-line-filled" style="font-size: 24px;"></span> '.apply_filters( 'tutor_course_restrict_new_entry', $add_to_cart_text ) . ' </div></div>';
 
                 echo wp_kses_post($price_html);
                 echo wp_kses_post($percet_html);

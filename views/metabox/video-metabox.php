@@ -51,7 +51,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
                 <i class="tutor-icon-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
                 <i class="tutor-icon-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
                 <i class="tutor-icon-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
-                <i class="tutor-icon-coding-filled tutor-icon-24" data-for="shortcode"></i>
+                <i class="tutor-icon-shortcode-filled tutor-icon-24" data-for="shortcode"></i>
                 <i class="tutor-icon-link-filled tutor-icon-24" data-for="external_url"></i>
                 <i class="tutor-icon-coding-filled tutor-icon-24" data-for="embedded"></i>
             </div>
