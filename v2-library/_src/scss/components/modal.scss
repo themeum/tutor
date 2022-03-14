@@ -92,8 +92,8 @@
 	&.modal-sticky-header-footer {
 		.tutor-modal-header {
 			@include valueWithPrefix(display, flex);
-			@include propertyWithPrefix(align-items, center);
-			@include propertyWithPrefix(justify-content, space-between);
+			align-items: center;
+			justify-content: space-between;
 			border-bottom: 1px solid $stroke-light-30;
 		}
 

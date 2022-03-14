@@ -112,8 +112,8 @@
 			background: rgba(0, 0, 0, 0.589);
 
 			@include valueWithPrefix(display, flex);
-			@include propertyWithPrefix(align-items, center);
-			@include propertyWithPrefix(justify-content, center);
+			align-items: center;
+			justify-content: center;
 
 			& > div {
 				display: inline-block;

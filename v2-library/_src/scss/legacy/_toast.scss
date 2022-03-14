@@ -26,19 +26,19 @@
 	// 	border: none;
 
 	// 	@include valueWithPrefix(display, flex);
-	// 	@include propertyWithPrefix(align-content, center);
-	// 	@include propertyWithPrefix(align-items, center);
+	// align-content: center;
+	// 	align-items: center;
 
 	// 	& > div {
 	// 		padding: 8px;
 
 	// 		&:nth-child(1),
 	// 		&:nth-child(3) {
-	// 			@include propertyWithPrefix(justify-content, center);
+	// 			justify-content: center;
 	// 		}
 
 	// 		&:nth-child(2) {
-	// 			@include propertyWithPrefix(flex, 1);
+	// 			flex: 1;
 	// 		}
 	// 	}
 

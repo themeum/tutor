@@ -37,8 +37,8 @@
             margin-left: 20px;
             @include valueWithPrefix(display, flex);
             flex-direction: column;
-            @include propertyWithPrefix(align-self, stretch);
-            @include propertyWithPrefix(justify-content, space-around);
+            align-self: stretch;
+            justify-content: space-around;
             
             a{
                 display: block;
@@ -51,11 +51,11 @@
                 text-align: center;
                 color: $text-hints;
                 @include valueWithPrefix(display, flex);
-                @include propertyWithPrefix(align-items, center);
+                align-items: center;
 
                 &:hover {
                     color: #3E64DE;
-                    background: #F3F3F5;;
+                    background: #F3F3F5;
                 }
 
                 &, &:hover, &:focus, &:active {

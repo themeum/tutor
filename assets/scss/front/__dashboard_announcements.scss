@@ -56,8 +56,8 @@
 	text-align: center;
 	color: #3e64de;
 	@include valueWithPrefix(display, flex);
-	@include propertyWithPrefix(align-items, center);
-	@include propertyWithPrefix(justify-content, center);
+	align-items: center;
+	justify-content: center;
 }
 
 table.frontend-dashboard-table {
