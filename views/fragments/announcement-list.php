@@ -27,11 +27,11 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<input type="hidden" name="announcement_id" value="<?php echo $announcment_id; ?>">
 					<input type="hidden" name="action" value="tutor_announcement_create"/>
 					<input type="hidden" name="action_type" value="<?php echo $announcement ? 'update' : 'create'; ?>"/>
-					<div class="tutor-form-group tutor-mb-20">
+					<div class="tutor-form-group tutor-mb-20 tutor-form-group-select-md">
 						<label class="tutor-form-label">
 							<?php _e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select" name="tutor_announcement_course" required>
+						<select class="tutor-form-select tutor-form-control" name="tutor_announcement_course" required>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>

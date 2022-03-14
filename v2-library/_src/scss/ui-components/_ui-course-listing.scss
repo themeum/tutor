@@ -1,3 +1,10 @@
+.tutor-wrap.tutor-courses-wrap.course-archive-page {
+	min-height: 200px;
+	@include breakpoint-min(tablet) {
+		min-height: 400px;
+	}
+}
+
 .tutor-course-listing {
 	// max-width: 1110px;
 	// margin: 0 auto;
@@ -303,11 +310,15 @@
 			@extend .text-regular-body;
 		}
 	}
-	&.tutor-filter-course-grid-2 {
-		grid-gap: 60px;
-	}
-	&.tutor-filter-course-grid-3 {
+
+	&[class*='tutor-filter-course-grid-'] {
 		grid-gap: 30px;
+	}
+
+	@include breakpoint-min(desktop-lg) {
+		&.tutor-filter-course-grid-2 {
+			grid-gap: 60px;
+		}
 	}
 
 	.has-show-more {

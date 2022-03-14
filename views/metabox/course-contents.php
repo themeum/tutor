@@ -24,8 +24,8 @@
     // This keyword '_tutor_course_id_for_lesson' used just to support backward compatibillity
     global $wpdb;
     $unassigned_contents = $wpdb->get_results(
-        "SELECT content.* FROM wp_posts content 
-	        INNER JOIN wp_postmeta meta ON content.ID=meta.post_id
+        "SELECT content.* FROM {$wpdb->posts} content 
+	        INNER JOIN {$wpdb->postmeta} meta ON content.ID=meta.post_id
         WHERE content.post_parent=0 
             AND meta.meta_key='_tutor_course_id_for_lesson' 
             AND meta.meta_value=".$course_id,
