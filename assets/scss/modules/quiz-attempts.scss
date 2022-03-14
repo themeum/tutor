@@ -19,7 +19,7 @@
 .correct-answer-wrap {
 	.matching-type {
 		display: flex;
-		@include propertyWithPrefix(align-items, center);
+		align-items: center;
 
 		&:not(:last-child) {
 			margin-bottom: 12px;
@@ -28,7 +28,7 @@
 
 	.text-image-type {
 		display: flex;
-		@include propertyWithPrefix(align-items, center);
+		align-items: center;
 
 		.image {
 			margin-right: 12px;
@@ -114,8 +114,8 @@
 	}
 	.tutor-icon-rounded {
 		display: inline-flex;
-		@include propertyWithPrefix(align-items, center);
-		@include propertyWithPrefix(justify-content, center);
+		align-items: center;
+		justify-content: center;
 		width: 26px;
 		height: 26px;
 		overflow: hidden;
@@ -194,8 +194,6 @@
 					border-color: #cdcfd5 !important;
 				}
 			}
-		}
-		td {
 		}
 	}
 	thead {

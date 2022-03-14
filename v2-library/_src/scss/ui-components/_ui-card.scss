@@ -21,7 +21,7 @@
 		box-sizing: border-box;
 		border-radius: 6px;
 		display: flex;
-		@include propertyWithPrefix(align-items, center);
+		align-items: center;
 	}
 
 	span.filesize {
@@ -39,7 +39,7 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			margin-right: 25px;
-			@include propertyWithPrefix(flex, 1);
+			flex: 1;
 
 			a {
 				font-style: normal;
@@ -55,7 +55,7 @@
 
 		&:last-child {
 			display: flex;
-			@include propertyWithPrefix(align-items, center);
+			align-items: center;
 		}
 	}
 

@@ -92,8 +92,8 @@
 	&.modal-sticky-header-footer {
 		.tutor-modal-header {
 			display: flex;
-			@include propertyWithPrefix(align-items, center);
-			@include propertyWithPrefix(justify-content, space-between);
+			align-items: center;
+			justify-content: space-between;
 			border-bottom: 1px solid $stroke-light-30;
 		}
 
@@ -110,10 +110,6 @@
 			min-height: 300px;
 			max-height: calc(100vh - 15em);
 			overflow-y: auto;
-		}
-
-		.tutor-modal-footer {
-			// border-top: 1px solid $stroke-light-30;
 		}
 	} // end of /.modal-sticky-header-footer
 
@@ -715,9 +711,6 @@
 				}
 
 				.tutor-form-check {
-					input {
-						// background-color: $black-05;
-					}
 					label {
 						@extend .tutor-text-regular-caption;
 						@extend .tutor-color-text-hints;

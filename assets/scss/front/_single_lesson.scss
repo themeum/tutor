@@ -16,8 +16,8 @@
             width: 30px;
             height: 30px;
             display: flex;
-            @include propertyWithPrefix(align-items, center);
-            @include propertyWithPrefix(justify-content, center);
+            align-items: center;
+            justify-content: center;
             &:hover,
             &.active {
                 background-color: var(--tutor-primary-color);

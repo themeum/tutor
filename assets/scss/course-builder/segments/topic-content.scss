@@ -9,7 +9,7 @@
 		a {
 			text-decoration: none;
 			&:focus {
-				@include propertyWithPrefix(box-shadow, none);
+				box-shadow: none;
 			}
 		}
 
@@ -36,7 +36,7 @@
 					font-weight: 500;
 					font-size: 16px;
 					color: $black-main;
-					@include propertyWithPrefix(flex, 1);
+					flex: 1;
 					a {
 						color: #393c40;
 					}
@@ -103,7 +103,7 @@
 							}
 
 							&.open-tutor-lesson-modal {
-								@include propertyWithPrefix(flex-grow, 1);
+								flex-grow: 1;
 							}
 						}
 
@@ -122,7 +122,7 @@
 			.tutor_add_content_wrap {
 				padding: 0;
 				display: flex;
-				@include propertyWithPrefix(flex-wrap, wrap);
+				flex-wrap: wrap;
 
 				& > span > button,
 				& > button {
@@ -143,7 +143,7 @@
 			}
 
 			.course-move-handle {
-				@include propertyWithPrefix(align-self, center);
+				align-self: center;
 				cursor: grab;
 				margin-right: 5px;
 
@@ -200,7 +200,7 @@
 			a {
 				color: #393c40;
 				&:nth-child(2) {
-					@include propertyWithPrefix(flex, 1);
+					flex: 1;
 				}
 			}
 
