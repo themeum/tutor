@@ -444,7 +444,7 @@ $filters = array(
 
 							</div>
 						</div>
-						<div class="tutor-modal-btns_ tutor-btn-group_ tutor-d-flex tutor-align-items-center tutor-tutor-justify-content-between tutor-flex-wrap ">
+						<div class="tutor-modal-btns_ tutor-btn-group_ tutor-d-flex tutor-align-items-center tutor-justify-content-between tutor-flex-wrap ">
 							<button
 								data-tutor-modal-close
 								class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg">

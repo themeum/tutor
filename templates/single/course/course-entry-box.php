@@ -76,7 +76,7 @@
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</span>
 					<div class="list-item-progress tutor-mt-16">
-						<div class="text-regular-body tutor-color-text-subsued tutor-d-flex tutor-align-items-center tutor-tutor-justify-content-between">
+						<div class="text-regular-body tutor-color-text-subsued tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
@@ -195,7 +195,7 @@
 			} else {
 				ob_start();
 				?>
-					<div class="tutor-course-sidebar-card-pricing tutor-d-flex align-items-end tutor-tutor-justify-content-between">
+					<div class="tutor-course-sidebar-card-pricing tutor-d-flex align-items-end tutor-justify-content-between">
 						<div>
 							<span class="text-bold-h4 tutor-color-text-primary"><?php esc_html_e( 'Free', 'tutor' ); ?></span>
 						</div>
@@ -228,7 +228,7 @@
 				if ( ! $meta['value'] ) {
 					continue;}
 				?>
-				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-tutor-justify-content-between">
+				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-content-between">
 					<div class="flex-center">
 						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-text-primary"></span>
 						<span class="text-regular-caption tutor-color-text-hints tutor-ml-5">
