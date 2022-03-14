@@ -14,7 +14,7 @@ const Header = () => {
 	return (
 		<header className="tutor-addons-list-header tutor-d-lg-flex tutor-justify-content-between tutor-align-items-center tutor-px-30 tutor-py-15">
 			<div className="title text-medium-h5 color-text-primary tutor-mb-lg-0 tutor-mb-3">
-				{__('Addons List', 'tutor')}
+				{__('Add-ons', 'tutor')}
 			</div>
 			<div className="filter-btns text-regular-body color-text-subsued ">
 				{filterBtns.map((btn, index) => {
