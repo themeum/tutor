@@ -32,7 +32,7 @@ ob_start();
 ?>
     <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
-    <div class="tutor-single-page-top-bar tutor-d-flex justify-content-between">
+    <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
         <div class="tutor-topbar-left-item tutor-d-flex"> 
             <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
                 <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">

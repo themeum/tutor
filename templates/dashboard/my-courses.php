@@ -97,7 +97,7 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
 
                     <!-- Card footer -->
                     <div class="tutor-course-listing-item-footer has-border tutor-py-8 tutor-pl-20 tutor-pr-8">
-                        <div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+                        <div class="tutor-d-flex tutor-align-items-center tutor-tutor-justify-content-between">
                             <div class="tutor-d-flex tutor-align-items-center">
                                 <span class="tutor-text-medium-caption tutor-color-text-hints tutor-mr-3">
                                     <?php esc_html_e('Price:', 'tutor') ?>

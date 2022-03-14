@@ -48,7 +48,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
 
-<div class="tutor-single-page-top-bar tutor-d-flex justify-content-between">
+<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
 	<div class="tutor-topbar-left-item tutor-d-flex">
 		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
@@ -155,7 +155,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 			?>
 		<?php if ( ! $submitted_assignment ) { ?>
-		<div class="tutor-assignment-meta-info d-flex justify-content-between tutor-mt-25 tutor-mt-sm-35 tutor-py-15 tutor-py-sm-22">
+		<div class="tutor-assignment-meta-info d-flex tutor-justify-content-between tutor-mt-25 tutor-mt-sm-35 tutor-py-15 tutor-py-sm-22">
 			<div class="tutor-assignment-detail-info d-flex">
 				<div class="tutor-assignment-duration">
 					<span class="text-regular-body tutor-color-text-hints"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
@@ -202,7 +202,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			if ( $now > $remaining_time and $is_submitted == false ) :
 				?>
 			<div class="quiz-flash-message tutor-mt-25 tutor-mt-sm-35">
-				<div class="tutor-quiz-warning-box time-over d-flex align-items-center justify-content-between">
+				<div class="tutor-quiz-warning-box time-over d-flex align-items-center tutor-justify-content-between">
 					<div class="flash-info d-flex align-items-center">
 						<span class="tutor-icon-cross-cricle-filled tutor-color-design-danger tutor-mr-7"></span>
 						<span class="text-regular-caption tutor-color-danger-100">
@@ -569,7 +569,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 				<div class="tutor-assignment-details tutor-assignment-border-bottom tutor-pb-50 tutor-pb-sm-70">
 					<div class="tutor-ar-body tutor-pt-25 tutor-pb-40 tutor-px-15 tutor-px-md-30">
-						<div class="tutor-ar-header d-flex justify-content-between align-items-center">
+						<div class="tutor-ar-header d-flex tutor-justify-content-between align-items-center">
 							<div class="tutor-ar-title tutor-text-medium-h6 tutor-color-text-primary">
 								<?php esc_html_e( 'Your Assignment', 'tutor' ); ?>
 							</div>
@@ -666,7 +666,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			} else {
 				?>
 				<div class="tutor-assignment-footer tutor-pt-30 tutor-pt-sm-45">
-					<div class="tutor-assignment-footer-btn d-flex justify-content-between">
+					<div class="tutor-assignment-footer-btn d-flex tutor-justify-content-between">
 						<form action="" method="post" id="tutor_assignment_start_form">
 						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 						<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />

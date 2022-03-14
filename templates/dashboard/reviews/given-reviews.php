@@ -71,7 +71,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					</div>
 
 					<div class="individual-dashboard-review-body">
-						<div class="tutor-d-sm-flex tutor-justify-content-between ">
+						<div class="tutor-d-sm-flex tutor-tutor-justify-content-between ">
 							<div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-10">
 								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?> 
 							</div>
