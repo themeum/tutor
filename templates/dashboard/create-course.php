@@ -152,9 +152,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 							<label class="tutor-course-field-label tutor-font-size-16 color-text-primary"><?php _e('Course Title', 'tutor'); ?></label>
 							<div id="tutor-course-create-title-tooltip-wrapper" class="tooltip-wrap tutor-d-block">
 								<span class="tooltip-txt tooltip-right tutor-mt-10">
-									<?php _e('60', 'tutor'); ?>
+									<?php _e('255', 'tutor'); ?>
 								</span>
-								<input id="tutor-course-create-title" type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>" maxlength="60">
+								<input id="tutor-course-create-title" type="text" name="title" class="tutor-form-control" value="<?php echo get_the_title(); ?>" placeholder="<?php _e('ex. Learn photoshop CS6 from scratch', 'tutor'); ?>" maxlength="255">
 							</div>
 						</div>
 
