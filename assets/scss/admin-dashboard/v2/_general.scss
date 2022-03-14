@@ -424,7 +424,7 @@
 	grid-gap: 30px;
 	.tutor-option-field-input {
 		// min-width: 200px;
-		&.d-flex {
+		&.tutor-d-flex {
 			margin-top: 0px;
 		}
 	}
@@ -433,7 +433,7 @@
 			align-items: center;
 		}
 	}
-	&:not(.d-block) {
+	&:not(.tutor-d-block) {
 		.tutor-option-field-input {
 			input[type='email'] + span {
 				position: absolute;
@@ -455,8 +455,8 @@
 	&:last-child {
 		padding-bottom: 0;
 	}
-	&.d-block {
-		.tutor-option-field-input.d-flex {
+	&.tutor-d-block {
+		.tutor-option-field-input.tutor-d-flex {
 			margin-top: 20px;
 			&.logo-upload {
 				margin-top: 12px;
@@ -625,17 +625,17 @@
 }
 
 .tutor-option-field-input {
-	&.d-flex {
+	&.tutor-d-flex {
 		text-align: left;
 		.tutor-form-check:not(:last-child) {
 			margin-right: 30px;
 		}
 	}
-	&.d-flex,
-	&.d-block {
+	&.tutor-d-flex,
+	&.tutor-d-block {
 		margin-top: 20px;
 	}
-	&.d-flex {
+	&.tutor-d-flex {
 		input.tutor-form-control {
 			min-width: 90px;
 			// margin-right: 15px;
@@ -770,9 +770,6 @@
 		grid-template-columns: repeat(auto-fill, minmax(var(--imgWidth), 1fr));
 		grid-gap: 30px;
 		justify-items: flex-start;
-		// .icon-wrapper img {
-		// 	max-width: var(--imgWidth);
-		// }
 	}
 
 	.instructor-list,
@@ -796,14 +793,14 @@
 // Input field variations
 .tutor-option-field-input {
 	.type-check {
-		&.d-flex {
+		&.tutor-d-flex {
 			.tutor-form-check {
 				&:not(:last-child) {
 					margin-right: 30px;
 				}
 			}
 		}
-		&.d-block {
+		&.tutor-d-block {
 			.tutor-form-check {
 				&:not(:last-child) {
 					margin-bottom: 30px;
@@ -817,7 +814,7 @@
 			}
 		}
 	}
-	.d-flex.input-select {
+	.tutor-d-flex.input-select {
 		> [class^='tutor-form-']:not(:last-child) {
 			margin-right: 15px;
 		}
