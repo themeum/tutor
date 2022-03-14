@@ -118,7 +118,7 @@ if ( ! defined( 'ABSPATH' ) )
                         $html .= '<div class="step-info">';
                             $html .= '<span class="tutor-text-regular-caption tutor-color-text-hints">'.__('Step', 'tutor').':</span> <strong class="tutor-color-text-primary">'.$i.'/'.count($field_arr).' </strong>';
                         $html .= '</div>';
-                        $html .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center">'.__('Reset Default', 'tutor').'</div>';
+                        $html .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-text-subsued tutor-d-flex tutor-align-items-center">'.__('Reset Default', 'tutor').'</div>';
                     $html .= '</div>';
                     $html .= '<div class="tutor-setup-content-heading body">';
 

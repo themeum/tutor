@@ -119,28 +119,28 @@ if ( ! $assignment_submitted_id ) {
 
 	<div class="tutor-dashboard-assignment-review-area tutor-mt-30">
 		<h3><?php esc_html_e( 'Evaluation', 'tutor' ); ?></h3>
-		<form action="" method="post" class="tutor-bs-row tutor-form-submit-through-ajax" data-toast_success_message="<?php _e( 'Assignment evaluated', 'tutor' ); ?>">
+		<form action="" method="post" class="tutor-row tutor-form-submit-through-ajax" data-toast_success_message="<?php _e( 'Assignment evaluated', 'tutor' ); ?>">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 			<input type="hidden" value="tutor_evaluate_assignment_submission" name="tutor_action"/>
 			<input type="hidden" value="<?php echo esc_html( $assignment_submitted_id ); ?>" name="assignment_submitted_id"/>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
+			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3">
 				<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 			</div>
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-30">
 				<input class="tutor-form-control" type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0">
 				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" ); ?></p>
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
+			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3">
 				<label for=""><?php esc_html_e( 'Feedback', 'tutor' ); ?></label>
 			</div>
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-20">
+			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-20">
 				<textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php esc_html_e( $instructor_note ); ?></textarea>
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3"></div>
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9">
+			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3"></div>
+			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9">
 				<button type="submit" class="tutor-btn tutor-mt-15">
 				<?php esc_html_e( 'Evaluate this submission', 'tutor' ); ?>
 				</button>

@@ -16,7 +16,7 @@
 </div>
 
 <div class="tutor-mb-30 tutor-text-regular-small tutor-color-text-subsued">
-    <div class="tutor-bs-d-flex">
+    <div class="tutor-d-flex">
         <div class="tutor-mr-15 tutor-color-text-title">
             <?php _e('Quiz Time', 'tutor'); ?>: <span class="tutor-fweight-600"><?php echo $quiz_time; ?></span>
         </div>

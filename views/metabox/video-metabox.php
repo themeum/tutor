@@ -45,7 +45,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
         }
         ?>
     </label>
-    <div class="tutor-input-group tutor-mb-15 tutor-mt-10 tutor-bs-d-block">
+    <div class="tutor-input-group tutor-mb-15 tutor-mt-10 tutor-d-block">
         <div class="tutor-video-upload-wrap g-0">
             <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo empty($videoSource) ? '' : $videoSource; ?>">
                 <i class="tutor-icon-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
@@ -130,16 +130,16 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
     <div class="tutor-mb-20">
         <label class="tutor-form-label"><?php _e('Video playback time', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-option-field-video-duration">
-            <div class="tutor-bs-row">
-                <div class="tutor-bs-col-4">
+            <div class="tutor-row">
+                <div class="tutor-col-4">
                     <input class="tutor-form-control" type="number" value="<?php echo $runtimeHours ? $runtimeHours : '00'; ?>" name="video[runtime][hours]" min="0">
                     <span><?php _e('Hour', 'tutor'); ?></span>
                 </div>
-                <div class="tutor-bs-col-4">
+                <div class="tutor-col-4">
                     <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeMinutes ? $runtimeMinutes : '00'; ?>" name="video[runtime][minutes]" min="0">
                     <span><?php _e('Minute', 'tutor'); ?></span>
                 </div>
-                <div class="tutor-bs-col-4">
+                <div class="tutor-col-4">
                     <input class="tutor-form-control" type="number" class="tutor-number-validation" data-min="0" data-max="59" value="<?php echo $runtimeSeconds ? $runtimeSeconds : '00'; ?>" name="video[runtime][seconds]" min="0">
                     <span><?php _e('Second', 'tutor'); ?></span>
                 </div>

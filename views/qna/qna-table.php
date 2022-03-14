@@ -48,7 +48,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             case 'checkbox':
                                 ?>
                                 <td data-th="<?php _e('Mark', 'tutor'); ?>" class="tutor-shrink">
-                                    <div class="td-checkbox tutor-bs-d-flex tutor-bs-align-items-center">
+                                    <div class="td-checkbox tutor-d-flex tutor-align-items-center">
                                         <input id="tutor-admin-list-<?php echo $qna->comment_ID; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $qna->comment_ID; ?>" style="margin-top:0" />
                                     </div>
                                 </td>

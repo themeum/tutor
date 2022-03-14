@@ -11,7 +11,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 
 
 
-<div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-bs-d-flex tutor-mt-10 tutor-mb-30">
+<div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-d-flex tutor-mt-10 tutor-mb-30">
     <?php
         $course_duration = get_tutor_course_duration_context( get_the_ID(), true );
         $course_students = tutor_utils()->count_enrolled_users_by_course();
@@ -19,20 +19,20 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
     <?php
         if(!empty($course_duration)) { 
     ?>
-    <div class="tutor-bs-d-flex tutor-bs-align-items-center">
+    <div class="tutor-d-flex tutor-align-items-center">
         <span class="meta-icon tutor-icon-clock-filled tutor-color-text-hints"></span>
         <span><?php echo wp_kses_post( $course_duration ); ?></span>
     </div>
     <?php } ?>
     <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
-    <div class="tutor-bs-d-flex tutor-bs-align-items-center">
+    <div class="tutor-d-flex tutor-align-items-center">
         <span class="meta-icon tutor-icon-user-filled tutor-color-text-hints"></span>
         <span><?php echo esc_html( $course_students ); ?></span>
     </div>
     <?php endif; ?>
 </div>
 
-<div class="list-item-author tutor-bs-d-flex tutor-bs-align-items-center tutor-mt-auto">
+<div class="list-item-author tutor-d-flex tutor-align-items-center tutor-mt-auto">
 	<div class="tutor-avatar">
 		<a href="<?php echo $profile_url; ?>"> <?php echo tutor_utils()->get_tutor_avatar($post->post_author); ?></a>
 	</div>

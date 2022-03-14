@@ -68,7 +68,7 @@
 
 	<div class="tutor-option-single-item">
 		<div class="item-title">
-			<div class="tutor-bs-d-flex">
+			<div class="tutor-d-flex">
 				<h4><?php echo esc_attr($blocks['label']); ?></h4>
 				<div class="tooltip-wrap tooltip-icon">
 					<span class="tooltip-txt tooltip-right"><?php echo esc_attr($blocks['tooltip']); ?></span>
