@@ -73,3 +73,21 @@
 		}
 	}
 }
+
+// new card
+.tutor {
+	&-card {
+		background-color: #FFFFFF;
+		border: 1px solid #CDCFD5;
+
+		&.is-selected {
+			background-color: #F6F8FD;
+			border-color: #D2DBF5;
+		}
+
+		&.is-active {
+			background-color: #F6F8FD;
+			border-color: $primary;
+		}
+	}
+}
