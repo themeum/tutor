@@ -14,8 +14,8 @@ if ( ! empty( $field['options'] ) ) {
 	?>
 	<div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>">
 		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>
-		<div class="tutor-option-field-input d-flex">
-			<div class="type-check d-flex">
+		<div class="tutor-option-field-input tutor-d-flex">
+			<div class="type-check tutor-d-flex">
 				<?php
 				foreach ( $field['options'] as $option_key => $option ) :
 						$input_id = 'tutor_check_' . $option_key;

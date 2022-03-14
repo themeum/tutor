@@ -13,7 +13,7 @@ $field_id  = esc_attr( 'field_' . $field_key );
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input">
-		<div class="type-check d-flex">
+		<div class="type-check tutor-d-flex">
 			<?php
 			if ( ! empty( $field['options'] ) ) :
 				foreach ( $field['options'] as $option_key => $option ) :

@@ -65,7 +65,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 			</div>
 		</div>
 		<div class="tutor-topbar-right-item tutor-d-flex">
-			<div class="tutor-topbar-assignment-details d-flex align-items-center">
+			<div class="tutor-topbar-assignment-details tutor-d-flex tutor-align-items-center">
 				<?php
 					do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' );
 				?>

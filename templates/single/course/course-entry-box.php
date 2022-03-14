@@ -195,7 +195,7 @@
 			} else {
 				ob_start();
 				?>
-					<div class="tutor-course-sidebar-card-pricing tutor-d-flex align-items-end tutor-justify-content-between">
+					<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-content-between">
 						<div>
 							<span class="text-bold-h4 tutor-color-text-primary"><?php esc_html_e( 'Free', 'tutor' ); ?></span>
 						</div>
