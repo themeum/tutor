@@ -27,28 +27,28 @@ var prefixerOptions = {
 };
 
 var scss_blueprints = {
-	tutor_front: { src: 'assets/scss/front/index.scss', mode: 'expanded', destination: 'tutor-front.css' },
+	tutor_front: { src: 'assets/scss/front/index.scss', mode: 'expanded', destination: 'tutor-front.min.css' },
 
-	tutor_admin: { src: 'assets/scss/admin-dashboard/index.scss', mode: 'expanded', destination: 'tutor-admin.css' },
+	tutor_admin: { src: 'assets/scss/admin-dashboard/index.scss', mode: 'expanded', destination: 'tutor-admin.min.css' },
 
 	tutor_setup: {
 		src: 'assets/scss/admin-dashboard/tutor-setup.scss',
 		mode: 'expanded',
-		destination: 'tutor-setup.css',
+		destination: 'tutor-setup.min.css',
 	},
 
-	tutor_v2: { src: 'v2-library/_src/scss/tutor-main.scss', mode: 'expanded', destination: 'tutor-v2.css' },
+	tutor_v2: { src: 'v2-library/_src/scss/tutor-main.scss', mode: 'expanded', destination: 'tutor.min.css' },
 
 	tutor_front_dashboard: {
 		src: 'assets/scss/frontend-dashboard/index.scss',
 		mode: 'expanded',
-		destination: 'tutor-frontend-dashboard.css',
+		destination: 'tutor-frontend-dashboard.min.css',
 	},
 
 	tutor_course_builder: {
 		src: 'assets/scss/course-builder/index.scss',
 		mode: 'expanded',
-		destination: 'tutor-course-builder.css',
+		destination: 'tutor-course-builder.min.css',
 	},
 
 	v2_scss: { src: 'v2-library/_src/scss/main.scss', destination: 'main.min.css', dest_path: 'v2-library/bundle' },
@@ -79,8 +79,8 @@ for (let task in scss_blueprints) {
 
 // Add task to add tutor prefix to v2 scss
 gulp.task('v2_tutor_prefix', function(resolve) {
-	var exp = path.resolve(__dirname + '/assets/css/tutor-v2.css');
-	var min = path.resolve(__dirname + '/assets/css/tutor-v2.css');
+	var exp = path.resolve(__dirname + '/assets/css/tutor.min.css');
+	var min = path.resolve(__dirname + '/assets/css/tutor.min.css');
 	var docz = path.resolve(__dirname + '/v2-library/bundle/main.min.css');
 
 	[exp, min, docz].forEach((css) => {
