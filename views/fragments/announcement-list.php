@@ -61,7 +61,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
-				<div class="tutor-modal-footer d-flex justify-content-between">
+				<div class="tutor-modal-footer d-flex tutor-justify-content-between">
 					<button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
 						<?php _e( 'Publish', 'tutor' ); ?>
 					</button>

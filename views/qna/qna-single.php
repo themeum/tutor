@@ -184,7 +184,7 @@
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
-							<div class="tutor-d-flex justify-content-between align-items-center">
+							<div class="tutor-d-flex tutor-justify-content-between align-items-center">
 								<span class="color-text-primary text-medium-body tutor-pl-10">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
@@ -207,7 +207,7 @@
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
-							<div class="tutor-d-flex justify-content-between align-items-center">
+							<div class="tutor-d-flex tutor-justify-content-between align-items-center">
 								<span class="color-text-primary text-medium-body tutor-pl-10">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>

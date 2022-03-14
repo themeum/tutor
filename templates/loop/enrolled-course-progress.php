@@ -12,7 +12,7 @@
 ?>
 
 <div class="list-item-progress tutor-mt-16 tutor-px-20 tutor-mb-8">
-    <div class="text-regular-body tutor-color-text-subsued tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+    <div class="text-regular-body tutor-color-text-subsued tutor-d-flex tutor-align-items-center tutor-tutor-justify-content-between">
         <span class="progress-steps">
             <?php echo esc_html( $course_progress['completed_count'] ); ?>/<?php echo esc_html( $course_progress['total_count'] ); ?>
         </span>

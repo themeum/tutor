@@ -1,4 +1,4 @@
-<div class="quiz-meta-info d-flex justify-content-between">
+<div class="quiz-meta-info d-flex tutor-justify-content-between">
 	<div class="quiz-meta-info-left d-flex">
 		<?php
 			$total_questions = tutor_utils()->total_questions_for_student_by_quiz( get_the_ID() );
@@ -67,7 +67,7 @@
 </div>
 
 <div class="quiz-flash-message">
-	<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
+	<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning d-flex align-items-center tutor-justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
 		<div class="flash-info d-flex align-items-center">
 			<span class="tutor-icon-warning-outline-circle-filled tutor-color-design-warning tutor-mr-7"></span>
 			<span class="text-regular-caption tutor-color-text-title tutor-quiz-alert-text">

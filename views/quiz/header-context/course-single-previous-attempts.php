@@ -17,7 +17,7 @@
 <div class="header-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-10 tutor-mb-30">
     <?php echo $quiz_title; ?>
 </div>
-<div class="d-flex justify-content-between tutor-py-20 tutor-my-20 tutor-border-top tutor-border-bottom">
+<div class="d-flex tutor-justify-content-between tutor-py-20 tutor-my-20 tutor-border-top tutor-border-bottom">
     <div class="flex">
         <?php _e('Questions', 'tutor'); ?>: 
         <span class="tutor-color-text-primary">
