@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import Search from './Search';
-import AddonsList from './AddonsList';
+import AddonList from './AddonList';
 import { AddonsContextProvider } from '../context/AddonsContext';
 
 const App = () => {
@@ -11,7 +11,7 @@ const App = () => {
 				<Header/>
 				<div className="tutor-addons-list-body tutor-p-30">
 					<Search/>
-					<AddonsList />
+					<AddonList />
 				</div>
 			</main>
 		</AddonsContextProvider>
