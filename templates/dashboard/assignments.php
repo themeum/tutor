@@ -31,9 +31,9 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 <div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php esc_html_e( 'Assignment', 'tutor' ); ?></div>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignments">
-	<div class="tutor-bs-row">
-		<div class="tutor-bs-col-12 tutor-bs-col-lg-6">
-			<label class="tutor-bs-d-block tutor-form-label">
+	<div class="tutor-row">
+		<div class="tutor-col-12 tutor-col-lg-6">
+			<label class="tutor-d-block tutor-form-label">
 				<?php esc_html_e( 'Courses', 'tutor' ); ?>
 			</label>
 			<select class="tutor-form-select tutor-form-control-sm tutor-announcement-course-sorting">
@@ -51,15 +51,15 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 				<?php endif; ?>
 			</select>
 		</div>
-		<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
-			<label class="tutor-bs-d-block tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
+		<div class="tutor-col-6 tutor-col-lg-3">
+			<label class="tutor-d-block tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
 			<select class="tutor-form-select tutor-form-control-sm tutor-announcement-order-sorting" data-search="no">
 				<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 				<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 			</select>
 		</div>
-		<div class="tutor-bs-col-6 tutor-bs-col-lg-3">
-			<label class="tutor-bs-d-block tutor-form-label"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
+		<div class="tutor-col-6 tutor-col-lg-3">
+			<label class="tutor-d-block tutor-form-label"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
 			<div class="tutor-v2-date-picker"></div>
 		</div>
 	</div>

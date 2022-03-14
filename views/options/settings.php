@@ -31,10 +31,10 @@
 		</div>
 	</header>
 	<div class="tutor-option-body">
-		<form class="tutor-option-form tutor-bs-py-4 tutor-bs-px-3" id="tutor-option-form">
+		<form class="tutor-option-form tutor-py-4 tutor-px-3" id="tutor-option-form">
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-option-tabs">
-				<ul class="tutor-option-nav tutor-bs-mt-0">
+				<ul class="tutor-option-nav tutor-mt-0">
 					<?php
 					foreach ( $option_fields as $key => $section ) {
 						$active_class = $active_tab == $key ? esc_attr( ' active' ) : '';

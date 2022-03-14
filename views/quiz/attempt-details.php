@@ -415,7 +415,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                 ?>
                                                 <td class="type" data-th="<?php echo $column; ?>">
                                                     <?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-                                                    <div class="tooltip-wrap tooltip-icon tutor-bs-d-flex">
+                                                    <div class="tooltip-wrap tooltip-icon tutor-d-flex">
                                                         <?php echo $question_type['icon']; ?>
                                                         <span class="tooltip-txt tooltip-top">
                                                             <?php echo $type['name']; ?>
@@ -428,7 +428,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                             case 'questions' :
                                                 ?>
                                                 <td class="questions" data-th="<?php echo $column; ?>">
-                                                    <span class="text-medium-small tutor-bs-d-flex tutor-bs-align-items-center">
+                                                    <span class="text-medium-small tutor-d-flex tutor-align-items-center">
                                                         <?php echo stripslashes($answer->question_title); ?>
                                                     </span>
                                                 </td>

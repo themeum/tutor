@@ -28,7 +28,7 @@ a.back-to-quiz-questions-btn {
 		padding-bottom: 0;
 	}
 
-	.tutor-modal-footer .tutor-bs-row > div {
+	.tutor-modal-footer .tutor-row > div {
 		&:not(:last-child) {
 			display: none !important;
 		}
@@ -41,7 +41,7 @@ a.back-to-quiz-questions-btn {
 
 // Hide add to question button when the container has no quiz editor opened
 &:not(.tutor-has-question-from) {
-	.tutor-modal-footer .tutor-bs-row > div {
+	.tutor-modal-footer .tutor-row > div {
 		&:last-child {
 			display: none;
 		}

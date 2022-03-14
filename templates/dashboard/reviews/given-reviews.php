@@ -71,16 +71,16 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					</div>
 
 					<div class="individual-dashboard-review-body">
-						<div class="tutor-bs-d-sm-flex tutor-bs-justify-content-between ">
+						<div class="tutor-d-sm-flex tutor-justify-content-between ">
 							<div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-10">
 								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?> 
 							</div>
-							<div class="tutor-given-review-action tutor-text-regular-body tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center">
-								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-bs-d-flex tutor-bs-align-items-center">
+							<div class="tutor-given-review-action tutor-text-regular-body tutor-color-text-subsued tutor-d-flex tutor-align-items-center">
+								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-d-flex tutor-align-items-center">
 									<i class="tutor-icon-edit-filled tutor-icon-24 tutor-mr-3"></i>
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 								</span>
-								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-bs-d-flex tutor-bs-align-items-center">
+								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-d-flex tutor-align-items-center">
 									<i class="tutor-icon-delete-stroke-filled tutor-icon-24 tutor-mr-3"></i>
 									<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 								</span>
@@ -121,15 +121,15 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 								</div>
 
 								<div class="tutor-modal-footer">
-									<div class="tutor-bs-row">
-										<div class="tutor-bs-col">
+									<div class="tutor-row">
+										<div class="tutor-col">
 											<div class="tutor-btn-group">
 												<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
 													<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 												</button>
 											</div>
 										</div>
-										<div class="tutor-bs-col-auto">
+										<div class="tutor-col-auto">
 											<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
 												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
 											</button>

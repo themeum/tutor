@@ -48,9 +48,9 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
 
-<div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
-	<div class="tutor-topbar-left-item tutor-bs-d-flex">
-		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
+<div class="tutor-single-page-top-bar tutor-d-flex justify-content-between">
+	<div class="tutor-topbar-left-item tutor-d-flex">
+		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
 				<span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
 			</a>
@@ -65,8 +65,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			</span>
 		</div>
 	</div>
-	<div class="tutor-topbar-right-item tutor-bs-d-flex">
-		<div class="tutor-topbar-assignment-details tutor-bs-d-flex tutor-bs-align-items-center">
+	<div class="tutor-topbar-right-item tutor-d-flex">
+		<div class="tutor-topbar-assignment-details tutor-d-flex tutor-align-items-center">
 			<?php
 				do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' );
 			?>
@@ -96,7 +96,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 	</div>
 </div>
 
-<div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
+<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-10">
 	<div class="tutor-mobile-top-nav d-grid">
 		<a href="<?php echo esc_url( get_the_permalink( isset( $previous_id ) ? $previous_id : '' ) ); ?>">
 			<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
@@ -238,8 +238,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				<span class="tutor-text-medium-h6 tutor-color-text-primary">
 					<?php esc_html_e( 'Attachments', 'tutor' ); ?>
 				</span>
-				<div class="tutor-bs-container tutor-pt-15">
-					<div class="tutor-bs-row tutor-bs-gy-3">
+				<div class="tutor-container tutor-pt-15">
+					<div class="tutor-row tutor-gy-3">
 					<?php if ( is_array( $assignment_attachments ) && count( $assignment_attachments ) ) : ?>
 						<?php
 						foreach ( $assignment_attachments as $attachment_id ) :
@@ -247,7 +247,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							$attachment_name = substr( $attachment_name, strrpos( $attachment_name, '/' ) + 1 );
 							$file_size       = tutor_utils()->get_attachment_file_size( $attachment_id );
 							?>
-							<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-10 tutor-ml-3">
+							<div class="tutor-instructor-card tutor-col-sm-5 tutor-py-15 tutor-mr-10 tutor-ml-3">
 								<div class="tutor-icard-content">
 									<div class="text-regular-body color-text-title">
 									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank" download>
@@ -345,8 +345,8 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 									</div>
 								</div>
 								<!-- uploaded attachment by students -->
-								<div class="tutor-bs-container tutor-pt-15 tutor-update-assignment-attachments">
-									<div class="tutor-bs-row tutor-bs-gy-3" id="tutor-student-assignment-edit-file-preview">
+								<div class="tutor-container tutor-pt-15 tutor-update-assignment-attachments">
+									<div class="tutor-row tutor-gy-3" id="tutor-student-assignment-edit-file-preview">
 									<?php
 										$submitted_attachments = get_comment_meta( $assignment_comment_id, 'uploaded_attachments' );
 									if ( is_array( $submitted_attachments ) && count( $submitted_attachments ) ) :
@@ -354,7 +354,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 											$attachments = json_decode( $attach );
 											?>
 											<?php foreach ( $attachments as $attachment ) : ?>
-												<div class="tutor-instructor-card tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15">
+												<div class="tutor-instructor-card tutor-col-sm-5 tutor-py-15 tutor-mr-15">
 													<div class="tutor-icard-content">
 														<div class="text-regular-body tutor-color-text-title">
 															<?php echo esc_html( $attachment->name ); ?>

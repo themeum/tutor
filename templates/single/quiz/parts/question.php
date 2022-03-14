@@ -123,7 +123,7 @@
 					?>
 					
 					<?php if ( $question_layout_view !== 'question_below_each_other' ) : ?>
-						<div class="tutor-quiz-btn-grp tutor-mt-60 tutor-bs-d-flex">
+						<div class="tutor-quiz-btn-grp tutor-mt-60 tutor-d-flex">
 							<?php
 								if ( $show_previous_button && $previous_question ) {
 									?>

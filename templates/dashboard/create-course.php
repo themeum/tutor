@@ -42,9 +42,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
 	<!-- Sticky header with course action buttons -->
 	<header class="tutor-dashboard-builder-header tutor-mb-30">
-		<div class="tutor-bs-container-fluid">
-			<div class="tutor-bs-row tutor-bs-align-items-center">
-				<div class="tutor-bs-col-auto">
+		<div class="tutor-container-fluid">
+			<div class="tutor-row tutor-align-items-center">
+				<div class="tutor-col-auto">
 					<div class="tutor-dashboard-builder-header-left">
 						<div class="tutor-dashboard-builder-logo">
 							<?php $tutor_course_builder_logo_src = apply_filters('tutor_course_builder_logo_src', tutor()->url . 'assets/images/tutor-logo.png'); ?>
@@ -57,8 +57,8 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 						</button>
 					</div>
 				</div>
-				<div class="tutor-bs-col tutor-mt-10 tutor-mb-10">
-					<div class="tutor-dashboard-builder-header-right tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
+				<div class="tutor-col tutor-mt-10 tutor-mb-10">
+					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-items-center tutor-justify-content-end">
 						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
 							<?php _e('Preview', 'tutor'); ?>
 						</a>
@@ -79,9 +79,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 	</header>
 
 	<!-- Course builder body -->
-	<div class="tutor-bs-container">
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-lg-8 tutor-mb-30 tutor-pr-30">
+	<div class="tutor-container">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-lg-8 tutor-mb-30 tutor-pr-30">
 				<input type="hidden" value="tutor_add_course_builder" name="tutor_action" />
 				<input type="hidden" name="course_ID" id="course_ID" value="<?php echo get_the_ID(); ?>">
 				<input type="hidden" name="post_ID" id="post_ID" value="<?php echo get_the_ID(); ?>">
@@ -150,7 +150,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 					<div class="tutor-course-builder-section-content">
 						<div class="tutor-mb-30">
 							<label class="tutor-course-field-label tutor-font-size-16 color-text-primary"><?php _e('Course Title', 'tutor'); ?></label>
-							<div id="tutor-course-create-title-tooltip-wrapper" class="tooltip-wrap tutor-bs-d-block">
+							<div id="tutor-course-create-title-tooltip-wrapper" class="tooltip-wrap tutor-d-block">
 								<span class="tooltip-txt tooltip-right tutor-mt-10">
 									<?php _e('60', 'tutor'); ?>
 								</span>
@@ -200,13 +200,13 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 
 							$_tutor_course_price_type = tutils()->price_type();
 						?>
-							<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-30">
-								<div class="tutor-bs-col-12">
+							<div class="tutor-row tutor-align-items-center tutor-mb-30">
+								<div class="tutor-col-12">
 									<label class="tutor-form-label tutor-font-size-16"><?php _e('Course Price', 'tutor'); ?></label>
 								</div>
-								<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
-									<div class="tutor-form-check tutor-bs-align-items-center">
-										<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
+								<div class="tutor-col-6 tutor-col-sm-5 tutor-col-lg-4">
+									<div class="tutor-form-check tutor-align-items-center">
+										<input type="radio" id="tutor_price_paid" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="paid" <?php checked($_tutor_course_price_type, 'paid'); ?> />
 										<label for="tutor_price_paid" class="tutor-amount-field">
 											<span class="tutor-input-prepand">
 												<?php echo $currency_symbol; ?>
@@ -215,9 +215,9 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 										</label>
 									</div>
 								</div>
-								<div class="tutor-bs-col-6 tutor-bs-col-sm-5 tutor-bs-col-lg-4">
-									<div class="tutor-form-check tutor-bs-align-items-center">
-										<input type="radio" id="tutor_price_free" class="tutor-form-check-input tutor-bs-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> />
+								<div class="tutor-col-6 tutor-col-sm-5 tutor-col-lg-4">
+									<div class="tutor-form-check tutor-align-items-center">
+										<input type="radio" id="tutor_price_free" class="tutor-form-check-input tutor-flex-shrink-0" name="tutor_course_price_type" value="free" <?php $_tutor_course_price_type ? checked($_tutor_course_price_type, 'free') : checked('true', 'true'); ?> />
 										<label for="tutor_price_free" class="tutor-font-size-15">
 											<?php _e('Free', 'tutor'); ?>
 										</label>
@@ -270,7 +270,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 			</div>
 
 			<!-- Course builder tips right sidebar -->
-			<div class="tutor-bs-col-12 tutor-bs-col-lg-4 tutor-mb-30 tutor-pl-40">
+			<div class="tutor-col-12 tutor-col-lg-4 tutor-mb-30 tutor-pl-40">
 				<div class="tutor-course-builder-upload-tips">
 					<h3 class="text-regular-body tutor-mb-20">
 						<strong>
