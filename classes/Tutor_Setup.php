@@ -377,9 +377,6 @@ if ( ! defined( 'ABSPATH' ) )
                         'enable_course_marketplace' => array(
                             'type' => 'marketplace'
                         ),
-                        'enable_tutor_earning' => array(
-                            'type' => 'earning'
-                        ),
                         'public_profile_layout' => array(
                             'type' => 'switch',
                             'data' => array(
@@ -560,9 +557,6 @@ if ( ! defined( 'ABSPATH' ) )
 
                             <?php $course_marketplace = tutor_utils()->get_option('enable_course_marketplace'); ?>
                             <input type="hidden" name="enable_course_marketplace" class="enable_course_marketplace_data" value="<?php echo ($course_marketplace ? 'on' : 'off'); ?>">
-
-                            <?php $earning = tutor_utils()->get_option('enable_tutor_earning'); ?>
-                            <input type="hidden" name="enable_tutor_earning" class="enable_tutor_earning_data" value="<?php echo ($earning ? 'on' : 'off'); ?>">
 
                             <ul class="tutor-setup-content">
                                 <?php $this->tutor_setup_generator(); ?>

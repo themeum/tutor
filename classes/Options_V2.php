@@ -655,20 +655,6 @@ class Options_V2
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-discount-filled-filled',
 				'blocks'   => array(
-					/* array(
-						'label'      => false,
-						'block_type' => 'uniform',
-						'fields'     => array(
-							array(
-								'key'         => 'enable_tutor_earning',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Enable Monetization', 'tutor' ),
-								'label_title' => __( '', 'tutor' ),
-								'default'     => 'off',
-								'desc'        => __( 'Enable monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
-							),
-						),
-					), */
 					'block_options' => array(
 						'label'      => __('Options', 'tutor'),
 						'slug'       => 'options',
@@ -795,7 +781,7 @@ class Options_V2
 								'key'     => 'minimum_days_for_balance_to_be_available',
 								'type'    => 'number',
 								'label'   => __('Minimum Days Before Balance is Available', 'tutor'),
-								'default' => '80',
+								'default' => '7',
 								'desc'    => __('Any income has to remain this many days in the platform before it is available for withdrawal.', 'tutor'),
 							),
 							array(
