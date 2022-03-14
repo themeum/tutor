@@ -17,7 +17,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 				if ( 'color_preset' === $fields_group['type'] ) {
 					$preset_color_fields = $fields_group['fields'];
 					?>
-					<div class="tutor-option-field-row d-block">
+					<div class="tutor-option-field-row tutor-d-block">
 						<div class="tutor-option-field-label">
 							<h5 class="label"><?php echo esc_attr( $fields_group['label'] ); ?></h5>
 							<p class="desc"><?php echo esc_attr( $fields_group['desc'] ); ?></p>
