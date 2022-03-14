@@ -23,7 +23,7 @@
 			border: 1px solid $stroke-light-30;
 			overflow: hidden;
 			.tutor-topic-title {
-				@include valueWithPrefix(display, flex);
+				display: flex;
 				font-size: 16px;
 				font-weight: 300;
 				margin: 0;
@@ -121,7 +121,7 @@
 
 			.tutor_add_content_wrap {
 				padding: 0;
-				@include valueWithPrefix(display, flex);
+				display: flex;
 				@include propertyWithPrefix(flex-wrap, wrap);
 
 				& > span > button,
@@ -173,7 +173,7 @@
 		}
 
 		.tutor-course-content-top {
-			@include valueWithPrefix(display, flex);
+			display: flex;
 			font-size: 14px;
 
 			&,

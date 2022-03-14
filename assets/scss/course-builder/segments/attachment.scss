@@ -1,6 +1,6 @@
 // Course attachment styles
 .tutor-course-builder-attachments{
-    @include valueWithPrefix(display, flex);
+    display: flex;
     @include propertyWithPrefix(flex-wrap, wrap);
     @include propertyWithPrefix(box-sizing, border-box);
 

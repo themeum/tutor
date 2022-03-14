@@ -35,10 +35,10 @@
         &:last-child {
             border-left: 1px solid $stroke-light-30;
             margin-left: 20px;
-            @include valueWithPrefix(display, flex);
+            display: flex;
             flex-direction: column;
-            @include propertyWithPrefix(align-self, stretch);
-            @include propertyWithPrefix(justify-content, space-around);
+            align-self: stretch;
+            justify-content: space-between;
             
             a{
                 display: block;
@@ -50,8 +50,8 @@
                 font-size: 15px;
                 text-align: center;
                 color: $text-hints;
-                @include valueWithPrefix(display, flex);
-                @include propertyWithPrefix(align-items, center);
+                display: flex;
+                align-items: center;
 
                 &:hover {
                     color: #3E64DE;

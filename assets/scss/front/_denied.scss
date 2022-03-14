@@ -34,7 +34,7 @@
         background-size: cover;
         background-position: center;
     }
-    @include valueWithPrefix(display, flex);
+    display: flex;
     @include propertyWithPrefix(justify-content, center);
     column-gap: 80px;
     margin: auto;
@@ -45,7 +45,7 @@
         .tutor-logo {
             height: 32px;
         }
-        @include valueWithPrefix(display, flex);
+        display: flex;
         @include propertyWithPrefix(flex-direction, column);
         row-gap: 39px;
 

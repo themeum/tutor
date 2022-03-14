@@ -75,7 +75,7 @@ $sidebar_width: 360px;
 	// Badges class
 	.tutor-qna-badges {
 		& > span {
-			@include valueWithPrefix(display, inline-flex);
+			display: inline-flex;
 			@include propertyWithPrefix(align-items, center);
 			margin-left: 15px;
 			font-style: normal;
@@ -113,7 +113,7 @@ $sidebar_width: 360px;
 
 	// Top Sticky bar for badges
 	.tutor-qa-sticky-bar {
-		@include valueWithPrefix(display, flex);
+		display: flex;
 		background: white;
 		padding: 21px 0px 15px 0px;
 		position: sticky;
@@ -122,7 +122,7 @@ $sidebar_width: 360px;
 
 		& > div {
 			&:last-child {
-				@include valueWithPrefix(flex, 1);
+				flex: 1;
 				text-align: right;
 			}
 		}
@@ -139,7 +139,7 @@ $sidebar_width: 360px;
 			clear: both;
 
 			.tutor-qna-user {
-				@include valueWithPrefix(display, flex);
+				display: flex;
 				@include propertyWithPrefix(align-items, center);
 				margin-bottom: 15px;
 
