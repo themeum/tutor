@@ -102,7 +102,7 @@ $filters = array(
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-pr-20">
+	<div class="tutor-admin-page-content-wrapper tutor-mt-26 tutor-pr-20">
 	<?php
 		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
 		$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';

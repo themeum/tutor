@@ -1,6 +1,12 @@
+// WordPress Notices
+#wpbody-content {
+	.notice.notice-error {
+		margin: 20px 20px 20px 0px !important;
+	}
+}
+
 // Common Styles
 .tutor-backend-settings-page {
-	// padding-top: 62px;
 	p,
 	h1,
 	h2,
