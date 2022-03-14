@@ -31,7 +31,7 @@
                 $b_total = number_format((float) $total_booked, 2, '.', '');
                 $add_to_cart_text = $product->add_to_cart_text();
 
-                $price_html = '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
+                $price_html = '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
                 $percet_html = '<div class="list-item-booking tutor-d-flex tutor-align-items-center"><div class="booking-progress tutor-d-flex"><div class="circle-progress progress-full" style="--pro:'.$b_total .'%;"></div></div><div class="tutor-text-medium-caption tutor-color-text-primary">'.$b_total . __('% Booked', 'tutor') . '</div></div></div>';
                 $cart_html = '<div class="list-item-button tutor-mt-15 booking-available"><div class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-md tutor-btn-full tutor-color-text-primary"> <span class="tutor-icon-cart-line-filled" style="font-size: 24px;"></span> '.apply_filters( 'tutor_course_restrict_new_entry', $add_to_cart_text ) . ' </div></div>';
 
@@ -41,14 +41,14 @@
             }
 
             if ( $product && $maximum_students == $total_enrolled && $maximum_students != 0) {
-                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
+                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
                 $restrict = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-items-center"><div class="booking-progress tutor-d-flex"><span class="btn-icon tutor-color-design-warning tutor-icon-circle-outline-info-filled"></span></div><div class="tutor-text-medium-caption tutor-color-text-primary">'. __('Fully Booked', 'tutor') .'</div></div></div>';
                 echo tutor_kses_html($price_html);
                 echo tutor_kses_html($restrict);
             }
 
             if ( $product && $maximum_students == 0) {
-                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
+                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
                 $cart_html = '<div class="list-item-button"> '.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
                 echo tutor_kses_html($price_html);
                 echo tutor_kses_html($cart_html);

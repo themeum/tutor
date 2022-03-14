@@ -39,7 +39,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
             <div class="tutor-text-bold-h4 tutor-ftsz-lg-30"><?php the_title(); ?>
         </div>
     </div>
-    <div class="tutor-d-sm-flex tutor-align-items-center tutor-tutor-justify-content-between tutor-mt-28">
+    <div class="tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-mt-28">
         <div class="tutor-course-details-category tutor-text-medium-body tutor-color-text-primary tutor-d-flex tutor-align-items-end">
             <!-- <?php if (tutor_utils()->get_option('enable_course_author')) : ?>
                 <div class="tutor-course-author tutor-mr-15">
