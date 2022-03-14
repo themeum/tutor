@@ -89,13 +89,13 @@
 		display: none;
 		.tutor-icon-line-cross-line.close-withdraw-form-btn {
 			position: absolute;
-			right: 70px;
-			top: 70px;
+			right: 20px;
+			top: 20px;
 			font-size: 24px;
 			cursor: pointer;
 			@include breakpoint-max(mobile) {
 				right: 30px;
-   				top: 60px;
+				top: 60px;
 			}
 		}
 		& > div {
@@ -284,17 +284,15 @@
 		.withdraw-history-table-title h4 {
 			margin-top: 45px;
 		}
-		table {	
+		table {
 			.tutor-withdrawals-method {
 				display: grid;
 				grid-template-columns: 40px auto;
 				grid-gap: 15px;
 				align-items: center;
 				.tutor-withdrawals-method-icon {
-
 				}
 				.tutor-withdrawals-method-name {
-
 				}
 			}
 		}

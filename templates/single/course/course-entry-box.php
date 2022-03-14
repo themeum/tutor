@@ -60,9 +60,6 @@
 		if ( $is_enrolled ) {
 			ob_start();
 
-			// The user is enrolled anyway. No matter manual, free, purchased, woocommerce, edd, membership
-			do_action( 'tutor_course/single/actions_btn_group/before' );
-
 			// Course Info
 			$completed_lessons   = tutor_utils()->get_completed_lesson_count_by_course();
 			$completed_percent   = tutor_utils()->get_course_completed_percent();
@@ -98,6 +95,9 @@
 			<?php
 			$start_content = '';
 
+			// The user is enrolled anyway. No matter manual, free, purchased, woocommerce, edd, membership
+			do_action( 'tutor_course/single/actions_btn_group/before' );
+
 			// Show Start/Continue/Retake Button
 			if ( $lesson_url ) {
 				$button_class = 'tutor-is-fullwidth tutor-btn ' .
@@ -125,6 +125,8 @@
 					$start_content = ob_get_clean();
 			}
 			echo apply_filters( 'tutor_course/single/start/button', $start_content, get_the_ID() );
+
+			
 
 			// Show Course Completion Button.
 			if ( ! $is_completed_course ) {
@@ -226,7 +228,7 @@
 				if ( ! $meta['value'] ) {
 					continue;}
 				?>
-				<li class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
+				<li class="tutor-bs-d-flex tutor-bs-align-items-start tutor-bs-align-items-xl-center tutor-bs-justify-content-between">
 					<div class="flex-center">
 						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-text-primary"></span>
 						<span class="text-regular-caption tutor-color-text-hints tutor-ml-5">

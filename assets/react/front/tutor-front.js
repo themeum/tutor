@@ -437,7 +437,7 @@ jQuery(document).ready(function ($) {
 			data: data,
 			beforeSend: function () {
 				$form.find('.tutor-success-msg').remove();
-				$btn.addClass('updating-icon');
+				$btn.addClass('tutor-updating-message');
 			},
 			success: function (data) {
 				var Msg;
@@ -477,7 +477,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$btn.removeClass('updating-icon');
+				$btn.removeClass('tutor-updating-message');
 			},
 		});
 	});
@@ -502,7 +502,7 @@ jQuery(document).ready(function ($) {
 			type: 'POST',
 			data: data,
 			beforeSend: function () {
-				$btn.addClass('updating-icon');
+				$btn.addClass('tutor-updating-message');
 			},
 			success: function (res) {
 				if (res.success) {
@@ -510,7 +510,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$btn.removeClass('updating-icon');
+				$btn.removeClass('tutor-updating-message');
 			},
 		});
 	});

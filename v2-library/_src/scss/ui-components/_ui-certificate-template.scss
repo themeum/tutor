@@ -43,7 +43,7 @@
 		}
 
 		&.is-active {
-			color: $text-brand;
+			color: var(--tutor-primary-color);
 			background-color: $color-white;
 			box-shadow: 0px 1px 2px rgba(2, 11, 83, 0.2);
 			span {
@@ -168,7 +168,7 @@
 				border-radius: 6px;
 				&.tutor-is-outline {
 					background: transparent;
-					color: var(--tutor-primary);
+					color: var(--tutor-primary-color);
 
 					&:hover {
 						background-color: var(--tutor-primary-hover-color);
