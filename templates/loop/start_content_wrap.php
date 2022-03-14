@@ -5,4 +5,4 @@
  */
 ?>
 
-<div class="tutor-loop-course-container">
+<div class="tutor-course-listing-item-body tutor-px-20 tutor-py-18">

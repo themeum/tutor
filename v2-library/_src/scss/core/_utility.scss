@@ -1,0 +1,544 @@
+// Cursor
+.tutor-cursor-pointer {
+	cursor: pointer;
+}
+.tutor-valign-top {
+	vertical-align: top;
+}
+// width 100%
+.tutor-w-100 {
+	width: 100%;
+}
+// min-width 100%
+.tutor-mw-100 {
+	min-width: 100%;
+}
+// display
+.d-inline {
+	display: inline;
+}
+.d-inline-block {
+	display: inline-block;
+}
+.d-block {
+	display: block;
+}
+.d-flex {
+	display: flex;
+}
+.d-inline-flex {
+	display: inline-flex;
+}
+.align-items-center {
+	align-items: center;
+}
+
+.justify-content-center {
+	justify-content: center;
+}
+
+// color
+
+.tutor-text-success {
+	color: var(--tutor-success) !important;
+}
+
+.tutor-text-warning {
+	color: var(--tutor-warning) !important;
+}
+
+.tutor-text-danger {
+	color: var(--tutor-danger) !important;
+}
+
+.tutor-text-hints {
+	color: var(--tutor-text-hints) !important;
+}
+
+.tutor-text-dark {
+	color: var(--tutor-text-primary) !important;
+}
+
+.tutor-text-primary {
+	color: var(--tutor-primary) !important;
+}
+
+// bg
+
+.tutor-bg-dark {
+	background-color: var(--tutor-bg-dark);
+}
+
+.tutor-bg-grey {
+	background-color: var(--tutor-bg-grey);
+}
+
+.tutor-bg-primary {
+	background-color: var(--tutor-primary-color);
+}
+
+.tutor-bg-success {
+	background-color: var(--tutor-success);
+}
+
+.tutor-bg-warning {
+	background-color: var(--tutor-warning);
+}
+
+.tutor-bg-danger {
+	background-color: var(--tutor-danger);
+}
+
+.tutor-bg-white {
+	background-color: white !important;
+}
+
+.tutor-bg-light {
+	background-color: #fdfdfd;
+}
+
+.tutor-bg-gray-10 {
+	background-color: $bg-gray-10 !important;
+}
+
+.tutor-bg-transparent {
+	background-color: transparent !important;
+}
+// text/typography
+
+.tutor-text-nowrap {
+	white-space: nowrap;
+	&:not(.tutor-nowrap-nocut) {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+.tutor-nowrap-ellipsis {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tutor-line-clamp-2 {
+	display: block !important;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+}
+
+.tutor-line-clamp-3 {
+	display: block !important;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+}
+
+.tutor-line-clamp-4 {
+	display: block !important;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+}
+
+.tutor-text-hover-underline {
+	cursor: pointer;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.tutor-text-center {
+	text-align: center;
+}
+
+.tutor-text-left {
+	text-align: left;
+}
+
+.tutor-text-right {
+	text-align: right;
+}
+
+.tutor-text-justify {
+	text-align: justify;
+}
+
+.tutor-text-300,
+.tutor-text-light {
+	font-weight: 300;
+}
+
+.tutor-text-400,
+.tutor-text-regular {
+	font-weight: 400;
+}
+
+.tutor-text-500,
+.tutor-text-medium {
+	font-weight: 500;
+}
+
+.tutor-text-600,
+.tutor-text-semi-bold {
+	font-weight: 600;
+}
+
+.tutor-text-700,
+.tutor-text-bold {
+	font-weight: 700;
+}
+
+.tutor-text-800,
+.tutor-text-extra-bold {
+	font-weight: 800;
+}
+
+.tutor-text-900,
+.tutor-text-black {
+	font-weight: 900;
+}
+
+.tutor-text-normal {
+	font-style: normal;
+}
+
+.tutor-text-italic {
+	font-style: italic;
+}
+
+.tutor-text-uppercase,
+.tutor-text-uc {
+	text-transform: uppercase;
+}
+
+.tutor-text-lowercase,
+.tutor-text-lc {
+	text-transform: lowercase;
+}
+
+.tutor-text-capitalize {
+	text-transform: capitalize;
+}
+
+// spacing
+$sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 26, 28, 30, 32, 34, 35, 36, 40, 42, 44, 45,
+	46, 48, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 120, 150, 200;
+
+@each $size in $sizes {
+	// padding
+	.tutor-p-#{$size},
+	.tutor-padding-#{$size} {
+		padding: #{$size}px;
+	}
+	.tutor-pb-#{$size} {
+		padding-bottom: #{$size}px;
+	}
+	.tutor-pt-#{$size} {
+		padding-top: #{$size}px;
+	}
+	.tutor-pr-#{$size} {
+		padding-right: #{$size}px;
+	}
+	.tutor-pl-#{$size} {
+		padding-left: #{$size}px;
+	}
+	.tutor-px-#{$size} {
+		padding-left: #{$size}px;
+		padding-right: #{$size}px;
+	}
+	.tutor-py-#{$size} {
+		padding-top: #{$size}px;
+		padding-bottom: #{$size}px;
+	}
+
+	// margin
+	.tutor-m-#{$size},
+	.tutor-margin-#{$size} {
+		margin: #{$size}px;
+	}
+	.tutor-mb-#{$size} {
+		margin-bottom: #{$size}px;
+	}
+	.tutor-mt-#{$size} {
+		margin-top: #{$size}px;
+	}
+	.tutor-mr-#{$size} {
+		margin-right: #{$size}px;
+	}
+	.tutor-ml-#{$size} {
+		margin-left: #{$size}px;
+	}
+	.tutor-mx-#{$size} {
+		margin-left: #{$size}px;
+		margin-right: #{$size}px;
+	}
+	.tutor-my-#{$size} {
+		margin-top: #{$size}px;
+		margin-bottom: #{$size}px;
+	}
+	// sm
+	@include breakpoint-min(mobile) {
+		// padding
+		.tutor-p-sm-#{$size},
+		.tutor-padding-sm-#{$size} {
+			padding: #{$size}px !important;
+		}
+		.tutor-pb-sm-#{$size} {
+			padding-bottom: #{$size}px !important;
+		}
+		.tutor-pt-sm-#{$size} {
+			padding-top: #{$size}px !important;
+		}
+		.tutor-pr-sm-#{$size} {
+			padding-right: #{$size}px !important;
+		}
+		.tutor-pl-sm-#{$size} {
+			padding-left: #{$size}px !important;
+		}
+		.tutor-px-sm-#{$size} {
+			padding-left: #{$size}px !important;
+			padding-right: #{$size}px !important;
+		}
+		.tutor-py-sm-#{$size} {
+			padding-top: #{$size}px !important;
+			padding-bottom: #{$size}px !important;
+		}
+
+		// margin
+		.tutor-m-sm-#{$size},
+		.tutor-margin-sm-#{$size} {
+			margin: #{$size}px !important;
+		}
+		.tutor-mb-sm-#{$size} {
+			margin-bottom: #{$size}px !important;
+		}
+		.tutor-mt-sm-#{$size} {
+			margin-top: #{$size}px !important;
+		}
+		.tutor-mr-sm-#{$size} {
+			margin-right: #{$size}px !important;
+		}
+		.tutor-ml-sm-#{$size} {
+			margin-left: #{$size}px !important;
+		}
+		.tutor-mx-sm-#{$size} {
+			margin-left: #{$size}px !important;
+			margin-right: #{$size}px !important;
+		}
+		.tutor-my-sm-#{$size} {
+			margin-top: #{$size}px !important;
+			margin-bottom: #{$size}px !important;
+		}
+	}
+	// md
+	@include breakpoint-min(tablet) {
+		// padding
+		.tutor-p-md-#{$size},
+		.tutor-padding-md-#{$size} {
+			padding: #{$size}px !important;
+		}
+		.tutor-pb-md-#{$size} {
+			padding-bottom: #{$size}px !important;
+		}
+		.tutor-pt-md-#{$size} {
+			padding-top: #{$size}px !important;
+		}
+		.tutor-pr-md-#{$size} {
+			padding-right: #{$size}px !important;
+		}
+		.tutor-pl-md-#{$size} {
+			padding-left: #{$size}px !important;
+		}
+		.tutor-px-md-#{$size} {
+			padding-left: #{$size}px !important;
+			padding-right: #{$size}px !important;
+		}
+		.tutor-py-md-#{$size} {
+			padding-top: #{$size}px !important;
+			padding-bottom: #{$size}px !important;
+		}
+
+		// margin
+		.tutor-m-md-#{$size},
+		.tutor-margin-md-#{$size} {
+			margin: #{$size}px !important;
+		}
+		.tutor-mb-md-#{$size} {
+			margin-bottom: #{$size}px !important;
+		}
+		.tutor-mt-md-#{$size} {
+			margin-top: #{$size}px !important;
+		}
+		.tutor-mr-md-#{$size} {
+			margin-right: #{$size}px !important;
+		}
+		.tutor-ml-md-#{$size} {
+			margin-left: #{$size}px !important;
+		}
+		.tutor-mx-md-#{$size} {
+			margin-left: #{$size}px !important;
+			margin-right: #{$size}px !important;
+		}
+		.tutor-my-md-#{$size} {
+			margin-top: #{$size}px !important;
+			margin-bottom: #{$size}px !important;
+		}
+	}
+	// lg
+	@include breakpoint-min(desktop) {
+		// padding
+		.tutor-p-lg-#{$size},
+		.tutor-padding-lg-#{$size} {
+			padding: #{$size}px !important;
+		}
+		.tutor-pb-lg-#{$size} {
+			padding-bottom: #{$size}px !important;
+		}
+		.tutor-pt-lg-#{$size} {
+			padding-top: #{$size}px !important;
+		}
+		.tutor-pr-lg-#{$size} {
+			padding-right: #{$size}px !important;
+		}
+		.tutor-pl-lg-#{$size} {
+			padding-left: #{$size}px !important;
+		}
+		.tutor-px-lg-#{$size} {
+			padding-left: #{$size}px !important;
+			padding-right: #{$size}px !important;
+		}
+		.tutor-py-lg-#{$size} {
+			padding-top: #{$size}px !important;
+			padding-bottom: #{$size}px !important;
+		}
+
+		// margin
+		.tutor-m-lg-#{$size},
+		.tutor-margin-lg-#{$size} {
+			margin: #{$size}px !important;
+		}
+		.tutor-mb-lg-#{$size} {
+			margin-bottom: #{$size}px !important;
+		}
+		.tutor-mt-lg-#{$size} {
+			margin-top: #{$size}px !important;
+		}
+		.tutor-mr-lg-#{$size} {
+			margin-right: #{$size}px !important;
+		}
+		.tutor-ml-lg-#{$size} {
+			margin-left: #{$size}px !important;
+		}
+		.tutor-mx-lg-#{$size} {
+			margin-left: #{$size}px !important;
+			margin-right: #{$size}px !important;
+		}
+		.tutor-my-lg-#{$size} {
+			margin-top: #{$size}px !important;
+			margin-bottom: #{$size}px !important;
+		}
+	}
+	// xl
+	@include breakpoint-min(desktop-lg) {
+		// padding
+		.tutor-p-xl-#{$size},
+		.tutor-padding-xl-#{$size} {
+			padding: #{$size}px !important;
+		}
+		.tutor-pb-xl-#{$size} {
+			padding-bottom: #{$size}px !important;
+		}
+		.tutor-pt-xl-#{$size} {
+			padding-top: #{$size}px !important;
+		}
+		.tutor-pr-xl-#{$size} {
+			padding-right: #{$size}px !important;
+		}
+		.tutor-pl-xl-#{$size} {
+			padding-left: #{$size}px !important;
+		}
+		.tutor-px-xl-#{$size} {
+			padding-left: #{$size}px !important;
+			padding-right: #{$size}px !important;
+		}
+		.tutor-py-xl-#{$size} {
+			padding-top: #{$size}px !important;
+			padding-bottom: #{$size}px !important;
+		}
+
+		// margin
+		.tutor-m-xl-#{$size},
+		.tutor-margin-xl-#{$size} {
+			margin: #{$size}px !important;
+		}
+		.tutor-mb-xl-#{$size} {
+			margin-bottom: #{$size}px !important;
+		}
+		.tutor-mt-xl-#{$size} {
+			margin-top: #{$size}px !important;
+		}
+		.tutor-mr-xl-#{$size} {
+			margin-right: #{$size}px !important;
+		}
+		.tutor-ml-xl-#{$size} {
+			margin-left: #{$size}px !important;
+		}
+		.tutor-mx-xl-#{$size} {
+			margin-left: #{$size}px !important;
+			margin-right: #{$size}px !important;
+		}
+		.tutor-my-xl-#{$size} {
+			margin-top: #{$size}px !important;
+			margin-bottom: #{$size}px !important;
+		}
+	}
+}
+
+// others
+.tutor-border,
+.tutor-bordered-box {
+	border: 1px solid var(--tutor-border-color);
+}
+.tutor-border-left {
+	border-left: 1px solid var(--tutor-border-color);
+}
+.tutor-border-right {
+	border-right: 1px solid var(--tutor-border-color);
+}
+.tutor-border-top {
+	border-top: 1px solid var(--tutor-border-color);
+}
+.tutor-border-bottom {
+	border-bottom: 1px solid var(--tutor-border-color);
+}
+
+// radius
+$radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;
+
+@each $r in $radius {
+	.tutor-radius-#{$r} {
+		border-radius: #{$r}px;
+	}
+}
+
+$border: (
+	'p40' $primary-40,
+	'p50' $primary-50,
+	'p60' $primary-60,
+	'sl10' $stroke-light-10,
+	'sl20' $stroke-light-20,
+	'sl30' $stroke-light-30
+);
+@each $pre, $b in $border {
+	.tutor-border-#{$pre} {
+		border: 1px solid #{$b};
+	}
+}

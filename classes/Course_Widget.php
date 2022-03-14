@@ -173,9 +173,9 @@ class Course_Widget extends \WP_Widget {
 
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>"><?php esc_attr_e( 'Count:', 'tutor' ); ?></label>
-			<input  class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'count' ) ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>"> <br />
+			<input  class="widefat tutor-form-number-verify" id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" name="<?php echo esc_attr($this->get_field_name( 'count' ) ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>" min="1"> <br />
 			<span style="color: #AAAAAA">
-				<?php _e( 'Total results you like to show', 'tutor' ); ?>
+				<?php _e('Total results you like to show', 'tutor'); ?>
 			</span>
 		</p>
 

@@ -12,99 +12,124 @@
  * @version 1.4.3
  */
 
-if ( ! tutor_utils()->is_instructor() ) {
+if ( ! tutor_utils()->is_instructor(0, true) ) {
 	include __DIR__ . '/reviews/given-reviews.php';
 	return;
 }
 
 // Pagination Variable
-$per_page     = tutils()->get_option( 'pagination_per_page', 20 );
-$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
+$per_page     = tutor_utils()->get_option( 'pagination_per_page', 20 );
+$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', $_GET ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
 $reviews     = tutor_utils()->get_reviews_by_instructor( get_current_user_id(), $offset, $per_page );
 $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 ?>
-
 	<div class="tutor-dashboard-content-inner">
-		<?php
-		if ( current_user_can( tutor()->instructor_role ) ) {
-			?>
+		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-15"><?php _e( 'Reviews', 'tutor' ); ?></div>
+		<?php if ( current_user_can( tutor()->instructor_role ) ) : ?>
 			<div class="tutor-dashboard-inline-links">
 				<ul>
-					<li class="active"><a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ) ); ?>"> <?php _e( 'Received', 'tutor' ); ?> (<?php echo esc_attr( $reviews->count ); ?>)</a> </li>
+					<li class="active">
+						<a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ); ?>"> 
+							<?php _e( 'Received', 'tutor' ); ?> (<?php echo $reviews->count; ?>)
+						</a> 
+					</li>
 					<?php if ( $given_count ) : ?>
-						<li> <a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ) ); ?>"> <?php _e( 'Given', 'tutor' ); ?> (<?php echo esc_attr( $given_count ); ?>)</a> </li>
+						<li> 
+							<a href="<?php echo tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ); ?>"> 
+								<?php _e( 'Given', 'tutor' ); ?> (<?php echo $given_count; ?>)
+							</a> 
+						</li>
 					<?php endif; ?>
 				</ul>
 			</div>
-		<?php } ?>
+		<?php endif; ?>
 
-		<div class="tutor-dashboard-reviews-wrap">
-
-			<?php
-			if ( $reviews->count ) {
-				?>
-				<div class="tutor-dashboard-reviews">
-					<p class="tutor-dashboard-pagination-results-stats">
-						<?php
-						echo sprintf( __( 'Showing results %1$d to %2$d out of %3$d', 'tutor' ), $offset + 1, min( $reviews->count, $offset + 1 + tutor_utils()->count( $reviews->results ) ), $reviews->count );
-						?>
-					</p>
-
-					<?php
-					foreach ( $reviews->results as $review ) {
-						$profile_url = tutor_utils()->profile_url( $review->user_id );
-						?>
-						<div class="tutor-dashboard-single-review tutor-review-<?php echo esc_attr( $review->comment_ID ); ?>">
-							<div class="tutor-dashboard-review-header">
-
-								<div class="tutor-dashboard-review-heading">
-									<div class="tutor-dashboard-review-title">
-										<?php _e( 'Course: ', 'tutor' ); ?>
-										<a href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>"><?php echo get_the_title( $review->comment_post_ID ); ?></a>
+		<?php if ( $reviews->count ) : ?>
+			<table class="tutor-ui-table tutor-ui-table-responsive table-reviews">
+				<thead>
+					<tr>
+						<th>
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
+								<?php esc_html_e( 'Student', 'tutor' ); ?>
+							</div>
+						</th>
+						<th>
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
+								<?php esc_html_e( 'Date', 'tutor' ); ?>
+							</div>
+						</th>
+						<th>
+							<div class="tutor-text-regular-small tutor-color-text-subsued">
+								<?php esc_html_e( 'Feedback', 'tutor' ); ?>
+							</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+				foreach ( $reviews->results as $review ) {
+					$user_data    = get_userdata( $review->user_id );
+					// $profile_url  = tutor_utils()->profile_url( $review->user_id );
+					$avatar_url   = get_avatar_url( $review->user_id );
+					$student_name = $user_data->display_name;
+					?>
+						<tr>
+							<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>" class="column-fullwidth">
+								<div class="td-avatar">
+									<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
+									<span class="tutor-text-medium-body tutor-color-text-primary">
+									<?php esc_html_e( $student_name ); ?>
+									</span>
+								</div>
+							</td>
+							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
+								<div class="tutor-text-medium-caption tutor-color-text-primary">
+								<?php
+								$date = explode( ',', tutor_get_formated_date( null, $review->comment_date ) );
+								echo '<span>'.$date[0].'</span>' . '<br />' . '<span class="tutor-fweight-400">'.$date[1].'</span>';
+								?>
+								</div>
+							</td>
+							<td data-th="<?php esc_html_e( 'Feedback', 'tutor' ); ?>">
+								<div class="td-feedback">
+									<div class="td-tutor-rating tutor-text-regular-body tutor-color-text-subsued">
+										<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?>
+									</div>
+									<div class="tutor-text-regular-body tutor-color-text-subsued tutor-mt-10">
+										<?php echo htmlspecialchars( stripslashes( $review->comment_content ) ); ?>
+									</div>
+									<div class="course-name tutor-text-regular-small tutor-color-text-title tutor-mb-0">
+										<span class="tutor-text-medium-small"><?php esc_html_e( 'Course', 'tutor' ); ?>:</span>&nbsp;
+										<span data-href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>">
+											<?php esc_html_e( get_the_title( $review->comment_post_ID ) ); ?>
+										</span>
 									</div>
 								</div>
-							</div>
-							<div class="individual-dashboard-review-body">
-								<div class="individual-star-rating-wrap">
-									<?php tutor_utils()->star_rating_generator( $review->rating ); ?>
-									<p class="review-meta"><?php echo esc_attr( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $review->comment_date ) ) ) ); ?></p>
-								</div>
-
-								<?php echo wp_kses_post( wpautop( stripslashes( $review->comment_content ) ) ); ?>
-							</div>
-						</div>
+							</td>
+						</tr>
 						<?php
-					}
-					?>
-				</div>
-				<?php
-			} else {
+				}
 				?>
-				<div class="tutor-dashboard-content-inner">
-					<p><?php _e( "Sorry, but you are looking for something that isn't here.", 'tutor' ); ?></p>
-				</div>
-				<?php
-			}
-			?>
-
-		</div>
+				</tbody>
+			</table>
+		<?php else : ?>
+			<div class="tutor-dashboard-content-inner">
+				<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+			</div>
+		<?php endif; ?>
 	</div>
-
 <?php
-if ( $reviews->count ) {
-	?>
-	<div class="tutor-pagination">
-		<?php
-		echo paginate_links(
-			array(
-				'format'  => '?current_page=%#%',
-				'current' => $current_page,
-				'total'   => ceil( $reviews->count / $per_page ),
-			)
-		);
-		?>
-	</div>
-	<?php
-}
+
+
+
+$pagination_data = array(
+	'total_items' => $reviews->count,
+	'per_page'    => $per_page,
+	'paged'       => $current_page,
+);
+$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+
+?>

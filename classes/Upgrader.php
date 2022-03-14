@@ -12,7 +12,6 @@ class Upgrader {
 		add_action( 'admin_init', array( $this, 'init_upgrader' ) );
 
 		$base_name = tutor()->basename;
-		add_action( 'in_plugin_update_message-' . $base_name, array( $this, 'in_plugin_update_message' ), 10, 2 );
 
 		/**
 		 * Installing Gradebook Addon from TutorPro
@@ -59,30 +58,6 @@ class Upgrader {
 		}
 	}
 
-
-	public function in_plugin_update_message( $args, $response ) {
-		?>
-			</p>
-			<p class="tutor-v2-upgrade-notice">
-				<h3 style="margin-top:0">Before You Update</h3>
-
-				Please make a Backup before you upgrade to the latest Tutor LMS! Make sure you are using:
-
-				<ul style="list-style-type: disc; list-style-position: inside; padding-left: 45px;">
-					<li>WordPress version: At least 4.5</li>
-					<li>PHP version: At least 7.0</li>
-				</ul>
-
-				We made sure the latest Tutor LMS works with your essential plugins, but there is always room for improvements. The latest update includes substantial changes to the plugin. Make sure you first update your website in a staging environment.
-
-				<h3>Compatibility Alert</h3>
-				In our testing, we made the latest Tutor LMS work with all our plugins. Some plugins may not work with the latest version of Tutor LMS. To avoid issues, make sure they are all up to date and compatible.
-			</p>
-			<p style="display:none;">
-		<?php
-	}
-
-
 	/**
 	 * Installing Gradebook if Tutor Pro exists
 	 *
@@ -99,7 +74,7 @@ class Upgrader {
 
 		if ( ! $exists_gradebook_table ) {
 			$gradebook_table = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks} (
-				gradebook_id int(11) NOT NULL AUTO_INCREMENT,
+				gradebook_id bigint(20) NOT NULL AUTO_INCREMENT,
 				grade_name varchar(50) DEFAULT NULL,
 				grade_point varchar(20) DEFAULT NULL,
 				grade_point_to varchar(20) DEFAULT NULL,
@@ -112,12 +87,12 @@ class Upgrader {
 		}
 		if ( ! $exists_gradebook_results_table ) {
 			$gradebook_results = "CREATE TABLE IF NOT EXISTS {$wpdb->tutor_gradebooks_results} (
-				gradebook_result_id int(11) NOT NULL AUTO_INCREMENT,
-				user_id int(11) DEFAULT NULL,
-				course_id int(11) DEFAULT NULL,
-				quiz_id int(11) DEFAULT NULL,
-				assignment_id int(11) DEFAULT NULL,
-				gradebook_id int(11) DEFAULT NULL,
+				gradebook_result_id bigint(20) NOT NULL AUTO_INCREMENT,
+				user_id bigint(20) DEFAULT NULL,
+				course_id bigint(20) DEFAULT NULL,
+				quiz_id bigint(20) DEFAULT NULL,
+				assignment_id bigint(20) DEFAULT NULL,
+				gradebook_id bigint(20) DEFAULT NULL,
 				result_for varchar(50) DEFAULT NULL,
 				grade_name varchar(50) DEFAULT NULL,
 				grade_point varchar(20) DEFAULT NULL,

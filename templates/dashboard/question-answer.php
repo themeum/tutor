@@ -5,85 +5,82 @@
  * @version 1.6.4
  */
 
-?>
+use TUTOR\Instructor;
 
-<h2><?php _e( 'Question & Answer', 'tutor' ); ?></h2>
-
-<?php
-$per_page     = 10;
-$current_page = max( 1, tutils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
-$offset       = ( $current_page - 1 ) * $per_page;
-
-$total_items = tutils()->get_total_qa_question();
-$questions   = tutils()->get_qa_questions( $offset, $per_page );
-
-if ( tutils()->count( $questions ) ) {
-	?>
-	<div class="tutor-dashboard-info-table-wrap tutor-dashboard-q-and-a">
-		<table class="tutor-dashboard-info-table">
-			<tr>
-				<th><?php _e( 'Question', 'tutor' ); ?></th>
-				<th><?php _e( 'Student', 'tutor' ); ?></th>
-				<th><?php _e( 'Course', 'tutor' ); ?></th>
-				<th><?php _e( 'Answer', 'tutor' ); ?></th>
-				<th></th>
-			</tr>
-			<?php
-			foreach ( $questions as $question ) {
-				?>
-				<tr id="tutor-dashboard-question-<?php echo esc_attr( $question->comment_ID ); ?>">
-					<td><a href="<?php echo esc_url( tutils()->get_tutor_dashboard_page_permalink( 'question-answer/answers?question_id=' . $question->comment_ID ) ); ?>"><?php echo esc_attr( $question->question_title ); ?></a></td>
-					<td><?php echo esc_attr( $question->display_name ); ?></td>
-					<td><?php echo esc_attr( $question->post_title ); ?></td>
-					<td><?php echo esc_attr( $question->answer_count ); ?></td>
-					<td>
-						<a href="#tutor-question-delete" class="tutor-dashboard-element-delete-btn" data-id="<?php echo esc_attr( $question->comment_ID ); ?>">
-							<i class="tutor-icon-garbage"></i> <?php _e( 'Delete', 'tutor' ); ?>
-						</a>
-					</td>
-				</tr>
-				<?php
-			}
-			?>
-		</table>
-		<div class="tutor-pagination">
-			<?php
-
-			echo paginate_links(
-				array(
-					'format'  => '?current_page=%#%',
-					'current' => $current_page,
-					'total'   => ceil( $total_items / $per_page ),
-				)
-			);
-			?>
-		</div>
-
-		<div class="tutor-frontend-modal" data-popup-rel="#tutor-question-delete" style="display: none">
-			<div class="tutor-frontend-modal-overlay"></div>
-			<div class="tutor-frontend-modal-content">
-				<button class="tm-close tutor-icon-line-cross"></button>
-
-				<div class="tutor-modal-body tutor-course-delete-popup">
-					<img src="<?php echo esc_url( tutor()->url . 'assets/images/delete-icon.png' ); ?>" alt="">
-					<h3><?php _e( 'Delete This Question?', 'tutor' ); ?></h3>
-					<p><?php _e( "You are going to delete this question, it can't be undone", 'tutor' ); ?></p>
-					<div class="tutor-modal-button-group">
-						<form action="" id="tutor-dashboard-delete-element-form">
-							<input type="hidden" name="action" value="tutor_delete_dashboard_question">
-							<input type="hidden" name="question_id" id="tutor-dashboard-delete-element-id" value="">
-							<button type="button" class="tutor-modal-btn-cancel"><?php _e( 'Cancel', 'tutor' ); ?></button>
-							<button type="submit" class="tutor-danger tutor-modal-element-delete-btn"><?php _e( 'Yes, Delete Question', 'tutor' ); ?></button>
-						</form>
-					</div>
-				</div>
-
-			</div> <!-- tutor-frontend-modal-content -->
-		</div> <!-- tutor-frontend-modal -->
-	</div>
-	<?php
-} else {
-	_e( 'No question is available', 'tutor' );
+if (isset($_GET['question_id'])) {
+    tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-single.php', array(
+        'question_id' => $_GET['question_id'],
+        'context' => 'frontend-dashboard-qna-single'
+    ));
+    return;
 }
 
+if (isset($_GET['view_as']) && in_array($_GET['view_as'], array('student', 'instructor'))) {
+    update_user_meta(get_current_user_id(), 'tutor_qa_view_as', $_GET['view_as']);
+}
+
+$is_instructor      = tutor_utils()->is_instructor(null, true);
+$view_option        = get_user_meta(get_current_user_id(), 'tutor_qa_view_as', true);
+$view_as            = $is_instructor ? ($view_option ? $view_option : 'instructor') : 'student';
+$as_instructor_url  = add_query_arg(array('view_as' => 'instructor'), tutor()->current_url);
+$as_student_url     = add_query_arg(array('view_as' => 'student'), tutor()->current_url);
+$qna_tabs           = \Tutor\Q_and_A::tabs_key_value($view_as=='student' ? get_current_user_id() : null);
+$active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'all';
+// pr($qna_tabs);
+?>
+
+<div class="tutor-frontend-dashboard-qna-header tutor-mb-32">
+    <div class="tutor-qna-header tutor-bs-d-flex tutor-bs-align-items-center">
+        <div class="tutor-text-medium-h5 tutor-color-text-primary">
+            <?php _e('Question & Answer', 'tutor'); ?>
+        </div>
+    </div>
+    <?php if ($is_instructor) : ?>
+        <div class="tutor-bs-col-auto">
+            <label class="tutor-form-toggle tutor-dashboard-qna-vew-as tutor-bs-d-flex tutor-bs-justify-content-end current-view-<?php echo $view_as == 'instructor' ? 'instructor' : 'student'; ?>">
+                <input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as == 'instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo $as_instructor_url; ?>" data-as_student_url="<?php echo $as_student_url; ?>" disabled="disabled" />
+                <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'student' ? 'checked' : 'unchecked'; ?>"><?php _e('Student', 'tutor'); ?></span>
+                <span class="tutor-form-toggle-control"></span>
+                <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'instructor' ? 'checked' : 'unchecked'; ?>"><?php _e('Instructor', 'tutor'); ?></span>
+            </label>
+        </div>
+    <?php endif; ?>
+
+    <?php // if($view_as=='instructor'): ?>
+        <div class="tutor-qna-filter <?php echo $is_instructor ? 'tutor-mt-22' : '' ?>" <?php if(!$is_instructor){ ?> style="justify-content: flex-end;" <?php } ?> >
+            <span class="tutor-text-regular-caption tutor-color-text-subsued"><?php _e('Sort By', 'tutor'); ?>:</span>
+            <select class="tutor-form-select tutor-select-redirector">
+                <?php
+                    foreach ($qna_tabs as $tab) {
+                        echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
+                            ' . $tab['title'] . '(' .$tab['value']. ')' . '
+                        </option>';
+                    }
+                ?>
+            </select>
+        </div>
+    <?php // endif; ?>
+</div>
+
+<?php
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$current_page = max(1, tutor_utils()->avalue_dot('current_page', $_GET));
+$offset = ($current_page - 1) * $per_page;
+
+$q_status = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : null;
+$asker_id = $view_as == 'instructor' ? null : get_current_user_id();
+$total_items = tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, $asker_id, $q_status, true);
+$questions = tutor_utils()->get_qa_questions($offset, $per_page, '', null, null, $asker_id, $q_status);
+
+tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
+    'qna_list' => $questions,
+    'context' => 'frontend-dashboard-qna-table-' . $view_as,
+    'view_as' => $view_as,
+    'qna_pagination' => array(
+        'base' => '?current_page=%#%',
+        'total_items' => $total_items,
+        'per_page' => $per_page,
+        'paged' => $current_page
+    )
+));
 ?>

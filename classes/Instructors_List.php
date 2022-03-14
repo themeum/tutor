@@ -1,31 +1,190 @@
 <?php
+/**
+ * Instructor List
+ *
+ * @package Instructor List
+ */
+
 namespace TUTOR;
+
+use TUTOR\Students_List;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Tutor_List_Table' ) ) {
-	include_once tutor()->path . 'classes/Tutor_List_Table.php';
-}
+use TUTOR\Backend_Page_Trait;
 
-class Instructors_List extends \Tutor_List_Table {
+class Instructors_List {
 
 	const INSTRUCTOR_LIST_PAGE = 'tutor-instructors';
 
-	function __construct() {
-		global $status, $page;
+	/**
+	 * Trait for utilities
+	 *
+	 * @var $page_title
+	 */
 
-		// Set parent defaults
-		parent::__construct(
+	use Backend_Page_Trait;
+	/**
+	 * Page Title
+	 *
+	 * @var $page_title
+	 */
+	public $page_title;
+
+	/**
+	 * Bulk Action
+	 *
+	 * @var $bulk_action
+	 */
+	public $bulk_action = true;
+
+	/**
+	 * Handle dependencies
+	 */
+	public function __construct() {
+		$this->page_title = __( 'Instructor', 'tutor' );
+		/**
+		 * Handle bulk action
+		 *
+		 * @since v2.0.0
+		 */
+		add_action( 'wp_ajax_tutor_instructor_bulk_action', array( $this, 'instructor_bulk_action' ) );
+	}
+
+	/**
+	 * Available tabs that will visible on the right side of page navbar
+	 *
+	 * @param string $search, instructor search | optional.
+	 * @param string $course_id, course id that belong to instructor | optional.
+	 * @param string $date, user registered date | optional.
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function tabs_key_value( $search = '', $course_id = '', $date = '' ): array {
+		$url     = get_pagenum_link();
+		$approve = tutor_utils()->get_total_instructors( $search, array( 'approved' ), $course_id, $date );
+		$pending = tutor_utils()->get_total_instructors( $search, array( 'pending' ), $course_id, $date );
+		$blocked = tutor_utils()->get_total_instructors( $search, array( 'blocked' ), $course_id, $date );
+		$tabs    = array(
 			array(
-				'singular' => 'instructor',     // singular name of the listed records
-				'plural'   => 'instructors',    // plural name of the listed records
-				'ajax'     => false,        // does this table support ajax?
+				'key'   => 'all',
+				'title' => __( 'All', 'tutor' ),
+				'value' => $approve + $pending + $blocked,
+				'url'   => $url . '&data=all',
+			),
+			array(
+				'key'   => 'approved',
+				'title' => __( 'Approve', 'tutor' ),
+				'value' => $approve,
+				'url'   => $url . '&data=approved',
+			),
+			array(
+				'key'   => 'pending',
+				'title' => __( 'Pending', 'tutor' ),
+				'value' => $pending,
+				'url'   => $url . '&data=pending',
+			),
+			array(
+				'key'   => 'blocked',
+				'title' => __( 'Block', 'tutor' ),
+				'value' => $blocked,
+				'url'   => $url . '&data=blocked',
+			),
+		);
+		return $tabs;
+	}
+
+	/**
+	 * Prepare bulk actions that will show on dropdown options
+	 *
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function prpare_bulk_actions(): array {
+		$actions = array(
+			$this->bulk_action_default(),
+			$this->bulk_action_approved(),
+			$this->bulk_action_pending(),
+			$this->bulk_action_blocked(),
+		);
+		return $actions;
+	}
+
+	/**
+	 * Handle bulk action for instructor delete
+	 *
+	 * @return string JSON response.
+	 * @since v2.0.0
+	 */
+	public function instructor_bulk_action() {
+		// check nonce.
+		tutor_utils()->checking_nonce();
+		$action                                = isset( $_POST['bulk-action'] ) ? sanitize_text_field( $_POST['bulk-action'] ) : '';
+		$bulk_ids                              = isset( $_POST['bulk-ids'] ) ? sanitize_text_field( $_POST['bulk-ids'] ) : '';
+		isset( $_POST['bulkIds'] ) ? $bulk_ids = sanitize_text_field( $_POST['bulkIds'] ) : 0;
+
+		if ( '' === $action || '' === $bulk_ids ) {
+			return wp_send_json_error();
+		}
+		if ( 'delete' === $action ) {
+			// Delete user from student_list class.
+			do_action( 'tutor_before_instructor_delete', $bulk_ids );
+			$response = Students_List::delete_students( $bulk_ids );
+			do_action( 'tutor_after_instructor_delete', $bulk_ids );
+		} else {
+			do_action( 'tutor_before_instructor_update', $bulk_ids );
+			$response = self::update_instructors( $action, $bulk_ids );
+			do_action( 'tutor_after_instructor_delete', $bulk_ids );
+		}
+
+		$message = 'Instructor status updated';
+
+		return true === $response ? wp_send_json_success(array('status'=>$message)) : wp_send_json_error();
+		exit;
+	}
+
+	/**
+	 * Execute bulk action for enrollments ex: complete | cancel
+	 *
+	 * @param string $status hold status for updating.
+	 * @param string $users_ids ids that need to update.
+	 * @return bool
+	 * @since v2.0.0
+	 */
+	public static function update_instructors( $status, $user_ids ): bool {
+		global $wpdb;
+		$status           = sanitize_text_field( $status );
+		$instructor_table = $wpdb->usermeta;
+		$update           = $wpdb->query(
+			$wpdb->prepare(
+				" UPDATE {$instructor_table}
+					SET meta_value = %s
+					WHERE user_id IN ($user_ids)
+						AND meta_key = %s
+				",
+				$status,
+				'_tutor_instructor_status'
 			)
 		);
+		// Remove role.
+		if ( 'pending' === $status || 'blocked' === $status ) {
+			$arr = explode( ',', $user_ids );
+			foreach ( $arr as $instructor_id ) {
+				$instructor_id = (int) sanitize_text_field( $instructor_id );
+				self::remove_instructor_role( $instructor_id, $status );
+			}
+		}
 
-		// $this->process_bulk_action();
+		if ( 'approved' === $status ) {
+			$arr = explode( ',', $user_ids );
+			foreach ( $arr as $instructor_id ) {
+				$instructor_id = (int) sanitize_text_field( $instructor_id );
+				self::add_instructor_role( $instructor_id, $status );
+			}
+		}
+		return false === $update ? false : true;
 	}
 
 	function column_default( $item, $column_name ) {
@@ -44,12 +203,14 @@ class Instructors_List extends \Tutor_List_Table {
 		global $wpdb;
 		$course_post_type = tutor()->course_post_type;
 
-		$total_course = (int) $wpdb->get_var( $wpdb->prepare( 
-			"SELECT count(ID) from {$wpdb->posts} 
-			WHERE post_author=%d AND post_type=%s ", 
-			$item->ID, 
-			$course_post_type 
-		) );
+		$total_course = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(ID) from {$wpdb->posts}
+			WHERE post_author=%d AND post_type=%s ",
+				$item->ID,
+				$course_post_type
+			)
+		);
 
 		echo $total_course;
 	}
@@ -59,10 +220,26 @@ class Instructors_List extends \Tutor_List_Table {
 	 *
 	 * Completed Course by User
 	 */
+
 	function column_status( $item ) {
-		$status      = tutor_utils()->instructor_status( $item->ID, false );
-		$status_name = tutor_utils()->instructor_status( $item->ID );
-		echo '<span class="tutor-status-context tutor-status-' . $status . '-context">' . $status_name . '</span>';
+		// Build row actions
+		$actions = array();
+
+		$status = tutor_utils()->instructor_status( $item->ID, false );
+
+		switch ( $status ) {
+			case 'pending':
+				$actions['approved'] = sprintf( '<span class="tutor-badge-label label-warning">' . __( 'Pending', 'tutor' ) . '</span>' );
+				break;
+			case 'approved':
+				$actions['blocked'] = sprintf( '<span class="tutor-badge-label label-success">' . __( 'Approved', 'tutor' ) . '</span>' );
+				break;
+			case 'blocked':
+				$actions['approved'] = sprintf( '<span class="tutor-badge-label label-danger">' . __( 'Blocked', 'tutor' ) . '</span>' );
+				break;
+		}
+
+		return $this->row_actions( $actions );
 	}
 
 	function column_display_name( $item ) {
@@ -73,13 +250,13 @@ class Instructors_List extends \Tutor_List_Table {
 
 		switch ( $status ) {
 			case 'pending':
-				$actions['approved'] = sprintf( '<a class="instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 			case 'approved':
-				$actions['blocked'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Block?', 'tutor' ) . '" class="instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
+				$actions['blocked'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
 				break;
 			case 'blocked':
-				$actions['approved'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Un Block?', 'tutor' ) . '" class="instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Unblock', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				$actions['approved'] = sprintf( '<a data-prompt-message="' . __( 'Sure to Un Block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Unblock', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
 				break;
 		}
 
@@ -100,6 +277,27 @@ class Instructors_List extends \Tutor_List_Table {
 			$item->ID,
 			$this->row_actions( $actions )
 		);
+	}
+
+	function column_action( $item ) {
+		// Build row actions
+		$actions = array();
+
+		$status = tutor_utils()->instructor_status( $item->ID, false );
+
+		switch ( $status ) {
+			case 'pending':
+				$actions['approved'] = sprintf( '<a class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				break;
+			case 'approved':
+				$actions['blocked'] = sprintf( '<a data-title="' . ( '' ) . '" data-prompt-message="' . __( 'Are you sure, want to block?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="blocked" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Block', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'blocked', $item->ID );
+				break;
+			case 'blocked':
+				$actions['approved'] = sprintf( '<a data-title="' . ( '' ) . '" data-prompt-message="' . __( 'Are you sure, want to approve?', 'tutor' ) . '" class="btn-outline tutor-btn instructor-action" data-action="approve" data-instructor-id="' . $item->ID . '" href="?page=%s&action=%s&instructor=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::INSTRUCTOR_LIST_PAGE, 'approve', $item->ID );
+				break;
+		}
+
+		return $this->row_actions( $actions );
 	}
 
 	function column_cb( $item ) {
@@ -139,56 +337,17 @@ class Instructors_List extends \Tutor_List_Table {
 		return $sortable_columns;
 	}
 
-	function get_bulk_actions() {
-		$actions = array(
-			'delete' => 'Delete',
-		);
-		return $actions;
-	}
-
+	/**
+	 * Handle single instructor approve | block action
+	 */
 	function process_bulk_action() {
+		$instructor_id = (int) sanitize_text_field( $_GET['instructor'] );
 		if ( 'approve' === $this->current_action() ) {
-			$instructor_id = (int) $_GET['instructor'];
-
-			do_action( 'tutor_before_approved_instructor', $instructor_id );
-
-			update_user_meta( $instructor_id, '_tutor_instructor_status', 'approved' );
-			update_user_meta( $instructor_id, '_tutor_instructor_approved', tutor_time() );
-
-			$instructor = new \WP_User( $instructor_id );
-			$instructor->add_role( tutor()->instructor_role );
-
-			// TODO: send E-Mail to this user about instructor approval, should via hook
-			do_action( 'tutor_after_approved_instructor', $instructor_id );
+			self::add_instructor_role( $instructor_id, 'approved' );
 		}
 
 		if ( 'blocked' === $this->current_action() ) {
-			$instructor_id = (int) $_GET['instructor'];
-
-			do_action( 'tutor_before_blocked_instructor', $instructor_id );
-			update_user_meta( $instructor_id, '_tutor_instructor_status', 'blocked' );
-
-			$instructor = new \WP_User( $instructor_id );
-			$instructor->remove_role( tutor()->instructor_role );
-			do_action( 'tutor_after_blocked_instructor', $instructor_id );
-
-			// TODO: send E-Mail to this user about instructor blocked, should via hook
-		}
-
-		// Detect when a bulk action is being triggered...
-		if ( 'delete' === $this->current_action() ) {
-
-			$delete_instructors = tutor_sanitize_data($_GET['instructor']);
-			if ( count( $delete_instructors ) ) {
-				foreach ( $delete_instructors as $instructor ) {
-					do_action( 'tutor_insctructor_before_delete', $instructor );
-
-					wp_delete_user( $instructor );
-
-					do_action( 'tutor_insctructor_after_delete', $instructor );
-
-				}
-			}
+			self::add_instructor_role( $instructor_id, 'blocked' );
 		}
 	}
 
@@ -225,5 +384,47 @@ class Instructors_List extends \Tutor_List_Table {
 				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
+	}
+
+	/**
+	 * Initialize instructor_role to a user
+	 *
+	 * @param int    $instructor_id | user id that need to add role.
+	 * @param string $status | status that will added with role (approved).
+	 * @return void
+	 */
+	protected static function add_instructor_role( int $instructor_id, string $status ) {
+		$instructor_id = sanitize_text_field( $instructor_id );
+		$status        = sanitize_text_field( $status );
+
+		do_action( 'tutor_before_approved_instructor', $instructor_id );
+
+		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
+		update_user_meta( $instructor_id, '_tutor_instructor_approved', tutor_time() );
+
+		$instructor = new \WP_User( $instructor_id );
+		$instructor->add_role( tutor()->instructor_role );
+
+		// TODO: send E-Mail to this user about instructor approval, should via hook.
+		do_action( 'tutor_after_approved_instructor', $instructor_id );
+	}
+
+	/**
+	 * Initialize instructor_role to a user
+	 *
+	 * @param int    $instructor_id | user id that need to add role.
+	 * @param string $status | status that will added with role (approved).
+	 * @return void
+	 */
+	protected static function remove_instructor_role( int $instructor_id, string $status ) {
+		$instructor_id = sanitize_text_field( $instructor_id );
+		$status        = sanitize_text_field( $status );
+
+		do_action( 'tutor_before_blocked_instructor', $instructor_id );
+		update_user_meta( $instructor_id, '_tutor_instructor_status', $status );
+
+		$instructor = new \WP_User( $instructor_id );
+		$instructor->remove_role( tutor()->instructor_role );
+		do_action( 'tutor_after_blocked_instructor', $instructor_id );
 	}
 }

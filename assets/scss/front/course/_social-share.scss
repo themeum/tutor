@@ -1,0 +1,22 @@
+.tutor-social-share-wrap {
+	button {
+		margin-right: 16px;
+		border: none;
+		padding: 8px 10px;
+		border-radius: 6px;
+		color: white;
+		cursor: pointer;
+
+		span {
+			font-style: normal;
+			font-weight: 500;
+			font-size: 15px;
+			color: #ffffff;
+		}
+	}
+	.tutor_share {
+		&.s_linkedin i {
+			margin-top: -2px;
+		}
+	}
+}

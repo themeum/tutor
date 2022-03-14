@@ -31,7 +31,7 @@ class Gutenberg {
 		global $pagenow;
 		if ( 'widgets.php' !== $pagenow ) {
 			wp_register_script(
-				'tutor-student-registration-block', tutor()->url . 'assets/js/gutenberg_blocks.js', array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' )
+				'tutor-student-registration-block', tutor()->url . 'assets/js/lib/gutenberg_blocks.js', array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' )
 			);
 		}
 
@@ -60,6 +60,10 @@ class Gutenberg {
 				'editor_script'   => 'tutor-student-registration-block',
 				'render_callback' => array( $this, 'render_block_tutor_dashboard_menu' ),
 			) );
+		} else {
+			wp_localize_script( 'tutor-student-registration-block', '_tutor_gutenberg_block_data', array(
+                'is_wp_version_5_9' => 'false',
+            ) );
 		}
 	}
 
@@ -94,7 +98,7 @@ class Gutenberg {
 
 	//For editor
 	public function render_block_tutor(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$shortcode = sanitize_text_field($_POST['shortcode']);
 		

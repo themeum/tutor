@@ -1,0 +1,81 @@
+// Helpers
+@mixin appearNone {
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+}
+
+// Masonry Grid
+@mixin masonryGrid($colCount, $colGap, $rowGap) {
+	columns: $colCount;
+	row-gap: $rowGap;
+	column-gap: $colGap;
+	> * {
+		break-inside: avoid;
+		margin-bottom: $rowGap;
+	}
+
+	@supports (grid-template-rows: masonry) {
+		display: grid;
+		grid-template-columns: repeat($colCount, 1fr);
+		grid-template-rows: masonry;
+		grid-auto-flow: dense;
+		> * {
+			margin-bottom: 0em;
+		}
+	}
+}
+
+// Dashed border -> width, gap, colors(optional)
+@mixin getDashedBorder($width: 2px, $gap: 15px, $color1: orange, $color2: $color1, $color3: $color1, $color4: $color1) {
+	--borderWidth: #{$width};
+	--borderGap: #{$gap};
+	background-image: linear-gradient(to right, $color1 50%, rgba(255, 255, 255, 0) 0%),
+		linear-gradient($color2 50%, rgba(255, 255, 255, 0) 0%),
+		linear-gradient(to right, $color3 50%, rgba(255, 255, 255, 0) 0%),
+		linear-gradient($color4 50%, rgba(255, 255, 255, 0) 0%);
+	background-position: top, right, bottom, left;
+	background-repeat: repeat-x, repeat-y;
+	background-size: var(--borderGap) var(--borderWidth), var(--borderWidth) var(--borderGap);
+}
+
+// @include responsiveGrid(**px, **fr);
+@mixin responsiveGrid($min, $max) {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax($min, $max));
+}
+
+@mixin flexCenter {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@mixin triangleRibbonStar {
+	content: '';
+	position: absolute;
+	right: -1px;
+	top: -1px;
+	width: 26px;
+	height: 26px;
+	background: #3e64de;
+	color: #fff;
+	clip-path: polygon(100% 0, 0 0, 100% 100%);
+	border-radius: 0px 5px 0px 0px;
+	transition: 200ms;
+	background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.91728 2.33301C6.98861 2.33348 7.05929 2.34669 7.12598 2.37202C7.19764 2.39504 7.26396 2.43218 7.32103 2.48125C7.37943 2.53622 7.4259 2.60261 7.45756 2.6763L8.63177 5.06371L11.2884 5.45381C11.3645 5.46335 11.4377 5.4893 11.5029 5.52988C11.565 5.56953 11.6214 5.61743 11.6707 5.67227C11.7124 5.7317 11.744 5.7976 11.7643 5.86732C11.7833 5.93195 11.7931 5.99891 11.7935 6.06627C11.7945 6.13854 11.7784 6.21002 11.7467 6.27497C11.7144 6.33838 11.6722 6.3963 11.6219 6.44662L9.68894 8.33276L10.1454 10.9893C10.1601 11.0601 10.1601 11.1331 10.1454 11.2039C10.1292 11.2731 10.1015 11.339 10.0634 11.3989C10.0277 11.4611 9.97919 11.515 9.92105 11.5569C9.80242 11.6419 9.65634 11.6795 9.51144 11.6623C9.4421 11.6521 9.37565 11.6275 9.31639 11.5901L6.91728 10.3515L4.52596 11.5901C4.4667 11.6275 4.40025 11.6521 4.33091 11.6623C4.18602 11.6795 4.03993 11.6419 3.9213 11.5569C3.86317 11.515 3.81463 11.4611 3.77892 11.3989C3.74081 11.339 3.71311 11.2731 3.69699 11.2039C3.68227 11.1331 3.68227 11.0601 3.69699 10.9893L4.15341 8.33276L2.21266 6.45637C2.16394 6.40236 2.12381 6.34118 2.09368 6.27497C2.06362 6.20917 2.04578 6.13846 2.04102 6.06627C2.04088 5.99695 2.05074 5.92798 2.07027 5.86147C2.09099 5.79005 2.12618 5.72366 2.17365 5.66642C2.21755 5.61005 2.27103 5.56185 2.33164 5.52403C2.39717 5.48522 2.4704 5.46125 2.5462 5.45381L5.20278 5.06371L6.39259 2.66459C6.42351 2.59437 6.46945 2.53179 6.52717 2.48125C6.58425 2.43218 6.65057 2.39504 6.72223 2.37202C6.78461 2.34823 6.85054 2.33505 6.91728 2.33301V2.33301Z' fill='white'/%3E%3C/svg%3E%0A");
+	background-repeat: no-repeat;
+	background-position: 90% 10%;
+	background-size: 12px;
+}
+
+// @include tutorLineClamp($lineNumber);
+@mixin tutorLineClamp($lineNumber: 2) {
+	display: block !important;
+	display: -webkit-box !important;
+	-webkit-line-clamp: $lineNumber;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+}

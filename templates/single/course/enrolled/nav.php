@@ -16,27 +16,54 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$course_nav_item = tutor_utils()->course_sub_pages();
 ?>
 
-<?php do_action( 'tutor_course/single/enrolled/nav/before' ); ?>
+<?php do_action('tutor_course/single/enrolled/nav/before'); ?>
+<div class="tab-header tutor-bs-d-flex">
+	<?php
+		$counter = 0;
+		$more_items = array();
 
-<div id="course-enrolled-nav-wrap-<?php echo get_the_ID(); ?>" class="course-enrolled-nav-wrap course-enrolled-nav-wrap-<?php the_ID(); ?>">
-	<nav id="course-enrolled-nav-<?php echo get_the_ID(); ?>" class="course-enrolled-nav course-enrolled-nav-<?php the_ID(); ?>">
-		<ul>
-			<li class="<?php echo get_query_var( 'course_subpage' ) === '' ? 'active' : ''; ?>"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php _e( 'Course Page', 'tutor' ); ?></a> </li>
-			<?php
-				foreach ( $course_nav_item as $nav_key => $nav_item ) {
-					$active_class = get_query_var( 'course_subpage' ) === $nav_key ? 'active' : '';
-					$url = trailingslashit( get_permalink() ) . $nav_key;
-					
-					echo '<li class="' . esc_attr( $active_class ) . '">
-							<a href="' . esc_url( $url ) . '">' . esc_attr( $nav_item ) . '</a> 
-						</li>';
-				}
+		foreach ($course_nav_item as $nav_key => $nav_item){
+			if($counter>=4) {
+				$more_items[$nav_key] = $nav_item;
+				continue;
+			}
+			$counter++;
+			/**
+			 * Apply filters to show default active tab
+			 */
+			$default_active_key = apply_filters( 'tutor_default_topics_active_tab', 'info' );
 			?>
-		</ul>
-	</nav>
-</div>
+				<div class="tab-header-item <?php echo $nav_key == $default_active_key ? 'is-active' : ''; ?>" data-tutor-tab-target="tutor-course-details-tab-<?php echo $nav_key; ?>">
+					<span><?php echo $nav_item['title']; ?></span>
+				</div>
+			<?php
+		}
 
-<?php do_action( 'tutor_course/single/enrolled/nav/after' ); ?>
+		if(count($more_items)) {
+			?>
+			<div class="tab-header-item-seemore tutor-bs-ml-auto">
+				<div class="tab-header-item-seemore-toggle" data-seemore-target="course-details-tab-seemore-1">
+					<?php _e('More', 'tutor'); ?> <span class="icon-seemore tutor-icon-line-cross-line tutor-icon-20 tutor-color-text-brand"></span>
+				</div>
+				<div id="course-details-tab-seemore-1" class="tab-header-item-seemore-popup">
+					<ul class="tutor-m-0 tutor-p-0">
+						<?php
+							$asset_base = tutor()->url . 'assets/images/';
+							foreach($more_items as $key=>$item) {
+								?>
+								<li class="tab-header-item" data-tutor-tab-target="tutor-course-details-tab-<?php echo $key; ?>">
+									<span><?php echo $item['title']; ?></span>
+								</li>
+								<?php
+							}
+						?>
+					</ul>
+				</div>
+			</div>
+			<?php
+		}
+	?>
+</div>
+<?php do_action('tutor_course/single/enrolled/nav/after'); ?>

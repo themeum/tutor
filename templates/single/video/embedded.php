@@ -11,18 +11,22 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) )
 	exit;
-}
 
 $video_info = tutor_utils()->get_video_info();
 
 do_action( 'tutor_lesson/single/before/video/embedded' );
 ?>
-	<div class="tutor-single-lesson-segment tutor-lesson-video-wrap">
-		<div class="tutor-video-embeded-wrap">
-			<?php echo tutor_utils()->array_get( 'source_embedded', $video_info ); ?>
-		</div>
-	</div>
-<?php
-do_action( 'tutor_lesson/single/after/video/embedded' ); ?>
+<?php if($video_info ): ?>
+    <div class="course-players-parent">
+        <div class="course-players">
+            <div class="loading-spinner"></div>
+            <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData??null)); ?>">
+
+            <?php echo tutor_utils()->array_get('source_embedded', $video_info); ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?php do_action('tutor_lesson/single/after/video/embedded'); ?>

@@ -16,111 +16,141 @@ $assignment_submitted_id = (int) tutor_utils()->array_get( 'view_assignment', $_
 $submitted_url           = tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments/submitted' );
 
 if ( ! $assignment_submitted_id ) {
-	_e( "Sorry, but you are looking for something that isn't here.", 'tutor' );
+	esc_html_e( "Sorry, but you are looking for something that isn't here.", 'tutor' );
 	return;
 }
+?>
 
-$submitted_assignment = tutor_utils()->get_assignment_submit_info( $assignment_submitted_id );
-if ( $submitted_assignment ) {
+<div class="tutor-dashboard-content-inner tutor-dashboard-assignment-review">
+	<?php
+		$submitted_assignment = tutor_utils()->get_assignment_submit_info( $assignment_submitted_id );
+	if ( $submitted_assignment ) {
 
-	$max_mark = tutor_utils()->get_assignment_option( $submitted_assignment->comment_post_ID, 'total_mark' );
+		$max_mark = tutor_utils()->get_assignment_option( $submitted_assignment->comment_post_ID, 'total_mark' );
 
-	$given_mark      = get_comment_meta( $assignment_submitted_id, 'assignment_mark', true );
-	$instructor_note = get_comment_meta( $assignment_submitted_id, 'instructor_note', true );
-	$comment_author  = get_user_by( 'login', $submitted_assignment->comment_author )
-	?>
+		$given_mark      = get_comment_meta( $assignment_submitted_id, 'assignment_mark', true );
+		$instructor_note = get_comment_meta( $assignment_submitted_id, 'instructor_note', true );
+		$comment_author  = get_user_by( 'login', $submitted_assignment->comment_author )
+		?>
 
-	<div class="submitted-assignment-title">
-		<a class="prev-btn" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>"><span>&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?></a>
+	<div class="submitted-assignment-title tutor-mb-15">
+		<a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
+			<!-- <span class="assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?> -->
+			<span class="color-text-primary assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-10"></span>
+			<span class="tutor-color-text-subsued"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
+		</a>
+		<!-- <a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>"></a> -->
 	</div>
 
 	<div class="tutor-assignment-review-header">
-		<h3>
-			<a href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_post_ID ) ); ?>" target="_blank">
-				<?php echo esc_html( get_the_title( $submitted_assignment->comment_post_ID ) ); ?>
-			</a>
-		</h3>
-		<p>
-			<?php esc_html_e( 'Course', 'tutor' ); ?>:
-			<a href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
-				<?php echo esc_html( get_the_title( $submitted_assignment->comment_parent ) ); ?>
-			</a>
-		</p>
-		<p>
-			<?php esc_html_e( 'Student', 'tutor' ); ?>:
-			<span><?php echo esc_html( $comment_author->display_name ) . ' (' . esc_html( $comment_author->user_email ) . ')'; ?></span>
-		</p>
-		<p>
-			<?php esc_html_e( 'Submitted Date', 'tutor' ); ?>:
-			<span><?php echo date( 'j M, Y, h:i a', strtotime( $submitted_assignment->comment_date ) ); ?></span>
-		</p>
+		<table class="tutor-ui-table-no-border tutor-is-lefty tutor-is-flexible">
+			<tbody>
+				<tr>
+					<td class="color-text-subsued"><?php esc_html_e( 'Course', 'tutor' ); ?></td>
+					<td>:
+						<a href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
+						<?php esc_html_e( get_the_title( $submitted_assignment->comment_parent ) ); ?>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="color-text-subsued"><?php esc_html_e( 'Student', 'tutor' ); ?></td>
+					<td>:
+						<span>
+						<?php echo esc_html( $comment_author->display_name . ' (' . $comment_author->user_email . ')' ); ?>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="color-text-subsued"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?></td>
+					<td>:
+						<span>
+						<?php echo esc_attr( date( 'j M, Y, h:i a', strtotime( $submitted_assignment->comment_date ) ) ); ?>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
-
 	<hr>
 
-	<div class="tutor-dashboard-assignment-submitted-content">
-		<h4><?php esc_html_e( 'Assignment Description:', 'tutor' ); ?></h4>
-		<p><?php echo wp_kses_post( nl2br( stripslashes( $submitted_assignment->comment_content ) ) ); ?></p>
-
+	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-30 tutor-mb-15">
+		<h5 class="text-medium-h6 tutor-mb-5">
+			<?php esc_html_e( 'Assignment Description:', 'tutor' ); ?>
+		</h5>
+		<p class="text-regular-body color-text-subsued tutor-mb-5">
+			<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
+		</p>
 		<?php
 		$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
-		if ( $attached_files ) {
+		if ( $attached_files && is_array( json_decode( $attached_files ) ) ) :
 			?>
-			<h5><?php esc_html_e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
-			<div class="tutor-dashboard-assignment-files">
+			<h5 class="text-medium-h6 tutor-mb-12 tutor-mt-20"><?php _e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
+			<div class="tutor-attachment-cards">
 				<?php
-				$attached_files = json_decode( $attached_files, true );
-				if ( tutor_utils()->count( $attached_files ) ) {
-					$upload_dir     = wp_get_upload_dir();
-					$upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
-					foreach ( $attached_files as $attached_file ) {
-						?>
-						<div class="uploaded-files">
-							<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank"> <i class="tutor-icon-upload-file"></i> <?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?></a>
-						</div>
-						<?php
+				if ( $attached_files ) {
+					$attached_files = json_decode( $attached_files, true );
+					if ( tutor_utils()->count( $attached_files ) ) {
+						$upload_dir     = wp_get_upload_dir();
+						$upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
+						foreach ( $attached_files as $attached_file ) {
+							?>
+									<div>
+										<div>
+											<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank">
+										<?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?>
+											</a>
+											<span class="filesize"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></span>
+										</div>
+										<div>
+											<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-mt-5" target="_blank">
+												<span class="tutor-icon-download-line"></span>
+											</a>
+										</div>
+									</div>
+							<?php
+						}
 					}
 				}
 				?>
 			</div>
-			<?php
-		}
-		?>
+		<?php endif; ?>
 	</div>
 
-	<div class="tutor-dashboard-assignment-review">
+	<div class="tutor-dashboard-assignment-review-area tutor-mt-30">
 		<h3><?php esc_html_e( 'Evaluation', 'tutor' ); ?></h3>
-		<form action="" method="post" class="tutor-form-submit-through-ajax" data-toast_success_message="<?php esc_attr_e( 'Assignment evaluated', 'tutor' ); ?>">
+		<form action="" method="post" class="tutor-bs-row tutor-form-submit-through-ajax" data-toast_success_message="<?php _e( 'Assignment evaluated', 'tutor' ); ?>">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 			<input type="hidden" value="tutor_evaluate_assignment_submission" name="tutor_action"/>
-			<input type="hidden" value="<?php echo esc_attr( $assignment_submitted_id ); ?>" name="assignment_submitted_id"/>
-			<div class="tutor-assignment-evaluate-row">
-				<div class="tutor-option-field-label">
-					<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
-				</div>
-				<div class="tutor-option-field input-mark">
-					<input type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? esc_attr( $given_mark ) : 0; ?>">
-					<p class="desc"><?php echo wp_sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), '<code>' . $max_mark . '</code>' ); ?></p>
-				</div>
+			<input type="hidden" value="<?php echo esc_html( $assignment_submitted_id ); ?>" name="assignment_submitted_id"/>
+
+			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
+				<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 			</div>
-			<div class="tutor-assignment-evaluate-row">
-				<div class="tutor-option-field-label">
-					<label for=""><?php esc_html_e( 'Write a note', 'tutor' ); ?></label>
-				</div>
-				<div class="tutor-option-field">
-					<textarea name="evaluate_assignment[instructor_note]"><?php echo esc_html( $instructor_note ); ?></textarea>
-					<p class="desc"><?php esc_html_e( 'Write a note to students about this submission', 'tutor' ); ?></p>
-				</div>
+			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-30">
+				<input class="tutor-form-control" type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0">
+				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" ); ?></p>
 			</div>
-			<div class="tutor-assignment-evaluate-row">
-				<div class="tutor-option-field-label"></div>
-				<div class="tutor-option-field">
-					<button type="submit" class="tutor-button tutor-button-primary"><?php esc_html_e( 'Evaluate this submission', 'tutor' ); ?></button>
-				</div>
+
+			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
+				<label for=""><?php esc_html_e( 'Feedback', 'tutor' ); ?></label>
+			</div>
+			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-20">
+				<textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php esc_html_e( $instructor_note ); ?></textarea>
+			</div>
+
+			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3"></div>
+			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9">
+				<button type="submit" class="tutor-btn tutor-mt-15">
+				<?php esc_html_e( 'Evaluate this submission', 'tutor' ); ?>
+				</button>
 			</div>
 		</form>
 	</div>
 
-<?php } else {
-	_e( 'Assignments submission not found or not completed', 'tutor' );
-} ?>
+		<?php
+	} else {
+		esc_html_e( 'Assignments submission not found or not completed', 'tutor' );
+	}
+	?>
+</div>

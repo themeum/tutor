@@ -21,7 +21,9 @@
 					</span>
 					<span class="instructor-name"> <?php echo esc_attr( $instructor->display_name ) . ' ' . $authorTag; ?> </span>
 					<span class="instructor-control">
-						<a href="javascript:;" class="tutor-instructor-delete-btn"><i class="tutor-icon-line-cross"></i></a>
+						<a href="javascript:;" class="tutor-instructor-delete-btn tutor-action-icon tutor-btn tutor-is-circle tutor-is-outline tutor-btn-ghost">
+							<i class="tutor-icon-line-cross-line tutor-icon-18"></i>
+						</a>
 					</span>
 				</div>
 				<?php
@@ -31,7 +33,7 @@
 	</div>
 
 	<div class="tutor-add-instructor-button-wrap">
-		<button type="button" class="tutor-btn tutor-add-instructor-btn bordered-btn"> <i class="tutor-icon-add-friend"></i> <?php _e( 'Add More Instructors', 'tutor' ); ?> </button>
+		<button type="button" class="tutor-btn tutor-add-instructor-btn bordered-btn"> <i class="tutor-icon-add-group-filled"></i> <?php _e( 'Add More Instructors', 'tutor' ); ?> </button>
 	</div>
 
 	<?php
@@ -50,7 +52,7 @@
 				<h1><?php _e( 'Add instructors', 'tutor' ); ?></h1>
 			</div>
 			<div class="lesson-modal-close-wrap">
-				<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i></a>
+				<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross-line"></i></a>
 			</div>
 		</div>
 		<div class="modal-content-body">

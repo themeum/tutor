@@ -1,347 +1,234 @@
 #tutor-course-content-builder-root {
-    position: relative;
+	position: relative;
+	// Course topics
+	#tutor-course-content-wrap,
+	#tutor-course-topics {
+		position: relative;
 
-    // Backend style
-    .tutor-course-builder-header {
-        line-height: 50px;
-        position: absolute;
-        top: -69px;
-        right: 40px;
+		// Common style
+		a {
+			text-decoration: none;
+			&:focus {
+				@include propertyWithPrefix(box-shadow, none);
+			}
+		}
 
-        &.has-postbox-header {
-            top: -56px;
-            right: 96px;
-        }
+		.tutor-topics-wrap {
+			border-bottom: 1px solid #f6f8fa;
+			padding-bottom: 0;
+			margin: 0;
+			background: $black-05;
+			border-radius: 6px;
+			margin-bottom: 15px;
+			border: 1px solid $stroke-light-30;
+			overflow: hidden;
+			.tutor-topic-title {
+				@include valueWithPrefix(display, flex);
+				font-size: 16px;
+				font-weight: 300;
+				margin: 0;
+				line-height: 40px;
+				> span {
+					padding: 12px 0px 11px 6px;
+				}
+				.topic-inner-title {
+					font-style: normal;
+					font-weight: 500;
+					font-size: 16px;
+					color: $black-main;
+					@include propertyWithPrefix(flex, 1);
+					a {
+						color: #393c40;
+					}
+				}
 
-        @at-root {
-            #{$body}.rtl .tutor-course-builder-header {
-                right: auto;
-                left: 40px;
-            }
+				& > span {
+					cursor: pointer;
+					&.expand-collapse-wrap {
+						&.is-expanded {
+							background: #fbfbfd;
+						}
+					}
 
-            #{$body}.tutor-screen-course-builder-frontend .has-postbox-header {
-                position: static !important;
-            }
-        }
-    }
+					&:not(.topic-inner-title) {
+						// width: 35px;
+						// text-align: center;
+						width: 35px;
+						text-align: center;
+						display: flex;
+						justify-content: center;
+					}
 
-    @at-root {
-        #{$body}.tutor-screen-course-builder-frontend {
-            #tutor-course-content-wrap {
-                border: 1px solid #ddd;
-                margin-top: 20px;
-            }
-        }
-    }
+					&.tutor-icon-garbage {
+						&:hover {
+							color: rgb(167, 19, 19);
+						}
+					}
+				}
+			}
 
-    .tutor-metabox-add-topics,
-    .tutor-topics-edit-form {
-        .tutor-option-field-row {
-            padding: 15px 0;
+			.tutor-topics-body {
+				background: #fbfbfd;
+				padding: 15px 20px;
 
-            &:last-child {
-                border-bottom: none;
-            }
+				.course-content-item {
+					padding: 10px 10px 10px 10px;
+					border: 1px solid $stroke-light-30;
+					box-sizing: border-box;
+					box-shadow: 0px 2px 4px rgba(216, 223, 234, 0.4);
+					border-radius: 6px;
+					margin-bottom: 15px;
+					background: white;
 
-            textarea {
-                height: 120px;
-            }
-        }
-    }
+					.tutor-course-content-top {
+						display: flex;
+						align-items: flex-start;
+						.tutor-course-content-top-right-action {
+							margin-top: 2px;
+							display: flex;
+							> a {
+								&:not(:last-child) {
+									margin-right: 6px;
+								}
+							}
+						}
+						a {
+							color: #393c40;
+							font-weight: 400;
+							display: inline-flex;
+							align-items: center;
 
-    .new-topic-btn-wrap {
-        padding: 0;
-        margin: 15px;
+							&:last-child {
+								margin-left: auto;
+							}
 
-        #{$body}.tutor-screen-course-builder-frontend .new-topic-btn-wrap {
-            margin-left: 0;
-            margin-right: 0;
-        }
-    }
+							&.open-tutor-lesson-modal {
+								@include propertyWithPrefix(flex-grow, 1);
+							}
+						}
 
-    // Course topics
-    #tutor-course-content-wrap,
-    #tutor-course-topics {
-        position: relative;
+						i {
+							padding-right: 7px;
+							color: #393c40;
+						}
 
-        // Common style
-        a {
-            text-decoration: none;
-            &:focus {
-                @include propertyWithPrefix(box-shadow, none);
-            }
-        }
+						i.tutor-icon-garbage:hover {
+							color: red;
+						}
+					}
+				}
+			}
 
-        .tutor-quiz-builder-modal-tabs-notice a {
-            color: #a4a4a4;
-            text-decoration: underline;
-        }
+			.tutor_add_content_wrap {
+				padding: 0;
+				@include valueWithPrefix(display, flex);
+				@include propertyWithPrefix(flex-wrap, wrap);
 
-        .toggle-indicator {
-            &:before {
-                margin-top: 20px;
-            }
-        }
+				& > span > button,
+				& > button {
+					font-style: normal;
+					font-weight: 500;
+					padding: 3px 8px;
+					margin-top: 3px;
+					margin-bottom: 3px;
 
-        .tutor-topics-wrap {
-            border-bottom: 1px solid #f6f8fa;
-            padding-bottom: 0;
-            margin: 0;
+					& {
+						font-size: 13px;
+					}
 
-            &:nth-child(2n) {
-                background: #f6f8fa;
-            }
+					&:not(:last-of-type) {
+						margin-right: 9px;
+					}
+				}
+			}
 
-            .tutor-topic-title {
-                display: -webkit-box;
-                display: -ms-flexbox;
-                display: flex;
-                font-size: 16px;
-                font-weight: 300;
-                margin: 0;
-                line-height: 40px;
-                padding-left: 15px;
-                align-items: center;
+			.course-move-handle {
+				@include propertyWithPrefix(align-self, center);
+				cursor: grab;
+				margin-right: 5px;
 
-                a {
-                    color: #393c40;
-                }
+				&:active {
+					cursor: grabbing;
+				}
+			}
+		}
 
-                .topic-inner-title {
-                    -webkit-box-flex: 1;
-                    -ms-flex: 1 0 auto;
-                    flex: 1 0 auto;
-                    cursor: pointer;
-                    max-width: calc(100% - 154px);
-                }
+		.drop-lessons {
+			p {
+				margin: 0;
+			}
+		}
 
-                span {
-                    padding: 0 5px;
+		.tutor-lessons {
+			padding-left: 0;
+			margin-bottom: 20px;
 
-                    &.expand-collapse-wrap {
-                        border-left: 1px solid #e7e7e7;
+			&:empty {
+				display: none;
+			}
 
-                        a {
-                            display: block;
-                            padding: 0 13px;
-                        }
-                    }
-                }
+			&.ui-sortable {
+				min-height: 20px;
+			}
+		}
 
-                .topic-edit-icon {
-                    cursor: pointer;
-                }
+		.tutor-course-content-top {
+			@include valueWithPrefix(display, flex);
+			font-size: 14px;
 
-                .topic-delete-btn {
-                    float: right;
+			&,
+			i {
+				font-size: 15px;
+			}
 
-                    a {
-                        padding: 0 10px;
+			i {
+				&.tutor-icon-pencil {
+					margin: 0 10px;
+				}
 
-                        &:hover {
-                            color: #ff0000;
-                        }
-                    }
+				&.tutor-icon-move {
+					margin-right: 10px;
+					cursor: grab;
+					line-height: unset;
 
-                    .dashicons {
-                        width: 12px;
-                        height: 12px;
-                        font-size: 12px;
-                    }
-                }
-            }
+					&:active {
+						cursor: grabbing;
+					}
+				}
+			}
 
-            .tutor-topics-body {
-                background: #ebeef0;
-                padding: 15px 20px;
-            }
+			a {
+				color: #393c40;
+				&:nth-child(2) {
+					@include propertyWithPrefix(flex, 1);
+				}
+			}
 
-            @at-root {
-                #{$body}.rtl {
-                    .tutor-topics-wrap .tutor-topic-title {
-                        padding-left: 0;
-                        padding-right: 15px;
+			.open-tutor-quiz-modal {
+				i {
+					display: inline-block;
+					vertical-align: middle;
+					margin-right: 5px;
+				}
+			}
+		}
 
-                        span {
-                            &.expand-collapse-wrap {
-                                border-left: none;
-                                border-right: 1px solid #e7e7e7;
-                            }
-                        }
-                    }
-                }
-            }
+		@at-root {
+			#{$body}.rtl {
+				#tutor-course-content-wrap .tutor-course-content-top {
+					i.tutor-icon-move {
+						margin-right: 0;
+						margin-left: 10px;
+					}
 
-            .course-move-handle {
-                @include propertyWithPrefix(align-self, center);
-                cursor: grab;
-                margin-right: 5px;
-
-                &:active {
-                    cursor: grabbing;
-                }
-            }
-        }
-
-        .drop-lessons {
-            p {
-                margin: 0;
-            }
-        }
-
-        .course-content-item {
-            &:hover {
-                background-color: #ebeef0;
-            }
-        }
-
-        .tutor-lessons {
-            padding-left: 0;
-            margin-bottom: 20px;
-
-            &:empty {
-                display: none;
-            }
-
-            &.ui-sortable {
-                min-height: 20px;
-            }
-        }
-
-        .tutor-lesson-top {
-            @include valueWithPrefix(display, flex);
-            font-size: 14px;
-
-            &,
-            i {
-                font-size: 15px;
-            }
-
-            i {
-                &.tutor-icon-pencil {
-                    margin: 0 10px;
-                }
-
-                &.tutor-icon-move {
-                    margin-right: 10px;
-                    cursor: grab;
-                    line-height: unset;
-
-                    &:active {
-                        cursor: grabbing;
-                    }
-                }
-            }
-
-            a {
-                color: #393c40;
-                &.tutor-updating-message {
-                    i {
-                        display: none;
-                    }
-                }
-
-                &:nth-child(2) {
-                    @include propertyWithPrefix(flex, 1);
-                }
-            }
-
-            .open-tutor-quiz-modal {
-                i {
-                    display: inline-block;
-                    vertical-align: middle;
-                    margin-right: 5px;
-                }
-            }
-        }
-
-        @at-root {
-            #{$body}.rtl {
-                #tutor-course-content-wrap .tutor-lesson-top {
-                    i.tutor-icon-move {
-                        margin-right: 0;
-                        margin-left: 10px;
-                    }
-
-                    .open-tutor-quiz-modal {
-                        i {
-                            margin-right: 0;
-                            margin-left: 5px;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.tutor-course-builder-content-container {
-    &.tutor-untopics-lessons {
-        border: 1px solid #eee;
-        padding: 20px;
-        margin: 0 -1px -1px;
-        background-color: #fbfbfb;
-
-        h3 {
-            font-weight: 300;
-        }
-
-        .tutor-lessons {
-            padding-left: 0 !important;
-        }
-    }
-
-    .course-content-item {
-        padding: 10px;
-        border-bottom: 1px solid #d9d9d9;
-        background-color: #ebeef0;
-
-        .tutor-lesson-top {
-            display: flex;
-            align-items: center;
-
-            a {
-                color: #393c40;
-                font-weight: 400;
-                display: inline-flex;
-                align-items: center;
-
-                &:last-child {
-                    margin-left: auto;
-                }
-
-                &.open-tutor-lesson-modal {
-                    @include propertyWithPrefix(flex-grow, 1);
-                }
-            }
-
-            i {
-                padding-right: 7px;
-                color: #393c40;
-            }
-
-            .tutor-updating-message i {
-                display: none;
-            }
-
-            i.tutor-icon-garbage:hover {
-                color: red;
-            }
-        }
-    }
-}
-
-.tutor-add-quiz-button-wrap {
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-
-    & > * + * {
-        margin-left: 15px;
-    }
-
-    a {
-        color: #2756d1;
-    }
+					.open-tutor-quiz-modal {
+						i {
+							margin-right: 0;
+							margin-left: 5px;
+						}
+					}
+				}
+			}
+		}
+	}
 }

@@ -18,12 +18,9 @@ class User {
 		add_action( 'profile_update', array( $this, 'profile_update' ) );
 		add_action( 'set_user_role', array( $this, 'set_user_role' ), 10, 3 );
 
-		add_action( 'wp_ajax_tutor_user_photo_remove', array( $this, 'tutor_user_photo_remove' ) );
-		add_action( 'wp_ajax_tutor_user_photo_upload', array( $this, 'update_user_photo' ) );
-
-		add_action( 'tutor_options_after_instructors', array( $this, 'tutor_instructor_profile_layout' ) );
-		// add_action('tutor_options_after_students', array($this, 'tutor_student_profile_layout'));
-
+		add_action('wp_ajax_tutor_user_photo_remove', array($this, 'tutor_user_photo_remove'));
+		add_action('wp_ajax_tutor_user_photo_upload', array($this, 'update_user_photo'));
+		
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
 	}
@@ -34,30 +31,8 @@ class User {
 		'no-cp',
 	);
 
-	/**
-	 * Show layout selection dashboard in instructor and student setting
-	 */
-	public function tutor_instructor_profile_layout() {
-		tutor_load_template(
-			'public-profile-setting',
-			array(
-				'profile_templates'  => $this->profile_layout,
-				'layout_option_name' => 'instructor',
-			)
-		);
-	}
-	public function tutor_student_profile_layout() {
-		tutor_load_template(
-			'public-profile-setting',
-			array(
-				'profile_templates'  => $this->profile_layout,
-				'layout_option_name' => 'student',
-			)
-		);
-	}
-
-	public function edit_user_profile( $user ) {
-		include tutor()->path . 'views/metabox/user-profile-fields.php';
+	public function edit_user_profile($user){
+		include  tutor()->path.'views/metabox/user-profile-fields.php';
 	}
 
 	private function delete_existing_user_photo( $user_id, $type ) {
@@ -67,14 +42,14 @@ class User {
 		delete_user_meta( $user_id, $meta_key );
 	}
 
-	public function tutor_user_photo_remove() {
-		tutils()->checking_nonce();
-
-		$this->delete_existing_user_photo( get_current_user_id(), tutor_sanitize_data( $_POST['photo_type'] ) );
+	public function tutor_user_photo_remove(){
+		tutor_utils()->checking_nonce();
+		
+		$this->delete_existing_user_photo(get_current_user_id(), tutor_sanitize_data( $_POST['photo_type'] ));
 	}
 
-	public function update_user_photo() {
-		tutils()->checking_nonce();
+	public function update_user_photo(){
+		tutor_utils()->checking_nonce();
 
 		$user_id  = get_current_user_id();
 		$meta_key = sanitize_text_field( $_POST['photo_type'] ) == 'cover_photo' ? '_tutor_cover_photo' : '_tutor_profile_photo';
@@ -82,9 +57,9 @@ class User {
 		/**
 		 * Photo Update from profile
 		 */
-		$photo      = tutils()->array_get( 'photo_file', $_FILES );
-		$photo_size = tutils()->array_get( 'size', $photo );
-		$photo_type = tutils()->array_get( 'type', $photo );
+		$photo = tutor_utils()->array_get('photo_file', $_FILES);
+		$photo_size = tutor_utils()->array_get('size', $photo);
+		$photo_type = tutor_utils()->array_get('type', $photo);
 
 		if ( $photo_size && strpos( $photo_type, 'image' ) !== false ) {
 			if ( ! function_exists( 'wp_handle_upload' ) ) {
@@ -95,8 +70,8 @@ class User {
 			$movefile         = wp_handle_upload( $photo, $upload_overrides );
 
 			if ( $movefile && ! isset( $movefile['error'] ) ) {
-				$file_path = tutils()->array_get( 'file', $movefile );
-				$file_url  = tutils()->array_get( 'url', $movefile );
+				$file_path = tutor_utils()->array_get( 'file', $movefile );
+				$file_url  = tutor_utils()->array_get( 'url', $movefile );
 
 				$media_id = wp_insert_attachment(
 					array(
@@ -127,8 +102,8 @@ class User {
 		}
 	}
 
-	public function profile_update( $user_id ) {
-		if ( tutils()->array_get( 'tutor_action', $_POST ) !== 'tutor_profile_update_by_wp' ) {
+	public function profile_update($user_id){
+		if (tutor_utils()->array_get('tutor_action', $_POST) !== 'tutor_profile_update_by_wp' ){
 			return;
 		}
 
@@ -155,8 +130,8 @@ class User {
 	}
 
 	public function hide_notices() {
-		if ( is_admin() && isset( $_GET['tutor-hide-notice'] ) && $_GET['tutor-hide-notice'] == 'registration' ) {
-			tutils()->checking_nonce( 'get' );
+		if(is_admin() && isset( $_GET['tutor-hide-notice'] ) && $_GET['tutor-hide-notice']=='registration') {
+			tutor_utils()->checking_nonce('get');
 
 			if ( isset( $_GET['tutor-registration'] ) && $_GET['tutor-registration'] === 'enable' ) {
 				update_option( 'users_can_register', 1 );
@@ -171,8 +146,8 @@ class User {
 
 		if (
 				self::$hide_registration_notice ||
-				! tutils()->is_tutor_dashboard() ||
-				get_option( 'users_can_register' ) ||
+				!tutor_utils()->is_tutor_dashboard() || 
+				get_option( 'users_can_register' ) || 
 				isset( $_COOKIE['tutor_notice_hide_registration'] ) ||
 				! current_user_can( 'manage_options' )
 			) {

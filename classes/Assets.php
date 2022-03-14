@@ -1,4 +1,5 @@
 <?php
+
 namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -7,18 +8,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Assets {
 
-	public function __construct() {
+	public function __construct()
+	{
+		/**
+		 * Common scripts loading
+		 */
+		add_action('admin_enqueue_scripts', array($this, 'common_scripts'));
+		add_action('wp_enqueue_scripts', array($this, 'common_scripts'));
 		/**
 		 * Front and backend script enqueue
 		 */
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts' ) );
 
-		/**
-		 * Common scripts loading
-		 */
-		add_action( 'admin_enqueue_scripts', array( $this, 'common_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'common_scripts' ) );
+		add_action('admin_enqueue_scripts', array($this, 'load_meta_data'));
+		add_action('wp_enqueue_scripts', array($this, 'load_meta_data'));
 
 		/**
 		 * Text domain loading
@@ -42,7 +46,7 @@ class Assets {
 		 *
 		 * @since 1.9.7
 		 */
-		add_filter( 'mce_external_languages', array( $this, 'tutor_tinymce_translate' ) );
+		add_filter('mce_external_languages', array($this, 'tutor_tinymce_translate'));
 
 		/**
 		 * Identifier class to body tag
@@ -53,10 +57,22 @@ class Assets {
 		add_filter( 'admin_body_class', array( $this, 'add_identifier_class_to_body' ) );
 	}
 
-	private function get_default_localized_data() {
+	private function get_default_localized_data()
+	{
+		global $wp_version;
+		$home_url = get_home_url();
+		$parsed   = parse_url($home_url);
+
+		$base_path = (is_array($parsed) && isset($parsed['path'])) ? $parsed['path'] : '/';
+		$base_path = rtrim($base_path, '/') . '/';
+
+		$post_id   = get_the_ID();
+		$post_type = get_post_type( $post_id );
+
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => get_home_url(),
+			'site_title'                   => get_bloginfo( 'title' ),
 			'base_path'                    => tutor()->basepath,
 			'tutor_url'                    => tutor()->url,
 			'tutor_pro_url'                => function_exists( 'tutor_pro' ) ? tutor_pro()->url : null,
@@ -69,37 +85,39 @@ class Assets {
 			'wp_date_format'               => tutor_js_date_format_against_wp(),
 			'is_admin'                     => is_admin(),
 			'is_admin_bar_showing'         => is_admin_bar_showing(),
+			'addons_data'                  => tutor_utils()->prepare_free_addons_data(),
+			'current_user'                  => wp_get_current_user(),
+			'content_change_event'         => 'tutor_content_changed_event',
+			'is_tutor_course_edit'		   => isset( $_GET[ 'action'] ) && 'edit' === $_GET['action'] && tutor()->course_post_type === get_post_type( get_the_ID() ) || isset( $_GET['post_type'] ) && 'courses' === $_GET['post_type'] ? true : false,
+			'assignment_max_file_allowed'  => 'tutor_assignments' === $post_type ? (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' ) : 0,
 		);
 	}
 
-	public function admin_scripts() {
-		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), tutor()->version );
-		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), tutor()->version );
-		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version );
-
+	public function admin_scripts()
+	{
+		wp_enqueue_style('tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor-admin', tutor()->url . 'assets/css/tutor-admin.css', array(), TUTOR_VERSION);
 		/**
 		 * Scripts
 		 */
 		wp_enqueue_media();
 
-		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script('wp-color-picker');
+		wp_enqueue_style('wp-color-picker');
 
 		wp_enqueue_script( 'jquery-ui-slider' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
-		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), tutor()->version, true );
-		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.js', array( 'jquery', 'wp-color-picker', 'wp-i18n' ), tutor()->version, true );
+		wp_enqueue_script('tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array('jquery'), TUTOR_VERSION, true);
+		wp_enqueue_script('tutor-admin', tutor()->url . 'assets/js/tutor-admin.js', array('jquery', 'wp-color-picker', 'wp-i18n'), TUTOR_VERSION, true);
 	}
 
 	/**
 	 * Load frontend scripts
 	 */
-	public function frontend_scripts() {
+	public function frontend_scripts()
+	{
 		global $post, $wp_query;
-
-		$is_script_debug = tutor_utils()->is_script_debug();
-		$suffix          = $is_script_debug ? '' : '.min';
 
 		/**
 		 * We checked wp_enqueue_editor() in condition because it conflicting with Divi Builder
@@ -131,58 +149,52 @@ class Assets {
 		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		/**
-		 * Tutor Icon
-		 */
-		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/icons/css/tutor-icon.css', array(), tutor()->version );
-
+		
 		// Plyr
-		wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), tutor()->version );
-		wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array( 'jquery' ), tutor()->version, true );
+		wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION);
+		wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), TUTOR_VERSION, true);
 
 		// Social Share
-		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array( 'jquery' ), tutor()->version, true );
+		wp_enqueue_script('tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array('jquery'), TUTOR_VERSION, true);
 
 		/**
 		 * Chart Data
 		 */
-		if ( ! empty( $wp_query->query_vars['tutor_dashboard_page'] ) ) {
-			wp_enqueue_script( 'jquery-ui-slider' );
+		if (!empty($wp_query->query_vars['tutor_dashboard_page'])) {
+			wp_enqueue_script('jquery-ui-slider');
 
-			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), tutor()->version );
-			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), tutor()->version, true );
+			wp_enqueue_style('tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION);
+			wp_enqueue_script('tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array('jquery'), TUTOR_VERSION, true);
 
-			if ( $wp_query->query_vars['tutor_dashboard_page'] === 'earning' ) {
-				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/js/Chart.bundle.min.js', array(), tutor()->version );
-				wp_enqueue_script( 'jquery-ui-datepicker' );
+			if ($wp_query->query_vars['tutor_dashboard_page'] === 'earning') {
+				wp_enqueue_script('tutor-front-chart-js', tutor()->url . 'assets/js/lib/Chart.bundle.min.js', array(), TUTOR_VERSION);
+				wp_enqueue_script('jquery-ui-datepicker');
 			}
 		}
-		// End: chart data
-
-		wp_enqueue_style( 'tutor-frontend', tutor()->url . "assets/css/tutor-front{$suffix}.css", array(), tutor()->version );
-
 		/**
 		 * dependency wp-i18n added for
 		 * translate js file
 		 *
 		 * @since 1.9.0
-		*/
-		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n' ), tutor()->version, true );
+		 */
+		wp_enqueue_style('tutor-frontend', tutor()->url . 'assets/css/tutor-front.css', array(), TUTOR_VERSION);
+		wp_enqueue_script('tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array('jquery', 'wp-i18n'), TUTOR_VERSION, true );
 
 		/**
 		 * Load frontend dashboard style
 		 *
 		 * @since v1.9.8
 		 */
-		if ( tutor_utils()->is_tutor_frontend_dashboard() ) {
-			wp_enqueue_style( 'tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.min.css', tutor()->version );
+		if (tutor_utils()->is_tutor_frontend_dashboard()) {
+			wp_enqueue_style('tutor-frontend-dashboard-css', tutor()->url . 'assets/css/tutor-frontend-dashboard.css', TUTOR_VERSION);
 		}
 
 		// Load date picker for announcement at frontend
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 	}
 
-	public function modify_localize_data( $localize_data ) {
+	public function modify_localize_data($localize_data)
+	{
 		global $post;
 
 		if ( is_admin() ) {
@@ -192,17 +204,17 @@ class Assets {
 		} else {
 
 			// Assign quiz option
-			if ( ! empty( $post->post_type ) && $post->post_type === 'tutor_quiz' ) {
-				$single_quiz_options = (array) tutor_utils()->get_quiz_option( $post->ID );
+			if (!empty($post->post_type) && $post->post_type === 'tutor_quiz') {
+				$single_quiz_options = (array) tutor_utils()->get_quiz_option($post->ID);
 				$saved_quiz_options  = array(
-					'quiz_when_time_expires' => tutils()->get_option( 'quiz_when_time_expires' ),
+					'quiz_when_time_expires' => tutor_utils()->get_option('quiz_when_time_expires'),
 				);
 
-				$quiz_options = array_merge( $single_quiz_options, $saved_quiz_options );
+				$quiz_options = array_merge($single_quiz_options, $saved_quiz_options);
 
 				$previous_attempts = tutor_utils()->quiz_attempts();
 
-				if ( $previous_attempts && count( $previous_attempts ) ) {
+				if ($previous_attempts && count($previous_attempts)) {
 					$quiz_options['quiz_auto_start'] = 0;
 				}
 
@@ -225,98 +237,99 @@ class Assets {
 	}
 
 	public function common_scripts() {
+
+		// Fonts
+		wp_enqueue_style('tutor-inter-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-v2-icon/style.css', array(), TUTOR_VERSION);
+
+		// Common css library
+		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.css', array(), TUTOR_VERSION);
+
 		// Load course builder resources
-		if ( $this->get_course_builder_screen() ) {
-			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'jquery', 'wp-i18n' ), tutor()->version, true );
-			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.css', array(), tutor()->version );
+		if ($this->get_course_builder_screen()) {
+			wp_enqueue_script('tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array('jquery', 'wp-i18n'), TUTOR_VERSION, true);
+			wp_enqueue_style('tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.css', array(), TUTOR_VERSION);
 		}
-
-		// Localize scripts
-		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
-		wp_localize_script( 'tutor-frontend', '_tutorobject', $localize_data );
-		wp_localize_script( 'tutor-admin', '_tutorobject', $localize_data );
-		wp_localize_script( 'tutor-course-builder', '_tutorobject', $localize_data );
-
-		// Inline styles
-		wp_add_inline_style( 'tutor-frontend', $this->load_color_palette() );
-		wp_add_inline_style( 'tutor-admin', $this->load_color_palette() );
+		/**
+		 * Load tutor common scripts both backend and frontend
+		 *
+		 * @since v2.0.0
+		 */
+		wp_enqueue_script('tutor-v2-script', tutor()->url . 'assets/js/tutor-v2.js', array('jquery', 'wp-i18n'), TUTOR_VERSION, true);
 	}
 
-	private function load_color_palette() {
+	public function load_meta_data()
+	{
+		// Localize scripts
+		$localize_data = apply_filters('tutor_localize_data', $this->get_default_localized_data());
+		wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
+		wp_localize_script('tutor-admin', '_tutorobject', $localize_data);
+		wp_localize_script('tutor-course-builder', '_tutorobject', $localize_data);
+		wp_localize_script('tutor-v2-script', '_tutorobject', $localize_data);
 
-		/**
-		 * Default Color
-		 */
-		$tutor_css                 = ':root{';
-		$tutor_primary_color       = tutor_utils()->get_option( 'tutor_primary_color' );
-		$tutor_primary_hover_color = tutor_utils()->get_option( 'tutor_primary_hover_color' );
-		$tutor_text_color          = tutor_utils()->get_option( 'tutor_text_color' );
-		$tutor_light_color         = tutor_utils()->get_option( 'tutor_light_color' );
+		// Inline styles
+		wp_add_inline_style('tutor-frontend', $this->load_color_palette());
+		wp_add_inline_style('tutor-admin', $this->load_color_palette());
+	}
 
-		/**
-		 * tutor buttons style
-		 */
-		$tutor_button_primary = tutor_utils()->get_option( 'tutor_button_primary' );
-		$tutor_button_danger  = tutor_utils()->get_option( 'tutor_button_danger' );
-		$tutor_button_success = tutor_utils()->get_option( 'tutor_button_success' );
-		$tutor_button_warning = tutor_utils()->get_option( 'tutor_button_warning' );
+	private function load_color_palette()
+	{
+		$colors = array(
+			'tutor_primary_color'       => '--tutor-primary-color',
+			'tutor_primary_hover_color' => '--tutor-primary-hover-color',
+			'tutor_text_color'          => '--tutor-text-color',
+			'tutor_background_color'	=> '--tutor-background-color',
+			'tutor_border_color'		=> '--tutor-border-color',
+			'tutor_success_color'		=> '--tutor-success-color',
+			'tutor_warning_color'		=> '--tutor-warning-color',
+			'tutor_danger_color'		=> '--tutor-danger-color',
+			'tutor_disable_color'		=> '--tutor-disable-color',
+			'tutor_table_background_color' => '--tutor-table-background-color',
 
-		if ( $tutor_primary_color ) {
-			$tutor_css .= " --tutor-primary-color: {$tutor_primary_color};";
-		}
-		if ( $tutor_primary_hover_color ) {
-			$tutor_css .= " --tutor-primary-hover-color: {$tutor_primary_hover_color};";
-		}
-		if ( $tutor_text_color ) {
-			$tutor_css .= " --tutor-text-color: {$tutor_text_color};";
-		}
-		if ( $tutor_light_color ) {
-			$tutor_css .= " --tutor-light-color: {$tutor_light_color};";
-		}
+			'tutor_primary_text_color'  => '--tutor-primary-text-color',
+			'tutor_light_color'         => '--tutor-light-color',
+			'tutor_button_primary'      => '--tutor-primary-button-color',
+			'tutor_button_danger'       => '--tutor-danger-button-color',
+			'tutor_button_success'      => '--tutor-success-button-color',
+			'tutor_button_warning'      => '--tutor-warning-button-color',
+		);
 
-		/**
-		 * check if button style setup
-		 */
-		if ( $tutor_button_primary ) {
-			$tutor_css .= " --tutor-primary-button-color: {$tutor_button_primary}; ";
-		}
-		if ( $tutor_button_danger ) {
-			$tutor_css .= " --tutor-danger-button-color: {$tutor_button_danger}; ";
-		}
-		if ( $tutor_button_success ) {
-			$tutor_css .= " --tutor-success-button-color: {$tutor_button_success}; ";
-		}
-		if ( $tutor_button_warning ) {
-			$tutor_css .= " --tutor-warning-button-color: {$tutor_button_warning}; ";
+		$color_string = '';
+		foreach ($colors as $key => $property) {
+			$color = tutor_utils()->get_option($key);
+			if ($color) {
+				$color_string .= $property . ':' . $color . ';';
+			}
 		}
 
-		$tutor_css .= '}';
-
-		return $tutor_css;
+		return ':root{' . $color_string . '}';
 	}
 
 	/**
 	 * Add Tinymce button for placing shortcode
 	 */
-	function tutor_add_mce_button() {
+	function tutor_add_mce_button()
+	{
 		// check user permissions
-		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
+		if (!current_user_can('edit_posts') && !current_user_can('edit_pages')) {
 			return;
 		}
 		// check if WYSIWYG is enabled
-		if ( 'true' == get_user_option( 'rich_editing' ) ) {
-			add_filter( 'mce_external_plugins', array( $this, 'tutor_add_tinymce_js' ) );
-			add_filter( 'mce_buttons', array( $this, 'tutor_register_mce_button' ) );
+		if ('true' == get_user_option('rich_editing')) {
+			add_filter('mce_external_plugins', array($this, 'tutor_add_tinymce_js'));
+			add_filter('mce_buttons', array($this, 'tutor_register_mce_button'));
 		}
 	}
 	// Declare script for new button
-	function tutor_add_tinymce_js( $plugin_array ) {
-		$plugin_array['tutor_button'] = tutor()->url . 'assets/js/mce-button.js';
+	function tutor_add_tinymce_js($plugin_array)
+	{
+		$plugin_array['tutor_button'] = tutor()->url . 'assets/js/lib/mce-button.js';
 		return $plugin_array;
 	}
 	// Register new button in the editor
-	function tutor_register_mce_button( $buttons ) {
-		array_push( $buttons, 'tutor_button' );
+	function tutor_register_mce_button($buttons)
+	{
+		array_push($buttons, 'tutor_button');
 		return $buttons;
 	}
 
@@ -327,8 +340,9 @@ class Assets {
 	 * @param string $type Type.
 	 * @return string
 	 */
-	function tutor_generator_tag( $gen, $type ) {
-		switch ( $type ) {
+	function tutor_generator_tag($gen, $type)
+	{
+		switch ($type) {
 			case 'html':
 				$gen .= "\n" . '<meta name="generator" content="TutorLMS ' . TUTOR_VERSION . '">';
 				break;
@@ -361,7 +375,8 @@ class Assets {
 		return $locales;
 	}
 
-	private function get_course_builder_screen() {
+	private function get_course_builder_screen()
+	{
 
 		// Add course editor identifier class
 		if ( is_admin() ) {
@@ -376,16 +391,47 @@ class Assets {
 		return null;
 	}
 
-	public function add_identifier_class_to_body( $classes ) {
+	public function add_identifier_class_to_body($classes)
+	{
 		$course_builder_screen = $this->get_course_builder_screen();
 		$to_add                = array();
 
-		// Add course editor identifier class
-		if ( $course_builder_screen ) {
+		// Add backend course editor identifier class to body
+		if ($course_builder_screen) {
+			$to_add[] = is_admin() ? 'tutor-backend' : '';
 			$to_add[] = ' tutor-screen-course-builder tutor-screen-course-builder-' . $course_builder_screen . ' ';
 		}
 
-		is_array( $classes ) ? $classes = array_merge( $classes, $to_add ) : $classes .= implode( '', $to_add );
+		// Add frontend course builder identifier class
+		if (!$course_builder_screen && tutor_utils()->is_tutor_frontend_dashboard()) {
+			$to_add[] = 'tutor-screen-frontend-dashboard';
+		}
+
+		if (is_admin()) {
+			$screen = function_exists('get_current_screen') ? get_current_screen() : null;
+			$base = ($screen && is_object($screen) && property_exists($screen, 'base')) ? $screen->base : '';
+			$index = strpos($base, 'tutor');
+
+			if($index===0 || $index>0) {
+				$to_add[] = 'tutor-backend';
+
+				if (isset($_GET['page']) && $_GET['page'] == 'tutor_settings') {
+					$to_add[] = 'tutor-screen-backend-settings ';
+				}
+				if (isset($_GET['page'])) {
+					$to_add[] = 'tutor-backend-' . $_GET['page'];
+				}
+			}
+		}
+
+		// Remove duplicate classes if any
+		$to_add = array_unique($to_add);
+
+		if(is_array($classes)) {
+			$classes = array_merge($classes, $to_add);
+		} else {
+			$classes .= implode(' ', $to_add);
+		}
 
 		return $classes;
 	}

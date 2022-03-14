@@ -11,25 +11,20 @@ class Ajax {
 		add_action( 'wp_ajax_sync_video_playback', array( $this, 'sync_video_playback' ) );
 		add_action( 'wp_ajax_nopriv_sync_video_playback', array( $this, 'sync_video_playback_noprev' ) );
 		add_action( 'wp_ajax_tutor_place_rating', array( $this, 'tutor_place_rating' ) );
-
-		add_action( 'wp_ajax_tutor_ask_question', array( $this, 'tutor_ask_question' ) );
-		add_action( 'wp_ajax_tutor_add_answer', array( $this, 'tutor_add_answer' ) );
+		add_action( 'wp_ajax_delete_tutor_review', array( $this, 'delete_tutor_review' ) );
 
 		add_action( 'wp_ajax_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
 		add_action( 'wp_ajax_nopriv_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
 
 		/**
+		 * Get all addons
+		 */
+		add_action( 'wp_ajax_tutor_get_all_addons', array( $this, 'tutor_get_all_addons' ) );
+
+		/**
 		 * Addon Enable Disable Control
 		 */
 		add_action( 'wp_ajax_addon_enable_disable', array( $this, 'addon_enable_disable' ) );
-
-		/**
-		 * Update Rating/review
-		 *
-		 * @since  v.1.4.0
-		 */
-		add_action( 'wp_ajax_tutor_load_edit_review_modal', array( $this, 'tutor_load_edit_review_modal' ) );
-		add_action( 'wp_ajax_tutor_update_review_modal', array( $this, 'tutor_update_review_modal' ) );
 
 		/**
 		 * Ajax login
@@ -62,7 +57,7 @@ class Ajax {
 		$duration    = sanitize_text_field( $_POST['duration'] );
 		$currentTime = sanitize_text_field( $_POST['currentTime'] );
 
-		if ( ! tutils()->has_enrolled_content_access( 'lesson', $post_id ) ) {
+		if ( ! tutor_utils()->has_enrolled_content_access( 'lesson', $post_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 			exit;
 		}
@@ -102,9 +97,9 @@ class Ajax {
 	public function tutor_place_rating() {
 		global $wpdb;
 
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		$rating    = sanitize_text_field( tutor_utils()->avalue_dot( 'rating', $_POST ) );
+		$rating    = sanitize_text_field( tutor_utils()->avalue_dot( 'tutor_rating_gen_input', $_POST ) );
 		$course_id = sanitize_text_field( tutor_utils()->avalue_dot( 'course_id', $_POST ) );
 		$review    = sanitize_textarea_field( tutor_utils()->avalue_dot( 'review', $_POST ) );
 
@@ -115,14 +110,25 @@ class Ajax {
 		$user    = get_userdata( $user_id );
 		$date    = date( 'Y-m-d H:i:s', tutor_time() );
 
-		if ( ! tutils()->has_enrolled_content_access( 'course', $course_id ) ) {
+		if ( ! tutor_utils()->has_enrolled_content_access( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 			exit;
 		}
 
 		do_action( 'tutor_before_rating_placed' );
 
-		$previous_rating_id = $wpdb->get_var( $wpdb->prepare( "select comment_ID from {$wpdb->comments} WHERE comment_post_ID = %d AND user_id = %d AND comment_type = 'tutor_course_rating' LIMIT 1;", $course_id, $user_id ) );
+		$previous_rating_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT comment_ID
+			from {$wpdb->comments}
+			WHERE comment_post_ID = %d AND
+				user_id = %d AND
+				comment_type = 'tutor_course_rating'
+			LIMIT 1;",
+				$course_id,
+				$user_id
+			)
+		);
 
 		$review_ID = $previous_rating_id;
 		if ( $previous_rating_id ) {
@@ -185,128 +191,57 @@ class Ajax {
 			}
 		}
 
-		$data = array(
-			'msg'       => __( 'Rating placed success', 'tutor' ),
-			'review_id' => $review_ID,
-			'review'    => $review,
+		wp_send_json_success(
+			array(
+				'message'   => __( 'Rating placed successsully!', 'tutor' ),
+				'review_id' => $review_ID,
+			)
 		);
-		wp_send_json_success( $data );
 	}
 
-	public function tutor_ask_question() {
+	public function delete_tutor_review() {
 		tutor_utils()->checking_nonce();
 
-		global $wpdb;
+		$review_id = sanitize_text_field( tutor_utils()->array_get( 'review_id', $_POST ) );
 
-		$course_id      = (int) $_POST['tutor_course_id'];
-		$question_title = sanitize_text_field( $_POST['question_title'] );
-		$question       = wp_kses_post( $_POST['question'] );
-
-		if ( ! tutils()->has_enrolled_content_access( 'course', $course_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		if ( ! tutor_utils()->can_user_manage( 'review', $review_id, get_current_user_id() ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permissioned Denied!', 'tutor' ) ) );
 			exit;
 		}
 
-		if ( empty( $question ) || empty( $question_title ) ) {
-			wp_send_json_error( __( 'Empty question title or body', 'tutor' ) );
-		}
+		global $wpdb;
+		$wpdb->delete( $wpdb->commentmeta, array( 'comment_id' => $review_id ) );
+		$wpdb->delete( $wpdb->comments, array( 'comment_ID' => $review_id ) );
 
-		$user_id = get_current_user_id();
-		$user    = get_userdata( $user_id );
-		$date    = date( 'Y-m-d H:i:s', tutor_time() );
+		wp_send_json_success();
+	}
 
-		do_action( 'tutor_before_add_question', $course_id );
-		$data = apply_filters(
-			'tutor_add_question_data',
-			array(
-				'comment_post_ID'  => $course_id,
-				'comment_author'   => $user->user_login,
-				'comment_date'     => $date,
-				'comment_date_gmt' => get_gmt_from_date( $date ),
-				'comment_content'  => $question,
-				'comment_approved' => 'waiting_for_answer',
-				'comment_agent'    => 'TutorLMSPlugin',
-				'comment_type'     => 'tutor_q_and_a',
-				'user_id'          => $user_id,
-			)
-		);
+	public function tutor_course_add_to_wishlist() {
+		tutor_utils()->checking_nonce();
 
-		$wpdb->insert( $wpdb->comments, $data );
-		$comment_id = (int) $wpdb->insert_id;
-
-		if ( $comment_id ) {
-			$result = $wpdb->insert(
-				$wpdb->commentmeta,
+		// Redirect login since only logged in user can add courses to wishlist
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error(
 				array(
-					'comment_id' => $comment_id,
-					'meta_key'   => 'tutor_question_title',
-					'meta_value' => $question_title,
+					'redirect_to' => wp_login_url( wp_get_referer() ),
 				)
 			);
 		}
-		do_action( 'tutor_after_add_question', $course_id, $comment_id );
 
-		wp_send_json_success( __( 'Question has been added successfully', 'tutor' ) );
-	}
-
-
-	public function tutor_add_answer() {
-		tutor_utils()->checking_nonce();
 		global $wpdb;
+		$user_id   = get_current_user_id();
+		$course_id = (int) sanitize_text_field( $_POST['course_id'] );
 
-		$answer = wp_kses_post( $_POST['answer'] );
-		if ( ! $answer ) {
-			wp_send_json_error( __( 'Please write answer', 'tutor' ) );
-		}
-
-		$question_id = (int) $_POST['question_id'];
-		$question    = tutor_utils()->get_qa_question( $question_id );
-
-		$user_id = get_current_user_id();
-		$user    = get_userdata( $user_id );
-		$date    = date( 'Y-m-d H:i:s', tutor_time() );
-
-		if ( ! tutils()->has_enrolled_content_access( 'qa_question', $question_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-			exit;
-		}
-
-		do_action( 'tutor_before_answer_to_question' );
-		$data = apply_filters(
-			'tutor_add_answer_data',
-			array(
-				'comment_post_ID'  => $question->comment_post_ID,
-				'comment_author'   => $user->user_login,
-				'comment_date'     => $date,
-				'comment_date_gmt' => get_gmt_from_date( $date ),
-				'comment_content'  => $answer,
-				'comment_approved' => 'approved',
-				'comment_agent'    => 'TutorLMSPlugin',
-				'comment_type'     => 'tutor_q_and_a',
-				'comment_parent'   => $question_id,
-				'user_id'          => $user_id,
+		$if_added_to_list = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * from {$wpdb->usermeta}
+			WHERE user_id = %d
+				AND meta_key = '_tutor_course_wishlist'
+				AND meta_value = %d;",
+				$user_id,
+				$course_id
 			)
 		);
-
-		$wpdb->insert( $wpdb->comments, $data );
-		$comment_id = (int) $wpdb->insert_id;
-		do_action( 'tutor_after_answer_to_question', $comment_id );
-
-		wp_send_json_success( __( 'Answer has been added successfully', 'tutor' ) );
-	}
-
-
-	public function tutor_course_add_to_wishlist() {
-		tutils()->checking_nonce();
-
-		$course_id = (int) $_POST['course_id'];
-		if ( ! is_user_logged_in() ) {
-			wp_send_json_error( array( 'redirect_to' => wp_login_url( wp_get_referer() ) ) );
-		}
-		global $wpdb;
-
-		$user_id          = get_current_user_id();
-		$if_added_to_list = $wpdb->get_row( $wpdb->prepare( "SELECT * from {$wpdb->usermeta} WHERE user_id = %d AND meta_key = '_tutor_course_wishlist' AND meta_value = %d;", $user_id, $course_id ) );
 
 		if ( $if_added_to_list ) {
 			$wpdb->delete(
@@ -319,25 +254,106 @@ class Ajax {
 			);
 			wp_send_json_success(
 				array(
-					'status' => 'removed',
-					'msg'    => __(
-						'Course removed from wish list',
-						'tutor'
-					),
+					'status'  => 'removed',
+					'message' => __( 'Course removed from wish list', 'tutor' ),
 				)
 			);
 		} else {
 			add_user_meta( $user_id, '_tutor_course_wishlist', $course_id );
 			wp_send_json_success(
 				array(
-					'status' => 'added',
-					'msg'    => __(
-						'Course added to wish list',
-						'tutor'
-					),
+					'status'  => 'added',
+					'message' => __( 'Course added to wish list', 'tutor' ),
 				)
 			);
 		}
+	}
+
+	/**
+	 * Prepare addons data
+	 */
+	public function prepare_addons_data() {
+		$addons       = apply_filters( 'tutor_addons_lists_config', array() );
+		$plugins_data = $addons;
+
+		if ( is_array( $addons ) && count( $addons ) ) {
+			foreach ( $addons as $base_name => $addon ) {
+				$addon_config = tutor_utils()->get_addon_config( $base_name );
+				$is_enabled   = (bool) tutor_utils()->avalue_dot( 'is_enable', $addon_config );
+
+				$plugins_data[ $base_name ]['is_enabled'] = $is_enabled;
+
+				$thumbnail_url = tutor()->url . 'assets/images/tutor-plugin.png';
+				if ( file_exists( $addon['path'] . 'assets/images/thumbnail.png' ) ) {
+					$thumbnail_url = $addon['url'] . 'assets/images/thumbnail.png';
+				} elseif ( file_exists( $addon['path'] . 'assets/images/thumbnail.jpg' ) ) {
+					$thumbnail_url = $addon['url'] . 'assets/images/thumbnail.jpg';
+				} elseif ( file_exists( $addon['path'] . 'assets/images/thumbnail.svg' ) ) {
+					$thumbnail_url = $addon['url'] . 'assets/images/thumbnail.svg';
+				}
+
+				$plugins_data[ $base_name ]['thumb_url'] = $thumbnail_url;
+
+				/**
+				 * Checking if there any dependant plugin exists
+				 */
+				$depends          = tutor_utils()->array_get( 'depend_plugins', $addon );
+				$plugins_required = array();
+				if ( tutor_utils()->count( $depends ) ) {
+					foreach ( $depends as $plugin_base => $plugin_name ) {
+						if ( ! is_plugin_active( $plugin_base ) ) {
+							$plugins_required[ $plugin_base ] = $plugin_name;
+						}
+					}
+				}
+
+				$depended_plugins = array();
+				foreach ( $plugins_required as $required_plugin ) {
+					array_push( $depended_plugins, $required_plugin );
+				}
+
+				$plugins_data[ $base_name ]['plugins_required'] = $depended_plugins;
+
+				// Check if it's notifications.
+				if ( function_exists( 'tutor_notifications' ) && $base_name == tutor_notifications()->basename ) {
+
+					$required = array();
+					version_compare( PHP_VERSION, '7.2.5', '>=' ) ? 0 : $required[] = __( 'PHP 7.2.5 or greater is required', 'tutor' );
+					! is_ssl() ? $required[]                                        = __( 'SSL certificate', 'tutor' ) : 0;
+
+					foreach ( array( 'curl', 'gmp', 'mbstring', 'openssl' ) as $ext ) {
+						! extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong>' : 0;
+					}
+
+					$plugins_data[ $base_name ]['ext_required'] = $required;
+				}
+			}
+		}
+
+		$prepared_addons = array();
+		foreach ( $plugins_data as $tutor_addon ) {
+			array_push( $prepared_addons, $tutor_addon );
+		}
+
+		return $prepared_addons;
+	}
+
+	/**
+	 * Get all notifications
+	 */
+	public function tutor_get_all_addons() {
+
+		// Check and verify the request.
+		tutor_utils()->checking_nonce();
+
+		// All good, let's proceed.
+		$all_addons = $this->prepare_addons_data();
+
+		wp_send_json_success(
+			array(
+				'addons' => $all_addons,
+			)
+		);
 	}
 
 	/**
@@ -351,91 +367,33 @@ class Ajax {
 
 		$addonsConfig = maybe_unserialize( get_option( 'tutor_addons_config' ) );
 
-		$isEnable       = (bool) sanitize_text_field( tutor_utils()->avalue_dot( 'isEnable', $_POST ) );
-		$addonFieldName = sanitize_text_field( tutor_utils()->avalue_dot( 'addonFieldName', $_POST ) );
+		// $isEnable = (bool) sanitize_text_field( tutor_utils()->avalue_dot( 'isEnable', $_POST ) );
+		// $addonFieldName = sanitize_text_field( tutor_utils()->avalue_dot( 'addonFieldName', $_POST ) );
+		$addonFieldNames = json_decode( stripslashes( ( tutor_utils()->avalue_dot( 'addonFieldNames', $_POST ) ) ), true );
 
-		do_action( 'tutor_addon_before_enable_disable' );
-		if ( $isEnable ) {
-			do_action( "tutor_addon_before_enable_{$addonFieldName}" );
-			do_action( 'tutor_addon_before_enable', $addonFieldName );
-			$addonsConfig[ $addonFieldName ]['is_enable'] = 1;
-			update_option( 'tutor_addons_config', $addonsConfig );
+		foreach ( $addonFieldNames as $addonFieldName => $isEnable ) {
+			do_action( 'tutor_addon_before_enable_disable' );
+			if ( $isEnable ) {
+				do_action( "tutor_addon_before_enable_{$addonFieldName}" );
+				do_action( 'tutor_addon_before_enable', $addonFieldName );
+				$addonsConfig[ $addonFieldName ]['is_enable'] = 1;
+				update_option( 'tutor_addons_config', $addonsConfig );
 
-			do_action( 'tutor_addon_after_enable', $addonFieldName );
-			do_action( "tutor_addon_after_enable_{$addonFieldName}" );
-		} else {
-			do_action( "tutor_addon_before_disable_{$addonFieldName}" );
-			do_action( 'tutor_addon_before_disable', $addonFieldName );
-			$addonsConfig[ $addonFieldName ]['is_enable'] = 0;
-			update_option( 'tutor_addons_config', $addonsConfig );
+				do_action( 'tutor_addon_after_enable', $addonFieldName );
+				do_action( "tutor_addon_after_enable_{$addonFieldName}" );
+			} else {
+				do_action( "tutor_addon_before_disable_{$addonFieldName}" );
+				do_action( 'tutor_addon_before_disable', $addonFieldName );
+				$addonsConfig[ $addonFieldName ]['is_enable'] = 0;
+				update_option( 'tutor_addons_config', $addonsConfig );
 
-			do_action( 'tutor_addon_after_disable', $addonFieldName );
-			do_action( "tutor_addon_after_disable_{$addonFieldName}" );
+				do_action( 'tutor_addon_after_disable', $addonFieldName );
+				do_action( "tutor_addon_after_disable_{$addonFieldName}" );
+			}
+			do_action( 'tutor_addon_after_enable_disable' );
 		}
 
-		do_action( 'tutor_addon_after_enable_disable' );
 		wp_send_json_success();
-	}
-
-	/**
-	 * Load review edit form
-	 *
-	 * @since v.1.4.0
-	 */
-	public function tutor_load_edit_review_modal() {
-		tutor_utils()->checking_nonce();
-
-		$review_id = (int) tutils()->array_get( 'review_id', $_POST );
-		$rating    = tutils()->get_rating_by_id( $review_id );
-
-		if ( ! tutils()->has_enrolled_content_access( 'review', $review_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-			exit;
-		}
-
-		ob_start();
-		tutor_load_template( 'dashboard.reviews.edit-review-form', array( 'rating' => $rating ) );
-		$output = ob_get_clean();
-
-		wp_send_json_success( array( 'output' => $output ) );
-	}
-
-	public function tutor_update_review_modal() {
-		global $wpdb;
-
-		tutor_utils()->checking_nonce();
-
-		$review_id = (int) tutils()->array_get( 'review_id', $_POST );
-		$rating    = sanitize_text_field( tutor_utils()->avalue_dot( 'rating', $_POST ) );
-		$review    = wp_kses_post( tutor_utils()->avalue_dot( 'review', $_POST ) );
-
-		if ( ! tutils()->has_enrolled_content_access( 'review', $review_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-			exit;
-		}
-
-		$is_exists = $wpdb->get_var( $wpdb->prepare( "SELECT comment_ID from {$wpdb->comments} WHERE comment_ID=%d AND comment_type = 'tutor_course_rating' ;", $review_id ) );
-
-		if ( $is_exists ) {
-			$wpdb->update(
-				$wpdb->comments,
-				array( 'comment_content' => $review ),
-				array( 'comment_ID' => $review_id )
-			);
-			$wpdb->update(
-				$wpdb->commentmeta,
-				array( 'meta_value' => $rating ),
-				array(
-					'comment_id' => $review_id,
-					'meta_key'   => 'tutor_rating',
-				)
-			);
-
-			do_action( 'tutor_after_review_update', $review_id, $is_exists );
-
-			wp_send_json_success();
-		}
-		wp_send_json_error();
 	}
 
 	/**
@@ -444,28 +402,36 @@ class Ajax {
 	 * @since v.1.6.3
 	 */
 	public function process_ajax_login() {
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		$username    = sanitize_text_field( tutils()->array_get( 'log', $_POST ) );
-		$password    = tutils()->array_get( 'pwd', $_POST ); // Password can not be sanitized because users might use special characters including quotes etc.
-		$redirect_to = esc_url( tutils()->array_get( 'redirect_to', $_POST ) );
+		$username    = tutor_utils()->array_get( 'log', $_POST );
+		$password    = tutor_utils()->array_get( 'pwd', $_POST );
+		$redirect_to = tutor_utils()->array_get( 'redirect_to', $_POST );
 
 		try {
 			$creds = array(
-				'user_login'    => trim( wp_unslash( $username ) ), 
-				'user_password' => $password, 
-				'remember'      => isset( $_POST['rememberme'] ), 
+				'user_login'    => trim( wp_unslash( $username ) ),
+				'user_password' => $password,
+				'remember'      => isset( $_POST['rememberme'] ),
 			);
 
 			$validation_error = new \WP_Error();
 			$validation_error = apply_filters( 'tutor_process_login_errors', $validation_error, $creds['user_login'], $creds['user_password'] );
 
 			if ( $validation_error->get_error_code() ) {
-				wp_send_json_error( '<strong>' . __( 'ERROR:', 'tutor' ) . '</strong> ' . $validation_error->get_error_message() );
+				wp_send_json_error(
+					array(
+						'message' => $validation_error->get_error_message(),
+					)
+				);
 			}
 
 			if ( empty( $creds['user_login'] ) ) {
-				wp_send_json_error( '<strong>' . __( 'ERROR:', 'tutor' ) . '</strong> ' . __( 'Username is required.', 'tutor' ) );
+				wp_send_json_error(
+					array(
+						'message' => __( 'Username is required.', 'tutor' ),
+					)
+				);
 			}
 
 			// On multisite, ensure user exists on current site, if not add them before allowing login.
@@ -481,24 +447,26 @@ class Ajax {
 			$user = wp_signon( apply_filters( 'tutor_login_credentials', $creds ), is_ssl() );
 
 			if ( is_wp_error( $user ) ) {
-				$message = $user->get_error_message();
-				$message = str_replace( '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', '<strong>' . esc_html( $creds['user_login'] ) . '</strong>', $message );
-
-				wp_send_json_error( $message );
+				wp_send_json_error(
+					array(
+						'message' => $user->get_error_message(),
+					)
+				);
 			} else {
 				// since 1.9.8 do enroll if guest attempt to enroll
-				do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
+				if ( ! empty( $_POST['tutor_course_enroll_attempt'] ) ) {
+					do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
+				}
 
 				wp_send_json_success(
 					array(
-						'redirect' => apply_filters( 'tutor_login_redirect_url', $redirect_to ),
+						'redirect_to' => apply_filters( 'tutor_login_redirect_url', $redirect_to ),
 					)
 				);
-
 			}
 		} catch ( \Exception $e ) {
-			wp_send_json_error( apply_filters( 'login_errors', $e->getMessage() ) );
 			do_action( 'tutor_login_failed' );
+			wp_send_json_error( apply_filters( 'login_errors', $e->getMessage() ) );
 		}
 	}
 
@@ -508,21 +476,15 @@ class Ajax {
 	 * @since  v.1.7.9
 	 */
 	public function create_or_update_annoucement() {
-		// prepare alert message
-		$create_success_msg = __( 'Announcement created successfully', 'tutor' );
-		$update_success_msg = __( 'Announcement updated successfully', 'tutor' );
-		$create_fail_msg    = __( 'Announcement creation failed', 'tutor' );
-		$update_fail_msg    = __( 'Announcement update failed', 'tutor' );
+		tutor_utils()->checking_nonce();
 
-		$error    = array();
-		$response = array();
-		tutils()->checking_nonce();
-
+		$error                = array();
 		$course_id            = sanitize_text_field( $_POST['tutor_announcement_course'] );
 		$announcement_title   = sanitize_text_field( $_POST['tutor_announcement_title'] );
 		$announcement_summary = sanitize_textarea_field( $_POST['tutor_announcement_summary'] );
 
-		if ( ! tutils()->can_user_manage( 'course', $course_id ) ) {
+		// Check if user can manage this announcment
+		if ( ! tutor_utils()->can_user_manage( 'course', $course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
@@ -554,35 +516,34 @@ class Ajax {
 
 		}
 
-		if ( count( $error ) > 0 ) {
-			$response['status']  = 'validation_error';
-			$response['message'] = $error;
-			wp_send_json( $response );
-		} else {
-			// insert or update post
-			$post_id = wp_insert_post( $form_data );
-			if ( $post_id > 0 ) {
-				$announcement       = get_post( $post_id );
-				$action_type        = sanitize_textarea_field( $_POST['action_type'] );
-				$response['status'] = 'success';
-				// set reponse message as per action type
-				$response['message'] = ( $action_type == 'create' ) ? $create_success_msg : $update_success_msg;
+		if ( empty( $form_data['post_content'] ) ) {
+			$error['post_content'] = __( 'Announcement summary required', 'tutor' );
 
-				do_action( 'tutor_announcements/after/save', $post_id, $announcement, $action_type );
-
-				wp_send_json( $response );
-			} else {
-				// failure message
-				$response['status'] = 'fail';
-				if ( $_POST['action_type'] == 'create' ) {
-					$response['message'] = $create_fail_msg;
-				}
-				if ( $_POST['action_type'] == 'update' ) {
-					$response['message'] = $update_fail_msg;
-				}
-				wp_send_json( $response );
-			}
 		}
+
+		// If validation fails
+		if ( count( $error ) > 0 ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'All fields required!', 'tutor' ),
+					'fields'  => $error,
+				)
+			);
+		}
+
+		// insert or update post
+		$post_id = wp_insert_post( $form_data );
+		if ( $post_id > 0 ) {
+			$announcement = get_post( $post_id );
+			$action_type  = sanitize_textarea_field( $_POST['action_type'] );
+
+			do_action( 'tutor_announcements/after/save', $post_id, $announcement, $action_type );
+
+			$resp_message = $action_type == 'create' ? __( 'Announcement created successfully', 'tutor' ) : __( 'Announcement updated successfully', 'tutor' );
+			wp_send_json_success( array( 'message' => $resp_message ) );
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Something Went Wrong!', 'tutor' ) ) );
 	}
 
 	/**
@@ -592,25 +553,17 @@ class Ajax {
 	 */
 	public function delete_annoucement() {
 		$announcement_id = sanitize_text_field( $_POST['announcement_id'] );
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		if ( ! tutils()->can_user_manage( 'announcement', $announcement_id ) ) {
+		if ( ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
 		$delete = wp_delete_post( $announcement_id );
 		if ( $delete ) {
-			$response = array(
-				'status'  => 'success',
-				'message' => __( 'Announcement deleted successfully', 'tutor' ),
-			);
-			wp_send_json( $response );
-		} else {
-			$response = array(
-				'status'  => 'fail',
-				'message' => __( 'Announcement delete failed', 'tutor' ),
-			);
-			wp_send_json( $response );
+			wp_send_json_success( array( 'message' => __( 'Announcement deleted successfully', 'tutor' ) ) );
 		}
+
+		wp_send_json_error( array( 'message' => __( 'Announcement delete failed', 'tutor' ) ) );
 	}
 }

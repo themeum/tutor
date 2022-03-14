@@ -1,71 +1,63 @@
+$inst_gap: 30px;
 
-/* Multi instructor styles */
+// Multi instructor list styles
+#wpcontent {
+    .tutor-course-available-instructors {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 400px));
+        gap: 20px;
+        justify-content: flex-start;
+        .added-instructor-item {
+            max-width: unset !important;
+        }
+    }
+}
 .tutor-course-available-instructors {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    
+    // display: flex;
+    // flex-wrap: wrap;
     .added-instructor-item {
-        -webkit-box-flex: 0;
-        -ms-flex: 0 0 calc(50% - 20px);
-        flex: 0 0 calc(50% - 20px);
-        max-width: calc(50% - 20px);
+        // flex: 0 0 calc(50% - #{$inst_gap});
+        // max-width: calc(50% - #{$inst_gap});
         border: 1px solid #dcdfe5;
         padding: 13px;
-        display: -webkit-inline-box;
-        display: -ms-inline-flexbox;
         display: inline-flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
         align-items: center;
         border-radius: 4px;
         position: relative;
-        -webkit-box-sizing: border-box;
-                box-sizing: border-box;
-        margin: 0px 10px 20px;
-
-        @media (min-width: 1300px) {
-            -ms-flex: 0 0 calc(33.333% - 20px);
-            -webkit-box-flex: 0;
-                    flex: 0 0 calc(33.333% - 20px);
-            max-width: calc(33.333% - 20px);
-        }
-        
-        @media (max-width: 546px) {
-            -ms-flex: 0 0 100%;
-            -webkit-box-flex: 0;
-                    flex: 0 0 100%;
-            max-width: 100%;
-        }
+        box-sizing: border-box;
+        // margin: 0px #{$inst_gap} #{$inst_gap} 0;
         
         .instructor-control {
             position: absolute;
-            right: 14px;
+            right: 0;
             top: 50%;
             font-size: 12px;
             -webkit-transform: translateY(-50%);
             transform: translateY(-50%);
-            opacity: 0;
             -webkit-transition: 300ms;
             transition: 300ms;
+            background: white;
+            height: calc(100% - 5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10px;
 
             a {
-                color: red;
                 text-decoration: none;
             }
         }
 
-        &:hover{
+        &:not(:hover){
             .instructor-control {
-                opacity: 1;
+                display: none;
             }
         }
-
         .instructor-icon {
-            height: 45px;
-            width: 45px;
+            // height: 45px;
+            // width: 45px;
+            height: auto !important;
+            max-width: 45px;
             overflow: hidden;
             border-radius: 50px;
             margin-right: 15px;
@@ -78,70 +70,146 @@
         
         .instructor-name {
             position: relative;
-
-            i.instructor-name-tooltip {
-                -webkit-transition: 300ms;
-                transition: 300ms;
-                opacity: 0;
-                position: absolute;
-                bottom: 34px;
-                right: 9px;
-                background: #2a344f;
-                -webkit-transform: translateX(50%);
-                transform: translateX(50%);
-                color: #fff;
-                font-size: 12px;
-                font-style: normal;
-                padding: 0 8px;
-                border-radius: 15px;
-                line-height: 20px;
-                z-index: 1;
-
-                &::before {
-                    content: "";
-                    position: absolute;
-                    border: 5px solid #2a344f;
-                    bottom: -3px;
-                    left: 50%;
-                    margin-left: -5px;
-                    -webkit-transform: rotate(45deg);
-                    transform: rotate(45deg);
-                    z-index: -1;
-                }
-            }
-            
+            font-style: normal;
+            font-weight: 500;
+            font-size: 18px;
+            color: #212327;
+            width: calc(100% - 45px);
+            flex-basis: calc(100% - 45px);
             img {
                 display: inline-block;
-                margin-left: 10px;
+                margin-left: 5px;
                 width: 18px;
+            }
 
-                &:hover + i.instructor-name-tooltip {
-                opacity: 1;
-                }
+            span{
+                // Email address
+                display: block;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 13px;
+                color: #5B616F;
             }
         }
-        
     }
 }
 
-#tutor-instructors {
-	h2 {
-		padding: 15px;
-		line-height: 30px;
+// Multi instructor picker modal
+#tutor_course_instructor_modal {
 
-		&:before {
-			content: "\e93c";
-			color: var(--tutor-primary-color);
-			font-family: "tutor" !important;
-			speak: none;
-			font-style: normal;
-			font-weight: normal;
-			font-variant: normal;
-			text-transform: none;
-			line-height: 1;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-			margin-right: 10px;
-		}
-	}
-} 
+    .tutor-modal-body{
+        padding: 40px ​50px;
+    }
+
+    
+    .tutor-modal-body-alt{
+        padding: 0;
+        text-align: left;
+    }
+
+    .instructor-modal-title {
+        text-align: left;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        color: #1D1F37;
+        border-bottom: 1px solid #CDCFD5;
+        position: relative;
+        padding-bottom: 20px;
+        margin-bottom: 36px;
+        
+        .tutor-modal-close{
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+    }
+
+    .tutor-search-result {
+        position: absolute;
+        z-index: 99;
+        width: 300px;
+        background: white;
+        max-height: 216px;
+        overflow: auto;
+        border: 1px solid #CDCFD5;
+        box-sizing: border-box;
+        border-radius: 6px;
+        &:empty{
+            display: none;
+            border: none;
+            margin: 0;
+            padding: 0;
+            height: 0;
+        }
+
+        &>div{
+            @include valueWithPrefix(display, flex);
+            @include propertyWithPrefix(align-items, center);
+            padding: 12px 0;
+
+            &:hover{
+                background: #EFF1F7;
+            }
+
+            img {
+                // Profile pic
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                overflow: hidden;
+                margin: 0 19px;
+            }
+
+            span {
+                // Name
+                @include propertyWithPrefix(flex, 1);
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 23px;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 16px;
+                color: #212327;
+
+                &>span{
+                    // Email
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 13px;
+                    color: #5B616F;
+                }
+            }
+
+            i{
+                // Add icon
+                padding: 0 20px;
+                color: #3E64DE;
+                font-size: 24px;
+                cursor: pointer;
+            }
+
+            &:not(:hover){
+                i{
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .tutor-selected-result {
+        min-height: 150px;
+        margin-bottom: 20px;
+    }
+
+    .tutor-instructor-buttons {
+        text-align: left;
+
+        button{
+            &:last-child{
+                float: right;
+            }
+        }
+    }
+}

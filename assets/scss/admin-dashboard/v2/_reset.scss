@@ -1,0 +1,37 @@
+// Reset Browser Default
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+a {
+	text-decoration: none;
+	&:focus,
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.tutor-backend-settings-page {
+	* {
+		box-sizing: border-box;
+	}
+}
+
+// [class^='tutor-'] {
+// 	p,
+// 	h1,
+// 	h2,
+// 	h3,
+// 	h4,
+// 	h5,
+// 	h6,
+// 	ul,
+// 	ol {
+// 		margin: 0;
+// 		padding: 0;
+// 	}
+// }

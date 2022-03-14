@@ -1,13 +1,3 @@
-.tutor-announcement-content-wrap {
-	text-align: left !important;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	
-	p {
-		margin: 0;
-	}
-}
 .tutor-dashboard-announcement-sorting-wrap {
 	display: flex;
 	column-gap: 15px;
@@ -22,60 +12,6 @@
 	}
 }
 
-.tutor-dashboard-announcement-table {
-	border-spacing: 0;
-	border-collapse: collapse;
-	border: 1px solid #ccd0d4;
-	thead {
-		th, td {
-			border-bottom: 1px solid #ccd0d4;
-		}
-	}
-	tbody {
-		tr:last-child {
-			border-bottom: 1px solid #ccd0d4;
-		}
-		td:first-child {
-			padding-left: 30px;
-			line-height: 24px;
-		}
-	}
-	tr {
-		background-color: #F3F3F3;
-	}
-	tr:nth-child(odd) {
-		background-color: #fff;
-	}
-	th, td {
-		border: 0;
-		vertical-align: middle;
-		h4 {
-			font-size: 16px;
-			margin-bottom: 0;
-		}
-		p, a {
-			font-size: 13px;
-			margin-bottom: 0;
-		}
-		&:last-child {
-			padding-right: 30px;
-		}
-	}
-	th {
-		padding: 15px 0;
-		background-color: #f3f3f3;
-	}
-	td {
-		padding: 30px 0;
-	}
-	th:first-child {
-		padding-left: 40px;
-	}
-	th:last-child {
-		padding-right: 40px;
-	}
-}
-
 .tutor-announcement-datepicker {
 	position: relative;
 	input, i {
@@ -87,13 +23,7 @@
 		color: rgba(62, 100, 222, 1);
 	}
 }
-.tutor-announcement-buttons {
-	display: flex;
-	align-items: center;
-	li {
-		list-style: none;
-	}
-}
+
 .tutor-dropdown {
 	position: relative;
 	cursor: pointer;
@@ -109,59 +39,18 @@
         }
     }
 
-	&.show {
+	&.tutor-dropdown-show {
 		.tutor-dropdown-menu {
 			display: block !important;
 		}
 	}
 }
 
-.tutor-announcements-update-form .tutor-option-field-row input[type="text"],
-.tutor-announcements-update-form textarea,
-.tutor-announcements-form .tutor-option-field-row input[type="text"],
-.tutor-announcements-form textarea {
-	width: 100%;
-	margin-top: 8px;
-}
-.tutor-announcements-form select,
-.tutor-announcements-update-form select {
-	width: 100%;
-	max-width: 100% !important;
-	padding: 7px 12px;
-	margin-top: 8px;
-}
-.tutor-announcements-update-form .tutor-option-field-row,
-.tutor-announcements-form .tutor-option-field-row {
-	border: none !important;
-}
-.tutor-announcement-modal-content {
-	border-radius: 20px;
-}
-.tutor-announcement-modal-footer-buttons {
-	display: flex;
-	justify-content: space-between;
-}
-.tutor-announcement-cancel-btn {
-	background: #e8e8e8 !important;
-	border-radius: 3px !important;
-	color: #7a7a7a !important;
-}
-
-/*announcemnets details modal*/
-.tutor-announcement-details-modal-content>a {
-	cursor: pointer;
-	padding: 20px;
-	float: right;
-}
-.modal-container.tutor-announcement-details-container {
-	padding: 45px 70px !important;
-}
-
 .tutor-announcement-big-icon {
 	margin-right: 10px;
 	font-size: 32px;
-	width: 76px;
-	height: 76px;
+	width: 60px;
+	height: 60px;
 	border-radius: 100%;
 	background: #e9edfb;
 	text-align: center;
@@ -171,64 +60,15 @@
 	@include propertyWithPrefix(justify-content, center);
 }
 
-.tutor-announcement-detail-content {
-	margin-top: 35px;
-
-	h3 {
-		font-size: 24px;
-		font-weight: bold;
-		color: #161616;
+table.frontend-dashboard-table {
+	tbody {
+		tr {
+			td[data-th="Date"] {
+				vertical-align: baseline;
+				div.td-datetime {
+					margin-top: 3px;
+				}
+			}
+		}
 	}
-	
-	p {
-		font-style: normal;
-		font-weight: normal;
-		font-size: 16px;
-		color: #7a7a7a;
-		margin-top: 15px;
-		margin-bottom: 10px;
-	}
-}
-
-.tutor-detail-course-content-wrap {
-	background-color: #f3f3f3;
-}
-.tutor-detail-course-content {
-	padding: 30px 70px 70px;
-}
-.tutor-detail-course-info-wrap {
-	display: flex;
-    justify-content: space-between;
-    margin-bottom: 50px;
-}
-.tutor-announce-detail-popup-button-wrap {
-	display: flex;
-	justify-content: space-between;
-}
-.announcement-detail-edit-delete-button>.tutor-announcement-delete {
-	background: #e8e8e8 !important;
-	color: #7a7a7a !important;
-}
-.tutor-border-none {
-	border: none !important;
-}
-.announcement-detail-edit-delete-button>button {
-	padding: 10px 20px !important;
-}
-.announcement-detail-edit-delete-button {
-	display: flex;
-	gap: 10px;
-}
-.tutor-announcement-detail-course-info p,
-.tutor-announcement-detail-date-info p {
-	font-size: 16px;
-	color: #161616;
-	font-weight: 700;
-	max-width: 95%;
-}
-.tutor-announcements-modal-wrap .tutor-modal-content {
-    max-width: 660px !important;
-}
-.tutor-announcements-modal-wrap .modal-footer {
-    justify-content: space-between;
 }

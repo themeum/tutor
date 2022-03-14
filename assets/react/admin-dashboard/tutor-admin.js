@@ -1,764 +1,527 @@
-import '../lib/common';
-
-jQuery(document).ready(function($){
-    'use strict';
-
-    const { __, _x, _n, _nx } = wp.i18n;
-    const search_student_placeholder = __( 'Search students', 'tutor' );
-    /**
-     * Color Picker
-     * @since v.1.2.21
-     */
-    if (jQuery().wpColorPicker) {
-        $('.tutor_colorpicker').wpColorPicker();
-    }
-
-    if (jQuery().select2){
-        $('.tutor_select2').select2();
-    }
-
-    /**
-     * Option Settings Nav Tab
-     */
-    $('.tutor-option-nav-tabs li a').click(function(e){
-        e.preventDefault();
-        var tab_page_id = $(this).attr('data-tab');
-        $('.option-nav-item').removeClass('current');
-        $(this).closest('li').addClass('current');
-        $('.tutor-option-nav-page').hide();
-        $(tab_page_id).addClass('current-page').show();
-        window.history.pushState('obj', '', $(this).attr('href'));
-    });
-
-    $('#save_tutor_option').click(function (e) {
-        e.preventDefault();
-        $(this).closest('form').submit();
-    });
-    $('#tutor-option-form').submit(function(e){
-        e.preventDefault();
-
-        var $form = $(this);
-        var data = $form.serializeObject();
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : data,
-            beforeSend: function () {
-                $form.find('.button').addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                data.success ? 
-                    tutor_toast(__('Saved', 'tutor'), $form.data('toast_success_message'), 'success') : 
-                    tutor_toast(__('Request Error', 'tutor'), __('Could not save', 'tutor'), 'error');
-            },
-            complete: function () {
-                $form.find('.button').removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    /**
-     * Withdraw nav tabs
-     * @since v.1.1.2
-     */
-    $(document).on('click', '.withdraw-method-nav li a', function(e){
-        e.preventDefault();
-        var tab_page_id = $(this).attr('data-target-id');
-        $('.withdraw-method-form-wrap').hide();
-        $('#'+tab_page_id).show();
-    });
-
-    /**
-     * End Withdraw nav tabs
-     */
-
-    /**
-     * Don't move it to anywhere?
-     */
-    function enable_sorting_topic_lesson(){
-        if (jQuery().sortable) {
-            $(".course-contents").sortable({
-                handle: ".course-move-handle",
-                start: function (e, ui) {
-                    ui.placeholder.css('visibility', 'visible');
-                },
-                stop: function (e, ui) {
-                    tutor_sorting_topics_and_lesson();
-                },
-            });
-            $(".tutor-lessons:not(.drop-lessons)").sortable({
-                connectWith: ".tutor-lessons",
-                items: "div.course-content-item",
-                start: function (e, ui) {
-                    ui.placeholder.css('visibility', 'visible');
-                },
-                stop: function (e, ui) {
-                    tutor_sorting_topics_and_lesson();
-                },
-            });
-        }
-    }
-    enable_sorting_topic_lesson();
-    function tutor_sorting_topics_and_lesson(){
-        var topics = {};
-        $('.tutor-topics-wrap').each(function(index, item){
-            var $topic = $(this);
-            var topics_id = parseInt($topic.attr('id').match(/\d+/)[0], 10);
-            var lessons = {};
-
-            $topic.find('.course-content-item').each(function(lessonIndex, lessonItem){
-                var $lesson = $(this);
-                var lesson_id = parseInt($lesson.attr('id').match(/\d+/)[0], 10);
-
-                lessons[lessonIndex] = lesson_id;
-            });
-            topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
-        });
-        $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
-    }
-
-    /**
-     * Lesson Update or Create Modal
-     */
-    $(document).on( 'click', '.update_lesson_modal_btn',  function( event ){
-        event.preventDefault();
-
-        var $that = $(this);
-        var inputid = 'tutor_lesson_modal_editor';
-        var editor = tinyMCE.get(inputid);
-        var content = editor ? editor.getContent() : $('#'+inputid).val();
-
-        console.log(content);
-        
-        var form_data = $(this).closest('form').serializeObject();
-        form_data.lesson_content = content;
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : form_data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $('#tutor-course-content-wrap').html(data.data.course_contents);
-                    enable_sorting_topic_lesson();
-
-                    //Close the modal
-                    $('.tutor-lesson-modal-wrap').removeClass('show');
-
-                    tutor_toast(__('Lesson Updated', 'tutor'), $that.data('toast_success_message'), 'success');
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    /**
-     * Lesson Video
-     */
-    $(document).on('change', '.tutor_lesson_video_source', function(e){
-        var selector = $(this).val();
-        $('[class^="video_source_wrap"]').hide();
-        $('.video_source_wrap_'+selector).show();
-
-        if (selector === 'html5'){
-            $('.tutor-video-poster-field').show();
-        } else{
-            $('.tutor-video-poster-field').hide();
-        }
-    });
-
-    $(document).on( 'click', '.video_source_wrap_html5 .video_upload_btn',  function( event ){
-        event.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        // If the media frame already exists, reopen it.
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-
-        // Create a new media frame
-        frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
-            button: {
-                text: __( 'Upload media', 'tutor' )
-            },
-            library: { type: 'video' },
-            multiple: false  // Set to true to allow multiple files to be selected
-        });
-
-        // When an image is selected in the media frame...
-        frame.on( 'select', function() {
-            // Get media attachment details from the frame state
-            var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.video_source_wrap_html5').find('span.video_media_id').data('video_url', attachment.url).text(attachment.id).trigger('paste').closest('p').show();
-            $that.closest('.video_source_wrap_html5').find('input.input_source_video_id').val(attachment.id);
-        });
-        // Finally, open the modal on click
-        frame.open();
-    });
-
-    $(document).on('click', 'a.tutor-delete-attachment', function(e){
-        e.preventDefault();
-        $(this).closest('.tutor-added-attachment').remove();
-    });
-
-    $(document).on('click', '.tutorUploadAttachmentBtn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        // If the media frame already exists, reopen it.
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-        // Create a new media frame
-        frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
-            button: {
-                text: __( 'Upload media', 'tutor' )
-            },
-            multiple: true  // Set to true to allow multiple files to be selected
-        });
-        // When an image is selected in the media frame...
-        frame.on( 'select', function() {
-            // Get media attachment details from the frame state
-            var attachments = frame.state().get('selection').toJSON();
-            if (attachments.length){
-                for (var i=0; i < attachments.length; i++){
-                    var attachment = attachments[i];
-
-                    var inputHtml = '<div class="tutor-added-attachment"><i class="tutor-icon-archive"></i> <a href="javascript:;" class="tutor-delete-attachment tutor-icon-line-cross"></a> <span> <a href="'+attachment.url+'">'+attachment.filename+'</a> </span><input type="hidden" name="tutor_attachments[]" value="'+attachment.id+'"></div>';
-                    $that.closest('.tutor-lesson-attachments-metabox').find('.tutor-added-attachments-wrap').append(inputHtml);
-                }
-            }
-        });
-        // Finally, open the modal on click
-        frame.open();
-    });
-
-    /**
-     * Open Sidebar Menu
-     */
-    if (_tutorobject.open_tutor_admin_menu){
-        var $adminMenu = $('#adminmenu');
-        $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').addClass('wp-has-current-submenu');
-        $adminMenu.find('[href="admin.php?page=tutor"]').closest('li.wp-has-submenu').find('a.wp-has-submenu').removeClass('wp-has-current-submenu').addClass('wp-has-current-submenu');
-    }
-
-    $(document).on('click', '.tutor-option-media-upload-btn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-        frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
-            button: {
-                text: __( 'Upload media', 'tutor' )
-            },
-            multiple: false
-        });
-        frame.on( 'select', function() {
-            var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.option-media-wrap').find('.option-media-preview').html('<img src="'+attachment.url+'" alt="" />');
-            $that.closest('.option-media-wrap').find('input').val(attachment.id);
-            $that.closest('.option-media-wrap').find('.tutor-media-option-trash-btn').show();
-        });
-        frame.open();
-    });
-
-    /**
-     * Remove option media
-     * @since v.1.4.3
-     */
-    $(document).on('click', '.tutor-media-option-trash-btn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        $that.closest('.option-media-wrap').find('img').remove();
-        $that.closest('.option-media-wrap').find('input').val('');
-        $that.closest('.option-media-wrap').find('.tutor-media-option-trash-btn').hide();
-    });
-
-
-    $(document).on('change', '.tutor_addons_list_item', function(e) {
-        var $that = $(this);
-
-        var isEnable = $that.prop('checked') ? 1 : 0;
-        var addonFieldName = $that.attr('name');
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {isEnable:isEnable, addonFieldName:addonFieldName, action : 'addon_enable_disable'},
-            success: function (data) {
-                if (data.success){
-                    //Success
-                }
-            }
-        });
-    });
-
-    /**
-     * Add instructor
-     * @since v.1.0.3
-     */
-    $(document).on('submit', '#new-instructor-form', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var formData = $that.serializeObject();
-        formData.action = 'tutor_add_instructor';
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : formData,
-            success: function (data) {
-                if (data.success){
-                    $that.trigger("reset");
-                    $('#form-response').html('<p class="tutor-status-approved-context">'+data.data.msg+'</p>');
-                }else{
-                    var errorMsg = '';
-
-                    var errors = data.data.errors;
-                    if (errors && Object.keys(errors).length){
-                        $.each(data.data.errors, function( index, value ) {
-                            if (isObject(value)){
-                                $.each(value, function( key, value1 ) {
-                                    errorMsg += '<p class="tutor-required-fields">'+value1[0]+'</p>';
-                                });
-                            } else{
-                                errorMsg += '<p class="tutor-required-fields">'+value+'</p>';
-                            }
-                        });
-                        $('#form-response').html(errorMsg);
-                    }
-
-                }
-            }
-        });
-    });
-
-
-    /**
-     * Instructor block unblock action
-     * @since v.1.5.3
-     */
-
-    $(document).on('click', 'a.instructor-action', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var action = $that.attr('data-action');
-        var instructor_id = $that.attr('data-instructor-id');
-        
-        var prompt_message = $that.attr('data-prompt-message');
-        if(prompt_message && !confirm(prompt_message)){
-            // Avoid Accidental CLick
-            return;
-        }
-
-        var nonce_key = _tutorobject.nonce_key;
-        var json_data = { instructor_id : instructor_id, action_name : action, action: 'instructor_approval_action'};
-        json_data[nonce_key] = _tutorobject[nonce_key];
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : json_data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                location.reload(true);
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    function isObject (value) {
-        return value && typeof value === 'object' && value.constructor === Object;
-    }
-
-    /**
-     * Tutor Assignments JS
-     * @since v.1.3.3
-     */
-    $(document).on('click', '.tutor-create-assignments-btn', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var topic_id = $(this).attr('data-topic-id');
-        var course_id = $('#post_ID').val();
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-lesson-modal-wrap').attr('data-topic-id', topic_id).addClass('show');
-
-                $(document).trigger('assignment_modal_loaded', {topic_id : topic_id, course_id : course_id});
-
-                tinymce.init(tinyMCEPreInit.mceInit.tutor_editor_config);
-                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
-                tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
-            },
-            complete: function () {
-                quicktags({id : "tutor_assignments_modal_editor"});
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    $(document).on('click', '.open-tutor-assignment-modal', function(e){
-        e.preventDefault();
-
-        var $that = $(this);
-        var assignment_id = $that.attr('data-assignment-id');
-        var topic_id = $that.attr('data-topic-id');
-        var course_id = $('#post_ID').val();
-
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id, action: 'tutor_load_assignments_builder_modal'},
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
-                $('.tutor-lesson-modal-wrap').attr({'data-assignment-id' : assignment_id, 'data-topic-id':topic_id}).addClass('show');
-
-                $(document).trigger('assignment_modal_loaded', {assignment_id : assignment_id, topic_id : topic_id, course_id : course_id});
-
-                tinymce.init(tinyMCEPreInit.mceInit.tutor_editor_config);
-                tinymce.execCommand( 'mceRemoveEditor', false, 'tutor_assignments_modal_editor' );
-                tinyMCE.execCommand('mceAddEditor', false, "tutor_assignments_modal_editor");
-            },
-            complete: function () {
-                quicktags({id : "tutor_assignments_modal_editor"});
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    /**
-     * Update Assignment Data
-     */
-    $(document).on( 'click', '.update_assignment_modal_btn',  function( event ){
-        event.preventDefault();
-
-        var $that = $(this);
-        var inputid = 'tutor_assignments_modal_editor';
-        var editor = tinyMCE.get(inputid);
-        var content = editor ? editor.getContent() : $('#'+inputid).val();
-        
-        console.log(content);
-        
-        var form_data = $(this).closest('form').serializeObject();
-        form_data.assignment_content = content;
-        
-        $.ajax({
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            data : form_data,
-            beforeSend: function () {
-                $that.addClass('tutor-updating-message');
-            },
-            success: function (data) {
-                if (data.success){
-                    $('#tutor-course-content-wrap').html(data.data.course_contents);
-                    enable_sorting_topic_lesson();
-
-                    //Close the modal
-                    $('.tutor-lesson-modal-wrap').removeClass('show');
-                    
-                    tutor_toast(__('Assignment Updated', 'tutor'), $that.data('toast_success_message'), 'success');
-                }
-            },
-            complete: function () {
-                $that.removeClass('tutor-updating-message');
-            }
-        });
-    });
-
-    /**
-     * Add Assignment
-     */
-    $(document).on( 'click', '.add-assignment-attachments',  function( event ){
-        event.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        // If the media frame already exists, reopen it.
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-
-        // Create a new media frame
-        frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
-            button: {
-                text: __( 'Upload media', 'tutor' )
-            },
-            multiple: false  // Set to true to allow multiple files to be selected
-        });
-
-        // When an image is selected in the media frame...
-        frame.on( 'select', function() {
-            // Get media attachment details from the frame state
-            var attachment = frame.state().get('selection').first().toJSON();
-
-            var  field_markup = '<div class="tutor-individual-attachment-file"><p class="attachment-file-name">'+attachment.filename+'</p><input type="hidden" name="tutor_assignment_attachments[]" value="'+attachment.id+'"><a href="javascript:;" class="remove-assignment-attachment-a text-muted"> &times; Remove</a></div>';
-
-            $('#assignment-attached-file').append(field_markup);
-            $that.closest('.video_source_wrap_html5').find('input').val(attachment.id);
-        });
-        // Finally, open the modal on click
-        frame.open();
-    });
-
-    $(document).on( 'click', '.remove-assignment-attachment-a',  function( event ){
-        event.preventDefault();
-        $(this).closest('.tutor-individual-attachment-file').remove();
-    });
-
-    /**
-     * Used for backend profile photo upload.
-     */
-
-    //tutor_video_poster_upload_btn
-    $(document).on( 'click', '.tutor_video_poster_upload_btn',  function( event ){
-        event.preventDefault();
-
-        var $that = $(this);
-        var frame;
-        // If the media frame already exists, reopen it.
-        if ( frame ) {
-            frame.open();
-            return;
-        }
-
-        // Create a new media frame
-        frame = wp.media({
-            title: __( 'Select or Upload Media Of Your Choice', 'tutor' ),
-            button: {
-                text: __( 'Upload media', 'tutor')
-            },
-            multiple: false  // Set to true to allow multiple files to be selected
-        });
-
-        // When an image is selected in the media frame...
-        frame.on( 'select', function() {
-            // Get media attachment details from the frame state
-            var attachment = frame.state().get('selection').first().toJSON();
-            $that.closest('.tutor-video-poster-wrap').find('.video-poster-img').html('<img src="'+attachment.sizes.thumbnail.url+'" alt="" />');
-            $that.closest('.tutor-video-poster-wrap').find('input').val(attachment.id);
-        });
-        // Finally, open the modal on click
-        frame.open();
-    });
-
-
-    /**
-     * Tutor Memberships toggle in Paid Membership Pro panel
-     * @since v.1.3.6
-     */
-
-    $(document).on( 'change', '#tutor_pmpro_membership_model_select',  function( e ){
-        e.preventDefault();
-
-        var $that = $(this);
-
-        if ($that.val() === 'category_wise_membership'){
-            $('.membership_course_categories').show();
-        } else{
-            $('.membership_course_categories').hide();
-        }
-    });
-
-    $(document).on( 'change', '#tutor_pmpro_membership_model_select',  function( e ){
-        e.preventDefault();
-
-        var $that = $(this);
-
-        if ($that.val() === 'category_wise_membership'){
-            $('.membership_course_categories').show();
-        } else{
-            $('.membership_course_categories').hide();
-        }
-    });
-
-    // Require category selection
-    $(document).on('submit', '.pmpro_admin form', function(e) {
-        var form = $(this);
-
-        if(!form.find('input[name="tutor_action"]').length) {
-            // Level editor or tutor action not necessary
-            return;
-        }
-
-        if(
-            form.find('[name="tutor_pmpro_membership_model"]').val()=='category_wise_membership' && 
-            !form.find('.membership_course_categories input:checked').length) {
-
-            if(!confirm(__('Do you want to save without any category?', 'tutor'))) {
-                e.preventDefault();
-            }
-        }
-    });
-
-    /**
-     * Find user/student from select2
-     * @since v.1.4.0
-     */
-    $('#select2_search_user_ajax').select2({
-        allowClear: true,
-
-        minimumInputLength: 1,
-        placeholder: search_student_placeholder,
-        language: {
-            inputTooShort: function() {
-                return __( 'Please add 1 or more character', 'tutor' );
-            },
-        },
-        escapeMarkup: function( m ) {
-            return m;
-        },
-        ajax: {
-            url : window._tutorobject.ajaxurl,
-            type : 'POST',
-            dataType: 'json',
-            delay:       1000,
-            data: function( params ) {
-                return {
-                    term:     params.term,
-                    action:   'tutor_json_search_students'
-                };
-            },
-            processResults: function( data ) {
-                var terms = [];
-                if ( data ) {
-                    $.each( data, function( id, text ) {
-                        terms.push({
-                            id: id,
-                            text: text
-                        });
-                    });
-                }
-                return {
-                    results: terms
-                };
-
-            },
-            cache: true
-        }
-    });
-
-    /**
-     * Confirm Alert for deleting enrollments data
-     *
-     * @since v.1.4.0
-     */
-    $(document).on( 'click', 'table.enrolments .delete a',  function( e ){
-        e.preventDefault();
-
-        var url = $(this).attr('href');
-        var popup;
-
-        var data = {
-            title: __('Delete this enrolment', 'tutor'),
-            description : __('All of the course data like quiz attempts, assignment, lesson <br/>progress will be deleted if you delete this student\'s enrollment.', 'tutor'),
-            buttons : {
-                reset: {
-                    title: __('Cancel', 'tutor'),
-                    class: 'secondary',
-
-                    callback: function() {
-                        popup.remove();
-                    }
-                },
-                keep: {
-                    title: __('Yes, Delete This', 'tutor'),
-                    class: 'primary',
-                    callback: function() {
-                        window.location.replace(url);
-                    }
-                }
-            } 
-        };
-
-        popup = new window.tutor_popup($, 'icon-trash', 40).popup(data);
-    });
-    
-
-    /**
-     * Show hide is course public checkbox (backend dashboard editor)
-     * 
-     * @since  v.1.7.2
-    */
-    var price_type = $('#tutor-attach-product [name="tutor_course_price_type"]');
-    if(price_type.length==0){
-        $('#_tutor_is_course_public_meta_checkbox').show();
-    }
-    else{
-        price_type.change(function(){
-            if($(this).prop('checked')){
-                var method = $(this).val()=='paid' ? 'hide' : 'show';
-                $('#_tutor_is_course_public_meta_checkbox')[method]();
-            }
-        }).trigger('change');
-    }    
-    
-    
-    /**
-     * Focus selected instructor layout in setting page
-     * 
-     * @since  v.1.7.5
-    */
-    $(document).on('click', '.instructor-layout-template', function(){
-        $('.instructor-layout-template').removeClass('selected-template');
-        $(this).addClass('selected-template');
-    });
-
-
-    
-    /**
-     * Programmatically open preview link. For some reason it's not working normally.
-     * 
-     * @since  v.1.7.9
-    */
-   $('#preview-action a.preview').click(function(e) {
-        var href = $(this).attr('href');
-
-        if(href) {
-            e.preventDefault();
-            window.open(href, '_blank');
-        }
-   });
-
-
-   
+import './segments/lib';
+import '../front/_select_dd_search';
+import './addons-list/addons-list-main';
+import './segments/addonlist';
+import './segments/color-preset';
+import './segments/editor_full';
+import './segments/filter';
+import ajaxHandler from './segments/filter';
+import './segments/image-preview';
+import './segments/import-export';
+import './segments/navigation';
+import './segments/options';
+import './segments/reset';
+import './segments/withdraw';
+
+const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
+toggleChange.forEach((element) => {
+	element.addEventListener('change', (e) => {
+		let check_value = element.previousElementSibling;
+		if (check_value) {
+			check_value.value == 'on' ? (check_value.value = 'off') : (check_value.value = 'on');
+		}
+	});
 });
 
+jQuery(document).ready(function($) {
+	'use strict';
+
+	const { __ } = wp.i18n;
+	/**i
+	 * Color Picker
+	 * @since v.1.2.21
+	 */
+	if (jQuery().wpColorPicker) {
+		$('.tutor_colorpicker').wpColorPicker();
+	}
+
+	if (jQuery().select2) {
+		$('.tutor_select2').select2();
+	}
+
+	/**
+   * Option Settings Nav Tab
+   * /
+  $(".tutor-option-nav-tabs li a").click(function (e) {
+    e.preventDefault();
+    var tab_page_id = $(this).attr("data-tab");
+    $(".option-nav-item").removeClass("current");
+    $(this)
+      .closest("li")
+      .addClass("current");
+    $(".tutor-option-nav-page").hide();
+    $(tab_page_id)
+      .addClass("current-page")
+      .show();
+    window.history.pushState("obj", "", $(this).attr("href"));
+  });
+
+  /**
+   * End Withdraw nav tabs
+   */
+
+	/**
+	 * Open Sidebar Menu
+	 */
+	if (_tutorobject.open_tutor_admin_menu) {
+		var $adminMenu = $('#adminmenu');
+		$adminMenu
+			.find('[href="admin.php?page=tutor"]')
+			.closest('li.wp-has-submenu')
+			.addClass('wp-has-current-submenu');
+		$adminMenu
+			.find('[href="admin.php?page=tutor"]')
+			.closest('li.wp-has-submenu')
+			.find('a.wp-has-submenu')
+			.removeClass('wp-has-current-submenu')
+			.addClass('wp-has-current-submenu');
+	}
+
+	$(document).on('click', '.tutor-option-media-upload-btn', function(e) {
+		e.preventDefault();
+
+		var $that = $(this);
+		var frame;
+		if (frame) {
+			frame.open();
+			return;
+		}
+		frame = wp.media({
+			title: __('Select or Upload Media Of Your Choice', 'tutor'),
+			button: {
+				text: __('Upload media', 'tutor'),
+			},
+			multiple: false,
+		});
+		frame.on('select', function() {
+			var attachment = frame
+				.state()
+				.get('selection')
+				.first()
+				.toJSON();
+			$that
+				.closest('.option-media-wrap')
+				.find('.option-media-preview')
+				.html('<img src="' + attachment.url + '" alt="" />');
+			$that
+				.closest('.option-media-wrap')
+				.find('input')
+				.val(attachment.id);
+			$that
+				.closest('.option-media-wrap')
+				.find('.tutor-media-option-trash-btn')
+				.show();
+		});
+		frame.open();
+	});
+
+	/**
+	 * Remove option media
+	 * @since v.1.4.3
+	 */
+	$(document).on('click', '.tutor-media-option-trash-btn', function(e) {
+		e.preventDefault();
+
+		var $that = $(this);
+		$that
+			.closest('.option-media-wrap')
+			.find('img')
+			.remove();
+		$that
+			.closest('.option-media-wrap')
+			.find('input')
+			.val('');
+		$that
+			.closest('.option-media-wrap')
+			.find('.tutor-media-option-trash-btn')
+			.hide();
+	});
+
+	// $(document).on("change", ".tutor-form-toggle-input", function(e) {
+	//   var $that = $(this);
+
+	//   var isEnable = $that.prop("checked") ? 1 : 0;
+	//   var addonFieldName = $that.attr("name");
+
+	//   $.ajax({
+	//     url: window._tutorobject.ajaxurl,
+	//     type: "POST",
+	//     data: {
+	//       isEnable: isEnable,
+	//       addonFieldName: addonFieldName,
+	//       action: "addon_enable_disable",
+	//     },
+	//     success: function(data) {
+	//       if (data.success) {
+	//         //Success
+	//       }
+	//     },
+	//   });
+	// });
+
+	/**
+	 * Add instructor
+	 * @since v.1.0.3
+	 */
+	$(document).on('submit', '#tutor-new-instructor-form', function(e) {
+		e.preventDefault();
+		var $that = $(this);
+		var formData = $that.serializeObject();
+		var loadingButton = $('#tutor-new-instructor-form .tutor-btn-loading');
+		var prevText = loadingButton.html();
+		var responseContainer = $('#tutor-new-instructor-form-response');
+		formData.action = 'tutor_add_instructor';
+		$.ajax({
+			url: window._tutorobject.ajaxurl,
+			type: 'POST',
+			data: formData,
+			beforeSend: function() {
+				responseContainer.html('');
+				loadingButton.html(`<div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>`);
+			},
+			success: function success(data) {
+				if (!data.success) {
+					if (data?.data?.errors.errors) {
+						for (let v of Object.values(data.data.errors.errors)) {
+							//responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+							responseContainer.append(`
+              <div class='tutor-bs-col'>
+                <div class="tutor-alert tutor-warning">
+                <div class="tutor-alert-text">
+                    <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
+                    <span>
+                      ${v}
+                    </span>
+                </div>
+                </div>
+              </div>
+              `);
+						}
+					} else {
+						for (let v of Object.values(data.data.errors)) {
+							//responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+							responseContainer.append(`
+              <div class='tutor-bs-col'>
+                <div class="tutor-alert tutor-warning">
+                <div class="tutor-alert-text">
+                    <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
+                    <span>
+                      ${v}
+                    </span>
+                </div>
+                </div>
+              </div>
+              `);
+						}
+					}
+				} else {
+					$('#tutor-new-instructor-form').trigger('reset');
+					tutor_toast(__('Success', 'tutor'), __('New Instructor Added', 'tutor'), 'success');
+					location.reload();
+				}
+			},
+			complete: function() {
+				loadingButton.html(prevText);
+			},
+		});
+	});
+
+	/**
+	 * Instructor block unblock action
+	 * @since v.1.5.3
+	 */
+	$(document).on('click', 'a.instructor-action', async function(e) {
+		e.preventDefault();
+
+		const $that = $(this);
+		const action = $that.attr('data-action');
+		const instructorId = $that.attr('data-instructor-id');
+		const loadingButton = e.target;
+		const prevHtml = loadingButton.innerHTML;
+		loadingButton.innerHTML = '';
+		loadingButton.classList.add('tutor-updating-message');
+
+		// prepare form data
+		const formData = new FormData();
+		formData.set('action', 'instructor_approval_action');
+		formData.set('action_name', action);
+		formData.set('instructor_id', instructorId);
+		formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+
+		try {
+			const post = await ajaxHandler(formData);
+			const response = await post.json();
+			if (loadingButton.classList.contains('tutor-updating-message')) {
+				loadingButton.classList.remove('tutor-updating-message');
+				loadingButton.innerHTML = action.charAt(0).toUpperCase() + action.slice(1);
+			}
+
+			if (post.ok && response.success) {
+				let message = '';
+				if (action == 'approve') {
+					message = 'Instructor approved!';
+				}
+				if (action == 'blocked') {
+					message = 'Instructor blocked!';
+				}
+				/**
+				 * If it is instructor modal for approve or blocked
+				 * hide modal then show toast then reload
+				 *
+				 * @since v2.0.0
+				 */
+				const instructorModal = document.querySelector('.tutor-modal-ins-approval');
+				if (instructorModal) {
+					if (instructorModal.classList.contains('tutor-is-active')) {
+						instructorModal.classList.remove('tutor-is-active');
+					}
+					tutor_toast(__('Success', 'tutor'), __(message, 'tutor'), 'success');
+					location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
+				} else {
+					tutor_toast(__('Success', 'tutor'), __(message, 'tutor'), 'success');
+					location.reload();
+				}
+			} else {
+				tutor_toast(__('Failed', 'tutor'), __('Something went wrong!', 'tutor'), 'error');
+			}
+		} catch (error) {
+			loadingButton.innerHTML = prevHtml;
+			tutor_toast(__('Operation failed', 'tutor'), error, 'error');
+		}
+	});
+
+	/**
+	 * If click on close instructor approve or modal then redirect to main URL
+	 * if not redirect then it will not work with pagination.
+	 */
+	const instructorModal = document.querySelector('.tutor-modal-ins-approval .tutor-icon-56.tutor-icon-line-cross-line');
+	if (instructorModal) {
+		instructorModal.addEventListener('click', function() {
+			console.log('ckk');
+			location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
+		});
+	}
+
+	/**
+	 * On form submit block | approve instructor
+	 *
+	 * @since v.2.0.0
+	 */
+	// if (instructorActionForm) {
+	//   instructorActionForm.onsubmit = async (e) => {
+	//     e.preventDefault();
+	//     const formData = new FormData(instructorActionForm);
+	//     const loadingButton = instructorActionForm.querySelector('#tutor-instructor-confirm-btn.tutor-btn-loading');
+	//     const prevHtml = loadingButton.innerHTML;
+	//     loadingButton.innerHTML = `<div class="ball"></div>
+	//     <div class="ball"></div>
+	//     <div class="ball"></div>
+	//     <div class="ball"></div>`;
+	//     try {
+	//       const post = await ajaxHandler(formData);
+	//       const response = await post.json();
+	//       loadingButton.innerHTML = prevHtml;
+	//       if (post.ok && response.success) {
+	//         location.reload();
+	//       } else {
+	//         tutor_toast(__("Failed", "tutor"), __('Something went wrong!', 'tutor'), "error");
+	//       }
+	//     } catch (error) {
+	//       loadingButton.innerHTML = prevHtml;
+	//       tutor_toast(__("Operation failed", "tutor"), error, "error");
+	//     }
+	//   }
+	// }
+
+	/**
+	 * Password Reveal
+	 */
+	$(document).on('click', '.tutor-password-reveal', function(e) {
+		//toggle icon
+		$(this).toggleClass('tutor-icon-eye-filled tutor-icon-eye-fill-filled');
+		//toggle attr
+		$(this)
+			.next()
+			.attr('type', function(index, attr) {
+				return attr == 'password' ? 'text' : 'password';
+			});
+	});
+
+	/**
+	 * Used for backend profile photo upload.
+	 */
+
+	//tutor_video_poster_upload_btn
+	$(document).on('click', '.tutor_video_poster_upload_btn', function(event) {
+		event.preventDefault();
+
+		var $that = $(this);
+		var frame;
+		// If the media frame already exists, reopen it.
+		if (frame) {
+			frame.open();
+			return;
+		}
+
+		// Create a new media frame
+		frame = wp.media({
+			title: __('Select or Upload Media Of Your Choice', 'tutor'),
+			button: {
+				text: __('Upload media', 'tutor'),
+			},
+			multiple: false, // Set to true to allow multiple files to be selected
+		});
+
+		// When an image is selected in the media frame...
+		frame.on('select', function() {
+			// Get media attachment details from the frame state
+			var attachment = frame
+				.state()
+				.get('selection')
+				.first()
+				.toJSON();
+			$that
+				.closest('.tutor-video-poster-wrap')
+				.find('.video-poster-img')
+				.html('<img src="' + attachment.sizes.thumbnail.url + '" alt="" />');
+			$that
+				.closest('.tutor-video-poster-wrap')
+				.find('input')
+				.val(attachment.id);
+		});
+		// Finally, open the modal on click
+		frame.open();
+	});
+
+	/**
+	 * Tutor Memberships toggle in Paid Membership Pro panel
+	 * @since v.1.3.6
+	 */
+
+	$(document).on('change', '#tutor_pmpro_membership_model_select', function(e) {
+		e.preventDefault();
+
+		var $that = $(this);
+
+		if ($that.val() === 'category_wise_membership') {
+			$('.membership_course_categories').show();
+		} else {
+			$('.membership_course_categories').hide();
+		}
+	});
+
+	$(document).on('change', '#tutor_pmpro_membership_model_select', function(e) {
+		e.preventDefault();
+
+		var $that = $(this);
+
+		if ($that.val() === 'category_wise_membership') {
+			$('.membership_course_categories').show();
+		} else {
+			$('.membership_course_categories').hide();
+		}
+	});
+
+	// Require category selection
+	$(document).on('submit', '.pmpro_admin form', function(e) {
+		var form = $(this);
+
+		if (!form.find('input[name="tutor_action"]').length) {
+			// Level editor or tutor action not necessary
+			return;
+		}
+
+		if (
+			form.find('[name="tutor_pmpro_membership_model"]').val() == 'category_wise_membership' &&
+			!form.find('.membership_course_categories input:checked').length
+		) {
+			if (!confirm(__('Do you want to save without any category?', 'tutor'))) {
+				e.preventDefault();
+			}
+		}
+	});
+
+	/**
+	 * Show hide is course public checkbox (backend dashboard editor)
+	 *
+	 * @since  v.1.7.2
+	 */
+	var price_type = $('#tutor-attach-product [name="tutor_course_price_type"]');
+	if (price_type.length == 0) {
+		$('#_tutor_is_course_public_meta_checkbox').show();
+	} else {
+		price_type
+			.change(function() {
+				if ($(this).prop('checked')) {
+					var method = $(this).val() == 'paid' ? 'hide' : 'show';
+					$('#_tutor_is_course_public_meta_checkbox')[method]();
+				}
+			})
+			.trigger('change');
+	}
+
+	/**
+	 * Focus selected instructor layout in setting page
+	 *
+	 * @since  v.1.7.5
+	 */
+	$(document).on('click', '.instructor-layout-template', function() {
+		$('.instructor-layout-template').removeClass('selected-template');
+		$(this).addClass('selected-template');
+	});
+
+	/**
+	 * Programmatically open preview link. For some reason it's not working normally.
+	 *
+	 * @since  v.1.7.9
+	 */
+	$('#preview-action a.preview').click(function(e) {
+		var href = $(this).attr('href');
+
+		if (href) {
+			e.preventDefault();
+			window.open(href, '_blank');
+		}
+	});
+
+	//add checkbox class for style
+	var tutorCheckbox = $('.tutor-ui-table .tutor-form-check-input');
+	if (tutorCheckbox) {
+		tutorCheckbox.parent().addClass('tutor-option-field-row');
+	}
+	const tdWithRadio = document.querySelectorAll("td[id^='tutor-student-course-'] .tutor-form-check");
+	tdWithRadio.forEach((item) => {
+		if (item) {
+			if (item.classList.contains('tutor-option-field-row')) {
+				item.classList.remove('tutor-option-field-row');
+			}
+		}
+	});
+	/**
+	 * If Tutor course edit then show tutor menu as active
+	 *
+	 * @since v2.0.0
+	 */
+	let lists = document.querySelectorAll('#adminmenu li > a');
+	if (window._tutorobject.is_tutor_course_edit && lists) {
+		lists.forEach((item) => {
+			if (item.tagName === 'A' && item.hasAttribute('href') && item.getAttribute('href') == 'admin.php?page=tutor') {
+				item.classList.add('current');
+				item.closest('li').classList.add('current');
+				let mainMenu = item.closest('li#toplevel_page_tutor');
+				let currentA = item.closest('#toplevel_page_tutor  li.wp-not-current-submenu.menu-top.toplevel_page_tutor > a');
+				if (mainMenu) {
+					mainMenu.className =
+						'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
+				}
+				if (currentA) {
+					currentA.className =
+						'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
+				}
+			}
+		});
+	}
+});

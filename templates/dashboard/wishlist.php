@@ -4,45 +4,58 @@
  * @version 1.4.3
  */
 
-global $post; ?>
+global $post;
+$per_page     = tutor_utils()->get_option('statement_show_per_page', 20);
+$current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', tutor_sanitize_data($_GET) ) );
+$offset       = ( $current_page - 1 ) * $per_page;
+$wishlists    = tutor_utils()->get_wishlist(null, $offset, $per_page); 
+$total_wishlists_count = count(tutor_utils()->get_wishlist(null)); 
+?>
 
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e('Wishlist', 'tutor'); ?></div>
+<div class="tutor-dashboard-content-inner my-wishlist">
+	<?php if (is_array($wishlists) && count($wishlists)): ?>
+		<div class="tutor-course-listing-grid tutor-course-listing-grid-3">
+			<?php
+				foreach ($wishlists as $post) {
+					setup_postdata($post);
 
-<h3><?php _e( 'Wishlist', 'tutor' ); ?></h3>
-<div class="tutor-dashboard-content-inner">
-	<div class="tutor-row">
+					/**
+					 * @hook tutor_course/archive/before_loop_course
+					 * @type action
+					 * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
+					 */
+					do_action('tutor_course/archive/before_loop_course');
 
-	<?php
-	$wishlists = tutor_utils()->get_wishlist();
+					tutor_load_template('loop.course');
 
-	if ( is_array( $wishlists ) && count( $wishlists ) ) :
-		foreach ( $wishlists as $post ) :
-			setup_postdata( $post );
+					/**
+					 * @hook tutor_course/archive/after_loop_course
+					 * @type action
+					 * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
+					 */
+					do_action('tutor_course/archive/after_loop_course');
+				}
+				wp_reset_postdata();
+			?>
+		</div>
+	<?php else: ?>
+		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+	<?php endif; ?>
+</div>
+<div class="tutor-mt-25">
+	<?php 
+		if($total_wishlists_count >= $per_page) {
+			$pagination_data = array(
+				'total_items' => $total_wishlists_count,
+				'per_page'    => $per_page,
+				'paged'       => $current_page,
+			);
 
-			/**
-			 * @hook tutor_course/archive/before_loop_course
-			 * @type action
-			 * Usage Idea, you may keep a loop within a wrap, such as bootstrap col
-			 */
-			do_action( 'tutor_course/archive/before_loop_course' );
-
-			tutor_load_template( 'loop.course' );
-
-			/**
-			 * @hook tutor_course/archive/after_loop_course
-			 * @type action
-			 * Usage Idea, If you start any div before course loop, you can end it here, such as </div>
-			 */
-			do_action( 'tutor_course/archive/after_loop_course' );
-
-		endforeach;
-
-		wp_reset_postdata();
-
-	else :
-		$msg = __( 'You do not have any course on the wishlist yet.', 'tutor' );
-		echo '<div class="tutor-col">' . $msg . '</div>';
-	endif;
-
+			tutor_load_template_from_custom_path(
+				tutor()->path . 'templates/dashboard/elements/pagination.php',
+				$pagination_data
+			);
+		}
 	?>
-	</div>
 </div>

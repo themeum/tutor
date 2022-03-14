@@ -20,40 +20,23 @@ class Tools {
          * Add setup wizard link in the tools menu
          * @since v.1.5.7
          */
-		add_filter('tutor_tool_pages', array($this, 'tutor_tool_pages_add_wizard'));
+		// add_filter('tutor_tool_pages', array($this, 'tutor_tool_pages_add_wizard'));
 		add_action('admin_init', array($this, 'redirect_to_wizard_page'));
-		add_filter('login_errors', array($this, 'login_error_message'));
 	}
-
-	/**
-	 * Custom Login Error Message
-	 * @since v.1.6.0
-	 */
-	public function login_error_message($error) {
-		$error_message = get_tutor_option('login_error_message');
-		if($error_message){
-			$pos = strpos($error, 'incorrect');
-			if (is_int($pos)) {
-				$error = $error_message;
-			}
-		}
-		return $error;
-	}
-
 
 	/**
 	 * Re-Generate Tutor Missing Pages
 	 * @since v.1.4.3
 	 */
 	public function regenerate_tutor_pages(){
-		tutils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-		$tutor_pages = tutils()->tutor_pages();
-		
+		$tutor_pages = tutor_utils()->tutor_pages();
+
 		foreach ($tutor_pages as $page){
-			$visible = tutils()->array_get('page_visible', $page);
-			$page_title = tutils()->array_get('page_name', $page);
-			$option_key = tutils()->array_get('option_key', $page);
+			$visible = tutor_utils()->array_get('page_visible', $page);
+			$page_title = tutor_utils()->array_get('page_name', $page);
+			$option_key = tutor_utils()->array_get('option_key', $page);
 
 			if ( ! $visible){
 				$page_arg = array(
@@ -68,10 +51,6 @@ class Tools {
 		}
 	}
 
-	/**
-	 * Enable Maintenance Mode
-	 */
-
 	public function tutor_option_save_after(){
 		$maintenance_mode = (bool) get_tutor_option('enable_tutor_maintenance_mode');
 		if ($maintenance_mode){
@@ -83,12 +62,10 @@ class Tools {
 
 	public function check_if_maintenance(){
 		if ( ! is_admin() && ! $this->is_wplogin()) {
-			$mode = get_tutor_option( 'enable_tutor_maintenance_mode' );
-			$maintenance_mode = (bool) $mode;
-			if ( ! $maintenance_mode || $mode=='off' ){
+			$maintenance_mode = (bool) get_tutor_option('enable_tutor_maintenance_mode');
+			if ( false === $maintenance_mode || current_user_can('administrator') ){
 				return;
 			}
-
 			header( 'Retry-After: 600' );
 			include tutor()->path.'views/maintenance.php';
 			die();
@@ -119,7 +96,7 @@ class Tools {
      * @since v.1.5.7
      */
     public function redirect_to_wizard_page(){
-	    if (tutils()->array_get('page', $_GET) === 'tutor-tools' && tutils()->array_get('sub_page', $_GET) === 'tutor-setup' ){
+		if (tutor_utils()->array_get('page', $_GET) === 'tutor-tools' && tutor_utils()->array_get('sub_page', $_GET) === 'tutor-setup' ){
             exit(wp_redirect(admin_url('admin.php?page=tutor-setup')));
         }
     }

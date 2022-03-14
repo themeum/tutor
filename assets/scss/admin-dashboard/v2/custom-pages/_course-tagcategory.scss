@@ -1,0 +1,97 @@
+.post-type-courses {
+	&.taxonomy-course-category {
+		// background: red !important;
+	}
+
+	&.taxonomy-course-category,
+	&.taxonomy-course-tag {
+		.button {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+		select {
+			padding-left: 20px;
+			padding-right: 40px;
+			background-position: right 10px top 55%;
+		}
+		.button,
+		select {
+			border-radius: 6px;
+			min-height: 40px;
+		}
+
+		.tablenav-pages {
+			.button {
+				min-height: 30px;
+				padding: 0 4px;
+			}
+		}
+
+		input[type='text']:not(.current-page),
+		input[type='search'],
+		textarea,
+		select {
+			border-radius: 6px;
+			min-height: 40px;
+
+			&:not(:focus) {
+				border-color: #c0c3cb;
+			}
+		}
+
+		.form-wrap p {
+			margin-top: 16px;
+		}
+
+		p.search-box,
+		.actions.bulkactions {
+			display: flex;
+		}
+
+		table.wp-list-table {
+			border-radius: 6px;
+			margin-top: 24px;
+			border-color: #cdcfd5;
+
+			thead {
+				th,
+				td {
+					background: #f4f6f9;
+				}
+				tr {
+					> * {
+						&:first-child {
+							border-top-left-radius: 6px;
+						}
+						&:last-child {
+							border-top-right-radius: 6px;
+						}
+					}
+				}
+			}
+			tbody {
+				tr {
+					&:nth-child(odd) th,
+					&:nth-child(odd) td {
+						background: #fff;
+					}
+					&:nth-child(even) th,
+					&:nth-child(even) td {
+						background: #fcfcfd;
+					}
+
+					&:not(:last-child) {
+						th,
+						td {
+							border-bottom: 1px solid #cdcfd5;
+						}
+					}
+				}
+			}
+		}
+
+		.tablenav.top {
+			margin-top: 20px;
+		}
+	}
+}

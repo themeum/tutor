@@ -1,120 +1,157 @@
-<?php
-$classname = '';
-if ( version_compare( get_bloginfo( 'version' ), '5.5', '>=' ) ) {
-	$classname = 'has-postbox-header';
-	
-	echo '<style> 
-			#tutor-course-topics .toggle-indicator:before { 
-				margin-top: 0; 
-			} 
-		</style>';
-}
-?>
-
 <div id="tutor-course-content-builder-root">
-	<div class="tutor-course-builder-header <?php echo esc_attr( $classname ); ?>">
-		<a href="javascript:;" class="tutor-expand-all-topic"><?php _e( 'Expand all', 'tutor' ); ?></a> |
-		<a href="javascript:;" class="tutor-collapse-all-topic"><?php _e( 'Collapse all', 'tutor' ); ?></a>
-	</div>
+    <?php $course_id = get_the_ID(); ?>
+    <div id="tutor-course-content-wrap">
+        <?php
+        include  tutor()->path.'views/metabox/course-contents.php';
+        ?>
+    </div>
 
-	<?php $course_id = get_the_ID(); ?>
-	<div id="tutor-course-content-wrap">
-		<?php
-		require tutor()->path . 'views/metabox/course-contents.php';
-		?>
-	</div>
+    <div class="new-topic-btn-wrap">
+        <button data-tutor-modal-target="tutor-modal-add-topic" class="tutor-mt-15 create_new_topic_btn tutor-btn tutor-btn-md bordered-btn"> 
+            <i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php _e('Add new topic', 'tutor'); ?>
+        </button>
+    </div>
 
-	<div class="new-topic-btn-wrap">
-		<a href="javascript:;" class="create_new_topic_btn tutor-btn bordered-btn"> <i class="tutor-icon-text-document-add-button-with-plus-sign"></i> <?php _e( 'Add new topic', 'tutor' ); ?></a>
-	</div>
+    <?php 
+        // Topic modal for new topic creation
+        tutor_load_template_from_custom_path(tutor()->path.'/views/modal/topic-form.php', array(
+            'modal_title'   => __('Add Topic', 'tutor'),
+            'wrapper_id'    => 'tutor-modal-add-topic',
+            'topic_id'      => null,
+            'course_id'     => $course_id,
+            'wrapper_class' => '',
+            'button_text'   => __('Add Topic', 'tutor'),
+            'button_class'     => 'tutor-save-topic-btn'
+        ), false); 
+    ?>
 
-	<div class="tutor-metabox-add-topics" style="display: none">
-		<h3><?php _e( 'Add Topic', 'tutor' ); ?></h3>
+    <div class="tutor-modal modal-sticky-header-footer tutor-quiz-builder-modal-wrap" data-target="quiz-builder-tab-quiz-info">
+        <span class="tutor-modal-overlay"></span>
+        <div class="tutor-modal-root">
+            <div class="tutor-modal-inner">
+                <div class="tutor-modal-header">
+                    <h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
+                        <?php _e('Quiz', 'tutor'); ?>
+                    </h3>
+                    <button data-tutor-modal-close class="tutor-modal-close">
+                        <span class="tutor-icon-line-cross-line"></span>
+                    </button>
+                </div>
+                
+                <div class="tutor-modal-steps">
+                    <ul>
+                        <li class="tutor-is-completed" data-tab="quiz-builder-tab-quiz-info">
+                            <span><?php _e('Quiz Info', 'tutor'); ?></span>
+                            <span class="tutor-modal-step-btn">1</span>
+                        </li>
+                        <li data-tab="quiz-builder-tab-questions">
+                            <span><?php _e('Question', 'tutor'); ?></span>
+                            <span class="tutor-modal-step-btn">2</span>
+                        </li>
+                        <li data-tab="quiz-builder-tab-settings">
+                            <span><?php _e('Settings', 'tutor'); ?></span>
+                            <span class="tutor-modal-step-btn">3</span>
+                        </li>
+                    </ul>
+                </div>
 
-		<div class="tutor-option-field-row">
-			<div class="tutor-option-field-label">
-				<label for=""><?php _e( 'Topic Name', 'tutor' ); ?></label>
-			</div>
-			<div class="tutor-option-field">
-				<input type="text" name="topic_title" value="">
-				<p class="desc">
-					<?php _e( 'Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.', 'tutor' ); ?>
-				</p>
-			</div>
-		</div>
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
 
-		<div class="tutor-option-field-row">
-			<div class="tutor-option-field-label">
-				<label for=""><?php _e( 'Topic Summary', 'tutor' ); ?></label>
-			</div>
-			<div class="tutor-option-field">
-				<textarea name="topic_summery"></textarea>
-				<p class="desc">
-					<?php _e( 'The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.', 'tutor' ); ?>
-				</p>
-				<?php
-				// submit_button(__('Add Topic', 'tutor'), 'primary', 'submit', true, array('id' => 'tutor-add-topic-btn'));
-				?>
-				<input type="hidden" name="tutor_topic_course_ID" value="<?php echo esc_attr( $course_id ); ?>">
-				<button type="button" class="tutor-btn" id="tutor-add-topic-btn"><?php _e( 'Add Topic', 'tutor' ); ?></button>
-			</div>
-		</div>
-	</div>
+                </div>
 
-	<div class="tutor-modal-wrap tutor-quiz-builder-modal-wrap">
-		<div class="tutor-modal-content">
-			<div class="modal-header">
-				<div class="modal-title">
-					<h1><?php _e( 'Quiz', 'tutor' ); ?></h1>
-				</div>
-				<div class="modal-close-wrap">
-					<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
-				</div>
-			</div>
-			<div class="modal-container"></div>
-		</div>
-	</div>
+                <div class="tutor-modal-footer">
+                    <div class="tutor-bs-row">
+                        <div class="tutor-bs-col">
+                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                                <?php _e('Cancel', 'tutor'); ?>
+                            </button>
+                        </div>
+                        <div class="tutor-bs-col-auto">
+                            <button type="button" data-action="back" class="tutor-btn tutor-is-default tutor-mr-10">
+                                <?php _e('Back', 'tutor'); ?>
+                            </button>
+                            <button type="button" data-action="next" class="tutor-btn tutor-is-primary">
+                                <?php _e('Save & Next', 'tutor'); ?>
+                            </button>
+                        </div>
+                        <div class="tutor-bs-col">
+                            <button class="tutor-btn quiz-modal-question-save-btn">
+                                <?php _e('Add To Questions', 'tutor'); ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tutor-modal modal-sticky-header-footer tutor-lesson-modal-wrap">
+        <span class="tutor-modal-overlay"></span>
+        <div class="tutor-modal-root">
+            <div class="tutor-modal-inner">
+                <div class="tutor-modal-header">
+                    <h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
+                        <?php _e('Lesson', 'tutor'); ?>
+                    </h3>
+                    <button data-tutor-modal-close class="tutor-modal-close">
+                        <span class="tutor-icon-line-cross-line"></span>
+                    </button>
+                </div>
 
-	<div class="tutor-modal-wrap tutor-lesson-modal-wrap">
-		<div class="tutor-modal-content">
-			<div class="modal-header">
-				<div class="modal-title">
-					<h1><?php esc_html_e( 'Lesson', 'tutor' ); ?></h1>
-				</div>
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
 
-				<div class="lesson-modal-close-wrap">
-					<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i></a>
-				</div>
-			</div>
-			<div class="modal-container"></div>
-		</div>
-	</div>
+                </div>
+                
+                <div class="tutor-modal-footer">
+                    <div class="tutor-bs-row">
+                        <div class="tutor-bs-col">
+                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                                <?php _e('Cancel', 'tutor'); ?>
+                            </button>
+                        </div>
+                        <div class="tutor-bs-col-auto">
+                            <button type="button" class="tutor-btn update_lesson_modal_btn">
+                                <?php _e('Update Lesson', 'tutor'); ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tutor-modal modal-sticky-header-footer tutor-assignment-modal-wrap">
+        <span class="tutor-modal-overlay"></span>
+        <div class="tutor-modal-root">
+            <div class="tutor-modal-inner">
+                <div class="tutor-modal-header">
+                    <h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
+                        <?php _e('Assignment', 'tutor'); ?>
+                    </h3>
+                    <button data-tutor-modal-close class="tutor-modal-close">
+                        <span class="tutor-icon-line-cross-line"></span>
+                    </button>
+                </div>
+                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
 
-	<div class="tutor-modal-wrap tutor-assignment-builder-modal-wrap">
-		<div class="tutor-modal-content">
-			<div class="modal-header">
-				<div class="modal-title">
-					<h1><?php _e( 'Assignments', 'tutor' ); ?></h1>
-				</div>
-				<div class="modal-close-wrap">
-					<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
-				</div>
-			</div>
-			<div class="modal-container"></div>
-		</div>
-	</div>
+                </div>
+                <div class="tutor-modal-footer">
+                    <div class="tutor-bs-row">
+                        <div class="tutor-bs-col">
+                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                                <?php _e('Cancel', 'tutor'); ?>
+                            </button>
+                        </div>
+                        <div class="tutor-bs-col-auto">
+                            <button type="button" class="tutor-btn update_assignment_modal_btn">
+                                <?php _e('Update Assignment', 'tutor'); ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="tutor-modal-wrap tutor-zoom-meeting-modal-wrap">
-		<div class="tutor-modal-content">
-			<div class="modal-header">
-				<div class="modal-title">
-					<h1><?php _e( 'Zoom Meeting', 'tutor' ); ?></h1>
-				</div>
-				<div class="modal-close-wrap">
-					<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross"></i> </a>
-				</div>
-			</div>
-			<div class="modal-container"></div>
-		</div>
-	</div>
+    <?php do_action('course-topic/after/modal_wrappers'); ?>
 </div>

@@ -1,0 +1,126 @@
+// Toggle Disable -> Monitization > Monitization fees
+.monetization-fees.is-disable {
+	.tutor-option-field-row {
+		&:nth-child(2),
+		&:nth-child(3) {
+			position: relative;
+			cursor: not-allowed;
+			&:before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				background: rgba(255, 255, 255, 0.55);
+			}
+			textarea,
+			select,
+			input {
+				&:disabled {
+					cursor: not-allowed;
+				}
+			}
+		}
+	}
+}
+
+// Warning -> Monitization > Sharing Percentage
+.revenue-percentage {
+	input.warning {
+		border-color: var(--tutor-danger) !important;
+		box-shadow: 0 0 0 3px lighten(red, 45) !important;
+	}
+}
+
+// Image Preview -> Design + Certificate > Logo and Signature Upload
+.template-preview{
+	img {
+		overflow: hidden;
+		position: relative;
+		&:empty:before {
+			content: '\e93a';
+			font-family: 'tutor-v2-iconpack' !important;
+			font-size: 2em;
+			position: absolute;
+			inset: 0;
+			background: $black-05;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #b4b7c0;
+		}
+	}
+}
+.tutor-option-field-input.image-previewer {
+	img {
+		&::before {
+			// content: '⚠️ \2000 Select an image';
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: $black-05;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			@include svg-image-uppoad;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+	}
+
+	.preview-loading {
+		position: absolute;
+		inset: 0;
+		background: #f3f3f3;
+		border-radius: 3px;
+		display: none;
+		@include spinner(#1a73aa, #e8e8e8);
+
+		&.is-loading {
+			display: block;
+		}
+	}
+
+	.delete-btn {
+		visibility: hidden;
+	}
+
+	&.is-selected {
+		.delete-btn {
+			visibility: visible;
+		}
+		img {
+			&::before {
+				visibility: hidden;
+			}
+		}
+	}
+}
+
+// Highlight items form search suggestion
+.tutor-option-field-label {
+	.isHighlighted {
+		position: relative;
+		display: inline-flex;
+		z-index: 1;
+		&::before {
+			content: '';
+			position: absolute;
+			inset: 1px -6px;
+			background: $warning-50;
+			border: 1px solid $warning-70;
+			box-sizing: border-box;
+			border-radius: 3px;
+			z-index: -1;
+			animation: blinking 0.5s alternate infinite;
+		}
+	}
+}
+
+@keyframes blinking {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}

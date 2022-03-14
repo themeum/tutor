@@ -11,112 +11,46 @@
  * @version 1.6.4
  */
 
-$per_page     = 20;
-$current_page = max( 1, tutils()->array_get( 'current_page', tutor_sanitize_data($_GET) ) );
-$offset       = ( $current_page - 1 ) * $per_page;
+
+if ( isset( $_GET['view_quiz_attempt_id'] ) ) {
+	// Load single attempt details if ID provided
+	include __DIR__ . '/quiz-attempts/quiz-reviews.php';
+	return;
+}
+
+$item_per_page = tutor_utils()->get_option( 'pagination_per_page' );
+$current_page  = max( 1, tutor_utils()->array_get( 'current_page', $_GET ) );
+$offset        = ( $current_page - 1 ) * $item_per_page;
+// Filter params.
+$course_filter  = isset( $_GET['course-id'] ) ? sanitize_text_field( $_GET['course-id'] ) : '';
+$order_filter   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+$date_filter    = isset( $_GET['date'] ) ? $_GET['date'] : '';
 ?>
 
-<h3><?php _e( 'Quiz Attempts', 'tutor' ); ?></h3>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-30 tutor-capitalize-text"><?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?></div>
 <?php
-$course_id           = tutor_utils()->get_assigned_courses_ids_by_instructors();
-$quiz_attempts       = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $per_page, $course_id );
-$quiz_attempts_count = tutor_utils()->get_total_quiz_attempts_by_course_ids( $course_id );
+// Load filter template.
+tutor_load_template_from_custom_path( tutor()->path . 'templates/dashboard/elements/filters.php' );
 
-if ( $quiz_attempts_count ) {
-	?>
-	<div class="tutor-dashboard-content tutor-quiz-attempt-history">
-		<table class="tutor-table">
-			<tr>
-				<th><?php _e( 'Course Info', 'tutor' ); ?></th>
-				<th><?php _e( 'Student', 'tutor' ); ?></th>
-				<th><?php _e( 'Correct Answer', 'tutor' ); ?></th>
-				<th><?php _e( 'Incorrect Answer', 'tutor' ); ?></th>
-				<th><?php _e( 'Earned Mark', 'tutor' ); ?></th>
-				<th><?php _e( 'Result', 'tutor' ); ?></th>
-				<th></th>
-				<?php do_action( 'tutor_quiz/student_attempts/table/thead/col' ); ?>
-			</tr>
-			<?php
-			foreach ( $quiz_attempts as $attempt ) {
-				$attempt_action    = tutor_utils()->get_tutor_dashboard_page_permalink( 'quiz-attempts/quiz-reviews/?attempt_id=' . $attempt->attempt_id );
-				$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
-				$passing_grade     = tutor_utils()->get_quiz_option( $attempt->quiz_id, 'passing_grade', 0 );
-				$answers           = tutor_utils()->get_quiz_answers_by_attempt_id( $attempt->attempt_id );
-				?>
-				<tr>
-					<td>
-						<div class="course">
-							<a href="<?php echo esc_url( get_the_permalink( $attempt->course_id ) ); ?>" target="_blank"><?php echo get_the_title( $attempt->course_id ); ?></a>
-						</div>
-						<div class="course-meta">
-							<span><?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?></span>
-							<span><?php _e( 'Question: ', 'tutor' ); ?><strong><?php echo esc_attr( count( $answers ) ); ?></strong></span>
-							<span><?php _e( 'Total Marks: ', 'tutor' ); ?><strong><?php echo esc_attr( $attempt->total_marks ); ?></strong></span>
-						</div>
-					</td>
-					<td>
-						<div class="student">
-							<?php echo esc_attr( $attempt->display_name ); ?></span>
-						</div>
-						<div class="student-meta">
-							<span><?php echo esc_attr( $attempt->user_email ); ?></span>
-						</div>
-					</td>
-					<td>
-						<?php
-							$correct   = 0;
-							$incorrect = 0;
-						if ( is_array( $answers ) && count( $answers ) > 0 ) {
-							foreach ( $answers as $answer ) {
-								if ( (bool) isset( $answer->is_correct ) ? $answer->is_correct : '' ) {
-									$correct++;
-								} else {
-									if ( $answer->question_type === 'open_ended' || $answer->question_type === 'short_answer' ) {
-									} else {
-										$incorrect++;
-									}
-								}
-							}
-						}
-							echo $correct;
-						?>
-					</td>
-					<td>
-						<?php echo $incorrect; ?>
-					</td>
-					<td>
-						<?php echo $attempt->earned_marks . ' (' . $earned_percentage . '%)'; ?>
-					</td>
-					<td>
-						<?php
-							if ( $attempt->attempt_status === 'review_required' ) {
-								echo '<span class="result-review-required">' . __( 'Under Review', 'tutor' ) . '</span>';
-							} else {
-								echo $earned_percentage >= $passing_grade ? 
-									'<span class="result-pass">' . __( 'Pass', 'tutor' ) . '</span>' : 
-									'<span class="result-fail">' . __( 'Fail', 'tutor' ) . '</span>';
-							}
-						?>
-					</td>
-					<td><a href="<?php echo esc_url( $attempt_action ); ?>"><?php _e( 'Details', 'tutor' ); ?></a></td>
-					<?php do_action( 'tutor_quiz/student_attempts/table/tbody/col', $attempt ); ?>
-				</tr>
-				<?php
-			}
-			?>
-		</table>
-	</div>
-	<div class="tutor-pagination">
-		<?php
-		echo paginate_links(
-			array(
-				'format'  => '?current_page=%#%',
-				'current' => $current_page,
-				'total'   => ceil( $quiz_attempts_count / $per_page ),
-			)
-		);
-		?>
-	</div>
-<?php } else {
-	_e( 'No quiz attempt yet.', 'tutor' );
-} ?>
+$course_id           = tutor_utils()->get_assigned_courses_ids_by_instructors();
+// how to pass params $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only = boolean
+$quiz_attempts       = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter );
+
+$quiz_attempts_count = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter, null, true );
+
+tutor_load_template_from_custom_path(
+	tutor()->path . '/views/quiz/attempt-table.php',
+	array(
+		'attempt_list' => $quiz_attempts,
+		'context'      => 'frontend-dashboard-students-attempts',
+	)
+);
+
+$pagination_data              = array(
+	'total_items' => $quiz_attempts_count,
+	'per_page'    => $item_per_page,
+	'paged'       => $current_page,
+);
+$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+?>

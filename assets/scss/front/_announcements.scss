@@ -1,67 +1,39 @@
-.tutor-announcement-content-wrap {
-    text-align: left !important;
-    display:flex;
-    justify-content:space-between;
-}
-
 .tutor-dashboard-announcement-sorting-wrap {
-    display: flex;
-    column-gap: 15px;
+	display: flex;
+	column-gap: 15px;
 
-    div{
-        &:nth-child(1){
-            flex-basis: 50%;
-        }
-        
-        &:nth-child(2){
-            flex-basis: 20%;
-        }
-        
-        &:nth-child(3){
-            flex-basis: 30%;
-        }
-    }
+	div {
+		&:nth-child(1) {
+			flex-basis: 50%;
+		}
+
+		&:nth-child(2) {
+			flex-basis: 20%;
+		}
+
+		&:nth-child(3) {
+			flex-basis: 30%;
+		}
+	}
 }
 
 .tutor-announcement-datepicker {
-    position: relative;
+	position: relative;
 
-    input, i {
-        position: absolute;
-    }
+	input,
+	i {
+		position: absolute;
+	}
 
-    i {
-        top: 50%;
-        right: 5px;
-        color: rgba(62, 100, 222, 1);
-    }
+	i {
+		top: 50%;
+		right: 5px;
+		color: rgba(62, 100, 222, 1);
+	}
 }
 
-.tutor-announcement-datepicker 
-.tutor-announcements-update-form 
-.tutor-option-field-row,
-.tutor-announcements-form 
-.tutor-option-field-row
-{
-    padding: 10px 18px 10px 18px
-}
-.tutor-announcements-update-form .tutor-option-field-row input[type=text],
-.tutor-announcements-update-form textarea ,
-.tutor-announcements-form .tutor-option-field-row input[type=text],
-.tutor-announcements-form textarea {
-    width: 100%;
-    margin-top: 8px;
-}
-.tutor-announcements-form select ,
-.tutor-announcements-update-form select {
-    width: 100%;
-    max-width: 100% !important;
-    padding: 7px 12px;
-    margin-top: 8px;
-}
-.tutor-announcements-update-form
-.tutor-option-field-row ,
-.tutor-announcements-form
-.tutor-option-field-row {
-    border: none !important;
+.tutor-modal.modal-sticky-header-footer.tutor-announcements-form {
+	input.tutor-form-check-input[type='checkbox'] {
+		margin-top: 3px;
+	}
 }

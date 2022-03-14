@@ -1,0 +1,16 @@
+@import './reset';
+
+// Components
+@import './components/index';
+
+// Main Style
+@import './general';
+
+// Pages
+@import './custom-pages/index';
+
+// Conditional Style
+@import './conditionals/conditionals.scss';
+
+// WP conflict override
+@import './conflict-override/conflict-override.scss';

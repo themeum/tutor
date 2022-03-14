@@ -13,13 +13,6 @@
     color: #000;
 }
 
-.tutor-single-course-segment {
-    margin-bottom: 45px;
-    .tutor-segment-title {
-        @extend .tutor-segment-title;
-    }
-}
-
 .tutor-full-width-course-top {
     h4,
     h5,
@@ -85,6 +78,7 @@
     color: var(--tutor-text-color);
     //font-size: var(--tutor-text-size);
 }
+
 .tutor-single-course-meta ul {
     list-style: none;
     margin: 0;
@@ -92,10 +86,12 @@
     overflow: hidden;
     line-height: 21px;
 }
+
 .tutor-single-course-meta.tutor-meta-top ul {
     padding-top: 0;
     padding-bottom: 15px;
 }
+
 .tutor-single-course-meta ul li {
     float: left;
     vertical-align: top;
@@ -104,6 +100,7 @@
     margin-bottom: 5px;
     min-width: 95px;
 }
+
 @media (max-width: 575px) {
     .tutor-single-course-meta ul li {
         margin-right: 10px;
@@ -159,6 +156,7 @@
 .tutor-single-course-meta.tutor-meta-top ul li a {
     font-weight: 700;
 }
+
 .tutor-single-course-meta ul li {
     font-weight: 500;
     color: var(--tutor-text-color);
@@ -207,11 +205,13 @@
     margin-bottom: 5px;
     color: var(--tutor-light-color);
 }
+
 .tutor-single-course-meta.tutor-lead-meta ul li a {
     color: var(--tutor-text-color);
     -webkit-transition: 300ms;
     transition: 300ms;
 }
+
 .tutor-single-course-meta.tutor-lead-meta ul li a:hover {
     color: var(--tutor-primary-color);
 }
@@ -237,7 +237,6 @@
         color: var(--tutor-text-color);
         font-weight: 700;
     }
-
     .tutor-single-course-meta.tutor-lead-meta ul li span::after {
         content: ":";
         color: var(--tutor-text-color);
@@ -278,9 +277,11 @@
     margin-bottom: 0;
     color: var(--tutor-text-color);
 }
+
 .tutor-course-topics-contents .tutor-course-title {
     cursor: pointer;
 }
+
 .tutor-course-topics-contents .tutor-course-title h4 {
     color: var(--tutor-primary-color);
     font-size: 16px;
@@ -305,6 +306,7 @@
     border-radius: 5px;
     overflow: hidden;
 }
+
 .tutor-course-title,
 .tutor-course-lesson {
     padding: 14px 20px;
@@ -326,9 +328,11 @@
     -webkit-transition: 300ms;
     transition: 300ms;
 }
+
 .tutor-course-lesson h5 a:hover {
     color: var(--tutor-primary-hover-color);
 }
+
 .tutor-course-lesson h5 i {
     line-height: 22px;
     vertical-align: text-top;
@@ -346,6 +350,7 @@
     padding-left: 5px;
     align-self: flex-start;
 }
+
 .tutor-course-lesson .lesson-preview-title {
     flex: 1 0 0;
     flex-direction: row;

@@ -1,5 +1,28 @@
-.tutor-single-lesson-wrap {
-    @import './single-quiz.scss';
-}
+@import './social-share';
+@import './archive';
+@import './single-course-details';
 
-@import './archive.scss';
+.tutor-course-author {
+    img {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+
+    span {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        color: #757C8E;
+    }
+
+    strong {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        color: #3F435B;
+    }
+}

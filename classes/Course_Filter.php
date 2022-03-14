@@ -21,8 +21,8 @@ class Course_Filter {
 
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
-		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? sanitize_text_field( $_post['page'] ) : 1;
 
+		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? sanitize_text_field( $_post['page'] ) : 1;
 		$args = array(
 			'post_status'    => 'publish',
 			'post_type'      => 'courses',
@@ -108,6 +108,7 @@ class Course_Filter {
 		$GLOBALS['tutor_shortcode_arg'] = array(
 			'column_per_row'  => $col_per_row <= 0 ? 3 : $col_per_row,
 			'course_per_page' => $courses_per_page,
+			'shortcode_enabled' => isset($_post['page_shortcode'])?true:false,
 		);
 
 		tutor_load_template( 'archive-course-init' );
@@ -141,18 +142,19 @@ class Course_Filter {
 
 		$term_id = $this->get_current_term_id();
 
-		foreach ( $terms as $term ) {
-			?>
-				<div class="tutor-course-filter-nested-terms">
-					<label>
-						<input type="checkbox" name="tutor-course-filter-<?php echo esc_attr( $taxonomy ); ?>" value="<?php echo esc_attr( $term->term_id ); ?>" <?php echo $term->term_id == $term_id ? 'checked' : ''; ?>/>&nbsp;
-						<?php echo sanitize_text_field( $term->name ); ?>
-					</label>
+		foreach($terms as $term){
+            ?>
+                <div class="tutor-form-check tutor-mb-18">
 
-					<?php isset( $term->children ) ? $this->render_terms_hierarchically( $term->children, $taxonomy ) : 0; ?>
-				</div>
-			<?php
-		}
+                <input type="checkbox" class="tutor-form-check-input" id="<?php echo $term->term_id; ?>"  name="tutor-course-filter-<?php echo $taxonomy; ?>" value="<?php echo $term->term_id; ?>" <?php echo $term->term_id==$term_id ? 'checked="checked"' : ''; ?>/>&nbsp;
+
+                    <label for="<?php echo $term->term_id; ?>">
+                        <?php echo $term->name; ?>
+                    </label>
+                </div>
+                <?php isset($term->children) ? $this->render_terms_hierarchically($term->children, $taxonomy) : 0; ?>
+            <?php
+        }
 	}
 
 	public function render_terms( $taxonomy ) {

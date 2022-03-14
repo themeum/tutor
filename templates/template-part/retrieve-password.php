@@ -10,9 +10,9 @@ defined( 'ABSPATH' ) || exit;
 tutor_alert( null, 'any' );
 
 
-if ( tutils()->array_get( 'reset_key', $_GET ) && tutils()->array_get( 'user_id', tutor_sanitize_data( $_GET ) ) ) {
-	tutor_load_template( 'template-part.form-retrieve-password' );
-} else {
+if (tutor_utils()->array_get('reset_key', $_GET) && tutor_utils()->array_get('user_id', $_GET)){
+    tutor_load_template('template-part.form-retrieve-password');
+}else{
 	do_action( 'tutor_before_retrieve_password_form' );
 	?>
 
@@ -36,17 +36,16 @@ if ( tutils()->array_get( 'reset_key', $_GET ) && tutils()->array_get( 'user_id'
 
 		<?php do_action( 'tutor_lostpassword_form' ); ?>
 
-		<div class="tutor-form-row">
-			<div class="tutor-form-col-12">
-				<div class="tutor-form-group">
-					<button type="submit" class="tutor-button tutor-button-primary" value="<?php esc_attr_e( 'Reset password', 'tutor' ); ?>">
-                    <?php esc_html_e( 'Reset password', 'tutor' ); ?>
-                    </button>
-				</div>
-			</div>
-		</div>
+        <div class="tutor-form-row">
+            <div class="tutor-form-col-12">
+                <div class="tutor-form-group">
+                    <button type="submit" class="tutor-btn" value="<?php esc_attr_e( 'Reset password', 'tutor' ); ?>"><?php
+						esc_html_e( 'Reset password', 'tutor' ); ?></button>
+                </div>
+            </div>
+        </div>
 
-	</form>
+    </form>
 
 	<?php
 	do_action( 'tutor_after_retrieve_password_form' );

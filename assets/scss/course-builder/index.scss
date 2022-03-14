@@ -1,4 +1,4 @@
-@import "../lib/mixins.scss";
+@import '../../../v2-library/_src/scss/reusables.scss';
 
 body.tutor-screen-course-builder {
 
@@ -7,7 +7,7 @@ body.tutor-screen-course-builder {
     // Reusable thumbnail wrapper
     .builder-course-thumbnail-upload-wrap {
         & > div {
-            font-size: var(--tutor-text-size);
+            font-size: 15px;
             line-height: 25px;
             margin-bottom: 20px;
             font-weight: 400;
@@ -51,7 +51,31 @@ body.tutor-screen-course-builder {
     @import './segments/instructor.scss';
     @import './segments/attachment.scss';
     @import './segments/topic-content.scss';
-    @import './segments/certificate-template.scss';
+    @import './segments/price-field.scss';
+    @import './segments/content-drip.scss';
+    
+    // LQA Modals
+    .tutor-modal {
+        .tutor-input-feedback-icon {
+            font-size: 19px;
+        }
+
+        .wp-editor-wrap {
+            width: 100%;
+        }
+        
+        &.tutor-lesson-modal-wrap {
+            @import './modal/lesson.scss';
+        }
+
+        &.tutor-quiz-builder-modal-wrap{
+            @import './modal/quiz.scss';
+        }
+
+        &.tutor-assignment-modal-wrap{
+            @import './modal/assignment.scss';
+        }
+    }
 
     /* Screen specific declarations (Frontend editor) */
     &.tutor-screen-course-builder-frontend{
@@ -60,5 +84,29 @@ body.tutor-screen-course-builder {
 
     &:not(.tutor-screen-course-builder-frontend) {
         @import './backend.scss';
+    }
+
+    .tutor-dropdown-icon-pack {
+        position: absolute;
+        top: 13px;
+        left: 10px;
+
+        &+select {
+            padding-left: 35px;
+        }
+
+        [data-for] {
+            display: none;
+        }
+
+        &[data-video_source=html5] [data-for=html5], 
+        &[data-video_source=youtube] [data-for=youtube], 
+        &[data-video_source=vimeo] [data-for=vimeo],
+        &[data-video_source=external_url] [data-for=external_url],
+        &[data-video_source=embedded] [data-for=embedded],
+        &[data-video_source=shortcode] [data-for=shortcode]
+        {
+            display: block;
+        }
     }
 }
