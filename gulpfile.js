@@ -71,7 +71,6 @@ for (let task in scss_blueprints) {
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
 			.pipe(sass({ outputStyle: 'compressed' }))
-			.pipe(prefix(prefixerOptions))
 			.pipe(rename(blueprint.destination))
 			.pipe(sourcemaps.write('.', { addComment: process.env._GULP_ENV != 'build' }))
 			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'));
