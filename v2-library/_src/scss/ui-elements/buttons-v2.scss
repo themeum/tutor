@@ -1,7 +1,7 @@
 // Button Utilities
 $variations: (
 	//  $suffix, $bgColor, $txtColor, $border
-	'wordpress' $brand-wordpress $text-white $brand-wordpress,
+		'wordpress' $brand-wordpress $text-white $brand-wordpress,
 	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
 	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-hover-color),
 	'secondary' $primary-40 var(--tutor-primary-color) $primary-40,
@@ -90,8 +90,8 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 		&.tutor-btn-outline-fd {
 			&:hover {
 				background: transparent;
-				border-color: $color-brand;
-				color: $color-brand;
+				border-color: var(--tutor-primary-color);
+				color: var(--tutor-primary-color);
 			}
 		}
 	}

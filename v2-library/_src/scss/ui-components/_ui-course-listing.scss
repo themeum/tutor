@@ -103,7 +103,7 @@
 				background: rgba(27, 27, 27, 0.4);
 			}
 			&:hover {
-				background: var(--tutor-design-brand, blue);
+				background: var(--tutor-primary-color, blue);
 				color: var(--tutor-design-white, #fff);
 			}
 		}
@@ -374,7 +374,7 @@
 		border-radius: 2px;
 		overflow: hidden;
 		.progress-value {
-			background: #3e64de;
+			background: var(--tutor-primary-color);
 			position: absolute;
 			width: var(--progress-value);
 			height: 100%;
