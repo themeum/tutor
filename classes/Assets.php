@@ -151,9 +151,11 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		
 		// Plyr
-		wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION);
-		wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), TUTOR_VERSION, true);
-
+		if(is_single_course()) {
+			wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION);
+			wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), TUTOR_VERSION, true);
+		}
+		
 		// Social Share
 		wp_enqueue_script('tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array('jquery'), TUTOR_VERSION, true);
 
