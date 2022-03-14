@@ -1,7 +1,7 @@
 .tutor-action-icon{
     @include valueWithPrefix(display, inline-flex);
-    @include propertyWithPrefix(align-items, center);
-    @include propertyWithPrefix(justify-content, center);
+    align-items: center;
+    justify-content: center;
     background: transparent;
     border-radius: 50%;
     font-size: 30px;

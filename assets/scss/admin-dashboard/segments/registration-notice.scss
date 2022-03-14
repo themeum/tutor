@@ -4,7 +4,7 @@
 
 .tutor-user-registration-notice {
     @include valueWithPrefix(display, flex);
-    @include propertyWithPrefix(align-items, center);
+    align-items: center;
     background: white;
     border: 1px solid $stroke-light-30;
     box-sizing: border-box;
@@ -21,7 +21,7 @@
         }
 
         &:nth-child(2){
-            @include propertyWithPrefix(flex, 1);
+            flex: 1;
             padding: 20px 0;
             color: #676a72;
             font-style: normal;
@@ -36,9 +36,9 @@
             border-left: 1px solid $stroke-light-30;
             margin-left: 20px;
             @include valueWithPrefix(display, flex);
-            @include propertyWithPrefix(flex-direction, column);
-            @include propertyWithPrefix(align-self, stretch);
-            @include propertyWithPrefix(justify-content, space-around);
+            flex-direction: column;
+            align-self: stretch;
+            justify-content: space-around;
 
             a{
                 display: block;
@@ -51,11 +51,11 @@
                 text-align: center;
                 color: $text-hints;
                 @include valueWithPrefix(display, flex);
-                @include propertyWithPrefix(align-items, center);
+                align-items: center;
 
                 &:hover {
                     color: #3E64DE;
-                    background: #F3F3F5;;
+                    background: #F3F3F5;
                 }
 
                 &, &:hover, &:focus, &:active {
