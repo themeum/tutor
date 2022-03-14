@@ -31,11 +31,9 @@ window.selectSearchField = (selectElement) => {
 						searchInput.focus();
 					}, 100);
 
-
 					dropDown.onclick = (e) => {
 						e.stopPropagation();
 					};
-
 				};
 				dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
 
@@ -99,7 +97,7 @@ window.selectSearchField = (selectElement) => {
 
 					let noItemText = `
                     <div class="tutor-dropdown-select-option noItem">
-                        <label>No item found</label>
+                        No item found
                     </div>
                     `;
 
@@ -124,21 +122,19 @@ window.selectSearchField = (selectElement) => {
 			}
 		});
 
-
 		const selectDdMarkup = document.querySelectorAll('.tutor-dropdown-select.select-dropdown');
 		selectDdMarkup.forEach((item) => {
 			if (item.nextElementSibling) {
-				if(item.nextElementSibling.classList.contains('select-dropdown')){
+				if (item.nextElementSibling.classList.contains('select-dropdown')) {
 					item.nextElementSibling.remove();
 				}
 			}
-		})
+		});
 
 		let otherDropDown = document.querySelectorAll('.tutor-dropdown-select-options-container');
 		document.onclick = (e) => {
 			dd_hide_dom_click(otherDropDown);
 		};
-
 	})();
 
 	function dd_hide_dom_click(elem) {
@@ -154,9 +150,7 @@ window.selectSearchField = (selectElement) => {
 		Array.from(options).forEach((item) => {
 			optionsList += `
             <div class="tutor-dropdown-select-option">
-                <label>
-                    <div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="${item.value}">${item.text}</div>
-                </label>
+				<div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="${item.value}">${item.text}</div>
             </div>
             `;
 		});

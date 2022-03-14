@@ -1,3 +1,10 @@
+.tutor-wrap.tutor-courses-wrap.course-archive-page {
+	min-height: 200px;
+	@include breakpoint-min(tablet) {
+		min-height: 400px;
+	}
+}
+
 .tutor-course-listing {
 	// max-width: 1110px;
 	// margin: 0 auto;

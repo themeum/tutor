@@ -711,7 +711,7 @@ final class Tutor {
 	public function toolbar_link_to_mypage( $wp_admin_bar ) {
 		$args = array(
 			'id'    	=> 'tutor_report_link',
-			'title' 	=> __( 'Report Tutor LMS 2.0.0 Beta Issues', 'tutor' ),
+			'title' 	=> __( 'Report Tutor LMS Issues', 'tutor' ),
 			'href'  	=> 'https://forms.gle/xHw7TQSLGAcmbySy9',
 			'meta'  	=> array(
 				'class' => 'tutor-report-issue',
