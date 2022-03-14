@@ -157,7 +157,7 @@
                 </div>
             </div>
 		</div>
-        <h3 class="title tutor-text-medium-h5 tutor-color-text-primary tutor-mb-10"><?php esc_html_e( 'Addons', 'tutor' ); ?></h3>
+        <h3 class="title tutor-text-medium-h5 tutor-color-text-primary tutor-mb-10"><?php esc_html_e( 'Add-ons', 'tutor' ); ?></h3>
         <div class="tutor-addons-list-select-filter tutor-d-flex tutor-justify-content-end tutor-align-items-center">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
 				<span class="tutor-icon-search-filled tutor-input-group-icon"></span>
@@ -170,6 +170,6 @@
 				/>
 			</div>
 		</div>
-        <div id="tutor-free-addons" class="tutor-addons-list-items tutor-mt-30"></div>
+        <div id="tutor-free-addons" class="tutor-addons-list-items tutor-row tutor-gx-xxl-4 tutor-mt-30"></div>
     </div>
 </main>
