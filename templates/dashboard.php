@@ -74,7 +74,7 @@ do_action('tutor_dashboard/before/wrap');
 	<div class="tutor-container">
 		<!-- new head part  -->
 		<div class="tutor-row tutor-d-flex tutor-justify-content-between tutor-frontend-dashboard-header">
-			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex align-items-center" style="border: none;">
+			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-items-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url(get_avatar_url($user_id, array('size' => 150))); ?>)">
 				</div>
 				<div class="tutor-user-info tutor-ml-24">
@@ -110,8 +110,8 @@ do_action('tutor_dashboard/before/wrap');
 					?>
 				</div>
 			</div>
-			<div class="tutor-header-right-side tutor-col-md-6 tutor-d-flex justify-content-end tutor-mt-20 tutor-mt-md-0">
-				<div class="tutor-d-flex align-items-center">
+			<div class="tutor-header-right-side tutor-col-md-6 tutor-d-flex tutor-justify-content-end tutor-mt-20 tutor-mt-md-0">
+				<div class="tutor-d-flex tutor-align-items-center">
 					<?php
 					do_action('tutor_dashboard/before_header_button');
 					$instructor_status  = tutor_utils()->instructor_status();

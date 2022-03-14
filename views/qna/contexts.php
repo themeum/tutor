@@ -3,7 +3,7 @@
 $contexts =  array(
     'qna-table' => array(
         'columns' => array(
-            'checkbox'      => '<div class="d-flex"><input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" /></div>',
+            'checkbox'      => '<div class="tutor-d-flex"><input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" /></div>',
             'student'       => __('Student', 'tutor'),
             'question'      => __('Question', 'tutor'),
             'reply'         => __('Reply', 'tutor'),

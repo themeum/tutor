@@ -156,7 +156,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 				<thead class="tutor-text-sm tutor-text-400">
 					<tr>
 						<th>
-							<div class="d-flex">
+							<div class="tutor-d-flex">
 								<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
 							</div>
 						</th>
@@ -217,7 +217,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 							?>
 							<tr>
 								<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
-									<div class="td-checkbox d-flex ">
+									<div class="td-checkbox tutor-d-flex ">
 										<input type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $post->ID ); ?>" />
 									</div>
 								</td>

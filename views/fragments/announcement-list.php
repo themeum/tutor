@@ -61,7 +61,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
-				<div class="tutor-modal-footer d-flex tutor-justify-content-between">
+				<div class="tutor-modal-footer tutor-d-flex tutor-justify-content-between">
 					<button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
 						<?php _e( 'Publish', 'tutor' ); ?>
 					</button>
@@ -124,7 +124,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 								<?php _e( 'Cancel', 'tutor' ); ?>
 							</button>
 						</div>
-						<div class="footer-btns announcement-action-button d-flex justify-content-end tutor-flex-sm-wrap tutor-flex-md-nowrap">
+						<div class="footer-btns announcement-action-button tutor-d-flex tutor-justify-content-end tutor-flex-sm-wrap tutor-flex-md-nowrap">
 							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-modal-btn-delete">
 								<?php _e( 'Delete', 'tutor' ); ?>
 							</button>
@@ -187,7 +187,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 				<tr>
 					<?php if ( is_admin() ) : ?>
 						<th width="2%">
-							<div class="d-flex">
+							<div class="tutor-d-flex">
 								<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input">
 							</div>
 						</th>

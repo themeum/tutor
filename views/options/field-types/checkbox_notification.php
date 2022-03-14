@@ -10,7 +10,7 @@ $field_id  = esc_attr( 'field_' . $field_key );
 if ( ! empty( $field['options'] ) ) { ?>
 	<div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>
-		<div class="type-check d-flex">
+		<div class="type-check tutor-d-flex">
 			<?php foreach ( $field['options'] as $option_key => $option ) : ?>
 				<div class="tutor-form-check">
 					<input type="checkbox" id="check_<?php echo esc_attr( $option_key ); ?>" name="tutor_option<?php echo esc_attr( $option_key ); ?>" value="1" <?php checked( $option['value'], 1 ); ?> class="tutor-form-check-input" />

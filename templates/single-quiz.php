@@ -50,7 +50,7 @@ ob_start();
             </div>
         </div>
         <div class="tutor-topbar-right-item tutor-d-flex">
-            <div class="tutor-topbar-assignment-details tutor-d-flex align-items-center">
+            <div class="tutor-topbar-assignment-details tutor-d-flex tutor-align-items-center">
                 <?php
                     do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
                 ?>
@@ -94,7 +94,7 @@ ob_start();
     </div>
 
     <?php ob_start(); ?>
-        <div class="tutor-quiz-wrapper tutor-quiz-wrapper d-flex justify-content-center tutor-mt-100 tutor-pb-100">
+        <div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-100 tutor-pb-100">
             <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
             <?php

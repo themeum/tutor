@@ -143,11 +143,11 @@ $filters = array(
 								<div class="td-avatar">
 									<?php echo get_avatar( $user_data->ID, 50 ); ?>
 									<div class="td-avatar-detials">
-											<div class="td-avatar-name d-flex align-items-center">
+											<div class="td-avatar-name tutor-d-flex tutor-align-items-center">
 												<span class="tutor-color-text-primary tutor-text-medium-body">
 													<?php echo esc_html( $user_data->display_name ); ?>
 												</span>
-												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-10 d-flex" target="_blank">
+												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-10 tutor-d-flex" target="_blank">
 													<span class="tutor-icon-detail-link-filled tutor-color-text-primary" style="font-size:18px;"></span>
 												</a>
 											</div>
