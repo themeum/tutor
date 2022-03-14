@@ -116,7 +116,7 @@
 	}
 
 	.tutor-dashboard-builder-header-left {
-		@include valueWithPrefix(display, flex);
+		display: flex;
 		@include propertyWithPrefix(align-items, center);
 
 		.tutor-dashboard-builder-logo {
@@ -179,7 +179,7 @@
  */
 
 .tutor-course-level-meta {
-	@include valueWithPrefix(display, flex);
+	display: flex;
 	@include propertyWithPrefix(justify-content, space-between);
 
 	label {
@@ -196,7 +196,7 @@
 	}
 
 	.field-container {
-		@include valueWithPrefix(display, flex);
+		display: flex;
 		@include propertyWithPrefix(align-items, center);
 
 		input[name='course_price'] {
@@ -204,7 +204,7 @@
 		}
 
 		& > label {
-			@include valueWithPrefix(display, inline-flex);
+			display: inline-flex;
 			&:first-child {
 				margin-right: 25px;
 			}

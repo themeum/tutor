@@ -22,7 +22,7 @@
 		height: 98px;
 		width: var(--width);
 		height: calc(var(--width) / 1.775);
-		@include valueWithPrefix(display, flex);
+		display: flex;
 		@include propertyWithPrefix(align-items, center);
 		@include propertyWithPrefix(justify-content, center);
 

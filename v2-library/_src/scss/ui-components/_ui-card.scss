@@ -20,7 +20,7 @@
 		border: 1px solid #c0c3cb;
 		box-sizing: border-box;
 		border-radius: 6px;
-		@include valueWithPrefix(display, flex);
+		display: flex;
 		@include propertyWithPrefix(align-items, center);
 	}
 
@@ -54,7 +54,7 @@
 		}
 
 		&:last-child {
-			@include valueWithPrefix(display, flex);
+			display: flex;
 			@include propertyWithPrefix(align-items, center);
 		}
 	}

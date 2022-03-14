@@ -16,7 +16,7 @@ body {
 	z-index: 9999999999;
 	background: rgba(0, 0, 0, 0.589);
 
-	@include valueWithPrefix(display, flex);
+	display: flex;
 	@include propertyWithPrefix(align-items, center);
 	@include propertyWithPrefix(justify-content, center);
 
@@ -70,7 +70,7 @@ body {
 
 .tutor-component-three-col-action {
 	@include breakpoint-min(desktop) {
-		@include valueWithPrefix(display, flex);
+		display: flex;
 		@include propertyWithPrefix(align-items, center);
 	}
 	@include breakpoint-max(desktop) {

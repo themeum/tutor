@@ -144,7 +144,7 @@ $inst_gap: 30px;
         }
 
         &>div{
-            @include valueWithPrefix(display, flex);
+            display: flex;
             @include propertyWithPrefix(align-items, center);
             padding: 12px 0;
 

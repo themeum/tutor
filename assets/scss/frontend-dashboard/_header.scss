@@ -52,7 +52,7 @@
             }
     
             .tutor-dashboard-header-stats {
-                @include valueWithPrefix(display, flex);
+                display: flex;
                 @include propertyWithPrefix(flex-wrap, wrap);
                 line-height: 25px;
     

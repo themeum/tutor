@@ -3,7 +3,7 @@
 }
 
 .tutor-user-registration-notice {
-    @include valueWithPrefix(display, flex);
+    display: flex;
     @include propertyWithPrefix(align-items, center);
     background: white;
     border: 1px solid $stroke-light-30;
@@ -35,7 +35,7 @@
         &:last-child {
             border-left: 1px solid $stroke-light-30;
             margin-left: 20px;
-            @include valueWithPrefix(display, flex);
+            display: flex;
             @include propertyWithPrefix(flex-direction, column);
             @include propertyWithPrefix(align-self, stretch);
             @include propertyWithPrefix(justify-content, space-around);
@@ -50,7 +50,7 @@
                 font-size: 15px;
                 text-align: center;
                 color: $text-hints;
-                @include valueWithPrefix(display, flex);
+                display: flex;
                 @include propertyWithPrefix(align-items, center);
 
                 &:hover {

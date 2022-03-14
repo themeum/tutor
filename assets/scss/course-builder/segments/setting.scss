@@ -331,7 +331,7 @@
 	}
 
 	.course-settings-tabs-container {
-		@include valueWithPrefix(display, flex);
+		display: flex;
 
 		.settings-tabs-navs-wrap {
 			@include propertyWithPrefix(flex, 0 0 200px);
