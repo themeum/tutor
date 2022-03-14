@@ -1,9 +1,10 @@
 // Button Utilities
 $variations: (
+	//  $suffix, $bgColor, $txtColor, $border
 	'wordpress' $brand-wordpress $text-white $brand-wordpress,
 	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
-	'primary' var(--tutor-primary-main) var(--tutor-color-white) var(--tutor-primary-main),
-	'secondary' $primary-40 $primary-main $primary-40,
+	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-hover-color),
+	'secondary' $primary-40 var(--tutor-primary-color) $primary-40,
 	'tertiary' transparent $primary-main $primary-main,
 	'disable' $black-08 $text-hints $black-08,
 	'disable-outline' transparent $text-hints $stroke-light-30
@@ -72,12 +73,7 @@ $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 's
 		&.tutor-btn-secondary:hover {
 			background: darken($primary-40, 2);
 			border-color: darken($primary-40, 2);
-			color: $primary-main;
-		}
-		&.tutor-btn-secondary:hover {
-			background: darken($primary-40, 2);
-			border-color: darken($primary-40, 2);
-			color: $primary-main;
+			color: var(--tutor-primary-color);
 		}
 		&.tutor-btn-wordpress-outline:hover {
 			background: $brand-wordpress;
