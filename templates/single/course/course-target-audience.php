@@ -23,19 +23,19 @@ if ( empty( $target_audience ) ) {
 if ( is_array( $target_audience ) && count( $target_audience ) ) {
 	?>
 
-	<div class="tutor-single-course-segment  tutor-course-target-audience-wrap">
-
-		<h4 class="tutor-segment-title"><?php _e( 'Target Audience', 'tutor' ); ?></h4>
-
-		<div class="tutor-course-target-audience-content">
-			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
-				<?php
-				foreach ( $target_audience as $audience ) {
-					echo '<li>' . $audience . '</li>';
-				}
-				?>
-			</ul>
+	<div class="tutor-course-details-widget tutor-mt-40">
+		<div class="tutor-course-details-widget-title tutor-mb-16">
+			<span class="tutor-color-text-primary tutor-text-medium-h6">
+				<?php _e('Audience', 'tutor'); ?>
+			</span>
 		</div>
+		<ul class="tutor-course-details-widget-list">
+			<?php
+				foreach ($target_audience as $audience){
+					echo "<li class='tutor-bs-d-flex tutor-color-text-primary tutor-text-regular-body tutor-mb-10'><span class='tutor-icon-mark-filled tutor-color-design-brand tutor-mr-5'></span><span>{$audience}</span></li>";
+				}
+			?>
+		</ul>
 	</div>
 
 <?php } ?>

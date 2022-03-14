@@ -1,5 +1,5 @@
 <?php
-	$tutor_pages = tutils()->tutor_pages();
+$tutor_pages = tutor_utils()->tutor_pages();
 ?>
 
 <div id="tools-tutor-pages" class="tools-tutor-pages">
@@ -65,20 +65,48 @@
 				<?php
 			}
 			?>
+            <tr>
+                <td><?php echo $page_id; ?></td>
+                <td>
+					<?php
+					echo "<p>";
+
+					if ($page['page_exists']){
+						$edit_url = admin_url("post.php?post={$page_id}&action=edit");
+						echo "<a href='{$edit_url}' target='_blank'>";
+					}
+					echo $page['page_name'];
+
+					if ($page['page_exists']){
+						echo '</a>';
+					}
+					echo "</p>";
+					?>
+                </td>
+
+                <td>
+                    <?php
+                    if ( ! $page_id ){
+	                    echo '<p style="color: red;">';
+	                    echo "<i class='dashicons dashicons-warning'></i> "; _e(' Page not set', 'tutor');
+	                    echo '</p>';
+                    }
+					?>
+
+					<form action="" method="post">
+						<?php
+							tutor_action_field( 'regenerate_tutor_pages' );
+							tutor_nonce_field();
+						?>
+
+						<p>
+							<button class="tutor-btn" type="submit"><?php _e('Re-Generate Tutor Pages','tutor'); ?></button>
+						</p>
+					</form>
+				</td>
+			</tr>
 		</tbody>
 	</table>
-
-	<form action="" method="post">
-		<?php
-			tutor_action_field( 'regenerate_tutor_pages' );
-			tutor_nonce_field();
-		?>
-
-		<p>
-			<button class="tutor-button tutor-button-primary" type="submit"><?php _e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
-		</p>
-	</form>
-
 	<?php
 		tutor_alert( __( 'Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor' ), 'info' );
 	?>

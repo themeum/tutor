@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template for displaying lead info
  *
@@ -11,145 +12,75 @@
  * @version 1.4.3
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+if (!defined('ABSPATH'))
+    exit;
 
 global $post, $authordata;
-$profile_url = tutor_utils()->profile_url( $authordata->ID );
+$profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 ?>
 
-<div class="tutor-single-course-segment tutor-single-course-lead-info">
+<header class="tutor-course-details-header tutor-mb-42">
+    <?php
+    $disable = !get_tutor_option('enable_course_review');
+    if (!$disable) {
+    ?>
+        <div class="tutor-course-details-ratings">
+            <?php
+            $course_rating = tutor_utils()->get_course_rating();
+            tutor_utils()->star_rating_generator_v2($course_rating->rating_avg, $course_rating->rating_count, true);
+            ?>
+        </div>
+    <?php
+    }
+    ?>
 
-	<?php
-	$disable = get_tutor_option( 'disable_course_review' );
-	if ( ! $disable ) {
-		?>
-		<div class="tutor-leadinfo-top-meta">
-		<span class="tutor-single-course-rating">
-			<?php
-			$course_rating = tutor_utils()->get_course_rating();
-			tutor_utils()->star_rating_generator( $course_rating->rating_avg );
-			?>
-			<span class="tutor-single-rating-count">
-				<?php
-				echo esc_attr( $course_rating->rating_avg );
-				echo '<i>(' . $course_rating->rating_count . ')</i>';
-				?>
-			</span>
-		</span>
-		</div>
-	<?php } ?>
+    <div class="tutor-course-details-title tutor-text-bold-h4 tutor-color-text-primary tutor-mt-10">
+        <?php do_action('tutor_course/single/title/before'); ?>
+            <div class="tutor-text-bold-h4 tutor-ftsz-lg-30"><?php the_title(); ?>
+        </div>
+    </div>
+    <div class="tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-mt-28">
+        <div class="tutor-course-details-category tutor-text-medium-body tutor-color-text-primary tutor-bs-d-flex tutor-bs-align-items-end">
+            <!-- <?php if (tutor_utils()->get_option('enable_course_author')) : ?>
+                <div class="tutor-course-author tutor-mr-15">
+                    <img src="<?php echo get_avatar_url(get_the_author_meta('ID')); ?>" />
+                    <span><?php _e('by', 'tutor'); ?></span>
+                    <strong><?php echo get_the_author_meta('display_name'); ?></strong>
+                </div>
+            <?php endif; ?> -->
+            <div>
+                <span class="text-regular-body tutor-color-text-hints">
+                    <?php _e('Categories', 'tutor'); ?>:
+                </span>
+                <span>
+                    <?php
+                    $course_categories = get_tutor_course_categories();
+                    $cats_array = [];
+                    if (is_array($course_categories) && count($course_categories)) {
+                        foreach ($course_categories as $course_category) {
+                            $category_name = $course_category->name;
+                            $category_link = get_term_link($course_category->term_id);
+                            $cats_array[] = "<a href='$category_link'>$category_name</a>";
+                        }
 
-	<?php do_action( 'tutor_course/single/title/before' ); ?>
-	<h1 class="tutor-course-header-h1"><?php the_title(); ?></h1>
+                        echo implode(', ', $cats_array);
+                    } else {
+                        _e('Uncategorized', 'tutor');
+                    }
+                    ?>
+                </span>
+            </div>
+        </div>
+        <div class="tutor-course-details-action-btns tutor-mt-10 tutor-mt-sm-0">
+            <a href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-text-regular-body tutor-color-text-primary tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
+                <i class="tutor-icon-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
+            </a>
 
-	<?php do_action( 'tutor_course/single/title/after' ); ?>
-	<?php do_action( 'tutor_course/single/lead_meta/before' ); ?>
-
-	<div class="tutor-single-course-meta tutor-meta-top">
-		<?php
-			$disable_course_author = get_tutor_option( 'disable_course_author' );
-			$disable_course_level  = get_tutor_option( 'disable_course_level' );
-			$disable_course_share  = get_tutor_option( 'disable_course_share' );
-		?>
-		<ul>
-			<?php if ( ! $disable_course_author ) { ?>
-				<li class="tutor-single-course-author-meta">
-					<div class="tutor-single-course-avatar">
-						<a href="<?php echo esc_url( $profile_url ); ?>"> <?php echo tutor_utils()->get_tutor_avatar( $post->post_author ); ?></a>
-					</div>
-					<div class="tutor-single-course-author-name">
-						<span><?php _e( 'by', 'tutor' ); ?></span>
-						<a href="<?php echo esc_url( tutor_utils()->profile_url( $authordata->ID ) ); ?>"><?php echo get_the_author(); ?></a>
-					</div>
-				</li>
-			<?php } ?>
-
-			<?php if ( ! $disable_course_level ) { ?>
-				<li class="tutor-course-level">
-					<strong><?php _e( 'Course level:', 'tutor' ); ?></strong>
-					<?php echo get_tutor_course_level(); ?>
-				</li>
-			<?php } ?>
-
-			<?php if ( ! $disable_course_share ) { ?>
-				<li class="tutor-social-share">
-					<?php tutor_social_share(); ?>
-				</li>
-			<?php } ?>
-		</ul>
-
-	</div>
-
-	<div class="tutor-single-course-meta tutor-lead-meta">
-		<ul>
-			<?php
-			$course_categories = get_tutor_course_categories();
-			if ( is_array( $course_categories ) && count( $course_categories ) ) {
-				?>
-				<li>
-					<span><?php esc_html_e( 'Categories', 'tutor' ); ?></span>
-					<?php
-					foreach ( $course_categories as $course_category ) {
-						$category_name = $course_category->name;
-						$category_link = get_term_link( $course_category->term_id );
-						echo '<a href="' . esc_url( $category_link ) . '">' . esc_attr( $category_name ) . '</a>';
-					}
-					?>
-				</li>
-			<?php } ?>
-
-			<?php
-			$disable_course_duration = get_tutor_option( 'disable_course_duration' );
-			$disable_total_enrolled  = get_tutor_option( 'disable_course_total_enrolled' );
-			$disable_update_date     = get_tutor_option( 'disable_course_update_date' );
-			$course_duration         = get_tutor_course_duration_context();
-
-			if ( ! empty( $course_duration ) && ! $disable_course_duration ) {
-				?>
-				<li>
-					<span><?php esc_html_e( 'Duration', 'tutor' ); ?></span>
-					<?php echo esc_attr( $course_duration ); ?>
-				</li>
-				<?php
-			}
-
-			if ( ! $disable_total_enrolled ) {
-				?>
-				<li>
-					<span><?php esc_html_e( 'Total Enrolled', 'tutor' ); ?></span>
-					<?php echo (int) esc_attr( tutor_utils()->count_enrolled_users_by_course() ); ?>
-				</li>
-				<?php
-			}
-
-			if ( ! $disable_update_date ) {
-				?>
-				<li>
-					<span><?php esc_html_e( 'Last Update', 'tutor' ); ?></span>
-					<?php echo esc_html( get_the_modified_date() ); ?>
-				</li>
-			<?php } ?>
-		</ul>
-	</div>
-
-	<?php do_action( 'tutor_course/single/lead_meta/after' ); ?>
-	<?php do_action( 'tutor_course/single/excerpt/before' ); ?>
-
-	<?php
-	$excerpt       = tutor_get_the_excerpt();
-	$disable_about = get_tutor_option( 'disable_course_about' );
-	if ( ! empty( $excerpt ) && ! $disable_about ) {
-		?>
-		<div class="tutor-course-summery">
-			<h4  class="tutor-segment-title"><?php esc_html_e( 'About Course', 'tutor' ); ?></h4>
-			<?php echo esc_attr( $excerpt ); ?>
-		</div>
-		<?php
-	}
-	?>
-
-	<?php do_action( 'tutor_course/single/excerpt/after' ); ?>
-
-</div>
+            <?php
+            if (tutor_utils()->get_option('enable_course_share', false, true, true)) {
+                tutor_load_template_from_custom_path(tutor()->path . '/views/course-share.php', array(), false);
+            }
+            ?>
+        </div>
+    </div>
+</header>

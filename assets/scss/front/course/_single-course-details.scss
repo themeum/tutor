@@ -1,0 +1,93 @@
+.tutor-single-course-wrapper {
+    overflow: auto;
+    &>div{
+        float: left;
+        width: 100%;
+
+        @media(min-width:992px) {
+            &:first-child{
+                width: calc(100% - 370px);
+            }
+
+            &:last-child{
+                width: 350px;
+                float: right;
+            }
+        }
+    }
+}
+.tutor-course-details-action-btns {
+    i.tutor-icon-fav-line-filled,
+    i.tutor-icon-fav-full-filled {
+        margin-top: -3px;
+    }
+    .tutor-updating-message {
+        &:before {
+            margin-right: -1px !important;
+            margin-top: -2px;
+        }
+    }
+}
+
+.course-enrolled-nav-wrap {
+    border-bottom: 1px solid #dedfe0;
+    margin-bottom: 45px;
+
+    .course-enrolled-nav{
+        ul {
+            list-style: none;
+            margin: 0 0 -1px;
+            padding: 0;
+
+            li {
+                display: inline-block;
+
+                a {
+                    display: block;
+                    font-size: 16px;
+                    padding: 5px 0 20px;
+                    margin-right: 20px;
+                    color: var(--tutor-light-color);
+                    border-bottom: 2px solid transparent;
+                }
+
+                &:not(:first-child) a {
+                    margin-left: 20px;
+                }
+
+                &.active a {
+                    border-bottom: 2px solid var(--tutor-primary-color);
+                    color: var(--tutor-text-color);
+                }
+            }
+        }
+    }
+}
+
+.course_template_shortcode {
+    .tutor-courses-wrap{
+        margin-top: 0;
+    }
+}
+.course-players{
+    position: relative;
+    overflow: hidden;
+
+    .loading-spinner {
+        position: absolute;
+        inset: 0;
+        background: $bg-gray-10;
+        border-radius: 3px;
+        z-index: 10;
+
+        @include spinner(#1973aa, #eee);
+    }
+    .loading-spinner::before {
+        width: 50px;
+        height: 50px;
+        top: calc(50% - 25px);
+    }
+    .loading-spinner.hide {
+        display: none;
+    }
+}

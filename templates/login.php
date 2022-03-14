@@ -15,33 +15,28 @@ if ( ! defined( 'ABSPATH' ) )
 	exit;
 
 
-if(tutils()->get_option('disable_tutor_native_login')) {
+if(!tutor_utils()->get_option('enable_tutor_native_login', null, true, true)) {
     // Refer to login oage
     header('Location: '.wp_login_url($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
     exit;
 }
     
 tutor_utils()->tutor_custom_header();
-
+$login_url = tutor_utils()->get_option('enable_tutor_native_login', null, true, true) ? '' : wp_login_url(tutor()->current_url);
 ?>
 
 <?php do_action('tutor/template/login/before/wrap'); ?>
-    <div <?php tutor_post_class('tutor-page-wrap'); ?>>
-
-        <div class="tutor-template-segment tutor-login-wrap">
-            <div class="tutor-login-title">
-                <h4><?php _e('Please Sign-In to view this section', 'tutor'); ?></h4>
-            </div>
-
-            <div class="tutor-template-login-form">
-				<?php tutor_load_template( 'global.login' ); ?>
-            </div>
+<div <?php tutor_post_class('tutor-page-wrap'); ?>>
+    <div class="tutor-template-segment tutor-login-wrap">
+        <div class="tutor-login-title">
+            <h4>
+                <?php echo sprintf( __('Please %sSign-In%s to view this section', 'tutor'), '<a data-login_url="'.$login_url.'" href="" class="tutor-open-login-modal">', '</a>'); ?>
+            </h4>
         </div>
-    </div><!-- .wrap -->
-
-<?php do_action('tutor/template/login/after/wrap'); ?>
-
-
-
-<?php
-tutor_utils()->tutor_custom_footer();
+    </div>
+</div>
+<?php 
+    do_action('tutor/template/login/after/wrap');
+    tutor_load_template_from_custom_path(tutor()->path . '/views/modal/login.php');
+    tutor_utils()->tutor_custom_footer();
+?>

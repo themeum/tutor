@@ -13,4 +13,4 @@
 ?>
 
 
-<h3>There is no course</h3>
+<?php tutor_utils()->tutor_empty_state( 'No Course Found', 'tutor' ); ?>

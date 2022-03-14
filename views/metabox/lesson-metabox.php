@@ -7,15 +7,13 @@
 		$courses = tutor_utils()->get_courses_for_instructors();
 		?>
 
-		<select name="selected_course" class="tutor_select2">
+		<select name="selected_course" class="tutor_select2 no-tutor-dropdown">
 			<option value=""><?php _e( 'Select a course', 'tutor' ); ?></option>
 
 			<?php
 			$course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() );
 			foreach ( $courses as $course ) {
-				echo '<option value="' . esc_attr( $course->ID ) . '" ' . selected( $course->ID, $course_id ) . '>' . 
-						esc_attr( $course->post_title ) . 
-					'</option>';
+				echo "<option value='{$course->ID}' " . selected( $course->ID, $course_id ) . " >{$course->post_title}</option>";
 			}
 			?>
 		</select>

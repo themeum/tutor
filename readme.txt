@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.9
 Requires PHP: 7.0
-Stable tag: 1.9.16
+Stable tag: 2.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,6 +241,95 @@ Tutor enables you to use any third party plugins without facing any compatibilit
 
 == Changelog ==
 
+= 2.0.0 - March 15, 2022
+
+New: Overall design update and optimizations
+New: Email template builder
+
+= 2.0.0-rc - February 22, 2022
+
+New: Now go to the next or previous lesson with a dedicated button
+New: Load more button for list of submitted reviews
+Update: The grace period is now removed from the setting as it was redundant
+Update: Setup wizard skip option now redirects to courses page
+Update: Introducing WP 5.9 Compatibility for Tutor LMS 2.0
+Update: Introducing WPML Compatibility for Tutor LMS 2.0
+Update: PHP-8 compatibility for Tutor LMS 2.0
+Fix: My course pagination issue in the dashboard section
+Fix: Blocked instructors showing up as a new Instructor in the report overview
+Fix: Quiz attempts remained in review and no result is showing pending
+Fix: Course is showing after expiration (Paid Membership Pro)
+Fix: Quiz abandon modal not showing in on-page navigation when clicking on any link
+Fix: Quiz reattempt button not showing upon timeout if grace period was enabled
+Fix: Fixed pagination issue on courses page (Course archive)
+Fix: Improved design of course details page.
+Fix: Improved design of dashboard course listing page.
+Fix: Missing icon fonts and font conflicts for multiple places
+Fix: Enabling course as public is not showing start button
+Fix: Hiding quiz time was not working properly
+Fix: Hiding quiz question number not working
+
+= 2.0.0-beta.3 - January 31, 2022
+
+Fix: Email notification error generating from tutor login modal
+Fix: Bulk delete option for quiz attempt not working
+Fix: Zoom & Announcement Time Calculation is not working
+Fix: Minimal GradeBook percentage was showing the wrong calculations
+Fix: The users were unable to switch the Q&A tab
+Fix: Quiz Export button was not showing up
+Fix: Quiz attempt table matching data was showing wrong information
+Fix: Pagination issues on the dashboard withdrawal tab
+Fix: Second Zoom live lesson not working properly
+Fix: Download certificate button issue without course completion
+
+= 2.0.0-beta.2 - January 25, 2022
+
+New: Student and instructor public profile layout option in settings
+Update: Add translation security to the export page
+Update: Confirmation modal added to import, delete & apply history data
+Fix: Student can submit quiz even after time expired issue fixed
+Fix: Student can upload multiple files while submitting Assignment
+Fix: Fixed Fatal error if users didn't have the compatible Tutor Pro installed
+Fix: Gradebook broken message issue fixed
+Fix: PHP notice and warning errors fixed
+Fix: Quiz attempt details table doesn't show all contents properly
+Fix: Division by zero on pagination is fixed
+Fix: Sorting fixed after ajax action on Import & delete history data
+Fix: Line-awesome static (404) link removed
+Fix: TinyMCE editor null checking fixed
+Fix: Removed duplicate site title of Tools status page
+Fix: Time type added to quiz attempt
+Fix: Slash (\) is removed to filter and search the title on each listing
+Fix: Removed array checking on an object in dashboard list page
+Fix: Issue for login page if there is no redirection page issue is fixed
+Fix: Replaced Q&A static date to dynamic date
+Fix: Fixed wrong display name on quiz attempt table
+Fix: Settings page input field enter modal issue fixed
+Fix: Pre-requisites not showing up on course page
+
+= 2.0.0-beta - January 18, 2022
+
+New: Visually appealing appearance with a more unified design system
+New: Edit email template content from the editor without having to override the plugin
+New: Exclusive in-house designed email templates for each event
+New: Personalized dashboard for instructors and students focused towards task automation
+New: ​​Notification bar on top of the dashboard to let learners and instructors stay updated
+New: Improved Analytics with more extensive statistics
+New: New Q/A features for instant and more engaging communication
+New: Event calendar with handy features to organize events, schedule assignments, and more.
+New: New Assignment features with the option to retake and add instructor's feedback.
+New: Announcement tab in the course detail page
+New: Preview certificate before downloading upon completing the course
+New: Use preset or custom color palettes to configure entire site's colors
+New: Brand new Quiz interface with a new student window and other handy settings
+New: Collect all of your reviews and ratings in one centralized location
+Update: Dynamic membership plan on the right sidebar of the course details page
+Update: Enhanced Instructor list and public profile layouts with Backend & Frontend preview
+Update: Flexible Gradebook with easy grading point system setup
+Update: More intuitive certificate setup page with guided creation process
+Update: Enhanced course catalog features with extensive course page
+Update: Improved accessibility and responsiveness across all device
+
 = 1.9.16 - February 28, 2022 =
 
 New: Precaution alert before upgrading to major release of Tutor
@@ -260,11 +349,9 @@ Update: Better user input field sanitization ensure SQL Injection
 Update: Better security of HTML output of user-provided input
 Update: XSS vulnerability protection is made stronger
 
-= 1.9.13 - January 10, 2022 =
+= 1.9.13 - December 20, 2021 =
 
-Update: User Input field sanitization is made stronger to ensure SQL Injection
-Update: HTML output of user provided input is more secure now
-Update: XSS vulnerability protection is made stronger than before
+Update: Security Update
 
 = 1.9.12 - December 14, 2021 =
 
@@ -322,7 +409,7 @@ New: Filters for instructor list in the backend dashboard
 New: Previous button for a single quiz (default enabled from settings)
 New: Pop up for review after course completion
 Update: "Add Option" button for the "True/False" quiz is disabled by default
-Update: Redundant demo link for quizzes are removed 
+Update: Redundant demo link for quizzes are removed
 Update: Improved loading icon while generating a certificate
 Update: New "Go home" button added for "Access Denied Page" when registration is disabled
 Update: Zoom API key check and save actions combined
@@ -378,7 +465,7 @@ Fix: Some addons not showing up on the addon list
 New: Push notification add-on
 New: Show a removable warning in WordPress admin dashboard if signup disabled
 Update: Updated design in the forgot password page
-Update: Enroll button text changed to 'Start Learning' for public courses 
+Update: Enroll button text changed to 'Start Learning' for public courses
 Update: Quiz question field placeholder text change
 Fix: Courses by other instructors now showing in course archives
 Fix: Instructor rejected notice is visible forever
@@ -426,7 +513,7 @@ Fix: Profile Picture and bio disappearing after checkout
 Fix: Categories not showing hierarchically in course filter
 Fix: Private course not found on the latest version of WordPress
 Fix: CSS class typo
-Fix: Grammatical text error 
+Fix: Grammatical text error
 
 = 1.8.9 - April 28, 2021 =
 
@@ -442,7 +529,7 @@ Fix: 'Edit with frontend course builder' button visible for other instructors
 Fix: Incorrect Lesson order for duplicated courses
 Fix: 'View certificate' page conflict with BuddyBoss theme
 Fix: Empty data insert & redundant hooks calling on course attachments addons
-Fix: Empty meta data insert for lesson 
+Fix: Empty meta data insert for lesson
 Fix: Content drip option not loading in the classic editor's lesson editing page
 
 = 1.8.8 - April 05, 2021 =
@@ -516,9 +603,9 @@ Fix: Max student count not saving
 = 1.8.0 - February 03, 2021 =
 
 New: Search filter in Assignments
-New: Confirmation message while saving data added 
+New: Confirmation message while saving data added
 New: Frontend and backend UX for Assignments redesigned
-New: Thank you notice when instructors submit a course for review added 
+New: Thank you notice when instructors submit a course for review added
 Update: All the email notification templates moved to Pro version
 Update: HTML tag support in Quiz description added
 Update: Date time column in Student enrolment report added
@@ -549,7 +636,7 @@ Fix: User access issue in Zoom meeting list
 = 1.7.8 - January 07, 2021 =
 
 Update: Quality of certificates' PDF files improved
-Update: A clear all filter button on the course filter page added
+Update: A clear all filters button on the course filter page added
 Update: Monetization activation issue while deactivating WooCommerce plugin
 Fix: Course lesson and assignment auto-draft issue in course builder
 Fix: PDF certificate not downloading on Firefox web browser
@@ -577,7 +664,7 @@ Fix: Backslashes issue in quiz module.
 
 = 1.7.5 - December 01, 2020 =
 
-New: Introducing customizable shortcode to showcase your instructors in a list 
+New: Introducing customizable shortcode to showcase your instructors in a list
 New: Upload a cover photo for the public profile of a user
 New: Public Profile is getting a brand new design
 Update: Withdrawal and Phone number fields now accept numbers only.
@@ -615,11 +702,11 @@ Update: Added option to turn on course archive filters
 New: Course filter option in Course Archive page
 New: Public Course/Private course option
 New: Now student will get email notification after his enrollment
-Update: Hide Become Instructor button if someone’s already applied 
+Update: Hide Become Instructor button if someone’s already applied
 Update: Enable/disable Video source and choose default video source option
 Update: Email Notification after instructor sign-up (Now admin will receive mail notification)
 Update: Assignment page with new deadline notice, expired message and more.
-Update: Instructor Request page with new prompts 
+Update: Instructor Request page with new prompts
 Fix: Quiz submission email recipients
 Fix: Enrolment email notification issue
 Fix: Assignment submission email recipients
@@ -674,7 +761,7 @@ Update: Topic Summary toggle option added in course page
 Fix: Certificate Unicode fonts issue
 Fix: Certificate image generation issues
 Fix: Issue with deleting reviews from Reports addon
-Fix: Lesson page access issue for administrator 
+Fix: Lesson page access issue for administrator
 Fix: CSS issue in back-end course builder
 Fix: SQL syntax error on course page
 

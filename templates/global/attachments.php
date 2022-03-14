@@ -21,24 +21,29 @@ do_action( 'tutor_global/before/attachments' );
 
 if ( is_array( $attachments ) && count( $attachments ) ) {
 	?>
-	<div class="tutor-page-segment tutor-attachments-wrap">
-		<h3><?php _e( 'Attachments', 'tutor' ); ?></h3>
-		<?php
-		foreach ( $attachments as $attachment ) {
-			?>
-			<a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo $open_mode_view ? $open_mode_view : ' download="' . $attachment->name . '" '; ?> class="tutor-lesson-attachment clearfix">
-				<div class="tutor-attachment-icon">
-					<i class="tutor-icon-<?php echo esc_attr( $attachment->icon ); ?>"></i>
-				</div>
-				<div class="tutor-attachment-info">
-					<span><?php echo esc_attr( $attachment->name ); ?></span>
-					<span><?php echo esc_attr( $attachment->size ); ?></span>
-				</div>
-			</a>
-			<?php
-		}
-		?>
-	</div>
-<?php }
+    <div class="tutor-exercise-files tutor-mt-20">
+        <?php
+            foreach ($attachments as $attachment){
+        ?>
+        <a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?>>
+            <div class="tutor-instructor-card tutor-mb-10">
+                <div class="tutor-icard-content">
+                    <h6 class="tutor-name tutor-text-regular-body tutor-color-text-title">
+                        <?php echo esc_html( $attachment->name ); ?>
+                    </h6>
+                    <div class="text-regular-small">
+                        <?php echo esc_html( $attachment->size ); ?>
+                    </div>
+                </div>
+                <div class="tutor-avatar tutor-is-xs flex-center tutor-bs-flex-shrink-0">
+                    <span class="tutor-icon-24 tutor-icon-download-line tutor-color-design-brand"></span>
+                </div>
+            </div>
+        </a>
+        <?php } ?>
+    </div>
+<?php } else {
+    tutor_utils()->tutor_empty_state(__('No Attachment Found', 'tutor'));
+}
 
 do_action( 'tutor_global/after/attachments' ); ?>

@@ -1,13 +1,20 @@
-
-<select name="<?php esc_attr_e( $input_name ); ?>">
+<?php
+/**
+ * Select inside group for tutor settings.
+ *
+ * @package Tutor LMS
+ * @since 2.0
+ */
+?>
+<select class="tutor-form-select" name="<?php echo esc_attr( $input_name ); ?>">
 	<?php
 	if ( ! isset( $group_field['select_options'] ) || $group_field['select_options'] !== false ) {
-		echo '<option value="-1">'.__('Select Option', 'tutor').'</option>';
+		echo '<option value="-1">' . esc_attr( 'Select Option' ) . '</option>';
 	}
 	if ( ! empty( $group_field['options'] ) ) {
-		foreach ( $group_field['options'] as $optionKey => $option ) {
+		foreach ( $group_field['options'] as $option_key => $option ) {
 			?>
-			<option value="<?php esc_attr_e( $optionKey ); ?>" <?php selected($input_value,  $optionKey) ?> ><?php esc_html_e( $option ); ?></option>
+			<option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $input_value, $option_key ); ?>><?php echo esc_attr( $option ); ?></option>
 			<?php
 		}
 	}

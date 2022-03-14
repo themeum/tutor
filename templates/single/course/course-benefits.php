@@ -20,27 +20,24 @@ $course_benefits = tutor_course_benefits();
 if ( empty( $course_benefits ) ) {
 	return;
 }
+?>
 
-if ( is_array( $course_benefits ) && count( $course_benefits ) ) {
-	?>
-
-	<div class="tutor-single-course-segment tutor-course-benefits-wrap">
-
-		<div class="course-benefits-title">
-			<h4 class="tutor-segment-title"><?php _e( 'What Will I Learn?', 'tutor' ); ?></h4>
+<?php if (is_array($course_benefits) && count($course_benefits)): ?>
+	<div class="tutor-course-details-widget tutor-course-details-widget-col-2 tutor-mt-lg-50 tutor-mt-30">
+		<div class="tutor-course-details-widget-title tutor-mb-16">
+			<span class="tutor-color-text-primary tutor-text-medium-h6">
+				<?php echo esc_html( apply_filters( 'tutor_course_benefit_title', __( 'What Will I Learn?', 'tutor' ) ) ); ?>
+			</span>
 		</div>
-
-		<div class="tutor-course-benefits-content">
-			<ul class="tutor-course-benefits-items tutor-custom-list-style">
-				<?php
-				foreach ( $course_benefits as $benefit ) {
-					echo '<li>' . $benefit . '</li>';
-				}
-				?>
-			</ul>
-		</div>
+		<ul class="tutor-course-details-widget-list tutor-m-0 tutor-mt-16">
+			<?php foreach ($course_benefits as $benefit): ?>
+				<li class="tutor-bs-d-flex tutor-color-text-primary tutor-text-regular-body tutor-mb-10">
+					<span class="tutor-icon-mark-filled tutor-color-design-brand tutor-mr-5"></span>
+					<span><?php echo $benefit; ?></span>
+				</li>
+			<?php endforeach; ?>
+		</ul>
 	</div>
+<?php endif; ?>
 
-<?php } ?>
-
-<?php do_action( 'tutor_course/single/after/benefits' ); ?>
+<?php do_action('tutor_course/single/after/benefits'); ?>

@@ -1,0 +1,75 @@
+// Attachment style
+.tutor-attachment-cards {
+	&,
+	& > div {
+		width: 100%;
+	}
+
+	span.tutor-icon-download-line {
+		background: #e9edfb;
+		border-radius: 50%;
+		text-align: center;
+		padding: 10px;
+		font-size: 20px;
+	}
+
+	& > div {
+		padding: 7px 14px;
+		margin-bottom: 15px;
+		background: #ffffff;
+		border: 1px solid #c0c3cb;
+		box-sizing: border-box;
+		border-radius: 6px;
+		@include valueWithPrefix(display, flex);
+		@include propertyWithPrefix(align-items, center);
+	}
+
+	span.filesize {
+		font-style: normal;
+		font-weight: normal;
+		font-size: 13px;
+		margin-right: 20px;
+		color: $black-60;
+		display: block;
+	}
+
+	& > div > div {
+		&:first-child {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			margin-right: 25px;
+			@include propertyWithPrefix(flex, 1);
+
+			a {
+				font-style: normal;
+				font-weight: normal;
+				font-size: 16px;
+				color: #41454f;
+
+				&:hover {
+					color: #0e0e0f;
+				}
+			}
+		}
+
+		&:last-child {
+			@include valueWithPrefix(display, flex);
+			@include propertyWithPrefix(align-items, center);
+		}
+	}
+
+	/* Responsive cards */
+	&.tutor-attachment-cards-responsive {
+		& > div {
+			width: calc(33.33% - 20px);
+			float: left;
+			margin-right: 20px;
+			margin-bottom: 20px;
+
+			@media (max-width: 1200px) {
+				width: calc(50% - 20px) !important;
+			}
+		}
+	}
+}

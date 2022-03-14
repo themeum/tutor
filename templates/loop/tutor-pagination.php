@@ -16,20 +16,69 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
+<?php
+
+	global $wp_query;
+
+	function course_listing_pagination( $pages = '', $range = 4 ) {
+		$showitems = ( $range * 2 )+1;
+		global $paged;
+		if(empty( $paged )) $paged = 1;
+
+		 if( $pages == '' ){
+			$wp_query = '';
+			$pages = is_object( $wp_query ) ? $wp_query->max_num_pages : null;
+			if( !$pages ){
+				$pages = 1;
+		}
+	}
+
+	if( 1 != $pages ){
+
+?>
+<nav class="tutor-course-list-pagination tutor-ui-pagination">
+	<div class="tutor-pagination-hints">
+		<div class="text-regular-caption tutor-color-text-subsued">
+			<?php _e('Page', 'tutor'); ?>
+			<span class="tutor-text-medium-caption tutor-color-text-primary">
+			<?php echo esc_html( $paged ); ?>
+			</span>
+			<?php _e('of', 'tutor'); ?>
+			<span className="tutor-text-medium-caption tutor-color-text-primary">
+			<?php echo esc_html( $pages ); ?>
+			</span>
+		</div>
+	</div>
+	<ul class="tutor-pagination-numbers">
+		<?php
+			if($paged > 1 ){
+				echo "<a href='".esc_url( get_pagenum_link(1) )."' class='prev page-numbers'>
+						<span class='tutor-icon-angle-left-filled'></span>
+					</a>";
+			}
+
+			for ($i=1; $i <= $pages; $i++){
+				if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) || $pages <= $showitems )){
+					echo ($paged == $i)? "<span class='page-numbers current'>".$i."</span>":"<a href='".get_pagenum_link($i)."' class='page-numbers'>".$i."</a>";
+				}
+			}
+
+			if ($paged < $pages) {
+				echo '<a href="'.esc_url( get_pagenum_link($paged + 1) ).'" class="next page-numbers">
+						<span class="tutor-icon-angle-right-filled"></span>
+					</a>';
+			}
+		?>
+	</ul>
+</nav>
+<?php } }  ?>
+
 <?php do_action('tutor_course/archive/pagination/before');  ?>
 
-<div class="tutor-pagination-wrap">
 	<?php
-	global $wp_query;
-	$big = 999999999; // need an unlikely integer
-
-	echo paginate_links( array(
-		'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-		'format' => '?paged=%#%',
-		'current' => max( 1, get_query_var('paged') ),
-		'total' => $wp_query->max_num_pages
-	) );
+		if (function_exists("course_listing_pagination") && is_object($wp_query)) {
+			course_listing_pagination( $wp_query->max_num_pages );
+		}
 	?>
-</div>
 
 <?php do_action('tutor_course/archive/pagination/after');  ?>

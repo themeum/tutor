@@ -1,0 +1,126 @@
+.tutor-course-single-content-wraper {
+	// Course content navigation
+	.tutor-single-course-content-prev,
+	.tutor-single-course-content-next {
+		width: 31px;
+		height: 100%; // calc(100vh - 290px);
+		top: 60px;
+		position: absolute;
+
+		@media (max-width: 575px) {
+			top: 76px;
+		}
+
+		a {
+			backdrop-filter: blur(94px);
+			margin: auto;
+			display: flex;
+			align-items: center;
+			height: 150px;
+			@include breakpoint-max(768) {
+				height: 60px;
+			}
+			background: rgba(121, 121, 121, 0.479);
+			position: relative;
+			// top: 20px;
+			&:hover {
+				background: rgba(70, 70, 70, 0.479);
+			}
+
+			span {
+				font-size: 40px;
+				color: #ffffff8c;
+				margin: auto;
+				display: block;
+			}
+		}
+	}
+
+	.tutor-single-course-content-prev {
+		left: 0;
+
+		a {
+			border-radius: 0px 6px 6px 0px;
+		}
+	}
+
+	.tutor-single-course-content-next {
+		right: 0;
+
+		a {
+			border-radius: 6px 0px 0px 6px;
+		}
+	}
+
+	@include breakpoint-max(768) {
+		.tutor-single-course-content-prev,
+		.tutor-single-course-content-next {
+			width: 31px;
+			height: 400px;
+
+			a {
+				position: relative;
+				top: 50px;
+			}
+
+			span {
+				font-size: 30px;
+				color: #ffffff8c;
+			}
+		}
+	}
+
+	.tutor-lesson-feature-image {
+		img {
+			display: block;
+			width: auto;
+			height: auto;
+			max-height: 100%;
+			max-width: 100%;
+			margin: 0 auto;
+		}
+	}
+
+	// Video players
+	.course-players-parent{
+		background: black;
+		display: block;
+		position: relative;
+
+		.course-players {
+			width: 100%;
+			margin: auto;
+			aspect-ratio: 16 / 9;
+
+			position: relative;
+			overflow: hidden;
+		
+			.loading-spinner {
+				position: absolute;
+				inset: 0;
+				background: $bg-gray-10;
+				border-radius: 3px;
+				z-index: 10;
+		
+				@include spinner(#1973aa, #eee);
+			}
+
+			.loading-spinner::before {
+				width: 50px;
+				height: 50px;
+				top: calc(50% - 25px);
+			}
+
+			.loading-spinner.hide {
+				display: none;
+			}
+
+
+			iframe {
+				width: 100%;
+				height: 100%;
+				border: none;
+			}
+		}
+	}
+}

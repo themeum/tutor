@@ -1,7 +1,9 @@
-
-<input type="text" name="<?php esc_attr_e( $input_name ); ?>" value="<?php esc_attr_e( $input_value ); ?>" >
 <?php
-if ( $label ) {
-	echo '<p>' . esc_html_e( $label ) . '</p>';
-}
+/**
+ * Input type number for settings.
+ *
+ * @package Tutor LMS
+ * @since 2.0
+ */
 ?>
+<input type="number" class="tutor-form-control" placeholder="0" min="0" name="<?php echo esc_attr( $input_name ); ?>" value="<?php echo esc_attr( $input_value ); ?>">

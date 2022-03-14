@@ -1,240 +1,211 @@
 <?php
+/**
+ * Withdraw Class
+ *
+ * @package Withdraw
+ */
+
 namespace TUTOR;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+/**
+ * Handle withdraw request logic
+ */
+class Withdraw_Requests_List {
 
-if ( ! class_exists( 'Tutor_List_Table' ) ) {
-	include_once tutor()->path . 'classes/Tutor_List_Table.php';
-}
-
-class Withdraw_Requests_List extends \Tutor_List_Table {
+	public $page_title;
 
 	const WITHDRAW_REQUEST_LIST_PAGE = 'tutor_withdraw_requests';
 
-	function __construct() {
-		global $status, $page;
+	public function __construct() {
+		$this->page_title = __( 'Withdraw Request', 'tutor' );
+		/**
+		 * Approve or reject withdraw request
+		 */
+		add_action( 'wp_ajax_tutor_admin_withdraw_action', array( $this, 'update_withdraw_status' ) );
+	}
 
-		// Set parent defaults
-		parent::__construct(
+	/**
+	 * Available tabs that will visible on the right side of page navbar
+	 *
+	 * @param string $date withdraw request date | optional.
+	 * @param string $search search by instructor name or email | optional.
+	 * @return array
+	 * @since v2.0.0
+	 */
+	public function tabs_key_value( $date = '', $search = '' ): array {
+		$approved = self::tabs_data( 'approved', $date, $search );
+		$pending  = self::tabs_data( 'pending', $date, $search );
+		$rejected = self::tabs_data( 'rejected', $date, $search );
+
+		$url  = get_pagenum_link();
+		$tabs = array(
 			array(
-				'singular' => 'withdraw',     // singular name of the listed records
-				'plural'   => 'withdraw',    // plural name of the listed records
-				'ajax'     => false,        // does this table support ajax?
-			)
+				'key'   => 'all',
+				'title' => __( 'All', 'tutor-pro' ),
+				'value' => $approved + $pending + $rejected,
+				'url'   => $url . '&data=all',
+			),
+			array(
+				'key'   => 'approved',
+				'title' => __( 'Approved', 'tutor-pro' ),
+				'value' => $approved,
+				'url'   => $url . '&data=approved',
+			),
+			array(
+				'key'   => 'pending',
+				'title' => __( 'Pending', 'tutor-pro' ),
+				'value' => $pending,
+				'url'   => $url . '&data=pending',
+			),
+			array(
+				'key'   => 'rejected',
+				'title' => __( 'Rejected', 'tutor-pro' ),
+				'value' => $rejected,
+				'url'   => $url . '&data=rejected',
+			),
 		);
-
-		$this->process_bulk_action();
+		return $tabs;
 	}
 
-	function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'testing_col':
-				return $item->$column_name;
-			default:
-				return print_r( $item, true ); // Show the whole array for troubleshooting purposes
-		}
-	}
-
-	function column_cb( $item ) {
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],  // Let's simply repurpose the table's singular label ("student")
-			/*$2%s*/ $item->withdraw_id                // The value of the checkbox should be the record's id
-		);
-	}
-
-	function column_requested_user( $item ) {
-		echo '<p>' . $item->user_name . '</p><p>' . $item->user_email . '</p>';
-
-		$actions = array();
-		switch ( $item->status ) {
-			case 'pending':
-				$actions['approved'] = sprintf(
-					'<a href="?page=%s&action=%s&withdraw_id=%s">' . __( 'Approve', 'tutor' ) . '</a>',
-					self::WITHDRAW_REQUEST_LIST_PAGE,
-					'approved',
-					$item->withdraw_id
-				);
-				$actions['rejected'] = sprintf( '<a href="?page=%s&action=%s&withdraw_id=%s">' . __( 'Rejected', 'tutor' ) . '</a>', self::WITHDRAW_REQUEST_LIST_PAGE, 'rejected', $item->withdraw_id );
-				break;
-			case 'approved':
-				$actions['rejected'] = sprintf( '<a href="?page=%s&action=%s&withdraw_id=%s">' . __( 'Rejected', 'tutor' ) . '</a>', self::WITHDRAW_REQUEST_LIST_PAGE, 'rejected', $item->withdraw_id );
-				break;
-			case 'rejected':
-				$actions['approved'] = sprintf( '<a href="?page=%s&action=%s&withdraw_id=%s">' . __( 'Approve', 'tutor' ) . '</a>', self::WITHDRAW_REQUEST_LIST_PAGE, 'approved', $item->withdraw_id );
-				break;
-		}
-
-		$actions['delete'] = sprintf( '<a href="?page=%s&action=%s&withdraw_id=%s" onclick="return confirm(\'' . __( 'Are you Sure? It can not be undone.', 'tutor' ) . '\')">' . __( 'Delete', 'tutor' ) . '</a>', self::WITHDRAW_REQUEST_LIST_PAGE, 'delete', $item->withdraw_id );
-
-		return '<div class="withdraw-list-row-actions">' . $this->row_actions( $actions ) . '</div>';
-	}
-	function column_withdraw_method( $item ) {
-		if ( $item->method_data ) {
-			$data = maybe_unserialize( $item->method_data );
-
-			$method_name = tutor_utils()->avalue_dot( 'withdraw_method_name', $data );
-
-			if ( $method_name ) {
-				echo '<p><strong>' . $method_name . '</strong></p>';
-			}
-
-			unset( $data['withdraw_method_key'], $data['withdraw_method_name'] );
-
-			if ( tutor_utils()->count( $data ) ) {
-				foreach ( $data as $method_field ) {
-					$label = tutor_utils()->avalue_dot( 'label', $method_field );
-					$value = tutor_utils()->avalue_dot( 'value', $method_field );
-					echo '<p class="withdraw-method-data-row"> <span class="withdraw-method-label">' . $label . '</span> : <span class="withdraw-method-value">' . $value . '</span> </p>';
-				}
-			}
-		}
-		return '';
-	}
-
-	function column_requested_at( $item ) {
-		echo '<p>' . date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item->created_at ) ) . '</p>';
-	}
-
-	function column_amount( $item ) {
-		$available_status = array(
-			'pending'  => __( 'pending', 'tutor' ),
-			'approved' => __( 'approved', 'tutor' ),
-			'rejected' => __( 'rejected', 'tutor' ),
-		);
-		echo '<p>' . tutor_utils()->tutor_price( $item->amount ) . '</p>';
-		echo '<p="withdraw-status withdraw-status-' . $item->status . '">' . __( isset( $available_status[ $item->status ] ) ? $available_status[ $item->status ] : $item->status, 'tutor' ) . '</span></p>';
-	}
-
-	function get_columns() {
-		$columns = array(
-			'cb'              => '<input type="checkbox" />', // Render a checkbox instead of text
-			'requested_user'  => __( 'Requested By', 'tutor' ),
-			'amount'          => __( 'Amount', 'tutor' ),
-			'withdraw_method' => __( 'Withdrawal Method', 'tutor' ),
-			'requested_at'    => __( 'Requested Time', 'tutor' ),
-		);
-		return $columns;
-	}
-
-	function get_bulk_actions() {
-		$actions = array(
-			// 'delete'    => 'Delete'
-		);
-		return $actions;
-	}
-
-	function process_bulk_action() {
+	/**
+	 * Get counted number of withdraw list by status ex: approved | pending | rejected
+	 *
+	 * @param string $status status required | available : (approved | pending | rejected).
+	 * @param string $date withdraw request date | optional | YYYY-MM-DD.
+	 * @param string $search search by instructor name or email | optional.
+	 * @return int
+	 * @since v2.0.0
+	 */
+	public static function tabs_data( string $status, $date = '', $search = '' ): int {
 		global $wpdb;
-
-		$withdraw_page_url = admin_url( 'admin.php?page=' . self::WITHDRAW_REQUEST_LIST_PAGE );
-		$date              = date( 'Y-m-d H:i:s', tutor_time() );
-		$redirect          = false;
-
-		// Detect when a bulk action is being triggered...
-		if ( 'delete' === $this->current_action() ) {
-			$should_withdraw_delete = apply_filters( 'tutor_should_withdraw_delete', true );
-
-			if ( $should_withdraw_delete ) {
-				$withdraw_id = (int) $_GET['withdraw_id'];
-
-				do_action( 'tutor_before_delete_withdraw', $withdraw_id );
-
-				$wpdb->delete( $wpdb->prefix . 'tutor_withdraws', array( 'withdraw_id' => $withdraw_id ) );
-
-				do_action( 'tutor_after_delete_withdraw', $withdraw_id );
-
-				$redirect = true;
-			} else {
-				wp_die( 'Items deleted (or they would be if we had items to delete)!' );
-			}
+		$withdraw_table = $wpdb->prefix . 'tutor_withdraws';
+		$user_table     = $wpdb->users;
+		$status         = sanitize_text_field( $status );
+		$date           = sanitize_text_field( $date );
+		$search         = sanitize_text_field( $search );
+		// Prepare date query.
+		$date_query = '';
+		if ( '' !== $date ) {
+			$date_query = "AND DATE(withdraw.created_at) = CAST('{$date}' AS DATE) ";
 		}
 
-		/**
-		 * Reject Withdraw
-		 */
-		if ( 'approved' === $this->current_action() ) {
-			$withdraw_id = (int) $_GET['withdraw_id'];
-			$withdraw    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id ) );
-			if ( ! $withdraw || $withdraw->status === 'approved' ) {
-				return;
-			}
+		// Prepare search query.
+		$search = '%' . $wpdb->esc_like( $search ) . '%';
 
-			do_action( 'tutor_before_approved_withdraw', $withdraw_id );
-
-			$wpdb->update(
-				$wpdb->prefix . 'tutor_withdraws',
-				array(
-					'status'     => 'approved',
-					'updated_at' => $date,
-				),
-				array( 'withdraw_id' => $withdraw_id )
-			);
-
-			do_action( 'tutor_after_approved_withdraw', $withdraw_id );
-
-			$redirect = true;
-		}
-
-		/**
-		 * Rejected
-		 */
-		if ( 'rejected' === $this->current_action() ) {
-			$withdraw_id = (int) $_GET['withdraw_id'];
-			$withdraw    = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_withdraws WHERE withdraw_id = %d ", $withdraw_id ) );
-			if ( ! $withdraw || $withdraw->status === 'rejected' ) {
-				return;
-			}
-
-			do_action( 'tutor_before_rejected_withdraw', $withdraw_id );
-
-			$wpdb->update(
-				$wpdb->prefix . 'tutor_withdraws',
-				array(
-					'status'     => 'rejected',
-					'updated_at' => $date,
-				),
-				array( 'withdraw_id' => $withdraw_id )
-			);
-
-			do_action( 'tutor_after_rejected_withdraw', $withdraw_id );
-
-			$redirect = true;
-		}
-
-		if($this->current_action()) {
-			wp_redirect( $withdraw_page_url );
-			exit;
-		}
+		$count = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT count(*) FROM {$withdraw_table} AS withdraw
+				INNER JOIN {$user_table} AS user
+					ON user.ID = withdraw.user_id
+				WHERE  withdraw.status = %s
+					{$date_query}
+					AND ( user.user_login LIKE %s OR user.user_nicename LIKE %s OR user.user_email LIKE %s OR user.display_name LIKE %s )
+			",
+				$status,
+				$search,
+				$search,
+				$search,
+				$search
+			)
+		);
+		return $count ? $count : 0;
 	}
 
-	function prepare_items() {
-		$per_page = 20;
+	/**
+	 * Handle ajax request for updating withdraw status | available status (approved, rejected, pending)
+	 *
+	 * @return string json response.
+	 * @since v2.0.0
+	 */
+	public function update_withdraw_status() {
+		tutor_utils()->checking_nonce();
+		$status         = isset( $_POST['action-type'] ) ? $_POST['action-type'] : '';
+		$withdraw_id    = isset( $_POST['withdraw-id'] ) ? $_POST['withdraw-id'] : '';
+		$reject_type    = isset( $_POST['reject-type'] ) ? $_POST['reject-type'] : '';
+		$reject_comment = isset( $_POST['reject-comment'] ) ? $_POST['reject-comment'] : '';
+		if ( '' === $withdraw_id ) {
+			return false;
+		} else {
+			$update = self::update( $status, $withdraw_id, $reject_type, $reject_comment );
+			return $update ? wp_send_json( true ) : false;
+		}
+		exit;
+	}
 
-		$search_term = '';
-		if ( isset( $_REQUEST['s'] ) ) {
-			$search_term = sanitize_text_field( $_REQUEST['s'] );
+	/**
+	 * Update withdraw status | available status (approved, rejected, pending)
+	 *
+	 * @param string $status | required.
+	 * @param int    $withdraw_id | required.
+	 * @param string $reject_type | optional.
+	 * @param string $reject_comment | optional.
+	 * @return bool json response.
+	 * @since v2.0.0
+	 */
+	public static function update( string $status, int $withdraw_id, $reject_type = '', $reject_comment = '' ): bool {
+		global $wpdb;
+		$withdraw_table = $wpdb->prefix . 'tutor_withdraws';
+		$withdraw_id    = sanitize_text_field( $withdraw_id );
+		$status         = sanitize_text_field( $status );
+
+		// Prepare data for update.
+		$data = array(
+			'status'     => $status,
+			'updated_at' => date( 'Y-m-d H:i:s' ),
+		);
+
+		// If rejected then append reject_type and comment with method_data.
+		if ( 'rejected' === $status ) {
+			$withdraw = self::get_withdraw_by_id( $withdraw_id );
+			if ( $withdraw ) {
+				$details = unserialize( $withdraw->method_data );
+
+				$details['rejects']  = array(
+					'reject_type'    => sanitize_text_field( $reject_type ),
+					'reject_comment' => sanitize_text_field( $reject_comment ),
+				);
+				$data['method_data'] = maybe_serialize( $details );
+
+				// trigger email after rejecting withdraw
+				do_action( 'tutor_after_rejected_withdraw', $withdraw_id );
+			}
+		} else {
+			do_action( 'tutor_after_approved_withdraw', $withdraw_id );
 		}
 
-		$columns = $this->get_columns();
-		$hidden  = array();
-
-		$this->_column_headers = array( $columns, $hidden );
-		$current_page          = $this->get_pagenum();
-
-		$start             = ( $current_page - 1 ) * $per_page;
-		$withdraw_requests = tutor_utils()->get_withdrawals_history( null, compact( 'start', 'per_page', 'search_term' ) );
-		$this->items       = $withdraw_requests->results;
-		$count_result      = $withdraw_requests->count;
-
-		$this->set_pagination_args(
+		// Update.
+		$update = $wpdb->update(
+			$withdraw_table,
+			$data,
 			array(
-				'total_items' => $count_result,
-				'per_page'    => $per_page,
-				'total_pages' => ceil( $count_result / $per_page ),
+				'withdraw_id' => $withdraw_id,
+			)
+		);
+		return $update ? true : false;
+	}
+
+
+	/**
+	 * Get withdraw by id
+	 *
+	 * @param int $withdraw_id | required.
+	 * @return object withdraw list.
+	 * @since v2.0.0
+	 */
+	public static function get_withdraw_by_id( int $withdraw_id ) {
+		global $wpdb;
+		$withdraw_table = $wpdb->prefix . 'tutor_withdraws';
+		return $wpdb->get_row(
+			$wpdb->prepare(
+				" SELECT *FROM {$withdraw_table}
+				WHERE withdraw_id = %d
+			",
+				$withdraw_id
 			)
 		);
 	}
+
 }

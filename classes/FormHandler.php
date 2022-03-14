@@ -138,7 +138,7 @@ class FormHandler {
 
 			do_action( 'tutor_user_reset_password_login', $user );
 
-			wp_safe_redirect( tutils()->tutor_dashboard_url() );
+			wp_safe_redirect( tutor_utils()->tutor_dashboard_url() );
 			exit;
 		}
 	}

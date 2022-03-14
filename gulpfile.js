@@ -29,20 +29,22 @@ var prefixerOptions = {
 
 var scss_blueprints = {
 	tutor_front: {src: "assets/scss/front/index.scss", mode: 'expanded', destination: 'tutor-front.css'},
-	tutor_front_min: {src: "assets/scss/front/index.scss", mode: 'compressed', destination: 'tutor-front.min.css'},
 	
 	tutor_admin: {src: "assets/scss/admin-dashboard/index.scss", mode: 'expanded', destination: 'tutor-admin.css'},
-	tutor_admin_min: {src: "assets/scss/admin-dashboard/index.scss", mode: 'compressed', destination: 'tutor-admin.min.css'},
 	
 	tutor_setup: {src: "assets/scss/admin-dashboard/tutor-setup.scss", mode: 'expanded', destination: 'tutor-setup.css'},
-	tutor_setup_min: {src: "assets/scss/admin-dashboard/tutor-setup.scss", mode: 'compressed', destination: 'tutor-setup.min.css'},
 
+	tutor_v2: {src: "v2-library/_src/scss/tutor-main.scss", mode: 'expanded', destination: 'tutor-v2.css'},
+	
 	tutor_front_dashboard: {src: "assets/scss/frontend-dashboard/index.scss", mode: 'expanded', destination: 'tutor-frontend-dashboard.css'},
-	tutor_front_dashboard_min: {src: "assets/scss/frontend-dashboard/index.scss", mode: 'compressed', destination: 'tutor-frontend-dashboard.min.css'},
 
 	tutor_course_builder: {src: "assets/scss/course-builder/index.scss", mode: 'expanded', destination: 'tutor-course-builder.css'},
-	tutor_course_builder_min: {src: "assets/scss/course-builder/index.scss", mode: 'compressed', destination: 'tutor-course-builder.min.css'},
+
+	v2_scss:{src: "v2-library/_src/scss/main.scss", destination: 'main.min.css', dest_path: 'v2-library/bundle'},
+	
+	v2_scss_docz:{src: "v2-library/_src/scss/main.scss", destination: 'main.min.css', dest_path: '.docz/static/v2-library/bundle'}
 };
+
 
 var task_keys = Object.keys(scss_blueprints);
 
@@ -54,13 +56,29 @@ for(let task in scss_blueprints) {
 		return gulp.src(blueprint.src)
 			.pipe(plumber({errorHandler: onError}))
 			.pipe(sourcemaps.init({loadMaps: true, largeFile:true}))
-			.pipe(sass({outputStyle: blueprint.mode}))
+			.pipe(sass({outputStyle: 'compressed'}))
 			.pipe(prefix(prefixerOptions))
 			.pipe(rename(blueprint.destination))
 			.pipe(sourcemaps.write('.', {addComment: process.env._GULP_ENV!='build'}))
 			.pipe(gulp.dest(blueprint.dest_path || "assets/css"));
 	});
 }
+
+// Add task to add tutor prefix to v2 scss
+gulp.task('v2_tutor_prefix', function (resolve) {
+	var exp = path.resolve(__dirname+'/assets/css/tutor-v2.css');
+	var min = path.resolve(__dirname+'/assets/css/tutor-v2.css');
+	var docz = path.resolve(__dirname+'/v2-library/bundle/main.min.css');
+	
+	[exp, min, docz].forEach(css=> {
+		var string = fs.readFileSync(css).toString();
+		string = string.replace(/\.tutor\-prefix \./g, '.tutor-bs-');
+		fs.writeFileSync(css, string);
+	});
+
+	resolve();
+});
+task_keys.push('v2_tutor_prefix');
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/ig;
@@ -173,7 +191,12 @@ gulp.task("copy", function () {
 			"!./assets/scss/**",
 			"!./assets/.sass-cache",
 			"!./node_modules/**",
-			"!./v2-library/**",
+			"!./v2-library/_src/**",
+			"!./v2-library/bundle/*.*",
+			"!./v2-library/bundle/fonts/tutor-v2-icon/demo-files/**",
+			"!./v2-library/bundle/fonts/tutor-v2-icon/*.html",
+			"!./v2-library/bundle/fonts/lineawesome@1.3.0/**",
+			"!./v2-library/src/**",
 			"!./test/**",
 			"!./.docz/**",
 			"!./**/*.zip",

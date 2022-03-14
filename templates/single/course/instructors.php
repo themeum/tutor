@@ -16,79 +16,61 @@
 do_action( 'tutor_course/single/enrolled/before/instructors' );
 
 $instructors = tutor_utils()->get_instructors_by_course();
-if ( $instructors ) {
-	$count = is_array( $instructors ) ? count( $instructors ) : 0;
 
+if($instructors && count($instructors)) {
 	?>
-	<h4 class="tutor-segment-title"><?php $count > 1 ? _e( 'About the instructors', 'tutor' ) : _e( 'About the instructor', 'tutor' ); ?></h4>
-
-	<div class="tutor-course-instructors-wrap tutor-single-course-segment" id="single-course-ratings">
-		<?php
-		foreach ( $instructors as $instructor ) {
-			$profile_url = tutor_utils()->profile_url( $instructor->ID );
-			?>
-			<div class="single-instructor-wrap">
-				<div class="single-instructor-top">
-					<div class="tutor-instructor-left">
-						<div class="instructor-avatar">
-							<a href="<?php echo esc_url( $profile_url ); ?>">
-								<?php echo tutor_utils()->get_tutor_avatar( $instructor->ID ); ?>
-							</a>
-						</div>
-
-						<div class="instructor-name">
-							<h3><a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_attr( $instructor->display_name ); ?></a> </h3>
-							<?php
-							if ( ! empty( $instructor->tutor_profile_job_title ) ) {
-								echo '<h4>' . esc_attr( $instructor->tutor_profile_job_title ) . '</h4>';
-							}
-							?>
-						</div>
+	<div class="tutor-mt-65">
+		<div class="tutor-color-text-primary tutor-text-medium-h6 tutor-mb-25">
+			<?php _e('About the instructors', 'tutor'); ?>
+		</div>
+		<?php foreach($instructors as $instructor): ?>
+			<div class="tutor-instructor-info-card tutor-mb-15">
+				<div class="tutor-instructor-info-card-body tutor-bs-d-sm-flex tutor-bs-align-items-start tutor-px-30 tutor-py-24">
+					<div class="tutor-ins-avatar tutor-bs-flex-shrink-0 tutor-mr-sm-15">
+						<img src="<?php echo get_avatar_url($instructor->ID); ?>" alt="instructor avatar" />
 					</div>
-					<div class="instructor-bio">
-						<?php echo $instructor->tutor_profile_bio; ?>
+					<div class="tutor-ins-rest">
+						<div class="tutor-ins-title  tutor-text-medium-body  tutor-color-text-primary">
+							<a href="<?php echo tutor_utils()->profile_url($instructor->ID, true); ?>"><?php echo $instructor->display_name; ?></a>
+						</div>
+						<?php if ( ! empty($instructor->tutor_profile_job_title)): ?>
+							<div class="tutor-ins-designation tutor-text-regular-caption tutor-color-text-hints tutor-mt-3">
+								<?php echo $instructor->tutor_profile_job_title; ?>
+							</div>
+						<?php endif; ?>
+						<div class="tutor-ins-summary tutor-text-regular-body tutor-color-text-subsued tutor-mt-18">
+							<?php echo htmlspecialchars($instructor->tutor_profile_bio); ?>
+						</div>
 					</div>
 				</div>
-
-				<?php
-				$instructor_rating = tutor_utils()->get_instructor_ratings( $instructor->ID );
-				?>
-
-				<div class="single-instructor-bottom">
-					<div class="ratings">
-						<span class="rating-generated">
-							<?php tutor_utils()->star_rating_generator( $instructor_rating->rating_avg ); ?>
-						</span>
-
-						<?php
-						echo ' <span class="rating-digits">' . esc_attr( $instructor_rating->rating_avg ) . '</span> ';
-						echo ' <span class="rating-total-meta">(' . esc_attr( $instructor_rating->rating_count ) . ' ' . __( 'ratings', 'tutor' ) . ')</span> ';
-						?>
-					</div>
-
-					<div class="courses">
-						<p>
-							<i class='tutor-icon-mortarboard'></i>
-							<?php echo esc_attr( tutor_utils()->get_course_count_by_instructor( $instructor->ID ) ); ?> <span class="tutor-text-mute"> <?php _e( 'Courses', 'tutor' ); ?></span>
-						</p>
-					</div>
-
-					<div class="students">
-						<?php
-						$total_students = tutor_utils()->get_total_students_by_instructor( $instructor->ID );
-						?>
-
-						<p>
-							<i class='tutor-icon-user'></i>
-							<?php echo esc_attr( $total_students ); ?>
-							<span class="tutor-text-mute">  <?php _e( 'students', 'tutor' ); ?></span>
-						</p>
+				<div class="tutor-instructor-info-card-footer tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-px-30 tutor-py-15">
+					<?php 
+						$instructor_rating = tutor_utils()->get_instructor_ratings($instructor->ID);
+						tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 
+					?>
+					<div class="tutor-ins-meta tutor-bs-d-flex">
+						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center">
+							<span class="tutor-icon-30 tutor-icon-user-filled"></span>
+							<span class="text-bold-body tutor-color-text-primary tutor-mr-4">
+								<?php echo tutor_utils()->get_total_students_by_instructor($instructor->ID); ?>
+							</span>
+							<span class="text-regular-caption tutor-color-text-subsued">
+								<?php _e('Students', 'tutor'); ?>
+							</span>
+						</div>
+						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center ">
+							<span class="tutor-icon-30 tutor-icon-mortarboard-line"></span>
+							<span class="text-bold-body tutor-color-text-primary tutor-mr-4">
+								<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?>
+							</span>
+							<span class="text-regular-caption tutor-color-text-subsued">
+								<?php _e('Courses', 'tutor'); ?>
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>
-			<?php
-		}
-		?>
+		<?php endforeach; ?>
 	</div>
 	<?php
 }

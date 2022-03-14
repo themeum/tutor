@@ -22,20 +22,25 @@ if ( empty( $materials ) ) {
 
 if ( is_array( $materials ) && count( $materials ) ) {
 	?>
-
-	<div class="tutor-single-course-segment  tutor-course-material-includes-wrap">
-		<h4 class="tutor-segment-title"><?php _e( 'Material Includes', 'tutor' ); ?></h4>
-		<div class="tutor-course-target-audience-content">
-			<ul class="tutor-course-target-audience-items tutor-custom-list-style">
-				<?php
-					foreach ( $materials as $material ) {
-						echo '<li>' . $material . '</li>';
-					}
-				?>
-			</ul>
+	<div class="tutor-course-details-widget tutor-mt-40">
+		<div class="tutor-course-details-widget-title tutor-mb-16">
+			<span class="tutor-color-text-primary tutor-text-medium-h6">
+				<?php _e('Material Includes', 'tutor'); ?>
+			</span>
 		</div>
+		<ul class="tutor-course-details-widget-list">
+			<?php foreach ($materials as $material): ?>
+				<li class="tutor-bs-d-flex tutor-color-text-primary tutor-text-regular-body tutor-mb-10">
+					<span class="tutor-icon-mark-filled tutor-color-design-brand tutor-mr-5"></span>
+					<span><?php echo $material; ?></span>
+				</li>
+			<?php endforeach; ?>
+		</ul>
 	</div>
+	<?php 
+} 
 
-<?php } ?>
+do_action('tutor_course/single/after/material_includes'); 
 
-<?php do_action( 'tutor_course/single/after/material_includes' ); ?>
+?>
+

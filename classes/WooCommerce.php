@@ -18,16 +18,15 @@ class WooCommerce extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'tutor_options_before_woocommerce', array( $this, 'notice_before_option' ) );
-
 		// Add option settings
 		add_filter( 'tutor_monetization_options', array( $this, 'tutor_monetization_options' ) );
-		add_filter( 'tutor/options/attr', array( $this, 'add_options' ) );
 
-		$monetize_by = tutils()->get_option( 'monetize_by' );
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		if ( $monetize_by !== 'wc' ) {
 			return;
 		}
+
+		add_filter( 'tutor/options/attr', array( $this, 'add_options' ) );
 
 		/**
 		 * Is Course Purchasable
@@ -68,7 +67,7 @@ class WooCommerce extends Tutor_Base {
 		 *
 		 * @since v.1.3.5
 		 */
-		if ( tutils()->has_wc() ) {
+		if ( tutor_utils()->has_wc() ) {
 			add_action( 'tutor_course/single/before/inner-wrap', 'wc_print_notices', 10 );
 			add_action( 'tutor_course/single/enrolled/before/inner-wrap', 'wc_print_notices', 10 );
 		}
@@ -92,31 +91,39 @@ class WooCommerce extends Tutor_Base {
 		 * Change woo commerce cart product link if it is tutor product
 		 */
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
+		add_filter( 'woocommerce_order_item_permalink', array( $this, 'filter_order_item_permalink_callback' ), 10, 3 );
 	}
+	function filter_order_item_permalink_callback( $product_permalink, $item, $order ) {
 
-	public function notice_before_option() {
-		$has_wc = tutor_utils()->has_wc();
-		if ( $has_wc ) {
-			return;
+		// For product variations
+		if ( $item->get_variation_id() > 0 ) {
+			$product = $item->get_product();
+
+			$is_visible = $product && $product->is_visible();
+
+			// Get the instance of the parent variable product Object
+			$parent_product = wc_get_product( $item->get_product_id() );
+
+			// Return the parent product permalink (if product is visible)
+			return $is_visible ? $parent_product->get_permalink() : '';
 		}
 
-		ob_start();
-		?>
-		<div class="tutor-notice-warning">
-			<p>
-				<?php
-				_e(
-					' Seems like you don’t have WooCommerce plugin installed on your site. In order to use this functionality, you need to have the
-                WooCommerce plugin installed. Get back on this page after installing the plugin and enable the following feature to start selling
-                courses with Tutor.',
-					'tutor'
-				);
-				?>
-			</p>
-			<p><?php _e( 'This notice will disappear after activating <strong>WooCommerce</strong>', 'tutor' ); ?></p>
-		</div>
-		<?php
-		echo ob_get_clean();
+		$course_id = $this->get_post_id_by_meta_key_and_value( '_tutor_course_product_id', $item->get_product_id() );
+
+		return get_permalink( $course_id );
+	}
+
+	public function get_post_id_by_meta_key_and_value( $key, $value ) {
+		global $wpdb;
+		$meta = $wpdb->get_results( 'SELECT * FROM `' . $wpdb->postmeta . "` WHERE meta_key='" . esc_sql( $key ) . "' AND meta_value='" . esc_sql( $value ) . "'" );
+		if ( is_array( $meta ) && ! empty( $meta ) && isset( $meta[0] ) ) {
+			$meta = $meta[0];
+		}
+		if ( is_object( $meta ) ) {
+			return $meta->post_id;
+		} else {
+			return false;
+		}
 	}
 
 	public function is_course_purchasable( $bool, $course_id ) {
@@ -171,14 +178,6 @@ class WooCommerce extends Tutor_Base {
 		return $types;
 	}
 
-	public function register_meta_box() {
-		add_meta_box( 'tutor-attach-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high' );
-	}
-
-	public function course_add_product_metabox() {
-		include tutor()->path . 'views/metabox/course-add-product-metabox.php';
-	}
-
 	/**
 	 * @param $post_ID
 	 *
@@ -195,6 +194,14 @@ class WooCommerce extends Tutor_Base {
 			update_post_meta( $product_id, '_virtual', 'yes' );
 			update_post_meta( $product_id, '_tutor_product', 'yes' );
 		}
+	}
+
+	public function register_meta_box() {
+		add_meta_box( 'tutor-attach-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high' );
+	}
+
+	public function course_add_product_metabox() {
+		include tutor()->path . 'views/metabox/course-add-product-metabox.php';
 	}
 
 	public function save_wc_product_meta( $post_ID ) {
@@ -224,7 +231,7 @@ class WooCommerce extends Tutor_Base {
 			if ( is_array( $enrolled_ids ) && count( $enrolled_ids ) ) {
 				foreach ( $enrolled_ids as $enrolled_id ) {
 
-					tutils()->course_enrol_status_change( $enrolled_id, $status_to );
+					tutor_utils()->course_enrol_status_change( $enrolled_id, $status_to );
 
 					// Invoke enrolled hook
 					if ( $status_to == 'completed' ) {
@@ -285,31 +292,13 @@ class WooCommerce extends Tutor_Base {
 	 * Add option for WooCommerce settings
 	 */
 	public function add_options( $attr ) {
-
-		$attr['woocommerce'] = array(
-			'label'    => __( 'WooCommerce', 'tutor' ),
-
-			'sections' => array(
-				'general' => array(
-					'label'  => __( 'General', 'tutor' ),
-					'desc'   => __( 'WooCommerce Settings', 'tutor' ),
-					'fields' => array(
-						/*
-						'enable_course_sell_by_woocommerce' => array(
-							'type'      => 'checkbox',
-							'label'     => __('Enable / Disable', 'tutor'),
-							'label_title'   => __('Enable WooComerce to sell course', 'tutor'),
-							'desc'      => __('By integrating WooCommerce, you can sell your course',	'tutor'),
-						),*/
-						'enable_guest_course_cart' => array(
-							'type'        => 'checkbox',
-							'label'       => __( 'Enable / Disable', 'tutor' ),
-							'label_title' => __( 'Enable add to cart feature for guest users', 'tutor' ),
-							'desc'        => __( 'Enabling this will let an unregistered user purchase any course from the Course Details page. Head over to Documentation to know how to configure this setting.', 'tutor' ),
-						),
-					),
-				),
-			),
+		$attr['monetization']['blocks']['block_options']['fields'][] = array(
+			'key'         => 'enable_guest_course_cart',
+			'type'        => 'toggle_switch',
+			'label'       => __( 'Enable add to cart feature for guest users', 'tutor' ),
+			'label_title' => __( '', 'tutor' ),
+			'default'     => 'off',
+			'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
 		);
 
 		return $attr;
@@ -325,7 +314,7 @@ class WooCommerce extends Tutor_Base {
 	 * @since v.1.3.5
 	 */
 	public function tutor_monetization_options( $arr ) {
-		$has_wc = tutils()->has_wc();
+		$has_wc = tutor_utils()->has_wc();
 		if ( $has_wc ) {
 			$arr['wc'] = __( 'WooCommerce', 'tutor' );
 		}
@@ -539,7 +528,7 @@ class WooCommerce extends Tutor_Base {
 	 * @since v.1.7.8
 	 */
 	public function disable_tutor_monetization() {
-		tutils()->update_option( 'monetize_by', 'free' );
+		tutor_utils()->update_option( 'monetize_by', 'free' );
 		update_option( 'tutor_show_woocommerce_notice', true );
 	}
 
@@ -551,15 +540,16 @@ class WooCommerce extends Tutor_Base {
 	 * @since 1.9.0
 	 */
 	public function redirect_to_enrolled_courses( $order_id ) {
-		if ( ! tutils()->get_option( 'wc_automatic_order_complete_redirect_to_courses' ) ) {
+		if ( ! tutor_utils()->get_option( 'wc_automatic_order_complete_redirect_to_courses' ) ) {
 			// Since 1.9.1
 			return;
 		}
 
-			// get woo order details
-			$order         = wc_get_order( $order_id );
-			$tutor_product = false;
-			$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
+		// get woo order details
+		$order         = wc_get_order( $order_id );
+		$tutor_product = false;
+		$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
+
 		foreach ( $order->get_items() as $item ) {
 			$product_id = $item->get_product_id();
 			// check if product associated with tutor course
@@ -568,7 +558,8 @@ class WooCommerce extends Tutor_Base {
 				$tutor_product = true;
 			}
 		}
-			// if tutor product & order status completed
+
+		// if tutor product & order status completed
 		if ( $order->has_status( 'completed' ) && $tutor_product ) {
 			wp_safe_redirect( $url );
 			exit;
@@ -604,7 +595,7 @@ add_action(
 	'admin_notices',
 	function() {
 
-		$show = get_option( 'tutor_show_woocommerce_notice' ) && tutils()->get_option( 'monetize_by', 'free' ) == 'free';
+		$show = get_option( 'tutor_show_woocommerce_notice' ) && tutor_utils()->get_option( 'monetize_by', 'free' ) == 'free';
 
 		if ( $show ) {
 			$message = __( 'Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce.', 'tutor' );

@@ -1,0 +1,73 @@
+.tutor-frontend-dashboard-header {
+    position: relative;
+    padding-bottom: 25px;
+    &:after {
+        content: '';
+        position: absolute;
+        width: calc(100% - 30px);
+        left: 15px;
+        height: 1px;
+        background: #CDCFD5;
+        bottom: 0;
+    }
+    .tutor-dashboard-header {
+        .tutor-btn.bordered-btn {
+            text-transform: uppercase;
+            font-weight: 400;
+            border-radius: 2px;
+            i {
+                font-size: 20px;
+            }
+        }
+
+        .tutor-star-rating-group {
+            margin-right: 3px;
+        }
+
+        .tutor-dashboard-header-avatar {
+            background-size: cover;
+            width: 80px;
+            height: 80px;
+            background-position: center;
+            border-radius: 50%;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+    
+        .tutor-dashboard-header-info {
+            @include propertyWithPrefix(flex, 1);
+            @include propertyWithPrefix(flex-grow, 1);
+            padding-left: 24px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+    
+            .tutor-dashboard-header-display-name {
+                h4 {
+                    margin: 0;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 30px;
+                    color: $black-main;
+                }
+            }
+    
+            .tutor-dashboard-header-stats {
+                @include valueWithPrefix(display, flex);
+                @include propertyWithPrefix(flex-wrap, wrap);
+                line-height: 25px;
+    
+                & > div {
+                    &:not(:first-child) {
+                        margin-left: 30px;
+                    }
+                }
+            }
+        }
+    
+        &-greetings,
+        &-username {
+            text-transform: capitalize;
+        }
+    }
+
+}

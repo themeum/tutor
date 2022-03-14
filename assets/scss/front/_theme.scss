@@ -31,33 +31,12 @@ body {
 		}
 	}
 }
-
-//styled radio button
-
-.tutor-styled-radio{
-	> span{
-		position: relative;
-		padding-left: 30px;
-		cursor: pointer;
-		&::before{
-			content: '';
-			height: 18px;
-			width: 18px;
-			background: #F1F3F7;
-			border: 1px solid #DCDFE5;
-			border-radius: 50%;
-			position: absolute;
-			top: 50%;
-			margin-top: -9px;
-			left: 0;
-			box-sizing: border-box;
-			transition: 200ms;
-		}
+.tutor-entry-content{
+	> br {
+		display: none;
 	}
-	> input{
-		display: none !important;
-		&:checked + span::before{
-			border: 5px solid var(--tutor-primary-color);
-		}
+	p:not(:last-child){
+		padding-bottom: 20px;
+		word-wrap: break-word;
 	}
 }

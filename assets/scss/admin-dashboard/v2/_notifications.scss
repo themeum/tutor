@@ -1,0 +1,38 @@
+#tutor_notifications {
+    .tutor-option-field-input {
+        .type-check.d-flex .tutor-form-check:not(:last-child) {
+            margin-right: 21px;
+        }
+    }
+
+    .tutor-option-single-item {
+        .item-title {
+            display: grid;
+            grid-template-columns: auto 34%;
+            gap: 10px;
+        }
+        .item-wrapper {
+            .tutor-option-field-row {
+                .tutor-option-field-label {
+                    h5.label {
+                        margin: 0;
+                    }
+                }
+                .type-check {
+                    .tutor-form-check {
+                        input[type="checkbox"]:checked::before {
+                            content: "";
+                        }
+                        &:not(:last-child) {
+                            margin-right: 22px;
+                        }
+                    }
+                }
+            }
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 34px;
+        }
+    }
+}
