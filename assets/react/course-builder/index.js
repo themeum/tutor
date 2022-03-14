@@ -41,7 +41,7 @@ window.addEventListener(_tutorobject.content_change_event, () => console.log(_tu
  * @return {Number}
  */
 
-function getRemainingLength(maxLength = 60, inputElement) {
+function getRemainingLength(maxLength = 255, inputElement) {
 	return maxLength - (((inputElement || {}).value || {}).length || 0);
 }
 
@@ -49,7 +49,7 @@ function getRemainingLength(maxLength = 60, inputElement) {
  * Update the course title input tooltip value in 'keyup'
  * and set the data initially
  */
-const maxLength = 60;
+const maxLength = 255;
 const courseCreateTitle = document.getElementById('tutor-course-create-title');
 const courseTitleTooltip = courseCreateTitle?.previousElementSibling;
 const courseCreateTitleTooptip = document.querySelector('#tutor-course-create-title-tooltip-wrapper .tooltip-txt');
