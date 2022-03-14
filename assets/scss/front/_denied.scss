@@ -4,11 +4,11 @@
     margin: auto;
     display: flex;
     flex-direction: column;
-    
-    @include propertyWithPrefix(justify-content, center);
+    justify-content: center;
+
     .tutor-disabled-content-wrapper {
-        @include propertyWithPrefix(flex-direction, column);
-        @include propertyWithPrefix(align-items, center);
+        flex-direction: column;
+        align-items: center;
         text-align: center;
         img {
             margin-bottom: 30px;
@@ -35,7 +35,7 @@
         background-position: center;
     }
     display: flex;
-    @include propertyWithPrefix(justify-content, center);
+    justify-content: center;
     column-gap: 80px;
     margin: auto;
     padding: 60px 0 30px;
@@ -46,7 +46,7 @@
             height: 32px;
         }
         display: flex;
-        @include propertyWithPrefix(flex-direction, column);
+        flex-direction: column;
         row-gap: 39px;
 
         h2 {
@@ -57,8 +57,8 @@
     }
 
     @media screen and (max-width:992px) {
-        @include propertyWithPrefix(flex-direction, column);
-        @include propertyWithPrefix(align-items, center);
+        flex-direction: column;
+        align-items: center;
         row-gap: 50px;
         width: 90%;
         margin: auto;

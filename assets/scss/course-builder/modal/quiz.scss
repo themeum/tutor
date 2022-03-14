@@ -7,21 +7,6 @@
 	display: none !important;
 }
 
-a.back-to-quiz-questions-btn {
-	// font-size: 16px;
-	// font-weight: 300;
-	// color: #393c40;
-	// margin-bottom: 10px;
-	// display: block;
-}
-
-// #quiz-builder-tab-questions {
-// 	.tutor-quiz-type-icon {
-// 		display: flex;
-// 		justify-content: center;
-// 	}
-// }
-
 // Show add to question button when quiz editor opened
 &.tutor-has-question-from {
 	.modal-container {
@@ -116,7 +101,7 @@ a.back-to-quiz-questions-btn {
 
 #quiz-builder-tab-settings {
 	.tutor-input-group {
-		@include propertyWithPrefix(flex-flow, column);
+		flex-flow: column;
 
 		input {
 			&:not([name='assignment_title']) {
@@ -246,8 +231,8 @@ a.back-to-quiz-questions-btn {
 
 				span {
 					display: inline-flex;
-					@include propertyWithPrefix(align-items, center);
-					@include propertyWithPrefix(justify-content, center);
+					align-items: center;
+					justify-content: center;
 
 					width: 37px;
 					height: 37px;

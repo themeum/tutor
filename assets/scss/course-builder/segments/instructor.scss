@@ -145,7 +145,7 @@ $inst_gap: 30px;
 
         &>div{
             display: flex;
-            @include propertyWithPrefix(align-items, center);
+            align-items: center;
             padding: 12px 0;
 
             &:hover{
@@ -163,7 +163,7 @@ $inst_gap: 30px;
 
             span {
                 // Name
-                @include propertyWithPrefix(flex, 1);
+                flex: 1;
                 display: inline-block;
                 overflow: hidden;
                 text-overflow: ellipsis;

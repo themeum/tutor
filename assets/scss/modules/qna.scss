@@ -76,7 +76,7 @@ $sidebar_width: 360px;
 	.tutor-qna-badges {
 		& > span {
 			display: inline-flex;
-			@include propertyWithPrefix(align-items, center);
+			align-items: center;
 			margin-left: 15px;
 			font-style: normal;
 			font-weight: normal;
@@ -140,7 +140,7 @@ $sidebar_width: 360px;
 
 			.tutor-qna-user {
 				display: flex;
-				@include propertyWithPrefix(align-items, center);
+				align-items: center;
 				margin-bottom: 15px;
 
 				img {
@@ -151,7 +151,7 @@ $sidebar_width: 360px;
 				}
 
 				& > div {
-					@include propertyWithPrefix(flex, 1);
+					flex: 1;
 					padding-left: 15px;
 				}
 			}
@@ -198,7 +198,7 @@ $sidebar_width: 360px;
 				}
 
 				.tutor-qna-user {
-					@include propertyWithPrefix(flex-flow, row-reverse);
+					flex-flow: row-reverse;
 					text-align: right;
 					& > div {
 						padding-left: 0;
