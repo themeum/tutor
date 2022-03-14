@@ -233,7 +233,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								</td>
 
 								<td data-th="<?php esc_html_e( 'Course Name', 'tutor' ); ?>" class="column-fullwidth">
-									<div class="td-course tutor-color-text-primary tutor-text-medium-body">
+									<div class="td-course tutor-color-text-primary tutor-text-medium-body tutor-line-clamp-2">
 										<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
 											<?php echo esc_html( $post->post_title ); ?>
 										</a>
