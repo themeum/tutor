@@ -239,8 +239,8 @@ class Assets {
 	public function common_scripts() {
 
 		// Fonts
-		wp_enqueue_style('tutor-inter-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap', array(), TUTOR_VERSION);
-		wp_enqueue_style('tutor-v2-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-v2-icon/style.css', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor-inter-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-icon/style.css', array(), TUTOR_VERSION);
 
 		// Common css library
 		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor-v2.css', array(), TUTOR_VERSION);
