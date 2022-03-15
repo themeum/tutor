@@ -7,7 +7,7 @@ $settings = maybe_unserialize($question->question_settings);
     <div class="question-form-header">
         <a href="javascript:;" class="back-to-quiz-questions-btn tutor-back-btn" data-quiz-id="<?php echo isset($quiz_id) ? $quiz_id : ''; ?>" data-topic-id="<?php echo isset($topic_id) ? $topic_id : ''; ?>">
             <span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-            <span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
+            <span class="text text tutro-text-regular-caption tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>
     <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>" />

@@ -32,13 +32,13 @@ if ( $total_categories && $total_categories > $limit ) {
 		<div class="tutor-instructor-customize-wrapper">
 			<div class="tutor-instructor-filters">
 				<i class="tutor-icon-customize-filled tutor-color-text-brand"></i>
-				<span class="text-medium-h5 tutor-color-text-primary">
+				<span class="text-medium-h5 tutor-color-black">
 					<?php esc_html_e( 'Filters', 'tutor' ); ?>
 				</span>
 			</div>
 			<div class="tutor-instructor-customize-clear clear-instructor-filter">
 				<i class="tutor-icon-line-cross-line design-dark"></i>
-				<span className="color-text-hints tutor-text-regular-body">
+				<span className="tutor-color-muted tutor-fs-6 tutor-fw-normal">
 					<?php esc_html_e( 'Clear', 'tutor' ); ?>
 				</span>
 			</div>
@@ -64,7 +64,7 @@ if ( $total_categories && $total_categories > $limit ) {
 								class="tutor-form-check-input tutor-form-check-square"
 								name="category"
 								value="<?php esc_attr_e( $category_id ); ?>"/>
-							<label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>" class="color-text-title tutor-text-medium-caption">
+							<label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>" class="color-text-title tutor-fs-7 tutor-fw-medium">
 							 <?php esc_html_e( $category->name ); ?>
 							</label>
 						</div>
@@ -76,7 +76,7 @@ if ( $total_categories && $total_categories > $limit ) {
 				<div class="tutor-instructor-category-show-more">
 					<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
 						<i class="tutor-icon-plus-bold-filled tutor-color-text-brand"></i>
-						<span class="text-subsued tutor-text-medium-caption">
+						<span class="text-subsued tutor-fs-7 tutor-fw-medium">
 							<?php esc_html_e( 'Show More', 'tutor' ); ?>
 							<span class="tutor-show-more-loading"></span>
 						</span>
@@ -96,7 +96,7 @@ if ( $total_categories && $total_categories > $limit ) {
 						<i class="tutor-icon-star-line-filled tutor-color-black-fill-20" data-value="<?php echo $i; ?>"></i>
 					<?php endfor; ?> 
 				</div>
-				<span class="text-subsued tutor-text-medium-body tutor-instructor-rating-filter"></span>   
+				<span class="text-subsued tutor-fs-6 tutor-fw-medium tutor-instructor-rating-filter"></span>   
 			</div>
 		</div>
 	</div>
@@ -109,10 +109,10 @@ if ( $total_categories && $total_categories > $limit ) {
 		</div>
 		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-32">
 			<div class="tutor-instructor-form-group">
-				<label for="tutor-instructor-relevant-sort" class="text-hints tutor-text-regular-body">
+				<label for="tutor-instructor-relevant-sort" class="text-hints tutor-fs-6 tutor-fw-normal">
 					<?php _e( 'Short by', 'tutor' ); ?>
 				</label>
-				<select class="text-title  tutor-text-regular-body" id="tutor-instructor-relevant-sort">
+				<select class="text-title  tutor-fs-6 tutor-fw-normal" id="tutor-instructor-relevant-sort">
 					<?php foreach ( $short_by as $k => $v ) : ?>
 						<option value="<?php esc_attr_e( $k ); ?>">
 							<?php esc_html_e( $v ); ?>
@@ -164,7 +164,7 @@ if ( $total_categories && $total_categories > $limit ) {
 					<div class="tutor-instructor-category-show-more tutor-mb-24">
 						<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
 							<i class="tutor-icon-plus-bold-filled tutor-color-text-brand"></i>
-							<span class="text-subsued tutor-text-medium-caption">
+							<span class="text-subsued tutor-fs-7 tutor-fw-medium">
 								<?php esc_html_e( 'Show More', 'tutor' ); ?>
 								<span class="tutor-show-more-loading"></span>
 							</span>

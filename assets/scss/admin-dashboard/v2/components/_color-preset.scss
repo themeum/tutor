@@ -194,7 +194,7 @@
 		.picker-value {
 			text-align: left;
 			@extend .text-regular-small;
-			color: $text-primary;
+			color: $black-main;
 			> .color {
 				display: inline-flex;
 				width: 32px;
@@ -202,7 +202,7 @@
 			}
 			> .value {
 				padding: 5px 10px;
-				color: $text-primary;
+				color: $black-main;
 			}
 		}
 
