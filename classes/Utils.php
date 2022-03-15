@@ -4322,15 +4322,26 @@ class Utils {
 				FROM {$wpdb->commentmeta}
 				WHERE comment_id IN ({$q_ids})"
 			);
-
 			// Loop through meta array
 			foreach ( $meta_array as $meta ) {
 				// Loop through questions
 				foreach ( $query as $index => $question ) {
 
 					if ( $query[ $index ]->comment_ID == $meta->comment_id ) {
+
 						$query[ $index ]->meta[ $meta->meta_key ] = $meta->meta_value;
 					}
+				}
+			}
+		}
+
+
+		if ( !isset($args['tab']) || isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
+			$query_all = $query;
+			$query     = array();
+			foreach ( $query_all as $m_query ) {
+				if (!isset( $m_query->meta['tutor_qna_archived'] ) || isset( $m_query->meta['tutor_qna_archived'] ) && 0 == $m_query->meta['tutor_qna_archived']) {
+					$query[] = $m_query;
 				}
 			}
 		}
