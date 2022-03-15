@@ -278,13 +278,13 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
 													<i class="tutor-icon-edit-filled tutor-color-design-white"></i>
-													<span class="text-regular-body tutor-color-text-white"><?php _e( 'Edit', 'tutor' ); ?></span>
+													<span class="text-regular-body tutor-color-white"><?php _e( 'Edit', 'tutor' ); ?></span>
 												</a>
 											</li>
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
 													<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
-													<span class="text-regular-body tutor-color-text-white"><?php _e( 'Delete', 'tutor' ); ?></span>
+													<span class="text-regular-body tutor-color-white"><?php _e( 'Delete', 'tutor' ); ?></span>
 												</a>
 											</li>
 										</ul>

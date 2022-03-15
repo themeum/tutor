@@ -54,7 +54,7 @@
 					<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">-</span>
 					<div class="tutor-quiz-dotted-box tutor-dropzone">
 						<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">
-						<?php _e( 'Drag your ans', 'tutor' ); ?>
+						<?php _e( 'Drag your answer', 'tutor' ); ?>
 						</span>
 					</div>
 				</div>
