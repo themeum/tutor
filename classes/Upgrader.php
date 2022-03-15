@@ -12,7 +12,6 @@ class Upgrader {
 		add_action( 'admin_init', array( $this, 'init_upgrader' ) );
 
 		$base_name = tutor()->basename;
-		add_action( 'in_plugin_update_message-' . $base_name, array( $this, 'in_plugin_update_message' ), 10, 2 );
 
 		/**
 		 * Installing Gradebook Addon from TutorPro
@@ -58,17 +57,6 @@ class Upgrader {
 			}
 		}
 	}
-
-
-	public function in_plugin_update_message( $args, $response ){
-		$upgrade_notice = strip_tags(tutor_utils()->array_get('upgrade_notice', $response));
-		if ($upgrade_notice){
-			$upgrade_notice = "<span class='version'><code>v.{$response->new_version}</code></span> <br />".$upgrade_notice;
-
-			echo apply_filters( 'tutor_in_plugin_update_message', ($upgrade_notice ? '</p> <div class="tutor_plugin_update_notice">' . $upgrade_notice . '</div> <p class="dummy">' : '') );
-		}
-	}
-
 
 	/**
 	 * Installing Gradebook if Tutor Pro exists

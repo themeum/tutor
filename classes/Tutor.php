@@ -712,7 +712,7 @@ final class Tutor {
 		$args = array(
 			'id'    	=> 'tutor_report_link',
 			'title' 	=> __( 'Report Tutor LMS Issues', 'tutor' ),
-			'href'  	=> 'https://forms.gle/xHw7TQSLGAcmbySy9',
+			'href'  	=> 'https://forms.gle/dgEZqqmgeBGxyMGT6',
 			'meta'  	=> array(
 				'class' => 'tutor-report-issue',
 				'target' => '_blank'
