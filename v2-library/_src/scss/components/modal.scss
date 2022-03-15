@@ -572,8 +572,8 @@
 		}
 		padding: 6px 10px;
 		&.tutor-warning {
-			@extend .bg-warning-30;
-			@extend .color-warning-100;
+			@extend .tutor-bg-warning-30;
+			@extend .tutor-color-warning-100;
 			border-color: $warning-60;
 			text-align: left;
 		}
@@ -713,7 +713,7 @@
 				.tutor-form-check {
 					label {
 						@extend .tutor-text-regular-caption;
-						@extend .tutor-color-text-hints;
+						@extend .tutor-color-muted;
 					}
 				}
 			}

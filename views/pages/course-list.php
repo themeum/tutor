@@ -159,41 +159,41 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-text-regular-small tutor-color-text-subsued">
-							<span class="tutor-text-regular-small">
+						<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
+							<span class="tutor-fs-7 tutor-fw-normal">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
 							</span>
 							<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-text-regular-small tutor-color-text-subsued">
-							<span class="tutor-text-regular-small">
+						<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
+							<span class="tutor-fs-7 tutor-fw-normal">
 								<?php esc_html_e( 'Title', 'tutor' ); ?>
 							</span>
 							<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-text-subsued">
-							<span class="tutor-text-regular-small">
+						<div class="tutor-color-black-60">
+							<span class="tutor-fs-7 tutor-fw-normal">
 							<?php esc_html_e( 'Author', 'tutor' ); ?>
 							</span>
 							<span class="a-to-z-sort-icon tutor-icon-ordering-a-to-z-filled  tutor-icon-18"></span>
 						</div>
 					</th>
 					<th>
-						<div class="tutor-text-regular-small tutor-color-text-subsued">
+						<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 							<?php esc_html_e( 'Course Categories', 'tutor' ); ?>
 						</div>
 					</th>
 					<th>
-						<div class="tutor-text-regular-small tutor-color-text-subsued">
+						<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 							<?php esc_html_e( 'Students', 'tutor' ); ?>
 						</div>
 					</th>
 					<th>
-						<div class="tutor-text-regular-small tutor-color-text-subsued">
+						<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 							<?php esc_html_e( 'Price', 'tutor' ); ?>
 						</div>
 					</th>
@@ -220,43 +220,43 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
-								<div class="td-datetime tutor-text-regular-caption tutor-color-text-primary">
-									<span class="">
+								<div class="td-datetime">
+									<div class="tutor-fs-7 tutor-color-black tutor-fw-medium tutor-d-block tutor-mb-8">
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
-									</span><br>
-									<span class="">
+									</div>
+									<div class="tutor-fs-8 tutor-color-muted tutor-fw-medium tutor-d-block">
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
-									</span>
+									</div>
 								</div>
 							</td>
 
 							<td data-th="<?php esc_html_e( 'Course Name', 'tutor' ); ?>" class="column-fullwidth">
-								<div class="td-course tutor-color-text-primary tutor-text-medium-body tutor-line-clamp-2">
+								<div class="td-course tutor-color-black tutor-fs-6 tutor-fw-medium tutor-line-clamp-2">
 									<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
 										<?php echo esc_html( $post->post_title ); ?>
 									</a>
 									<div class="course-meta">
-									<span class="color-text-hints tutor-text-medium-small">
+									<span class="tutor-color-muted tutor-fs-7 tutor-fw-medium">
 										<?php esc_html_e( 'Topic:', 'tutor' ); ?>
-										<strong class="tutor-color-text-primary">
+										<strong class="tutor-color-black">
 											<?php echo esc_html( $count_topic ); ?>
 										</strong>
 									</span>
-									<span class="color-text-hints tutor-text-medium-small">
+									<span class="tutor-color-muted tutor-fs-7 tutor-fw-medium">
 										<?php esc_html_e( 'Lesson:', 'tutor' ); ?>
-										<strong class="tutor-color-text-primary">
+										<strong class="tutor-color-black">
 											<?php echo esc_html( $count_lesson ); ?>
 										</strong>
 									</span>
-									<span class="color-text-hints tutor-text-medium-small">
+									<span class="tutor-color-muted tutor-fs-7 tutor-fw-medium">
 										<?php esc_html_e( 'Quiz:', 'tutor' ); ?>
-										<strong class="tutor-color-text-primary">
+										<strong class="tutor-color-black">
 											<?php echo esc_html( $count_quiz ); ?>
 										</strong>
 									</span>
-									<span class="color-text-hints tutor-text-medium-small">
+									<span class="tutor-color-muted tutor-fs-7 tutor-fw-medium">
 										<?php esc_html_e( 'Assignment:', 'tutor' ); ?>
-										<strong class="tutor-color-text-primary">
+										<strong class="tutor-color-black">
 											<?php echo esc_html( $count_assignment ); ?>
 										</strong>
 									</span>
@@ -268,7 +268,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 									<?php
 										echo get_avatar( $post->post_author, '96' );
 									?>
-									<p class="tutor-text-medium-body  tutor-color-text-primary">
+									<p class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
 										<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 									</p>
 									<a
@@ -286,12 +286,12 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								?>
 							</td>
 							<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>">
-									<div class="tutor-text-regular-caption tutor-color-text-primary">
+									<div class="tutor-fs-7 tutor-fw-normal tutor-color-black">
 									<?php echo esc_html( $total_student ); ?>
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Price', 'tutor' ); ?>">
-								<div class="tutor-text-regular-caption tutor-color-text-primary">
+								<div class="tutor-fs-7 tutor-fw-normal tutor-color-black">
 									<?php
 										$price = tutor_utils()->get_course_price( $post->ID );
 									if ( null === $price ) {
@@ -333,7 +333,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										<li>
 											<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
 												<i class="tutor-icon-eye-fill-filled"></i>
-												<span class="tutor-text-regular-body tutor-color-text-white">
+												<span class="tutor-fs-6 tutor-fw-normal tutor-color-text-white">
 													<?php esc_html_e( 'View Course', 'tutor' ); ?>
 												</span>
 											</a>
@@ -342,7 +342,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										<li>
 											<a href="javascript:void(0)" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
 												<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
-												<span class="tutor-text-regular-body tutor-color-text-white">
+												<span class="tutor-fs-6 tutor-fw-normal tutor-color-text-white">
 												<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
 												</span>
 											</a>

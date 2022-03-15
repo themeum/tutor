@@ -120,7 +120,7 @@ $args = $this->args;
 																<?php echo $option['label_title']; ?>
 																<?php
 																	if(!empty($option['hint'])) {
-																		echo '<span class="tutor-d-block tutor-text-regular-small">'.$option['hint'].'</span>';
+																		echo '<span class="tutor-d-block tutor-fs-7 tutor-fw-normal">'.$option['hint'].'</span>';
 																	}
 																?>
 															</label>
@@ -136,7 +136,7 @@ $args = $this->args;
 
 														if(!empty($option['hint'])) {
 															?>
-															<p class="tutor-text-regular-small tutor-has-icon tutor-color-text-hints tutor-d-flex tutor-mt-12">
+															<p class="tutor-fs-7 tutor-fw-normal tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
 																<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19 tutor-mr-4"  style="margin-top: -1px;"></i>
 																<?php echo $option['hint']; ?>
 															</p>
@@ -167,7 +167,7 @@ $args = $this->args;
 
 										if ( isset( $field['desc'] ) && 'Content Drip Type' !== $field['label'] ) {
 											?>
-												<p class="tutor-text-regular-small tutor-has-icon tutor-color-text-hints tutor-d-flex tutor-mt-12" style="margin-top: 14px;">
+												<p class="tutor-fs-7 tutor-fw-normal tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12" style="margin-top: 14px;">
 													<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19 tutor-mr-4" style="margin-top: -1px;"></i>
 													<?php echo $field['desc']; ?>
 												</p>

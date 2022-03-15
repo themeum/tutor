@@ -23,7 +23,7 @@ input.tutor-form-control {
 	font-family: inherit;
 
 	&::placeholder {
-		color: $text-hints;
+		color: $text-muted;
 	}
 
 	padding: 0 20px;
@@ -85,7 +85,7 @@ input.tutor-form-control {
 		border-color: $bg-gray-20;
 		cursor: not-allowed;
 		&::placeholder {
-			color: $text-hints;
+			color: $text-muted;
 		}
 	}
 }

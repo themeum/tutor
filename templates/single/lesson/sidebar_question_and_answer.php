@@ -40,10 +40,10 @@ if(!count($questions)) : ?>
 	<div class="tutor-empty-state-wrapper">
         <div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/empty-q&a.svg' ); ?>" alt="No Data Available in this Section" width="85%">
-			<div class="tutor-text-regular-h6 tutor-color-text-subsued tutor-text-center tutor-mt-20">
+			<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-text-center tutor-mt-20">
 				No questions yet
 			</div>
-			<div class="tutor-text-regular-caption tutor-color-text-hints tutor-mt-12">
+			<div class="tutor-fs-7 tutor-fw-normal tutor-color-muted tutor-mt-12">
 				Describe what you’re trying to achieve and where you’re getting stuck
 			</div>
 		</div>

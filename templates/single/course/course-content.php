@@ -118,10 +118,10 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 ?>
 	<div class='tab-item-content <?php echo $has_readmore ? 'tutor-has-showmore' : '' ?>'>
 		<div class='tutor-showmore-content'>
-			<div class="text-medium-h6 tutor-color-text-primary">
+			<div class="text-medium-h6 tutor-color-black">
 				<?php _e('About Course', 'tutor'); ?>
 			</div>
-			<div class="text-regular-body tutor-color-text-subsued tutor-mt-12">
+			<div class="text-regular-body tutor-color-black-60 tutor-mt-12">
 				<?php
                     if ($has_readmore) {
                         echo "<div class='showmore-short-text'>{$first_part}</div>";
@@ -134,7 +134,7 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 		</div>
 		<?php
             if ($has_readmore) :
-                echo '<div class="tutor-showmore-btn tutor-mt-24" data-showmore="true"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showmore"><span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand"></span><span class="tutor-color-text-subsued">Show More</span></button><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showless"><span class="btn-icon tutor-icon-minus-filled tutor-color-design-brand"></span><span class="tutor-color-text-subsued">Show Less</span></button></div>';
+                echo '<div class="tutor-showmore-btn tutor-mt-24" data-showmore="true"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showmore"><span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand"></span><span class="tutor-color-black-60">Show More</span></button><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showless"><span class="btn-icon tutor-icon-minus-filled tutor-color-design-brand"></span><span class="tutor-color-black-60">Show Less</span></button></div>';
             endif;
 		?>
 	</div>

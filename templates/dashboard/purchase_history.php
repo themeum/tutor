@@ -25,7 +25,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
     }
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php esc_html_e( 'Order History', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Order History', 'tutor' ); ?></div>
 <div class="tutor-purchase-history">
     <!--filter buttons tabs-->
     <?php
@@ -84,27 +84,27 @@ $offset      = ( $per_page * $paged ) - $per_page;
         <?php if ( tutor_utils()->count ( $orders ) ) { ?>
         <thead class="tutor-text-sm tutor-text-400">
             <th>
-                <div class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-black-60">
                     <?php esc_html_e( 'Order ID', 'tutor' ); ?>
                 </div>
             </th>
             <th>
-                <div class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-black-60">
                     <?php esc_html_e( 'Course Name', 'tutor' ); ?>
                 </div>
             </th>
             <th>
-                <div class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-black-60">
                     <?php esc_html_e( 'Date', 'tutor' ); ?>
                 </div>
             </th>
             <th>
-                <div class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-black-60">
                     <?php esc_html_e( 'Price', 'tutor' ); ?>
                 </div>
             </th>
             <th>
-                <div class="text-regular-small tutor-color-text-subsued">
+                <div class="text-regular-small tutor-color-black-60">
                     <?php esc_html_e( 'Status', 'tutor' ); ?>
                 </div>
             </th>
@@ -160,7 +160,7 @@ $offset      = ( $per_page * $paged ) - $per_page;
             ?>
                 <tr>
                     <td data-th="Order ID" class="v-align-top">
-                        <div class="td-course tutor-text-medium-body tutor-color-text-primary tutor-mt-4" style="font-weight: 600;">
+                        <div class="td-course tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-4" style="font-weight: 600;">
                             #<?php esc_html_e( $order->ID ); ?>
                         </div>
                     </td>
@@ -169,22 +169,22 @@ $offset      = ( $per_page * $paged ) - $per_page;
                             $courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
                             if ( tutor_utils()->count( $courses ) ) {
                                 foreach ( $courses as $course ) {
-                                    echo '<div class="tutor-text-medium-caption tutor-color-text-primary">' . esc_html( get_the_title( $course['course_id'] ) ) . '</div>';
+                                    echo '<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">' . esc_html( get_the_title( $course['course_id'] ) ) . '</div>';
                                 }
                             }
                         ?>
                     </td>
                     <td data-th="Date">
-                        <span class="tutor-text-medium-caption tutor-color-text-primary"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ); ?></span>
+                        <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ); ?></span>
                     </td>
                     <td data-th="Price">
-                        <span class="tutor-text-medium-caption tutor-color-text-primary"><?php echo wp_kses_post( $price ); ?></span>
+                        <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo wp_kses_post( $price ); ?></span>
                     </td>
                     <td data-th="Status">
                         <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-4"><?php esc_html_e( $order_status_text ); ?></span>
                     </td>
                     <td data-th="Download" class="tutor-export-purchase-history" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
-                        <a><span class="tutor-icon-receipt-line tutor-color-text-title" style="font-size:24px"></span></a>
+                        <a><span class="tutor-icon-receipt-line tutor-color-black-70" style="font-size:24px"></span></a>
                     </td>
                 </tr>
                 <?php } ?>

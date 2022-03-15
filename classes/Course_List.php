@@ -59,6 +59,7 @@ class Course_List {
 		 * @since v2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_course_delete', array( __CLASS__, 'tutor_course_delete' ) );
+		add_action( 'wp_ajax_tabs_key_value_all', array( __CLASS__, 'tabs_key_value_all' ) );
 	}
 
 	/**
@@ -144,6 +145,52 @@ class Course_List {
 		return apply_filters( 'tutor_course_tabs', $tabs );
 	}
 
+	public function tabs_key_value_all() {
+
+		$all       = self::count_course( 'all' );
+		$mine      = self::count_course( 'mine' );
+		$published = self::count_course( 'publish' );
+		$draft     = self::count_course( 'draft' );
+		$pending   = self::count_course( 'pending' );
+		$trash     = self::count_course( 'trash' );
+
+		$tabs = array(
+			array(
+				'key'   => 'all',
+				'title' => __( 'All', 'tutor' ),
+				'value' => $all,
+			),
+			array(
+				'key'   => 'mine',
+				'title' => __( 'Mine', 'tutor' ),
+				'value' => $mine,
+			),
+			array(
+				'key'   => 'published',
+				'title' => __( 'Published', 'tutor' ),
+				'value' => $published,
+			),
+			array(
+				'key'   => 'draft',
+				'title' => __( 'Draft', 'tutor' ),
+				'value' => $draft,
+			),
+			array(
+				'key'   => 'pending',
+				'title' => __( 'Pending', 'tutor' ),
+				'value' => $pending,
+			),
+			array(
+				'key'   => 'trash',
+				'title' => __( 'Trash', 'tutor' ),
+				'value' => $trash,
+			),
+		);
+
+		return $tabs;
+		// return apply_filters( 'tutor_course_tabs', $tabs );
+	}
+
 	/**
 	 * Count courses by status & filters
 	 * Count all | min | published | pending | draft
@@ -219,7 +266,7 @@ class Course_List {
 
 		$the_query = new \WP_Query( $args );
 
-		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : 0;
+		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
 
 	}
 
@@ -238,8 +285,8 @@ class Course_List {
 		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error(array('message' => __('Please select appropriate action', 'tutor')));
 			exit;
-		} 
-		
+		}
+
 		if ( 'delete' === $action ) {
 			// Do action before delete.
 			do_action( 'before_tutor_course_bulk_action_delete', $bulk_ids );
@@ -250,7 +297,7 @@ class Course_List {
 			$delete_courses ? wp_send_json_success() : wp_send_json_error(array('message' => __('Could not delete selected courses', 'tutor')));
 			exit;
 		}
-		
+
 		/**
 		 * Do action before course update
 		 *
@@ -264,7 +311,7 @@ class Course_List {
 		do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
 
 		$update_status ? wp_send_json_success() : wp_send_json_error(array('message' => 'Could not update course status', 'tutor'));
-		
+
 		exit;
 	}
 
@@ -278,7 +325,7 @@ class Course_List {
 		tutor_utils()->checking_nonce();
 		$status = sanitize_text_field( $_POST['status'] );
 		$id     = sanitize_text_field( $_POST['id'] );
-		
+
 		self::update_course_status( $status, $id );
 
 		wp_send_json_success();

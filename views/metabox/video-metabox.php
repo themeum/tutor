@@ -92,7 +92,7 @@ if (!is_array($supported_sources) || !count($supported_sources)) {
                         'no_control' => true
                     ), false);
 
-                    echo '<div class="tutor-color-text-medium-caption tutor-color-text-title tutor-mb-12" >' . __('Upload Video Poster', 'tutor') . '</div>';
+                    echo '<div class="tutor-color-text-medium-caption tutor-color-black-70 tutor-mb-12" >' . __('Upload Video Poster', 'tutor') . '</div>';
                     // Load thumbnail segment
                     tutor_load_template_from_custom_path(tutor()->path . '/views/fragments/thumbnail-uploader.php', array(
                         'media_id' => tutor_utils()->avalue_dot('poster', $video),

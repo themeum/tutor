@@ -513,3 +513,24 @@
 .tutor-line-clamp-3 {
 	@include tutorLineClamp(3);
 }
+
+// responsive image
+.tutor-img-responsive {
+	max-width: 100%;
+	height: auto;
+}
+
+// font sizes
+.tutor-fs {
+	&-1,
+	&-2,
+	&-3,
+	&-4,
+	&-5,
+	&-6,
+	&-7,
+	&-8,
+	&-9 {
+		line-height: 1.6;
+	}
+}

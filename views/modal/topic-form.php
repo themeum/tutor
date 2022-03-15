@@ -3,7 +3,7 @@
     <div class="tutor-modal-root">
         <div class="tutor-modal-inner">
             <div class="tutor-modal-header">
-                <h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
+                <h3 class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
                     <?php echo $data['modal_title']; ?>
                 </h3>
                 <button data-tutor-modal-close class="tutor-modal-close">
@@ -12,7 +12,7 @@
             </div>
             <div class="tutor-modal-body-alt">
                 <div class="tutor-mb-32">
-                    <label class="tutor-text-medium-caption tutor-color-text-title tutor-mb-4 d-block"><?php _e('Topic Name', 'tutor'); ?></label>
+                    <label class="tutor-fs-7 tutor-fw-medium tutor-color-black-70 tutor-mb-4 d-block"><?php _e('Topic Name', 'tutor'); ?></label>
                     <div class="tutor-input-group tutor-mb-16">
                         <input type="text" name="topic_title" class="tutor-form-control tutor-mb-12" value="<?php echo !empty($data['title']) ? $data['title'] : ''; ?>"/>
                         <p class="tutor-input-feedback tutor-has-icon">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div>
-                    <label class="tutor-text-medium-caption tutor-color-text-title tutor-mb-4 d-block"><?php _e('Topic Summary', 'tutor'); ?></label>
+                    <label class="tutor-fs-7 tutor-fw-medium tutor-color-black-70 tutor-mb-4 d-block"><?php _e('Topic Summary', 'tutor'); ?></label>
                     <div class="tutor-input-group tutor-mb-16">
                         <textarea name="topic_summery" class="tutor-form-control tutor-mb-12"><?php echo !empty($data['summary']) ? $data['summary'] : ''; ?></textarea>
                         <p class="tutor-input-feedback tutor-has-icon">
