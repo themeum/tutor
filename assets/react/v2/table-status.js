@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
       if (newStatus === prevStatus) {
         return;
       }
-      console.log(status);
 
       const icon1 = target.nextElementSibling;
       icon1.classList.add('tutor-updating-message-v2');
@@ -26,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
       formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 
       // Assign all data to the request object
-      for(let k in target.dataset) {
+      for (let k in target.dataset) {
         formData.set(k, target.dataset[k]);
       }
 
@@ -37,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const post = await ajaxHandler(formData);
       const response = await post.json();
       if (response) {
+
         target.dataset.status = newStatus;
         let putStatus = target.getElementsByTagName('OPTION')[target.selectedIndex].dataset.status_class;
         let message = response.data ? response.data.status : "Course status updated ";
@@ -44,10 +44,24 @@ document.addEventListener("DOMContentLoaded", function () {
         target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
 
         tutor_toast(__("Updated", "tutor"), __(message, "tutor"), "success");
+        courseTabsCoursesCount(prevStatus, newStatus);
+
       } else {
         tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
       }
       icon1.classList.remove('tutor-updating-message-v2');
     };
+  }
+  const courseTabsCoursesCount = (prevStatus, newStatus) => {
+    let previousStatus = prevStatus === 'publish' ? 'published' : prevStatus;
+    let nextStatus = newStatus === 'publish' ? 'published' : newStatus;
+    let prevLabel = document.querySelector('a[data-keypage=' + previousStatus + ']');
+    let nextLabel = document.querySelector('a[data-keypage=' + nextStatus + ']');
+
+    prevLabel.dataset.keyvalue = parseInt(prevLabel.dataset.keyvalue) - 1;
+    nextLabel.dataset.keyvalue = parseInt(nextLabel.dataset.keyvalue) + 1;
+
+    prevLabel.querySelector('.filter-btn-number').innerText = '(' + prevLabel.dataset.keyvalue + ')';
+    nextLabel.querySelector('.filter-btn-number').innerText = '(' + nextLabel.dataset.keyvalue + ')';
   }
 });
