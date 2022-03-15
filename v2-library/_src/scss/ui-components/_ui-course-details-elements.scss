@@ -430,7 +430,7 @@
 			transition: 150ms;
 		}
 		&.is-active {
-			color: $primary-main;
+			color: $color-brand;
 			&::after {
 				// content: '\e941';
 				transform: rotate(-90deg);

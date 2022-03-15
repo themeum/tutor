@@ -331,19 +331,18 @@ class WooCommerce extends Tutor_Base {
 	 * @since v.1.1.2
 	 */
 	public function add_earning_data( $item_id, $item, $order_id ) {
+
+		if ( tutor_utils()->get_option( 'monetize_by' )!='wc' ) {
+			return;
+		}
+
 		global $wpdb;
 		$item = new \WC_Order_Item_Product( $item );
-
+		
 		$product_id    = $item->get_product_id();
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
 		if ( $if_has_course ) {
-
-			$enable_tutor_earning = tutor_utils()->get_option( 'enable_tutor_earning' );
-			if ( ! $enable_tutor_earning ) {
-				return;
-			}
-
 			$course_id    = $if_has_course->post_id;
 			$user_id      = $wpdb->get_var( $wpdb->prepare( "SELECT post_author FROM {$wpdb->posts} WHERE ID = %d ", $course_id ) );
 			$order_status = $wpdb->get_var( $wpdb->prepare( "SELECT post_status from {$wpdb->posts} where ID = %d ", $order_id ) );
@@ -472,9 +471,19 @@ class WooCommerce extends Tutor_Base {
 		}
 		global $wpdb;
 
-		$is_earning_data = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(earning_id) FROM {$wpdb->prefix}tutor_earnings WHERE order_id = %d  ", $order_id ) );
+		$is_earning_data = (int) $wpdb->get_var( $wpdb->prepare( 
+			"SELECT COUNT(earning_id) 
+			FROM {$wpdb->prefix}tutor_earnings 
+			WHERE order_id = %d  ", 
+			$order_id 
+		) );
+
 		if ( $is_earning_data ) {
-			$wpdb->update( $wpdb->prefix . 'tutor_earnings', array( 'order_status' => $status_to ), array( 'order_id' => $order_id ) );
+			$wpdb->update( 
+				$wpdb->prefix . 'tutor_earnings', 
+				array( 'order_status' => $status_to ), 
+				array( 'order_id' => $order_id ) 
+			);
 		}
 	}
 

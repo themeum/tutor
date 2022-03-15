@@ -60,7 +60,7 @@ $brand-wordpress-hover: darken($brand-wordpress, 5);
 
 // Common Colors
 $color-white: #ffffff;
-$color-brand: $primary-main;
+$color-brand: var(--tutor-primary-color);
 $color-success: $success-main;
 $color-warning: $warning-main;
 $color-error: $danger-main;
