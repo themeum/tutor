@@ -555,7 +555,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 
 		$html = '<div class="asas tutor-alert tutor-' . esc_attr( $type ) . '">
 					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
+						<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
 						<span>' . esc_attr( $msg ) . '</span>
 					</div>
 				</div>';
