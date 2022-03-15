@@ -231,7 +231,7 @@
 				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-content-between">
 					<div class="flex-center">
 						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
-						<span class="text-regular-caption tutor-color-muted tutor-ml-5">
+						<span class="text-regular-caption tutor-color-muted tutor-ml-8">
 							<?php echo esc_html( $meta['label'] ); ?>
 						</span>
 					</div>
