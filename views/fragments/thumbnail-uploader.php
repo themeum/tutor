@@ -10,7 +10,7 @@
 	$background    = ! empty( $data['background']) ? $data['background'] : '#eff1f7';
 	$border_color  = ! empty( $data['border']) ? $data['border'] : '#eff1f7';
 ?>
-<div class="tutor-thumbnail-uploader" data-media-heading="<?php echo ! empty( $media_heading ) ? $media_heading : __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ); ?>">
+<div class="tutor-thumbnail-uploader tutor-mt-12" data-media-heading="<?php echo ! empty( $media_heading ) ? $media_heading : __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ); ?>">
 	<div class="thumbnail-wrapper tutor-d-flex tutor-align-items-center <?php echo $is_borderless ? 'tutor-is-borderless' : 'tutor-p-16'; ?>">
 		<div class="thumbnail-preview image-previewer" style="background:<?php echo esc_attr( $background ); ?>; border: 2px solid <?php echo esc_attr( $border_color ); ?>;">
 			<span class="preview-loading"></span>

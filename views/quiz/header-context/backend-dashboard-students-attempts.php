@@ -4,7 +4,7 @@
     }
 ?>
 
-<header class="tutor-wp-dashboard-header tutor-justify-content-between tutor-align-items-center tutor-px-32 tutor-py-20 tutor-mb-24 tutor-pt-15 tutor-pb-15" style="margin-left:-20px; height:auto;">
+<header class="tutor-wp-dashboard-header tutor-justify-content-between tutor-align-items-center tutor-px-32 tutor-py-20 tutor-mb-24 tutor-pt-16 tutor-pb-16" style="margin-left:-20px; height:auto;">
     <div class="tutor-color-text-primary back tutor-mb-24">
         <a class="tutor-back-btn" href="<?php echo $back_url; ?>">
             <span class="tutor-icon-previous-line tutor-color-design-dark"></span>

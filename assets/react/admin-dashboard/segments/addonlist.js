@@ -46,7 +46,7 @@ const displayAddons = (addons) => {
 					<div class="tooltip-wrap tutor-lock-tooltip">
 						<span class="tooltip-txt tooltip-top">Available in Pro</span>
 					</div>
-					<div class="card-body tutor-px-32 tutor-py-35">
+					<div class="card-body tutor-px-32 tutor-py-36">
 						<div class="addon-logo">
 							<img src="${url}" alt="${name}" /> 
 						</div>

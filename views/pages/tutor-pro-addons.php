@@ -136,13 +136,13 @@
                     </div>
                     <div class="addon-jumbotron-content">
                         <h3 class="title tutor-mt-0 tutor-mb-20"><?php esc_html_e( 'Get All of Our Addons for a Single Price', 'tutor' ); ?></h3>
-                        <p class="tutor-d-flex tutor-py-5"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Enjoy all popular add-ons under a single price', 'tutor' ); ?>
                         </p>
-                        <p class="tutor-d-flex tutor-py-5"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Easy enable options for the features you need', 'tutor' ); ?>
                         </p>
-                        <p class="tutor-d-flex tutor-py-5"><span class="icon tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="icon tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Advanced customization options for each add-on', 'tutor' ); ?>
                         </p>
                         <button class="tutor-btn tutor-btn-wordpress tutor-mt-20">

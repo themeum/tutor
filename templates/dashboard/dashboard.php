@@ -254,7 +254,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 							<div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty( esc_url( $tutor_course_img ) ) ? $placeholder_img : esc_url( $tutor_course_img ); ?>)"></div>
 						</a>
 					</div>
-					<div class="tutor-course-listing-item-body tutor-px-32 tutor-pt-26 tutor-pb-20">
+					<div class="tutor-course-listing-item-body tutor-px-32 tutor-pt-24 tutor-pb-20">
 						<?php if ( $course_rating ) : ?>
 						<div class="list-item-rating tutor-d-flex">
 							<div class="tutor-ratings tutor-is-sm">

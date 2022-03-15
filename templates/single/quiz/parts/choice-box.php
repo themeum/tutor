@@ -67,7 +67,7 @@
 								<?php
 								if ( $answer->answer_view_format == 'text_image' ) {
 									?>
-											<div class="text-regular-body tutor-color-text-primary tutor-px-16 tutor-py-10 ">
+											<div class="text-regular-body tutor-color-text-primary tutor-px-16 tutor-py-12 ">
 										<?php
 											echo $answer_title;
 										?>
