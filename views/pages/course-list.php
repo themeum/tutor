@@ -333,7 +333,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										<li>
 											<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
 												<i class="tutor-icon-eye-fill-filled"></i>
-												<span class="tutor-fs-6 tutor-fw-normal tutor-color-text-white">
+												<span class="tutor-fs-6 tutor-fw-normal tutor-color-white">
 													<?php esc_html_e( 'View Course', 'tutor' ); ?>
 												</span>
 											</a>
@@ -342,7 +342,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 										<li>
 											<a href="javascript:void(0)" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
 												<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
-												<span class="tutor-fs-6 tutor-fw-normal tutor-color-text-white">
+												<span class="tutor-fs-6 tutor-fw-normal tutor-color-white">
 												<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
 												</span>
 											</a>

@@ -48,8 +48,8 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 <?php else : ?>
 	<div class="tutor-no-announcements">
 		<div class="text-medium-h6 tutor-color-black"><?php _e( 'No announcements posted yet.', 'tutor' ); ?></div>
-		<div class="text-regular-body tutor-color-black-60 tutor-mt-7">
-			<?php _e( 'The instructor hasn’t added any announcements to this course yet. Announcements are used to inform you of updates or additions to the course.', 'tutor' ); ?>
+		<div class="text-regular-body tutor-color-black-60 tutor-mt-16">
+			<?php _e( 'The instructor hasn\'t added any announcements to this course yet. Announcements are used to inform you of updates or additions to the course.', 'tutor' ); ?>
 		</div>
 	</div>
 <?php endif; ?>

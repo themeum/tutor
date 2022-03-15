@@ -37,7 +37,7 @@ do_action( 'tutor_course/single/before/topics' );
 </div>
 
 <?php if ( $topics->have_posts() ) : ?>
-	<div class="tutor-accordion tutor-mt-40">
+	<div class="tutor-accordion tutor-mt-24">
 	<?php while ( $topics->have_posts() ) : ?>
 		<?php
 			$topics->the_post();
