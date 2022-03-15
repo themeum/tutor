@@ -8,9 +8,9 @@
 					<div class="tutor-quiz-border-box" draggable="true">
 						<?php
 						if ( $question_type === 'matching' ) {
-							echo '<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">' . stripslashes( $rand_answer->answer_two_gap_match ) . '</span>';
+							echo '<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">' . stripslashes( $rand_answer->answer_two_gap_match ) . '</span>';
 						} else {
-							echo '<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">' . stripslashes( $rand_answer->answer_title ) . '</span>';
+							echo '<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">' . stripslashes( $rand_answer->answer_title ) . '</span>';
 						}
 						?>
 						<span class="tutor-icon-humnurger-filled tutor-color-black-fill"></span>
@@ -39,7 +39,7 @@
 		foreach ( $answers as $answer ) {
 			$answer_i++; ?>
 			<div class="quiz-matching-ans">
-				<div class="tutor-quiz-ans-no  tutor-text-medium-body  tutor-color-text-primary">
+				<div class="tutor-quiz-ans-no  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 					<?php
 					if ( $answer_i < 9 ) {
 						echo 0;
@@ -51,9 +51,9 @@
 					
 				</div>
 				<div class="quiz-matching-ans-item">
-					<span class="tutor-text-medium-body  tutor-color-text-primary">-</span>
+					<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">-</span>
 					<div class="tutor-quiz-dotted-box tutor-dropzone">
-						<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">
+						<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">
 						<?php _e( 'Drag your ans', 'tutor' ); ?>
 						</span>
 					</div>

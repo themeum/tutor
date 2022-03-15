@@ -31,7 +31,7 @@ $quiz_attempts = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_
 
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php _e( 'My Quiz Attempts', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php _e( 'My Quiz Attempts', 'tutor' ); ?></div>
 <?php
 $quiz_attempts_count = tutor_utils()->get_quiz_attempts_by_course_ids( $offset, $item_per_page, $course_id, '', $course_filter, $date_filter, $order_filter, get_current_user_id(), true );
 

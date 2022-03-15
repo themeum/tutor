@@ -17,7 +17,7 @@ $user = wp_get_current_user();
 		<?php
 			tutor_load_template( 'dashboard.settings.nav-bar', array( 'active_setting_nav' => 'social-profile' ) );
 		?>
-		<div class="tutor-text-medium-h6 tutor-color-text-primary tutor-mt-32"><?php esc_html_e( 'Social Profile Link', 'tutor' ) ?></div>
+		<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Social Profile Link', 'tutor' ) ?></div>
 	</div>
 
 	<form id="user_social_form" action="" method="post" enctype="multipart/form-data">

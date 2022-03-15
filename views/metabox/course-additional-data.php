@@ -33,11 +33,11 @@ $material_includes = get_post_meta( $course_id, '_tutor_course_material_includes
     </div>
     <div class="tutor-col-6 tutor-col-sm-4 tutor-col-md-3">
         <input class="tutor-form-control tutor-mb-5" type="number" min="0" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
-        <span class="tutor-text-regular-caption color-text-hints"><?php _e( 'Hour', 'tutor' ); ?></span>
+        <span class="tutor-fs-7 tutor-fw-normal tutor-color-muted"><?php _e( 'Hour', 'tutor' ); ?></span>
     </div>
     <div class="tutor-col-6 tutor-col-sm-4 tutor-col-md-3">
         <input class="tutor-form-control tutor-mb-4 tutor-number-validation" type="number" min="0" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
-        <span class="tutor-text-regular-caption color-text-hints"><?php _e( 'Minute', 'tutor' ); ?></span>
+        <span class="tutor-fs-7 tutor-fw-normal tutor-color-muted"><?php _e( 'Minute', 'tutor' ); ?></span>
     </div>
     <input type="hidden" value="<?php echo $durationSeconds ? $durationSeconds : '00'; ?>" name="course_duration[seconds]">
 </div>

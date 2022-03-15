@@ -11,16 +11,16 @@ $colorUtils: (
 	'success' $success-main,
 	'warning' $warning-main,
 	'error' $danger-main,
-	// Text Colors
-		'text-primary' $black-main,
-	'text-title' $black-70,
-	'text-subsued' $black-60,
-	'text-hints' $text-hints,
-	'text-white' $text-white,
-	'text-brand' $text-brand,
-	'text-success' $text-success,
-	'text-warning' $text-warning,
-	'text-error' $text-error,
+	// Colors
+		'black' $black-main,
+	'black-70' $black-70,
+	'black-60' $black-60,
+	'muted' $text-muted,
+	'white' $text-white,
+	'brand' $text-brand,
+	'success' $text-success,
+	'warning' $text-warning,
+	'error' $text-error,
 	// Design Colors
 		'design-dark' $black-90,
 	'design-grey' $black-70,
@@ -101,18 +101,12 @@ $colorUtils: (
 );
 
 @each $classSuffix, $value in $colorUtils {
-	.color-#{$classSuffix} {
-		color: #{$value};
-	}
 	.tutor-color-#{$classSuffix} {
 		color: #{$value};
 	}
 }
 
 @each $classSuffix, $value in $colorUtils {
-	.bg-#{$classSuffix} {
-		background-color: #{$value};
-	}
 	.tutor-bg-#{$classSuffix} {
 		background-color: #{$value};
 	}
