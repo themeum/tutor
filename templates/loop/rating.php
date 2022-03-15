@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<div class="list-item-rating tutor-bs-d-flex">
+<div class="list-item-rating tutor-d-flex">
     <div class="tutor-ratings">
         <div class="tutor-rating-stars">
 			<?php
@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php
 				if ($course_rating->rating_avg > 0) {
 					echo apply_filters('tutor_course_rating_average', $course_rating->rating_avg);
-					echo $course_rating->rating_count>0 ? '<span class="tutor-ml-5 tutor-bs-d-inline">('.$course_rating->rating_count.')</span>' : 0;
+					echo $course_rating->rating_count>0 ? '<span class="tutor-ml-5 tutor-d-inline">('.$course_rating->rating_count.')</span>' : 0;
 				}
 			?>
 		</div>

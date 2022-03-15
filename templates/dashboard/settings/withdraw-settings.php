@@ -5,9 +5,9 @@
  */
 
 $col_classes = array(
-    1 => 'tutor-bs-col-12',
-    2 => 'tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6',
-    3 => 'tutor-bs-col-12 tutor-bs-col-lg-4'
+    1 => 'tutor-col-12',
+    2 => 'tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6',
+    3 => 'tutor-col-12 tutor-col-lg-4'
 );
 ?>
 <div class="tutor-dashboard-setting-withdraw tutor-dashboard-content-inner">
@@ -28,13 +28,13 @@ $col_classes = array(
             $old_method_key      = tutor_utils()->avalue_dot( 'withdraw_method_key', $saved_account );
             $min_withdraw_amount = tutor_utils()->get_option( 'min_withdraw_amount' );
             ?>
-            <div class="tutor-bs-row tutor-mb-30">
+            <div class="tutor-row tutor-mb-30">
                 <?php
                 $method_count = count( $tutor_withdrawal_methods );
                 foreach ( $tutor_withdrawal_methods as $method_id => $method ) {
                     ?>
                     <div class="<?php echo esc_attr( $col_classes[ $method_count ] ); ?>" data-withdraw-method="<?php echo esc_attr( $method_id ); ?>">
-                        <label class="tutor-radio-select tutor-bs-align-items-center tutor-mb-10">
+                        <label class="tutor-radio-select tutor-align-items-center tutor-mb-10">
                             <input class="tutor-form-check-input" type="radio" name="tutor_selected_withdraw_method" value="<?php echo esc_attr( $method_id ); ?>" <?php checked( $method_id, $old_method_key ) ?>/>
                             <div class="tutor-radio-select-content">
                                 <span class="tutor-radio-select-title">
@@ -62,7 +62,7 @@ $col_classes = array(
                     !is_array($method_values) ? $method_values=array() : 0;
                     ?>
 
-                    <div data-withdraw-form="<?php echo esc_attr( $method_id ); ?>" class="tutor-bs-row withdraw-method-form" style="<?php echo esc_attr( $old_method_key != $method_id ? 'display: none;' : '' ); ?>">
+                    <div data-withdraw-form="<?php echo esc_attr( $method_id ); ?>" class="tutor-row withdraw-method-form" style="<?php echo esc_attr( $old_method_key != $method_id ? 'display: none;' : '' ); ?>">
                         <?php 
                         do_action( "tutor_withdraw_set_account_{$method_id}_before" );
                         
@@ -70,7 +70,7 @@ $col_classes = array(
                         if ( $field_count ) {
                             foreach ( $form_fields as $field_name => $field ) {
                                 ?>
-                                <div class="<?php echo esc_attr( $field_count ) > 1 ? 'tutor-bs-col-12 tutor-bs-col-sm-6' : 'tutor-bs-col-12'; ?> tutor-mb-30">
+                                <div class="<?php echo esc_attr( $field_count ) > 1 ? 'tutor-col-12 tutor-col-sm-6' : 'tutor-col-12'; ?> tutor-mb-30">
                                     <?php
                                     if ( ! empty( $field['label'] ) ) {
                                         echo "<label class='tutor-form-label tutor-color-text-hints' for='field_{$method_id}_$field_name'>

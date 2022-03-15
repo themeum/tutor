@@ -20,8 +20,8 @@
 		border: 1px solid #c0c3cb;
 		box-sizing: border-box;
 		border-radius: 6px;
-		@include valueWithPrefix(display, flex);
-		@include propertyWithPrefix(align-items, center);
+		display: flex;
+		align-items: center;
 	}
 
 	span.filesize {
@@ -39,7 +39,7 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			margin-right: 25px;
-			@include propertyWithPrefix(flex, 1);
+			flex: 1;
 
 			a {
 				font-style: normal;
@@ -54,8 +54,8 @@
 		}
 
 		&:last-child {
-			@include valueWithPrefix(display, flex);
-			@include propertyWithPrefix(align-items, center);
+			display: flex;
+			align-items: center;
 		}
 	}
 
@@ -70,6 +70,24 @@
 			@media (max-width: 1200px) {
 				width: calc(50% - 20px) !important;
 			}
+		}
+	}
+}
+
+// new card
+.tutor {
+	&-card {
+		background-color: #FFFFFF;
+		border: 1px solid #CDCFD5;
+
+		&.is-selected {
+			background-color: #F6F8FD;
+			border-color: #D2DBF5;
+		}
+
+		&.is-active {
+			background-color: #F6F8FD;
+			border-color: $primary;
 		}
 	}
 }

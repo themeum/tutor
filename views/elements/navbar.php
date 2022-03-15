@@ -6,8 +6,8 @@
  */
 
 if ( isset( $data ) && count( $data ) ) : ?>
-	<header class="tutor-wp-dashboard-header tutor-bs-d-xl-flex tutor-bs-justify-content-between tutor-bs-align-items-center tutor-px-30 tutor-py-14 tutor-mb-26" style="margin-left:-20px">
-		<div class="header-title-wrap tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-flex-wrap tutor-bs-mb-xl-0 tutor-bs-mb-4 header-title tutor-text-medium-h5 tutor-color-text-primary">
+	<header class="tutor-wp-dashboard-header tutor-d-xl-flex tutor-justify-content-between tutor-align-items-center tutor-px-30 tutor-py-14 tutor-mb-26" style="margin-left:-20px">
+		<div class="header-title-wrap tutor-d-flex tutor-align-items-center tutor-flex-wrap tutor-mb-xl-0 tutor-mb-4 header-title tutor-text-medium-h5 tutor-color-text-primary">
 			<span class="text-primary-h5">
 				<?php echo esc_html( $data['page_title'] ); ?>
 			</span>

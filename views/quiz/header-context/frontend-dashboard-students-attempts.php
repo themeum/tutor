@@ -16,7 +16,7 @@
 </div>
 
 <div class="tutor-mb-30 tutor-text-regular-small tutor-color-text-subsued">
-    <div class="tutor-bs-d-flex">
+    <div class="tutor-d-flex">
         <div class="tutor-mr-15">
             <?php _e('Student', 'tutor'); ?>: <span class="tutor-color-text-primary"><strong><?php echo $student_name; ?></strong></span>
         </div>

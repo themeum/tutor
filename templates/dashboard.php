@@ -71,10 +71,10 @@ do_action('tutor_dashboard/before/wrap');
 ?>
 
 <div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-100">
-	<div class="tutor-bs-container">
+	<div class="tutor-container">
 		<!-- new head part  -->
-		<div class="tutor-bs-row tutor-bs-d-flex justify-content-between tutor-frontend-dashboard-header">
-			<div class="tutor-header-left-side tutor-dashboard-header tutor-bs-col-md-6 tutor-bs-d-flex align-items-center" style="border: none;">
+		<div class="tutor-row tutor-d-flex tutor-justify-content-between tutor-frontend-dashboard-header">
+			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-items-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url(get_avatar_url($user_id, array('size' => 150))); ?>)">
 				</div>
 				<div class="tutor-user-info tutor-ml-24">
@@ -110,8 +110,8 @@ do_action('tutor_dashboard/before/wrap');
 					?>
 				</div>
 			</div>
-			<div class="tutor-header-right-side tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end tutor-mt-20 tutor-mt-md-0">
-				<div class="tutor-bs-d-flex align-items-center">
+			<div class="tutor-header-right-side tutor-col-md-6 tutor-d-flex tutor-justify-content-end tutor-mt-20 tutor-mt-md-0">
+				<div class="tutor-d-flex tutor-align-items-center">
 					<?php
 					do_action('tutor_dashboard/before_header_button');
 					$instructor_status  = tutor_utils()->instructor_status();
@@ -153,8 +153,8 @@ do_action('tutor_dashboard/before/wrap');
 		</div>
 		<!-- new head part end -->
 		<!-- Sidebar and Content Part -->
-		<div class="tutor-bs-row tutor-frontend-dashboard-maincontent">
-			<div class="tutor-bs-col-12 tutor-bs-col-md-4 tutor-bs-col-lg-3 tutor-dashboard-left-menu">
+		<div class="tutor-row tutor-frontend-dashboard-maincontent">
+			<div class="tutor-col-12 tutor-col-md-4 tutor-col-lg-3 tutor-dashboard-left-menu">
 				<ul class="tutor-dashboard-permalinks">
 					<?php
 					$dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
@@ -209,7 +209,7 @@ do_action('tutor_dashboard/before/wrap');
 				</ul>
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-md-8 tutor-bs-col-lg-9">
+			<div class="tutor-col-12 tutor-col-md-8 tutor-col-lg-9">
 				<div class="tutor-dashboard-content">
 					<?php
 
@@ -243,10 +243,10 @@ do_action('tutor_dashboard/before/wrap');
 		</div>
 	</div>
 	<div id="tutor-dashboard-footer-mobile">
-		<div class="tutor-bs-container">
-			<div class="tutor-bs-row">
+		<div class="tutor-container">
+			<div class="tutor-row">
 				<?php foreach ($footer_links as $link) : ?>
-					<a class="tutor-bs-col-4 <?php echo $link['is_active'] ? 'active' : ''; ?>" href="<?php echo $link['url']; ?>">
+					<a class="tutor-col-4 <?php echo $link['is_active'] ? 'active' : ''; ?>" href="<?php echo $link['url']; ?>">
 						<i class="<?php echo $link['icon_class']; ?>"></i>
 						<span><?php echo $link['title']; ?></span>
 					</a>

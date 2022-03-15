@@ -72,14 +72,14 @@
 
                     <?php if($question_type !== 'fill_in_the_blank'): ?>
                         <span class="tutor-quiz-answer-sort-icon">
-                            <i class="tutor-bs-d-flex tutor-icon-menu-line tutor-icon-24"></i>
+                            <i class="tutor-d-flex tutor-icon-menu-line tutor-icon-24"></i>
                         </span>
                     <?php endif; ?>
                 </div>
 
                 <?php if ( $question_type !== 'true_false' && $question_type !== 'fill_in_the_blank' ): ?>
-                    <div class="tutor-quiz-answer-trash-wrap tutor-bs-d-flex">
-                        <a href="javascript:;" class="answer-trash-btn answer-trash-btn tutor-bs-d-flex tutor-bs-align-items-center" data-answer-id="<?php echo $answer->answer_id; ?>">
+                    <div class="tutor-quiz-answer-trash-wrap tutor-d-flex">
+                        <a href="javascript:;" class="answer-trash-btn answer-trash-btn tutor-d-flex tutor-align-items-center" data-answer-id="<?php echo $answer->answer_id; ?>">
                             <i class="tutor-icon-garbage-line tutor-icon-24"></i>
                         </a>
                     </div>
@@ -92,7 +92,7 @@
 </div>
 
 <?php if($question_type!='true_false' && ($question_type!='fill_in_the_blank' || empty($answers))): ?>
-    <a href="javascript:;" class="add_question_answers_option tutor-bs-d-flex tutor-bs-align-items-center" data-question-id="<?php echo $question_id; ?>">
+    <a href="javascript:;" class="add_question_answers_option tutor-d-flex tutor-align-items-center" data-question-id="<?php echo $question_id; ?>">
         <i class="tutor-icon-plus-bold-filled tutor-icon-18"></i>
         <?php _e('Add An Option', 'tutor'); ?>
     </a>

@@ -69,7 +69,7 @@ $filters = array(
 			<thead>
 			<tr>
 				<th width="3%">
-					<div class="d-flex">
+					<div class="tutor-d-flex">
 						<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
 					</div>
 				</th>
@@ -105,7 +105,7 @@ $filters = array(
 					<?php foreach ( $students_list as $list ) : ?>
 					<tr>
 						<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
-							<div class="td-checkbox d-flex ">
+							<div class="td-checkbox tutor-d-flex ">
 								<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
 							</div>
 						</td>

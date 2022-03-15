@@ -14,7 +14,7 @@
 		padding: 4px;
 
 		&.d-flex {
-			@include valueWithPrefix(display, flex);
+			display: flex;
 		}
 	}
 
@@ -53,7 +53,7 @@
 
 		&:not(.is-active) {
 			img {
-				@include propertyWithPrefix(filter, grayscale(100%));
+				filter: grayscale(100%);
 				opacity: 0.55;
 			}
 		}

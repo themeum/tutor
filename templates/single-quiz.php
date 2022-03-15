@@ -32,9 +32,9 @@ ob_start();
 ?>
     <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
-    <div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
-        <div class="tutor-topbar-left-item tutor-bs-d-flex"> 
-            <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
+    <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+        <div class="tutor-topbar-left-item tutor-d-flex"> 
+            <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
                 <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
                     <span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
                 </a>
@@ -49,8 +49,8 @@ ob_start();
                 </span>
             </div>
         </div>
-        <div class="tutor-topbar-right-item tutor-bs-d-flex">
-            <div class="tutor-topbar-assignment-details tutor-bs-d-flex align-items-center">
+        <div class="tutor-topbar-right-item tutor-d-flex">
+            <div class="tutor-topbar-assignment-details tutor-d-flex tutor-align-items-center">
                 <?php
                     do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
                 ?>
@@ -80,7 +80,7 @@ ob_start();
         </div>
     </div>
 
-    <div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
+    <div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-10">
         <div class="tutor-mobile-top-nav d-grid">
             <a href="<?php echo get_the_permalink($previous_id); ?>">
                 <span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
@@ -94,7 +94,7 @@ ob_start();
     </div>
 
     <?php ob_start(); ?>
-        <div class="tutor-quiz-wrapper tutor-quiz-wrapper d-flex justify-content-center tutor-mt-100 tutor-pb-100">
+        <div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-100 tutor-pb-100">
             <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
             <?php

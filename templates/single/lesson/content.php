@@ -47,9 +47,9 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
 <?php if ( $is_enrolled ) : ?>
-	<div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
-		<div class="tutor-topbar-left-item tutor-bs-d-flex">
-			<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
+	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+		<div class="tutor-topbar-left-item tutor-d-flex">
+			<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
 				<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
 					<span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
 				</a>
@@ -64,8 +64,8 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 				</span>
 			</div>
 		</div>
-		<div class="tutor-topbar-right-item tutor-bs-d-flex">
-			<div class="tutor-topbar-assignment-details d-flex align-items-center">
+		<div class="tutor-topbar-right-item tutor-d-flex">
+			<div class="tutor-topbar-assignment-details tutor-d-flex tutor-align-items-center">
 				<?php
 					do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' );
 				?>
@@ -97,7 +97,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 			</div>
 		</div>
 	</div>
-	<div class="tutor-mobile-top-navigation tutor-bs-d-block tutor-bs-d-sm-none tutor-my-20 tutor-mx-10">
+	<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-10">
 		<div class="tutor-mobile-top-nav d-grid">
 			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
 				<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
@@ -110,8 +110,8 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 		</div>
 	</div>
 <?php else : ?>
-	<div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
-		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
+	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
 				<span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
 			</a>
@@ -156,7 +156,7 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 
 <div class="tutor-course-spotlight-wrapper">
 	<div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
-		<div class="tab-header tutor-bs-d-flex justify-content-center">
+		<div class="tab-header tutor-d-flex justify-content-center">
 			<div class="tab-header-item flex-center<?php echo (!isset($page_tab) || 'overview'==$page_tab) ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-1" data-tutor-query-string="overview">
 				<span class="tutor-icon-document-alt-filled"></span>
 				<span><?php _e( 'Overview', 'tutor' ); ?></span>
