@@ -155,9 +155,9 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
         </div>
         <div class="tutor-mt-20">
             <?php
-            if ($publish_courses_count > $per_page) {
+            if (($status[0] === 'publish' && $publish_courses_count > $per_page) || ($status[0] === 'pending' && $pending_courses_count > $per_page)) {
                 $pagination_data = array(
-                    'total_items' => $publish_courses_count,
+                    'total_items' => $status[0] === 'publish' ? $publish_courses_count : $pending_courses_count,
                     'per_page'    => $per_page,
                     'paged'       => $paged,
                 );
