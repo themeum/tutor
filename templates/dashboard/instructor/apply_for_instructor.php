@@ -31,12 +31,12 @@
 		</div>
 		<div class="tutor-instructor-application-body">
 		<div class="tutor-ins-app-title tutor-m-auto tutor-text-center">
-			<span class="tutor-app-process-title tutor-text-medium-h3 tutor-color-text-primary">
+			<span class="tutor-app-process-title tutor-fs-3 tutor-fw-medium tutor-color-black">
 			<?php esc_html_e( 'Do you want to start your career as an instructor?', 'tutor' ); ?>
 			</span>
 		</div>
 		<div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-25 tutor-pb-48">
-			<span class="tutor-app-process-subtitle tutor-text-regular-h6 tutor-color-text-subsued">
+			<span class="tutor-app-process-subtitle tutor-fs-6 tutor-fw-normal tutor-color-black-60">
 			<?php esc_html_e( 'Tell us your qualifications, show us your passion, and begin
 			teaching with us!', 'tutor' ); ?>
 			</span>

@@ -66,10 +66,10 @@
 		<!-- Show header action bar if it is single question in backend/frontend dashboard -->
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 			<div class="tutor-qa-sticky-bar">
-				<div class="tutor-color-text-primary back">
+				<div class="tutor-color-black back">
 					<a class="tutor-back-btn" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-						<span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
+						<span class="text text tutro-text-regular-caption tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
 					</a>
 				</div>
 				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-content-end">
@@ -120,16 +120,16 @@
 								<div class="tutor-qna-user">
 									<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
 									<div>
-										<div class="tutor-text-medium-h6 tutor-color-text-title">
+										<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-70">
 											<?php echo $answer->display_name; ?>
 										</div>
-										<div class="tutor-text-regular-caption tutor-color-text-hints">
+										<div class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
 											<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
 										</div>
 									</div>
 								</div>
 
-								<div class="tutor-qna-text tutor-text-regular-caption">
+								<div class="tutor-qna-text tutor-fs-7 tutor-fw-normal">
 									<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
 								</div>
 
@@ -162,8 +162,8 @@
 			<div class="tutor-qna-admin-sidebar">
 				<div class="tutor-qna-user">
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
-					<div class="tutor-text-medium-h4 tutor-color-text-primary tutor-mt-24"><?php echo $question->display_name; ?></div>
-					<div class="tutor-text-medium-body tutor-color-text-subsued tutor-mt-3"><?php echo $question->user_email; ?></div>
+					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mt-24"><?php echo $question->display_name; ?></div>
+					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 tutor-mt-3"><?php echo $question->user_email; ?></div>
 					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 21px;">
 						<?php
 							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
@@ -176,7 +176,7 @@
 								}
 						?>
 							<a href="<?php echo esc_url( $url ); ?>">
-								<i class="color-text-hints <?php echo esc_attr( $social_icon['icon_classes'] ); ?> tutor-icon-20 tutor-hover-wp"></i>
+								<i class="tutor-color-muted <?php echo esc_attr( $social_icon['icon_classes'] ); ?> tutor-icon-20 tutor-hover-wp"></i>
 							</a>
 						<?php endforeach;?>
 					</div>

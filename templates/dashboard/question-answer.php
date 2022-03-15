@@ -31,7 +31,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
 
 <div class="tutor-frontend-dashboard-qna-header tutor-mb-32">
     <div class="tutor-qna-header tutor-d-flex tutor-align-items-center">
-        <div class="tutor-text-medium-h5 tutor-color-text-primary">
+        <div class="tutor-fs-5 tutor-fw-medium tutor-color-black">
             <?php _e('Question & Answer', 'tutor'); ?>
         </div>
     </div>
@@ -48,7 +48,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
 
     <?php // if($view_as=='instructor'): ?>
         <div class="tutor-qna-filter <?php echo $is_instructor ? 'tutor-mt-24' : '' ?>" <?php if(!$is_instructor){ ?> style="justify-content: flex-end;" <?php } ?> >
-            <span class="tutor-text-regular-caption tutor-color-text-subsued"><?php _e('Sort By', 'tutor'); ?>:</span>
+            <span class="tutor-fs-7 tutor-fw-normal tutor-color-black-60"><?php _e('Sort By', 'tutor'); ?>:</span>
             <select class="tutor-form-select tutor-select-redirector">
                 <?php
                     foreach ($qna_tabs as $tab) {

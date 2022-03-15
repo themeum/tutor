@@ -513,3 +513,9 @@
 .tutor-line-clamp-3 {
 	@include tutorLineClamp(3);
 }
+
+// responsive image
+.tutor-img-responsive {
+	max-width: 100%;
+	height: auto;
+}

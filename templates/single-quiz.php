@@ -41,7 +41,7 @@ ob_start();
             </div>
             <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
                 <span class="tutor-icon-quiz-filled tutor-icon-24 tutor-color-text-white tutor-mr-4"></span>
-                <span class="tutor-text-regular-caption tutor-color-design-white">
+                <span class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
                     <?php 
                         esc_html_e( 'Quiz: ', 'tutor' );
                         the_title();
@@ -54,15 +54,15 @@ ob_start();
                 <?php
                     do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
                 ?>
-                <div class="tutor-text-regular-caption tutor-color-design-white">
+                <div class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
                     <span class="tutor-progress-content tutor-color-primary-60">
                         <?php _e('Your Progress:', 'tutor'); ?>
                     </span>
-                    <span class="tutor-text-bold-caption">
+                    <span class="tutor-fs-7 tutor-fw-bold">
                         <?php echo $course_stats['completed_count']; ?>
                     </span> 
                     <?php _e('of ', 'tutor'); ?>
-                    <span class="tutor-text-bold-caption">
+                    <span class="tutor-fs-7 tutor-fw-bold">
                         <?php echo $course_stats['total_count']; ?>
                     </span>
                     (<?php echo $course_stats['completed_percent'] .'%'; ?>)
@@ -85,7 +85,7 @@ ob_start();
             <a href="<?php echo get_the_permalink($previous_id); ?>">
                 <span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
             </a>
-            <div class="tutor-top-nav-title tutor-text-regular-body  tutor-color-text-primary">
+            <div class="tutor-top-nav-title tutor-fs-6 tutor-fw-normal  tutor-color-black">
                 <?php 
                     the_title();
                 ?>

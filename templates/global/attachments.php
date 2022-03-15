@@ -28,7 +28,7 @@ if ( is_array( $attachments ) && count( $attachments ) ) {
         <a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?>>
             <div class="tutor-instructor-card tutor-mb-12">
                 <div class="tutor-icard-content">
-                    <h6 class="tutor-name tutor-text-regular-body tutor-color-text-title">
+                    <h6 class="tutor-name tutor-fs-6 tutor-fw-normal tutor-color-black-70">
                         <?php echo esc_html( $attachment->name ); ?>
                     </h6>
                     <div class="text-regular-small">

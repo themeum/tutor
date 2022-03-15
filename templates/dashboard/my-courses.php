@@ -17,7 +17,7 @@ $courses_per_page = tutor_utils()->get_courses_by_instructor($user->ID, $status,
 $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-16"><?php esc_html_e('My Courses', 'tutor'); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16"><?php esc_html_e('My Courses', 'tutor'); ?></div>
 
 <div class="tutor-dashboard-content-inner my-courses">
     <?php
@@ -67,14 +67,14 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                     </div>
                     <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-20">
                         <div class="tutor-d-flex tutor-mb-7">
-                            <span class="tutor-text-regular-body tutor-color-text-subsued">
+                            <span class="tutor-fs-6 tutor-fw-normal tutor-color-black-60">
                                 <?php echo esc_html(get_the_date()); ?> <?php echo esc_html(get_the_time()); ?>
                             </span>
                         </div>
-                        <div class="list-item-title tutor-text-bold-body tutor-color-text-primary tutor-mb-16">
+                        <div class="list-item-title tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mb-16">
                             <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
                         </div>
-                        <div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-d-flex tutor-mt-12">
+                        <div class="list-item-meta tutor-fs-7 tutor-fw-medium tutor-color-black tutor-d-flex tutor-mt-12">
                             <?php
                             $course_duration = get_tutor_course_duration_context($post->ID, true);
                             $course_students = tutor_utils()->count_enrolled_users_by_course();
@@ -82,13 +82,13 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                             <?php
                             if (!empty($course_duration)) { ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-text-hints tutor-icon-20 tutor-mr-3"></span>
-                                    <span class="tutor-text-medium-caption tutor-color-text-primary"><?php echo $course_duration; ?></span>
+                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-icon-20 tutor-mr-3"></span>
+                                    <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo $course_duration; ?></span>
                                 </div>
                             <?php } ?>
                             <?php if (!empty($course_students)) : ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-user-filled tutor-color-text-hints"></span>
+                                    <span class="meta-icon tutor-icon-user-filled tutor-color-muted"></span>
                                     <span><?php echo $course_students; ?></span>
                                 </div>
                             <?php endif; ?>
@@ -99,19 +99,19 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                     <div class="tutor-course-listing-item-footer has-border tutor-py-8 tutor-pl-20 tutor-pr-8">
                         <div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between">
                             <div class="tutor-d-flex tutor-align-items-center">
-                                <span class="tutor-text-medium-caption tutor-color-text-hints tutor-mr-3">
+                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-3">
                                     <?php esc_html_e('Price:', 'tutor') ?>
                                 </span>
-                                <span class="tutor-text-medium-caption tutor-color-text-primary">
+                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
                                     <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
                                 </span>
                             </div>
                             <div class="tutor-course-listing-item-btns">
                                 <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                    <i class="tutor-icon-edit-filled tutor-icon-26 tutor-color-text-hints"></i>
+                                    <i class="tutor-icon-edit-filled tutor-icon-26 tutor-color-muted"></i>
                                 </a>
                                 <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                    <i class="tutor-icon-delete-stroke-filled tutor-icon-24 tutor-color-text-hints"></i>
+                                    <i class="tutor-icon-delete-stroke-filled tutor-icon-24 tutor-color-muted"></i>
                                 </a>
                             </div>
                         </div>

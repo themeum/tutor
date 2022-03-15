@@ -13,7 +13,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
             <?php
             foreach ($table_columns as $key => $column) {
                 echo '<th>
-                    <span class="text-regular-small tutor-color-text-subsued" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
+                    <span class="text-regular-small tutor-color-black-60" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
                         $column
                     . '</span>
                 </th>';
@@ -81,10 +81,10 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         </div>
                                         <img src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>" />
                                         <div class="">
-                                            <div class="tutor-text-medium-body  tutor-color-text-primary">
+                                            <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
                                                 <?php echo $qna->display_name; ?>
                                             </div>
-                                            <div class="tutor-text-medium-small tutor-color-text-hints" style="margin-top : -2px">
+                                            <div class="tutor-fs-8 tutor-fw-medium tutor-color-muted" style="margin-top : -2px">
                                                 <?php echo human_time_diff(strtotime($qna->comment_date)); ?>
                                             </div>
                                         </div>
@@ -102,7 +102,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         <div class="tutor-input-feedback tutor-has-icon tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
                                             <i class="tutor-icon-bullet-point-filled tutor-input-feedback-icon"></i>
                                             <div class="tutor-qna-desc">
-                                                <div class="tutor-qna-content tutor-text-bold-body tutor-color-text-primary">
+                                                <div class="tutor-qna-content tutor-fs-6 tutor-fw-bold tutor-color-black">
                                                     <?php
                                                     $limit = 60;
                                                     $content = strlen($content) > $limit ? substr($content, 0, $limit) . '...' : $content;
@@ -110,8 +110,8 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                     ?>
                                                 </div>
                                                 <div class="">
-                                                    <span class="tutor-text-medium-small tutor-color-text-subsued"><?php _e('Course'); ?>:</span>
-                                                    <sapn class="tutor-text-regular-small tutor-color-text-subsued"><?php echo $qna->post_title; ?></span>
+                                                    <span class="tutor-fs-8 tutor-fw-medium tutor-color-black-60"><?php _e('Course'); ?>:</span>
+                                                    <sapn class="tutor-fs-7 tutor-fw-normal tutor-color-black-60"><?php echo $qna->post_title; ?></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             case 'reply':
                             ?>
                                 <td data-th="<?php echo $column; ?>">
-                                    <div class="tutor-text-medium-caption tutor-color-text-primary">
+                                    <div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
                                         <?php echo $qna->answer_count; ?>
                                     </div>
                                 </td>

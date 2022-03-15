@@ -40,7 +40,7 @@ if ( $is_instructor ) {
             </div>
             <div class="tutor-instructor-application-body">
                 <div class="tutor-ins-app-title tutor-m-auto tutor-text-center">
-                    <span class="tutor-app-process-title tutor-text-medium-h3 tutor-color-text-primary">
+                    <span class="tutor-app-process-title tutor-fs-3 tutor-fw-medium tutor-color-black">
                     <?php
                         if ( $instructor_status == 'pending' ) {
                             esc_html_e( 'Thank you for registering as an instructor! ', 'tutor' );
@@ -53,7 +53,7 @@ if ( $is_instructor ) {
                     </span>
                 </div>
                 <div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-25 tutor-pb-48">
-                    <span class="tutor-app-process-subtitle tutor-text-regular-h6 tutor-color-text-subsued">
+                    <span class="tutor-app-process-subtitle tutor-fs-6 tutor-fw-normal tutor-color-black-60">
                     <?php
                         if ( $instructor_status == 'pending' ) {
                             esc_html_e( 'We\'ve received your application, and we will review it soon. Please hang tight!', 'tutor' );
