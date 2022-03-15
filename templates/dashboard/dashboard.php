@@ -128,7 +128,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 }
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25 tutor-dashboard-title"><?php _e( 'Dashboard', 'tutor' ); ?></div>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-24 tutor-dashboard-title"><?php _e( 'Dashboard', 'tutor' ); ?></div>
 <!-- <h3 class="tutor-dashboard-title"><?php // _e('Dashboard', 'tutor'); ?></h3> -->
 
 <div class="tutor-dashboard-content-inner">
@@ -235,7 +235,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 
 <?php if ( tutor_utils()->is_instructor() ) : ?>
 	<div class="tutor-frontend-dashboard-course-porgress">
-		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25">
+		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-24">
 			<?php esc_html_e( 'In Progress Course', 'tutor' ); ?>
 		</div>
 		<?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
@@ -317,7 +317,7 @@ if ( count( $instructor_course ) ) {
 	);
 
 	?>
-		<div class="popular-courses-heading-dashboard tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-25 tutor-mt-md-42 tutor-mt-0">
+		<div class="popular-courses-heading-dashboard tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-24 tutor-mt-md-42 tutor-mt-0">
 			<?php esc_html_e( 'My Courses', 'tutor' ); ?>
 			<a style="float:right" class="tutor-view-all-course" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'my-courses' ) ); ?>">
 				<?php esc_html_e( 'View All', 'tutor' ); ?>

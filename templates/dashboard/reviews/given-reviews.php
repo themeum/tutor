@@ -26,7 +26,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 ?>
 
 <div class="tutor-dashboard-content-inner">
-	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e( 'Reviews', 'tutor' ); ?></div>
+	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php _e( 'Reviews', 'tutor' ); ?></div>
 	<?php
 	if ( current_user_can( tutor()->instructor_role ) ) {
 		?>

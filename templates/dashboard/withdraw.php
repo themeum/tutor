@@ -42,7 +42,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-frontend-dashboard-withdrawal tutor-color-text-primary">
-	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php echo __( 'Withdrawal', 'tutor' ); ?></div>
+	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php echo __( 'Withdrawal', 'tutor' ); ?></div>
 
 	<div class="tutor-component-three-col-action">
 		<img src="<?php echo esc_url( $image_base ); ?>wallet.svg" />
@@ -179,7 +179,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 		?>
 		<div class="withdraw-history-table-wrap tutor-tooltip-inside tutor-mt-40">
 			<div class="withdraw-history-table-title">
-				<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"> 
+				<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"> 
 					<?php esc_html_e( 'Withdrawal History', 'tutor' ); ?>
 				</div>
 			</div>
