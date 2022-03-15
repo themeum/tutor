@@ -66,6 +66,9 @@ window.jQuery(document).ready($=>{
                 }
 
                 // Update read unread
+                if (qna_action == 'archived') {
+                    location.reload();
+                }
                 if(qna_action=='read') {
                     let method = new_value==0 ? 'removeClass' : 'addClass';
                     row.find('.tutor-qna-question-col')[method]('is-read');
