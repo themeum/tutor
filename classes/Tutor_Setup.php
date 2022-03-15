@@ -829,8 +829,9 @@ class Tutor_Setup {
 	 * @return mixed
 	 */
 	public static function is_welcome_page_visited(): bool {
-		$visited = get_option( 'tutor_welcome_page_visited' );
-		return $visited ? true : false;
+		return false;
+		// $visited = get_option( 'tutor_welcome_page_visited' );
+		// return $visited ? true : false;
 	}
 	
 	/**
