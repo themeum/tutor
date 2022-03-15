@@ -27,7 +27,7 @@ $order_filter   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 $date_filter    = isset( $_GET['date'] ) ? $_GET['date'] : '';
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-32 tutor-capitalize-text"><?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-capitalize-text"><?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?></div>
 <?php
 // Load filter template.
 tutor_load_template_from_custom_path( tutor()->path . 'templates/dashboard/elements/filters.php' );
