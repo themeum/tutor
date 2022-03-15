@@ -7700,7 +7700,8 @@ class Utils {
 					course.post_title AS course_title,
 					student.user_nicename,
 					student.user_email,
-					student.display_name
+					student.display_name,
+					student.ID
 			FROM   {$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.id
