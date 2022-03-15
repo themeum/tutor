@@ -59,7 +59,7 @@ $image_base = tutor()->url . '/assets/images/';
 ?>
 
 <div class="tutor-dashboard-content-inner">
-	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php echo __( 'Announcement', 'tutor' ); ?></div>
+	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php echo __( 'Announcement', 'tutor' ); ?></div>
 	<!--notice-->
 	<div class="tutor-component-three-col-action new-announcement-wrap">
 		<div class="tutor-announcement-big-icon">

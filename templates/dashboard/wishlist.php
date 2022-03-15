@@ -12,7 +12,7 @@ $wishlists    = tutor_utils()->get_wishlist(null, $offset, $per_page);
 $total_wishlists_count = count(tutor_utils()->get_wishlist(null)); 
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php _e('Wishlist', 'tutor'); ?></div>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php _e('Wishlist', 'tutor'); ?></div>
 <div class="tutor-dashboard-content-inner my-wishlist">
 	<?php if (is_array($wishlists) && count($wishlists)): ?>
 		<div class="tutor-course-listing-grid tutor-course-listing-grid-3">
