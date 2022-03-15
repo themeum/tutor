@@ -49,13 +49,13 @@
                         if ($question_type === 'true_false' || $question_type === 'single_choice')
                         {
                             ?>
-                            <span class="tutor-quiz-answers-mark-correct-wrap tutor-mr-5">
+                            <span class="tutor-quiz-answers-mark-correct-wrap tutor-mr-4">
                                 <input type="radio" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                             </span>
                             <?php
                         } elseif ($question_type === 'multiple_choice'){
                             ?>
-                            <span class="tutor-quiz-answers-mark-correct-wrap tutor-mr-5">
+                            <span class="tutor-quiz-answers-mark-correct-wrap tutor-mr-4">
                                 <input type="checkbox" name="mark_as_correct[<?php echo $answer->belongs_question_id; ?>]" value="<?php echo $answer->answer_id; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" <?php checked(1, $answer->is_correct); ?> >
                             </span>
                             <?php

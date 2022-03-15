@@ -15,7 +15,7 @@
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page" style="margin-left: -20px;">
-	<header class="tutor-option-header tutor-pl-30 tutor-pr-25">
+	<header class="tutor-option-header tutor-pl-32 tutor-pr-24">
 		<div class="title"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 		<div class="search-field">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
@@ -31,7 +31,7 @@
 		</div>
 	</header>
 	<div class="tutor-option-body">
-		<form class="tutor-option-form tutor-py-4 tutor-px-3" id="tutor-option-form">
+		<form class="tutor-option-form tutor-p-4" id="tutor-option-form">
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-option-tabs">
 				<ul class="tutor-option-nav tutor-mt-0">

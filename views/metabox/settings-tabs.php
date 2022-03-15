@@ -60,11 +60,11 @@ $args = $this->args;
 							$value = tutor_utils()->array_get('value', $field);
 
 							if($type=='line_break') {
-								echo '<hr class="tutor-mb-30"/>';
+								echo '<hr class="tutor-mb-32"/>';
 								continue;
 							}
 							?>
-							<div class="tutor-row tutor-mb-30">
+							<div class="tutor-row tutor-mb-32">
 								<?php
 									$second_class = 'tutor-col-12';
 									$_vertical = isset($field['is_vertical']) ? $field['is_vertical'] : false;
@@ -114,7 +114,7 @@ $args = $this->args;
 
 													if($field['type']=='checkbox') {
 														?>
-														<div class="tutor-form-check tutor-mb-10">
+														<div class="tutor-form-check tutor-mb-12">
 															<input id="<?php echo $id_string; ?>" type="checkbox" class="tutor-form-check-input" value="<?php echo isset($option['value']) ? $option['value'] : ''; ?>" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
 															<label for="<?php echo $id_string; ?>" class="text-medium-caption">
 																<?php echo $option['label_title']; ?>
@@ -136,7 +136,7 @@ $args = $this->args;
 
 														if(!empty($option['hint'])) {
 															?>
-															<p class="tutor-text-regular-small tutor-has-icon tutor-color-text-hints tutor-d-flex tutor-mt-10">
+															<p class="tutor-text-regular-small tutor-has-icon tutor-color-text-hints tutor-d-flex tutor-mt-12">
 																<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19 tutor-mr-4"  style="margin-top: -1px;"></i>
 																<?php echo $option['hint']; ?>
 															</p>
@@ -167,7 +167,7 @@ $args = $this->args;
 
 										if ( isset( $field['desc'] ) && 'Content Drip Type' !== $field['label'] ) {
 											?>
-												<p class="tutor-text-regular-small tutor-has-icon tutor-color-text-hints tutor-d-flex tutor-mt-10" style="margin-top: 14px;">
+												<p class="tutor-text-regular-small tutor-has-icon tutor-color-text-hints tutor-d-flex tutor-mt-12" style="margin-top: 14px;">
 													<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19 tutor-mr-4" style="margin-top: -1px;"></i>
 													<?php echo $field['desc']; ?>
 												</p>

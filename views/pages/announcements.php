@@ -80,7 +80,7 @@ $filters = array(
 ?>
 
 <div class="tutor-admin-announcements-list">
-	<div class="tutor-dashboard-content-inner tutor-mt-10 tutor-mb-24 tutor-pr-20">
+	<div class="tutor-dashboard-content-inner tutor-mt-12 tutor-mb-24 tutor-pr-20">
 		<div class="tutor-component-three-col-action new-announcement-wrap">
 			<div class="tutor-announcement-big-icon">
 				<i class="tutor-icon-speaker-filled"></i>
@@ -102,7 +102,7 @@ $filters = array(
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-page-content-wrapper tutor-mt-26 tutor-pr-20">
+	<div class="tutor-admin-page-content-wrapper tutor-mt-24 tutor-pr-20">
 	<?php
 		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
 		$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';

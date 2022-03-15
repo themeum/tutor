@@ -112,7 +112,7 @@
                                 ?>
                                 <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-assignment-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
                                     <div class="tutor-course-content-top">
-                                        <span class="color-text-hints tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-10"></span>
+                                        <span class="color-text-hints tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-2"></span>
                                         <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-assignment-modal' : ''; ?>" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                             <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?>
                                         </a>
@@ -134,7 +134,7 @@
                                 ?>
                                 <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
                                     <div class="tutor-course-content-top">
-                                        <span class="color-text-hints tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-6"></span>
+                                        <span class="color-text-hints tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-8"></span>
                                         <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-lesson-modal' : ''; ?>" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                             <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?>
                                         </a>

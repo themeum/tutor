@@ -29,7 +29,7 @@
                 
                 <textarea name="review" class="tutor-form-control tutor-mt-28" placeholder="<?php _e('Tell us about your own personal experience taking this course. Was it a good match for you?', 'tutor'); ?>"></textarea>
                
-                <div class="tutor-modal-btns tutor-btn-group tutor-mt-30">
+                <div class="tutor-modal-btns tutor-btn-group tutor-mt-32">
                     <button data-tutor-modal-close type="button" class="tutor-modal-close-btn tutor-btn tutor-is-default">
                         <?php _e('Cancel', 'tutor'); ?>
                     </button>

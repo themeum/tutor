@@ -17,7 +17,7 @@ $user = wp_get_current_user();
 		<?php
 			tutor_load_template( 'dashboard.settings.nav-bar', array( 'active_setting_nav' => 'social-profile' ) );
 		?>
-		<div class="tutor-text-medium-h6 tutor-color-text-primary tutor-mt-30"><?php esc_html_e( 'Social Profile Link', 'tutor' ) ?></div>
+		<div class="tutor-text-medium-h6 tutor-color-text-primary tutor-mt-32"><?php esc_html_e( 'Social Profile Link', 'tutor' ) ?></div>
 	</div>
 
 	<form id="user_social_form" action="" method="post" enctype="multipart/form-data">
@@ -30,7 +30,7 @@ $user = wp_get_current_user();
 			$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 		foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 			?>
-						<div class="tutor-row tutor-align-items-center tutor-mb-30 tutor-social-field">
+						<div class="tutor-row tutor-align-items-center tutor-mb-32 tutor-social-field">
 							<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3">
 								<i class="<?php echo esc_html( $social_icon['icon_classes'] ); ?>"></i>
 						<?php echo esc_html( $social_icon['label'] ); ?>

@@ -57,11 +57,11 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 		<div class="tutor-ratingsreviews">
 			<div class="tutor-ratingsreviews-ratings">
 				<div class="tutor-ratingsreviews-ratings-avg tutor-text-center">
-					<div class="text-medium-h1 tutor-color-text-primary tutor-mb-18">
+					<div class="text-medium-h1 tutor-color-text-primary tutor-mb-20">
 						<?php echo number_format( $rating->rating_avg, 1 ); ?>
 					</div>
 					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-d-block', 'lg' ); ?>
-					<div class="tutor-total-ratings-text tutor-text-regular-body text-subsued tutor-mt-10">
+					<div class="tutor-total-ratings-text tutor-text-regular-body text-subsued tutor-mt-12">
 						<span class="tutor-rating-text-part">
 							<?php esc_html_e( 'Total ', 'tutor' ); ?>
 						</span>
@@ -87,7 +87,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 										<?php echo $key; ?>
 									</div>
 								</div>
-								<div class="progress-bar tutor-mt-10" style="--progress-value: <?php echo $rating_count_percent; ?>%">
+								<div class="progress-bar tutor-mt-12" style="--progress-value: <?php echo $rating_count_percent; ?>%">
 									<span class="progress-value"></span>
 								</div>
 							</div>
@@ -114,7 +114,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 		<div class="tutor-col">
 			<?php if($is_enrolled): ?>
 				<button class="tutor-btn write-course-review-link-btn">
-					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-5"></i>
+					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-4"></i>
 					<?php
 						$is_new = !$my_rating || empty($my_rating->rating) || empty($my_rating->comment_content);
 						$is_new ? _e('Write a review', 'tutor') : _e('Edit review', 'tutor');
@@ -146,7 +146,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 </div>
 
 <?php if($is_enrolled): ?>
-	<div class="tutor-course-enrolled-review-wrap tutor-mt-15">
+	<div class="tutor-course-enrolled-review-wrap tutor-mt-16">
 		<div class="tutor-write-review-form" style="display: none;">
 			<form method="post">
 				<div class="tutor-star-rating-container">

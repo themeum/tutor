@@ -25,7 +25,7 @@ if ($product) {
                     <?php echo $symbol . ($sale_price ? $sale_price : $regular_price); ?>
                 </span>
                 <?php if($regular_price && $sale_price && $sale_price!=$regular_price): ?>
-                    <del class="tutor-text-regular-caption tutor-color-text-hints tutor-ml-7">
+                    <del class="tutor-text-regular-caption tutor-color-text-hints tutor-ml-8">
                         <?php echo $symbol . $regular_price; ?>
                     </del>
                 <?php endif; ?>

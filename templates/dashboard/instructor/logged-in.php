@@ -11,11 +11,11 @@ if ( $is_instructor ) {
     $instructor_status = get_user_meta( $user_id, '_tutor_instructor_status', true );
 ?>
     <div class="tutor-container">
-        <div class="tutor-instructor-application-process tutor-pt-50 tutor-pb-50">
+        <div class="tutor-instructor-application-process tutor-pt-48 tutor-pb-48">
             <div class="tutor-app-process-alert">
                 <div style="border:1px solid var(--tutor-color-brand);" class="tutor-primary tutor-py-12 tutor-px-20 tutor-radius-6">
                     <div class="tutor-alert-text tutor-d-flex tutor-align-items-center">
-                    <span class="tutor-icon-circle-outline-info-filled tutor-mr-10 tutor-h4 tutor-color-brand"></span>
+                    <span class="tutor-icon-circle-outline-info-filled tutor-mr-12 tutor-h4 tutor-color-brand"></span>
                     <span>
                     <?php
                         if ( $instructor_status == 'pending' ) {
@@ -30,7 +30,7 @@ if ( $is_instructor ) {
                     </div>
                 </div>
             </div>
-            <div class="tutor-app-process-image tutor-m-auto tutor-pt-30 tutor-pb-45 tutor-d-flex tutor-justify-content-center tutor-align-items-center">
+            <div class="tutor-app-process-image tutor-m-auto tutor-pt-32 tutor-pb-44 tutor-d-flex tutor-justify-content-center tutor-align-items-center">
                 <span class="tutor-app-process-img">
                     <img
                     src="<?php echo esc_url( tutor()->url . 'assets/images/instructor-thankyou.png' ); ?>"
@@ -52,7 +52,7 @@ if ( $is_instructor ) {
                     ?>
                     </span>
                 </div>
-                <div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-25 tutor-pb-50">
+                <div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-25 tutor-pb-48">
                     <span class="tutor-app-process-subtitle tutor-text-regular-h6 tutor-color-text-subsued">
                     <?php
                         if ( $instructor_status == 'pending' ) {
@@ -66,7 +66,7 @@ if ( $is_instructor ) {
                     </span>
                 </div>
                 <div class="tutor-instructor-apply-button tutor-text-center">
-                    <a style="text-decoration:none;" class="tutor-bg-primary tutor-color-text-white tutor-py-15 tutor-px-30 tutor-radius-6" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ) ?>">
+                    <a style="text-decoration:none;" class="tutor-bg-primary tutor-color-text-white tutor-py-16 tutor-px-32 tutor-radius-6" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ) ?>">
                         <?php esc_html_e( 'Go to Dashboard', 'tutor' ); ?>
                     </a>
                 </div>

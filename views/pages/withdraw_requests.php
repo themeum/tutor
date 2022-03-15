@@ -75,7 +75,7 @@ $filters = array(
 	tutor_load_template_from_custom_path( $filters_template, $filters );
 ?>
 <div class="wrap">
-	<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-50">
+	<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-48">
 		<div class="tutor-ui-table-wrapper">
 			<table class="tutor-ui-table tutor-ui-table-responsive tutor-withdraw-request">
 				<thead class="tutor-text-sm tutor-text-400">
@@ -147,7 +147,7 @@ $filters = array(
 												<span class="tutor-color-text-primary tutor-text-medium-body">
 													<?php echo esc_html( $user_data->display_name ); ?>
 												</span>
-												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-10 tutor-d-flex" target="_blank">
+												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-12 tutor-d-flex" target="_blank">
 													<span class="tutor-icon-detail-link-filled tutor-color-text-primary" style="font-size:18px;"></span>
 												</a>
 											</div>
@@ -182,7 +182,7 @@ $filters = array(
 													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['account_number']['value'] ) ); ?>
 												</span>
 												<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top tutor-d-flex">
-													<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-10">
+													<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-12">
 														<?php echo esc_html( $details['account_number']['value'] ); ?>
 													</div>
 													<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-text-regular-small flex-center">
@@ -209,7 +209,7 @@ $filters = array(
 													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['iban']['value'] ) ); ?>
 												</span>
 												<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top  tutor-d-flex">
-													<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-10">
+													<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-12">
 														<?php echo esc_html( $details['iban']['value'] ); ?>
 													</div>
 													<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-text-regular-small flex-center">
@@ -238,7 +238,7 @@ $filters = array(
 											<?php echo esc_html( '' !== $details['paypal_email']['value'] ? tutor_utils()->asterisks_email( $details['paypal_email']['value'] ) : '' ); ?>
 										</span>
 										<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top  tutor-d-flex me-auto">
-											<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-10">
+											<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-12">
 												<?php echo esc_html( $details['paypal_email']['value'] ); ?>
 											</div>
 											<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-text-regular-small flex-center">
@@ -256,7 +256,7 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
 								<div>
-									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-5 justify-content-center">
+									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-4 justify-content-center">
 										<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
 									</span>
 								</div>
@@ -318,7 +318,7 @@ $filters = array(
 	</div>
 
 
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-50">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-48">
 		<?php
 			/**
 			 * Prepare pagination data & load template
@@ -424,10 +424,10 @@ $filters = array(
 							<div class="tutor-modal-title tutor-text-regular-h4 text-primary">
 								<?php esc_html_e( 'Reject Withdrawal?', 'tutor' ); ?>
 							</div>
-							<div id="tutor-admin-withdraw-reject-content" class="tutor-text-regular-body tutor-color-text-subsued tutor-mb-30">
+							<div id="tutor-admin-withdraw-reject-content" class="tutor-text-regular-body tutor-color-text-subsued tutor-mb-32">
 
 							</div>
-							<div class="tutor-form-group-select-md tutor-mb-15">
+							<div class="tutor-form-group-select-md tutor-mb-16">
 								<select class="tutor-form-select" name="reject-type" id="tutor-admin-withdraw-reject-type">
 									<option value="<?php esc_attr_e( 'Invalid Payment Details', 'tutor' ); ?>">
 										<?php esc_html_e( 'Invalid Payment Details', 'tutor' ); ?>

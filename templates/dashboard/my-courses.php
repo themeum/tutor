@@ -17,7 +17,7 @@ $courses_per_page = tutor_utils()->get_courses_by_instructor($user->ID, $status,
 $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-15"><?php esc_html_e('My Courses', 'tutor'); ?></div>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-16"><?php esc_html_e('My Courses', 'tutor'); ?></div>
 
 <div class="tutor-dashboard-content-inner my-courses">
     <?php
@@ -65,16 +65,16 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                         <!-- <img src="<?php //echo esc_url($tutor_course_img); ?>" alt="Course Thumbnail"> -->
                         <div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty(esc_url($tutor_course_img)) ? $placeholder_img : esc_url($tutor_course_img) ?>)"></div>
                     </div>
-                    <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-18">
+                    <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-20">
                         <div class="tutor-d-flex tutor-mb-7">
                             <span class="tutor-text-regular-body tutor-color-text-subsued">
                                 <?php echo esc_html(get_the_date()); ?> <?php echo esc_html(get_the_time()); ?>
                             </span>
                         </div>
-                        <div class="list-item-title tutor-text-bold-body tutor-color-text-primary tutor-mb-15">
+                        <div class="list-item-title tutor-text-bold-body tutor-color-text-primary tutor-mb-16">
                             <a href="<?php echo get_the_permalink(); ?>"><?php the_title(); ?></a>
                         </div>
-                        <div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-d-flex tutor-mt-10">
+                        <div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-d-flex tutor-mt-12">
                             <?php
                             $course_duration = get_tutor_course_duration_context($post->ID, true);
                             $course_students = tutor_utils()->count_enrolled_users_by_course();
@@ -155,9 +155,9 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
         </div>
         <div class="tutor-mt-20">
             <?php
-            if ($publish_courses_count > $per_page) {
+            if (($status[0] === 'publish' && $publish_courses_count > $per_page) || ($status[0] === 'pending' && $pending_courses_count > $per_page)) {
                 $pagination_data = array(
-                    'total_items' => $publish_courses_count,
+                    'total_items' => $status[0] === 'publish' ? $publish_courses_count : $pending_courses_count,
                     'per_page'    => $per_page,
                     'paged'       => $paged,
                 );

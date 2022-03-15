@@ -24,7 +24,7 @@ do_action('tutor_course/single/before/wrap');
             <div class="tutor-course-details-page-main-left">
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
-                <div class="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-30">
+                <div class="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-32">
                     <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
                     <div class="tab-body">
                         <?php

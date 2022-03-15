@@ -11,7 +11,7 @@ const AddonList = () => {
 
 	return (
 		<div
-			className={`tutor-addons-list-items tutor-row tutor-gx-xxl-4 tutor-mt-30 ${allAddons.length < 3 ? 'is-less-items' : ''} ${
+			className={`tutor-addons-list-items tutor-row tutor-gx-xxl-4 tutor-mt-32 ${allAddons.length < 3 ? 'is-less-items' : ''} ${
 				allAddons.length ? 'is-active' : ''
 			}`}
 		>
@@ -25,9 +25,9 @@ const AddonList = () => {
 				</div>	
 			) : (
 				<div className="tutor-col-12">
-					<div className="tutor-addons-card tutor-p-30">
+					<div className="tutor-addons-card tutor-p-32">
 						<div className="tutor-d-flex tutor-flex-column tutor-justify-content-center tutor-text-center">
-							<div className="tutor-mb-30">
+							<div className="tutor-mb-32">
 								<img src={emptyStateImg} alt={__('Empty State Illustration', 'tutor')} />
 							</div>
 							<div className="tutor-text-regular-h6 tutor-color-text-subsued">{__('No Addons Found!', 'tutor')}</div>

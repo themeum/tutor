@@ -92,7 +92,7 @@ export default function () {
                                 <tbody>
                                     <tr>
                                         <td colSpan="2">
-                                            <p className="tutor-text-sm tutor-text-500 tutor-text-dark tutor-mb-3">Be more friendly with social media</p>
+                                            <p className="tutor-text-sm tutor-text-500 tutor-text-dark tutor-mb-4">Be more friendly with social media</p>
                                             <p className="tutor-text-sm">Course: Write PHP Like a Pro: Build a PHP MVC Framework From Scratch</p>
                                         </td>
                                     </tr>
@@ -113,7 +113,7 @@ export default function () {
                                     <tr>
                                         <td colSpan="2">
                                             <p className="tutor-text-sm">Order ID #D798987</p>
-                                            <p className="tutor-text-sm tutor-text-500 tutor-text-dark tutor-mb-3">Be more friendly with social media</p>
+                                            <p className="tutor-text-sm tutor-text-500 tutor-text-dark tutor-mb-4">Be more friendly with social media</p>
                                         </td>
                                     </tr>
                                     <tr>

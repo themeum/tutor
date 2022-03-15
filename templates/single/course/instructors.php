@@ -20,12 +20,12 @@ $instructors = tutor_utils()->get_instructors_by_course();
 if($instructors && count($instructors)) {
 	?>
 	<div class="tutor-mt-65">
-		<div class="tutor-color-text-primary tutor-text-medium-h6 tutor-mb-25">
+		<div class="tutor-color-text-primary tutor-text-medium-h6 tutor-mb-24">
 			<?php _e('About the instructors', 'tutor'); ?>
 		</div>
 		<?php foreach($instructors as $instructor): ?>
-			<div class="tutor-instructor-info-card tutor-mb-15">
-				<div class="tutor-instructor-info-card-body tutor-d-sm-flex tutor-align-items-start tutor-px-30 tutor-py-24">
+			<div class="tutor-instructor-info-card tutor-mb-16">
+				<div class="tutor-instructor-info-card-body tutor-d-sm-flex tutor-align-items-start tutor-px-32 tutor-py-24">
 					<div class="tutor-ins-avatar tutor-flex-shrink-0 tutor-mr-sm-15">
 						<img src="<?php echo get_avatar_url($instructor->ID); ?>" alt="instructor avatar" />
 					</div>
@@ -38,12 +38,12 @@ if($instructors && count($instructors)) {
 								<?php echo $instructor->tutor_profile_job_title; ?>
 							</div>
 						<?php endif; ?>
-						<div class="tutor-ins-summary tutor-text-regular-body tutor-color-text-subsued tutor-mt-18">
+						<div class="tutor-ins-summary tutor-text-regular-body tutor-color-text-subsued tutor-mt-20">
 							<?php echo htmlspecialchars($instructor->tutor_profile_bio); ?>
 						</div>
 					</div>
 				</div>
-				<div class="tutor-instructor-info-card-footer tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-px-30 tutor-py-15">
+				<div class="tutor-instructor-info-card-footer tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-px-32 tutor-py-16">
 					<?php 
 						$instructor_rating = tutor_utils()->get_instructor_ratings($instructor->ID);
 						tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 

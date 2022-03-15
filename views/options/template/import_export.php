@@ -48,7 +48,7 @@ tutor_alert(
 					<span class="file-info"></span>
 				</div>
 			</div>
-			<div class="tutor-option-field-input tutor-mt-15">
+			<div class="tutor-option-field-input tutor-mt-16">
 				<button class="tutor-btn tutor-is-sm tutor_import_options" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Import Settings','tutor'); ?>" data-heading="<?php _e('Import from Previous Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will overwrite all existing settings, please proceed with caution.','tutor'); ?>" id="import_options"><?php _e('Update Settings','tutor'); ?></button>
 			</div>
 		</div>
@@ -71,7 +71,7 @@ tutor_alert(
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
 						<p class="text-medium-small"><?php echo esc_html( $option_data['history_date'] ); ?>
-						<span class="tutor-badge-label tutor-ml-15<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
+						<span class="tutor-badge-label tutor-ml-16<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Restore Settings','tutor'); ?>" data-heading="<?php _e('Restore Previous Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will overwrite all existing settings, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>"><?php _e('Apply','tutor'); ?></button>

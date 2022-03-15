@@ -26,7 +26,7 @@ if ( is_array( $attachments ) && count( $attachments ) ) {
             foreach ($attachments as $attachment){
         ?>
         <a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?>>
-            <div class="tutor-instructor-card tutor-mb-10">
+            <div class="tutor-instructor-card tutor-mb-12">
                 <div class="tutor-icard-content">
                     <h6 class="tutor-name tutor-text-regular-body tutor-color-text-title">
                         <?php echo esc_html( $attachment->name ); ?>

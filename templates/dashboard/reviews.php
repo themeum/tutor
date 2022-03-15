@@ -26,7 +26,7 @@ $reviews     = tutor_utils()->get_reviews_by_instructor( get_current_user_id(), 
 $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 ?>
 	<div class="tutor-dashboard-content-inner">
-		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-15"><?php _e( 'Reviews', 'tutor' ); ?></div>
+		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-16"><?php _e( 'Reviews', 'tutor' ); ?></div>
 		<?php if ( current_user_can( tutor()->instructor_role ) ) : ?>
 			<div class="tutor-dashboard-inline-links">
 				<ul>
@@ -97,7 +97,7 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 									<div class="td-tutor-rating tutor-text-regular-body tutor-color-text-subsued">
 										<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?>
 									</div>
-									<div class="tutor-text-regular-body tutor-color-text-subsued tutor-mt-10">
+									<div class="tutor-text-regular-body tutor-color-text-subsued tutor-mt-12">
 										<?php echo htmlspecialchars( stripslashes( $review->comment_content ) ); ?>
 									</div>
 									<div class="course-name tutor-text-regular-small tutor-color-text-title tutor-mb-0">
