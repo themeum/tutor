@@ -220,13 +220,13 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
-								<div class="td-datetime tutor-fs-7 tutor-fw-normal tutor-color-black">
-									<span class="">
+								<div class="td-datetime">
+									<div class="tutor-fs-7 tutor-color-black tutor-fw-medium tutor-d-block tutor-mb-8">
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
-									</span><br>
-									<span class="">
+									</div>
+									<div class="tutor-fs-8 tutor-color-muted tutor-fw-medium tutor-d-block">
 										<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
-									</span>
+									</div>
 								</div>
 							</td>
 
