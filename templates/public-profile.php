@@ -29,7 +29,7 @@ $layout_key     = $is_instructor ? 'public_profile_layout' : 'student_public_pro
 $profile_layout = tutor_utils()->get_option($layout_key , 'private' );
 $user_type		= $is_instructor ? 'instructor' : 'student';
 
-if ( 'private' === $profile_layout && $is_instructor ) {
+if ( 'private' === $profile_layout ) {
 	// Disable profile access then.
 	wp_redirect( get_home_url() );
 	exit;
@@ -106,14 +106,16 @@ tutor_utils()->tutor_custom_header();
 						?>
 							<span>
 								<span><?php echo $course_count; ?></span> 
-							<?php $course_count > 1 ? _e( 'Courses', 'tutor' ) : _e( 'Course', 'tutor' ); ?>
+								<?php $course_count > 1 ? _e( 'Courses', 'tutor' ) : _e( 'Course', 'tutor' ); ?>
 							</span>
-							<span><span>•</span></span>
+							<span>
+								<span>•</span>
+							</span>
 							<span>
 								<span><?php echo $student_count; ?></span> 
-							<?php $student_count > 1 ? _e( 'Students', 'tutor' ) : _e( 'Student', 'tutor' ); ?>
+								<?php $student_count > 1 ? _e( 'Students', 'tutor' ) : _e( 'Student', 'tutor' ); ?>
 							</span>
-							<?php
+						<?php
 					} else {
 						$enrolled_course = tutor_utils()->get_enrolled_courses_by_user( $user_id );
 						$enrol_count     = is_object( $enrolled_course ) ? $enrolled_course->found_posts : 0;

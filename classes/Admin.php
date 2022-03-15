@@ -88,11 +88,10 @@ class Admin {
 
 		do_action('tutor_admin_register');
 
-		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_settings_page_content'));
-
-		// add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools'));
 		add_submenu_page('tutor', __('Tools', 'tutor'), __('Tools', 'tutor'), 'manage_tutor', 'tutor-tools', array($this, 'tutor_tools'));
-
+		
+		add_submenu_page('tutor', __('Settings', 'tutor'), __('Settings', 'tutor'), 'manage_tutor', 'tutor_settings', array($this, 'tutor_settings_page_content'));
+		
 		if (!$hasPro) {
 			add_submenu_page('tutor', __('Get Pro', 'tutor'), __('<span class="dashicons dashicons-awards tutor-get-pro-text"></span> Get Pro', 'tutor'), 'manage_options', 'tutor-get-pro', array($this, 'tutor_get_pro'));
 		}
