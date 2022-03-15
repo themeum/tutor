@@ -35,7 +35,7 @@
 			<?php esc_html_e( 'Do you want to start your career as an instructor?', 'tutor' ); ?>
 			</span>
 		</div>
-		<div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-25 tutor-pb-48">
+		<div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-24 tutor-pb-48">
 			<span class="tutor-app-process-subtitle tutor-text-regular-h6 tutor-color-text-subsued">
 			<?php esc_html_e( 'Tell us your qualifications, show us your passion, and begin
 			teaching with us!', 'tutor' ); ?>

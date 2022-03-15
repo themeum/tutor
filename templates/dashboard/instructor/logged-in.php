@@ -52,7 +52,7 @@ if ( $is_instructor ) {
                     ?>
                     </span>
                 </div>
-                <div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-25 tutor-pb-48">
+                <div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-24 tutor-pb-48">
                     <span class="tutor-app-process-subtitle tutor-text-regular-h6 tutor-color-text-subsued">
                     <?php
                         if ( $instructor_status == 'pending' ) {
