@@ -55,7 +55,7 @@
 
 <div class="tutor-course-sidebar-card">
 	<!-- Course Entry -->
-	<div class="tutor-course-sidebar-card-body tutor-p-30 <?php echo $login_class; ?>" data-login_url="<?php echo $login_url; ?>">
+	<div class="tutor-course-sidebar-card-body tutor-p-32 <?php echo $login_class; ?>" data-login_url="<?php echo $login_url; ?>">
 		<?php
 		if ( $is_enrolled ) {
 			ob_start();
@@ -71,7 +71,7 @@
 			?>
 			<!-- course progress -->
 			<?php if ( tutor_utils()->get_option('enable_course_progress_bar', true, true) && is_array( $course_progress ) && count( $course_progress ) ) : ?>
-				<div class="tutor-course-progress-wrapper tutor-mb-30" style="width: 100%;">
+				<div class="tutor-course-progress-wrapper tutor-mb-32" style="width: 100%;">
 					<span class="tutor-color-text-primary tutor-text-medium-h6">
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</span>
@@ -86,7 +86,7 @@
 								<?php esc_html_e( 'Complete', 'tutor' ); ?>
 							</span>
 						</div>
-						<div class="progress-bar tutor-mt-10" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
+						<div class="progress-bar tutor-mt-12" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
 							<span class="progress-value"></span>
 						</div>
 					</div>
@@ -148,10 +148,10 @@
 
 			?>
 				<div class="text-regular-caption tutor-color-text-hints tutor-mt-12 tutor-d-flex tutor-justify-content-center">
-					<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-6"></span>
+					<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-8"></span>
 					<span class="tutor-enrolled-info-text">
 					<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
-						<span class="text-bold-small tutor-color-success tutor-ml-3 tutor-enrolled-info-date">
+						<span class="text-bold-small tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
 						<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) ); ?>
 						</span>
 					</span>
@@ -179,7 +179,7 @@
 				?>
 					<div class="tutor-alert tutor-warning tutor-mt-28">
 						<div class="tutor-alert-text">
-							<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
+							<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
 							<span>
 							<?php esc_html_e( 'This course is full right now. We limit the number of students to create an optimized and productive group dynamic.', 'tutor' ); ?>
 							</span>
@@ -221,7 +221,7 @@
 	</div>
 
 	<!-- Course Info -->
-	<div class="tutor-course-sidebar-card-footer tutor-p-30">
+	<div class="tutor-course-sidebar-card-footer tutor-p-32">
 		<ul class="tutor-course-sidebar-card-meta-list tutor-m-0 tutor-pl-0">
 			<?php foreach ( $sidebar_meta as $meta ) : ?>
 				<?php

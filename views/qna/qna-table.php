@@ -168,7 +168,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 <?php if ($context != 'frontend-dashboard-qna-table-student') : ?>
                                                     <li class="tutor-qna-badges tutor-qna-badges-wrapper">
                                                         <a href="#" data-action="archived" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
-                                                            <span class="tutor-icon-msg-archive-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                            <span class="tutor-icon-msg-archive-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
                                                             <span class="text-regular-body tutor-color-text-white">
                                                                 <?php $is_archived ?  _e('Un-archive', 'tutor') : _e('Archive', 'tutor'); ?>
                                                             </span>
@@ -177,7 +177,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 <?php endif; ?>
                                                 <li class="tutor-qna-badges tutor-qna-badges-wrapper">
                                                     <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
-                                                        <span class="tutor-icon-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                        <span class="tutor-icon-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
                                                         <span class="text-regular-body tutor-color-text-white" style="text-align: left;">
                                                             <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
                                                         </span>
@@ -185,7 +185,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 </li>
                                                 <li>
                                                     <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>">
-                                                        <span class="tutor-icon-delete-fill-filled tutor-color-design-white tutor-font-size-24 tutor-mr-5"></span>
+                                                        <span class="tutor-icon-delete-fill-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
                                                         <span class="text-regular-body tutor-color-text-white"><?php _e('Delete', 'tutor'); ?></span>
                                                     </a>
                                                 </li>
@@ -247,7 +247,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
     </tbody>
 </table>
 <?php if ($qna_pagination['total_items'] > $qna_pagination['per_page']) : ?>
-    <div class="tutor-mt-50">
+    <div class="tutor-mt-48">
         <?php
         $pagination_data = array(
             'base'        => !empty($qna_pagination['base']) ? $qna_pagination['base'] : null,

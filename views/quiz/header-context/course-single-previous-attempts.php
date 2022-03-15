@@ -2,7 +2,7 @@
     $passing_grade = tutor_utils()->get_quiz_option(get_the_ID(), 'passing_grade', 0);
 ?>
 <?php if(!empty($back_url)): ?>
-    <div class="tutor-color-text-primary back tutor-mb-22">
+    <div class="tutor-color-text-primary back tutor-mb-24">
         <a class="tutor-back-btn" href="<?php echo $back_url; ?>">
             <span class="tutor-icon-previous-line tutor-color-design-dark"></span>
             <span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
@@ -14,7 +14,7 @@
     <?php _e('Quiz', 'tutor'); ?>
 </div>
 
-<div class="header-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-10 tutor-mb-30">
+<div class="header-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-12 tutor-mb-32">
     <?php echo $quiz_title; ?>
 </div>
 <div class="tutor-d-flex tutor-justify-content-between tutor-py-20 tutor-my-20 tutor-border-top tutor-border-bottom">

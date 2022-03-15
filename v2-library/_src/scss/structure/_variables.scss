@@ -78,6 +78,7 @@ $position-values: (
 $utility-spacer: 4px !default;
 $utility-spacers: (
   0: 0,
+  2: $utility-spacer * 0.5,
   4: $utility-spacer * 1,
   8: $utility-spacer * 2,
   12: $utility-spacer * 3,

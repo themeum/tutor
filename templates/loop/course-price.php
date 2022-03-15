@@ -30,7 +30,7 @@
 
             $price_html = '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.$product->get_price_html() . ' </span></div>';
             $percet_html = '<div class="list-item-booking tutor-d-flex tutor-align-items-center"><div class="booking-progress tutor-d-flex"><div class="circle-progress progress-full" style="--pro:'.$b_total .'%;"></div></div><div class="tutor-text-medium-caption tutor-color-text-primary">'.$b_total . __('% Booked', 'tutor') . '</div></div></div>';
-            $cart_html = '<div class="list-item-button tutor-mt-15 booking-available"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-md tutor-btn-full">'.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </button></div>';
+            $cart_html = '<div class="list-item-button tutor-mt-16 booking-available"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-md tutor-btn-full">'.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </button></div>';
 
             echo wp_kses_post($price_html);
             echo wp_kses_post($percet_html);

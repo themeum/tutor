@@ -7,8 +7,8 @@
     </div>
 
     <div class="new-topic-btn-wrap">
-        <button data-tutor-modal-target="tutor-modal-add-topic" class="tutor-mt-15 create_new_topic_btn tutor-btn tutor-btn-md bordered-btn"> 
-            <i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php _e('Add new topic', 'tutor'); ?>
+        <button data-tutor-modal-target="tutor-modal-add-topic" class="tutor-mt-16 create_new_topic_btn tutor-btn tutor-btn-md bordered-btn"> 
+            <i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-12"></i> <?php _e('Add new topic', 'tutor'); ?>
         </button>
     </div>
 
@@ -67,7 +67,7 @@
                             </button>
                         </div>
                         <div class="tutor-col-auto">
-                            <button type="button" data-action="back" class="tutor-btn tutor-is-default tutor-mr-10">
+                            <button type="button" data-action="back" class="tutor-btn tutor-is-default tutor-mr-12">
                                 <?php _e('Back', 'tutor'); ?>
                             </button>
                             <button type="button" data-action="next" class="tutor-btn tutor-is-primary">

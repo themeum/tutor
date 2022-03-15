@@ -107,7 +107,7 @@ if ( $total_categories && $total_categories > $limit ) {
 				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" />
 			</div>
 		</div>
-		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-30">
+		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-32">
 			<div class="tutor-instructor-form-group">
 				<label for="tutor-instructor-relevant-sort" class="text-hints tutor-text-regular-body">
 					<?php _e( 'Short by', 'tutor' ); ?>

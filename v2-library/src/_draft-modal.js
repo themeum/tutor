@@ -73,14 +73,14 @@ export default () => {
             <div className="row">
                 <div className="col-6">
                     // radio with content
-                    <label className="tutor-radio-select tutor-mb-10" form="radio_aa">
+                    <label className="tutor-radio-select tutor-mb-12" form="radio_aa">
                         <input className="tutor-form-check-input" type="radio" name="radio_aa" id="radio_aa"/>
                         <div className="tutor-radio-select-content">
                             <span className="tutor-radio-select-title">Retry Mode</span>
                             Unlimited attempts on each question. <a href="#">Live Demo</a>
                         </div>
                     </label>
-                    <label className="tutor-radio-select tutor-mb-10" form="radio_aa">
+                    <label className="tutor-radio-select tutor-mb-12" form="radio_aa">
                         <input className="tutor-form-check-input" type="radio" name="radio_aa" id="radio_aa"/>
                         <div className="tutor-radio-select-content">
                             <span className="tutor-radio-select-title">Retry Mode</span>
@@ -104,7 +104,7 @@ export default () => {
                 <div className="col-6">
                     // quiz-builder-question
 
-                    <div className="tutor-quiz-item tutor-mb-15" draggable>
+                    <div className="tutor-quiz-item tutor-mb-16" draggable>
                         <div className="tutor-quiz-item-label">
                             <span className="tutor-quiz-item-draggable fas fa-bars"></span>
                             <h6 className="tutor-quiz-item-name">Popular Uses Of The Internet?</h6>
@@ -119,7 +119,7 @@ export default () => {
                             </button>
                         </div>
                     </div>
-                    <div className="tutor-quiz-item tutor-mb-15" draggable>
+                    <div className="tutor-quiz-item tutor-mb-16" draggable>
                         <div className="tutor-quiz-item-label">
                             <span className="tutor-quiz-item-draggable fas fa-bars"></span>
                             <h6 className="tutor-quiz-item-name">Uniquely pursue interdependent metrics via process-centric e-commerce. Energistically whiteboard.</h6>
@@ -188,17 +188,17 @@ export default () => {
                             <div className="tutor-modal-root">
                                 <div className="tutor-modal-inner">
                                     <div className="tutor-modal-body">
-                                        <h3 className="tutor-modal-title tutor-mb-30">Hi, Welcome back!</h3>
+                                        <h3 className="tutor-modal-title tutor-mb-32">Hi, Welcome back!</h3>
                                         <form action="#">
                                             <div className="tutor-input-group tutor-form-control-has-icon-right tutor-mb-20">
                                                 <input type="text" className="tutor-form-control" placeholder="Username or Email Id"/>
                                                 {/*<span className="las la-calendar-alt tutor-input-group-icon-right"></span>*/}
                                             </div>
-                                            <div className="tutor-input-group tutor-form-control-has-icon-right tutor-mb-30">
+                                            <div className="tutor-input-group tutor-form-control-has-icon-right tutor-mb-32">
                                                 <input type="password" className="tutor-form-control" placeholder="Password"/>
                                                 {/*<span className="las la-calendar-alt tutor-input-group-icon-right"></span>*/}
                                             </div>
-                                            <div className="row tutor-align-items-center tutor-mb-30">
+                                            <div className="row tutor-align-items-center tutor-mb-32">
                                                 <div className="col">
                                                     <div className="tutor-form-check">
                                                         <input id="login-agmnt-1" type="checkbox" className="tutor-form-check-input" name="login-agmnt-1" />
@@ -210,7 +210,7 @@ export default () => {
                                                 </div>
                                             </div>
                                             <button type="submit" className="tutor-btn is-primary tutor-is-block">Sign In</button>
-                                            <div className="tutor-text-center tutor-mt-15">Don’t have an account? <a href="#">Registration Now</a></div>
+                                            <div className="tutor-text-center tutor-mt-16">Don’t have an account? <a href="#">Registration Now</a></div>
                                         </form>
                                     </div>
                                 </div>
@@ -236,19 +236,19 @@ export default () => {
                                         <h3 className="tutor-modal-title">Add Lesson</h3>
                                     </div>
                                     <div className="tutor-modal-body-alt">
-                                        <div className="tutor-mb-30">
+                                        <div className="tutor-mb-32">
                                             <label className="tutor-form-label">Lesson Name</label>
-                                            <div className="tutor-input-group tutor-mb-15">
-                                                <input type="text" className="tutor-form-control tutor-mb-10" placeholder="Installing linux on local machine"/>
+                                            <div className="tutor-input-group tutor-mb-16">
+                                                <input type="text" className="tutor-form-control tutor-mb-12" placeholder="Installing linux on local machine"/>
                                                 <p className="tutor-input-feedback tutor-has-icon">
                                                     <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="tutor-mb-30">
+                                        <div className="tutor-mb-32">
                                             <label className="tutor-form-label">Lesson Summary</label>
-                                            <div className="tutor-input-group tutor-mb-15">
-                                                <textarea className="tutor-form-control tutor-mb-10" placeholder="Lesson Summary"></textarea>
+                                            <div className="tutor-input-group tutor-mb-16">
+                                                <textarea className="tutor-form-control tutor-mb-12" placeholder="Lesson Summary"></textarea>
                                                 <p className="tutor-input-feedback tutor-has-icon">
                                                     <i className="far fa-question-circle tutor-input-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
                                                 </p>
@@ -256,7 +256,7 @@ export default () => {
                                         </div>
 
                                         <div>
-                                            <div className="tutor-form-check tutor-mb-15">
+                                            <div className="tutor-form-check tutor-mb-16">
                                                 <input id="course_privew_check" type="checkbox" className="tutor-form-check-input" name="course_privew_check" />
                                                 <label htmlFor="course_privew_check">Enable Course Preview</label>
                                             </div>
@@ -328,19 +328,19 @@ export default () => {
                                     </div>
 
                                     <div className="tutor-modal-body-alt">
-                                        <div className="tutor-mb-30">
+                                        <div className="tutor-mb-32">
                                             <label className="tutor-form-label">Lesson Name</label>
-                                            <div className="tutor-input-group tutor-mb-15">
-                                                <input type="text" className="tutor-form-control tutor-mb-10" placeholder="Installing linux on local machine"/>
+                                            <div className="tutor-input-group tutor-mb-16">
+                                                <input type="text" className="tutor-form-control tutor-mb-12" placeholder="Installing linux on local machine"/>
                                                 <p className="tutor-input-feedback tutor-has-icon">
                                                     <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="tutor-mb-30">
+                                        <div className="tutor-mb-32">
                                             <label className="tutor-form-label">Lesson Summary</label>
-                                            <div className="tutor-input-group tutor-mb-15">
-                                                <textarea className="tutor-form-control tutor-mb-10" placeholder="Lesson Summary"></textarea>
+                                            <div className="tutor-input-group tutor-mb-16">
+                                                <textarea className="tutor-form-control tutor-mb-12" placeholder="Lesson Summary"></textarea>
                                                 <p className="tutor-input-feedback tutor-has-icon">
                                                     <i className="far fa-question-circle tutor-input-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
                                                 </p>
@@ -348,7 +348,7 @@ export default () => {
                                         </div>
 
                                         <div>
-                                            <div className="tutor-form-check tutor-mb-15">
+                                            <div className="tutor-form-check tutor-mb-16">
                                                 <input id="course_privew_check2" type="checkbox" className="tutor-form-check-input" name="course_privew_check2" />
                                                 <label htmlFor="course_privew_check2">Enable Course Preview</label>
                                             </div>
@@ -427,19 +427,19 @@ export default () => {
                                     </ul>
 
                                     <div className="tutor-modal-body-alt">
-                                        <div className="tutor-mb-30">
+                                        <div className="tutor-mb-32">
                                             <label className="tutor-form-label">Lesson Name</label>
-                                            <div className="tutor-input-group tutor-mb-15">
-                                                <input type="text" className="tutor-form-control tutor-mb-10" placeholder="Installing linux on local machine"/>
+                                            <div className="tutor-input-group tutor-mb-16">
+                                                <input type="text" className="tutor-form-control tutor-mb-12" placeholder="Installing linux on local machine"/>
                                                 <p className="tutor-input-feedback tutor-has-icon">
                                                     <i className="far fa-question-circle tutor-input-feedback-icon"></i> Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="tutor-mb-30">
+                                        <div className="tutor-mb-32">
                                             <label className="tutor-form-label">Lesson Summary</label>
-                                            <div className="tutor-input-group tutor-mb-15">
-                                                <textarea className="tutor-form-control tutor-mb-10" placeholder="Lesson Summary"></textarea>
+                                            <div className="tutor-input-group tutor-mb-16">
+                                                <textarea className="tutor-form-control tutor-mb-12" placeholder="Lesson Summary"></textarea>
                                                 <p className="tutor-input-feedback tutor-has-icon">
                                                     <i className="far fa-question-circle tutor-input-feedback-icon"></i> The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.
                                                 </p>
@@ -447,7 +447,7 @@ export default () => {
                                         </div>
 
                                         <div>
-                                            <div className="tutor-form-check tutor-mb-15">
+                                            <div className="tutor-form-check tutor-mb-16">
                                                 <input id="course_privew_check3" type="checkbox" className="tutor-form-check-input" name="course_privew_check3" />
                                                 <label htmlFor="course_privew_check3">Enable Course Preview</label>
                                             </div>

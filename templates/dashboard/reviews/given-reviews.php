@@ -72,7 +72,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 
 					<div class="individual-dashboard-review-body">
 						<div class="tutor-d-sm-flex tutor-justify-content-between ">
-							<div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-10">
+							<div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-12">
 								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?> 
 							</div>
 							<div class="tutor-given-review-action tutor-text-regular-body tutor-color-text-subsued tutor-d-flex tutor-align-items-center">
@@ -115,7 +115,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 											tutor_utils()->star_rating_generator( tutor_utils()->get_rating_value( $review->rating ) );
 										?>
 									</div>
-									<textarea class="tutor-form-control tutor-mt-10" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php
+									<textarea class="tutor-form-control tutor-mt-12" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php
 										esc_html_e( stripslashes( $review->comment_content ) );
 									?></textarea>
 								</div>

@@ -148,7 +148,7 @@ tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 tutor_load_template_from_custom_path( $filters_template, $filters );
 
 ?>
-<div class="tutor-admin-page-content-wrapper tutor-mt-26 tutor-pr-20">
+<div class="tutor-admin-page-content-wrapper tutor-mt-24 tutor-pr-20">
 	<div class="tutor-ui-table-wrapper">
 		<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
 			<thead class="tutor-text-sm tutor-text-400">
@@ -365,7 +365,7 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 		</table>
 	</div>
 </div>
-<div class="tutor-admin-page-pagination-wrapper tutor-mt-50 tutor-pr-20">
+<div class="tutor-admin-page-pagination-wrapper tutor-mt-48 tutor-pr-20">
 	<?php
 	/**
 	 * Prepare pagination data & load template

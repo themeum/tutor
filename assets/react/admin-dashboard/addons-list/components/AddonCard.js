@@ -7,14 +7,14 @@ const AddonCard = ({ addon, addonId }) => {
 	const { handleOnChange, addonLoading } = useAddonsUpdate();
 
 	return (
-		<div className="tutor-col-lg-6 tutor-col-xl-4 tutor-col-xxl-3 tutor-mb-30">
+		<div className="tutor-col-lg-6 tutor-col-xl-4 tutor-col-xxl-3 tutor-mb-32">
 			<div
 				className={`tutor-addons-card tutor-d-flex tutor-flex-column ${
 					addon.plugins_required.length > 0 ? 'not-subscribed' : ''
 				} tutor-addons-card-${addonId + 1}`}
 				style={{ transitionDelay: `${100 * addonId}ms` }}
 			>
-				<div className="card-body tutor-px-30 tutor-py-40">
+				<div className="card-body tutor-px-32 tutor-py-40">
 					<div className="addon-logo">
 						<img src={addon.thumb_url} alt={addon.name} />
 					</div>
@@ -24,7 +24,7 @@ const AddonCard = ({ addon, addonId }) => {
 					<div className="addon-des tutor-text-regular-body tutor-color-text-subsued tutor-mt-20">{addon.description}</div>
 				</div>
 
-				<div className="card-footer tutor-px-30 tutor-py-20 tutor-d-flex tutor-justify-content-between tutor-align-items-center tutor-mt-auto">
+				<div className="card-footer tutor-px-32 tutor-py-20 tutor-d-flex tutor-justify-content-between tutor-align-items-center tutor-mt-auto">
 					<div className="text-medium-small color-text-hints">
 						<div className="color-text-hints text-medium-small tutor-d-flex">
 							<span>

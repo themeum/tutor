@@ -11,7 +11,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 
 
 
-<div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-d-flex tutor-mt-10 tutor-mb-30">
+<div class="list-item-meta tutor-text-medium-caption tutor-color-text-primary tutor-d-flex tutor-mt-12 tutor-mb-32">
     <?php
         $course_duration = get_tutor_course_duration_context( get_the_ID(), true );
         $course_students = tutor_utils()->count_enrolled_users_by_course();

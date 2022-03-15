@@ -17,14 +17,14 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 
 <?php if ( is_array( $announcements ) && count( $announcements ) ) : ?>
 	<?php foreach ( $announcements as $announcement ) : ?>
-		<div class="tutor-announcement bg-white tutor-mb-30">
+		<div class="tutor-announcement bg-white tutor-mb-32">
 			<div class="tutor-announcement-head tutor-color-text-primary bg-black-03 tutor-px-28 tutor-py-20">
 				<div class="text-medium-h6">
 					<?php echo esc_html( $announcement->post_title ); ?>
 				</div>
-				<div class="tutor-d-flex tutor-mt-14">
-					<div class="tutor-d-flex tutor-mr-md-32 tutor-mr-10">
-						<div class="tutor-avatar-circle tutor-26 tutor-mr-6">
+				<div class="tutor-d-flex tutor-mt-16">
+					<div class="tutor-d-flex tutor-mr-md-32 tutor-mr-12">
+						<div class="tutor-avatar-circle tutor-26 tutor-mr-8">
 							<img src="<?php echo esc_url( get_avatar_url( $announcement->post_author ) ); ?>" alt="instructor avatar" />
 						</div>
 						<div class="text-medium-caption">

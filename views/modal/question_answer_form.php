@@ -42,16 +42,16 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
 	} elseif ($question_type === 'multiple_choice' || $question_type === 'single_choice' || $question_type === 'ordering' ){
 		?>
 
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Answer title', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-15">
+            <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
             </div>
         </div>
 
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Upload Image', 'tutor'); ?>
             </label>
@@ -65,26 +65,26 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             ?>
         </div>
 
-        <div class="tutor-row tutor-mb-30">
+        <div class="tutor-row tutor-mb-32">
             <div class="tutor-col-12">
                 <label class="tutor-form-label">
                     <?php _e('Display format for options', 'tutor'); ?>
                 </label>
             </div>
             <div class="tutor-col-auto">
-                <div class="tutor-form-check tutor-mb-15">
+                <div class="tutor-form-check tutor-mb-16">
                     <input type="radio" id="tutor_quiz_type_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>/>
                     <label for="tutor_quiz_type_text"><?php _e('Only text', 'tutor'); ?></label>
                 </div>
             </div>
             <div class="tutor-col-auto">
-                <div class="tutor-form-check tutor-mb-15">
+                <div class="tutor-form-check tutor-mb-16">
                     <input type="radio" id="tutor_quiz_type_img" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?>/>
                     <label for="tutor_quiz_type_img"><?php _e('Only Image', 'tutor'); ?></label>
                 </div>
             </div>
             <div class="tutor-col-auto">
-                <div class="tutor-form-check tutor-mb-15">
+                <div class="tutor-form-check tutor-mb-16">
                     <input type="radio" id="tutor_quiz_type_img_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?>/>
                     <label for="tutor_quiz_type_img_text"><?php _e('Text &amp; Image both', 'tutor'); ?></label>
                 </div>
@@ -93,11 +93,11 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
 		<?php
 	} elseif ($question_type === 'fill_in_the_blank'){ ?>
 
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Question Title', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-15">
+            <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>">
                 <p class="tutor-input-feedback tutor-has-icon">
                     <i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
@@ -106,11 +106,11 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             </div>
         </div>
         
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Correct Answer(s)', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-15">
+            <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_two_gap_match]" value="<?php echo $answer_two_gap_match; ?>"/>
                 <p class="tutor-input-feedback tutor-has-icon">
                     <i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
@@ -144,25 +144,25 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
 		<?php
 	} elseif ( $question_type === 'matching' ) {
 		?>
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Answer title', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-15">
+            <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>"/>
             </div>
         </div>
 
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Matched Answer title', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-15">
+            <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][matched_answer_title]" value="<?php echo $answer_two_gap_match; ?>"/>
             </div>
         </div>
 
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Upload Image', 'tutor'); ?>
             </label>
@@ -176,26 +176,26 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             ?>
         </div> 
         
-        <div class="tutor-row tutor-mb-30">
+        <div class="tutor-row tutor-mb-32">
             <div class="tutor-col-12">
                 <label class="tutor-form-label">
                     <?php _e('Display format for options', 'tutor'); ?>
                 </label>
             </div>
             <div class="tutor-col-auto">
-                <div class="tutor-form-check tutor-mb-15">
+                <div class="tutor-form-check tutor-mb-16">
                     <input type="radio" id="tutor_quiz_type_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>/>
                     <label for="tutor_quiz_type_text"><?php _e('Only text', 'tutor'); ?></label>
                 </div>
             </div>
             <div class="tutor-col-auto">
-                <div class="tutor-form-check tutor-mb-15">
+                <div class="tutor-form-check tutor-mb-16">
                     <input type="radio" id="tutor_quiz_type_img" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?>/>
                     <label for="tutor_quiz_type_img"><?php _e('Only Image', 'tutor'); ?></label>
                 </div>
             </div>
             <div class="tutor-col-auto">
-                <div class="tutor-form-check tutor-mb-15">
+                <div class="tutor-form-check tutor-mb-16">
                     <input type="radio" id="tutor_quiz_type_img_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?>/>
                     <label for="tutor_quiz_type_img_text"><?php _e('Text &amp; Image both', 'tutor'); ?></label>
                 </div>
@@ -204,7 +204,7 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
 		<?php
 	} elseif ($question_type === 'image_matching'){ 
         ?>
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Upload Image', 'tutor'); ?>
             </label>
@@ -217,11 +217,11 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
                 ), false);
             ?>
         </div> 
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Image matched text', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-15">
+            <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]"  value="<?php echo $answer_title; ?>"/>
             </div>
         </div>
@@ -229,7 +229,7 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
 	} elseif ( $question_type === 'image_answering' ) {
 		?>
 
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Upload Image', 'tutor'); ?>
             </label>
@@ -243,11 +243,11 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             ?>
         </div> 
         
-        <div class="tutor-mb-30">
+        <div class="tutor-mb-32">
             <label class="tutor-form-label">
                 <?php _e('Answer input value', 'tutor'); ?>
             </label>
-            <div class="tutor-input-group tutor-mb-15">
+            <div class="tutor-input-group tutor-mb-16">
                 <input class="tutor-form-control" type="text" name="quiz_answer[<?php echo $question_id; ?>][answer_title]" value="<?php echo $answer_title; ?>"/>
                 <p class="tutor-input-feedback tutor-has-icon">
                     <i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
