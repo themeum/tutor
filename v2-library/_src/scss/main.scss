@@ -10,11 +10,6 @@
 body {
 	font-family: 'Inter', sans-serif !important;
 	letter-spacing: -0.2px;
-	// docz
-	[data-testid] textarea,
-	[data-testid] {
-		// font-family: 'Roboto', sans-serif;
-	}
 }
 
 // These will not be used in core tutor
@@ -23,16 +18,3 @@ body {
 // Load Other modules
 @import './vendors/grid.css';
 @import './tutor-main.scss';
-
-// .tutor-ratio {
-// }
-
-// .tutor-ratio-16x9 {
-// 	position: relative;
-// 	width: 100%;
-// 	--bs-aspect-ratio: 56.25%;
-// }
-// .ratio {
-// 	position: relative;
-// 	width: 100%;
-// }
