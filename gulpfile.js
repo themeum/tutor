@@ -38,6 +38,11 @@ var scss_blueprints = {
 	},
 
 	tutor_v2: { src: 'v2-library/_src/scss/tutor-main.scss', mode: 'expanded', destination: 'tutor.min.css' },
+	tutor_icon: {
+		src: 'v2-library/bundle/fonts/tutor-icon/tutor-icon.css',
+		mode: 'expanded',
+		destination: 'tutor-icon.min.css',
+	},
 
 	tutor_front_dashboard: {
 		src: 'assets/scss/frontend-dashboard/index.scss',
@@ -206,12 +211,12 @@ gulp.task('copy', function() {
 			'!./assets/scss/**',
 			'!./assets/.sass-cache',
 			'!./node_modules/**',
-			'!./v2-library/_src/**',
-			'!./v2-library/bundle/*.*',
-			'!./v2-library/bundle/fonts/tutor-icon/demo-files/**',
-			'!./v2-library/bundle/fonts/tutor-icon/*.html',
-			'!./v2-library/bundle/fonts/lineawesome@1.3.0/**',
-			'!./v2-library/src/**',
+			'!./v2-library/**',
+			// '!./v2-library/bundle/*.*',
+			// '!./v2-library/bundle/fonts/tutor-icon/demo-files/**',
+			// '!./v2-library/bundle/fonts/tutor-icon/*.html',
+			// '!./v2-library/bundle/fonts/lineawesome@1.3.0/**',
+			// '!./v2-library/src/**',
 			'!./test/**',
 			'!./.docz/**',
 			'!./**/*.zip',
@@ -223,6 +228,7 @@ gulp.task('copy', function() {
 			'!./*.lock',
 			'!./*.js',
 			'!./*.json',
+			'!yarn-error.log',
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });

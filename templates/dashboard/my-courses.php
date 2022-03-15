@@ -82,7 +82,7 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                             <?php
                             if (!empty($course_duration)) { ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-icon-20 tutor-mr-3"></span>
+                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-icon-20 tutor-mr-4"></span>
                                     <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo $course_duration; ?></span>
                                 </div>
                             <?php } ?>
@@ -99,7 +99,7 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                     <div class="tutor-course-listing-item-footer has-border tutor-py-8 tutor-pl-20 tutor-pr-8">
                         <div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between">
                             <div class="tutor-d-flex tutor-align-items-center">
-                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-3">
+                                <span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-4">
                                     <?php esc_html_e('Price:', 'tutor') ?>
                                 </span>
                                 <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
