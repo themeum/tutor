@@ -61,7 +61,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
-				<div class="tutor-modal-footer d-flex justify-content-between">
+				<div class="tutor-modal-footer tutor-d-flex tutor-justify-content-between">
 					<button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
 						<?php _e( 'Publish', 'tutor' ); ?>
 					</button>
@@ -88,7 +88,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 						<span class="tutor-icon-line-cross-line tutor-icon-40"></span>
 					</button>
 				</div>
-				<div class="tutor-modal-body tutor-bs-align-items-start">
+				<div class="tutor-modal-body tutor-align-items-start">
 					<div class="view-announcement-icon bg-primary-40 tutor-color-brand-wordpress">
 						<span class="tutor-icon-speaker-filled tutor-color-design-brand"></span>
 					</div>
@@ -120,11 +120,11 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 					</div>
 					<div class="footer-bottom tutor-mt-sm-60 tutor-mt-20">
 						<div class="footer-btns">
-							<button data-tutor-modal-close class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md tutor-bs-d-none tutor-bs-d-sm-block tutor-modal-btn-cancel">
+							<button data-tutor-modal-close class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md tutor-d-none tutor-d-sm-block tutor-modal-btn-cancel">
 								<?php _e( 'Cancel', 'tutor' ); ?>
 							</button>
 						</div>
-						<div class="footer-btns announcement-action-button d-flex justify-content-end tutor-bs-flex-sm-wrap tutor-bs-flex-md-nowrap">
+						<div class="footer-btns announcement-action-button tutor-d-flex tutor-justify-content-end tutor-flex-sm-wrap tutor-flex-md-nowrap">
 							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-modal-btn-delete">
 								<?php _e( 'Delete', 'tutor' ); ?>
 							</button>
@@ -187,7 +187,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 				<tr>
 					<?php if ( is_admin() ) : ?>
 						<th width="2%">
-							<div class="d-flex">
+							<div class="tutor-d-flex">
 								<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input">
 							</div>
 						</th>
@@ -263,7 +263,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Action', 'tutor' ); ?>">
-								<div class="tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
+								<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-end">
 									<div class="inline-flex-center td-action-btns tutor-mr-5">
 										<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress-outline' : 'tutor-btn-disable-outline tutor-btn-outline-fd'?> tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo $details_modal_id; ?>">
 											<?php esc_html_e( 'Details', 'tutor' ); ?>

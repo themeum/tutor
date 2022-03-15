@@ -27,15 +27,15 @@ $material_includes = get_post_meta( $course_id, '_tutor_course_material_includes
     <textarea class="tutor-form-control tutor-textarea-auto-height tutor-mt-10" name="course_target_audience" rows="2" placeholder="<?php esc_attr_e( 'Specify the target audience that will benefit the most from the course. (One line per target audience.)', 'tutor' ); ?>"><?php echo $target_audience; ?></textarea>
 </div>
 
-<div class="tutor-bs-row tutor-mb-30">
-    <div class="tutor-bs-col-12 tutor-mb-10">
+<div class="tutor-row tutor-mb-30">
+    <div class="tutor-col-12 tutor-mb-10">
         <label class="text-medium-body tutor-font-size-16 color-text-primary"><?php _e( 'Total Course Duration', 'tutor' ); ?></label>
     </div>
-    <div class="tutor-bs-col-6 tutor-bs-col-sm-4 tutor-bs-col-md-3">
+    <div class="tutor-col-6 tutor-col-sm-4 tutor-col-md-3">
         <input class="tutor-form-control tutor-mb-5" type="number" min="0" value="<?php echo $durationHours ? $durationHours : '00'; ?>" name="course_duration[hours]">
         <span class="tutor-text-regular-caption color-text-hints"><?php _e( 'Hour', 'tutor' ); ?></span>
     </div>
-    <div class="tutor-bs-col-6 tutor-bs-col-sm-4 tutor-bs-col-md-3">
+    <div class="tutor-col-6 tutor-col-sm-4 tutor-col-md-3">
         <input class="tutor-form-control tutor-mb-5 tutor-number-validation" type="number" min="0" data-min="0" data-max="59" value="<?php echo $durationMinutes ? $durationMinutes : '00'; ?>" name="course_duration[minutes]">
         <span class="tutor-text-regular-caption color-text-hints"><?php _e( 'Minute', 'tutor' ); ?></span>
     </div>

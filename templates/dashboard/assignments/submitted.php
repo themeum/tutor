@@ -34,7 +34,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
         <div class="tutor-text-medium-h6 tutor-mt-6">
             <?php echo get_the_title($assignment_id); ?>
         </div>
-        <div class="assignment-info tutor-mt-10 tutor-bs-d-flex">
+        <div class="assignment-info tutor-mt-10 tutor-d-flex">
             <div class="tutor-text-regular-small tutor-color-text-title">
                 <?php esc_html_e('Submission Deadline', 'tutor'); ?>:
                 <span class="tutor-text-semi-small"><?php echo $deadline; ?></span>

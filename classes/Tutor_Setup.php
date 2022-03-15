@@ -118,7 +118,7 @@ if ( ! defined( 'ABSPATH' ) )
                         $html .= '<div class="step-info">';
                             $html .= '<span class="tutor-text-regular-caption tutor-color-text-hints">'.__('Step', 'tutor').':</span> <strong class="tutor-color-text-primary">'.$i.'/'.count($field_arr).' </strong>';
                         $html .= '</div>';
-                        $html .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-text-subsued tutor-bs-d-flex tutor-bs-align-items-center">'.__('Reset Default', 'tutor').'</div>';
+                        $html .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-text-subsued tutor-d-flex tutor-align-items-center">'.__('Reset Default', 'tutor').'</div>';
                     $html .= '</div>';
                     $html .= '<div class="tutor-setup-content-heading body">';
 
@@ -798,12 +798,12 @@ if ( ! defined( 'ABSPATH' ) )
 
         public function enqueue_scripts() {
             if (isset($_GET['page']) && $_GET['page'] == 'tutor-setup') {
-                wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.css', array(), TUTOR_VERSION );
+                wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
                 wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.css', array(), TUTOR_VERSION );
                 wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/packages/slick/slick-theme.css', array(), TUTOR_VERSION );
                 wp_register_script( 'tutor-slick', tutor()->url . 'assets/packages/slick/slick.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-                wp_register_script( 'tutor-setup-v2', tutor()->url . 'assets/js/tutor-v2.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
-                wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'tutor-slick', 'wp-i18n' ), TUTOR_VERSION, true );
+                wp_register_script( 'tutor-setup-v2', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+                wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.min.js', array( 'jquery', 'tutor-slick', 'wp-i18n' ), TUTOR_VERSION, true );
                 wp_localize_script('tutor-setup', '_tutorobject', array('ajaxurl' => admin_url('admin-ajax.php')));
             }
         }

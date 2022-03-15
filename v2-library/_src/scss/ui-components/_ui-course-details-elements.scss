@@ -422,7 +422,7 @@
 		@include getTypography(600, 18px, 160%);
 		&::after {
 			content: '\e940';
-			font-family: 'tutor-v2-iconpack' !important;
+			font-family: 'tutor' !important;
 			font-size: 2rem;
 			font-weight: normal;
 			position: absolute;

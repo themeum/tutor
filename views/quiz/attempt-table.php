@@ -12,7 +12,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 }
 ?>
 
-<div class="tutor-ui-table-wrapper tutor-my-40">
+<div class="tutor-ui-table-wrapper tutor-my-26">
 	<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
 		<?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) { ?>
 		<thead>
@@ -65,7 +65,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'checkbox':
 									?>
 											<td data-th="<?php _e( 'Mark', 'tutor' ); ?>" class="v-align-top">
-												<div class="td-checkbox d-flex ">
+												<div class="td-checkbox tutor-d-flex ">
 													<input id="tutor-admin-list-<?php echo $attempt->attempt_id; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $attempt->attempt_id; ?>" />
 												</div>
 											</td>

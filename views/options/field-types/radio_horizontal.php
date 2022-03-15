@@ -15,7 +15,7 @@ $field_id = esc_attr( 'field_' . $field_key );
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input">
-		<div class="d-flex radio-thumbnail items-per-row">
+		<div class="tutor-d-flex radio-thumbnail items-per-row">
 			<?php
 			$i = 1;
 			if ( ! empty( $field['options'] ) ) :

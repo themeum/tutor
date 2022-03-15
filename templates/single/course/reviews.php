@@ -60,7 +60,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 					<div class="text-medium-h1 tutor-color-text-primary tutor-mb-18">
 						<?php echo number_format( $rating->rating_avg, 1 ); ?>
 					</div>
-					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-bs-d-block', 'lg' ); ?>
+					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-d-block', 'lg' ); ?>
 					<div class="tutor-total-ratings-text tutor-text-regular-body text-subsued tutor-mt-10">
 						<span class="tutor-rating-text-part">
 							<?php esc_html_e( 'Total ', 'tutor' ); ?>
@@ -110,8 +110,8 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 		</div>
 	<?php endif; ?>
 
-	<div class="tutor-bs-row tutor-mt-40 tutor-mb-20">
-		<div class="tutor-bs-col">
+	<div class="tutor-row tutor-mt-40 tutor-mb-20">
+		<div class="tutor-col">
 			<?php if($is_enrolled): ?>
 				<button class="tutor-btn write-course-review-link-btn">
 					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-5"></i>
@@ -122,7 +122,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 				</button>
 			<?php endif; ?>
 		</div>
-		<div class="tutor-bs-col-auto">
+		<div class="tutor-col-auto">
 			<?php
 				$pagination_data = array(
 					'total_items' => $reviews_total,

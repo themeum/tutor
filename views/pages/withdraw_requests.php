@@ -143,11 +143,11 @@ $filters = array(
 								<div class="td-avatar">
 									<?php echo get_avatar( $user_data->ID, 50 ); ?>
 									<div class="td-avatar-detials">
-											<div class="td-avatar-name d-flex align-items-center">
+											<div class="td-avatar-name tutor-d-flex tutor-align-items-center">
 												<span class="tutor-color-text-primary tutor-text-medium-body">
 													<?php echo esc_html( $user_data->display_name ); ?>
 												</span>
-												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-10 d-flex" target="_blank">
+												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-10 tutor-d-flex" target="_blank">
 													<span class="tutor-icon-detail-link-filled tutor-color-text-primary" style="font-size:18px;"></span>
 												</a>
 											</div>
@@ -181,7 +181,7 @@ $filters = array(
 												<span class="text-medium-small tutor-color-text-primary">
 													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['account_number']['value'] ) ); ?>
 												</span>
-												<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top tutor-bs-d-flex">
+												<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top tutor-d-flex">
 													<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-10">
 														<?php echo esc_html( $details['account_number']['value'] ); ?>
 													</div>
@@ -208,7 +208,7 @@ $filters = array(
 												<span class="text-medium-small tutor-color-text-primary dotedtext">
 													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['iban']['value'] ) ); ?>
 												</span>
-												<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top  tutor-bs-d-flex">
+												<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top  tutor-d-flex">
 													<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-10">
 														<?php echo esc_html( $details['iban']['value'] ); ?>
 													</div>
@@ -237,7 +237,7 @@ $filters = array(
 										<span class="dotedtext">
 											<?php echo esc_html( '' !== $details['paypal_email']['value'] ? tutor_utils()->asterisks_email( $details['paypal_email']['value'] ) : '' ); ?>
 										</span>
-										<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top  tutor-bs-d-flex me-auto">
+										<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top  tutor-d-flex me-auto">
 											<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-10">
 												<?php echo esc_html( $details['paypal_email']['value'] ); ?>
 											</div>
@@ -263,7 +263,7 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Update', 'tutor' ); ?>" class="tutor-withdraw-btns">
 								<?php if ( 'pending' === $list->status ) : ?>
-								<div class="tutor-bs-d-flex td-action-btns">
+								<div class="tutor-d-flex td-action-btns">
 									<button data-tutor-modal-target="tutor-admin-withdraw-approve" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>" class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-admin-open-withdraw-approve-modal">
 										<?php esc_html_e( 'Approve', 'tutor' ); ?>
 									</button>
@@ -277,7 +277,7 @@ $filters = array(
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 									</div>
 								<?php elseif ( 'rejected' === $list->status ) : ?>
-									<div class="tutor-bs-d-flex ">
+									<div class="tutor-d-flex ">
 										<div class="tutor-text-medium-small tutor-color-text-hints">
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
@@ -444,7 +444,7 @@ $filters = array(
 
 							</div>
 						</div>
-						<div class="tutor-modal-btns_ tutor-btn-group_ tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-bs-flex-wrap ">
+						<div class="tutor-modal-btns_ tutor-btn-group_ tutor-d-flex tutor-align-items-center tutor-justify-content-between tutor-flex-wrap ">
 							<button
 								data-tutor-modal-close
 								class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg">

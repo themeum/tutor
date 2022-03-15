@@ -331,10 +331,10 @@
 	}
 
 	.course-settings-tabs-container {
-		@include valueWithPrefix(display, flex);
+		display: flex;
 
 		.settings-tabs-navs-wrap {
-			@include propertyWithPrefix(flex, 0 0 200px);
+			flex: 0 0 200px;
 			background: $black-05;
 			border-top-left-radius: 6px;
 			border-bottom-left-radius: 6px;
@@ -396,7 +396,7 @@
 		.settings-tabs-container {
 			padding: 30px 40px 0px 40px;
 			background: white;
-			@include propertyWithPrefix(flex, 1);
+			flex: 1;
 			border-top-right-radius: 6px;
 			border-bottom-right-radius: 6px;
 			overflow: hidden;

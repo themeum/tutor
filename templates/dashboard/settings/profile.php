@@ -65,7 +65,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 				<span class="dashboard-profile-delete tutor-icon-delete-fill-filled"></span>
 			</span>
 			<div class="tutor_overlay">
-				<button class="tutor_cover_uploader tutor-bs-d-flex tutor-bs-align-items-center">
+				<button class="tutor_cover_uploader tutor-d-flex tutor-align-items-center">
 					<i class="tutor-icon-camera-filled tutor-icon-24"></i>
 					<span><?php echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' ); ?></span>
 				</button>
@@ -112,15 +112,15 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 
 		<?php do_action( 'tutor_profile_edit_input_before' ); ?>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'First Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="first_name" value="<?php esc_attr_e( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 				</label>
@@ -128,15 +128,15 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			</div>
 		</div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'User Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" disabled="disabled" value="<?php esc_attr_e( $user->user_login ); ?>">
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 				</label>
@@ -144,8 +144,8 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			</div>
 		</div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-mb-30">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-mb-30">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
 				</label>
@@ -153,8 +153,8 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			</div>
 		</div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-mb-30">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-mb-30">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php _e( 'Bio', 'tutor' ); ?>
 				</label>
@@ -162,8 +162,8 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 			</div>
 		</div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php _e( 'Display name publicly as', 'tutor' ); ?>
 
@@ -184,8 +184,8 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		</div>
 		<?php do_action( 'tutor_profile_edit_input_after', $user ); ?>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12">
+		<div class="tutor-row">
+			<div class="tutor-col-12">
 				<button type="submit" class="tutor-btn tutor-profile-settings-save">
 					<?php esc_html_e( 'Update Profile', 'tutor' ); ?>
 				</button>

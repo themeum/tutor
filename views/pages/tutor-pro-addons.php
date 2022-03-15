@@ -1,6 +1,6 @@
 <?php
 /**
- * Addons list when Pro is disabled
+ * Addons when Pro is disabled
  */
 ?>
 <main class="tutor-backend-settings-addons-list tutor-dashboard-page" style="margin-left: -20px;">
@@ -136,13 +136,13 @@
                     </div>
                     <div class="addon-jumbotron-content">
                         <h3 class="title tutor-mt-0 tutor-mb-20"><?php esc_html_e( 'Get All of Our Addons for a Single Price', 'tutor' ); ?></h3>
-                        <p class="d-flex tutor-py-5"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-5"><span class="tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Enjoy all popular add-ons under a single price', 'tutor' ); ?>
                         </p>
-                        <p class="d-flex tutor-py-5"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-5"><span class="tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Easy enable options for the features you need', 'tutor' ); ?>
                         </p>
-                        <p class="d-flex tutor-py-5"><span class="icon tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-5"><span class="icon tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Advanced customization options for each add-on', 'tutor' ); ?>
                         </p>
                         <button class="tutor-btn tutor-btn-wordpress tutor-mt-20">
@@ -157,8 +157,8 @@
                 </div>
             </div>
 		</div>
-        <h3 class="title tutor-text-medium-h5 tutor-color-text-primary tutor-mb-10"><?php esc_html_e( 'Addons List', 'tutor' ); ?></h3>
-        <div class="tutor-addons-list-select-filter d-flex justify-content-end align-items-center">
+        <h3 class="title tutor-text-medium-h5 tutor-color-text-primary tutor-mb-10"><?php esc_html_e( 'Add-ons', 'tutor' ); ?></h3>
+        <div class="tutor-addons-list-select-filter tutor-d-flex tutor-justify-content-end tutor-align-items-center">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
 				<span class="tutor-icon-search-filled tutor-input-group-icon"></span>
 				<input
@@ -170,6 +170,6 @@
 				/>
 			</div>
 		</div>
-        <div id="tutor-free-addons" class="tutor-addons-list-items tutor-mt-30" />
+        <div id="tutor-free-addons" class="tutor-addons-list-items tutor-row tutor-gx-xxl-4 tutor-mt-30"></div>
     </div>
 </main>

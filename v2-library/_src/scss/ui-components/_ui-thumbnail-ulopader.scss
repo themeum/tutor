@@ -22,9 +22,9 @@
 		height: 98px;
 		width: var(--width);
 		height: calc(var(--width) / 1.775);
-		@include valueWithPrefix(display, flex);
-		@include propertyWithPrefix(align-items, center);
-		@include propertyWithPrefix(justify-content, center);
+		display: flex;
+		align-items: center;
+		justify-content: center;
 
 		img {
 			width: auto;

@@ -31,7 +31,7 @@ if ( empty( $course_benefits ) ) {
 		</div>
 		<ul class="tutor-course-details-widget-list tutor-m-0 tutor-mt-16">
 			<?php foreach ($course_benefits as $benefit): ?>
-				<li class="tutor-bs-d-flex tutor-color-text-primary tutor-text-regular-body tutor-mb-10">
+				<li class="tutor-d-flex tutor-color-text-primary tutor-text-regular-body tutor-mb-10">
 					<span class="tutor-icon-mark-filled tutor-color-design-brand tutor-mr-5"></span>
 					<span><?php echo $benefit; ?></span>
 				</li>

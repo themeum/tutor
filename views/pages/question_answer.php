@@ -46,7 +46,7 @@
 	tutor_load_template_from_custom_path( $filters_template, $filters );
 ?>
 
-<div class="wrap tutor-mt-50">
+<div class="wrap tutor-mt-26">
 	<?php
 		tutor_load_template_from_custom_path(tutor()->path . '/views/qna/qna-table.php', array(
 			'qna_list' => $qna_list,

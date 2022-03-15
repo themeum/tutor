@@ -97,7 +97,7 @@ $filters = array(
 			<thead>
 			<tr>
 				<th width="3%">
-					<div class="d-flex">
+					<div class="tutor-d-flex">
 						<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
 					</div>
 				</th>
@@ -144,7 +144,7 @@ $filters = array(
 						?>
 						<tr>
 							<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
-								<div class="td-checkbox d-flex ">
+								<div class="td-checkbox tutor-d-flex ">
 									<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
 								</div>
 							</td>
@@ -241,8 +241,8 @@ $filters = array(
 
 				<?php tutor_nonce_field(); ?>
 				<?php do_action( 'tutor_add_new_instructor_form_fields_before' ); ?>
-				<div class="tutor-bs-row ">
-					<div class="tutor-bs-col">
+				<div class="tutor-row ">
+					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'First Name', 'tutor' ); ?>
 						</label>
@@ -250,7 +250,7 @@ $filters = array(
 							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
-					<div class="tutor-bs-col">
+					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 						</label>
@@ -259,8 +259,8 @@ $filters = array(
 						</div>
 					</div>
 				</div>
-				<div class="tutor-bs-row ">
-					<div class="tutor-bs-col">
+				<div class="tutor-row ">
+					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'User Name', 'tutor' ); ?>
 						</label>
@@ -268,7 +268,7 @@ $filters = array(
 							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>" pattern="^[a-zA-Z0-9_]*$" title="<?php esc_attr_e( 'Only alphanumeric and underscore are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
-					<div class="tutor-bs-col">
+					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 						</label>
@@ -277,8 +277,8 @@ $filters = array(
 						</div>
 					</div>
 				</div>
-				<div class="tutor-bs-row ">
-					<div class="tutor-bs-col">
+				<div class="tutor-row ">
+					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Email Address', 'tutor' ); ?>
 						</label>
@@ -287,8 +287,8 @@ $filters = array(
 						</div>
 					</div>
 				</div>
-				<div class="tutor-bs-row ">
-					<div class="tutor-bs-col">
+				<div class="tutor-row ">
+					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Password', 'tutor' ); ?>
 						</label>
@@ -297,7 +297,7 @@ $filters = array(
 							<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control tutor-mb-10" minlength="8" placeholder="*******" autocomplete="new-password" required/>
 						</div>
 					</div>
-					<div class="tutor-bs-col">
+					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
 						</label>
@@ -308,8 +308,8 @@ $filters = array(
 					</div>
 				</div>
 				<?php do_action( 'tutor_add_new_instructor_form_fields_after' ); ?>
-				<div class="tutor-bs-row ">
-					<div class="tutor-bs-col">
+				<div class="tutor-row ">
+					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Bio', 'tutor' ); ?>
 							<span class="text-medium-caption" style="color: #999ead;">
@@ -321,10 +321,10 @@ $filters = array(
 						</div>
 					</div>
 				</div>
-				<div class="tutor-bs-row " id="tutor-new-instructor-form-response"></div>
+				<div class="tutor-row " id="tutor-new-instructor-form-response"></div>
 			  </div>
 			<div class="tutor-modal-footer">
-				<div class="tutor-bs-d-flex tutor-bs-justify-content-between">
+				<div class="tutor-d-flex tutor-justify-content-between">
 					<div class="col">
 						<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn-loading" name="tutor_register_instructor_btn">
 							<?php esc_html_e( 'Add Instructor', 'tutor' ); ?>

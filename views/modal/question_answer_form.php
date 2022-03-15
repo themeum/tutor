@@ -65,25 +65,25 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             ?>
         </div>
 
-        <div class="tutor-bs-row tutor-mb-30">
-            <div class="tutor-bs-col-12">
+        <div class="tutor-row tutor-mb-30">
+            <div class="tutor-col-12">
                 <label class="tutor-form-label">
                     <?php _e('Display format for options', 'tutor'); ?>
                 </label>
             </div>
-            <div class="tutor-bs-col-auto">
+            <div class="tutor-col-auto">
                 <div class="tutor-form-check tutor-mb-15">
                     <input type="radio" id="tutor_quiz_type_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>/>
                     <label for="tutor_quiz_type_text"><?php _e('Only text', 'tutor'); ?></label>
                 </div>
             </div>
-            <div class="tutor-bs-col-auto">
+            <div class="tutor-col-auto">
                 <div class="tutor-form-check tutor-mb-15">
                     <input type="radio" id="tutor_quiz_type_img" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?>/>
                     <label for="tutor_quiz_type_img"><?php _e('Only Image', 'tutor'); ?></label>
                 </div>
             </div>
-            <div class="tutor-bs-col-auto">
+            <div class="tutor-col-auto">
                 <div class="tutor-form-check tutor-mb-15">
                     <input type="radio" id="tutor_quiz_type_img_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?>/>
                     <label for="tutor_quiz_type_img_text"><?php _e('Text &amp; Image both', 'tutor'); ?></label>
@@ -176,25 +176,25 @@ $answer_two_gap_match   = ! empty($old_answer->answer_two_gap_match) ? stripslas
             ?>
         </div> 
         
-        <div class="tutor-bs-row tutor-mb-30">
-            <div class="tutor-bs-col-12">
+        <div class="tutor-row tutor-mb-30">
+            <div class="tutor-col-12">
                 <label class="tutor-form-label">
                     <?php _e('Display format for options', 'tutor'); ?>
                 </label>
             </div>
-            <div class="tutor-bs-col-auto">
+            <div class="tutor-col-auto">
                 <div class="tutor-form-check tutor-mb-15">
                     <input type="radio" id="tutor_quiz_type_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text" <?php echo $answer_view_format ? checked('text', $answer_view_format) : 'checked="checked"' ?>/>
                     <label for="tutor_quiz_type_text"><?php _e('Only text', 'tutor'); ?></label>
                 </div>
             </div>
-            <div class="tutor-bs-col-auto">
+            <div class="tutor-col-auto">
                 <div class="tutor-form-check tutor-mb-15">
                     <input type="radio" id="tutor_quiz_type_img" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="image" <?php echo checked('image', $answer_view_format) ?>/>
                     <label for="tutor_quiz_type_img"><?php _e('Only Image', 'tutor'); ?></label>
                 </div>
             </div>
-            <div class="tutor-bs-col-auto">
+            <div class="tutor-col-auto">
                 <div class="tutor-form-check tutor-mb-15">
                     <input type="radio" id="tutor_quiz_type_img_text" class="tutor-form-check-input" name="quiz_answer[<?php echo $question_id; ?>][answer_view_format]" value="text_image" <?php echo checked('text_image', $answer_view_format) ?>/>
                     <label for="tutor_quiz_type_img_text"><?php _e('Text &amp; Image both', 'tutor'); ?></label>

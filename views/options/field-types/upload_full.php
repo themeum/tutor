@@ -3,7 +3,7 @@ $default      = isset( $field['default'] ) ? $field['default'] : '';
 $option_value = $this->get( $field['key'], $default );
 $field_id     = 'field_' . $field['key'];
 ?>
-<div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>">
+<div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label">
 		<h5 class="label"><?php echo esc_attr( $field['label'] ); ?></h5>
 	</div>

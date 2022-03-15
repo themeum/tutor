@@ -72,7 +72,7 @@
 						<span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
 					</a>
 				</div>
-				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
+				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-content-end">
 
 					<!-- Show meta data actions if it is instructor view -->
 					<?php if ( ! $is_user_asker ) : ?>
@@ -146,7 +146,7 @@
 			</div>
 			<div class="tutor-qa-reply tutor-mt-10 tutor-mb-25" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
-				<div class="tutor-bs-d-flex tutor-bs-align-items-center">
+				<div class="tutor-d-flex tutor-align-items-center">
 					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
 						<?php esc_html_e( 'Reply', 'tutor' ); ?>
 					</button>
@@ -164,7 +164,7 @@
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
 					<div class="tutor-text-medium-h4 tutor-color-text-primary tutor-mt-22"><?php echo $question->display_name; ?></div>
 					<div class="tutor-text-medium-body tutor-color-text-subsued tutor-mt-3"><?php echo $question->user_email; ?></div>
-					<div class="tutor-user-social tutor-bs-d-flex tutor-mt-24" style="column-gap: 21px;">
+					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 21px;">
 						<?php
 							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 
@@ -184,7 +184,7 @@
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
-							<div class="tutor-bs-d-flex justify-content-between align-items-center">
+							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
 								<span class="color-text-primary text-medium-body tutor-pl-10">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
@@ -207,7 +207,7 @@
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
-							<div class="tutor-bs-d-flex justify-content-between align-items-center">
+							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
 								<span class="color-text-primary text-medium-body tutor-pl-10">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>

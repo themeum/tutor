@@ -25,8 +25,8 @@ if($instructors && count($instructors)) {
 		</div>
 		<?php foreach($instructors as $instructor): ?>
 			<div class="tutor-instructor-info-card tutor-mb-15">
-				<div class="tutor-instructor-info-card-body tutor-bs-d-sm-flex tutor-bs-align-items-start tutor-px-30 tutor-py-24">
-					<div class="tutor-ins-avatar tutor-bs-flex-shrink-0 tutor-mr-sm-15">
+				<div class="tutor-instructor-info-card-body tutor-d-sm-flex tutor-align-items-start tutor-px-30 tutor-py-24">
+					<div class="tutor-ins-avatar tutor-flex-shrink-0 tutor-mr-sm-15">
 						<img src="<?php echo get_avatar_url($instructor->ID); ?>" alt="instructor avatar" />
 					</div>
 					<div class="tutor-ins-rest">
@@ -43,12 +43,12 @@ if($instructors && count($instructors)) {
 						</div>
 					</div>
 				</div>
-				<div class="tutor-instructor-info-card-footer tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-px-30 tutor-py-15">
+				<div class="tutor-instructor-info-card-footer tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-px-30 tutor-py-15">
 					<?php 
 						$instructor_rating = tutor_utils()->get_instructor_ratings($instructor->ID);
 						tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 
 					?>
-					<div class="tutor-ins-meta tutor-bs-d-flex">
+					<div class="tutor-ins-meta tutor-d-flex">
 						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center">
 							<span class="tutor-icon-30 tutor-icon-user-filled"></span>
 							<span class="text-bold-body tutor-color-text-primary tutor-mr-4">

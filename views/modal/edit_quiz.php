@@ -31,7 +31,7 @@
                             <?php echo stripslashes($question->question_title); ?>
                         </h6>
                     </div>
-                    <div class="tutor-quiz-item-action tutor-bs-align-items-center">
+                    <div class="tutor-quiz-item-action tutor-align-items-center">
                         <div class="tutor-quiz-item-type">
                             <?php
                                 $type = tutor_utils()->get_question_types($question->question_type);
@@ -77,11 +77,11 @@
     <div class="tutor-mb-30">
         <label class="tutor-form-label"><?php _e('Time Limit', 'tutor'); ?></label>
         <div class="tutor-input-group">
-            <div class="tutor-bs-row tutor-bs-align-items-center">
-                <div class="tutor-bs-col-sm-4 tutor-bs-col-md-3">
+            <div class="tutor-row tutor-align-items-center">
+                <div class="tutor-col-sm-4 tutor-col-md-3">
                     <input type="number" class="tutor-form-control" min="0" name="quiz_option[time_limit][time_value]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_value', 0) ?>">
                 </div>
-                <div class="tutor-bs-col-sm-5 tutor-bs-col-md-4">
+                <div class="tutor-col-sm-5 tutor-col-md-4">
                     <?php $limit_time_type = tutor_utils()->get_quiz_option($quiz_id, 'time_limit.time_type', 'minutes') ?>
                     <select name="quiz_option[time_limit][time_type]" class="tutor-form-select">
                         <option value="seconds" <?php selected('seconds', $limit_time_type); ?>><?php _e('Seconds', 'tutor'); ?></option>
@@ -91,7 +91,7 @@
                         <option value="weeks" <?php selected('weeks', $limit_time_type); ?>><?php _e('Weeks', 'tutor'); ?></option>
                     </select>
                 </div>
-                <div class="tutor-bs-col-sm-12 tutor-bs-col-md-5 tutor-mt-4 tutor-mb-4">
+                <div class="tutor-col-sm-12 tutor-col-md-5 tutor-mt-4 tutor-mb-4">
                     <label class="tutor-form-toggle">
                         <input type="checkbox" class="tutor-form-toggle-input" value="1" name="quiz_option[hide_quiz_time_display]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_quiz_time_display')); ?> />
                         <span class="tutor-form-toggle-control"></span> <?php _e('Hide quiz time - display', 'tutor'); ?>
@@ -181,26 +181,26 @@
 
     <div class="tutor-quiz-advance-settings tutor-bg-white tutor-cursor-pointer tutor-mb-30">
         <!-- Header -->
-        <div class="tutor-bs-row tutor-bs-align-items-center tutor-quiz-advance-header tutor-bs-g-0">
-            <div class="tutor-bs-col">
-                <div class="tutor-bs-row tutor-bs-align-items-center">
-                    <div class="tutor-bs-col-auto">
+        <div class="tutor-row tutor-align-items-center tutor-quiz-advance-header tutor-g-0">
+            <div class="tutor-col">
+                <div class="tutor-row tutor-align-items-center">
+                    <div class="tutor-col-auto">
                         <span><i class="tutor-icon-settings-filled"></i></span>
                     </div>
-                    <div class="tutor-bs-col tutor-padding-0 tutor-text-medium-h6 tutor-color-text-title">
+                    <div class="tutor-col tutor-padding-0 tutor-text-medium-h6 tutor-color-text-title">
                         <?php _e('Advance Settings', 'tutor'); ?>
                     </div>
                 </div>
             </div>
-            <div class="tutor-bs-col-auto">
+            <div class="tutor-col-auto">
                 <i class="tutor-icon-angle-down-filled tutor-mr-30"></i>
             </div>
         </div>
 
         <!-- Fields -->
         <div class="tutor-quiz-advance-content tutor-padding-32">
-            <div class="tutor-quiz-advance-settings-fields tutor-bs-row">
-                <div class="tutor-bs-col-12 tutor-mb-30">
+            <div class="tutor-quiz-advance-settings-fields tutor-row">
+                <div class="tutor-col-12 tutor-mb-30">
                     <label class="tutor-form-toggle">
                         <input type="checkbox" class="tutor-form-toggle-input" value="1" name="quiz_option[quiz_auto_start]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'quiz_auto_start')); ?> />
                         <span class="tutor-form-toggle-control"></span> <?php _e('Quiz Auto Start', 'tutor'); ?>
@@ -210,7 +210,7 @@
                     </p>
                 </div>
 
-                <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-mb-35">
+                <div class="tutor-col-12 tutor-col-sm-6 tutor-mb-35">
                     <h4><?php _e('Question Layout', 'tutor'); ?></h4>
                     <select class="tutor-form-select" name="quiz_option[question_layout_view]">
                         <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
@@ -220,7 +220,7 @@
                     </select>
                 </div>
 
-                <div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-mb-35">
+                <div class="tutor-col-12 tutor-col-sm-6 tutor-mb-35">
                     <h4><?php _e('Questions Order', 'tutor'); ?></h4>
                     <select class="tutor-form-select" name="quiz_option[questions_order]">
                         <option value="rand" <?php selected('rand', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
@@ -230,7 +230,7 @@
                     </select>
                 </div>
 
-                <div class="tutor-bs-col-12 tutor-mb-30">
+                <div class="tutor-col-12 tutor-mb-30">
                     <label class="tutor-form-toggle">
                         <input type="checkbox" class="tutor-form-toggle-input" value="1" name="quiz_option[hide_question_number_overview]" <?php checked('1', tutor_utils()->get_quiz_option($quiz_id, 'hide_question_number_overview')); ?> />
                         <span class="tutor-form-toggle-control"></span> <?php _e('Hide question number', 'tutor'); ?></span>
@@ -238,13 +238,13 @@
                     <p class="help"><?php _e('Show/hide question number during attempt.', 'tutor'); ?></p>
                 </div>
 
-                <div class="tutor-bs-col-12 tutor-mb-30">
+                <div class="tutor-col-12 tutor-mb-30">
                     <h4><?php _e('Short answer characters limit', 'tutor'); ?></h4>
                     <input style="max-width: 135px;" class="tutor-form-control" type="number" name="quiz_option[short_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'short_answer_characters_limit', 200); ?>" min="0">
                     <p class="help"><?php _e('Student will place answer in short answer question type within this characters limit.', 'tutor'); ?></p>
                 </div>
 
-                <div class="tutor-bs-col-12">
+                <div class="tutor-col-12">
                     <h4><?php _e('Open-Ended/Essay questions answer character limit', 'tutor'); ?></h4>
                     <input style="max-width: 135px;" class="tutor-form-control" type="number" name="quiz_option[open_ended_answer_characters_limit]" value="<?php echo tutor_utils()->get_quiz_option($quiz_id, 'open_ended_answer_characters_limit', 500); ?>" min="0">
                     <p class="help"><?php _e('Students will place the answer in the Open-Ended/Essay question type within this character limit.', 'tutor'); ?></p>
