@@ -81,40 +81,40 @@ $filters = array(
 				<thead class="tutor-text-sm tutor-text-400">
 					<tr>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Request Date', 'tutor' ); ?>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<span>
 									<?php esc_html_e( 'Request By', 'tutor' ); ?>
 								</span>
-								<span class="tutor-icon-ordering-a-to-z-filled tutor-icon-18 a-to-z-sort-icon tutor-color-text-subsued"></span>
+								<span class="tutor-icon-ordering-a-to-z-filled tutor-icon-18 a-to-z-sort-icon tutor-color-black-60"></span>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Withdraw Method', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Withdraw Details', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Amount', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Update', 'tutor' ); ?>
 							</div>
 						</th>
@@ -134,7 +134,7 @@ $filters = array(
 							?>
 						<tr>
 							<td data-th="<?php esc_html_e( 'Request Date', 'tutor' ); ?>">
-								<div class="tutor-text-medium-caption tutor-color-text-primary">
+								<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 									<?php esc_html_e( tutor_get_formated_date( get_option( 'date_format' ), $list->created_at ) ); ?>,<br>
 									<?php esc_html_e( tutor_get_formated_date( get_option( 'time_format' ), $list->created_at ) ); ?>
 								</div>
@@ -144,21 +144,21 @@ $filters = array(
 									<?php echo get_avatar( $user_data->ID, 50 ); ?>
 									<div class="td-avatar-detials">
 											<div class="td-avatar-name tutor-d-flex tutor-align-items-center">
-												<span class="tutor-color-text-primary tutor-text-medium-body">
+												<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
 													<?php echo esc_html( $user_data->display_name ); ?>
 												</span>
 												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-12 tutor-d-flex" target="_blank">
-													<span class="tutor-icon-detail-link-filled tutor-color-text-primary" style="font-size:18px;"></span>
+													<span class="tutor-icon-detail-link-filled tutor-color-black" style="font-size:18px;"></span>
 												</a>
 											</div>
-											<span class="color-text-title tutor-tutor-text-regular-small">
+											<span class="color-text-title tutor-tutor-fs-7 tutor-fw-normal">
 												<?php echo esc_html( $user_data->user_email ); ?>
 											</span>
 									</div>
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Withdraw Method', 'tutor' ); ?>" class="v-align-top">
-								<div class="tutor-text-medium-caption tutor-color-text-primary" style="">
+								<div class="tutor-fs-7 tutor-fw-medium tutor-color-black" style="">
 									<?php echo esc_html( $details['withdraw_method_name'] ); ?>
 								</div>
 							</td>
@@ -166,26 +166,26 @@ $filters = array(
 								<?php if ( 'bank_transfer_withdraw' === $details['withdraw_method_key'] ) : ?>
 									<ul class="tutor-table-inside-table">
 										<li>
-											<span class="tutor-text-regular-small tutor-color-text-hints">
+											<span class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
 												<?php esc_html_e( 'Name:', 'tutor' ); ?>
 											</span>
-											<span class="text-medium-small tutor-color-text-primary">
+											<span class="text-medium-small tutor-color-black">
 												<?php echo esc_html( $details['account_name']['value'] ); ?>
 											</span>
 										</li>
 										<li>
-											<span class="tutor-text-regular-small tutor-color-text-hints">
+											<span class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
 												<?php esc_html_e( 'A/C Number:', 'tutor' ); ?>
 											</span>
 											<div class="tooltip-wrap">
-												<span class="text-medium-small tutor-color-text-primary">
+												<span class="text-medium-small tutor-color-black">
 													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['account_number']['value'] ) ); ?>
 												</span>
-												<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top tutor-d-flex">
-													<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-12">
+												<div class="tutor-tooltip-wrap-area tutor-tutor-fs-7 tutor-fw-normal tooltip-txt tooltip-top tutor-d-flex">
+													<div class="withdraw-tutor-tooltip-content tutor-tutor-fs-7 tutor-fw-normal flex-center tutor-mr-12">
 														<?php echo esc_html( $details['account_number']['value'] ); ?>
 													</div>
-													<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-text-regular-small flex-center">
+													<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-fs-7 tutor-fw-normal flex-center">
 														<span class="icon tutor-icon-copy-filled"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
@@ -193,26 +193,26 @@ $filters = array(
 											</div>
 										</li>
 										<li>
-											<span class="tutor-text-regular-small tutor-color-text-hints">
+											<span class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
 												<?php esc_html_e( 'Bank Name:', 'tutor' ); ?>
 											</span>
-											<span class="text-medium-small tutor-color-text-primary">
+											<span class="text-medium-small tutor-color-black">
 												<?php echo esc_html( $details['bank_name']['value'] ); ?>
 											</span>
 										</li>
 										<li>
-											<span class="tutor-text-regular-small tutor-color-text-hints">
+											<span class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
 												<?php esc_html_e( 'IBAN:', 'tutor' ); ?>
 											</span>
 											<div class="tooltip-wrap">
-												<span class="text-medium-small tutor-color-text-primary dotedtext">
+												<span class="text-medium-small tutor-color-black dotedtext">
 													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['iban']['value'] ) ); ?>
 												</span>
-												<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top  tutor-d-flex">
-													<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-12">
+												<div class="tutor-tooltip-wrap-area tutor-tutor-fs-7 tutor-fw-normal tooltip-txt tooltip-top  tutor-d-flex">
+													<div class="withdraw-tutor-tooltip-content tutor-tutor-fs-7 tutor-fw-normal flex-center tutor-mr-12">
 														<?php echo esc_html( $details['iban']['value'] ); ?>
 													</div>
-													<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-text-regular-small flex-center">
+													<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-fs-7 tutor-fw-normal flex-center">
 														<span class="icon tutor-icon-copy-filled"></span>
 														<?php esc_html_e( 'Copy', 'tutor' ); ?>
 													</div>
@@ -220,10 +220,10 @@ $filters = array(
 											</div>
 										</li>
 										<li>
-											<span class="tutor-text-regular-small tutor-color-text-hints">
+											<span class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
 												<?php esc_html_e( 'BIC/SWIFT:', 'tutor' ); ?>
 											</span>
-											<span class="text-medium-small tutor-color-text-primary">
+											<span class="text-medium-small tutor-color-black">
 												<?php echo esc_html( $details['swift']['value'] ); ?>
 											</span>
 										</li>
@@ -237,11 +237,11 @@ $filters = array(
 										<span class="dotedtext">
 											<?php echo esc_html( '' !== $details['paypal_email']['value'] ? tutor_utils()->asterisks_email( $details['paypal_email']['value'] ) : '' ); ?>
 										</span>
-										<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-top  tutor-d-flex me-auto">
-											<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center tutor-mr-12">
+										<div class="tutor-tooltip-wrap-area tutor-tutor-fs-7 tutor-fw-normal tooltip-txt tooltip-top  tutor-d-flex me-auto">
+											<div class="withdraw-tutor-tooltip-content tutor-tutor-fs-7 tutor-fw-normal flex-center tutor-mr-12">
 												<?php echo esc_html( $details['paypal_email']['value'] ); ?>
 											</div>
-											<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-text-regular-small flex-center">
+											<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-tutor-fs-7 tutor-fw-normal flex-center">
 												<span class="icon tutor-icon-copy-filled"></span>
 												Copy
 											</div>
@@ -250,7 +250,7 @@ $filters = array(
 								<?php endif; ?>
 							</td>
 							<td data-th="<?php esc_html_e( 'Amount', 'tutor' ); ?>">
-								<div class="tutor-text-medium-caption tutor-color-text-primary">
+								<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 									<?php echo tutor_utils()->tutor_price( $list->amount ); ?>
 								</div>
 							</td>
@@ -272,22 +272,22 @@ $filters = array(
 									</button>
 								</div>
 								<?php elseif ( 'approved' === $list->status ) : ?>
-									<div class="tutor-text-medium-small tutor-color-text-hints">
+									<div class="tutor-fs-8 tutor-fw-medium tutor-color-muted">
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 									</div>
 								<?php elseif ( 'rejected' === $list->status ) : ?>
 									<div class="tutor-d-flex ">
-										<div class="tutor-text-medium-small tutor-color-text-hints">
+										<div class="tutor-fs-8 tutor-fw-medium tutor-color-muted">
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 										</div>
 										<div class="tooltip-wrap tutor-ml-lg-20 tutor-ml-0">
-											<span class="tutor-text-medium-small tutor-color-text-primary">
+											<span class="tutor-fs-8 tutor-fw-medium tutor-color-black">
 												<i class="tutor-icon-circle-outline-info-filled tutor-color-black-20 tutor-icon-20"></i>
 											</span>
-											<div class="tutor-tooltip-wrap-area tutor-tutor-text-regular-small tooltip-txt tooltip-left">
-												<div class="withdraw-tutor-tooltip-content tutor-tutor-text-regular-small flex-center">
+											<div class="tutor-tooltip-wrap-area tutor-tutor-fs-7 tutor-fw-normal tooltip-txt tooltip-left">
+												<div class="withdraw-tutor-tooltip-content tutor-tutor-fs-7 tutor-fw-normal flex-center">
 													<span>
 														<?php echo esc_html( '' !== $details['rejects']['reject_comment'] ? $details['rejects']['reject_comment'] : $details['rejects']['reject_type'] ); ?>
 													</span>
@@ -296,7 +296,7 @@ $filters = array(
 										</div>
 									</div>
 								<?php else : ?>
-									<div class="tutor-text-medium-small tutor-color-text-hints">
+									<div class="tutor-fs-8 tutor-fw-medium tutor-color-muted">
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
 										<br>
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
@@ -369,10 +369,10 @@ $filters = array(
 						</svg>
 					</div>
 					<div class="tutor-modal-text-wrap">
-						<h3 class="tutor-modal-title tutor-text-regular-h4 text-primary">
+						<h3 class="tutor-modal-title tutor-fs-4 tutor-fw-normal text-primary">
 							<?php esc_html_e( 'Approve Withdrawal?', 'tutor' ); ?>
 						</h3>
-						<p id="tutor-admin-withdraw-approve-content" class="text-regular-body tutor-color-text-subsued">
+						<p id="tutor-admin-withdraw-approve-content" class="text-regular-body tutor-color-black-60">
 
 						</p>
 					</div>
@@ -421,10 +421,10 @@ $filters = array(
 							</svg>
 						</div>
 						<div class="tutor-mb-40">
-							<div class="tutor-modal-title tutor-text-regular-h4 text-primary">
+							<div class="tutor-modal-title tutor-fs-4 tutor-fw-normal text-primary">
 								<?php esc_html_e( 'Reject Withdrawal?', 'tutor' ); ?>
 							</div>
-							<div id="tutor-admin-withdraw-reject-content" class="tutor-text-regular-body tutor-color-text-subsued tutor-mb-32">
+							<div id="tutor-admin-withdraw-reject-content" class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-mb-32">
 
 							</div>
 							<div class="tutor-form-group-select-md tutor-mb-16">

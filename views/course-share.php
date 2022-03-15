@@ -11,7 +11,7 @@
     );
 ?>
 
-<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-text-regular-body tutor-color-text-primary tutor-course-wishlist-btn">
+<a data-tutor-modal-target="tutor-course-share-opener" href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-fs-6 tutor-fw-normal tutor-color-black tutor-course-wishlist-btn">
     <span class="tutor-icon-share-filled"></span> <?php _e('Share', 'tutor'); ?>
 </a>
 <div id="tutor-course-share-opener" class="tutor-modal">
@@ -22,17 +22,17 @@
 				<button data-tutor-modal-close class="tutor-modal-close">
 					<span class="tutor-icon-line-cross-line"></span>
 				</button>
-                <div class="tutor-text-medium-h5 color-text-primary tutor-mb-16">
+                <div class="tutor-fs-5 tutor-fw-medium color-text-primary tutor-mb-16">
                     <?php _e('Share Course', 'tutor'); ?>
                 </div>
-                <div class="tutor-text-regular-caption color-text-subsued tutor-mb-12">
+                <div class="tutor-fs-7 tutor-fw-normal color-text-subsued tutor-mb-12">
                     <?php _e('Page Link', 'tutor') ?>
                 </div>
                 <div class="tutor-mb-32">
                     <input class="tutor-form-control" value="<?php echo get_permalink( get_the_ID() ); ?>" />
                 </div>
                 <div>
-                    <div class="color-text-primary tutor-text-medium-h6 tutor-mb-16">
+                    <div class="color-text-primary tutor-fs-6 tutor-fw-medium tutor-mb-16">
                         <?php _e('Share On Social Media', 'tutor'); ?>
                     </div>
                     <div class="tutor-social-share-wrap" data-social-share-config="<?php echo esc_attr(wp_json_encode($share_config)); ?>">

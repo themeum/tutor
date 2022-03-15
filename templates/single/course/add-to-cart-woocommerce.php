@@ -21,11 +21,11 @@ if ($product) {
         ?>
         <div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-content-between">
             <div>
-                <span class="tutor-text-bold-h4 tutor-color-text-primary">
+                <span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
                     <?php echo $symbol . ($sale_price ? $sale_price : $regular_price); ?>
                 </span>
                 <?php if($regular_price && $sale_price && $sale_price!=$regular_price): ?>
-                    <del class="tutor-text-regular-caption tutor-color-text-hints tutor-ml-8">
+                    <del class="tutor-fs-7 tutor-fw-normal tutor-color-muted tutor-ml-8">
                         <?php echo $symbol . $regular_price; ?>
                     </del>
                 <?php endif; ?>

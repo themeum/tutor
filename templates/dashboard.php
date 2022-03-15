@@ -83,7 +83,7 @@ do_action('tutor_dashboard/before/wrap');
 
 					if (current_user_can(tutor()->instructor_role)) {
 					?>
-						<div class="tutor-text-semi-h4 tutor-dashboard-header-username">
+						<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
 							<?php echo esc_html($user->display_name); ?>
 						</div>
 						<div class="tutor-dashboard-header-stats">
@@ -97,11 +97,11 @@ do_action('tutor_dashboard/before/wrap');
 					<?php
 					} else {
 					?>
-						<div class="tutor-dashboard-header-display-name tutor-color-text-primary">
-							<div class="tutor-text-regular-h5 tutor-dashboard-header-greetings">
+						<div class="tutor-dashboard-header-display-name tutor-color-black">
+							<div class="tutor-fs-5 tutor-fw-normal tutor-dashboard-header-greetings">
 								Hello,
 							</div>
-							<div class="tutor-text-semi-h4 tutor-dashboard-header-username">
+							<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
 								<?php echo esc_html($user->display_name); ?>
 							</div>
 						</div>
@@ -202,7 +202,7 @@ do_action('tutor_dashboard/before/wrap');
 							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
 							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
 
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-fw-normal tutor-color-black'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
 						}
 					}
 					?>

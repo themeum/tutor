@@ -17,8 +17,8 @@
                 <input type="hidden" name="action" value="tutor_place_rating"/>   
 
                 <div class="tutor-star-rating-container">
-                    <h6 class="tutor-text-regular-h4 tutor-color-text-title tutor-mb-16"><?php _e('How would you rate this course?', 'tutor'); ?></h6>
-                    <div class="tutor-modal-text-rating tuor-text-medium-body tutor-color-text-primary tutor-mb-12"><?php _e('Select Rating', 'tutor'); ?></div>
+                    <h6 class="tutor-fs-4 tutor-fw-normal tutor-color-black-70 tutor-mb-16"><?php _e('How would you rate this course?', 'tutor'); ?></h6>
+                    <div class="tutor-modal-text-rating tuor-text-medium-body tutor-color-black tutor-mb-12"><?php _e('Select Rating', 'tutor'); ?></div>
 
                     <div class="tutor-form-group tutor-stars">
                         <?php

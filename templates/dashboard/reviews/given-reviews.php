@@ -26,7 +26,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 ?>
 
 <div class="tutor-dashboard-content-inner">
-	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php _e( 'Reviews', 'tutor' ); ?></div>
+	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php _e( 'Reviews', 'tutor' ); ?></div>
 	<?php
 	if ( current_user_can( tutor()->instructor_role ) ) {
 		?>
@@ -61,9 +61,9 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					<div class="tutor-dashboard-review-header">
 
 						<div class="tutor-dashboard-review-heading">
-							<div class="tutor-dashboard-review-title tutor-text-regular-h6 tutor-color-text-primary">
+							<div class="tutor-dashboard-review-title tutor-fs-6 tutor-fw-normal tutor-color-black">
 								<?php esc_html_e( 'Course: ', 'tutor' ); ?>
-								<span class="tutor-text-medium-h6" data-href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>">
+								<span class="tutor-fs-6 tutor-fw-medium" data-href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>">
 									<?php esc_html_e( get_the_title( $review->comment_post_ID ) ); ?>
 								</span>
 							</div>
@@ -75,7 +75,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							<div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-12">
 								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?> 
 							</div>
-							<div class="tutor-given-review-action tutor-text-regular-body tutor-color-text-subsued tutor-d-flex tutor-align-items-center">
+							<div class="tutor-given-review-action tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-d-flex tutor-align-items-center">
 								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-d-flex tutor-align-items-center">
 									<i class="tutor-icon-edit-filled tutor-icon-24 tutor-mr-3"></i>
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
@@ -86,7 +86,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 								</span>
 							</div>
 						</div>
-						<div class="tutor-mt-24 tutor-text-regular-body tutor-color-text-hints">
+						<div class="tutor-mt-24 tutor-fs-6 tutor-fw-normal tutor-color-muted">
 							<?php echo htmlspecialchars( stripslashes( $review->comment_content ) ); ?>
 						</div>
 					</div>
@@ -97,7 +97,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 						<div class="tutor-modal-root">
 							<div class="tutor-modal-inner">
 								<div class="tutor-modal-header">
-									<h3 class="tutor-modal-title tutor-text-bold-h6 tutor-color-text-title">
+									<h3 class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
 										<?php esc_html_e( 'Update Review' ); ?>
 									</h3>
 									<button data-tutor-modal-close class="tutor-modal-close">
@@ -146,10 +146,10 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										<span class="tutor-icon-cross-filled"></span>
 									</button>
 									<div class="tutor-modal-body tutor-text-center">
-										<div class="tutor-rating-modal-title tutor-text-regular-h4 tutor-color-text-title tutor-mb-16">
+										<div class="tutor-rating-modal-title tutor-fs-4 tutor-fw-normal tutor-color-black-70 tutor-mb-16">
 											How would you rate this course?
 										</div>
-										<div class="tutor-modal-text-rating tuor-text-medium-body tutor-color-text-primary tutor-mb-12">
+										<div class="tutor-modal-text-rating tuor-text-medium-body tutor-color-black tutor-mb-12">
 											Average
 										</div>
 										<input type="hidden" name="course_id" value="<?php echo esc_html( $review->comment_post_ID ); ?>"/>

@@ -11,7 +11,7 @@
  */
 ?>
 
-<div class="list-item-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-2" title="<?php the_title(); ?>">
+<div class="list-item-title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mt-2" title="<?php the_title(); ?>">
     <a href="<?php echo esc_url(get_the_permalink()); ?>"><?php the_title(); ?></a>
 </div>
 

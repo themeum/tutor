@@ -102,7 +102,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
 				<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
 			</a>
-			<div class="tutor-top-nav-title tutor-text-regular-body tutor-color-text-primary">
+			<div class="tutor-top-nav-title tutor-fs-6 tutor-fw-normal tutor-color-black">
 				<?php
 					the_title();
 				?>
@@ -174,15 +174,15 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 		</div>
 		<div class="tab-body">
 			<div class="tab-body-item<?php echo (!isset($page_tab) || 'overview'==$page_tab) ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-1" data-tutor-query-string-content="overview">
-				<div class="text-medium-h6 tutor-color-text-primary">
+				<div class="text-medium-h6 tutor-color-black">
 					<?php _e( 'About Lesson', 'tutor' ); ?>
 				</div>
-				<div class="text-regular-body tutor-color-text-subsued tutor-mt-12" style="min-height:293px;">
+				<div class="text-regular-body tutor-color-black-60 tutor-mt-12" style="min-height:293px;">
 					<?php the_content(); ?>
 				</div>
 			</div>
 			<div class="tab-body-item<?php echo 'files'==$page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-2" data-tutor-query-string-content="files">
-				<div class="text-medium-h6 tutor-color-text-primary"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
+				<div class="text-medium-h6 tutor-color-black"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
 				<?php get_tutor_posts_attachments(); ?>
 			</div>
 			<?php if ( $is_comment_enabled ) : ?>
