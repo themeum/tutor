@@ -365,7 +365,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
     if (is_array($answers) && count($answers)){
         echo $context!='course-single-previous-attempts' ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">'.__('Quiz Overview', 'tutor').'</div>' : '';
         ?>
-        <div class="tutor-ui-table-wrapper tutor-mt-12">
+        <div class="tutor-ui-table-wrapper tutor-mt-16">
             <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-32 td-align-top">
                 <thead>
                     <tr>

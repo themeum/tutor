@@ -66,7 +66,7 @@ if ( $is_instructor ) {
                     </span>
                 </div>
                 <div class="tutor-instructor-apply-button tutor-text-center">
-                    <a style="text-decoration:none;" class="tutor-bg-primary tutor-color-text-white tutor-py-16 tutor-px-32 tutor-radius-6" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ) ?>">
+                    <a style="text-decoration:none;" class="tutor-bg-primary tutor-color-white tutor-py-16 tutor-px-32 tutor-radius-6" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ) ?>">
                         <?php esc_html_e( 'Go to Dashboard', 'tutor' ); ?>
                     </a>
                 </div>

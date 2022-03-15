@@ -52,11 +52,11 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 	<div class="tutor-topbar-left-item tutor-d-flex">
 		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-				<span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
+				<span class="tutor-icon-icon-light-left-line tutor-color-white flex-center"></span>
 			</a>
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-			<span class="tutor-icon-assignment-filled tutor-icon-24 tutor-color-text-white tutor-mr-4"></span>
+			<span class="tutor-icon-assignment-filled tutor-icon-24 tutor-color-white tutor-mr-4"></span>
 			<span class="text-regular-caption tutor-color-design-white">
 				<?php
 					esc_html_e( 'Assignment: ', 'tutor' );
@@ -90,7 +90,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 		<div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
-				<span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>
+				<span class="tutor-icon-line-cross-line tutor-color-white flex-center"></span>
 			</a>
 		</div>
 	</div>
