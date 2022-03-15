@@ -574,11 +574,15 @@
 		align-items: flex-start;
 	}
 }
+
 #tutor-quiz-time-expire-wrapper {
+	margin-bottom: 40px;
 	display: none;
+
 	&.tutor-alert-show {
-		display: flex;
+		display: flex !important;
 	}
+
 	.flash-info span:first-child {
 		&.tutor-icon-cross-circle-outline-filled::before {
 			color: #f44337;

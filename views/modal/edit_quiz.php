@@ -193,7 +193,7 @@
                 </div>
             </div>
             <div class="tutor-col-auto">
-                <i class="tutor-icon-angle-down-filled tutor-mr-30"></i>
+                <i class="tutor-icon-angle-down-filled"></i>
             </div>
         </div>
 
