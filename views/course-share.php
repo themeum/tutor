@@ -22,17 +22,17 @@
 				<button data-tutor-modal-close class="tutor-modal-close">
 					<span class="tutor-icon-line-cross-line"></span>
 				</button>
-                <div class="tutor-text-medium-h5 color-text-primary tutor-mb-15">
+                <div class="tutor-text-medium-h5 color-text-primary tutor-mb-16">
                     <?php _e('Share Course', 'tutor'); ?>
                 </div>
-                <div class="tutor-text-regular-caption color-text-subsued tutor-mb-10">
+                <div class="tutor-text-regular-caption color-text-subsued tutor-mb-12">
                     <?php _e('Page Link', 'tutor') ?>
                 </div>
-                <div class="tutor-mb-30">
+                <div class="tutor-mb-32">
                     <input class="tutor-form-control" value="<?php echo get_permalink( get_the_ID() ); ?>" />
                 </div>
                 <div>
-                    <div class="color-text-primary tutor-text-medium-h6 tutor-mb-15">
+                    <div class="color-text-primary tutor-text-medium-h6 tutor-mb-16">
                         <?php _e('Share On Social Media', 'tutor'); ?>
                     </div>
                     <div class="tutor-social-share-wrap" data-social-share-config="<?php echo esc_attr(wp_json_encode($share_config)); ?>">

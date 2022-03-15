@@ -7,7 +7,7 @@
     <div class="tutor-quesanswer-askquestion">
         <textarea placeholder="You Have any question?" class="tutor-form-control"></textarea>
         <?php if('course-single-qna-sidebar'==$data['context']):?>
-        <div class="sidebar-ask-new-qna-submit tutor-mt-10">
+        <div class="sidebar-ask-new-qna-submit tutor-mt-12">
             <button class="sidebar-ask-new-qna-cancel-btn tutor-modal-close-btn tutor-btn tutor-btn-md">
                 <?php _e('Cancel', 'tutor'); ?>
             </button>

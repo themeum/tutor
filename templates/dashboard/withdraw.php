@@ -47,7 +47,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 	<div class="tutor-component-three-col-action">
 		<img src="<?php echo esc_url( $image_base ); ?>wallet.svg" />
 
-		<div class="tutor-mt-10 tutor-mt-sm-0">
+		<div class="tutor-mt-12 tutor-mt-sm-0">
 			<small><?php esc_html_e( 'Current Balance', 'tutor' ); ?></small>
 			<p>
 				<?php
@@ -63,7 +63,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 		<?php
 		if ( $is_balance_sufficient && $withdraw_method_name ) {
 			?>
-				<button class="tutor-btn open-withdraw-form-btn tutor-mt-10 tutor-mt-sm-0">
+				<button class="tutor-btn open-withdraw-form-btn tutor-mt-12 tutor-mt-sm-0">
 				<?php esc_html_e( 'Withdrawal Request', 'tutor' ); ?>
 				</button>
 				<?php
@@ -284,7 +284,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 								if ( $withdraw_history->status !== 'approved' && isset( $status_message[ $withdraw_history->status ] ) ) {
 									?>
 									<span class="tool-tip-container">
-										<div class="tooltip-wrap tooltip-icon tutor-mt-10">
+										<div class="tooltip-wrap tooltip-icon tutor-mt-12">
 											<span class="tooltip-txt tooltip-left">
 												<?php echo esc_html( $status_message[ $withdraw_history->status ] ); ?>
 											</span>

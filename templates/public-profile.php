@@ -158,7 +158,7 @@ tutor_utils()->tutor_custom_header();
 			<div class="tutor-user-profile-sidebar">
 				<?php // tutor_load_template('profile.badge', ['profile_badges'=>(new )]); ?>
 			</div>
-			<div class="tutor-user-profile-content tutor-d-block tutor-mt-70">
+			<div class="tutor-user-profile-content tutor-d-block tutor-mt-72">
 				<h3><?php _e( 'Biography', 'tutor' ); ?></h3>
 				<?php tutor_load_template( 'profile.bio' ); ?>
 				

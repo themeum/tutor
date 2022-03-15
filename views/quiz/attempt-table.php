@@ -12,7 +12,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 }
 ?>
 
-<div class="tutor-ui-table-wrapper tutor-my-26">
+<div class="tutor-ui-table-wrapper tutor-my-24">
 	<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
 		<?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) { ?>
 		<thead>

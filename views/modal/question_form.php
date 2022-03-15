@@ -13,17 +13,17 @@ $settings = maybe_unserialize($question->question_settings);
     <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>" />
 
     <!-- Question title -->
-    <div class="tutor-mb-30">
+    <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Write your question here', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group tutor-mb-16">
             <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_title]" class="tutor-form-control" placeholder="<?php _e('Type your question here', 'tutor'); ?>" value="<?php echo htmlspecialchars(stripslashes($question->question_title)); ?>">
         </div>
     </div>
 
     <!-- Question Type Dropdown -->
-    <div class="tutor-mb-30">
+    <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Select your question type', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group tutor-mb-16">
             <div class="tutor-row tutor-align-items-center">
                 <div class="tutor-col-12 tutor-col-md-12">
                     <div class="question-type-select">
@@ -87,9 +87,9 @@ $settings = maybe_unserialize($question->question_settings);
     </div>
 
     <!-- Points for the question -->
-    <div class="tutor-mb-30">
+    <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Point(s) for this answer', 'tutor'); ?></label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group tutor-mb-16">
             <div class="tutor-row tutor-align-items-center">
                 <div class="tutor-col-sm-6 tutor-col-md-4">
                     <input type="text" name="tutor_quiz_question[<?php echo $question_id; ?>][question_mark]" class="tutor-form-control" placeholder="<?php _e('set the mark ex. 10', 'tutor'); ?>" value="<?php echo $question->question_mark; ?>">
@@ -105,14 +105,14 @@ $settings = maybe_unserialize($question->question_settings);
     </div>
 
     <!-- Question description -->
-    <div class="tutor-mb-30">
+    <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Description', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></label>
-        <div class="tutor-input-group tutor-mb-15">
+        <div class="tutor-input-group tutor-mb-16">
             <textarea name="tutor_quiz_question[<?php echo $question_id; ?>][question_description]" class="tutor-form-control"><?php echo stripslashes($question->question_description); ?></textarea>
         </div>
     </div>
 
-    <div class="tutor-mb-15">
+    <div class="tutor-mb-16">
         <label class="tutor-form-label">
             <?php _e('Input options for the question and select the correct answer.', 'tutor'); ?>
         </label>

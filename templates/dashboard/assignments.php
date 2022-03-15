@@ -64,7 +64,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 		</div>
 	</div>
 	<br/>
-	<div class="tutor-ui-table-wrapper tutor-mb-42">
+	<div class="tutor-ui-table-wrapper tutor-mb-44">
 		<table class="tutor-ui-table tutor-ui-table-responsive table-assignment">
 			<thead>
 				<tr>

@@ -7,7 +7,7 @@
             <?php
                 if (intval($answer->image_id)){
             ?>
-            <div class="quiz-short-ans-image tutor-mb-30 tutor-mb-md-30">
+            <div class="quiz-short-ans-image tutor-mb-32 tutor-mb-md-30">
                 <?php echo '<img src="'.wp_get_attachment_image_url($answer->image_id, 'full').'" />'; ?>
             </div>
             <?php } ?>

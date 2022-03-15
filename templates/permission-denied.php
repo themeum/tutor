@@ -35,7 +35,7 @@ tutor_utils()->tutor_custom_header();
             <span class="color-text-primary text-medium-h3">
                 <?php echo isset($headline) ? $headline : __( 'Permission Denied', 'tutor' ); ?>
             </span>
-            <p class="tutor-mt-10">
+            <p class="tutor-mt-12">
                 <?php echo isset($message) ? $message : __( 'You don\'t have enough privilege to access this page', 'tutor' ); ?>
             </p>
             <p> 

@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<?php if ( 'image' === $rand_answer->answer_view_format || 'text_image' === $rand_answer->answer_view_format ) : ?>
-					<div class="tutor-mb-30">
+					<div class="tutor-mb-32">
 						<?php
 						if ( isset( $rand_answer->image_id ) ) :
 							$image_url = wp_get_attachment_url( $rand_answer->image_id );

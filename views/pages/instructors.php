@@ -92,7 +92,7 @@ $filters = array(
 	?>
 
 <div class="wrap">
-	<div class="tutor-ui-table-responsive tutor-mt-30">
+	<div class="tutor-ui-table-responsive tutor-mt-32">
 		<table class="tutor-ui-table tutor-ui-table-responsive table-instructors tutor-table-with-checkbox">
 			<thead>
 			<tr>
@@ -156,7 +156,7 @@ $filters = array(
 										<?php echo esc_html( $list->display_name ); ?>
 									</span>
 									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
-										<span class="tutor-icon-detail-link-filled tutor-mt-5"></span>
+										<span class="tutor-icon-detail-link-filled tutor-mt-4"></span>
 									</a>
 								</div>
 							</td>
@@ -206,7 +206,7 @@ $filters = array(
 			</tbody>
 		</table>
 		</div>
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-50">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-48">
 		<?php
 			/**
 			 * Prepare pagination data & load template
@@ -246,16 +246,16 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'First Name', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="first_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
+						<div class="tutor-input-group tutor-mb-16">
+							<input type="text" name="first_name" class="tutor-form-control tutor-mb-12" placeholder="<?php echo esc_attr( 'Enter First Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="last_name" class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
+						<div class="tutor-input-group tutor-mb-16">
+							<input type="text" name="last_name" class="tutor-form-control tutor-mb-12" placeholder="<?php echo esc_attr( 'Enter Last Name', 'tutor' ); ?>" pattern="[a-zA-Z0-9-\s]+" title="<?php esc_attr_e( 'Only alphanumeric & space are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
@@ -264,16 +264,16 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'User Name', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="user_login" class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>" pattern="^[a-zA-Z0-9_]*$" title="<?php esc_attr_e( 'Only alphanumeric and underscore are allowed', 'tutor' ); ?>" required/>
+						<div class="tutor-input-group tutor-mb-16">
+							<input type="text" name="user_login" class="tutor-form-control tutor-mb-12" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Name', 'tutor' ); ?>" pattern="^[a-zA-Z0-9_]*$" title="<?php esc_attr_e( 'Only alphanumeric and underscore are allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-mb-15">
-							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-10" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
+						<div class="tutor-input-group tutor-mb-16">
+							<input type="text" name="phone_number"  class="tutor-form-control tutor-mb-12" placeholder="<?php echo esc_attr( 'Enter Phone Number', 'tutor' ); ?>" minlength="8" maxlength="16" pattern="[0-9]+" title="<?php esc_attr_e( 'Only number is allowed', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
@@ -282,8 +282,8 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Email Address', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-mb-15">
-							<input type="email" name="email"  class="tutor-form-control tutor-mb-10" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Email', 'tutor' ); ?>" required/>
+						<div class="tutor-input-group tutor-mb-16">
+							<input type="email" name="email"  class="tutor-form-control tutor-mb-12" autocomplete="off" placeholder="<?php echo esc_attr( 'Enter Your Email', 'tutor' ); ?>" required/>
 						</div>
 					</div>
 				</div>
@@ -292,18 +292,18 @@ $filters = array(
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Password', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
+						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-16">
 							<span class="tutor-icon-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
-							<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control tutor-mb-10" minlength="8" placeholder="*******" autocomplete="new-password" required/>
+							<input type="password" name="password" id="tutor-instructor-pass"  class="tutor-form-control tutor-mb-12" minlength="8" placeholder="*******" autocomplete="new-password" required/>
 						</div>
 					</div>
 					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Retype Password', 'tutor' ); ?>
 						</label>
-						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-15">
+						<div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-16">
 							<span class="tutor-icon-eye-filled tutor-input-group-icon-right tutor-password-reveal"></span>
-							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-10" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.', 'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
+							<input type="password" name="password_confirmation"  class="tutor-form-control tutor-mb-12" placeholder="*******" autocomplete="off" pattern="" title="<?php esc_attr_e( 'Your passwords should match each other. Please recheck.', 'tutor' ); ?>" onfocus="this.setAttribute('pattern', document.getElementById('tutor-instructor-pass').value)" required/>
 						</div>
 					</div>
 				</div>
@@ -316,7 +316,7 @@ $filters = array(
 								<?php esc_html_e( '(Optional)', 'tutor' ); ?>
 							</span>
 						</label>
-						<div class="tutor-input-group tutor-mb-15">
+						<div class="tutor-input-group tutor-mb-16">
 							<textarea  name="tutor_profile_bio" class="tutor-form-control" rows="3" style="width: 100%;" placeholder="<?php esc_html_e( 'Write Your Bio...', 'tutor' ); ?>"></textarea>
 						</div>
 					</div>
@@ -367,7 +367,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 						<div class="text-regular-h4 tutor-color-text-primary">
 							<?php esc_html_e( 'A New Instructor Just Signed Up', 'tutor' ); ?>
 						</div>
-						<div class="text-regular-small tutor-color-text-subsued tutor-mt-10">
+						<div class="text-regular-small tutor-color-text-subsued tutor-mt-12">
 							<?php esc_html_e( 'You can either accept or reject the application. The applicant will be notified via email either way.', 'tutor' ); ?>
 						</div>
 					</div>
@@ -405,11 +405,11 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 								<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
 									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
 								</a>
-								<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-10" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+								<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
 									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>
 								</a>
 								<?php elseif ( 'approved' === $instructor_status ) : ?>
-									<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-10" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
 									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>
 									</a>
 								<?php elseif ( 'blocked' === $instructor_status ) : ?>
@@ -420,7 +420,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 						<?php else : ?>
 							<div class="tutor-alert tutor-danger">
 								<div class="tutor-alert-text">
-									<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-10"></span>
+									<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-12"></span>
 									<span>
 										<?php esc_html_e( 'Attempted invalid action', 'tutor' ); ?>
 									</span>
@@ -436,7 +436,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 					<div class="tutor-modal-text-wrap">
 						<div class="tutor-alert tutor-danger">
 								<div class="tutor-alert-text">
-									<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-10"></span>
+									<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-12"></span>
 									<span>
 									<?php esc_html_e( 'Invalid instructor', 'tutor' ); ?>
 									</span>

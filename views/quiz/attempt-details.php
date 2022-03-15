@@ -35,7 +35,7 @@ function tutor_render_answer_list( $answers= array(), $dump_data=false ){
 
                 switch ($type) {
                     case 'text_image':
-                        echo '<div class="text-image-type tutor-mb-3">';
+                        echo '<div class="text-image-type tutor-mb-4">';
                             if(isset($ans->image_id)){
                                 $img_url = wp_get_attachment_image_url($ans->image_id);
                                 if($img_url){
@@ -174,7 +174,7 @@ if ( is_array( $attempt_info ) ) {
 ?>
 
 <?php echo is_admin() ? '<div class="wrap">' : ''; ?>
-<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts tutor-mb-30">
+<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts tutor-mb-32">
     <thead>
         <tr>
             <?php
@@ -351,7 +351,7 @@ $feedback = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedba
 // don't show on instructor quiz attempt since below already have feedback box area.
 if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 	?>
-    <div class="tutor-quiz-attempt-note tutor-instructor-note tutor-my-30 tutor-py-20 tutor-px-25 tutor-py-sm-30 tutor-px-sm-35">
+    <div class="tutor-quiz-attempt-note tutor-instructor-note tutor-my-32 tutor-py-20 tutor-px-25 tutor-py-sm-30 tutor-px-sm-35">
         <div class="tutor-in-title tutor-text-medium-h6 tutor-color-text-primary">
             <?php esc_html_e( 'Instructor Note', 'tutor' ); ?>					
         </div>
@@ -363,10 +363,10 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 
 <?php
     if (is_array($answers) && count($answers)){
-        echo $context!='course-single-previous-attempts' ? '<div class="tutor-text-medium-body tutor-color-text-primary tutor-mt-22">'.__('Quiz Overview', 'tutor').'</div>' : '';
+        echo $context!='course-single-previous-attempts' ? '<div class="tutor-text-medium-body tutor-color-text-primary tutor-mt-24">'.__('Quiz Overview', 'tutor').'</div>' : '';
         ?>
-        <div class="tutor-ui-table-wrapper tutor-mt-10">
-            <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-30 td-align-top">
+        <div class="tutor-ui-table-wrapper tutor-mt-12">
+            <table class="tutor-ui-table tutor-ui-table-responsive tutor-quiz-attempt-details tutor-mb-32 td-align-top">
                 <thead>
                     <tr>
                         <?php
@@ -718,7 +718,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                             case 'manual_review' :
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap">
-                                                    <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-10 tutor-icon-rounded tutor-text-success">
+                                                    <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-text-success">
                                                         <i class="tutor-icon-mark-filled tutor-icon-24"></i>
                                                     </a>
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" data-context="<?php echo $context; ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-text-danger">

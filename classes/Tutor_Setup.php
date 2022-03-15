@@ -646,7 +646,7 @@ if ( ! defined( 'ABSPATH' ) )
                             <div class="wizard-boarding-header-sub tutor-text-regular-h5  tutor-color-text-primary">
                                 <?php printf(__('Hello %s, welcome to Tutor LMS!', 'tutor'), $current_user->user_login); ?>
                             </div>
-                            <div class="wizard-boarding-header-main tutor-text-semi-h3  tutor-color-text-primary tutor-mt-10">
+                            <div class="wizard-boarding-header-main tutor-text-semi-h3  tutor-color-text-primary tutor-mt-12">
                                 <?php _e('Thank You for Choosing Us', 'tutor'); ?>
                             </div>
                         </div>

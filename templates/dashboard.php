@@ -134,7 +134,7 @@ do_action('tutor_dashboard/before/wrap');
 						$course_type = tutor()->course_post_type;
 					?>
 						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
-							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
+							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-12"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
 						</a>
 					<?php
 					} elseif ($instructor_status == 'pending') {
@@ -202,7 +202,7 @@ do_action('tutor_dashboard/before/wrap');
 							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
 							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
 
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-10'>{$menu_title}</span></a></li>";
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
 						}
 					}
 					?>

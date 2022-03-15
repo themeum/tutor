@@ -11,7 +11,7 @@
 	$border_color  = ! empty( $data['border']) ? $data['border'] : '#eff1f7';
 ?>
 <div class="tutor-thumbnail-uploader" data-media-heading="<?php echo ! empty( $media_heading ) ? $media_heading : __( 'Select or Upload Media Of Your Chosen Persuasion', 'tutor' ); ?>" data-button-text="<?php echo ! empty( $button_text ) ? $button_text : __( 'Use this media', 'tutor' ); ?>">
-	<div class="thumbnail-wrapper tutor-d-flex tutor-align-items-center <?php echo $is_borderless ? 'tutor-is-borderless' : 'tutor-p-15'; ?>">
+	<div class="thumbnail-wrapper tutor-d-flex tutor-align-items-center <?php echo $is_borderless ? 'tutor-is-borderless' : 'tutor-p-16'; ?>">
 		<div class="thumbnail-preview image-previewer" style="background:<?php echo esc_attr( $background ); ?>; border: 2px solid <?php echo esc_attr( $border_color ); ?>;">
 			<span class="preview-loading"></span>
 			<input type="hidden" class="tutor-tumbnail-id-input" name="<?php echo $input_name; ?>" value="<?php echo ! empty( $media_id ) ? $media_id : ''; ?>">
@@ -25,7 +25,7 @@
 				<?php _e( 'File Support', 'tutor' ); ?>: <span class="tutor-text-semi-caption"><?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?></span>
 			</p>
 
-			<button type="button" class="tutor-btn tutor-btn-primary tutor-is-sm tutor-mt-15 tutor-thumbnail-upload-button">
+			<button type="button" class="tutor-btn tutor-btn-primary tutor-is-sm tutor-mt-16 tutor-thumbnail-upload-button">
 				<span class="tutor-btn-icon tutor-icon-image-filled"></span>
 				<span><?php _e( 'Upload Image', 'tutor' ); ?></span>
 			</button>

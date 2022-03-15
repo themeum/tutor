@@ -19,9 +19,9 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
-	<div class="tutor-mb-22">
+	<div class="tutor-mb-24">
 		<a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
-			<span class="color-text-primary assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-10"></span>
+			<span class="color-text-primary assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12"></span>
             <span class="tutor-color-text-subsued"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
 		</a>
 	</div>
@@ -34,16 +34,16 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
         <div class="tutor-text-medium-h6 tutor-mt-6">
             <?php echo get_the_title($assignment_id); ?>
         </div>
-        <div class="assignment-info tutor-mt-10 tutor-d-flex">
+        <div class="assignment-info tutor-mt-12 tutor-d-flex">
             <div class="tutor-text-regular-small tutor-color-text-title">
                 <?php esc_html_e('Submission Deadline', 'tutor'); ?>:
                 <span class="tutor-text-semi-small"><?php echo $deadline; ?></span>
             </div>
-            <div class="tutor-text-regular-small tutor-color-text-title tutor-ml-22">
+            <div class="tutor-text-regular-small tutor-color-text-title tutor-ml-24">
                 <?php esc_html_e('Total Points', 'tutor'); ?>:
                 <span class="tutor-text-semi-small"><?php echo $max_mark; ?></span>
             </div>
-            <div class="tutor-text-regular-small tutor-color-text-title tutor-ml-22">
+            <div class="tutor-text-regular-small tutor-color-text-title tutor-ml-24">
                 <?php esc_html_e('Pass Points', 'tutor'); ?>:
                 <span class="tutor-text-semi-small"><?php echo $pass_mark; ?></span>
             </div>

@@ -39,7 +39,7 @@ do_action('tutor_quiz/single/before/top');
 				<?php echo get_the_content(); ?>
 			</div>
 		</div>
-		<div class="tutor-quiz-info-area tutor-mb-60 tutor-mt-22">
+		<div class="tutor-quiz-info-area tutor-mb-60 tutor-mt-24">
 			<?php
 				// Show total question count
 				$total_questions = tutor_utils()->total_questions_for_student_by_quiz(get_the_ID());

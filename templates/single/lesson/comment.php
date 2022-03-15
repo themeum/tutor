@@ -43,23 +43,23 @@
 			<?php
 			foreach ( $comments as $comment ) :
 				?>
-				<div class="tutor-comments-list tutor-parent-comment tutor-mt-30" id="lesson-comment-<?php echo esc_attr( $comment->comment_ID ); ?>">
+				<div class="tutor-comments-list tutor-parent-comment tutor-mt-32" id="lesson-comment-<?php echo esc_attr( $comment->comment_ID ); ?>">
 					<div class="comment-avatar">
 						<img src="<?php echo get_avatar_url( $comment->user_id ); ?>" alt="">
 					</div>
 					<div class="tutor-single-comment">
-						<div class="tutor-actual-comment tutor-mb-10">
+						<div class="tutor-actual-comment tutor-mb-12">
 							<div class="tutor-comment-author">
 								<span class="text-bold-body"><?php echo $comment->comment_author; ?></span>
-								<span class="text-regular-caption tutor-ml-10 tutor-ml-sm-10">
+								<span class="text-regular-caption tutor-ml-12 tutor-ml-sm-10">
 									<?php echo human_time_diff( strtotime( $comment->comment_date ), tutor_time() ) . __( ' ago', 'tutor' ); ?>
 								</span>
 							</div>
-							<div class="tutor-comment-text tutor-text-regular-body tutor-mt-5">
+							<div class="tutor-comment-text tutor-text-regular-body tutor-mt-4">
 								<?php echo $comment->comment_content; ?>
 							</div>
 						</div>
-						<div class="tutor-comment-actions tutor-ml-22">
+						<div class="tutor-comment-actions tutor-ml-24">
 							<span class="text-regular-body tutor-color-text-title">reply</span>
 							<!-- <span class="text-regular-body tutor-color-text-title">like</span>
 							<span class="text-regular-body tutor-color-text-title">edit</span>
@@ -77,19 +77,19 @@
 						?>
 						<?php if ( is_array( $replies ) && count( $replies ) ) : ?>
 							<?php foreach ( $replies as $reply ) : ?>
-								<div class="tutor-comments-list tutor-child-comment tutor-mt-30" id="lesson-comment-<?php echo esc_attr($reply->comment_ID)?>">
+								<div class="tutor-comments-list tutor-child-comment tutor-mt-32" id="lesson-comment-<?php echo esc_attr($reply->comment_ID)?>">
 									<div class="comment-avatar">
 										<img src="<?php echo get_avatar_url( $reply->user_id ); ?>" alt="">
 									</div>
 									<div class="tutor-single-comment">
-										<div class="tutor-actual-comment tutor-mb-10">
+										<div class="tutor-actual-comment tutor-mb-12">
 											<div class="tutor-comment-author">
 												<span class="text-bold-body">Estella Clayton</span>
 												<span class="text-regular-caption tutor-ml-0 tutor-ml-sm-10">
 													<?php echo human_time_diff( strtotime( $reply->comment_date ), tutor_time() ) . __( ' ago', 'tutor' ); ?>
 												</span>
 											</div>
-											<div class="tutor-comment-text tutor-text-regular-body tutor-mt-5">
+											<div class="tutor-comment-text tutor-text-regular-body tutor-mt-4">
 												<?php echo $reply->comment_content; ?>
 											</div>
 										</div>

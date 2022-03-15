@@ -20,7 +20,7 @@
                 </div>
                 <div>
                 <?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true, 'tutor-is-sm' ); ?>
-                    <div class="text-regular-caption tutor-color-text-subsued tutor-mt-10 tutor-review-comment">
+                    <div class="text-regular-caption tutor-color-text-subsued tutor-mt-12 tutor-review-comment">
                     <?php echo htmlspecialchars( $review->comment_content ); ?>
                     </div>
                 </div>
