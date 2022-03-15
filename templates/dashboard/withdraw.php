@@ -285,7 +285,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 									?>
 									<span class="tool-tip-container">
 										<div class="tooltip-wrap tooltip-icon tutor-mt-10">
-											<span class="tooltip-txt tooltip-bottom">
+											<span class="tooltip-txt tooltip-left">
 												<?php echo esc_html( $status_message[ $withdraw_history->status ] ); ?>
 											</span>
 										</div>
