@@ -571,16 +571,14 @@ class Tutor_Setup {
 										</div>
 										<div class="tutor-setup-content-footer footer">
 										<?php
-											$url                     = admin_url( 'admin.php?page=tutor-addons' );
-											$is_welcome_page_visited = self::is_welcome_page_visited();
-										if ( ! $is_welcome_page_visited ) {
-											$url = admin_url( 'admin.php?page=tutor&welcome=1' );
-										}
+                                            $welcome_url = admin_url( 'admin.php?page=tutor&welcome=1' );
+											$addons_url  = admin_url( 'admin.php?page=tutor-addons' );
+											$course_url  = admin_url( 'admin.php?page=tutor' );
 										?>
-											<a class="tutor-btn tutor-btn-primary tutor-btn-md primary-btn" href="<?php echo esc_url( $url ); ?>">
+											<a class="tutor-btn tutor-btn-primary tutor-btn-md primary-btn" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $course_url ); ?>">
 											<?php _e( 'Create a New Course', 'tutor' ); ?>
 											</a>
-											<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" href="<?php echo admin_url( 'admin.php?page=tutor-addons' ); ?>">
+											<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $addons_url ); ?>">
 											<?php _e( 'Explore Addons', 'tutor' ); ?>
 											</a>
 										</div>
