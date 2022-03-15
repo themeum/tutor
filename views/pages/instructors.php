@@ -392,14 +392,14 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 								<?php echo esc_html( $instructor_data->user_login ); ?>
 							</span>
 						</div>
-						<div class="text-regular-body tutor-color-black-70 tutor-mt-3">
+						<div class="text-regular-body tutor-color-black-70 tutor-mt-4">
 							<?php esc_html_e( 'Email:', 'tutor' ); ?>
 							<span class="tutor-color-black">
 								<?php echo esc_html( $instructor_data->user_email ); ?>
 							</span>
 						</div>
 					</div>
-					<div class="tutor-modal-buttons tutor-mt-35 tutor-mt-md-50">
+					<div class="tutor-modal-buttons tutor-mt-32 tutor-mt-md-48">
 						<?php if ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) : ?>
 							<?php if ( 'pending' === $instructor_status ) : ?>
 								<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
