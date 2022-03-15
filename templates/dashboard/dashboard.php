@@ -25,7 +25,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			<div class="profile-completion tutor-mb-40">
 				<div class="tutor-row tutor-align-items-center">
 					<div class="tutor-col-lg-7 profile-completion-content <?php echo tutor_utils()->is_instructor() ? 'tutor-profile-completion-content-admin' : ''; ?>">
-						<div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary">
+						<div class="list-item-title tutor-fs-6 tutor-fw-medium tutor-color-black">
 							<?php esc_html_e( 'Complete Your Profile', 'tutor' ); ?>
 						</div>
 						<div class="tutor-mt-12 tutor-align-items-center" style="display: grid; grid-template-columns: repeat(<?php echo $total_count + 1; ?>, 1fr); ">
@@ -47,7 +47,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 								</span>
 							</li>
 						</div>
-						<div class="list-item-title tutor-text-regular-body tutor-mt-20">
+						<div class="list-item-title tutor-fs-6 tutor-fw-normal tutor-mt-20">
 							<?php
 								$profile_complete_text = "Please complete profile";
 								if($complete_count > ( $total_count / 2 ) && $complete_count < $total_count) {
@@ -58,8 +58,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 								$profile_complete_status = _e($profile_complete_text, 'tutor');
 
 							?>
-							<span class="tutor-color-text-hints"><?php $profile_complete_status ?></span>:&nbsp;
-							<span class="tutor-color-text-primary">
+							<span class="tutor-color-muted"><?php $profile_complete_status ?></span>:&nbsp;
+							<span class="tutor-color-black">
 								<?php echo $complete_count . '/' . $total_count; ?>
 							</span>
 						</div>
@@ -77,7 +77,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 											<span class="tutor-icon-cross-circle-outline-filled empty tutor-mr-4"></span>
 										<?php endif; ?>
 
-										<span class="<?php echo $is_set ? 'tutor-color-text-title' : 'tutor-color-text-hints'; ?>">
+										<span class="<?php echo $is_set ? 'tutor-color-black-70' : 'tutor-color-muted'; ?>">
 										<?php echo $data['label_html']; ?>
 										</span>
 									</li>
@@ -128,7 +128,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 }
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-24 tutor-dashboard-title"><?php _e( 'Dashboard', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24 tutor-dashboard-title"><?php _e( 'Dashboard', 'tutor' ); ?></div>
 <!-- <h3 class="tutor-dashboard-title"><?php // _e('Dashboard', 'tutor'); ?></h3> -->
 
 <div class="tutor-dashboard-content-inner">
@@ -235,7 +235,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 
 <?php if ( tutor_utils()->is_instructor() ) : ?>
 	<div class="tutor-frontend-dashboard-course-porgress">
-		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-24">
+		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24">
 			<?php esc_html_e( 'In Progress Course', 'tutor' ); ?>
 		</div>
 		<?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
@@ -259,22 +259,22 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 						<div class="list-item-rating tutor-d-flex">
 							<div class="tutor-ratings tutor-is-sm">
 								<?php tutor_utils()->star_rating_generator( $course_rating->rating_avg ); ?>
-								<div class="tutor-rating-text tutor-color-text-subsued tutor-text-regular-body">
+								<div class="tutor-rating-text tutor-color-black-60 tutor-fs-6 tutor-fw-normal">
 									<?php echo esc_html( number_format( $course_rating->rating_avg, 2 ) ); ?>
 								</div>
 							</div>
 						</div>
 						<?php endif; ?>
-						<div class="list-item-title tutor-text-medium-h6 tutor-color-text-primary tutor-mt-6">
+						<div class="list-item-title tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-6">
 							<a href="<?php the_permalink(); ?>">
 								<?php the_title(); ?>
 							</a>
 						</div>
 						<div class="list-item-steps tutor-mt-16">
-							<span class="tutor-text-regular-caption tutor-color-text-hints">
+							<span class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
 								<?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?>
 							</span>
-							<span class="tutor-text-medium-caption tutor-color-text-primary">
+							<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 								<span>
 									<?php echo esc_html( $course_progress['completed_count'] ); ?>
 								</span>
@@ -286,10 +286,10 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 							</span>
 						</div>
 						<div class="list-item-progress tutor-mt-32">
-							<div class="tutor-text-regular-body tutor-color-text-subsued tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+							<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 								<div class="progress-bar tutor-mr-16" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="progress-value"></span></div>
-								<span class="progress-percentage tutor-text-regular-caption tutor-color-text-hints">
-									<span class="tutor-text-medium-caption tutor-color-text-primary ">
+								<span class="progress-percentage tutor-fs-7 tutor-fw-normal tutor-color-muted">
+									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black ">
 										<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
 									</span><?php esc_html_e( 'Complete', 'tutor' ); ?>
 								</span>
@@ -317,7 +317,7 @@ if ( count( $instructor_course ) ) {
 	);
 
 	?>
-		<div class="popular-courses-heading-dashboard tutor-text-medium-h5 tutor-color-text-primary tutor-capitalize-text tutor-mb-24 tutor-mt-md-42 tutor-mt-0">
+		<div class="popular-courses-heading-dashboard tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24 tutor-mt-md-42 tutor-mt-0">
 			<?php esc_html_e( 'My Courses', 'tutor' ); ?>
 			<a style="float:right" class="tutor-view-all-course" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'my-courses' ) ); ?>">
 				<?php esc_html_e( 'View All', 'tutor' ); ?>
@@ -328,18 +328,18 @@ if ( count( $instructor_course ) ) {
 				<thead>
 					<tr>
 						<th>
-							<span class="text-regular-small tutor-color-text-subsued">
+							<span class="text-regular-small tutor-color-black-60">
 								<?php esc_html_e( 'Course Name', 'tutor' ); ?>
 							</span>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="inline-flex-center tutor-color-text-subsued">
+							<div class="inline-flex-center tutor-color-black-60">
 								<span class="text-regular-small"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
-							<div class="inline-flex-center tutor-color-text-subsued">
+							<div class="inline-flex-center tutor-color-black-60">
 								<span class="text-regular-small"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
@@ -358,19 +358,19 @@ if ( count( $instructor_course ) ) {
 							?>
 							<tr>
 								<td data-th="<?php esc_html_e( 'Course Name', 'tutor' ); ?>" class="column-fullwidth">
-									<div class="td-course  tutor-text-medium-body  tutor-color-text-primary">
+									<div class="td-course  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 										<a href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>" target="_blank">
 											<?php esc_html_e( $course->post_title ); ?>
 										</a>
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Enrolled', 'tutor' ); ?>">
-									<span class="tutor-text-medium-caption tutor-color-text-primary">
+									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 										<?php esc_html_e( $enrolled ); ?>
 									</span>
 								</td>
 								<td data-th="<?php esc_html_e( 'Rating', 'tutor' ); ?>">
-									<div class="td-tutor-rating tutor-text-regular-body tutor-color-text-subsued">
+									<div class="td-tutor-rating tutor-fs-6 tutor-fw-normal tutor-color-black-60">
 										<?php tutor_utils()->star_rating_generator_v2( $course_rating->rating_avg, null, true ); ?>
 									</div>
 								</td>

@@ -7,7 +7,7 @@
 
 if ( isset( $data ) && count( $data ) ) : ?>
 	<header class="tutor-wp-dashboard-header tutor-d-xl-flex tutor-justify-content-between tutor-align-items-center tutor-px-32 tutor-py-16 tutor-mb-24" style="margin-left:-20px">
-		<div class="header-title-wrap tutor-d-flex tutor-align-items-center tutor-flex-wrap tutor-mb-xl-0 tutor-mb-4 header-title tutor-text-medium-h5 tutor-color-text-primary">
+		<div class="header-title-wrap tutor-d-flex tutor-align-items-center tutor-flex-wrap tutor-mb-xl-0 tutor-mb-4 header-title tutor-fs-5 tutor-fw-medium tutor-color-black">
 			<span class="text-primary-h5">
 				<?php echo esc_html( $data['page_title'] ); ?>
 			</span>
@@ -33,7 +33,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 			<?php endif; ?>
 			<?php endif; ?>
 		</div>
-		<div class="filter-btns tutor-text-regular-body tutor-color-text-subsued">
+		<div class="filter-btns tutor-fs-6 tutor-fw-normal tutor-color-black-60">
 			<?php if ( isset( $data['tabs'] ) ) : ?>
 				<div class="tutor-admin-page-navbar-tabs filter-btns">
 					<?php foreach ( $data['tabs'] as $key => $v ) : ?>

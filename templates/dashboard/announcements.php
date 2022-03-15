@@ -59,15 +59,15 @@ $image_base = tutor()->url . '/assets/images/';
 ?>
 
 <div class="tutor-dashboard-content-inner">
-	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php echo __( 'Announcement', 'tutor' ); ?></div>
+	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php echo __( 'Announcement', 'tutor' ); ?></div>
 	<!--notice-->
 	<div class="tutor-component-three-col-action new-announcement-wrap">
 		<div class="tutor-announcement-big-icon">
 			<i class="tutor-icon-speaker-filled"></i>
 		</div>
 		<div>
-			<span class=" tutor-color-text-subsued"><?php esc_html_e( 'Create Announcement', 'tutor' ); ?></span>
-			<div class="tutor-text-medium-h6 tutor-color-text-primary">
+			<span class=" tutor-color-black-60"><?php esc_html_e( 'Create Announcement', 'tutor' ); ?></span>
+			<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 					<?php esc_html_e( 'Notify all students of your course', 'tutor' ); ?>
 			</div>
 		</div>

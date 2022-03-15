@@ -31,7 +31,7 @@
 		</div>
 		<div class="tutor-instructor-application-body">
 		<div class="tutor-ins-app-title tutor-m-auto tutor-text-center">
-			<span class="tutor-app-process-title tutor-text-medium-h3 tutor-color-text-primary">
+			<span class="tutor-app-process-title tutor-fs-3 tutor-fw-medium tutor-color-black">
 			<?php esc_html_e( 'Do you want to start your career as an instructor?', 'tutor' ); ?>
 			</span>
 		</div>

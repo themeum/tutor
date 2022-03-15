@@ -15,7 +15,7 @@ $col_classes = array(
         <?php
             tutor_load_template( 'dashboard.settings.nav-bar', ['active_setting_nav'=>'withdrawal'] );
         ?>
-        <div class="tutor-text-medium-h6 tutor-color-text-primary tutor-mt-32"><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></div>
+        <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></div>
     </div>
 
     <form id="tutor-withdraw-account-set-form" action="" method="post">
@@ -73,7 +73,7 @@ $col_classes = array(
                                 <div class="<?php echo esc_attr( $field_count ) > 1 ? 'tutor-col-12 tutor-col-sm-6' : 'tutor-col-12'; ?> tutor-mb-32">
                                     <?php
                                     if ( ! empty( $field['label'] ) ) {
-                                        echo "<label class='tutor-form-label tutor-color-text-hints' for='field_{$method_id}_$field_name'>
+                                        echo "<label class='tutor-form-label tutor-color-muted' for='field_{$method_id}_$field_name'>
                                                 ". htmlspecialchars($field['label']) ."
                                             </label>";
                                     }
@@ -107,7 +107,7 @@ $col_classes = array(
                                     }
 
                                     if ( ! empty( $field['desc'] ) ) {
-                                        echo wp_kses_post("<div class='tutor-text-regular-caption tutor-color-text-subsued withdraw-field-desc tutor-mt-4'>{$field['desc']}</div>");
+                                        echo wp_kses_post("<div class='tutor-fs-7 tutor-fw-normal tutor-color-black-60 withdraw-field-desc tutor-mt-4'>{$field['desc']}</div>");
                                     }
                                     ?>
                                 </div>

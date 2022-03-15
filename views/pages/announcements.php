@@ -86,7 +86,7 @@ $filters = array(
 				<i class="tutor-icon-speaker-filled"></i>
 			</div>
 			<div>
-				<div class="tutor-text-regular-h5 tutor-color-text-primary">
+				<div class="tutor-fs-5 tutor-fw-normal tutor-color-black">
 					<?php esc_html_e( 'Create a new announcement and notify your students about it', 'tutor' ); ?>
 				</div>
 			</div>
