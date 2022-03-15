@@ -138,7 +138,7 @@
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
 
-					<button type="submit" class="tutor-mt-25 tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
+					<button type="submit" class="tutor-mt-24 tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
 						<?php esc_html_e( 'Complete Course', 'tutor' ); ?>
 					</button>
 				</form>

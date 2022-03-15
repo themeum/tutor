@@ -19,14 +19,14 @@ $instructors = tutor_utils()->get_instructors_by_course();
 
 if($instructors && count($instructors)) {
 	?>
-	<div class="tutor-mt-65">
+	<div class="tutor-mt-64">
 		<div class="tutor-color-text-primary tutor-text-medium-h6 tutor-mb-24">
 			<?php _e('About the instructors', 'tutor'); ?>
 		</div>
 		<?php foreach($instructors as $instructor): ?>
 			<div class="tutor-instructor-info-card tutor-mb-16">
 				<div class="tutor-instructor-info-card-body tutor-d-sm-flex tutor-align-items-start tutor-px-32 tutor-py-24">
-					<div class="tutor-ins-avatar tutor-flex-shrink-0 tutor-mr-sm-15">
+					<div class="tutor-ins-avatar tutor-flex-shrink-0 tutor-mr-sm-16">
 						<img src="<?php echo get_avatar_url($instructor->ID); ?>" alt="instructor avatar" />
 					</div>
 					<div class="tutor-ins-rest">
