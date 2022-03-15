@@ -185,7 +185,7 @@
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
 							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
-								<span class="color-text-primary text-medium-body tutor-pl-10">
+								<span class="color-text-primary text-medium-body tutor-pl-12">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
@@ -208,7 +208,7 @@
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
 							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
-								<span class="color-text-primary text-medium-body tutor-pl-10">
+								<span class="color-text-primary text-medium-body tutor-pl-12">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>

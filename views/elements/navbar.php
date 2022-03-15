@@ -24,7 +24,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 				<?php endif; ?>
 			<?php else : ?>
 			<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
-				<a class="tutor-pl-10" href="<?php echo esc_url( $data['button_url'] ); ?>">
+				<a class="tutor-pl-12" href="<?php echo esc_url( $data['button_url'] ); ?>">
 					<button class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm">
 						<span class="tutor-icon-20 tutor-icon-plus-bold-filled"></span>
 						<span><?php echo esc_html( $data['button_title'] ); ?></span>

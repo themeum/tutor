@@ -81,7 +81,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 	<!-- Course builder body -->
 	<div class="tutor-container">
 		<div class="tutor-row">
-			<div class="tutor-col-12 tutor-col-lg-8 tutor-mb-32 tutor-pr-30">
+			<div class="tutor-col-12 tutor-col-lg-8 tutor-mb-32 tutor-pr-32">
 				<input type="hidden" value="tutor_add_course_builder" name="tutor_action" />
 				<input type="hidden" name="course_ID" id="course_ID" value="<?php echo get_the_ID(); ?>">
 				<input type="hidden" name="post_ID" id="post_ID" value="<?php echo get_the_ID(); ?>">
@@ -109,7 +109,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 									<button data-tutor-modal-close class="tutor-modal-close">
 										<span class="tutor-icon-line-cross-line tutor-icon-30 tutor-color-black-40"></span>
 									</button>
-									<div class="tutor-text-center tutor-mt-80 tutor-px-50 tutor-pb-md-100 tutor-pb-50">
+									<div class="tutor-text-center tutor-mt-80 tutor-px-48 tutor-pb-md-80 tutor-pb-48">
 										<div class="tutor-modal-icon tutor-flex-center">
 											<img src="<?php echo tutor()->url; ?>/assets/images/icon-cup.svg" alt="" />
 										</div>
@@ -211,7 +211,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 											<span class="tutor-input-prepand">
 												<?php echo $currency_symbol; ?>
 											</span>
-											<input type="number" class="tutor-form-number-verify tutor-pl-10" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" min="0">
+											<input type="number" class="tutor-form-number-verify tutor-pl-12" name="course_price" value="<?php echo $course_price->regular_price; ?>" placeholder="<?php _e('Set course price', 'tutor'); ?>" min="0">
 										</label>
 									</div>
 								</div>

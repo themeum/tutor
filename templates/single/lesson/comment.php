@@ -22,7 +22,7 @@
 	<div class="text-medium-h6 tutor-color-text-primary">
 		<?php _e( 'Join the conversation', 'tutor' ); ?>
 	</div>
-	<div class="tutor-conversation tutor-mt-12 tutor-pb-20 tutor-pb-sm-50">
+	<div class="tutor-conversation tutor-mt-12 tutor-pb-20 tutor-pb-sm-48">
 		<form class="tutor-comment-box tutor-mt-32" action="<?php echo get_home_url(); ?>/wp-comments-post.php" method="post">
 			<input type="hidden" name="is_lesson_comment" value="true">
 			<div class="comment-avatar">

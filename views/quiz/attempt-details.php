@@ -351,11 +351,11 @@ $feedback = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedba
 // don't show on instructor quiz attempt since below already have feedback box area.
 if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 	?>
-    <div class="tutor-quiz-attempt-note tutor-instructor-note tutor-my-32 tutor-py-20 tutor-px-25 tutor-py-sm-30 tutor-px-sm-35">
+    <div class="tutor-quiz-attempt-note tutor-instructor-note tutor-my-32 tutor-py-20 tutor-px-24 tutor-py-sm-32 tutor-px-sm-36">
         <div class="tutor-in-title tutor-text-medium-h6 tutor-color-text-primary">
             <?php esc_html_e( 'Instructor Note', 'tutor' ); ?>					
         </div>
-		<div class="tutor-in-body tutor-text-regular-body tutor-color-text-subsued tutor-pt-10 tutor-pt-sm-18">
+		<div class="tutor-in-body tutor-text-regular-body tutor-color-text-subsued tutor-pt-12 tutor-pt-sm-16">
 			<?php echo wp_kses_post( $feedback ); ?>					
         </div>
 	</div>
