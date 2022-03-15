@@ -111,7 +111,7 @@
                 (<?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>)
             </div>
 
-            <label class="tutor-radio-select tutor-bg-white tutor-mb-7">
+            <label class="tutor-radio-select tutor-bg-white tutor-mb-8">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="default" <?php checked('default', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Default', 'tutor'); ?></span>
@@ -119,7 +119,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-12 tutor-mt-7">
+            <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="retry" <?php checked('retry', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Retry Mode', 'tutor'); ?></span>
@@ -127,7 +127,7 @@
                 </div>
             </label>
 
-            <label class="tutor-radio-select tutor-bg-transparent tutor-mb-12 tutor-mt-7">
+            <label class="tutor-radio-select tutor-bg-transparent tutor-my-8">
                 <input class="tutor-form-check-input" type="radio" name="quiz_option[feedback_mode]" value="reveal" <?php checked('reveal', tutor_utils()->get_quiz_option($quiz_id, 'feedback_mode')); ?>>
                 <div class="tutor-radio-select-content">
                     <span class="tutor-radio-select-title"><?php _e('Reveal Mode', 'tutor'); ?></span>
@@ -187,18 +187,18 @@
                     <div class="tutor-col-auto">
                         <span><i class="tutor-icon-settings-filled"></i></span>
                     </div>
-                    <div class="tutor-col tutor-padding-0 tutor-fs-6 tutor-fw-medium tutor-color-black-70">
+                    <div class="tutor-col tutor-p-0 tutor-text-medium-h6 tutor-color-black-70">
                         <?php _e('Advance Settings', 'tutor'); ?>
                     </div>
                 </div>
             </div>
             <div class="tutor-col-auto">
-                <i class="tutor-icon-angle-down-filled tutor-mr-32"></i>
+                <i class="tutor-icon-angle-down-filled"></i>
             </div>
         </div>
 
         <!-- Fields -->
-        <div class="tutor-quiz-advance-content tutor-padding-32">
+        <div class="tutor-quiz-advance-content tutor-p-32">
             <div class="tutor-quiz-advance-settings-fields tutor-row">
                 <div class="tutor-col-12 tutor-mb-32">
                     <label class="tutor-form-toggle">
@@ -210,7 +210,7 @@
                     </p>
                 </div>
 
-                <div class="tutor-col-12 tutor-col-sm-6 tutor-mb-35">
+                <div class="tutor-col-12 tutor-col-sm-6 tutor-mb-32">
                     <h4><?php _e('Question Layout', 'tutor'); ?></h4>
                     <select class="tutor-form-select" name="quiz_option[question_layout_view]">
                         <option value=""><?php _e('Set question layout view', 'tutor'); ?></option>
@@ -220,7 +220,7 @@
                     </select>
                 </div>
 
-                <div class="tutor-col-12 tutor-col-sm-6 tutor-mb-35">
+                <div class="tutor-col-12 tutor-col-sm-6 tutor-mb-32">
                     <h4><?php _e('Questions Order', 'tutor'); ?></h4>
                     <select class="tutor-form-select" name="quiz_option[questions_order]">
                         <option value="rand" <?php selected('rand', tutor_utils()->get_quiz_option($quiz_id, 'questions_order')); ?>> <?php _e('Random', 'tutor'); ?> </option>
