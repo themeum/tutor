@@ -6411,7 +6411,7 @@ class Utils {
 	 *
 	 * Get purchase history by customer id
 	 */
-	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date, $offset = '', $per_page = '' ) {
+	public function get_orders_by_user_id( $user_id=0, $period='', $start_date='', $end_date='', $offset = '', $per_page = '' ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id( $user_id );
