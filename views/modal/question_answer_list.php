@@ -1,6 +1,6 @@
 <?php 
     if ($question_type === 'open_ended' || $question_type === 'short_answer'){
-        echo '<p class="tutor-padding-30">'.
+        echo '<p class="tutor-px-32 tutor-py-16">'.
                 __('No option is necessary for this answer type', 'tutor').
             '</p>';
         return '';
