@@ -28,16 +28,16 @@
             $total_booked = 100 / $maximum_students * $total_enrolled;
             $b_total = $total_booked;
 
-            $price_html = '<div class="list-item-price-with-booking tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-between">
-                            <div class="list-item-price tutor-bs-d-flex tutor-bs-align-items-center"> 
+            $price_html = '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+                            <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
                                 <span class="price tutor-text-bold-h6 tutor-color-text-primary">'.
                                     $product->get_price_html() . 
                                 ' </span>
                             </div>
                         </div>';
 
-            $percet_html = '<div class="list-item-booking tutor-bs-d-flex tutor-bs-align-items-center">
-                                <div class="booking-progress tutor-bs-d-flex">
+            $percet_html = '<div class="list-item-booking tutor-d-flex tutor-align-items-center">
+                                <div class="booking-progress tutor-d-flex">
                                     <div class="circle-progress progress-full" style="--pro:'.$b_total .'%;">
                                     
                                     </div>
