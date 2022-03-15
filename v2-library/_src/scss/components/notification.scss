@@ -155,10 +155,10 @@
 // Tutor alert utility - .tutor-alert.tutor-*
 // prefix 1-borderC 2-txtC 3-bgC 4-iconC 5-btnC 6-btnBg 7-btnBorder
 $alertVariations: (
-	'success' $success-70 $text-title $bg-white $design-success $text-success $success-40 $success-60,
-	'danger' $danger-70 $text-title $bg-white $design-danger $text-error $danger-40 $danger-60,
-	'warning' $warning-70 $text-title $bg-white $design-warning $text-warning $warning-40 $warning-60,
-	'primary' $primary-70 $text-title $bg-white $design-brand $text-brand $primary-40 $primary-60
+	'success' $success-70 $black-70 $bg-white $design-success $text-success $success-40 $success-60,
+	'danger' $danger-70 $black-70 $bg-white $design-danger $text-error $danger-40 $danger-60,
+	'warning' $warning-70 $black-70 $bg-white $design-warning $text-warning $warning-40 $warning-60,
+	'primary' $primary-70 $black-70 $bg-white $design-brand $text-brand $primary-40 $primary-60
 );
 @each $suffix, $borderC, $txtC, $bgC, $iconC, $btnC, $btnBg, $btnBorder in $alertVariations {
 	.tutor-alert.tutor-#{$suffix} {
@@ -192,7 +192,7 @@ $alertVariations: (
 
 	.tutor-alert-text {
 		@extend .text-regular-caption;
-		@extend .color-text-title;
+		@extend .tutor-color-black-70;
 		display: flex;
 		@include breakpoint-min(tablet) {
 			align-items: center;

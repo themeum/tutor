@@ -36,7 +36,7 @@
 				pointer-events: none;
 			}
 			.item-count {
-				color: $text-subsued;
+				color: $black-60;
 			}
 			&:before {
 				content: '';
@@ -127,7 +127,7 @@
 
 	.tutor-form-label {
 		@extend .text-medium-caption;
-		@extend .color-text-title;
+		@extend .tutor-color-black-70;
 		@extend .tutor-mb-12;
 	}
 
