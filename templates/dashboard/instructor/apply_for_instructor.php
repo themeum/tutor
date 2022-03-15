@@ -42,7 +42,7 @@
 			</span>
 		</div>
 		<div class="tutor-instructor-apply-button tutor-text-center">
-			<button class="tutor-btn tutor-btn-primary tutor-color-text-white" type="submit" name="tutor_register_instructor_btn" value="apply">
+			<button class="tutor-btn tutor-btn-primary tutor-color-white" type="submit" name="tutor_register_instructor_btn" value="apply">
 			<?php esc_html_e( 'Apply Now', 'tutor' ); ?>
 			</button>
 		</div>

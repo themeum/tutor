@@ -46,13 +46,13 @@
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="tutor-icon-edit-filled tutor-icon-24 tutor-mr-4 tutor-color-design-white"></span>
-                                        <span class="text-regular-body tutor-color-text-white"><?php _e('Edit', 'tutor'); ?></span>
+                                        <span class="text-regular-body tutor-color-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="tutor-icon-delete-fill-filled tutor-icon-24 tutor-mr-4 tutor-color-design-white"></span>
-                                        <span class="text-regular-body tutor-color-text-white"><?php _e('Delete', 'tutor'); ?></span>
+                                        <span class="text-regular-body tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>
                             </ul>

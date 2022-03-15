@@ -169,7 +169,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                     <li class="tutor-qna-badges tutor-qna-badges-wrapper">
                                                         <a href="#" data-action="archived" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
                                                             <span class="tutor-icon-msg-archive-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
-                                                            <span class="text-regular-body tutor-color-text-white">
+                                                            <span class="text-regular-body tutor-color-white">
                                                                 <?php $is_archived ?  _e('Un-archive', 'tutor') : _e('Archive', 'tutor'); ?>
                                                             </span>
                                                         </a>
@@ -178,7 +178,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 <li class="tutor-qna-badges tutor-qna-badges-wrapper">
                                                     <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
                                                         <span class="tutor-icon-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
-                                                        <span class="text-regular-body tutor-color-text-white" style="text-align: left;">
+                                                        <span class="text-regular-body tutor-color-white" style="text-align: left;">
                                                             <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
                                                         </span>
                                                     </a>
@@ -186,7 +186,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 <li>
                                                     <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>">
                                                         <span class="tutor-icon-delete-fill-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
-                                                        <span class="text-regular-body tutor-color-text-white"><?php _e('Delete', 'tutor'); ?></span>
+                                                        <span class="text-regular-body tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
                                                     </a>
                                                 </li>
                                             </ul>
