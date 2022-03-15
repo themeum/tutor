@@ -242,10 +242,10 @@ class Assets {
 
 		// Fonts
 		wp_enqueue_style('tutor-inter-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', array(), TUTOR_VERSION);
-		wp_enqueue_style('tutor-icon', tutor()->url . 'v2-library/bundle/fonts/tutor-icon/style.css', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor-icon', tutor()->url . 'assets/css/tutor-icon.css', array(), TUTOR_VERSION);
 
 		// Common css library
-		wp_enqueue_style('tutor-v2', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION);
+		wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION);
 
 		// Load course builder resources
 		if ($this->get_course_builder_screen()) {
@@ -257,7 +257,7 @@ class Assets {
 		 *
 		 * @since v2.0.0
 		 */
-		wp_enqueue_script('tutor-v2-script', tutor()->url . 'assets/js/tutor.min.js', array('jquery', 'wp-i18n'), TUTOR_VERSION, true);
+		wp_enqueue_script('tutor-script', tutor()->url . 'assets/js/tutor.min.js', array('jquery', 'wp-i18n'), TUTOR_VERSION, true);
 	}
 
 	public function load_meta_data()
@@ -267,7 +267,7 @@ class Assets {
 		wp_localize_script('tutor-frontend', '_tutorobject', $localize_data);
 		wp_localize_script('tutor-admin', '_tutorobject', $localize_data);
 		wp_localize_script('tutor-course-builder', '_tutorobject', $localize_data);
-		wp_localize_script('tutor-v2-script', '_tutorobject', $localize_data);
+		wp_localize_script('tutor-script', '_tutorobject', $localize_data);
 
 		// Inline styles
 		wp_add_inline_style('tutor-frontend', $this->load_color_palette());
