@@ -92,7 +92,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 					<div class="view-announcement-icon bg-primary-40 tutor-color-brand-wordpress">
 						<span class="tutor-icon-speaker-filled tutor-color-design-brand"></span>
 					</div>
-					<div class="text-bold-h5 tutor-color-black tutor-mt-35 pr-lg-5">
+					<div class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mt-32 tutor-pr-lg-4">
 						<?php echo $announcement->post_title; ?>
 					</div>
 					<div class="text-regular-body tutor-color-muted tutor-mt-20">
@@ -105,7 +105,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php _e( 'Course', 'tutor' ); ?>
 							</div>
-							<div class="text-bold-body tutor-color-black tutor-mt-3">
+							<div class="text-bold-body tutor-color-black tutor-mt-4">
 								<?php echo $course_title; ?>
 							</div>
 						</div>
@@ -113,7 +113,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 							<div class="text-regular-caption tutor-color-black-60">
 								<?php _e( 'Publised Date', 'tutor' ); ?>
 							</div>
-							<div class="text-bold-body tutor-color-black tutor-mt-3">
+							<div class="text-bold-body tutor-color-black tutor-mt-4">
 								<?php echo $publish_date . ', ' . $publish_time; ?>
 							</div>
 						</div>

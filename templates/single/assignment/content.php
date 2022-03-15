@@ -155,7 +155,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 			?>
 		<?php if ( ! $submitted_assignment ) { ?>
-		<div class="tutor-assignment-meta-info tutor-d-flex tutor-justify-content-between tutor-mt-25 tutor-mt-sm-35 tutor-py-16 tutor-py-sm-22">
+		<div class="tutor-assignment-meta-info tutor-d-flex tutor-justify-content-between tutor-mt-24 tutor-mt-sm-32 tutor-py-16 tutor-py-sm-24">
 			<div class="tutor-assignment-detail-info tutor-d-flex">
 				<div class="tutor-assignment-duration">
 					<span class="text-regular-body tutor-color-muted"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
@@ -201,7 +201,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 		if ( $time_duration['value'] != 0 ) :
 			if ( $now > $remaining_time and $is_submitted == false ) :
 				?>
-			<div class="quiz-flash-message tutor-mt-25 tutor-mt-sm-35">
+			<div class="quiz-flash-message tutor-mt-24 tutor-mt-sm-32">
 				<div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 					<div class="flash-info tutor-d-flex tutor-align-items-center">
 						<span class="tutor-icon-cross-cricle-filled tutor-color-design-danger tutor-mr-8"></span>

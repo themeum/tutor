@@ -163,7 +163,7 @@
 				<div class="tutor-qna-user">
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
 					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mt-24"><?php echo $question->display_name; ?></div>
-					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 tutor-mt-3"><?php echo $question->user_email; ?></div>
+					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 tutor-mt-4"><?php echo $question->user_email; ?></div>
 					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 21px;">
 						<?php
 							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
