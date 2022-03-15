@@ -878,6 +878,8 @@ jQuery(document).ready(function ($) {
 		filter_criteria.course_per_page = course_per_page;
 		filter_criteria.action = 'tutor_course_filter_ajax';
 
+		console.log(filter_criteria);
+
 
 		loop_container.html('<div class="loading-spinner"></div>');
 		$(this)
@@ -936,6 +938,7 @@ jQuery(document).ready(function ($) {
 	loop_container.on('change', 'select[name="tutor_course_filter"]', function () {
 		filter_modifier.tutor_course_filter = $(this).val();
 		filter_container.find('input:first').trigger('change');
+		ajaxFilterArchive();
 	});
 
 	// Refresh page after coming back to course archive page from cart

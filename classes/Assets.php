@@ -151,7 +151,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		
 		// Plyr
-		if(is_single_course()) {
+		if(is_single_course(true)) {
 			wp_enqueue_style('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION);
 			wp_enqueue_script('tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array('jquery'), TUTOR_VERSION, true);
 		}

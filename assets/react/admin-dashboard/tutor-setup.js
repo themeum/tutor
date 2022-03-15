@@ -62,7 +62,6 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-
 	/* ---------------------
 	* Navigate Wizard Screens
 	* ---------------------- */
@@ -73,21 +72,6 @@ jQuery(document).ready(function ($) {
 		$('.tutor-setup-title li').eq(0).addClass('active')
 		window.location.hash = "general";
 		showHide($("input[name='enable_course_marketplace']:checked").val())
-	});
-
-	/* ---------------------
-	* Marketplace Type
-	* ---------------------- */
-	$("input[type=radio][name=enable_course_marketplace]").change(function () {
-		console.log('change', this.value);
-		var wizardForm = $('form#tutor-setup-form');
-		if (this.value == "0" || this.value == "off") {
-			wizardForm.find("input[name=enable_course_marketplace]").val("off");
-			wizardForm.find("input[name=enable_tutor_earning]").val("off");
-		} else if (this.value == "1" || this.value == "on") {
-			wizardForm.find("input[name=enable_course_marketplace]").val("on");
-			wizardForm.find("input[name=enable_tutor_earning]").val("on");
-		}
 	});
 
 	/* ---------------------

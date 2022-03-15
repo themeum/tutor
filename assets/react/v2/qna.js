@@ -66,6 +66,9 @@ window.jQuery(document).ready($=>{
                 }
 
                 // Update read unread
+                if (qna_action == 'archived') {
+                    location.reload();
+                }
                 if(qna_action=='read') {
                     let method = new_value==0 ? 'removeClass' : 'addClass';
                     row.find('.tutor-qna-question-col')[method]('is-read');
@@ -145,7 +148,7 @@ window.jQuery(document).ready($=>{
             },
             complete: () =>{
                 button.html(btnInnerHtml)
-                $('.tutor-qna-single-wrapper').find('.tutor-qa-reply').hide();
+                // $('.tutor-qna-single-wrapper').find('.tutor-qa-reply').hide();
             }
         })
     });

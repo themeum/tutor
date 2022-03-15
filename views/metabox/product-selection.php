@@ -14,9 +14,7 @@
 			<option value="-1"><?php _e( 'Select a Product' ); ?></option>
 			<?php
 			foreach ( $products as $product ) {
-				echo "<option value='{$product->ID}' " . selected( $product->ID, $product_id ) . " >
-                            {$product->post_title}
-                        </option>";
+				echo "<option value='{$product->ID}' " . selected( $product->ID, $product_id ) . " >{$product->post_title}</option>";
 			}
 			?>
 		</select>
