@@ -31,7 +31,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
             <?php
             esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($comment_parent); ?>
         </div>
-        <div class="tutor-fs-6 tutor-fw-medium tutor-mt-6">
+        <div class="tutor-fs-6 tutor-fw-medium tutor-mt-8">
             <?php echo get_the_title($assignment_id); ?>
         </div>
         <div class="assignment-info tutor-mt-12 tutor-d-flex">
