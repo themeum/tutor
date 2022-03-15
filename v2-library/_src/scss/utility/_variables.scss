@@ -8,6 +8,7 @@ $primary-60: #bdcaf1;
 $primary-50: #d2dbf5;
 $primary-40: #e9edfb;
 $primary-30: #f6f8fd;
+
 // Black
 $black-main: #212327;
 $black-100: #0b0c0e;
@@ -66,10 +67,7 @@ $color-warning: $warning-main;
 $color-error: $danger-main;
 
 // Text Colors
-$text-primary: $black-main;
-$text-title: $black-70;
-$text-subsued: $black-60;
-$text-hints: #757c8e;
+$text-muted: #757c8e;
 $text-white: $color-white;
 $text-brand: $color-brand;
 $text-success: $color-success;
