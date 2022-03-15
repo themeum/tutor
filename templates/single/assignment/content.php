@@ -568,7 +568,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					<?php endif; ?>
 
 				<div class="tutor-assignment-details tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
-					<div class="tutor-ar-body tutor-pt-25 tutor-pb-40 tutor-px-16 tutor-px-md-32">
+					<div class="tutor-ar-body tutor-pt-24 tutor-pb-40 tutor-px-16 tutor-px-md-32">
 						<div class="tutor-ar-header tutor-d-flex tutor-justify-content-between tutor-align-items-center">
 							<div class="tutor-ar-title tutor-text-medium-h6 tutor-color-text-primary">
 								<?php esc_html_e( 'Your Assignment', 'tutor' ); ?>
