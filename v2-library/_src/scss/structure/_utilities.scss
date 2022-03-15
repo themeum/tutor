@@ -240,6 +240,121 @@ $utilities: map-merge(
         last: 6,
       ),
     ),
+
+    // Margin utilities
+    // scss-docs-start utils-spacing
+    "margin": (
+      responsive: true,
+      property: margin,
+      class: tutor-m,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-x": (
+      responsive: true,
+      property: margin-right margin-left,
+      class: tutor-mx,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-y": (
+      responsive: true,
+      property: margin-top margin-bottom,
+      class: tutor-my,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-top": (
+      responsive: true,
+      property: margin-top,
+      class: tutor-mt,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-end": (
+      responsive: true,
+      property: margin-right,
+      class: tutor-mr,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-bottom": (
+      responsive: true,
+      property: margin-bottom,
+      class: tutor-mb,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-start": (
+      responsive: true,
+      property: margin-left,
+      class: tutor-ml,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+
+    // Padding utilities
+    "padding": (
+      responsive: true,
+      property: padding,
+      class: tutor-p,
+      values: $utility-spacers
+    ),
+    "padding-x": (
+      responsive: true,
+      property: padding-right padding-left,
+      class: tutor-px,
+      values: $utility-spacers
+    ),
+    "padding-y": (
+      responsive: true,
+      property: padding-top padding-bottom,
+      class: tutor-py,
+      values: $utility-spacers
+    ),
+    "padding-top": (
+      responsive: true,
+      property: padding-top,
+      class: tutor-pt,
+      values: $utility-spacers
+    ),
+    "padding-end": (
+      responsive: true,
+      property: padding-right,
+      class: tutor-pr,
+      values: $utility-spacers
+    ),
+    "padding-bottom": (
+      responsive: true,
+      property: padding-bottom,
+      class: tutor-pb,
+      values: $utility-spacers
+    ),
+    "padding-start": (
+      responsive: true,
+      property: padding-left,
+      class: tutor-pl,
+      values: $utility-spacers
+    ),
+
+    // scss-docs-start utils-text
+    "font-size": (
+      rfs: true,
+      property: font-size,
+      class: tutor-fs,
+      values: $font-sizes
+    ),
+    "font-style": (
+      property: font-style,
+      class: tutor-fst,
+      values: italic normal
+    ),
+    "font-weight": (
+      property: font-weight,
+      class: tutor-fw,
+      values: (
+        light: lighter,
+        lighter: 300,
+        normal: 400,
+        medium: 500,
+        bold: 700,
+        bolder: bolder
+      )
+    ),
+
     // scss-docs-start utils-visibility
     "visibility": (
       property: visibility,
