@@ -148,7 +148,7 @@ window.jQuery(document).ready($=>{
             },
             complete: () =>{
                 button.html(btnInnerHtml)
-                $('.tutor-qna-single-wrapper').find('.tutor-qa-reply').hide();
+                // $('.tutor-qna-single-wrapper').find('.tutor-qa-reply').hide();
             }
         })
     });
