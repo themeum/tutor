@@ -2,8 +2,27 @@
 
 ### 2.0.0 - March 15, 2022
 
-* New: Overall design update and optimizations
-* New: Email template builder
+* New: Visually appealing appearance with a more unified design system
+* New: Edit email template content from the editor without having to override the plugin
+* New: Exclusive in-house designed email templates for email notification events
+* New: Personalized dashboard for instructors and students focused on task automation
+* New: Notification bar on top of the dashboard to let learners and instructors stay updated
+* New: Improved Analytics with more extensive statistics 
+* New: New Q&A features for instant and more engaging communication
+* New: Event calendar with handy features to organize and schedule assignments
+* New: New Assignment features with the option to retake and add instructor's feedback 
+* New: Announcement tab in the course detail page to display announcements created from the backend for courses
+* New: Preview certificate before downloading upon completing the course 
+* New: Use preset or custom color palettes to configure the entire site's colors 
+* New: Brand new Quiz interface with a new student window and other handy settings 
+* New: Collect all of your reviews and ratings in one centralized location
+* New: Dynamic membership plan on the right sidebar of the course details page
+* New: Enhanced Instructor list and public profile layouts with Backend & Frontend preview
+* New: Flexible Gradebook with easy grading point system setup
+* New: More intuitive certificate setup page with the guided creation process
+* New: Enhanced course catalog features with extensive course page
+* New: Improved accessibility and responsiveness across all devices
+* And many under the hood improvements
 
 
 ### 2.0.0-rc - February 22, 2022
