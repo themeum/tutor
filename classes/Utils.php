@@ -4336,7 +4336,7 @@ class Utils {
 		}
 
 
-		if ( isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
+		if ( !isset($args['tab']) || isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
 			$query_all = $query;
 			$query     = array();
 			foreach ( $query_all as $m_query ) {
