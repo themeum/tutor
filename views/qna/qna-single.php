@@ -144,7 +144,7 @@
 				}
 				?>
 			</div>
-			<div class="tutor-qa-reply tutor-mt-10 tutor-mb-25" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+			<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 				<div class="tutor-d-flex tutor-align-items-center">
 					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
@@ -162,7 +162,7 @@
 			<div class="tutor-qna-admin-sidebar">
 				<div class="tutor-qna-user">
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
-					<div class="tutor-text-medium-h4 tutor-color-text-primary tutor-mt-22"><?php echo $question->display_name; ?></div>
+					<div class="tutor-text-medium-h4 tutor-color-text-primary tutor-mt-24"><?php echo $question->display_name; ?></div>
 					<div class="tutor-text-medium-body tutor-color-text-subsued tutor-mt-3"><?php echo $question->user_email; ?></div>
 					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 21px;">
 						<?php
@@ -185,7 +185,7 @@
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
 							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
-								<span class="color-text-primary text-medium-body tutor-pl-10">
+								<span class="color-text-primary text-medium-body tutor-pl-12">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
@@ -208,7 +208,7 @@
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
 							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
-								<span class="color-text-primary text-medium-body tutor-pl-10">
+								<span class="color-text-primary text-medium-body tutor-pl-12">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>

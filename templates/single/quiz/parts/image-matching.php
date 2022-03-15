@@ -23,7 +23,7 @@
                 foreach ($answers as $answer){
         ?>
         <div class="quiz-image-box">
-            <div class="quiz-image tutor-d-flex tutor-mb-15">
+            <div class="quiz-image tutor-d-flex tutor-mb-16">
                 <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
             </div>
             <div class="tutor-quiz-dotted-box tutor-dropzone flex-center">

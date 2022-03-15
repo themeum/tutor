@@ -10,7 +10,7 @@ export default function () {
             <div className="tutor-border-bottom">
                 <div className="row tutor-align-items-center">
                     <div className="col">
-                        <div className="tutor-user-profile tutor-pb-25">
+                        <div className="tutor-user-profile tutor-pb-24">
                             <div className="tutor-avatar">
                                 <img src="https://i.imgur.com/nhvtFNJ.jpg" alt=""/>
                             </div>
@@ -31,7 +31,7 @@ export default function () {
             <div className="tutor-border-bottom">
                 <div className="row tutor-align-items-center">
                     <div className="col">
-                        <div className="tutor-user-profile tutor-pb-25">
+                        <div className="tutor-user-profile tutor-pb-24">
                             <div className="tutor-avatar">
                                 <img src="https://i.imgur.com/nhvtFNJ.jpg" alt=""/>
                             </div>
@@ -72,7 +72,7 @@ export default function () {
             <div className="tutor-border-bottom">
                 <div className="row tutor-align-items-center">
                     <div className="col">
-                        <div className="tutor-user-profile tutor-pb-25">
+                        <div className="tutor-user-profile tutor-pb-24">
                             <div className="tutor-avatar">
                                 <img src="https://i.imgur.com/nhvtFNJ.jpg" alt=""/>
                             </div>

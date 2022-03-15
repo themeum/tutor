@@ -4,11 +4,11 @@
  */
 ?>
 <main class="tutor-backend-settings-addons-list tutor-dashboard-page" style="margin-left: -20px;">
-    <div class="tutor-addons-list-body tutor-p-30">
+    <div class="tutor-addons-list-body tutor-p-32">
         <div class="tutor-addons-list-items tutor-mb-40">
             <div class="tutor-addons-card">
-                <div class="card-body addons-jumbotron tutor-px-30 tutor-py-40">
-                    <div class="addon-pro-banner tutor-mr-50"> 
+                <div class="card-body addons-jumbotron tutor-px-32 tutor-py-40">
+                    <div class="addon-pro-banner tutor-mr-40"> 
                         <svg width="423" height="268" viewBox="0 0 423 268" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M409.16 266.995H232.985C225.77 266.995 219.928 261.156 219.928 253.946V152.409C219.928 145.198 225.77 139.36 232.985 139.36H409.144C416.359 139.36 422.202 145.198 422.202 152.409V253.946C422.218 261.156 416.359 266.995 409.16 266.995Z" fill="#FEEDF5"/>
                         <path d="M196.082 138.434H19.9224C12.7074 138.434 6.86523 144.273 6.86523 151.483V253.02C6.86523 260.231 12.7074 266.069 19.9224 266.069H196.082C203.297 266.069 209.139 260.231 209.139 253.02V151.483C209.139 144.273 203.297 138.434 196.082 138.434Z" fill="#F4F2F5"/>
@@ -136,13 +136,13 @@
                     </div>
                     <div class="addon-jumbotron-content">
                         <h3 class="title tutor-mt-0 tutor-mb-20"><?php esc_html_e( 'Get All of Our Addons for a Single Price', 'tutor' ); ?></h3>
-                        <p class="tutor-d-flex tutor-py-5"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Enjoy all popular add-ons under a single price', 'tutor' ); ?>
                         </p>
-                        <p class="tutor-d-flex tutor-py-5"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Easy enable options for the features you need', 'tutor' ); ?>
                         </p>
-                        <p class="tutor-d-flex tutor-py-5"><span class="icon tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="icon tutor-icon-mark-filled"></span>
                         <?php esc_html_e( 'Advanced customization options for each add-on', 'tutor' ); ?>
                         </p>
                         <button class="tutor-btn tutor-btn-wordpress tutor-mt-20">
@@ -157,7 +157,7 @@
                 </div>
             </div>
 		</div>
-        <h3 class="title tutor-text-medium-h5 tutor-color-text-primary tutor-mb-10"><?php esc_html_e( 'Add-ons', 'tutor' ); ?></h3>
+        <h3 class="title tutor-text-medium-h5 tutor-color-text-primary tutor-mb-12"><?php esc_html_e( 'Add-ons', 'tutor' ); ?></h3>
         <div class="tutor-addons-list-select-filter tutor-d-flex tutor-justify-content-end tutor-align-items-center">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
 				<span class="tutor-icon-search-filled tutor-input-group-icon"></span>
@@ -170,6 +170,6 @@
 				/>
 			</div>
 		</div>
-        <div id="tutor-free-addons" class="tutor-addons-list-items tutor-row tutor-gx-xxl-4 tutor-mt-30"></div>
+        <div id="tutor-free-addons" class="tutor-addons-list-items tutor-row tutor-gx-xxl-4 tutor-mt-32"></div>
     </div>
 </main>

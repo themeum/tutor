@@ -23,9 +23,9 @@ if (null !== searchBar) {
 
 const emptySearch = () => {
 	const nothingFound = `
-			<div class="tutor-addons-card tutor-p-30">
+			<div class="tutor-addons-card tutor-p-32">
 			<div class="tutor-d-flex tutor-flex-column tutor-justify-content-center tutor-text-center">
-				<div class="tutor-mb-30">
+				<div class="tutor-mb-32">
 					<img src=${emptyStateImg} alt="Empty State Illustration" />
 				</div>
 				<div class="tutor-text-regular-h6 tutor-color-text-subsued">No Addons Found!</div>
@@ -41,12 +41,12 @@ const displayAddons = (addons) => {
 		.map((addon) => {
 			const { name, url, description } = addon;
 			return `
-            <div class="tutor-col-lg-6 tutor-col-xl-4 tutor-col-xxl-3 tutor-mb-30">
+            <div class="tutor-col-lg-6 tutor-col-xl-4 tutor-col-xxl-3 tutor-mb-32">
 				<div class="tutor-addons-card">
 					<div class="tooltip-wrap tutor-lock-tooltip">
 						<span class="tooltip-txt tooltip-top">Available in Pro</span>
 					</div>
-					<div class="card-body tutor-px-30 tutor-py-35">
+					<div class="card-body tutor-px-32 tutor-py-36">
 						<div class="addon-logo">
 							<img src="${url}" alt="${name}" /> 
 						</div>

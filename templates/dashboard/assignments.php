@@ -28,7 +28,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php esc_html_e( 'Assignment', 'tutor' ); ?></div>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php esc_html_e( 'Assignment', 'tutor' ); ?></div>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignments">
 	<div class="tutor-row">
@@ -64,7 +64,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 		</div>
 	</div>
 	<br/>
-	<div class="tutor-ui-table-wrapper tutor-mb-42">
+	<div class="tutor-ui-table-wrapper tutor-mb-44">
 		<table class="tutor-ui-table tutor-ui-table-responsive table-assignment">
 			<thead>
 				<tr>

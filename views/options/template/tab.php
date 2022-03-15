@@ -41,7 +41,7 @@
                     <ul>
                         <?php foreach($more_popups as $tab): ?>
                             <li class="tab-header-item" data-tutor-tab-target="tutor-settings-tab-<?php echo $tab['key']; ?>">
-                                <span class="tutor-icon-github-logo-brand tutor-icon-18 tutor-mr-7"></span>
+                                <span class="tutor-icon-github-logo-brand tutor-icon-18 tutor-mr-8"></span>
                                 <span><?php echo $tab['label']; ?></span>
                             </li>
                         <?php endforeach; ?>

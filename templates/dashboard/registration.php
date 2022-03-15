@@ -35,7 +35,7 @@
         
         $errors = apply_filters('tutor_student_register_validation_errors', array());
         if (is_array($errors) && count($errors)){
-            echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+            echo '<div class="tutor-alert-warning tutor-mb-12"><ul class="tutor-required-fields">';
             foreach ($errors as $error_key => $error_value){
                 echo "<li>{$error_value}</li>";
             }

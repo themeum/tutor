@@ -7,17 +7,17 @@
     </div>
 <?php endif; ?>
 
-<div class="text-regular-small tutor-color-text-subsued tutor-mt-26">
+<div class="text-regular-small tutor-color-text-subsued tutor-mt-24">
     <?php _e('Course', 'tutor'); ?>: <?php echo $course_title; ?>
 </div>
 
-<div class="header-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-8 tutor-mb-10">
+<div class="header-title tutor-text-medium-h5 tutor-color-text-primary tutor-mt-8 tutor-mb-12">
     <?php echo $quiz_title; ?>
 </div>
 
-<div class="tutor-mb-30 tutor-text-regular-small tutor-color-text-subsued">
+<div class="tutor-mb-32 tutor-text-regular-small tutor-color-text-subsued">
     <div class="tutor-d-flex">
-        <div class="tutor-mr-15 tutor-color-text-title">
+        <div class="tutor-mr-16 tutor-color-text-title">
             <?php _e('Quiz Time', 'tutor'); ?>: <span class="tutor-fweight-600"><?php echo $quiz_time; ?></span>
         </div>
         <div class="tutor-color-text-title">

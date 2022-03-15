@@ -55,7 +55,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 				</a>
 			</div>
 			<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-				<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-text-white tutor-mr-5"></span>
+				<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-text-white tutor-mr-4"></span>
 				<span class="text-regular-caption tutor-color-design-white">
 					<?php
 						esc_html_e( 'Lesson: ', 'tutor' );
@@ -89,7 +89,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 					<?php tutor_lesson_mark_complete_html(); ?>
 				<!-- </div> -->
 			</div>
-			<div class="tutor-topbar-cross-icon tutor-ml-15 flex-center">
+			<div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
 				<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 				<a href="<?php echo get_the_permalink( $course_id ); ?>">
 					<span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>
@@ -97,7 +97,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 			</div>
 		</div>
 	</div>
-	<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-10">
+	<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
 		<div class="tutor-mobile-top-nav d-grid">
 			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
 				<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
@@ -117,7 +117,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 			</a>
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-			<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-text-white tutor-mr-5"></span>
+			<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-text-white tutor-mr-4"></span>
 			<span class="text-regular-caption tutor-color-design-white">
 				<?php
 					esc_html_e( 'Lesson: ', 'tutor' );
@@ -126,7 +126,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id );
 			</span>
 		</div>
 
-		<div class="tutor-topbar-cross-icon tutor-ml-15 flex-center">
+		<div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 			<a href="<?php echo get_the_permalink( $course_id ); ?>">
 				<span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>

@@ -31,7 +31,7 @@ $profile_data = array(
 )
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25 tutor-capitalize-text"><?php _e( 'My Profile', 'tutor' ); ?></div>
+<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24 tutor-capitalize-text"><?php _e( 'My Profile', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
 	<?php
 

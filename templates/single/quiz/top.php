@@ -27,9 +27,9 @@ $attempt_remaining 	= (int) $attempts_allowed - (int) $attempted_count;
 do_action('tutor_quiz/single/before/top');
 ?>
 <?php if (!$is_started_quiz && $attempted_count == 0): ?>
-	<div class="tutor-start-quiz-wrapper tutor-p-50">
+	<div class="tutor-start-quiz-wrapper tutor-p-48">
 		<div class="tutor-start-quiz-title tutor-pb-28">
-			<div class="text-regular-body tutor-color-text-primary tutor-pb-6">
+			<div class="text-regular-body tutor-color-text-primary tutor-pb-8">
 				<?php _e('Quiz', 'tutor'); ?>
 			</div>
 			<div class="text-medium-h4 tutor-color-text-primary">
@@ -39,7 +39,7 @@ do_action('tutor_quiz/single/before/top');
 				<?php echo get_the_content(); ?>
 			</div>
 		</div>
-		<div class="tutor-quiz-info-area tutor-mb-60 tutor-mt-22">
+		<div class="tutor-quiz-info-area tutor-mb-60 tutor-mt-24">
 			<?php
 				// Show total question count
 				$total_questions = tutor_utils()->total_questions_for_student_by_quiz(get_the_ID());

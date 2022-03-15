@@ -59,7 +59,7 @@ $image_base = tutor()->url . '/assets/images/';
 ?>
 
 <div class="tutor-dashboard-content-inner">
-	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25"><?php echo __( 'Announcement', 'tutor' ); ?></div>
+	<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-24"><?php echo __( 'Announcement', 'tutor' ); ?></div>
 	<!--notice-->
 	<div class="tutor-component-three-col-action new-announcement-wrap">
 		<div class="tutor-announcement-big-icon">
@@ -82,9 +82,9 @@ $image_base = tutor()->url . '/assets/images/';
 
 
 <!--Filter-->
-<div class="tutor-row tutor-mb-30 tutor-mt-42" style="width: calc(100% + 30px);">
-	<div class="tutor-col-12 tutor-col-lg-6 tutor-mt-10 tutor-mt-lg-0">
-		<label class="tutor-d-block tutor-mb-10 tutor-form-label">
+<div class="tutor-row tutor-mb-32 tutor-mt-44" style="width: calc(100% + 30px);">
+	<div class="tutor-col-12 tutor-col-lg-6 tutor-mt-12 tutor-mt-lg-0">
+		<label class="tutor-d-block tutor-mb-12 tutor-form-label">
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
 		<select class="tutor-form-select tutor-form-control-sm tutor-announcement-course-sorting">
@@ -103,16 +103,16 @@ $image_base = tutor()->url . '/assets/images/';
 		</select>
 	</div>
 
-	<div class="tutor-col-6 tutor-col-lg-3 tutor-mt-10 tutor-mt-lg-0">
-		<label class="tutor-d-block tutor-mb-10 tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
+	<div class="tutor-col-6 tutor-col-lg-3 tutor-mt-12 tutor-mt-lg-0">
+		<label class="tutor-d-block tutor-mb-12 tutor-form-label"><?php esc_html_e( 'Sort By', 'tutor' ); ?></label>
 		<select class="tutor-form-select tutor-announcement-order-sorting tutor-form-control-sm" data-search="no">
 			<option <?php selected( $order_filter, 'ASC' ); ?>><?php esc_html_e( 'ASC', 'tutor' ); ?></option>
 			<option <?php selected( $order_filter, 'DESC' ); ?>><?php esc_html_e( 'DESC', 'tutor' ); ?></option>
 		</select>
 	</div>
 
-	<div class="tutor-col-6 tutor-col-lg-3 tutor-mt-10 tutor-mt-lg-0">
-		<label class="tutor-form-label tutor-d-block tutor-mb-10"><?php esc_html_e( 'Date', 'tutor' ); ?></label>
+	<div class="tutor-col-6 tutor-col-lg-3 tutor-mt-12 tutor-mt-lg-0">
+		<label class="tutor-form-label tutor-d-block tutor-mb-12"><?php esc_html_e( 'Date', 'tutor' ); ?></label>
 		<div class="tutor-v2-date-picker"></div>
 	</div>
 </div>

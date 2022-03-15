@@ -40,7 +40,7 @@ ob_start();
                 </a>
             </div>
             <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
-                <span class="tutor-icon-quiz-filled tutor-icon-24 tutor-color-text-white tutor-mr-5"></span>
+                <span class="tutor-icon-quiz-filled tutor-icon-24 tutor-color-text-white tutor-mr-4"></span>
                 <span class="tutor-text-regular-caption tutor-color-design-white">
                     <?php 
                         esc_html_e( 'Quiz: ', 'tutor' );
@@ -71,7 +71,7 @@ ob_start();
                     do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
                 ?>
             </div>
-            <div class="tutor-topbar-cross-icon tutor-ml-15 flex-center">
+            <div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
                 <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
                 <a href="<?php echo get_the_permalink($course_id); ?>">
                     <span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>
@@ -80,7 +80,7 @@ ob_start();
         </div>
     </div>
 
-    <div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-10">
+    <div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
         <div class="tutor-mobile-top-nav d-grid">
             <a href="<?php echo get_the_permalink($previous_id); ?>">
                 <span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
@@ -94,7 +94,7 @@ ob_start();
     </div>
 
     <?php ob_start(); ?>
-        <div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-100 tutor-pb-100">
+        <div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-80 tutor-pb-80">
             <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
             <?php

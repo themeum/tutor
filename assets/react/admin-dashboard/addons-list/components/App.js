@@ -9,7 +9,7 @@ const App = () => {
 		<AddonsContextProvider>
 			<main className="tutor-backend-settings-addons-list tutor-dashboard-page">
 				<Header/>
-				<div className="tutor-addons-list-body tutor-p-30">
+				<div className="tutor-addons-list-body tutor-p-32">
 					<Search/>
 					<AddonList />
 				</div>

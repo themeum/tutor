@@ -64,7 +64,7 @@ $filters = array(
 ?>
 
 <div class="wrap">
-	<div class="tutor-ui-table-responsive tutor-mt-30">
+	<div class="tutor-ui-table-responsive tutor-mt-32">
 		<table class="tutor-ui-table tutor-ui-table-responsive tutor-table-with-checkbox">
 			<thead>
 			<tr>
@@ -117,7 +117,7 @@ $filters = array(
 									<?php esc_html_e( $list->display_name ); ?>
 								</span>
 								<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
-									<span class="tutor-icon-detail-link-filled tutor-mt-5"></span>
+									<span class="tutor-icon-detail-link-filled tutor-mt-4"></span>
 								</a>
 							</div>
 						</td>
@@ -156,7 +156,7 @@ $filters = array(
 			</tbody>
 		</table>
 	</div>
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-50">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-48">
 		<?php
 			/**
 			 * Prepare pagination data & load template

@@ -102,7 +102,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		<?php
 		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+			echo '<div class="tutor-alert-warning tutor-mb-12"><ul class="tutor-required-fields">';
 			foreach ( $errors as $error_key => $error_value ) {
 				echo "<li>{$error_value}</li>";
 			}
@@ -113,14 +113,14 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		<?php do_action( 'tutor_profile_edit_input_before' ); ?>
 
 		<div class="tutor-row">
-			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'First Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="first_name" value="<?php esc_attr_e( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
 			</div>
 
-			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 				</label>
@@ -129,14 +129,14 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		</div>
 
 		<div class="tutor-row">
-			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'User Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" disabled="disabled" value="<?php esc_attr_e( $user->user_login ); ?>">
 			</div>
 
-			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 				</label>
@@ -145,7 +145,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		</div>
 
 		<div class="tutor-row">
-			<div class="tutor-col-12 tutor-mb-30">
+			<div class="tutor-col-12 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
 				</label>
@@ -154,7 +154,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		</div>
 
 		<div class="tutor-row">
-			<div class="tutor-col-12 tutor-mb-30">
+			<div class="tutor-col-12 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php _e( 'Bio', 'tutor' ); ?>
 				</label>
@@ -163,7 +163,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		</div>
 
 		<div class="tutor-row">
-			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-text-subsued">
 					<?php _e( 'Display name publicly as', 'tutor' ); ?>
 

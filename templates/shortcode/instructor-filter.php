@@ -57,7 +57,7 @@ if ( $total_categories && $total_categories > $limit ) {
 				foreach ( $categories as $category ) {
 					$category_id = $category->term_id;
 					?>
-						<div class="tutor-form-check tutor-mb-25">
+						<div class="tutor-form-check tutor-mb-24">
 							<input
 								id="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>"
 								type="checkbox"
@@ -102,12 +102,12 @@ if ( $total_categories && $total_categories > $limit ) {
 	</div>
 	<div class="tutor-instructor-filter-result">
 		<div class="filter-pc">
-			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-mb-25">
+			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right tutor-mb-24">
 				<span class="las la-search tutor-input-group-icon"></span>
 				<input type="text" class="tutor-form-control" name="keyword" placeholder="<?php esc_html_e( 'Search any instructor...', 'tutor' ); ?>" />
 			</div>
 		</div>
-		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-30">
+		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-32">
 			<div class="tutor-instructor-form-group">
 				<label for="tutor-instructor-relevant-sort" class="text-hints tutor-text-regular-body">
 					<?php _e( 'Short by', 'tutor' ); ?>
@@ -145,7 +145,7 @@ if ( $total_categories && $total_categories > $limit ) {
 						foreach ( $categories as $category ) {
 							$category_id = $category->term_id;
 							?>
-							<div class="tutor-form-check tutor-mb-25">
+							<div class="tutor-form-check tutor-mb-24">
 								<input
 									id="tutor-instructor-checkbox-id-<?php esc_attr_e( $category_id ); ?>"
 									type="checkbox"
@@ -161,7 +161,7 @@ if ( $total_categories && $total_categories > $limit ) {
 						?>
 					</div>
 					<?php if ( $show_more ) : ?>
-					<div class="tutor-instructor-category-show-more tutor-mb-25">
+					<div class="tutor-instructor-category-show-more tutor-mb-24">
 						<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
 							<i class="tutor-icon-plus-bold-filled tutor-color-text-brand"></i>
 							<span class="text-subsued tutor-text-medium-caption">
