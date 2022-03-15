@@ -130,7 +130,7 @@
 
 			button {
 				font-size: 32px;
-				@extend .color-design-grey;
+				@extend .tutor-color-design-grey;
 
 				&:focus-visible {
 					box-shadow: 0 0 0 2px var(--tutor-primary);
@@ -263,7 +263,7 @@ $variations: (
 
 	.element-icon {
 		// color: #fff;
-		color: $text-hints;
+		color: $text-muted;
 
 		[class^='element-'] {
 			width: 26px;
@@ -320,7 +320,7 @@ $variations: (
 			}
 
 			[class^='element-'] {
-				color: $text-title;
+				color: $black-70;
 			}
 		}
 

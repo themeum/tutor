@@ -22,10 +22,10 @@
 	--tutor-border-color: #{$border};
 	--tutor-border-color-alt: #{$border-alt};
 
-	--tutor-text-primary: #{$text-primary};
-	--tutor-text-title: #{$text-title};
+	--tutor-text-primary: #{$black-main};
+	--tutor-text-title: #{$black-70};
 	--tutor-text-subtitle: #{$text-subtitle};
-	--tutor-text-hints: #{$text-hints};
+	--tutor-text-hints: #{$text-muted};
 
 	--tutor-disabled-bg: #{$disabled-bg};
 	--tutor-disabled-color: #{$disabled-color};
@@ -49,10 +49,10 @@
 	--tutor-color-error: #{$color-error};
 
 	// Text Colors
-	--tutor-text-primary: #{$text-primary};
-	--tutor-text-title: #{$text-title};
-	--tutor-text-subsued: #{$text-subsued};
-	--tutor-text-hints: #{$text-hints};
+	--tutor-text-primary: #{$black-main};
+	--tutor-text-title: #{$black-70};
+	--tutor-text-subsued: #{$black-60};
+	--tutor-text-hints: #{$text-muted};
 	--tutor-text-white: #{$text-white};
 	--tutor-text-brand: #{$text-brand};
 	--tutor-text-success: #{$text-success};
