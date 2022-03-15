@@ -36,7 +36,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 			<?php if ( isset( $data['tabs'] ) ) : ?>
 				<div class="tutor-admin-page-navbar-tabs filter-btns">
 					<?php foreach ( $data['tabs'] as $key => $v ) : ?>
-						<a href="<?php echo esc_attr( $v['url'] ); ?>" class="filter-btn <?php echo esc_attr( $data['active'] == $v['key'] ? 'is-active' : '' ); ?>">
+						<a data-keypage="<?php echo $v['key']; ?>" data-keyvalue="<?php echo esc_attr( $v['value'] ); ?>" href="<?php echo esc_attr( $v['url'] ); ?>" class="filter-btn <?php echo esc_attr( $data['active'] == $v['key'] ? 'is-active' : '' ); ?>">
 							<span class="filter-btn-name"><?php echo esc_html( $v['title'] ); ?></span>
 							<span class="filter-btn-number"><?php if ( isset( $v['value'] ) ) : ?>
 								(<?php echo esc_attr( $v['value'] ); ?>)
