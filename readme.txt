@@ -330,6 +330,10 @@ Update: More intuitive certificate setup page with guided creation process
 Update: Enhanced course catalog features with extensive course page
 Update: Improved accessibility and responsiveness across all device
 
+= 1.9.16 - February 28, 2022 =
+
+New: Precaution alert before upgrading to major release of Tutor
+
 = 1.9.15 - February 01, 2022 =
 
 Update: Added Compatibility with WordPress 5.9 and Block Based Theme

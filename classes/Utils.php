@@ -1283,8 +1283,8 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		// Delete Quiz submissions
-		$attempts = $this->get_quiz_attempts_by_course_ids( $start = 0, $limit = 99999999, $course_ids = array( $course_id ), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = $user_id );
+		// Delete Quiz submissions 
+		$attempts = $this->get_quiz_attempts_by_course_ids( $start = 0, $limit = 99999999, $course_ids = array( $course_id ), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = $user_id, false, true );
 
 		if ( is_array( $attempts ) ) {
 			$attempt_ids = array_map(
@@ -4322,15 +4322,26 @@ class Utils {
 				FROM {$wpdb->commentmeta}
 				WHERE comment_id IN ({$q_ids})"
 			);
-
 			// Loop through meta array
 			foreach ( $meta_array as $meta ) {
 				// Loop through questions
 				foreach ( $query as $index => $question ) {
 
 					if ( $query[ $index ]->comment_ID == $meta->comment_id ) {
+
 						$query[ $index ]->meta[ $meta->meta_key ] = $meta->meta_value;
 					}
+				}
+			}
+		}
+
+
+		if ( !isset($args['tab']) || isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
+			$query_all = $query;
+			$query     = array();
+			foreach ( $query_all as $m_query ) {
+				if (!isset( $m_query->meta['tutor_qna_archived'] ) || isset( $m_query->meta['tutor_qna_archived'] ) && 0 == $m_query->meta['tutor_qna_archived']) {
+					$query[] = $m_query;
 				}
 			}
 		}
@@ -5390,7 +5401,7 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only=false ) {
+	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only=false, $all_attempt=false ) {
 		global $wpdb;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
@@ -5416,6 +5427,8 @@ class Utils {
 		$limit_offset = $count_only ? '' : " LIMIT 	{$start}, {$limit} ";
 		$select_col = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, users.*, quiz.* ';
 
+		$attempt_type = $all_attempt ? '' : " AND quiz_attempts.attempt_status != 'attempt_started' ";
+
 		$query = "SELECT {$select_col}
 			FROM	{$wpdb->prefix}tutor_quiz_attempts AS quiz_attempts
 					INNER JOIN {$wpdb->posts} AS quiz
@@ -5424,7 +5437,8 @@ class Utils {
 							ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course
 							ON course.ID = quiz_attempts.course_id
-			WHERE 	quiz_attempts.attempt_status != 'attempt_started'
+			WHERE 	1=1
+					{$attempt_type}
 					{$course_ids_in}
 					{$search_filter}
 					{$course_filter}
@@ -6397,7 +6411,7 @@ class Utils {
 	 *
 	 * Get purchase history by customer id
 	 */
-	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date, $offset = '', $per_page = '' ) {
+	public function get_orders_by_user_id( $user_id=0, $period='', $start_date='', $end_date='', $offset = '', $per_page = '' ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id( $user_id );
@@ -7686,7 +7700,8 @@ class Utils {
 					course.post_title AS course_title,
 					student.user_nicename,
 					student.user_email,
-					student.display_name
+					student.display_name,
+					student.ID
 			FROM   {$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.id
