@@ -42,7 +42,7 @@
               padding-top: 140px;
               padding-bottom: 290px;
               background-color: #bed6fa;
-              background-image: url(./image/tutor-welcome-hero.png);
+              background-image: url(https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/tutor-welcome-hero.png);
               background-size: contain;
               background-position: bottom right;
               background-repeat: no-repeat;
@@ -95,7 +95,7 @@
               background-color: #3e64de;
               padding: 16px 100px;
             }
-            .tutor-start-buid-btn:hover {
+            .tutor-start-buid-btn:hover, .tutor-start-buid-btn:active {
               color: white;
               box-shadow: 0px 6px 12px 0px rgb(9 30 66 / 20%);
               text-decoration: none;
@@ -177,12 +177,12 @@
             <div class="container d-flex justify-content-center">
                 <div class="col-auto">
                     <div class="tutor-welcome-start-btn">
-                        <a class="tutor-welcome-btn tutor-start-buid-btn" href="https://www.themeum.com/tutor-lms/pricing/">Let’s Start Building</a>
+                        <a class="tutor-welcome-btn tutor-start-buid-btn" href="<?php echo admin_url( 'post-new.php?post_type=courses' ); ?>">Let’s Start Building</a>
                     </div> 
                 </div>
                 <div class="col-auto">
                     <div class="tutor-welcome-pricing-btn">
-                        <a class="tutor-welcome-btn tutor-pricing-btn" href="<?php echo admin_url( 'post-new.php?post_type=courses' ); ?>">Get Tutor LMS Pro - 20% off</a>
+                        <a class="tutor-welcome-btn tutor-pricing-btn" href="https://www.themeum.com/tutor-lms/pricing/">Get Tutor LMS Pro - 20% off</a>
                     </div> 
                 </div>
             </div>
