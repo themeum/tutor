@@ -28,7 +28,7 @@ const emptySearch = () => {
 				<div class="tutor-mb-32">
 					<img src=${emptyStateImg} alt="Empty State Illustration" />
 				</div>
-				<div class="tutor-text-regular-h6 tutor-color-text-subsued">No Addons Found!</div>
+				<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60">No Addons Found!</div>
 			</div>
 		</div>`;
 	if (null !== addonsList) {

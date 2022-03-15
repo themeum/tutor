@@ -18,8 +18,8 @@ tutor_alert(
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="label tutor-text-regular-h6 tutor-color-text-primary"><?php _e('Current Settings','tutor'); ?></div>
-				<div class="desc tutor-text-medium-small tutor-color-text-subsued">
+				<div class="label tutor-fs-6 tutor-fw-normal tutor-color-black"><?php _e('Current Settings','tutor'); ?></div>
+				<div class="desc tutor-fs-8 tutor-fw-medium tutor-color-black-60">
 					<span style="font-weight: 500"><?php _e('Last Update','tutor'); ?>: </span> <?php echo get_option('tutor_option_update_time'); ?>
 				</div>
 			</div>
@@ -117,8 +117,8 @@ tutor_alert(
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="text-regular-h6 tutor-color-text-primary"><?php _e('Reset Everything to Default','tutor'); ?></div>
-				<div class="text-medium-small tutor-color-text-subsued">
+				<div class="text-regular-h6 tutor-color-black"><?php _e('Reset Everything to Default','tutor'); ?></div>
+				<div class="text-medium-small tutor-color-black-60">
 					<span style="font-weight: 500"> <?php _e('It will revert all settings to initial setup.','tutor'); ?>
 				</span></div>
 			</div>

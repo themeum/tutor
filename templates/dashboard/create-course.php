@@ -53,7 +53,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 						<button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
 							<!-- @TODO: Icon must be chenged -->
 							<i class="tutor-icon-save-line tutor-icon-28"></i>
-							<span class="tutor-color-text-subsued"><?php _e('Save', 'tutor'); ?></span>
+							<span class="tutor-color-black-60"><?php _e('Save', 'tutor'); ?></span>
 						</button>
 					</div>
 				</div>
@@ -114,8 +114,8 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 											<img src="<?php echo tutor()->url; ?>/assets/images/icon-cup.svg" alt="" />
 										</div>
 										<div class="tutor-modal-text-wrap tutor-mt-24">
-											<div class="tutor-modal-title tutor-text-regular-h4 tutor-color-text-primary"><?php _e('Thank You!', 'tutor'); ?></div>
-											<div class="tutor-text-regular-body tutor-text-subsued tutor-mt-20"><?php echo $message; ?></div>
+											<div class="tutor-modal-title tutor-fs-4 tutor-fw-normal tutor-color-black"><?php _e('Thank You!', 'tutor'); ?></div>
+											<div class="tutor-fs-6 tutor-fw-normal tutor-text-subsued tutor-mt-20"><?php echo $message; ?></div>
 										</div>
 									</div>
 								</div>
