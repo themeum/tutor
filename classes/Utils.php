@@ -3519,7 +3519,7 @@ class Utils {
 			<?php
 			if ( $show_avg_rate ) {
 				?>
-				<span class="tutor-rating-text tutor-text-regular-body tutor-color-text-subsued tutor-pl-0 tutor-ml-0">
+				<span class="tutor-rating-text tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-pl-0 tutor-ml-0">
 					<?php
 					echo $current_rating;
 					if ( ! ( $total_count === null ) ) {
@@ -7654,15 +7654,15 @@ class Utils {
 
 		// List constantly required fields
 		$required_fields = array(
-			// 'first_name' 				  => sprintf(__('Set Your %sFirst Name%s', 'tutor'), '<a class="tutor-color-text-primary" href="' . $settings_url . '">', '</a>'),
-			// 'last_name' 				  => sprintf(__('Set Your %sLast Name%s', 'tutor'), '<a class="tutor-color-text-primary" href="' . $settings_url . '">', '</a>'),
-			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-color-text-primary" href="' . $settings_url . '">', '</a>' ),
-			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-color-text-primary" href="' . $settings_url . '">', '</a>' ),
+			// 'first_name' 				  => sprintf(__('Set Your %sFirst Name%s', 'tutor'), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>'),
+			// 'last_name' 				  => sprintf(__('Set Your %sLast Name%s', 'tutor'), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>'),
+			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>' ),
+			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>' ),
 		);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-color-text-primary" href="' . $withdraw_settings_url . '">', '</a>' );
+			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $withdraw_settings_url . '">', '</a>' );
 		}
 
 		// Now assign identifer whether set or not
@@ -8743,7 +8743,7 @@ class Utils {
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%" />
-			<div class="tutor-text-regular-h6 tutor-color-text-subsued tutor-text-center">
+			<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
 		</div>

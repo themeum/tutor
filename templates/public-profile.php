@@ -60,7 +60,7 @@ tutor_utils()->tutor_custom_header();
 					<span class='rating-digits'>
 						<?php echo esc_html( number_format( $instructor_rating->rating_avg, 2 ) ); ?>
 					</span> 
-					<span class='rating-total-meta text-hints tutor-text-regular-caption'>
+					<span class='rating-total-meta text-hints tutor-fs-7 tutor-fw-normal'>
 						(<?php echo esc_html( number_format( $instructor_rating->rating_count, 2 ) ); ?>)
 					</span>
 				</div>

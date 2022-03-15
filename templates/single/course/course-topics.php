@@ -25,7 +25,7 @@ do_action( 'tutor_course/single/before/topics' );
 
 <div class="tutor-course-topics-header">
 	<div class="tutor-course-topics-header-left">
-		<div class="text-medium-h6 tutor-color-text-primary">
+		<div class="text-medium-h6 tutor-color-black">
 			<span>
 				<?php
 					$title = __( 'Course Curriculum', 'tutor' );
@@ -81,7 +81,7 @@ do_action( 'tutor_course/single/before/topics' );
 										<li>
 											<div class="tutor-courses-lession-list-single-item">
 												<span class="<?php echo $topic_content_icon; ?> tutor-icon-24 tutor-color-black-30 tutor-mr-16"></span>
-												<span class="tutor-text-regular-body tutor-color-text-primary">
+												<span class="tutor-fs-6 tutor-fw-normal tutor-color-black">
 													<?php
 														$lesson_title = '';
 
@@ -115,7 +115,7 @@ do_action( 'tutor_course/single/before/topics' );
 												</span>
 											</div>
 											<div>
-												<span class="text-regular-caption tutor-color-text-hints">
+												<span class="text-regular-caption tutor-color-muted">
 													<?php echo $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : ''; ?>
 												</span>
 												<span class="<?php echo $is_locked ? ' tutor-icon-lock-stroke-filled' : 'tutor-icon-eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20"></span>
