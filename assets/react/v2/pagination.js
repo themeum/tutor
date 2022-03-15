@@ -8,9 +8,8 @@ window.jQuery(document).ready($=>{
     $(document).on('click', '[data-tutor_pagination_ajax] a.page-numbers', function(e){
         e.preventDefault();
 
-        console.log('Pagination a clicked', e);
-
         let link_el = $(this);
+        const innerSpan = link_el.find('span');
         let replace_me = $(this).closest('.tutor-pagination-wrapper-replacable');
 
         if(link_el.find('.tutor-updating-message').length) {
@@ -29,8 +28,12 @@ window.jQuery(document).ready($=>{
             url: window._tutorobject.ajaxurl,
             type: 'POST',
             data: data,
-            beforeSend: function() {
-                link_el.prepend('<span class="tutor-updating-message" style="font-style: initial; vertical-align: middle; display: inherit;"></span>');
+            beforeSend: function () {
+                if (innerSpan.hasClass('tutor-icon-angle-right-filled')) {
+                    innerSpan.removeClass('tutor-icon-angle-right-filled').addClass('tutor-icon-spinner-filled');
+                } else if (innerSpan.hasClass('tutor-icon-angle-left-filled')) {
+                    innerSpan.removeClass('tutor-icon-angle-left-filled').addClass('tutor-icon-spinner-filled');
+                }
             },
             success: function(resp) {
                 let {success, data={}} = resp || {};
@@ -65,8 +68,12 @@ window.jQuery(document).ready($=>{
             error: function() {
                 tutor_toast(__('Error', 'tutor'), 'Something went wrong', 'error');
             },
-            complete: function() {
-                link_el.find('.tutor-updating-message').remove();
+            complete: function () {
+                if (innerSpan.hasClass('tutor-icon-angle-right-filled')) {
+                    innerSpan.removeClass('tutor-icon-spinner-filled').addClass('tutor-icon-angle-right-filled');
+                } else if (innerSpan.hasClass('tutor-icon-angle-left-filled')) {
+                    innerSpan.removeClass('tutor-icon-spinner-filled').addClass('tutor-icon-angle-left-filled');
+                }
             }
         })
     });
