@@ -87,13 +87,13 @@ tutor_alert(
 							<li>
 								<a class="export_single_settings" data-id="<?php echo $key; ?>">
 									<span class="icon tutor-icon-msg-archive-filled tutor-color-design-white"></span>
-									<span class="text-regular-body tutor-color-text-white"><?php _e('Download','tutor'); ?></span>
+									<span class="text-regular-body tutor-color-white"><?php _e('Download','tutor'); ?></span>
 								</a>
 							</li>
 							<li>
 								<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Delete Settings','tutor'); ?>" data-heading="<?php _e('Delete This Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will remove the settings history data from your system, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>">
 									<span class="icon tutor-icon-delete-fill-filled tutor-color-design-white"></span>
-									<span class="text-regular-body tutor-color-text-white"><?php _e('Delete','tutor'); ?></span>
+									<span class="text-regular-body tutor-color-white"><?php _e('Delete','tutor'); ?></span>
 								</a>
 							</li>
 							</ul>
