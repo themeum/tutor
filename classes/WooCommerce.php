@@ -92,7 +92,63 @@ class WooCommerce extends Tutor_Base {
 		 */
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
 		add_filter( 'woocommerce_order_item_permalink', array( $this, 'filter_order_item_permalink_callback' ), 10, 3 );
+
+		/*
+		 * Make sure user registration is required during checkout if purchasing courses.
+		 * So every course member/student will have a working account.
+		 */
+		add_filter( 'woocommerce_checkout_registration_required', array( $this, 'require_registration_during_checkout' ) );
+		add_action( 'woocommerce_before_checkout_process', array( $this, 'force_registration_during_checkout' ), 10 );
 	}
+
+	/**
+	 * Enables the 'registeration required' setting (during guest checkout) when purchasing courses.
+	 *
+	 *
+	 * @param bool $account_required Whether an account is required to checkout.
+	 * @return bool
+	 */
+	public static function require_registration_during_checkout( $account_required ) {
+		$enforce_login_course_cart = tutor_utils()->get_option('enforce_login_course_cart');
+
+		if ( $enforce_login_course_cart && self::cart_contains_course() && ! is_user_logged_in() ) {
+			$account_required = true;
+		}
+
+		return $account_required;
+	}
+
+	/**
+	 * During the checkout process, force registration when the cart contains a course.
+	 *
+	 * @param $woocommerce_params This parameter is not used.
+	 */
+	public static function force_registration_during_checkout( $woocommerce_params ) {
+		$enforce_login_course_cart = tutor_utils()->get_option('enforce_login_course_cart');
+
+		if ( $enforce_login_course_cart && self::cart_contains_course() && ! is_user_logged_in() ) {
+			$_POST['createaccount'] = 1;
+		}
+	}
+
+	/**
+	 * Checks the cart to see if it contains a Tutor course product.
+	 *
+	 * @return boolean
+	 */
+	public static function cart_contains_course() {
+		if ( ! empty( WC()->cart->cart_contents ) ) {
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+				$product_id = $cart_item['product_id'];
+				$is_tutor_product = get_post_meta( $product_id, '_tutor_product', true );
+				if ( $is_tutor_product ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	function filter_order_item_permalink_callback( $product_permalink, $item, $order ) {
 
 		// For product variations
@@ -338,7 +394,7 @@ class WooCommerce extends Tutor_Base {
 
 		global $wpdb;
 		$item = new \WC_Order_Item_Product( $item );
-		
+
 		$product_id    = $item->get_product_id();
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
@@ -471,18 +527,18 @@ class WooCommerce extends Tutor_Base {
 		}
 		global $wpdb;
 
-		$is_earning_data = (int) $wpdb->get_var( $wpdb->prepare( 
-			"SELECT COUNT(earning_id) 
-			FROM {$wpdb->prefix}tutor_earnings 
-			WHERE order_id = %d  ", 
-			$order_id 
+		$is_earning_data = (int) $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(earning_id)
+			FROM {$wpdb->prefix}tutor_earnings
+			WHERE order_id = %d  ",
+			$order_id
 		) );
 
 		if ( $is_earning_data ) {
-			$wpdb->update( 
-				$wpdb->prefix . 'tutor_earnings', 
-				array( 'order_status' => $status_to ), 
-				array( 'order_id' => $order_id ) 
+			$wpdb->update(
+				$wpdb->prefix . 'tutor_earnings',
+				array( 'order_status' => $status_to ),
+				array( 'order_id' => $order_id )
 			);
 		}
 	}

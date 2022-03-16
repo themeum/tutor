@@ -683,6 +683,14 @@ class Options_V2
 								'desc'        => __('Allow customers to place orders without an account.', 'tutor'),
 							),
 							array(
+								'key'         => 'enforce_login_course_cart',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Enforce login or registration for courses on checkout', 'tutor' ),
+								'label_title' => __( '', 'tutor' ),
+								'default'     => 'off',
+								'desc'        => __( 'Enforces users to login or create a new account if cart contains a course. Disables guest checkout only if cart contains a course.', 'tutor' ),
+							),
+							array(
 								'key'         => 'sharing_percentage',
 								'type'        => 'double_input',
 								'label'       => __('Sharing Percentage', 'tutor'),

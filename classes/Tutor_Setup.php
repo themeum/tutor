@@ -506,6 +506,12 @@ class Tutor_Setup {
 						'lable' => __( 'Guest Checkout', 'tutor' ),
 						'desc'  => __( 'Allow users to buy and consume content without logging in.', 'tutor' ),
 					),
+					array(
+						'key'         => 'enforce_login_course_cart',
+						'type'        => 'switch',
+						'label'       => __( 'Enforce login / registration', 'tutor' ),
+						'desc'        => __( 'Enforces users to login or create a new account if cart contains a course.Disables guest checkout only if cart contains a course.', 'tutor' ),
+				),
 					'commission_split'              => array(
 						'type'    => 'range',
 						'lable'   => __( 'Commission Rate', 'tutor' ),
@@ -728,7 +734,7 @@ class Tutor_Setup {
 					</div>
 					<div class="wizard-type-body">
 						<div class="wizard-type-item">
-							<input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="off" 
+							<input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="off"
 							<?php
 							if ( ! $course_marketplace ) {
 								echo 'checked'; }
@@ -748,7 +754,7 @@ class Tutor_Setup {
 						</div>
 
 						<div class="wizard-type-item">
-							<input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="on" 
+							<input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="on"
 							<?php
 							if ( $course_marketplace ) {
 								echo 'checked'; }
@@ -832,7 +838,7 @@ class Tutor_Setup {
 		$visited = get_option( 'tutor_welcome_page_visited' );
 		return $visited ? true : false;
 	}
-	
+
 	/**
 	 * Mark as welcome page visited
 	 *
