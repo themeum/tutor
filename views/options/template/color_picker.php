@@ -7,6 +7,7 @@
  * @since 2.0
  */
 $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] : array();
+
 ?>
 <div class="tutor-option-single-item <?php echo esc_attr( $blocks['slug'] ); ?>">
 	<?php echo ( isset( $blocks['label'] ) && ! empty( $blocks['label'] ) ) ? '<h4>' . esc_attr( $blocks['label'] ) . '</h4>' : ''; ?>
@@ -17,16 +18,18 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 				if ( 'color_preset' === $fields_group['type'] ) {
 					$preset_color_fields = $fields_group['fields'];
 					?>
-					<div class="tutor-option-field-row d-block">
+					<div class="tutor-option-field-row tutor-d-block">
 						<div class="tutor-option-field-label">
 							<h5 class="label"><?php echo esc_attr( $fields_group['label'] ); ?></h5>
 							<p class="desc"><?php echo esc_attr( $fields_group['desc'] ); ?></p>
 						</div>
 						<div class="tutor-option-field-input color-preset-grid">
 							<?php
+							$is_color_preset = $this->get( $fields_group['key'] );
+
 							foreach ( $preset_color_fields as $fields ) {
 								$option_value  = $this->get( $fields_group['key'], tutils()->array_get( 'default', $fields_group ) );
-								$option_value  = ! isset( $option_value ) || empty( $option_value ) ? 'custom' : $option_value;
+								$option_value  = ! isset( $option_value ) || empty( $option_value ) || false == $is_color_preset ? 'custom' : $option_value;
 								$preset_colors = tutils()->sanitize_array( $fields['colors'] );
 
 								?>
