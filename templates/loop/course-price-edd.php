@@ -18,9 +18,8 @@
     $free_html = $enroll_btn;
     if (tutor_utils()->is_course_purchasable()) {
             $enroll_btn = tutor_course_loop_add_to_cart(false);
-
             $product_id = tutor_utils()->get_course_product_id($course_id);
-            $edd_price = edd_price( $product_id );
+            $edd_price  = function_exists( 'edd_price' ) ? edd_price( $product_id ) : '';
          
             $total_enrolled = tutor_utils()->count_enrolled_users_by_course($course_id);
             $maximum_students = tutor_utils()->get_course_settings($course_id, 'maximum_students');
@@ -32,7 +31,7 @@
                 echo '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-content-between">
                         <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
                             <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.
-                                $product->get_price_html() . ' 
+                                $edd_price . ' 
                             </span>
                         </div>
                         <div class="list-item-booking tutor-d-flex tutor-align-items-center">
@@ -56,7 +55,7 @@
                 $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between">
                                     <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
                                         <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.
-                                            $product->get_price_html() . ' 
+                                            $edd_price . ' 
                                         </span>
                                     </div>';
 
@@ -73,7 +72,7 @@
             }
 
             if ( $maximum_students == 0) {
-                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.$product->get_price_html() . ' </span></div>';
+                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.$edd_price . ' </span></div>';
                 $cart_html = '<div class="list-item-button"> '.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
                 echo wp_kses_post($price_html);
                 echo wp_kses_post($cart_html);
