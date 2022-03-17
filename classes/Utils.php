@@ -9428,6 +9428,8 @@ class Utils {
 	 * @param string $date | string date time to conver.
 	 *
 	 * @return string | date time
+	 *
+	 * NOTE: date_i18n translate able string is not supported
 	 */
 	public function convert_date_into_wp_timezone( string $date ): string {
 		$date = new \DateTime( $date );
