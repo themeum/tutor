@@ -17,7 +17,7 @@ global $post;
 do_action('tutor_course/single/before/content');
 
 if (tutor_utils()->get_option('enable_course_about', true, true)) {
-    $string             = get_the_content();
+    $string             = apply_filters( 'tutor_course_about_content', get_the_content() );
     $post_size_in_words = sizeof( explode(" ", $string) );
 	$word_limit         = 100;
 	$has_readmore       = false;
@@ -31,7 +31,7 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 	<div class='tab-item-content <?php echo $has_readmore ? 'tutor-has-showmore' : '' ?>'>
 		<div class='tutor-showmore-content'>
 			<div class="text-medium-h6 tutor-color-black">
-				<?php _e('About Course', 'tutor'); ?>
+				<?php echo apply_filters( 'tutor_course_about_title', __( 'About Course', 'tutor' ) ); ?>
 			</div>
 			<div class="text-regular-body tutor-color-black-60 tutor-mt-12">
 				<?php
@@ -50,11 +50,22 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 				?>
 			</div>
 		</div>
-		<?php
-            if ($has_readmore) :
-                echo '<div class="tutor-showmore-btn tutor-mt-24" data-showmore="true"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showmore"><span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand"></span><span class="tutor-color-black-60">Show More</span></button><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showless"><span class="btn-icon tutor-icon-minus-filled tutor-color-design-brand"></span><span class="tutor-color-black-60">Show Less</span></button></div>';
-            endif;
-		?>
+        <?php if ( $has_readmore ) : ?>
+            <div class="tutor-showmore-btn tutor-mt-24" data-showmore="true">
+                <button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showmore">
+                    <span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand"></span>
+                    <span class="tutor-color-black-60">
+                        <?php esc_html_e( 'Show More', 'tutor' ); ?>
+                    </span>
+                </button>
+                <button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showless">
+                    <span class="btn-icon tutor-icon-minus-filled tutor-color-design-brand"></span>
+                    <span class="tutor-color-black-60">
+                        <?php esc_html_e( 'Show Less', 'tutor' ); ?>
+                    </span>
+                </button>
+            </div>
+        <?php endif; ?>
 	</div>
 <?php
 }
