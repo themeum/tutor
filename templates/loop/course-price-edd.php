@@ -18,9 +18,8 @@
     $free_html = $enroll_btn;
     if (tutor_utils()->is_course_purchasable()) {
             $enroll_btn = tutor_course_loop_add_to_cart(false);
-
             $product_id = tutor_utils()->get_course_product_id($course_id);
-            $edd_price = edd_price( $product_id );
+            $edd_price  = function_exists( 'edd_price' ) ? edd_price( $product_id ) : '';
          
             $total_enrolled = tutor_utils()->count_enrolled_users_by_course($course_id);
             $maximum_students = tutor_utils()->get_course_settings($course_id, 'maximum_students');
