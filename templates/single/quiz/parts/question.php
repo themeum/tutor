@@ -60,7 +60,7 @@
 						$answers            = tutor_utils()->get_answers_by_quiz_question( $question->question_id, $rand_choice );
 						$show_question_mark = (bool) tutor_utils()->avalue_dot( 'show_question_mark', $question_settings );
 						$answer_required    = (bool) tutor_utils()->array_get( 'answer_required', $question_settings );	
-						echo '<div class="quiz-question-title tutor-text-medium-h4 tutor-color-text-primary tutor-mb-20">';
+						echo '<div class="quiz-question-title tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-20">';
 							if ( ! $hide_question_number_overview ) {
 								echo $question_i . '. ';
 							}
@@ -73,7 +73,7 @@
 
 						$question_description = nl2br( stripslashes( $question->question_description ) );
 						if ( $question_description ) {
-							echo "<div class='matching-quiz-question-desc'><span class='text-regular-caption tutor-color-text-subsued'>{$question_description}</span></div>";
+							echo "<div class='matching-quiz-question-desc'><span class='text-regular-caption tutor-color-black-60'>{$question_description}</span></div>";
 						}
 					?>
 					</div>
@@ -123,7 +123,7 @@
 					?>
 					
 					<?php if ( $question_layout_view !== 'question_below_each_other' ) : ?>
-						<div class="tutor-quiz-btn-grp tutor-mt-60 tutor-bs-d-flex">
+						<div class="tutor-quiz-btn-grp tutor-mt-60 tutor-d-flex">
 							<?php
 								if ( $show_previous_button && $previous_question ) {
 									?>
@@ -137,7 +137,7 @@
 								<?php $next_question ? esc_html_e( 'Submit &amp; Next', 'tutor' ) : esc_html_e( 'Submit Quiz', 'tutor' ); ?>
 							</button>
 							<?php if ( ! isset( $question_settings['answer_required'] ) ) : ?>
-								<span class="tutor-ml-30 tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> " style="border: 0px; padding: 0px; margin-left: auto;">
+								<span class="tutor-ml-32 tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> " style="border: 0px; padding: 0px; margin-left: auto;">
 									<?php esc_html_e( 'Skip Question', 'tutor' ); ?>
 								</span>
 							<?php endif; ?>

@@ -1,5 +1,5 @@
 .tutor-input-group{
-    @include propertyWithPrefix(flex-flow, column);
+    flex-flow: column;
     
     input{
         &:not([name=assignment_title]) {

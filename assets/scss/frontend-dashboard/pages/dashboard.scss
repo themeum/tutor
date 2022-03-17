@@ -1,18 +1,10 @@
-
 .tutor-dashboard-cards-container {
 	width: calc(100% + 30px);
-	// @include breakpoint-min(desktop) {
-	// 	width: calc(100% + 30px);
-	// }
-	// @include breakpoint-max(desktop) {
-	// 	width: calc(100% + 60px);
-	// }
-
 	& > div {
 		p {
-			@include valueWithPrefix(display, flex);
-			@include propertyWithPrefix(flex-direction, column);
-			@include propertyWithPrefix(align-items, center);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 			margin: 0;
 			background: white;
 			border: 1px solid hsl(225, 9%, 82%);
@@ -20,7 +12,7 @@
 			margin-bottom: 24px;
 			padding: 30px 0;
 			@media (max-width: 575px) {
-				@include propertyWithPrefix(flex-flow, row);
+				flex-flow: row;
 				padding: 7px 10px;
 			}
 			& > span {
@@ -57,7 +49,7 @@
 					}
 				}
 			}
-			
+
 			.tutor-dashboard-info-val {
 				@include breakpoint-min(mobile) {
 					margin-top: 6px;
@@ -105,7 +97,7 @@
 	// margin-bottom: 20px;
 	padding: 0px;
 	overflow: hidden;
-	.tutor-bs-row {
+	.tutor-row {
 		margin-left: 0px;
 	}
 	.profile-completion-content {
@@ -213,7 +205,7 @@
 	@media only screen and (max-width: 600px) {
 		margin-right: 0px;
 		margin-left: 0px;
-		.tutor-bs-row {
+		.tutor-row {
 			margin-left: 0px;
 		}
 		.profile-completion-content {
@@ -236,15 +228,15 @@
 }
 
 .tutor-dashboard-round-icon {
-	@include valueWithPrefix(display, flex);
-	@include propertyWithPrefix(align-items, center);
-	@include propertyWithPrefix(justify-content, center);
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 60px;
 	height: 60px;
 	border-radius: 50%;
 	overflow: hidden;
 	background: #e9edfb;
-	
+
 	i {
 		color: var(--tutor-primary-color);
 		display: inline-block;

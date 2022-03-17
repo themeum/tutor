@@ -19,7 +19,7 @@ global $post, $authordata;
 $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
 ?>
 
-<header class="tutor-course-details-header tutor-mb-42">
+<header class="tutor-course-details-header tutor-mb-44">
     <?php
     $disable = !get_tutor_option('enable_course_review');
     if (!$disable) {
@@ -34,22 +34,22 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
     }
     ?>
 
-    <div class="tutor-course-details-title tutor-text-bold-h4 tutor-color-text-primary tutor-mt-10">
+    <div class="tutor-course-details-title tutor-fs-4 tutor-fw-bold tutor-color-black tutor-mt-12">
         <?php do_action('tutor_course/single/title/before'); ?>
-            <div class="tutor-text-bold-h4 tutor-ftsz-lg-30"><?php the_title(); ?>
+            <div class="tutor-fs-4 tutor-fw-bold"><?php the_title(); ?>
         </div>
     </div>
-    <div class="tutor-bs-d-sm-flex tutor-bs-align-items-center tutor-bs-justify-content-between tutor-mt-28">
-        <div class="tutor-course-details-category tutor-text-medium-body tutor-color-text-primary tutor-bs-d-flex tutor-bs-align-items-end">
+    <div class="tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-mt-16">
+        <div class="tutor-course-details-category tutor-fs-6 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-end">
             <!-- <?php if (tutor_utils()->get_option('enable_course_author')) : ?>
-                <div class="tutor-course-author tutor-mr-15">
+                <div class="tutor-course-author tutor-mr-16">
                     <img src="<?php echo get_avatar_url(get_the_author_meta('ID')); ?>" />
                     <span><?php _e('by', 'tutor'); ?></span>
                     <strong><?php echo get_the_author_meta('display_name'); ?></strong>
                 </div>
             <?php endif; ?> -->
             <div>
-                <span class="text-regular-body tutor-color-text-hints">
+                <span class="text-regular-body tutor-color-muted">
                     <?php _e('Categories', 'tutor'); ?>:
                 </span>
                 <span>
@@ -71,8 +71,8 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
                 </span>
             </div>
         </div>
-        <div class="tutor-course-details-action-btns tutor-mt-10 tutor-mt-sm-0">
-            <a href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-text-regular-body tutor-color-text-primary tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
+        <div class="tutor-course-details-action-btns tutor-mt-12 tutor-mt-sm-0">
+            <a href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-fs-6 tutor-fw-normal tutor-color-black tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
                 <i class="tutor-icon-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
 

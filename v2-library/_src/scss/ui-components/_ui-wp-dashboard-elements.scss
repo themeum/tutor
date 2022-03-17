@@ -36,7 +36,7 @@
 				pointer-events: none;
 			}
 			.item-count {
-				color: $text-subsued;
+				color: $black-60;
 			}
 			&:before {
 				content: '';
@@ -91,12 +91,6 @@
 
 .tutor-wp-dashboard-filter {
 	gap: 30px;
-	// flex-wrap: wrap;
-	&-item {
-		&.item-reset {
-			// flex: 0 0 100%;
-		}
-	}
 	@include breakpoint-max(1300) {
 		flex-wrap: wrap;
 		margin-top: 40px;
@@ -133,8 +127,8 @@
 
 	.tutor-form-label {
 		@extend .text-medium-caption;
-		@extend .color-text-title;
-		@extend .tutor-mb-10;
+		@extend .tutor-color-black-70;
+		@extend .tutor-mb-12;
 	}
 
 	select.tutor-form-select,
@@ -174,9 +168,9 @@
 
 		& > div {
 			&:first-child {
-				@include valueWithPrefix(display, flex);
-				@include propertyWithPrefix(align-items, center);
-				@include propertyWithPrefix(justify-content, center);
+				display: flex;
+				align-items: center;
+				justify-content: center;
 				width: 30px;
 				height: 30px;
 				font-size: 40px;
@@ -187,7 +181,7 @@
 			}
 
 			&:nth-child(2) {
-				@include propertyWithPrefix(flex, 1);
+				flex: 1;
 				margin: 0 10px;
 				font-style: normal;
 				font-weight: 500;

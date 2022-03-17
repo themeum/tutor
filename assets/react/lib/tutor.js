@@ -410,7 +410,7 @@ window.tutor_toast = function(title, description, type) {
 
 	if (!jQuery('.tutor-toast-parent').length) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
-		// jQuery('body').append('<div class="tutor-notification tutor-is-danger tutor-mb-15"></div>');
+		// jQuery('body').append('<div class="tutor-notification tutor-is-danger tutor-mb-16"></div>');
 	}
 
 	// var icons = {
@@ -427,10 +427,10 @@ window.tutor_toast = function(title, description, type) {
 	var contentS = jQuery(`
         <div class="tutor-large-notification tutor-large-notification-${alert}">
             <div class="tutor-large-notification-icon">
-                <span class="tutor-icon-48 ${icon} tutor-mr-10"></span>
+                <span class="tutor-icon-48 ${icon} tutor-mr-12"></span>
             </div>
             <div class="tutor-large-notification-content tutor-ml-5">
-                <div class="tutor-large-notification-title text-bold-h6 tutor-mt-10">
+                <div class="tutor-large-notification-title text-bold-h6 tutor-mt-12">
                     ${title}
                 </div>
                 <div class="text-regular-caption tutor-mt-8">
@@ -442,7 +442,7 @@ window.tutor_toast = function(title, description, type) {
     `);
 
 	var content = jQuery(`
-		<div class="tutor-notification tutor-is-${alert} tutor-mb-15">
+		<div class="tutor-notification tutor-is-${alert} tutor-mb-16">
 			<div class="tutor-notification-icon">
 				<i class="${icon}"></i>
 			</div>

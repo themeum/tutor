@@ -8,17 +8,17 @@
 			$answer->is_correct ? $quiz_answers[] = $answer->answer_id : 0;
 			if ( $answer->answer_view_format === 'image' || $answer->answer_view_format === 'text_image' ) {
 				?>
-	<div class="quiz-image-ordering-ans d-flex align-items-center">
-		<div class="tutor-quiz-ans-no  tutor-text-medium-body  tutor-color-text-primary">
+	<div class="quiz-image-ordering-ans tutor-d-flex tutor-align-items-center">
+		<div class="tutor-quiz-ans-no  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 			<span class="snum">&nbsp;</span>
 		</div>
-		<div class="quiz-image-ordering-ans-item d-flex tutor-ml-20">
-			<div class="tutor-quiz-image-ordering-icon d-flex align-items-center justify-content-center">
+		<div class="quiz-image-ordering-ans-item tutor-d-flex tutor-ml-20">
+			<div class="tutor-quiz-image-ordering-icon tutor-d-flex tutor-align-items-center justify-content-center">
 				<span class="tutor-icon-humnurger-filled tutor-color-black-fill"></span>
 			</div>
-			<div class="tutor-quiz-image-ordering-item d-flex align-items-center tutor-p-10">
+			<div class="tutor-quiz-image-ordering-item tutor-d-flex tutor-align-items-center tutor-p-12">
 				<img src="<?php echo wp_get_attachment_image_url( $answer->image_id, 'full' ); ?>" />
-				<span class="text-regular-body tutor-color-text-primary tutor-ml-16">
+				<span class="text-regular-body tutor-color-black tutor-ml-16">
 				<?php echo $answer_title; ?>
 				</span>
 				<input type="hidden" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answers][]" value="<?php echo $answer->answer_id; ?>" >
@@ -26,13 +26,13 @@
 		</div>
 	</div>
 	<?php } else { ?>
-	<div class="quiz-ordering-ans d-flex align-items-center">
-		<div class="tutor-quiz-ans-no  tutor-text-medium-body  tutor-color-text-primary">
+	<div class="quiz-ordering-ans tutor-d-flex tutor-align-items-center">
+		<div class="tutor-quiz-ans-no  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 			<span class="snum">&nbsp;</span>
 		</div>
-		<div class="quiz-ordering-ans-item tutor-ml-30">
+		<div class="quiz-ordering-ans-item tutor-ml-32">
 			<div class="tutor-quiz-border-box">
-				<span class="text-regular-body tutor-color-text-primary">
+				<span class="text-regular-body tutor-color-black">
 					<?php echo $answer_title; ?>
 				</span>
 				<span class="tutor-icon-humnurger-filled tutor-color-black-fill"></span>

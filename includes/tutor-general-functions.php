@@ -724,17 +724,27 @@ if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 	 * @since v.1.6.0
 	 */
 
-if ( ! function_exists( 'is_single_course' ) ) {
-	function is_single_course() {
-		global $wp_query;
-		$course_post_type = tutor()->course_post_type;
+	if ( ! function_exists( 'is_single_course' ) ) {
+		function is_single_course($check_spotlight=false) {
+			global $wp_query;
+			$course_post_type = tutor()->course_post_type;
 
-		if ( is_single() && ! empty( $wp_query->query['post_type'] ) && $wp_query->query['post_type'] === $course_post_type ) {
-			return true;
+			$post_types = array($course_post_type);
+			if($check_spotlight){
+				$post_types = array_merge($post_types, array(
+					'lesson',
+					'tutor_quiz',
+					'tutor_assignments',
+					'tutor_zoom_meeting'
+				));
+			}
+
+			if ( is_single() && ! empty( $wp_query->query['post_type'] ) && in_array($wp_query->query['post_type'], $post_types)  ) {
+				return true;
+			}
+			return false;
 		}
-		return false;
 	}
-}
 
 	/**
 	 * Require wp_date form return js date format.

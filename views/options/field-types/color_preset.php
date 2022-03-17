@@ -15,12 +15,12 @@ $field_key = isset( $field['key'] ) ? esc_attr( $field['key'] ) : null;
 $field_id = esc_attr( 'field_' . $field_key );
 ?>
 
-<div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>"
+<div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_attr( $field_id ); ?>"
 >
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
-	<div class="tutor-option-field-input d-block">
-		<div class="type-check d-block has-desc">
+	<div class="tutor-option-field-input tutor-d-block">
+		<div class="type-check tutor-d-block has-desc">
 			<?php
 			if ( ! empty( $field['options'] ) ) :
 				foreach ( $field['options'] as $option_key => $option ) :
@@ -41,7 +41,7 @@ $field_id = esc_attr( 'field_' . $field_key );
 
 
 
-<div class="tutor-option-field-row d-block">
+<div class="tutor-option-field-row tutor-d-block">
 	<div class="tutor-option-field-label">
 		<h5 class="label"><?php esc_attr( $fields_group['label'] ); ?></h5>
 		<p class="desc"><?php esc_attr( $fields_group['desc'] ); ?></p>

@@ -11,7 +11,7 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
             <?php do_action("tutor_before_login_form"); ?>
 
             <div class="tutor-modal-body">
-                <div class="tutor-text-regular-h5 tutor-color-text-primary tutor-mb-32">
+                <div class="tutor-fs-5 tutor-fw-normal tutor-color-black tutor-mb-32">
                     <?php _e('Hi, Welcome back!', 'tutor'); ?>
                 </div>
                 <form>
@@ -25,7 +25,7 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
                     <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-20">
                         <input type="text" class="tutor-form-control" placeholder="<?php _e('Username or Email Address', 'tutor'); ?>" name="log" value="" size="20" />
                     </div>
-                    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-30">
+                    <div class="tutor-input-group tutor-form-control-has-icon-right tutor-mb-32">
                         <input type="password" class="tutor-form-control" placeholder="<?php _e('Password', 'tutor'); ?>" name="pwd" value="" size="20" />
                     </div>
                     <div class="tutor-login-error">
@@ -36,14 +36,14 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
                         do_action("login_form");
                         apply_filters("login_form_middle", '', '');
                     ?>
-                    <div class="d-flex justify-content-between align-items-center tutor-mb-40">
+                    <div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center tutor-mb-40">
                         <div class="tutor-form-check">
                             <input id="tutor-login-agmnt-1" type="checkbox" class="tutor-form-check-input tutor-bg-black-40" name="rememberme" value="forever" />
-                            <label for="tutor-login-agmnt-1" class="tutor-text-regular-caption tutor-color-text-hints">
+                            <label for="tutor-login-agmnt-1" class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
                                 <?php _e('Keep me signed in', 'tutor'); ?>
                             </label>
                         </div>
-                        <a href="<?php echo $lost_pass; ?>" class="tutor-text-medium-body tutor-color-text-subsued td-none">
+                        <a href="<?php echo $lost_pass; ?>" class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 td-none">
                             <?php _e('Forgot?', 'tutor'); ?>
                         </a>
                     </div>
@@ -62,7 +62,7 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
                                 $url_arg['enrol_course_id'] = get_the_ID();
                             }
                         ?>
-                        <div class="tutor-text-center tutor-text-regular-body tutor-color-text-subsued tutor-mt-18">
+                        <div class="tutor-text-center tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-mt-20">
                             <?php _e('Don\'t have an account?', 'tutor'); ?>&nbsp;
                             <a href="<?php echo add_query_arg($url_arg, tutor_utils()->student_register_url()); ?>" class="tutor-fweight-500 td-none tutor-color-design-brand">
                                 <?php _e('Registration Now', 'tutor'); ?>

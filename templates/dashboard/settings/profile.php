@@ -65,7 +65,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 				<span class="dashboard-profile-delete tutor-icon-delete-fill-filled"></span>
 			</span>
 			<div class="tutor_overlay">
-				<button class="tutor_cover_uploader tutor-bs-d-flex tutor-bs-align-items-center">
+				<button class="tutor_cover_uploader tutor-d-flex tutor-align-items-center">
 					<i class="tutor-icon-camera-filled tutor-icon-24"></i>
 					<span><?php echo $profile_photo_id ? esc_html__( 'Update Cover Photo', 'tutor' ) : esc_html__( 'Upload Cover Photo', 'tutor' ); ?></span>
 				</button>
@@ -102,7 +102,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 		<?php
 		$errors = apply_filters( 'tutor_profile_edit_validation_errors', array() );
 		if ( is_array( $errors ) && count( $errors ) ) {
-			echo '<div class="tutor-alert-warning tutor-mb-10"><ul class="tutor-required-fields">';
+			echo '<div class="tutor-alert-warning tutor-mb-12"><ul class="tutor-required-fields">';
 			foreach ( $errors as $error_key => $error_value ) {
 				echo "<li>{$error_value}</li>";
 			}
@@ -112,59 +112,59 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 
 		<?php do_action( 'tutor_profile_edit_input_before' ); ?>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label class="tutor-form-label tutor-color-text-subsued">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
+				<label class="tutor-form-label tutor-color-black-60">
 					<?php esc_html_e( 'First Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="first_name" value="<?php esc_attr_e( $user->first_name ); ?>" placeholder="<?php esc_attr_e( 'First Name', 'tutor' ); ?>">
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label class="tutor-form-label tutor-color-text-subsued">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
+				<label class="tutor-form-label tutor-color-black-60">
 					<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="last_name" value="<?php esc_attr_e( $user->last_name ); ?>" placeholder="<?php esc_attr_e( 'Last Name', 'tutor' ); ?>">
 			</div>
 		</div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label class="tutor-form-label tutor-color-text-subsued">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
+				<label class="tutor-form-label tutor-color-black-60">
 					<?php esc_html_e( 'User Name', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" disabled="disabled" value="<?php esc_attr_e( $user->user_login ); ?>">
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label class="tutor-form-label tutor-color-text-subsued">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
+				<label class="tutor-form-label tutor-color-black-60">
 					<?php esc_html_e( 'Phone Number', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="tel" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" name="phone_number" value="<?php esc_html_e( filter_var( get_user_meta( $user->ID, 'phone_number', true ), FILTER_SANITIZE_NUMBER_INT ) ); ?>" placeholder="<?php esc_attr_e( 'Phone Number', 'tutor' ); ?>">
 			</div>
 		</div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-mb-30">
-				<label class="tutor-form-label tutor-color-text-subsued">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-mb-32">
+				<label class="tutor-form-label tutor-color-black-60">
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php esc_attr_e( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
 			</div>
 		</div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-mb-30">
-				<label class="tutor-form-label tutor-color-text-subsued">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-mb-32">
+				<label class="tutor-form-label tutor-color-black-60">
 					<?php _e( 'Bio', 'tutor' ); ?>
 				</label>
 				<textarea class="tutor-form-control" name="tutor_profile_bio"><?php echo strip_tags( get_user_meta( $user->ID, '_tutor_profile_bio', true ) ); ?></textarea>
 			</div>
 		</div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-6 tutor-bs-col-md-12 tutor-bs-col-lg-6 tutor-mb-30">
-				<label class="tutor-form-label tutor-color-text-subsued">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-mb-32">
+				<label class="tutor-form-label tutor-color-black-60">
 					<?php _e( 'Display name publicly as', 'tutor' ); ?>
 
 				</label>
@@ -177,15 +177,15 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 					}
 					?>
 				</select>
-				<div class="tutor-text-regular-small tutor-color-text-subsued tutor-mt-12">
+				<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60 tutor-mt-12">
 					<?php esc_html_e( 'The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor' ); ?>
 				</div>
 			</div>
 		</div>
 		<?php do_action( 'tutor_profile_edit_input_after', $user ); ?>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12">
+		<div class="tutor-row">
+			<div class="tutor-col-12">
 				<button type="submit" class="tutor-btn tutor-profile-settings-save">
 					<?php esc_html_e( 'Update Profile', 'tutor' ); ?>
 				</button>

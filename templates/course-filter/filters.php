@@ -25,12 +25,12 @@
 	}
 	?>
 	<div class="tutor-filter-widget-items-wrap">
-		<div class="filter-widget-input-wrapper tutor-mt-26">
+		<div class="filter-widget-input-wrapper tutor-mt-24">
 			<div class="filter-widget-input">
 				<?php
 				if ( in_array( 'category', $supported_filters ) ) {
 					?>
-				<div class="filter-widget-title tutor-text-regular-h6 tutor-color-text-primary tutor-mb-26">
+				<div class="filter-widget-title tutor-fs-6 tutor-fw-normal tutor-color-black tutor-mb-24">
 					<?php esc_html_e( 'Category', 'tutor' ); ?>
 				</div>
 				<div class="filter-widget-checkboxes">
@@ -39,12 +39,12 @@
 				<?php } ?>
 			</div>
 		</div>
-		<div class="filter-widget-input-wrapper tutor-mt-26">
+		<div class="filter-widget-input-wrapper tutor-mt-24">
 			<div class="filter-widget-input">
 				<?php
 				if ( in_array( 'tag', $supported_filters ) ) {
 					?>
-				<div class="filter-widget-title tutor-text-regular-h6 tutor-color-text-primary tutor-mb-26">
+				<div class="filter-widget-title tutor-fs-6 tutor-fw-normal tutor-color-black tutor-mb-24">
 					<?php esc_html_e( 'Tag', 'tutor' ); ?>
 				</div>
 				<div class="filter-widget-checkboxes">
@@ -56,9 +56,9 @@
 		<?php
 		if ( in_array( 'difficulty_level', $supported_filters ) ) {
 			?>
-		<div class="filter-widget-input-wrapper tutor-mt-26">
+		<div class="filter-widget-input-wrapper tutor-mt-24">
 			<div class="filter-widget-input">
-				<div class="filter-widget-title tutor-text-regular-h6 tutor-color-text-primary tutor-mb-26">
+				<div class="filter-widget-title tutor-fs-6 tutor-fw-normal tutor-color-black tutor-mb-24">
 				<?php esc_html_e( 'Level', 'tutor' ); ?>
 				</div>
 				<div class="filter-widget-checkboxes">
@@ -69,7 +69,7 @@
 						continue;
 					}
 					?>
-						<div class="tutor-form-check tutor-mb-18">
+						<div class="tutor-form-check tutor-mb-20">
 							<input type="checkbox" class="tutor-form-check-input" id="<?php echo esc_html( $value ); ?>" name="tutor-course-filter-level" value="<?php echo esc_html( $value ); ?>"/>&nbsp;
 							<label for="<?php echo esc_html( $value ); ?>">
 							<?php esc_html_e( $title ); ?>
@@ -84,16 +84,16 @@
 			$is_membership = get_tutor_option( 'monetize_by' ) == 'pmpro' && tutor_utils()->has_pmpro();
 		if ( ! $is_membership && in_array( 'price_type', $supported_filters ) ) {
 			?>
-		<div class="filter-widget-input-wrapper tutor-mt-26">
+		<div class="filter-widget-input-wrapper tutor-mt-24">
 			<div class="filter-widget-input">
-				<div class="filter-widget-title tutor-text-regular-h6 tutor-color-text-primary tutor-mb-26">
+				<div class="filter-widget-title tutor-fs-6 tutor-fw-normal tutor-color-black tutor-mb-24">
 				<?php _e( 'Price', 'tutor' ); ?>
 				</div>
 				<div class="filter-widget-checkboxes">
 				<?php
 				foreach ( $filter_prices as $value => $title ) {
 					?>
-							<div class="tutor-form-check tutor-mb-18">
+							<div class="tutor-form-check tutor-mb-20">
 								<input type="checkbox" class="tutor-form-check-input" id="<?php echo esc_html( $value ); ?>" name="tutor-course-filter-price" value="<?php echo esc_html( $value ); ?>"/>&nbsp;
 								<label for="<?php echo esc_html( $value ); ?>">
 							<?php esc_html_e( $title ); ?>
@@ -106,7 +106,7 @@
 			</div>
 		</div>
 		<?php } ?>
-		<div class="filter-widget-input-wrapper tutor-mt-26">
+		<div class="filter-widget-input-wrapper tutor-mt-24">
 			<div class="filter-widget-input">
 				<div class="tutor-clear-all-filter">
 					<a href="#" onclick="window.location.reload()">

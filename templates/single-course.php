@@ -18,13 +18,13 @@ tutor_utils()->tutor_custom_header();
 do_action('tutor_course/single/before/wrap');
 ?>
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
-    <div class="tutor-course-details-page tutor-bs-container">
+    <div class="tutor-course-details-page tutor-container">
         <?php (isset($is_enrolled) && $is_enrolled) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
         <div class="tutor-course-details-page-main">
             <div class="tutor-course-details-page-main-left">
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
-                <div class="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-30">
+                <div class="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-32">
                     <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
                     <div class="tab-body">
                         <?php

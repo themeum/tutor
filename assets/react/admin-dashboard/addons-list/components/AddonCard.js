@@ -5,75 +5,87 @@ const { __ } = wp.i18n;
 
 const AddonCard = ({ addon, addonId }) => {
 	const { handleOnChange, addonLoading } = useAddonsUpdate();
-	// const addonIsLoading = addonLoading[addonId];
-	// console.log(addonLoading);
 
 	return (
-		<div
-			className={`tutor-addons-card ${
-				addon.plugins_required.length > 0 ? 'not-subscribed' : ''
-			} tutor-addons-card-${addonId + 1}`}
-			style={{ transitionDelay: `${100 * addonId}ms` }}
-		>
-			<div className="card-body tutor-px-30 tutor-py-40">
-				<div className="addon-logo">
-					<img src={addon.thumb_url} alt={addon.name} />
-				</div>
-				<div className="addon-title tutor-mt-20">
-					<div className="text-medium-h5 color-text-primary tutor-mb-4">{addon.name}</div>
-				</div>
-				<div className="addon-des text-regular-body color-text-subsued tutor-mt-20">{addon.description}</div>
-			</div>
-			<div className=" card-footer tutor-px-30 tutor-py-20 d-flex justify-content-between align-items-center">
-				<div className="text-medium-small color-text-hints">
-					<div className="extra-plugins color-text-hints text-medium-small">
-						{addon.plugins_required?.length > 0
-							? __('Required Plugin(s)', 'tutor')
-							: addon.ext_required?.length > 0
-							? __('Required for Push Notification', 'tutor')
-							: __('No extra plugin required', 'tutor')}
+		<div className="tutor-col-lg-6 tutor-col-xl-4 tutor-col-xxl-3 tutor-mb-32">
+			<div
+				className={`tutor-addons-card tutor-d-flex tutor-flex-column ${
+					addon.plugins_required.length > 0 ? 'not-subscribed' : ''
+				} tutor-addons-card-${addonId + 1}`}
+				style={{ transitionDelay: `${100 * addonId}ms` }}
+			>
+				<div className="card-body tutor-px-32 tutor-py-40">
+					<div className="addon-logo">
+						<img src={addon.thumb_url} alt={addon.name} />
 					</div>
-					{addon.ext_required && addon.ext_required
-						? addon.ext_required.map((extension, index) => {
-								return (
-									<div className="extension-wrapper tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
-										<span className="addon-icon tutor-icon-bullet-point-filled"></span>
-										<span className="plugin-title" dangerouslySetInnerHTML={{ __html: extension }} />
-									</div>
-								);
-						  })
-						: addon.depend_plugins
-						? addon.plugins_required.map((plugin, index) => {
-								return (
-									<div className="plugins-wrapper tutor-bs-d-flex color-text-primary text-medium-caption" key={index}>
-										<span className="addon-icon tutor-icon-bullet-point-filled"></span>
-										<span className="plugin-title">{plugin}</span>
-									</div>
-								);
-						  })
-						: ''}
-				</div>
-				{addon.plugins_required?.length === 0 && (
-					<div className="addon-toggle">
-						<label className="tutor-form-toggle">
-							<input
-								type="checkbox"
-								className="tutor-form-toggle-input"
-								name={addon.basename}
-								checked={addon.is_enabled}
-								onChange={(event) => handleOnChange(event, addon.basename)}
-							/>
-							<span className="tutor-form-toggle-control"></span>
-							{/* {addonIsLoading ? (
-								<span className="tutor-updating-message tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5"></span>
-							) : (
-								<span className="tutor-form-toggle-label tutor-form-toggle-checked color-text-primary tutor-ml-5">
-									{__('Active', 'tutor')}
-								</span>
-							)} */}
-						</label>
+					<div className="addon-title tutor-mt-20">
+						<div className="text-medium-h6 color-text-primary tutor-mb-4">{addon.name}</div>
 					</div>
-				)}
+					<div className="addon-des tutor-fs-7 tutor-fw-normal tutor-color-black-60 tutor-mt-20">{addon.description}</div>
+				</div>
+
+				<div className="card-footer tutor-px-32 tutor-py-20 tutor-d-flex tutor-justify-content-between tutor-align-items-center tutor-mt-auto">
+					<div className="text-medium-small tutor-color-muted">
+						<div className="tutor-color-muted text-medium-small tutor-d-flex">
+							<span>
+								{addon.plugins_required?.length > 0 ?
+									__('Required Plugin(s)', 'tutor')
+								: addon.ext_required?.length > 0 ?
+									__('Required for Push Notification', 'tutor')
+								:
+									__('No extra plugin required', 'tutor')
+								}
+							</span>
+							{addon.ext_required && addon.ext_required ?
+								<>
+									<div className="tooltip-wrap tooltip-icon">
+										<span className="tooltip-txt tooltip-top">
+											{addon.ext_required.map((extension, index) => {
+												return (
+													<div key={index}>
+														<span dangerouslySetInnerHTML={{ __html: extension }} />
+													</div>
+												);
+											})}
+										</span>
+									</div>
+								</>
+							: addon.depend_plugins ?
+									<>
+										<div className="tooltip-wrap tooltip-icon">
+											<span className="tooltip-txt tooltip-top">
+												{
+													addon.plugins_required.map((plugin, index) => {
+														return (
+															<div key={index}>
+																<span>{plugin}</span>
+															</div>
+														);
+													})
+												}
+											</span>
+										</div>
+									</>
+								: ''
+							}
+						</div>
+					</div>
+
+					{addon.plugins_required?.length === 0 && (
+						<div className="addon-toggle">
+							<label className="tutor-form-toggle">
+								<input
+									type="checkbox"
+									className="tutor-form-toggle-input"
+									name={addon.basename}
+									checked={addon.is_enabled}
+									onChange={(event) => handleOnChange(event, addon.basename)}
+								/>
+								<span className="tutor-form-toggle-control" area-hidden="true"></span>
+							</label>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);

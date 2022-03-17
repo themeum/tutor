@@ -12,7 +12,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 }
 ?>
 
-<div class="tutor-ui-table-wrapper tutor-my-40">
+<div class="tutor-ui-table-wrapper tutor-my-24">
 	<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
 		<?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) { ?>
 		<thead>
@@ -20,7 +20,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 				<?php
 					foreach ( $table_columns as $key => $column ) {
 						echo '<th>
-								<div class="text-regular-small tutor-color-text-subsued">
+								<div class="text-regular-small tutor-color-black-60">
 									' . $column . '
 								</div>
 							</th>';
@@ -65,7 +65,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'checkbox':
 									?>
 											<td data-th="<?php _e( 'Mark', 'tutor' ); ?>" class="v-align-top">
-												<div class="td-checkbox d-flex ">
+												<div class="td-checkbox tutor-d-flex ">
 													<input id="tutor-admin-list-<?php echo $attempt->attempt_id; ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo $attempt->attempt_id; ?>" />
 												</div>
 											</td>
@@ -76,7 +76,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									?>
 											<td data-th="<?php echo $column; ?>">
 												<div class="td-statement-info">
-													<span class="text-regular-small tutor-color-text-primary">
+													<span class="text-regular-small tutor-color-black">
 														<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
 													</span>
 												</div>
@@ -88,11 +88,11 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									?>
 											<td data-th="<?php echo $column; ?>">
 												<div class="td-statement-info">
-													<span class="tutor-text-regular-small tutor-color-text-primary">
+													<span class="tutor-fs-7 tutor-fw-normal tutor-color-black">
 														<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
 													</span>
-													<div class="tutor-text-medium-body  tutor-color-text-primary tutor-margin-0">
-														<div class="tutor-text-medium-body tutor-color-text-primary" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
+													<div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-margin-0">
+														<div class="tutor-fs-6 tutor-fw-medium tutor-color-black" data-href="<?php echo get_the_permalink( $attempt->course_id ); ?>">
 															<?php echo get_the_title( $attempt->course_id ); ?>
 														</div>
 														<?php
@@ -104,7 +104,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 
 														?>
 																<div>
-																	<span class="tutor-text-regular-small tutor-color-text-title">
+																	<span class="tutor-fs-7 tutor-fw-normal tutor-color-black-70">
 																		<?php _e( 'Student', 'tutor' ); ?>
 																	</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
 																</div>
@@ -112,8 +112,8 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 														} else {
 														?>
 															<?php if(!empty($user_name) && isset( $attempt->user_email ) ) : ?>
-																<span class="tutor-text-regular-small tutor-color-text-title"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
-																<span class="tutor-color-text-title tutor-text-medium-small" title="<?php echo esc_attr( $attempt->user_email ); ?>">
+																<span class="tutor-fs-7 tutor-fw-normal tutor-color-black-70"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
+																<span class="tutor-color-black-70 tutor-fs-8 tutor-fw-medium" title="<?php echo esc_attr( $attempt->user_email ); ?>">
 																	<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
 																</span>
 
@@ -131,7 +131,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'course':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="tutor-text-medium-caption tutor-color-text-primary">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php echo get_the_title( $attempt->course_id ); ?>
 												</span>
 											</td>
@@ -141,7 +141,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'question':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="tutor-text-medium-caption tutor-color-text-primary">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php echo count( $answers ); ?>
 												</span>
 											</td>
@@ -151,7 +151,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'total_marks':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="tutor-text-medium-caption tutor-color-text-primary">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php echo round($attempt->total_marks); ?>
 												</span>
 											</td>
@@ -161,7 +161,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'correct_answer':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="tutor-text-medium-caption tutor-color-text-primary">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php echo $correct; ?>
 												</span>
 											</td>
@@ -171,7 +171,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'incorrect_answer':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="tutor-text-medium-caption tutor-color-text-primary">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php echo $incorrect; ?>
 												</span>
 											</td>
@@ -181,7 +181,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 								case 'earned_marks':
 									?>
 											<td data-th="<?php echo $column; ?>">
-												<span class="tutor-text-medium-caption tutor-color-text-primary">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php echo round($attempt->earned_marks) . ' (' . $earned_percentage . '% )'; ?>
 												</span>
 											</td>

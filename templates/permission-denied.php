@@ -32,10 +32,10 @@ tutor_utils()->tutor_custom_header();
             <img src="<?php echo esc_url( tutor()->url.'assets/images/tutor-logo.png' );?>" class="tutor-logo" alt="tutor-logo">
         </div>	
         <div>
-            <span class="color-text-primary text-medium-h3">
+            <span class="color-text-primary tutor-fs-3 tutor-fw-medium">
                 <?php echo isset($headline) ? $headline : __( 'Permission Denied', 'tutor' ); ?>
             </span>
-            <p class="tutor-mt-10">
+            <p class="tutor-mt-12">
                 <?php echo isset($message) ? $message : __( 'You don\'t have enough privilege to access this page', 'tutor' ); ?>
             </p>
             <p> 

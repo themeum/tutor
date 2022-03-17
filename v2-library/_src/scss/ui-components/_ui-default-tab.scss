@@ -7,7 +7,7 @@
 
 	.tab-header-item {
 		@extend .text-medium-caption;
-		@extend .color-text-subsued;
+		@extend .tutor-color-black-60;
 		@extend .tutor-px-20;
 		@extend .tutor-py-12;
 		position: relative;
@@ -52,7 +52,7 @@
 	}
 
 	.tab-body {
-		@extend .tutor-pt-30;
+		@extend .tutor-pt-32;
 		&-item {
 			display: none;
 			&.is-active {
@@ -68,7 +68,7 @@
 		align-items: center;
 		&-toggle {
 			@extend .text-medium-caption;
-			@extend .color-text-subsued;
+			@extend .tutor-color-black-60;
 			display: flex;
 			align-items: center;
 			cursor: pointer;
@@ -109,9 +109,9 @@
 			}
 			.tab-header-item {
 				@extend .text-regular-caption;
-				@extend .color-design-dark;
-				@extend .tutor-px-15;
-				@extend .tutor-py-6;
+				@extend .tutor-color-design-dark;
+				@extend .tutor-px-16;
+				@extend .tutor-py-8;
 				display: flex;
 				align-items: center;
 				transition: 200ms;

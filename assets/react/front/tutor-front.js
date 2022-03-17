@@ -319,7 +319,7 @@ jQuery(document).ready(function ($) {
 
 	$(document).on('click', '.tutor-lesson-sidebar-hide-bar', function (e) {
 		e.preventDefault();
-		$('.tutor-lesson-sidebar').toggle();
+		$('.tutor-course-single-sidebar-wraper.tutor-desktop-sidebar').toggle();
 		$('#tutor-single-entry-content').toggleClass('sidebar-hidden');
 	});
 
