@@ -531,6 +531,14 @@ class Options_V2
 								'desc'        => __('When a user\'s WooCommerce order is auto-completed, they will be redirected to enrolled courses', 'tutor'),
 							),
 							array(
+								'key'         => 'auto_complete_woocommerce_virtual_orders',
+								'type'        => 'toggle_switch',
+								'label'       => __('Auto Complete Woocommerce Virtual Orders', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('When a user\'s WooCommerce order is completed, they will be auto enrolled to corresponding courses', 'tutor'),
+							),
+							array(
 								'key'         => 'enable_spotlight_mode',
 								'type'        => 'toggle_switch',
 								'label'       => __('Spotlight mode', 'tutor'),
