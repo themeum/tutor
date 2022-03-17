@@ -40,7 +40,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 <div class="tutor-pagination-wrapper-replacable">
 	<div class="tutor-course-topics-header">
 		<div class="tutor-course-topics-header-left tutor-mb-20">
-			<div class="text-primary tutor-text-medium-h6">
+			<div class="text-primary tutor-fs-6 tutor-fw-medium">
 				<span>
 					<?php
 						$review_title = apply_filters( 'tutor_course_reviews_section_title', 'Student Ratings & Reviews' );
@@ -57,11 +57,11 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 		<div class="tutor-ratingsreviews">
 			<div class="tutor-ratingsreviews-ratings">
 				<div class="tutor-ratingsreviews-ratings-avg tutor-text-center">
-					<div class="text-medium-h1 tutor-color-text-primary tutor-mb-18">
+					<div class="tutor-fs-1 tutor-fw-medium tutor-color-black tutor-mb-20">
 						<?php echo number_format( $rating->rating_avg, 1 ); ?>
 					</div>
-					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-bs-d-block', 'lg' ); ?>
-					<div class="tutor-total-ratings-text tutor-text-regular-body text-subsued tutor-mt-10">
+					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-d-block', 'lg' ); ?>
+					<div class="tutor-total-ratings-text tutor-fs-6 tutor-fw-normal text-subsued tutor-mt-12">
 						<span class="tutor-rating-text-part">
 							<?php esc_html_e( 'Total ', 'tutor' ); ?>
 						</span>
@@ -83,15 +83,15 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 									<div class="tutor-rating-stars">
 										<span class="tutor-icon-star-line-filled"></span>
 									</div>
-									<div class="tutor-rating-text  tutor-text-medium-body  tutor-color-text-primary">
+									<div class="tutor-rating-text  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 										<?php echo $key; ?>
 									</div>
 								</div>
-								<div class="progress-bar tutor-mt-10" style="--progress-value: <?php echo $rating_count_percent; ?>%">
+								<div class="progress-bar tutor-mt-12" style="--progress-value: <?php echo $rating_count_percent; ?>%">
 									<span class="progress-value"></span>
 								</div>
 							</div>
-							<div class="rating-num tutor-text-regular-caption tutor-color-text-subsued">
+							<div class="rating-num tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php
 									echo $value . ' ';
 									echo $value > 1 ? __( 'ratings', 'tutor' ) : __( 'rating', 'tutor' );
@@ -110,11 +110,11 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 		</div>
 	<?php endif; ?>
 
-	<div class="tutor-bs-row tutor-mt-40 tutor-mb-20">
-		<div class="tutor-bs-col">
+	<div class="tutor-row tutor-mt-40 tutor-mb-20">
+		<div class="tutor-col">
 			<?php if($is_enrolled): ?>
 				<button class="tutor-btn write-course-review-link-btn">
-					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-5"></i>
+					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-4"></i>
 					<?php
 						$is_new = !$my_rating || empty($my_rating->rating) || empty($my_rating->comment_content);
 						$is_new ? _e('Write a review', 'tutor') : _e('Edit review', 'tutor');
@@ -122,7 +122,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 				</button>
 			<?php endif; ?>
 		</div>
-		<div class="tutor-bs-col-auto">
+		<div class="tutor-col-auto">
 			<?php
 				$pagination_data = array(
 					'total_items' => $reviews_total,
@@ -146,7 +146,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 </div>
 
 <?php if($is_enrolled): ?>
-	<div class="tutor-course-enrolled-review-wrap tutor-mt-15">
+	<div class="tutor-course-enrolled-review-wrap tutor-mt-16">
 		<div class="tutor-write-review-form" style="display: none;">
 			<form method="post">
 				<div class="tutor-star-rating-container">

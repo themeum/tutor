@@ -1,5 +1,5 @@
 <div id="quiz-matching-ans-area" class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo $question_type; ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?> ">
-	<div class="matching-quiz-question-desc d-flex align-items-start">
+	<div class="matching-quiz-question-desc tutor-d-flex tutor-align-items-start">
 		<?php
 			$rand_answers = tutor_utils()->get_answers_by_quiz_question( $question->question_id, true );
 		foreach ( $rand_answers as $rand_answer ) { ?>
@@ -8,9 +8,9 @@
 					<div class="tutor-quiz-border-box" draggable="true">
 						<?php
 						if ( $question_type === 'matching' ) {
-							echo '<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">' . stripslashes( $rand_answer->answer_two_gap_match ) . '</span>';
+							echo '<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">' . stripslashes( $rand_answer->answer_two_gap_match ) . '</span>';
 						} else {
-							echo '<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">' . stripslashes( $rand_answer->answer_title ) . '</span>';
+							echo '<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">' . stripslashes( $rand_answer->answer_title ) . '</span>';
 						}
 						?>
 						<span class="tutor-icon-humnurger-filled tutor-color-black-fill"></span>
@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<?php if ( 'image' === $rand_answer->answer_view_format || 'text_image' === $rand_answer->answer_view_format ) : ?>
-					<div class="tutor-mb-30">
+					<div class="tutor-mb-32">
 						<?php
 						if ( isset( $rand_answer->image_id ) ) :
 							$image_url = wp_get_attachment_url( $rand_answer->image_id );
@@ -39,7 +39,7 @@
 		foreach ( $answers as $answer ) {
 			$answer_i++; ?>
 			<div class="quiz-matching-ans">
-				<div class="tutor-quiz-ans-no  tutor-text-medium-body  tutor-color-text-primary">
+				<div class="tutor-quiz-ans-no  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 					<?php
 					if ( $answer_i < 9 ) {
 						echo 0;
@@ -51,10 +51,10 @@
 					
 				</div>
 				<div class="quiz-matching-ans-item">
-					<span class="tutor-text-medium-body  tutor-color-text-primary">-</span>
+					<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">-</span>
 					<div class="tutor-quiz-dotted-box tutor-dropzone">
-						<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">
-						<?php _e( 'Drag your ans', 'tutor' ); ?>
+						<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">
+						<?php _e( 'Drag your answer', 'tutor' ); ?>
 						</span>
 					</div>
 				</div>

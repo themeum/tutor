@@ -1,4 +1,3 @@
-import './segments/lib';
 import '../front/_select_dd_search';
 import './addons-list/addons-list-main';
 import './segments/addonlist';
@@ -8,6 +7,7 @@ import './segments/filter';
 import ajaxHandler from './segments/filter';
 import './segments/image-preview';
 import './segments/import-export';
+import './segments/lib';
 import './segments/navigation';
 import './segments/options';
 import './segments/reset';
@@ -187,9 +187,9 @@ jQuery(document).ready(function($) {
 				if (!data.success) {
 					if (data?.data?.errors.errors) {
 						for (let v of Object.values(data.data.errors.errors)) {
-							//responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+							//responseContainer.append(`<div class='tutor-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
 							responseContainer.append(`
-              <div class='tutor-bs-col'>
+              <div class='tutor-col'>
                 <div class="tutor-alert tutor-warning">
                 <div class="tutor-alert-text">
                     <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
@@ -203,9 +203,9 @@ jQuery(document).ready(function($) {
 						}
 					} else {
 						for (let v of Object.values(data.data.errors)) {
-							//responseContainer.append(`<div class='tutor-bs-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
+							//responseContainer.append(`<div class='tutor-col'><li class='tutor-alert tutor-alert-warning'>${v}</li></div>`);
 							responseContainer.append(`
-              <div class='tutor-bs-col'>
+              <div class='tutor-col'>
                 <div class="tutor-alert tutor-warning">
                 <div class="tutor-alert-text">
                     <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>

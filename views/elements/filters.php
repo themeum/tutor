@@ -1,7 +1,7 @@
 <?php if ( isset( $data ) ) : ?>
-<div class="tutor-wp-dashboard-filter tutor-bs-d-flex tutor-bs-align-items-end tutor-bs-justify-content-<?php echo esc_attr( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ? 'between' : 'end' ); ?> tutor-pr-20">
+<div class="tutor-wp-dashboard-filter tutor-d-flex tutor-align-items-end tutor-justify-content-<?php echo esc_attr( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ? 'between' : 'end' ); ?> tutor-pr-20">
 	<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
-		<div class="tutor-wp-dashboard-filter-items tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap">
+		<div class="tutor-wp-dashboard-filter-items tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap">
 			<form action="" method="post" id="tutor-admin-bulk-action-form">
 				<input type="hidden" name="action" value="<?php esc_html_e( $data['ajax_action'] ); ?>"/>
 				<div class="tutor-form-select-with-btn">
@@ -30,7 +30,7 @@
 				$categories = get_terms( $terms_arg );
 				?>
 
-		<div class="tutor-wp-dashboard-filter-items tutor-bs-d-flex tutor-bs-flex-xl-nowrap tutor-bs-flex-wrap">
+		<div class="tutor-wp-dashboard-filter-items tutor-d-flex tutor-flex-xl-nowrap tutor-flex-wrap">
 			<div class="tutor-wp-dashboard-filter-item item-reset">
 				<label class="tutor-form-label">
 				</label>

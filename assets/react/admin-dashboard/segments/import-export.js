@@ -82,7 +82,7 @@ function tutor_option_history_load(dataset) {
 			output += `<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
 						<p class="text-medium-small">${dataValue.history_date}
-						<span class="tutor-badge-label tutor-ml-15${badgeStatus}"> ${dataValue.datatype}</span> </p>
+						<span class="tutor-badge-label tutor-ml-16${badgeStatus}"> ${dataValue.datatype}</span> </p>
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution."  data-id="${dataKey}">Apply</button>
@@ -99,13 +99,13 @@ function tutor_option_history_load(dataset) {
             <li>
               <a class="export_single_settings" data-id="${dataKey}">
                 <span class="icon tutor-icon-msg-archive-filled tutor-color-design-white"></span>
-                <span class="text-regular-body tutor-color-text-white">Download</span>
+                <span class="text-regular-body tutor-color-white">Download</span>
               </a>
             </li>
             <li>
               <a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
                 <span class="icon tutor-icon-delete-fill-filled tutor-color-design-white"></span>
-                <span class="text-regular-body tutor-color-text-white">Delete</span>
+                <span class="text-regular-body tutor-color-white">Delete</span>
               </a>
             </li>
             </ul>

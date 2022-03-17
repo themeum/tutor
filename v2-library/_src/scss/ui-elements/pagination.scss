@@ -71,7 +71,7 @@
 
 		.page-numbers {
 			@extend .text-medium-caption;
-			@extend .color-text-primary;
+			@extend .tutor-color-black;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -133,7 +133,7 @@
 
 			&.current {
 				@extend .text-bold-caption;
-				@extend .color-text-brand;
+				@extend .tutor-color-brand;
 				color: var(--tutor-primary-color);
 				&:before {
 					transform: scaleY(1);
@@ -147,7 +147,7 @@
 			.page-numbers {
 				&:hover {
 					color: $brand-wordpress;
-					// @extend .color-brand-wordpress;
+					// @extend .tutor-color-brand-wordpress;
 				}
 
 				&.prev,

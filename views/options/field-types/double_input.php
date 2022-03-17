@@ -17,7 +17,7 @@ $field_id  = esc_attr( 'field_' . $field_key );
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 	<div class="tutor-option-field-input">
-		<div class="d-flex flex-column double-input">
+		<div class="tutor-d-flex tutor-flex-column double-input">
 			<?php
 			foreach ( $field['fields'] as $group_field_key => $group_field ) {
 				$input_name    = "tutor_option[{$group_field_key}]";

@@ -12,11 +12,11 @@ if ( ! empty( $field['options'] ) ) {
 	$saved_data = $this->get( $field_key, array() );
 	$saved_data = ! is_array( $saved_data ) ? array( $saved_data ) : $saved_data;
 	?>
-	<div class="tutor-option-field-row d-block" id="<?php echo esc_attr( $field_id ); ?>">
+	<div class="tutor-option-field-row tutor-d-block" id="<?php echo esc_attr( $field_id ); ?>">
 		<?php include tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
 		<div class="tutor-option-field-input">
-			<div class="type-check d-block">
+			<div class="type-check tutor-d-block">
 				<?php foreach ( $field['options'] as $option_key => $option ) : ?>
 					<?php $_checked = in_array( $option_key, $saved_data ) ? 'checked="checked"' : ''; ?>
 					<div class="tutor-form-check">

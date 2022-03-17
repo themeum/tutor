@@ -7,34 +7,34 @@
 $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
 ?>
 
-<div class="tutor-single-page-top-bar tutor-bs-d-flex justify-content-between">
-    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-bs-d-none tutor-bs-d-xl-flex">
+<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+    <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-            <span class="tutor-icon-icon-light-left-line tutor-color-text-white flex-center"></span>
+            <span class="tutor-icon-icon-light-left-line tutor-color-white flex-center"></span>
         </a>
     </div>
     <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
         <?php
             if ($post->post_type === 'tutor_quiz') {
-                echo '<span class="tutor-icon-quiz-filled tutor-color-text-white tutor-mr-5"></span>';
+                echo '<span class="tutor-icon-quiz-filled tutor-color-white tutor-mr-4"></span>';
                 echo '<span class="text-regular-caption tutor-color-design-white">';
                     esc_html_e( 'Quiz: ', 'tutor' );
                     the_title(); 
                 echo '</span>';
             } elseif ($post->post_type === 'tutor_assignments'){
-                echo '<span class="tutor-icon-assignment-filled tutor-color-text-white tutor-mr-5"></span>';
+                echo '<span class="tutor-icon-assignment-filled tutor-color-white tutor-mr-4"></span>';
                 echo '<span class="text-regular-caption tutor-color-design-white">';
                     esc_html_e( 'Assignment: ', 'tutor' );
                     the_title(); 
                 echo '</span>';
             } elseif ($post->post_type === 'tutor_zoom_meeting'){
-                echo '<span class="tutor-icon-zoom tutor-color-text-white tutor-mr-5"></span>';
+                echo '<span class="tutor-icon-zoom tutor-color-white tutor-mr-4"></span>';
                 echo '<span class="text-regular-caption tutor-color-design-white">';
                     esc_html_e( 'Zoom Meeting: ', 'tutor' );
                     the_title(); 
                 echo '</span>';
             } else{
-                echo '<span class="tutor-icon-youtube-brand tutor-color-text-white tutor-mr-5"></span>';
+                echo '<span class="tutor-icon-youtube-brand tutor-color-white tutor-mr-4"></span>';
                 echo '<span class="text-regular-caption tutor-color-design-white">';
                     esc_html_e( 'Lesson: ', 'tutor' );
                     the_title(); 
@@ -43,10 +43,10 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
         ?>
     </div>
 
-    <div class="tutor-topbar-cross-icon tutor-ml-15 flex-center">
+    <div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
         <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
         <a href="<?php echo get_the_permalink($course_id); ?>">
-            <span class="tutor-icon-line-cross-line tutor-color-text-white flex-center"></span>
+            <span class="tutor-icon-line-cross-line tutor-color-white flex-center"></span>
         </a>
     </div>
 </div>

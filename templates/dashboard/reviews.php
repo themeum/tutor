@@ -26,7 +26,7 @@ $reviews     = tutor_utils()->get_reviews_by_instructor( get_current_user_id(), 
 $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 ?>
 	<div class="tutor-dashboard-content-inner">
-		<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-15"><?php _e( 'Reviews', 'tutor' ); ?></div>
+		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16"><?php _e( 'Reviews', 'tutor' ); ?></div>
 		<?php if ( current_user_can( tutor()->instructor_role ) ) : ?>
 			<div class="tutor-dashboard-inline-links">
 				<ul>
@@ -51,17 +51,17 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 				<thead>
 					<tr>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Student', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
 							</div>
 						</th>
 						<th>
-							<div class="tutor-text-regular-small tutor-color-text-subsued">
+							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
 								<?php esc_html_e( 'Feedback', 'tutor' ); ?>
 							</div>
 						</th>
@@ -79,13 +79,13 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 							<td data-th="<?php esc_html_e( 'Student', 'tutor' ); ?>" class="column-fullwidth">
 								<div class="td-avatar">
 									<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-									<span class="tutor-text-medium-body tutor-color-text-primary">
+									<span class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 									<?php esc_html_e( $student_name ); ?>
 									</span>
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>">
-								<div class="tutor-text-medium-caption tutor-color-text-primary">
+								<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 								<?php
 								$date = explode( ',', tutor_get_formated_date( null, $review->comment_date ) );
 								echo '<span>'.$date[0].'</span>' . '<br />' . '<span class="tutor-fweight-400">'.$date[1].'</span>';
@@ -94,14 +94,14 @@ $given_count = tutor_utils()->get_reviews_by_user( 0, 0, 0, true )->count;
 							</td>
 							<td data-th="<?php esc_html_e( 'Feedback', 'tutor' ); ?>">
 								<div class="td-feedback">
-									<div class="td-tutor-rating tutor-text-regular-body tutor-color-text-subsued">
+									<div class="td-tutor-rating tutor-fs-6 tutor-fw-normal tutor-color-black-60">
 										<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?>
 									</div>
-									<div class="tutor-text-regular-body tutor-color-text-subsued tutor-mt-10">
+									<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-mt-12">
 										<?php echo htmlspecialchars( stripslashes( $review->comment_content ) ); ?>
 									</div>
-									<div class="course-name tutor-text-regular-small tutor-color-text-title tutor-mb-0">
-										<span class="tutor-text-medium-small"><?php esc_html_e( 'Course', 'tutor' ); ?>:</span>&nbsp;
+									<div class="course-name tutor-fs-7 tutor-fw-normal tutor-color-black-70 tutor-mb-0">
+										<span class="tutor-fs-8 tutor-fw-medium"><?php esc_html_e( 'Course', 'tutor' ); ?>:</span>&nbsp;
 										<span data-href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>">
 											<?php esc_html_e( get_the_title( $review->comment_post_ID ) ); ?>
 										</span>

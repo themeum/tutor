@@ -16,15 +16,15 @@
 	<form action="" method="post" enctype="multipart/form-data">
 		<?php do_action( 'tutor_reset_password_input_before' ); ?>
 
-        <div class="tutor-bs-row">
-            <div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
-                <label class="tutor-form-label tutor-color-text-subsued"> <?php esc_html_e('Current Password', 'tutor'); ?> </label>
+        <div class="tutor-row">
+            <div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-32">
+                <label class="tutor-form-label tutor-color-black-60"> <?php esc_html_e('Current Password', 'tutor'); ?> </label>
                 <input class="tutor-form-control" type="password" name="previous_password" placeholder="Current Password">
             </div>
         </div>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-32">
 				<div class="tutor-password-strength-checker">
 					<div class="tutor-password-field">
 						<label class="field-label tutor-form-label" for="new-password-1">
@@ -47,15 +47,15 @@
 							<span class="medium"></span>
 							<span class="strong"></span>
 						</div>
-						<div class="text text-regular-caption color-text-hints"></div>
+						<div class="text text-regular-caption tutor-color-muted"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-7 tutor-mb-30">
+		<div class="tutor-row">
+			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-7 tutor-mb-32">
 				<div class="tutor-password-field tutor-settings-pass-field">
 					<label class="field-label tutor-form-label" for="password-field-icon-1">
 						<?php esc_html_e( 'Re-type New Password', 'tutor' ); ?>
@@ -76,8 +76,8 @@
 
 		<?php do_action( 'tutor_reset_password_input_after' ); ?>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12">
+		<div class="tutor-row">
+			<div class="tutor-col-12">
 				<button type="submit" class="tutor-btn tutor-profile-password-reset">
 					<?php esc_html_e( 'Reset Password', 'tutor' ); ?>
 				</button>

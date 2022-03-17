@@ -79,7 +79,7 @@
 			transform: translateY(-50%);
 
 			content: '\e93e';
-			font-family: 'tutor-v2-iconpack' !important;
+			font-family: 'tutor' !important;
 			font-size: 30px;
 			color: #7a7a7a;
 		}
@@ -106,7 +106,7 @@
 		cursor: pointer;
 		> div:first-child {
 			@extend .text-medium-body;
-			@extend .color-text-primary;
+			@extend .tutor-color-black;
 		}
 	}
 } // .tutor-dropdown-select

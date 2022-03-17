@@ -30,14 +30,14 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
 ?>
 
 <div class="tutor-frontend-dashboard-qna-header tutor-mb-32">
-    <div class="tutor-qna-header tutor-bs-d-flex tutor-bs-align-items-center">
-        <div class="tutor-text-medium-h5 tutor-color-text-primary">
+    <div class="tutor-qna-header tutor-d-flex tutor-align-items-center">
+        <div class="tutor-fs-5 tutor-fw-medium tutor-color-black">
             <?php _e('Question & Answer', 'tutor'); ?>
         </div>
     </div>
     <?php if ($is_instructor) : ?>
-        <div class="tutor-bs-col-auto">
-            <label class="tutor-form-toggle tutor-dashboard-qna-vew-as tutor-bs-d-flex tutor-bs-justify-content-end current-view-<?php echo $view_as == 'instructor' ? 'instructor' : 'student'; ?>">
+        <div class="tutor-col-auto">
+            <label class="tutor-form-toggle tutor-dashboard-qna-vew-as tutor-d-flex tutor-justify-content-end current-view-<?php echo $view_as == 'instructor' ? 'instructor' : 'student'; ?>">
                 <input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as == 'instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo $as_instructor_url; ?>" data-as_student_url="<?php echo $as_student_url; ?>" disabled="disabled" />
                 <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'student' ? 'checked' : 'unchecked'; ?>"><?php _e('Student', 'tutor'); ?></span>
                 <span class="tutor-form-toggle-control"></span>
@@ -47,8 +47,8 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
     <?php endif; ?>
 
     <?php // if($view_as=='instructor'): ?>
-        <div class="tutor-qna-filter <?php echo $is_instructor ? 'tutor-mt-22' : '' ?>" <?php if(!$is_instructor){ ?> style="justify-content: flex-end;" <?php } ?> >
-            <span class="tutor-text-regular-caption tutor-color-text-subsued"><?php _e('Sort By', 'tutor'); ?>:</span>
+        <div class="tutor-qna-filter <?php echo $is_instructor ? 'tutor-mt-24' : '' ?>" <?php if(!$is_instructor){ ?> style="justify-content: flex-end;" <?php } ?> >
+            <span class="tutor-fs-7 tutor-fw-normal tutor-color-black-60"><?php _e('Sort By', 'tutor'); ?>:</span>
             <select class="tutor-form-select tutor-select-redirector">
                 <?php
                     foreach ($qna_tabs as $tab) {

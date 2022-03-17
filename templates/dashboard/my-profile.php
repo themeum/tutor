@@ -31,19 +31,19 @@ $profile_data = array(
 )
 ?>
 
-<div class="tutor-text-medium-h5 tutor-color-text-primary tutor-mb-25 tutor-capitalize-text"><?php _e( 'My Profile', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-capitalize-text"><?php _e( 'My Profile', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
 	<?php
 
 	foreach ( $profile_data as $key => $data ) {
 		$first_name_class = ($data[0] == 'First Name' || $data[0] == 'Last Name') ? 'tutor-capitalize-text' : '';
 		?>
-			<div class="tutor-bs-row">
-				<div class="tutor-bs-col-12 tutor-bs-col-sm-5 tutor-bs-col-lg-3">
-					<span class="tutor-text-regular-body tutor-color-text-subsued"><?php echo $data[0]; ?></span>
+			<div class="tutor-row">
+				<div class="tutor-col-12 tutor-col-sm-5 tutor-col-lg-3">
+					<span class="tutor-fs-6 tutor-fw-normal tutor-color-black-60"><?php echo $data[0]; ?></span>
 				</div>
-				<div class="tutor-bs-col-12 tutor-bs-col-sm-7 tutor-bs-col-lg-9">
-					<?php echo $data[0] == 'Biography' ? '<span class="tutor-text-regular-body tutor-color-text-subsued">'.$data[1].'</span>' : '<span class="tutor-text-medium-body tutor-color-text-primary ' . $first_name_class . ' ">' . $data[1] . '</span>'; ?>
+				<div class="tutor-col-12 tutor-col-sm-7 tutor-col-lg-9">
+					<?php echo $data[0] == 'Biography' ? '<span class="tutor-fs-6 tutor-fw-normal tutor-color-black-60">'.$data[1].'</span>' : '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black ' . $first_name_class . ' ">' . $data[1] . '</span>'; ?>
 				</div>
 			</div>
 		<?php

@@ -18,8 +18,8 @@ tutor_alert(
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="label tutor-text-regular-h6 tutor-color-text-primary"><?php _e('Current Settings','tutor'); ?></div>
-				<div class="desc tutor-text-medium-small tutor-color-text-subsued">
+				<div class="label tutor-fs-6 tutor-fw-normal tutor-color-black"><?php _e('Current Settings','tutor'); ?></div>
+				<div class="desc tutor-fs-8 tutor-fw-medium tutor-color-black-60">
 					<span style="font-weight: 500"><?php _e('Last Update','tutor'); ?>: </span> <?php echo get_option('tutor_option_update_time'); ?>
 				</div>
 			</div>
@@ -35,7 +35,7 @@ tutor_alert(
 	<h4><?php _e('Import Settings','tutor'); ?></h4>
 
 	<div class="item-wrapper">
-		<div class="tutor-option-field-row tutor-bs-d-block d-block">
+		<div class="tutor-option-field-row tutor-d-block d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
 					<span class="tutor-icon-upload-icon-line tutor-icon-80 tutor-color-brand-wordpress"></span>
@@ -48,7 +48,7 @@ tutor_alert(
 					<span class="file-info"></span>
 				</div>
 			</div>
-			<div class="tutor-option-field-input tutor-mt-15">
+			<div class="tutor-option-field-input tutor-mt-16">
 				<button class="tutor-btn tutor-is-sm tutor_import_options" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Import Settings','tutor'); ?>" data-heading="<?php _e('Import from Previous Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will overwrite all existing settings, please proceed with caution.','tutor'); ?>" id="import_options"><?php _e('Update Settings','tutor'); ?></button>
 			</div>
 		</div>
@@ -71,7 +71,7 @@ tutor_alert(
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
 						<p class="text-medium-small"><?php echo esc_html( $option_data['history_date'] ); ?>
-						<span class="tutor-badge-label tutor-ml-15<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
+						<span class="tutor-badge-label tutor-ml-16<?php echo $datetypeClass; ?>"> <?php echo esc_html( ucwords( $option_data['datatype'] ) ); ?></span> </p>
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Restore Settings','tutor'); ?>" data-heading="<?php _e('Restore Previous Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will overwrite all existing settings, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>"><?php _e('Apply','tutor'); ?></button>
@@ -87,13 +87,13 @@ tutor_alert(
 							<li>
 								<a class="export_single_settings" data-id="<?php echo $key; ?>">
 									<span class="icon tutor-icon-msg-archive-filled tutor-color-design-white"></span>
-									<span class="text-regular-body tutor-color-text-white"><?php _e('Download','tutor'); ?></span>
+									<span class="text-regular-body tutor-color-white"><?php _e('Download','tutor'); ?></span>
 								</a>
 							</li>
 							<li>
 								<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Delete Settings','tutor'); ?>" data-heading="<?php _e('Delete This Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will remove the settings history data from your system, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>">
 									<span class="icon tutor-icon-delete-fill-filled tutor-color-design-white"></span>
-									<span class="text-regular-body tutor-color-text-white"><?php _e('Delete','tutor'); ?></span>
+									<span class="text-regular-body tutor-color-white"><?php _e('Delete','tutor'); ?></span>
 								</a>
 							</li>
 							</ul>
@@ -117,8 +117,8 @@ tutor_alert(
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="text-regular-h6 tutor-color-text-primary"><?php _e('Reset Everything to Default','tutor'); ?></div>
-				<div class="text-medium-small tutor-color-text-subsued">
+				<div class="text-regular-h6 tutor-color-black"><?php _e('Reset Everything to Default','tutor'); ?></div>
+				<div class="text-medium-small tutor-color-black-60">
 					<span style="font-weight: 500"> <?php _e('It will revert all settings to initial setup.','tutor'); ?>
 				</span></div>
 			</div>
