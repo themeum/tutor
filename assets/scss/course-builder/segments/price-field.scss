@@ -5,8 +5,8 @@
     border: 1px solid $border-color;
     padding: 0;
     background: var(--tutor-white);
-    @include valueWithPrefix(display, flex);
-    @include propertyWithPrefix(align-items, center);
+    display: flex;
+    align-items: center;
 
     span {
         padding: 8px 14px;

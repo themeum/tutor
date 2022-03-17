@@ -32,7 +32,7 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . esc_attr( $field_label 
 
 		<?php } ?>
 	</div>
-	<div class="tutor-option-field-input d-flex has-btn-after">
+	<div class="tutor-option-field-input tutor-d-flex has-btn-after">
 		<label class="tutor-form-toggle">
 			<input type="hidden" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo esc_attr( $field['event'] ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
 			<input type="checkbox" value="on" <?php esc_attr( checked( $option_value, 'on' ) ); ?> class="tutor-form-toggle-input">

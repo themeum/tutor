@@ -3,7 +3,7 @@
 $contexts =  array(
     'attempt-table' => array(
         'columns' => array(
-            'checkbox'          => '<div class="d-flex"><input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" /></div>',
+            'checkbox'          => '<div class="tutor-d-flex"><input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" /></div>',
             'date'              => __('Date', 'tutor'),
             'quiz_info'         => __('Quiz Info', 'tutor'),
             'course'            => __('Course', 'tutor'),

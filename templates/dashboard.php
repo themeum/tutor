@@ -70,11 +70,11 @@ $footer_links = array(
 do_action('tutor_dashboard/before/wrap');
 ?>
 
-<div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-100">
-	<div class="tutor-bs-container">
+<div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-80">
+	<div class="tutor-container">
 		<!-- new head part  -->
-		<div class="tutor-bs-row tutor-bs-d-flex justify-content-between tutor-frontend-dashboard-header">
-			<div class="tutor-header-left-side tutor-dashboard-header tutor-bs-col-md-6 tutor-bs-d-flex align-items-center" style="border: none;">
+		<div class="tutor-row tutor-d-flex tutor-justify-content-between tutor-frontend-dashboard-header">
+			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-items-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url(get_avatar_url($user_id, array('size' => 150))); ?>)">
 				</div>
 				<div class="tutor-user-info tutor-ml-24">
@@ -83,7 +83,7 @@ do_action('tutor_dashboard/before/wrap');
 
 					if (current_user_can(tutor()->instructor_role)) {
 					?>
-						<div class="tutor-text-semi-h4 tutor-dashboard-header-username">
+						<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
 							<?php echo esc_html($user->display_name); ?>
 						</div>
 						<div class="tutor-dashboard-header-stats">
@@ -97,11 +97,11 @@ do_action('tutor_dashboard/before/wrap');
 					<?php
 					} else {
 					?>
-						<div class="tutor-dashboard-header-display-name tutor-color-text-primary">
-							<div class="tutor-text-regular-h5 tutor-dashboard-header-greetings">
+						<div class="tutor-dashboard-header-display-name tutor-color-black">
+							<div class="tutor-fs-5 tutor-fw-normal tutor-dashboard-header-greetings">
 								Hello,
 							</div>
-							<div class="tutor-text-semi-h4 tutor-dashboard-header-username">
+							<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
 								<?php echo esc_html($user->display_name); ?>
 							</div>
 						</div>
@@ -110,8 +110,8 @@ do_action('tutor_dashboard/before/wrap');
 					?>
 				</div>
 			</div>
-			<div class="tutor-header-right-side tutor-bs-col-md-6 tutor-bs-d-flex justify-content-end tutor-mt-20 tutor-mt-md-0">
-				<div class="tutor-bs-d-flex align-items-center">
+			<div class="tutor-header-right-side tutor-col-md-6 tutor-d-flex tutor-justify-content-end tutor-mt-20 tutor-mt-md-0">
+				<div class="tutor-d-flex tutor-align-items-center">
 					<?php
 					do_action('tutor_dashboard/before_header_button');
 					$instructor_status  = tutor_utils()->instructor_status();
@@ -134,7 +134,7 @@ do_action('tutor_dashboard/before/wrap');
 						$course_type = tutor()->course_post_type;
 					?>
 						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
-							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-10"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
+							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-12"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
 						</a>
 					<?php
 					} elseif ($instructor_status == 'pending') {
@@ -153,8 +153,8 @@ do_action('tutor_dashboard/before/wrap');
 		</div>
 		<!-- new head part end -->
 		<!-- Sidebar and Content Part -->
-		<div class="tutor-bs-row tutor-frontend-dashboard-maincontent">
-			<div class="tutor-bs-col-12 tutor-bs-col-md-4 tutor-bs-col-lg-3 tutor-dashboard-left-menu">
+		<div class="tutor-row tutor-frontend-dashboard-maincontent">
+			<div class="tutor-col-12 tutor-col-md-4 tutor-col-lg-3 tutor-dashboard-left-menu">
 				<ul class="tutor-dashboard-permalinks">
 					<?php
 					$dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
@@ -202,14 +202,14 @@ do_action('tutor_dashboard/before/wrap');
 							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
 							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
 
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-text-regular-body tutor-color-text-primary'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-10'>{$menu_title}</span></a></li>";
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-fw-normal tutor-color-black'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
 						}
 					}
 					?>
 				</ul>
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-md-8 tutor-bs-col-lg-9">
+			<div class="tutor-col-12 tutor-col-md-8 tutor-col-lg-9">
 				<div class="tutor-dashboard-content">
 					<?php
 
@@ -243,10 +243,10 @@ do_action('tutor_dashboard/before/wrap');
 		</div>
 	</div>
 	<div id="tutor-dashboard-footer-mobile">
-		<div class="tutor-bs-container">
-			<div class="tutor-bs-row">
+		<div class="tutor-container">
+			<div class="tutor-row">
 				<?php foreach ($footer_links as $link) : ?>
-					<a class="tutor-bs-col-4 <?php echo $link['is_active'] ? 'active' : ''; ?>" href="<?php echo $link['url']; ?>">
+					<a class="tutor-col-4 <?php echo $link['is_active'] ? 'active' : ''; ?>" href="<?php echo $link['url']; ?>">
 						<i class="<?php echo $link['icon_class']; ?>"></i>
 						<span><?php echo $link['title']; ?></span>
 					</a>

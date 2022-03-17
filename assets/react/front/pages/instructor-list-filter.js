@@ -206,7 +206,7 @@ jQuery(document).ready(function($) {
 
 								$('.tutor-instructor-category-show-more .text-medium-caption').attr('data-id', res.term_id);
 								wrapper.append(
-									`<div class="tutor-form-check tutor-mb-25">
+									`<div class="tutor-form-check tutor-mb-24">
                                     <input
                                         id="item-a"
                                         type="checkbox"

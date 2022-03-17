@@ -14,7 +14,7 @@ $field_id = 'field_' . $field['key'];
 	</div>
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 
-	<div class="tutor-option-field-input d-flex has-btn-after">
+	<div class="tutor-option-field-input tutor-d-flex has-btn-after">
 		<label class="tutor-form-toggle">
 			<input type="checkbox" class="tutor-form-toggle-input" checked="">
 			<span class="tutor-form-toggle-control"></span>

@@ -66,13 +66,13 @@
 		<!-- Show header action bar if it is single question in backend/frontend dashboard -->
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 			<div class="tutor-qa-sticky-bar">
-				<div class="tutor-color-text-primary back">
+				<div class="tutor-color-black back">
 					<a class="tutor-back-btn" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-						<span class="text text tutro-text-regular-caption tutor-color-text-primary"><?php _e('Back', 'tutor'); ?></span>
+						<span class="text text tutro-text-regular-caption tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
 					</a>
 				</div>
-				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-end">
+				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-content-end">
 
 					<!-- Show meta data actions if it is instructor view -->
 					<?php if ( ! $is_user_asker ) : ?>
@@ -120,16 +120,16 @@
 								<div class="tutor-qna-user">
 									<img src="<?php echo get_avatar_url( $answer->user_id ); ?>" />
 									<div>
-										<div class="tutor-text-medium-h6 tutor-color-text-title">
+										<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-70">
 											<?php echo $answer->display_name; ?>
 										</div>
-										<div class="tutor-text-regular-caption tutor-color-text-hints">
+										<div class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
 											<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
 										</div>
 									</div>
 								</div>
 
-								<div class="tutor-qna-text tutor-text-regular-caption">
+								<div class="tutor-qna-text tutor-fs-7 tutor-fw-normal">
 									<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
 								</div>
 
@@ -144,9 +144,9 @@
 				}
 				?>
 			</div>
-			<div class="tutor-qa-reply tutor-mt-10 tutor-mb-25" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
+			<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
-				<div class="tutor-bs-d-flex tutor-bs-align-items-center">
+				<div class="tutor-d-flex tutor-align-items-center">
 					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
 						<?php esc_html_e( 'Reply', 'tutor' ); ?>
 					</button>
@@ -162,9 +162,9 @@
 			<div class="tutor-qna-admin-sidebar">
 				<div class="tutor-qna-user">
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
-					<div class="tutor-text-medium-h4 tutor-color-text-primary tutor-mt-22"><?php echo $question->display_name; ?></div>
-					<div class="tutor-text-medium-body tutor-color-text-subsued tutor-mt-3"><?php echo $question->user_email; ?></div>
-					<div class="tutor-user-social tutor-bs-d-flex tutor-mt-24" style="column-gap: 21px;">
+					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mt-24"><?php echo $question->display_name; ?></div>
+					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 tutor-mt-4"><?php echo $question->user_email; ?></div>
+					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 21px;">
 						<?php
 							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 
@@ -176,7 +176,7 @@
 								}
 						?>
 							<a href="<?php echo esc_url( $url ); ?>">
-								<i class="color-text-hints <?php echo esc_attr( $social_icon['icon_classes'] ); ?> tutor-icon-20 tutor-hover-wp"></i>
+								<i class="tutor-color-muted <?php echo esc_attr( $social_icon['icon_classes'] ); ?> tutor-icon-20 tutor-hover-wp"></i>
 							</a>
 						<?php endforeach;?>
 					</div>
@@ -184,8 +184,8 @@
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
-							<div class="tutor-bs-d-flex justify-content-between align-items-center">
-								<span class="color-text-primary text-medium-body tutor-pl-10">
+							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
+								<span class="color-text-primary text-medium-body tutor-pl-12">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
@@ -207,8 +207,8 @@
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
-							<div class="tutor-bs-d-flex justify-content-between align-items-center">
-								<span class="color-text-primary text-medium-body tutor-pl-10">
+							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
+								<span class="color-text-primary text-medium-body tutor-pl-12">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>

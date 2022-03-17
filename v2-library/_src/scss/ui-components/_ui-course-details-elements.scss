@@ -8,7 +8,7 @@
 			.tab-item-content {
 				p {
 					@extend .text-regular-body;
-					@extend .color-text-subsued;
+					@extend .tutor-color-black-60;
 				}
 			}
 		}
@@ -418,11 +418,11 @@
 		cursor: pointer;
 		transition: 200ms;
 		// @extend .text-medium-h6;
-		@extend .color-text-title;
+		@extend .tutor-color-black-70;
 		@include getTypography(600, 18px, 160%);
 		&::after {
 			content: '\e940';
-			font-family: 'tutor-v2-iconpack' !important;
+			font-family: 'tutor' !important;
 			font-size: 2rem;
 			font-weight: normal;
 			position: absolute;
@@ -448,7 +448,7 @@
 	// .tutor-accordion-item-body-content
 	&-item-body-content {
 		@extend .text-regular-body;
-		@extend .color-text-primary;
+		@extend .tutor-color-black;
 		padding: 0 15px;
 		border-top: 1px solid $stroke-light-30;
 	}
@@ -779,7 +779,7 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 						white-space: nowrap;
 						font-size: 16px;
 						font-weight: 400;
-						color: $text-subsued;
+						color: $black-60;
 						display: flex;
 						align-items: center;
 					}

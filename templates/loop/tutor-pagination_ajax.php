@@ -41,13 +41,13 @@ function course_listing_pagination( $pages = '', $range = 4 ) {
 		?>
 <nav class="tutor-course-list-pagination tutor-ui-pagination">
 	<div class="tutor-pagination-hints">
-		<div class="text-regular-caption tutor-color-text-subsued">
+		<div class="text-regular-caption tutor-color-black-60">
 		<?php _e( 'Page', 'tutor' ); ?>
-			<span class="tutor-text-medium-caption tutor-color-text-primary">
+			<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 		<?php echo esc_html( $paged ); ?>
 			</span>
 		<?php _e( 'of', 'tutor' ); ?>
-			<span className="tutor-text-medium-caption tutor-color-text-primary">
+			<span className="tutor-fs-7 tutor-fw-medium tutor-color-black">
 		<?php echo esc_html( $pages ); ?>
 			</span>
 		</div>

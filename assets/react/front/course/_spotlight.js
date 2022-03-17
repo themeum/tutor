@@ -1,5 +1,5 @@
 import ajaxHandler from '../../admin-dashboard/segments/filter';
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function($) {
 	$('.tutor-sortable-list').sortable();
 });
 
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		});
 	}
 
-	const sidebarTabeHandler = function (sideBarTabs) {
+	const sidebarTabeHandler = function(sideBarTabs) {
 		const tabWrapper = document.querySelector('.tutor-desktop-sidebar-area');
 
 		if (null !== tabWrapper && tabWrapper.children.length < 2) {
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				tabConent.querySelector('#' + id).classList.add('active');
 			});
 		});
-		const clearActiveClass = function (tabConent) {
+		const clearActiveClass = function(tabConent) {
 			for (let i = 0; i < sideBarTabs.length; i++) {
 				sideBarTabs[i].classList.remove('active');
 			}
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				let query_string = currentItem.getAttribute('data-tutor-query-string');
 
 				const tabConent = currentItem.parentNode.nextElementSibling;
-				if(null !== tabConent.querySelector('#' + id)){
+				if (null !== tabConent.querySelector('#' + id)) {
 					tabConent.querySelector('#' + id).classList.add('is-active');
 				}
 				if (id === 'tutor-course-spotlight-tab-3') {
@@ -124,7 +124,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				item.classList.remove('is-active');
 			});
 		};
-
 	}
 	/* commenting */
 
@@ -151,7 +150,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		this.classList.add('tutor-drop-over');
 		event.preventDefault();
 	}
-	function dragEnter() { }
+	function dragEnter() {}
 	function dragLeave() {
 		this.classList.remove('tutor-drop-over');
 	}
@@ -217,7 +216,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					if (!file) {
 						continue;
 					}
-					let editWrapClass = assignmentEditFilePreview ? 'tutor-bs-col-sm-5 tutor-py-15 tutor-mr-15' : '';
+					let editWrapClass = assignmentEditFilePreview ? 'tutor-col-sm-5 tutor-py-16 tutor-mr-16' : '';
 					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
                                         <div class="text-regular-body color-text-title">

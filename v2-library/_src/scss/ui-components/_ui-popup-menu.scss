@@ -1,5 +1,5 @@
 // Popup icon - three dot
-@function svgActionLine($color: $text-hints) {
+@function svgActionLine($color: $text-muted) {
 	$hexColor: '%23' + str-slice('#{$color}', 2, -1);
 	@return "data:image/svg+xml;charset=UTF-8, <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48' fill='none'><path fill-rule='evenodd' clip-rule='evenodd' d='M24 12C26.2091 12 28 10.2091 28 8C28 5.79086 26.2091 4 24 4C21.7909 4 20 5.79086 20 8C20 10.2091 21.7909 12 24 12ZM24 28C26.2091 28 28 26.2091 28 24C28 21.7909 26.2091 20 24 20C21.7909 20 20 21.7909 20 24C20 26.2091 21.7909 28 24 28ZM28 40C28 42.2091 26.2091 44 24 44C21.7909 44 20 42.2091 20 40C20 37.7909 21.7909 36 24 36C26.2091 36 28 37.7909 28 40Z' fill='#{$hexColor}'/></svg>";
 }
@@ -202,7 +202,7 @@
 
 	.tutor-btn.tutor-is-circle {
 		padding: 7px !important;
-		color: $text-hints;
+		color: $text-muted;
 		&:hover {
 			background: $primary-30;
 			color: $design-brand;
@@ -289,8 +289,8 @@
 		padding: 2px 6px;
 		border-radius: 6px;
 		background: #fff;
-		color: $text-hints;
-		border: 1px solid $text-hints;
+		color: $text-muted;
+		border: 1px solid $text-muted;
 		&:before {
 			--bw: 4px;
 			content: '';

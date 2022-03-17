@@ -18,7 +18,7 @@ $supported_filters = tutor_utils()->get_option('supported_course_filters', array
 
 if ($course_filter && count($supported_filters)) {
 ?>
-	<div class="tutor-wrap tutor-courses-wrap tutor-bs-container">
+	<div class="tutor-wrap tutor-courses-wrap tutor-container">
 		<div class="tutor-course-listing-filter tutor-filter-course-grid-2 course-archive-page">
 			<div class="tutor-course-filter tutor-course-filter-container">
 				<div class="tutor-course-filter-widget">
@@ -33,7 +33,7 @@ if ($course_filter && count($supported_filters)) {
 <?php
 } else {
 	?>
-	<div class="tutor-wrap tutor-courses-wrap tutor-bs-container course-archive-page">
+	<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page">
 		<div class="<?php tutor_container_classes(); ?>	tutor-course-filter-loop-container"><div style="background-color: #fff;" class="loading-spinner"></div>
 			<?php tutor_load_template('archive-course-init'); ?>
 		</div>

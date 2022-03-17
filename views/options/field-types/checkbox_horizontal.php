@@ -17,14 +17,13 @@ if ( ! empty( $field['options'] ) ) {
 		<div class="tutor-option-field-input tutor-d-flex">
 			<div class="type-check tutor-d-flex">
 				<?php
-				// pr($saved_data);
 				foreach ( $field['options'] as $option_key => $option ) :
-					// echo $saved_data[$option_key];
+						$input_id = 'tutor_check_' . $option_key;
 						$_checked = 1 == $saved_data[$option_key] ? ' checked="checked"' : '';
 					?>
 					<div class="tutor-form-check">
-						<input type="checkbox" id="<?php echo esc_attr( $option_key ); ?>" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo $option_key; ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php echo wp_kses_post( $_checked ); ?> class="tutor-form-check-input" />
-						<label for="<?php echo esc_attr( $option_key ); ?>"> <?php echo esc_attr( $option ); ?> </label>
+						<input type="checkbox" id="<?php echo esc_attr( $input_id ); ?>" name="tutor_option[<?php echo esc_attr( $field_key ); ?>][<?php echo $option_key; ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php echo wp_kses_post( $_checked ); ?> class="tutor-form-check-input" />
+						<label for="<?php echo esc_attr( $input_id ); ?>"> <?php echo esc_attr( $option ); ?> </label>
 					</div>
 				<?php endforeach; ?>
 			</div>

@@ -6,7 +6,7 @@
 
 ?>
 
-<div class="tutor-course-listing-item-head tutor-bs-d-flex">
+<div class="tutor-course-listing-item-head tutor-d-flex">
 	<?php
 	    tutor_course_loop_thumbnail();
 
@@ -22,7 +22,7 @@
             $action_class = apply_filters('tutor_popup_login_class', 'cart-required-login');
         }
         
-		echo '<a href="javascript:;" class="'. esc_attr( $action_class ) .' save-bookmark-btn tutor-bs-d-flex tutor-bs-align-items-center tutor-bs-justify-content-center" data-course-id="'. esc_attr( $course_id ) .'">
+		echo '<a href="javascript:;" class="'. esc_attr( $action_class ) .' save-bookmark-btn tutor-d-flex tutor-align-items-center tutor-justify-content-center" data-course-id="'. esc_attr( $course_id ) .'">
             <i class="'.($is_wishlisted ? 'tutor-icon-fav-full-filled' : 'tutor-icon-fav-line-filled').'"></i>
         </a>';
 	?>

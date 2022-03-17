@@ -22,9 +22,9 @@
 				<div class="tutor-modal-text-wrap">
 					<h3 class="tutor-modal-title">Null</h3>
 				</div>
-				<div class="tutor-alert tutor-warning tutor-mt-30">
+				<div class="tutor-alert tutor-warning tutor-mt-32">
 					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-icon-34  tutor-icon-warning-filled tutor-mr-10"></span>
+						<span class="tutor-alert-icon tutor-icon-34  tutor-icon-warning-filled tutor-mr-12"></span>
 						<span class="color-warning-100 tutor-modal-message">Null</span>
 					</div>
 				</div>

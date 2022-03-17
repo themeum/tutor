@@ -77,11 +77,11 @@ module.exports = (env, options) => {
 		{
 			dest_path: './assets/js',
 			src_files: {
-				'tutor-front': './assets/react/front/tutor-front.js',
-				'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
-				'tutor-course-builder': './assets/react/course-builder/index.js',
-				'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
-				'tutor-v2': './assets/react/v2/common.js',
+				'tutor-front.min': './assets/react/front/tutor-front.js',
+				'tutor-admin.min': './assets/react/admin-dashboard/tutor-admin.js',
+				'tutor-course-builder.min': './assets/react/course-builder/index.js',
+				'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
+				'tutor.min': './assets/react/v2/common.js',
 			},
 		},
 		{
