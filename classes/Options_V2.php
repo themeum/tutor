@@ -523,6 +523,14 @@ class Options_V2
 								'desc'        => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 							),
 							array(
+								'key'         => 'wc_automatic_order_complete_redirect_to_courses',
+								'type'        => 'toggle_switch',
+								'label'       => __('Auto redirect to courses', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('When a user\'s WooCommerce order is auto-completed, they will be redirected to enrolled courses', 'tutor'),
+							),
+							array(
 								'key'         => 'enable_spotlight_mode',
 								'type'        => 'toggle_switch',
 								'label'       => __('Spotlight mode', 'tutor'),
