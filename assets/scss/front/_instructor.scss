@@ -42,7 +42,7 @@
       border-radius: 6px;
       padding: 30px 20px;
       h4 {
-        @extend .color-text-primary;
+        @extend .tutor-color-black;
         @extend .text-medium-h5;
         margin: 0;
       }
@@ -72,7 +72,7 @@
     i {
       font-size: 16px !important;
       padding-right: 6px;
-      @extend .color-design-warning;
+      @extend .tutor-color-design-warning;
     }
   }
   .tutor-instructor-profile-photo,
@@ -89,7 +89,7 @@
   }
 
   h4.tutor-instructor-name {
-    @extend .color-text-primary;
+    @extend .tutor-color-black;
     @extend .text-medium-h5;
     margin: 0;
   }
@@ -421,7 +421,7 @@
         border-radius: 6px;
         padding: 30px 20px;
         h4 {
-          @extend .color-text-primary;
+          @extend .tutor-color-black;
           @extend .text-medium-h5;
           margin: 0;
         }
@@ -445,7 +445,7 @@
         font-weight: bold;
         font-size: 16px;
         text-transform: uppercase;
-        color: $text-title;
+        color: $black-70;
       }
 
       &:nth-of-type(2) {
@@ -577,7 +577,7 @@ Instructor customize filters styles
             color: #C0C3CB;
         }
         i.active {
-          @extend .color-design-warning;
+          @extend .tutor-color-design-warning;
         }
       }
       span {

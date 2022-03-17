@@ -17,7 +17,7 @@ $user = wp_get_current_user();
 		<?php
 			tutor_load_template( 'dashboard.settings.nav-bar', array( 'active_setting_nav' => 'social-profile' ) );
 		?>
-		<div class="tutor-text-medium-h6 tutor-color-text-primary tutor-mt-30"><?php esc_html_e( 'Social Profile Link', 'tutor' ) ?></div>
+		<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Social Profile Link', 'tutor' ) ?></div>
 	</div>
 
 	<form id="user_social_form" action="" method="post" enctype="multipart/form-data">
@@ -30,12 +30,12 @@ $user = wp_get_current_user();
 			$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 		foreach ( $tutor_user_social_icons as $key => $social_icon ) {
 			?>
-						<div class="tutor-bs-row tutor-bs-align-items-center tutor-mb-30 tutor-social-field">
-							<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
+						<div class="tutor-row tutor-align-items-center tutor-mb-32 tutor-social-field">
+							<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3">
 								<i class="<?php echo esc_html( $social_icon['icon_classes'] ); ?>"></i>
 						<?php echo esc_html( $social_icon['label'] ); ?>
 							</div>
-							<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-6">
+							<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-6">
 								<input class="tutor-form-control" type="url" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_url( get_user_meta( $user->ID, $key, true ) ); ?>" placeholder="<?php echo esc_html( $social_icon['placeholder'] ); ?>">
 							</div>
 						</div>
@@ -43,8 +43,8 @@ $user = wp_get_current_user();
 		}
 		?>
 
-		<div class="tutor-bs-row">
-			<div class="tutor-bs-col-12">
+		<div class="tutor-row">
+			<div class="tutor-col-12">
 				<button type="submit" class="tutor-btn">
 					<?php esc_html_e( 'Update Profile', 'tutor' ); ?>
 				</button>

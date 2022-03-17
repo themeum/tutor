@@ -33,7 +33,7 @@ tutor_load_template_from_custom_path(tutor()->path . '/views/quiz/attempt-table.
 if ($attempt_remaining > 0 || $attempts_allowed == 0 && $previous_attempts) {
     do_action('tuotr_quiz/start_form/before', $quiz_id);
 ?>
-	<div class="tutor-quiz-btn-grp tutor-mt-30">
+	<div class="tutor-quiz-btn-grp tutor-mt-32">
 		<form id="tutor-start-quiz" method="post">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 

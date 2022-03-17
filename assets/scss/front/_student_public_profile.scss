@@ -186,7 +186,7 @@
 				text-align: right;
 				padding-right: 30px;
 				padding-bottom: 20px;
-				@include propertyWithPrefix(flex, 1);
+				flex: 1;
 
 				.tutor-rating-container {
 					font-size: 16px;
@@ -343,8 +343,8 @@
 			.pp-area {
 				padding-left: 0 !important;
 				top: -82px !important;
-				@include propertyWithPrefix(flex-wrap, wrap);
-				@include propertyWithPrefix(justify-content, center);
+				flex-wrap: wrap;
+				justify-content: center;
 			}
 
 			.profile-name,
@@ -440,13 +440,13 @@
 			font-size: 24px !important;
 			line-height: 34px;
 			margin-top: 20px;
-			@extend .color-text-primary;
+			@extend .tutor-color-black;
 			&:first-child {
 				margin-top: 0;
 			}
 		}
 		p {
-			@extend .color-text-subsued;
+			@extend .tutor-color-black-60;
 			font-size: 16px;
 			line-height: 28px;
 		}

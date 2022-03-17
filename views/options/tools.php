@@ -9,7 +9,7 @@
 ?>
 <!-- .tutor-backend-wrap -->
 <section class="tutor-backend-settings-page">
-	<header class="tutor-option-header tutor-bs-px-3 tutor-bs-py-2">
+	<header class="tutor-option-header tutor-px-4 tutor-py-2">
 		<div class="title"><?php _e( 'Tools', 'tutor' ); ?></div>
 		<div class="search-field">
 			<!-- <div class="tutor-input-group tutor-form-control-has-icon">
@@ -20,7 +20,7 @@
 	</header>
 	<?php //pr($tools_fields); ?>
 	<div class="tutor-option-body">
-		<div class="tutor-option-form tutor-bs-py-4 tutor-bs-px-3">
+		<div class="tutor-option-form tutor-p-4">
 			<div class="tutor-option-tabs">
 
 				<ul class="tutor-option-nav" data-page="<?php esc_attr_e( $_GET['page'] ); ?>">

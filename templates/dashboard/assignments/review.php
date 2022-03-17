@@ -33,11 +33,11 @@ if ( ! $assignment_submitted_id ) {
 		$comment_author  = get_user_by( 'login', $submitted_assignment->comment_author )
 		?>
 
-	<div class="submitted-assignment-title tutor-mb-15">
+	<div class="submitted-assignment-title tutor-mb-16">
 		<a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
 			<!-- <span class="assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?> -->
-			<span class="color-text-primary assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-10"></span>
-			<span class="tutor-color-text-subsued"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
+			<span class="color-text-primary assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12"></span>
+			<span class="tutor-color-black-60"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
 		</a>
 		<!-- <a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>"></a> -->
 	</div>
@@ -74,7 +74,7 @@ if ( ! $assignment_submitted_id ) {
 	</div>
 	<hr>
 
-	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-30 tutor-mb-15">
+	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-32 tutor-mb-16">
 		<h5 class="text-medium-h6 tutor-mb-5">
 			<?php esc_html_e( 'Assignment Description:', 'tutor' ); ?>
 		</h5>
@@ -103,7 +103,7 @@ if ( ! $assignment_submitted_id ) {
 											<span class="filesize"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></span>
 										</div>
 										<div>
-											<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-mt-5" target="_blank">
+											<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-mt-4" target="_blank">
 												<span class="tutor-icon-download-line"></span>
 											</a>
 										</div>
@@ -117,31 +117,31 @@ if ( ! $assignment_submitted_id ) {
 		<?php endif; ?>
 	</div>
 
-	<div class="tutor-dashboard-assignment-review-area tutor-mt-30">
+	<div class="tutor-dashboard-assignment-review-area tutor-mt-32">
 		<h3><?php esc_html_e( 'Evaluation', 'tutor' ); ?></h3>
-		<form action="" method="post" class="tutor-bs-row tutor-form-submit-through-ajax" data-toast_success_message="<?php _e( 'Assignment evaluated', 'tutor' ); ?>">
+		<form action="" method="post" class="tutor-row tutor-form-submit-through-ajax" data-toast_success_message="<?php _e( 'Assignment evaluated', 'tutor' ); ?>">
 			<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 			<input type="hidden" value="tutor_evaluate_assignment_submission" name="tutor_action"/>
 			<input type="hidden" value="<?php echo esc_html( $assignment_submitted_id ); ?>" name="assignment_submitted_id"/>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
+			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3">
 				<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 			</div>
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-30">
+			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-32">
 				<input class="tutor-form-control" type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0">
 				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" ); ?></p>
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3">
+			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3">
 				<label for=""><?php esc_html_e( 'Feedback', 'tutor' ); ?></label>
 			</div>
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9 tutor-mb-20">
+			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-20">
 				<textarea class="tutor-form-control" name="evaluate_assignment[instructor_note]"><?php esc_html_e( $instructor_note ); ?></textarea>
 			</div>
 
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-4 tutor-bs-col-md-12 tutor-bs-col-lg-3"></div>
-			<div class="tutor-bs-col-12 tutor-bs-col-sm-8 tutor-bs-col-md-12 tutor-bs-col-lg-9">
-				<button type="submit" class="tutor-btn tutor-mt-15">
+			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3"></div>
+			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9">
+				<button type="submit" class="tutor-btn tutor-mt-16">
 				<?php esc_html_e( 'Evaluate this submission', 'tutor' ); ?>
 				</button>
 			</div>

@@ -63,7 +63,7 @@
 		padding: 5px 10px;
 		border: 1px solid #dddddd;
 		&:focus {
-			@include propertyWithPrefix(box-shadow, none);
+			box-shadow: none;
 		}
 	}
 	.current a {
@@ -1204,7 +1204,6 @@ span.withdraw-method-label {
 		display: -webkit-box;
 		display: -ms-flexbox;
 		display: flex;
-		@include valueWithPrefix(display, flex);
 		-webkit-box-align: center;
 		-ms-flex-align: center;
 		align-items: center;

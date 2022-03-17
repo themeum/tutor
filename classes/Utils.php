@@ -1283,8 +1283,8 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		// Delete Quiz submissions
-		$attempts = $this->get_quiz_attempts_by_course_ids( $start = 0, $limit = 99999999, $course_ids = array( $course_id ), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = $user_id );
+		// Delete Quiz submissions 
+		$attempts = $this->get_quiz_attempts_by_course_ids( $start = 0, $limit = 99999999, $course_ids = array( $course_id ), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = $user_id, false, true );
 
 		if ( is_array( $attempts ) ) {
 			$attempt_ids = array_map(
@@ -3519,7 +3519,7 @@ class Utils {
 			<?php
 			if ( $show_avg_rate ) {
 				?>
-				<span class="tutor-rating-text tutor-text-regular-body tutor-color-text-subsued tutor-pl-0 tutor-ml-0">
+				<span class="tutor-rating-text tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-pl-0 tutor-ml-0">
 					<?php
 					echo $current_rating;
 					if ( ! ( $total_count === null ) ) {
@@ -5401,7 +5401,7 @@ class Utils {
 	 *
 	 * @since 1.9.5
 	 */
-	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only=false ) {
+	public function get_quiz_attempts_by_course_ids( $start = 0, $limit = 10, $course_ids = array(), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = null, $count_only=false, $all_attempt=false ) {
 		global $wpdb;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
@@ -5427,6 +5427,8 @@ class Utils {
 		$limit_offset = $count_only ? '' : " LIMIT 	{$start}, {$limit} ";
 		$select_col = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, users.*, quiz.* ';
 
+		$attempt_type = $all_attempt ? '' : " AND quiz_attempts.attempt_status != 'attempt_started' ";
+
 		$query = "SELECT {$select_col}
 			FROM	{$wpdb->prefix}tutor_quiz_attempts AS quiz_attempts
 					INNER JOIN {$wpdb->posts} AS quiz
@@ -5435,7 +5437,8 @@ class Utils {
 							ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course
 							ON course.ID = quiz_attempts.course_id
-			WHERE 	quiz_attempts.attempt_status != 'attempt_started'
+			WHERE 	1=1
+					{$attempt_type}
 					{$course_ids_in}
 					{$search_filter}
 					{$course_filter}
@@ -6408,7 +6411,7 @@ class Utils {
 	 *
 	 * Get purchase history by customer id
 	 */
-	public function get_orders_by_user_id( $user_id, $period, $start_date, $end_date, $offset = '', $per_page = '' ) {
+	public function get_orders_by_user_id( $user_id=0, $period='', $start_date='', $end_date='', $offset = '', $per_page = '' ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id( $user_id );
@@ -7651,15 +7654,15 @@ class Utils {
 
 		// List constantly required fields
 		$required_fields = array(
-			// 'first_name' 				  => sprintf(__('Set Your %sFirst Name%s', 'tutor'), '<a class="tutor-color-text-primary" href="' . $settings_url . '">', '</a>'),
-			// 'last_name' 				  => sprintf(__('Set Your %sLast Name%s', 'tutor'), '<a class="tutor-color-text-primary" href="' . $settings_url . '">', '</a>'),
-			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-color-text-primary" href="' . $settings_url . '">', '</a>' ),
-			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-color-text-primary" href="' . $settings_url . '">', '</a>' ),
+			// 'first_name' 				  => sprintf(__('Set Your %sFirst Name%s', 'tutor'), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>'),
+			// 'last_name' 				  => sprintf(__('Set Your %sLast Name%s', 'tutor'), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>'),
+			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>' ),
+			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>' ),
 		);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-color-text-primary" href="' . $withdraw_settings_url . '">', '</a>' );
+			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $withdraw_settings_url . '">', '</a>' );
 		}
 
 		// Now assign identifer whether set or not
@@ -7697,7 +7700,8 @@ class Utils {
 					course.post_title AS course_title,
 					student.user_nicename,
 					student.user_email,
-					student.display_name
+					student.display_name,
+					student.ID
 			FROM   {$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.id
@@ -8737,9 +8741,9 @@ class Utils {
 	public function tutor_empty_state( string $title = 'No data yet!' ) {
 		$page_title = $title ? $title : '';
 		?>
-		<div class="tutor-empty-state td-empty-state tutor-p-30 tutor-text-center">
+		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%" />
-			<div class="tutor-text-regular-h6 tutor-color-text-subsued tutor-text-center">
+			<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
 		</div>

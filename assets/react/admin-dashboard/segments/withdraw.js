@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function(){
         rejectType.onchange = (e) => {
             const type = e.target.value;
             if (type === 'Other') {
-                document.getElementById('tutor-withdraw-reject-other').innerHTML = `<div class="tutor-input-group tutor-form-control-lg tutor-mb-15">
+                document.getElementById('tutor-withdraw-reject-other').innerHTML = `<div class="tutor-input-group tutor-form-control-lg tutor-mb-16">
                 <input type="text" name="reject-comment" class="tutor-form-control" placeholder="${__('Withdraw Reject Reason', 'tutor')}" required/>
               </div>`;
             } 

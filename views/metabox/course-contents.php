@@ -47,15 +47,15 @@
             <div class="tutor-topics-top">
                 <div class="tutor-topic-title">
                     <span class="<?php echo $is_topic ? 'tutor-icon-humnurger-filled course-move-handle' : 'tutor-icon-warning-f'; ?> tutor-icon-24"></span>
-                    <span class="topic-inner-title tutor-text-bold-body tutor-color-text-primary">
+                    <span class="topic-inner-title tutor-fs-6 tutor-fw-bold tutor-color-black">
                         <?php echo stripslashes($topic->post_title); ?>
                     </span>
                     <?php if($is_topic): ?>
                         <span class="tutor-topic-inline-edit-btn tutor-topic-btn-hover tutor-font-size-24">
-                            <i class="color-text-hints tutor-icon-edit-filled tutor-icon-24" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>
+                            <i class="tutor-color-muted tutor-icon-edit-filled tutor-icon-24" data-tutor-modal-target="tutor-topics-edit-id-<?php echo $topic->ID; ?>"></i>
                         </span>
                         <span class="topic-delete-btn tutor-topic-btn-hover tutor-font-size-24">
-                            <i class="color-text-hints tutor-icon-delete-stroke-filled tutor-icon-24"></i>
+                            <i class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-icon-24"></i>
                         </span>
                     <?php endif; ?>
                     <span class="expand-collapse-wrap tutor-topic-btn-hover tutor-font-size-24">
@@ -112,18 +112,18 @@
                                 ?>
                                 <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-assignment-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
                                     <div class="tutor-course-content-top">
-                                        <span class="color-text-hints tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-10"></span>
+                                        <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-2"></span>
                                         <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-assignment-modal' : ''; ?>" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                             <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?>
                                         </a>
                                         <div class="tutor-course-content-top-right-action">
                                             <?php if($is_topic): ?>
                                                 <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                                    <span class="color-text-hints tutor-icon-edit-filled tutor-font-size-24"></span>
+                                                    <span class="tutor-color-muted tutor-icon-edit-filled tutor-font-size-24"></span>
                                                 </a>
                                             <?php endif; ?>
                                             <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                                <span class="color-text-hints tutor-icon-delete-stroke-filled tutor-font-size-24"></span>
+                                                <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-font-size-24"></span>
                                             </a>
                                         </div>
                                     </div>
@@ -134,18 +134,18 @@
                                 ?>
                                 <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
                                     <div class="tutor-course-content-top">
-                                        <span class="color-text-hints tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-6"></span>
+                                        <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-font-size-24 tutor-pr-8"></span>
                                         <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-lesson-modal' : ''; ?>" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                             <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?>
                                         </a>
                                         <div class="tutor-course-content-top-right-action">
                                             <?php if($is_topic): ?>
                                                 <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                                    <span class="color-text-hints tutor-icon-edit-filled tutor-font-size-24"></span>
+                                                    <span class="tutor-color-muted tutor-icon-edit-filled tutor-font-size-24"></span>
                                                 </a>
                                             <?php endif; ?>
                                             <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                                <span class="color-text-hints tutor-icon-delete-stroke-filled tutor-font-size-24"></span>
+                                                <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-font-size-24"></span>
                                             </a>
                                         </div>
                                     </div>

@@ -25,12 +25,12 @@ if ( is_array( $course_requirements ) && count( $course_requirements ) ) {
 
 	<div class="tutor-course-details-widget tutor-mt-40">
 		<div class="tutor-course-details-widget-title tutor-mb-16">
-			<span class="tutor-color-text-primary tutor-text-medium-h6"><?php _e('Requirements', 'tutor'); ?></span>
+			<span class="tutor-color-black tutor-fs-6 tutor-fw-medium"><?php _e('Requirements', 'tutor'); ?></span>
 		</div>
 		<ul class="tutor-course-details-widget-list">
 			<?php
 				foreach ($course_requirements as $requirement){
-					echo "<li class='tutor-bs-d-flex tutor-color-text-primary tutor-text-regular-body tutor-mb-10'><span class='tutor-icon-mark-filled tutor-color-design-brand tutor-mr-5'></span><span>{$requirement}</span></li>";
+					echo "<li class='tutor-d-flex tutor-color-black tutor-fs-6 tutor-fw-normal tutor-mb-12'><span class='tutor-icon-mark-filled tutor-color-design-brand tutor-mr-4'></span><span>{$requirement}</span></li>";
 				}
 			?>
 		</ul>

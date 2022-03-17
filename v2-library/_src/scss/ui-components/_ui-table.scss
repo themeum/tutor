@@ -340,7 +340,7 @@ table.tutor-ui-table {
 		gap: 10px;
 		.btn-outline {
 			&.tutor-btn {
-				@extend .color-text-hints;
+				@extend .tutor-color-muted;
 				@extend .text-btn-small;
 				display: inline-block;
 				border: 1px solid $stroke-gray;
@@ -371,7 +371,7 @@ table.tutor-ui-table {
 		}
 
 		.btn-text {
-			@extend .color-text-hints;
+			@extend .tutor-color-muted;
 			font-size: 24px;
 			text-decoration: none;
 			display: flex;
@@ -528,7 +528,7 @@ table.tutor-ui-table {
 		.tutor-form-check {
 			label {
 				@extend .text-regular-caption;
-				@extend .color-text-subsued;
+				@extend .tutor-color-black-60;
 			}
 		}
 
@@ -712,7 +712,7 @@ table.tutor-ui-table.tutor-ui-table-responsive {
 					font-weight: 400;
 					font-size: 13px;
 					line-height: 138%;
-					color: $text-subsued;
+					color: $black-60;
 				}
 			}
 		}

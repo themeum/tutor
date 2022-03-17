@@ -26,16 +26,16 @@ if ( is_array( $attachments ) && count( $attachments ) ) {
             foreach ($attachments as $attachment){
         ?>
         <a href="<?php echo esc_url( $attachment->url ); ?>" <?php echo ($open_mode_view ? $open_mode_view : ' download="'.$attachment->name.'" ' ); ?>>
-            <div class="tutor-instructor-card tutor-mb-10">
+            <div class="tutor-instructor-card tutor-mb-12">
                 <div class="tutor-icard-content">
-                    <h6 class="tutor-name tutor-text-regular-body tutor-color-text-title">
+                    <h6 class="tutor-name tutor-fs-6 tutor-fw-normal tutor-color-black-70">
                         <?php echo esc_html( $attachment->name ); ?>
                     </h6>
                     <div class="text-regular-small">
                         <?php echo esc_html( $attachment->size ); ?>
                     </div>
                 </div>
-                <div class="tutor-avatar tutor-is-xs flex-center tutor-bs-flex-shrink-0">
+                <div class="tutor-avatar tutor-is-xs flex-center tutor-flex-shrink-0">
                     <span class="tutor-icon-24 tutor-icon-download-line tutor-color-design-brand"></span>
                 </div>
             </div>

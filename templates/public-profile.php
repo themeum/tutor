@@ -29,7 +29,7 @@ $layout_key     = $is_instructor ? 'public_profile_layout' : 'student_public_pro
 $profile_layout = tutor_utils()->get_option($layout_key , 'private' );
 $user_type		= $is_instructor ? 'instructor' : 'student';
 
-if ( 'private' === $profile_layout && $is_instructor ) {
+if ( 'private' === $profile_layout ) {
 	// Disable profile access then.
 	wp_redirect( get_home_url() );
 	exit;
@@ -60,7 +60,7 @@ tutor_utils()->tutor_custom_header();
 					<span class='rating-digits'>
 						<?php echo esc_html( number_format( $instructor_rating->rating_avg, 2 ) ); ?>
 					</span> 
-					<span class='rating-total-meta text-hints tutor-text-regular-caption'>
+					<span class='rating-total-meta text-hints tutor-fs-7 tutor-fw-normal'>
 						(<?php echo esc_html( number_format( $instructor_rating->rating_count, 2 ) ); ?>)
 					</span>
 				</div>
@@ -82,7 +82,7 @@ tutor_utils()->tutor_custom_header();
 <?php do_action( 'tutor_profile/'.$user_type.'/before/wrap' ); ?>
 <?php $user_identifier = $is_instructor ? 'tutor-instructor' : 'tutor-student'; ?>
 	<div <?php tutor_post_class( 'tutor-full-width-student-profile tutor-page-wrap tutor-user-public-profile tutor-user-public-profile-' . $profile_layout . ' ' . $user_identifier ); ?> >
-		<div class="tutor-bs-container photo-area">
+		<div class="tutor-container photo-area">
 			<div class="cover-area">
 				<div style="background-image:url(<?php echo tutor_utils()->get_cover_photo_url( $user_id ); ?>)"></div>
 				<div></div>
@@ -106,14 +106,16 @@ tutor_utils()->tutor_custom_header();
 						?>
 							<span>
 								<span><?php echo $course_count; ?></span> 
-							<?php $course_count > 1 ? _e( 'Courses', 'tutor' ) : _e( 'Course', 'tutor' ); ?>
+								<?php $course_count > 1 ? _e( 'Courses', 'tutor' ) : _e( 'Course', 'tutor' ); ?>
 							</span>
-							<span><span>•</span></span>
+							<span>
+								<span>•</span>
+							</span>
 							<span>
 								<span><?php echo $student_count; ?></span> 
-							<?php $student_count > 1 ? _e( 'Students', 'tutor' ) : _e( 'Student', 'tutor' ); ?>
+								<?php $student_count > 1 ? _e( 'Students', 'tutor' ) : _e( 'Student', 'tutor' ); ?>
 							</span>
-							<?php
+						<?php
 					} else {
 						$enrolled_course = tutor_utils()->get_enrolled_courses_by_user( $user_id );
 						$enrol_count     = is_object( $enrolled_course ) ? $enrolled_course->found_posts : 0;
@@ -154,11 +156,11 @@ tutor_utils()->tutor_custom_header();
 		</div>
 
 		
-		<div class="tutor-bs-container" style="overflow:auto">
+		<div class="tutor-container" style="overflow:auto">
 			<div class="tutor-user-profile-sidebar">
 				<?php // tutor_load_template('profile.badge', ['profile_badges'=>(new )]); ?>
 			</div>
-			<div class="tutor-user-profile-content tutor-bs-d-block tutor-mt-70">
+			<div class="tutor-user-profile-content tutor-d-block tutor-mt-72">
 				<h3><?php _e( 'Biography', 'tutor' ); ?></h3>
 				<?php tutor_load_template( 'profile.bio' ); ?>
 				

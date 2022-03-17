@@ -1,30 +1,30 @@
-<div class="quiz-meta-info d-flex justify-content-between">
-	<div class="quiz-meta-info-left d-flex">
+<div class="quiz-meta-info tutor-d-flex tutor-justify-content-between">
+	<div class="quiz-meta-info-left tutor-d-flex">
 		<?php
 			$total_questions = tutor_utils()->total_questions_for_student_by_quiz( get_the_ID() );
 
 		if ( $total_questions ) {
 			?>
-				<div class="quiz-qno d-flex">
-					<span class="text-regular-body tutor-color-text-hints tutor-mr-10">
+				<div class="quiz-qno tutor-d-flex">
+					<span class="text-regular-body tutor-color-muted tutor-mr-12">
 					<?php esc_html_e( 'Questions No', 'tutor' ); ?>:
 					</span>
-					<span class="text-bold-body tutor-color-text-title tutor-quiz-question-counter">
+					<span class="text-bold-body tutor-color-black-70 tutor-quiz-question-counter">
 						<span>1</span>/<?php echo $total_questions; ?>
 					</span>
 				</div>
 				<?php
-		}
-		?>
-		<div class="quiz-total-attempt d-flex d-xs-none">
-			<span class="text-regular-body tutor-color-text-hints tutor-mr-10">Total <?php esc_html_e( 'Attempted', 'tutor' ); ?>:</span>
-			<span class="text-bold-body tutor-color-text-title">
-			<?php
-			if ( 0 != $attempts_allowed ) {
-				if ( $attempted_count ) {
-					echo esc_html( $attempted_count ) . '/';
-				}
 			}
+		?>
+		<div class="quiz-total-attempt tutor-d-flex d-xs-none">
+			<span class="text-regular-body tutor-color-muted tutor-mr-12">Total <?php esc_html_e( 'Attempted', 'tutor' ); ?>:</span>
+			<span class="text-bold-body tutor-color-black-70">
+			<?php
+				if ( 0 != $attempts_allowed ) {
+					if ( $attempted_count ) {
+						echo esc_html( $attempted_count ) . '/';
+					}
+				}
 				echo 0 == $attempts_allowed ? esc_html__( 'No limit', 'tutor' ) : esc_html( $attempts_allowed );
 			?>
 			</span>
@@ -32,7 +32,7 @@
 	</div>
 	<?php if ( ! $hide_quiz_time_display ) : ?>
 		<div class="quiz-meta-info-right">
-			<div class="quiz-time-remaining d-flex">
+			<div class="quiz-time-remaining tutor-d-flex">
 				<?php if ( $remaining_time_secs > 0 ) : ?>
 					<div class="quiz-time-remaining-progress-circle">
 						<svg viewBox="0 0 50 50" width="50" height="50">
@@ -50,7 +50,7 @@
 					</div>
 				<?php endif; ?>
 
-				<p class="text-regular-body tutor-color-text-hints tutor-text-nowrap tutor-nowrap-nocut tutor-mr-10">
+				<p class="text-regular-body tutor-color-muted tutor-text-nowrap tutor-nowrap-nocut tutor-mr-12">
 					<?php esc_html_e( 'Time remaining: ', 'tutor' ); ?>
 				</p>
 				
@@ -67,10 +67,10 @@
 </div>
 
 <div class="quiz-flash-message">
-	<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning d-flex align-items-center justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
-		<div class="flash-info d-flex align-items-center">
-			<span class="tutor-icon-warning-outline-circle-filled tutor-color-design-warning tutor-mr-7"></span>
-			<span class="text-regular-caption tutor-color-text-title tutor-quiz-alert-text">
+	<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning tutor-align-items-center tutor-justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
+		<div class="flash-info tutor-d-flex tutor-align-items-center">
+			<span class="tutor-icon-warning-outline-circle-filled tutor-color-design-warning tutor-mr-8"></span>
+			<span class="text-regular-caption tutor-color-black-70 tutor-quiz-alert-text">
 			</span>
 		</div>
 		<div class="flash-action">

@@ -80,13 +80,13 @@ $filters = array(
 ?>
 
 <div class="tutor-admin-announcements-list">
-	<div class="tutor-dashboard-content-inner tutor-mt-10 tutor-mb-24 tutor-pr-20">
+	<div class="tutor-dashboard-content-inner tutor-mt-12 tutor-mb-24 tutor-pr-20">
 		<div class="tutor-component-three-col-action new-announcement-wrap">
 			<div class="tutor-announcement-big-icon">
 				<i class="tutor-icon-speaker-filled"></i>
 			</div>
 			<div>
-				<div class="tutor-text-regular-h5 tutor-color-text-primary">
+				<div class="tutor-fs-5 tutor-fw-normal tutor-color-black">
 					<?php esc_html_e( 'Create a new announcement and notify your students about it', 'tutor' ); ?>
 				</div>
 			</div>
@@ -102,7 +102,7 @@ $filters = array(
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-page-content-wrapper tutor-mt-50 tutor-pr-20">
+	<div class="tutor-admin-page-content-wrapper tutor-mt-24 tutor-pr-20">
 	<?php
 		$announcements         = $the_query->have_posts() ? $the_query->posts : array();
 		$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';

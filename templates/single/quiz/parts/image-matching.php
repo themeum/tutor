@@ -7,9 +7,9 @@
         <div class="tutor-quiz-border-box" draggable="true">
             <?php
                 if ($question_type === 'matching'){
-                    echo '<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">'.stripslashes($rand_answer->answer_two_gap_match).'</span>';
+                    echo '<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">'.stripslashes($rand_answer->answer_two_gap_match).'</span>';
                 }else{
-                    echo '<span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">'.stripslashes($rand_answer->answer_title).'</span>';
+                    echo '<span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">'.stripslashes($rand_answer->answer_title).'</span>';
                 }
             ?>
             <span class="tutor-icon-humnurger-filled tutor-color-black-fill"></span>
@@ -17,18 +17,18 @@
         </div>
         <?php } ?>
     </div>
-    <div class="quiz-image-matching-ans d-flex align-items-start">
+    <div class="quiz-image-matching-ans tutor-d-flex tutor-align-items-start">
         <?php
             if ( is_array($answers) && count($answers) ) {
                 foreach ($answers as $answer){
         ?>
         <div class="quiz-image-box">
-            <div class="quiz-image d-flex tutor-mb-15">
+            <div class="quiz-image tutor-d-flex tutor-mb-16">
                 <img src="<?php echo wp_get_attachment_image_url($answer->image_id, 'full') ?>" />
             </div>
             <div class="tutor-quiz-dotted-box tutor-dropzone flex-center">
-                <span class="tutor-dragging-text-conent tutor-text-regular-body tutor-color-text-primary">
-                    <?php _e('Drag your ans', 'tutor'); ?>
+                <span class="tutor-dragging-text-conent tutor-fs-6 tutor-fw-normal tutor-color-black">
+                    <?php _e('Drag your answer', 'tutor'); ?>
                 </span>
             </div>
         </div>

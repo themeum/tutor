@@ -27,27 +27,27 @@ $attempt_remaining 	= (int) $attempts_allowed - (int) $attempted_count;
 do_action('tutor_quiz/single/before/top');
 ?>
 <?php if (!$is_started_quiz && $attempted_count == 0): ?>
-	<div class="tutor-start-quiz-wrapper tutor-p-50">
+	<div class="tutor-start-quiz-wrapper tutor-p-48">
 		<div class="tutor-start-quiz-title tutor-pb-28">
-			<div class="text-regular-body tutor-color-text-primary tutor-pb-6">
+			<div class="text-regular-body tutor-color-black tutor-pb-8">
 				<?php _e('Quiz', 'tutor'); ?>
 			</div>
-			<div class="text-medium-h4 tutor-color-text-primary">
+			<div class="text-medium-h4 tutor-color-black">
 				<?php echo get_the_title(); ?>
 			</div>
 			<div class="">
 				<?php echo get_the_content(); ?>
 			</div>
 		</div>
-		<div class="tutor-quiz-info-area tutor-mb-60 tutor-mt-22">
+		<div class="tutor-quiz-info-area tutor-mb-60 tutor-mt-24">
 			<?php
 				// Show total question count
 				$total_questions = tutor_utils()->total_questions_for_student_by_quiz(get_the_ID());
 				if($total_questions){
 					?>
 					<div class="tutor-quiz-info">
-						<span class="text-regular-body tutor-color-text-hints"><?php _e('Questions', 'tutor'); ?>:</span>
-						<span class="text-regular-body tutor-color-text-primary">
+						<span class="text-regular-body tutor-color-muted"><?php _e('Questions', 'tutor'); ?>:</span>
+						<span class="text-regular-body tutor-color-black">
 							<?php echo $total_questions; ?>
 						</span>
 					</div>
@@ -69,8 +69,8 @@ do_action('tutor_quiz/single/before/top');
 
 					?>
 					<div class="tutor-quiz-info">
-						<span class="text-regular-body tutor-color-text-hints"><?php _e('Quize Time', 'tutor'); ?>:</span>
-						<span class="text-regular-body tutor-color-text-primary">
+						<span class="text-regular-body tutor-color-muted"><?php _e('Quize Time', 'tutor'); ?>:</span>
+						<span class="text-regular-body tutor-color-black">
 							<?php echo $time_limit.' '.sprintf( __( '%s', 'tutor' ), isset( $available_time_type[$time_type] ) ? $available_time_type[$time_type] : $time_type ); ?>
 						</span>
 					</div>
@@ -80,10 +80,10 @@ do_action('tutor_quiz/single/before/top');
 
 			<!-- Show Total attempt count -->
 			<div class="tutor-quiz-info">
-				<span class="text-regular-body tutor-color-text-hints">
+				<span class="text-regular-body tutor-color-muted">
 					<?php _e('Total Attempted', 'tutor'); ?>:
 				</span>
-				<span class="text-regular-body tutor-color-text-primary">
+				<span class="text-regular-body tutor-color-black">
 					<?php echo $attempted_count . '/' . ($attempts_allowed == 0 ? '&#8734;' : $attempts_allowed); ?>
 				</span>
 			</div>
@@ -93,8 +93,8 @@ do_action('tutor_quiz/single/before/top');
 				if($passing_grade){
 					?>
 					<div class="tutor-quiz-info">
-						<span class="text-regular-body tutor-color-text-hints"><?php _e('Passing Grade', 'tutor'); ?></span>
-						<span class="text-regular-body tutor-color-text-primary">(<?php echo $passing_grade . '%'; ?>)</span>
+						<span class="text-regular-body tutor-color-muted"><?php _e('Passing Grade', 'tutor'); ?></span>
+						<span class="text-regular-body tutor-color-black">(<?php echo $passing_grade . '%'; ?>)</span>
 					</div>
 					<?php 
 				} 

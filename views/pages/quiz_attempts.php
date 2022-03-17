@@ -76,7 +76,7 @@ $filters = array(
 			'context' => 'backend-dashboard-students-attempts'
 		));
 	?>
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-30">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 		<?php
 			/**
 			 * Prepare pagination data & load template

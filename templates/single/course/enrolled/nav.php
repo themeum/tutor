@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <?php do_action('tutor_course/single/enrolled/nav/before'); ?>
-<div class="tab-header tutor-bs-d-flex">
+<div class="tab-header tutor-d-flex">
 	<?php
 		$counter = 0;
 		$more_items = array();
@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		if(count($more_items)) {
 			?>
-			<div class="tab-header-item-seemore tutor-bs-ml-auto">
+			<div class="tab-header-item-seemore tutor-ml-auto">
 				<div class="tab-header-item-seemore-toggle" data-seemore-target="course-details-tab-seemore-1">
 					<?php _e('More', 'tutor'); ?> <span class="icon-seemore tutor-icon-line-cross-line tutor-icon-20 tutor-color-text-brand"></span>
 				</div>

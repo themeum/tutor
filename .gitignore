@@ -5,7 +5,6 @@ assets/js/*
 !assets/js/lib/
 languages/*
 !languages/.gitkeep
-vendor/
 test/
 build/
 .idea/

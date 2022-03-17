@@ -1,0 +1,370 @@
+// stylelint-disable indentation
+
+// Utilities
+
+$utilities: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$utilities: map-merge(
+  (
+    // scss-docs-start utils-vertical-align
+    "align": (
+      property: vertical-align,
+      class: tutor-align,
+      values: baseline top middle bottom text-bottom text-top
+    ),
+    // scss-docs-end utils-vertical-align
+    // scss-docs-start utils-float
+    "float": (
+      responsive: true,
+      property: float,
+      class: tutor-float,
+      values: (
+        start: left,
+        end: right,
+        none: none,
+      )
+    ),
+    // scss-docs-end utils-float
+    // Opacity utilities
+    // scss-docs-start utils-opacity
+    "opacity": (
+      property: opacity,
+      class: tutor-opacity,
+      values: (
+        0: 0,
+        25: .25,
+        50: .5,
+        75: .75,
+        100: 1,
+      )
+    ),
+    // scss-docs-end utils-opacity
+    // scss-docs-start utils-display
+    "display": (
+      responsive: true,
+      print: true,
+      property: display,
+      class: tutor-d,
+      values: inline inline-block block grid table table-row table-cell flex inline-flex none
+    ),
+    // scss-docs-end utils-display
+    // scss-docs-end utils-shadow
+    // scss-docs-start utils-position
+    "position": (
+      property: position,
+      class: tutor-position,
+      values: static relative absolute fixed sticky
+    ),
+    "start": (
+      property: left,
+      class: tutor-start,
+      values: $position-values
+    ),
+    "end": (
+      property: right,
+      class: tutor-end,
+      values: $position-values
+    ),
+    "translate-middle": (
+      property: transform,
+      class: tutor-translate-middle,
+      values: (
+        null: translate(-50%, -50%),
+        x: translateX(-50%),
+        y: translateY(-50%),
+      )
+    ),
+    // scss-docs-end utils-position
+    // Sizing utilities
+    // scss-docs-start utils-sizing
+    "width": (
+      property: width,
+      class: tutor-w,
+      values: (
+        25: 25%,
+        50: 50%,
+        75: 75%,
+        100: 100%,
+        auto: auto
+      )
+    ),
+    "max-width": (
+      property: max-width,
+      class: tutor-mw,
+      values: (100: 100%)
+    ),
+    "viewport-width": (
+      property: width,
+      class: tutor-vw,
+      values: (100: 100vw)
+    ),
+    "min-viewport-width": (
+      property: min-width,
+      class: tutor-min-vw,
+      values: (100: 100vw)
+    ),
+    "height": (
+      property: height,
+      class: tutor-h,
+      values: (
+        25: 25%,
+        50: 50%,
+        75: 75%,
+        100: 100%,
+        auto: auto
+      )
+    ),
+    "max-height": (
+      property: max-height,
+      class: tutor-mh,
+      values: (100: 100%)
+    ),
+    "viewport-height": (
+      property: height,
+      class: tutor-vh,
+      values: (100: 100vh)
+    ),
+    "min-viewport-height": (
+      property: min-height,
+      class: tutor-min-vh,
+      values: (100: 100vh)
+    ),
+    // scss-docs-end utils-sizing
+    // Flex utilities
+    // scss-docs-start utils-flex
+    "flex": (
+      responsive: true,
+      property: flex,
+      class: tutor-flex,
+      values: (fill: 1 1 auto)
+    ),
+    "flex-direction": (
+      responsive: true,
+      property: flex-direction,
+      class: tutor-flex,
+      values: row column row-reverse column-reverse
+    ),
+    "flex-grow": (
+      responsive: true,
+      property: flex-grow,
+      class: tutor-flex,
+      values: (
+        grow-0: 0,
+        grow-1: 1,
+      )
+    ),
+    "flex-shrink": (
+      responsive: true,
+      property: flex-shrink,
+      class: tutor-flex,
+      values: (
+        shrink-0: 0,
+        shrink-1: 1,
+      )
+    ),
+    "flex-wrap": (
+      responsive: true,
+      property: flex-wrap,
+      class: tutor-flex,
+      values: wrap nowrap wrap-reverse
+    ),
+    "gap": (
+      responsive: true,
+      property: gap,
+      class: tutor-gap,
+      values: $spacers
+    ),
+    "justify-content": (
+      responsive: true,
+      property: justify-content,
+      class: tutor-justify-content,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        evenly: space-evenly,
+      )
+    ),
+    "align-items": (
+      responsive: true,
+      property: align-items,
+      class: tutor-align-items,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        baseline: baseline,
+        stretch: stretch,
+      )
+    ),
+    "align-content": (
+      responsive: true,
+      property: align-content,
+      class: tutor-align-content,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        stretch: stretch,
+      )
+    ),
+    "align-self": (
+      responsive: true,
+      property: align-self,
+      class: tutor-align-self,
+      values: (
+        auto: auto,
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        baseline: baseline,
+        stretch: stretch,
+      )
+    ),
+    "order": (
+      responsive: true,
+      property: order,
+      class: tutor-order,
+      values: (
+        first: -1,
+        0: 0,
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
+        5: 5,
+        last: 6,
+      ),
+    ),
+
+    // Margin utilities
+    // scss-docs-start utils-spacing
+    "margin": (
+      responsive: true,
+      property: margin,
+      class: tutor-m,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-x": (
+      responsive: true,
+      property: margin-right margin-left,
+      class: tutor-mx,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-y": (
+      responsive: true,
+      property: margin-top margin-bottom,
+      class: tutor-my,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-top": (
+      responsive: true,
+      property: margin-top,
+      class: tutor-mt,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-end": (
+      responsive: true,
+      property: margin-right,
+      class: tutor-mr,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-bottom": (
+      responsive: true,
+      property: margin-bottom,
+      class: tutor-mb,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+    "margin-start": (
+      responsive: true,
+      property: margin-left,
+      class: tutor-ml,
+      values: map-merge($utility-spacers, (auto: auto))
+    ),
+
+    // Padding utilities
+    "padding": (
+      responsive: true,
+      property: padding,
+      class: tutor-p,
+      values: $utility-spacers
+    ),
+    "padding-x": (
+      responsive: true,
+      property: padding-right padding-left,
+      class: tutor-px,
+      values: $utility-spacers
+    ),
+    "padding-y": (
+      responsive: true,
+      property: padding-top padding-bottom,
+      class: tutor-py,
+      values: $utility-spacers
+    ),
+    "padding-top": (
+      responsive: true,
+      property: padding-top,
+      class: tutor-pt,
+      values: $utility-spacers
+    ),
+    "padding-end": (
+      responsive: true,
+      property: padding-right,
+      class: tutor-pr,
+      values: $utility-spacers
+    ),
+    "padding-bottom": (
+      responsive: true,
+      property: padding-bottom,
+      class: tutor-pb,
+      values: $utility-spacers
+    ),
+    "padding-start": (
+      responsive: true,
+      property: padding-left,
+      class: tutor-pl,
+      values: $utility-spacers
+    ),
+
+    // scss-docs-start utils-text
+    "font-size": (
+      rfs: true,
+      property: font-size,
+      class: tutor-fs,
+      values: $font-sizes
+    ),
+    "font-style": (
+      property: font-style,
+      class: tutor-fst,
+      values: italic normal
+    ),
+    "font-weight": (
+      property: font-weight,
+      class: tutor-fw,
+      values: (
+        thin: lighter,
+        lighter: 300,
+        normal: 400,
+        medium: 500,
+        bold: 700,
+        bolder: bolder
+      )
+    ),
+
+    // scss-docs-start utils-visibility
+    "visibility": (
+      property: visibility,
+      class: tutor-visibility,
+      values: (
+        visible: visible,
+        invisible: hidden,
+      )
+    )
+    // scss-docs-end utils-visibility
+  ),
+  $utilities
+);
