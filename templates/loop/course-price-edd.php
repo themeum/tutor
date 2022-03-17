@@ -29,18 +29,45 @@
                 $total_booked = 100 / $maximum_students * $total_enrolled;
                 $b_total = $total_booked;
 
-                $price_html = '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.$product->get_price_html() . ' </span></div>';
-                $percet_html = '<div class="list-item-booking tutor-d-flex tutor-align-items-center"><div class="booking-progress tutor-d-flex"><div class="circle-progress progress-full" style="--pro:'.$b_total .'%;"></div></div><div class="tutor-fs-7 tutor-fw-medium tutor-color-black">'.$b_total . __('% Booked', 'tutor') . '</div></div></div>';
-                $cart_html = '<div class="list-item-button tutor-mt-16 booking-available"><button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-md tutor-btn-full">'.apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </button></div>';
-
-                echo wp_kses_post($price_html);
-                echo wp_kses_post($percet_html);
-                echo wp_kses_post($cart_html);
+                echo '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+                        <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
+                            <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.
+                                $product->get_price_html() . ' 
+                            </span>
+                        </div>
+                        <div class="list-item-booking tutor-d-flex tutor-align-items-center">
+                            <div class="booking-progress tutor-d-flex">
+                                <div class="circle-progress progress-full" style="--pro:'.$b_total .'%;">
+                                </div>
+                            </div>
+                            <div class="tutor-fs-7 tutor-fw-medium tutor-color-black">'.
+                                $b_total . __('% Booked', 'tutor') . '
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-item-button tutor-mt-16 booking-available">
+                        <button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-md tutor-btn-full">'.
+                            apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' 
+                        </button>
+                    </div>';
             }
 
             if ( $maximum_students == $total_enrolled && $maximum_students != 0) {
-                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.$product->get_price_html() . ' </span></div>';
-                $restrict = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-items-center"><div class="booking-progress tutor-d-flex"><span class="btn-icon tutor-color-design-warning tutor-icon-circle-outline-info-filled"></span></div><div class="tutor-fs-7 tutor-fw-medium tutor-color-black">'. __('Fully Booked', 'tutor') .'</div></div></div>';
+                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+                                    <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
+                                        <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.
+                                            $product->get_price_html() . ' 
+                                        </span>
+                                    </div>';
+
+                $restrict = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-items-center">
+                                <div class="booking-progress tutor-d-flex">
+                                    <span class="btn-icon tutor-color-design-warning tutor-icon-circle-outline-info-filled"></span>
+                                </div>
+                                <div class="tutor-fs-7 tutor-fw-medium tutor-color-black">'.
+                                    __('Fully Booked', 'tutor') .'
+                                </div>
+                            </div></div>';
                 echo wp_kses_post($price_html);
                 echo wp_kses_post($restrict);
             }
