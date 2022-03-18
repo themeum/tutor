@@ -104,6 +104,12 @@ window.jQuery(document).ready(function($){
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
+
+                if(!data.success){
+                    tutor_toast(__('Error', 'tutor'), get_response_message(data), 'error');
+                    return;
+                }
+
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id});
                 $('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
