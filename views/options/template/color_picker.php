@@ -92,7 +92,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 			?>
 			<div class="more_button tutor-font-size-16">
 				<i class="tutor-icon-plus-filled"></i>
-				<span>Show More</span>
+				<span><?php _e('Show More', 'tutor'); ?></span>
 			</div>
 		</div>
 	</div>
