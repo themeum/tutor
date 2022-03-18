@@ -111,16 +111,15 @@ tutor_alert(
 	</div>
 </div>
 
-
 <div class="tutor-option-single-item">
 	<h4><?php _e('Reset Settings','tutor'); ?></h4>
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<div class="text-regular-h6 tutor-color-black"><?php _e('Reset Everything to Default','tutor'); ?></div>
+				<div class="tutor-fs-6 tutor-fw-normal tutor-color-black"><?php _e( 'Reset Everything to Default', 'tutor' ); ?></div>
 				<div class="text-medium-small tutor-color-black-60">
-					<span style="font-weight: 500"> <?php _e('It will revert all settings to initial setup.','tutor'); ?>
-				</span></div>
+					<span class="tutor-fw-medium"><?php _e( 'It will revert all settings to initial setup.', 'tutor' ); ?></span>
+				</div>
 			</div>
 			<div class="tutor-option-field-input">
 				<button class="tutor-btn tutor-is-outline tutor-is-sm tutor-reset-all" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Reset Settings','tutor'); ?>" data-heading="<?php _e('Reset All Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will reset all settings to default, please proceed with caution.','tutor') ?>" id="reset_options"><?php _e('Reset All Settings','tutor'); ?></button>

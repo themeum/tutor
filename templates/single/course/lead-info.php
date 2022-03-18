@@ -34,11 +34,11 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
     }
     ?>
 
-    <div class="tutor-course-details-title tutor-fs-4 tutor-fw-bold tutor-color-black tutor-mt-12">
+    <h1 class="tutor-course-details-title tutor-fs-4 tutor-fw-bold tutor-color-black tutor-mt-12 tutor-mb-0">
         <?php do_action('tutor_course/single/title/before'); ?>
-            <div class="tutor-fs-4 tutor-fw-bold"><?php the_title(); ?>
-        </div>
-    </div>
+        <span><?php the_title(); ?></span>
+    </h1>
+    
     <div class="tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-mt-16">
         <div class="tutor-course-details-category tutor-fs-6 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-end">
             <!-- <?php if (tutor_utils()->get_option('enable_course_author')) : ?>
