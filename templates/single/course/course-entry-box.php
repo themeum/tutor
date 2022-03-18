@@ -197,7 +197,7 @@
 				?>
 					<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-content-between">
 						<div>
-							<span class="text-bold-h4 tutor-color-black"><?php esc_html_e( 'Free', 'tutor' ); ?></span>
+							<span class="tutor-fs-4 tutor-fw-bold tutor-color-black"><?php esc_html_e( 'Free', 'tutor' ); ?></span>
 						</div>
 					</div>
 					<div class="tutor-course-sidebar-card-btns">
