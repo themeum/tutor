@@ -228,6 +228,9 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 = 2.0.1 - March 21, 2022
 
 Fix: In the courses page, AJAX based "Add to Cart" is not working
+Fix: Backend dashboard search field clear not removing parameter from tab URL
+Fix: Automatically loading next course content not working
+Fix: HTML5 video input is open even if unselected from settings page
 
 = 2.0.0 - March 15, 2022
 

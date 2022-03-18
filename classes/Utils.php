@@ -9315,7 +9315,7 @@ class Utils {
 				'icon'  => 'tutor-icon-man-user-filled',
 			),
 			'enrolled-courses' => array(
-				'title' => __( 'Enrolled  Courses', 'tutor' ),
+				'title' => __( 'Enrolled Courses', 'tutor' ),
 				'icon'  => 'tutor-icon-college-graduation-filled',
 			),
 			'wishlist'         => array(
