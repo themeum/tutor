@@ -2,40 +2,40 @@
 
 @import './main_contents.scss';
 
-.tutor-font-family {
-	font-family: 'Inter', sans-serif !important;
-	letter-spacing: -0.2px;
-}
+// .tutor-font-family {
+// 	font-family: 'Inter', sans-serif !important;
+// 	letter-spacing: -0.2px;
+// }
 
-.tutor-backend {
-	background: #e9eaed !important;
-	&.tutor-screen-course-builder {
-		&.tutor-screen-course-builder-classic {
-			&.sticky-menu #adminmenuwrap {
-				max-height: calc(100vh - 30px);
-				overflow-y: auto;
-			}
-		}
-	}
-	#wpbody-content {
-		@extend .tutor-font-family;
-	}
-}
+// .tutor-backend {
+// 	background: #e9eaed !important;
+// 	&.tutor-screen-course-builder {
+// 		&.tutor-screen-course-builder-classic {
+// 			&.sticky-menu #adminmenuwrap {
+// 				max-height: calc(100vh - 30px);
+// 				overflow-y: auto;
+// 			}
+// 		}
+// 	}
+// 	#wpbody-content {
+// 		@extend .tutor-font-family;
+// 	}
+// }
 
-[class*='tutor-screen-'],
-.tutor-course-details-page,
-.tutor-course-single-content-wraper,
-.tutor-wrap {
-	@extend .tutor-font-family;
-}
+// [class*='tutor-screen-'],
+// .tutor-course-details-page,
+// .tutor-course-single-content-wraper,
+// .tutor-wrap {
+// 	@extend .tutor-font-family;
+// }
 
-[class*='tutor-screen-'] {
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		font-family: 'Inter', sans-serif !important;
-	}
-}
+// [class*='tutor-screen-'] {
+// 	h1,
+// 	h2,
+// 	h3,
+// 	h4,
+// 	h5,
+// 	h6 {
+// 		font-family: 'Inter', sans-serif !important;
+// 	}
+// }
