@@ -143,7 +143,7 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 1.9.8
 		 */
-		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
+		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 2 );
 	
 		add_action( 'wp_ajax_tutor_update_course_content_parent', array($this, 'tutor_update_course_content_parent') );
 	}
@@ -1280,12 +1280,12 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.9.8
 	 */
-	public function enroll_after_login_if_attempt( $course_id ) {
+	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
 		$course_id = sanitize_text_field( $course_id );
 		if ( $course_id ) {
 			$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 			if ( ! $is_purchasable ) {
-				tutor_utils()->do_enroll( $course_id );
+				tutor_utils()->do_enroll( $course_id, $order_id = 0, $user_id );
 				do_action( 'guest_attempt_after_enrollment', $course_id );
 			}
 		}

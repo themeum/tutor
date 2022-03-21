@@ -8,7 +8,7 @@ window.jQuery(document).ready(($) => {
 	 *
 	 * @since v.1.6.3
 	 */
-	$(document).on('submit', '.tutor-login-modal form', function(e) {
+	$(document).on('submit', '#tutor-login-form', function(e) {
 		e.preventDefault();
 
 		var form = $(this);
@@ -17,7 +17,7 @@ window.jQuery(document).ready(($) => {
 
 		var form_data = $(this).serializeObject();
 		form_data.action = 'tutor_user_login';
-		console.log(form_data);
+
 		$.ajax({
 			url: _tutorobject.ajaxurl,
 			type: 'POST',
