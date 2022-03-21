@@ -79,7 +79,7 @@ get_tutor_header();
         </div>
     </div>
 
-     <!-- Course Progressbar on sm/mobile  -->
+    <!-- Course Progressbar on sm/mobile  -->
     <?php 
         // Get the ID of this content and the corresponding course
         $course_content_id = get_the_ID();
