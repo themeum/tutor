@@ -243,6 +243,7 @@ Fix: Lesson, quiz order not retaining properly after drag and drop
 Fix: Login requires for woocommerce connected course add to cart
 Fix: Quiz export adding extra answer for questions
 Fix: Enabling course content access without enrollment for admin and instructor not working
+Fix: Lesson comment reply author name hard coded
 Update: Email Logo is coming from course base logo
 Update: WooCommerce Auto redirect to courses added on automatic order completion
 Update: Email footer text is now from default content

@@ -675,14 +675,6 @@ class Options_V2
 								'desc'           => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor'),
 							),
 							array(
-								'key'         => 'enable_guest_course_cart',
-								'type'        => 'toggle_switch',
-								'label'       => __('Enable Guest Mode', 'tutor'),
-								'label_title' => __('', 'tutor'),
-								'default'     => 'off',
-								'desc'        => __('Allow customers to place orders without an account.', 'tutor'),
-							),
-							array(
 								'key'         => 'sharing_percentage',
 								'type'        => 'double_input',
 								'label'       => __('Sharing Percentage', 'tutor'),
