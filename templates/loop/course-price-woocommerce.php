@@ -30,7 +30,7 @@
             echo tutor_kses_html($free_html);
         } elseif ($maximum_students != 0 && $total_enrolled != $maximum_students){
             $total_booked = 100 / $maximum_students * $total_enrolled;
-            $b_total = number_format((float) $total_booked, 2, '.', '');
+            $b_total = number_format($total_booked);
             $add_to_cart_text = $product->add_to_cart_text();
 
             $price_html = '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-content-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.$product->get_price_html() . ' </span></div>';
