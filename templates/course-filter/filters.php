@@ -30,7 +30,7 @@
 				<?php
 				if ( in_array( 'category', $supported_filters ) ) {
 					?>
-				<div class="filter-widget-title tutor-fs-6 tutor-fw-normal tutor-color-black tutor-mb-24">
+				<div class="filter-widget-title tutor-fs-6 tutor-color-black tutor-mb-24">
 					<?php esc_html_e( 'Category', 'tutor' ); ?>
 				</div>
 				<div class="filter-widget-checkboxes">
@@ -44,7 +44,7 @@
 				<?php
 				if ( in_array( 'tag', $supported_filters ) ) {
 					?>
-				<div class="filter-widget-title tutor-fs-6 tutor-fw-normal tutor-color-black tutor-mb-24">
+				<div class="filter-widget-title tutor-fs-6 tutor-color-black tutor-mb-24">
 					<?php esc_html_e( 'Tag', 'tutor' ); ?>
 				</div>
 				<div class="filter-widget-checkboxes">
@@ -58,7 +58,7 @@
 			?>
 		<div class="filter-widget-input-wrapper tutor-mt-24">
 			<div class="filter-widget-input">
-				<div class="filter-widget-title tutor-fs-6 tutor-fw-normal tutor-color-black tutor-mb-24">
+				<div class="filter-widget-title tutor-fs-6 tutor-color-black tutor-mb-24">
 				<?php esc_html_e( 'Level', 'tutor' ); ?>
 				</div>
 				<div class="filter-widget-checkboxes">
@@ -86,7 +86,7 @@
 			?>
 		<div class="filter-widget-input-wrapper tutor-mt-24">
 			<div class="filter-widget-input">
-				<div class="filter-widget-title tutor-fs-6 tutor-fw-normal tutor-color-black tutor-mb-24">
+				<div class="filter-widget-title tutor-fs-6 tutor-color-black tutor-mb-24">
 				<?php _e( 'Price', 'tutor' ); ?>
 				</div>
 				<div class="filter-widget-checkboxes">

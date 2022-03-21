@@ -177,7 +177,7 @@ $max_filesize = floatval(ini_get('upload_max_filesize')) * (1024 * 1024);
 					}
 					?>
 				</select>
-				<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60 tutor-mt-12">
+				<div class="tutor-fs-7 tutor-color-black-60 tutor-mt-12">
 					<?php esc_html_e( 'The display name is shown in all public fields, such as the author name, instructor name, student name, and name that will be printed on the certificate.', 'tutor' ); ?>
 				</div>
 			</div>

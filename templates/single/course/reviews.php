@@ -61,7 +61,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 						<?php echo number_format( $rating->rating_avg, 1 ); ?>
 					</div>
 					<?php tutor_utils()->star_rating_generator_v2( $rating->rating_avg, null, false, 'tutor-d-block', 'lg' ); ?>
-					<div class="tutor-total-ratings-text tutor-fs-6 tutor-fw-normal text-subsued tutor-mt-12">
+					<div class="tutor-total-ratings-text tutor-fs-6 tutor-black-60 tutor-mt-12">
 						<span class="tutor-rating-text-part">
 							<?php esc_html_e( 'Total ', 'tutor' ); ?>
 						</span>
@@ -91,7 +91,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 									<span class="progress-value"></span>
 								</div>
 							</div>
-							<div class="rating-num tutor-fs-7 tutor-fw-normal tutor-color-black-60">
+							<div class="rating-num tutor-fs-7 tutor-color-black-60">
 								<?php
 									echo $value . ' ';
 									echo $value > 1 ? __( 'ratings', 'tutor' ) : __( 'rating', 'tutor' );
