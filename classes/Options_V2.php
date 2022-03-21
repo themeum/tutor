@@ -305,7 +305,7 @@ class Options_V2
 		$old_dashboard_id = get_tutor_option('tutor_dashboard_page_id');
 		$dashboard_update_id = isset($option['tutor_dashboard_page_id']) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
 
-		$option['email_footer_text'] = !empty($option['email_footer_text']) ? wp_unslash($option['email_footer_text']) : '';
+		$option['email_footer_text'] = !empty($option['email_footer_text']) ? htmlentities(wp_unslash($option['email_footer_text'])) : '';
 
 		$option = apply_filters('tutor_option_input', $option);
 
@@ -521,6 +521,22 @@ class Options_V2
 								'default'     => 'off',
 								'label_title' => __('', 'tutor'),
 								'desc'        => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
+							),
+							array(
+								'key'         => 'wc_automatic_order_complete_redirect_to_courses',
+								'type'        => 'toggle_switch',
+								'label'       => __('Auto redirect to courses', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('When a user\'s WooCommerce order is auto-completed, they will be redirected to enrolled courses', 'tutor'),
+							),
+							array(
+								'key'         => 'auto_complete_woocommerce_virtual_orders',
+								'type'        => 'toggle_switch',
+								'label'       => __('Auto Complete Woocommerce Virtual Orders', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('When a user\'s WooCommerce order is completed, they will be auto enrolled to corresponding courses', 'tutor'),
 							),
 							array(
 								'key'         => 'enable_spotlight_mode',
