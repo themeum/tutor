@@ -84,7 +84,7 @@
 									<div class="tutor-single-comment">
 										<div class="tutor-actual-comment tutor-mb-12">
 											<div class="tutor-comment-author">
-												<span class="text-bold-body">Estella Clayton</span>
+												<span class="text-bold-body"><?php echo $comment->comment_author; ?></span>
 												<span class="text-regular-caption tutor-ml-0 tutor-ml-sm-10">
 													<?php echo human_time_diff( strtotime( $reply->comment_date ), tutor_time() ) . __( ' ago', 'tutor' ); ?>
 												</span>
