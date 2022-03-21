@@ -53,7 +53,7 @@ if ( $is_instructor ) {
                     </span>
                 </div>
                 <div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-24 tutor-pb-48">
-                    <span class="tutor-app-process-subtitle tutor-text-regular-h6 tutor-color-text-subsued">
+                    <span class="tutor-app-process-subtitle tutor-fs-6 tutor-color-black-60">
                     <?php
                         if ( $instructor_status == 'pending' ) {
                             esc_html_e( 'We\'ve received your application, and we will review it soon. Please hang tight!', 'tutor' );

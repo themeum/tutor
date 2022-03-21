@@ -48,7 +48,7 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
 
     <?php // if($view_as=='instructor'): ?>
         <div class="tutor-qna-filter <?php echo $is_instructor ? 'tutor-mt-24' : '' ?>" <?php if(!$is_instructor){ ?> style="justify-content: flex-end;" <?php } ?> >
-            <span class="tutor-fs-7 tutor-fw-normal tutor-color-black-60"><?php _e('Sort By', 'tutor'); ?>:</span>
+            <span class="tutor-fs-7 tutor-color-black-60"><?php _e('Sort By', 'tutor'); ?>:</span>
             <select class="tutor-form-select tutor-select-redirector">
                 <?php
                     foreach ($qna_tabs as $tab) {

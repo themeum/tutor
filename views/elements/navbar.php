@@ -32,7 +32,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 			<?php endif; ?>
 			<?php endif; ?>
 		</div>
-		<div class="filter-btns tutor-fs-6 tutor-fw-normal tutor-color-black-60">
+		<div class="filter-btns tutor-fs-6 tutor-color-black-60">
 			<?php if ( isset( $data['tabs'] ) ) : ?>
 				<div class="tutor-admin-page-navbar-tabs filter-btns">
 					<?php foreach ( $data['tabs'] as $key => $v ) : ?>

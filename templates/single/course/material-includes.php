@@ -30,7 +30,7 @@ if ( is_array( $materials ) && count( $materials ) ) {
 		</div>
 		<ul class="tutor-course-details-widget-list">
 			<?php foreach ($materials as $material): ?>
-				<li class="tutor-d-flex tutor-color-black tutor-fs-6 tutor-fw-normal tutor-mb-12">
+				<li class="tutor-d-flex tutor-color-black tutor-fs-6 tutor-mb-12">
 					<span class="tutor-icon-mark-filled tutor-color-design-brand tutor-mr-4"></span>
 					<span><?php echo $material; ?></span>
 				</li>

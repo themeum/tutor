@@ -32,7 +32,7 @@ if ( is_array( $target_audience ) && count( $target_audience ) ) {
 		<ul class="tutor-course-details-widget-list">
 			<?php
 				foreach ($target_audience as $audience){
-					echo "<li class='tutor-d-flex tutor-color-black tutor-fs-6 tutor-fw-normal tutor-mb-12'><span class='tutor-icon-mark-filled tutor-color-design-brand tutor-mr-4'></span><span>{$audience}</span></li>";
+					echo "<li class='tutor-d-flex tutor-color-black tutor-fs-6 tutor-mb-12'><span class='tutor-icon-mark-filled tutor-color-design-brand tutor-mr-4'></span><span>{$audience}</span></li>";
 				}
 			?>
 		</ul>

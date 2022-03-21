@@ -3519,7 +3519,7 @@ class Utils {
 			<?php
 			if ( $show_avg_rate ) {
 				?>
-				<span class="tutor-rating-text tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-pl-0 tutor-ml-0">
+				<span class="tutor-rating-text tutor-fs-6 tutor-color-black-60 tutor-pl-0 tutor-ml-0">
 					<?php
 					echo $current_rating;
 					if ( ! ( $total_count === null ) ) {
@@ -8743,7 +8743,7 @@ class Utils {
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%" />
-			<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-text-center">
+			<div class="tutor-fs-6 tutor-color-black-60 tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
 		</div>

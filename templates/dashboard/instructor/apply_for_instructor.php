@@ -36,7 +36,7 @@
 				</div>
 	
 				<div class="tutor-ins-app-subtitle tutor-m-auto tutor-text-center tutor-pt-24 tutor-pb-48">
-					<span class="tutor-app-process-subtitle tutor-fs-6 tutor-fw-normal tutor-color-muted">
+					<span class="tutor-app-process-subtitle tutor-fs-6 tutor-color-muted">
 						<?php esc_html_e( 'Tell us your qualifications, show us your passion, and begin teaching with us!', 'tutor' ); ?>
 					</span>
 				</div>

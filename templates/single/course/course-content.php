@@ -30,10 +30,10 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 ?>
 	<div class='tab-item-content <?php echo $has_readmore ? 'tutor-has-showmore' : '' ?>'>
 		<div class='tutor-showmore-content'>
-			<div class="text-medium-h6 tutor-color-black">
+			<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 				<?php echo apply_filters( 'tutor_course_about_title', __( 'About Course', 'tutor' ) ); ?>
 			</div>
-			<div class="text-regular-body tutor-color-black-60 tutor-mt-12">
+			<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-12">
 				<?php
                     if ($has_readmore) {
                         ?>

@@ -74,7 +74,7 @@
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</span>
 					<div class="list-item-progress tutor-mt-16">
-						<div class="text-regular-body tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+						<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
@@ -145,11 +145,11 @@
 			}
 
 			?>
-				<div class="text-regular-caption tutor-color-muted tutor-mt-12 tutor-d-flex tutor-justify-content-center">
+				<div class="tutor-fs-7 tutor-color-muted tutor-mt-12 tutor-d-flex tutor-justify-content-center">
 					<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-8"></span>
 					<span class="tutor-enrolled-info-text">
 					<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
-						<span class="text-bold-small tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
+						<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
 						<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) ); ?>
 						</span>
 					</span>
@@ -210,7 +210,7 @@
 							</button>
 						</form>
 					</div>
-					<div class="text-regular-caption tutor-color-muted tutor-mt-12 tutor-text-center">
+					<div class="tutor-fs-7 tutor-color-muted tutor-mt-12 tutor-text-center">
 						<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
 					</div>
 				<?php
@@ -231,7 +231,7 @@
 				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-content-between">
 					<div class="flex-center">
 						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
-						<span class="text-regular-caption tutor-color-muted tutor-ml-8">
+						<span class="tutor-fs-7 tutor-color-muted tutor-ml-8">
 							<?php echo esc_html( $meta['label'] ); ?>
 						</span>
 					</div>
