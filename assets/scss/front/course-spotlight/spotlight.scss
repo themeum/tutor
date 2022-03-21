@@ -234,3 +234,21 @@
 }
 
 /* tutor-course-spotlight-wrapper */
+
+// .tutor-spotlight-mobile-progress-complete
+.tutor-spotlight-mobile {
+	&-progress-complete {
+		background: #ffffff;
+		box-shadow: 0px 0px 16px 0 rgba(176, 182, 209, 0.180862);
+		margin-top: 16px;
+	}
+
+	&-progress-right {
+		.tutor-topbar-complete-btn {
+			text-align: right;
+		}
+		[class*='tutor-icon-'] {
+			display: none;
+		}
+	}
+}
