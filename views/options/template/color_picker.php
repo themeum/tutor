@@ -7,6 +7,7 @@
  * @since 2.0
  */
 $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] : array();
+
 ?>
 <div class="tutor-option-single-item <?php echo esc_attr( $blocks['slug'] ); ?>">
 	<?php echo ( isset( $blocks['label'] ) && ! empty( $blocks['label'] ) ) ? '<h4>' . esc_attr( $blocks['label'] ) . '</h4>' : ''; ?>
@@ -24,9 +25,11 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 						</div>
 						<div class="tutor-option-field-input color-preset-grid">
 							<?php
+							$is_color_preset = $this->get( $fields_group['key'] );
+
 							foreach ( $preset_color_fields as $fields ) {
 								$option_value  = $this->get( $fields_group['key'], tutils()->array_get( 'default', $fields_group ) );
-								$option_value  = ! isset( $option_value ) || empty( $option_value ) ? 'custom' : $option_value;
+								$option_value  = ! isset( $option_value ) || empty( $option_value ) || false == $is_color_preset ? 'custom' : $option_value;
 								$preset_colors = tutils()->sanitize_array( $fields['colors'] );
 
 								?>
@@ -89,7 +92,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 			?>
 			<div class="more_button tutor-font-size-16">
 				<i class="tutor-icon-plus-filled"></i>
-				<span>Show More</span>
+				<span><?php _e('Show More', 'tutor'); ?></span>
 			</div>
 		</div>
 	</div>

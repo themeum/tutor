@@ -42,19 +42,19 @@ $is_instructor             = tutor_utils()->is_instructor();
 
 // URLS
 $current_url  = tutor()->current_url;
-$footer_url_1 = trailingslashit(tutor_utils()->tutor_dashboard_url($is_instructor ? '' : 'my-courses'));
-$footer_url_2 = trailingslashit(tutor_utils()->tutor_dashboard_url($is_instructor ? 'question-answer' : 'my-quiz-attempts'));
+$footer_url_1 = trailingslashit( tutor_utils()->tutor_dashboard_url( $is_instructor ? 'my-courses' : '' ) );
+$footer_url_2 = trailingslashit( tutor_utils()->tutor_dashboard_url( $is_instructor ? 'question-answer' : 'my-quiz-attempts' ) );
 
 // Footer links
 $footer_links = array(
 	array(
-		'title'      => $is_instructor ? __('Dashboard', 'tutor') : __('Courses', 'tutor'),
+		'title'      => $is_instructor ? __( 'My Courses', 'tutor' ) : __( 'Dashboard', 'tutor' ),
 		'url'        => $footer_url_1,
 		'is_active'  => $footer_url_1 == $current_url,
 		'icon_class' => 'ttr tutor-icon-dashboard-filled',
 	),
 	array(
-		'title'      => $is_instructor ? __('Q&A', 'tutor') : __('Quiz Attempts' . 'tutor'),
+		'title'      => $is_instructor ? __( 'Q&A', 'tutor' ) : __( 'Quiz Attempts', 'tutor' ),
 		'url'        => $footer_url_2,
 		'is_active'  => $footer_url_2 == $current_url,
 		'icon_class' => $is_instructor ? 'ttr  tutor-icon-question-filled' : 'ttr tutor-icon-quiz-attempt-filled',

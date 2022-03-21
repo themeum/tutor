@@ -1,5 +1,9 @@
 # TutorLMS Changelog
 
+### 2.0.1 - March 21, 2022
+
+* Fix: To be added
+
 ### 2.0.0 - March 15, 2022
 
 * New: Visually appealing appearance with a more unified design system

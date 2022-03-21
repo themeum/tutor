@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.9
 Requires PHP: 7.0
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,13 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.0.1 - March 21, 2022
+
+Fix: In the courses page, AJAX based "Add to Cart" is not working
+Fix: Backend dashboard search field clear not removing parameter from tab URL
+Fix: Automatically loading next course content not working
+Fix: HTML5 video input is open even if unselected from settings page
 
 = 2.0.0 - March 15, 2022
 
