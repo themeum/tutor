@@ -22,6 +22,7 @@ $saved_data = $this->get( $field_key, array() );
 			$content = empty( $saved_data ) ? $field['default'] : wp_unslash( $saved_data );
 			$pattern = array( '/\<[\/]{0,1}div[^\>]*\>/i', '/<p>(?:\s|&nbsp;)*?<\/p>/i' );
 			$content = preg_replace( $pattern, '', $content );
+			$content = html_entity_decode($content);
 			$args    = array(
 				'textarea_name' => "tutor_option[{$field_key}]",
 				'tinymce'       => array(
