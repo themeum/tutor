@@ -1,6 +1,12 @@
 // Cursor
-.tutor-cursor-pointer {
-	cursor: pointer;
+.tutor-cursor {
+	&-pointer {
+		cursor: pointer;
+	}
+
+	&-move {
+		cursor: move;
+	}
 }
 .tutor-valign-top {
 	vertical-align: top;

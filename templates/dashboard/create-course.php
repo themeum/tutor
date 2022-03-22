@@ -272,10 +272,8 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 			<!-- Course builder tips right sidebar -->
 			<div class="tutor-col-12 tutor-col-lg-4 tutor-mb-32 tutor-pl-40">
 				<div class="tutor-course-builder-upload-tips">
-					<h3 class="tutor-fs-6 tutor-mb-20">
-						<strong>
-							<?php _e('Course Upload Tips', 'tutor'); ?>
-						</strong>
+					<h3 class="tutor-fs-5 tutor-fw-medium tutor-color-black-70 tutor-mb-20">
+						<?php _e('Course Upload Tips', 'tutor'); ?>
 					</h3>
 					<ul>
 						<li class="tutor-mb-20"><?php _e('Set the Course Price option or make it free.', 'tutor'); ?></li>
