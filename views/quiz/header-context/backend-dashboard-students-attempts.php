@@ -8,11 +8,11 @@
     <div class="tutor-color-black back tutor-mb-24">
         <a class="tutor-back-btn" href="<?php echo $back_url; ?>">
             <span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-            <span class="text text tutro-text-regular-caption tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
+            <span class="text text tutro-tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>
     
-    <div class="text-regular-small tutor-color-black-60">
+    <div class="tutor-fs-7 tutor-color-black-60">
         <?php echo __('Course', 'tutor').': '.$course_title; ?>
     </div>
     <div class="header-title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mt-12">

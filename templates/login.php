@@ -30,7 +30,7 @@ $login_url = tutor_utils()->get_option('enable_tutor_native_login', null, true, 
     <div class="tutor-template-segment tutor-login-wrap">
 
         <div class="tutor-login-form-wrapper">
-            <div class="tutor-fs-5 tutor-fw-normal tutor-color-black tutor-mb-32">
+            <div class="tutor-fs-5 tutor-color-black tutor-mb-32">
                 <?php esc_html_e( 'Hi, Welcome back!', 'tutor' ); ?>
             </div>
             <?php

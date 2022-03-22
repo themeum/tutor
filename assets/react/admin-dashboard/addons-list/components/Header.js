@@ -13,10 +13,10 @@ const Header = () => {
 
 	return (
 		<header className="tutor-addons-list-header tutor-d-lg-flex tutor-justify-content-between tutor-align-items-center tutor-px-32 tutor-py-16">
-			<div className="title text-medium-h5 color-text-primary tutor-mb-lg-0 tutor-mb-4">
+			<div className="title tutor-fs-5 tutor-fw-medium tutor-mb-lg-0 tutor-mb-4">
 				{__('Add-ons', 'tutor')}
 			</div>
-			<div className="filter-btns text-regular-body color-text-subsued ">
+			<div className="filter-btns tutor-fs-6 tutor-color-black-60">
 				{filterBtns.map((btn, index) => {
 					return (
 						<button

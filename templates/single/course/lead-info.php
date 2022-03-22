@@ -49,7 +49,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
                 </div>
             <?php endif; ?> -->
             <div>
-                <span class="text-regular-body tutor-color-muted">
+                <span class="tutor-fs-6 tutor-color-muted">
                     <?php _e('Categories', 'tutor'); ?>:
                 </span>
                 <span>
@@ -72,7 +72,7 @@ $profile_url = tutor_utils()->profile_url( $authordata->ID, true );
             </div>
         </div>
         <div class="tutor-course-details-action-btns tutor-mt-12 tutor-mt-sm-0">
-            <a href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-fs-6 tutor-fw-normal tutor-color-black tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
+            <a href="#" class="tutor-btn-ghost tutor-btn-ghost-fd action-btn tutor-fs-6 tutor-color-black tutor-course-wishlist-btn" data-course-id="<?php echo get_the_ID(); ?>">
                 <i class="tutor-icon-fav-line-filled"></i> <?php _e('Wishlist', 'tutor'); ?>
             </a>
 

@@ -98,7 +98,7 @@ do_action('tutor_dashboard/before/wrap');
 					} else {
 					?>
 						<div class="tutor-dashboard-header-display-name tutor-color-black">
-							<div class="tutor-fs-5 tutor-fw-normal tutor-dashboard-header-greetings">
+							<div class="tutor-fs-5 tutor-dashboard-header-greetings">
 								Hello,
 							</div>
 							<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
@@ -202,7 +202,7 @@ do_action('tutor_dashboard/before/wrap');
 							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
 							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
 
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-fw-normal tutor-color-black'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-color-black'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
 						}
 					}
 					?>

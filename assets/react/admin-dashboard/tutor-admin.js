@@ -13,6 +13,7 @@ import './segments/options';
 import './segments/reset';
 import './segments/withdraw';
 import './segments/column-filter';
+import './segments/multiple_email_input';
 
 const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
 toggleChange.forEach((element) => {

@@ -63,7 +63,7 @@ $field_id = esc_attr( 'field_' . $field_key );
 					<?php endforeach; ?>
 				</div>
 				<div class="footer">
-					<span class="text-regular-body"><?php echo esc_attr( $fields['label'] ); ?></span><span class="check-icon"></span>
+					<span class="tutor-fs-6"><?php echo esc_attr( $fields['label'] ); ?></span><span class="check-icon"></span>
 				</div>
 			</div>
 		</label>

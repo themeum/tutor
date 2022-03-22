@@ -36,7 +36,7 @@ if ( ! $assignment_submitted_id ) {
 	<div class="submitted-assignment-title tutor-mb-16">
 		<a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
 			<!-- <span class="assignment-back-icon">&leftarrow;</span><?php esc_html_e( 'Back', 'tutor' ); ?> -->
-			<span class="color-text-primary assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12"></span>
+			<span class="tutor-color-black assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12"></span>
 			<span class="tutor-color-black-60"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
 		</a>
 		<!-- <a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>"></a> -->
@@ -46,7 +46,7 @@ if ( ! $assignment_submitted_id ) {
 		<table class="tutor-ui-table-no-border tutor-is-lefty tutor-is-flexible">
 			<tbody>
 				<tr>
-					<td class="color-text-subsued"><?php esc_html_e( 'Course', 'tutor' ); ?></td>
+					<td class="tutor-color-black-60"><?php esc_html_e( 'Course', 'tutor' ); ?></td>
 					<td>:
 						<a href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
 						<?php esc_html_e( get_the_title( $submitted_assignment->comment_parent ) ); ?>
@@ -54,7 +54,7 @@ if ( ! $assignment_submitted_id ) {
 					</td>
 				</tr>
 				<tr>
-					<td class="color-text-subsued"><?php esc_html_e( 'Student', 'tutor' ); ?></td>
+					<td class="tutor-color-black-60"><?php esc_html_e( 'Student', 'tutor' ); ?></td>
 					<td>:
 						<span>
 						<?php echo esc_html( $comment_author->display_name . ' (' . $comment_author->user_email . ')' ); ?>
@@ -62,7 +62,7 @@ if ( ! $assignment_submitted_id ) {
 					</td>
 				</tr>
 				<tr>
-					<td class="color-text-subsued"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?></td>
+					<td class="tutor-color-black-60"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?></td>
 					<td>:
 						<span>
 						<?php echo esc_attr( date( 'j M, Y, h:i a', strtotime( $submitted_assignment->comment_date ) ) ); ?>
@@ -75,17 +75,17 @@ if ( ! $assignment_submitted_id ) {
 	<hr>
 
 	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-32 tutor-mb-16">
-		<h5 class="text-medium-h6 tutor-mb-5">
+		<h5 class="tutor-fs-6 tutor-fw-medium tutor-mb-5">
 			<?php esc_html_e( 'Assignment Description:', 'tutor' ); ?>
 		</h5>
-		<p class="text-regular-body color-text-subsued tutor-mb-5">
+		<p class="tutor-fs-6 tutor-color-black-60 tutor-mb-5">
 			<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
 		</p>
 		<?php
 		$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
 		if ( $attached_files && is_array( json_decode( $attached_files ) ) ) :
 			?>
-			<h5 class="text-medium-h6 tutor-mb-12 tutor-mt-20"><?php _e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
+			<h5 class="tutor-fs-6 tutor-fw-medium tutor-mb-12 tutor-mt-20"><?php _e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
 			<div class="tutor-attachment-cards">
 				<?php
 				if ( $attached_files ) {

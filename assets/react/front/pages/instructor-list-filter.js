@@ -185,7 +185,8 @@ jQuery(document).ready(function($) {
 			.on('click', '.mobile-filter-popup', function(e) {
 				$(this).removeClass('is-opened');
 			})
-			.on('click', '.tutor-instructor-category-show-more > .text-medium-caption', function(e) {
+
+			.on('click', '.tutor-instructor-category-show-more > [action-tutor-toggle-more]', function(e) {
 				//show more @since v2.0.0
 				let term_id = e.target.parentNode.dataset.id;
 				console.log(e.target.tagName);
@@ -198,13 +199,12 @@ jQuery(document).ready(function($) {
 						$('.tutor-show-more-loading').html(`<img src='${window._tutorobject.loading_icon_url}'>`);
 					},
 					success: function(response) {
-						console.log(response);
 						if (response.success && response.data.categories.length) {
 							$('.tutor-instructor-category-show-more').css('display', 'block');
 							for (let res of response.data.categories) {
 								const wrapper = $('.tutor-instructor-categories-wrapper .course-category-filter');
 
-								$('.tutor-instructor-category-show-more .text-medium-caption').attr('data-id', res.term_id);
+								$('.tutor-instructor-category-show-more [action-tutor-toggle-more]').attr('data-id', res.term_id);
 								wrapper.append(
 									`<div class="tutor-form-check tutor-mb-24">
                                     <input

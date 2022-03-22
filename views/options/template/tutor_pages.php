@@ -28,11 +28,11 @@ $tutor_pages = tutor_utils()->tutor_pages();
 			?>
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<p class="text-medium-caption"><?php echo $page_id; ?></p>
+				<p class="tutor-fs-7 tutor-fw-medium"><?php echo $page_id; ?></p>
 			</div>
 			<div class="tutor-option-field-label">
 				<?php
-					echo '<div class="text-medium-caption tutor-d-flex tutor-align-items-center">';
+					echo '<div class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-items-center">';
 
 					echo $page['page_name'];
 
@@ -47,7 +47,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 				<?php
 				if ( $page['page_exists'] && $page['page_visible'] ) {
 						$page = get_post( $page_id );
-						echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='text-medium-caption tutor-color-black tutor-d-flex tutor-align-items-center'><span class='icon-check tutor-icon-mark-cricle tutor-icon-20 tutor-color-design-success'></span>/{$page->post_name}</a>";
+						echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='tutor-fs-7 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-center'><span class='icon-check tutor-icon-mark-cricle tutor-icon-20 tutor-color-design-success'></span>/{$page->post_name}</a>";
 				}
 				?>
 			</div>

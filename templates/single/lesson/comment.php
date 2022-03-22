@@ -19,7 +19,7 @@
 ?>
 
 <div class="tutor-pagination-wrapper-replacable tutor-single-course-lesson-comments" data-lesson_id="<?php echo $lesson_id; ?>">
-	<div class="text-medium-h6 tutor-color-black">
+	<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 		<?php _e( 'Join the conversation', 'tutor' ); ?>
 	</div>
 	<div class="tutor-conversation tutor-mt-12 tutor-pb-20 tutor-pb-sm-48">
@@ -50,20 +50,20 @@
 					<div class="tutor-single-comment">
 						<div class="tutor-actual-comment tutor-mb-12">
 							<div class="tutor-comment-author">
-								<span class="text-bold-body"><?php echo $comment->comment_author; ?></span>
-								<span class="text-regular-caption tutor-ml-12 tutor-ml-sm-10">
+								<span class="tutor-fs-6 tutor-fw-bold"><?php echo $comment->comment_author; ?></span>
+								<span class="tutor-fs-7 tutor-ml-12 tutor-ml-sm-10">
 									<?php echo human_time_diff( strtotime( $comment->comment_date ), tutor_time() ) . __( ' ago', 'tutor' ); ?>
 								</span>
 							</div>
-							<div class="tutor-comment-text tutor-fs-6 tutor-fw-normal tutor-mt-4">
+							<div class="tutor-comment-text tutor-fs-6 tutor-mt-4">
 								<?php echo $comment->comment_content; ?>
 							</div>
 						</div>
 						<div class="tutor-comment-actions tutor-ml-24">
-							<span class="text-regular-body tutor-color-black-70">reply</span>
-							<!-- <span class="text-regular-body tutor-color-black-70">like</span>
-							<span class="text-regular-body tutor-color-black-70">edit</span>
-							<span class="text-regular-body tutor-color-black-70">delete</span> -->
+							<span class="tutor-fs-6 tutor-color-black-70">reply</span>
+							<!-- <span class="tutor-fs-6 tutor-color-black-70">like</span>
+							<span class="tutor-fs-6 tutor-color-black-70">edit</span>
+							<span class="tutor-fs-6 tutor-color-black-70">delete</span> -->
 						</div>
 
 						<?php
@@ -84,12 +84,14 @@
 									<div class="tutor-single-comment">
 										<div class="tutor-actual-comment tutor-mb-12">
 											<div class="tutor-comment-author">
-												<span class="text-bold-body">Estella Clayton</span>
-												<span class="text-regular-caption tutor-ml-0 tutor-ml-sm-10">
+												<span class="tutor-fs-6 tutor-fw-bold">
+													<?php echo $reply->comment_author; ?>
+												</span>
+												<span class="tutor-fs-7 tutor-ml-0 tutor-ml-sm-10">
 													<?php echo human_time_diff( strtotime( $reply->comment_date ), tutor_time() ) . __( ' ago', 'tutor' ); ?>
 												</span>
 											</div>
-											<div class="tutor-comment-text tutor-fs-6 tutor-fw-normal tutor-mt-4">
+											<div class="tutor-comment-text tutor-fs-6 tutor-mt-4">
 												<?php echo $reply->comment_content; ?>
 											</div>
 										</div>
