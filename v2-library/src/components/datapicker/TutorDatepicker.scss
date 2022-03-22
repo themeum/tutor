@@ -558,7 +558,7 @@
 	.tutor-react-datepicker .react-datepicker__input-container input {
 		height: 48px;
 		&:focus {
-			border-color: #3e64de;
+			border-color: var(--tutor-primary-color);
 		}
 	}
 }
