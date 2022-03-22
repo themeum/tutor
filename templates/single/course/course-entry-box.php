@@ -47,16 +47,14 @@
 
 	// Right sidebar meta data
 	$sidebar_meta = apply_filters('tutor/course/single/sidebar/metadata', $default_meta, get_the_ID() );
-
-	$login_class = (!is_user_logged_in() && !$is_public) ? 'tutor-course-entry-box-login' : '';
-	$login_url   = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
+	$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
 ?>
 
 <div class="tutor-course-sidebar-card">
 	<!-- Course Entry -->
-	<div class="tutor-course-sidebar-card-body tutor-p-32 <?php echo $login_class; ?>" data-login_url="<?php echo $login_url; ?>">
+	<div class="tutor-course-sidebar-card-body tutor-p-32">
 		<?php
-		if ( $is_enrolled ) {
+		if ( $is_enrolled || $is_privileged_user) {
 			ob_start();
 
 			// Course Info
@@ -196,16 +194,18 @@
 				?>
 					<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-content-between">
 						<div>
-							<span class="tutor-fs-4 tutor-fw-bold tutor-color-black"><?php esc_html_e( 'Free', 'tutor' ); ?></span>
+							<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
+								<?php esc_html_e( 'Free', 'tutor' ); ?>
+							</span>
 						</div>
 					</div>
-					<div class="tutor-course-sidebar-card-btns">
+					<div class="tutor-course-sidebar-card-btns <?php echo is_user_logged_in() ? '' : 'tutor-course-entry-box-login'; ?>" data-login_url="<?php echo $login_url; ?>">
 						<form class="tutor-enrol-course-form" method="post">
-						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 							<input type="hidden" name="tutor_course_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
 							<input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
 							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24 tutor-enroll-course-button">
-							<?php esc_html_e( 'Enroll Course', 'tutor' ); ?>
+								<?php esc_html_e( 'Enroll Course', 'tutor' ); ?>
 							</button>
 						</form>
 					</div>

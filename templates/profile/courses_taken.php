@@ -10,7 +10,7 @@ $user_id   = $get_user->ID;
 
 $pageposts = tutor_utils()->get_courses_by_instructor( $user_id );
 ?>
-<div class="tutor-course-listing-grid tutor-course-listing-grid-3 sfxvcbv">
+<div class="tutor-course-listing-grid tutor-course-listing-grid-3">
 	<?php
 	if ( $pageposts ) {
 		global $post;

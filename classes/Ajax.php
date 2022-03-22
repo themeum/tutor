@@ -454,10 +454,9 @@ class Ajax {
 				);
 			} else {
 				// since 1.9.8 do enroll if guest attempt to enroll
-				if ( ! empty( $_POST['tutor_course_enroll_attempt'] ) ) {
-					do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'] );
+				if ( ! empty( $_POST['tutor_course_enroll_attempt'] ) && is_a( $user, 'WP_User' ) ) {
+					do_action( 'tutor_do_enroll_after_login_if_attempt', $_POST['tutor_course_enroll_attempt'], $user->ID );
 				}
-
 				wp_send_json_success(
 					array(
 						'redirect_to' => apply_filters( 'tutor_login_redirect_url', $redirect_to ),

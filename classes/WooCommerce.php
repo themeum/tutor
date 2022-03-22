@@ -92,7 +92,52 @@ class WooCommerce extends Tutor_Base {
 		 */
 		add_filter( 'woocommerce_cart_item_permalink', array( $this, 'tutor_update_product_url' ), 10, 2 );
 		add_filter( 'woocommerce_order_item_permalink', array( $this, 'filter_order_item_permalink_callback' ), 10, 3 );
+		add_filter( 'woocommerce_payment_complete_order_status', array( $this, 'auto_complete_woocommerce_virtual_orders' ), 10, 3 );
+
 	}
+
+	function auto_complete_woocommerce_virtual_orders( $payment_complete_status, $order_id, $order ) {
+
+		$auto_complete_woocommerce_virtual_orders = tutor_utils()->get_option( 'auto_complete_woocommerce_virtual_orders' );
+		if ( 'on' !== $auto_complete_woocommerce_virtual_orders ) {
+			return;
+		}
+
+
+		$current_status = $order->get_status();
+		// We only want to update the status to 'completed' if it's coming from one of the following statuses:
+		$allowed_current_statuses = array( 'on-hold', 'pending', 'failed' );
+
+		if ( 'processing' === $payment_complete_status && in_array( $current_status, $allowed_current_statuses ) ) {
+
+			$order_items = $order->get_items();
+
+			// Create an array of products in the order
+			$order_products = array_filter( array_map( function( $item ) {
+				// Get associated product for each line item
+				return $item->get_product();
+			}, $order_items ), function( $product ) {
+				// Remove non-products
+				return !! $product;
+			} );
+
+			if ( count( $order_products > 0 ) ) {
+				// Check if each product is 'virtual'
+				$is_virtual_order = array_reduce( $order_products, function( $virtual_order_so_far, $product ) {
+					return $virtual_order_so_far && $product->is_virtual();
+				}, true );
+
+				if ( $is_virtual_order ) {
+					$payment_complete_status = 'completed';
+				}
+			}
+		}
+
+		return $payment_complete_status;
+
+	}
+
+
 	function filter_order_item_permalink_callback( $product_permalink, $item, $order ) {
 
 		// For product variations
@@ -295,10 +340,10 @@ class WooCommerce extends Tutor_Base {
 		$attr['monetization']['blocks']['block_options']['fields'][] = array(
 			'key'         => 'enable_guest_course_cart',
 			'type'        => 'toggle_switch',
-			'label'       => __( 'Enable add to cart feature for guest users', 'tutor' ),
+			'label'       => __( 'Enable Guest Mode', 'tutor' ),
 			'label_title' => __( '', 'tutor' ),
 			'default'     => 'off',
-			'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
+			'desc'        => __( 'Allow customers to place orders without an account.', 'tutor' ),
 		);
 
 		return $attr;
@@ -338,7 +383,7 @@ class WooCommerce extends Tutor_Base {
 
 		global $wpdb;
 		$item = new \WC_Order_Item_Product( $item );
-		
+
 		$product_id    = $item->get_product_id();
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
@@ -471,18 +516,18 @@ class WooCommerce extends Tutor_Base {
 		}
 		global $wpdb;
 
-		$is_earning_data = (int) $wpdb->get_var( $wpdb->prepare( 
-			"SELECT COUNT(earning_id) 
-			FROM {$wpdb->prefix}tutor_earnings 
-			WHERE order_id = %d  ", 
-			$order_id 
+		$is_earning_data = (int) $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(earning_id)
+			FROM {$wpdb->prefix}tutor_earnings
+			WHERE order_id = %d  ",
+			$order_id
 		) );
 
 		if ( $is_earning_data ) {
-			$wpdb->update( 
-				$wpdb->prefix . 'tutor_earnings', 
-				array( 'order_status' => $status_to ), 
-				array( 'order_id' => $order_id ) 
+			$wpdb->update(
+				$wpdb->prefix . 'tutor_earnings',
+				array( 'order_status' => $status_to ),
+				array( 'order_id' => $order_id )
 			);
 		}
 	}

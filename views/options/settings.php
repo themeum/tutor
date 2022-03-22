@@ -71,9 +71,9 @@
 					?>
 					<div id="<?php echo esc_attr( $key ); ?>" class="tutor-option-nav-page<?php echo esc_attr( $active_class ); ?>">
 						<?php
-						if ( is_array( $section ) ) {
-							echo $this->template( $section );
-						}
+							if ( is_array( $section ) ) {
+								echo $this->template( $section );
+							}
 						?>
 					</div>
 					<?php

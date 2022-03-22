@@ -66,6 +66,8 @@
 		position: relative;
 		display: flex;
 		align-items: center;
+
+		// .tab-header-item-seemore-toggle
 		&-toggle {
 			@extend .text-medium-caption;
 			@extend .tutor-color-black-60;
@@ -80,6 +82,8 @@
 				pointer-events: none;
 			}
 		}
+
+		// .tab-header-item-seemore-popup
 		&-popup {
 			position: absolute;
 			background: #ffffff;
@@ -88,6 +92,7 @@
 			padding: 4px 0;
 			top: calc(100% - 8px);
 			right: -3px;
+			z-index: 10;
 
 			ul {
 				width: 180px;
@@ -136,6 +141,7 @@
 			visibility: hidden;
 			transition: 100ms;
 		}
+		// .tab-header-item-seemore.is-active
 		&.is-active {
 			.tab-header-item-seemore-toggle {
 				.icon-seemore {
