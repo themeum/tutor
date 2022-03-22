@@ -11,7 +11,6 @@
 
 	// Monetization info
 	$monetize_by              = tutor_utils()->get_option( 'monetize_by' );
-	$enable_guest_course_cart = tutor_utils()->get_option( 'enable_guest_course_cart' );
 	$is_purchasable           = tutor_utils()->is_course_purchasable();
 
 	// Get login url if
