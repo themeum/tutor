@@ -22,7 +22,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 					</button>
 				<?php endif; ?>
 			<?php else : ?>
-			<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
+				<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 				<a class="tutor-pl-12" href="<?php echo esc_url( $data['button_url'] ); ?>">
 					<button class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm">
 						<span class="tutor-icon-20 tutor-icon-plus-bold-filled"></span>
@@ -36,10 +36,10 @@ if ( isset( $data ) && count( $data ) ) : ?>
 			<?php if ( isset( $data['tabs'] ) ) : ?>
 				<div class="tutor-admin-page-navbar-tabs filter-btns">
 					<?php foreach ( $data['tabs'] as $key => $v ) : ?>
-						<a data-keypage="<?php echo $v['key']; ?>" data-keyvalue="<?php echo esc_attr( $v['value'] ); ?>" href="<?php echo esc_attr( $v['url'] ); ?>" class="filter-btn <?php echo esc_attr( $data['active'] == $v['key'] ? 'is-active' : '' ); ?>">
-							<span class="filter-btn-name"><?php echo esc_html( $v['title'] ); ?></span>
+						<a data-keypage="<?php echo isset( $v['key'] ) ? esc_attr( $v['key'] ) : ''; ?>" data-keyvalue="<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>" href="<?php echo esc_attr( $v['url'] ); ?>" class="filter-btn <?php echo esc_attr( $data['active'] == $v['key'] ? 'is-active' : '' ); ?>">
+							<span class="filter-btn-name"><?php echo isset( $v['title'] ) ? esc_html( $v['title'] ) : ''; ?></span>
 							<span class="filter-btn-number"><?php if ( isset( $v['value'] ) ) : ?>
-								(<?php echo esc_attr( $v['value'] ); ?>)
+								(<?php echo isset( $v['value'] ) ? esc_attr( $v['value'] ) : ''; ?>)
 							<?php endif; ?></span>
 						</a>
 					<?php endforeach; ?>
