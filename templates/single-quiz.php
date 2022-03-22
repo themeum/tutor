@@ -17,20 +17,20 @@ global $previous_id;
 
 // Get the ID of this content and the corresponding course
 $course_content_id = get_the_ID();
-$course_id = tutor_utils()->get_course_id_by_subcontent($course_content_id);
+$course_id         = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
 
-$content_id = tutor_utils()->get_post_id($course_content_id);
-$contents = tutor_utils()->get_course_prev_next_contents_by_id($content_id);
+$content_id  = tutor_utils()->get_post_id( $course_content_id );
+$contents    = tutor_utils()->get_course_prev_next_contents_by_id( $content_id );
 $previous_id = $contents->previous_id;
-$course = tutor_utils()->get_course_by_quiz(get_the_ID());
+$course      = tutor_utils()->get_course_by_quiz( get_the_ID() );
 
 // Get total content count
-$course_stats = tutor_utils()->get_course_completed_percent($course_id, 0, true);
-$enable_spotlight_mode = tutor_utils()->get_option('enable_spotlight_mode');
+$course_stats          = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+$enable_spotlight_mode = tutor_utils()->get_option( 'enable_spotlight_mode' );
 
 ob_start();
 ?>
-    <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
+	<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
     <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
         <div class="tutor-topbar-left-item tutor-d-flex"> 
@@ -41,7 +41,7 @@ ob_start();
             </div>
             <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
                 <span class="tutor-icon-quiz-filled tutor-icon-24 tutor-color-white tutor-mr-4"></span>
-                <span class="tutor-fs-7 tutor-color-design-white">
+                <span class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
                     <?php 
                         esc_html_e( 'Quiz: ', 'tutor' );
                         the_title();
@@ -54,18 +54,20 @@ ob_start();
                 <?php
                     do_action('tutor_course/single/enrolled/before/lead_info/progress_bar');
                 ?>
-                <div class="tutor-fs-7 tutor-color-design-white">
-                    <span class="tutor-progress-content tutor-color-primary-60">
-                        <?php _e('Your Progress:', 'tutor'); ?>
-                    </span>
-                    <span class="tutor-fs-7 tutor-fw-bold">
-                        <?php echo $course_stats['completed_count']; ?>
-                    </span> 
-                    <?php _e('of ', 'tutor'); ?>
-                    <span class="tutor-fs-7 tutor-fw-bold">
-                        <?php echo $course_stats['total_count']; ?>
-                    </span>
-                    (<?php echo $course_stats['completed_percent'] .'%'; ?>)
+                <div class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
+					<?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
+						<span class="tutor-progress-content tutor-color-primary-60">
+							<?php _e('Your Progress:', 'tutor'); ?>
+						</span>
+						<span class="tutor-fs-7 tutor-fw-bold">
+							<?php echo $course_stats['completed_count']; ?>
+						</span> 
+						<?php _e('of ', 'tutor'); ?>
+						<span class="tutor-fs-7 tutor-fw-bold">
+							<?php echo $course_stats['total_count']; ?>
+						</span>
+						(<?php echo $course_stats['completed_percent'] .'%'; ?>)
+					<?php endif; ?>
                 </div>
                 <?php
                     do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
@@ -85,7 +87,7 @@ ob_start();
             <a href="<?php echo get_the_permalink($previous_id); ?>">
                 <span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
             </a>
-            <div class="tutor-top-nav-title tutor-fs-6  tutor-color-black">
+            <div class="tutor-top-nav-title tutor-fs-6 tutor-fw-normal tutor-color-black">
                 <?php 
                     the_title();
                 ?>
@@ -93,22 +95,29 @@ ob_start();
         </div>
     </div>
 
-    <?php ob_start(); ?>
-        <div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-80 tutor-pb-80">
-            <input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
+	<?php ob_start(); ?>
+		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-80 tutor-pb-80">
+			<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
-            <?php
-            if ($course){
-                tutor_single_quiz_top();
-                // tutor_single_quiz_content();
-                tutor_single_quiz_body();
-            }else{
-                tutor_single_quiz_no_course_belongs();
-            }
-            ?>
-        </div>
-    <?php 
-    
-echo apply_filters( 'tutor_quiz/single/wrapper', ob_get_clean() );
-tutor_load_template_from_custom_path(__DIR__.'/single-content-loader.php', array('context' => 'quiz', 'html_content'=>ob_get_clean()), false);
-?>
+			<?php
+			if ( $course ) {
+				tutor_single_quiz_top();
+				// tutor_single_quiz_content();
+				tutor_single_quiz_body();
+			} else {
+				tutor_single_quiz_no_course_belongs();
+			}
+			?>
+		</div>
+	<?php
+
+	echo apply_filters( 'tutor_quiz/single/wrapper', ob_get_clean() );
+	tutor_load_template_from_custom_path(
+		__DIR__ . '/single-content-loader.php',
+		array(
+			'context'      => 'quiz',
+			'html_content' => ob_get_clean(),
+		),
+		false
+	);
+	?>
