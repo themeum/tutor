@@ -428,6 +428,15 @@
 	// grid-template-columns: 2fr 1.1fr;
 	grid-auto-flow: column;
 	grid-gap: 30px;
+
+	&.tutor-d-block{
+		display: block !important;
+	}
+	
+	&.tutor-d-block{
+		display: block !important;
+	}
+
 	.tutor-option-field-input {
 		// min-width: 200px;
 		&.tutor-d-flex {
