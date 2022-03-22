@@ -33,7 +33,7 @@
 		array(
 			'icon_class' => 'tutor-icon-refresh-l',
 			'label'      => __( 'Last Updated', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null,
+			'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date('U') ) : null,
 		),
 	);
 
@@ -124,7 +124,7 @@
 			}
 			echo apply_filters( 'tutor_course/single/start/button', $start_content, get_the_ID() );
 
-			
+
 
 			// Show Course Completion Button.
 			if ( ! $is_completed_course ) {
@@ -211,7 +211,7 @@
 						</form>
 					</div>
 					<div class="text-regular-caption tutor-color-muted tutor-mt-12 tutor-text-center">
-						<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
+						<?php esc_html_e( 'Access this course for Free', 'tutor' ); ?>
 					</div>
 				<?php
 				echo apply_filters( 'tutor/course/single/entry-box/free', ob_get_clean(), get_the_ID() );
