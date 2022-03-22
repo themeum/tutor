@@ -783,7 +783,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 		$require_format===null ? $require_format = get_option( 'date_format' ). ', ' . get_option( 'time_format' ) : 0;
 		!is_numeric($user_date) ? $user_date = strtotime(str_replace('/', '-', $user_date )) : 0;
 
-		return date( $require_format, $user_date );
+		return date_i18n( $require_format, $user_date );
 	}
 }
 
@@ -878,7 +878,7 @@ if(!function_exists('tutor_kses_allowed_html')) {
 
 			$allowed_tags[$tag] = $tag_attrs;
 		}
-		
+
 		return $allowed_tags;
 	}
 }
@@ -904,7 +904,7 @@ if(!function_exists('tutor_kses_html')) {
 
 		remove_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
 		remove_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html' );
-		
+
 		return $content;
 	}
 }
