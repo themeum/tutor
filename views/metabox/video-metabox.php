@@ -43,7 +43,7 @@ function tutor_video_input_state($videoSource, $source){
 
 
 <div class="tutor-mb-32">
-    <label class="text-medium-body color-text-primary tutor-pb-10">
+    <label class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-pb-10">
         <?php
         if ($post->post_type === tutor()->course_post_type) {
             _e('Course Intro Video', 'tutor');
@@ -79,8 +79,8 @@ function tutor_video_input_state($videoSource, $source){
                 <div class="video-metabox-source-html5-upload">
                     <p class="video-upload-icon"><i class="tutor-icon-upload-icon-line"></i></p>
                     <p><strong><?php _e('Drag & Drop Your Video', 'tutor'); ?></strong></p>
-                    <p><?php _e('File Format: ', 'tutor'); ?> <span class="color-text-primary">.mp4</span></p>
-                    <p class="color-text-primary"><?php _e('or', 'tutor'); ?></p>
+                    <p><?php _e('File Format: ', 'tutor'); ?> <span class="tutor-color-black">.mp4</span></p>
+                    <p class="tutor-color-black"><?php _e('or', 'tutor'); ?></p>
 
                     <div class="video_source_upload_wrap_html5">
                         <button class="video_upload_btn tutor-btn tutor-btn-secondary tutor-btn-md">
@@ -99,7 +99,7 @@ function tutor_video_input_state($videoSource, $source){
                         'no_control' => true
                     ), false);
 
-                    echo '<div class="tutor-color-text-medium-caption tutor-color-black-70 tutor-mb-12" >' . __('Upload Video Poster', 'tutor') . '</div>';
+                    echo '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-70 tutor-mb-12" >' . __('Upload Video Poster', 'tutor') . '</div>';
                     // Load thumbnail segment
                     tutor_load_template_from_custom_path(tutor()->path . '/views/fragments/thumbnail-uploader.php', array(
                         'media_id' => tutor_utils()->avalue_dot('poster', $video),

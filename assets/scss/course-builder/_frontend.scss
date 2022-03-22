@@ -36,18 +36,19 @@
 	}
 
 	.tutor-course-builder-section-title {
+		border-bottom: 1px solid #c0c3cb;
+		padding-bottom: 20px;
+		position: relative;
+		overflow: hidden;
+		z-index: 1;
+		margin: 0 0 24px;
+		cursor: pointer;
+
 		h3 {
 			font-size: 20px;
-			position: relative;
-			overflow: hidden;
-			z-index: 1;
-			margin: 0 0 25px;
-			cursor: pointer;
-			border-bottom: 1px solid #c0c3cb;
 			font-style: normal;
 			font-weight: bold;
-			color: #41454f;
-			padding-bottom: 20px;
+			color: var(--tutor-black-70);
 
 			span,
 			i {

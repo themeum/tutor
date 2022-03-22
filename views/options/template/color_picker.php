@@ -56,7 +56,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 											?>
 										</div>
 										<div class="footer">
-											<span class="text-regular-body"><?php echo esc_attr( $fields['label'] ); ?></span><span class="check-icon"></span>
+											<span class="tutor-fs-6"><?php echo esc_attr( $fields['label'] ); ?></span><span class="check-icon"></span>
 										</div>
 									</div>
 								</label>
@@ -90,7 +90,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 				}
 			}
 			?>
-			<div class="more_button tutor-font-size-16">
+			<div class="more_button tutor-fs-6">
 				<i class="tutor-icon-plus-filled"></i>
 				<span><?php _e('Show More', 'tutor'); ?></span>
 			</div>

@@ -187,8 +187,8 @@ export default function () {
                             <img src="https://i.imgur.com/nhvtFNJ.jpg" alt=""/>
                         </div>
                         <div className="tutor-content">
-                            <span className="tutor-subtitle tutor-text-hints">A course by <span className="tutor-text-primary">Steve Melaan</span></span>
-                            <span className="tutor-subtitle tutor-text-hints">Digital illustrator.</span>
+                            <span className="tutor-subtitle tutor-color-muted">A course by <span className="tutor-text-primary">Steve Melaan</span></span>
+                            <span className="tutor-subtitle tutor-color-muted">Digital illustrator.</span>
                         </div>
                     </div>
                 </div>

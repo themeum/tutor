@@ -75,25 +75,25 @@ $filters = array(
 				</th>
 				<th class="tutor-table-rows-sorting">
 					<div class="tutor-color-black-60">
-						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
+						<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
 						<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
 					<div class="tutor-color-black-60">
-						<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
+						<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
 						<span class="tutor-icon-order-down-filled up-down-icon"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
 					<div class="tutor-color-black-60">
-						<span class="text-regular-small"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
+						<span class="tutor-fs-7"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
 						<span class="tutor-icon-order-down-filled up-down-icon"></span>
 					</div>
 				</th>
 				<th class="tutor-table-rows-sorting">
 					<div class="tutor-color-black-60">
-						<span class="text-regular-small"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
+						<span class="tutor-fs-7"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
 						<span class="tutor-icon-order-down-filled up-down-icon"></span>
 					</div>
 				</th>
@@ -122,13 +122,13 @@ $filters = array(
 							</div>
 						</td>
 						<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-							<span class="tutor-color-black tutor-fs-7 tutor-fw-normal">
+							<span class="tutor-color-black tutor-fs-7">
 							<?php echo esc_html( $list->user_email ); ?>
 							</span>
 						</td>
 						</td>
 						<td data-th="<?php esc_html_e( 'Registration Date', 'tutor' ); ?>">
-							<span class="tutor-color-black tutor-fs-7 tutor-fw-normal">
+							<span class="tutor-color-black tutor-fs-7">
 							<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ). ', ' . get_option( 'time_format' ), $list->user_registered ) ); ?>
 							</span>
 						</td>
