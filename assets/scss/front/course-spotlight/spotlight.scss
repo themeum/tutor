@@ -257,6 +257,11 @@
 				text-align: right;
 			}
 		}
+		@include breakpoint-max(420) {
+			.tutor-topbar-complete-btn.tutor-ml-24 {
+				margin-left: 0 !important;
+			}
+		}
 		[class*='tutor-icon-'] {
 			display: none;
 		}

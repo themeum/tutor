@@ -165,30 +165,6 @@
 .tutor-zoom-integration-card {
 	.tutor-zoom-no-meetings {
 		margin: 15px;
-
-		& > div {
-			&:first-child {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				width: 30px;
-				height: 30px;
-				font-size: 40px;
-				border-radius: 50%;
-				overflow: hidden;
-				// background: #2D8CFF;
-				color: #2e8cff;
-			}
-
-			&:nth-child(2) {
-				flex: 1;
-				margin: 0 10px;
-				font-style: normal;
-				font-weight: 500;
-				font-size: 20px;
-				color: #1973aa;
-			}
-		}
 	}
 
 	// .tutor-zoom-integration-card-body max-width: 1367px;
@@ -203,11 +179,6 @@
 		.list-item.list-item-buttons {
 			display: inline-flex;
 		}
-
-		// @include breakpoint-min(1500) {
-		// 	// grid-template-columns: 275px 410px 195px 228px auto;
-		// 	@include responsiveGrid(200px, auto);
-		// }
 
 		@include breakpoint-min(desktop-lg) {
 			.list-item {
