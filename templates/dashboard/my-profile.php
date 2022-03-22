@@ -28,7 +28,7 @@ $profile_data = array(
 	array( __( 'Phone Number', 'tutor' ), ( $phone ? $phone : '-' ) ),
 	array( __( 'Skill/Occupation', 'tutor' ), ( $job ? $job : '-' ) ),
 	array( __( 'Biography', 'tutor' ), $bio ? $bio : '-' )
-)
+);
 ?>
 
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-capitalize-text"><?php _e( 'My Profile', 'tutor' ); ?></div>
