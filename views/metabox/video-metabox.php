@@ -19,8 +19,8 @@ $videoAttachment = $sourceVideoID ? tutor_utils()->get_attachment_data($sourceVi
 $video_sources  = tutor_utils()->get_video_sources(false);
 
 $supported_sources = tutor_utils()->get_option('supported_video_sources', array());
+!is_array($supported_sources) ? $supported_sources = array($supported_sources) : 0;
 $GLOBALS['supported_sources'] = $supported_sources;
-is_string($supported_sources) ? $supported_sources = array($supported_sources) : 0;
 
 if (!is_array($supported_sources) || !count($supported_sources)) {
     $notice = __('No video source selected from settings!', 'tutor');
