@@ -4,8 +4,10 @@ window.jQuery(document).ready($=>{
 
     // On Remove video
     $(document).on('click', '.video_source_wrap_html5 .tutor-attachment-cards .tutor-delete-attachment', function() {
-        $(this).closest('.video_source_wrap_html5').removeClass('tutor-has-video')
-                .find('input.input_source_video_id').val('');
+        $(this)
+            .closest('.video_source_wrap_html5')
+            .removeClass('tutor-has-video')
+            .find('input.input_source_video_id').val('');
     });
 
     // Upload video

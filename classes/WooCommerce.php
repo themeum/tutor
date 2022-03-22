@@ -340,10 +340,10 @@ class WooCommerce extends Tutor_Base {
 		$attr['monetization']['blocks']['block_options']['fields'][] = array(
 			'key'         => 'enable_guest_course_cart',
 			'type'        => 'toggle_switch',
-			'label'       => __( 'Enable add to cart feature for guest users', 'tutor' ),
+			'label'       => __( 'Enable Guest Mode', 'tutor' ),
 			'label_title' => __( '', 'tutor' ),
 			'default'     => 'off',
-			'desc'        => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
+			'desc'        => __( 'Allow customers to place orders without an account.', 'tutor' ),
 		);
 
 		return $attr;
