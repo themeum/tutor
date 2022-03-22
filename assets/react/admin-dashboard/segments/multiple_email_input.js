@@ -18,6 +18,7 @@ multipleEmailInput.forEach((inputReceipient) => {
 
     // inputReceipient.onchange
 
+    let inputField = inputReceipient.previousElementSibling.querySelector('input[type=email]');
     setTimeout(() => {
         console.log(inputReceipient.previousElementSibling.querySelectorAll('.item_email'));
 
@@ -26,21 +27,32 @@ multipleEmailInput.forEach((inputReceipient) => {
                 console.log(item);
                 item.remove();
             }
+
+            item.addEventListener('dblclick', function (e) {
+                inputField.value = item.innerText;
+                item.remove();
+                inputField.focus();
+            });
+
         })
 
-        let inputField = inputReceipient.previousElementSibling.querySelector('input[type=email]');
         inputField.addEventListener('keyup', function (event) {
 
         });
         inputField.addEventListener('keydown', function (event) {
             const key = event.key; // const {key} = event; ES6+
             inputField.classList.remove('invalid');
+            if (event.keyCode === 32) {
+                tutor_toast('Invalid', 'Space is not allowed!', 'warning');
+                event.preventDefault();
+            }
             if (key === "Backspace") {
                 if ('' === inputField.value) {
                     inputField.previousElementSibling.remove();
                 }
             }
-            if (key === "Tab" || event.keyCode === 188) {
+
+            if ( key === "Enter" || key === "Tab" || event.keyCode === 188) {
                 if (false === validateEmailInput(inputField.value)) {
                     tutor_toast('Invalid', 'Invalid email', 'warning');
                     event.preventDefault();
@@ -56,15 +68,18 @@ multipleEmailInput.forEach((inputReceipient) => {
 
                     inputField.style.borderColor = 'transparent';
                     inputField.value = '';
+                    tutor_toast('Success', 'Valid email', 'success');
+                    event.preventDefault();
                     inputField.focus();
 
-                    tutor_toast('Success', 'Valid email', 'success');
+                    return false;
                 }
             }
         });
 
 
-    }, 10)
+    }, 10);
+
 
 
 })
