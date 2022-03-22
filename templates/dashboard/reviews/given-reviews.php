@@ -150,7 +150,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 											<?php _e("How would you rate this course?", "tutor"); ?>
 										</div>
 										<div class="tutor-modal-text-rating tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-12">
-											<?php _e("Average", "tutor"); ?>
+											<?php _e('Select Rating', 'tutor'); ?>
 										</div>
 										<input type="hidden" name="course_id" value="<?php echo esc_html( $review->comment_post_ID ); ?>"/>
 										<input type="hidden" name="review_id" value="<?php echo esc_html( $review->comment_ID ); ?>"/>
