@@ -17,18 +17,15 @@
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		vertical-align: top;
-		content: '\e92f' !important;
+		content: '\e9df' !important;
 		font-family: 18px;
-		-webkit-animation: spin 2s infinite linear;
-		animation: spinner 2s infinite linear;
+		animation: rotateSpinner 0.8s linear infinite;
 		margin-right: 10px;
 		line-height: 0;
 		width: auto;
 		height: auto;
 		font-size: 24px;
 	}
-
-	// @include spinner();
 
 	&:not(.tutor-m-0):not(.tutor-mr-0) {
 		&:before {

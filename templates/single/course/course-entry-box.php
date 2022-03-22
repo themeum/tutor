@@ -58,11 +58,9 @@
 			ob_start();
 
 			// Course Info
-			$completed_lessons   = tutor_utils()->get_completed_lesson_count_by_course();
 			$completed_percent   = tutor_utils()->get_course_completed_percent();
 			$is_completed_course = tutor_utils()->is_completed_course();
-			$completed_anyway 	 = $is_completed_course || $completed_percent >= 100;
-			$retake_course       = is_single_course() && tutor_utils()->get_option( 'course_retake_feature', false ) && $completed_anyway;
+			$retake_course       = tutor_utils()->can_user_retake_course();
 			$course_id           = get_the_ID();
 			$course_progress     = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 			?>
@@ -129,7 +127,7 @@
 			if ( ! $is_completed_course ) {
 				ob_start();
 				?>
-				<form method="post">
+				<form method="post" class="tutor-mt-20">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
