@@ -2166,3 +2166,10 @@ table.course-single-gradebooks a {
 .loading-spinner.hide {
 	display: none;
 }
+
+/*
+* EDD support for price ajax button
+*/
+.list-item-button .edd-has-js.edd-no-js {
+	display: none !important;
+}
