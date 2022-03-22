@@ -38,18 +38,12 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 ?>
 
 <div class="tutor-pagination-wrapper-replacable">
-	<div class="tutor-course-topics-header">
-		<div class="tutor-course-topics-header-left tutor-mb-20">
-			<div class="text-primary tutor-fs-6 tutor-fw-medium">
-				<span>
-					<?php
-						$review_title = apply_filters( 'tutor_course_reviews_section_title', 'Student Ratings & Reviews' );
-						echo esc_html( $review_title, 'tutor' );
-					?>
-				</span>
-			</div>
-		</div>
-	</div>
+	<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
+		<?php
+			$review_title = apply_filters( 'tutor_course_reviews_section_title', 'Student Ratings & Reviews' );
+			echo esc_html( $review_title, 'tutor' );
+		?>
+	</h3>
 
 	<?php if(! is_array( $reviews ) || ! count( $reviews )): ?>
 		<?php tutor_utils()->tutor_empty_state(__('No Review Yet', 'tutor')); ?>

@@ -28,26 +28,23 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 		$first_part =  force_balance_tags( html_entity_decode( wp_trim_words( htmlentities( wpautop( $string ) ), $word_limit ) ) );
 	}
 ?>
-	<div class='tab-item-content <?php echo $has_readmore ? 'tutor-has-showmore' : '' ?>'>
-		<div class='tutor-showmore-content'>
-			<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+	<div class="tab-item-content <?php echo $has_readmore ? "tutor-has-showmore" : '' ?>">
+		<div class="tutor-showmore-content">
+			<h2 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-12">
 				<?php echo apply_filters( 'tutor_course_about_title', __( 'About Course', 'tutor' ) ); ?>
-			</div>
-			<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-12">
-				<?php
-                    if ($has_readmore) {
-                        ?>
-                        <div class='showmore-short-text'>
-                            <?php echo wp_kses_post( $first_part ); ?>
-                        </div>
-                        <div class='showmore-text'>
-                            <?php echo wp_kses_post( $string ); ?>
-                        </div>
-                        <?php
-                    } else {
-                        echo wp_kses_post( $string );
-                    }
-				?>
+            </h2>
+			
+            <div class="tutor-fs-6 tutor-color-black-60">
+				<?php if ($has_readmore) : ?>
+                    <div class='showmore-short-text'>
+                        <?php echo wp_kses_post( $first_part ); ?>
+                    </div>
+                    <div class='showmore-text'>
+                        <?php echo wp_kses_post( $string ); ?>
+                    </div>
+                <?php else : ?>
+                    <?php echo wp_kses_post( $string ); ?>
+                <?php endif; ?>
 			</div>
 		</div>
         <?php if ( $has_readmore ) : ?>
