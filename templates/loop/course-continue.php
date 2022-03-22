@@ -25,10 +25,9 @@
                 ';
 
     $lesson_url = tutor_utils()->get_course_first_lesson();
-    $completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
     $completed_percent = tutor_utils()->get_course_completed_percent();
     $is_completed_course = tutor_utils()->is_completed_course();
-    $retake_course = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
+    $retake_course = tutor_utils()->can_user_retake_course();
     $button_class = 'tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-btn-full tutor-pr-0 tutor-pl-0 ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
     
     if ( $lesson_url && ! $is_completed_course ) { 
