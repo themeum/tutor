@@ -129,7 +129,7 @@
 			if ( ! $is_completed_course ) {
 				ob_start();
 				?>
-				<form method="post">
+				<form method="post" class="tutor-mt-20">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
@@ -147,9 +147,9 @@
 				<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-d-flex tutor-justify-content-center">
 					<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-8"></span>
 					<span class="tutor-enrolled-info-text">
-					<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
+						<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
 						<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
-						<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) ); ?>
+							<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) ); ?>
 						</span>
 					</span>
 				</div>
