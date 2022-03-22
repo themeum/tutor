@@ -71,6 +71,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' );
 			?>
 			<div class="text-regular-caption tutor-color-design-white">
+				<?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
 				<span class="tutor-progress-content tutor-color-primary-60">
 					<?php _e( 'Your Progress:', 'tutor' ); ?>
 				</span>
@@ -82,6 +83,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					<?php echo $course_stats['total_count']; ?>
 				</span>
 				(<?php echo $course_stats['completed_percent'] . '%'; ?>)
+				<?php endif; ?>
 			</div>
 			<?php
 				do_action( 'tutor_course/single/enrolled/after/lead_info/progress_bar' );
