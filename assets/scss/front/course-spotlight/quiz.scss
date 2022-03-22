@@ -195,7 +195,7 @@
 			pointer-events: none;
 		}
 		.matching-quiz-question-desc {
-			display: grid;
+			display: grid !important;
 			gap: 20px 20px;
 			grid-template-columns: repeat(auto-fit, minmax(163px, 1fr));
 		}
@@ -459,7 +459,7 @@
 		// }
 		#quiz-image-matching-ans-area {
 			.quiz-image-matching-ans {
-				display: grid;
+				display: grid !important;
 				gap: 20px 20px;
 				grid-template-columns: repeat(auto-fit, minmax(163px, 1fr));
 				// @include breakpoint-max(1200) {
