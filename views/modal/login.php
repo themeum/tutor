@@ -11,7 +11,7 @@ $lost_pass = apply_filters('tutor_lostpassword_url', wp_lostpassword_url());
             <?php do_action("tutor_before_login_form"); ?>
 
             <div class="tutor-modal-body">
-                <div class="tutor-fs-5 tutor-fw-normal tutor-color-black tutor-mb-32">
+                <div class="tutor-fs-5 tutor-color-black tutor-mb-32">
                     <?php _e('Hi, Welcome back!', 'tutor'); ?>
                 </div>
                 <?php

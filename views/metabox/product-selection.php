@@ -4,7 +4,7 @@
 
 <div class="tutor-row tutor-mt-16 tutor-mb-16">
 	<div class="tutor-col-12 tutor-col-md-5 tutor-col-lg-4">
-		<label class="text-medium-body">
+		<label class="tutor-fs-6 tutor-fw-medium">
 			<?php _e( 'Select product', 'tutor' ); ?> <br />
 			<p class="text-muted">(<?php _e( 'When selling the course', 'tutor' ); ?>)</p>
 		</label>
@@ -19,7 +19,7 @@
 			?>
 		</select>
 		<p class="tutor-input-feedback tutor-has-icon">
-			<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19"></i>
+			<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-fs-5"></i>
 			<?php echo $info_text; ?>
 		</p>
 	</div>

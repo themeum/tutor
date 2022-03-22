@@ -95,25 +95,25 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 					<div class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mt-32 tutor-pr-lg-4">
 						<?php echo $announcement->post_title; ?>
 					</div>
-					<div class="text-regular-body tutor-color-muted tutor-mt-20">
+					<div class="tutor-fs-6 tutor-color-muted tutor-mt-20">
 						<?php echo $announcement->post_content; ?>
 					</div>
 				</div>
 				<div class="tutor-modal-footer">
 					<div class="footer-top">
 						<div class="">
-							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-black-60">
 								<?php _e( 'Course', 'tutor' ); ?>
 							</div>
-							<div class="text-bold-body tutor-color-black tutor-mt-4">
+							<div class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mt-4">
 								<?php echo $course_title; ?>
 							</div>
 						</div>
 						<div class="">
-							<div class="text-regular-caption tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-black-60">
 								<?php _e( 'Publised Date', 'tutor' ); ?>
 							</div>
-							<div class="text-bold-body tutor-color-black tutor-mt-4">
+							<div class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mt-4">
 								<?php echo $publish_date . ', ' . $publish_time; ?>
 							</div>
 						</div>
@@ -192,19 +192,19 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 							</div>
 						</th>
 						<th width="17%">
-							<div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
+							<div class="tutor-fs-7 tutor-color-black-60">
 								<?php esc_html_e( 'Date', 'tutor-pro'); ?>
 							</div>
 						</th>
 					<?php else : ?>
 						<th width="17%" class="tutor-shrink">
-							<span class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
+							<span class="tutor-fs-7 tutor-color-black-60">
 								<?php esc_html_e( 'Date', 'tutor'); ?>
 							</span>
 						</th>
 					<?php endif; ?>
 					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-black-60 tutor-fs-7 tutor-fw-normal">
+						<div class="tutor-color-black-60 tutor-fs-7">
 							<?php esc_html_e( 'Announcements', 'tutor' ); ?>
 						</div>
 					</th>
@@ -240,14 +240,14 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" width="17%" class="v-align-top">
 									<div class="td-datetime">
 										<div class="tutor-fs-8 tutor-fw-medium tutor-color-black"><?php echo esc_html( $date_format ); ?></div>
-										<div class="tutor-fs-7 tutor-fw-normal tutor-color-black"><?php echo esc_html( $time_format ); ?></div>
+										<div class="tutor-fs-7 tutor-color-black"><?php echo esc_html( $time_format ); ?></div>
 									</div>
 								</td>
 							<?php else : ?>
 								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" width="17%" class="tutor-text-nowrap">
 									<div class="td-datetime">
 										<div class="tutor-date tutor-fs-8 tutor-fw-medium tutor-color-black"><?php echo esc_html( $date_format ); ?></div>
-										<div class="tutor-fs-7 tutor-fw-normal tutor-color-black"><?php echo esc_html( $time_format ); ?></div>
+										<div class="tutor-fs-7 tutor-color-black"><?php echo esc_html( $time_format ); ?></div>
 									</div>
 								</td>
 							<?php endif; ?>
@@ -278,13 +278,13 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
 													<i class="tutor-icon-edit-filled tutor-color-design-white"></i>
-													<span class="text-regular-body tutor-color-white"><?php _e( 'Edit', 'tutor' ); ?></span>
+													<span class="tutor-fs-6 tutor-color-white"><?php _e( 'Edit', 'tutor' ); ?></span>
 												</a>
 											</li>
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
 													<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
-													<span class="text-regular-body tutor-color-white"><?php _e( 'Delete', 'tutor' ); ?></span>
+													<span class="tutor-fs-6 tutor-color-white"><?php _e( 'Delete', 'tutor' ); ?></span>
 												</a>
 											</li>
 										</ul>

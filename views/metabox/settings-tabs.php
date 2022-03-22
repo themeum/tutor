@@ -98,7 +98,7 @@ $args = $this->args;
 														?>
 														<div class="tutor-form-check tutor-mt-20 tutor-mb-20 tutor-align-items-center">
 															<input type="radio" id="<?php echo $id_string; ?>" class="tutor-form-check-input tutor-flex-shrink-0" name="<?php echo $field_key; ?>" value="<?php echo $value; ?>" <?php echo $value==$field['value'] ? 'checked="checked"' : ''; ?>/>
-															<label for="<?php echo $id_string; ?>" class="text-medium-caption tutor-font-size-15">
+															<label for="<?php echo $id_string; ?>" class="tutor-fs-7 tutor-fw-medium tutor-fs-6">
 																<?php echo $label; ?>
 															</label>
 														</div>
@@ -116,11 +116,11 @@ $args = $this->args;
 														?>
 														<div class="tutor-form-check tutor-mb-12">
 															<input id="<?php echo $id_string; ?>" type="checkbox" class="tutor-form-check-input" value="<?php echo isset($option['value']) ? $option['value'] : ''; ?>" name="<?php echo $field_key; ?>" <?php echo $option['checked'] ? 'checked="checked"' : ''; ?>/>
-															<label for="<?php echo $id_string; ?>" class="text-medium-caption">
+															<label for="<?php echo $id_string; ?>" class="tutor-fs-7 tutor-fw-medium">
 																<?php echo $option['label_title']; ?>
 																<?php
 																	if(!empty($option['hint'])) {
-																		echo '<span class="tutor-d-block tutor-fs-7 tutor-fw-normal">'.$option['hint'].'</span>';
+																		echo '<span class="tutor-d-block tutor-fs-7">'.$option['hint'].'</span>';
 																	}
 																?>
 															</label>
@@ -136,8 +136,8 @@ $args = $this->args;
 
 														if(!empty($option['hint'])) {
 															?>
-															<p class="tutor-fs-7 tutor-fw-normal tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
-																<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19 tutor-mr-4"  style="margin-top: -1px;"></i>
+															<p class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
+																<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-fs-5 tutor-mr-4"  style="margin-top: -1px;"></i>
 																<?php echo $option['hint']; ?>
 															</p>
 															<?php
@@ -167,8 +167,8 @@ $args = $this->args;
 
 										if ( isset( $field['desc'] ) && 'Content Drip Type' !== $field['label'] ) {
 											?>
-												<p class="tutor-fs-7 tutor-fw-normal tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12" style="margin-top: 14px;">
-													<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-font-size-19 tutor-mr-4" style="margin-top: -1px;"></i>
+												<p class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12" style="margin-top: 14px;">
+													<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-fs-5 tutor-mr-4" style="margin-top: -1px;"></i>
 													<?php echo $field['desc']; ?>
 												</p>
 											<?php

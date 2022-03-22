@@ -19,14 +19,14 @@ const AddonCard = ({ addon, addonId }) => {
 						<img src={addon.thumb_url} alt={addon.name} />
 					</div>
 					<div className="addon-title tutor-mt-20">
-						<div className="text-medium-h6 color-text-primary tutor-mb-4">{addon.name}</div>
+						<div className="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-4">{addon.name}</div>
 					</div>
-					<div className="addon-des tutor-fs-7 tutor-fw-normal tutor-color-black-60 tutor-mt-20">{addon.description}</div>
+					<div className="addon-des tutor-fs-7 tutor-color-black-60 tutor-mt-20">{addon.description}</div>
 				</div>
 
 				<div className="card-footer tutor-px-32 tutor-py-20 tutor-d-flex tutor-justify-content-between tutor-align-items-center tutor-mt-auto">
-					<div className="text-medium-small tutor-color-muted">
-						<div className="tutor-color-muted text-medium-small tutor-d-flex">
+					<div className="tutor-fs-8 tutor-fw-medium tutor-color-muted">
+						<div className="tutor-color-muted tutor-fs-7 tutor-fw-medium tutor-d-flex">
 							<span>
 								{addon.plugins_required?.length > 0 ?
 									__('Required Plugin(s)', 'tutor')

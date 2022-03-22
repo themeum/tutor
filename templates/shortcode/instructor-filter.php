@@ -32,13 +32,13 @@ if ( $total_categories && $total_categories > $limit ) {
 		<div class="tutor-instructor-customize-wrapper">
 			<div class="tutor-instructor-filters">
 				<i class="tutor-icon-customize-filled tutor-color-text-brand"></i>
-				<span class="text-medium-h5 tutor-color-black">
+				<span class="tutor-fs-5 tutor-fw-medium tutor-color-black">
 					<?php esc_html_e( 'Filters', 'tutor' ); ?>
 				</span>
 			</div>
 			<div class="tutor-instructor-customize-clear clear-instructor-filter">
 				<i class="tutor-icon-line-cross-line design-dark"></i>
-				<span className="tutor-color-muted tutor-fs-6 tutor-fw-normal">
+				<span className="tutor-color-muted tutor-fs-6">
 					<?php esc_html_e( 'Clear', 'tutor' ); ?>
 				</span>
 			</div>
@@ -46,7 +46,7 @@ if ( $total_categories && $total_categories > $limit ) {
 		<div class="tutor-instructor-categories-wrapper">
 			<div>
 				<div class="tutor-category-text">
-					<span class="color-text-title">
+					<span class="tutor-color-black-70">
 						<?php esc_html_e( 'Category', 'tutor' ); ?>
 					</span>
 				</div>
@@ -64,7 +64,7 @@ if ( $total_categories && $total_categories > $limit ) {
 								class="tutor-form-check-input tutor-form-check-square"
 								name="category"
 								value="<?php esc_attr_e( $category_id ); ?>"/>
-							<label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>" class="color-text-title tutor-fs-7 tutor-fw-medium">
+							<label for="tutor-instructor-checkbox-<?php esc_attr_e( $category_id ); ?>" class="tutor-color-black-70 tutor-fs-7 tutor-fw-medium">
 							 <?php esc_html_e( $category->name ); ?>
 							</label>
 						</div>
@@ -74,9 +74,9 @@ if ( $total_categories && $total_categories > $limit ) {
 			</div>
 			<?php if ( $show_more ) : ?>
 				<div class="tutor-instructor-category-show-more">
-					<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
+					<div class="tutor-fs-7 tutor-fw-medium" data-id="<?php esc_attr_e( $category_id ); ?>">
 						<i class="tutor-icon-plus-bold-filled tutor-color-text-brand"></i>
-						<span class="text-subsued tutor-fs-7 tutor-fw-medium">
+						<span class="tutor-fs-7 tutor-fw-medium tutor-color-black-60" action-tutor-toggle-more role="button">
 							<?php esc_html_e( 'Show More', 'tutor' ); ?>
 							<span class="tutor-show-more-loading"></span>
 						</span>
@@ -96,7 +96,7 @@ if ( $total_categories && $total_categories > $limit ) {
 						<i class="tutor-icon-star-line-filled tutor-color-black-fill-20" data-value="<?php echo $i; ?>"></i>
 					<?php endfor; ?> 
 				</div>
-				<span class="text-subsued tutor-fs-6 tutor-fw-medium tutor-instructor-rating-filter"></span>   
+				<span class="tutor-fs-6 tutor-fw-medium tutor-black-60 tutor-instructor-rating-filter"></span>   
 			</div>
 		</div>
 	</div>
@@ -109,10 +109,10 @@ if ( $total_categories && $total_categories > $limit ) {
 		</div>
 		<div class="tutor-instructor-relevant-short-wrapper tutor-mb-32">
 			<div class="tutor-instructor-form-group">
-				<label for="tutor-instructor-relevant-sort" class="text-hints tutor-fs-6 tutor-fw-normal">
+				<label for="tutor-instructor-relevant-sort" class="tutor-fs-6 tutor-color-muted">
 					<?php _e( 'Short by', 'tutor' ); ?>
 				</label>
-				<select class="text-title  tutor-fs-6 tutor-fw-normal" id="tutor-instructor-relevant-sort">
+				<select class="tutor-fs-6 tutor-color-black-70" id="tutor-instructor-relevant-sort">
 					<?php foreach ( $short_by as $k => $v ) : ?>
 						<option value="<?php esc_attr_e( $k ); ?>">
 							<?php esc_html_e( $v ); ?>
@@ -162,9 +162,9 @@ if ( $total_categories && $total_categories > $limit ) {
 					</div>
 					<?php if ( $show_more ) : ?>
 					<div class="tutor-instructor-category-show-more tutor-mb-24">
-						<div class="text-medium-caption" data-id="<?php esc_attr_e( $category_id ); ?>">
+						<div class="tutor-fs-7 tutor-fw-medium" data-id="<?php esc_attr_e( $category_id ); ?>">
 							<i class="tutor-icon-plus-bold-filled tutor-color-text-brand"></i>
-							<span class="text-subsued tutor-fs-7 tutor-fw-medium">
+							<span class="tutor-fs-7 tutor-fw-medium tutor-black-60" action-tutor-toggle-more role="button">
 								<?php esc_html_e( 'Show More', 'tutor' ); ?>
 								<span class="tutor-show-more-loading"></span>
 							</span>

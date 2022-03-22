@@ -214,10 +214,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		<a data-tab="${section_slug}" data-key="field_${field_key}">
 			<div class="search_result_title">
 			${magnifyingGlass}
-			<span class="text-regular-caption">${text}</span>
+			<span class="tutor-fs-7">${text}</span>
 			</div>
 			<div class="search_navigation">
-			<div class="nav-track text-regular-small">
+			<div class="nav-track tutor-fs-7">
 				<span>${section}</span>
 				<span>${navTrack}</span>
 			</div>

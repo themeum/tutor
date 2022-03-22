@@ -98,7 +98,7 @@ class Course_Settings_Tabs{
     public function display_frontend() {
         ?>
         <div class="tutor-mb-32">
-            <label class="tutor-form-label tutor-font-size-16"><?php _e('Course Settings', 'tutor'); ?></label>
+            <label class="tutor-form-label tutor-fs-6"><?php _e('Course Settings', 'tutor'); ?></label>
             <div class="tutor-input-group tutor-mb-16">
                 <?php $this->display(); ?>
             </div>

@@ -46,13 +46,13 @@
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="tutor-icon-edit-filled tutor-icon-24 tutor-mr-4 tutor-color-design-white"></span>
-                                        <span class="text-regular-body tutor-color-white"><?php _e('Edit', 'tutor'); ?></span>
+                                        <span class="tutor-fs-6 tutor-color-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
                                         <span class="tutor-icon-delete-fill-filled tutor-icon-24 tutor-mr-4 tutor-color-design-white"></span>
-                                        <span class="text-regular-body tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
+                                        <span class="tutor-fs-6 tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>
                             </ul>
@@ -98,7 +98,7 @@
                     </label>
                 </div>
             </div>
-            <p class="text-regular-small tutor-color-muted tutor-mt-12">
+            <p class="tutor-fs-7 tutor-color-muted tutor-mt-12">
                 <?php _e('Time limit for this quiz. 0 means no time limit.', 'tutor'); ?>
             </p>
         </div>
@@ -107,7 +107,7 @@
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Quiz Feedback Mode', 'tutor'); ?></label>
         <div class="tutor-input-group">
-            <div class="text-regular-small tutor-color-muted tutor-mb-12">
+            <div class="tutor-fs-7 tutor-color-muted tutor-mb-12">
                 (<?php _e('Pick the quiz system"s behaviour on choice based questions.', 'tutor'); ?>)
             </div>
 
@@ -187,7 +187,7 @@
                     <div class="tutor-col-auto">
                         <span><i class="tutor-icon-settings-filled"></i></span>
                     </div>
-                    <div class="tutor-col tutor-p-0 tutor-text-medium-h6 tutor-color-black-70">
+                    <div class="tutor-col tutor-p-0 tutor-fs-6 tutor-fw-medium tutor-color-black-70">
                         <?php _e('Advance Settings', 'tutor'); ?>
                     </div>
                 </div>

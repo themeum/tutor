@@ -40,10 +40,10 @@ if(!count($questions)) : ?>
 	<div class="tutor-empty-state-wrapper">
         <div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/empty-qa.svg' ); ?>" alt="<?php __( "No Data Available in this Section", "tutor" ); ?>" width="85%">
-			<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-text-center tutor-mt-20">
+			<div class="tutor-fs-6 tutor-color-black-60 tutor-text-center tutor-mt-20">
 				<?php _e( "No questions yet", "tutor" ); ?>
 			</div>
-			<div class="tutor-fs-7 tutor-fw-normal tutor-color-muted tutor-mt-12">
+			<div class="tutor-fs-7 tutor-color-muted tutor-mt-12">
 				<?php _e( "Describe what you're trying to achieve and where you're getting stuck", "tutor" ); ?>
 			</div>
 		</div>
