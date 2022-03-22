@@ -84,34 +84,33 @@
 }
 
 .tutor-frontend-dashboard-qna-header {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	@include breakpoint-max(991) {
-		grid-template-columns: 1fr;
-	}
-	.tutor-qna-header {
-	}
-	.tutor-qna-toggle {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		@include breakpoint-max(991) {
-			justify-content: flex-start;
-			margin-top: 4px;
-		}
-		.tutor-qna-toggle-area {
-		}
-	}
-	.tutor-qna-filter {
-		display: grid;
-		grid-template-columns: 70px 227px;
-		align-items: center;
-		gap: 10px;
-		.tutor-form-select.tutor-select-redirector {
-			height: 40px;
-		}
-	}
+	// display: grid;
+	// grid-template-columns: 1fr 1fr;
+	// @include breakpoint-max(991) {
+	// 	grid-template-columns: 1fr;
+	// }
+
+	// .tutor-qna-toggle {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	justify-content: flex-end;
+	// 	@include breakpoint-max(991) {
+	// 		justify-content: flex-start;
+	// 		margin-top: 4px;
+	// 	}
+	// }
+
+	// .tutor-qna-filter {
+	// 	display: grid;
+	// 	grid-template-columns: 70px 227px;
+	// 	align-items: center;
+	// 	gap: 10px;
+	// 	.tutor-form-select.tutor-select-redirector {
+	// 		height: 40px;
+	// 	}
+	// }
 }
+
 table {
 	td[data-th='Question'] {
 		.tutor-input-feedback {
