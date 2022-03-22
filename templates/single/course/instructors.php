@@ -20,9 +20,9 @@ $instructors = tutor_utils()->get_instructors_by_course();
 if($instructors && count($instructors)) {
 	?>
 	<div class="tutor-mt-60">
-		<div class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-mb-24">
-			<?php _e('About the instructors', 'tutor'); ?>
-		</div>
+		<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
+			<?php _e( 'About the ' . ( count( (array) $instructors ) > 1 ? 'instructors' : 'instructor' ), 'tutor'); ?>
+		</h3>
 		<?php foreach($instructors as $instructor): ?>
 			<div class="tutor-instructor-info-card tutor-mb-16">
 				<div class="tutor-instructor-info-card-body tutor-d-sm-flex tutor-align-items-start tutor-px-32 tutor-py-24">

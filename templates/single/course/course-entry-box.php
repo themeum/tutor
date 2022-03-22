@@ -69,11 +69,11 @@
 			?>
 			<!-- course progress -->
 			<?php if ( tutor_utils()->get_option('enable_course_progress_bar', true, true) && is_array( $course_progress ) && count( $course_progress ) ) : ?>
-				<div class="tutor-course-progress-wrapper tutor-mb-32" style="width: 100%;">
-					<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
+				<div class="tutor-course-progress-wrapper tutor-mb-32">
+					<h3 class="tutor-color-black tutor-fs-5 tutor-fw-bold tutor-mb-16">
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
-					</span>
-					<div class="list-item-progress tutor-mt-16">
+					</h3>
+					<div class="list-item-progress">
 						<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
@@ -136,7 +136,7 @@
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
 
-					<button type="submit" class="tutor-mt-24 tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
+					<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
 						<?php esc_html_e( 'Complete Course', 'tutor' ); ?>
 					</button>
 				</form>
@@ -145,7 +145,7 @@
 			}
 
 			?>
-				<div class="tutor-fs-7 tutor-color-muted tutor-mt-12 tutor-d-flex tutor-justify-content-center">
+				<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-d-flex tutor-justify-content-center">
 					<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-8"></span>
 					<span class="tutor-enrolled-info-text">
 					<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
@@ -210,7 +210,7 @@
 							</button>
 						</form>
 					</div>
-					<div class="tutor-fs-7 tutor-color-muted tutor-mt-12 tutor-text-center">
+					<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-text-center">
 						<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
 					</div>
 				<?php
