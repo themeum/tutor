@@ -30,34 +30,43 @@ $active_tab         = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 
 ?>
 
 <div class="tutor-frontend-dashboard-qna-header tutor-mb-32">
-    <div class="tutor-qna-header tutor-d-flex tutor-align-items-center">
-        <div class="tutor-fs-5 tutor-fw-medium tutor-color-black">
-            <?php _e('Question & Answer', 'tutor'); ?>
+    <div class="tutor-row tutor-mb-24">
+        <div class="tutor-col">
+            <div class="tutor-fs-5 tutor-fw-medium tutor-color-black">
+                <?php _e('Question & Answer', 'tutor'); ?>
+            </div>
         </div>
+    
+        <?php if ($is_instructor) : ?>
+            <div class="tutor-col-auto">
+                <label class="tutor-form-toggle tutor-dashboard-qna-vew-as tutor-d-flex tutor-justify-content-end current-view-<?php echo $view_as == 'instructor' ? 'instructor' : 'student'; ?>">
+                    <input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as == 'instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo $as_instructor_url; ?>" data-as_student_url="<?php echo $as_student_url; ?>" disabled="disabled" />
+                    <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'student' ? 'checked' : 'unchecked'; ?>"><?php _e('Student', 'tutor'); ?></span>
+                    <span class="tutor-form-toggle-control"></span>
+                    <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'instructor' ? 'checked' : 'unchecked'; ?>"><?php _e('Instructor', 'tutor'); ?></span>
+                </label>
+            </div>
+        <?php endif; ?>
     </div>
-    <?php if ($is_instructor) : ?>
-        <div class="tutor-col-auto">
-            <label class="tutor-form-toggle tutor-dashboard-qna-vew-as tutor-d-flex tutor-justify-content-end current-view-<?php echo $view_as == 'instructor' ? 'instructor' : 'student'; ?>">
-                <input type="checkbox" class="tutor-form-toggle-input" <?php echo $view_as == 'instructor' ? 'checked="checked"' : ''; ?> data-as_instructor_url="<?php echo $as_instructor_url; ?>" data-as_student_url="<?php echo $as_student_url; ?>" disabled="disabled" />
-                <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'student' ? 'checked' : 'unchecked'; ?>"><?php _e('Student', 'tutor'); ?></span>
-                <span class="tutor-form-toggle-control"></span>
-                <span class="tutor-form-toggle-label tutor-form-toggle-<?php echo $view_as == 'instructor' ? 'checked' : 'unchecked'; ?>"><?php _e('Instructor', 'tutor'); ?></span>
-            </label>
-        </div>
-    <?php endif; ?>
 
     <?php // if($view_as=='instructor'): ?>
-        <div class="tutor-qna-filter <?php echo $is_instructor ? 'tutor-mt-24' : '' ?>" <?php if(!$is_instructor){ ?> style="justify-content: flex-end;" <?php } ?> >
-            <span class="tutor-fs-7 tutor-color-black-60"><?php _e('Sort By', 'tutor'); ?>:</span>
-            <select class="tutor-form-select tutor-select-redirector">
-                <?php
-                    foreach ($qna_tabs as $tab) {
-                        echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
-                            ' . $tab['title'] . '(' .$tab['value']. ')' . '
-                        </option>';
-                    }
-                ?>
-            </select>
+        <div class="tutor-row">
+            <div class="tutor-col-lg-5">
+                <div class="tutor-qna-filter tutor-d-flex tutor-align-items-center">
+                    <span class="tutor-fs-7 tutor-color-black-60 tutor-mr-20"><?php _e('Sort By', 'tutor'); ?>:</span>
+                    <div class="tutor-flex-grow-1">
+                        <select class="tutor-form-select tutor-select-redirector">
+                            <?php
+                                foreach ($qna_tabs as $tab) {
+                                    echo '<option value="' . $tab['url'] . '" ' . ($active_tab == $tab['key'] ? 'selected="selected"' : '') . '>
+                                        ' . $tab['title'] . '(' .$tab['value']. ')' . '
+                                    </option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
     <?php // endif; ?>
 </div>

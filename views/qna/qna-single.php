@@ -66,7 +66,7 @@
 		<!-- Show header action bar if it is single question in backend/frontend dashboard -->
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 			<div class="tutor-qa-sticky-bar">
-				<div class="tutor-color-black back">
+				<div class="tutor-color-black">
 					<a class="tutor-back-btn" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-color-design-dark"></span>
 						<span class="text text tutro-tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
