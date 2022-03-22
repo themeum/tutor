@@ -5,12 +5,12 @@
     <div class="tutor-color-black back tutor-mb-24">
         <a class="tutor-back-btn" href="<?php echo $back_url; ?>">
             <span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-            <span class="text text tutro-text-regular-caption tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
+            <span class="text text tutro-tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>
 <?php endif; ?>
 
-<div class="text-regular-small tutor-color-black-60">
+<div class="tutor-fs-7 tutor-color-black-60">
     <?php _e('Quiz', 'tutor'); ?>
 </div>
 
@@ -18,25 +18,25 @@
     <?php echo $quiz_title; ?>
 </div>
 <div class="tutor-d-flex tutor-justify-content-between tutor-py-20 tutor-my-20 tutor-border-top tutor-border-bottom">
-    <div class="flex">
+    <div class="tutor-d-flex">
         <?php _e('Questions', 'tutor'); ?>: 
         <span class="tutor-color-black">
             <?php echo $question_count; ?>
         </span>
     </div>
-    <div class="flex">
+    <div class="tutor-d-flex-flex">
         <?php _e('Quiz Time', 'tutor'); ?>: 
         <span class="tutor-color-black">
             <?php echo $quiz_time; ?>
         </span>
     </div>
-    <div class="flex">
+    <div class="tutor-d-flex">
         <?php _e('Total Marks', 'tutor'); ?>: 
         <span class="tutor-color-black">
             <?php echo $earned_marks . '/' . $total_marks; ?>
         </span>
     </div>
-    <div class="flex">
+    <div class="tutor-d-flex">
         <?php _e('Passing Marks', 'tutor'); ?>: 
         <span class="tutor-color-black">
             <?php

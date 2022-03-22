@@ -23,28 +23,28 @@ export default function () {
                                 <td>Javascript Tutorial For Beginners</td>
                                 <td>27 Mar, 2019</td>
                                 <td>$149.00</td>
-                                <td className="tutor-shrink tutor-text-hints"><i className="fas fa-receipt"></i></td>
+                                <td className="tutor-shrink tutor-color-muted"><i className="fas fa-receipt"></i></td>
                             </tr>
                             <tr>
                                 <td>#D798987</td>
                                 <td>Content Marketing: Grow Your Business with....</td>
                                 <td>27 Mar, 2019</td>
                                 <td>$149.00</td>
-                                <td className="tutor-shrink tutor-text-hints"><i className="fas fa-receipt"></i></td>
+                                <td className="tutor-shrink tutor-color-muted"><i className="fas fa-receipt"></i></td>
                             </tr>
                             <tr>
                                 <td>#D798987</td>
                                 <td>Digital Marketing Masterclass</td>
                                 <td>27 Mar, 2019</td>
                                 <td>$149.00</td>
-                                <td className="tutor-shrink tutor-text-hints"><i className="fas fa-receipt"></i></td>
+                                <td className="tutor-shrink tutor-color-muted"><i className="fas fa-receipt"></i></td>
                             </tr>
                             <tr>
                                 <td>#D798987</td>
                                 <td>Create Your Own WordPress Website</td>
                                 <td>27 Mar, 2019</td>
                                 <td>$149.00</td>
-                                <td className="tutor-shrink tutor-text-hints"><i className="fas fa-receipt"></i></td>
+                                <td className="tutor-shrink tutor-color-muted"><i className="fas fa-receipt"></i></td>
                             </tr>
                         </tbody>
                     </table>

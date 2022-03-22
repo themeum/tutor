@@ -78,6 +78,32 @@ get_tutor_header();
             </div> 
         </div>
     </div>
-<?php do_action('tutor_'.$context.'/single/after/wrap');
+
+    <!-- Course Progressbar on sm/mobile  -->
+    <?php 
+        // Get the ID of this content and the corresponding course
+        $course_content_id = get_the_ID();
+        $course_id         = tutor_utils()->get_course_id_by_subcontent( $course_content_id );
+
+        // Get total content count
+        $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+    ?>
+
+    <div class="tutor-spotlight-mobile-progress-complete tutor-px-20 tutor-py-16 tutor-mt-20 tutor-d-sm-none tutor-d-block">
+        <div class="tutor-row tutor-align-items-center">
+            <div class="tutor-spotlight-mobile-progress-left tutor-col-6">
+                <div class="tutor-fs-7 tutor-color-muted">
+                    <?php echo $course_stats['completed_percent'] . '%'; ?><span>&nbsp;Complete</span>
+                </div>
+                <div class="list-item-progress tutor-my-16">
+                    <div class="progress-bar tutor-mt-12" style="--progress-value:<?php echo $course_stats['completed_percent']; ?>%;"><span class="progress-value"></span></div>
+                </div>
+            </div>
+            <div class="tutor-spotlight-mobile-progress-right tutor-col-6">
+                <?php tutor_lesson_mark_complete_html(); ?>
+            </div>
+        </div>
+    </div>
+    <?php do_action('tutor_'.$context.'/single/after/wrap');
 
 get_tutor_footer();

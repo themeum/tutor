@@ -47,7 +47,7 @@
 							<span class="medium"></span>
 							<span class="strong"></span>
 						</div>
-						<div class="text text-regular-caption tutor-color-muted"></div>
+						<div class="text tutor-fs-7 tutor-color-muted"></div>
 					</div>
 				</div>
 			</div>

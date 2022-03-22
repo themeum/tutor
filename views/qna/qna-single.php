@@ -69,7 +69,7 @@
 				<div class="tutor-color-black back">
 					<a class="tutor-back-btn" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-						<span class="text text tutro-text-regular-caption tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
+						<span class="text text tutro-tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
 					</a>
 				</div>
 				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-content-end">
@@ -123,13 +123,13 @@
 										<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-70">
 											<?php echo $answer->display_name; ?>
 										</div>
-										<div class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
+										<div class="tutor-fs-7 tutor-color-muted">
 											<?php echo sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ); ?>
 										</div>
 									</div>
 								</div>
 
-								<div class="tutor-qna-text tutor-fs-7 tutor-fw-normal">
+								<div class="tutor-qna-text tutor-fs-7">
 									<?php echo esc_textarea( stripslashes( $answer->comment_content ) ); ?>
 								</div>
 
@@ -185,7 +185,7 @@
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
 							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
-								<span class="color-text-primary text-medium-body tutor-pl-12">
+								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
@@ -196,7 +196,7 @@
 					<tr>
 						<td class="data-td-content" id="tutor-asked-under-course">
 							<div class="td-toggle-content">
-								<span class="color-text-primary text-bold-body">
+								<span class="tutor-color-black tutor-fs-6 tutor-fw-bold">
 									<?php echo esc_html( $question->post_title ); ?>
 								</span>
 							</div>
@@ -208,7 +208,7 @@
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
 							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
-								<span class="color-text-primary text-medium-body tutor-pl-12">
+								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>
 								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
@@ -226,14 +226,14 @@
 									<div class="qna-previous-questions">
 										<?php foreach ( $own_questions as $question ) : ?>
 											<div>
-												<span class="color-text-subsued text-regular-caption">
+												<span class="tutor-color-black-60 tutor-fs-7">
 													<?php echo esc_html( date_i18n( get_option( 'date_format') , strtotime( $question->comment_date ) ) ); ?>,
 													<?php echo esc_html( date_i18n( get_option( 'time_format') , strtotime( $question->comment_date ) ) ); ?>
 												</span>
-												<span class="color-text-primary text-bold-body">
+												<span class="tutor-color-black tutor-fs-6 tutor-fw-bold">
 													<?php echo esc_textarea( $question->comment_content ); ?>
 												</span>
-												<span class="color-text-subsued">
+												<span class="tutor-color-black-60">
 													<?php esc_html_e( 'Course', 'tutor' ); ?></strong>: <?php echo esc_html( $question->post_title ); ?>
 												</span>
 											</div>

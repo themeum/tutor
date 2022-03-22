@@ -219,10 +219,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					let editWrapClass = assignmentEditFilePreview ? 'tutor-col-sm-5 tutor-py-16 tutor-mr-16' : '';
 					fileCard += `<div class="tutor-instructor-card ${editWrapClass}">
                                     <div class="tutor-icard-content">
-                                        <div class="text-regular-body color-text-title">
+                                        <div class="tutor-fs-6 tutor-color-black-70">
                                             ${file.name}
                                         </div>
-                                        <div class="text-regular-small">Size: ${file.size}</div>
+                                        <div class="tutor-fs-7">Size: ${file.size}</div>
                                     </div>
                                     <div onclick="(() => {
 										this.closest('.tutor-instructor-card').remove();
@@ -257,13 +257,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			lessText.style.display = 'block';
 			dots.style.display = 'inline';
 			btnText.innerHTML =
-				"<span class='btn-icon tutor-icon-plus-filled color-design-brand'></span><span class='color-text-primary'>Show More</span>";
+				"<span class='btn-icon tutor-icon-plus-filled color-design-brand'></span><span class='tutor-color-black'>" + __('Show More', 'tutor') + "</span>";
 			moreText.style.display = 'none';
 		} else {
 			lessText.style.display = 'none';
 			dots.style.display = 'none';
 			btnText.innerHTML =
-				"<span class='btn-icon tutor-icon-minus-filled color-design-brand'></span><span class='color-text-primary'>Show Less</span>";
+				"<span class='btn-icon tutor-icon-minus-filled color-design-brand'></span><span class='tutor-color-black'>" + __('Show Less', 'tutor') + "</span>";
 			moreText.style.display = 'block';
 			contSect.classList.add('no-before');
 		}

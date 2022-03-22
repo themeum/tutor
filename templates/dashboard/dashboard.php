@@ -47,7 +47,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 								</span>
 							</li>
 						</div>
-						<div class="list-item-title tutor-fs-6 tutor-fw-normal tutor-mt-20">
+						<div class="list-item-title tutor-fs-6 tutor-mt-20">
 							<?php
 								$profile_complete_text = "Please complete profile";
 								if($complete_count > ( $total_count / 2 ) && $complete_count < $total_count) {
@@ -259,7 +259,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 						<div class="list-item-rating tutor-d-flex">
 							<div class="tutor-ratings tutor-is-sm">
 								<?php tutor_utils()->star_rating_generator( $course_rating->rating_avg ); ?>
-								<div class="tutor-rating-text tutor-color-black-60 tutor-fs-6 tutor-fw-normal">
+								<div class="tutor-rating-text tutor-color-black-60 tutor-fs-6">
 									<?php echo esc_html( number_format( $course_rating->rating_avg, 2 ) ); ?>
 								</div>
 							</div>
@@ -271,7 +271,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 							</a>
 						</div>
 						<div class="list-item-steps tutor-mt-16">
-							<span class="tutor-fs-7 tutor-fw-normal tutor-color-muted">
+							<span class="tutor-fs-7 tutor-color-muted">
 								<?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?>
 							</span>
 							<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
@@ -286,9 +286,9 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 							</span>
 						</div>
 						<div class="list-item-progress tutor-mt-32">
-							<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+							<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 								<div class="progress-bar tutor-mr-16" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="progress-value"></span></div>
-								<span class="progress-percentage tutor-fs-7 tutor-fw-normal tutor-color-muted">
+								<span class="progress-percentage tutor-fs-7 tutor-color-muted">
 									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black ">
 										<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
 									</span><?php esc_html_e( 'Complete', 'tutor' ); ?>
@@ -328,19 +328,19 @@ if ( count( $instructor_course ) ) {
 				<thead>
 					<tr>
 						<th>
-							<span class="text-regular-small tutor-color-black-60">
+							<span class="tutor-fs-7 tutor-color-black-60">
 								<?php esc_html_e( 'Course Name', 'tutor' ); ?>
 							</span>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-black-60">
-								<span class="text-regular-small"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
+								<span class="tutor-fs-7"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="inline-flex-center tutor-color-black-60">
-								<span class="text-regular-small"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
+								<span class="tutor-fs-7"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
 								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
 							</div>
 						</th>
@@ -370,7 +370,7 @@ if ( count( $instructor_course ) ) {
 									</span>
 								</td>
 								<td data-th="<?php esc_html_e( 'Rating', 'tutor' ); ?>">
-									<div class="td-tutor-rating tutor-fs-6 tutor-fw-normal tutor-color-black-60">
+									<div class="td-tutor-rating tutor-fs-6 tutor-color-black-60">
 										<?php tutor_utils()->star_rating_generator_v2( $course_rating->rating_avg, null, true ); ?>
 									</div>
 								</td>
