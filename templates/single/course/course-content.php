@@ -25,7 +25,7 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 	if ( $post_size_in_words > $word_limit ) {
 		$has_readmore = true;
 		// truncate string
-		$first_part =  force_balance_tags( html_entity_decode( wp_trim_words( htmlentities( wpautop( $string ) ), $word_limit ) ) );
+		$first_part =  force_balance_tags( html_entity_decode( wp_trim_words( htmlentities( $string ), $word_limit ) ) );
 	}
 ?>
 	<div class="tab-item-content <?php echo $has_readmore ? "tutor-has-showmore" : '' ?>">
