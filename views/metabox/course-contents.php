@@ -112,18 +112,18 @@
                                 ?>
                                 <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-assignment-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
                                     <div class="tutor-course-content-top">
-                                        <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-fs-4 tutor-pr-2"></span>
+                                        <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-fs-4 tutor-pr-2 tutor-lh-1"></span>
                                         <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-assignment-modal' : ''; ?>" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                             <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?>
                                         </a>
                                         <div class="tutor-course-content-top-right-action">
                                             <?php if($is_topic): ?>
                                                 <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                                    <span class="tutor-color-muted tutor-icon-edit-filled tutor-fs-4"></span>
+                                                    <span class="tutor-color-muted tutor-icon-edit-filled tutor-fs-4 tutor-lh-1"></span>
                                                 </a>
                                             <?php endif; ?>
                                             <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                                <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-fs-4"></span>
+                                                <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-fs-4 tutor-lh-1"></span>
                                             </a>
                                         </div>
                                     </div>
@@ -134,18 +134,18 @@
                                 ?>
                                 <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
                                     <div class="tutor-course-content-top">
-                                        <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-fs-4 tutor-pr-8"></span>
+                                        <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-fs-4 tutor-pr-8 tutor-lh-1"></span>
                                         <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-lesson-modal' : ''; ?>" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
                                             <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?>
                                         </a>
                                         <div class="tutor-course-content-top-right-action">
                                             <?php if($is_topic): ?>
                                                 <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                                    <span class="tutor-color-muted tutor-icon-edit-filled tutor-fs-4"></span>
+                                                    <span class="tutor-color-muted tutor-icon-edit-filled tutor-fs-4 tutor-lh-1"></span>
                                                 </a>
                                             <?php endif; ?>
                                             <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                                <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-fs-4"></span>
+                                                <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-fs-4 tutor-lh-1"></span>
                                             </a>
                                         </div>
                                     </div>
