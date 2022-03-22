@@ -122,6 +122,15 @@ textarea.tutor-form-control {
 	position: relative;
 	flex-wrap: wrap;
 	width: 100%;
+
+	&.tutor-d-block {
+		display: block !important;
+	}
+
+	&.tutor-d-flex {
+		display: flex !important;
+	}
+
 	&.tutor-form-control-has-border {
 		&:not(.tutor-form-control-has-icon) {
 			input.tutor-form-control {
