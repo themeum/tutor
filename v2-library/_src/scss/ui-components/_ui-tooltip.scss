@@ -24,6 +24,14 @@ $arrow: 5px;
 	display: inline-block;
 	cursor: pointer;
 
+	&.tutor-d-block {
+		display: block !important;
+	}
+
+	&.tutor-d-flex {
+		display: flex !important;
+	}
+
 	.tooltip-txt {
 		position: absolute;
 		max-width: 208px;
