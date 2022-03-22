@@ -88,8 +88,4 @@
 			<button type="button" id="save_tutor_option" class="button button-primary"><?php echo __( 'Save Settings', 'tutor' ); ?></button>
 		</p>
 	</form>
-
-
 </div>
-
-
