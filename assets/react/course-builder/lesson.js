@@ -183,6 +183,8 @@ window.jQuery(document).ready(function($){
                     $that.closest('.tutor-modal').removeClass('tutor-is-active');
                     
                     tutor_toast(__('Success', 'tutor'), __('Lesson Updated', 'tutor'), 'success');
+
+                    window.dispatchEvent(new Event(_tutorobject.content_change_event));
                 }
             },
             complete: function () {
