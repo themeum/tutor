@@ -152,7 +152,7 @@
 						<span class="tutor-enrolled-info-text">
 							<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
 							<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
-								
+
 							<?php
 								echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post_date ) );
 							?>
@@ -217,7 +217,7 @@
 						</form>
 					</div>
 					<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-text-center">
-						<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
+						<?php esc_html_e( 'Free access this course', 'tutor' ); ?>
 					</div>
 				<?php
 				echo apply_filters( 'tutor/course/single/entry-box/free', ob_get_clean(), get_the_ID() );
