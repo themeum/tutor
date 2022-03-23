@@ -17,22 +17,17 @@ $saved_data = $this->get( $field_key, array() );
 		<div class="tutor-wp-editor" style="position: relative;">
 			<div class="loading-spinner"></div>
 			<?php
-			$editor_id    = 'editor_' . $field_id;
-			// $content = empty( $saved_data ) ? $content_demo : wp_unslash( $saved_data );
-			// $content = empty( $saved_data ) ? $field['default'] : wp_unslash( $saved_data );
+			$editor_id = 'editor_' . $field_id;
 			$content = empty( $saved_data ) ? $field['default'] : wp_unslash( json_decode( $saved_data ) );
-			$pattern = array( '/\<[\/]{0,1}div[^\>]*\>/i', '/<p>(?:\s|&nbsp;)*?<\/p>/i' );
-			$content = preg_replace( $pattern, '', $content );
-			$content = html_entity_decode($content);
-			$args    = array(
-				'textarea_name' => "tutor_option[{$field_key}]",
+			$content = html_entity_decode( tutor_utils()->clean_html_content( $content ) );
+			
+			$args = array(
+				'textarea_name' => 'tutor_option[' .  $field_key. ']',
 				'tinymce'       => array(
-					'toolbar1' => 'bold,italic,underline,forecolor,fontselect,fontsizeselect,formatselect,alignleft,aligncenter,alignright,bullist,numlist,link,unlink,removeformat',
-					'toolbar2' => '',
-					'toolbar3' => '',
+					'toolbar1' => 'bold, italic, underline, forecolor, fontselect, fontsizeselect, formatselect, alignleft, aligncenter, alignright, bullist, numlist, link, unlink, removeformat',
 				),
 				'media_buttons' => false,
-				'quicktags'     => false,
+				'quicktags'     => true,
 				'elementpath'   => false,
 				'wpautop'       => false,
 				'statusbar'     => false,

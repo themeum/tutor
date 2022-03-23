@@ -1154,22 +1154,20 @@ class Utils {
 	public function get_course_price( $course_id = 0 ) {
 		$price     = null;
 		$course_id = $this->get_post_id( $course_id );
+		$product_id = tutor_utils()->get_course_product_id( $course_id );
 		if ( $this->is_course_purchasable( $course_id ) ) {
 			$monetize_by = $this->get_option( 'monetize_by' );
-
 			if ( $this->has_wc() && $monetize_by === 'wc' ) {
-				$product_id = tutor_utils()->get_course_product_id( $course_id );
 				$product    = wc_get_product( $product_id );
-
 				if ( $product ) {
 					$price = $product->get_price();
 				}
-			} else {
-				$price = apply_filters( 'get_tutor_course_price', null, $course_id );
+			} else if ( 'edd' === $monetize_by && function_exists( 'edd_price' ) ) {
+				$download 	= new \EDD_Download( $product_id );
+				$price 		= \edd_price( $download->ID, false );
 			}
 		}
-
-		return $price;
+		return apply_filters( 'get_tutor_course_price', $price, $course_id );;
 	}
 
 	/**
@@ -9490,5 +9488,42 @@ class Utils {
 		$retake_course = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
 	
 		return $retake_course;
+	}
+
+
+	/**
+	 * Clean unnecessary html code from the content
+	 *
+	 * @return string
+	 *
+	 * @since v.2.0.1
+	 */
+
+	public function clean_html_content( $content = '', $allowed = array() ) {
+		
+		$default = array(
+			'div' => array( 'class' => 1, 'style' => 1),
+			'b' => array( 'style' => 1 ),
+			'strong' => array( 'style' => 1 ),
+			'i' => array( 'style' => 1 ),
+			'u' => array( 'style' => 1 ),
+			'h1' => array( 'style' => 1 ),
+			'h2' => array( 'style' => 1 ),
+			'h3' => array( 'style' => 1 ),
+			'h4' => array( 'style' => 1 ),
+			'h5' => array( 'style' => 1 ),
+			'h6' => array( 'style' => 1 ),
+			'a' => array( 'href' => array( 'minlen' => 3, 'maxlen' => 100 ), 'target' => 1, 'style' => 1 ),
+			'p' => array( 'style' => 1 ),
+			'img' => array( 'src' => 1, 'alt' => 1, 'style' => 1 ),
+			'pre' => array( 'style' => 1 ),
+			'ul' => array( 'style' => 1 ),
+			'ol' => array( 'style' => 1 ),
+			'li' => array( 'style' => 1 )
+		);
+
+		$allowed = wp_parse_args( $allowed, $default );
+
+		return wp_kses($content, $allowed);
 	}
 }
