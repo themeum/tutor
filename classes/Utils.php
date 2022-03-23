@@ -1154,22 +1154,20 @@ class Utils {
 	public function get_course_price( $course_id = 0 ) {
 		$price     = null;
 		$course_id = $this->get_post_id( $course_id );
+		$product_id = tutor_utils()->get_course_product_id( $course_id );
 		if ( $this->is_course_purchasable( $course_id ) ) {
 			$monetize_by = $this->get_option( 'monetize_by' );
-
 			if ( $this->has_wc() && $monetize_by === 'wc' ) {
-				$product_id = tutor_utils()->get_course_product_id( $course_id );
 				$product    = wc_get_product( $product_id );
-
 				if ( $product ) {
 					$price = $product->get_price();
 				}
-			} else {
-				$price = apply_filters( 'get_tutor_course_price', null, $course_id );
+			} else if ( 'edd' === $monetize_by && function_exists( 'edd_price' ) ) {
+				$download 	= new \EDD_Download( $product_id );
+				$price 		= \edd_price( $download->ID, false );
 			}
 		}
-
-		return $price;
+		return apply_filters( 'get_tutor_course_price', $price, $course_id );;
 	}
 
 	/**
