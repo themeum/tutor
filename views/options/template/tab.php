@@ -52,10 +52,10 @@
     </div>
     
     <div class="tab-body">
-            <?php foreach($tabbed as $index => $tab): ?>
-                <div class="tab-body-item <?php echo $index==0 ? 'is-active' : ''; ?>" id="tutor-settings-tab-<?php echo $tab['slug']; ?>">
-                    <?php echo $this->blocks( $tab ); ?>
-                </div>
-            <?php endforeach; ?>
+        <?php foreach($tabbed as $index => $tab): ?>
+            <div class="tab-body-item <?php echo $index==0 ? 'is-active' : ''; ?>" id="tutor-settings-tab-<?php echo $tab['slug']; ?>">
+                <?php echo $this->blocks( $tab ); ?>
+            </div>
+        <?php endforeach; ?>
     </div>
 </div>
