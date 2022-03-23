@@ -1,5 +1,8 @@
 .tutor-wp-dashboard-header {
 	box-sizing: border-box;
+	background: #ffffff;
+	border-bottom: 1px solid $stroke-light-30;
+
 	ol,
 	ul {
 		padding: 0;
@@ -16,7 +19,6 @@
 		height: 60px;
 	}
 
-	background: #ffffff;
 	.filter-btns {
 		display: flex;
 		gap: 12px;
@@ -87,7 +89,7 @@
 	@include breakpoint-max(mobile) {
 		overflow-x: auto;
 	}
-} // .tutor-wp-dashboard-header
+}
 
 .tutor-wp-dashboard-filter {
 	gap: 30px;
