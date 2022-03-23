@@ -146,16 +146,15 @@
 					// check if has enrolled date.
 					$post_date = is_object( $is_enrolled ) && isset( $is_enrolled->post_date ) ? $is_enrolled->post_date : '';
 					if ( '' !== $post_date ) :
-				?>
+					?>
 					<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-d-flex tutor-justify-content-center">
 						<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-8"></span>
 						<span class="tutor-enrolled-info-text">
 							<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
 							<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
-								
-							<?php
-								echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post_date ) );
-							?>
+								<?php
+									echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post_date ) );
+								?>
 							</span>
 						</span>
 					</div>
@@ -223,6 +222,8 @@
 				echo apply_filters( 'tutor/course/single/entry-box/free', ob_get_clean(), get_the_ID() );
 			}
 		}
+
+		do_action('tutor_course/single/entry/after', get_the_ID());
 		?>
 	</div>
 
