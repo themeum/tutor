@@ -9502,25 +9502,26 @@ class Utils {
 	 */
 
 	public function clean_html_content( $content = '', $allowed = array() ) {
+		
 		$default = array(
-			'div' => array( 'class' => 1),
-			'b' => array(),
-			'strong' => array(),
-			'i' => array(),
-			'u' => array(),
-			'h1' => array(),
-			'h2' => array(),
-			'h3' => array(),
-			'h4' => array(),
-			'h5' => array(),
-			'h6' => array(),
-			'a' => array( 'href' => array( 'minlen' => 3, 'maxlen' => 100 ), 'target' => 1 ),
-			'p' => array(),
-			'img' => array( 'src' => 1, 'alt' => 1 ),
-			'pre' => array(),
-			'ul' => array(),
-			'ol' => array(),
-			'li' => array()
+			'div' => array( 'class' => 1, 'style' => 1),
+			'b' => array( 'style' => 1 ),
+			'strong' => array( 'style' => 1 ),
+			'i' => array( 'style' => 1 ),
+			'u' => array( 'style' => 1 ),
+			'h1' => array( 'style' => 1 ),
+			'h2' => array( 'style' => 1 ),
+			'h3' => array( 'style' => 1 ),
+			'h4' => array( 'style' => 1 ),
+			'h5' => array( 'style' => 1 ),
+			'h6' => array( 'style' => 1 ),
+			'a' => array( 'href' => array( 'minlen' => 3, 'maxlen' => 100 ), 'target' => 1, 'style' => 1 ),
+			'p' => array( 'style' => 1 ),
+			'img' => array( 'src' => 1, 'alt' => 1, 'style' => 1 ),
+			'pre' => array( 'style' => 1 ),
+			'ul' => array( 'style' => 1 ),
+			'ol' => array( 'style' => 1 ),
+			'li' => array( 'style' => 1 )
 		);
 
 		$allowed = wp_parse_args( $allowed, $default );
