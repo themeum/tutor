@@ -9491,4 +9491,40 @@ class Utils {
 	
 		return $retake_course;
 	}
+
+
+	/**
+	 * Clean unnecessary html code from the content
+	 *
+	 * @return string
+	 *
+	 * @since v.2.0.1
+	 */
+
+	public function clean_html_content( $content = '', $allowed = array() ) {
+		$default = array(
+			'div' => array( 'class' => 1),
+			'b' => array(),
+			'strong' => array(),
+			'i' => array(),
+			'u' => array(),
+			'h1' => array(),
+			'h2' => array(),
+			'h3' => array(),
+			'h4' => array(),
+			'h5' => array(),
+			'h6' => array(),
+			'a' => array( 'href' => array( 'minlen' => 3, 'maxlen' => 100 ), 'target' => 1 ),
+			'p' => array(),
+			'img' => array( 'src' => 1, 'alt' => 1 ),
+			'pre' => array(),
+			'ul' => array(),
+			'ol' => array(),
+			'li' => array()
+		);
+
+		$allowed = wp_parse_args( $allowed, $default );
+
+		return wp_kses($content, $allowed);
+	}
 }

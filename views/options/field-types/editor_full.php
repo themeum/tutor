@@ -19,9 +19,8 @@ $saved_data = $this->get( $field_key, array() );
 			<?php
 			$editor_id = 'editor_' . $field_id;
 			$content = empty( $saved_data ) ? $field['default'] : wp_unslash( json_decode( $saved_data ) );
-			$pattern = array( '/\<[\/]{0,1}div[^\>]*\>/i', '/<p>(?:\s|&nbsp;)*?<\/p>/i' );
-			$content = preg_replace( $pattern, '', $content );
-			$content = html_entity_decode($content);
+			$content = html_entity_decode( tutor_utils()->clean_html_content( $content ));
+			
 			$args = array(
 				'textarea_name' => 'tutor_option[' .  $field_key. ']',
 				'tinymce'       => array(
