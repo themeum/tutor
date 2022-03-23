@@ -96,7 +96,7 @@ ob_start();
     </div>
 
 	<?php ob_start(); ?>
-		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-80 tutor-pb-80">
+		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-content-center tutor-mt-80 tutor-pb-80">
 			<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 			<?php

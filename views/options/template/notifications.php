@@ -4,7 +4,7 @@
 foreach ( $section['blocks'] as $blocks ) :
 	if ( empty( $blocks['label'] ) ) :
 		?>
-		<div class="tutor-option-single-item">
+		<div class="tutor-option-single-item tutor-mb-32">
 			<?php echo $this->blocks( $blocks ); ?> </div>
 	<?php else : ?>
 		<?php echo $this->blocks( $blocks ); ?>
