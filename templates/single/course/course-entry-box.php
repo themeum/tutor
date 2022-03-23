@@ -216,7 +216,7 @@
 						</form>
 					</div>
 					<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-text-center">
-						<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
+						<?php esc_html_e( 'Free access this course', 'tutor' ); ?>
 					</div>
 				<?php
 				echo apply_filters( 'tutor/course/single/entry-box/free', ob_get_clean(), get_the_ID() );
