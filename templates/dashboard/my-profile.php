@@ -10,14 +10,22 @@ $user = get_userdata( $uid );
 
 $profile_settings_link = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings' );
 
-$rdate = tutor_utils()->convert_date_into_wp_timezone( date( 'D d M Y, h:i:s a', strtotime( $user->user_registered ) ) );
-$fname = $user->first_name;
-$lname = $user->last_name;
-$uname = $user->user_login;
-$email = $user->user_email;
-$phone = get_user_meta( $uid, 'phone_number', true );
-$job   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_job_title', true ) ) );
-$bio   = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_bio', true ) ) );
+$rdate               = tutor_utils()->convert_date_into_wp_timezone( date( 'D d M Y, h:i:s a', strtotime( $user->user_registered ) ) );
+$fname               = $user->first_name;
+$lname               = $user->last_name;
+$uname               = $user->user_login;
+$email               = $user->user_email;
+$user_profile_phone  = get_user_meta( $uid, 'phone_number', true );
+$user_billing_phone  = get_user_meta( $uid, 'billing_phone', true );
+$user_shipping_phone = get_user_meta( $uid, 'shipping_phone', true );
+$phone               = empty( $user_profile_phone )
+						? ( empty( $user_shipping_phone )
+							? ( empty( $user_billing_phone ) ? '' : $user_billing_phone ) : $user_shipping_phone )
+						: $user_profile_phone;
+
+
+$job = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_job_title', true ) ) );
+$bio = nl2br( strip_tags( get_user_meta( $uid, '_tutor_profile_bio', true ) ) );
 
 $profile_data = array(
 	array( __( 'Registration Date', 'tutor' ), ( $rdate ? date_i18n( 'D d M Y, h:i:s a', $rdate ) : esc_html( '-' ) ) ),
@@ -25,7 +33,7 @@ $profile_data = array(
 	array( __( 'Last Name', 'tutor' ), ( $lname ? $lname : __( '-' ) ) ),
 	array( __( 'Username', 'tutor' ), $uname ),
 	array( __( 'Email', 'tutor' ), $email ),
-	array( __( 'Phone Number', 'tutor' ), ( $phone ? $phone : '-' ) ),
+	array( __( 'Phone Number', 'tutor' ), ( isset( $phone ) ? $phone : '-' ) ),
 	array( __( 'Skill/Occupation', 'tutor' ), ( $job ? $job : '-' ) ),
 	array( __( 'Biography', 'tutor' ), $bio ? $bio : '-' ),
 );
@@ -43,7 +51,7 @@ $profile_data = array(
 					<span class="tutor-fs-6 tutor-color-black-60"><?php echo $data[0]; ?></span>
 				</div>
 				<div class="tutor-col-12 tutor-col-sm-7 tutor-col-lg-9">
-					<?php echo $data[0] == 'Biography' ? '<span class="tutor-fs-6 tutor-color-black-60">'.$data[1].'</span>' : '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black ' . $first_name_class . ' ">' . $data[1] . '</span>'; ?>
+					<?php echo $data[0] == 'Biography' ? '<span class="tutor-fs-6 tutor-color-black-60">' . $data[1] . '</span>' : '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black ' . $first_name_class . ' ">' . $data[1] . '</span>'; ?>
 				</div>
 			</div>
 		<?php
