@@ -120,15 +120,11 @@
 } // .tutor-wp-dashboard-filter
 
 .tutor-wp-dashboard-filter-items {
-	// width: 100%;
-	// display: flex;
 	gap: 30px;
-	// flex-wrap: wrap;
 
 	.tutor-form-label {
 		@extend .text-medium-caption;
 		@extend .tutor-color-black-70;
-		@extend .tutor-mb-12;
 	}
 
 	select.tutor-form-select,

@@ -20,6 +20,10 @@
     $property-class: if(map-has-key($utility, class), map-get($utility, class), nth($properties, 1));
     $property-class: if($property-class == null, "", $property-class);
 
+    // is important
+    $is-important: true !default;
+    $is-important: if($property-class == "tutor-fs" or $property-class == "tutor-fw" or $property-class == "tutor-m" or $property-class == "tutor-mx" or $property-class == "tutor-my" or $property-class == "tutor-mt" or $property-class == "tutor-mr" or $property-class == "tutor-mb" or $property-class == "tutor-ml" or $property-class == "tutor-p" or $property-class == "tutor-px" or $property-class == "tutor-py" or $property-class == "tutor-pt" or $property-class == "tutor-pr" or $property-class == "tutor-pb" or $property-class == "tutor-pl", false, $is-important);
+
     // State params to generate pseudo-classes
     $state: if(map-has-key($utility, state), map-get($utility, state), ());
 
@@ -68,14 +72,14 @@
                 --#{$variable-prefix}#{$local-var}: #{$value};
               }
             }
-            #{$property}: $value if($enable-important-utilities, !important, null);
+            #{$property}: $value if($is-important, !important, null);
           }
         }
 
         @each $pseudo in $state {
           .#{$property-class + $infix + $property-class-modifier}-#{$pseudo}:#{$pseudo} {
             @each $property in $properties {
-              #{$property}: $value if($enable-important-utilities, !important, null);
+              #{$property}: $value if($is-important, !important, null);
             }
           }
         }
