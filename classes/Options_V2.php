@@ -305,7 +305,7 @@ class Options_V2
 		$old_dashboard_id = get_tutor_option('tutor_dashboard_page_id');
 		$dashboard_update_id = isset($option['tutor_dashboard_page_id']) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
 
-		$option['email_footer_text'] = !empty($option['email_footer_text']) ? wp_unslash($option['email_footer_text']) : '';
+		$option['email_footer_text'] = !empty($option['email_footer_text']) ? htmlentities(wp_unslash($option['email_footer_text'])) : '';
 
 		$option = apply_filters('tutor_option_input', $option);
 
@@ -523,6 +523,22 @@ class Options_V2
 								'desc'        => __('Allow instructors and admins to view the course content without enrolling', 'tutor'),
 							),
 							array(
+								'key'         => 'wc_automatic_order_complete_redirect_to_courses',
+								'type'        => 'toggle_switch',
+								'label'       => __('Auto redirect to courses', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('When a user\'s WooCommerce order is auto-completed, they will be redirected to enrolled courses', 'tutor'),
+							),
+							array(
+								'key'         => 'auto_complete_woocommerce_virtual_orders',
+								'type'        => 'toggle_switch',
+								'label'       => __('Auto Complete Woocommerce Virtual Orders', 'tutor'),
+								'default'     => 'off',
+								'label_title' => __('', 'tutor'),
+								'desc'        => __('When a user\'s WooCommerce order is completed, they will be auto enrolled to corresponding courses', 'tutor'),
+							),
+							array(
 								'key'         => 'enable_spotlight_mode',
 								'type'        => 'toggle_switch',
 								'label'       => __('Spotlight mode', 'tutor'),
@@ -683,6 +699,14 @@ class Options_V2
 								'desc'        => __('Allow customers to place orders without an account.', 'tutor'),
 							),
 							array(
+								'key'         => 'enable_revenue_sharing',
+								'type'        => 'toggle_switch',
+								'label'       => __('Enable Revenue Sharing', 'tutor'),
+								'label_title' => __('', 'tutor'),
+								'default'     => 'off',
+								'desc'        => __('Allow revenue generated from selling courses to be shared with course creators.', 'tutor'),
+							),
+							array(
 								'key'         => 'sharing_percentage',
 								'type'        => 'double_input',
 								'label'       => __('Sharing Percentage', 'tutor'),
@@ -703,14 +727,6 @@ class Options_V2
 									),
 								),
 								'desc'        => __('Set how the sales revenue will be shared among admins and instructors.', 'tutor'),
-							),
-							array(
-								'key'         => 'enable_revenue_sharing',
-								'type'        => 'toggle_switch',
-								'label'       => __('Enable Revenue Sharing', 'tutor'),
-								'label_title' => __('', 'tutor'),
-								'default'     => 'off',
-								'desc'        => __('Allow revenue generated from selling courses to be shared with course creators.', 'tutor'),
 							),
 							array(
 								'key'     => 'statement_show_per_page',

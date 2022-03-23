@@ -1283,7 +1283,7 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		// Delete Quiz submissions 
+		// Delete Quiz submissions
 		$attempts = $this->get_quiz_attempts_by_course_ids( $start = 0, $limit = 99999999, $course_ids = array( $course_id ), $search_filter = '', $course_filter = '', $date_filter = '', $order_filter = '', $user_id = $user_id, false, true );
 
 		if ( is_array( $attempts ) ) {
@@ -3519,7 +3519,7 @@ class Utils {
 			<?php
 			if ( $show_avg_rate ) {
 				?>
-				<span class="tutor-rating-text tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-pl-0 tutor-ml-0">
+				<span class="tutor-rating-text tutor-fs-6 tutor-color-black-60 tutor-pl-0 tutor-ml-0">
 					<?php
 					echo $current_rating;
 					if ( ! ( $total_count === null ) ) {
@@ -8743,7 +8743,7 @@ class Utils {
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $page_title ); ?>" width="85%" />
-			<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-text-center">
+			<div class="tutor-fs-6 tutor-color-black-60 tutor-text-center">
 				<?php echo sprintf( esc_html_x( '%s', $page_title, 'tutor' ), $page_title ); ?>
 			</div>
 		</div>
@@ -9315,7 +9315,7 @@ class Utils {
 				'icon'  => 'tutor-icon-man-user-filled',
 			),
 			'enrolled-courses' => array(
-				'title' => __( 'Enrolled  Courses', 'tutor' ),
+				'title' => __( 'Enrolled Courses', 'tutor' ),
 				'icon'  => 'tutor-icon-college-graduation-filled',
 			),
 			'wishlist'         => array(
@@ -9428,6 +9428,8 @@ class Utils {
 	 * @param string $date | string date time to conver.
 	 *
 	 * @return string | date time
+	 *
+	 * NOTE: date_i18n translate able string is not supported
 	 */
 	public function convert_date_into_wp_timezone( string $date ): string {
 		$date = new \DateTime( $date );

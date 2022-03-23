@@ -57,7 +57,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 		</div>
 		<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
 			<span class="tutor-icon-assignment-filled tutor-icon-24 tutor-color-white tutor-mr-4"></span>
-			<span class="text-regular-caption tutor-color-design-white">
+			<span class="tutor-fs-7 tutor-color-design-white">
 				<?php
 					esc_html_e( 'Assignment: ', 'tutor' );
 					the_title();
@@ -70,18 +70,20 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			<?php
 				do_action( 'tutor_course/single/enrolled/before/lead_info/progress_bar' );
 			?>
-			<div class="text-regular-caption tutor-color-design-white">
-				<span class="tutor-progress-content tutor-color-primary-60">
-					<?php _e( 'Your Progress:', 'tutor' ); ?>
-				</span>
-				<span class="text-bold-caption">
-					<?php echo $course_stats['completed_count']; ?>
-				</span>
-				<?php _e( 'of ', 'tutor' ); ?>
-				<span class="text-bold-caption">
-					<?php echo $course_stats['total_count']; ?>
-				</span>
-				(<?php echo $course_stats['completed_percent'] . '%'; ?>)
+			<div class="tutor-fs-7 tutor-color-design-white">
+				<?php if ( true == get_tutor_option( 'enable_course_progress_bar' ) ) : ?>
+					<span class="tutor-progress-content tutor-color-primary-60">
+						<?php _e( 'Your Progress:', 'tutor' ); ?>
+					</span>
+					<span class="tutor-fs-7 tutor-fw-bold">
+						<?php echo $course_stats['completed_count']; ?>
+					</span>
+					<?php _e( 'of ', 'tutor' ); ?>
+					<span class="tutor-fs-7 tutor-fw-bold">
+						<?php echo $course_stats['total_count']; ?>
+					</span>
+					(<?php echo $course_stats['completed_percent'] . '%'; ?>)
+				<?php endif; ?>
 			</div>
 			<?php
 				do_action( 'tutor_course/single/enrolled/after/lead_info/progress_bar' );
@@ -97,11 +99,11 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 </div>
 
 <div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
-	<div class="tutor-mobile-top-nav d-grid">
+	<div class="tutor-mobile-top-nav tutor-d-grid">
 		<a href="<?php echo esc_url( get_the_permalink( isset( $previous_id ) ? $previous_id : '' ) ); ?>">
 			<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
 		</a>
-		<div class="tutor-top-nav-title tutor-fs-6 tutor-fw-normal tutor-color-black">
+		<div class="tutor-top-nav-title tutor-fs-6 tutor-color-black">
 			<?php
 				the_title();
 			?>
@@ -158,13 +160,13 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 		<div class="tutor-assignment-meta-info tutor-d-flex tutor-justify-content-between tutor-mt-24 tutor-mt-sm-32 tutor-py-16 tutor-py-sm-24">
 			<div class="tutor-assignment-detail-info tutor-d-flex">
 				<div class="tutor-assignment-duration">
-					<span class="text-regular-body tutor-color-muted"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
+					<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
 					<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
 						<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . $time_duration['time'] : __( 'No limit', 'tutor' ) ); ?>
 					</span>
 				</div>
 				<div class="tutor-assignmetn-deadline">
-					<span class="text-regular-body tutor-color-muted"><?php esc_html_e( 'Deadline:', 'tutor' ); ?></span>
+					<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Deadline:', 'tutor' ); ?></span>
 					<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
 						<?php
 						if ( $time_duration['value'] != 0 ) {
@@ -182,11 +184,11 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			</div>
 			<div class="tutor-assignment-detail-info tutor-d-flex">
 				<div class="tutor-assignment-marks">
-					<span class="text-regular-body tutor-color-muted"><?php _e( 'Total Marks:', 'tutor' ); ?></span>
+					<span class="tutor-fs-6 tutor-color-muted"><?php _e( 'Total Marks:', 'tutor' ); ?></span>
 					<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black"><?php echo $total_mark; ?></span>
 				</div>
 				<div class="tutor-assignmetn-pass-mark">
-					<span class="text-regular-body tutor-color-muted"><?php _e( 'Passing Mark:', 'tutor' ); ?></span>
+					<span class="tutor-fs-6 tutor-color-muted"><?php _e( 'Passing Mark:', 'tutor' ); ?></span>
 					<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black"><?php echo $pass_mark; ?></span>
 				</div>
 			</div>
@@ -205,7 +207,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				<div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 					<div class="flash-info tutor-d-flex tutor-align-items-center">
 						<span class="tutor-icon-cross-cricle-filled tutor-color-design-danger tutor-mr-8"></span>
-						<span class="text-regular-caption tutor-color-danger-100">
+						<span class="tutor-fs-7 tutor-color-danger-100">
 							<?php _e( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor' ); ?>
 						</span>
 					</div>
@@ -223,7 +225,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					<?php _e( 'Description', 'tutor' ); ?>
 				</div>
 
-				<div class="tutor-to-body tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-pt-12 tutor-entry-content">
+				<div class="tutor-to-body tutor-fs-6 tutor-color-black-60 tutor-pt-12 tutor-entry-content">
 					<?php the_content(); ?>
 				</div>
 
@@ -249,12 +251,12 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							?>
 							<div class="tutor-instructor-card tutor-col-sm-5 tutor-py-16 tutor-mr-12 tutor-ml-3">
 								<div class="tutor-icard-content">
-									<div class="text-regular-body color-text-title">
+									<div class="tutor-fs-6 tutor-color-black-70">
 									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank" download>
 										<?php echo esc_html( $attachment_name ); ?>
 									</a>
 									</div>
-									<div class="text-regular-small">
+									<div class="tutor-fs-7">
 										<?php esc_html_e( 'Size: ', 'tutor' ); ?>
 										<?php echo esc_html( $file_size ? $file_size . 'KB' : '' ); ?>
 									</div>
@@ -289,7 +291,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 						<div class="tutor-to-title tutor-fs-6 tutor-fw-medium tutor-color-black">
 							<?php _e( 'Assignment Submission', 'tutor' ); ?>
 						</div>
-						<div class="text-regular-caption tutor-color-black-60 tutor-pt-16 tutor-pt-sm-32">
+						<div class="tutor-fs-7 tutor-color-black-60 tutor-pt-16 tutor-pt-sm-32">
 							<?php _e( 'Assignment answer form', 'tutor' ); ?>
 						</div>
 						<div class="tutor-assignment-text-area tutor-pt-20">
@@ -313,7 +315,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 						<?php if ( $allowed_upload_files ) { ?>
 							<div class="tutor-assignment-attachment tutor-mt-32 tutor-py-20 tutor-px-16 tutor-py-sm-32 tutor-px-sm-32">
-								<div class="text-regular-caption tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-black-60">
 									<?php _e( "Attach assignment files (Max: $allow_to_upload file)", 'tutor' ); ?>
 								</div>
 								<div class="tutor-attachment-files tutor-mt-12">
@@ -329,13 +331,13 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 										</form>
 									</div>
 									<div class="tutor-input-type-size">
-										<p class="text-regular-small tutor-color-black-60">
+										<p class="tutor-fs-7 tutor-color-black-60">
 											<?php _e( 'File Support: ', 'tutor' ); ?>
 											<span class="tutor-color-black">
 												<?php esc_html_e( 'Any standard Image, Document, Presentation, Sheet, PDF or Text file is allowed', 'tutor' ); ?>
 											</span>
 										</p>
-										<p class="text-regular-small tutor-color-black-60 tutor-mt-7">
+										<p class="tutor-fs-7 tutor-color-black-60 tutor-mt-7">
 											<?php _e( 'Total File Size: Max', 'tutor' ); ?>
 											<span class="tutor-color-black">
 												<?php echo $file_upload_limit; ?>
@@ -356,10 +358,10 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 											<?php foreach ( $attachments as $attachment ) : ?>
 												<div class="tutor-instructor-card tutor-col-sm-5 tutor-py-16 tutor-mr-16">
 													<div class="tutor-icard-content">
-														<div class="text-regular-body tutor-color-black-70">
+														<div class="tutor-fs-6 tutor-color-black-70">
 															<?php echo esc_html( $attachment->name ); ?>
 														</div>
-														<div class="text-regular-small">Size: 230KB;</div>
+														<div class="tutor-fs-7">Size: 230KB;</div>
 													</div>
 													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
 														<a href="<?php echo esc_url( $attachment->url ); ?>" data-id="<?php echo esc_attr( $assignment_comment_id ); ?>" data-name="<?php echo esc_attr( $attachment->name ); ?>" target="_blank">
@@ -386,10 +388,10 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			</div> <!-- assignment-submission -->
 			<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-32 tutor-pb-sm-44">
 				<div class="tutor-pt-40 tutor-pt-sm-60 <?php echo esc_attr( strlen( $s_content ) > 500 ? 'tutor-ad-body has-show-more' : '' ); ?>" id="content-section">
-					<div class="text-medium-h6 tutor-color-black">
+					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 						<?php _e( 'Description', 'tutor' ); ?>
 					</div>
-					<div class="text-regular-body tutor-color-black-60 tutor-pt-12 tutor-entry-content" id="short-text">
+					<div class="tutor-fs-6 tutor-color-black-60 tutor-pt-12 tutor-entry-content" id="short-text">
 						<?php
 						if ( strlen( $s_content ) > 500 ) {
 							echo wp_kses_post( substr_replace( $s_content, '...', 500 ) );
@@ -400,7 +402,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 						<span id="dots"></span>
 					</div>
 					<?php if ( strlen( $s_content ) > 500 ) : ?>
-						<div class="text-regular-body tutor-color-black-60 tutor-pt-12 tutor-entry-content" id="full-text">
+						<div class="tutor-fs-6 tutor-color-black-60 tutor-pt-12 tutor-entry-content" id="full-text">
 							<?php
 								echo wp_kses_post( $s_content );
 							?>
@@ -441,30 +443,30 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					<div class="tutor-assignment-result-table tutor-mt-32 tutor-mb-40">
 						<div class="tutor-ui-table-wrapper">
 							<table class="tutor-ui-table tutor-ui-table-responsive my-quiz-attempts">
-								<thead>
+								<thead class="tutor-fs-7 tutor-color-black-60">
 									<tr>
 										<th>
-											<span class="text-regular-small tutor-color-black-60">
+											<span>
 												<?php _e( 'Date', 'tutor' ); ?>
 											</span>
 										</th>
 										<th>
-											<span class="text-regular-small tutor-color-black-60">
+											<span>
 												<?php _e( 'Total Marks', 'tutor' ); ?>
 											</span>
 										</th>
 										<th>
-											<span class="text-regular-small tutor-color-black-60">
+											<span>
 												<?php _e( 'Pass Marks', 'tutor' ); ?>
 											</span>
 										</th>
 										<th>
-											<span class="text-regular-small tutor-color-black-60">
+											<span>
 												<?php _e( 'Earned Marks', 'tutor' ); ?>
 											</span>
 										</th>
 										<th>
-											<span class="text-regular-small tutor-color-black-60">
+											<span>
 												<?php _e( 'Result', 'tutor' ); ?>
 											</span>
 										</th>
@@ -474,7 +476,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 									<tr>
 										<td data-th="Date" class="date">
 											<div class="td-statement-info">
-												<span class="text-medium-small tutor-color-black">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php esc_html_e( tutor_utils()->convert_date_into_wp_timezone( $submitted_assignment->comment_date ) ) ?>
 												</span>
 											</div>
@@ -535,7 +537,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 					<div class="tutor-in-title tutor-fs-6 tutor-fw-medium tutor-color-black">
 					<?php _e( 'Instructor Note', 'tutor' ); ?>
 					</div>
-					<div class="tutor-in-body tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-pt-12 tutor-pt-sm-16">
+					<div class="tutor-in-body tutor-fs-6 tutor-color-black-60 tutor-pt-12 tutor-pt-sm-16">
 					<?php echo nl2br( get_comment_meta( $submitted_assignment->comment_ID, 'instructor_note', true ) ); ?>
 					</div>
 				</div>
@@ -584,7 +586,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 								</div>
 							<?php endif; ?>
 						</div>
-						<div class="text-regular-body tutor-color-black-60 tutor-pt-16 tutor-entry-content">
+						<div class="tutor-fs-6 tutor-color-black-60 tutor-pt-16 tutor-entry-content">
 							<?php echo nl2br( stripslashes( $submitted_assignment->comment_content ) ); ?>
 						</div>
 						<?php
@@ -603,10 +605,10 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 										?>
 												<div class="tutor-instructor-card">
 													<div class="tutor-icard-content">
-														<div class="text-regular-body tutor-color-black-70">
+														<div class="tutor-fs-6 tutor-color-black-70">
 													<?php echo tutor_utils()->array_get( 'name', $attached_file ); ?>
 														</div>
-														<div class="text-regular-small">Size: <?php echo tutor_utils()->array_get( 'size', $attached_file ); ?></div>
+														<div class="tutor-fs-7">Size: <?php echo tutor_utils()->array_get( 'size', $attached_file ); ?></div>
 													</div>
 													<div class="tutor-avatar tutor-is-xs flex-center">
 														<a download href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>" target="_blank">
@@ -627,10 +629,10 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 				<div class="tutor-assignment-description-details tutor-assignment-border-bottom tutor-pb-32 tutor-pb-sm-44">
 					<div class="tutor-pt-40 tutor-pt-sm-60 <?php echo esc_attr( strlen( $s_content ) > 500 ? 'tutor-ad-body has-show-more' : '' ); ?>" id="content-section">
-						<div class="text-medium-h6 tutor-color-black">
+						<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 							<?php _e( 'Description', 'tutor' ); ?>
 						</div>
-						<div class="text-regular-body tutor-color-black-60 tutor-pt-12 tutor-entry-content" id="short-text">
+						<div class="tutor-fs-6 tutor-color-black-60 tutor-pt-12 tutor-entry-content" id="short-text">
 							<?php
 							if ( strlen( $s_content ) > 500 ) {
 								echo wp_kses_post( substr_replace( $s_content, '...', 500 ) );
@@ -641,7 +643,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							<span id="dots"></span>
 						</div>
 						<?php if ( strlen( $s_content ) > 500 ) : ?>
-							<div class="text-regular-body tutor-color-black-60 tutor-pt-12 tutor-entry-content" id="full-text">
+							<div class="tutor-fs-6 tutor-color-black-60 tutor-pt-12 tutor-entry-content" id="full-text">
 								<?php
 									echo wp_kses_post( $s_content );
 								?>

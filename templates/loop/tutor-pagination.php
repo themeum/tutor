@@ -38,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <nav class="tutor-course-list-pagination tutor-ui-pagination">
 	<div class="tutor-pagination-hints">
-		<div class="text-regular-caption tutor-color-black-60">
+		<div class="tutor-fs-7 tutor-color-black-60">
 			<?php _e('Page', 'tutor'); ?>
 			<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 			<?php echo esc_html( $paged ); ?>

@@ -17,25 +17,25 @@ $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
         <?php
             if ($post->post_type === 'tutor_quiz') {
                 echo '<span class="tutor-icon-quiz-filled tutor-color-white tutor-mr-4"></span>';
-                echo '<span class="text-regular-caption tutor-color-design-white">';
+                echo '<span class="tutor-fs-7 tutor-color-design-white">';
                     esc_html_e( 'Quiz: ', 'tutor' );
                     the_title(); 
                 echo '</span>';
             } elseif ($post->post_type === 'tutor_assignments'){
                 echo '<span class="tutor-icon-assignment-filled tutor-color-white tutor-mr-4"></span>';
-                echo '<span class="text-regular-caption tutor-color-design-white">';
+                echo '<span class="tutor-fs-7 tutor-color-design-white">';
                     esc_html_e( 'Assignment: ', 'tutor' );
                     the_title(); 
                 echo '</span>';
             } elseif ($post->post_type === 'tutor_zoom_meeting'){
                 echo '<span class="tutor-icon-zoom tutor-color-white tutor-mr-4"></span>';
-                echo '<span class="text-regular-caption tutor-color-design-white">';
+                echo '<span class="tutor-fs-7 tutor-color-design-white">';
                     esc_html_e( 'Zoom Meeting: ', 'tutor' );
                     the_title(); 
                 echo '</span>';
             } else{
                 echo '<span class="tutor-icon-youtube-brand tutor-color-white tutor-mr-4"></span>';
-                echo '<span class="text-regular-caption tutor-color-design-white">';
+                echo '<span class="tutor-fs-7 tutor-color-design-white">';
                     esc_html_e( 'Lesson: ', 'tutor' );
                     the_title(); 
                 echo '</span>';

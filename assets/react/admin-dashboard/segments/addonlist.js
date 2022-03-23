@@ -28,7 +28,7 @@ const emptySearch = () => {
 				<div class="tutor-mb-32">
 					<img src=${emptyStateImg} alt="Empty State Illustration" />
 				</div>
-				<div class="tutor-fs-6 tutor-fw-normal tutor-color-black-60">No Addons Found!</div>
+				<div class="tutor-fs-6 tutor-color-black-60">No Addons Found!</div>
 			</div>
 		</div>`;
 	if (null !== addonsList) {
@@ -51,9 +51,9 @@ const displayAddons = (addons) => {
 							<img src="${url}" alt="${name}" /> 
 						</div>
 						<div class="addon-title tutor-mt-20">
-							<div class="text-medium-h6 color-text-primary tutor-mb-4">${name}</div>
+							<div class="tutor-fs-6 tutor-fw-medium tutor-mb-4">${name}</div>
 						</div>
-						<div class="addon-des text-regular-body color-text-subsued tutor-mt-20">
+						<div class="addon-des tutor-fs-6 tutor-color-black-60 tutor-mt-20">
 							${description}
 						</div>
 					</div>

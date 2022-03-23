@@ -6,10 +6,10 @@
 		if ( $total_questions ) {
 			?>
 				<div class="quiz-qno tutor-d-flex">
-					<span class="text-regular-body tutor-color-muted tutor-mr-12">
+					<span class="tutor-fs-6 tutor-color-muted tutor-mr-12">
 					<?php esc_html_e( 'Questions No', 'tutor' ); ?>:
 					</span>
-					<span class="text-bold-body tutor-color-black-70 tutor-quiz-question-counter">
+					<span class="tutor-fs-6 tutor-fw-bold tutor-color-black-70 tutor-quiz-question-counter">
 						<span>1</span>/<?php echo $total_questions; ?>
 					</span>
 				</div>
@@ -17,8 +17,8 @@
 			}
 		?>
 		<div class="quiz-total-attempt tutor-d-flex d-xs-none">
-			<span class="text-regular-body tutor-color-muted tutor-mr-12">Total <?php esc_html_e( 'Attempted', 'tutor' ); ?>:</span>
-			<span class="text-bold-body tutor-color-black-70">
+			<span class="tutor-fs-6 tutor-color-muted tutor-mr-12">Total <?php esc_html_e( 'Attempted', 'tutor' ); ?>:</span>
+			<span class="tutor-fs-6 tutor-fw-bold tutor-color-black-70">
 			<?php
 				if ( 0 != $attempts_allowed ) {
 					if ( $attempted_count ) {
@@ -50,12 +50,12 @@
 					</div>
 				<?php endif; ?>
 
-				<p class="text-regular-body tutor-color-muted tutor-text-nowrap tutor-nowrap-nocut tutor-mr-12">
+				<p class="tutor-fs-6 tutor-color-muted tutor-text-nowrap tutor-nowrap-nocut tutor-mr-12">
 					<?php esc_html_e( 'Time remaining: ', 'tutor' ); ?>
 				</p>
 				
 				<span id="tutor-quiz-time-update" 
-					class="text-medium-body tutor-text-nowrap tutor-nowrap-nocut <?php  $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
+					class="tutor-fs-6 tutor-fw-medium tutor-text-nowrap tutor-nowrap-nocut <?php  $remaining_time_secs < 0 ? 'color-text-error' : ''; ?>" 
 					data-attempt-settings="<?php echo esc_attr( json_encode( $is_started_quiz ) ); ?>" 
 					data-attempt-meta="<?php echo esc_attr( json_encode( $quiz_attempt_info ) ); ?>" 
 					data-quiz-duration="<?php echo esc_attr( tutor_utils()->quiz_time_duration_in_seconds( $quiz_time_type, $quiz_time_value ) ); ?>">
@@ -70,7 +70,7 @@
 	<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning tutor-align-items-center tutor-justify-content-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
 		<div class="flash-info tutor-d-flex tutor-align-items-center">
 			<span class="tutor-icon-warning-outline-circle-filled tutor-color-design-warning tutor-mr-8"></span>
-			<span class="text-regular-caption tutor-color-black-70 tutor-quiz-alert-text">
+			<span class="tutor-fs-7 tutor-color-black-70 tutor-quiz-alert-text">
 			</span>
 		</div>
 		<div class="flash-action">

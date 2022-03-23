@@ -61,7 +61,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					<div class="tutor-dashboard-review-header">
 
 						<div class="tutor-dashboard-review-heading">
-							<div class="tutor-dashboard-review-title tutor-fs-6 tutor-fw-normal tutor-color-black">
+							<div class="tutor-dashboard-review-title tutor-fs-6 tutor-color-black">
 								<?php esc_html_e( 'Course: ', 'tutor' ); ?>
 								<span class="tutor-fs-6 tutor-fw-medium" data-href="<?php echo esc_url( get_the_permalink( $review->comment_post_ID ) ); ?>">
 									<?php esc_html_e( get_the_title( $review->comment_post_ID ) ); ?>
@@ -75,7 +75,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							<div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-12">
 								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?> 
 							</div>
-							<div class="tutor-given-review-action tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-d-flex tutor-align-items-center">
+							<div class="tutor-given-review-action tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center">
 								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-d-flex tutor-align-items-center">
 									<i class="tutor-icon-edit-filled tutor-icon-24 tutor-mr-4"></i>
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
@@ -86,7 +86,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 								</span>
 							</div>
 						</div>
-						<div class="tutor-mt-24 tutor-fs-6 tutor-fw-normal tutor-color-muted">
+						<div class="tutor-mt-24 tutor-fs-6 tutor-color-muted">
 							<?php echo htmlspecialchars( stripslashes( $review->comment_content ) ); ?>
 						</div>
 					</div>
@@ -146,11 +146,11 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										<span class="tutor-icon-cross-filled"></span>
 									</button>
 									<div class="tutor-modal-body tutor-text-center">
-										<div class="tutor-rating-modal-title tutor-fs-4 tutor-fw-normal tutor-color-black-70 tutor-mb-16">
-											How would you rate this course?
+										<div class="tutor-rating-modal-title tutor-fs-4 tutor-color-black-70 tutor-mb-16">
+											<?php _e("How would you rate this course?", "tutor"); ?>
 										</div>
-										<div class="tutor-modal-text-rating tuor-text-medium-body tutor-color-black tutor-mb-12">
-											Average
+										<div class="tutor-modal-text-rating tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-12">
+											<?php _e("Average", "tutor"); ?>
 										</div>
 										<input type="hidden" name="course_id" value="<?php echo esc_html( $review->comment_post_ID ); ?>"/>
 										<input type="hidden" name="review_id" value="<?php echo esc_html( $review->comment_ID ); ?>"/>
@@ -165,14 +165,16 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 												</div>
 											</div>
 										</div>
+
 										<textarea class="tutor-form-control tutor-mt-28" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php esc_html_e( stripslashes( $review->comment_content ) ); ?></textarea>
+										
 										<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
-												<button data-tutor-modal-close type="button" data-action="back" class="tutor-modal-close-btn tutor-btn tutor-is-default">
-													<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-												</button>
-												<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
-													<?php esc_html_e( 'Update Review', 'tutor' ); ?>
-												</button>
+											<button data-tutor-modal-close type="button" data-action="back" class="tutor-modal-close-btn tutor-btn tutor-is-default">
+												<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+											</button>
+											<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
+												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
+											</button>
 										</div>
 									</div>
 								</div>

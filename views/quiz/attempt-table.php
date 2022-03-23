@@ -20,7 +20,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 				<?php
 					foreach ( $table_columns as $key => $column ) {
 						echo '<th>
-								<div class="text-regular-small tutor-color-black-60">
+								<div class="tutor-fs-7 tutor-color-black-60">
 									' . $column . '
 								</div>
 							</th>';
@@ -76,7 +76,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									?>
 											<td data-th="<?php echo $column; ?>">
 												<div class="td-statement-info">
-													<span class="text-regular-small tutor-color-black">
+													<span class="tutor-fs-7 tutor-color-black">
 														<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
 													</span>
 												</div>
@@ -88,7 +88,7 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 									?>
 											<td data-th="<?php echo $column; ?>">
 												<div class="td-statement-info">
-													<span class="tutor-fs-7 tutor-fw-normal tutor-color-black">
+													<span class="tutor-fs-7 tutor-color-black">
 														<?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt->attempt_ended_at ) ); ?>
 													</span>
 													<div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-margin-0">
@@ -104,15 +104,15 @@ if ( $context == 'course-single-previous-attempts' && is_array( $attempt_list ) 
 
 														?>
 																<div>
-																	<span class="tutor-fs-7 tutor-fw-normal tutor-color-black-70">
+																	<span class="tutor-fs-7 tutor-color-black-70">
 																		<?php _e( 'Student', 'tutor' ); ?>
-																	</span>: <span class="text-medium-small"> <?php echo $user_name; ?> </span>
+																	</span>: <span class="tutor-fs-7 tutor-fw-medium"> <?php echo $user_name; ?> </span>
 																</div>
 														<?php
 														} else {
 														?>
 															<?php if(!empty($user_name) && isset( $attempt->user_email ) ) : ?>
-																<span class="tutor-fs-7 tutor-fw-normal tutor-color-black-70"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
+																<span class="tutor-fs-7 tutor-color-black-70"><?php esc_html_e( 'Student', 'tutor' ); ?>: </span>
 																<span class="tutor-color-black-70 tutor-fs-8 tutor-fw-medium" title="<?php echo esc_attr( $attempt->user_email ); ?>">
 																	<?php echo esc_attr( isset($attempt->display_name) ? $attempt->display_name : $user_name ); ?>
 																</span>

@@ -13,6 +13,7 @@ $field_id     = 'field_' . $field['key'];
 			array(
 				'media_id'   => $option_value,
 				'input_name' => 'tutor_option[' . $field['key'] . ']',
+				'desc' => $field['desc'],
 			),
 			false
 		);

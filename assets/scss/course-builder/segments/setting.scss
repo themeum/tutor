@@ -347,6 +347,11 @@
 
 				li {
 					margin: 0;
+					&:not(:first-child) {
+						a {
+							border-top: 1px solid transparent;
+						}
+					}
 
 					a {
 						display: block;
@@ -357,6 +362,8 @@
 						border-left: 3px solid transparent;
 						display: flex;
 						align-items: center;
+						border-bottom: 1px solid transparent;
+						transition: background 300ms, border 300ms;
 						&:focus {
 							box-shadow: none;
 						}
@@ -375,18 +382,29 @@
 							font-size: 26px;
 							margin-right: 3px;
 						}
+						i.dashicons,
+						i.dashicons-before:before {
+							width: 26px;
+							height: 26px;
+							font-size: 20px;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+						}
 					}
 
 					&.active {
 						a {
 							background-color: white;
 							border-left: 3px solid var(--tutor-primary-color);
+							border-bottom-color: #e5e5e5;
+							border-top-color: #e5e5e5;
 						}
 					}
 
 					&:not(.active):not(:last-child) {
 						a {
-							border-bottom: 1px solid #e5e5e5;
+							// border-bottom-color: #e5e5e5;
 						}
 					}
 				}

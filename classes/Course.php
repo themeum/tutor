@@ -143,25 +143,30 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 1.9.8
 		 */
-		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 1 );
+		add_action( 'tutor_do_enroll_after_login_if_attempt', array( $this, 'enroll_after_login_if_attempt' ), 10, 2 );
 	
-		add_action( 'wp_ajax_tutor_update_course_content_parent', array($this, 'tutor_update_course_content_parent') );
+		add_action( 'wp_ajax_tutor_update_course_content_order', array($this, 'tutor_update_course_content_order') );
 	}
 
-	public function tutor_update_course_content_parent() {
+	public function tutor_update_course_content_order() {
 		tutor_utils()->checking_nonce();
 
-		$topic_id = (int)tutor_utils()->array_get('parent_topic_id', $_POST);
-		$content_id = (int)tutor_utils()->array_get('content_id', $_POST);
+		if(isset($_POST['content_parent'])) {
+			$topic_id = (int)tutor_utils()->array_get('parent_topic_id', $_POST['content_parent']);
+			$content_id = (int)tutor_utils()->array_get('content_id', $_POST['content_parent']);
 
-		if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
-			wp_send_json_success(array('message' => __('Access Denied!', 'tutor')));
-			exit;
+			if(!tutor_utils()->can_user_manage('topic', $topic_id)) {
+				wp_send_json_success(array('message' => __('Access Denied!', 'tutor')));
+				exit;
+			}
+
+			// Update the parent topic id of the content
+			global $wpdb;
+			$wpdb->update($wpdb->posts, array( 'post_parent' => $topic_id ), array( 'ID' => $content_id ));
 		}
-
-		// Update the parent topic id of the content
-		global $wpdb;
-		$wpdb->update($wpdb->posts, array( 'post_parent' => $topic_id ), array( 'ID' => $content_id ));
+		
+		// Save course content order
+		$this->save_course_content_order();
 
 		wp_send_json_success();
 	}
@@ -258,6 +263,59 @@ class Course extends Tutor_Base {
 		do_action('tutor_course_builder_metabox_after', get_the_ID());
 	}
 
+	private function save_course_content_order(){
+		global $wpdb;
+		
+		if ( ! empty( $_POST['tutor_topics_lessons_sorting'] ) ) {
+			$new_order = sanitize_text_field( stripslashes( $_POST['tutor_topics_lessons_sorting'] ) );
+			$order     = json_decode( $new_order, true );
+
+			if ( is_array( $order ) && count( $order ) ) {
+				$i = 0;
+				foreach ( $order as $topic ) {
+					$i++;
+					$wpdb->update(
+						$wpdb->posts,
+						array( 'menu_order' => $i ),
+						array( 'ID' => $topic['topic_id'] )
+					);
+
+					/**
+					 * Removing All lesson with topic
+					 */
+
+					$wpdb->update(
+						$wpdb->posts,
+						array( 'post_parent' => 0 ),
+						array( 'post_parent' => $topic['topic_id'] )
+					);
+
+					/**
+					 * Lesson Attaching with topic ID
+					 * sorting lesson
+					 */
+					if ( isset( $topic['lesson_ids'] ) ) {
+						$lesson_ids = $topic['lesson_ids'];
+					} else {
+						$lesson_ids = array();
+					}
+					if ( count( $lesson_ids ) ) {
+						foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
+							$wpdb->update(
+								$wpdb->posts,
+								array(
+									'post_parent' => $topic['topic_id'],
+									'menu_order'  => $lesson_key,
+								),
+								array( 'ID' => $lesson_id )
+							);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * @param $post_ID
 	 *
@@ -321,55 +379,9 @@ class Course extends Tutor_Base {
 		/**
 		 * Sorting Topics and lesson
 		 */
-		if ( ! empty( $_POST['tutor_topics_lessons_sorting'] ) ) {
-			$new_order = sanitize_text_field( stripslashes( $_POST['tutor_topics_lessons_sorting'] ) );
-			$order     = json_decode( $new_order, true );
+		$this->save_course_content_order();
 
-			if ( is_array( $order ) && count( $order ) ) {
-				$i = 0;
-				foreach ( $order as $topic ) {
-					$i++;
-					$wpdb->update(
-						$wpdb->posts,
-						array( 'menu_order' => $i ),
-						array( 'ID' => $topic['topic_id'] )
-					);
-
-					/**
-					 * Removing All lesson with topic
-					 */
-
-					$wpdb->update(
-						$wpdb->posts,
-						array( 'post_parent' => 0 ),
-						array( 'post_parent' => $topic['topic_id'] )
-					);
-
-					/**
-					 * Lesson Attaching with topic ID
-					 * sorting lesson
-					 */
-					if ( isset( $topic['lesson_ids'] ) ) {
-						$lesson_ids = $topic['lesson_ids'];
-					} else {
-						$lesson_ids = array();
-					}
-					if ( count( $lesson_ids ) ) {
-						foreach ( $lesson_ids as $lesson_key => $lesson_id ) {
-							$wpdb->update(
-								$wpdb->posts,
-								array(
-									'post_parent' => $topic['topic_id'],
-									'menu_order'  => $lesson_key,
-								),
-								array( 'ID' => $lesson_id )
-							);
-						}
-					}
-				}
-			}
-		}
-
+		// Additional data like course intro video
 		if ( $additional_data_edit ) {
 			if ( ! empty( $_POST['video']['source'] ) ) { // Video
 				$video = tutor_utils()->array_get( 'video', $_POST );
@@ -1280,12 +1292,12 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.9.8
 	 */
-	public function enroll_after_login_if_attempt( $course_id ) {
+	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
 		$course_id = sanitize_text_field( $course_id );
 		if ( $course_id ) {
 			$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 			if ( ! $is_purchasable ) {
-				tutor_utils()->do_enroll( $course_id );
+				tutor_utils()->do_enroll( $course_id, $order_id = 0, $user_id );
 				do_action( 'guest_attempt_after_enrollment', $course_id );
 			}
 		}

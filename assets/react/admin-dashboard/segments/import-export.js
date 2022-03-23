@@ -81,7 +81,7 @@ function tutor_option_history_load(dataset) {
 			let badgeStatus = dataValue.datatype == 'saved' ? ' label-primary-wp' : ' label-refund';
 			output += `<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
-						<p class="text-medium-small">${dataValue.history_date}
+						<p class="tutor-fs-7 tutor-fw-medium">${dataValue.history_date}
 						<span class="tutor-badge-label tutor-ml-16${badgeStatus}"> ${dataValue.datatype}</span> </p>
 					</div>
 					<div class="tutor-option-field-input">
@@ -99,13 +99,13 @@ function tutor_option_history_load(dataset) {
             <li>
               <a class="export_single_settings" data-id="${dataKey}">
                 <span class="icon tutor-icon-msg-archive-filled tutor-color-design-white"></span>
-                <span class="text-regular-body tutor-color-white">Download</span>
+                <span class="tutor-fs-6 tutor-color-white">Download</span>
               </a>
             </li>
             <li>
               <a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
                 <span class="icon tutor-icon-delete-fill-filled tutor-color-design-white"></span>
-                <span class="text-regular-body tutor-color-white">Delete</span>
+                <span class="tutor-fs-6 tutor-color-white">Delete</span>
               </a>
             </li>
             </ul>
@@ -114,7 +114,7 @@ function tutor_option_history_load(dataset) {
         </div>`;
 		});
 	} else {
-		output += `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p class="text-medium-small">No settings data found.</p></div></div>`;
+		output += `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p class="tutor-fs-7 tutor-fw-medium">No settings data found.</p></div></div>`;
 	}
 	const heading = `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p>Date</p></div></div>`;
 

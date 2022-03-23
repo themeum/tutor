@@ -1,4 +1,4 @@
-'use strict';
+import {get_response_message} from '../../helper/response';
 
 // SVG Icons Totor V2
 const tutorIconsV2 = {
@@ -214,10 +214,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		<a data-tab="${section_slug}" data-key="field_${field_key}">
 			<div class="search_result_title">
 			${magnifyingGlass}
-			<span class="text-regular-caption">${text}</span>
+			<span class="tutor-fs-7">${text}</span>
 			</div>
 			<div class="search_navigation">
-			<div class="nav-track text-regular-small">
+			<div class="nav-track tutor-fs-7">
 				<span>${section}</span>
 				<span>${navTrack}</span>
 			</div>
@@ -227,71 +227,87 @@ document.addEventListener('DOMContentLoaded', function() {
 		return output;
 	}
 
+	let wait_for_input;
 	$('#search_settings').on('input', function(e) {
 		e.preventDefault();
 
-		if (e.target.value) {
-			var searchKey = this.value;
-			$.ajax({
-				url: window._tutorobject.ajaxurl,
-				type: 'POST',
-				data: {
-					action: 'tutor_option_search',
-					keyword: searchKey,
-				},
-				// beforeSend: function () {},
-				success: function(data) {
-					// console.log(data.data);
-					// return false;
-					var output = '',
-						wrapped_item = '',
-						notfound = true,
-						item_text = '',
-						section_slug = '',
-						section_label = '',
-						block_label = '',
-						matchedText = '',
-						searchKeyRegex = '',
-						field_key = '',
-						result = data.data.fields;
-
-					Object.values(result).forEach(function(item, index, arr) {
-						item_text = item.label;
-						section_slug = item.section_slug;
-						section_label = item.section_label;
-						block_label = item.block_label;
-						field_key = item.event ? item.key + '_' + item.event : item.key;
-						searchKeyRegex = new RegExp(searchKey, 'ig');
-						// console.log(item_text.match(searchKeyRegex));
-						matchedText = item_text.match(searchKeyRegex)?.[0];
-
-						if (matchedText) {
-							wrapped_item = item_text.replace(
-								searchKeyRegex,
-								`<span style='color: #212327; font-weight:500'>${matchedText}</span>`,
-							);
-
-							output += view_item(wrapped_item, section_slug, section_label, block_label, field_key);
-							notfound = false;
-						}
-					});
-					if (notfound) {
-						output += `<div class="no_item"> ${warning} No Results Found</div>`;
-					}
-					$('.search_result')
-						.html(output)
-						.addClass('show');
-					output = '';
-					// console.log("working");
-				},
-				complete: function() {
-					// Active navigation element
-					navigationTrigger();
-				},
-			});
-		} else {
-			document.querySelector('.search-popup-opener').classList.remove('show');
+		if(wait_for_input) {
+			// Prevent high rate input
+			window.clearTimeout(wait_for_input);
 		}
+
+		wait_for_input = window.setTimeout(()=>{
+			if (e.target.value) {
+				var searchKey = this.value;
+				$.ajax({
+					url: window._tutorobject.ajaxurl,
+					type: 'POST',
+					data: {
+						action: 'tutor_option_search',
+						keyword: searchKey,
+					},
+					// beforeSend: function () {},
+					success: function(data) {
+
+						if(!data.success) {
+							tutor_toast(__('Error', 'tutor'), get_response_message(data), 'error');
+							return;
+						}
+
+						// console.log(data.data);
+						// return false;
+						var output = '',
+							wrapped_item = '',
+							notfound = true,
+							item_text = '',
+							section_slug = '',
+							section_label = '',
+							block_label = '',
+							matchedText = '',
+							searchKeyRegex = '',
+							field_key = '',
+							result = data.data.fields;
+
+						Object.values(result).forEach(function(item, index, arr) {
+							item_text = item.label;
+							section_slug = item.section_slug;
+							section_label = item.section_label;
+							block_label = item.block_label;
+							field_key = item.event ? item.key + '_' + item.event : item.key;
+							searchKeyRegex = new RegExp(searchKey, 'ig');
+							// console.log(item_text.match(searchKeyRegex));
+							matchedText = item_text.match(searchKeyRegex)?.[0];
+
+							if (matchedText) {
+								wrapped_item = item_text.replace(
+									searchKeyRegex,
+									`<span style='color: #212327; font-weight:500'>${matchedText}</span>`,
+								);
+
+								output += view_item(wrapped_item, section_slug, section_label, block_label, field_key);
+								notfound = false;
+							}
+						});
+						if (notfound) {
+							output += `<div class="no_item"> ${warning} No Results Found</div>`;
+						}
+						$('.search_result')
+							.html(output)
+							.addClass('show');
+						output = '';
+						// console.log("working");
+					},
+					complete: function() {
+						// Active navigation element
+						navigationTrigger();
+					},
+				});
+			} else {
+				document.querySelector('.search-popup-opener').classList.remove('show');
+			}
+
+			wait_for_input = undefined;
+		}, 500);
 	});
 
 	/**

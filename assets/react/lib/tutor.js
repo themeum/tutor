@@ -430,10 +430,10 @@ window.tutor_toast = function(title, description, type) {
                 <span class="tutor-icon-48 ${icon} tutor-mr-12"></span>
             </div>
             <div class="tutor-large-notification-content tutor-ml-5">
-                <div class="tutor-large-notification-title text-bold-h6 tutor-mt-12">
+                <div class="tutor-large-notification-title tutor-fs-6 tutor-fw-bold tutor-mt-12">
                     ${title}
                 </div>
-                <div class="text-regular-caption tutor-mt-8">
+                <div class="tutor-fs-7 tutor-mt-8">
                     ${description}
                 </div>
             </div>

@@ -22,19 +22,12 @@ $index       = 0;
 
 do_action( 'tutor_course/single/before/topics' );
 ?>
-
-<div class="tutor-course-topics-header">
-	<div class="tutor-course-topics-header-left">
-		<div class="text-medium-h6 tutor-color-black">
-			<span>
-				<?php
-					$title = __( 'Course Curriculum', 'tutor' );
-					echo esc_html( apply_filters( 'tutor_course_topics_title', $title ) );
-				?>
-			</span>
-		</div>
-	</div>
-</div>
+<h3 class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mb-24">
+	<?php
+		$title = __( 'Course Curriculum', 'tutor' );
+		echo esc_html( apply_filters( 'tutor_course_topics_title', $title ) );
+	?>
+</h3>
 
 <?php if ( $topics->have_posts() ) : ?>
 	<div class="tutor-accordion tutor-mt-24">
@@ -45,15 +38,14 @@ do_action( 'tutor_course/single/before/topics' );
 			$index++;
 		?>
 			<div class="tutor-accordion-item">
-				<div class="tutor-accordion-item-header">
+				<h4 class="tutor-accordion-item-header">
 					<?php the_title(); ?>
-					<?php if ( ! empty( $topic_summery ) ) { ?>
+					<?php if ( ! empty( $topic_summery ) ): ?>
 						<div class="tooltip-wrap tooltip-icon">
 							<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $topic_summery ); ?></span>
 						</div>
-					<?php } ?>
-
-				</div>
+					<?php endif; ?>
+				</h4>
 				<?php
 					$topic_contents = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
 					if ( $topic_contents->have_posts() ) {
@@ -61,7 +53,7 @@ do_action( 'tutor_course/single/before/topics' );
 						<div class="tutor-accordion-item-body">
 							<div class="tutor-accordion-item-body-content">
 								<ul class="tutor-courses-lession-list">
-								<?php while ( $topic_contents->have_posts() ) : ?>
+									<?php while ( $topic_contents->have_posts() ) : ?>
 										<?php
 											$topic_contents->the_post();
 											global $post;
@@ -81,44 +73,44 @@ do_action( 'tutor_course/single/before/topics' );
 										<li>
 											<div class="tutor-courses-lession-list-single-item">
 												<span class="<?php echo $topic_content_icon; ?> tutor-icon-24 tutor-color-black-30 tutor-mr-16"></span>
-												<span class="tutor-fs-6 tutor-fw-normal tutor-color-black">
+												<h5 class="tutor-fs-6 tutor-color-black">
 													<?php
 														$lesson_title = '';
 
 														// Add zoom meeting countdown info
 														$countdown = '';
-													if ( $post->post_type === 'tutor_zoom_meeting' ) {
-														$zoom_meeting = tutor_zoom_meeting_data( $post->ID );
-														$countdown    = '<div class="tutor-zoom-lesson-countdown tutor-lesson-duration" data-timer="' . $zoom_meeting->countdown_date . '" data-timezone="' . $zoom_meeting->timezone . '"></div>';
-													}
+														if ( $post->post_type === 'tutor_zoom_meeting' ) {
+															$zoom_meeting = tutor_zoom_meeting_data( $post->ID );
+															$countdown    = '<div class="tutor-zoom-lesson-countdown tutor-lesson-duration" data-timer="' . $zoom_meeting->countdown_date . '" data-timezone="' . $zoom_meeting->timezone . '"></div>';
+														}
 
 														// Show clickable content if enrolled
 														// Or if it is public and not paid, then show content forcefully
-													if ( $is_enrolled || ( get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes' && ! tutor_utils()->is_course_purchasable( $course_id ) ) ) {
-														$lesson_title .= "<a href='" . get_the_permalink() . "'> " . get_the_title() . ' </a>';
+														if ( $is_enrolled || ( get_post_meta( $course_id, '_tutor_is_public_course', true ) == 'yes' && ! tutor_utils()->is_course_purchasable( $course_id ) ) ) {
+															$lesson_title .= "<a href='" . get_the_permalink() . "'> " . get_the_title() . ' </a>';
 
-														if ( $countdown ) {
-															if ( $zoom_meeting->is_expired ) {
-																$lesson_title .= '<span class="tutor-zoom-label">' . __( 'Expired', 'tutor' ) . '</span>';
-															} elseif ( $zoom_meeting->is_started ) {
-																$lesson_title .= '<span class="tutor-zoom-label tutor-zoom-live-label">' . __( 'Live', 'tutor' ) . '</span>';
+															if ( $countdown ) {
+																if ( $zoom_meeting->is_expired ) {
+																	$lesson_title .= '<span class="tutor-zoom-label">' . __( 'Expired', 'tutor' ) . '</span>';
+																} elseif ( $zoom_meeting->is_started ) {
+																	$lesson_title .= '<span class="tutor-zoom-label tutor-zoom-live-label">' . __( 'Live', 'tutor' ) . '</span>';
+																}
+																$lesson_title .= $countdown;
 															}
-															$lesson_title .= $countdown;
-														}
 
-														echo $lesson_title;
-													} else {
-														$lesson_title .= get_the_title();
-														echo apply_filters( 'tutor_course/contents/lesson/title', $lesson_title, get_the_ID() );
-													}
+															echo $lesson_title;
+														} else {
+															$lesson_title .= get_the_title();
+															echo apply_filters( 'tutor_course/contents/lesson/title', $lesson_title, get_the_ID() );
+														}
 													?>
-												</span>
+												</h5>
 											</div>
 											<div>
-												<span class="text-regular-caption tutor-color-muted">
+												<span class="tutor-fs-7 tutor-color-muted">
 													<?php echo $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : ''; ?>
 												</span>
-												<span class="<?php echo $is_locked ? ' tutor-icon-lock-stroke-filled' : 'tutor-icon-eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20"></span>
+												<span class="<?php echo $is_locked ? ' tutor-icon-lock-stroke-filled' : 'tutor-icon-eye-filled'; ?> tutor-icon-24 tutor-color-black-20 tutor-ml-20" area-hidden="true"></span>
 											</div>
 										</li>
 									<?php endwhile; ?>
