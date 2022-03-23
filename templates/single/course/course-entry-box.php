@@ -58,11 +58,9 @@
 			ob_start();
 
 			// Course Info
-			$completed_lessons   = tutor_utils()->get_completed_lesson_count_by_course();
 			$completed_percent   = tutor_utils()->get_course_completed_percent();
 			$is_completed_course = tutor_utils()->is_completed_course();
-			$completed_anyway 	 = $is_completed_course || $completed_percent >= 100;
-			$retake_course       = is_single_course() && tutor_utils()->get_option( 'course_retake_feature', false ) && $completed_anyway;
+			$retake_course       = tutor_utils()->can_user_retake_course();
 			$course_id           = get_the_ID();
 			$course_progress     = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 			?>
@@ -129,7 +127,7 @@
 			if ( ! $is_completed_course ) {
 				ob_start();
 				?>
-				<form method="post">
+				<form method="post" class="tutor-mt-20">
 					<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
@@ -144,15 +142,24 @@
 			}
 
 			?>
-				<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-d-flex tutor-justify-content-center">
-					<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-8"></span>
-					<span class="tutor-enrolled-info-text">
-					<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
-						<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
-						<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) ); ?>
+				<?php
+					// check if has enrolled date.
+					$post_date = is_object( $is_enrolled ) && isset( $is_enrolled->post_date ) ? $is_enrolled->post_date : '';
+					if ( '' !== $post_date ) :
+				?>
+					<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-d-flex tutor-justify-content-center">
+						<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-8"></span>
+						<span class="tutor-enrolled-info-text">
+							<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
+							<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
+								
+							<?php
+								echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post_date ) );
+							?>
+							</span>
 						</span>
-					</span>
-				</div>
+					</div>
+				<?php endif; ?>
 			<?php
 			do_action( 'tutor_course/single/actions_btn_group/after' );
 			echo apply_filters( 'tutor/course/single/entry-box/is_enrolled', ob_get_clean(), get_the_ID() );

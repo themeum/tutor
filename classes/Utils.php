@@ -9478,4 +9478,17 @@ class Utils {
 			get_footer();
 		}
 	}
+
+	public function can_user_retake_course(){
+		if(!$this->is_enrolled()) {
+			return false;
+		}
+
+		$completed_lessons = tutor_utils()->get_completed_lesson_count_by_course();
+		$completed_percent = tutor_utils()->get_course_completed_percent();
+		$is_completed_course = tutor_utils()->is_completed_course();
+		$retake_course = tutor_utils()->get_option( 'course_retake_feature', false ) && ( $is_completed_course || $completed_percent >= 100 );
+	
+		return $retake_course;
+	}
 }

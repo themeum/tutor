@@ -292,6 +292,7 @@ class Options_V2
 	 */
 	public function tutor_option_save()
 	{
+		global $wpdb;
 		tutor_utils()->checking_nonce();
 
 		!current_user_can('manage_options') ? wp_send_json_error() : 0;
@@ -304,8 +305,9 @@ class Options_V2
 
 		$old_dashboard_id = get_tutor_option('tutor_dashboard_page_id');
 		$dashboard_update_id = isset($option['tutor_dashboard_page_id']) && null !== $option['tutor_dashboard_page_id'] ? $option['tutor_dashboard_page_id'] : null;
+		$email_footer_text = json_encode(wp_unslash( $option['email_footer_text'] ));
 
-		$option['email_footer_text'] = !empty($option['email_footer_text']) ? htmlentities(wp_unslash($option['email_footer_text'])) : '';
+		$option['email_footer_text'] = !empty($option['email_footer_text']) ? $email_footer_text : '';
 
 		$option = apply_filters('tutor_option_input', $option);
 
@@ -689,14 +691,6 @@ class Options_V2
 								),
 								'default'        => 'free',
 								'desc'           => __('Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor'),
-							),
-							array(
-								'key'         => 'enable_guest_course_cart',
-								'type'        => 'toggle_switch',
-								'label'       => __('Enable Guest Mode', 'tutor'),
-								'label_title' => __('', 'tutor'),
-								'default'     => 'off',
-								'desc'        => __('Allow customers to place orders without an account.', 'tutor'),
 							),
 							array(
 								'key'         => 'enable_revenue_sharing',
