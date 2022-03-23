@@ -180,7 +180,7 @@ $alertVariations: (
 .tutor-alert {
 	@extend .text-regular-caption;
 	border-radius: 6px;
-	margin-bottom: 10px;
+	margin-bottom: 16px;
 	display: grid;
 	@include breakpoint-min(mobile) {
 		grid-template-columns: 1fr auto;

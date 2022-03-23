@@ -1,5 +1,5 @@
 <div class="tutor-option-main-title">
-	<h2><?php _e('Import/Export','tutor'); ?></h2>
+	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black"><?php _e('Import/Export','tutor'); ?></div>
 </div>
 
 <?php
@@ -7,14 +7,13 @@ tutor_alert(
 	__( 'Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.', 'tutor' ),
 	'warning'
 );
-// pr(get_option( 'tutor_default_option' ));
-// pr(get_option( 'tutor_option' ));
 ?>
 
+<div class="tutor-option-single-item tutor-mb-32">
+	<div class="tutor-option-group-title tutor-mb-16">
+		<div class="tutor-fs-6 tutor-color-muted"><?php _e('Export','tutor'); ?></div>
+	</div>
 
-
-<div class="tutor-option-single-item">
-	<h4><?php _e('Export','tutor'); ?></h4>
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
@@ -30,9 +29,10 @@ tutor_alert(
 	</div>
 </div>
 
-
-<div class="tutor-option-single-item item-variation-dragndrop import-setting">
-	<h4><?php _e('Import Settings','tutor'); ?></h4>
+<div class="tutor-option-single-item tutor-mb-32 item-variation-dragndrop import-setting">
+	<div class="tutor-option-group-title tutor-mb-16">
+		<div class="tutor-fs-6 tutor-color-muted"><?php _e('Import Settings','tutor'); ?></div>
+	</div>
 
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row tutor-d-block d-block">
@@ -55,8 +55,10 @@ tutor_alert(
 	</div>
 </div>
 
-<div class="tutor-option-single-item item-variation-table settings-history">
-	<h4><?php _e('Settings History','tutor'); ?></h4>
+<div class="tutor-option-single-item tutor-mb-32 item-variation-table settings-history">
+	<div class="tutor-option-group-title tutor-mb-16">
+		<div class="tutor-fs-6 tutor-color-muted"><?php _e('Settings History','tutor'); ?></div>
+	</div>
 	<div class="item-wrapper history_data">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
@@ -111,8 +113,10 @@ tutor_alert(
 	</div>
 </div>
 
-<div class="tutor-option-single-item">
-	<h4><?php _e('Reset Settings','tutor'); ?></h4>
+<div class="tutor-option-single-item tutor-mb-32">
+	<div class="tutor-option-group-title tutor-mb-16">
+		<div class="tutor-fs-6 tutor-color-muted"><?php _e('Reset Settings','tutor'); ?></div>
+	</div>
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">

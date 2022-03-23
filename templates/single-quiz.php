@@ -83,7 +83,7 @@ ob_start();
     </div>
 
     <div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
-        <div class="tutor-mobile-top-nav d-grid">
+        <div class="tutor-mobile-top-nav tutor-d-grid">
             <a href="<?php echo get_the_permalink($previous_id); ?>">
                 <span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
             </a>
@@ -96,7 +96,7 @@ ob_start();
     </div>
 
 	<?php ob_start(); ?>
-		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex justify-content-center tutor-mt-80 tutor-pb-80">
+		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-content-center tutor-mt-80 tutor-pb-80">
 			<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 			<?php

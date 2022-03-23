@@ -69,7 +69,6 @@
 						<?php
 							$replies = get_comments(
 								array(
-									'status'  => 'approve',
 									'post_id' => $lesson_id,
 									'parent'  => $comment->comment_ID,
 								)

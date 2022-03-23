@@ -294,13 +294,14 @@ tutor_load_template_from_custom_path( $filters_template, $filters );
 								<div class="tutor-fs-7 tutor-color-black">
 									<?php
 										$price = tutor_utils()->get_course_price( $post->ID );
-									if ( null === $price ) {
-										esc_html_e( 'Free', 'tutor' );
-									} else {
-										echo function_exists('wc_price') ? wp_kses_post( wc_price( $price ) ) : '';
-									}
-									// Alert class for course status.
-									$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : ( 'private' === $post->post_status ? 'select-default' : 'select-default' ) ) ) );
+										if ( null == $price ) {
+											esc_html_e( 'Free', 'tutor' );
+										} 
+										else {
+											echo $price; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										}
+										// Alert class for course status.
+										$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : ( 'private' === $post->post_status ? 'select-default' : 'select-default' ) ) ) );
 									?>
 								</div>
 							</td>
