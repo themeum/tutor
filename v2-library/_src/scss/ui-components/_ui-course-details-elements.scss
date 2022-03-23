@@ -1,13 +1,11 @@
-.tutor-course-details-elements {
-}
-
 // Course Details Page
 .tutor-course-details {
+	// .tutor-course-details-page
 	&-page {
 		.tutor-course-details-tab {
 			.tab-item-content {
 				p {
-					@extend .text-regular-body;
+					@extend .tutor-text-regular-body;
 					@extend .tutor-color-black-60;
 				}
 			}
@@ -27,9 +25,6 @@
 		.tutor-course-thumbnail-bg img {
 			border-radius: 6px;
 		}
-	}
-
-	&-page-main-left {
 	}
 }
 
@@ -295,9 +290,7 @@
 
 // Course Details Page
 .tutor-course-details-page {
-	// border: 1px solid;
 	ul.tutor-course-details-widget-list {
-		// margin: 0;
 		padding: 0;
 		list-style: none;
 	}
@@ -317,22 +310,18 @@
 		}
 	}
 
+	// .tutor-course-details-page-main
 	&-main {
-		display: grid;
-		grid-gap: 30px;
 		@include breakpoint-min(desktop) {
+			display: grid;
+			grid-gap: 30px;
 			grid-template-columns: 8fr 4fr;
 		}
 		@include breakpoint-min(desktop-lg) {
 			grid-gap: 55px;
 		}
-
-		&-left {
-		}
-		&-right {
-		}
 	}
-}
+} // end of .tutor-course-details-page
 
 .tutor-has-showmore {
 	.tutor-showmore-content {
@@ -507,8 +496,6 @@
 		align-items: center;
 		padding: 30px;
 
-		&-avg {
-		}
 		&-all {
 			.rating-numbers {
 				display: grid;
