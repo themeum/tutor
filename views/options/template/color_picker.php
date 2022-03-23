@@ -9,8 +9,12 @@
 $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] : array();
 
 ?>
-<div class="tutor-option-single-item <?php echo esc_attr( $blocks['slug'] ); ?>">
-	<?php echo ( isset( $blocks['label'] ) && ! empty( $blocks['label'] ) ) ? '<h4>' . esc_attr( $blocks['label'] ) . '</h4>' : ''; ?>
+<div class="tutor-option-single-item tutor-mb-32 <?php echo esc_attr( $blocks['slug'] ); ?>">
+	<?php if ( isset($blocks['label']) ) : ?>
+		<div class="tutor-option-group-title tutor-mb-16">
+			<div class="tutor-fs-6 tutor-color-muted"><?php echo esc_attr($blocks['label']); ?></div>
+		</div>
+	<?php endif; ?>
 	<div class="item-grid">
 		<div class="item-wrapper color-preset-picker">
 			<?php
@@ -91,7 +95,7 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 			}
 			?>
 			<div class="more_button tutor-fs-6">
-				<i class="tutor-icon-plus-filled"></i>
+				<i class="tutor-icon-plus-filled" area-hidden="true"></i>
 				<span><?php _e('Show More', 'tutor'); ?></span>
 			</div>
 		</div>

@@ -180,12 +180,6 @@
 	// overflow-y: hidden;
 }
 
-.tutor-option-nav-item h4,
-.tutor-option-single-item h4 {
-	@extend .text-regular-body;
-	color: var(--tutor-text-subsued);
-}
-
 .tutor-option-main-title {
 	display: flex;
 	align-items: center;
@@ -215,22 +209,19 @@
 }
 
 .tutor-option-single-item {
-	margin-bottom: 20px;
 	h4 {
 		margin-bottom: 12px;
 	}
+	
 	.item-wrapper {
 		background: var(--tutor-bg-white);
 		border: 1px solid #d3d4d9;
 		box-sizing: border-box;
 		border-radius: 6px;
 		padding: 20px 26px;
+
 		&:not(:last-child) {
 			margin-bottom: 8px;
-		}
-		// transition: all 500ms;
-		&:hover {
-			// box-shadow: 0 0 30px -25px #000;
 		}
 	}
 

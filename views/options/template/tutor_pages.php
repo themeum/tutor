@@ -2,24 +2,25 @@
 $tutor_pages = tutor_utils()->tutor_pages();
 ?>
 <div class="tutor-option-main-title">
-	<h2>Tutor Pages</h2>
+	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black"><?php _e('Tutor Pages','tutor'); ?></div>
 </div>
 
-<?php	tutor_alert(__('Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor'), 'primary');
- ?>
+<?php tutor_alert(__('Note: This tool will install all the missing Tutor pages. Pages already defined and set up will not be replaced.', 'tutor'), 'primary'); ?>
 
-<div class="tutor-option-single-item item-variation-table table-col-3 all-pages">
-	<h4>All Pages</h4>
+<div class="tutor-option-single-item tutor-mb-32 item-variation-table table-col-3 all-pages">
+	<div class="tutor-option-group-title tutor-mb-16">
+		<div class="tutor-fs-6 tutor-color-muted"><?php _e('All Pages','tutor'); ?></div>
+	</div>
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
-				<p>ID</p>
+				<p><?php _e('ID','tutor'); ?></p>
 			</div>
 			<div class="tutor-option-field-label">
-				<p>Page Name</p>
+				<?php _e('Page Name','tutor'); ?>
 			</div>
 			<div class="tutor-option-field-label">
-				<p>Status</p>
+				<?php _e('Status','tutor'); ?>
 			</div>
 		</div>
 		<?php
@@ -46,8 +47,8 @@ $tutor_pages = tutor_utils()->tutor_pages();
 			<div class="tutor-option-field-label">
 				<?php
 				if ( $page['page_exists'] && $page['page_visible'] ) {
-						$page = get_post( $page_id );
-						echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='tutor-fs-7 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-center'><span class='icon-check tutor-icon-mark-cricle tutor-icon-20 tutor-color-design-success'></span>/{$page->post_name}</a>";
+					$page = get_post( $page_id );
+					echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='tutor-fs-7 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-center'><span class='icon-check tutor-icon-mark-cricle tutor-icon-20 tutor-color-design-success'></span>/{$page->post_name}</a>";
 				}
 				?>
 			</div>
@@ -65,5 +66,4 @@ $tutor_pages = tutor_utils()->tutor_pages();
 			<button class="tutor-btn tutor-is-sm" type="submit"><?php esc_html_e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
 		</p>
 	</form>
-
 </div><br>
