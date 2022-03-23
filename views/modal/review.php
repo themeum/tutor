@@ -18,7 +18,9 @@
 
                 <div class="tutor-star-rating-container">
                     <h6 class="tutor-fs-4 tutor-color-black-70 tutor-mb-16"><?php _e('How would you rate this course?', 'tutor'); ?></h6>
-                    <div class="tutor-modal-text-rating tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-12"><?php _e('Select Rating', 'tutor'); ?></div>
+                    <div class="tutor-modal-text-rating tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mb-12">
+                        <?php _e('Select Rating', 'tutor'); ?>
+                    </div>
 
                     <div class="tutor-form-group tutor-stars">
                         <?php

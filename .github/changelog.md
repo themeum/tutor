@@ -1,8 +1,42 @@
 # TutorLMS Changelog
 
-### 2.0.1 - March 21, 2022
+### 2.0.1 - March 22, 2022
 
-* Fix: To be added
+* Fix: In the courses page, AJAX based “Add to Cart” is not working
+* Fix: In Backend, search field Clear is not removing parameter from the URL
+* Fix: “Automatically load next course” is not working
+* Fix: HTML5 video input is active even it is unselected from Settings
+* Fix: Gutenberg content is not working in Single Course about section
+* Fix: Dedicated Login Page had error, also Redirection is not working
+* Fix: On Enrollment error is occurring while sending Email
+* Fix: My Profile page gives error after updating to latest version
+* Fix: My Profile page date not being translatable
+* Fix: Instructor Course menu was showing in student’s mobile view
+* Fix: PmPro is visible in Monetization even if add-on disabled
+* Fix: After saving Settings, old values were getting reseted
+* Fix: Lesson and Quiz order is not being saved
+* Fix: Login requires for WooCommerce enabled Course while add to cart
+* Fix: Quiz export is adding extra answer for questions
+* Fix: Enable Course Content Access is not working for Admin/Instructor without
+* Fix: In Lesson comment reply, author name is hard coded
+* Fix: Zoom Layout of backend course builder is broken
+* Fix: Email Template’s background, typography, logo and margin padding has issue
+* Fix: Sticky calendar positioning had issue
+* Fix: In Zoom Meeting List page at Backend, the Expired button has design issue
+* Fix: Create Zoom Meeting page design has issue
+* Fix: Course Placeholder height has issue
+* Fix: Quiz List view responsiveness has issue
+* Fix: The Registration Date Time is not being Translated
+* Fix: HTML code is appearing on the Course Details page
+* Fix: Profile Page is showing error if language is changed
+* Fix: Forgot Password option is showing Alert wrongly
+* Fix: In front Course Builder while uploading video, metabox shows warning
+* Fix: Backend Editor is not accepting Unicode Character if DB collation is non-utf
+* Update: Tutor Player is upgraded
+* Update: Email Logo is coming from course base logo
+* Update: WooCommerce “Auto redirect to Course” is added on order completion
+* Update: Email footer text is now from default Content
+
 
 ### 2.0.0 - March 15, 2022
 
