@@ -94,6 +94,6 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
 
 
         } else{
-            echo wp_kses( $free_html, array( 'div', 'a', 'span', 'i' ) );
+            echo tutor_kses_html( $free_html );
     }
 ?>
