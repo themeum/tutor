@@ -14,7 +14,7 @@
 
 .tutor-dropzone {
 	&.tutor-drop-over {
-		border: 2px dashed rgb(160, 42, 42) !important;
+		border: 2px dashed var(--tutor-primary-color) !important;
 	}
 	input {
 		display: none;
@@ -312,7 +312,7 @@
 					> input {
 						&:checked {
 							& + .tutor-multiple-checkbox {
-								box-shadow: 0px 0px 0px 2px #3057d5;
+								box-shadow: 0px 0px 0px 2px var(--tutor-primary-color);
 								span.tutor-icon-checkbox {
 									background-color: $design-brand;
 									&:before {
@@ -341,7 +341,7 @@
 					min-width: 240px;
 					border: 1px solid $black-20;
 					border-radius: 6px;
-					padding: 9.5px 80px 9.5px 15px;
+					padding: 9.5px 15px 9.5px 15px;
 					display: inline-block;
 					cursor: pointer;
 					input {
