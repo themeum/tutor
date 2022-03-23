@@ -79,86 +79,84 @@
                 ?>
             </div>
             <div class="tutor-topics-body" style="display: <?php echo (isset($current_topic_id) && $current_topic_id == $topic->ID) ? 'block' : 'none'; ?>;">
-                <div class="tutor-lessons">
-                    <?php
-                        $post_type = apply_filters( 'tutor_course_contents_post_types', array( tutor()->lesson_post_type, 'tutor_quiz' ) );
-                        $course_contents = !$is_topic ? $topic->contents : get_posts(array(
-                            'post_type'      => $post_type,
-                            'post_parent'    => $topic->ID,
-                            'posts_per_page' => -1,
-                            'orderby'        => 'menu_order',
-                            'order'          => 'ASC',
-                        ));
+                <div class="tutor-lessons"><?php
+                    $post_type = apply_filters( 'tutor_course_contents_post_types', array( tutor()->lesson_post_type, 'tutor_quiz' ) );
+                    $course_contents = !$is_topic ? $topic->contents : get_posts(array(
+                        'post_type'      => $post_type,
+                        'post_parent'    => $topic->ID,
+                        'posts_per_page' => -1,
+                        'orderby'        => 'menu_order',
+                        'order'          => 'ASC',
+                    ));
 
-                        $counter = array(
-                            'lesson' => 0,
-                            'quiz' => 0,
-                            'assignment' => 0
-                        );
-                    
-                        foreach ($course_contents as $content){
-                    
-                            if ($content->post_type === 'tutor_quiz'){
-                                $quiz = $content;
-                                $counter['quiz']++;
-                                tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
-                                    'quiz_id' => $quiz->ID,
-                                    'topic_id' => $topic->ID,
-                                    'quiz_title' => __('Quiz', 'tutor').' '.$counter['quiz'].': '. $quiz->post_title,
-                                ), false);
-                    
-                            } elseif ($content->post_type === 'tutor_assignments'){
-                                $counter['assignment']++;
-                                ?>
-                                <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-assignment-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
-                                    <div class="tutor-course-content-top">
-                                        <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-fs-4 tutor-pr-2 tutor-lh-1"></span>
-                                        <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-assignment-modal' : ''; ?>" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                            <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?>
-                                        </a>
-                                        <div class="tutor-course-content-top-right-action">
-                                            <?php if($is_topic): ?>
-                                                <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                                    <span class="tutor-color-muted tutor-icon-edit-filled tutor-fs-4 tutor-lh-1"></span>
-                                                </a>
-                                            <?php endif; ?>
-                                            <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                                <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-fs-4 tutor-lh-1"></span>
+                    $counter = array(
+                        'lesson' => 0,
+                        'quiz' => 0,
+                        'assignment' => 0
+                    );
+                
+                    foreach ($course_contents as $content){
+                
+                        if ($content->post_type === 'tutor_quiz'){
+                            $quiz = $content;
+                            $counter['quiz']++;
+                            tutor_load_template_from_custom_path(tutor()->path.'/views/fragments/quiz-list-single.php', array(
+                                'quiz_id' => $quiz->ID,
+                                'topic_id' => $topic->ID,
+                                'quiz_title' => __('Quiz', 'tutor').' '.$counter['quiz'].': '. $quiz->post_title,
+                            ), false);
+                
+                        } elseif ($content->post_type === 'tutor_assignments'){
+                            $counter['assignment']++;
+                            ?>
+                            <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-assignment-<?php echo $content->ID; ?>" class="course-content-item tutor-assignment tutor-assignment-<?php echo $content->ID; ?>">
+                                <div class="tutor-course-content-top">
+                                    <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-cursor-move tutor-fs-4 tutor-pr-8 tutor-lh-1"></span>
+                                    <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-assignment-modal' : ''; ?>" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                        <?php echo __('Assignment', 'tutor').' '.$counter['assignment'].': '. $content->post_title; ?>
+                                    </a>
+                                    <div class="tutor-course-content-top-right-action">
+                                        <?php if($is_topic): ?>
+                                            <a href="javascript:;" class="open-tutor-assignment-modal" data-assignment-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                                <span class="tutor-color-muted tutor-icon-edit-filled tutor-fs-4 tutor-lh-1"></span>
                                             </a>
-                                        </div>
+                                        <?php endif; ?>
+                                        <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
+                                            <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-fs-4 tutor-lh-1"></span>
+                                        </a>
                                     </div>
                                 </div>
-                                <?php
-                            } else if($content->post_type=='lesson') {
-                                $counter['lesson']++;
-                                ?>
-                                <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
-                                    <div class="tutor-course-content-top">
-                                        <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-fs-4 tutor-pr-8 tutor-lh-1"></span>
-                                        <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-lesson-modal' : ''; ?>" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                            <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?>
-                                        </a>
-                                        <div class="tutor-course-content-top-right-action">
-                                            <?php if($is_topic): ?>
-                                                <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
-                                                    <span class="tutor-color-muted tutor-icon-edit-filled tutor-fs-4 tutor-lh-1"></span>
-                                                </a>
-                                            <?php endif; ?>
-                                            <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
-                                                <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-fs-4 tutor-lh-1"></span>
+                            </div>
+                            <?php
+                        } else if($content->post_type=='lesson') {
+                            $counter['lesson']++;
+                            ?>
+                            <div data-course_content_id="<?php echo $content->ID; ?>" id="tutor-lesson-<?php echo $content->ID; ?>" class="course-content-item tutor-lesson tutor-lesson-<?php echo $content->ID; ?>">
+                                <div class="tutor-course-content-top">
+                                    <span class="tutor-color-muted tutor-icon-humnurger-filled tutor-cursor-move tutor-fs-4 tutor-pr-8 tutor-lh-1"></span>
+                                    <a href="javascript:;" class="<?php echo $is_topic ? 'open-tutor-lesson-modal' : ''; ?>" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                        <?php echo __('Lesson', 'tutor').' '.$counter['lesson'].': '.stripslashes($content->post_title); ?>
+                                    </a>
+                                    <div class="tutor-course-content-top-right-action">
+                                        <?php if($is_topic): ?>
+                                            <a href="javascript:;" class="open-tutor-lesson-modal" data-lesson-id="<?php echo $content->ID; ?>" data-topic-id="<?php echo $topic->ID; ?>">
+                                                <span class="tutor-color-muted tutor-icon-edit-filled tutor-fs-4 tutor-lh-1"></span>
                                             </a>
-                                        </div>
+                                        <?php endif; ?>
+                                        <a href="javascript:;" class="tutor-delete-lesson-btn" data-lesson-id="<?php echo $content->ID; ?>">
+                                            <span class="tutor-color-muted tutor-icon-delete-stroke-filled tutor-fs-4 tutor-lh-1"></span>
+                                        </a>
                                     </div>
                                 </div>
-                                <?php
-                            } else {
-                                !isset($counter[$content->post_type]) ? $counter[$content->post_type]=0 : 0;
-                                $counter[$content->post_type]++;
-                                do_action( 'tutor/course/builder/content/'.$content->post_type, $content, $topic, $course_id, $counter[$content->post_type] );
-                            }
+                            </div>
+                            <?php
+                        } else {
+                            !isset($counter[$content->post_type]) ? $counter[$content->post_type]=0 : 0;
+                            $counter[$content->post_type]++;
+                            do_action( 'tutor/course/builder/content/'.$content->post_type, $content, $topic, $course_id, $counter[$content->post_type] );
                         }
-                    ?>
-                </div>
+                    }
+                ?></div>
 
                 <?php if($is_topic): ?>
                     <div class="tutor_add_content_wrap tutor_add_content_wrap_btn_sm" data-topic_id="<?php echo $topic->ID; ?>">
