@@ -25,6 +25,7 @@
 					display: grid;
 					grid-template-columns: repeat(2, 1fr);
 					gap: 20px;
+					word-break: break-all;
 					@include breakpoint-max(mobile) {
 						grid-template-columns: repeat(1, 1fr);
 					}
