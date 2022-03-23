@@ -160,7 +160,7 @@
 
 				&:before {
 					content: '';
-					position: absolute;
+					position: absolute !important;
 					inset: calc(0% + var(--pd));
 					border-radius: 50%;
 					background: #fff;

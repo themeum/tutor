@@ -145,12 +145,6 @@
 		li {
 			list-style: none;
 			display: inline-block;
-			&.tutor-profile-complete-dash-3 {
-				// width: 115px;
-			}
-			&.tutor-profile-complete-dash-4 {
-				// width: 86px;
-			}
 		}
 		li:last-child {
 			width: 20%;
@@ -162,7 +156,7 @@
 			border-radius: 8px;
 		}
 		.tutor-round-icon {
-			background: #3e64de;
+			background: var(--tutor-primary-color);
 			height: 28px;
 			width: 28px;
 			border-radius: 50%;
