@@ -7,6 +7,9 @@
 	Component containers
 ----------------------------------*/
 
+body.tutor-backend-tutor_settings #wpbody-content {
+	min-height: 100vh;
+}
 .ui-widget-content {
 	border: 1px solid #aaaaaa;
 	background: #ffffff;
