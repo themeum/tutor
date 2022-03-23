@@ -7,6 +7,9 @@
 	Component containers
 ----------------------------------*/
 
+body.tutor-backend-tutor_settings #wpbody-content {
+	min-height: 100vh;
+}
 .ui-widget-content {
 	border: 1px solid #aaaaaa;
 	background: #ffffff;
@@ -80,6 +83,14 @@
 	padding: 20px 0;
 	font-size: 14px;
 	line-height: 1.3;
+
+	&.tutor-d-flex {
+		display: flex;
+	}
+
+	&.tutor-d-block {
+		display: block;
+	}
 }
 
 .tutor-option-field-row:last-child {

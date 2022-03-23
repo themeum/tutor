@@ -1,5 +1,8 @@
 .tutor-wp-dashboard-header {
 	box-sizing: border-box;
+	background: #ffffff;
+	border-bottom: 1px solid $stroke-light-30;
+
 	ol,
 	ul {
 		padding: 0;
@@ -16,7 +19,6 @@
 		height: 60px;
 	}
 
-	background: #ffffff;
 	.filter-btns {
 		display: flex;
 		gap: 12px;
@@ -87,7 +89,7 @@
 	@include breakpoint-max(mobile) {
 		overflow-x: auto;
 	}
-} // .tutor-wp-dashboard-header
+}
 
 .tutor-wp-dashboard-filter {
 	gap: 30px;
@@ -120,15 +122,11 @@
 } // .tutor-wp-dashboard-filter
 
 .tutor-wp-dashboard-filter-items {
-	// width: 100%;
-	// display: flex;
 	gap: 30px;
-	// flex-wrap: wrap;
 
 	.tutor-form-label {
 		@extend .text-medium-caption;
 		@extend .tutor-color-black-70;
-		@extend .tutor-mb-12;
 	}
 
 	select.tutor-form-select,
