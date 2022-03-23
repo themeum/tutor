@@ -23,36 +23,15 @@ import { get_response_message } from "../helper/response";
                 },
                 stop: function (e, ui) {
                     // Store new updated order as input value
-                    tutor_sorting_topics_and_lesson();
-
-                    // Update parent topic id fro the dropped content
-                    let parent_topic_id = ui.item.closest('[data-topic-id]').attr('data-topic-id');
-                    let content_id = ui.item.attr('data-course_content_id');
-
-                    $.ajax({
-                        url: window._tutorobject.ajaxurl,
-                        type: 'POST',
-                        data: {
-                            parent_topic_id,
-                            content_id,
-                            action: 'tutor_update_course_content_parent',
-                        },
-                        success: function(r){
-                            if(!r.success) {
-                                tutor_toast(__('Error', 'tutor'), get_response_message(r), 'error');
-                            }
-                        },
-                        error: function(){
-
-                        }
-                    })
+                    tutor_sorting_topics_and_lesson(ui);
                 },
             });
         }
     }
 
 
-    window.tutor_sorting_topics_and_lesson=function(){
+    window.tutor_sorting_topics_and_lesson=function(ui){
+        
         var topics = {};
         $('.tutor-topics-wrap').each(function(index, item){
             var $topic = $(this);
@@ -65,10 +44,42 @@ import { get_response_message } from "../helper/response";
 
                 lessons[lessonIndex] = lesson_id;
             });
-            topics[index] = { 'topic_id' : topics_id, 'lesson_ids' : lessons };
+            topics[index] = { 
+                'topic_id' : topics_id, 
+                'lesson_ids' : lessons 
+            };
         });
-
         $('#tutor_topics_lessons_sorting').val(JSON.stringify(topics));
+        
+        let request_data={
+            tutor_topics_lessons_sorting: JSON.stringify(topics),
+            action: 'tutor_update_course_content_order',
+        }
+
+        if(ui){
+            // Update parent topic id fro the dropped content
+            let parent_topic_id = ui.item.closest('[data-topic-id]').attr('data-topic-id');
+            let content_id = ui.item.attr('data-course_content_id');
+
+            request_data.content_parent={
+                parent_topic_id,
+                content_id
+            }
+        }
+
+        $.ajax({
+            url: window._tutorobject.ajaxurl,
+            type: 'POST',
+            data: request_data,
+            success: function(r){
+                if(!r.success) {
+                    tutor_toast(__('Error', 'tutor'), get_response_message(r), 'error');
+                }
+            },
+            error: function(){
+
+            }
+        });
     }
 
 })(window.jQuery);
@@ -104,6 +115,12 @@ window.jQuery(document).ready(function($){
                 $that.addClass('tutor-updating-message');
             },
             success: function (data) {
+
+                if(!data.success){
+                    tutor_toast(__('Error', 'tutor'), get_response_message(data), 'error');
+                    return;
+                }
+
                 $('.tutor-lesson-modal-wrap .modal-container').html(data.data.output);
                 $('.tutor-lesson-modal-wrap').attr({'data-lesson-id' : lesson_id, 'data-topic-id':topic_id});
                 $('.tutor-lesson-modal-wrap').addClass('tutor-is-active');
@@ -166,6 +183,8 @@ window.jQuery(document).ready(function($){
                     $that.closest('.tutor-modal').removeClass('tutor-is-active');
                     
                     tutor_toast(__('Success', 'tutor'), __('Lesson Updated', 'tutor'), 'success');
+
+                    window.dispatchEvent(new Event(_tutorobject.content_change_event));
                 }
             },
             complete: function () {

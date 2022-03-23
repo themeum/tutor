@@ -11,7 +11,6 @@
 
 	// Monetization info
 	$monetize_by              = tutor_utils()->get_option( 'monetize_by' );
-	$enable_guest_course_cart = tutor_utils()->get_option( 'enable_guest_course_cart' );
 	$is_purchasable           = tutor_utils()->is_course_purchasable();
 
 	// Get login url if
@@ -33,7 +32,7 @@
 		array(
 			'icon_class' => 'tutor-icon-refresh-l',
 			'label'      => __( 'Last Updated', 'tutor' ),
-			'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date() ) : null,
+			'value'      => get_tutor_option( 'enable_course_update_date' ) ? tutor_get_formated_date( get_option( 'date_format' ), get_the_modified_date('U') ) : null,
 		),
 	);
 
@@ -48,16 +47,14 @@
 
 	// Right sidebar meta data
 	$sidebar_meta = apply_filters('tutor/course/single/sidebar/metadata', $default_meta, get_the_ID() );
-
-	$login_class = (!is_user_logged_in() && !$is_public) ? 'tutor-course-entry-box-login' : '';
-	$login_url   = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
+	$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
 ?>
 
 <div class="tutor-course-sidebar-card">
 	<!-- Course Entry -->
-	<div class="tutor-course-sidebar-card-body tutor-p-32 <?php echo $login_class; ?>" data-login_url="<?php echo $login_url; ?>">
+	<div class="tutor-course-sidebar-card-body tutor-p-32">
 		<?php
-		if ( $is_enrolled ) {
+		if ( $is_enrolled || $is_privileged_user) {
 			ob_start();
 
 			// Course Info
@@ -71,12 +68,12 @@
 			?>
 			<!-- course progress -->
 			<?php if ( tutor_utils()->get_option('enable_course_progress_bar', true, true) && is_array( $course_progress ) && count( $course_progress ) ) : ?>
-				<div class="tutor-course-progress-wrapper tutor-mb-32" style="width: 100%;">
-					<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
+				<div class="tutor-course-progress-wrapper tutor-mb-32">
+					<h3 class="tutor-color-black tutor-fs-5 tutor-fw-bold tutor-mb-16">
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
-					</span>
-					<div class="list-item-progress tutor-mt-16">
-						<div class="text-regular-body tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+					</h3>
+					<div class="list-item-progress">
+						<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
@@ -126,7 +123,7 @@
 			}
 			echo apply_filters( 'tutor_course/single/start/button', $start_content, get_the_ID() );
 
-			
+
 
 			// Show Course Completion Button.
 			if ( ! $is_completed_course ) {
@@ -138,7 +135,7 @@
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
 
-					<button type="submit" class="tutor-mt-24 tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
+					<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
 						<?php esc_html_e( 'Complete Course', 'tutor' ); ?>
 					</button>
 				</form>
@@ -147,11 +144,11 @@
 			}
 
 			?>
-				<div class="text-regular-caption tutor-color-muted tutor-mt-12 tutor-d-flex tutor-justify-content-center">
+				<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-d-flex tutor-justify-content-center">
 					<span class="tutor-icon-26 tutor-color-success tutor-icon-purchase-filled tutor-mr-8"></span>
 					<span class="tutor-enrolled-info-text">
 					<?php esc_html_e( 'You enrolled in this course on', 'tutor' ); ?>
-						<span class="text-bold-small tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
+						<span class="tutor-fs-7 tutor-fw-bold tutor-color-success tutor-ml-4 tutor-enrolled-info-date">
 						<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $is_enrolled->post_date ) ); ?>
 						</span>
 					</span>
@@ -197,20 +194,22 @@
 				?>
 					<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-content-between">
 						<div>
-							<span class="text-bold-h4 tutor-color-black"><?php esc_html_e( 'Free', 'tutor' ); ?></span>
+							<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
+								<?php esc_html_e( 'Free', 'tutor' ); ?>
+							</span>
 						</div>
 					</div>
-					<div class="tutor-course-sidebar-card-btns">
+					<div class="tutor-course-sidebar-card-btns <?php echo is_user_logged_in() ? '' : 'tutor-course-entry-box-login'; ?>" data-login_url="<?php echo $login_url; ?>">
 						<form class="tutor-enrol-course-form" method="post">
-						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 							<input type="hidden" name="tutor_course_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
 							<input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
 							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24 tutor-enroll-course-button">
-							<?php esc_html_e( 'Enroll Course', 'tutor' ); ?>
+								<?php esc_html_e( 'Enroll Course', 'tutor' ); ?>
 							</button>
 						</form>
 					</div>
-					<div class="text-regular-caption tutor-color-muted tutor-mt-12 tutor-text-center">
+					<div class="tutor-fs-7 tutor-color-muted tutor-mt-20 tutor-text-center">
 						<?php esc_html_e( 'Free acess this course', 'tutor' ); ?>
 					</div>
 				<?php
@@ -231,7 +230,7 @@
 				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-content-between">
 					<div class="flex-center">
 						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
-						<span class="text-regular-caption tutor-color-muted tutor-ml-8">
+						<span class="tutor-fs-7 tutor-color-muted tutor-ml-8">
 							<?php echo esc_html( $meta['label'] ); ?>
 						</span>
 					</div>

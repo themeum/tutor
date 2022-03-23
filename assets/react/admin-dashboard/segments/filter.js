@@ -46,10 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	const filterSearch = document.getElementById('tutor-admin-search-filter-form');
+	const search_field = document.getElementById('tutor-backend-filter-search');
+
 	if (filterSearch) {
+		// Resubmit filter on clear
+		// So we can avoid wrong tab link retaining search value
+		search_field.addEventListener('search', e=>{
+			let {value} = e.currentTarget || {};
+			if(/\S+/.test(value)==false) {
+				window.location = urlPrams('search', '');
+			}
+		});
+		
+		// Assign search value to normal form submission
 		filterSearch.onsubmit = (e) => {
 			e.preventDefault();
-			const search = document.getElementById('tutor-backend-filter-search').value;
+			const search = search_field.value;
 			window.location = urlPrams('search', search);
 		};
 	}

@@ -42,19 +42,19 @@ $is_instructor             = tutor_utils()->is_instructor();
 
 // URLS
 $current_url  = tutor()->current_url;
-$footer_url_1 = trailingslashit(tutor_utils()->tutor_dashboard_url($is_instructor ? '' : 'my-courses'));
-$footer_url_2 = trailingslashit(tutor_utils()->tutor_dashboard_url($is_instructor ? 'question-answer' : 'my-quiz-attempts'));
+$footer_url_1 = trailingslashit( tutor_utils()->tutor_dashboard_url( $is_instructor ? 'my-courses' : '' ) );
+$footer_url_2 = trailingslashit( tutor_utils()->tutor_dashboard_url( $is_instructor ? 'question-answer' : 'my-quiz-attempts' ) );
 
 // Footer links
 $footer_links = array(
 	array(
-		'title'      => $is_instructor ? __('Dashboard', 'tutor') : __('Courses', 'tutor'),
+		'title'      => $is_instructor ? __( 'My Courses', 'tutor' ) : __( 'Dashboard', 'tutor' ),
 		'url'        => $footer_url_1,
 		'is_active'  => $footer_url_1 == $current_url,
 		'icon_class' => 'ttr tutor-icon-dashboard-filled',
 	),
 	array(
-		'title'      => $is_instructor ? __('Q&A', 'tutor') : __('Quiz Attempts' . 'tutor'),
+		'title'      => $is_instructor ? __( 'Q&A', 'tutor' ) : __( 'Quiz Attempts', 'tutor' ),
 		'url'        => $footer_url_2,
 		'is_active'  => $footer_url_2 == $current_url,
 		'icon_class' => $is_instructor ? 'ttr  tutor-icon-question-filled' : 'ttr tutor-icon-quiz-attempt-filled',
@@ -98,7 +98,7 @@ do_action('tutor_dashboard/before/wrap');
 					} else {
 					?>
 						<div class="tutor-dashboard-header-display-name tutor-color-black">
-							<div class="tutor-fs-5 tutor-fw-normal tutor-dashboard-header-greetings">
+							<div class="tutor-fs-5 tutor-dashboard-header-greetings">
 								Hello,
 							</div>
 							<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
@@ -202,7 +202,7 @@ do_action('tutor_dashboard/before/wrap');
 							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
 							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
 
-							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-fw-normal tutor-color-black'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
+							echo "<li class='tutor-dashboard-menu-item {$li_class}  {$active_class}'><a {$data_no_instant} href='" . $menu_link . "' class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-color-black'>{$menu_icon} <span class='tutor-dashboard-menu-item-text tutor-ml-12'>{$menu_title}</span></a></li>";
 						}
 					}
 					?>

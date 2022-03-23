@@ -25,6 +25,7 @@
 					display: grid;
 					grid-template-columns: repeat(2, 1fr);
 					gap: 20px;
+					word-break: break-all;
 					@include breakpoint-max(mobile) {
 						grid-template-columns: repeat(1, 1fr);
 					}
@@ -234,3 +235,36 @@
 }
 
 /* tutor-course-spotlight-wrapper */
+
+// .tutor-spotlight-mobile-progress-complete
+.tutor-spotlight-mobile {
+	&-progress-complete {
+		background: #ffffff;
+		box-shadow: 0px 0px 16px 0 rgba(176, 182, 209, 0.180862);
+		margin-top: 16px;
+
+		@include breakpoint-max(420) {
+			.tutor-col-6 {
+				flex: 0 0 auto;
+				width: 100%;
+			}
+		}
+	}
+
+	&-progress-right {
+		text-align: center;
+		@include breakpoint-min(420) {
+			.tutor-topbar-complete-btn {
+				text-align: right;
+			}
+		}
+		@include breakpoint-max(420) {
+			.tutor-topbar-complete-btn.tutor-ml-24 {
+				margin-left: 0 !important;
+			}
+		}
+		[class*='tutor-icon-'] {
+			display: none;
+		}
+	}
+}

@@ -28,15 +28,25 @@ $login_url = tutor_utils()->get_option('enable_tutor_native_login', null, true, 
 <?php do_action('tutor/template/login/before/wrap'); ?>
 <div <?php tutor_post_class('tutor-page-wrap'); ?>>
     <div class="tutor-template-segment tutor-login-wrap">
-        <div class="tutor-login-title">
-            <h4>
-                <?php echo sprintf( __('Please %sSign-In%s to view this section', 'tutor'), '<a data-login_url="'.$login_url.'" href="" class="tutor-open-login-modal">', '</a>'); ?>
-            </h4>
+
+        <div class="tutor-login-form-wrapper">
+            <div class="tutor-fs-5 tutor-color-black tutor-mb-32">
+                <?php esc_html_e( 'Hi, Welcome back!', 'tutor' ); ?>
+            </div>
+            <?php
+                // load form template.
+                $login_form = trailingslashit( tutor()->path ) . 'templates/login-form.php';
+                tutor_load_template_from_custom_path(
+                    $login_form,
+                    false
+                );
+            ?>
+            <?php do_action("tutor_after_login_form"); ?>
         </div>
     </div>
 </div>
 <?php 
     do_action('tutor/template/login/after/wrap');
-    tutor_load_template_from_custom_path(tutor()->path . '/views/modal/login.php');
+    //tutor_load_template_from_custom_path(tutor()->path . '/views/modal/login.php');
     tutor_utils()->tutor_custom_footer();
 ?>

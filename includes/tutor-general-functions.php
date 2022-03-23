@@ -391,10 +391,10 @@ if ( ! function_exists( 'course_builder_section_wrap' ) ) {
 		?>
 		<div class="tutor-course-builder-section">
 			<div class="tutor-course-builder-section-title">
-				<h3>
-					<i class="tutor-icon-angle-up-filled"></i>
+				<span class="tutor-fs-5 tutor-fw-bold tutor-color-black-70">
+					<i class="tutor-icon-angle-up-filled" area-hidden="true"></i>
 					<span><?php echo $title; ?></span>
-				</h3>
+				</span>
 			</div>
 			<div class="tutor-course-builder-section-content">
 				<?php echo $content; ?>
@@ -556,7 +556,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 		$html = '<div class="asas tutor-alert tutor-' . esc_attr( $type ) . '">
 					<div class="tutor-alert-text">
 						<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
-						<span>' . esc_attr( $msg ) . '</span>
+						<span>' . wp_kses( $msg, array( 'div', 'span' ) ) . '</span>
 					</div>
 				</div>';
 		if ( $echo ) {
@@ -783,7 +783,7 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 		$require_format===null ? $require_format = get_option( 'date_format' ). ', ' . get_option( 'time_format' ) : 0;
 		!is_numeric($user_date) ? $user_date = strtotime(str_replace('/', '-', $user_date )) : 0;
 
-		return date( $require_format, $user_date );
+		return date_i18n( $require_format, $user_date );
 	}
 }
 
@@ -878,7 +878,7 @@ if(!function_exists('tutor_kses_allowed_html')) {
 
 			$allowed_tags[$tag] = $tag_attrs;
 		}
-		
+
 		return $allowed_tags;
 	}
 }
@@ -904,7 +904,7 @@ if(!function_exists('tutor_kses_html')) {
 
 		remove_filter( 'safe_style_css', 'tutor_kses_allowed_css' );
 		remove_filter( 'wp_kses_allowed_html', 'tutor_kses_allowed_html' );
-		
+
 		return $content;
 	}
 }

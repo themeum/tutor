@@ -104,6 +104,7 @@ jQuery(document).ready(function ($) {
 	const videoPlayer = {
 		ajaxurl: window._tutorobject.ajaxurl,
 		nonce_key: window._tutorobject.nonce_key,
+		played_once: false,
 		video_data: function () {
 			const video_track_data = $('#tutor_video_tracking_information').val();
 			return video_track_data ? JSON.parse(video_track_data) : {};
@@ -134,12 +135,17 @@ jQuery(document).ready(function ($) {
 					tempTimeNow++;
 				});
 
+				player.on('play', ()=>{
+					that.played_once=true;
+				});
+
 				player.on('ended', function (event) {
 					const video_data = that.video_data();
 					const instance = event.detail.plyr;
 					const data = { is_ended: true };
 					that.sync_time(instance, data);
-					if (video_data.autoload_next_course_content) {
+					console.log(video_data.autoload_next_course_content, that.played_once);
+					if (video_data.autoload_next_course_content && that.played_once) {
 						that.autoload_content();
 					}
 				});
@@ -162,10 +168,12 @@ jQuery(document).ready(function ($) {
 			$.post(this.ajaxurl, data_send);
 		},
 		autoload_content: function () {
+			console.log('Autoloader called');
 			const post_id = this.video_data().post_id;
 			const data = { action: 'autoload_next_course_content', post_id };
 			data[this.nonce_key] = _tutorobject[this.nonce_key];
 			$.post(this.ajaxurl, data).done(function (response) {
+				console.log(response);
 				if (response.success && response.data.next_url) {
 					location.href = response.data.next_url;
 				}

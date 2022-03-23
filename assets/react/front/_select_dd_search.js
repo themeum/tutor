@@ -18,7 +18,7 @@ window.selectSearchField = (selectElement) => {
 				dropDownOthers = document.querySelectorAll('.tutor-dropdown-select-options-container.is-active');
 				dropDown = element.nextElementSibling.querySelector('.tutor-dropdown-select-options-container');
 				const selectLabel = element.nextElementSibling.querySelector('.tutor-dropdown-select-selected');
-				const selectedLabel = selectLabel && selectLabel.querySelector('.text-medium-body');
+				const selectedLabel = selectLabel && selectLabel.querySelector('[tutor-dropdown-label]');
 				selectedLabel.innerText = initialSelectedItem && initialSelectedItem.text;
 
 				selectLabel.onclick = (e) => {
@@ -80,7 +80,7 @@ window.selectSearchField = (selectElement) => {
 						noItemFound = false;
 					resultFilter = e.target.value.toUpperCase();
 					resultList.forEach((item) => {
-						textToSearch = item.querySelector('.text-regular-caption');
+						textToSearch = item.querySelector('[tutor-dropdown-item]');
 						txtValue = textToSearch.textContent || textToSearch.innerText;
 						if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
 							item.style.display = '';
@@ -150,7 +150,7 @@ window.selectSearchField = (selectElement) => {
 		Array.from(options).forEach((item) => {
 			optionsList += `
             <div class="tutor-dropdown-select-option">
-				<div class="text-regular-caption color-text-title tutor-admin-report-frequency" data-key="${item.value}">${item.text}</div>
+				<div class="tutor-fs-7 tutor-color-black-70 tutor-admin-report-frequency" tutor-dropdown-item data-key="${item.value}">${item.text}</div>
             </div>
             `;
 		});
@@ -173,7 +173,7 @@ window.selectSearchField = (selectElement) => {
                 </div>
             </div>
             <div class="tutor-dropdown-select-selected">
-                <div class="text-medium-body color-text-primary"> ${window.wp.i18n.__('Select One', 'tutor')}	</div>
+                <div class="tutor-fs-6 tutor-fw-medium tutor-pr-20" tutor-dropdown-label>${window.wp.i18n.__('Select One', 'tutor')}	</div>
             </div>
         </div>
         `;

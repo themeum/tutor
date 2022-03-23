@@ -95,46 +95,46 @@ $filters = array(
 	<div class="tutor-ui-table-responsive tutor-mt-32">
 		<table class="tutor-ui-table tutor-ui-table-responsive table-instructors tutor-table-with-checkbox">
 			<thead>
-			<tr>
-				<th width="3%">
-					<div class="tutor-d-flex">
-						<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
-					</div>
-				</th>
-				<th class="tutor-table-rows-sorting">
-					<div class=" tutor-color-black-60">
-						<span class="text-regular-small tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
-						<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
-					</div>
-				</th>
-				<th class="tutor-table-rows-sorting">
-					<div class=" tutor-color-black-60">
-						<span class="text-regular-small"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
+				<tr>
+					<th width="3%">
+						<div class="tutor-d-flex">
+							<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
+						</div>
+					</th>
+					<th class="tutor-table-rows-sorting">
+						<div class="tutor-color-black-60">
+							<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
+							<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+						</div>
+					</th>
+					<th class="tutor-table-rows-sorting">
+						<div class="tutor-color-black-60">
+							<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
+							<span class="tutor-icon-order-down-filled up-down-icon"></span>
+						</div>
+					</th>
+					<th class="tutor-table-rows-sorting">
+						<div class=" tutor-color-black-60">
+							<span class="tutor-fs-7"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
+							<span class="tutor-icon-order-down-filled up-down-icon"></span>
+						</div>
+					</th>
+					<th class="tutor-table-rows-sorting">
+						<div class=" tutor-color-black-60">
+							<span class="tutor-fs-7">
+								<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
+							</span>
+							<span class="tutor-icon-order-down-filled up-down-icon"></span>
+						</div>
+					</th>
+					<th class="tutor-table-rows-sorting">
+					<div class="tutor-color-black-60">
+						<span class="tutor-fs-7"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
 						<span class="tutor-icon-order-down-filled up-down-icon"></span>
 					</div>
-				</th>
-				<th class="tutor-table-rows-sorting">
-					<div class=" tutor-color-black-60">
-						<span class="text-regular-small"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
-						<span class="tutor-icon-order-down-filled up-down-icon"></span>
-					</div>
-				</th>
-				<th class="tutor-table-rows-sorting">
-					<div class=" tutor-color-black-60">
-						<span class="text-regular-small">
-							<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
-						</span>
-						<span class="tutor-icon-order-down-filled up-down-icon"></span>
-					</div>
-				</th>
-				<th class="tutor-table-rows-sorting">
-				<div class=" tutor-color-black-60">
-					<span class="text-regular-small"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
-					<span class="tutor-icon-order-down-filled up-down-icon"></span>
-				</div>
-				</th>
-				<th class="tutor-shrink"></th>
-			</tr>
+					</th>
+					<th class="tutor-shrink"></th>
+				</tr>
 			</thead>
 			<tbody>
 				<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
@@ -161,18 +161,18 @@ $filters = array(
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-								<span class="tutor-color-black tutor-fs-7 tutor-fw-normal">
+								<span class="tutor-color-black tutor-fs-7">
 							<?php echo esc_html( $list->user_email ); ?>
 								</span>
 							</td>
 							</td>
 							<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
-								<span class="tutor-color-black tutor-fs-7 tutor-fw-normal">
+								<span class="tutor-color-black tutor-fs-7">
 							<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
 								</span>
 							</td>
 							<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
-								<span class="tutor-color-black tutor-fs-7 tutor-fw-normal">
+								<span class="tutor-color-black tutor-fs-7">
 								<?php echo esc_html( tutor_utils()->get_option( 'earning_instructor_commission' ) . '%' ); ?>
 								</span>
 							</td>
@@ -312,7 +312,8 @@ $filters = array(
 					<div class="tutor-col">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Bio', 'tutor' ); ?>
-							<span class="text-medium-caption" style="color: #999ead;">
+							<!-- @todo: remove the hard coded color -->
+							<span class="tutor-fs-7 tutor-fw-medium" style="color: #999ead;">
 								<?php esc_html_e( '(Optional)', 'tutor' ); ?>
 							</span>
 						</label>
@@ -364,10 +365,10 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 		<?php if ( $instructor_data ) : ?>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-text-wrap">
-						<div class="text-regular-h4 tutor-color-black">
+						<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
 							<?php esc_html_e( 'A New Instructor Just Signed Up', 'tutor' ); ?>
 						</div>
-						<div class="text-regular-small tutor-color-black-60 tutor-mt-12">
+						<div class="tutor-fs-7 tutor-color-black-60 tutor-mt-12">
 							<?php esc_html_e( 'You can either accept or reject the application. The applicant will be notified via email either way.', 'tutor' ); ?>
 						</div>
 					</div>
@@ -377,7 +378,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 								<?php echo get_avatar( $instructor_data->ID ); ?>
 							</div>
 						</div>
-						<div class="text-medium-h4 tutor-color-text-primay tutor-mt-20">
+						<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mt-20">
 							<?php
 							echo esc_html(
 								( '' !== $instructor_data->display_name ?
@@ -386,13 +387,13 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 							);
 							?>
 						</div>
-						<div class="text-regular-body tutor-color-black-70 tutor-mt-8">
+						<div class="tutor-fs-6 tutor-color-black-70 tutor-mt-8">
 							<?php esc_html_e( 'Username:', 'tutor' ); ?>
 							<span class="tutor-color-black">
 								<?php echo esc_html( $instructor_data->user_login ); ?>
 							</span>
 						</div>
-						<div class="text-regular-body tutor-color-black-70 tutor-mt-4">
+						<div class="tutor-fs-6 tutor-color-black-70 tutor-mt-4">
 							<?php esc_html_e( 'Email:', 'tutor' ); ?>
 							<span class="tutor-color-black">
 								<?php echo esc_html( $instructor_data->user_email ); ?>

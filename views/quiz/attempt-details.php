@@ -181,7 +181,7 @@ if ( is_array( $attempt_info ) ) {
                 foreach($table_1_columns as $key => $column) {
                     $class_name = join('-', explode(' ', strtolower($column)));
                     echo '<th class="'. $class_name .'">
-                            <span class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">'.
+                            <span class="tutor-fs-7 tutor-color-black-60">'.
                                 $column.
                             '</span>
                         </th>';
@@ -355,7 +355,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
         <div class="tutor-in-title tutor-fs-6 tutor-fw-medium tutor-color-black">
             <?php esc_html_e( 'Instructor Note', 'tutor' ); ?>					
         </div>
-		<div class="tutor-in-body tutor-fs-6 tutor-fw-normal tutor-color-black-60 tutor-pt-12 tutor-pt-sm-16">
+		<div class="tutor-in-body tutor-fs-6 tutor-color-black-60 tutor-pt-12 tutor-pt-sm-16">
 			<?php echo wp_kses_post( $feedback ); ?>					
         </div>
 	</div>
@@ -372,7 +372,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                         <?php
                             foreach($table_2_columns as $key => $column) {
                                 $class_name = join('--', explode(' ', strtolower($column)));
-                                echo '<th class="'. $class_name .'"><span class="text-regular-small tutor-color-black-60">'. $column .'</span></th>';
+                                echo '<th class="'. $class_name .'"><span class="tutor-fs-7 tutor-color-black-60">'. $column .'</span></th>';
                             }
                         ?>
                     </tr>
@@ -428,7 +428,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                             case 'questions' :
                                                 ?>
                                                 <td class="questions" data-th="<?php echo $column; ?>">
-                                                    <span class="text-medium-small tutor-d-flex tutor-align-items-center">
+                                                    <span class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-items-center">
                                                         <?php echo stripslashes($answer->question_title); ?>
                                                     </span>
                                                 </td>

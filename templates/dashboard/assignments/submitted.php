@@ -21,13 +21,13 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
 	<div class="tutor-mb-24">
 		<a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
-			<span class="color-text-primary assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12"></span>
+			<span class="tutor-color-black assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12"></span>
             <span class="tutor-color-black-60"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
 		</a>
 	</div>
 
     <div class="tutor-assignment-review-header tutor-assignment-submitted-page">
-        <div class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
+        <div class="tutor-fs-7 tutor-color-black-60">
             <?php
             esc_html_e('Course', 'tutor'); ?> : <?php echo get_the_title($comment_parent); ?>
         </div>
@@ -35,15 +35,15 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
             <?php echo get_the_title($assignment_id); ?>
         </div>
         <div class="assignment-info tutor-mt-12 tutor-d-flex">
-            <div class="tutor-fs-7 tutor-fw-normal tutor-color-black-70">
+            <div class="tutor-fs-7 tutor-color-black-70">
                 <?php esc_html_e('Submission Deadline', 'tutor'); ?>:
                 <span class="tutor-fs-7 tutor-fw-medium"><?php echo $deadline; ?></span>
             </div>
-            <div class="tutor-fs-7 tutor-fw-normal tutor-color-black-70 tutor-ml-24">
+            <div class="tutor-fs-7 tutor-color-black-70 tutor-ml-24">
                 <?php esc_html_e('Total Points', 'tutor'); ?>:
                 <span class="tutor-fs-7 tutor-fw-medium"><?php echo $max_mark; ?></span>
             </div>
-            <div class="tutor-fs-7 tutor-fw-normal tutor-color-black-70 tutor-ml-24">
+            <div class="tutor-fs-7 tutor-color-black-70 tutor-ml-24">
                 <?php esc_html_e('Pass Points', 'tutor'); ?>:
                 <span class="tutor-fs-7 tutor-fw-medium"><?php echo $pass_mark; ?></span>
             </div>
@@ -52,7 +52,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
 
     <div class="tutor-dashboard-announcement-sorting-wrap submitted-assignments-sorting-wrap">
         <div class="tutor-dashboard-announcement-sorting-input">
-            <label class="tutor-fs-7 tutor-fw-normal tutor-color-black-60"><?php esc_html_e( 'Sort By:', 'tutor' ); ?></label>
+            <label class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Sort By:', 'tutor' ); ?></label>
             <select class="tutor-announcement-order-sorting tutor-form-select tutor-form-control tutor-form-control-sm no-tutor-dropdown">
                 <option value="desc" <?php selected( $order_filter, 'desc' ); ?>><?php esc_html_e( 'Latest', 'tutor' ); ?></option>
                 <option value="asc" <?php selected( $order_filter, 'asc' ); ?>><?php esc_html_e( 'Oldest', 'tutor' ); ?></option>
@@ -65,27 +65,27 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
             <thead>
                 <tr>
                     <th>
-                        <span class="tutor-fs-7 tutor-fw-normal tutor-color-black-60">
+                        <span class="tutor-fs-7 tutor-color-black-60">
                             <?php esc_html_e('Date', 'tutor'); ?>
                         </span>
                     </th>
                     <th>
                         <div class="inline-flex-center tutor-color-black-60">
-                            <span class="tutor-fs-7 tutor-fw-normal">
+                            <span class="tutor-fs-7">
                                 <?php esc_html_e('Student', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
                         <div class="inline-flex-center tutor-color-black-60">
-                            <span class="tutor-fs-7 tutor-fw-normal">
+                            <span class="tutor-fs-7">
                                 <?php esc_html_e('Total Points', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
                         <div class="inline-flex-center tutor-color-black-60">
-                            <span class="tutor-fs-7 tutor-fw-normal">
+                            <span class="tutor-fs-7">
                                 <?php esc_html_e('Result', 'tutor'); ?>
                             </span>
                         </div>
@@ -121,7 +121,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
                                         <img src="<?php echo get_avatar_url( $comment_author->ID ); ?>" alt=" - Profile Picture">
                                         <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
                                             <?php esc_html_e( $comment_author->display_name ); ?><br/>
-                                            <span class="tutor-fs-7 tutor-fw-normal">
+                                            <span class="tutor-fs-7">
                                                 <?php esc_html_e( $comment_author->user_email ); ?>
                                             </span>
                                         </div>

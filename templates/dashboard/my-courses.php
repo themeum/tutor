@@ -67,7 +67,7 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                     </div>
                     <div class="tutor-course-listing-item-body tutor-px-20 tutor-py-20">
                         <div class="tutor-d-flex tutor-mb-7">
-                            <span class="tutor-fs-6 tutor-fw-normal tutor-color-black-60">
+                            <span class="tutor-fs-6 tutor-color-black-60">
                                 <?php echo esc_html(get_the_date()); ?> <?php echo esc_html(get_the_time()); ?>
                             </span>
                         </div>

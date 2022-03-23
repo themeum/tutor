@@ -19,10 +19,22 @@
 			<span class="delete-btn" style="<?php echo ! $media_url ? 'display:none' : ''; ?>"></span>
 		</div>
 		<div class="thumbnail-input">
-			<p class="text-regular-body tutor-color-black-60">
-				<?php _e( 'Size', 'tutor' ); ?>: <span class="tutor-fs-7 tutor-fw-medium"><?php _e( '700x430 pixels', 'tutor' ); ?>;</span>
+			<p class="tutor-fs-6 tutor-color-black-60">
+			<?php
+				if ( isset($data['desc']['file_size']) ) {
+					printf( __( 'Size: <span class="tutor-fs-7 tutor-fw-medium">%s</span>', 'tutor' ), esc_attr( $data['desc']['file_size'] ) );
+				} else {
+					printf( __( 'Size: <span class="tutor-fs-7 tutor-fw-medium">%s</span>', 'tutor' ), '700x430 pixels' );
+				}
+				?>
 				<br />
-				<?php _e( 'File Support', 'tutor' ); ?>: <span class="tutor-fs-7 tutor-fw-medium"><?php _e( 'jpg, .jpeg,. gif, or .png.', 'tutor' ); ?></span>
+				<?php
+				if ( isset($data['desc']['file_support']) ) {
+					printf( __( 'File Support: <span class="tutor-fs-7 tutor-fw-medium">%s</span>', 'tutor' ), esc_attr( $data['desc']['file_support'] ) );
+				} else {
+					printf( __( 'File Support: <span class="tutor-fs-7 tutor-fw-medium">%s</span>', 'tutor' ), 'jpg, .jpeg,. gif, or .png.' );
+				}
+				?>
 			</p>
 
 			<button type="button" class="tutor-btn tutor-btn-primary tutor-is-sm tutor-mt-16 tutor-thumbnail-upload-button">

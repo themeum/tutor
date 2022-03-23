@@ -18,7 +18,7 @@
 			</div>
 			<div class="tutor-quiz-image-ordering-item tutor-d-flex tutor-align-items-center tutor-p-12">
 				<img src="<?php echo wp_get_attachment_image_url( $answer->image_id, 'full' ); ?>" />
-				<span class="text-regular-body tutor-color-black tutor-ml-16">
+				<span class="tutor-fs-6 tutor-color-black tutor-ml-16">
 				<?php echo $answer_title; ?>
 				</span>
 				<input type="hidden" name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answers][]" value="<?php echo $answer->answer_id; ?>" >
@@ -32,7 +32,7 @@
 		</div>
 		<div class="quiz-ordering-ans-item tutor-ml-32">
 			<div class="tutor-quiz-border-box">
-				<span class="text-regular-body tutor-color-black">
+				<span class="tutor-fs-6 tutor-color-black">
 					<?php echo $answer_title; ?>
 				</span>
 				<span class="tutor-icon-humnurger-filled tutor-color-black-fill"></span>

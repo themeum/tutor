@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 5.9
 Requires PHP: 7.0
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -224,6 +224,30 @@ Looking for the best LMS for WordPress? Get Tutor and start your e-learning webs
 31. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 == Changelog ==
+
+= 2.0.1 - March 21, 2022
+
+Fix: In the courses page, AJAX based "Add to Cart" is not working
+Fix: Backend dashboard search field clear not removing parameter from tab URL
+Fix: Automatically loading next course content not working
+Fix: HTML5 video input is open even if unselected from settings page
+Fix: Gutenberg content not working properly in single course about section
+Fix: Login page issue fix
+Fix: Email error on enrollment
+Fix: My profile page gives error after updating tutor plugin
+Fix: My profile page date not translating
+Fix: Instructor course showing in student mobile view 
+Fix: Pmpro shoing in monetization dropdown even if add-on disabled 
+Fix: Saving settings resets old values
+Fix: Lesson, quiz order not retaining properly after drag and drop
+Fix: Login requires for woocommerce connected course add to cart
+Fix: Quiz export adding extra answer for questions
+Fix: Enabling course content access without enrollment for admin and instructor not working
+Fix: Lesson comment reply author name hard coded
+Update: Email Logo is coming from course base logo
+Update: WooCommerce Auto redirect to courses added on automatic order completion
+Update: Email footer text is now from default content
+Update: Recipients field is now available to send CC email to other recipients
 
 = 2.0.0 - March 15, 2022
 

@@ -13,7 +13,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
             <?php
             foreach ($table_columns as $key => $column) {
                 echo '<th>
-                    <span class="text-regular-small tutor-color-black-60" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
+                    <span class="tutor-fs-7 tutor-color-black-60" style="' . ($key == 'action' ? 'visibility:hidden' : '') . '">' .
                         $column
                     . '</span>
                 </th>';
@@ -81,7 +81,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         </div>
                                         <img src="<?php echo esc_url(get_avatar_url($qna->user_id)); ?>" alt="<?php echo esc_attr($qna->display_name); ?> - <?php _e('Profile Picture', 'tutor'); ?>" />
                                         <div class="">
-                                            <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
+                                            <div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
                                                 <?php echo $qna->display_name; ?>
                                             </div>
                                             <div class="tutor-fs-8 tutor-fw-medium tutor-color-muted" style="margin-top : -2px">
@@ -97,7 +97,6 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                 $content = (stripslashes($qna->comment_content));
                             ?>
                                 <td data-th="<?php echo $column; ?>">
-                                    <!-- <td data-th="<?php echo $column; ?>" title="<?php echo $content; ?>"> -->
                                     <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>">
                                         <div class="tutor-input-feedback tutor-has-icon tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
                                             <i class="tutor-icon-bullet-point-filled tutor-input-feedback-icon"></i>
@@ -109,9 +108,9 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                     echo esc_html($content);
                                                     ?>
                                                 </div>
-                                                <div class="">
-                                                    <span class="tutor-fs-8 tutor-fw-medium tutor-color-black-60"><?php _e('Course'); ?>:</span>
-                                                    <sapn class="tutor-fs-7 tutor-fw-normal tutor-color-black-60"><?php echo $qna->post_title; ?></span>
+                                                <div class="tutor-fs-7 tutor-color-black-60">
+                                                    <span class="tutor-fw-medium"><?php _e('Course'); ?>:</span>
+                                                    <span><?php echo $qna->post_title; ?></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -142,7 +141,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             ?>
                                 <td data-th="<?php echo $column; ?>">
                                     <div class="tooltip-wrap">
-                                        <i class=" tutor-font-size-24 <?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success' : 'tutor-icon-tick-circle-outline-filled tutor-color-black-40'; ?>"></i>
+                                        <i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success' : 'tutor-icon-tick-circle-outline-filled tutor-color-black-40'; ?>"></i>
                                         <span class="tooltip-txt tooltip-bottom">
                                             <?php $is_solved ? _e('Solved', 'tutor') : _e('Unresolved Yet', 'tutor'); ?>
                                         </span>
@@ -167,26 +166,26 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                             <ul id="<?php echo $menu_id; ?>" class="popup-menu">
                                                 <?php if ($context != 'frontend-dashboard-qna-table-student') : ?>
                                                     <li class="tutor-qna-badges tutor-qna-badges-wrapper">
-                                                        <a href="#" data-action="archived" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
-                                                            <span class="tutor-icon-msg-archive-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
-                                                            <span class="text-regular-body tutor-color-white">
+                                                        <a href="#" data-action="archived" data-state-text-selector="[data-state-text]" data-state-class-selector="[data-state-class]" data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
+                                                            <span class="tutor-icon-msg-archive-filled tutor-color-white tutor-fs-4 tutor-mr-4" data-state-class></span>
+                                                            <span class="tutor-fs-6 tutor-color-white" data-state-text>
                                                                 <?php $is_archived ?  _e('Un-archive', 'tutor') : _e('Archive', 'tutor'); ?>
                                                             </span>
                                                         </a>
                                                     </li>
                                                 <?php endif; ?>
                                                 <li class="tutor-qna-badges tutor-qna-badges-wrapper">
-                                                    <a href="#" data-action="read" data-state-text-selector=".text-regular-body" data-state-class-selector=".color-design-white" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
-                                                        <span class="tutor-icon-envelope-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
-                                                        <span class="text-regular-body tutor-color-white" style="text-align: left;">
+                                                    <a href="#" data-action="read" data-state-text-selector="[data-state-text]" data-state-class-selector="[data-state-class]" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
+                                                        <span class="tutor-icon-envelope-filled tutor-color-white tutor-fs-4 tutor-mr-4" data-state-class></span>
+                                                        <span class="tutor-fs-6 tutor-color-white tutor-text-left" data-state-text>
                                                             <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
                                                         </span>
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>">
-                                                        <span class="tutor-icon-delete-fill-filled tutor-color-design-white tutor-font-size-24 tutor-mr-4"></span>
-                                                        <span class="text-regular-body tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
+                                                        <span class="tutor-icon-delete-fill-filled tutor-color-white tutor-fs-4 tutor-mr-4"></span>
+                                                        <span class="tutor-fs-6 tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
                                                     </a>
                                                 </li>
                                             </ul>
