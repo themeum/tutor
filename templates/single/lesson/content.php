@@ -100,7 +100,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 		</div>
 	</div>
 	<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
-		<div class="tutor-mobile-top-nav tutor-d-grid">
+		<div class="tutor-mobile-top-nav tutor-d-flex tutor-align-items-center tutor-justify-content-between">
 			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
 				<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
 			</a>
@@ -108,6 +108,12 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 				<?php
 					the_title();
 				?>
+			</div>
+			<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-sm-none tutor-d-flex tutor-d-sm-none">
+				<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
+				<a href="<?php echo get_the_permalink( $course_id ); ?>">
+					<span class="tutor-icon-line-cross-line tutor-icon-28 tutor-color-primary flex-center"></span>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -177,20 +183,26 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 		</div>
 		<div class="tab-body">
 			<div class="tab-body-item<?php echo (!isset($page_tab) || 'overview'==$page_tab) ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-1" data-tutor-query-string-content="overview">
-				<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
-					<?php _e( 'About Lesson', 'tutor' ); ?>
-				</div>
-				<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-12" style="min-height:293px;">
-					<?php the_content(); ?>
+				<div class="tutor-container tutor-pb-32">
+					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+						<?php _e( 'About Lesson', 'tutor' ); ?>
+					</div>
+					<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-12" style="min-height:293px;">
+						<?php the_content(); ?>
+					</div>
 				</div>
 			</div>
 			<div class="tab-body-item<?php echo 'files'==$page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-2" data-tutor-query-string-content="files">
-				<div class="tutor-fs-6 tutor-fw-medium tutor-color-black"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
-				<?php get_tutor_posts_attachments(); ?>
+				<div class="tutor-container">
+					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
+					<?php get_tutor_posts_attachments(); ?>
+				</div>
 			</div>
 			<?php if ( $is_comment_enabled ) : ?>
 				<div class="tab-body-item<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-3" data-tutor-query-string-content="comments">
-					<?php require __DIR__ . '/comment.php'; ?>
+					<div class="tutor-container">
+						<?php require __DIR__ . '/comment.php'; ?>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>
