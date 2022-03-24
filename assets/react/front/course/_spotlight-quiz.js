@@ -309,10 +309,7 @@ window.jQuery(document).ready($=>{
 
             let data = {
                 title: __('Abandon Quiz?', 'tutor'),
-                description: __(
-                    'Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.',
-                    'tutor',
-                ),
+                description: __('Do you want to abandon this quiz? The quiz will be submitted partially up to this question if you leave this page.', 'tutor'), // Don't break line in favour of pot file generating
                 buttons: {
                     keep: {
                         title: __('Yes, leave quiz', 'tutor'),
