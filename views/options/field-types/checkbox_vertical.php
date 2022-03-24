@@ -18,7 +18,7 @@ if ( ! empty( $field['options'] ) ) {
 		<div class="tutor-option-field-input">
 			<div class="type-check tutor-d-block">
 				<?php foreach ( $field['options'] as $option_key => $option ) : ?>
-					<?php $_checked = in_array( $option_key, $saved_data ) ? 'checked="checked"' : ''; ?>
+					<?php $_checked = isset( $saved_data[ $option_key ] ) && ( 1 == $saved_data[ $option_key ] ) ? 'checked="checked"' : ''; ?>
 					<div class="tutor-form-check">
 						<input type="checkbox" id="check_<?php echo esc_attr( $option_key ); ?>_<?php echo esc_attr( $field_key ); ?>" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php echo wp_kses_post( $_checked ); ?> class="tutor-form-check-input" />
 						<label for="check_<?php echo esc_attr( $option_key ); ?>_<?php echo esc_attr( $field_key ); ?>"> <?php echo esc_attr( $option ); ?> </label>

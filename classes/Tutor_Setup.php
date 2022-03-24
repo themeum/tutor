@@ -712,7 +712,7 @@ class Tutor_Setup {
 					</div>
 				</div>
 			</div>
-			<?php
+		<?php
 	}
 
 	public function tutor_setup_wizard_type() {
@@ -728,12 +728,12 @@ class Tutor_Setup {
 					</div>
 					<div class="wizard-type-body">
 						<div class="wizard-type-item">
-							<input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="off" 
+							<input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="off"
 							<?php
 							if ( ! $course_marketplace ) {
 								echo 'checked'; }
 							?>
-							 />
+							/>
 							<span class="icon"></span>
 							<label for="enable_course_marketplace-0">
 								<img src="<?php echo esc_url( tutor()->url . 'assets/images/single-marketplace.svg' ); ?>" />
@@ -748,7 +748,7 @@ class Tutor_Setup {
 						</div>
 
 						<div class="wizard-type-item">
-							<input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="on" 
+							<input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="on"
 							<?php
 							if ( $course_marketplace ) {
 								echo 'checked'; }
@@ -833,7 +833,7 @@ class Tutor_Setup {
 		// $visited = get_option( 'tutor_welcome_page_visited' );
 		// return $visited ? true : false;
 	}
-	
+
 	/**
 	 * Mark as welcome page visited
 	 *
