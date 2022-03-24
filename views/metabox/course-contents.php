@@ -28,7 +28,7 @@
 	        INNER JOIN {$wpdb->postmeta} meta ON content.ID=meta.post_id
         WHERE content.post_parent=0 
             AND meta.meta_key='_tutor_course_id_for_lesson' 
-            AND meta.meta_value=".$course_id,
+            AND meta.meta_value=".$course_id
     );
 
     if(is_array($unassigned_contents) && count($unassigned_contents)) {
