@@ -23,9 +23,7 @@
 						if ( isset( $rand_answer->image_id ) ) :
 							$image_url = wp_get_attachment_url( $rand_answer->image_id );
 							?>
-							<a href="<?php echo esc_url( $image_url ); ?>)" target="_blank">
-								<img src="<?php echo esc_url( $image_url ); ?>)" alt="" style="max-height: 240px;">
-							</a>
+							<img src="<?php echo esc_url( $image_url ); ?>" alt="" style="max-height: 240px;">
 						<?php endif; ?>
 					</div>
 				<?php endif; ?>

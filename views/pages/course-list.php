@@ -75,7 +75,7 @@ $args = array(
 );
 
 if ( 'all' === $active_tab || 'mine' === $active_tab ) {
-	$args['post_status'] = array( 'publish', 'pending', 'draft', 'trash', 'private' );
+	$args['post_status'] = array( 'publish', 'pending', 'draft', 'private' );
 } else {
 	$status              = $active_tab === 'published' ? 'publish' : $active_tab;
 	$args['post_status'] = array( $status );

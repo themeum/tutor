@@ -1,5 +1,10 @@
 # TutorLMS Changelog
 
+### 2.0.2 - March 30, 2022
+
+* Fix: To be added later
+
+
 ### 2.0.1 - March 23, 2022
 
 * Update: Tutor Player has been upgraded

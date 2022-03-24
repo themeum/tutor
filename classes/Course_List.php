@@ -216,7 +216,7 @@ class Course_List {
 		);
 
 		if ( 'all' === $status || 'mine' === $status ) {
-			$args['post_status'] = array( 'publish', 'pending', 'draft', 'trash', 'private' );
+			$args['post_status'] = array( 'publish', 'pending', 'draft', 'private' );
 		} else {
 			$status              = $status === 'published' ? 'publish' : $status;
 			$args['post_status'] = array( $status );
