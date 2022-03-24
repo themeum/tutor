@@ -37,13 +37,13 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
             <div class="tutor-fs-6 tutor-color-black-60">
 				<?php if ($has_readmore) : ?>
                     <div class='showmore-short-text'>
-                        <?php echo wp_kses_post( $first_part ); ?>
+                        <?php echo nl2br( wp_kses_post( $first_part ) ); ?>
                     </div>
                     <div class='showmore-text'>
-                        <?php echo wp_kses_post( $string ); ?>
+                        <?php echo nl2br( wp_kses_post( $string ) ); ?>
                     </div>
                 <?php else : ?>
-                    <?php echo wp_kses_post( $string ); ?>
+                    <?php echo nl2br( wp_kses_post( $string ) ); ?>
                 <?php endif; ?>
 			</div>
 		</div>
