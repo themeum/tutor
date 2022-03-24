@@ -14,9 +14,6 @@
 			}
 		}
 		.tab-body {
-			max-width: 730px;
-			margin: 0 auto;
-			padding: 50px 30px;
 			@include breakpoint-max(mobile) {
 				padding: 20px 20px;
 			}

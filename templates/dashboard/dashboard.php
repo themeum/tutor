@@ -94,18 +94,18 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 		if ( ! $profile_completion['_tutor_profile_photo']['is_set'] ) {
 			$alert_message = sprintf(
 				'<div class="tutor-alert tutor-primary tutor-mb-20">
-			<div class="tutor-alert-text">
-				<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
-				<span>
-					%s
-				</span>
-			</div>
-			<div class="tutor-alert-btns">
-				<div class="alert-btn-group">
-					<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
-				</div>
-			</div>
-		</div>',
+					<div class="tutor-alert-text">
+						<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
+						<span>
+							%s
+						</span>
+					</div>
+					<div class="tutor-alert-btns">
+						<div class="alert-btn-group">
+							<a href="%s" class="tutor-btn tutor-btn-sm">Click Here</a>
+						</div>
+					</div>
+				</div>',
 				$profile_completion['_tutor_profile_photo']['label_html'],
 				tutor_utils()->tutor_dashboard_url( 'settings' )
 			);
