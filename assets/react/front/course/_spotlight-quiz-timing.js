@@ -78,13 +78,7 @@ window.jQuery(document).ready($=>{
 								// if attempt remaining
 								if (attemptRemaining > 0) {
 									$(`${alertDiv} .tutor-quiz-alert-text`).html(
-										__(
-											'Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining: ' +
-												attemptRemaining +
-												'/' +
-												attemptAllowed,
-											'tutor'
-										)
+										__('Your time limit for this quiz has expired, please reattempt the quiz. Attempts remaining:', 'tutor') + ' ' + attemptRemaining + '/' + attemptAllowed // Don't break line
 									);
 								} else {
 									// if attempt not remaining
