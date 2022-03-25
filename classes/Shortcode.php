@@ -177,20 +177,21 @@ class Shortcode {
 
 		wp_reset_query();
 		$the_query = new \WP_Query( $a );
+
+		
+		// Load the renderer now
 		ob_start();
-
-		$GLOBALS['the_custom_query'] = $the_query;
-
-		$GLOBALS['tutor_shortcode_arg'] = array(
-			'shortcode_enabled' => true,
-			'include_course_filter' => isset( $atts['course_filter'] ) ? $atts['course_filter'] === 'on' : null,
-			'column_per_row'        => isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
-			'course_per_page'       => $a['posts_per_page'],
-			'show_pagination'       => isset( $atts['show_pagination'] ) ? $atts['show_pagination'] : 'off',
-		);
-
-		tutor_load_template( 'shortcode.tutor-course' );
+		tutor_load_template('archive-course-init', array(
+			'course_filter' 	=> isset( $atts['course_filter'] ) && $atts['course_filter'] == 'on',
+			'supported_filters' => tutor_utils()->get_option( 'supported_course_filters', array() ),
+			'loop_content_only' => false,
+			'column_per_row' 	=> isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
+			'course_per_page' 	=> $a['posts_per_page'],
+			'show_pagination' 	=> isset( $atts['show_pagination'] ) && $atts['show_pagination']=='on',
+			'the_query'			=> $the_query
+		));
 		$output = ob_get_clean();
+
 		wp_reset_postdata();
 
 		return $output;

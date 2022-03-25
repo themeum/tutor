@@ -79,23 +79,27 @@ class Course_Filter {
 		}
 		count( $level_price ) ? $args['meta_query'] = $level_price : 0;
 
-		$search_key              = sanitize_text_field( tutils()->array_get( 'keyword', $_post, null ) );
+		$search_key = sanitize_text_field( tutils()->array_get( 'keyword', $_post, null ) );
 		$search_key ? $args['s'] = $search_key : 0;
 
 		if ( isset( $_post['tutor_course_filter'] ) ) {
 			switch ( $_post['tutor_course_filter'] ) {
+
 				case 'newest_first':
 					$args['orderby'] = 'ID';
 					$args['order']   = 'desc';
 					break;
+
 				case 'oldest_first':
 					$args['orderby'] = 'ID';
 					$args['order']   = 'asc';
 					break;
+
 				case 'course_title_az':
 					$args['orderby'] = 'post_title';
 					$args['order']   = 'asc';
 					break;
+
 				case 'course_title_za':
 					$args['orderby'] = 'post_title';
 					$args['order']   = 'desc';
@@ -104,14 +108,7 @@ class Course_Filter {
 		}
 
 		query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
-		$col_per_row                    = (int) tutils()->array_get( 'column_per_row', $_post, 3 );
-		$GLOBALS['tutor_shortcode_arg'] = array(
-			'column_per_row'  => $col_per_row <= 0 ? 3 : $col_per_row,
-			'course_per_page' => $courses_per_page,
-			'shortcode_enabled' => isset($_post['page_shortcode'])?true:false,
-		);
-
-		tutor_load_template( 'archive-course-init' );
+		tutor_load_template( 'archive-course-init', array_merge( array('loop_content_only' => true), $_post ));
 		exit;
 	}
 
