@@ -82,7 +82,7 @@
 	}
 
 	// Video players
-	.course-players-parent{
+	.course-players-parent {
 		background: black;
 		display: block;
 		position: relative;
@@ -91,17 +91,19 @@
 			width: 100%;
 			margin: auto;
 			aspect-ratio: 16 / 9;
-
+			max-height: 700px;
 			position: relative;
 			overflow: hidden;
-		
+			.plyr--html5 {
+				aspect-ratio: 16 / 9;
+			}
 			.loading-spinner {
 				position: absolute;
 				inset: 0;
 				background: $bg-gray-10;
 				border-radius: 3px;
 				z-index: 10;
-		
+
 				@include spinner(#1973aa, #eee);
 			}
 
