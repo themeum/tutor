@@ -50,12 +50,12 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
 	<div class="tutor-topbar-left-item tutor-d-flex">
-		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
+		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-				<span class="tutor-icon-icon-light-left-line tutor-color-white flex-center"></span>
+				<span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 			</a>
 		</div>
-		<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
+		<div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
 			<span class="tutor-icon-assignment-filled tutor-icon-24 tutor-color-white tutor-mr-4"></span>
 			<span class="tutor-fs-7 tutor-color-design-white">
 				<?php
@@ -89,10 +89,10 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				do_action( 'tutor_course/single/enrolled/after/lead_info/progress_bar' );
 			?>
 		</div>
-		<div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
+		<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>">
-				<span class="tutor-icon-line-cross-line tutor-color-white flex-center"></span>
+				<span class="tutor-icon-line-cross-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 			</a>
 		</div>
 	</div>
@@ -261,7 +261,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 										<?php echo esc_html( $file_size ? $file_size . 'KB' : '' ); ?>
 									</div>
 								</div>
-								<div class="tutor-avatar tutor-is-xs flex-center">
+								<div class="tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
 									<a href="<?php echo esc_url( wp_get_attachment_url( $attachment_id ) ); ?>" target="_blank" download>
 										<span class="tutor-icon-download-line"></span>
 									</a>
@@ -363,7 +363,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 														</div>
 														<div class="tutor-fs-7">Size: 230KB;</div>
 													</div>
-													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs flex-center">
+													<div class="tutor-attachment-file-close tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
 														<a href="<?php echo esc_url( $attachment->url ); ?>" data-id="<?php echo esc_attr( $assignment_comment_id ); ?>" data-name="<?php echo esc_attr( $attachment->name ); ?>" target="_blank">
 															<span class="tutor-icon-cross-filled color-design-brand"></span>
 														</a>
@@ -610,7 +610,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 														</div>
 														<div class="tutor-fs-7">Size: <?php echo tutor_utils()->array_get( 'size', $attached_file ); ?></div>
 													</div>
-													<div class="tutor-avatar tutor-is-xs flex-center">
+													<div class="tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center">
 														<a download href="<?php echo $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ); ?>" target="_blank">
 															<span class="tutor-icon-download-line tutor-color-design-brand"></span>
 														</a>
