@@ -20,41 +20,39 @@ do_action('tutor_course/single/before/wrap');
 <div <?php tutor_post_class('tutor-full-width-course-top tutor-course-top-info tutor-page-wrap'); ?>>
     <div class="tutor-course-details-page tutor-container">
         <?php (isset($is_enrolled) && $is_enrolled) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
-        <div class="tutor-course-details-page-main">
-            <div class="tutor-course-details-page-main-left">
+        <div class="tutor-row tutor-gx-xl-5">
+            <main class="tutor-col-xl-8">
                 <?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 	            <?php do_action('tutor_course/single/before/inner-wrap'); ?>
-                <div class="tutor-default-tab tutor-course-details-tab tutor-tab-has-seemore tutor-mt-32">
-                    <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
-                    <div class="tab-body">
-                        <?php
-                            foreach($course_nav_item as $key=>$subpage) {
-                                ?>
-                                <div class="tab-body-item <?php echo $key=='info' ? 'is-active' : ''; ?>" id="tutor-course-details-tab-<?php echo $key; ?>">
-                                    <?php
-                                        do_action( 'tutor_course/single/tab/'.$key.'/before' );
-                                        
-                                        $method = $subpage['method'];
-                                        if(is_string($method)) {
-                                            $method();
-                                        } else {
-                                            $_object = $method[0];
-                                            $_method = $method[1];
-                                            $_object->$_method(get_the_ID());
-                                        }
-
-                                        do_action( 'tutor_course/single/tab/'.$key.'/after' );
-                                    ?>
-                                </div>
+                <div class="tutor-course-details-tab tutor-tab-has-seemore tutor-mt-32">
+                    <div class="tutor-is-sticky">
+                        <?php tutor_load_template( 'single.course.enrolled.nav', array('course_nav_item' => $course_nav_item ) ); ?>
+                    </div>
+                    <div class="tutor-tab tutor-pt-24">
+                        <?php foreach( $course_nav_item as $key => $subpage ) : ?>
+                            <div id="tutor-course-details-tab-<?php echo $key; ?>" class="tutor-tab-item<?php echo $key == 'info' ? ' is-active' : ''; ?>">
                                 <?php
-                            }
-                        ?>
+                                    do_action( 'tutor_course/single/tab/'.$key.'/before' );
+                                    
+                                    $method = $subpage['method'];
+                                    if ( is_string($method) ) {
+                                        $method();
+                                    } else {
+                                        $_object = $method[0];
+                                        $_method = $method[1];
+                                        $_object->$_method(get_the_ID());
+                                    }
+
+                                    do_action( 'tutor_course/single/tab/'.$key.'/after' );
+                                ?>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 	            <?php do_action('tutor_course/single/after/inner-wrap'); ?>
-            </div>
-            <!-- end of /.tutor-course-details-page-main-left -->
-            <div class="tutor-course-details-page-main-right">
+            </main>
+
+            <aside class="tutor-col-xl-4">
                 <div class="tutor-single-course-sidebar">
                     <?php do_action('tutor_course/single/before/sidebar'); ?>
                     <?php tutor_load_template('single.course.course-entry-box'); ?>
@@ -63,10 +61,8 @@ do_action('tutor_course/single/before/wrap');
                     <?php tutor_course_target_audience_html(); ?>
                     <?php do_action('tutor_course/single/after/sidebar'); ?>
                 </div>
-            </div>
-            <!-- end of /.tutor-course-details-page-main-right -->
+            </aside>
         </div>
-        <!-- end of /.tutor-course-details-page-main -->
     </div>
 </div>
 
