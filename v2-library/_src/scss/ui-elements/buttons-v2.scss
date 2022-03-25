@@ -3,7 +3,7 @@ $variations: (
 	//  $suffix, $bgColor, $txtColor, $border
 		'wordpress' $brand-wordpress $text-white $brand-wordpress,
 	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
-	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-hover-color),
+	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-color),
 	'secondary' $primary-40 var(--tutor-primary-color) $primary-40,
 	'tertiary' transparent $primary-main $primary-main,
 	'disable' $black-08 $text-muted $black-08,

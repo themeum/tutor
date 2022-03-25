@@ -21,7 +21,7 @@ do_action( 'tutor_global/before/attachments' );
 
 if ( is_array( $attachments ) && count( $attachments ) ) {
 	?>
-    <div class="tutor-exercise-files tutor-mt-20 tutor-pb-32">
+    <div class="tutor-exercise-files tutor-mt-20">
         <?php
             foreach ($attachments as $attachment){
         ?>
