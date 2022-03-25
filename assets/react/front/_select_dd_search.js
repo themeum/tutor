@@ -1,6 +1,5 @@
 window.selectSearchField = (selectElement) => {
 	const tutorFormSelect = document.querySelectorAll(selectElement);
-	// if (typeof readyState_complete !== 'undefined' && readyState_complete) {
 	(() => {
 		tutorFormSelect.forEach((element) => {
 			if (!element.hasAttribute('noDropdown') && !element.classList.contains('no-tutor-dropdown')) {
@@ -23,10 +22,18 @@ window.selectSearchField = (selectElement) => {
 
 				selectLabel.onclick = (e) => {
 					e.stopPropagation();
+					let thisDropDown = false;
+					if (true == dropDown.classList.contains('is-active')) {
+						thisDropDown = true;
+					}
+					
 					dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
 
-					dropDown.classList.toggle('is-active');
-
+					if (true == thisDropDown) {
+						dropDown.classList.remove('is-active');
+					} else {
+						dropDown.classList.add('is-active');
+					}
 					setTimeout(() => {
 						searchInput.focus();
 					}, 100);
@@ -35,7 +42,6 @@ window.selectSearchField = (selectElement) => {
 						e.stopPropagation();
 					};
 				};
-				dd_hide_dom_click(document.querySelectorAll('.tutor-dropdown-select-options-container'));
 
 				resultWrap = searchInputWrap.nextElementSibling;
 				resultList = resultWrap && resultWrap.querySelectorAll('.tutor-dropdown-select-option');
@@ -85,15 +91,11 @@ window.selectSearchField = (selectElement) => {
 						if (txtValue.toUpperCase().indexOf(resultFilter) > -1) {
 							item.style.display = '';
 							noItemFound = 'false';
-							// console.log('found');
 						} else {
 							noItemFound = 'true';
 							item.style.display = 'none';
-							// console.log('not found');
 						}
 					});
-
-					// console.log(countHiddenItems(resultList), noItemFound);
 
 					let noItemText = `
                     <div class="tutor-dropdown-select-option noItem">
@@ -181,22 +183,6 @@ window.selectSearchField = (selectElement) => {
 	}
 };
 
-// const callback = function(mutationsList) {
-// 	for (let mutation of mutationsList) {
-// 		if (mutation.type == 'childList') {
-// 			if (mutation.addedNodes.length) {
-// 				if (mutation.target.id === 'tutor-course-filter-loop-container') {
-// 					window.selectSearchField('.tutor-form-select');
-// 				}
-// 			}
-// 		}
-// 	}
-// };
-
-// const observer = new MutationObserver(callback);
-
-// const targetNode = document.querySelector('body');
-// const config = { attributes: true, childList: true, subtree: true };
-// observer.observe(targetNode, config);
-
-selectSearchField('.tutor-form-select');
+setTimeout(() => {
+	selectSearchField('.tutor-form-select');
+}, 10)
