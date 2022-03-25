@@ -26,15 +26,14 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
     $pending_courses_count = count(tutor_utils()->get_pending_courses_by_instructor($user->ID));
     ?>
 
-    <!-- Navigation Tab -->
-    <div class="tutor-dashboard-inline-links">
-        <ul>
-            <li class="<?php echo $active_tab == 'my-courses' ? 'active' : ''; ?>">
+    <div class="tutor-mb-32">
+        <ul class="tutor-nav">
+            <li class="tutor-nav-item<?php echo $active_tab == 'my-courses' ? ' is-active' : ''; ?>">
                 <a href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses')); ?>">
                     <?php esc_html_e('Publish', 'tutor'); ?> <?php echo "(" . $publish_courses_count . ")"; ?>
                 </a>
             </li>
-            <li class="<?php echo $active_tab == 'my-courses/pending-courses' ? 'active' : ''; ?>">
+            <li class="<?php echo $active_tab == 'my-courses/pending-courses' ? ' is-active' : ''; ?>">
                 <a href="<?php echo esc_url(tutor_utils()->get_tutor_dashboard_page_permalink('my-courses/pending-courses')); ?>">
                     <?php esc_html_e('Pending', 'tutor'); ?> <?php echo "(" . $pending_courses_count . ")"; ?>
                 </a>
