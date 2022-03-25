@@ -459,7 +459,7 @@ class Ajax {
 				}
 				wp_send_json_success(
 					array(
-						'redirect_to' => apply_filters( 'tutor_login_redirect_url', $redirect_to ),
+						'redirect_to' => apply_filters( 'tutor_login_redirect_url', $redirect_to, $user ),
 					)
 				);
 			}
