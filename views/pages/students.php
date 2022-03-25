@@ -137,7 +137,7 @@ $filters = array(
 							<span class="tutor-color-black tutor-fs-7 tutor-fw-medium"><?php echo esc_html( is_array( $course_taken ) ? count( $course_taken ) : 0 ); ?></span>
 						</td>
 						<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
-							<div class="inline-flex-center td-action-btns">
+							<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
 								<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
 								class="btn-outline tutor-btn" target="_blank">
 								<?php esc_html_e( 'Details', 'tutor' ); ?>

@@ -35,7 +35,7 @@ if ( is_array( $attachments ) && count( $attachments ) ) {
                         <?php echo esc_html( $attachment->size ); ?>
                     </div>
                 </div>
-                <div class="tutor-avatar tutor-is-xs flex-center tutor-flex-shrink-0">
+                <div class="tutor-avatar tutor-is-xs tutor-d-flex tutor-align-items-center tutor-flex-shrink-0">
                     <span class="tutor-icon-24 tutor-icon-download-line tutor-color-design-brand"></span>
                 </div>
             </div>

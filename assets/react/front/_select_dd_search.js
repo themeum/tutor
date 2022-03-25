@@ -1,6 +1,5 @@
 window.selectSearchField = (selectElement) => {
 	const tutorFormSelect = document.querySelectorAll(selectElement);
-	// if (typeof readyState_complete !== 'undefined' && readyState_complete) {
 	(() => {
 		tutorFormSelect.forEach((element) => {
 			if (!element.hasAttribute('noDropdown') && !element.classList.contains('no-tutor-dropdown')) {
