@@ -2,25 +2,6 @@
 .tutor-course-details {
 	// .tutor-course-details-page
 	&-page {
-		.tutor-course-details-tab {
-			.tab-item-content {
-				p {
-					@extend .tutor-text-regular-body;
-					@extend .tutor-color-black-60;
-				}
-			}
-		}
-	}
-
-	// .tutor-course-details-header
-	&-header {
-		a {
-			text-decoration: none;
-		}
-	}
-
-	// .tutor-course-details-page-main
-	&-page-main {
 		.plyr--video,
 		.tutor-course-thumbnail-bg img {
 			border-radius: 6px;
@@ -31,11 +12,12 @@
 .tutor-course-details-page {
 	.tutor-course-details-tab {
 		@include breakpoint-min(800) {
-			.tab-header {
+			.tutor-is-sticky {
 				position: sticky;
 				top: 0;
-				background: #fff;
-				z-index: 999;
+				background: rgba(255, 255, 255, 0.6);
+				backdrop-filter: blur(14px);
+				z-index: 1023;
 			}
 		}
 	}
@@ -44,7 +26,7 @@
 .admin-bar {
 	.tutor-course-details-tab {
 		@include breakpoint-min(800) {
-			.tab-header {
+			.tutor-is-sticky {
 				top: 32px;
 			}
 		}
@@ -53,7 +35,7 @@
 
 .tutor-course-details-action-btns {
 	display: flex;
-	gap: 30px;
+	gap: 32px;
 	position: relative;
 
 	& > a {
@@ -63,7 +45,7 @@
 	}
 
 	.action-btn [class^='tutor-icon-'] {
-		font-size: 21px;
+		font-size: 20px;
 	}
 }
 
@@ -73,19 +55,19 @@
 		margin: 0;
 		padding: 0;
 	}
-	&-title {
-	}
+
 	&-list {
 		margin-top: 16px;
 		li [class^='tutor-icon-'] {
-			font-size: 26px;
+			font-size: 24px;
 		}
 	}
+
 	&-tags {
-		margin-left: -15px;
+		margin-left: -16px;
 		.tutor-tag-list li {
 			a {
-				margin-bottom: 15px;
+				margin-bottom: 16px;
 			}
 		}
 	}
@@ -101,11 +83,9 @@
 
 // Course Details - Instructor Cards
 .tutor-instructor-info-card {
-	/* stroke/light30 */
 	border: 1px solid $stroke-light-30;
 	border-radius: 6px;
-	&-body {
-	}
+
 	&-footer {
 		border-top: 1px solid $stroke-light-30;
 	}
@@ -133,16 +113,9 @@
 .tutor-course-sidebar-card {
 	border: 1px solid $stroke-light-30;
 	border-radius: 6px;
-	// max-width: 400px;
 	position: relative;
-	&-body {
-	}
 	&-footer {
 		border-top: 1px solid $stroke-light-30;
-	}
-	&-pricing {
-	}
-	&-btns {
 	}
 	&-meta-list {
 		li {
@@ -159,32 +132,21 @@
 	}
 
 	// Card Variations
-	&.tutor-before-enroll {
-	}
-	&.tutor-after-enroll {
-	}
-	&.tutor-before-purchase {
-	}
-	&.tutor-after-purchase {
-	}
-
 	.tutor-alert {
 		.tutor-alert-text {
 			align-items: flex-start;
 		}
 		.tutor-alert-icon {
-			margin-top: -5px;
+			margin-top: -4px;
 		}
 	}
 
-	&-header-only {
-	}
 	&-footer-only {
-		// background: #000;
 		.tutor-course-sidebar-card-footer {
 			border-top: none;
 		}
 	}
+
 	// .tutor-course-sidebar-card-membership-plan
 	&-membership-plan {
 		border-color: $primary-50;
@@ -209,8 +171,6 @@
 
 	// .tutor-course-sidebar-card-pick-plan
 	&-pick-plan {
-		&-fields {
-		}
 		&-label {
 			cursor: pointer;
 			display: grid;
@@ -248,18 +208,12 @@
 				opacity: 0;
 			}
 		}
+
 		// has-input-expandable
 		&.has-input-expandable {
 			.tutor-course-sidebar-card-pick-plan-label {
 				input[type='radio'] {
-					top: 25px;
-					// &:checked {
-					// 	~ .tutor-course-sidebar-card-pick-plan-input {
-					// 		.input-plan-details {
-					// 			max-height: max-content;
-					// 		}
-					// 	}
-					// }
+					top: 24px;
 				}
 			}
 			.tutor-course-sidebar-card-pick-plan-input {
@@ -314,11 +268,11 @@
 	&-main {
 		@include breakpoint-min(desktop) {
 			display: grid;
-			grid-gap: 30px;
+			grid-gap: 32px;
 			grid-template-columns: 8fr 4fr;
 		}
 		@include breakpoint-min(desktop-lg) {
-			grid-gap: 55px;
+			grid-gap: 54px;
 		}
 	}
 } // end of .tutor-course-details-page
@@ -778,8 +732,3 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 		}
 	} // end /.tutor-gradebook-allgrades
 } // end /.tutor-gradebook
-
-// Layout - Debug
-.tutor-course-details-page > * > * {
-	// border: 1px solid red;
-}

@@ -272,3 +272,21 @@ $border: (
 .tutor-lh-1 {
 	line-height: 1 !important;
 }
+
+// ratio
+.tutor-ratio {
+	position: relative;
+    width: 100%;
+
+	&-16x9 {
+		content: " ";
+		display: block;
+		padding-top: 56.25%;
+	}
+
+	&-4x3 {
+		content: " ";
+		display: block;
+		padding-top: 75%;
+	}
+}
