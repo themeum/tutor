@@ -24,6 +24,32 @@
 			}
 		}
 
+		// Nav
+		const attrNav = 'data-tutor-nav-target';
+		const activeNavItems = document.querySelectorAll('.tutor-nav-item.is-active, .tutor-tab-item.is-active');
+
+		if (e.target.hasAttribute(attrNav)) {
+			e.preventDefault();
+			const id = e.target.hasAttribute(attrNav)
+				? e.target.getAttribute(attrNav)
+				: e.target.closest(`[${attrNav}]`).getAttribute(attrNav);
+
+			const navTabBodyItem = document.getElementById(id);
+
+			if (e.target.hasAttribute(attrNav) && navTabBodyItem) {
+				activeNavItems.forEach((m) => {
+					m.classList.remove('is-active');
+				});
+
+				if(e.target.closest('.tutor-nav-more') != undefined) {
+					e.target.closest('.tutor-nav-more').classList.add('is-active');
+				}
+
+				e.target.parentElement.classList.add('is-active');
+				navTabBodyItem.classList.add('is-active');
+			}
+		}
+
 		/**
 		 * Tutor Default Tab - see more
 		 */
