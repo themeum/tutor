@@ -134,12 +134,67 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		quizBox.addEventListener('dragstart', dragStart);
 		quizBox.addEventListener('dragend', dragEnd);
 	});
+	tutorDraggables.forEach((quizBox) => {
+		['touchstart', 'touchmove', 'touchend'].forEach(function(e) {
+			quizBox.addEventListener(e, touchHandler);
+		});
+	});
 	tutorDropzone.forEach((quizImageBox) => {
 		quizImageBox.addEventListener('dragover', dragOver);
 		quizImageBox.addEventListener('dragenter', dragEnter);
 		quizImageBox.addEventListener('dragleave', dragLeave);
 		quizImageBox.addEventListener('drop', dragDrop);
 	});
+
+	function touchHandler(e) {
+		e.preventDefault();
+		const { type } = e;
+
+		if (type === 'touchstart') {
+			this.classList.add('tutor-dragging');
+		} else if (type === 'touchmove') {
+			let copiedDragElement = document.querySelector('.tutor-drag-copy');
+			if (e.target.classList.contains('tutor-dragging')) {
+				const mainElementBoundingRect = e.target.getBoundingClientRect();
+				if (!copiedDragElement) {
+					copiedDragElement = e.target.cloneNode(true);
+					copiedDragElement.classList.add('tutor-drag-copy');
+					e.target.parentNode.appendChild(copiedDragElement);
+				}
+				copiedDragElement.style.position = 'fixed';
+				copiedDragElement.style.left = e.touches[0].clientX - copiedDragElement.clientWidth / 2 + 'px';
+				copiedDragElement.style.top = e.touches[0].clientY - copiedDragElement.clientHeight / 2 + 'px';
+				copiedDragElement.style.zIndex = '9999';
+				copiedDragElement.style.opacity = '0.5';
+				copiedDragElement.style.width = mainElementBoundingRect.width + 'px';
+				copiedDragElement.style.height = mainElementBoundingRect.height + 'px';
+			}
+		} else if (type === 'touchend') {
+			const copiedDragElement = document.querySelector('.tutor-drag-copy');
+			if (copiedDragElement) {
+				copiedDragElement.remove();
+				const evt = typeof e.originalEvent === 'undefined' ? e : e.originalEvent;
+				const touch = evt.touches[0] || evt.changedTouches[0];
+				let [x, y] = [touch.pageX, touch.pageY];
+				let dropZone = document.elementFromPoint(x, y);
+				if (dropZone.classList.contains('tutor-dropzone') || dropZone.closest('.tutor-dropzone')) {
+					if (!dropZone.classList.contains('tutor-dropzone')) {
+						dropZone = dropZone.closest('.tutor-dropzone');
+					}
+					const input = copiedDragElement.querySelector('input');
+					const inputName = input.dataset.name;
+					const newInput = document.createElement('input');
+					newInput.type = 'text';
+					newInput.setAttribute('value', input.value);
+					newInput.setAttribute('name', inputName);
+					dropZone.appendChild(newInput);
+					const copyContent = copiedDragElement.querySelector('.tutor-dragging-text-conent').textContent;
+					dropZone.querySelector('.tutor-dragging-text-conent').textContent = copyContent;
+					this.classList.remove('tutor-dragging');
+				}
+			}
+		}
+	}
 	function dragStart() {
 		this.classList.add('tutor-dragging');
 	}
@@ -257,13 +312,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			lessText.style.display = 'block';
 			dots.style.display = 'inline';
 			btnText.innerHTML =
-				"<span class='btn-icon tutor-icon-plus-filled color-design-brand'></span><span class='tutor-color-black'>" + __('Show More', 'tutor') + "</span>";
+				"<span class='btn-icon tutor-icon-plus-filled color-design-brand'></span><span class='tutor-color-black'>" +
+				__('Show More', 'tutor') +
+				'</span>';
 			moreText.style.display = 'none';
 		} else {
 			lessText.style.display = 'none';
 			dots.style.display = 'none';
 			btnText.innerHTML =
-				"<span class='btn-icon tutor-icon-minus-filled color-design-brand'></span><span class='tutor-color-black'>" + __('Show Less', 'tutor') + "</span>";
+				"<span class='btn-icon tutor-icon-minus-filled color-design-brand'></span><span class='tutor-color-black'>" +
+				__('Show Less', 'tutor') +
+				'</span>';
 			moreText.style.display = 'block';
 			contSect.classList.add('no-before');
 		}
