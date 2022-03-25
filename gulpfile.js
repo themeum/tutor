@@ -136,8 +136,9 @@ function i18n_makepot(callback, target_dir) {
 					// Parse the string
 
 					var string = found[n];
-					var first_quote = string.indexOf("'") + 1;
-					var second_quote = string.indexOf("'", first_quote);
+					var delimeter = string[3]==' ' ? string[4] : string[3];
+					var first_quote = string.indexOf(delimeter) + 1;
+					var second_quote = string.indexOf(delimeter, first_quote);
 					var text = string.slice(first_quote, second_quote);
 
 					if (added_texts.indexOf(text) > -1) {

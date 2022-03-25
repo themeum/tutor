@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
         courseTabsCoursesCount(prevStatus, newStatus);
 
       } else {
-        tutor_toast(__("Failed", "tutor"), __("Course status update failed ", "tutor"), "error");
+        tutor_toast(__("Failed", "tutor"), __('Course status update failed', 'tutor'), "error");
       }
       icon1.classList.remove('tutor-updating-message-v2');
     };
