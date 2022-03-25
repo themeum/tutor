@@ -196,20 +196,6 @@ if ( ! function_exists( 'tutor_course_loop_end' ) ) {
 	}
 }
 
-if ( ! function_exists( 'tutor_course_archive_pagination' ) ) {
-	function tutor_course_archive_pagination( $echo = true ) {
-		ob_start();
-		tutor_load_template( 'loop.tutor-pagination' );
-
-		$output = apply_filters( 'tutor_course_archive_pagination', ob_get_clean() );
-		if ( $echo ) {
-			echo tutor_kses_html( $output );
-		}
-
-		return $output;
-	}
-}
-
 function tutor_course_loop_before_content() {
 	ob_start();
 	tutor_load_template( 'loop.loop-before-content' );
@@ -318,8 +304,8 @@ if ( ! function_exists( 'tutor_course_loop_wrap_classes' ) ) {
 if ( ! function_exists( 'tutor_course_loop_col_classes' ) ) {
 	function tutor_course_loop_col_classes( $echo = true ) {
 		$course_filter = (bool) tutor_utils()->get_option( 'course_archive_filter', false );
-		$shortcode_arg = isset( $GLOBALS['tutor_shortcode_arg'] ) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
-		$course_cols   = $shortcode_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $shortcode_arg;
+		$course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
+		$course_cols   = $course_archive_arg === null ? tutor_utils()->get_option( 'courses_col_per_row', 3 ) : $course_archive_arg;
 		$classes       = apply_filters(
 			'tutor_course_loop_col_classes',
 			array(
@@ -373,16 +359,6 @@ if ( ! function_exists( 'tutor_post_class' ) ) {
 		);
 
 		post_class( $classes );
-	}
-}
-
-if ( ! function_exists( 'tutor_course_archive_filter_bar' ) ) {
-	function tutor_course_archive_filter_bar() {
-		ob_start();
-		tutor_load_template( 'global.course-archive-filter-bar' );
-		$output = apply_filters( 'tutor_course_archive_filter_bar', ob_get_clean() );
-
-		echo $output;
 	}
 }
 
