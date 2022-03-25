@@ -27,7 +27,7 @@
                     break;
                 }
             ?>
-            <div class="tab-header-item <?php echo $index==0 ? 'is-active' : ''; ?>" data-tutor-tab-target="tutor-settings-tab-<?php echo $tab['slug']; ?>">
+            <div class="tab-header-item<?php echo $index==0 ? ' is-active' : ''; ?>" data-tutor-tab-target="tutor-settings-tab-<?php echo $tab['slug']; ?>">
                 <span><?php echo $tab['label']; ?></span>
             </div>
         <?php endforeach; ?>
@@ -53,7 +53,7 @@
     
     <div class="tab-body">
         <?php foreach($tabbed as $index => $tab): ?>
-            <div class="tab-body-item <?php echo $index==0 ? 'is-active' : ''; ?>" id="tutor-settings-tab-<?php echo $tab['slug']; ?>">
+            <div class="tab-body-item<?php echo $index==0 ? ' is-active' : ''; ?>" id="tutor-settings-tab-<?php echo $tab['slug']; ?>">
                 <?php echo $this->blocks( $tab ); ?>
             </div>
         <?php endforeach; ?>
