@@ -253,15 +253,15 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" width="17%" class="v-align-top">
-									<div class="td-datetime">
-										<div class="tutor-fs-8 tutor-fw-medium tutor-color-black"><?php echo esc_html( $date_format ); ?></div>
-										<div class="tutor-fs-7 tutor-color-black"><?php echo esc_html( $time_format ); ?></div>
+									<div class="td-datetime tutor-fs-7 tutor-color-black">
+										<div class="tutor-fw-medium"><?php echo esc_html( $date_format ); ?></div>
+										<div><?php echo esc_html( $time_format ); ?></div>
 									</div>
 								</td>
 							<?php else : ?>
 								<td data-th="<?php esc_html_e( 'Date', 'tutor' ); ?>" width="17%" class="tutor-text-nowrap">
 									<div class="td-datetime">
-										<div class="tutor-date tutor-fs-8 tutor-fw-medium tutor-color-black"><?php echo esc_html( $date_format ); ?></div>
+										<div class="tutor-date tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo esc_html( $date_format ); ?></div>
 										<div class="tutor-fs-7 tutor-color-black"><?php echo esc_html( $time_format ); ?></div>
 									</div>
 								</td>
@@ -272,7 +272,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 									<div class="td-course tutor-color-black tutor-fs-6 tutor-fw-medium">
 										<?php echo esc_html( $announcement->post_title ); ?>
 									</div>
-									<div class="tutor-fs-8 tutor-fw-medium tutor-color-black-60" style="margin-top: 3px;">
+									<div class="tutor-fs-7 tutor-fw-medium tutor-color-black-60" style="margin-top: 3px;">
 										<?php esc_html_e( 'Course', 'tutor' ); ?>: <?php echo esc_html( $course ? $course->post_title : '' ); ?>
 									</div>
 								</div>
