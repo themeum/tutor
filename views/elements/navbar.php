@@ -5,12 +5,11 @@
  * @package Navbar component
  */
 if ( isset( $data ) && count( $data ) ) : ?>
-	<header class="tutor-wp-dashboard-header tutor-d-xl-flex tutor-justify-content-between tutor-align-items-center tutor-px-32 tutor-py-16 tutor-mb-24" style="margin-left:-20px">
+	<header class="tutor-wp-dashboard-header tutor-d-xl-flex tutor-justify-content-between tutor-align-items-center tutor-px-32 tutor-py-16 tutor-mb-24">
 		<div class="header-title-wrap tutor-d-flex tutor-align-items-center tutor-flex-wrap tutor-mb-xl-0 tutor-mb-4 header-title tutor-fs-5 tutor-fw-medium tutor-color-black">
 			<span class="text-primary-h5">
 				<?php echo esc_html( $data['page_title'] ); ?>
 			</span>
-			<!--modal button or url button -->
 			<?php
 			// If modal target set then button will be set as modal button otherwise url button.
 			if ( isset( $data['modal_target'] ) && '' !== $data['modal_target'] ) :
@@ -43,7 +42,6 @@ if ( isset( $data ) && count( $data ) ) : ?>
 							<?php endif; ?></span>
 						</a>
 					<?php endforeach; ?>
-					<!-- <ul style="display: flex; column-gap: 15px;"></ul> -->
 				</div>
 			<?php endif; ?>
 		</div>

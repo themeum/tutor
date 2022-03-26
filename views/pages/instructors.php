@@ -206,7 +206,7 @@ $filters = array(
 			</tbody>
 		</table>
 		</div>
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-48">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 		<?php
 			/**
 			 * Prepare pagination data & load template

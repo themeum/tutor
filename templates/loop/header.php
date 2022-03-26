@@ -13,7 +13,7 @@
 	    $course_id = get_the_ID();
 	?>
     <?php
-        $is_wishlisted = tutor_utils()->is_wishlisted($course_id);
+        $is_wish_listed = tutor_utils()->is_wishlisted($course_id);
         
         $action_class = '';
         if ( is_user_logged_in()){
@@ -23,7 +23,7 @@
         }
         
 		echo '<a href="javascript:;" class="'. esc_attr( $action_class ) .' save-bookmark-btn tutor-d-flex tutor-align-items-center tutor-justify-content-center" data-course-id="'. esc_attr( $course_id ) .'">
-            <i class="'.($is_wishlisted ? 'tutor-icon-fav-full-filled' : 'tutor-icon-fav-line-filled').'"></i>
+            <i class="' . ( $is_wish_listed ? 'tutor-icon-fav-full-filled' : 'tutor-icon-fav-line-filled') . '"></i>
         </a>';
 	?>
 </div>
