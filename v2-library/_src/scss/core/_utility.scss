@@ -298,3 +298,21 @@ $border: (
 		height: 100%;
 	}
 }
+
+// svg icon
+.tutor {
+	&-svg {
+		display: inline-flex;
+		line-height: 1 !important;
+		svg {
+			height: 1em;
+			width: 1em;
+		}
+	}
+
+	&-round-icon {
+		background-color: var(--tutor-primary-lighter);
+		color: var(--tutor-primary-color);
+		border-radius: 100px;
+	}
+}
