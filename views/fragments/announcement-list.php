@@ -79,29 +79,35 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 	// TODO: Update this modal with new modal variation from Saif
 	?>
 	<div id="<?php echo $id; ?>" class="tutor-modal modal-view-double-segment">
-		<span class="tutor-modal-overlay"></span>
+		<div class="tutor-modal-overlay"></div>
 
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
-				<div class="tutor-modal-header tutor-fs-6 tutor-fw-bold tutor-color-black-70">
+				<div class="tutor-modal-header">
 					<button data-tutor-modal-close class="tutor-modal-close tutor-color-muted">
 						<span class="tutor-icon-line-cross-line tutor-icon-40"></span>
 					</button>
 				</div>
+
 				<div class="tutor-modal-body tutor-align-items-start">
-					<div class="view-announcement-icon bg-primary-40 tutor-color-brand-wordpress">
-						<span class="tutor-icon-speaker-filled tutor-color-design-brand"></span>
+					<div class="tutor-mb-32">
+						<span class="tutor-round-icon tutor-fs-1 tutor-p-12">
+							<i class="tutor-icon-speaker-filled" area-hidden="true"></i>
+						</span>
 					</div>
-					<div class="tutor-fs-5 tutor-fw-bold tutor-color-black tutor-mt-32 tutor-pr-lg-4">
+
+					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-12">
 						<?php echo $announcement->post_title; ?>
 					</div>
-					<div class="tutor-fs-6 tutor-color-muted tutor-mt-20">
+
+					<div class="tutor-fs-6 tutor-color-muted">
 						<?php echo $announcement->post_content; ?>
 					</div>
 				</div>
+
 				<div class="tutor-modal-footer">
-					<div class="footer-top">
-						<div class="">
+					<div class="tutor-row tutor-mb-60">
+						<div class="tutor-col-lg-7 tutor-mb-16 tutor-mb-lg-0">
 							<div class="tutor-fs-7 tutor-color-black-60">
 								<?php _e( 'Course', 'tutor' ); ?>
 							</div>
@@ -109,28 +115,35 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 								<?php echo $course_title; ?>
 							</div>
 						</div>
-						<div class="">
+
+						<div class="tutor-col-lg-5">
 							<div class="tutor-fs-7 tutor-color-black-60">
-								<?php _e( 'Publised Date', 'tutor' ); ?>
+								<?php _e( 'Published Date', 'tutor' ); ?>
 							</div>
 							<div class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mt-4">
 								<?php echo $publish_date . ', ' . $publish_time; ?>
 							</div>
 						</div>
 					</div>
-					<div class="footer-bottom tutor-mt-sm-60 tutor-mt-20">
-						<div class="footer-btns">
-							<button data-tutor-modal-close class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md tutor-d-none tutor-d-sm-block tutor-modal-btn-cancel">
-								<?php _e( 'Cancel', 'tutor' ); ?>
-							</button>
-						</div>
-						<div class="footer-btns announcement-action-button tutor-d-flex tutor-justify-content-end tutor-flex-sm-wrap tutor-flex-md-nowrap">
-							<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-modal-btn-delete">
-								<?php _e( 'Delete', 'tutor' ); ?>
-							</button>
-							<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-md tutor-modal-btn-edit <?php echo is_admin() ? 'tutor-btn-wordpress' : 'tutor-btn-primary'; ?>">
-								<?php _e( 'Edit', 'tutor' ); ?>
-							</button>
+
+					<div class="footer-bottom">
+						<div class="tutor-row">
+							<div class="tutor-col-6 tutor-col-lg-7">
+								<button data-tutor-modal-close class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md tutor-modal-btn-cancel">
+									<?php _e( 'Cancel', 'tutor' ); ?>
+								</button>
+							</div>
+
+							<div class="tutor-col-6 tutor-col-lg-5">
+								<div class="tutor-d-flex tutor-justify-content-end">
+									<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-modal-btn-delete">
+										<?php _e( 'Delete', 'tutor' ); ?>
+									</button>
+									<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-md tutor-modal-btn-edit <?php echo is_admin() ? 'tutor-btn-wordpress' : 'tutor-btn-primary'; ?> tutor-ml-16">
+										<?php _e( 'Edit', 'tutor' ); ?>
+									</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -147,25 +160,27 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner tutor-modal-close-inner">
 				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="tutor-icon-line-cross-line"></span>
+					<span class="tutor-icon-line-cross-line" area-hidden="true"></span>
 				</button>
+
 				<div class="tutor-modal-body tutor-text-center">
-					<div class="tutor-modal-icon">
-						<img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+					<div class="tutor-mb-32">
+						<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
 					</div>
-					<div class="tutor-modal-text-wrap">
-						<h3 class="tutor-modal-title">
-							<?php _e( 'Delete This Announcement?', 'tutor' ); ?>
-						</h3>
-						<p>
-							<?php _e( 'Are you sure you want to delete this Announcement permanently from the site? Please confirm your choice.', 'tutor' ); ?>
-						</p>
+	
+					<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-16">
+						<?php _e( 'Delete This Announcement?', 'tutor' ); ?>
 					</div>
-					<div class="tutor-modal-btns tutor-btn-group">
+
+					<div class="tutor-fs-6 tutor-color-muted">
+						<?php _e( 'Are you sure you want to delete this Announcement permanently from the site? Please confirm your choice.', 'tutor' ); ?>
+					</div>
+					
+					<div class="tutor-mt-48">
 						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
 							<?php _e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-list-ajax-action"  data-request_data='{"announcement_id":<?php echo $announcment_id; ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo $row_id; ?>">
+						<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-list-ajax-action tutor-ml-16"  data-request_data='{"announcement_id":<?php echo $announcment_id; ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo $row_id; ?>">
 							<?php _e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>

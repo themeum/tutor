@@ -56,19 +56,24 @@ $courses    = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cours
 $image_base = tutor()->url . '/assets/images/';
 ?>
 
-<div class="tutor-dashboard-content-inner">
-	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php echo __( 'Announcement', 'tutor' ); ?></div>
-	<div class="tutor-component-three-col-action new-announcement-wrap">
-		<div class="tutor-announcement-big-icon">
-			<i class="tutor-icon-speaker-filled"></i>
-		</div>
-		<div>
-			<span class=" tutor-color-black-60"><?php esc_html_e( 'Create Announcement', 'tutor' ); ?></span>
-			<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
-					<?php esc_html_e( 'Notify all students of your course', 'tutor' ); ?>
+<div class="tutor-card tutor-p-24">
+	<div class="tutor-row tutor-align-items-lg-center">
+		<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
+			<div class="tutor-round-icon tutor-fs-2 tutor-p-8">
+				<i class="tutor-icon-speaker-filled" area-hidden="true"></i>
 			</div>
 		</div>
-		<div class="new-announcement-button">
+
+		<div class="tutor-col tutor-mb-16 tutor-mb-lg-0">
+			<div class="tutor-fs-6 tutor-color-muted tutor-mb-4">
+				<?php esc_html_e( 'Create Announcement', 'tutor' ); ?>
+			</div>
+			<div class="tutor-fs-5 tutor-color-black">
+				<?php esc_html_e( 'Notify all students of your course', 'tutor' ); ?>
+			</div>
+		</div>
+
+		<div class="tutor-col-lg-auto">
 			<button type="button" class="tutor-btn" data-tutor-modal-target="tutor_announcement_new">
 				<?php esc_html_e( 'Add New Announcement', 'tutor' ); ?>
 			</button>
