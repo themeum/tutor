@@ -373,7 +373,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 						</div>
 					</div>
 					<div class="tutor-modal-ins-meta tutor-mt-44">
-						<div class="flex-center">
+						<div class="tutor-d-flex tutor-align-items-center">
 							<div class="tutor-avatar">
 								<?php echo get_avatar( $instructor_data->ID ); ?>
 							</div>

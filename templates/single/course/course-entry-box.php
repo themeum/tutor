@@ -236,7 +236,7 @@
 					continue;}
 				?>
 				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-content-between">
-					<div class="flex-center">
+					<div class="tutor-d-flex tutor-align-items-center">
 						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
 						<span class="tutor-fs-7 tutor-color-muted tutor-ml-8">
 							<?php echo esc_html( $meta['label'] ); ?>

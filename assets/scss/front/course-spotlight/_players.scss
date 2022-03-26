@@ -1,15 +1,21 @@
+.tutor-video-player {
+	position: relative;
+	.loading-spinner {
+		&:before {
+			top: 50%;
+			margin-top: -25px;
+			margin-left: -25px;
+		}
+	}
+}
+
 .tutor-course-single-content-wraper {
-	// Course content navigation
 	.tutor-single-course-content-prev,
 	.tutor-single-course-content-next {
-		width: 31px;
-		height: 100%; // calc(100vh - 290px);
-		top: 60px;
+		top: 0;
+		width: 40px;
+		height: 100%;
 		position: absolute;
-
-		@media (max-width: 575px) {
-			top: 76px;
-		}
 
 		a {
 			backdrop-filter: blur(94px);
@@ -17,12 +23,14 @@
 			display: flex;
 			align-items: center;
 			height: 150px;
+
 			@include breakpoint-max(768) {
 				height: 60px;
 			}
+
 			background: rgba(121, 121, 121, 0.479);
 			position: relative;
-			// top: 20px;
+			
 			&:hover {
 				background: rgba(70, 70, 70, 0.479);
 			}

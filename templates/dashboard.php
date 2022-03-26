@@ -72,8 +72,7 @@ do_action('tutor_dashboard/before/wrap');
 
 <div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-80">
 	<div class="tutor-container">
-		<!-- new head part  -->
-		<div class="tutor-row tutor-frontend-dashboard-header">
+		<div class="tutor-row tutor-d-flex tutor-justify-content-between tutor-frontend-dashboard-header">
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-items-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url(get_avatar_url($user_id, array('size' => 150))); ?>)">
 				</div>
@@ -151,8 +150,7 @@ do_action('tutor_dashboard/before/wrap');
 				</div>
 			</div>
 		</div>
-		<!-- new head part end -->
-		<!-- Sidebar and Content Part -->
+
 		<div class="tutor-row tutor-frontend-dashboard-maincontent">
 			<div class="tutor-col-12 tutor-col-md-4 tutor-col-lg-3 tutor-dashboard-left-menu">
 				<ul class="tutor-dashboard-permalinks">

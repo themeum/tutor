@@ -22,11 +22,10 @@ do_action( 'tutor_lesson/single/before/video/external_url' );
 ?>
 
 <?php if($video_info ): ?>
-    <div class="course-players-parent">
-        <div class="course-players">
-            <div class="loading-spinner"></div>
-            <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData??null)); ?>">
-
+    <div class="tutor-video-player">
+        <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr(json_encode($jsonData??null)); ?>">
+        <div class="loading-spinner" area-hidden="true"></div>
+        <div class="tutor-ratio tutor-ratio-16x9">
             <video poster="<?php echo $poster_url; ?>" class="tutorPlayer" playsinline controls >
                 <source src="<?php echo tutor_utils()->array_get('source_external_url', $video_info); ?>" type="<?php echo tutor_utils()->avalue_dot('type', $video_info); ?>">
             </video>

@@ -49,8 +49,8 @@ if($instructors && count($instructors)) {
 						tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 
 					?>
 					<div class="tutor-ins-meta tutor-d-flex">
-						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center">
-							<span class="tutor-icon-30 tutor-icon-user-filled tutor-mr-4"></span>
+						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center">
+							<span class="tutor-icon-30 tutor-icon-user-filled"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
 								<?php echo tutor_utils()->get_total_students_by_instructor($instructor->ID); ?>
 							</span>
@@ -58,8 +58,8 @@ if($instructors && count($instructors)) {
 								<?php _e('Students', 'tutor'); ?>
 							</span>
 						</div>
-						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center ">
-							<span class="tutor-icon-30 tutor-icon-student-line-1 tutor-mr-4"></span>
+						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center ">
+							<span class="tutor-icon-30 tutor-icon-mortarboard-line"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
 								<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?>
 							</span>

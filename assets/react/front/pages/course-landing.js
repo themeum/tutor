@@ -58,7 +58,7 @@ window.jQuery(document).ready(($) => {
 });
 
 readyState_complete(() => {
-    let loadingSpinner = document.querySelector('.course-players .loading-spinner');
+    let loadingSpinner = document.querySelector('.tutor-video-player .loading-spinner');
     if (null !== loadingSpinner) {
         loadingSpinner.remove();
     }
