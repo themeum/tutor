@@ -56,15 +56,16 @@ $filters = array(
 <div class="tutor-admin-wrap">
 
 	<?php
+		/**
+		 * Load Templates with data.
+		 */
 		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+		$filters_template = tutor()->path . 'views/elements/filters.php';
+		tutor_load_template_from_custom_path( $filters_template, $filters );
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	?>
 
 	<div class="tutor-admin-body">
-		<?php
-			$filters_template = tutor()->path . 'views/elements/filters.php';
-			tutor_load_template_from_custom_path( $filters_template, $filters );
-		?>
 		<div class="tutor-ui-table-responsive tutor-mt-24">
 			<table class="tutor-ui-table tutor-ui-table-responsive tutor-table-with-checkbox">
 				<thead>

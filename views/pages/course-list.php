@@ -140,18 +140,15 @@ $available_status = array(
 
 <div class="tutor-admin-wrap">
 	<?php
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
-	?>
-	<div class="tutor-admin-body">
-		<?php
 		/**
 		 * Load Templates with data.
 		 */
+		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		$filters_template = tutor()->path . 'views/elements/filters.php';
+		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
-		?>
-
+	?>
+	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
 			<div class="tutor-ui-table-wrapper">
 				<table class="tutor-ui-table tutor-ui-table-responsive table-dashboard-course-list td-align-middle">
@@ -272,12 +269,12 @@ $available_status = array(
 											<?php
 												echo get_avatar( $post->post_author, '96' );
 											?>
-											<p class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
+											<div class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
 												<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
-											</p>
+											</pDIV>
 											<a
-											href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>"
-											class="btn-text btn-detail-link tutor-color-design-dark" target="_blank"
+												href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>"
+												class="btn-text btn-detail-link tutor-color-design-dark" target="_blank"
 											>
 											<span class="tutor-icon-detail-link-filled"></span>
 											</a>
