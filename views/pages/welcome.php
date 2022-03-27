@@ -70,7 +70,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 				<div class="tutor-col-lg-6">
 					<div class="tutor-welcome-card tutor-px-24 tutor-px-xl-48 tutor-pt-24 tutor-pt-xl-48 tutor-pb-20 tutor-pb-xl-32 tutor-mb-32 tutor-mb-xl-40">
 						<div class="tutor-row tutor-align-items-center">
-							<div class="tutor-col-lg-6 tutor-d-flex tutor-justify-content-center tutor-d-xl-block">
+							<div class="tutor-col-lg-6 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<div>
 									<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/design-system.png" srcset="<?php echo esc_url($image_url); ?>/design-system-2x.png 2x" alt="Unified Design" loading="lazy">
 								</div>
@@ -84,7 +84,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 	
 					<div class="tutor-welcome-card">
 						<div class="tutor-row tutor-align-items-center">
-							<div class="tutor-col-lg-6 tutor-d-flex tutor-justify-content-center tutor-d-xl-block">
+							<div class="tutor-col-lg-6 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<div>
 									<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/analytics.png" srcset="<?php echo esc_url($image_url); ?>/analytics-2x.png 2x" alt="Analytics" loading="lazy">
 								</div>
@@ -141,7 +141,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 				<div class="tutor-col-lg-6 tutor-mb-32 tutor-mb-lg-0">
 					<div class="tutor-welcome-card tutor-px-32 tutor-pt-44">
 						<div class="tutor-row">
-							<div class="tutor-col-xl-6 tutor-d-flex tutor-justify-content-center tutor-d-xl-block">
+							<div class="tutor-col-xl-6 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<div>
 									<img class="tutor-img-responsive" src="<?php echo esc_url($image_url); ?>/notifications.png" srcset="<?php echo esc_url($image_url); ?>/notifications-2x.png 2x" alt="Notifications" loading="lazy">
 								</div>
@@ -162,7 +162,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 				<div class="tutor-col-lg-6">
 					<div class="tutor-welcome-card tutor-px-32 tutor-py-44">
 						<div class="tutor-row">
-							<div class="tutor-col-xl-4 tutor-d-flex tutor-justify-content-center tutor-d-xl-block">
+							<div class="tutor-col-xl-4 tutor-d-flex tutor-justify-center tutor-d-xl-block">
 								<svg xmlns="http://www.w3.org/2000/svg" width="155" height="155" fill="none"><circle cx="77.5" cy="77.5" r="77.5" fill="#3E64DE" fill-opacity=".1"/><path fill="#3E64DE" d="M97.857 72.41H82.59V57.144a3.393 3.393 0 0 0-3.393-3.393h-3.392a3.393 3.393 0 0 0-3.393 3.393V72.41H57.143a3.393 3.393 0 0 0-3.393 3.393v3.392a3.393 3.393 0 0 0 3.393 3.393H72.41v15.268a3.393 3.393 0 0 0 3.393 3.393h3.392a3.393 3.393 0 0 0 3.393-3.393V82.59h15.268a3.393 3.393 0 0 0 3.393-3.393v-3.392a3.393 3.393 0 0 0-3.393-3.393Z"/></svg>
 							</div>
 	
@@ -181,7 +181,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 		
 	<section>
 		<div class="tutor-container">
-			<div class="tutor-row tutor-justify-content-center tutor-gx-xl-5">
+			<div class="tutor-row tutor-justify-center tutor-gx-xl-5">
 				<div class="tutor-col-lg-4 tutor-col-xl-3 tutor-mb-24 tutor-mb-lg-0">
 					<a class="tutor-btn tutor-btn-primary tutor-d-block tutor-text-center" href="<?php echo admin_url( 'post-new.php?post_type=courses' ); ?>">Let's Start Building</a>
 				</div>

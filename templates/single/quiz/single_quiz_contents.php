@@ -7,7 +7,7 @@
 $course = tutor_utils()->get_course_by_quiz( get_the_ID() );
 ?>
 
-<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
     <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
         <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
             <span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>

@@ -61,8 +61,8 @@ $filters = array(
 		 */
 		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		$filters_template = tutor()->path . 'views/elements/filters.php';
-		tutor_load_template_from_custom_path( $filters_template, $filters );
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
+		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
 	<div class="tutor-admin-body">

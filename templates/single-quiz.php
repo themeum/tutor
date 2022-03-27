@@ -32,7 +32,7 @@ ob_start();
 ?>
 	<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
-    <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+    <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
         <div class="tutor-topbar-left-item tutor-d-flex"> 
             <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
                 <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
@@ -96,7 +96,7 @@ ob_start();
     </div>
 
 	<?php ob_start(); ?>
-		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-content-center tutor-mt-80 tutor-pb-80">
+		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-center tutor-mt-80 tutor-pb-80">
 			<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 			<?php

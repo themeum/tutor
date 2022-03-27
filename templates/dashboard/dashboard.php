@@ -235,7 +235,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 				$completed_number = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
 				?>
 			<div class="tutor-frontend-dashboard-course-porgress-cards tutor-mb-20">
-				<div class="tutor-frontend-dashboard-course-porgress-card tutor-frontend-dashboard-course-porgress-card-horizontal tutor-course-listing-item tutor-course-listing-item-sm tutor-justify-content-start">
+				<div class="tutor-frontend-dashboard-course-porgress-card tutor-frontend-dashboard-course-porgress-card-horizontal tutor-course-listing-item tutor-course-listing-item-sm tutor-justify-start">
 					<div class="tutor-course-listing-item-head tutor-d-flex">
 						<a href="<?php the_permalink(); ?>" class="tutor-course-listing-thumb-permalink">
 							<div class="tutor-course-listing-thumbnail" style="background-image:url(<?php echo empty( esc_url( $tutor_course_img ) ) ? $placeholder_img : esc_url( $tutor_course_img ); ?>)"></div>
@@ -273,7 +273,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 							</span>
 						</div>
 						<div class="list-item-progress tutor-mt-32">
-							<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+							<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-between">
 								<div class="progress-bar tutor-mr-16" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="progress-value"></span></div>
 								<span class="progress-percentage tutor-fs-7 tutor-color-muted">
 									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black ">

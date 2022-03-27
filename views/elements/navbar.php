@@ -8,7 +8,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 	<div class="tutor-wp-dashboard-header tutor-px-24 tutor-mb-24">
 		<div class="tutor-row tutor-align-items-lg-center">
 			<div class="tutor-col-lg">
-				<div class="tutor-d-lg-flex tutor-align-items-lg-center tutor-p-12">
+				<div class="tutor-d-lg-flex tutor-align-items-lg-center tutor-px-12 tutor-py-16">
 					<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16">
 						<?php echo esc_html( $data['page_title'] ); ?>
 					</span>
