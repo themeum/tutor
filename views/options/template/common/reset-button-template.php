@@ -11,7 +11,7 @@ $section_label = isset( $section['label'] ) && ! empty( $section['label'] ) ? es
 $section_slug  = isset( $section['slug'] ) && ! empty( $section['slug'] ) ? esc_attr( $section['slug'] ) : '';
 ?>
 <div class="tutor-option-main-title">
-	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black"><?php echo esc_attr( $section_label ); ?></div>
+	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black" tutor-option-title><?php echo esc_attr( $section_label ); ?></div>
 	<button type="button" data-tutor-modal-target="tutor-modal-bulk-action"
 			class="modal-reset-open"
 			data-reset="<?php echo esc_attr( $section_slug ); ?>"

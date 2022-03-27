@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	const checkEmailFieldsOnSubmit = (inputFields) => {
 		inputFields.forEach((emailField) => {
 			let pageNeedsValidation = emailField.closest('.tutor-option-nav-page');
-			let invalidLabel = emailField && emailField.parentNode.parentNode.querySelector('h5').innerText;
-			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('h2').innerText;
+			let invalidLabel = emailField && emailField.parentNode.parentNode.querySelector('[tutor-option-name]').innerText;
+			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('[tutor-option-title]').innerText;
 
 			let invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
 			if (false === validateEmail(emailField.value)) {
