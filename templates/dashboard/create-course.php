@@ -58,7 +58,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 					</div>
 				</div>
 				<div class="tutor-col tutor-mt-12 tutor-mb-12">
-					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-items-center tutor-justify-content-end">
+					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-items-center tutor-justify-end">
 						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
 							<?php _e('Preview', 'tutor'); ?>
 						</a>

@@ -325,7 +325,7 @@ $filters = array(
 				<div class="tutor-row " id="tutor-new-instructor-form-response"></div>
 			  </div>
 			<div class="tutor-modal-footer">
-				<div class="tutor-d-flex tutor-justify-content-between">
+				<div class="tutor-d-flex tutor-justify-between">
 					<div class="col">
 						<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn-loading" name="tutor_register_instructor_btn">
 							<?php esc_html_e( 'Add Instructor', 'tutor' ); ?>

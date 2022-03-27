@@ -47,7 +47,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
 <?php if ( $is_enrolled ) : ?>
-	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
 		<div class="tutor-topbar-left-item tutor-d-flex">
 			<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 				<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
@@ -100,7 +100,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 		</div>
 	</div>
 	<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
-		<div class="tutor-mobile-top-nav tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+		<div class="tutor-mobile-top-nav tutor-d-flex tutor-align-items-center tutor-justify-between">
 			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
 				<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
 			</a>
@@ -118,7 +118,7 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 		</div>
 	</div>
 <?php else : ?>
-	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
 		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
 				<span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>

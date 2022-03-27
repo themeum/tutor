@@ -48,7 +48,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
 
-<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
 	<div class="tutor-topbar-left-item tutor-d-flex">
 		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
@@ -157,7 +157,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 			?>
 		<?php if ( ! $submitted_assignment ) { ?>
-		<div class="tutor-assignment-meta-info tutor-d-flex tutor-justify-content-between tutor-mt-24 tutor-mt-sm-32 tutor-py-16 tutor-py-sm-24">
+		<div class="tutor-assignment-meta-info tutor-d-flex tutor-justify-between tutor-mt-24 tutor-mt-sm-32 tutor-py-16 tutor-py-sm-24">
 			<div class="tutor-assignment-detail-info tutor-d-flex">
 				<div class="tutor-assignment-duration">
 					<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
@@ -204,7 +204,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			if ( $now > $remaining_time and $is_submitted == false ) :
 				?>
 			<div class="quiz-flash-message tutor-mt-24 tutor-mt-sm-32">
-				<div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+				<div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-items-center tutor-justify-between">
 					<div class="flash-info tutor-d-flex tutor-align-items-center">
 						<span class="tutor-icon-cross-cricle-filled tutor-color-design-danger tutor-mr-8"></span>
 						<span class="tutor-fs-7 tutor-color-danger-100">
@@ -417,7 +417,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 				</div>
 			</div>
 			<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
-			<div class="tutor-assignment-footer tutor-d-flex tutor-justify-content-end tutor-pt-32 tutor-pt-sm-44">
+			<div class="tutor-assignment-footer tutor-d-flex tutor-justify-end tutor-pt-32 tutor-pt-sm-44">
 				<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-12">
 					<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
 				</a>
@@ -571,7 +571,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 
 				<div class="tutor-assignment-details tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
 					<div class="tutor-ar-body tutor-pt-24 tutor-pb-40 tutor-px-16 tutor-px-md-32">
-						<div class="tutor-ar-header tutor-d-flex tutor-justify-content-between tutor-align-items-center">
+						<div class="tutor-ar-header tutor-d-flex tutor-justify-between tutor-align-items-center">
 							<div class="tutor-ar-title tutor-fs-6 tutor-fw-medium tutor-color-black">
 								<?php esc_html_e( 'Your Assignment', 'tutor' ); ?>
 							</div>
@@ -668,7 +668,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			} else {
 				?>
 				<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
-					<div class="tutor-assignment-footer-btn tutor-d-flex tutor-justify-content-between">
+					<div class="tutor-assignment-footer-btn tutor-d-flex tutor-justify-between">
 						<form action="" method="post" id="tutor_assignment_start_form">
 						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 						<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />

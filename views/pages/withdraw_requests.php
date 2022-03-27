@@ -256,7 +256,7 @@ $filters = array(
 							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
 								<div>
-									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-4 tutor-justify-content-center">
+									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-4 tutor-justify-center">
 										<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
 									</span>
 								</div>
@@ -444,7 +444,7 @@ $filters = array(
 
 							</div>
 						</div>
-						<div class="tutor-modal-btns_ tutor-btn-group_ tutor-d-flex tutor-align-items-center tutor-justify-content-between tutor-flex-wrap ">
+						<div class="tutor-modal-btns_ tutor-btn-group_ tutor-d-flex tutor-align-items-center tutor-justify-between tutor-flex-wrap ">
 							<button
 								data-tutor-modal-close
 								class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg">
