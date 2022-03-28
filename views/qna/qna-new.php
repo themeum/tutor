@@ -15,13 +15,13 @@
                 <?php _e('Submit My Question', 'tutor'); ?>
             </button>
         </div>
-        <div class="tutor-d-flex tutor-justify-content-center">
+        <div class="tutor-d-flex tutor-justify-center">
             <a class="sidebar-ask-new-qna-btn tutor-btn tutor-btn-primary tutor-btn-md">
                 <?php _e('Ask a New Question', 'tutor'); ?>
             </a>
         </div>
         <?php else: ?>
-        <div class="tutor-d-flex tutor-justify-content-end tutor-mt-24">
+        <div class="tutor-d-flex tutor-justify-end tutor-mt-24">
             <button class="sidebar-ask-new-qna-submit-btn tutor-btn tutor-btn-primary tutor-btn-md">
                 <?php _e('Ask Question', 'tutor'); ?>
             </button>

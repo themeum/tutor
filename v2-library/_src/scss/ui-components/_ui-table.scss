@@ -43,7 +43,7 @@ table.tutor-ui-table {
 	}
 
 	// Table utility classes
-	.inline-flex-center {
+	.tutor-d-inline-flex tutor-align-items-center {
 		display: inline-flex;
 		align-items: center;
 		// justify-content: center;
@@ -426,7 +426,7 @@ table.tutor-ui-table {
 	}
 
 	.td-avatar {
-		@extend .inline-flex-center;
+		@extend .d-inline-flex;
 		gap: 10px;
 		img {
 			width: 34px;

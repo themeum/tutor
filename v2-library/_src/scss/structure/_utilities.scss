@@ -172,12 +172,12 @@ $utilities: map-merge(
       responsive: true,
       property: gap,
       class: tutor-gap,
-      values: $spacers
+      values: $gutters
     ),
     "justify-content": (
       responsive: true,
       property: justify-content,
-      class: tutor-justify-content,
+      class: tutor-justify,
       values: (
         start: flex-start,
         end: flex-end,
@@ -284,6 +284,50 @@ $utilities: map-merge(
       property: margin-left,
       class: tutor-ml,
       values: map-merge($utility-spacers, (auto: auto))
+    ),
+
+    // Negative margin utilities
+    "negative-margin": (
+      responsive: true,
+      property: margin,
+      class: tutor-m,
+      values: $negative-utility-spacers
+    ),
+    "negative-margin-x": (
+      responsive: true,
+      property: margin-right margin-left,
+      class: tutor-mx,
+      values: $negative-utility-spacers
+    ),
+    "negative-margin-y": (
+      responsive: true,
+      property: margin-top margin-bottom,
+      class: tutor-my,
+      values: $negative-utility-spacers
+    ),
+    "negative-margin-top": (
+      responsive: true,
+      property: margin-top,
+      class: tutor-mt,
+      values: $negative-utility-spacers
+    ),
+    "negative-margin-end": (
+      responsive: true,
+      property: margin-right,
+      class: tutor-me,
+      values: $negative-utility-spacers
+    ),
+    "negative-margin-bottom": (
+      responsive: true,
+      property: margin-bottom,
+      class: tutor-mb,
+      values: $negative-utility-spacers
+    ),
+    "negative-margin-start": (
+      responsive: true,
+      property: margin-left,
+      class: tutor-ms,
+      values: $negative-utility-spacers
     ),
 
     // Padding utilities

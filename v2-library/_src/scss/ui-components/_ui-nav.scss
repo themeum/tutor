@@ -121,6 +121,18 @@
             }
         }
     }
+
+    // admin
+    &-admin {
+        border-bottom: 0;
+        > li {
+            margin: 0;
+            > a {
+                // font-size: 14px;
+                padding: 20px 16px;
+            }
+        }
+    }
 }
 
 // Tab

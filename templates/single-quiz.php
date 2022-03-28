@@ -32,14 +32,14 @@ ob_start();
 ?>
 	<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
-    <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+    <div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
         <div class="tutor-topbar-left-item tutor-d-flex"> 
-            <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
+            <div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
                 <a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-                    <span class="tutor-icon-icon-light-left-line tutor-color-white flex-center"></span>
+                    <span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
                 </a>
             </div>
-            <div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
+            <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
                 <span class="tutor-icon-quiz-filled tutor-icon-24 tutor-color-white tutor-mr-4"></span>
                 <span class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
                     <?php 
@@ -73,10 +73,10 @@ ob_start();
                     do_action('tutor_course/single/enrolled/after/lead_info/progress_bar');
                 ?>
             </div>
-            <div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
+            <div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
                 <?php $course_id = tutor_utils()->get_course_id_by('lesson', get_the_ID()); ?>
                 <a href="<?php echo get_the_permalink($course_id); ?>">
-                    <span class="tutor-icon-line-cross-line tutor-color-white flex-center"></span>
+                    <span class="tutor-icon-line-cross-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
                 </a>
             </div>
         </div>
@@ -96,7 +96,7 @@ ob_start();
     </div>
 
 	<?php ob_start(); ?>
-		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-content-center tutor-mt-80 tutor-pb-80">
+		<div class="tutor-quiz-wrapper tutor-quiz-wrapper tutor-d-flex tutor-justify-center tutor-mt-80 tutor-pb-80">
 			<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 			<?php

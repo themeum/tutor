@@ -54,37 +54,6 @@
 		font-size: 24px;
 	}
 
-	.withdrawal-preference {
-		font-size: 15px;
-		color: #7a7a7a;
-	}
-	.current-withdraw-account-wrap.withdrawal-preference {
-		display: grid;
-		grid-template-columns: 20px auto;
-		align-items: center;
-		gap: 5px;
-	}
-	.inline-image-text {
-		& > img {
-			width: 23px;
-			display: inline-block !important;
-		}
-
-		& > * {
-			vertical-align: middle;
-		}
-
-		&.is-inline-block {
-			& > * {
-				display: inline-block;
-			}
-		}
-		a {
-			text-decoration: underline;
-			color: #444;
-		}
-	}
-
 	.tutor-earning-withdraw-form-wrap {
 		display: none;
 		.tutor-icon-line-cross-line.close-withdraw-form-btn {
