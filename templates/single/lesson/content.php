@@ -200,7 +200,7 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 		<div class="tab-body">
 			<div class="tab-body-item<?php echo (!isset($page_tab) || 'overview'==$page_tab) ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-1" data-tutor-query-string-content="overview">
 				<div class="tutor-container tutor-pb-32">
-					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+					<div class="tutor-fs-5 tutor-fw-medium tutor-color-black">
 						<?php _e( 'About Lesson', 'tutor' ); ?>
 					</div>
 					<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-12" style="min-height:293px;">
@@ -210,14 +210,16 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 			</div>
 			<div class="tab-body-item<?php echo 'files'==$page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-2" data-tutor-query-string-content="files">
 				<div class="tutor-container">
-					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
+					<div class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php _e( 'Exercise Files', 'tutor' ); ?></div>
 					<?php get_tutor_posts_attachments(); ?>
 				</div>
 			</div>
 			<?php if ( $is_comment_enabled ) : ?>
 				<div class="tab-body-item<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" id="tutor-course-spotlight-tab-3" data-tutor-query-string-content="comments">
 					<div class="tutor-container">
-						<?php require __DIR__ . '/comment.php'; ?>
+						<div class="tutor-course-spotlight-comments">
+							<?php require __DIR__ . '/comment.php'; ?>
+						</div>
 					</div>
 				</div>
 			<?php endif; ?>
