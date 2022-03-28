@@ -34,13 +34,6 @@
 		}
 	}
 
-	.tutor-modal-footer {
-		button[data-tutor-modal-close],
-		button[data-action='back'] {
-			@extend .tutor-modal-close-btn;
-		}
-	}
-
 	&.tutor-is-active {
 		visibility: visible;
 		opacity: 1;

@@ -162,12 +162,12 @@
                     <div class="tutor_add_content_wrap tutor_add_content_wrap_btn_sm" data-topic_id="<?php echo $topic->ID; ?>">
                         <?php do_action('tutor_course_builder_before_btn_group', $topic->ID); ?>
 
-                        <button class="tutor-btn tutor-is-outline tutor-is-sm open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
+                        <button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm open-tutor-lesson-modal create-lesson-in-topic-btn" data-topic-id="<?php echo $topic->ID; ?>" data-lesson-id="0" >
                             <i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-8"></i>
                             <?php _e('Lesson', 'tutor'); ?>
                         </button>
 
-                        <button class="tutor-btn tutor-is-outline tutor-is-sm tutor-add-quiz-btn" data-topic-id="<?php echo $topic->ID; ?>">
+                        <button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-add-quiz-btn" data-topic-id="<?php echo $topic->ID; ?>">
                             <i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-8"></i>
                             <?php _e('Quiz', 'tutor'); ?>
                         </button>

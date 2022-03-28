@@ -14,10 +14,6 @@
 	.header-title {
 		gap: 10px;
 	}
-
-	.tutor-btn.tutor-btn-wordpress-outline.tutor-btn-sm {
-		padding: 5px 10px 5px 8px;
-	}
 }
 
 .tutor-wp-dashboard-filter {
@@ -40,15 +36,9 @@
 		}
 		&-item {
 			margin-top: 20px;
-			.tutor-admin-page-refresh {
-				margin-top: 20px;
-			}
 		}
 	}
-	.tutor-btn.tutor-btn-wordpress-outline.tutor-btn-sm {
-		padding: 7px 10px;
-	}
-} // .tutor-wp-dashboard-filter
+}
 
 .tutor-wp-dashboard-filter-items {
 	gap: 30px;

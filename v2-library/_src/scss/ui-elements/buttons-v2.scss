@@ -205,22 +205,6 @@ $disabled-color: #E9E9EA !default;
 		}
 	}
 
-
-	// &:not(.tutor-is-outline):not(.tutor-no-hover) {
-	// 	&.tutor-btn-wordpress:hover {
-	// 		background: $brand-wordpress-hover;
-	// 		border-color: $brand-wordpress-hover;
-	// 	}
-	// 	&.tutor-btn-secondary:hover {
-	// 		background: darken($primary-40, 2);
-	// 		border-color: darken($primary-40, 2);
-	// 		color: var(--tutor-primary-color);
-	// 	}
-	// 	&.tutor-btn-wordpress-outline:hover {
-	// 		background: $brand-wordpress;
-	// 		border-color: $brand-wordpress;
-	// 	}
-
 	// 	&.tutor-btn-outline-wp {
 	// 		&:hover {
 	// 			background: transparent;
@@ -428,42 +412,6 @@ $disabled-color: #E9E9EA !default;
 		&:hover {
 			background: $black-05;
 			color: inherit;
-		}
-	}
-}
-
-button,
-a {
-	&:focus {
-		outline: none !important;
-		box-shadow: none !important;
-	}
-}
-
-.tutor-back-btn {
-	display: flex;
-	align-items: center;
-	max-width: 100px;
-	span:first-child {
-		font-size: 30px !important;
-		margin-right: 5px;
-		margin-left: -5px;
-	}
-	span:last-child {
-		font-weight: 400;
-	}
-}
-
-.tutor-btn-ghost {
-	display: flex;
-	&.tutor-btn-ghost-fd {
-		&:hover {
-			color: $design-brand;
-		}
-	}
-	&.tutor-btn-ghost-wp {
-		&:hover {
-			color: $brand-wordpress;
 		}
 	}
 }

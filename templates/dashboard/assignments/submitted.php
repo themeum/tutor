@@ -20,9 +20,9 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
 	<div class="tutor-mb-24">
-		<a class="tutor-back-btn tutor-color-design-dark" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
-			<span class="tutor-color-black assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12"></span>
-            <span class="tutor-color-black-60"><?php esc_html_e( 'Back', 'tutor' ); ?></span>
+		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
+			<span class="assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12" area-hidden="true"></span>
+            <?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
 
