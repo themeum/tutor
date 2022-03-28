@@ -191,23 +191,6 @@
 		@extend .text-medium-h5;
 		color: var(--tutor-text-primary);
 	}
-	a,
-	.modal-reset-open {
-		font-weight: 500;
-		font-size: 15px;
-		line-height: 1.6;
-		color: #a3a3a3;
-		text-decoration: none;
-		display: flex;
-		align-items: center;
-		background: transparent;
-		border: none;
-		outline: none;
-		i {
-			margin-right: 5px;
-			font-size: 17px;
-		}
-	}
 }
 
 .tutor-option-single-item {

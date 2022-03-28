@@ -28,7 +28,7 @@ window.jQuery(document).ready(($) => {
                                 course_id: course_id,
                             },
                             beforeSend: () => {
-                                button.prop('disabled', true).addClass('tutor-updating-message');
+                                button.prop('disabled', true).addClass('is-loading');
                             },
                             success: function (response) {
                                 if (response.success) {
@@ -38,7 +38,7 @@ window.jQuery(document).ready(($) => {
                                 }
                             },
                             complete: function () {
-                                button.prop('disabled', false).removeClass('tutor-updating-message');
+                                button.prop('disabled', false).removeClass('is-loading');
                             }
                         });
                     }

@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			formData.set('file_name', fileName);
 			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
 			const span = currentTarget.querySelector('span');
-			span.classList.add('tutor-updating-message');
+			span.classList.add('is-loading');
 			const post = await ajaxHandler(formData);
 			if (post.ok) {
 				const response = await post.json();
@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				}
 			} else {
 				alert(post.statusText);
-				span.classList.remove('tutor-updating-message');
+				span.classList.remove('is-loading');
 			}
 		};
 	});

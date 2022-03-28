@@ -29,10 +29,10 @@
 					</div>
 				</div>
 				<div class="tutor-modal-btns tutor-btn-group tutor-mt-40">
-					<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+					<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 					<?php echo esc_attr( 'Cancel' ); ?>
 					</button>
-					<button class="tutor-btn reset_to_default" data-reset-for="Null" data-reset="Null">
+					<button class="tutor-btn tutor-btn-primary reset_to_default" data-reset-for="Null" data-reset="Null">
 						<?php echo esc_attr( 'Reset' ); ?>
 					</button>
 				</div>
