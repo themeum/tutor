@@ -46,11 +46,8 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 		</div>
 	<?php endforeach; ?>
 <?php else : ?>
-	<div class="tutor-no-announcements">
-		<div class="tutor-fs-6 tutor-fw-medium tutor-color-black"><?php _e( 'No announcements posted yet.', 'tutor' ); ?></div>
-		<div class="tutor-fs-6 tutor-color-black-60 tutor-mt-16">
-			<?php _e( 'The instructor hasn\'t added any announcements to this course yet. Announcements are used to inform you of updates or additions to the course.', 'tutor' ); ?>
-		</div>
+	<div>
+		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 	</div>
 <?php endif; ?>
 
