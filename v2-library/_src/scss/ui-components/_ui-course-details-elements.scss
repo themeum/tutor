@@ -2,6 +2,32 @@
 .tutor-course-details {
 	// .tutor-course-details-page
 	&-page {
+		.tutor-course-details-tab {
+			.tab-item-content {
+				p {
+					@extend .tutor-text-regular-body;
+					@extend .tutor-color-black-60;
+				}
+			}
+		}
+	}
+
+	// .tutor-course-details-header
+	&-header {
+		a {
+			text-decoration: none;
+		}
+	}
+
+	// .tutor-course-details-title
+	&-title {
+		@include breakpoint-min(desktop) {
+			max-width: 80%;
+		}
+	}
+
+	// .tutor-course-details-page-main
+	&-page-main {
 		.plyr--video,
 		.tutor-course-thumbnail img,
 		.tutor-video-player {
@@ -339,7 +365,10 @@
 		border-radius: 6px;
 
 		&:not(:last-child) {
-			margin-bottom: 20px;
+			margin-bottom: 10px;
+			@include breakpoint-min(desktop) {
+				margin-bottom: 20px;
+			}
 		}
 	}
 
@@ -352,7 +381,6 @@
 		position: relative;
 		cursor: pointer;
 		transition: 200ms;
-		// @extend .text-medium-h6;
 		@extend .tutor-color-black-70;
 		@include getTypography(600, 18px, 160%);
 		&::after {

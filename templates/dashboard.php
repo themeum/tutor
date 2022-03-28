@@ -82,7 +82,7 @@ do_action('tutor_dashboard/before/wrap');
 
 					if (current_user_can(tutor()->instructor_role)) {
 					?>
-						<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
+						<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-dashboard-header-username">
 							<?php echo esc_html($user->display_name); ?>
 						</div>
 						<div class="tutor-dashboard-header-stats">
