@@ -15,7 +15,7 @@ $col_classes = array(
         <?php
             tutor_load_template( 'dashboard.settings.nav-bar', ['active_setting_nav'=>'withdrawal'] );
         ?>
-        <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></div>
+        <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></div>
     </div>
 
     <form id="tutor-withdraw-account-set-form" action="" method="post">
