@@ -316,3 +316,12 @@ $border: (
 		border-radius: 100px;
 	}
 }
+
+// border
+.tutor {
+	&-vr {
+		width: 1px;
+		background-color: #dcdbdc;
+		height: 100%;
+	}
+}

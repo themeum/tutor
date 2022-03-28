@@ -1,7 +1,10 @@
 /**
 @package: Tutor LMS
-@author: themeum
+@author: Themeum
  */
+
+$accent-color: var(--wp-admin-theme-color) !default;
+$accent-color-hover: var(--wp-admin-theme-color) !default;
 
 .tutor-admin {
 	&-wrap {
@@ -12,9 +15,24 @@
 		padding-left: 20px;
 		padding-right: 20px;
 	}
+
+	&-container {
+		max-width: 1160px;
+		min-width: 760px;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 30px;
+		padding-right: 30px;
+		overflow-x: auto;
+	}
+
+	&-header {
+		box-sizing: border-box;
+		background: #ffffff;
+		border-bottom: 1px solid #cdcfd5;
+		padding: 12px 24px;
+	}
 }
-
-
 
 
 /*----------------------------------
@@ -24,6 +42,7 @@
 body.tutor-backend-tutor_settings #wpbody-content {
 	min-height: 100vh;
 }
+
 .ui-widget-content {
 	border: 1px solid #aaaaaa;
 	background: #ffffff;
@@ -508,7 +527,6 @@ input:checked + .btn-slider {
 }
 
 input:checked + .btn-slider:before {
-	-webkit-transform: translateX(16px);
 	transform: translateX(16px);
 }
 
