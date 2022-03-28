@@ -269,14 +269,14 @@ $available_status = array(
 											<?php
 												echo get_avatar( $post->post_author, '96' );
 											?>
-											<div class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
+											<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 												<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 											</pDIV>
 											<a
 												href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>"
 												class="btn-text btn-detail-link tutor-color-design-dark" target="_blank"
 											>
-											<span class="tutor-icon-detail-link-filled"></span>
+												<span class="tutor-icon-detail-link-filled"></span>
 											</a>
 										</div>
 									</td>
