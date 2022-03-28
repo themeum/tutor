@@ -95,9 +95,9 @@
 
 			// Show Start/Continue/Retake Button
 			if ( $lesson_url ) {
-				$button_class = 'tutor-is-fullwidth tutor-btn ' .
-								( $retake_course ? 'tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full' : '' ) .
-								' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' .
+				$button_class = 'tutor-btn ' .
+								( $retake_course ? 'tutor-btn-outline-primary' : 'tutor-btn-primary' ) .
+								' tutor-btn-block' .
 								( $retake_course ? ' tutor-course-retake-button' : '' );
 
 				// Button identifier class
@@ -133,7 +133,7 @@
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
 
-					<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
+					<button type="submit" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block" name="complete_course_btn" value="complete_course">
 						<?php esc_html_e( 'Complete Course', 'tutor' ); ?>
 					</button>
 				</form>

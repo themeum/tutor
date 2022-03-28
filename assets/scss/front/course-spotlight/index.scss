@@ -28,14 +28,7 @@
 	position: relative;
 	width: 100%;
 	align-items: flex-start;
-	a {
-		text-decoration: none;
-		color: inherit;
-	}
-	a:focus,
-	a:hover {
-		opacity: 1;
-	}
+	
 	input.tutor-form-check-input.tutor-form-check-circle {
 		width: 20px;
 		height: 20px;

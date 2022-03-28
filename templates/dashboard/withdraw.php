@@ -68,7 +68,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 			if ( $is_balance_sufficient && $withdraw_method_name ) {
 				?>
 				<div class="tutor-col-lg-auto">
-					<button class="tutor-btn open-withdraw-form-btn">
+					<button class="tutor-btn tutor-btn-primary open-withdraw-form-btn">
 					<?php esc_html_e( 'Withdrawal Request', 'tutor' ); ?>
 					</button>
 				</div>
@@ -98,7 +98,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 			<div>
 				<div class="tutor-withdrawal-pop-up-success">
 					<div>
-						<i class="tutor-icon-line-cross-line close-withdraw-form-btn tutor-color-black-40" data-reload="yes"></i>
+						<i class="tutor-icon-line-cross-line tutor-color-black-40" action-close-withdraw-form data-reload="yes"></i>
 						<br />
 						<br />
 						<div style="text-align:center">
@@ -112,7 +112,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 					</div>
 				</div>
 				<div class="tutor-withdrawal-op-up-frorm ">
-					<i class="tutor-icon-line-cross-line close-withdraw-form-btn tutor-color-black-40"></i>
+					<i class="tutor-icon-line-cross-line tutor-color-black-40" action-close-withdraw-form></i> <!-- @todo: fix the close btn position -->
 					<div>
 						<div class="tutor-svg tutor-round-icon tutor-fs-2 tutor-p-8">
 							<?php echo tutor_utils()->get_svg_icon('wallet'); ?>
@@ -157,17 +157,15 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 									</span>
 									<input type="number" min="<?php echo esc_attr( $min_withdraw ); ?>" name="tutor_withdraw_amount" id="tutor_withdraw_amount" step=".01" required>
 								</div>
-								<div class="inline-image-text">
-									<img src="<?php echo $image_base; ?>info-icon-question.svg" />
-									<span>
-										<?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?>
-									</span>
+								<div class="tutor-d-flex tutor-align-items-center">
+									<span class="tutor-mr-8"><img src="<?php echo $image_base; ?>info-icon-question.svg" /></span>
+									<span><?php echo __( 'Minimum withdraw amount is', 'tutor' ) . ' ' . strip_tags( $formatted_min_withdraw_amount ); ?></span>
 								</div>
 							</div>
 
 							<div class="tutor-withdraw-button-container">
-								<button class="tutor-btn tutor-btn-secondary close-withdraw-form-btn"><?php esc_html_e( 'Cancel', 'tutor' ); ?></button>
-								<button class="tutor-btn" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php esc_html_e( 'Submit Request', 'tutor' ); ?></button>
+								<button class="tutor-btn tutor-btn-outline-primary" action-close-withdraw-form><?php esc_html_e( 'Cancel', 'tutor' ); ?></button>
+								<button class="tutor-btn tutor-btn-primary" type="submit" id="tutor-earning-withdraw-btn" name="withdraw-form-submit"><?php esc_html_e( 'Submit Request', 'tutor' ); ?></button>
 							</div>
 
 							<div class="tutor-withdraw-form-response"></div>

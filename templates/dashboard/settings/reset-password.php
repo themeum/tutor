@@ -78,7 +78,7 @@
 
 		<div class="tutor-row">
 			<div class="tutor-col-12">
-				<button type="submit" class="tutor-btn tutor-profile-password-reset">
+				<button type="submit" class="tutor-btn tutor-btn-primary tutor-profile-password-reset">
 					<?php esc_html_e( 'Reset Password', 'tutor' ); ?>
 				</button>
 			</div>

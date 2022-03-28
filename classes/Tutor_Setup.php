@@ -575,11 +575,11 @@ class Tutor_Setup {
 											$addons_url  = admin_url( 'admin.php?page=tutor-addons' );
 											$course_url  = admin_url( 'admin.php?page=tutor' );
 										?>
-											<a class="tutor-btn tutor-btn-primary tutor-btn-md primary-btn" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $course_url ); ?>">
-											<?php _e( 'Create a New Course', 'tutor' ); ?>
+											<a class="tutor-btn tutor-btn-primary" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $course_url ); ?>">
+												<?php _e( 'Create a New Course', 'tutor' ); ?>
 											</a>
-											<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $addons_url ); ?>">
-											<?php _e( 'Explore Addons', 'tutor' ); ?>
+											<a class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url( ! self::is_welcome_page_visited() ? $welcome_url : $addons_url ); ?>">
+												<?php _e( 'Explore Addons', 'tutor' ); ?>
 											</a>
 										</div>
 									</div>

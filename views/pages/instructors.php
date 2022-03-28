@@ -190,7 +190,7 @@ $filters = array(
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-disable-outline tutor-btn-sm">
+								<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-sm">
 									<?php esc_html_e( 'Edit', 'tutor' ); ?>
 								</a>
 							</td>

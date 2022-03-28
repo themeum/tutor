@@ -13,7 +13,7 @@
 								</option>
 							<?php endforeach; ?>
 						</select>
-						<button class="tutor-btn tutor-btn-wordpress-outline tutor-btn-md" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
+						<button class="tutor-btn tutor-btn-outline-primary" id="tutor-admin-bulk-action-btn" data-tutor-modal-target="tutor-bulk-confirm-popup">
 							<?php esc_html_e( 'Apply', 'tutor' ); ?>
 						</button>
 					</div>

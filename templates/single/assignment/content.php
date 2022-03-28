@@ -580,7 +580,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							if ( ! $evaluated && ( $remaining_time > $now || $time_duration['value'] == 0 ) ) :
 								?>
 								<div class="tutor-ar-btn">
-									<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm">
+									<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
 								</div>

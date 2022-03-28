@@ -47,7 +47,7 @@
 	border-radius: 7px;
 	overflow: hidden;
 
-	a {
+	a:not(.btn):not(.tutor-btn) {
 		text-decoration: none;
 		color: inherit;
 	}

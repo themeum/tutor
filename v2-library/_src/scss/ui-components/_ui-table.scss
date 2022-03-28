@@ -366,10 +366,6 @@ table.tutor-ui-table {
 			}
 		}
 
-		> a:not(:last-child) {
-			// margin-right: 13px;
-		}
-
 		.btn-text {
 			@extend .tutor-color-muted;
 			font-size: 24px;

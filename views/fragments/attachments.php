@@ -33,7 +33,7 @@
 </div>
 
 <?php if ( isset( $data['add_button'] ) && true === $data['add_button'] ): ?>
-    <button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutorUploadAttachmentBtn" data-name="<?php echo isset( $data['name'] ) ? esc_attr( $data['name'] ) : ''; ?>">
+    <button type="button" class="tutor-btn tutor-btn-outline-primary tutorUploadAttachmentBtn" data-name="<?php echo isset( $data['name'] ) ? esc_attr( $data['name'] ) : ''; ?>">
         <span class="btn-icon tutor-icon-attach-filled tutor-icon-24"></span>
         <span><?php esc_html_e( 'Upload Attachments', 'tutor' ); ?></span>
     </button>

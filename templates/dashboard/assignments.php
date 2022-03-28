@@ -120,7 +120,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 							</td>
 							<td data-th="Details URL">
 								<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
-									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</a>
 								</div>
