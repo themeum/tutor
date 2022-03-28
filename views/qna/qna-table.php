@@ -57,9 +57,9 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
 
                             case 'student':
                             ?>
-                                <td data-th="<?php echo $column; ?>">
+                                <td data-th="<?php echo $column; ?>" >
                                     <div class="td-avatar">
-                                        <div class="tooltip-wrap tutor-qna-badges-wrapper">
+                                        <div class="tooltip-wrap tooltip-icon-custom tutor-qna-badges-wrapper tutor-mt-4">
                                             <span
                                                 data-state-class-0="tutor-icon-msg-important-filled"
                                                 data-state-class-1="tutor-icon-msg-important-fill-filled"
@@ -139,8 +139,8 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
 
                             case 'status':
                             ?>
-                                <td data-th="<?php echo $column; ?>">
-                                    <div class="tooltip-wrap">
+                                <td data-th="<?php echo $column; ?>" class="v-align-top">
+                                    <div class="tooltip-wrap tooltip-icon-custom" >
                                         <i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success' : 'tutor-icon-tick-circle-outline-filled tutor-color-black-40'; ?>"></i>
                                         <span class="tooltip-txt tooltip-bottom">
                                             <?php $is_solved ? _e('Solved', 'tutor') : _e('Unresolved Yet', 'tutor'); ?>
