@@ -122,7 +122,6 @@
 @keyframes fadeIn {
 	from {
 		transform: translateY(2px);
-		// filter: blur(2px);
 		opacity: 0;
 	}
 	to {
@@ -147,11 +146,8 @@
 
 		&.is-active {
 			.tutor-popover-toggle-btn {
-				border-color: $color-brand;
-				color: $color-brand;
 				.btn-icon {
 					transform: rotate(-180deg);
-					color: $color-brand;
 				}
 			}
 		}
@@ -265,16 +261,6 @@
 	.tutor-input-group {
 		.tutor-form-control {
 			padding-right: 70px;
-		}
-
-		.tutor-btn.tutor-btn-disable-outline {
-			font-size: 13px;
-			line-height: 123%;
-			padding: 7px 11px;
-			position: absolute;
-			top: 8px;
-			right: 8px;
-			height: calc(100% - 16px);
 		}
 	}
 

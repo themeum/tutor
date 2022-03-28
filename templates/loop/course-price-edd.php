@@ -16,7 +16,7 @@ $download = new EDD_Download( $product_id );
 add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
 
     if ( isset( $defaults['class'] ) ) {
-        $defaults['class'] = 'edd-add-to-cart button white edd-submit edd-has-js tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-btn-full tutor-pr-0 tutor-pl-0 ';
+        $defaults['class'] = 'edd-add-to-cart button white edd-submit edd-has-js tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ';
     }
     return $defaults;
 });
@@ -25,7 +25,7 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
 
 <?php
     $course_id = get_the_ID();
-    $enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-md tutor-btn-full">' . __('Enroll Course', 'tutor') . '</a>' ) . '</div>';
+    $enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">' . __('Enroll Course', 'tutor') . '</a>' ) . '</div>';
     $free_html = $enroll_btn;
     if (tutor_utils()->is_course_purchasable()) {
             $enroll_btn = tutor_course_loop_add_to_cart(false);

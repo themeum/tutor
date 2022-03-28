@@ -10,7 +10,7 @@ $product = wc_get_product( $product_id );
 if ($product) {
     if(tutor_utils()->is_course_added_to_cart($product_id, true)){
         ?>
-            <a href="<?php echo wc_get_cart_url(); ?>" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full">
+            <a href="<?php echo wc_get_cart_url(); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block">
                 <?php _e('View Cart', 'tutor'); ?>
             </a>
         <?php

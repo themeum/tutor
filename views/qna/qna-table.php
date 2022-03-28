@@ -154,7 +154,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             ?>
                                 <td data-th="<?php echo $column; ?>" class="tutor-text-right">
                                     <div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
-                                        <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+                                        <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php _e('Reply', 'tutor-pro'); ?>
                                         </a>
 

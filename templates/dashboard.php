@@ -122,7 +122,7 @@ do_action('tutor_dashboard/before/wrap');
 					ob_start();
 					if (tutor_utils()->get_option('enable_become_instructor_btn')) {
 					?>
-						<a id="tutor-become-instructor-button" style="vertical-align:middle" class="tutor-btn tutor-btn-tertiary tutor-is-outline" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
+						<a id="tutor-become-instructor-button" class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
 							<i class="tutor-icon-man-user-filled tutor-icon-24"></i> &nbsp; <?php _e('Become an instructor', 'tutor'); ?>
 						</a>
 					<?php
@@ -132,8 +132,8 @@ do_action('tutor_dashboard/before/wrap');
 					if (current_user_can(tutor()->instructor_role)) {
 						$course_type = tutor()->course_post_type;
 					?>
-						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
-							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-12"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
+						<a class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
+							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-my-n4 tutor-mr-8"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
 						</a>
 					<?php
 					} elseif ($instructor_status == 'pending') {

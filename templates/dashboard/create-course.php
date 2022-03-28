@@ -59,7 +59,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 				</div>
 				<div class="tutor-col tutor-mt-12 tutor-mb-12">
 					<div class="tutor-dashboard-builder-header-right tutor-d-flex tutor-align-items-center tutor-justify-end">
-						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
+						<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( get_the_permalink($course_id) ); ?>" target="_blank">
 							<?php _e('Preview', 'tutor'); ?>
 						</a>
 						<?php if ($can_publish_course): ?>
@@ -257,7 +257,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 					<div class="tutor-form-col-12">
 						<div class="tutor-form-group">
 							<div class="tutor-form-field tutor-course-builder-btn-group">
-								<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-sm" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save as Draft', 'tutor'); ?></button>
+								<button type="submit" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" name="course_submit_btn" value="save_course_as_draft"><?php _e('Save as Draft', 'tutor'); ?></button>
 								<?php if ($can_publish_course) { ?>
 									<button class="tutor-btn tutor-btn-primary" type="submit" name="course_submit_btn" value="publish_course"><?php _e('Publish Course', 'tutor'); ?></button>
 								<?php } else { ?>

@@ -137,7 +137,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
                                 </td>
                                 <td data-th="<?php esc_html_e('Details URL', 'tutor'); ?>">
                                     <div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
-                                        <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+                                        <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php esc_html_e($button_text); ?>
                                         </a>
                                     </div>

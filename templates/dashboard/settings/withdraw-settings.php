@@ -119,7 +119,7 @@ $col_classes = array(
                         <?php do_action( "tutor_withdraw_set_account_{$method_id}_after" ); ?>
 
                         <div class="withdraw-account-save-btn-wrap tutor-mt-32">
-                            <button type="submit" class="tutor_set_withdraw_account_btn tutor-btn" name="withdraw_btn_submit">
+                            <button type="submit" class="tutor_set_withdraw_account_btn tutor-btn tutor-btn-primary" name="withdraw_btn_submit">
                                 <?php esc_html_e( 'Save Withdrawal Account', 'tutor' ); ?>
                             </button>
                         </div>

@@ -59,15 +59,9 @@ const TutorDateRangePicker = () => {
 							{dayCount ? (dayCount > 1 ? `${dayCount} days selected` : `${dayCount} day selected`) : '0 day selected'}
 						</div>
 						<div className="tutor-btns">
-							{/* <button
-								className="tutor-btn tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md"
-								onClick={() => handleCalendarClose()}
-							>
-								Cancel
-							</button> */}
 							<button
 								type="button"
-								className="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md"
+								className="tutor-btn tutor-btn-outline-primary"
 								onClick={applyDateRange}
 							>
 								Apply
