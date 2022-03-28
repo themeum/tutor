@@ -328,12 +328,12 @@ $filters = array(
 			<div class="tutor-modal-footer">
 				<div class="tutor-d-flex tutor-justify-between">
 					<div class="col">
-						<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-loading" name="tutor_register_instructor_btn">
+						<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-loading" name="tutor_register_instructor_btn">
 							<?php esc_html_e( 'Add Instructor', 'tutor' ); ?>
 						</button>
 					</div>
 					<div class="col-auto">
-						<button data-tutor-modal-close class="tutor-btn tutor-is-default">
+						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
 					</div>
@@ -404,19 +404,19 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 					<div class="tutor-modal-buttons tutor-mt-32 tutor-mt-md-48">
 						<?php if ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) : ?>
 							<?php if ( 'pending' === $instructor_status ) : ?>
-								<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
+								<a class="instructor-action tutor-btn tutor-btn-primary tutor-btn-block " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Approve the Instructor', 'tutor' ); ?>
 								</a>
-								<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>
+								<a class="instructor-action tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-btn-block tutor-mt-md-24 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Reject the Application', 'tutor' ); ?>
 								</a>
 								<?php elseif ( 'approved' === $instructor_status ) : ?>
-									<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>
+									<a class="instructor-action tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-btn-block tutor-mt-md-24 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Reject the Application', 'tutor' ); ?>
 									</a>
 								<?php elseif ( 'blocked' === $instructor_status ) : ?>
-									<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
+									<a class="instructor-action tutor-btn tutor-btn-primary tutor-btn-block" data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Approve the Instructor', 'tutor' ); ?>
 								</a>
 							<?php endif; ?>
 						<?php else : ?>
@@ -437,14 +437,14 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-text-wrap">
 						<div class="tutor-alert tutor-danger">
-								<div class="tutor-alert-text">
-									<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-12"></span>
-									<span>
+							<div class="tutor-alert-text">
+								<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-12"></span>
+								<span>
 									<?php esc_html_e( 'Invalid instructor', 'tutor' ); ?>
-									</span>
-								</div>
+								</span>
 							</div>
 						</div>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>

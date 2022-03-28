@@ -319,7 +319,7 @@ $available_status = array(
 												<i class="icon1 tutor-icon-eye-fill-filled"></i>
 												<i class="icon2 tutor-icon-angle-down-filled"></i>
 											</div>
-											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="btn-outline tutor-btn">
+											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-btn tutor-btn-outline-primary">
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</a>
 											<div class="tutor-popup-opener">

@@ -20,13 +20,12 @@
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="id">
 					<input type="hidden" name="action">
-					<!-- body content will be generate from js -->
 					<div id="tutor-common-confirmation-modal-content"></div>
 					<div class="tutor-modal-btns tutor-btn-group">
-						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-btn-loading tutor-btn-lg">
+						<button class="tutor-btn tutor-btn-primary tutor-btn-loading">
 							<?php esc_html_e( "Yes, I'am Sure", 'tutor' ); ?>
 						</button>
 					</div>

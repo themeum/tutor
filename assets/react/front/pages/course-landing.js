@@ -9,6 +9,7 @@ window.jQuery(document).ready(($) => {
         e.preventDefault();
 		var url = $(this).attr('href');
 		var course_id = $(this).data('course_id');
+        // @todo: check the button class functionality
 		
         var data = {
             title: __('Override Previous Progress', 'tutor'),

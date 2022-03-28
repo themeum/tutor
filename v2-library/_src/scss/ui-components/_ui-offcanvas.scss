@@ -1,24 +1,3 @@
-// Off Canvas
-.btn-offcanvas-open {
-	border: none;
-	background: transparent;
-	outline: none;
-
-	&:focus-visible {
-		box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
-	}
-
-	.icon {
-		font-size: 36px;
-		/* color/primary/fill/90 */
-		color: var(--tutor-primary-color);
-	}
-
-	> * {
-		pointer-events: none;
-	}
-}
-
 .tutor-offcanvas {
 	.tutor-offcanvas-backdrop {
 		position: fixed;
