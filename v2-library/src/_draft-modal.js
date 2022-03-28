@@ -269,7 +269,7 @@ export default () => {
                                     <div className="tutor-modal-footer">
                                         <div className="row">
                                             <div className="col">
-                                                <button className="tutor-btn tutor-is-primary">Update Lesson</button>
+                                                <button className="tutor-btn tutor-btn-primary">Update Lesson</button>
                                             </div>
                                             <div className="col-auto">
                                                 <button data-tutor-modal-close className="tutor-btn tutor-is-default">Cancel</button>
@@ -363,7 +363,7 @@ export default () => {
                                             <div className="col">
                                                 <div className="tutor-btn-group">
                                                     <button className="tutor-btn tutor-is-default">Back</button>
-                                                    <button className="tutor-btn tutor-is-primary">Save & Next</button>
+                                                    <button className="tutor-btn tutor-btn-primary">Save &amp; Next</button>
                                                 </div>
                                             </div>
                                             <div className="col-auto">
@@ -462,7 +462,7 @@ export default () => {
                                             <div className="col">
                                                 <div className="tutor-btn-group">
                                                     <button className="tutor-btn tutor-is-default">Back</button>
-                                                    <button className="tutor-btn tutor-is-primary">Save & Next</button>
+                                                    <button className="tutor-btn tutor-btn-primary">Save &amp; Next</button>
                                                 </div>
                                             </div>
                                             <div className="col-auto">

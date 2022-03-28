@@ -379,12 +379,6 @@
 					border-color: lighten(#3e64de, 36);
 				}
 			}
-
-			input[type='file']#drag-drop-input {
-				appearance: none;
-				-webkit-appearance: none;
-				display: none;
-			}
 		}
 	}
 } // end of .tutor-option-single-item
@@ -401,7 +395,6 @@
 	display: grid;
 	align-items: center;
 	justify-content: space-between;
-	// grid-template-columns: 2fr 1.1fr;
 	grid-auto-flow: column;
 	grid-gap: 30px;
 
@@ -414,7 +407,6 @@
 	}
 
 	.tutor-option-field-input {
-		// min-width: 200px;
 		&.tutor-d-flex {
 			margin-top: 0px;
 		}
@@ -587,8 +579,8 @@
 				}
 			}
 		}
-	} // end of of .row-variation-code
-} // end of ofof .tutor-option-field-row
+	}
+}
 
 .tutor-option-field-label {
 	label,
@@ -860,7 +852,7 @@
 			color: grey;
 		}
 	}
-} // end of .tutor-option-field-input (Input field variations)
+}
 
 .tutor-option-nav-page.gradebook {
 	.tutor-option-single-item {

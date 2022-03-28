@@ -132,7 +132,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 											</div>
 										</div>
 										<div class="tutor-col-auto">
-											<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
+											<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary tutor_submit_review_btn">
 												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
 											</button>
 										</div>
@@ -174,7 +174,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 											<button data-tutor-modal-close type="button" data-action="back" class="tutor-modal-close-btn tutor-btn tutor-is-default">
 												<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 											</button>
-											<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
+											<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary tutor_submit_review_btn">
 												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
 											</button>
 										</div>

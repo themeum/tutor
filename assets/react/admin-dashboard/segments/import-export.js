@@ -78,7 +78,7 @@ function tutor_option_history_load(dataset) {
 						<span class="tutor-badge-label tutor-ml-16${badgeStatus}"> ${dataValue.datatype}</span> </p>
 					</div>
 					<div class="tutor-option-field-input">
-						<button class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs apply_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution."  data-id="${dataKey}">Apply</button>
+						<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." data-id="${dataKey}">Apply</button>
 
           <div class="tutor-popup-opener tutor-ml-16">
             <button
