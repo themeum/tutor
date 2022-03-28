@@ -3,11 +3,10 @@ $default      = isset( $field['default'] ) ? $field['default'] : '';
 $option_value = $this->get( $field['key'], $default );
 $field_id     = 'field_' . $field['key'];
 ?>
-<div class="tutor-option-field-row col-1x145"id="<?php echo esc_attr( $field_id ); ?>"
->
+<div class="tutor-option-field-row col-1x145"id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label">
-		<h5 class="label"><?php echo __( $field['label'], 'tutor' ); ?></h5>
-		<p class="desc"><?php echo __( $field['desc'], 'tutor' ); ?></p>
+		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo __( $field['label'], 'tutor' ); ?></div>
+		<div class="tutor-fs-7 tutor-color-muted"><?php echo __( $field['desc'], 'tutor' ); ?></div>
 	</div>
 	<div class="tutor-option-field-input image-previewer is-selected">
 		<div class="signature-upload-wrap">
@@ -17,12 +16,13 @@ $field_id     = 'field_' . $field['key'];
 					<img class="upload_preview" src="<?php echo esc_attr( $option_value ); ?>" alt="signature preview">
 					<span class="delete-btn"></span>
 				</div>
+				<!-- @todo: hard coded string -->
 				<div class="signature-info">
-					<p style="font-size: 15px">
+					<div style="font-size: 15px">
 						File Support:
 						<span style="color: #222427; font-weight: 500;">jpg, .jpeg, .png</span>
-					</p>
-					<p style="font-size: 13px; margin-top:7px;">Image size ratio: 4:1</p>
+					</div>
+					<div style="font-size: 13px; margin-top:7px;">Image size ratio: 4:1</div>
 				</div>
 			</div>
 			<label for="signature-uploader" class="tutor-btn tutor-is-sm image_upload_button">
