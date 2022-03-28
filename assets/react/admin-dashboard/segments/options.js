@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					type: 'POST',
 					data: data,
 					beforeSend: function() {
-						button.addClass('tutor-updating-message');
+						button.addClass('is-loading');
 					},
 					success: function(resp) {
 						const { data = {}, success } = resp || {};
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						tutor_toast('Error!', message, 'error');
 					},
 					complete: function() {
-						button.removeClass('tutor-updating-message');
+						button.removeClass('is-loading');
 					},
 				});
 			}

@@ -64,6 +64,7 @@ $disabled-color: #E9E9EA !default;
     padding: 10px 16px;
     font-size: 16px;
     border-radius: 6px;
+	cursor: pointer;
     transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
 
 	&[disabled],

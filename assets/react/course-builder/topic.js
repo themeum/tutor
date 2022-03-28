@@ -25,7 +25,7 @@ window.jQuery(document).ready(function($) {
 			type: 'POST',
 			data: data,
 			beforeSend: function() {
-				$button.addClass('tutor-updating-message');
+				$button.addClass('is-loading');
 			},
 			success: function(resp) {
 				const { data = {}, success } = resp;
@@ -57,7 +57,7 @@ window.jQuery(document).ready(function($) {
 				window.dispatchEvent(new Event(_tutorobject.content_change_event));
 			},
 			complete: function() {
-				$button.removeClass('tutor-updating-message');
+				$button.removeClass('is-loading');
 			},
 		});
 	});
@@ -82,7 +82,7 @@ window.jQuery(document).ready(function($) {
 				topic_id,
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message-v2');
+				$that.addClass('is-loading-v2');
 			},
 			success: function(data) {
 				// To Do: Load updated topic list here
@@ -94,7 +94,7 @@ window.jQuery(document).ready(function($) {
 				tutor_toast('Error!', (data.data || {}).message || __('Something Went Wrong', 'tutor'), 'error');
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message-v2');
+				$that.removeClass('is-loading-v2');
 			},
 		});
 	});

@@ -404,24 +404,10 @@
 
 // Loading Bookmark spacing fix
 .tutor-course-listing-item {
-	.tutor-updating-message {
-		&:before {
-			margin-right: 0 !important;
-		}
-	}
 	.tutor-ratings {
 		.tutor-rating-text {
 			line-height: 1 !important;
 			margin-top: 2px;
-		}
-	}
-}
-
-.tutor-course-listing-item {
-	.tutor-updating-message {
-		@include spinner($lineColor: #ababab, $lineBgColor: #fdfdfd, $size: 17px);
-		&:before {
-			content: '' !important;
 		}
 	}
 }

@@ -112,7 +112,7 @@ window.jQuery(document).ready(function($){
                 action: 'tutor_load_edit_lesson_modal'
             },
             beforeSend: function () {
-                $that.addClass('tutor-updating-message');
+                $that.addClass('is-loading');
             },
             success: function (data) {
 
@@ -137,7 +137,7 @@ window.jQuery(document).ready(function($){
             },
             complete: function () {
                 console.log('ajax completed');
-                $that.removeClass('tutor-updating-message');
+                $that.removeClass('is-loading');
                 quicktags({id : "tutor_lesson_modal_editor"});
             }
         });
@@ -172,7 +172,7 @@ window.jQuery(document).ready(function($){
             type : 'POST',
             data : form_data,
             beforeSend: function () {
-                $that.addClass('tutor-updating-message');
+                $that.addClass('is-loading');
             },
             success: function (data) {
                 if (data.success){
@@ -188,7 +188,7 @@ window.jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('tutor-updating-message');
+                $that.removeClass('is-loading');
             }
         });
     });

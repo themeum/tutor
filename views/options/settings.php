@@ -23,7 +23,7 @@
 			</div>
 			<div class="tutor-col-md-4 tutor-col-lg-3 tutor-col-xl-2 tutor-d-flex tutor-justify-end">
 				<div>
-					<button id="save_tutor_option" class="tutor-btn" disabled form="tutor-option-form">
+					<button id="save_tutor_option" class="tutor-btn tutor-btn-primary" disabled form="tutor-option-form">
 						<?php _e( 'Save Changes', 'tutor' ); ?>
 					</button>
 				</div>
