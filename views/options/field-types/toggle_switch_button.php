@@ -23,13 +23,12 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . esc_attr( $field_label 
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<div class="tutor-option-field-label <?php echo $tooltip_desc ? 'has-tooltip' : ''; ?>">
-		<h5 class="label"><?php echo esc_attr( $field_label ); ?></h5>
+		<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo esc_attr( $field_label ); ?></div>
 		<?php if ( $tooltip_desc ) { ?>
 			<div class="tooltip-wrap tooltip-icon">
 				<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $tooltip_desc ); ?></span>
 			</div>
 			<span style="white-space: nowrap;"><?php //echo $field_key_title;?></span>
-
 		<?php } ?>
 	</div>
 	<div class="tutor-option-field-input tutor-d-flex has-btn-after">
