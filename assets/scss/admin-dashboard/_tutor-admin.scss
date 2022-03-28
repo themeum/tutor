@@ -18,10 +18,12 @@ $accent-color-hover: var(--wp-admin-theme-color) !default;
 
 	&-container {
 		max-width: 1160px;
+		min-width: 760px;
 		margin-left: auto;
 		margin-right: auto;
 		padding-left: 30px;
 		padding-right: 30px;
+		overflow-x: auto;
 	}
 
 	&-header {
