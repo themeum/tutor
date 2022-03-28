@@ -1,291 +1,418 @@
-// Button Utilities
-$variations: (
-	//  $suffix, $bgColor, $txtColor, $border
-		'wordpress' $brand-wordpress $text-white $brand-wordpress,
-	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
-	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-hover-color),
-	'secondary' $primary-40 var(--tutor-primary-color) $primary-40,
-	'tertiary' transparent $primary-main $primary-main,
-	'disable' $black-08 $text-muted $black-08,
-	'disable-outline' transparent $text-muted $stroke-light-30
-);
+// // Button Utilities
 // $variations: (
-// 	'wordpress' $brand-wordpress $text-white $brand-wordpress,
-// 	'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
-// 	'primary' $primary-main $text-white $primary-main,
-// 	'secondary' $primary-40 $primary-main $primary-40,
+// 	// 'wordpress' $brand-wordpress $text-white $brand-wordpress,
+// 	// 'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
+// 	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-hover-color),
+// 	'secondary' $primary-40 var(--tutor-primary-color) $primary-40,
 // 	'tertiary' transparent $primary-main $primary-main,
 // 	'disable' $black-08 $text-muted $black-08,
 // 	'disable-outline' transparent $text-muted $stroke-light-30
 // );
 
-// BTN .tutor-btn-primary/secondary/tertiary
-@each $suffix, $bgColor, $txtColor, $border in $variations {
-	.tutor-btn:not(.tutor-is-outline).tutor-btn-#{$suffix} {
-		background: #{$bgColor};
-		color: #{$txtColor};
-		border-color: #{$border};
-	}
-}
+// @each $suffix, $bgColor, $txtColor, $border in $variations {
+// 	.tutor-btn:not(.tutor-is-outline).tutor-btn-#{$suffix} {
+// 		background: #{$bgColor};
+// 		color: #{$txtColor};
+// 		border-color: #{$border};
+// 	}
+// }
 
-// SIZES .tutor-btn-xl/lg/md/sm
-$btn-sizes: ('xl' 15 79, 'lg' 7 55, 'md' 7 38, 'sm' 7 28);
-@each $suffix, $px, $py in $btn-sizes {
-	.tutor-btn:not(.tutor-btn-icon).tutor-btn-#{$suffix} {
-		padding: #{$px}px #{$py}px;
-	}
-}
+// $btn-sizes: ('xl' 15 79, 'lg' 7 55, 'md' 7 38, 'sm' 7 28);
+// @each $suffix, $px, $py in $btn-sizes {
+// 	.tutor-btn:not(.tutor-btn-icon).tutor-btn-#{$suffix} {
+// 		padding: #{$px}px #{$py}px;
+// 	}
+// }
 
-// ICON BTN .tutor-btn-xl/lg/md/sm + .tutor-btn-icon
-$icon-btn-sizes: ('xl' 15 61 31 4, 'lg' 7 43 25 2, 'md' 7 25 23 4, 'sm' 6 20 18 2);
-@each $suffix, $px, $py, $icon, $gap in $icon-btn-sizes {
-	.tutor-btn.tutor-btn-icon.tutor-btn-#{$suffix} {
-		padding: #{$px}px #{$py}px;
-		gap: #{$gap}px;
-		.btn-icon {
-			font-size: #{$icon}px;
-		}
-	}
-}
+// $icon-btn-sizes: ('xl' 15 61 31 4, 'lg' 7 43 25 2, 'md' 7 25 23 4, 'sm' 6 20 18 2);
+// @each $suffix, $px, $py, $icon, $gap in $icon-btn-sizes {
+// 	.tutor-btn.tutor-btn-icon.tutor-btn-#{$suffix} {
+// 		padding: #{$px}px #{$py}px;
+// 		gap: #{$gap}px;
+// 		.btn-icon {
+// 			font-size: #{$icon}px;
+// 		}
+// 	}
+// }
 
-// ICON BTN LEFT/RIGHT .tutor-btn-xl/lg/md/sm + .tutor-btn-icon-left/right
-$icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 'sm' 6 13 18 99);
-@each $suffix, $px, $py, $icon, $gap in $icon-btn-left-right {
-	.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-#{$suffix},
-	.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-#{$suffix} {
-		padding: #{$px}px #{$py}px;
-		min-width: #{$gap}px;
-		.btn-icon {
-			font-size: #{$icon}px;
-		}
-	}
-}
+// $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 'sm' 6 13 18 99);
+// @each $suffix, $px, $py, $icon, $gap in $icon-btn-left-right {
+// 	.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-#{$suffix},
+// 	.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-#{$suffix} {
+// 		padding: #{$px}px #{$py}px;
+// 		min-width: #{$gap}px;
+// 		.btn-icon {
+// 			font-size: #{$icon}px;
+// 		}
+// 	}
+// }
+
+$disabled-color: #E9E9EA !default;
 
 .tutor-btn {
-	border-radius: 6px;
-	white-space: nowrap;
-	word-break: keep-all;
-	&:not(.tutor-is-outline):not(.tutor-no-hover) {
-		&.tutor-btn-wordpress:hover {
-			background: $brand-wordpress-hover;
-			border-color: $brand-wordpress-hover;
-		}
-		&.tutor-btn-secondary:hover {
-			background: darken($primary-40, 2);
-			border-color: darken($primary-40, 2);
-			color: var(--tutor-primary-color);
-		}
-		&.tutor-btn-wordpress-outline:hover {
-			background: $brand-wordpress;
-			border-color: $brand-wordpress;
-		}
+	display: inline-flex;
+	align-items: center;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--tutor-primary);
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 6px;
+    transition: color 200ms ease-in-out, background-color 200ms ease-in-out, border-color 200ms ease-in-out;
 
-		&.tutor-btn-outline-wp {
-			&:hover {
-				background: transparent;
-				border-color: $brand-wordpress;
-				color: $brand-wordpress;
-			}
-		}
-		&.tutor-btn-outline-fd {
-			&:hover {
-				background: transparent;
-				border-color: var(--tutor-primary-color);
-				color: var(--tutor-primary-color);
-			}
-		}
+	&[disabled],
+	&.disabled {
+		pointer-events: none;
+		color: #858689;
 	}
 
-	&.tutor-btn-ghost {
-		padding: 0 !important;
-		border: none !important;
-	}
-
-	&.tutor-btn-primary {
-	}
-	&.tutor-btn-secondary {
-	}
-	&.tutor-btn-tertiary {
-	}
-	&.tutor-btn-disable {
-	}
-	&.tutor-btn-disable-outline {
-	}
-
-	&.tutor-is-outline {
-		background: transparent;
-	}
-
-	&.tutor-btn-loading:not(.tutor-btn-icon) {
-		padding-top: 5px;
-		.ball {
-			width: 9px;
-			height: 9px;
-			border-radius: 50%;
-			margin: 0 5.5px;
-			background-color: #fff;
-
-			animation: 1.5s bounce ease infinite;
-
-			&:nth-child(2) {
-				animation-delay: 0.25s;
-			}
-			&:nth-child(3) {
-				animation-delay: 0.5s;
-			}
-			&:nth-child(4) {
-				animation-delay: 0.75s;
-			}
-		}
-
-		@keyframes bounce {
-			50% {
-				transform: translateY(9px);
-			}
-		}
-
-		&.tutor-btn-xl {
-			height: 64px;
-		}
-		&.tutor-btn-lg {
-			height: 48px;
-
-			.ball {
-				width: 9px;
-				height: 9px;
-				border-radius: 50%;
-				margin: 0 5.5px;
-				background-color: #fff;
-
-				animation: 1.5s bounce ease infinite;
-
-				&:nth-child(2) {
-					animation-delay: 0.25s;
-				}
-				&:nth-child(3) {
-					animation-delay: 0.5s;
-				}
-				&:nth-child(4) {
-					animation-delay: 0.75s;
-				}
-			}
-
-			@keyframes bounce {
-				50% {
-					transform: translateY(5px);
-				}
-			}
-		}
-		&.tutor-btn-md {
-			height: 40px;
-			.ball {
-				width: 9px;
-				height: 9px;
-				border-radius: 50%;
-				margin: 0 5.5px;
-				background-color: #fff;
-
-				animation: 1.5s bounce ease infinite;
-
-				&:nth-child(2) {
-					animation-delay: 0.25s;
-				}
-				&:nth-child(3) {
-					animation-delay: 0.5s;
-				}
-				&:nth-child(4) {
-					animation-delay: 0.75s;
-				}
-			}
-
-			@keyframes bounce {
-				50% {
-					transform: translateY(3px);
-				}
-			}
-		}
-		&.tutor-btn-sm {
-			height: 32px;
-			.ball {
-				width: 9px;
-				height: 9px;
-				border-radius: 50%;
-				margin: 0 5.5px;
-				background-color: #fff;
-
-				animation: 1.5s bounce ease infinite;
-
-				&:nth-child(2) {
-					animation-delay: 0.25s;
-				}
-				&:nth-child(3) {
-					animation-delay: 0.5s;
-				}
-				&:nth-child(4) {
-					animation-delay: 0.75s;
-				}
-			}
-
-			@keyframes bounce {
-				50% {
-					transform: translateY(3px);
-				}
-			}
-		}
-	}
-
-	&.tutor-btn-full {
+	&-block {
+		display: block;
 		width: 100%;
 	}
 
-	// Button Sizes and Typography
-	&.tutor-btn-xl {
-		@extend .text-btn-xlarge;
+	&-primary {
+		border-color: var(--tutor-primary);
+		background-color: var(--tutor-primary);
+		color: #FFFFFF;
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: #FFFFFF;
+			border-color: var(--tutor-primary-hover);
+			background-color: var(--tutor-primary-hover);
+		}
+
+		&[disabled],
+		&.disabled {
+			border-color: #E9E9EA;
+			background-color: #E9E9EA;
+		}
 	}
-	&.tutor-btn-lg {
-		@extend .text-btn-large;
+
+	&-outline-primary {
+		border-color: var(--tutor-primary);
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: #FFFFFF;
+			border-color: var(--tutor-primary-hover);
+			background-color: var(--tutor-primary-hover);
+		}
+
+		&[disabled],
+		&.disabled {
+			border-color: #E9E9EA;
+		}
 	}
-	&.tutor-btn-md {
-		@extend .text-btn-medium;
+
+	&-secondary {
+		border-color: #E0E6FA;
+		background-color: #E0E6FA;
+		color: var(--tutor-primary);
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: #FFFFFF;
+			border-color: var(--tutor-primary-hover);
+			background-color: var(--tutor-primary-hover);
+		}
+
+		&[disabled],
+		&.disabled {
+			border-color: #E9E9EA;
+			background-color: #E9E9EA;
+		}
 	}
-	&.tutor-btn-sm {
-		@extend .text-btn-small;
-		// font-size: 15px;
+
+	&-link {
+		padding: 4px !important;
+		position: relative;
+		&:after {
+			content: " ";
+			position: absolute;
+			bottom: 0px;
+			left: 0;
+			width: 0;
+			height: 1px;
+			background: var(--tutor-primary-hover);
+			transition: width 200ms ease-in-out;
+		}
+
+		&:hover,
+		&:focus,
+		&:active {
+			&:after {
+				width: 100%;
+			}
+		}
 	}
+
+	&-ghost {
+		padding: 0px !important;
+		position: relative;
+		color: #757C8E; // @todo: to be changed
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: var(--tutor-primary);
+		}
+	}
+
+	// sizes
+	&-sm {
+		font-size: 14px;
+		padding: 5px 12px;
+	}
+
+	&-md {
+		padding: 6px 12px;
+	}
+
+	&-lg {
+		font-size: 18px;
+		padding: 10px 20px;
+	}
+
+	&-xl {
+		font-size: 18px;
+		padding: 15px 24px;
+	}
+
+	// loading state
+	&.is-loading {
+		&:before {
+			content: '\e9df' !important;
+			display: inline-block;
+			font-family: 'tutor';
+			line-height: 1;
+			margin-right: 8px;
+			font-size: 24px;
+			margin-top: -4px;
+			margin-bottom: -4px;
+			animation: rotateSpinner 0.8s linear infinite;
+		}
+	}
+
+
+	// &:not(.tutor-is-outline):not(.tutor-no-hover) {
+	// 	&.tutor-btn-wordpress:hover {
+	// 		background: $brand-wordpress-hover;
+	// 		border-color: $brand-wordpress-hover;
+	// 	}
+	// 	&.tutor-btn-secondary:hover {
+	// 		background: darken($primary-40, 2);
+	// 		border-color: darken($primary-40, 2);
+	// 		color: var(--tutor-primary-color);
+	// 	}
+	// 	&.tutor-btn-wordpress-outline:hover {
+	// 		background: $brand-wordpress;
+	// 		border-color: $brand-wordpress;
+	// 	}
+
+	// 	&.tutor-btn-outline-wp {
+	// 		&:hover {
+	// 			background: transparent;
+	// 			border-color: $brand-wordpress;
+	// 			color: $brand-wordpress;
+	// 		}
+	// 	}
+	// 	&.tutor-btn-outline-fd {
+	// 		&:hover {
+	// 			background: transparent;
+	// 			border-color: var(--tutor-primary-color);
+	// 			color: var(--tutor-primary-color);
+	// 		}
+	// 	}
+	// }
+
+	// &.tutor-btn-ghost {
+	// 	padding: 0 !important;
+	// 	border: none !important;
+	// }
+
+	// &.tutor-is-outline {
+	// 	background: transparent;
+	// }
+
+	// &.tutor-btn-loading:not(.tutor-btn-icon) {
+	// 	padding-top: 5px;
+	// 	.ball {
+	// 		width: 9px;
+	// 		height: 9px;
+	// 		border-radius: 50%;
+	// 		margin: 0 5.5px;
+	// 		background-color: #fff;
+
+	// 		animation: 1.5s bounce ease infinite;
+
+	// 		&:nth-child(2) {
+	// 			animation-delay: 0.25s;
+	// 		}
+	// 		&:nth-child(3) {
+	// 			animation-delay: 0.5s;
+	// 		}
+	// 		&:nth-child(4) {
+	// 			animation-delay: 0.75s;
+	// 		}
+	// 	}
+
+	// 	@keyframes bounce {
+	// 		50% {
+	// 			transform: translateY(9px);
+	// 		}
+	// 	}
+
+	// 	&.tutor-btn-xl {
+	// 		height: 64px;
+	// 	}
+	// 	&.tutor-btn-lg {
+	// 		height: 48px;
+
+	// 		.ball {
+	// 			width: 9px;
+	// 			height: 9px;
+	// 			border-radius: 50%;
+	// 			margin: 0 5.5px;
+	// 			background-color: #fff;
+
+	// 			animation: 1.5s bounce ease infinite;
+
+	// 			&:nth-child(2) {
+	// 				animation-delay: 0.25s;
+	// 			}
+	// 			&:nth-child(3) {
+	// 				animation-delay: 0.5s;
+	// 			}
+	// 			&:nth-child(4) {
+	// 				animation-delay: 0.75s;
+	// 			}
+	// 		}
+
+	// 		@keyframes bounce {
+	// 			50% {
+	// 				transform: translateY(5px);
+	// 			}
+	// 		}
+	// 	}
+	// 	&.tutor-btn-md {
+	// 		height: 40px;
+	// 		.ball {
+	// 			width: 9px;
+	// 			height: 9px;
+	// 			border-radius: 50%;
+	// 			margin: 0 5.5px;
+	// 			background-color: #fff;
+
+	// 			animation: 1.5s bounce ease infinite;
+
+	// 			&:nth-child(2) {
+	// 				animation-delay: 0.25s;
+	// 			}
+	// 			&:nth-child(3) {
+	// 				animation-delay: 0.5s;
+	// 			}
+	// 			&:nth-child(4) {
+	// 				animation-delay: 0.75s;
+	// 			}
+	// 		}
+
+	// 		@keyframes bounce {
+	// 			50% {
+	// 				transform: translateY(3px);
+	// 			}
+	// 		}
+	// 	}
+	// 	&.tutor-btn-sm {
+	// 		height: 32px;
+	// 		.ball {
+	// 			width: 9px;
+	// 			height: 9px;
+	// 			border-radius: 50%;
+	// 			margin: 0 5.5px;
+	// 			background-color: #fff;
+
+	// 			animation: 1.5s bounce ease infinite;
+
+	// 			&:nth-child(2) {
+	// 				animation-delay: 0.25s;
+	// 			}
+	// 			&:nth-child(3) {
+	// 				animation-delay: 0.5s;
+	// 			}
+	// 			&:nth-child(4) {
+	// 				animation-delay: 0.75s;
+	// 			}
+	// 		}
+
+	// 		@keyframes bounce {
+	// 			50% {
+	// 				transform: translateY(3px);
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// &.tutor-btn-full {
+	// 	width: 100%;
+	// }
+
+	// // Button Sizes and Typography
+	// &.tutor-btn-xl {
+	// 	@extend .text-btn-xlarge;
+	// }
+	// &.tutor-btn-lg {
+	// 	@extend .text-btn-large;
+	// }
+	// &.tutor-btn-md {
+	// 	@extend .text-btn-medium;
+	// }
+	// &.tutor-btn-sm {
+	// 	@extend .text-btn-small;
+	// 	// font-size: 15px;
+	// }
 
 	// Button with icon
-	&.tutor-btn-icon {
-		// gap: 5px;
-		> span {
-			padding-left: 0 !important;
-		}
-		&.tutor-btn-xl {
-			@extend .text-btn-xlarge;
-		}
-		&.tutor-btn-lg {
-			@extend .text-btn-large;
-		}
-		&.tutor-btn-md {
-			@extend .text-btn-medium;
-		}
-		&.tutor-btn-sm {
-			@extend .text-btn-small;
-			font-size: 15px;
-		}
+	// &.tutor-btn-icon {
+	// 	// gap: 5px;
+	// 	> span {
+	// 		padding-left: 0 !important;
+	// 	}
+	// 	&.tutor-btn-xl {
+	// 		@extend .text-btn-xlarge;
+	// 	}
+	// 	&.tutor-btn-lg {
+	// 		@extend .text-btn-large;
+	// 	}
+	// 	&.tutor-btn-md {
+	// 		@extend .text-btn-medium;
+	// 	}
+	// 	&.tutor-btn-sm {
+	// 		@extend .text-btn-small;
+	// 		font-size: 15px;
+	// 	}
 
-		&.tutor-btn-icon-left,
-		&.tutor-btn-icon-right {
-			justify-content: space-between !important;
-		}
-	}
+	// 	&.tutor-btn-icon-left,
+	// 	&.tutor-btn-icon-right {
+	// 		justify-content: space-between !important;
+	// 	}
+	// }
 }
 
 .tutor-loading-spinner {
 	$size: var(--size);
 	position: relative;
 	@include spinner($design-brand, #f1f1f1, $size);
-	// For custom call this with position: relative;
-	// spinner($lineColor: #ababab, $lineBgColor: #f1f1f1, $size: 20px)
 }
 
 .tutor-btn.tutor-is-circle {

@@ -27,16 +27,18 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 
 <div class="tutor-dashboard-content-inner">
 	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php _e( 'Reviews', 'tutor' ); ?></div>
-	<?php
-	if ( current_user_can( tutor()->instructor_role ) ) {
-		?>
-		<div class="tutor-dashboard-inline-links">
-			<ul>
-				<li><a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ) ); ?>"> <?php esc_html_e( 'Received', 'tutor' ); ?> (<?php echo $received_count; ?>)</a> </li>
-				<li class="active"> <a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ) ); ?>"> <?php esc_html_e( 'Given', 'tutor' ); ?> (<?php echo $review_count; ?>)</a> </li>
+	<?php if ( current_user_can( tutor()->instructor_role ) ) : ?>
+		<div class="tutor-mb-32">
+			<ul class="tutor-nav">
+				<li class="tutor-nav-item">
+					<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ) ); ?>"> <?php esc_html_e( 'Received', 'tutor' ); ?> (<?php echo $received_count; ?>)</a>
+				</li>
+				<li class="tutor-nav-item is-active">
+					<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews/given-reviews' ) ); ?>"> <?php esc_html_e( 'Given', 'tutor' ); ?> (<?php echo $review_count; ?>)</a>
+				</li>
 			</ul>
 		</div>
-	<?php } ?>
+	<?php endif; ?>
 
 	<div class="tutor-dashboard-reviews-wrap">
 		<?php
@@ -71,7 +73,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 					</div>
 
 					<div class="individual-dashboard-review-body">
-						<div class="tutor-d-sm-flex tutor-justify-content-between ">
+						<div class="tutor-d-sm-flex tutor-justify-between ">
 							<div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-12">
 								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?> 
 							</div>

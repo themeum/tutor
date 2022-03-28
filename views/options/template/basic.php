@@ -1,5 +1,4 @@
 <?php echo $this->view_template( 'common/reset-button-template.php', $section ); ?>
-<!-- end /.tutor-option-main-title -->
 
 <?php
 foreach ( $section['blocks'] as $blocks ) :

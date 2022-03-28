@@ -28,14 +28,7 @@
 	position: relative;
 	width: 100%;
 	align-items: flex-start;
-	a {
-		text-decoration: none;
-		color: inherit;
-	}
-	a:focus,
-	a:hover {
-		opacity: 1;
-	}
+	
 	input.tutor-form-check-input.tutor-form-check-circle {
 		width: 20px;
 		height: 20px;
@@ -49,11 +42,12 @@
 	#tutor-single-entry-content {
 		position: relative;
 		flex: 100%;
-		height: calc(100vh - 100px);
+		height: 100vh;
 		overflow-x: hidden;
 		overflow-y: auto;
-		// border-left: 1px solid $stroke-light-30;
+		border-left: 1px solid $stroke-light-30;
 		border-top: 1px solid $stroke-light-30;
+		padding-bottom: 100px;
 		.tutor-single-page-top-bar {
 			background: var(--tutor-primary-color);
 			@include breakpoint-max(mobile) {

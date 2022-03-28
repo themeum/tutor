@@ -190,7 +190,7 @@ $filters = array(
 								</div>
 							</td>
 							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-disable-outline tutor-btn-sm">
+								<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-sm">
 									<?php esc_html_e( 'Edit', 'tutor' ); ?>
 								</a>
 							</td>
@@ -206,7 +206,7 @@ $filters = array(
 			</tbody>
 		</table>
 		</div>
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-48">
+	<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 		<?php
 			/**
 			 * Prepare pagination data & load template
@@ -325,7 +325,7 @@ $filters = array(
 				<div class="tutor-row " id="tutor-new-instructor-form-response"></div>
 			  </div>
 			<div class="tutor-modal-footer">
-				<div class="tutor-d-flex tutor-justify-content-between">
+				<div class="tutor-d-flex tutor-justify-between">
 					<div class="col">
 						<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn-loading" name="tutor_register_instructor_btn">
 							<?php esc_html_e( 'Add Instructor', 'tutor' ); ?>
@@ -373,7 +373,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 						</div>
 					</div>
 					<div class="tutor-modal-ins-meta tutor-mt-44">
-						<div class="flex-center">
+						<div class="tutor-d-flex tutor-align-items-center">
 							<div class="tutor-avatar">
 								<?php echo get_avatar( $instructor_data->ID ); ?>
 							</div>

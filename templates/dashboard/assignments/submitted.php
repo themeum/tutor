@@ -70,21 +70,21 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
                         </span>
                     </th>
                     <th>
-                        <div class="inline-flex-center tutor-color-black-60">
+                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Student', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="inline-flex-center tutor-color-black-60">
+                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Total Points', 'tutor'); ?>
                             </span>
                         </div>
                     </th>
                     <th>
-                        <div class="inline-flex-center tutor-color-black-60">
+                        <div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
                             <span class="tutor-fs-7">
                                 <?php esc_html_e('Result', 'tutor'); ?>
                             </span>
@@ -136,8 +136,8 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
                                     <?php echo tutor_utils()->translate_dynamic_text($status, true); ?>
                                 </td>
                                 <td data-th="<?php esc_html_e('Details URL', 'tutor'); ?>">
-                                    <div class="inline-flex-center td-action-btns">
-                                        <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
+                                    <div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
+                                        <a href="<?php echo esc_url($review_url . '?view_assignment=' . $assignment->comment_ID) . '&assignment=' . $assignment_id; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php esc_html_e($button_text); ?>
                                         </a>
                                     </div>

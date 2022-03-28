@@ -69,10 +69,10 @@
 				<div class="tutor-color-black">
 					<a class="tutor-back-btn" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-						<span class="text text tutro-tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
+						<span class="tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
 					</a>
 				</div>
-				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-content-end">
+				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-end">
 
 					<!-- Show meta data actions if it is instructor view -->
 					<?php if ( ! $is_user_asker ) : ?>
@@ -184,7 +184,7 @@
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-asked-under-course" style="background-color: #F4F6F9;">
-							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
+							<div class="tutor-d-flex tutor-justify-between tutor-align-items-center">
 								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
@@ -207,7 +207,7 @@
 				<table class="tutor-ui-table tutor-ui-table-responsive tutor-ui-table-data-td-target">
 					<tr>
 						<td class="expand-btn" data-th="Collapse" data-td-target="tutor-prev-question-history" style="background-color: #F4F6F9;">
-							<div class="tutor-d-flex tutor-justify-content-between tutor-align-items-center">
+							<div class="tutor-d-flex tutor-justify-between tutor-align-items-center">
 								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>
