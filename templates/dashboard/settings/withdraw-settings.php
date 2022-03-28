@@ -11,7 +11,7 @@ $col_classes = array(
 );
 ?>
 <div class="tutor-dashboard-setting-withdraw tutor-dashboard-content-inner">
-    <div class="tutor-dashboard-inline-links">
+    <div class="tutor-mb-32">
         <?php
             tutor_load_template( 'dashboard.settings.nav-bar', ['active_setting_nav'=>'withdrawal'] );
         ?>

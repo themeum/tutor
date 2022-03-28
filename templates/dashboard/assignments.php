@@ -74,12 +74,12 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 						</span>
 					</th>
 					<th>
-						<div class="inline-flex-center tutor-color-black-60">
+						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Marks', 'tutor' ); ?></span>
 						</div>
 					</th>
 					<th>
-						<div class="inline-flex-center tutor-color-black-60">
+						<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Total Submit', 'tutor' ); ?></span>
 						</div>
 					</th>
@@ -119,7 +119,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_cou
 								</span>
 							</td>
 							<td data-th="Details URL">
-								<div class="inline-flex-center td-action-btns">
+								<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
 									<a href="<?php echo esc_url( $submitted_url . '?assignment=' . $item->ID ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-btn-outline-fd tutor-btn-sm">
 										<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</a>

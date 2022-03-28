@@ -3,6 +3,20 @@
 @author: themeum
  */
 
+.tutor-admin {
+	&-wrap {
+		margin-left: -20px;
+	}
+
+	&-body {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+
+
+
+
 /*----------------------------------
 	Component containers
 ----------------------------------*/
@@ -1441,10 +1455,6 @@ h2.tutor-page-heading {
 
 .tutor-report-left-menus ul {
 	margin: 0;
-}
-
-.report-main-wrap {
-	/*display: flex;*/
 }
 
 .report-main-wrap h3 {

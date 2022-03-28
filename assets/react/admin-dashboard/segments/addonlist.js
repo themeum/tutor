@@ -24,7 +24,7 @@ if (null !== searchBar) {
 const emptySearch = () => {
 	const nothingFound = `
 			<div class="tutor-addons-card tutor-p-32">
-			<div class="tutor-d-flex tutor-flex-column tutor-justify-content-center tutor-text-center">
+			<div class="tutor-d-flex tutor-flex-column tutor-justify-center tutor-text-center">
 				<div class="tutor-mb-32">
 					<img src=${emptyStateImg} alt="Empty State Illustration" />
 				</div>

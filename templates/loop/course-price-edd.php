@@ -39,7 +39,7 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
                 $total_booked = 100 / $maximum_students * $total_enrolled;
                 $b_total = $total_booked;
                 // @codingStandardsIgnoreStart
-                echo '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+                echo '<div class="list-item-price-with-booking tutor-d-flex tutor-align-items-center tutor-justify-between">
                         <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
                             <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.
                                 $edd_price . ' 
@@ -62,7 +62,7 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
             }
 
             if ( $maximum_students == $total_enrolled && $maximum_students != 0) {
-                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+                $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-between">
                                     <div class="list-item-price tutor-d-flex tutor-align-items-center"> 
                                         <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.
                                             $edd_price . ' 

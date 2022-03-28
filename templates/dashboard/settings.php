@@ -5,16 +5,14 @@
  */
 
 ?>
-<h3><?php _e( 'Settings', 'tutor' ); ?></h3>
+<div class="tutor-fs-5 tutor-fw-medium tutor-mb-24"><?php _e( 'Settings', 'tutor' ); ?></div>
 
 <div class="tutor-dashboard-content-inner">
-
-	<div class="tutor-dashboard-inline-links">
+	<div class="tutor-mb-32">
 		<?php
 			tutor_load_template( 'dashboard.settings.nav-bar', array( 'active_setting_nav' => 'profile' ) );
 		?>
 	</div>
-
 </div>
 
 <?php

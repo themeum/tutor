@@ -19,7 +19,7 @@ if ($product) {
         $regular_price = $product->get_regular_price();
         $symbol = get_woocommerce_currency_symbol();
         ?>
-        <div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-content-between">
+        <div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-between">
             <div>
                 <span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
                     <?php echo $symbol . ($sale_price ? $sale_price : $regular_price); ?>

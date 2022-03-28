@@ -47,14 +47,14 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
 <?php if ( $is_enrolled ) : ?>
-	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
+	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
 		<div class="tutor-topbar-left-item tutor-d-flex">
-			<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
+			<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 				<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-					<span class="tutor-icon-icon-light-left-line tutor-color-white flex-center"></span>
+					<span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 				</a>
 			</div>
-			<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
+			<div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
 				<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-white tutor-mr-4"></span>
 				<span class="tutor-fs-7 tutor-color-design-white">
 					<?php
@@ -91,16 +91,16 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 					<?php tutor_lesson_mark_complete_html(); ?>
 				<!-- </div> -->
 			</div>
-			<div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
+			<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
 				<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 				<a href="<?php echo get_the_permalink( $course_id ); ?>">
-					<span class="tutor-icon-line-cross-line tutor-color-white flex-center"></span>
+					<span class="tutor-icon-line-cross-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 				</a>
 			</div>
 		</div>
 	</div>
 	<div class="tutor-mobile-top-navigation tutor-d-block tutor-d-sm-none tutor-my-20 tutor-mx-12">
-		<div class="tutor-mobile-top-nav tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+		<div class="tutor-mobile-top-nav tutor-d-flex tutor-align-items-center tutor-justify-between">
 			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
 				<span class="tutor-top-nav-icon tutor-icon-previous-line design-lightgrey"></span>
 			</a>
@@ -112,19 +112,19 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 			<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-sm-none tutor-d-flex tutor-d-sm-none">
 				<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 				<a href="<?php echo get_the_permalink( $course_id ); ?>">
-					<span class="tutor-icon-line-cross-line tutor-icon-28 tutor-color-primary flex-center"></span>
+					<span class="tutor-icon-line-cross-line tutor-icon-28 tutor-color-primary tutor-d-flex tutor-align-items-center"></span>
 				</a>
 			</div>
 		</div>
 	</div>
 <?php else : ?>
-	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-content-between">
-		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar flex-center tutor-d-none tutor-d-xl-flex">
+	<div class="tutor-single-page-top-bar tutor-d-flex tutor-justify-between">
+		<div class="tutor-topbar-item tutor-topbar-sidebar-toggle tutor-hide-sidebar-bar tutor-d-flex tutor-align-items-center tutor-d-none tutor-d-xl-flex">
 			<a href="javascript:;" class="tutor-lesson-sidebar-hide-bar">
-				<span class="tutor-icon-icon-light-left-line tutor-color-white flex-center"></span>
+				<span class="tutor-icon-icon-light-left-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 			</a>
 		</div>
-		<div class="tutor-topbar-item tutor-topbar-content-title-wrap flex-center">
+		<div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
 			<span class="tutor-icon-youtube-brand tutor-icon-24 tutor-color-white tutor-mr-4"></span>
 			<span class="tutor-fs-7 tutor-color-design-white">
 				<?php
@@ -134,10 +134,10 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 			</span>
 		</div>
 
-		<div class="tutor-topbar-cross-icon tutor-ml-16 flex-center">
+		<div class="tutor-topbar-cross-icon tutor-ml-16 tutor-d-flex tutor-align-items-center">
 			<?php $course_id = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() ); ?>
 			<a href="<?php echo get_the_permalink( $course_id ); ?>">
-				<span class="tutor-icon-line-cross-line tutor-color-white flex-center"></span>
+				<span class="tutor-icon-line-cross-line tutor-color-white tutor-d-flex tutor-align-items-center"></span>
 			</a>
 		</div>
 	</div>
@@ -145,9 +145,25 @@ $is_enrolled        = tutor_utils()->is_enrolled( $course_id );
 
 <!-- Load Lesson Video -->
 <input type="hidden" id="tutor_video_tracking_information" value="<?php echo esc_attr( json_encode( $jsonData ) ); ?>">
-<?php
-tutor_lesson_video();
+<div class="tutor-video-player-wrapper">
+	<?php tutor_lesson_video(); ?>
+	<?php if($previous_id): ?>
+		<div class="tutor-single-course-content-prev tutor-d-flex tutor-align-items-center">
+			<a href="<?php echo get_the_permalink( $previous_id ); ?>">
+				<span class="tutor-icon-angle-left-filled" area-hidden="true"></span>
+			</a>
+		</div>
+	<?php endif; ?>
 
+	<?php if($next_id): ?>
+		<div class="tutor-single-course-content-next tutor-d-flex tutor-align-items-center">
+			<a href="<?php echo get_the_permalink( $next_id ); ?>">
+				<span class="tutor-icon-angle-right-filled" area-hidden="true"></span>
+			</a>
+		</div>
+	<?php endif; ?>
+</div>
+<?php
 $referer_url        = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';
 $referer_comment_id = explode( '#', $_SERVER['REQUEST_URI'] );
 $url_components     = parse_url( $referer_url );
@@ -166,16 +182,16 @@ $page_tab = isset( $_GET['page_tab'] ) ? esc_attr( $_GET['page_tab'] ) : ( isset
 <div class="tutor-course-spotlight-wrapper">
 	<div class="tutor-spotlight-tab tutor-default-tab tutor-course-details-tab">
 		<div class="tab-header tutor-d-flex justify-content-center">
-			<div class="tab-header-item flex-center<?php echo ( ! isset( $page_tab ) || 'overview' == $page_tab ) ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-1" data-tutor-query-string="overview">
+			<div class="tab-header-item tutor-d-flex tutor-align-items-center<?php echo ( ! isset( $page_tab ) || 'overview' == $page_tab ) ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-1" data-tutor-query-string="overview">
 				<span class="tutor-icon-document-alt-filled"></span>
 				<span><?php _e( 'Overview', 'tutor' ); ?></span>
 			</div>
-			<div class="tab-header-item flex-center<?php echo 'files' == $page_tab ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-2" data-tutor-query-string="files">
+			<div class="tab-header-item tutor-d-flex tutor-align-items-center<?php echo 'files' == $page_tab ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-2" data-tutor-query-string="files">
 				<span class="tutor-icon-attach-filled"></span>
 				<span><?php _e( 'Exercise Files', 'tutor' ); ?></span>
 			</div>
 			<?php if ( $is_comment_enabled ) : ?>
-				<div class="tab-header-item flex-center<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-3" data-tutor-query-string="comments">
+				<div class="tab-header-item tutor-d-flex tutor-align-items-center<?php echo 'comments' == $page_tab ? ' is-active' : ''; ?>" data-tutor-spotlight-tab-target="tutor-course-spotlight-tab-3" data-tutor-query-string="comments">
 					<span class="tutor-icon-comment-filled"></span>
 					<span><?php _e( 'Comments', 'tutor' ); ?></span>
 				</div>
