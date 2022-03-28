@@ -24,7 +24,7 @@ if($instructors && count($instructors)) {
 			<?php _e( 'About the ' . ( count( (array) $instructors ) > 1 ? 'instructors' : 'instructor' ), 'tutor'); ?>
 		</h3>
 		<?php foreach($instructors as $instructor): ?>
-			<div class="tutor-instructor-info-card tutor-mb-16">
+			<div class="tutor-instructor-info-card tutor-mb-16 tutor-break-word">
 				<div class="tutor-instructor-info-card-body tutor-d-sm-flex tutor-align-items-start tutor-px-32 tutor-py-24">
 					<div class="tutor-ins-avatar tutor-flex-shrink-0 tutor-mr-sm-16">
 						<img src="<?php echo get_avatar_url($instructor->ID); ?>" alt="instructor avatar" />
@@ -43,13 +43,13 @@ if($instructors && count($instructors)) {
 						</div>
 					</div>
 				</div>
-				<div class="tutor-instructor-info-card-footer tutor-d-sm-flex tutor-align-items-center tutor-justify-content-between tutor-px-32 tutor-py-16">
+				<div class="tutor-instructor-info-card-footer tutor-d-sm-flex tutor-align-items-center tutor-justify-between tutor-px-32 tutor-py-16">
 					<?php 
 						$instructor_rating = tutor_utils()->get_instructor_ratings($instructor->ID);
 						tutor_utils()->star_rating_generator_v2($instructor_rating->rating_avg, $instructor_rating->rating_count, true); 
 					?>
 					<div class="tutor-ins-meta tutor-d-flex">
-						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center">
+						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center">
 							<span class="tutor-icon-30 tutor-icon-user-filled"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
 								<?php echo tutor_utils()->get_total_students_by_instructor($instructor->ID); ?>
@@ -58,7 +58,7 @@ if($instructors && count($instructors)) {
 								<?php _e('Students', 'tutor'); ?>
 							</span>
 						</div>
-						<div class="tutor-ins-meta-item tutor-color-design-dark flex-center ">
+						<div class="tutor-ins-meta-item tutor-color-design-dark tutor-d-flex tutor-align-items-center ">
 							<span class="tutor-icon-30 tutor-icon-mortarboard-line"></span>
 							<span class="tutor-fs-6 tutor-fw-bold tutor-color-black tutor-mr-4">
 								<?php echo tutor_utils()->get_course_count_by_instructor($instructor->ID); ?>

@@ -127,7 +127,7 @@
 							<?php
 								if ( $show_previous_button && $previous_question ) {
 									?>
-										<button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-quiz-answer-previous-btn tutor-mr-20">
+										<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-quiz-answer-previous-btn tutor-mr-20">
 											<?php esc_html_e( 'Back', 'tutor' ); ?>
 										</button>
 									<?php

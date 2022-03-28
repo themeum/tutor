@@ -24,8 +24,8 @@ $fields_groups = is_array( $blocks['fields_group'] ) ? $blocks['fields_group'] :
 					?>
 					<div class="tutor-option-field-row tutor-d-block">
 						<div class="tutor-option-field-label">
-							<h5 class="label"><?php echo esc_attr( $fields_group['label'] ); ?></h5>
-							<p class="desc"><?php echo esc_attr( $fields_group['desc'] ); ?></p>
+							<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name><?php echo esc_attr( $fields_group['label'] ); ?></div>
+							<div class="tutor-fs-7 tutor-color-muted"><?php echo esc_attr( $fields_group['desc'] ); ?></div>
 						</div>
 						<div class="tutor-option-field-input color-preset-grid">
 							<?php

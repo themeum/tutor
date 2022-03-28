@@ -1,7 +1,9 @@
 // WordPress Notices
-#wpbody-content {
-	.notice.notice-error {
-		margin: 20px 20px 20px 0px !important;
+.tutor-screen-backend-settings {
+	#wpbody-content {
+		.notice.notice-error {
+			margin-bottom: 10px;
+		}
 	}
 }
 
@@ -212,7 +214,7 @@
 	h4 {
 		margin-bottom: 12px;
 	}
-	
+
 	.item-wrapper {
 		background: var(--tutor-bg-white);
 		border: 1px solid #d3d4d9;
@@ -420,11 +422,11 @@
 	grid-auto-flow: column;
 	grid-gap: 30px;
 
-	&.tutor-d-block{
+	&.tutor-d-block {
 		display: block !important;
 	}
-	
-	&.tutor-d-block{
+
+	&.tutor-d-block {
 		display: block !important;
 	}
 

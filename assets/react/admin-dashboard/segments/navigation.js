@@ -7,11 +7,11 @@ const navTabItems = document.querySelectorAll('li.tutor-option-nav-item a');
 const navPages = document.querySelectorAll('.tutor-option-nav-page');
 
 readyState_complete(() => {
+
     const loadNavItem = document.querySelector('li.tutor-option-nav-item a.active');
     if (null !== loadNavItem) {
-        document.title = loadNavItem.querySelector('.nav-label').innerText + ' ‹ ' + _tutorobject.site_title;
+        document.title = loadNavItem.querySelector('[tutor-option-label]').innerText + ' ‹ ' + _tutorobject.site_title;
     }
-
 
     navTabLists.forEach((list) => {
         list.addEventListener('click', (e) => {
@@ -53,7 +53,6 @@ readyState_complete(() => {
                 if (loadingSpinner) {
                     document.getElementById(dataTab).querySelector('.loading-spinner').remove();
                 }
-
 
                 //enable if tinymce content changed
                 if (typeof(tinyMCE) != "undefined") {

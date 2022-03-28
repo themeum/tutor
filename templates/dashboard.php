@@ -72,8 +72,7 @@ do_action('tutor_dashboard/before/wrap');
 
 <div class="tutor-wrap tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-80">
 	<div class="tutor-container">
-		<!-- new head part  -->
-		<div class="tutor-row tutor-d-flex tutor-justify-content-between tutor-frontend-dashboard-header">
+		<div class="tutor-row tutor-d-flex tutor-justify-between tutor-frontend-dashboard-header">
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-items-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar" style="background-image: url( <?php echo esc_url(get_avatar_url($user_id, array('size' => 150))); ?>)">
 				</div>
@@ -83,7 +82,7 @@ do_action('tutor_dashboard/before/wrap');
 
 					if (current_user_can(tutor()->instructor_role)) {
 					?>
-						<div class="tutor-fs-4 tutor-fw-medium tutor-dashboard-header-username">
+						<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-dashboard-header-username">
 							<?php echo esc_html($user->display_name); ?>
 						</div>
 						<div class="tutor-dashboard-header-stats">
@@ -110,7 +109,7 @@ do_action('tutor_dashboard/before/wrap');
 					?>
 				</div>
 			</div>
-			<div class="tutor-header-right-side tutor-col-md-6 tutor-d-flex tutor-justify-content-end tutor-mt-20 tutor-mt-md-0">
+			<div class="tutor-header-right-side tutor-col-md-6 tutor-d-flex tutor-justify-end tutor-mt-20 tutor-mt-md-0">
 				<div class="tutor-d-flex tutor-align-items-center">
 					<?php
 					do_action('tutor_dashboard/before_header_button');
@@ -123,7 +122,7 @@ do_action('tutor_dashboard/before/wrap');
 					ob_start();
 					if (tutor_utils()->get_option('enable_become_instructor_btn')) {
 					?>
-						<a id="tutor-become-instructor-button" style="vertical-align:middle" class="tutor-btn tutor-btn-tertiary tutor-is-outline" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
+						<a id="tutor-become-instructor-button" class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
 							<i class="tutor-icon-man-user-filled tutor-icon-24"></i> &nbsp; <?php _e('Become an instructor', 'tutor'); ?>
 						</a>
 					<?php
@@ -133,8 +132,8 @@ do_action('tutor_dashboard/before/wrap');
 					if (current_user_can(tutor()->instructor_role)) {
 						$course_type = tutor()->course_post_type;
 					?>
-						<a class="tutor-btn tutor-btn-tertiary tutor-is-outline" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
-							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-12"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
+						<a class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
+							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-my-n4 tutor-mr-8"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
 						</a>
 					<?php
 					} elseif ($instructor_status == 'pending') {
@@ -151,8 +150,7 @@ do_action('tutor_dashboard/before/wrap');
 				</div>
 			</div>
 		</div>
-		<!-- new head part end -->
-		<!-- Sidebar and Content Part -->
+
 		<div class="tutor-row tutor-frontend-dashboard-maincontent">
 			<div class="tutor-col-12 tutor-col-md-4 tutor-col-lg-3 tutor-dashboard-left-menu">
 				<ul class="tutor-dashboard-permalinks">

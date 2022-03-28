@@ -2,7 +2,7 @@
     <div class="tutor-color-black tutor-mb-24">
         <a class="tutor-back-btn" href="<?php echo $back_url; ?>">
             <span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-            <span class="text text tutro-tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
+            <span class="tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
         </a>
     </div>
 <?php endif; ?>
