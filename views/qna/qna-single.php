@@ -48,10 +48,10 @@
 						</p>
 					</div>
 					<div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
-						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
+						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
 							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>

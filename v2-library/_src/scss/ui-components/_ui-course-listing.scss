@@ -6,9 +6,6 @@
 }
 
 .tutor-course-listing {
-	// max-width: 1110px;
-	// margin: 0 auto;
-
 	// .tutor-course-listing-grid
 	&-grid {
 		@include responsiveGrid(250px, 1fr);
@@ -31,12 +28,6 @@
 			}
 		}
 	}
-
-	// Course Grid with Filter
-	&-filter-grid-2 {
-	}
-	&-filter-grid-3 {
-	}
 }
 
 .tutor-course-listing-item {
@@ -47,7 +38,7 @@
 	border-radius: 7px;
 	overflow: hidden;
 
-	a:not(.btn):not(.tutor-btn) {
+	a:not(.btn):not(.tutor-btn):not(.tutor-icon-btn) {
 		text-decoration: none;
 		color: inherit;
 	}

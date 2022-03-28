@@ -1,52 +1,3 @@
-// // Button Utilities
-// $variations: (
-// 	// 'wordpress' $brand-wordpress $text-white $brand-wordpress,
-// 	// 'wordpress-outline' transparent $brand-wordpress $brand-wordpress,
-// 	'primary' var(--tutor-primary-color) var(--tutor-color-white) var(--tutor-primary-hover-color),
-// 	'secondary' $primary-40 var(--tutor-primary-color) $primary-40,
-// 	'tertiary' transparent $primary-main $primary-main,
-// 	'disable' $black-08 $text-muted $black-08,
-// 	'disable-outline' transparent $text-muted $stroke-light-30
-// );
-
-// @each $suffix, $bgColor, $txtColor, $border in $variations {
-// 	.tutor-btn:not(.tutor-is-outline).tutor-btn-#{$suffix} {
-// 		background: #{$bgColor};
-// 		color: #{$txtColor};
-// 		border-color: #{$border};
-// 	}
-// }
-
-// $btn-sizes: ('xl' 15 79, 'lg' 7 55, 'md' 7 38, 'sm' 7 28);
-// @each $suffix, $px, $py in $btn-sizes {
-// 	.tutor-btn:not(.tutor-btn-icon).tutor-btn-#{$suffix} {
-// 		padding: #{$px}px #{$py}px;
-// 	}
-// }
-
-// $icon-btn-sizes: ('xl' 15 61 31 4, 'lg' 7 43 25 2, 'md' 7 25 23 4, 'sm' 6 20 18 2);
-// @each $suffix, $px, $py, $icon, $gap in $icon-btn-sizes {
-// 	.tutor-btn.tutor-btn-icon.tutor-btn-#{$suffix} {
-// 		padding: #{$px}px #{$py}px;
-// 		gap: #{$gap}px;
-// 		.btn-icon {
-// 			font-size: #{$icon}px;
-// 		}
-// 	}
-// }
-
-// $icon-btn-left-right: ('xl' 15 20 31 213, 'lg' 7 16 25 160, 'md' 7 14 23 121, 'sm' 6 13 18 99);
-// @each $suffix, $px, $py, $icon, $gap in $icon-btn-left-right {
-// 	.tutor-btn-icon.tutor-btn-icon-left.tutor-btn-#{$suffix},
-// 	.tutor-btn-icon.tutor-btn-icon-right.tutor-btn-#{$suffix} {
-// 		padding: #{$px}px #{$py}px;
-// 		min-width: #{$gap}px;
-// 		.btn-icon {
-// 			font-size: #{$icon}px;
-// 		}
-// 	}
-// }
-
 $disabled-color: #E9E9EA !default;
 
 .tutor-btn {
@@ -203,28 +154,13 @@ $disabled-color: #E9E9EA !default;
 			margin-bottom: -4px;
 			animation: rotateSpinner 0.8s linear infinite;
 		}
+
+		[class^='tutor-icon-'],
+		[class*=' tutor-icon-'] {
+			display: none;
+		}
 	}
 
-	// 	&.tutor-btn-outline-wp {
-	// 		&:hover {
-	// 			background: transparent;
-	// 			border-color: $brand-wordpress;
-	// 			color: $brand-wordpress;
-	// 		}
-	// 	}
-	// 	&.tutor-btn-outline-fd {
-	// 		&:hover {
-	// 			background: transparent;
-	// 			border-color: var(--tutor-primary-color);
-	// 			color: var(--tutor-primary-color);
-	// 		}
-	// 	}
-	// }
-
-	// &.tutor-btn-ghost {
-	// 	padding: 0 !important;
-	// 	border: none !important;
-	// }
 
 	// &.tutor-is-outline {
 	// 	background: transparent;
@@ -392,6 +328,79 @@ $disabled-color: #E9E9EA !default;
 	// 		justify-content: space-between !important;
 	// 	}
 	// }
+}
+
+
+// iconic button
+.tutor-icon {
+	&-btn-group {
+		display: flex;
+		align-items: center;
+	}
+
+	&-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		font-weight: 400;
+		line-height: 1.4;
+		color: #757C8E;
+		text-align: center;
+		text-decoration: none;
+		vertical-align: middle;
+		user-select: none;
+		background-color: transparent;
+		font-size: 24px;
+		border: 0;
+		border-radius: 48px;
+		cursor: pointer;
+		transition: color 200ms ease-in-out, background-color 200ms ease-in-out;
+
+		[class^='tutor-icon-'],
+		[class*=' tutor-icon-'] {
+			pointer-events: none;
+		}
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: var(--tutor-primary-hover);
+			background-color: #E0E6FA;
+		}
+
+		&[disabled],
+		&.disabled {
+			background-color: #E9E9EA;
+		}
+
+		// secondary
+		&-secondary {
+			background-color: #E0E6FA;
+			color: var(--tutor-primary);
+
+			&:hover,
+			&:focus,
+			&:active {
+				color: #FFFFFF;
+				background-color: var(--tutor-primary-hover);
+			}
+
+			&[disabled],
+			&.disabled {
+				border-color: #E9E9EA;
+				background-color: #E9E9EA;
+			}
+		}
+
+		// size
+		&-lg {
+			width: 48px;
+			height: 48px;
+			font-size: 32px;
+		}
+	}
 }
 
 .tutor-loading-spinner {

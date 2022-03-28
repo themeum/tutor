@@ -177,7 +177,7 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 					</div>
 					
 					<div class="tutor-mt-48">
-						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php _e( 'Cancel', 'tutor' ); ?>
 						</button>
 						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-16"  data-request_data='{"announcement_id":<?php echo $announcment_id; ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo $row_id; ?>">

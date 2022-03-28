@@ -338,73 +338,8 @@ table.tutor-ui-table {
 
 	.td-action-btns {
 		gap: 10px;
-		.btn-outline {
-			&.tutor-btn {
-				@extend .tutor-color-muted;
-				@extend .text-btn-small;
-				display: inline-block;
-				border: 1px solid $stroke-gray;
-				box-sizing: border-box;
-				border-radius: 6px;
-				text-decoration: none;
-				background: transparent;
-				padding: 7px 9px;
-				transition: 100ms ease;
-
-				&:hover,
-				&.tutor-brand {
-					color: $brand-wordpress;
-					border-color: $brand-wordpress;
-				}
-
-				&.tutor-danger {
-					&:hover {
-						color: $text-error;
-						border-color: $text-error;
-					}
-				}
-			}
-		}
-
-		.btn-text {
-			@extend .tutor-color-muted;
-			font-size: 24px;
-			text-decoration: none;
-			display: flex;
-			&:hover {
-				color: $brand-wordpress;
-			}
-		}
-
-		.btn-delete {
-			background: transparent;
-			border: none;
-			outline: none;
-			font-size: 24px;
-			width: 34px;
-			height: 34px;
-			color: $black-40;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			&:hover {
-				background: #f4f6f9;
-			}
-		}
-
 		.tutor-form-select-with-icon {
 			margin-right: 10px;
-		}
-
-		.tutor-btn {
-			&.tutor-btn-sm {
-				padding: 7px 11px;
-			}
-			&.tutor-btn-tertiary {
-			}
-			&.tutor-is-outline {
-			}
 		}
 	}
 
@@ -425,20 +360,15 @@ table.tutor-ui-table {
 		@extend .d-inline-flex;
 		gap: 10px;
 		img {
-			width: 34px;
-			height: 34px;
+			width: 32px;
+			height: 32px;
 			border-radius: 50%;
 			overflow: hidden;
-		}
-		.btn-text {
-			text-decoration: none;
-			color: inherit;
 		}
 
 		.btn-detail-link {
 			font-size: 24px;
 			margin-left: -5px;
-			// margin-top: 3px;
 		}
 	}
 

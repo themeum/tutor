@@ -298,6 +298,7 @@ window.jQuery(document).ready($=>{
 
 	//warn user before leave page if quiz is running
 	var $tutor_quiz_time_update = $('#tutor-quiz-time-update');
+    // @todo: check the button class functionality
 
     $(document).on('click', 'a',  function(event) {
         const href = $(this).attr('href');

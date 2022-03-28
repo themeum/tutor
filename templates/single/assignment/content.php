@@ -408,7 +408,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 							?>
 						</div>
 						<div class="tutor-show-more-btn tutor-pt-12">
-							<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
+							<button class="tutor-btn tutor-btn-icon tutor-btn-outline-primary tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
 								<span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand" id="no-icon"></span>
 								<span class="tutor-color-black"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
 							</button>
@@ -418,7 +418,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 			</div>
 			<?php if ( isset( $next_prev_content_id->next_id ) && '' !== $next_prev_content_id->next_id ) : ?>
 			<div class="tutor-assignment-footer tutor-d-flex tutor-justify-end tutor-pt-32 tutor-pt-sm-44">
-				<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-12">
+				<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-12">
 					<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
 				</a>
 			</div>
@@ -649,7 +649,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 								?>
 							</div>
 							<div class="tutor-show-more-btn tutor-pt-12">
-								<button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
+								<button class="tutor-btn tutor-btn-icon tutor-btn-outline-primary tutor-btn-ghost tutor-no-hover tutor-btn-lg" id="showBtn">
 									<span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand" id="no-icon"></span>
 									<span class="tutor-color-black"><?php esc_html_e( 'Show More', 'tutor' ); ?></span>
 								</button>
@@ -693,7 +693,7 @@ $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'u
 						</form>
 
 						<?php if ( isset( $next_prev_content_id->next_id ) && 0 !== $next_prev_content_id->next_id ) : ?>
-							<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-12">
+							<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-no-hover tutor-btn-lg tutor-mt-md-0 tutor-mt-12">
 							<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
 						</a>
 						<?php endif; ?>

@@ -49,15 +49,15 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
 		</div>
         <?php if ( $has_readmore ) : ?>
             <div class="tutor-showmore-btn tutor-mt-24" data-showmore="true">
-                <button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showmore">
-                    <span class="btn-icon tutor-icon-plus-filled tutor-color-design-brand"></span>
-                    <span class="tutor-color-black-60">
+                <button class="tutor-btn tutor-btn-link btn-showmore">
+                    <span class="tutor-icon-plus-filled tutor-mr-8" area-hidden="true"></span>
+                    <span>
                         <?php esc_html_e( 'Show More', 'tutor' ); ?>
                     </span>
                 </button>
-                <button class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md btn-showless">
-                    <span class="btn-icon tutor-icon-minus-filled tutor-color-design-brand"></span>
-                    <span class="tutor-color-black-60">
+                <button class="tutor-btn tutor-btn-link btn-showless">
+                    <span class="tutor-icon-minus-filled tutor-mr-8" area-hidden="true"></span>
+                    <span>
                         <?php esc_html_e( 'Show Less', 'tutor' ); ?>
                     </span>
                 </button>

@@ -377,15 +377,12 @@ $filters = array(
 						</p>
 					</div>
 					<div class="tutor-modal-btns tutor-btn-group">
-					<button
-						data-tutor-modal-close
-						class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg"
-					>
-						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-					</button>
-					<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-loading tutor-btn-lg">
-						<?php esc_html_e( 'Yes, Approve Withdrawal', 'tutor' ); ?>
-					</button>
+						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+						</button>
+						<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-loading">
+							<?php esc_html_e( 'Yes, Approve Withdrawal', 'tutor' ); ?>
+						</button>
 					</div>
 				</form>
 			</div>
@@ -445,12 +442,10 @@ $filters = array(
 							</div>
 						</div>
 						<div class="tutor-modal-btns_ tutor-btn-group_ tutor-d-flex tutor-align-items-center tutor-justify-between tutor-flex-wrap ">
-							<button
-								data-tutor-modal-close
-								class="tutor-btn tutor-btn-outline-primary tutor-btn-lg">
+							<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 								<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 							</button>
-							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-loading">
+							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-loading">
 								<?php esc_html_e( 'Yes, Reject Withdrawal', 'tutor' ); ?>
 							</button>
 						</div>
