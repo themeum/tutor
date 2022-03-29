@@ -22,7 +22,7 @@ class Course_Filter {
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
 
-		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? sanitize_text_field( $_post['page'] ) : 1;
+		$page = ( isset( $_post['current_page'] ) && is_numeric( $_post['current_page'] ) && $_post['current_page'] > 0 ) ? sanitize_text_field( $_post['current_page'] ) : 1;
 		$args = array(
 			'post_status'    => 'publish',
 			'post_type'      => 'courses',
@@ -107,8 +107,12 @@ class Course_Filter {
 			}
 		}
 
+		ob_start();
+
 		query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
 		tutor_load_template( 'archive-course-init', array_merge( array('loop_content_only' => true), $_post ));
+
+		wp_send_json_success( array('html' => ob_get_clean()) );
 		exit;
 	}
 

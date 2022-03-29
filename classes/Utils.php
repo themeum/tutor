@@ -1234,36 +1234,34 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		if ( is_user_logged_in() ) {
-			global $wpdb;
+		global $wpdb;
 
-			do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
+		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
-			$getEnrolledInfo = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT ID,
-						post_author,
-						post_date,
-						post_date_gmt,
-						post_title
-				FROM 	{$wpdb->posts}
-				WHERE 	post_type = %s
-						AND post_parent = %d
-						AND post_author = %d
-						AND post_status = %s;
-				",
-					'tutor_enrolled',
-					$course_id,
-					$user_id,
-					'completed'
-				)
-			);
+		$getEnrolledInfo = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT ID,
+					post_author,
+					post_date,
+					post_date_gmt,
+					post_title
+			FROM 	{$wpdb->posts}
+			WHERE 	post_type = %s
+					AND post_parent = %d
+					AND post_author = %d
+					AND post_status = %s;
+			",
+				'tutor_enrolled',
+				$course_id,
+				$user_id,
+				'completed'
+			)
+		);
 
-			if ( $getEnrolledInfo ) {
-				return apply_filters( 'tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id );
-			}
+		if ( $getEnrolledInfo ) {
+			return apply_filters( 'tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id );
 		}
-
+		
 		return false;
 	}
 

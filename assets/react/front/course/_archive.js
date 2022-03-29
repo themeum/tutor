@@ -25,7 +25,7 @@ window.jQuery(document).ready($=>{
 
 	const ajaxFilterArchive = (e = null, page = null) => {
 		var filter_criteria = Object.assign(filter_container.serializeObject(), filter_modifier, archive_meta);
-		filter_criteria.page = page;
+		filter_criteria.current_page = 1;
 		filter_criteria.action = 'tutor_course_filter_ajax';
 
 		console.log(filter_criteria);
