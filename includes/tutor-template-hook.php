@@ -4,8 +4,6 @@
  * TUTOR hook
  */
 
-add_action('tutor_course/archive/before_loop', 'tutor_course_archive_filter_bar');
-
 add_action('tutor_course/archive/before_loop_course', 'tutor_course_loop_before_content');
 add_action('tutor_course/archive/after_loop_course', 'tutor_course_loop_after_content');
 

@@ -851,7 +851,7 @@ class Options_V2
 								'type'    => 'number',
 								'label'   => __('Pagination', 'tutor'),
 								'default' => '12',
-								'desc'    => __('Set the number of items you want to display per page.', 'tutor'),
+								'desc'    => __('Set the number of courses you want to display per page.', 'tutor'),
 							),
 							array(
 								'key'     => 'supported_course_filters',

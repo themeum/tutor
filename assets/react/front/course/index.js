@@ -6,6 +6,7 @@ import './_spotlight-quiz';
 import './_spotlight-quiz-timing';
 import './_lesson';
 import './_woocommerce';
+import './_archive';
 
 window.jQuery(document).ready($=>{
     // Login require on enrol purchase click

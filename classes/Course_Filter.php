@@ -22,7 +22,7 @@ class Course_Filter {
 		$default_per_page = tutils()->get_option( 'courses_per_page', 12 );
 		$courses_per_page = (int) tutils()->array_get( 'course_per_page', $_post, $default_per_page );
 
-		$page             = ( isset( $_post['page'] ) && is_numeric( $_post['page'] ) && $_post['page'] > 0 ) ? sanitize_text_field( $_post['page'] ) : 1;
+		$page = ( isset( $_post['current_page'] ) && is_numeric( $_post['current_page'] ) && $_post['current_page'] > 0 ) ? sanitize_text_field( $_post['current_page'] ) : 1;
 		$args = array(
 			'post_status'    => 'publish',
 			'post_type'      => 'courses',
@@ -79,23 +79,27 @@ class Course_Filter {
 		}
 		count( $level_price ) ? $args['meta_query'] = $level_price : 0;
 
-		$search_key              = sanitize_text_field( tutils()->array_get( 'keyword', $_post, null ) );
+		$search_key = sanitize_text_field( tutils()->array_get( 'keyword', $_post, null ) );
 		$search_key ? $args['s'] = $search_key : 0;
 
 		if ( isset( $_post['tutor_course_filter'] ) ) {
 			switch ( $_post['tutor_course_filter'] ) {
+
 				case 'newest_first':
 					$args['orderby'] = 'ID';
 					$args['order']   = 'desc';
 					break;
+
 				case 'oldest_first':
 					$args['orderby'] = 'ID';
 					$args['order']   = 'asc';
 					break;
+
 				case 'course_title_az':
 					$args['orderby'] = 'post_title';
 					$args['order']   = 'asc';
 					break;
+
 				case 'course_title_za':
 					$args['orderby'] = 'post_title';
 					$args['order']   = 'desc';
@@ -103,15 +107,12 @@ class Course_Filter {
 			}
 		}
 
-		query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
-		$col_per_row                    = (int) tutils()->array_get( 'column_per_row', $_post, 3 );
-		$GLOBALS['tutor_shortcode_arg'] = array(
-			'column_per_row'  => $col_per_row <= 0 ? 3 : $col_per_row,
-			'course_per_page' => $courses_per_page,
-			'shortcode_enabled' => isset($_post['page_shortcode'])?true:false,
-		);
+		ob_start();
 
-		tutor_load_template( 'archive-course-init' );
+		query_posts( apply_filters( 'tutor_course_filter_args', $args ) );
+		tutor_load_template( 'archive-course-init', array_merge( array('loop_content_only' => true), $_post ));
+
+		wp_send_json_success( array('html' => ob_get_clean()) );
 		exit;
 	}
 
