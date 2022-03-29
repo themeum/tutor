@@ -41,16 +41,12 @@ window.jQuery(document).ready($=>{
 			type: 'POST',
 			data: filter_criteria,
 			success: function (r) {
-				loop_container.html(r);
-			},
-			complete: function (c) {
+				if(!r.success){
+					loop_container.html(__('Could not load courses', 'tutor'));
+					return;
+				}
 
-				/* selectSearchField('[name=tutor_course_filter]');
-
-				$('.course-archive-page .page-numbers').on('click', function (pe) {
-					pe.preventDefault();
-					ajaxFilterArchive(pe, $(this).data('pagenumber'))
-				}) */
+				loop_container.html(r.data.html).find('nav').css('display', 'flex');
 			}
 		});
 	}

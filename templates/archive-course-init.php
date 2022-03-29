@@ -85,7 +85,7 @@
 	}
 ?>
 
-<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo json_encode($GLOBALS['tutor_course_archive_arg']); ?>">
+<div class="tutor-wrap tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode($GLOBALS['tutor_course_archive_arg']) ); ?>">
 	<?php if ($course_filter && count($supported_filters)): ?>
 		<div class="tutor-course-listing-filter tutor-filter-course-grid-2 course-archive-page">
 			<div class="tutor-course-filter tutor-course-filter-container">
