@@ -22,7 +22,7 @@
             $action_class = apply_filters('tutor_popup_login_class', 'cart-required-login');
         }
         
-		echo '<a href="javascript:;" class="'. esc_attr( $action_class ) .' save-bookmark-btn tutor-d-flex tutor-align-items-center tutor-justify-center" data-course-id="'. esc_attr( $course_id ) .'">
+		echo '<a href="javascript:;" class="'. esc_attr( $action_class ) .' save-bookmark-btn tutor-iconic-btn tutor-iconic-btn-secondary" data-course-id="'. esc_attr( $course_id ) .'">
             <i class="' . ( $is_wish_listed ? 'tutor-icon-fav-full-filled' : 'tutor-icon-fav-line-filled') . '"></i>
         </a>';
 	?>

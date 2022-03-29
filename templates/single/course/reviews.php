@@ -81,8 +81,8 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 										<?php echo $key; ?>
 									</div>
 								</div>
-								<div class="progress-bar tutor-mt-12" style="--progress-value: <?php echo $rating_count_percent; ?>%">
-									<span class="progress-value"></span>
+								<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value: <?php echo $rating_count_percent; ?>%">
+									<span class="tutor-progress-value" area-hidden="true"></span>
 								</div>
 							</div>
 							<div class="rating-num tutor-fs-7 tutor-color-black-60">

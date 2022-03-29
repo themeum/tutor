@@ -5,7 +5,7 @@ $disabled-color: #E9E9EA !default;
 	align-items: center;
     font-weight: 400;
     line-height: 1.4;
-    color: var(--tutor-primary);
+    color: var(--tutor-primary-color);
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
@@ -30,16 +30,16 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-primary {
-		border-color: var(--tutor-primary);
-		background-color: var(--tutor-primary);
+		border-color: var(--tutor-primary-color);
+		background-color: var(--tutor-primary-color);
 		color: #FFFFFF;
 
 		&:hover,
 		&:focus,
 		&:active {
 			color: #FFFFFF;
-			border-color: var(--tutor-primary-hover);
-			background-color: var(--tutor-primary-hover);
+			border-color: var(--tutor-primary-hover-color);
+			background-color: var(--tutor-primary-hover-color);
 		}
 
 		&[disabled],
@@ -50,14 +50,14 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-outline-primary {
-		border-color: var(--tutor-primary);
+		border-color: var(--tutor-primary-color);
 
 		&:hover,
 		&:focus,
 		&:active {
 			color: #FFFFFF;
-			border-color: var(--tutor-primary-hover);
-			background-color: var(--tutor-primary-hover);
+			border-color: var(--tutor-primary-hover-color);
+			background-color: var(--tutor-primary-hover-color);
 		}
 
 		&[disabled],
@@ -69,14 +69,14 @@ $disabled-color: #E9E9EA !default;
 	&-secondary {
 		border-color: #E0E6FA;
 		background-color: #E0E6FA;
-		color: var(--tutor-primary);
+		color: var(--tutor-primary-color);
 
 		&:hover,
 		&:focus,
 		&:active {
 			color: #FFFFFF;
-			border-color: var(--tutor-primary-hover);
-			background-color: var(--tutor-primary-hover);
+			border-color: var(--tutor-primary-hover-color);
+			background-color: var(--tutor-primary-hover-color);
 		}
 
 		&[disabled],
@@ -96,7 +96,7 @@ $disabled-color: #E9E9EA !default;
 			left: 0;
 			width: 0;
 			height: 1px;
-			background: var(--tutor-primary-hover);
+			background: var(--tutor-primary-hover-color);
 			transition: width 200ms ease-in-out;
 		}
 
@@ -144,15 +144,7 @@ $disabled-color: #E9E9EA !default;
 	// loading state
 	&.is-loading {
 		&:before {
-			content: '\e9df' !important;
-			display: inline-block;
-			font-family: 'tutor';
-			line-height: 1;
 			margin-right: 8px;
-			font-size: 24px;
-			margin-top: -4px;
-			margin-bottom: -4px;
-			animation: rotateSpinner 0.8s linear infinite;
 		}
 
 		[class^='tutor-icon-'],
@@ -332,7 +324,7 @@ $disabled-color: #E9E9EA !default;
 
 
 // iconic button
-.tutor-icon {
+.tutor-iconic {
 	&-btn-group {
 		display: flex;
 		align-items: center;
@@ -356,6 +348,7 @@ $disabled-color: #E9E9EA !default;
 		border: 0;
 		border-radius: 48px;
 		cursor: pointer;
+		position: relative;
 		transition: color 200ms ease-in-out, background-color 200ms ease-in-out;
 
 		[class^='tutor-icon-'],
@@ -366,7 +359,7 @@ $disabled-color: #E9E9EA !default;
 		&:hover,
 		&:focus,
 		&:active {
-			color: var(--tutor-primary-hover);
+			color: var(--tutor-primary-hover-color);
 			background-color: #E0E6FA;
 		}
 
@@ -378,13 +371,13 @@ $disabled-color: #E9E9EA !default;
 		// secondary
 		&-secondary {
 			background-color: #E0E6FA;
-			color: var(--tutor-primary);
+			color: var(--tutor-primary-color);
 
 			&:hover,
 			&:focus,
 			&:active {
 				color: #FFFFFF;
-				background-color: var(--tutor-primary-hover);
+				background-color: var(--tutor-primary-hover-color);
 			}
 
 			&[disabled],
@@ -399,6 +392,28 @@ $disabled-color: #E9E9EA !default;
 			width: 48px;
 			height: 48px;
 			font-size: 32px;
+		}
+	}
+}
+
+.tutor-btn,
+.tutor-iconic-btn {
+	// loading state
+	&.is-loading {
+		&:before {
+			content: '\e9df' !important;
+			display: inline-block;
+			font-family: 'tutor';
+			line-height: 1;
+			font-size: 24px;
+			margin-top: -4px;
+			margin-bottom: -4px;
+			animation: rotateSpinner 0.8s linear infinite;
+		}
+
+		[class^='tutor-icon-'],
+		[class*=' tutor-icon-'] {
+			display: none;
 		}
 	}
 }

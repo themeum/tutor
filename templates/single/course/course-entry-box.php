@@ -81,8 +81,8 @@
 								<?php esc_html_e( 'Complete', 'tutor' ); ?>
 							</span>
 						</div>
-						<div class="progress-bar tutor-mt-12" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
-							<span class="progress-value"></span>
+						<div class="tutor-progress-bar tutor-mt-12" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;">
+							<span class="tutor-progress-value" area-hidden="true"></span>
 						</div>
 					</div>
 				</div>

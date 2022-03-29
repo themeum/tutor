@@ -21,18 +21,15 @@ window.jQuery(document).ready(($) => {
 	$('.tutor-announcements-form').on('submit', function(e) {
 		e.preventDefault();
 		var $btn = $(this).find('button[type="submit"]');
+		let buttonContent = $btn.html().trim();
 		var formData = $btn.closest('.tutor-announcements-form').serialize();
-		const btnInnerHtml = $btn.html().trim();
-		const { width: btnWidth, height: btnHeight } = $btn.get(0).getBoundingClientRect();
-		const btnStyles = { width: `${btnWidth}px`, height: `${btnHeight}px` };
 
 		$.ajax({
 			url: window._tutorobject.ajaxurl,
 			type: 'POST',
 			data: formData,
 			beforeSend: function() {
-				$btn.css(btnStyles);
-				$btn.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
+				$btn.text(__('Updating...', 'tutor')).attr('disabled', 'disabled').addClass('is-loading');
 			},
 			success: function(data) {
 				if (!data.success) {
@@ -44,7 +41,7 @@ window.jQuery(document).ready(($) => {
 				location.reload();
 			},
 			complete: function() {
-				$btn.html(btnInnerHtml);
+				$btn.html(buttonContent).removeAttr('disabled').removeClass('is-loading');
 			},
 			error: function(data) {
 				tutor_toast(__('Error!', 'tutor'), __('Something Went Wrong!', 'tutor'), 'error');
