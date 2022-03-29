@@ -25,7 +25,8 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-block {
-		display: block;
+		display: flex;
+		justify-content: center;
 		width: 100%;
 	}
 
@@ -87,7 +88,8 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-link {
-		padding: 4px !important;
+		font-size: inherit;
+		padding: 0px !important;
 		position: relative;
 		&:after {
 			content: " ";
@@ -110,14 +112,33 @@ $disabled-color: #E9E9EA !default;
 	}
 
 	&-ghost {
+		font-size: inherit;
 		padding: 0px !important;
+		font-weight: 500;
 		position: relative;
 		color: #757C8E; // @todo: to be changed
+
+		&.tutor-has-underline {
+			position: relative;
+			&:after {
+				content: " ";
+				position: absolute;
+				bottom: 0px;
+				left: 0;
+				width: 100%;
+				height: 1px;
+				background-color: #757C8E;
+				transition: background-color 200ms ease-in-out;
+			}
+		}
 
 		&:hover,
 		&:focus,
 		&:active {
-			color: var(--tutor-primary);
+			color: var(--tutor-primary-color);
+			&.tutor-has-underline:after {
+				background-color: var(--tutor-primary-color);
+			}
 		}
 	}
 
@@ -416,12 +437,6 @@ $disabled-color: #E9E9EA !default;
 			display: none;
 		}
 	}
-}
-
-.tutor-loading-spinner {
-	$size: var(--size);
-	position: relative;
-	@include spinner($design-brand, #f1f1f1, $size);
 }
 
 .tutor-btn.tutor-is-circle {

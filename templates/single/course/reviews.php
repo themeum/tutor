@@ -107,7 +107,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 	<div class="tutor-row tutor-mt-40 tutor-mb-20">
 		<div class="tutor-col">
 			<?php if($is_enrolled): ?>
-				<button class="tutor-btn write-course-review-link-btn">
+				<button class="tutor-btn tutor-btn-primary write-course-review-link-btn">
 					<i class="tutor-icon-star-line-filled tutor-icon-24 tutor-mr-4"></i>
 					<?php
 						$is_new = !$my_rating || empty($my_rating->rating) || empty($my_rating->comment_content);
