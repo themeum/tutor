@@ -22,10 +22,10 @@
 					<input type="hidden" name="action">
 					<div id="tutor-common-confirmation-modal-content"></div>
 					<div class="tutor-modal-btns tutor-btn-group">
-						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-btn-loading">
+						<button class="tutor-btn tutor-btn-primary tutor-ml-16">
 							<?php esc_html_e( "Yes, I'am Sure", 'tutor' ); ?>
 						</button>
 					</div>

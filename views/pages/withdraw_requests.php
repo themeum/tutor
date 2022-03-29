@@ -147,8 +147,8 @@ $filters = array(
 												<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
 													<?php echo esc_html( $user_data->display_name ); ?>
 												</span>
-												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-ml-12 tutor-d-flex" target="_blank">
-													<span class="tutor-icon-detail-link-filled tutor-color-black" style="font-size:18px;"></span>
+												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
+													<span class="tutor-icon-detail-link-filled"></span>
 												</a>
 											</div>
 											<span class="tutor-color-black-70 tutor-fs-7">
