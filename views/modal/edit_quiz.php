@@ -65,8 +65,8 @@
         ?>
     </div>
 
-    <div class="">
-        <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-is-outline tutor-is-sm">
+    <div>
+        <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-btn-outline-primary tutor-btn-sm">
             <i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-12"></i>
             <?php _e('Add Question', 'tutor'); ?>
         </a>

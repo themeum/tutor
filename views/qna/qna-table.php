@@ -212,10 +212,10 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                             </p>
                                                         </div>
                                                         <div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
-                                                            <button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+                                                            <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
                                                                 <?php esc_html_e('Cancel', 'tutor'); ?>
                                                             </button>
-                                                            <button class="tutor-btn tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $qna->comment_ID; ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo $row_id; ?>">
+                                                            <button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $qna->comment_ID; ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo $row_id; ?>">
                                                                 <?php esc_html_e('Yes, Delete This', 'tutor'); ?>
                                                             </button>
                                                         </div>

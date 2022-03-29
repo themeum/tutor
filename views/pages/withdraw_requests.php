@@ -264,10 +264,10 @@ $filters = array(
 							<td data-th="<?php esc_html_e( 'Update', 'tutor' ); ?>" class="tutor-withdraw-btns">
 								<?php if ( 'pending' === $list->status ) : ?>
 								<div class="tutor-d-flex td-action-btns">
-									<button data-tutor-modal-target="tutor-admin-withdraw-approve" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>" class="tutor-btn tutor-btn-wordpress-outline tutor-btn-sm tutor-admin-open-withdraw-approve-modal">
+									<button data-tutor-modal-target="tutor-admin-withdraw-approve" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-admin-open-withdraw-approve-modal">
 										<?php esc_html_e( 'Approve', 'tutor' ); ?>
 									</button>
-									<button data-tutor-modal-target="tutor-admin-withdraw-reject"  data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>"  class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-sm tutor-admin-open-withdraw-reject-modal">
+									<button data-tutor-modal-target="tutor-admin-withdraw-reject"  data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>"  class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-admin-open-withdraw-reject-modal">
 										<?php esc_html_e( 'Reject', 'tutor' ); ?>
 									</button>
 								</div>
@@ -377,15 +377,12 @@ $filters = array(
 						</p>
 					</div>
 					<div class="tutor-modal-btns tutor-btn-group">
-					<button
-						data-tutor-modal-close
-						class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg"
-					>
-						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-					</button>
-					<button type="submit" class="tutor-btn tutor-btn-loading tutor-no-hover tutor-btn-wordpress tutor-btn-lg">
-						<?php esc_html_e( 'Yes, Approve Withdrawal', 'tutor' ); ?>
-					</button>
+						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+						</button>
+						<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-loading">
+							<?php esc_html_e( 'Yes, Approve Withdrawal', 'tutor' ); ?>
+						</button>
 					</div>
 				</form>
 			</div>
@@ -445,12 +442,10 @@ $filters = array(
 							</div>
 						</div>
 						<div class="tutor-modal-btns_ tutor-btn-group_ tutor-d-flex tutor-align-items-center tutor-justify-between tutor-flex-wrap ">
-							<button
-								data-tutor-modal-close
-								class="tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-lg">
+							<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 								<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 							</button>
-							<button type="submit" class="tutor-btn tutor-btn-loading tutor-no-hover tutor-btn-wordpress tutor-btn-lg tutor-btn">
+							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-loading">
 								<?php esc_html_e( 'Yes, Reject Withdrawal', 'tutor' ); ?>
 							</button>
 						</div>

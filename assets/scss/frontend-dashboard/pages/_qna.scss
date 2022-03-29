@@ -133,17 +133,6 @@ table.frontend-dashboard-qna-table-instructor {
 		display: flex;
 		align-items: center;
 	}
-	.tutor-qna-badges {
-		span.tutor-updating-message {
-			i {
-				visibility: hidden;
-			}
-			&:before {
-				position: absolute;
-				margin-left: 5px;
-			}
-		}
-	}
 }
 
 .tutor-input-feedback .tutor-input-feedback-icon {

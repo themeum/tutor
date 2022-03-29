@@ -12,7 +12,7 @@ window.jQuery(document).ready($=>{
         const innerSpan = link_el.find('span');
         let replace_me = $(this).closest('.tutor-pagination-wrapper-replacable');
 
-        if(link_el.find('.tutor-updating-message').length) {
+        if(link_el.find('.is-loading').length) {
             // Prevent duplicate click
             return;
         }

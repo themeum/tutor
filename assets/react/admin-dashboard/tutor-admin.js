@@ -244,7 +244,7 @@ jQuery(document).ready(function($) {
 		const loadingButton = e.target;
 		const prevHtml = loadingButton.innerHTML;
 		loadingButton.innerHTML = '';
-		loadingButton.classList.add('tutor-updating-message');
+		loadingButton.classList.add('is-loading');
 
 		// prepare form data
 		const formData = new FormData();
@@ -256,8 +256,8 @@ jQuery(document).ready(function($) {
 		try {
 			const post = await ajaxHandler(formData);
 			const response = await post.json();
-			if (loadingButton.classList.contains('tutor-updating-message')) {
-				loadingButton.classList.remove('tutor-updating-message');
+			if (loadingButton.classList.contains('is-loading')) {
+				loadingButton.classList.remove('is-loading');
 				loadingButton.innerHTML = action.charAt(0).toUpperCase() + action.slice(1);
 			}
 

@@ -41,8 +41,8 @@
 							$url      = '' === $sub_page ? "?page=$page" : "?page=$page&sub_page=$sub_page";
 
 						?>
-					<a href="<?php echo esc_url( $url ); ?>" class="tutor-admin-page-refresh">
-						<i class="color-wordpress tutor-icon-refresh-1-filled"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
+					<a class="tutor-btn tutor-btn-ghost tutor-mt-28" href="<?php echo esc_url( $url ); ?>">
+						<i class="tutor-icon-refresh-1-filled tutor-mr-8" area-hidden="true"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
 					</a>
 				</div>
 				<?php

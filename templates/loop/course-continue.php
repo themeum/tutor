@@ -19,7 +19,7 @@
     
     $course_id = get_the_ID();
     $enroll_btn = '
-                    <a href="'. get_the_permalink(). '" class="tutor-btn tutor-pr-0 tutor-pl-0 tutor-btn-disable-outline tutor-btn-md tutor-btn-full">
+                    <a href="'. get_the_permalink(). '" class="tutor-btn tutor-pr-0 tutor-pl-0 tutor-btn-outline-primary tutor-btn-md tutor-btn-full">
                         ' . __( 'Start Learning', 'tutor' ) . '
                     </a>
                 ';
@@ -28,7 +28,7 @@
     $completed_percent = tutor_utils()->get_course_completed_percent();
     $is_completed_course = tutor_utils()->is_completed_course();
     $retake_course = tutor_utils()->can_user_retake_course();
-    $button_class = 'tutor-btn tutor-btn-disable-outline tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
+    $button_class = 'tutor-btn tutor-btn-outline-primary tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . ( $retake_course ? ' tutor-course-retake-button' : '' );
     
     if ( $lesson_url && ! $is_completed_course ) { 
         ob_start();

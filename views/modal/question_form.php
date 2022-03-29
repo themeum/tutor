@@ -5,14 +5,14 @@ $settings = maybe_unserialize($question->question_settings);
 
 <div id="tutor-quiz-question-wrapper" data-question-id="<?php echo $question_id; ?>">
     <div class="question-form-header tutor-mb-12">
-        <a href="javascript:;" class="back-to-quiz-questions-btn tutor-back-btn" data-quiz-id="<?php echo isset($quiz_id) ? $quiz_id : ''; ?>" data-topic-id="<?php echo isset($topic_id) ? $topic_id : ''; ?>">
-            <span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-            <span class="tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
+        <a href="javascript:;" class="back-to-quiz-questions-btn tutor-btn tutor-btn-ghost" data-quiz-id="<?php echo isset($quiz_id) ? $quiz_id : ''; ?>" data-topic-id="<?php echo isset($topic_id) ? $topic_id : ''; ?>">
+            <span class="tutor-icon-previous-line" area-hidden="true"></span>
+            <?php _e('Back', 'tutor'); ?>
         </a>
     </div>
+    
     <input type="hidden" name="quiz_id" value="<?php echo $quiz_id; ?>" />
 
-    <!-- Question title -->
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Write your question here', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-16">
@@ -20,7 +20,6 @@ $settings = maybe_unserialize($question->question_settings);
         </div>
     </div>
 
-    <!-- Question Type Dropdown -->
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Select your question type', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-16">
@@ -87,7 +86,6 @@ $settings = maybe_unserialize($question->question_settings);
         </div>
     </div>
 
-    <!-- Points for the question -->
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Point(s) for this answer', 'tutor'); ?></label>
         <div class="tutor-input-group tutor-mb-16">
@@ -105,7 +103,6 @@ $settings = maybe_unserialize($question->question_settings);
         </div>
     </div>
 
-    <!-- Question description -->
     <div class="tutor-mb-32">
         <label class="tutor-form-label"><?php _e('Description', 'tutor'); ?> <span>(<?php _e('Optional', 'tutor'); ?>)</span></label>
         <div class="tutor-input-group tutor-mb-16">

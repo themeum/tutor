@@ -99,7 +99,7 @@ $filters = array(
 				</div>
 
 				<div class="tutor-col-lg-auto">
-					<button type="button" class="tutor-btn tutor-btn-wordpress tutor-btn-lg" data-tutor-modal-target="tutor_announcement_new">
+					<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg" data-tutor-modal-target="tutor_announcement_new">
 						<?php esc_html_e( 'Add New Announcement', 'tutor' ); ?>
 					</button>
 				</div>

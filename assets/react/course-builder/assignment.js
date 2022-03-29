@@ -21,7 +21,7 @@ window.jQuery(document).ready(function($){
                 action: 'tutor_load_assignments_builder_modal' 
             },
             beforeSend: function () {
-                $that.addClass('tutor-updating-message');
+                $that.addClass('is-loading');
             },
             success: function (data) {
                 $('.tutor-assignment-modal-wrap .modal-container').html(data.data.output);
@@ -34,7 +34,7 @@ window.jQuery(document).ready(function($){
                 window.dispatchEvent(new Event(_tutorobject.content_change_event));
             },
             complete: function () {
-                $that.removeClass('tutor-updating-message');
+                $that.removeClass('is-loading');
                 quicktags({ id: "tutor_assignments_modal_editor" });
             }
         });
@@ -64,7 +64,7 @@ window.jQuery(document).ready(function($){
             type : 'POST',
             data : form_data,
             beforeSend: function () {
-                $that.addClass('tutor-updating-message');
+                $that.addClass('is-loading');
             },
             success: function (data) {
                 if (data.success){
@@ -78,7 +78,7 @@ window.jQuery(document).ready(function($){
                 }
             },
             complete: function () {
-                $that.removeClass('tutor-updating-message');
+                $that.removeClass('is-loading');
             }
         });
     });

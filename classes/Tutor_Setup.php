@@ -595,7 +595,7 @@ class Tutor_Setup {
 	public function tutor_setup_wizard_action() {
 		$html              = '<div class="tutor-setup-content-footer footer">';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-btn tutor-btn-disable-outline tutor-btn-md tutor-setup-previous">';
+				$html     .= '<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-setup-previous">';
 					$html .= '<span>&#8592;</span>&nbsp;<span>' . __( 'Previous', 'tutor' ) . '</span>';
 				$html     .= '</button>';
 			$html         .= '</div>';
@@ -614,7 +614,7 @@ class Tutor_Setup {
 	public function tutor_setup_wizard_action_final() {
 		$html              = '<div class="tutor-setup-content-footer footer">';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-btn tutor-btn-disable-outline tutor-btn-md tutor-setup-previous">';
+				$html     .= '<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-setup-previous">';
 					$html .= '<span>&#8592;</span>&nbsp;<span>' . __( 'Previous', 'tutor' ) . '</span>';
 				$html     .= '</button>';
 			$html         .= '</div>';

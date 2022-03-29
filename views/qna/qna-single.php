@@ -28,7 +28,6 @@
 ?>
 
 <div class="tutor-qna-single-question" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
-	<!-- Delete modal -->
 	<div id="<?php echo $modal_id; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
 		<span class="tutor-modal-overlay"></span>
 		<div class="tutor-modal-root">
@@ -49,10 +48,10 @@
 						</p>
 					</div>
 					<div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
-						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
+						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
 							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>
@@ -62,19 +61,15 @@
 	</div>
 
 	<div class="tutor-qna-single-wrapper">
-
-		<!-- Show header action bar if it is single question in backend/frontend dashboard -->
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
 			<div class="tutor-qa-sticky-bar">
-				<div class="tutor-color-black">
-					<a class="tutor-back-btn" href="<?php echo $back_url; ?>">
-						<span class="tutor-icon-previous-line tutor-color-design-dark"></span>
-						<span class="tutor-fs-7 tutor-color-black"><?php _e('Back', 'tutor'); ?></span>
+				<div>
+					<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
+						<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
+						<?php _e('Back', 'tutor'); ?>
 					</a>
 				</div>
 				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-end">
-
-					<!-- Show meta data actions if it is instructor view -->
 					<?php if ( ! $is_user_asker ) : ?>
 						<span data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-text-success">
 							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success active' : 'tutor-icon-tick-circle-outline-filled'; ?>"></i>
@@ -89,15 +84,14 @@
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 						</span>
 					<?php endif; ?>
-					<span data-tutor-modal-target="<?php echo $modal_id; ?>">
-						<i class="tutor-icon-delete-fill-filled"></i>
-						<span><?php _e( 'Delete', 'tutor' ); ?></span>
-					</span>
+					<a href="javascript:;" class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo $modal_id; ?>">
+						<i class="tutor-icon-delete-fill-filled tutor-mr-8" area-hidden="true"></i>
+						<?php _e( 'Delete', 'tutor' ); ?>
+					</a>
 				</div>
 			</div>
 		<?php endif; ?>
 
-		<!-- Show  question anaswer. Both the root level question and reply will go in single loop. Just first one will be considered as root questoin. -->
 		<div class="tutor-qa-reply-wrapper">
 			<div class="tutor-qa-chatlist">
 				<?php
@@ -157,7 +151,6 @@
 
 	<?php
 	if ( $context == 'backend-dashboard-qna-single' ) {
-		// Right sidebar should be loaded at backend dashboard only
 		?>
 			<div class="tutor-qna-admin-sidebar">
 				<div class="tutor-qna-user">

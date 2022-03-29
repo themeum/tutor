@@ -105,12 +105,12 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                                     <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
                                 </span>
                             </div>
-                            <div class="tutor-course-listing-item-btns">
-                                <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                    <i class="tutor-icon-edit-filled tutor-icon-26 tutor-color-muted"></i>
+                            <div class="tutor-icon-btn-group">
+                                <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-icon-btn">
+                                    <i class="tutor-icon-edit-filled" area-hidden="true"></i>
                                 </a>
-                                <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-sm">
-                                    <i class="tutor-icon-delete-stroke-filled tutor-icon-24 tutor-color-muted"></i>
+                                <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-icon-btn">
+                                    <i class="tutor-icon-delete-stroke-filled" area-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
@@ -137,7 +137,7 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                                         </p>
                                     </div>
                                     <div class="tutor-modal-btns tutor-btn-group">
-                                        <button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+                                        <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
                                             <?php esc_html_e('Cancel', 'tutor'); ?>
                                         </button>
                                         <button class="tutor-btn tutor-list-ajax-action" data-request_data='{"course_id":<?php echo $post->ID; ?>,"action":"tutor_delete_dashboard_course"}' data-delete_element_id="<?php echo $row_id; ?>">

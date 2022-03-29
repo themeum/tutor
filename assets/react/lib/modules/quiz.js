@@ -29,7 +29,7 @@ window.jQuery(document).ready(($) => {
 				action: 'review_quiz_answer',
 			},
 			beforeSend: function() {
-				$that.find('i').addClass('tutor-icon-spinner-filled');
+				$that.addClass('is-loading');
 			},
 			success: function(data) {
 				if (data.success && (data.data || {}).html) {
@@ -40,7 +40,7 @@ window.jQuery(document).ready(($) => {
 				tutor_toast('Error!', get_response_message(data), 'error');
 			},
 			complete: function() {
-				$that.find('i').removeClass('tutor-icon-spinner-filled');
+				$that.removeClass('is-loading');
 			},
 		});
 	});

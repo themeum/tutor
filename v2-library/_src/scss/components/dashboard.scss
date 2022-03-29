@@ -58,7 +58,6 @@
   width: 100%;
   box-sizing: border-box;
   .tutor-card-icon {
-    @extend .tutor-btn-circle;
     @extend .tutor-is-primary-light;
     margin-bottom: 13px;
     height: 60px;
