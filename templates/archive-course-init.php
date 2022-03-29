@@ -6,6 +6,7 @@
 	!isset($column_per_row)		? $column_per_row 	 = tutor_utils()->get_option( 'courses_col_per_row', 3 ) : 0;
 	!isset($course_per_page)	? $course_per_page	 = tutor_utils()->get_option( 'courses_per_page', 12 ) : 0;
 	!isset($show_pagination)	? $show_pagination	 = true : 0;
+	!isset($current_page)		? $current_page	 	 = 1 : 0;
 
 	// Set in global variable to avoid too many stack to pass to other templates
 	$GLOBALS['tutor_course_archive_arg'] = compact(
@@ -56,26 +57,26 @@
 		tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() );
 	}
 
-	if ( isset($_POST['action']) && 'tutor_course_filter_ajax' === $_POST['action'] ) {
-		
-	} else {
-		
-	}
-
 	do_action( 'tutor_course/archive/after_loop' );
 
-	// Load the pagination now
-	/* $pagination_data = array(
-		'total_items' => isset($the_query) ? $the_query-> : global $wp_query;
-		echo $wp_query->max_num_pages;,
-		'per_page'    => $per_page,
-		'paged'       => $current_page,
-	);
-	tutor_load_template_from_custom_path(
-		tutor()->path . 'templates/dashboard/elements/pagination.php',
-		$pagination_data
-	); */
+	if($show_pagination){
+		// Load the pagination now
+		global $wp_query;
+		$pagination_data = array(
+			'total_items' => isset($the_query) ? $the_query->max_num_pages : $wp_query->max_num_pages,
+			'per_page'    => $course_per_page,
+			'paged'       => $current_page,
+			'ajax'		  => array_merge($GLOBALS['tutor_course_archive_arg'], array(
+				'action' => 'tutor_course_filter_ajax',
+			))
+		);
 
+		tutor_load_template_from_custom_path(
+			tutor()->path . 'templates/dashboard/elements/pagination.php',
+			$pagination_data
+		);
+	}
+	
 	$course_loop = ob_get_clean();
 
 	if(isset($loop_content_only) && $loop_content_only==true){
@@ -92,14 +93,14 @@
 					<?php tutor_load_template('course-filter.filters'); ?>
 				</div>
 			</div>
-			<div class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container" data-column_per_row="<?php esc_attr_e( $column_per_row ); ?>">
+			<div class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container tutor-pagination-wrapper-replacable" data-column_per_row="<?php esc_attr_e( $column_per_row ); ?>">
 				<?php 
 					echo $course_loop; 
 				?>
 			</div>
 		</div>
 	<?php else: ?>
-		<div class="<?php tutor_container_classes(); ?>	tutor-course-filter-loop-container">
+		<div class="<?php tutor_container_classes(); ?>	tutor-course-filter-loop-container tutor-pagination-wrapper-replacable">
 			<?php 
 				echo $course_loop; 
 			?>
