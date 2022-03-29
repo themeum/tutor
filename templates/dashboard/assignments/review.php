@@ -35,7 +35,7 @@ if ( ! $assignment_submitted_id ) {
 
 	<div class="submitted-assignment-title tutor-mb-16">
 		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
-			<span class="assignment-back-icon tutor-icon-previous-line tutor-icon-30 tutor-mr-12" area-hidden="true"></span>
+			<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
@@ -139,8 +139,8 @@ if ( ! $assignment_submitted_id ) {
 
 			<div class="tutor-col-12 tutor-col-sm-4 tutor-col-md-12 tutor-col-lg-3"></div>
 			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9">
-				<button type="submit" class="tutor-btn tutor-mt-16">
-				<?php esc_html_e( 'Evaluate this submission', 'tutor' ); ?>
+				<button type="submit" class="tutor-btn tutor-btn-primary tutor-mt-16">
+					<?php esc_html_e( 'Evaluate this submission', 'tutor' ); ?>
 				</button>
 			</div>
 		</form>

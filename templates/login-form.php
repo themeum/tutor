@@ -47,7 +47,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
     </div>
 
     <?php do_action("tutor_login_form_end"); ?>
-    <button type="submit" class="tutor-btn is-primary tutor-is-block">
+    <button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-block">
         <?php esc_html_e( 'Sign In', 'tutor' ); ?>
     </button>
     <?php if ( get_option( 'users_can_register', false ) ) : ?>
@@ -61,7 +61,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
         ?>
         <div class="tutor-text-center tutor-fs-6 tutor-color-black-60 tutor-mt-20">
             <?php esc_html_e( 'Don\'t have an account?', 'tutor' ); ?>&nbsp;
-            <a href="<?php echo esc_url( add_query_arg( $url_arg, tutor_utils()->student_register_url() ) ); ?>" class="tutor-fw-medium td-none tutor-color-design-brand">
+            <a href="<?php echo esc_url( add_query_arg( $url_arg, tutor_utils()->student_register_url() ) ); ?>" class="tutor-btn tutor-btn-link">
                 <?php esc_html_e( 'Registration Now', 'tutor' ); ?>
             </a>
         </div>

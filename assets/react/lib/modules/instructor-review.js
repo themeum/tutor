@@ -50,16 +50,13 @@ window.jQuery(document).ready($ => {
         }
 
         const btnInnerHtml = $that.html().trim();
-        const { width : btnWidth, height : btnHeight } = $that.get(0).getBoundingClientRect();
-        const btnStyles =  {width: `${btnWidth}px`, height: `${btnHeight}px`};
 
         $.ajax({
             url: _tutorobject.ajaxurl,
             type: 'POST',
             data: data,
             beforeSend: function () {
-                $that.css(btnStyles);
-                $that.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
+                $that.html(__('Updating...', 'tutor')).attr('disabled', 'disabled').addClass('is-loading');
             },
             success: function (response) {
                 const {success, data={}} = response || {};
@@ -81,7 +78,7 @@ window.jQuery(document).ready($ => {
                 }, 3000);
             },
             complete: function() {
-                $that.html(btnInnerHtml)
+                $that.html(btnInnerHtml).removeAttr('disabled').removeClass('is-loading');
             }
         });
     });
