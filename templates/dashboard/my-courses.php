@@ -81,13 +81,13 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                             <?php
                             if (!empty($course_duration)) { ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-icon-20 tutor-mr-4"></span>
+                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-mr-8"></span>
                                     <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo $course_duration; ?></span>
                                 </div>
                             <?php } ?>
                             <?php if (!empty($course_students)) : ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-user-filled tutor-color-muted"></span>
+                                    <span class="meta-icon tutor-icon-user-filled tutor-color-muted tutor-mr-8"></span>
                                     <span><?php echo $course_students; ?></span>
                                 </div>
                             <?php endif; ?>

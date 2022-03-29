@@ -1,9 +1,3 @@
-.tutor-table-responsive {
-  overflow-x: auto;
-  outline: 1px solid var(--tutor-border-color-alt);
-  outline-offset: -1px;
-}
-
 .tutor-table {
   @extend .tutor-text-sm;
   width: 100%;

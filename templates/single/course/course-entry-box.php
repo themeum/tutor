@@ -133,7 +133,7 @@
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
 
-					<button type="submit" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block" name="complete_course_btn" value="complete_course">
+					<button type="submit" class="tutor-btn tutor-btn-outline-primary tutor-btn-block" name="complete_course_btn" value="complete_course">
 						<?php esc_html_e( 'Complete Course', 'tutor' ); ?>
 					</button>
 				</form>
@@ -168,7 +168,7 @@
 			!$first_lesson_url ? $first_lesson_url = tutor_utils()->get_course_first_lesson( get_the_ID() ) : 0;
 			ob_start();
 			?>
-				<a href="<?php echo esc_url( $first_lesson_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full">
+				<a href="<?php echo esc_url( $first_lesson_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block">
 					<?php esc_html_e( 'Start Learning', 'tutor' ); ?>
 				</a>
 			<?php
@@ -210,7 +210,7 @@
 							<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 							<input type="hidden" name="tutor_course_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
 							<input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
-							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24 tutor-enroll-course-button">
+							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-enroll-course-button">
 								<?php esc_html_e( 'Enroll Course', 'tutor' ); ?>
 							</button>
 						</form>
@@ -237,7 +237,7 @@
 				?>
 				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-between">
 					<div class="tutor-d-flex tutor-align-items-center">
-						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
+						<span class="<?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
 						<span class="tutor-fs-7 tutor-color-muted tutor-ml-8">
 							<?php echo esc_html( $meta['label'] ); ?>
 						</span>

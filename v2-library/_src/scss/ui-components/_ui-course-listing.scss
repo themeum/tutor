@@ -52,9 +52,6 @@
 		@include breakpoint-min(desktop-lg) {
 			gap: 36px;
 		}
-		.meta-icon {
-			font-size: 28px;
-		}
 	}
 
 	.course-listing-thumbnail {
@@ -180,9 +177,6 @@
 
 	// .tutor-course-listing-item-sm
 	&-sm {
-		.list-item-meta .meta-icon {
-			font-size: 20px;
-		}
 		.tutor-ratings {
 			.tutor-rating-text {
 				@extend .text-medium-small;

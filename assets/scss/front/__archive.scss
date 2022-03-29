@@ -11,7 +11,6 @@ div[class*='tutor-course-col'] {
 .tutor-course-loop {
 	background: #fff;
 	color: #29303b;
-	//font-size: var(--tutor-text-size);
 	overflow: hidden;
 	position: relative;
 	vertical-align: top;
@@ -1649,19 +1648,6 @@ Lesson Edit Modal
 	margin: 0;
 }
 
-label.btn-switch input:checked + .btn-slider {
-	background-color: var(--tutor-success-button-color);
-}
-
-.btn-switch + span {
-	line-height: 24px;
-	display: inline-block;
-	margin-left: 8px;
-	font-weight: 700;
-	//font-size: var(--tutor-text-size);
-	vertical-align: top;
-}
-
 .question-type-pro {
 	color: #fff;
 	font-size: 9px;
@@ -1756,58 +1742,6 @@ span.tutor-quiz-answer-title {
 .tutor-addons-list .plugin-icon {
 	height: 120px !important;
 	width: auto !important;
-}
-
-.btn-switch {
-	display: inline-block;
-	height: 22px;
-	position: relative;
-	width: 40px;
-}
-
-.btn-switch input {
-	display: none;
-}
-
-.btn-slider {
-	background-color: #ccc;
-	bottom: 0;
-	cursor: pointer;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	-webkit-transition: 0.4s;
-	transition: 0.4s;
-}
-
-.btn-slider:before {
-	background-color: #fff;
-	bottom: 3px;
-	content: '';
-	height: 16px;
-	left: 4px;
-	position: absolute;
-	-webkit-transition: 0.4s;
-	transition: 0.4s;
-	width: 16px;
-}
-
-input:checked + .btn-slider {
-	background-color: var(--tutor-primary-color);
-}
-
-input:checked + .btn-slider:before {
-	-webkit-transform: translateX(16px);
-	transform: translateX(16px);
-}
-
-.btn-slider.btn-round {
-	border-radius: 34px;
-}
-
-.btn-slider.btn-round:before {
-	border-radius: 50%;
 }
 
 .tutor-video-embeded-wrap {

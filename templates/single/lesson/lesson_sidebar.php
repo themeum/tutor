@@ -79,7 +79,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 										<?php if ( true ): ?>
 											<div class="tutor-topics-title-info">
 												<div class="tooltip-wrap tutor-d-flex">
-													<i class="tutor-icon-circle-outline-info-filled tutor-icon-24 color-black-40"></i>
+													<i class="tutor-icon-circle-outline-info-filled color-black-40"></i>
 													<span class="tooltip-txt tooltip-bottom">
 														<?php echo $topic_summery; ?>
 													</span>

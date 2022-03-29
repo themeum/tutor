@@ -8,7 +8,7 @@
 
     <div class="new-topic-btn-wrap">
         <button data-tutor-modal-target="tutor-modal-add-topic" class="create_new_topic_btn tutor-btn tutor-btn-primary tutor-btn-md tutor-mt-16"> 
-            <i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-12"></i> <?php _e('Add new topic', 'tutor'); ?>
+            <i class="tutor-icon-plus-square-filled tutor-mr-12"></i> <?php _e('Add new topic', 'tutor'); ?>
         </button>
     </div>
 

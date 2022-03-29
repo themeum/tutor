@@ -123,7 +123,7 @@ do_action('tutor_dashboard/before/wrap');
 					if (tutor_utils()->get_option('enable_become_instructor_btn')) {
 					?>
 						<a id="tutor-become-instructor-button" class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url(tutor_utils()->instructor_register_url()); ?>">
-							<i class="tutor-icon-man-user-filled tutor-icon-24"></i> &nbsp; <?php _e('Become an instructor', 'tutor'); ?>
+							<i class="tutor-icon-man-user-filled"></i> &nbsp; <?php _e('Become an instructor', 'tutor'); ?>
 						</a>
 					<?php
 					}
@@ -133,7 +133,7 @@ do_action('tutor_dashboard/before/wrap');
 						$course_type = tutor()->course_post_type;
 					?>
 						<a class="tutor-btn tutor-btn-outline-primary" href="<?php echo esc_url(apply_filters('frontend_course_create_url', admin_url('post-new.php?post_type=' . tutor()->course_post_type))); ?>">
-							<i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-my-n4 tutor-mr-8"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
+							<i class="tutor-icon-plus-square-filled tutor-my-n4 tutor-mr-8"></i> <?php esc_html_e('Create a New Course', 'tutor'); ?>
 						</a>
 					<?php
 					} elseif ($instructor_status == 'pending') {
@@ -177,7 +177,7 @@ do_action('tutor_dashboard/before/wrap');
 							$menu_title     = tutor_utils()->array_get('title', $dashboard_page);
 							$menu_icon_name = tutor_utils()->array_get('icon', $dashboard_page);
 							if ($menu_icon_name) {
-								$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon tutor-icon-30'></span>";
+								$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon'></span>";
 							}
 							// Add new menu item property "url" for custom link
 							if (isset($dashboard_page['url'])) {
