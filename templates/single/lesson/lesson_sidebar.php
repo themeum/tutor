@@ -119,7 +119,7 @@ $is_user_admin                = current_user_can( 'administrator' );
 														<div class="tutor-single-lesson-items-right tutor-d-flex tutor-lesson-right-icons">
 															<span class="tutor-fs-7 tutor-color-black-70">
 																<?php
-																	$time_limit = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
+																	$time_limit = (int) tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' );
 																	if ( $time_limit ) {
 																		$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
 

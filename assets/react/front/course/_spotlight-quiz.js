@@ -302,6 +302,10 @@ window.jQuery(document).ready($=>{
 
     $(document).on('click', 'a',  function(event) {
         const href = $(this).attr('href');
+        // if user click on ask question then return, no warning.
+        if (event.target.classList.contains('sidebar-ask-new-qna-btn')) {
+            return;
+        }
 
         if ($tutor_quiz_time_update.length > 0 && $tutor_quiz_time_update.text() != 'EXPIRED') {
             event.preventDefault();
