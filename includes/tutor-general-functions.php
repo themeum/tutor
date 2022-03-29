@@ -930,3 +930,23 @@ if(!function_exists('tutor_log')) {
 		error_log(ob_get_clean());
 	}
 }
+
+if(!function_exists('tutor_wc_price_currency_format')){
+	function tutor_wc_price_currency_format($amount){
+
+		$symbol = get_woocommerce_currency_symbol();
+		$position = get_option('woocommerce_currency_pos', 'left');
+		
+		switch($position){
+			case 'left' 		: $amount = $symbol . $amount; break;
+			case 'left_space' 	: $amount = $symbol . ' ' . $amount; break;
+
+			case 'right' 		: $amount = $amount . $symbol; break;
+			case 'right_space' 	: $amount = $amount . ' ' . $symbol; break;
+
+			default 			: $amount = $symbol . $amount; break;
+		}
+
+		return $amount;
+	}
+}

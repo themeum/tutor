@@ -17,16 +17,15 @@ if ($product) {
     } else {
         $sale_price = $product->get_sale_price();
         $regular_price = $product->get_regular_price();
-        $symbol = get_woocommerce_currency_symbol();
         ?>
         <div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-between">
             <div>
                 <span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
-                    <?php echo $symbol . ($sale_price ? $sale_price : $regular_price); ?>
+                    <?php echo tutor_wc_price_currency_format($sale_price ? $sale_price : $regular_price); ?>
                 </span>
                 <?php if($regular_price && $sale_price && $sale_price!=$regular_price): ?>
                     <del class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-                        <?php echo $symbol . $regular_price; ?>
+                        <?php echo tutor_wc_price_currency_format($regular_price); ?>
                     </del>
                 <?php endif; ?>
             </div>

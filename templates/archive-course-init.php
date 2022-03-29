@@ -93,14 +93,14 @@
 					<?php tutor_load_template('course-filter.filters'); ?>
 				</div>
 			</div>
-			<div class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container tutor-pagination-wrapper-replacable" data-column_per_row="<?php esc_attr_e( $column_per_row ); ?>">
+			<div class="<?php tutor_container_classes(); ?> tutor-course-filter-loop-container tutor-pagination-wrapper-replacable replace-inner-contents" data-column_per_row="<?php esc_attr_e( $column_per_row ); ?>">
 				<?php 
 					echo $course_loop; 
 				?>
 			</div>
 		</div>
 	<?php else: ?>
-		<div class="<?php tutor_container_classes(); ?>	tutor-course-filter-loop-container tutor-pagination-wrapper-replacable">
+		<div class="<?php tutor_container_classes(); ?>	tutor-course-filter-loop-container tutor-pagination-wrapper-replacable replace-inner-contents">
 			<?php 
 				echo $course_loop; 
 			?>
