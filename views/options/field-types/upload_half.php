@@ -19,18 +19,17 @@ $field_id     = 'field_' . $field['key'];
 				<!-- @todo: hard coded string -->
 				<div class="signature-info">
 					<div style="font-size: 15px">
-						File Support:
-						<span style="color: #222427; font-weight: 500;">jpg, .jpeg, .png</span>
+						<?php _e("File Support", "tutor"); ?>:
+						<span style="color: #222427; font-weight: 500;"><?php _e("jpg, .jpeg, .png", "tutor"); ?></span>
 					</div>
-					<div style="font-size: 13px; margin-top:7px;">Image size ratio: 4:1</div>
+					<div style="font-size: 13px; margin-top:7px;"><?php _e("Image size ratio: 4:1", "tutor"); ?></div>
 				</div>
 			</div>
-			<label for="signature-uploader" class="tutor-btn tutor-is-sm image_upload_button">
+			<label for="signature-uploader" class="tutor-btn tutor-btn-primary tutor-btn-sm image_upload_button">
 				<input type="hidden" class="input_file" name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" value="<?php echo esc_attr( $option_value ); ?>">
 				<input type="file" class="image_uploader" id="<?php echo esc_attr( $field_id ); ?>" accept=".jpg, .jpeg, .png, .svg">
-				<!-- <span class="tutor-btn-icon las la-image"></span> -->
 				<span class="tutor-btn-icon tutor-icon-image-filled"></span>
-				<span>Upload Image</span>
+				<span><?php _e("Upload Image", "tutor"); ?></span>
 			</label>
 		</div>
 	</div>

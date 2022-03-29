@@ -388,7 +388,7 @@ jQuery(document).ready(function ($) {
 				type: 'POST',
 				data: data,
 				beforeSend: function () {
-					$btn.addClass('tutor-updating-message');
+					$btn.addClass('is-loading');
 				},
 				success: function (data) {
 					if (data.success) {
@@ -396,7 +396,7 @@ jQuery(document).ready(function ($) {
 					}
 				},
 				complete: function () {
-					$btn.removeClass('tutor-updating-message');
+					$btn.removeClass('is-loading');
 					setTimeout(() => {
 						$btn.prop("disabled", false);
 					}, 2000);
@@ -445,7 +445,7 @@ jQuery(document).ready(function ($) {
 			data: data,
 			beforeSend: function () {
 				$form.find('.tutor-success-msg').remove();
-				$btn.addClass('tutor-updating-message');
+				$btn.addClass('is-loading');
 			},
 			success: function (data) {
 				var Msg;
@@ -485,7 +485,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$btn.removeClass('tutor-updating-message');
+				$btn.removeClass('is-loading');
 			},
 		});
 	});
@@ -510,7 +510,7 @@ jQuery(document).ready(function ($) {
 			type: 'POST',
 			data: data,
 			beforeSend: function () {
-				$btn.addClass('tutor-updating-message');
+				$btn.addClass('is-loading');
 			},
 			success: function (res) {
 				if (res.success) {
@@ -518,7 +518,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$btn.removeClass('tutor-updating-message');
+				$btn.removeClass('is-loading');
 			},
 		});
 	});
@@ -540,7 +540,7 @@ jQuery(document).ready(function ($) {
 			type: 'POST',
 			data: form_data,
 			beforeSend: function () {
-				$('#tutor_assignment_start_btn').addClass('tutor-updating-message');
+				$('#tutor_assignment_start_btn').addClass('is-loading');
 			},
 			success: function (data) {
 				if (data.success) {
@@ -548,7 +548,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$('#tutor_assignment_start_btn').removeClass('tutor-updating-message');
+				$('#tutor_assignment_start_btn').removeClass('is-loading');
 			},
 		});
 	});

@@ -126,13 +126,13 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 									<div class="tutor-row">
 										<div class="tutor-col">
 											<div class="tutor-btn-group">
-												<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
+												<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary">
 													<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 												</button>
 											</div>
 										</div>
 										<div class="tutor-col-auto">
-											<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
+											<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary tutor_submit_review_btn">
 												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
 											</button>
 										</div>
@@ -171,10 +171,10 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										<textarea class="tutor-form-control tutor-mt-28" name="review" placeholder="<?php _e( 'write a review', 'tutor' ); ?>"><?php esc_html_e( stripslashes( $review->comment_content ) ); ?></textarea>
 										
 										<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
-											<button data-tutor-modal-close type="button" data-action="back" class="tutor-modal-close-btn tutor-btn tutor-is-default">
+											<button data-tutor-modal-close type="button" data-action="back" class="tutor-modal-close-btn tutor-btn tutor-btn-outline-primary">
 												<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 											</button>
-											<button type="submit" data-action="next" class="tutor-btn tutor-is-primary tutor_submit_review_btn">
+											<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary tutor_submit_review_btn">
 												<?php esc_html_e( 'Update Review', 'tutor' ); ?>
 											</button>
 										</div>
@@ -205,10 +205,10 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										</p>
 									</div>
 									<div class="tutor-modal-delete-footer tutor-modal-btns tutor-btn-group">
-										<button data-tutor-modal-close class="tutor-modal-close-btn tutor-btn tutor-is-outline tutor-is-default">
+										<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 											<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 										</button>
-										<button class="tutor-btn tutor-list-ajax-action" data-request_data='{"review_id":<?php echo $review->comment_ID; ?>,"action":"delete_tutor_review"}' data-delete_element_id="<?php echo $row_id; ?>">
+										<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"review_id":<?php echo $review->comment_ID; ?>,"action":"delete_tutor_review"}' data-delete_element_id="<?php echo $row_id; ?>">
 											<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 										</button>
 									</div>

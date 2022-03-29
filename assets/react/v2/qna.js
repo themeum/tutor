@@ -121,7 +121,7 @@ window.jQuery(document).ready($=>{
                 action: 'tutor_qna_create_update'
             },
             beforeSend: () =>{
-                // button.addClass('tutor-updating-message');
+                // button.addClass('is-loading');
                 button.css(btnStyles);
                 button.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
             },

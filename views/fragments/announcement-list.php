@@ -62,10 +62,10 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 				</div>
 
 				<div class="tutor-modal-footer tutor-d-flex tutor-justify-between">
-					<button type="submit" data-action="next" class="tutor-btn tutor-is-primary">
+					<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary">
 						<?php _e( 'Publish', 'tutor' ); ?>
 					</button>
-					<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-is-default">
+					<button data-tutor-modal-close type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary">
 						<?php _e( 'Cancel', 'tutor' ); ?>
 					</button>
 				</div>
@@ -129,7 +129,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 					<div class="footer-bottom">
 						<div class="tutor-row">
 							<div class="tutor-col-6 tutor-col-lg-7">
-								<button data-tutor-modal-close class="tutor-btn tutor-btn-disable tutor-no-hover tutor-btn-md tutor-modal-btn-cancel">
+								<button data-tutor-modal-close class="tutor-btn tutor-btn-secondary tutor-btn-md">
 									<?php _e( 'Cancel', 'tutor' ); ?>
 								</button>
 							</div>
@@ -139,7 +139,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 									<button data-tutor-modal-target="<?php echo $delete_modal_id; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-modal-btn-delete">
 										<?php _e( 'Delete', 'tutor' ); ?>
 									</button>
-									<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-primary tutor-btn-md tutor-modal-btn-edit <?php echo is_admin() ? 'tutor-btn-wordpress' : 'tutor-btn-primary'; ?> tutor-ml-16">
+									<button data-tutor-modal-target="<?php echo $update_modal_id; ?>" class="tutor-btn tutor-btn-primary tutor-btn-md tutor-modal-btn-edit tutor-ml-16">
 										<?php _e( 'Edit', 'tutor' ); ?>
 									</button>
 								</div>
@@ -177,10 +177,10 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 					</div>
 					
 					<div class="tutor-mt-48">
-						<button data-tutor-modal-close class="tutor-btn tutor-is-outline tutor-is-default">
+						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php _e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn <?php echo is_admin() ? 'tutor-btn-wordpress' : ''; ?> tutor-list-ajax-action tutor-ml-16"  data-request_data='{"announcement_id":<?php echo $announcment_id; ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo $row_id; ?>">
+						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-16"  data-request_data='{"announcement_id":<?php echo $announcment_id; ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo $row_id; ?>">
 							<?php _e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>

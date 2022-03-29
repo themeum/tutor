@@ -671,15 +671,6 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 		}
 		align-items: center;
 		grid-gap: 20px;
-		.tutor-btn-circle.tutor-is-lg {
-			margin: 0;
-			height: 54px;
-			width: 54px;
-			min-width: 54px;
-			background: #00abfa;
-			border-color: #00abfa;
-			color: #fff;
-		}
 	}
 
 	&-allgrades {
@@ -711,10 +702,6 @@ $avatarSizes: 16, 20, 24, 26, 28, 32, 40, 48, 50, 64, 120;
 		}
 
 		&-item {
-			.tutor-btn-circle.tutor-is-outline {
-				color: #1b3185;
-				border-color: #1b3185;
-			}
 			&:not(:last-child) {
 				margin-bottom: 16px;
 			}

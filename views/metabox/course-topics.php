@@ -7,7 +7,7 @@
     </div>
 
     <div class="new-topic-btn-wrap">
-        <button data-tutor-modal-target="tutor-modal-add-topic" class="tutor-mt-16 create_new_topic_btn tutor-btn tutor-btn-md bordered-btn"> 
+        <button data-tutor-modal-target="tutor-modal-add-topic" class="create_new_topic_btn tutor-btn tutor-btn-primary tutor-btn-md tutor-mt-16"> 
             <i class="tutor-icon-plus-square-filled tutor-icon-24 tutor-mr-12"></i> <?php _e('Add new topic', 'tutor'); ?>
         </button>
     </div>
@@ -62,20 +62,20 @@
                 <div class="tutor-modal-footer">
                     <div class="tutor-row">
                         <div class="tutor-col">
-                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                            <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
                                 <?php _e('Cancel', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-col-auto">
-                            <button type="button" data-action="back" class="tutor-btn tutor-is-default tutor-mr-12">
+                            <button type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary tutor-mr-12">
                                 <?php _e('Back', 'tutor'); ?>
                             </button>
-                            <button type="button" data-action="next" class="tutor-btn tutor-is-primary">
+                            <button type="button" data-action="next" class="tutor-btn tutor-btn-primary">
                                 <?php _e('Save & Next', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-col">
-                            <button class="tutor-btn quiz-modal-question-save-btn">
+                            <button class="tutor-btn tutor-btn-primary quiz-modal-question-save-btn">
                                 <?php _e('Add To Questions', 'tutor'); ?>
                             </button>
                         </div>
@@ -105,12 +105,12 @@
                 <div class="tutor-modal-footer">
                     <div class="tutor-row">
                         <div class="tutor-col">
-                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                            <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
                                 <?php _e('Cancel', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-col-auto">
-                            <button type="button" class="tutor-btn update_lesson_modal_btn">
+                            <button type="button" class="tutor-btn tutor-btn-primary update_lesson_modal_btn">
                                 <?php _e('Update Lesson', 'tutor'); ?>
                             </button>
                         </div>
@@ -133,17 +133,16 @@
                     </button>
                 </div>
                 <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
-
                 </div>
                 <div class="tutor-modal-footer">
                     <div class="tutor-row">
                         <div class="tutor-col">
-                            <button data-tutor-modal-close class="tutor-btn tutor-is-default">
+                            <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
                                 <?php _e('Cancel', 'tutor'); ?>
                             </button>
                         </div>
                         <div class="tutor-col-auto">
-                            <button type="button" class="tutor-btn update_assignment_modal_btn">
+                            <button type="button" class="tutor-btn tutor-btn-primary update_assignment_modal_btn">
                                 <?php _e('Update Assignment', 'tutor'); ?>
                             </button>
                         </div>

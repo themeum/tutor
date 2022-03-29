@@ -168,7 +168,7 @@ $alertVariations: (
 		.tutor-alert-icon {
 			color: #{$iconC};
 		}
-		.tutor-btn:not(.tutor-btn-disable-outline) {
+		.tutor-btn:not(.tutor-btn-outline-primary) {
 			color: #{$btnC};
 			background: #{$btnBg};
 			border: 1px solid #{$btnBorder};
@@ -212,7 +212,7 @@ $alertVariations: (
 		.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
 			padding: 7.5px 13px;
 		}
-		.tutor-btn.tutor-btn-disable-outline {
+		.tutor-btn.tutor-btn-outline-primary {
 			border-color: $stroke-light-20;
 		}
 	}

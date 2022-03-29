@@ -15,7 +15,7 @@ window.jQuery(document).ready(($) => {
 				action: 'tutor_course_add_to_wishlist',
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message tutor-m-0');
+				$that.addClass('is-loading tutor-m-0');
 			},
 			success: function(data) {
 				if (data.success) {
@@ -35,7 +35,7 @@ window.jQuery(document).ready(($) => {
 				}
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message tutor-m-0');
+				$that.removeClass('is-loading tutor-m-0');
 			},
 		});
 	});

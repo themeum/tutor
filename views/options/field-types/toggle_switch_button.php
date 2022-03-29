@@ -17,7 +17,7 @@ $field_key_title  = $field_key . ' --> ' . $field_event;
 $field_template   = sanitize_key( $field['template'] );
 $field_id         = sanitize_key( 'field_' . $field_key_event );
 $tooltip_desc     = ! empty( $field['tooltip'] ) ? $field['tooltip'] : null;
-$send_test_button = '<button type="button" class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs send_test_email"
+$send_test_button = '<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm send_test_email"
 data-to="' . esc_attr( $field_key ) . '" data-label="' . esc_attr( $field_label ) . '" data-key="' . esc_attr( $field_event ) . '" data-template="' . esc_attr( $field_template ) . '"
 >' . esc_attr( 'Send Test' ) . '</button>';
 ?>
@@ -42,9 +42,8 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . esc_attr( $field_label 
 			foreach ( $field['buttons'] as $key => $button ) {
 				if ( 'anchor' === $button['type'] ) {
 					?>
-					<a class="tutor-btn tutor-is-outline tutor-is-default tutor-is-xs" href="<?php echo esc_attr( $button['url'] ); ?>"><?php echo esc_attr( $button['text'] ); ?></a>
+					<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_attr( $button['url'] ); ?>"><?php echo esc_attr( $button['text'] ); ?></a>
 					<?php
-					// echo wp_kses_post( $send_test_button );
 				}
 			}
 		}

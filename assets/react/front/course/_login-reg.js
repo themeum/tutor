@@ -23,7 +23,7 @@ window.jQuery(document).ready(($) => {
 			type: 'POST',
 			data: form_data,
 			beforeSend: () => {
-				button.addClass('tutor-updating-message');
+				button.addClass('is-loading');
 				error_container.empty();
 			},
 			success: function(response) {
@@ -48,7 +48,7 @@ window.jQuery(document).ready(($) => {
 				tutor_toast(__('Error!', 'tutor'), get_response_message(), 'error');
 			},
 			complete: () => {
-				button.removeClass('tutor-updating-message');
+				button.removeClass('is-loading');
 			},
 		});
 	});

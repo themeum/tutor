@@ -32,10 +32,10 @@
                 <textarea name="review" class="tutor-form-control tutor-mt-28" placeholder="<?php _e('Tell us about your own personal experience taking this course. Was it a good match for you?', 'tutor'); ?>"></textarea>
                
                 <div class="tutor-modal-btns tutor-btn-group tutor-mt-32">
-                    <button data-tutor-modal-close type="button" class="tutor-modal-close-btn tutor-btn tutor-is-default">
+                    <button data-tutor-modal-close type="button" class="tutor-modal-close-btn tutor-btn tutor-btn-outline-primary">
                         <?php _e('Cancel', 'tutor'); ?>
                     </button>
-                    <button type="submit" class="tutor-btn tutor_submit_review_btn">
+                    <button type="submit" class="tutor-btn tutor-btn-primary tutor_submit_review_btn">
                         <?php _e('Submit', 'tutor'); ?>
                     </button>
                 </div>   
