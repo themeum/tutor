@@ -2125,16 +2125,6 @@ table.course-single-gradebooks a {
 		display: none;
 	}
 }
-.list-item-button.booking-available {
-	.btn-icon {
-		height: 0px !important;
-		width: 0px !important;
-		margin-right: 10px !important;
-	}
-	button:hover span {
-		color: #fff;
-	}
-}
 
 @media only screen and (min-width: 1200px) {
 	.tutor-course-list-pagination.tutor-ui-pagination {

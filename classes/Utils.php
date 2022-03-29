@@ -7652,15 +7652,13 @@ class Utils {
 
 		// List constantly required fields
 		$required_fields = array(
-			// 'first_name' 				  => sprintf(__('Set Your %sFirst Name%s', 'tutor'), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>'),
-			// 'last_name' 				  => sprintf(__('Set Your %sLast Name%s', 'tutor'), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>'),
-			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>' ),
-			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>' ),
+			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $settings_url . '">', '</a>' ),
+			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $settings_url . '">', '</a>' ),
 		);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $withdraw_settings_url . '">', '</a>' );
+			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $withdraw_settings_url . '">', '</a>' );
 		}
 
 		// Now assign identifer whether set or not

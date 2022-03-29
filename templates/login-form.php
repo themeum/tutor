@@ -41,7 +41,7 @@ $lost_pass = apply_filters( 'tutor_lostpassword_url', wp_lostpassword_url() );
                 <?php esc_html_e( 'Keep me signed in', 'tutor' ); ?>
             </label>
         </div>
-        <a href="<?php echo $lost_pass; ?>" class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 td-none">
+        <a href="<?php echo $lost_pass; ?>" class="tutor-btn tutor-btn-ghost">
             <?php esc_html_e( 'Forgot?', 'tutor' ); ?>
         </a>
     </div>
