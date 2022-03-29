@@ -445,7 +445,7 @@ jQuery(document).ready(function ($) {
 			data: data,
 			beforeSend: function () {
 				$form.find('.tutor-success-msg').remove();
-				$btn.addClass('is-loading');
+				$btn.attr('disabled', 'disabled').addClass('is-loading');
 			},
 			success: function (data) {
 				var Msg;
@@ -477,7 +477,6 @@ jQuery(document).ready(function ($) {
                             </div>\
                         </div>';
 
-					// $responseDiv.html(Msg);
 					setTimeout(function () {
 						$responseDiv.html('');
 					}, 5000);
@@ -485,7 +484,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete: function () {
-				$btn.removeClass('is-loading');
+				$btn.removeAttr('disabled').removeClass('is-loading');
 			},
 		});
 	});

@@ -105,11 +105,11 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                                     <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
                                 </span>
                             </div>
-                            <div class="tutor-icon-btn-group">
-                                <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-icon-btn">
+                            <div class="tutor-iconic-btn-group">
+                                <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-iconic-btn">
                                     <i class="tutor-icon-edit-filled" area-hidden="true"></i>
                                 </a>
-                                <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-icon-btn">
+                                <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-iconic-btn">
                                     <i class="tutor-icon-delete-stroke-filled" area-hidden="true"></i>
                                 </a>
                             </div>
