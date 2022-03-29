@@ -155,8 +155,8 @@ $filters = array(
 										<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
 											<?php echo esc_html( $list->display_name ); ?>
 										</span>
-										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
-											<span class="tutor-icon-detail-link-filled tutor-mt-4"></span>
+										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
+											<span class="tutor-icon-detail-link-filled"></span>
 										</a>
 									</div>
 								</td>
@@ -190,7 +190,7 @@ $filters = array(
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-sm">
+									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
 								</td>

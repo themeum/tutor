@@ -202,7 +202,7 @@ if ( is_array( $attempt_info ) ) {
                                     <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-text-nowrap">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </div>
-                                    <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="btn-text btn-detail-link tutor-color-design-dark">
+                                    <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="tutor-iconic-btn">
                                         <span class="tutor-icon-detail-link-filled"></span>
                                     </a>
                                 </div>
