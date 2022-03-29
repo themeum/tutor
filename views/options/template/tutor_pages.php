@@ -39,7 +39,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 
 				if ( $page['page_exists'] ) {
 					$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-					echo "<a href='{$edit_url}' target='_blank' class='icon-link tutor-color-stroke-light-30 tutor-d-flex tutor-ml-4'><span class=' tutor-icon-detail-link-filled tutor-icon-24'></span></a>";
+					echo "<a href='{$edit_url}' target='_blank' class='icon-link tutor-color-stroke-light-30 tutor-d-flex tutor-ml-4'><span class=' tutor-icon-detail-link-filled'></span></a>";
 				}
 					echo '</div>';
 				?>
@@ -48,7 +48,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 				<?php
 				if ( $page['page_exists'] && $page['page_visible'] ) {
 					$page = get_post( $page_id );
-					echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='tutor-fs-7 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-center'><span class='icon-check tutor-icon-mark-cricle tutor-icon-20 tutor-color-design-success'></span>/{$page->post_name}</a>";
+					echo "<a href='" . get_permalink( $page ) . "' target='_blank' class='tutor-fs-7 tutor-fw-medium tutor-color-black tutor-d-flex tutor-align-items-center'><span class='icon-check tutor-icon-mark-circle tutor-color-design-success'></span>/{$page->post_name}</a>";
 				}
 				?>
 			</div>

@@ -83,34 +83,39 @@ if ( ! $assignment_submitted_id ) {
 		$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
 		if ( $attached_files && is_array( json_decode( $attached_files ) ) ) :
 			?>
-			<h5 class="tutor-fs-6 tutor-fw-medium tutor-mb-12 tutor-mt-20"><?php _e( 'Attach assignment file(s)', 'tutor' ); ?></h5>
+			<div class="tutor-fs-5 tutor-fw-medium tutor-mb-20">
+				<?php _e( 'Attach assignment file(s)', 'tutor' ); ?>
+			</div>
 			<div class="tutor-attachment-cards">
-				<?php
-				if ( $attached_files ) {
-					$attached_files = json_decode( $attached_files, true );
-					if ( tutor_utils()->count( $attached_files ) ) {
-						$upload_dir     = wp_get_upload_dir();
-						$upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
-						foreach ( $attached_files as $attached_file ) {
-							?>
-									<div>
-										<div>
-											<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" target="_blank">
-										<?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?>
-											</a>
-											<span class="filesize"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></span>
-										</div>
-										<div>
-											<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-mt-4" target="_blank">
-												<span class="tutor-icon-download-line"></span>
-											</a>
+				<div class="tutor-row">
+					<?php
+					if ( $attached_files ) {
+						$attached_files = json_decode( $attached_files, true );
+						if ( tutor_utils()->count( $attached_files ) ) {
+							$upload_dir     = wp_get_upload_dir();
+							$upload_baseurl = trailingslashit( tutor_utils()->array_get( 'baseurl', $upload_dir ) );
+							foreach ( $attached_files as $attached_file ) {
+								?>
+									<div class="tutor-col-lg-6 tutor-mb-16 tutor-mb-lg-0">
+										<div class="tutor-card tutor-d-flex tutor-align-items-center tutor-px-16 tutor-py-12">
+											<div>
+												<div class="tutor-fs-6 tutor-color-black tutor-mb-4"><?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?></div>
+												<div class="tutor-fs-7 tutor-color-muted"><?php esc_html_e( 'Size', 'tutor' ); ?><?php esc_html_e( ': 2MB', 'tutor' ); ?></div>
+											</div>
+
+											<div class="tutor-ml-auto">
+												<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-lg" target="_blank" rel="noopener noreferrer">
+													<span class="tutor-icon-download-line"></span>
+												</a>
+											</div>
 										</div>
 									</div>
-							<?php
+								<?php
+							}
 						}
 					}
-				}
-				?>
+					?>
+				</div>
 			</div>
 		<?php endif; ?>
 	</div>

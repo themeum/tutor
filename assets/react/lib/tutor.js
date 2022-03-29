@@ -439,7 +439,7 @@ window.tutor_toast = function(title, description, type) {
                     ${description}
                 </div>
             </div>
-            <span class="tutor-toast-close tutor-noti-close tutor-icon-32 color-black-40 tutor-icon-cross-filled"></span>
+            <span class="tutor-toast-close tutor-noti-close tutor-icon-20 color-black-40 tutor-icon-cross-filled"></span>
         </div>
     `);
 

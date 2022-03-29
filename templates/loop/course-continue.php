@@ -18,8 +18,7 @@
 <?php
     
     $course_id = get_the_ID();
-    $enroll_btn = '
-                    <a href="'. get_the_permalink(). '" class="tutor-btn tutor-pr-0 tutor-pl-0 tutor-btn-outline-primary tutor-btn-md tutor-btn-full">
+    $enroll_btn = '<a href="'. get_the_permalink(). '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">
                         ' . __( 'Start Learning', 'tutor' ) . '
                     </a>
                 ';

@@ -78,7 +78,7 @@ $filters = array(
 					<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-black-60">
 							<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
-							<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+							<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
