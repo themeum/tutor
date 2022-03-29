@@ -1,7 +1,39 @@
 /**
 @package: Tutor LMS
-@author: themeum
+@author: Themeum
  */
+
+$accent-color: var(--wp-admin-theme-color) !default;
+$accent-color-hover: var(--wp-admin-theme-color) !default;
+
+.tutor-admin {
+	&-wrap {
+		margin-left: -20px;
+	}
+
+	&-body {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	&-container {
+		max-width: 1160px;
+		min-width: 760px;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 30px;
+		padding-right: 30px;
+		overflow-x: auto;
+	}
+
+	&-header {
+		box-sizing: border-box;
+		background: #ffffff;
+		border-bottom: 1px solid #cdcfd5;
+		padding: 12px 24px;
+	}
+}
+
 
 /*----------------------------------
 	Component containers
@@ -10,6 +42,7 @@
 body.tutor-backend-tutor_settings #wpbody-content {
 	min-height: 100vh;
 }
+
 .ui-widget-content {
 	border: 1px solid #aaaaaa;
 	background: #ffffff;
@@ -494,7 +527,6 @@ input:checked + .btn-slider {
 }
 
 input:checked + .btn-slider:before {
-	-webkit-transform: translateX(16px);
 	transform: translateX(16px);
 }
 
@@ -1324,6 +1356,7 @@ span.withdraw-method-label {
 				margin: 0;
 			}
 		}
+		
 		.quiz-manual-review-action {
 			border: 1px solid #d4dadb;
 			color: #d4dadb;
@@ -1337,22 +1370,26 @@ span.withdraw-method-label {
 			-webkit-transition: 300ms;
 			transition: 300ms;
 			text-decoration: none;
+
 			&:first-child {
 				&:hover {
 					border: 1px solid var(--tutor-success-button-color);
 					color: var(--tutor-success-button-color);
 				}
 			}
+
 			&:last-child {
 				&:hover {
 					border: 1px solid #df3247;
 					color: #df3247;
 				}
 			}
+			
 			&:not(:last-child) {
 				margin-right: 17px;
 			}
 		}
+
 		.quiz-incorrect-answer-text,
 		.quiz-correct-answer-text {
 			i {
@@ -1441,10 +1478,6 @@ h2.tutor-page-heading {
 
 .tutor-report-left-menus ul {
 	margin: 0;
-}
-
-.report-main-wrap {
-	/*display: flex;*/
 }
 
 .report-main-wrap h3 {
@@ -2477,25 +2510,6 @@ table.tutor-table p {
 
 .a-to-z-sort-icon {
 	cursor: pointer;
-}
-
-/* /.report-course-list - end */
-
-//page reset style
-.tutor-admin-page-refresh {
-	display: flex;
-	align-items: center;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 15px;
-	color: #5b616f;
-	cursor: pointer;
-	align-self: center;
-	margin-top: 43px;
-	i {
-		color: #1973aa;
-		font-size: 18px;
-	}
 }
 
 .tutor-entry-content{

@@ -2,25 +2,9 @@
 .select2-container .select2-search__field {
 	padding: 12px 3px 8px 6px !important;
 }
-.tutor-btn.tutor-is-outline:not(.tutor-no-hover):hover {
-	opacity: 1;
-}
 
 #wpcontent,
 #tutor-frontend-course-builder {
-	.tutor-topic-title {
-		.tutor-updating-message {
-			&:before {
-				vertical-align: unset !important;
-			}
-		}
-	}
-	.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
-		margin-right: 0px !important;
-	}
-	button.tutor-updating-message:not(.tutor-m-0):not(.tutor-mr-0):before {
-		margin-right: 8px !important;
-	}
 	.tutor-certificate-template {
 		.template-item {
 			.template-radio-field {
@@ -29,11 +13,6 @@
 		}
 	}
 	.tutor-modal {
-		.tutor-updating-message:before {
-			vertical-align: unset;
-			line-height: unset;
-			// display: flex;
-		}
 		.tutor-delete-attachment.tutor-icon-line-cross {
 			margin-left: 5px;
 		}
@@ -175,16 +154,6 @@
 		}
 		#tutor-course-available-instructors {
 			gap: 10px;
-		}
-		.tutor-search-result {
-			&.tutor-updating-message {
-				min-height: 60px;
-				&:before {
-					top: 50% !important;
-					left: calc(50% - 10px);
-					position: absolute;
-				}
-			}
 		}
 	}
 	.tutor-quiz-advance-settings p.help {

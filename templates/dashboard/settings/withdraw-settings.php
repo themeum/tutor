@@ -11,11 +11,11 @@ $col_classes = array(
 );
 ?>
 <div class="tutor-dashboard-setting-withdraw tutor-dashboard-content-inner">
-    <div class="tutor-dashboard-inline-links">
+    <div class="tutor-mb-32">
         <?php
             tutor_load_template( 'dashboard.settings.nav-bar', ['active_setting_nav'=>'withdrawal'] );
         ?>
-        <div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></div>
+        <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mt-32"><?php esc_html_e( 'Select a withdraw method', 'tutor' ) ?></div>
     </div>
 
     <form id="tutor-withdraw-account-set-form" action="" method="post">
@@ -119,7 +119,7 @@ $col_classes = array(
                         <?php do_action( "tutor_withdraw_set_account_{$method_id}_after" ); ?>
 
                         <div class="withdraw-account-save-btn-wrap tutor-mt-32">
-                            <button type="submit" class="tutor_set_withdraw_account_btn tutor-btn" name="withdraw_btn_submit">
+                            <button type="submit" class="tutor_set_withdraw_account_btn tutor-btn tutor-btn-primary" name="withdraw_btn_submit">
                                 <?php esc_html_e( 'Save Withdrawal Account', 'tutor' ); ?>
                             </button>
                         </div>

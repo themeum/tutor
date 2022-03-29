@@ -63,7 +63,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 		tutor_nonce_field();
 		?>
 		<p>
-			<button class="tutor-btn tutor-is-sm" type="submit"><?php esc_html_e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
+			<button class="tutor-btn tutor-btn-primary tutor-btn-sm" type="submit"><?php esc_html_e( 'Re-Generate Tutor Pages', 'tutor' ); ?></button>
 		</p>
 	</form>
 </div><br>

@@ -30,7 +30,7 @@ if ( $is_instructor ) {
                     </div>
                 </div>
             </div>
-            <div class="tutor-app-process-image tutor-m-auto tutor-pt-32 tutor-pb-44 tutor-d-flex tutor-justify-content-center tutor-align-items-center">
+            <div class="tutor-app-process-image tutor-m-auto tutor-pt-32 tutor-pb-44 tutor-d-flex tutor-justify-center tutor-align-items-center">
                 <span class="tutor-app-process-img">
                     <img
                     src="<?php echo esc_url( tutor()->url . 'assets/images/instructor-thankyou.png' ); ?>"

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       const icon1 = target.nextElementSibling;
-      icon1.classList.add('tutor-updating-message-v2');
+      icon1.classList.add('is-loading-v2');
 
       // Prepare request form data
       const formData = new FormData();
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         tutor_toast(__("Failed", "tutor"), __('Course status update failed', 'tutor'), "error");
       }
-      icon1.classList.remove('tutor-updating-message-v2');
+      icon1.classList.remove('is-loading-v2');
     };
   }
   const courseTabsCoursesCount = (prevStatus, newStatus) => {

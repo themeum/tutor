@@ -6,9 +6,6 @@
 }
 
 .tutor-course-listing {
-	// max-width: 1110px;
-	// margin: 0 auto;
-
 	// .tutor-course-listing-grid
 	&-grid {
 		@include responsiveGrid(250px, 1fr);
@@ -31,12 +28,6 @@
 			}
 		}
 	}
-
-	// Course Grid with Filter
-	&-filter-grid-2 {
-	}
-	&-filter-grid-3 {
-	}
 }
 
 .tutor-course-listing-item {
@@ -47,7 +38,7 @@
 	border-radius: 7px;
 	overflow: hidden;
 
-	a {
+	a:not(.btn):not(.tutor-btn):not(.tutor-icon-btn) {
 		text-decoration: none;
 		color: inherit;
 	}
@@ -404,24 +395,10 @@
 
 // Loading Bookmark spacing fix
 .tutor-course-listing-item {
-	.tutor-updating-message {
-		&:before {
-			margin-right: 0 !important;
-		}
-	}
 	.tutor-ratings {
 		.tutor-rating-text {
 			line-height: 1 !important;
 			margin-top: 2px;
-		}
-	}
-}
-
-.tutor-course-listing-item {
-	.tutor-updating-message {
-		@include spinner($lineColor: #ababab, $lineBgColor: #fdfdfd, $size: 17px);
-		&:before {
-			content: '' !important;
 		}
 	}
 }

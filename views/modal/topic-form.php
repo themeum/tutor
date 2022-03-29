@@ -37,12 +37,12 @@
             <div class="tutor-modal-footer">
                 <div class="tutor-row">
                     <div class="tutor-col">
-                        <button data-tutor-modal-close class="tutor-btn tutor-btn-disable">
+                        <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
                             <?php _e('Cancel', 'tutor'); ?>
                         </button>
                     </div>
                     <div class="tutor-col-auto">
-                        <button type="button" class="tutor-btn <?php echo !empty($data['button_class']) ? $data['button_class'] : ''; ?>" id="<?php echo !empty($data['button_id']) ? $data['button_id'] : ''; ?>">
+                        <button type="button" class="tutor-btn tutor-btn-primary <?php echo !empty($data['button_class']) ? $data['button_class'] : ''; ?>" id="<?php echo !empty($data['button_id']) ? $data['button_id'] : ''; ?>">
                             <?php echo $data['button_text']; ?>
                         </button>
                     </div>

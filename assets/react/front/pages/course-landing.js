@@ -9,6 +9,7 @@ window.jQuery(document).ready(($) => {
         e.preventDefault();
 		var url = $(this).attr('href');
 		var course_id = $(this).data('course_id');
+        // @todo: check the button class functionality
 		
         var data = {
             title: __('Override Previous Progress', 'tutor'),
@@ -28,7 +29,7 @@ window.jQuery(document).ready(($) => {
                                 course_id: course_id,
                             },
                             beforeSend: () => {
-                                button.prop('disabled', true).addClass('tutor-updating-message');
+                                button.prop('disabled', true).addClass('is-loading');
                             },
                             success: function (response) {
                                 if (response.success) {
@@ -38,7 +39,7 @@ window.jQuery(document).ready(($) => {
                                 }
                             },
                             complete: function () {
-                                button.prop('disabled', false).removeClass('tutor-updating-message');
+                                button.prop('disabled', false).removeClass('is-loading');
                             }
                         });
                     }
@@ -58,7 +59,7 @@ window.jQuery(document).ready(($) => {
 });
 
 readyState_complete(() => {
-    let loadingSpinner = document.querySelector('.course-players .loading-spinner');
+    let loadingSpinner = document.querySelector('.tutor-video-player .loading-spinner');
     if (null !== loadingSpinner) {
         loadingSpinner.remove();
     }

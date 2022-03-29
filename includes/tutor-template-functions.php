@@ -408,8 +408,8 @@ if ( ! function_exists('get_tutor_course_thumbnail')) {
             return $thumb_url;
         }
 
-        echo '<div class="tutor-course-thumbnail-bg tutor-text-center">
-            <img src="'.$thumb_url.'"/>
+        echo '<div class="tutor-course-thumbnail">
+            <img src="' . $thumb_url . '" />
         </div>';
     }
 }

@@ -4,21 +4,21 @@ $sidebar_width: 360px;
 	table.tutor-ui-table-data-td-target [data-td-target] {
 		padding: 12px !important;
 	}
+	
 	table.tutor-ui-table tr:last-child td:last-child {
 		border-radius: 0;
-		-webkit-border-radius: 0;
-		-moz-border-radius: 0;
-		-ms-border-radius: 0;
-		-o-border-radius: 0;
 	}
+	
 	table.tutor-ui-table-data-td-target .is-active:not(.expand-btn) {
 		background-color: #fff !important;
 	}
+	
 	td {
 		div.tutor-icon-angle-down-filled {
 			font-size: 20px;
 		}
 	}
+	
 	@at-root {
 		body.wp-admin {
 			.tutor-qna-single-wrapper {
@@ -444,77 +444,33 @@ table.qna-list-table {
 	}
 }
 
-.tutor-quesanswer-askquestion {
-	button,
-	a.sidebar-ask-new-qna-btn {
-		text-align: center;
-	}
-	button {
-	}
-}
 #sideabr-qna-tab-content {
 	.tutor-qna-single-question .tutor-qa-chatlist .tutor-qna-chat {
 		max-width: 100%;
 		margin-bottom: 10px;
 	}
+	
 	.tutor-qna-single-question .tutor-qa-reply div {
 		padding: 10px 0px 0px 0px;
 	}
+
 	.tutor-qa-new {
-		margin-top: 10px;
-		padding: 16px 15px;
-		.sidebar-ask-new-qna-submit {
-			display: none;
-		}
-		// .tutor-quesanswer-askquestion {
-		// 	a.sidebar-ask-new-qna-btn {
-		// 		// display: none;
-		// 	}
-		// 	textarea {
-		// 		display: none;
-		// 		margin-bottom: 10px !important;
-		// 	}
-		// 	button {
-
-		// 	}
-		// 	a.sidebar-ask-new-qna-btn {
-		// 		width: 100%;
-		// 		margin-top: 0px !important;
-		// 	}
-		// 	a.sidebar-ask-new-qna-btn {
-		// 		display: block;
-		// 	}
-		// 	.sidebar-ask-new-qna-submit {
-		// 		width: 100%;
-		// 		display: grid;
-		// 		grid-template-columns: 1fr 1fr;
-		// 		> button {
-		// 			display: none;
-		// 		}
-		// 	}
-
-		// }
 		.tutor-quesanswer-askquestion {
-			textarea {
-				display: none;
-			}
-			.sidebar-ask-new-qna-submit {
-				grid-template-columns: 1fr 1fr;
-				gap: 15px;
-			}
-			&.tutor-quesanswer-askquestion-expand {
-				.sidebar-ask-new-qna-btn {
+			&:not(.tutor-quesanswer-askquestion-expand) {
+				.sidebar-ask-new-qna-submit,
+				textarea {
 					display: none;
 				}
-				textarea {
-					display: block;
-				}
-				.sidebar-ask-new-qna-submit {
-					display: grid;
+			}
+
+			&.tutor-quesanswer-askquestion-expand {
+				.sidebar-ask-new-qna-btn-wrap {
+					display: none;
 				}
 			}
 		}
 	}
+
 	.tutor-qa-reply {
 		textarea {
 			&:focus {

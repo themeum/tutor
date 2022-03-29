@@ -13,7 +13,7 @@ window.jQuery(document).ready($=>{
             type: 'POST',
             data: data,
             beforeSend: function(){
-                btn.addClass('tutor-updating-message').prop('disabled', true);
+                btn.addClass('is-loading').prop('disabled', true);
             },
             success: function(){
                 // Replicate pagination click
@@ -38,31 +38,8 @@ window.jQuery(document).ready($=>{
             },
             error: function(e){
                 alert('Something went wrong!');
-                btn.removeClass('tutor-updating-message').prop('disabled', false);
+                btn.removeClass('is-loading').prop('disabled', false);
             }
         });
     });
-
-    // Set navigation menu position
-    $(window).resize(function(){
-        let height = 500;
-        let top='50px';
-        
-        if($('.course-players-parent').length) {
-            height=$('.course-players-parent').height()-100;
-            top='50px';
-        }
-        
-        if($('.tutor-lesson-feature-image').length){
-            height=$('.tutor-lesson-feature-image').height();
-            top='0px';
-        }
-
-        $('.tutor-single-course-content-next, .tutor-single-course-content-prev')
-            .css('height', height+'px')
-            .show()
-            .find('a')
-            .css('top', top);
-
-    }).trigger('resize');
 });

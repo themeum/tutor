@@ -1,5 +1,3 @@
-//tutor download certificate image
-
 .tutor-download-certificate {
 	max-width: 750px;
 	display: grid;
@@ -42,14 +40,7 @@
 		}
 	}
 }
-.tutor-btn-circle.tutor-is-outline {
-	border-color: $stroke-gray;
-	color: $design-dark;
-}
-.tutor-btn-circle.tutor-is-outline:not(.tutor-no-hover):hover {
-	background-color: var(--tutor-primary-color);
-	border-color: var(--tutor-primary);
-}
+
 .tutor-dc-button-group {
 	position: absolute;
 	right: 20px;
@@ -71,11 +62,6 @@
 	.tutor-dc-button-group {
 		right: 0px;
 		top: 125px;
-	}
-}
-@include breakpoint-min(1200) {
-	button.tutor-btn-circle {
-		margin: 15px;
 	}
 }
 @include breakpoint-minmax(768, 1200) {
