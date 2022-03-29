@@ -43,7 +43,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							?>
 							<li>
 								<span class="tutor-round-icon">
-									<i class="tutor-icon-award-filled"></i>
+									<i class="tutor-icon-award-filled" area-hidden="true"></i>
 								</span>
 							</li>
 						</div>
@@ -274,7 +274,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 						</div>
 						<div class="list-item-progress tutor-mt-32">
 							<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-between">
-								<div class="progress-bar tutor-mr-16" style="--progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="progress-value"></span></div>
+								<div class="tutor-progress-bar tutor-mr-16" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="tutor-progress-value" area-hidden="true"></span></div>
 								<span class="progress-percentage tutor-fs-7 tutor-color-muted">
 									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black ">
 										<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>

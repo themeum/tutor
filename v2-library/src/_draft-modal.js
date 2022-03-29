@@ -210,7 +210,7 @@ export default () => {
                                                 </div>
                                             </div>
                                             <button type="submit" className="tutor-btn is-primary tutor-is-block">Sign In</button>
-                                            <div className="tutor-text-center tutor-mt-16">Don’t have an account? <a href="#">Registration Now</a></div>
+                                            <div className="tutor-text-center tutor-mt-16">Don't have an account? <a href="#">Registration Now</a></div>
                                         </form>
                                     </div>
                                 </div>

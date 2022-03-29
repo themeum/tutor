@@ -77,13 +77,13 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							<div class="individual-star-rating-wrap tutor-mt-sm-0 tutor-mb-12">
 								<?php tutor_utils()->star_rating_generator_v2( $review->rating, null, true ); ?> 
 							</div>
-							<div class="tutor-given-review-action tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center">
-								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-d-flex tutor-align-items-center">
-									<i class="tutor-icon-edit-filled tutor-icon-24 tutor-mr-4"></i>
+							<div class="tutor-given-review-action tutor-d-flex tutor-align-items-center">
+								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-btn tutor-btn-ghost" role="button">
+									<i class="tutor-icon-edit-filled tutor-mr-8"></i>
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 								</span>
-								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-d-flex tutor-align-items-center">
-									<i class="tutor-icon-delete-stroke-filled tutor-icon-24 tutor-mr-4"></i>
+								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-btn tutor-btn-ghost" role="button">
+									<i class="tutor-icon-delete-stroke-filled tutor-mr-8"></i>
 									<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 								</span>
 							</div>
