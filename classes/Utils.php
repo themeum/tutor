@@ -9516,4 +9516,19 @@ class Utils {
 			}
 		}
 	}
+
+	public function get_course_builder_screen()
+	{
+		// Add course editor identifier class
+		if ( is_admin() ) {
+			$screen = get_current_screen();
+			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == 'courses' ) {
+				return $screen->is_block_editor ? 'gutenberg' : 'classic';
+			}
+		} elseif ( $this->is_tutor_frontend_dashboard( 'create-course' ) ) {
+			return 'frontend';
+		}
+
+		return null;
+	}
 }

@@ -55,7 +55,7 @@ window.jQuery(document).ready($=>{
                         url.searchParams.set('current_page', page_num+1);
                         link_el.attr('href', url.toString());
                     } else {
-                        replace_me.replaceWith(html);
+                        replace_me[replace_me.hasClass('replace-inner-contents') ? 'html' : 'replaceWith'](html);
                     }
 
                     $('[data-tutor_pagination_ajax]').css('display', 'flex');

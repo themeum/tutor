@@ -248,7 +248,7 @@ class Assets {
 		wp_enqueue_style('tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION);
 
 		// Load course builder resources
-		if ($this->get_course_builder_screen()) {
+		if (tutor_utils()->get_course_builder_screen()) {
 			wp_enqueue_script('tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array('jquery', 'wp-i18n'), TUTOR_VERSION, true);
 			wp_enqueue_style('tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION);
 		}
@@ -377,25 +377,9 @@ class Assets {
 		return $locales;
 	}
 
-	private function get_course_builder_screen()
-	{
-
-		// Add course editor identifier class
-		if ( is_admin() ) {
-			$screen = get_current_screen();
-			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == 'courses' ) {
-				return $screen->is_block_editor ? 'gutenberg' : 'classic';
-			}
-		} elseif ( tutor_utils()->is_tutor_frontend_dashboard( 'create-course' ) ) {
-			return 'frontend';
-		}
-
-		return null;
-	}
-
 	public function add_identifier_class_to_body($classes)
 	{
-		$course_builder_screen = $this->get_course_builder_screen();
+		$course_builder_screen = tutor_utils()->get_course_builder_screen();
 		$to_add                = array();
 
 		// Add backend course editor identifier class to body
