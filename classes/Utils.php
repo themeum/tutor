@@ -9495,4 +9495,27 @@ class Utils {
 
 		return wp_kses($content, $allowed);
 	}
+
+	/**
+	 * Get predefined icon
+	 *
+	 * @return string
+	 *
+	 * @since v.2.0.2
+	 */
+
+	public function get_svg_icon( $name = '' ) {
+
+		$json = tutor()->path . 'assets/images/icons.json';
+
+		if ( file_exists( $json ) ) {
+			$icons = json_decode( file_get_contents( $json ), true );
+			$icon = isset( $icons[$name] ) ? $icons[$name] : '';
+
+			if ( isset( $icon['viewBox'] ) && isset( $icon['path'] ) ) {
+				$html = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="' . esc_attr( $icon['viewBox'] ) . '"><path fill="currentColor" d="' . esc_attr( $icon['path'] ) . '" /></svg>';
+				return $html;
+			}
+		}
+	}
 }

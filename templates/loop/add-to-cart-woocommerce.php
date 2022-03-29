@@ -41,7 +41,7 @@ $defaults = array(
 	'class'      => implode( ' ', array_filter( array(
 		'button',
 		'product_type_' . $product->get_type(),
-		$product->is_purchasable() && $product->is_in_stock() ? 'tutor-btn tutor-btn-icon tutor-btn-disable-outline tutor-btn-ghost tutor-no-hover tutor-btn-md add_to_cart_button' : '',
+		$product->is_purchasable() && $product->is_in_stock() ? 'tutor-btn tutor-btn-icon tutor-btn-outline-primary tutor-btn-ghost tutor-no-hover tutor-btn-md add_to_cart_button' : '',
 		$ajax_add_to_cart_class,
 		$required_loggedin_class
 	) ) ),

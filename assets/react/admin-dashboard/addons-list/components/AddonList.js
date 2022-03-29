@@ -26,7 +26,7 @@ const AddonList = () => {
 			) : (
 				<div className="tutor-col-12">
 					<div className="tutor-addons-card tutor-p-32">
-						<div className="tutor-d-flex tutor-flex-column tutor-justify-content-center tutor-text-center">
+						<div className="tutor-d-flex tutor-flex-column tutor-justify-center tutor-text-center">
 							<div className="tutor-mb-32">
 								<img src={emptyStateImg} alt={__('Empty State Illustration', 'tutor')} />
 							</div>

@@ -238,7 +238,7 @@ window.jQuery(document).ready(($) => {
 			type: 'POST',
 			data,
 			beforeSend: () => {
-				btn.addClass('tutor-updating-message');
+				btn.addClass('is-loading');
 			},
 			success: (resp) => {
 				let { success } = resp;
@@ -250,7 +250,7 @@ window.jQuery(document).ready(($) => {
 				}
 			},
 			complete: () => {
-				btn.removeClass('tutor-updating-message');
+				btn.removeClass('is-loading');
 			},
 		});
 	});

@@ -130,5 +130,3 @@
 
 
 })();
-// if (typeof readyState_complete !== 'undefined' && readyState_complete) {
-// }

@@ -35,11 +35,6 @@
 				color: #41454f;
 			}
 
-			&:nth-of-type(2) {
-				// background: var(--tutor-primary) !important;
-				// background-color: var(--tutor-primary) !important;
-			}
-
 			&:nth-of-type(1) {
 				font-style: normal;
 				font-weight: normal;
@@ -68,11 +63,6 @@
 				color: #41454f;
 			}
 
-			// &:nth-of-type(2) {
-			// 	background: var(--tutor-primary) !important;
-			// 	background-color: var(--tutor-primary) !important;
-			// }
-
 			&:nth-of-type(3) {
 				font-style: normal;
 				font-weight: normal;
@@ -83,60 +73,12 @@
 	}
 }
 
-.tutor-frontend-dashboard-qna-header {
-	// display: grid;
-	// grid-template-columns: 1fr 1fr;
-	// @include breakpoint-max(991) {
-	// 	grid-template-columns: 1fr;
-	// }
-
-	// .tutor-qna-toggle {
-	// 	display: flex;
-	// 	align-items: center;
-	// 	justify-content: flex-end;
-	// 	@include breakpoint-max(991) {
-	// 		justify-content: flex-start;
-	// 		margin-top: 4px;
-	// 	}
-	// }
-
-	// .tutor-qna-filter {
-	// 	display: grid;
-	// 	grid-template-columns: 70px 227px;
-	// 	align-items: center;
-	// 	gap: 10px;
-	// 	.tutor-form-select.tutor-select-redirector {
-	// 		height: 40px;
-	// 	}
-	// }
-}
-
 table {
 	td[data-th='Question'] {
-		.tutor-input-feedback {
-		}
 		.tutor-qna-desc {
 			padding-right: 20px;
 			.tutor-qna-content:first-letter {
 				text-transform: uppercase;
-			}
-		}
-	}
-	td[data-th='Student'] {
-		.tutor-qna-badges-wrapper {
-			span {
-				> *:first-child {
-					width: 20px;
-					height: 20px;
-				}
-				i {
-					&:before {
-						width: 18px;
-						height: 18px;
-						left: 1px;
-						top: 3px;
-					}
-				}
 			}
 		}
 	}
@@ -148,12 +90,6 @@ table.frontend-dashboard-qna-table-student {
 				padding-left: 21px;
 			}
 		}
-		td[data-th='Question'] {
-		}
-		td[data-th='Reply'] {
-		}
-		td[data-th='Action'] {
-		}
 	}
 }
 table.frontend-dashboard-qna-table-instructor {
@@ -164,17 +100,10 @@ table.frontend-dashboard-qna-table-instructor {
 			}
 		}
 
-		td {
-			vertical-align: top;
-		}
-
 		td[data-th='Student'] {
-			vertical-align: top;
 			width: 30%;
 			i {
 				font-size: 24px;
-				margin-top: 4px;
-				display: inline-block;
 			}
 		}
 
@@ -187,27 +116,10 @@ table.frontend-dashboard-qna-table-instructor {
 				padding-left: 0px;
 				margin: 0px;
 			}
-			.tutor-qna-desc {
-				// padding-right: 20px;
-				// .tutor-qna-content:first-letter {
-				// 	text-transform: uppercase;
-				// }
-			}
 		}
 
 		td[data-th='Reply'] {
 			width: 8%;
-		}
-
-		td[data-th='Reply'],
-		td[data-th='Status'] {
-			div {
-				padding-top: 10px;
-			}
-		}
-
-		td[data-th='Action'] {
-			div {}
 		}
 
 		td[data-th='Action'] {
@@ -221,19 +133,22 @@ table.frontend-dashboard-qna-table-instructor {
 		display: flex;
 		align-items: center;
 	}
-	.tutor-qna-badges {
-		span.tutor-updating-message {
-			i {
-				visibility: hidden;
-			}
-			&:before {
-				position: absolute;
-				margin-left: 5px;
-			}
-		}
-	}
 }
 
 .tutor-input-feedback .tutor-input-feedback-icon {
 	margin-top: 2px;
+}
+
+.tutor-ui-table.qna-list-table {
+	.tooltip-wrap.tooltip-icon-custom {
+		width: 24px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		i {
+			display: block;
+		}
+	}
 }

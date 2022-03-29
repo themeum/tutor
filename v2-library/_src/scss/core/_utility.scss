@@ -272,3 +272,56 @@ $border: (
 .tutor-lh-1 {
 	line-height: 1 !important;
 }
+
+// ratio
+.tutor-ratio {
+	position: relative;
+    width: 100%;
+
+	&-16x9 {
+		content: " ";
+		display: block;
+		padding-top: 56.25%;
+	}
+
+	&-4x3 {
+		content: " ";
+		display: block;
+		padding-top: 75%;
+	}
+
+	> * {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+// svg icon
+.tutor {
+	&-svg {
+		svg {
+			height: 1em;
+			width: 1em;
+		}
+	}
+
+	&-round-icon {
+		display: inline-flex;
+		line-height: 1 !important;
+		background-color: var(--tutor-primary-lighter);
+		color: var(--tutor-primary-color);
+		border-radius: 100px;
+	}
+}
+
+// border
+.tutor {
+	&-vr {
+		width: 1px;
+		background-color: #dcdbdc;
+		height: 100%;
+	}
+}

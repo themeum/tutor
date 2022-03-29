@@ -4,7 +4,6 @@ readyState_complete(() => {
 	const tabHeaderItem = document.querySelectorAll('.tab-header-item');
 	tabHeaderItem.forEach((tabItem) => {
 		tabItem.onclick = (e) => {
-			console.log(e.target);
 			setTimeout(() => {
 				toggleCertificate();
 			}, 100);

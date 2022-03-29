@@ -127,7 +127,7 @@
 							<?php
 								if ( $show_previous_button && $previous_question ) {
 									?>
-										<button type="button" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-md tutor-quiz-answer-previous-btn tutor-mr-20">
+										<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-quiz-answer-previous-btn tutor-mr-20">
 											<?php esc_html_e( 'Back', 'tutor' ); ?>
 										</button>
 									<?php
@@ -137,7 +137,7 @@
 								<?php $next_question ? esc_html_e( 'Submit &amp; Next', 'tutor' ) : esc_html_e( 'Submit Quiz', 'tutor' ); ?>
 							</button>
 							<?php if ( ! isset( $question_settings['answer_required'] ) ) : ?>
-								<span class="tutor-ml-32 tutor-btn tutor-btn-disable-outline tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> " style="border: 0px; padding: 0px; margin-left: auto;">
+								<span class="tutor-ml-32 tutor-btn tutor-btn-outline-primary tutor-no-hover tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> " style="border: 0px; padding: 0px; margin-left: auto;">
 									<?php esc_html_e( 'Skip Question', 'tutor' ); ?>
 								</span>
 							<?php endif; ?>

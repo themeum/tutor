@@ -19,11 +19,11 @@
 ?>
 
 <div class="tutor-pagination-wrapper-replacable tutor-single-course-lesson-comments tutor-pb-32" data-lesson_id="<?php echo $lesson_id; ?>">
-	<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
+	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-36">
 		<?php _e( 'Join the conversation', 'tutor' ); ?>
 	</div>
-	<div class="tutor-conversation tutor-mt-12 tutor-pb-20 tutor-pb-sm-48">
-		<form class="tutor-comment-box tutor-mt-32" action="<?php echo get_home_url(); ?>/wp-comments-post.php" method="post">
+	<div class="tutor-conversation tutor-pb-20 tutor-pb-sm-48">
+		<form class="tutor-comment-box" action="<?php echo get_home_url(); ?>/wp-comments-post.php" method="post">
 			<input type="hidden" name="is_lesson_comment" value="true">
 			<div class="comment-avatar">
 				<img src="<?php echo get_avatar_url( get_current_user_id() ); ?>" alt="">

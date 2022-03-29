@@ -215,7 +215,7 @@ jQuery(document).ready(function($) {
 			type: 'POST',
 			data: { lesson_id: lesson_id, action: 'tutor_delete_lesson_by_id' },
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function(data) {
 				if (data.success) {
@@ -223,7 +223,7 @@ jQuery(document).ready(function($) {
 				}
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('is-loading');
 			},
 		});
 	});
@@ -251,7 +251,7 @@ jQuery(document).ready(function($) {
 				action: 'tutor_delete_quiz_by_id',
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function(resp) {
 				const { data = {}, success } = resp || {};
@@ -265,7 +265,7 @@ jQuery(document).ready(function($) {
 				tutor_toast('Error!', message, 'error');
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('is-loading');
 			},
 		});
 	});
@@ -325,7 +325,7 @@ jQuery(document).ready(function($) {
 				action: 'tutor_instructor_feedback',
 			},
 			beforeSend: function() {
-				$that.addClass('tutor-updating-message');
+				$that.addClass('is-loading');
 			},
 			success: function(data) {
 				if (data.success) {
@@ -334,7 +334,7 @@ jQuery(document).ready(function($) {
 				}
 			},
 			complete: function() {
-				$that.removeClass('tutor-updating-message');
+				$that.removeClass('is-loading');
 			},
 		});
 	});
@@ -364,7 +364,7 @@ jQuery(document).ready(function($) {
 		var type = $(this).attr('method') || 'GET';
 		var data = $(this).serializeObject();
 
-		$that.find('button').addClass('tutor-updating-message');
+		$that.find('button').addClass('is-loading');
 
 		$.ajax({
 			url: url,
@@ -374,7 +374,7 @@ jQuery(document).ready(function($) {
 				tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
 			},
 			complete: function() {
-				$that.find('button').removeClass('tutor-updating-message');
+				$that.find('button').removeClass('is-loading');
 			},
 		});
 	});

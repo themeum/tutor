@@ -76,151 +76,152 @@ $filters = array(
 
 ?>
 
-<?php
-	/**
-	 * Load Templates with data.
-	 */
-	$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-	$filters_template = tutor()->path . 'views/elements/filters.php';
-	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
-	tutor_load_template_from_custom_path( $filters_template, $filters );
-	$available_status = array(
-		'pending'  => array( __( 'Pending', 'tutor' ), 'select-warning' ),
-		'approved' => array( __( 'Approved', 'tutor' ), 'select-success' ),
-		'blocked'  => array( __( 'Blocked', 'tutor' ), 'select-danger' ),
-	);
+<div class="tutor-admin-wrap">
+	<?php
+		/**
+		 * Load Templates with data.
+		 */
+		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+		$filters_template = tutor()->path . 'views/elements/filters.php';
+		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
+		tutor_load_template_from_custom_path( $filters_template, $filters );
+		$available_status = array(
+			'pending'  => array( __( 'Pending', 'tutor' ), 'select-warning' ),
+			'approved' => array( __( 'Approved', 'tutor' ), 'select-success' ),
+			'blocked'  => array( __( 'Blocked', 'tutor' ), 'select-danger' ),
+		);
 	?>
-
-<div class="wrap">
-	<div class="tutor-ui-table-responsive tutor-mt-32">
-		<table class="tutor-ui-table tutor-ui-table-responsive table-instructors tutor-table-with-checkbox">
-			<thead>
-				<tr>
-					<th width="3%">
-						<div class="tutor-d-flex">
-							<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
-						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
+	<div class="tutor-admin-body">
+		<div class="tutor-ui-table-responsive tutor-mt-32">
+			<table class="tutor-ui-table tutor-ui-table-responsive table-instructors tutor-table-with-checkbox">
+				<thead>
+					<tr>
+						<th width="3%">
+							<div class="tutor-d-flex">
+								<input type="checkbox" id="tutor-bulk-checkbox-all" class="tutor-form-check-input" />
+							</div>
+						</th>
+						<th class="tutor-table-rows-sorting">
+							<div class="tutor-color-black-60">
+								<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
+								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+							</div>
+						</th>
+						<th class="tutor-table-rows-sorting">
+							<div class="tutor-color-black-60">
+								<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
+								<span class="tutor-icon-order-down-filled up-down-icon"></span>
+							</div>
+						</th>
+						<th class="tutor-table-rows-sorting">
+							<div class=" tutor-color-black-60">
+								<span class="tutor-fs-7"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
+								<span class="tutor-icon-order-down-filled up-down-icon"></span>
+							</div>
+						</th>
+						<th class="tutor-table-rows-sorting">
+							<div class=" tutor-color-black-60">
+								<span class="tutor-fs-7">
+									<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
+								</span>
+								<span class="tutor-icon-order-down-filled up-down-icon"></span>
+							</div>
+						</th>
+						<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-black-60">
-							<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
-							<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
-						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
-						<div class="tutor-color-black-60">
-							<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
+							<span class="tutor-fs-7"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
 							<span class="tutor-icon-order-down-filled up-down-icon"></span>
 						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
-						<div class=" tutor-color-black-60">
-							<span class="tutor-fs-7"><?php esc_html_e( 'Total Course', 'tutor' ); ?></span>
-							<span class="tutor-icon-order-down-filled up-down-icon"></span>
-						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
-						<div class=" tutor-color-black-60">
-							<span class="tutor-fs-7">
-								<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>
-							</span>
-							<span class="tutor-icon-order-down-filled up-down-icon"></span>
-						</div>
-					</th>
-					<th class="tutor-table-rows-sorting">
-					<div class="tutor-color-black-60">
-						<span class="tutor-fs-7"><?php esc_html_e( 'Status', 'tutor' ); ?></span>
-						<span class="tutor-icon-order-down-filled up-down-icon"></span>
-					</div>
-					</th>
-					<th class="tutor-shrink"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
-					<?php
-					foreach ( $instructors_list as $list ) :
-						$alert = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
-						?>
-						<tr>
-							<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
-								<div class="td-checkbox tutor-d-flex ">
-									<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
-								</div>
-							</td>
-							<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
-								<div class="td-avatar">
-								<?php $avatar_url = get_avatar_url( $list->ID ); ?>
-									<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
-									<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
-										<?php echo esc_html( $list->display_name ); ?>
+						</th>
+						<th class="tutor-shrink"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
+						<?php
+						foreach ( $instructors_list as $list ) :
+							$alert = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
+							?>
+							<tr>
+								<td data-th="<?php esc_html_e( 'Checkbox', 'tutor' ); ?>">
+									<div class="td-checkbox tutor-d-flex ">
+										<input id="tutor-admin-list-<?php esc_attr_e( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
+									</div>
+								</td>
+								<td data-th="<?php esc_html_e( 'Avatar', 'tutor' ); ?>" class="column-fullwidth">
+									<div class="td-avatar">
+									<?php $avatar_url = get_avatar_url( $list->ID ); ?>
+										<img src="<?php echo esc_url( $avatar_url ); ?>" alt="student avatar"/>
+										<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
+											<?php echo esc_html( $list->display_name ); ?>
+										</span>
+										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
+											<span class="tutor-icon-detail-link-filled tutor-mt-4"></span>
+										</a>
+									</div>
+								</td>
+								<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
+									<span class="tutor-color-black tutor-fs-7">
+								<?php echo esc_html( $list->user_email ); ?>
 									</span>
-									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
-										<span class="tutor-icon-detail-link-filled tutor-mt-4"></span>
+								</td>
+								</td>
+								<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
+									<span class="tutor-color-black tutor-fs-7">
+								<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
+									</span>
+								</td>
+								<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
+									<span class="tutor-color-black tutor-fs-7">
+									<?php echo esc_html( tutor_utils()->get_option( 'earning_instructor_commission' ) . '%' ); ?>
+									</span>
+								</td>
+								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+									<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
+										<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
+											<?php foreach ( $available_status as $key => $status ) : ?>
+												<option data-status_class="<?php echo $available_status[ $key ][1]; ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
+													<?php echo esc_html( $available_status[ $key ][0] ); ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
+										<i class="icon1 tutor-icon-eye-fill-filled"></i>
+										<i class="icon2 tutor-icon-angle-down-filled"></i>
+									</div>
+								</td>
+								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-sm">
+										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
-								</div>
-							</td>
-							<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-								<span class="tutor-color-black tutor-fs-7">
-							<?php echo esc_html( $list->user_email ); ?>
-								</span>
-							</td>
-							</td>
-							<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
-								<span class="tutor-color-black tutor-fs-7">
-							<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
-								</span>
-							</td>
-							<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
-								<span class="tutor-color-black tutor-fs-7">
-								<?php echo esc_html( tutor_utils()->get_option( 'earning_instructor_commission' ) . '%' ); ?>
-								</span>
-							</td>
-							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
-									<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
-										<?php foreach ( $available_status as $key => $status ) : ?>
-											<option data-status_class="<?php echo $available_status[ $key ][1]; ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
-												<?php echo esc_html( $available_status[ $key ][0] ); ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-									<i class="icon1 tutor-icon-eye-fill-filled"></i>
-									<i class="icon2 tutor-icon-angle-down-filled"></i>
-								</div>
-							</td>
-							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-								<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-wordpress tutor-btn-disable-outline tutor-btn-sm">
-									<?php esc_html_e( 'Edit', 'tutor' ); ?>
-								</a>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-					<?php else : ?>
-						<tr>
-							<td colspan="100%" class="column-empty-state">
-								<?php tutor_utils()->tutor_empty_state( __( 'No instructor found', 'tutor' ) ); ?>
-							</td>
-						</tr>
-				<?php endif; ?>
-			</tbody>
-		</table>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+						<?php else : ?>
+							<tr>
+								<td colspan="100%" class="column-empty-state">
+									<?php tutor_utils()->tutor_empty_state( __( 'No instructor found', 'tutor' ) ); ?>
+								</td>
+							</tr>
+					<?php endif; ?>
+				</tbody>
+			</table>
 		</div>
-	<div class="tutor-admin-page-pagination-wrapper tutor-mt-48">
-		<?php
-			/**
-			 * Prepare pagination data & load template
-			 */
-		if ( $total > $per_page ) {
-			$pagination_data     = array(
-				'total_items' => $total,
-				'per_page'    => $per_page,
-				'paged'       => $paged,
-			);
-			$pagination_template = tutor()->path . 'views/elements/pagination.php';
-			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-		}
-		?>
+		<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
+			<?php
+				/**
+				 * Prepare pagination data & load template
+				 */
+			if ( $total > $per_page ) {
+				$pagination_data     = array(
+					'total_items' => $total,
+					'per_page'    => $per_page,
+					'paged'       => $paged,
+				);
+				$pagination_template = tutor()->path . 'views/elements/pagination.php';
+				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+			}
+			?>
+		</div>
 	</div>
 </div>
 
@@ -325,14 +326,14 @@ $filters = array(
 				<div class="tutor-row " id="tutor-new-instructor-form-response"></div>
 			  </div>
 			<div class="tutor-modal-footer">
-				<div class="tutor-d-flex tutor-justify-content-between">
+				<div class="tutor-d-flex tutor-justify-between">
 					<div class="col">
-						<button type="submit" class="tutor-btn tutor-btn-wordpress tutor-btn-lg tutor-btn-loading" name="tutor_register_instructor_btn">
+						<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-loading" name="tutor_register_instructor_btn">
 							<?php esc_html_e( 'Add Instructor', 'tutor' ); ?>
 						</button>
 					</div>
 					<div class="col-auto">
-						<button data-tutor-modal-close class="tutor-btn tutor-is-default">
+						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
 					</div>
@@ -373,7 +374,7 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 						</div>
 					</div>
 					<div class="tutor-modal-ins-meta tutor-mt-44">
-						<div class="flex-center">
+						<div class="tutor-d-flex tutor-align-items-center">
 							<div class="tutor-avatar">
 								<?php echo get_avatar( $instructor_data->ID ); ?>
 							</div>
@@ -403,19 +404,19 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 					<div class="tutor-modal-buttons tutor-mt-32 tutor-mt-md-48">
 						<?php if ( 'approved' === $prompt_action || 'blocked' === $prompt_action ) : ?>
 							<?php if ( 'pending' === $instructor_status ) : ?>
-								<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
+								<a class="instructor-action tutor-btn tutor-btn-primary tutor-btn-block " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Approve the Instructor', 'tutor' ); ?>
 								</a>
-								<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>
+								<a class="instructor-action tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-btn-block tutor-mt-md-24 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Reject the Application', 'tutor' ); ?>
 								</a>
 								<?php elseif ( 'approved' === $instructor_status ) : ?>
-									<a class="instructor-action tutor-btn tutor-is-outline tutor-is-default tutor-btn-full tutor-mt-md-25 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Reject The Application', 'tutor' ); ?>
+									<a class="instructor-action tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-btn-block tutor-mt-md-24 tutor-mt-12" data-action="blocked" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Reject the Application', 'tutor' ); ?>
 									</a>
 								<?php elseif ( 'blocked' === $instructor_status ) : ?>
-									<a class="instructor-action tutor-btn tutor-btn-full " data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
-									<?php esc_html_e( 'Approve The Instructor', 'tutor' ); ?>
+									<a class="instructor-action tutor-btn tutor-btn-primary tutor-btn-block" data-action="approve" data-instructor-id="<?php echo esc_attr( $instructor_data->ID ); ?>">
+									<?php esc_html_e( 'Approve the Instructor', 'tutor' ); ?>
 								</a>
 							<?php endif; ?>
 						<?php else : ?>
@@ -436,14 +437,14 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-text-wrap">
 						<div class="tutor-alert tutor-danger">
-								<div class="tutor-alert-text">
-									<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-12"></span>
-									<span>
+							<div class="tutor-alert-text">
+								<span class="tutor-alert-icon tutor-icon-34 tutor-icon-cross-circle-outline-filled tutor-mr-12"></span>
+								<span>
 									<?php esc_html_e( 'Invalid instructor', 'tutor' ); ?>
-									</span>
-								</div>
+								</span>
 							</div>
 						</div>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>

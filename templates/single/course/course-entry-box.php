@@ -71,7 +71,7 @@
 						<?php esc_html_e( 'Course Progress', 'tutor' ); ?>
 					</h3>
 					<div class="list-item-progress">
-						<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-content-between">
+						<div class="tutor-fs-6 tutor-color-black-60 tutor-d-flex tutor-align-items-center tutor-justify-between">
 							<span class="progress-steps">
 								<?php echo esc_html( $course_progress['completed_count'] ); ?>/
 								<?php echo esc_html( $course_progress['total_count'] ); ?>
@@ -95,9 +95,9 @@
 
 			// Show Start/Continue/Retake Button
 			if ( $lesson_url ) {
-				$button_class = 'tutor-is-fullwidth tutor-btn ' .
-								( $retake_course ? 'tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full' : '' ) .
-								' tutor-is-fullwidth tutor-pr-0 tutor-pl-0 ' .
+				$button_class = 'tutor-btn ' .
+								( $retake_course ? 'tutor-btn-outline-primary' : 'tutor-btn-primary' ) .
+								' tutor-btn-block' .
 								( $retake_course ? ' tutor-course-retake-button' : '' );
 
 				// Button identifier class
@@ -133,7 +133,7 @@
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
 
-					<button type="submit" class="tutor-btn tutor-btn-tertiary tutor-is-outline tutor-btn-lg tutor-btn-full" name="complete_course_btn" value="complete_course">
+					<button type="submit" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block" name="complete_course_btn" value="complete_course">
 						<?php esc_html_e( 'Complete Course', 'tutor' ); ?>
 					</button>
 				</form>
@@ -198,7 +198,7 @@
 			} else {
 				ob_start();
 				?>
-					<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-content-between">
+					<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-between">
 						<div>
 							<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
 								<?php esc_html_e( 'Free', 'tutor' ); ?>
@@ -235,8 +235,8 @@
 				if ( ! $meta['value'] ) {
 					continue;}
 				?>
-				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-content-between">
-					<div class="flex-center">
+				<li class="tutor-d-flex tutor-align-items-start tutor-align-items-xl-center tutor-justify-between">
+					<div class="tutor-d-flex tutor-align-items-center">
 						<span class="tutor-icon-24 <?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black"></span>
 						<span class="tutor-fs-7 tutor-color-muted tutor-ml-8">
 							<?php echo esc_html( $meta['label'] ); ?>
