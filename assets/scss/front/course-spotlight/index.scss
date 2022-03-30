@@ -89,6 +89,7 @@
 			}
 			.tutor-topbar-cross-icon {
 				cursor: pointer;
+				z-index: 1;
 				&:hover {
 					background: var(--tutor-primary-hover-color);
 				}
