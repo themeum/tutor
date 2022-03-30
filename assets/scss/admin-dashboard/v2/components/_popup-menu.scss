@@ -29,7 +29,6 @@
 
 	&:hover,
 	&:focus {
-		// box-shadow: 0 0 0 2px rgba(33, 35, 39, .17);
 		box-shadow: 0 0 0 2px var(--tutor-primary-lighter);
 	}
 
@@ -54,22 +53,17 @@
 	z-index: 1;
 	top: calc(100% + 1.5px);
 	min-width: $width;
-	// to align right
 	right: -$arrow;
-	// to align center
-	// right: calc(50% - #{$width});
-	// margin-right: $width / 2;
+
 	&:before {
 		content: '';
 		position: absolute;
 		border: $arrow solid transparent;
 		border-bottom-color: $menuBg;
-		// to align right
 		top: -$arrow * 2;
 		right: $arrow + 4;
-		// to align center
-		// right: calc(50% - #{$arrow});
 	}
+	
 	li {
 		list-style: none;
 		&:not(:last-child) a {
