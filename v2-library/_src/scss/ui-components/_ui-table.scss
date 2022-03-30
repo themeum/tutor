@@ -338,7 +338,9 @@ table.tutor-ui-table {
 
 	.td-action-btns {
 		gap: 10px;
-		min-width: 150px;
+		.tutor-btn {
+			white-space: nowrap;
+		}
 		.tutor-form-select-with-icon {
 			margin-right: 10px;
 		}
