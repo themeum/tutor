@@ -517,11 +517,11 @@ jQuery(document).ready(function($) {
 				let currentA = item.closest('#toplevel_page_tutor  li.wp-not-current-submenu.menu-top.toplevel_page_tutor > a');
 				if (mainMenu) {
 					mainMenu.className =
-						'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
+					'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
 				}
 				if (currentA) {
 					currentA.className =
-						'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
+					'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
 				}
 			}
 		});
