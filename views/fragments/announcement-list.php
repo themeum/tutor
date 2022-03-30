@@ -91,7 +91,7 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 
 				<div class="tutor-modal-body tutor-align-items-start">
 					<div class="tutor-mb-32">
-						<span class="tutor-round-icon tutor-fs-1 tutor-p-12">
+						<span class="tutor-round-box tutor-round-box-lg">
 							<i class="tutor-icon-bullhorn" area-hidden="true"></i>
 						</span>
 					</div>

@@ -343,7 +343,7 @@ jQuery(document).ready(function($) {
 	 */
 	$(document).on('click', '.tutor-password-reveal', function(e) {
 		//toggle icon
-		$(this).toggleClass('tutor-icon-eye-filled tutor-icon-eye-fill-filled');
+		$(this).toggleClass('tutor-icon-eye-line tutor-icon-eye-bold');
 		//toggle attr
 		$(this)
 			.next()
