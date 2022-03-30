@@ -24,6 +24,11 @@
 @import './sidebar';
 
 .tutor-course-single-content-wraper {
+
+	a {
+		text-decoration: none;
+	}
+
 	display: flex;
 	position: relative;
 	width: 100%;

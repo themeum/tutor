@@ -88,7 +88,7 @@
 		}
 
 		.tutor-sidebar-tabs-content {
-			height: calc(100vh - 156px);
+			// height: calc(100vh - 156px);
 			position: relative;
 			> div {
 				display: none;
@@ -98,7 +98,6 @@
 			}
 			#sideabr-qna-tab-content {
 				overflow: auto;
-				height: calc(100% - 60px);
 			}
 			#tutor-lesson-sidebar-tab-content {
 				overflow: auto;
