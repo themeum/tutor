@@ -106,8 +106,6 @@ window.jQuery(document).ready($=>{
         let back_url    = $(this).data('back_url');
 
         const btnInnerHtml = button.html().trim();
-        const { width : btnWidth, height : btnHeight } = button.get(0).getBoundingClientRect();
-        const btnStyles =  {width: `${btnWidth}px`, height: `${btnHeight}px`};
 
         $.ajax({
             url: _tutorobject.ajaxurl,
@@ -121,9 +119,7 @@ window.jQuery(document).ready($=>{
                 action: 'tutor_qna_create_update'
             },
             beforeSend: () =>{
-                // button.addClass('is-loading');
-                button.css(btnStyles);
-                button.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
+                button.addClass('is-loading');
             },
             success: resp => {
                 if(!resp.success) {
@@ -147,8 +143,7 @@ window.jQuery(document).ready($=>{
                 }
             },
             complete: () =>{
-                button.html(btnInnerHtml)
-                // $('.tutor-qna-single-wrapper').find('.tutor-qa-reply').hide();
+                button.removeClass('is-loading');
             }
         })
     });

@@ -86,9 +86,9 @@
 
 	&-list {
 		margin-top: 16px;
-		li [class^='tutor-icon-'] {
-			font-size: 24px;
-		}
+		// li [class^='tutor-icon-'] {
+		// 	font-size: 24px;
+		// }
 	}
 
 	&-tags {
@@ -386,10 +386,10 @@
 		&::after {
 			content: '\e940';
 			font-family: 'tutor' !important;
-			font-size: 2rem;
+			font-size: 16px;
 			font-weight: normal;
 			position: absolute;
-			right: 1rem;
+			right: 16px;
 			transition: 150ms;
 		}
 		&.is-active {

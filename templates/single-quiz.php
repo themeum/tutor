@@ -40,7 +40,7 @@ ob_start();
                 </a>
             </div>
             <div class="tutor-topbar-item tutor-topbar-content-title-wrap tutor-d-flex tutor-align-items-center">
-                <span class="tutor-icon-quiz-filled tutor-icon-24 tutor-color-white tutor-mr-4"></span>
+                <span class="tutor-icon-quiz-filled tutor-color-white tutor-mr-4"></span>
                 <span class="tutor-fs-7 tutor-fw-normal tutor-color-design-white">
                     <?php 
                         esc_html_e( 'Quiz: ', 'tutor' );

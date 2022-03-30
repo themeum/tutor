@@ -726,11 +726,6 @@ input[type='number'].attempts:focus {
 	justify-self: left;
 }
 
-button.tutor-setup-previous {
-	display: inline-block;
-	padding: 0 50px;
-}
-
 .tutor-setup-title li {
 	letter-spacing: -0.08px;
 	text-align: right;
@@ -740,18 +735,6 @@ button.tutor-setup-previous {
 .tutor-setup-title li.active {
 	font-weight: 600;
 	color: var(--secondary-text);
-}
-
-.tutor-setup-content-heading.heading > div:nth-child(1) {
-	// font-size: 20px;
-	// line-height: 1;
-	// font-weight: 300;
-	// color: var(--secondary-text);
-}
-
-.tutor-setup-content-heading.heading > div {
-	// font-weight: 300;
-	// color: var(--primary-text);
 }
 
 .tutor-setting .content b {
@@ -921,41 +904,6 @@ button.previous:hover svg {
 
 button.next:hover svg {
 	transform: translateX(4px);
-}
-
-button[class^='tutor-setup-'] {
-	cursor: pointer;
-	padding: 10px 20px;
-	font-size: 14px;
-	font-weight: normal;
-	font-stretch: normal;
-	font-style: normal;
-	line-height: 1.43;
-	text-transform: capitalize;
-	text-align: center;
-	color: var(--tertiary-btn);
-	transition: 200ms;
-	outline: none;
-}
-
-button.tutor-setup-next.next {
-	color: var(--initial);
-	text-transform: uppercase;
-}
-
-button.tutor-setup-skip {
-	background: transparent;
-	border: none;
-	padding: 5px;
-	letter-spacing: 0.1px;
-	font-style: normal;
-	font-weight: 500;
-	font-size: 13px;
-	color: #717881;
-
-	&:hover {
-		color: var(--tutor-primary-hover-color);
-	}
 }
 
 .tutor-setting .grade-calculation {
@@ -1949,10 +1897,6 @@ input.checkbox {
 @media (max-width: 575px) {
 	.wizard-type-body {
 		grid-template-columns: auto;
-	}
-
-	.tutor-setup-content-heading.heading > div:nth-child(1) {
-		// font-size: 3.5vw;
 	}
 
 	.course-per-page span.label-text,

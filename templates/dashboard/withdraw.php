@@ -82,7 +82,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 		<span class="tutor-svg tutor-fs-4 tutor-mr-8">
 			<?php echo tutor_utils()->get_svg_icon('infoCircle'); ?>
 		</span>
-		<span class="tutor-fs-7">
+		<span class="tutor-fs-7 tutor-mt-4">
 			<?php
 			$my_profile_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
 			echo $withdraw_method_name ? sprintf( __( 'The preferred payment method is selected as %s. ', 'tutor' ), $withdraw_method_name ) : '';

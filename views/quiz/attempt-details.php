@@ -202,7 +202,7 @@ if ( is_array( $attempt_info ) ) {
                                     <div class="tutor-fs-6 tutor-fw-medium  tutor-color-black tutor-text-nowrap">
                                         <?php echo $user_data ? $user_data->display_name : ''; ?>
                                     </div>
-                                    <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="btn-text btn-detail-link tutor-color-design-dark">
+                                    <a href="<?php echo esc_url( tutor_utils()->profile_url($user_id, false) ) ?>" class="tutor-iconic-btn">
                                         <span class="tutor-icon-detail-link-filled"></span>
                                     </a>
                                 </div>
@@ -719,10 +719,10 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
                                                 ?>
                                                 <td data-th="<?php echo $column; ?>" class="tutor-text-center tutor-bg-gray-10 tutor-text-nowrap">
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="correct" data-context="<?php echo $context; ?>" title="<?php _e('Mark as correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-text-success">
-                                                        <i class="tutor-icon-mark-filled tutor-icon-24"></i>
+                                                        <i class="tutor-icon-mark-filled"></i>
                                                     </a>
                                                     <a href="javascript:;" data-back-url="<?php echo $back_url; ?>" data-attempt-id="<?php echo $attempt_id; ?>" data-attempt-answer-id="<?php echo $answer->attempt_answer_id; ?>" data-mark-as="incorrect" data-context="<?php echo $context; ?>" title="<?php _e('Mark as In correct', 'tutor'); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-text-danger">
-                                                        <i class="tutor-icon-line-cross-line tutor-icon-24"></i>
+                                                        <i class="tutor-icon-line-cross-line"></i>
                                                     </a>
                                                 </td>
                                                 <?php

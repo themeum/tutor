@@ -26,9 +26,6 @@
 			right: 10px;
 			top: 14px;
 		}
-		.tutorUploadAttachmentBtn {
-			margin-top: 0px;
-		}
 		.tutor-quiz-answer {
 			align-items: center;
 		}
@@ -43,16 +40,8 @@
 				margin-right: 8px;
 			}
 		}
-		.tutor-attachment-cards {
-			> div {
-				&:last-child {
-					margin-bottom: 25px;
-				}
-			}
-		}
 	}
 	.btn-csv-download {
-		// margin-right: 2px !important;
 		padding: 0px;
 		svg {
 			fill: #757c8e;
@@ -61,26 +50,8 @@
 			height: 16px;
 		}
 	}
-	.tutorUploadAttachmentBtn {
-		margin-top: 15px;
-	}
-	.tutor-course-content-top {
-		.tutor-icon-humnurger-filled {
-			color: rgba(117, 124, 142, 0.63) !important;
-			margin-top: 3px;
-		}
-		> a {
-			margin-top: 1px;
-		}
-	}
-
-	.tutor-btn {
-		font-size: 15px;
-		line-height: 24px;
-	}
 
 	.tutor-add-instructor-btn,
-	.tutorUploadAttachmentBtn,
 	.create_new_topic_btn {
 		padding: 7px 20px;
 	}
@@ -106,13 +77,6 @@
 	.tutor-modal-body {
 		align-items: unset !important;
 	}
-	// .tutor-attachments-metabox {
-	//     .tutor-attachment-cards {
-	//         .filesize {
-	//             margin-top: -5px;
-	//         }
-	//     }
-	// }
 	.tutor-course-available-instructors {
 		display: flex;
 		flex-wrap: wrap;
@@ -141,11 +105,6 @@
 					}
 				}
 			}
-		}
-	}
-	.tutor-lesson-modal-wrap {
-		.filesize {
-			margin: 0px !important;
 		}
 	}
 	#tutor_course_instructor_modal {
@@ -214,7 +173,6 @@
 
 	.tutor-zoom-meeting-modal-wrap {
 		#tutor-zoom-meeting-modal-form {
-			// .tutor-react-datepicker .react-datepicker__input-container input,
 			.tutor_zoom_timepicker,
 			.tutor-dropdown-select-selected {
 				height: 48px !important;
@@ -247,30 +205,6 @@
 		.tutor-topics-top {
 			.tutor-topic-title {
 				background: #f4f6f9;
-
-				span.tutor-icon-humnurger-filled {
-					align-self: flex-start;
-				}
-				span.tutor-icon-humnurger-filled.course-move-handle {
-					margin-right: 0 !important;
-				}
-				.topic-inner-title {
-					line-height: 1.3;
-					padding-right: 20px;
-					margin-top: 2px;
-				}
-				span.expand-collapse-wrap {
-					i {
-						margin-top: -2px;
-						margin-right: 6px;
-					}
-					display: block;
-				}
-				.tutor-topic-btn-hover i {
-					&:hover {
-						color: $design-brand;
-					}
-				}
 			}
 		}
 	}
@@ -348,17 +282,12 @@
 						}
 
 						i {
-							font-size: 26px;
-							margin-right: 3px;
-						}
-						i.dashicons,
-						i.dashicons-before:before {
-							width: 26px;
-							height: 26px;
+							margin-right: 8px;
+							width: 24px;
+							height: 24px;
 							font-size: 20px;
 							display: flex;
 							align-items: center;
-							justify-content: center;
 						}
 					}
 
@@ -427,14 +356,8 @@
 	p {
 		margin-bottom: 0px;
 	}
-	// .filesize {
-	// 	margin-top: -8px;
-	// }
 }
 #wpcontent {
-	// .filesize {
-	// 	margin-top: -2px;
-	// }
 	.tutor-course-content-top {
 		> a {
 			margin-top: 4px;

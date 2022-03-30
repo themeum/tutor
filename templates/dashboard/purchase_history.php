@@ -183,8 +183,10 @@ $offset      = ( $per_page * $paged ) - $per_page;
                     <td data-th="Status">
                         <span class="tutor-badge-label label-<?php esc_attr_e( $order_status ); ?> tutor-m-4"><?php esc_html_e( $order_status_text ); ?></span>
                     </td>
-                    <td data-th="Download" class="tutor-export-purchase-history" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
-                        <a><span class="tutor-icon-receipt-line tutor-color-black-70" style="font-size:24px"></span></a>
+                    <td data-th="Download">
+                        <a href="javascript:;" class="tutor-export-purchase-history tutor-iconic-btn tutor-iconic-btn-secondary" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
+                            <span class="tutor-icon-receipt-line" area-hidden="true"></span>
+                        </a>
                     </td>
                 </tr>
                 <?php } ?>

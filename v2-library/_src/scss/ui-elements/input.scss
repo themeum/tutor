@@ -29,10 +29,8 @@ input.tutor-form-control {
 	padding: 0 20px;
 	font-size: 16px;
 	height: $height;
-
 	border-width: 1px !important;
 	border-style: solid;
-	// border-color: var(--tutor-border-color);
 	border-color: $black-20;
 
 	transition: 0.2s;
@@ -160,8 +158,6 @@ textarea.tutor-form-control {
 			line-height: $height;
 			position: absolute;
 			top: 0;
-			font-size: 23px;
-			font-size: 30px;
 			width: 41px;
 			text-align: center;
 		}
@@ -202,6 +198,7 @@ textarea.tutor-form-control {
 			color: var(--tutor-primary-color);
 		}
 	}
+
 	&.tutor-is-success {
 		input.tutor-form-control:not([readonly]) {
 			border-color: var(--tutor-success);
@@ -210,6 +207,7 @@ textarea.tutor-form-control {
 			color: var(--tutor-success);
 		}
 	}
+
 	&.tutor-is-warning {
 		input.tutor-form-control:not([readonly]) {
 			border-color: var(--tutor-warning);
@@ -218,6 +216,7 @@ textarea.tutor-form-control {
 			color: var(--tutor-warning);
 		}
 	}
+
 	&.tutor-is-danger {
 		input.tutor-form-control:not([readonly]) {
 			border-color: var(--tutor-danger);
@@ -235,7 +234,6 @@ textarea.tutor-form-control {
 		.tutor-input-group-icon-right {
 			height: $height-lg;
 			line-height: $height-lg;
-			font-size: 25px;
 		}
 		&.tutor-form-control-has-border::before {
 			top: ($height-lg - 23px) / 2;
@@ -250,7 +248,6 @@ textarea.tutor-form-control {
 		.tutor-input-group-icon-right {
 			height: $height-sm;
 			line-height: $height-sm;
-			font-size: 25px;
 		}
 		&.tutor-form-control-has-border::before {
 			height: 19px;
@@ -282,10 +279,8 @@ textarea.tutor-form-control {
 }
 
 // checkbox
-
 .tutor-form-check {
-	@extend .d-flex;
-	// @extend .align-items-center;
+	display: flex;
 	label {
 		cursor: pointer;
 		font-size: 16px;
@@ -449,4 +444,48 @@ $checkSizes: 16, 18, 20, 22, 24;
 		width: #{$size}px;
 		height: #{$size}px;
 	}
+}
+
+// toggle switch
+.btn-switch {
+	display: inline-block;
+	height: 24px;
+	position: relative;
+	width: 40px;
+}
+
+.btn-switch input {
+	display: none;
+}
+
+.btn-slider {
+	background-color: #ccc;
+	bottom: 0;
+	cursor: pointer;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: 0.4s;
+	border-radius: 48px;
+}
+
+.btn-slider:before {
+	background-color: #fff;
+	bottom: 3px;
+	content: '';
+	height: 18px;
+	width: 18px;
+	left: 4px;
+	position: absolute;
+	transition: 0.4s;
+	border-radius: 48px;
+}
+
+input:checked + .btn-slider {
+	background-color: var(--tutor-primary-color);
+}
+
+input:checked + .btn-slider:before {
+	transform: translateX(14px);
 }

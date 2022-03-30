@@ -309,8 +309,8 @@ table.tutor-ui-table {
 		.tutor-rating-stars {
 			align-items: flex-start;
 			> span {
-				margin-right: 0;
-				font-size: 22px;
+				margin-right: 4px;
+				font-size: 18px;
 			}
 		}
 		.tutor-rating-text {
@@ -357,18 +357,15 @@ table.tutor-ui-table {
 	}
 
 	.td-avatar {
-		@extend .d-inline-flex;
+		display: inline-flex;
+		align-items: center;
 		gap: 10px;
+
 		img {
 			width: 32px;
 			height: 32px;
 			border-radius: 50%;
 			overflow: hidden;
-		}
-
-		.btn-detail-link {
-			font-size: 24px;
-			margin-left: -5px;
 		}
 	}
 
@@ -391,23 +388,6 @@ table.tutor-ui-table {
 	.td-progress {
 		display: flex;
 		align-items: center;
-		.progress-bar {
-			position: relative;
-			width: 50px;
-			height: 4px;
-			background: #e3e5eb;
-			border-radius: 2px;
-			overflow: hidden;
-			.progress-value {
-				background: #3e64de;
-				position: absolute;
-				width: var(--progress-value);
-				height: 100%;
-			}
-		}
-		.progress-text {
-			margin-left: 10px;
-		}
 	}
 
 	.td-datetime {
@@ -742,8 +722,7 @@ table.tutor-ui-table {
 				font-size: 14px;
 			}
 			[class*='tutor-icon-'] {
-				font-size: 18px;
-				margin-left: 4px;
+				margin-left: 8px;
 			}
 		}
 		.tutor-table-rows-sorting > * {

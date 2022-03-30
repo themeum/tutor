@@ -44,7 +44,7 @@ $navbar_data = array(
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'   => $students->bulk_action,
+	'bulk_action'   => tutor_utils()->has_user_role('administrator') ? $students->bulk_action : false,
 	'bulk_actions'  => $students->prpare_bulk_actions(),
 	'ajax_action'   => 'tutor_student_bulk_action',
 	'filters'       => true,
@@ -78,7 +78,7 @@ $filters = array(
 					<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-black-60">
 							<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
-							<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+							<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
@@ -118,8 +118,8 @@ $filters = array(
 									<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-m-0">
 										<?php esc_html_e( $list->display_name ); ?>
 									</span>
-									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
-										<span class="tutor-icon-detail-link-filled tutor-mt-4"></span>
+									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="tutor-iconic-btn" target="_blank">
+										<span class="tutor-icon-detail-link-filled"></span>
 									</a>
 								</div>
 							</td>
@@ -141,7 +141,7 @@ $filters = array(
 							<td data-th="<?php esc_html_e( 'URL', 'tutor' ); ?>">
 								<div class="tutor-d-inline-flex tutor-align-items-center td-action-btns">
 									<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
-									class="tutor-btn tutor-btn-outline-primary" target="_blank">
+									class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" target="_blank">
 									<?php esc_html_e( 'Details', 'tutor' ); ?>
 									</a>
 								</div>

@@ -58,7 +58,7 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
                     <div class="list-item-button tutor-mt-16 booking-available">
                         ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . '
                     </div>';
-                // @codingStandardsIgnoreStart
+                // @codingStandardsIgnoreEnd
             }
 
             if ( $maximum_students == $total_enrolled && $maximum_students != 0) {
@@ -77,8 +77,8 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
                                     __('Fully Booked', 'tutor') .'
                                 </div>
                             </div></div>';
-                echo wp_kses( $price_html, array( 'div', 'a', 'span', 'i' ) );
-                echo wp_kses( $restrict, array( 'div', 'a', 'span', 'i' ) );
+                echo tutor_kses_html( $price_html );
+                echo tutor_kses_html( $restrict );
             }
 
             if ( $maximum_students == 0) {
