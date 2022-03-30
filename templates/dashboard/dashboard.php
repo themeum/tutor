@@ -41,7 +41,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							</div>
 
 							<div class="tutor-col-auto">
-								<span class="tutor-round-icon">
+								<span class="tutor-round-box">
 									<i class="tutor-icon-trophy" area-hidden="true"></i> <!-- @todo: fix this icon -->
 								</span>
 							</div>

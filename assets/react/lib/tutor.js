@@ -422,10 +422,10 @@ window.tutor_toast = function(title, description, type) {
 	var alert = type == 'success' ? 'success' : type == 'error' ? 'danger' : 'primary';
 	var icon =
 		type == 'success'
-			? 'tutor-icon-mark-filled'
+			? 'tutor-icon-mark'
 			: type == 'error'
-			? 'tutor-icon-line-cross-line'
-			: 'tutor-icon-info-circle-outline-filled';
+			? 'tutor-icon-times'
+			: 'tutor-icon-circle-info-o';
 	var contentS = jQuery(`
         <div class="tutor-large-notification tutor-large-notification-${alert}">
             <div class="tutor-large-notification-icon">
@@ -439,7 +439,7 @@ window.tutor_toast = function(title, description, type) {
                     ${description}
                 </div>
             </div>
-            <span class="tutor-toast-close tutor-noti-close tutor-icon-20 color-black-40 tutor-icon-cross-filled"></span>
+            <span class="tutor-toast-close tutor-noti-close tutor-icon-20 color-black-40 tutor-icon-times"></span>
         </div>
     `);
 

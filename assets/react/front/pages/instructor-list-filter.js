@@ -114,9 +114,9 @@ jQuery(document).ready(function($) {
 					if (star.classList.contains('active')) {
 						star.classList.remove('active');
 					}
-					if (star.classList.contains('tutor-icon-star-full-filled')) {
-						star.classList.remove('tutor-icon-star-full-filled');
-						star.classList.add('tutor-icon-star-line-filled');
+					if (star.classList.contains('tutor-icon-star-bold')) {
+						star.classList.remove('tutor-icon-star-bold');
+						star.classList.add('tutor-icon-star-line');
 					}
 				}
 				rating_range.innerHTML = ``;
@@ -252,17 +252,17 @@ jQuery(document).ready(function($) {
 				if (star.classList.contains('active')) {
 					star.classList.remove('active');
 				}
-				if (star.classList.contains('tutor-icon-star-full-filled')) {
-					star.classList.remove('tutor-icon-star-full-filled');
-					star.classList.add('tutor-icon-star-line-filled');
+				if (star.classList.contains('tutor-icon-star-bold')) {
+					star.classList.remove('tutor-icon-star-bold');
+					star.classList.add('tutor-icon-star-line');
 				}
 			}
 			//show stars active as click
 			const length = e.target.dataset.value;
 			for (let i = 0; i < length; i++) {
 				stars[i].classList.add('active');
-				stars[i].classList.remove('tutor-icon-star-line-filled');
-				stars[i].classList.add('tutor-icon-star-full-filled');
+				stars[i].classList.remove('tutor-icon-star-line');
+				stars[i].classList.add('tutor-icon-star-bold');
 			}
 			rating_range.innerHTML = `0.0 - ${length}.0`;
 		};

@@ -90,7 +90,6 @@
 	</div>
 
 <?php elseif ($blocks['block_type'] == 'column') : ?>
-
 	<div class="tutor-option-single-item tutor-mb-32 item-variation-grid <?php echo esc_attr($blocks['slug']); ?>">
 		<!-- @todo: know the use -->
 		<?php if ( isset($blocks['label']) ) : ?>

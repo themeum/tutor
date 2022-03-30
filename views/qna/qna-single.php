@@ -183,7 +183,7 @@
 								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
-								<div class="tutor-icon-angle-down tutor-color-brand-wordpress has-data-td-target"></div>
+								<div class="tutor-icon-angle-down tutor-fs-6 tutor-color-primary has-data-td-target"></div>
 							</div>
 
 						</td>
@@ -206,7 +206,7 @@
 								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>
-								<div class="tutor-icon-angle-down tutor-color-brand-wordpress has-data-td-target"></div>
+								<div class="tutor-icon-angle-down tutor-fs-6 tutor-color-primary has-data-td-target"></div>
 							</div>
 
 						</td>
