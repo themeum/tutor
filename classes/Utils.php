@@ -1234,36 +1234,34 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		if ( is_user_logged_in() ) {
-			global $wpdb;
+		global $wpdb;
 
-			do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
+		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
-			$getEnrolledInfo = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT ID,
-						post_author,
-						post_date,
-						post_date_gmt,
-						post_title
-				FROM 	{$wpdb->posts}
-				WHERE 	post_type = %s
-						AND post_parent = %d
-						AND post_author = %d
-						AND post_status = %s;
-				",
-					'tutor_enrolled',
-					$course_id,
-					$user_id,
-					'completed'
-				)
-			);
+		$getEnrolledInfo = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT ID,
+					post_author,
+					post_date,
+					post_date_gmt,
+					post_title
+			FROM 	{$wpdb->posts}
+			WHERE 	post_type = %s
+					AND post_parent = %d
+					AND post_author = %d
+					AND post_status = %s;
+			",
+				'tutor_enrolled',
+				$course_id,
+				$user_id,
+				'completed'
+			)
+		);
 
-			if ( $getEnrolledInfo ) {
-				return apply_filters( 'tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id );
-			}
+		if ( $getEnrolledInfo ) {
+			return apply_filters( 'tutor_is_enrolled', $getEnrolledInfo, $course_id, $user_id );
 		}
-
+		
 		return false;
 	}
 
@@ -5864,19 +5862,19 @@ class Utils {
 		$icons = array(
 			'facebook' => array(
 				'share_class' => 's_facebook',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-facebook-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-facebook-brand"></i>',
 				'text'        => __( 'Facebook', 'tutor' ),
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-twitter-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-twitter-brand"></i>',
 				'text'        => __( 'Twitter', 'tutor' ),
 				'color'       => '#4CA0EB',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-linkedin-brand tutor-icon-24"></i>',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-linkedin-brand"></i>',
 				'text'        => __( 'Linkedin', 'tutor' ),
 				'color'       => '#3967B6',
 			),
@@ -7652,15 +7650,13 @@ class Utils {
 
 		// List constantly required fields
 		$required_fields = array(
-			// 'first_name' 				  => sprintf(__('Set Your %sFirst Name%s', 'tutor'), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>'),
-			// 'last_name' 				  => sprintf(__('Set Your %sLast Name%s', 'tutor'), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>'),
-			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>' ),
-			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $settings_url . '">', '</a>' ),
+			'_tutor_profile_photo' => sprintf( __( 'Set Your %1$sProfile Photo%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $settings_url . '">', '</a>' ),
+			'_tutor_profile_bio'   => sprintf( __( 'Set Your %1$sBio%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $settings_url . '">', '</a>' ),
 		);
 
 		// Add payment method as a required on if current user is an approved instructor
 		if ( 'approved' == $instructor_status ) {
-			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-color-black" href="' . $withdraw_settings_url . '">', '</a>' );
+			$required_fields['_tutor_withdraw_method_data'] = sprintf( __( 'Set %1$sWithdraw Method%2$s', 'tutor' ), '<a class="tutor-btn tutor-btn-ghost tutor-has-underline" href="' . $withdraw_settings_url . '">', '</a>' );
 		}
 
 		// Now assign identifer whether set or not
@@ -8538,37 +8534,6 @@ class Utils {
 			}
 		}
 		return $array;
-	}
-
-	/*
-	 Custom Pagination for Tutor Shortcode
-	 *
-	 * @param int $total_num_pages
-	 *
-	 * @return void
-	 */
-	public function tutor_custom_pagination( $total_num_pages = 1 ) {
-
-		do_action( 'tutor_course/archive/pagination/before' );
-		?>
-
-		<div class="tutor-pagination-wrap">
-			<?php
-			$big = 999999999; // need an unlikely integer
-
-			echo paginate_links(
-				array(
-					'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-					'format'  => '?paged=%#%',
-					'current' => max( 1, get_query_var( 'paged' ) ),
-					'total'   => $total_num_pages,
-				)
-			);
-			?>
-		</div>
-
-		<?php
-		do_action( 'tutor_course/archive/pagination/after' );
 	}
 
 	/**
@@ -9548,5 +9513,20 @@ class Utils {
 				return $html;
 			}
 		}
+	}
+
+	public function get_course_builder_screen()
+	{
+		// Add course editor identifier class
+		if ( is_admin() ) {
+			$screen = get_current_screen();
+			if ( is_object( $screen ) && $screen->base == 'post' && $screen->id == 'courses' ) {
+				return $screen->is_block_editor ? 'gutenberg' : 'classic';
+			}
+		} elseif ( $this->is_tutor_frontend_dashboard( 'create-course' ) ) {
+			return 'frontend';
+		}
+
+		return null;
 	}
 }

@@ -148,12 +148,8 @@
 			color: $black-main;
 		}
 		&-icon {
-			@extend .tutor-icon-30;
+			font-size: 24px;
 			color: var(--tutor-primary-color);
-			width: 30px;
-			height: 30px;
-		}
-		&-text {
 		}
 
 		&.active {

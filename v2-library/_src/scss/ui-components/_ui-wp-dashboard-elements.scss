@@ -76,15 +76,14 @@
 			width: 228px;
 		}
 	}
-} // .tutor-wp-dashboard-filter-items
+}
 
-// Zoom Integration .tutor-zoom-integration-card
+
 .tutor-zoom-integration-card {
 	.tutor-zoom-no-meetings {
 		margin: 15px;
 	}
 
-	// .tutor-zoom-integration-card-body max-width: 1367px;
 	&-body {
 		border-top: 1px solid $stroke-light-30;
 		border-bottom: 1px solid $stroke-light-30;
@@ -105,32 +104,4 @@
 			}
 		}
 	}
-
-	.tutor-btn.update_zoom_meeting_modal_btn,
-	.tutor-btn.create-zoom-meeting-btn {
-		border-color: #2d8cff;
-		background: #2d8cff;
-		&:hover {
-			background: darken(#2d8cff, 5);
-			border-color: darken(#2d8cff, 5);
-		}
-	}
-
-	.tutor-btn.tutor-is-outline {
-		padding: 6px 12px;
-		border-color: #2d8cff;
-		color: #2d8cff;
-		&:hover {
-			border-color: #2d8cff;
-			background: #2d8cff;
-		}
-	}
-
-	.tutor-btn.tutor-is-circle {
-		color: $design-grey;
-		background: transparent;
-		&:hover {
-			background: $black-05;
-		}
-	}
-} //end of .tutor-zoom-integration-card
+}

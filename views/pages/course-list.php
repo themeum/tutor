@@ -271,10 +271,10 @@ $available_status = array(
 											?>
 											<div class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 												<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
-											</pDIV>
+											</div>
 											<a
 												href="<?php echo esc_url( tutor_utils()->profile_url( $post->post_author, true ) ); ?>"
-												class="btn-text btn-detail-link tutor-color-design-dark" target="_blank"
+												class="tutor-iconic-btn" target="_blank"
 											>
 												<span class="tutor-icon-detail-link-filled"></span>
 											</a>
@@ -319,7 +319,7 @@ $available_status = array(
 												<i class="icon1 tutor-icon-eye-fill-filled"></i>
 												<i class="icon2 tutor-icon-angle-down-filled"></i>
 											</div>
-											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-btn tutor-btn-outline-primary">
+											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</a>
 											<div class="tutor-popup-opener">
@@ -345,7 +345,7 @@ $available_status = array(
 													<a href="javascript:void(0)" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
 														<i class="tutor-icon-delete-fill-filled tutor-color-design-white"></i>
 														<span class="tutor-fs-6 tutor-color-white">
-														<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
+															<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
 														</span>
 													</a>
 												</li>

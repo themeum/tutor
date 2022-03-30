@@ -136,10 +136,10 @@ $args = $this->args;
 
 														if(!empty($option['hint'])) {
 															?>
-															<p class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
-																<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-fs-5 tutor-mr-4"  style="margin-top: -1px;"></i>
+															<div class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
+																<i class="tutor-icon-info-circle-outline-filled tutor-mt-4 tutor-mr-8"></i>
 																<?php echo $option['hint']; ?>
-															</p>
+															</div>
 															<?php
 														}
 													}
@@ -167,10 +167,10 @@ $args = $this->args;
 
 										if ( isset( $field['desc'] ) && 'Content Drip Type' !== $field['label'] ) {
 											?>
-												<p class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12" style="margin-top: 14px;">
-													<i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon tutor-fs-5 tutor-mr-4" style="margin-top: -1px;"></i>
+												<div class="tutor-fs-7 tutor-has-icon tutor-color-muted tutor-d-flex tutor-mt-12">
+													<i class="tutor-icon-info-circle-outline-filled tutor-mt-4 tutor-mr-8"></i>
 													<?php echo $field['desc']; ?>
-												</p>
+												</div>
 											<?php
 										}
 									?>

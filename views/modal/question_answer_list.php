@@ -65,14 +65,14 @@
                     <?php if ( $question_type !== 'true_false' ): ?>
                         <span class="tutor-quiz-answer-edit">
                             <a href="javascript:;">
-                                <i class="tutor-icon-pencil-line tutor-icon-22"></i> 
+                                <i class="tutor-icon-pencil-line"></i> 
                             </a>
                         </span>
                     <?php endif; ?>
 
                     <?php if($question_type !== 'fill_in_the_blank'): ?>
                         <span class="tutor-quiz-answer-sort-icon">
-                            <i class="tutor-d-flex tutor-icon-menu-line tutor-icon-24"></i>
+                            <i class="tutor-d-flex tutor-icon-menu-line"></i>
                         </span>
                     <?php endif; ?>
                 </div>
@@ -80,7 +80,7 @@
                 <?php if ( $question_type !== 'true_false' && $question_type !== 'fill_in_the_blank' ): ?>
                     <div class="tutor-quiz-answer-trash-wrap tutor-d-flex">
                         <a href="javascript:;" class="answer-trash-btn answer-trash-btn tutor-d-flex tutor-align-items-center" data-answer-id="<?php echo $answer->answer_id; ?>">
-                            <i class="tutor-icon-garbage-line tutor-icon-24"></i>
+                            <i class="tutor-icon-garbage-line"></i>
                         </a>
                     </div>
                 <?php endif; ?>

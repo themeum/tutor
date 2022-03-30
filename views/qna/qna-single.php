@@ -47,11 +47,11 @@
 							<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
 						</p>
 					</div>
-					<div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
+					<div class="tutor-modal-footer">
 						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
+						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-16" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
 							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>
@@ -62,7 +62,7 @@
 
 	<div class="tutor-qna-single-wrapper">
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
-			<div class="tutor-qa-sticky-bar">
+			<div class="tutor-qa-sticky-bar tutor-mb-24">
 				<div>
 					<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
@@ -141,7 +141,7 @@
 			<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 				<div class="tutor-d-flex tutor-align-items-center">
-					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
+					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
 						<?php esc_html_e( 'Reply', 'tutor' ); ?>
 					</button>
 				</div>

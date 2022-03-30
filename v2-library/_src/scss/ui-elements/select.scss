@@ -13,13 +13,10 @@ select.tutor-form-select {
 	@extend .d-block;
 	width: 100%;
 	max-width: 100%;
-	// min-width: -webkit-fill-available;
 	background-color: #fff;
 	background-repeat: no-repeat;
 	border: 1px solid $stroke-gray;
 	border-radius: $radius;
-	-webkit-appearance: none;
-	-moz-appearance: none;
 	appearance: none;
 	background-image: url(svgArrow($text-muted));
 	outline: none;
@@ -67,7 +64,7 @@ select.tutor-form-select {
 		box-shadow: unset;
 	}
 
-	// Foucs variation
+	// Focus variation
 	&.tutor-form-select-wp {
 		&:focus {
 			border-color: $brand-wordpress !important;
@@ -84,10 +81,8 @@ select.tutor-form-select {
 	display: flex;
 	align-items: center;
 	gap: 20px;
+
 	@include breakpoint-max(mobile) {
 		flex-wrap: wrap;
-	}
-
-	select.tutor-form-select {
 	}
 }

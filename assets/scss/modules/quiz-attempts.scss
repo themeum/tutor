@@ -42,19 +42,6 @@
 }
 
 .tutor-quiz-attempt-details-wrapper {
-	
-	.back {
-		position: relative;
-		a {
-			font-size: 16px;
-			color: #5b616f;
-			.ttr-previous-line {
-				font-size: 20px;
-				line-height: 0px;
-				color: #1a1b1e;
-			}
-		}
-	}
 	.my-quiz-attempts {
 		thead {
 			@include breakpoint-min(1200) {

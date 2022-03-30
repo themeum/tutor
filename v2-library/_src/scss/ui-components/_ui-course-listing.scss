@@ -38,7 +38,7 @@
 	border-radius: 7px;
 	overflow: hidden;
 
-	a:not(.btn):not(.tutor-btn):not(.tutor-icon-btn) {
+	a:not(.btn):not(.tutor-btn):not(.tutor-iconic-btn) {
 		text-decoration: none;
 		color: inherit;
 	}
@@ -51,9 +51,6 @@
 		gap: 10px;
 		@include breakpoint-min(desktop-lg) {
 			gap: 36px;
-		}
-		.meta-icon {
-			font-size: 28px;
 		}
 	}
 
@@ -78,22 +75,7 @@
 		.save-bookmark-btn {
 			position: absolute;
 			top: 12px;
-			right: 21px;
-			width: 38px;
-			height: 38px;
-			background: rgba(33, 35, 39, 0.4);
-			color: var(--tutor-design-white, #fff);
-			border: none;
-			border-radius: 50%;
-			font-size: 20px;
-			transition: 150ms linear;
-			&.bookmark-is-filled {
-				background: rgba(27, 27, 27, 0.4);
-			}
-			&:hover {
-				background: var(--tutor-primary-color, blue);
-				color: var(--tutor-design-white, #fff);
-			}
+			right: 12px;
 		}
 	}
 
@@ -195,9 +177,6 @@
 
 	// .tutor-course-listing-item-sm
 	&-sm {
-		.list-item-meta .meta-icon {
-			font-size: 20px;
-		}
 		.tutor-ratings {
 			.tutor-rating-text {
 				@extend .text-medium-small;
@@ -335,27 +314,6 @@
 				margin-bottom: 50px;
 			}
 		}
-	}
-}
-
-.list-item-progress {
-	.progress-bar {
-		position: relative;
-		width: 100%;
-		height: 4px;
-		background: #e3e5eb;
-		border-radius: 2px;
-		overflow: hidden;
-		.progress-value {
-			background: var(--tutor-primary-color);
-			position: absolute;
-			width: var(--progress-value);
-			height: 100%;
-			border-radius: 2px;
-		}
-	}
-	.progress-text {
-		margin-left: 10px;
 	}
 }
 

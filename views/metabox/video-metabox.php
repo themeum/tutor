@@ -53,14 +53,14 @@ function tutor_video_input_state($videoSource, $source){
         ?>
     </label>
     <div class="tutor-input-group tutor-mb-16 tutor-mt-12 tutor-d-block">
-        <div class="tutor-video-upload-wrap g-0">
-            <div class="tutor-dropdown-icon-pack" data-video_source="<?php echo empty($videoSource) ? '' : $videoSource; ?>">
-                <i class="tutor-icon-html5-stroke-brand tutor-icon-24" data-for="html5"></i>
-                <i class="tutor-icon-youtube-stroke-brand tutor-icon-24" data-for="youtube"></i>
-                <i class="tutor-icon-vimeo-stroke-brand tutor-icon-24" data-for="vimeo"></i>
-                <i class="tutor-icon-shortcode-filled tutor-icon-24" data-for="shortcode"></i>
-                <i class="tutor-icon-link-filled tutor-icon-24" data-for="external_url"></i>
-                <i class="tutor-icon-coding-filled tutor-icon-24" data-for="embedded"></i>
+        <div class="tutor-video-upload-wrap">
+            <div class="tutor-dropdown-icon-pack tutor-mt-4" data-video_source="<?php echo empty($videoSource) ? '' : $videoSource; ?>">
+                <i class="tutor-icon-html5-stroke-brand" data-for="html5"></i>
+                <i class="tutor-icon-youtube-stroke-brand" data-for="youtube"></i>
+                <i class="tutor-icon-vimeo-stroke-brand" data-for="vimeo"></i>
+                <i class="tutor-icon-shortcode-filled" data-for="shortcode"></i>
+                <i class="tutor-icon-link-filled" data-for="external_url"></i>
+                <i class="tutor-icon-coding-filled" data-for="embedded"></i>
             </div>
             <select name="video[source]" class="tutor-form-select tutor-select-icon-primary tutor_lesson_video_source no-tutor-dropdown no-tutor-dropdown">
                 <option value="-1"><?php _e('Select Video Source', 'tutor'); ?></option>

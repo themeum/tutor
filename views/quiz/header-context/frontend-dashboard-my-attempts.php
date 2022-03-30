@@ -1,10 +1,8 @@
 <?php if(!empty($back_url)): ?>
-    <div class="tutor-color-black">
-        <a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
-            <span class="tutor-icon-previous-line" area-hidden="true"></span>
-            <?php _e('Back', 'tutor'); ?>
-        </a>
-    </div>
+    <a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
+        <span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
+        <?php _e('Back', 'tutor'); ?>
+    </a>
 <?php endif; ?>
 
 <div class="tutor-fs-7 tutor-color-black-60 tutor-mt-24">
