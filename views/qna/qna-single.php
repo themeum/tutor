@@ -47,11 +47,11 @@
 							<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
 						</p>
 					</div>
-					<div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
+					<div class="tutor-modal-footer">
 						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
+						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-16" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
 							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>
@@ -62,8 +62,8 @@
 
 	<div class="tutor-qna-single-wrapper">
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
-			<div class="tutor-qa-sticky-bar tutor-d-lg-flex tutor-align-items-center tutor-justify-lg-between">
-				<div class="tutor-mb-lg-0 tutor-mb-8">
+			<div class="tutor-qa-sticky-bar tutor-fs-6 tutor-mb-24">
+				<div>
 					<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
 						<?php _e('Back', 'tutor'); ?>
@@ -71,16 +71,18 @@
 				</div>
 				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-lg-flex tutor-align-items-center tutor-justify-end">
 					<?php if ( ! $is_user_asker ) : ?>
-						<dutton class="tutor-btn tutor-btn-ghost" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-text-success">
-							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success active' : 'tutor-icon-tick-circle-outline-filled'; ?> tutor-mr-8" area-hidden="true"></i>
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-color-success" role="button">
+							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-color-success active' : 'tutor-icon-tick-circle-outline-filled'; ?> tutor-mr-8"></i>
 							<span><?php _e( 'Solved', 'tutor' ); ?></span>
-						</dutton>
-						<button class="tutor-btn tutor-btn-ghost" data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
-							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?> tutor-mr-8" area-hidden="true"></i>
+						</span>
+						
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
+							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?> tutor-mr-8"></i>
 							<span><?php _e( 'Important', 'tutor' ); ?></span>
-						</button>
-						<button class="tutor-btn tutor-btn-ghost" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
-							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?> tutor-mr-8" area-hidden="true"></i>
+						</span>
+
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
+							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?> tutor-mr-8"></i>
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 						</button>
 					<?php endif; ?>
@@ -141,7 +143,7 @@
 			<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 				<div class="tutor-d-flex tutor-align-items-center">
-					<button data-back_url="<?php echo $back_url; ?>" type="subsmit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
+					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
 						<?php esc_html_e( 'Reply', 'tutor' ); ?>
 					</button>
 				</div>
@@ -157,7 +159,7 @@
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
 					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mt-24"><?php echo $question->display_name; ?></div>
 					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 tutor-mt-4"><?php echo $question->user_email; ?></div>
-					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 21px;">
+					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 4px;">
 						<?php
 							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 
@@ -168,8 +170,8 @@
 									continue;
 								}
 						?>
-							<a href="<?php echo esc_url( $url ); ?>">
-								<i class="tutor-color-muted <?php echo esc_attr( $social_icon['icon_classes'] ); ?> tutor-icon-20 tutor-hover-wp"></i>
+							<a class="tutor-iconic-btn" href="<?php echo esc_url( $url ); ?>">
+								<i class="<?php echo esc_attr( $social_icon['icon_classes'] ); ?>"></i>
 							</a>
 						<?php endforeach;?>
 					</div>

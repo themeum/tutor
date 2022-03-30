@@ -315,6 +315,7 @@ jQuery(document).ready(function($) {
 	$(document).on('click', '.tutor-instructor-feedback', function(e) {
 		e.preventDefault();
 		var $that = $(this);
+		let btnContent = $that.html();
 		console.log(tinymce.activeEditor.getContent());
 		$.ajax({
 			url: window.ajaxurl || _tutorobject.ajaxurl,
@@ -325,7 +326,7 @@ jQuery(document).ready(function($) {
 				action: 'tutor_instructor_feedback',
 			},
 			beforeSend: function() {
-				$that.addClass('is-loading');
+				$that.text(__('Updating...', 'tutor')).attr('disabled', 'disabled').addClass('is-loading');
 			},
 			success: function(data) {
 				if (data.success) {
@@ -334,7 +335,7 @@ jQuery(document).ready(function($) {
 				}
 			},
 			complete: function() {
-				$that.removeClass('is-loading');
+				$that.html(btnContent).removeAttr('disabled').removeClass('is-loading');
 			},
 		});
 	});
@@ -364,17 +365,18 @@ jQuery(document).ready(function($) {
 		var type = $(this).attr('method') || 'GET';
 		var data = $(this).serializeObject();
 
-		$that.find('button').addClass('is-loading');
-
 		$.ajax({
 			url: url,
 			type: type,
 			data: data,
+			beforeSend: function() {
+				$that.find('button').attr('disabled', 'disabled').addClass('is-loading');
+			},
 			success: function() {
 				tutor_toast(__('Success', 'tutor'), $that.data('toast_success_message'), 'success');
 			},
 			complete: function() {
-				$that.find('button').removeClass('is-loading');
+				$that.find('button').removeAttr('disabled').removeClass('is-loading');
 			},
 		});
 	});
@@ -437,7 +439,7 @@ window.tutor_toast = function(title, description, type) {
                     ${description}
                 </div>
             </div>
-            <span class="tutor-toast-close tutor-noti-close tutor-icon-32 color-black-40 tutor-icon-cross-filled"></span>
+            <span class="tutor-toast-close tutor-noti-close tutor-icon-20 color-black-40 tutor-icon-cross-filled"></span>
         </div>
     `);
 

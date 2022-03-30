@@ -473,9 +473,6 @@
 			}
 		}
 	}
-	.tutor-attachment-size {
-		white-space: nowrap;
-	}
 }
 
 .tutor-quiz-item {
@@ -645,7 +642,6 @@
 			right: 20px;
 			top: 20px;
 			color: $black-50;
-			@extend .tutor-icon-30;
 			margin: 0px;
 		}
 	}

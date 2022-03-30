@@ -17,22 +17,21 @@ if ($product) {
     } else {
         $sale_price = $product->get_sale_price();
         $regular_price = $product->get_regular_price();
-        $symbol = get_woocommerce_currency_symbol();
         ?>
         <div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-items-end tutor-justify-between">
             <div>
                 <span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
-                    <?php echo $symbol . ($sale_price ? $sale_price : $regular_price); ?>
+                    <?php echo tutor_wc_price_currency_format($sale_price ? $sale_price : $regular_price); ?>
                 </span>
                 <?php if($regular_price && $sale_price && $sale_price!=$regular_price): ?>
                     <del class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-                        <?php echo $symbol . $regular_price; ?>
+                        <?php echo tutor_wc_price_currency_format($regular_price); ?>
                     </del>
                 <?php endif; ?>
             </div>
         </div>
         <form action="<?php echo esc_url( apply_filters( 'tutor_course_add_to_cart_form_action', get_permalink( get_the_ID() ) ) ); ?>" method="post" enctype="multipart/form-data">
-            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>"  class="tutor-btn tutor-btn-icon tutor-btn-primary tutor-btn-lg tutor-btn-full tutor-mt-24 tutor-add-to-cart-button">
+            <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>"  class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-add-to-cart-button">
                 <span class="btn-icon tutor-icon-cart-filled"></span>
                 <span><?php echo esc_html( $product->single_add_to_cart_text() ); ?></span>
             </button>

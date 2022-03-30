@@ -107,7 +107,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 							<div class="tutor-modal-root">
 								<div class="tutor-modal-inner tutor-modal-close-inner">
 									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="tutor-icon-line-cross-line tutor-icon-30 tutor-color-black-40"></span>
+										<span class="tutor-icon-line-cross-line tutor-fs-5 tutor-color-black-40"></span>
 									</button>
 									<div class="tutor-text-center tutor-mt-80 tutor-px-48 tutor-pb-md-80 tutor-pb-48">
 										<div class="tutor-modal-icon tutor-d-flex tutor-align-items-center">

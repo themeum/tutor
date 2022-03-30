@@ -6,8 +6,8 @@
  */
 
 $user = wp_get_current_user();
-$shortcode_arg = isset($GLOBALS['tutor_shortcode_arg']) ? $GLOBALS['tutor_shortcode_arg']['column_per_row'] : null;
-$courseCols = $shortcode_arg === null ? tutor_utils()->get_option('courses_col_per_row', 4) : $shortcode_arg;
+$course_archive_arg = isset($GLOBALS['tutor_course_archive_arg']) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
+$courseCols = $course_archive_arg === null ? tutor_utils()->get_option('courses_col_per_row', 4) : $course_archive_arg;
 !isset($active_tab) ? $active_tab = 'my-courses' : 0;
 $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = (isset($_GET['current_page']) && is_numeric($_GET['current_page']) && $_GET['current_page'] >= 1) ? $_GET['current_page'] : 1;
@@ -81,13 +81,13 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                             <?php
                             if (!empty($course_duration)) { ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-icon-20 tutor-mr-4"></span>
+                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-mr-8"></span>
                                     <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo $course_duration; ?></span>
                                 </div>
                             <?php } ?>
                             <?php if (!empty($course_students)) : ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-user-filled tutor-color-muted"></span>
+                                    <span class="meta-icon tutor-icon-user-filled tutor-color-muted tutor-mr-8"></span>
                                     <span><?php echo $course_students; ?></span>
                                 </div>
                             <?php endif; ?>
@@ -105,11 +105,11 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                                     <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
                                 </span>
                             </div>
-                            <div class="tutor-icon-btn-group">
-                                <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-icon-btn">
+                            <div class="tutor-iconic-btn-group">
+                                <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-iconic-btn">
                                     <i class="tutor-icon-edit-filled" area-hidden="true"></i>
                                 </a>
-                                <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-icon-btn">
+                                <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-iconic-btn">
                                     <i class="tutor-icon-delete-stroke-filled" area-hidden="true"></i>
                                 </a>
                             </div>
