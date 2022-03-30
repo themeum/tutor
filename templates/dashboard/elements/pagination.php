@@ -10,7 +10,7 @@
 $paged    = $data['paged'];
 $per_page = $data['per_page'];
 $big      = 999999999;
-$total_page = ceil( $data['total_items'] / $per_page );
+$total_page = isset( $data['total_page'] ) ? $data['total_page'] : ceil( $data['total_items'] / $per_page );
 
 if(isset($data['layout']) && $data['layout']['type']=='load_more') {
 	$current_url = tutor()->current_url;
@@ -28,7 +28,7 @@ if(isset($data['layout']) && $data['layout']['type']=='load_more') {
 	return;
 }
 
-if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
+if ( isset( $data['total_page'] ) || isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 	<nav class="tutor-ui-pagination tutor-mt-40" <?php echo isset($data['ajax']) ? ' data-tutor_pagination_ajax="'.esc_attr( json_encode($data['ajax']) ).'" ' : ''; ?>>
 		<div classs="tutor-pagination-hints">
 			<div class="tutor-fs-7 tutor-color-black-60">
@@ -38,7 +38,7 @@ if ( isset( $data['total_items'] ) && $data['total_items'] ) : ?>
 				</span>
 				<?php esc_html_e( 'of', 'tutor' ); ?> 
 				<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-					<?php echo esc_html( ceil( $data['total_items'] / $data['per_page'] ) ); ?>
+					<?php echo $total_page; ?>
 				</span>
 			</div>
 		</div>

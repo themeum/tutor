@@ -22,7 +22,7 @@ window.jQuery(document).ready($=>{
         let page_num = parseInt(url.searchParams.get("current_page"));
 
         let data = $(this).closest('[data-tutor_pagination_ajax]').data('tutor_pagination_ajax');
-        data.current_page = page_num;
+        data.current_page = (isNaN(page_num) || page_num<=1) ? 1 : page_num;
 
         $.ajax({
             url: window._tutorobject.ajaxurl,

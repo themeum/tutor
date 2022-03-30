@@ -789,16 +789,4 @@ table.tutor-ui-table {
 			}
 		}
 	}
-} // end of table.tutor-ui-table
-
-// wp-admin tutor-ui-table detail-link-btn
-.wp-admin {
-	table.tutor-ui-table {
-		.tutor-icon-detail-link-filled {
-			color: $black-40;
-			&:hover {
-				color: $brand-wordpress;
-			}
-		}
-	}
 }

@@ -62,7 +62,7 @@
 
 	<div class="tutor-qna-single-wrapper">
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
-			<div class="tutor-qa-sticky-bar tutor-mb-24">
+			<div class="tutor-qa-sticky-bar tutor-fs-6 tutor-mb-24">
 				<div>
 					<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
@@ -71,16 +71,18 @@
 				</div>
 				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-end">
 					<?php if ( ! $is_user_asker ) : ?>
-						<span data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-text-success">
-							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success active' : 'tutor-icon-tick-circle-outline-filled'; ?>"></i>
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-color-success" role="button">
+							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-color-success active' : 'tutor-icon-tick-circle-outline-filled'; ?> tutor-mr-8"></i>
 							<span><?php _e( 'Solved', 'tutor' ); ?></span>
 						</span>
-						<span data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
-							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?>"></i>
+						
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
+							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?> tutor-mr-8"></i>
 							<span><?php _e( 'Important', 'tutor' ); ?></span>
 						</span>
-						<span data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
-							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?>"></i>
+
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
+							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?> tutor-mr-8"></i>
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 						</span>
 					<?php endif; ?>
@@ -157,7 +159,7 @@
 					<img src="<?php echo get_avatar_url( $question->user_id ); ?>"/>
 					<div class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mt-24"><?php echo $question->display_name; ?></div>
 					<div class="tutor-fs-6 tutor-fw-medium tutor-color-black-60 tutor-mt-4"><?php echo $question->user_email; ?></div>
-					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 21px;">
+					<div class="tutor-user-social tutor-d-flex tutor-mt-24" style="column-gap: 4px;">
 						<?php
 							$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();
 
@@ -168,8 +170,8 @@
 									continue;
 								}
 						?>
-							<a href="<?php echo esc_url( $url ); ?>">
-								<i class="tutor-color-muted <?php echo esc_attr( $social_icon['icon_classes'] ); ?> tutor-icon-20 tutor-hover-wp"></i>
+							<a class="tutor-iconic-btn" href="<?php echo esc_url( $url ); ?>">
+								<i class="<?php echo esc_attr( $social_icon['icon_classes'] ); ?>"></i>
 							</a>
 						<?php endforeach;?>
 					</div>
