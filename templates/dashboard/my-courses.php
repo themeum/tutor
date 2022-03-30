@@ -81,13 +81,13 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                             <?php
                             if (!empty($course_duration)) { ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-clock-filled tutor-color-muted tutor-mr-8"></span>
+                                    <span class="meta-icon tutor-icon-clock-line tutor-color-muted tutor-mr-8"></span>
                                     <span class="tutor-fs-7 tutor-fw-medium tutor-color-black"><?php echo $course_duration; ?></span>
                                 </div>
                             <?php } ?>
                             <?php if (!empty($course_students)) : ?>
                                 <div class="tutor-d-flex tutor-align-items-center">
-                                    <span class="meta-icon tutor-icon-user-filled tutor-color-muted tutor-mr-8"></span>
+                                    <span class="meta-icon tutor-icon-user-line tutor-color-muted tutor-mr-8"></span>
                                     <span><?php echo $course_students; ?></span>
                                 </div>
                             <?php endif; ?>
@@ -107,10 +107,10 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                             </div>
                             <div class="tutor-iconic-btn-group">
                                 <a href="<?php echo tutor_utils()->course_edit_link($post->ID); ?>" class="tutor-iconic-btn">
-                                    <i class="tutor-icon-edit-filled" area-hidden="true"></i>
+                                    <i class="tutor-icon-edit" area-hidden="true"></i>
                                 </a>
                                 <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>" class="tutor-dashboard-element-delete-btn tutor-iconic-btn">
-                                    <i class="tutor-icon-delete-stroke-filled" area-hidden="true"></i>
+                                    <i class="tutor-icon-trashcan-line" area-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
@@ -120,7 +120,7 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                     <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
                         <span class="tutor-modal-overlay"></span>
                         <button data-tutor-modal-close class="tutor-modal-close">
-                            <span class="tutor-icon-line-cross-line"></span>
+                            <span class="tutor-icon-times"></span>
                         </button>
                         <div class="tutor-modal-root">
                             <div class="tutor-modal-inner">

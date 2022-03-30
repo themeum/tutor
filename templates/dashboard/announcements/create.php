@@ -7,7 +7,7 @@
             </div>
             <div class="tutor-announcements-modal-close-wrap">
                 <a href="#" class="tutor-announcement-close-btn">
-                    <i class="tutor-icon-line-cross-line"></i>
+                    <i class="tutor-icon-times"></i>
                 </a>
             </div>
         </div>
