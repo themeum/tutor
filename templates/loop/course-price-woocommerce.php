@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="list-item-button tutor-mt-16 booking-available">
-                    <div class="tutor-btn tutor-btn-icon tutor-btn-outline-primary tutor-btn-md tutor-btn-full tutor-color-black"> '.
+                    <div class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block"> '.
                         apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' 
                     </div>
                 </div>';

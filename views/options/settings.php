@@ -49,7 +49,7 @@
 							?>
 							<li class="tutor-option-nav-item">
 								<a data-page="<?php esc_attr_e( $_GET['page'] ); ?>" data-tab="<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $active_class ); ?>">
-									<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-icon-30 tutor-color-black-40"></span>
+									<span class="<?php echo esc_attr( $section['icon'] ); ?> tutor-fs-5 tutor-color-black-40"></span>
 									<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
 								</a>
 							</li>

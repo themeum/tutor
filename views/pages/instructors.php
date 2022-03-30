@@ -104,7 +104,7 @@ $filters = array(
 						<th class="tutor-table-rows-sorting">
 							<div class="tutor-color-black-60">
 								<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Name', 'tutor' ); ?></span>
-								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon tutor-icon-22"></span>
+								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
@@ -155,8 +155,8 @@ $filters = array(
 										<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
 											<?php echo esc_html( $list->display_name ); ?>
 										</span>
-										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="btn-text btn-detail-link tutor-color-design-dark" target="_blank">
-											<span class="tutor-icon-detail-link-filled tutor-mt-4"></span>
+										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
+											<span class="tutor-icon-detail-link-filled"></span>
 										</a>
 									</div>
 								</td>
@@ -190,7 +190,7 @@ $filters = array(
 									</div>
 								</td>
 								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-sm">
+									<a href="<?php echo esc_url( add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 										<?php esc_html_e( 'Edit', 'tutor' ); ?>
 									</a>
 								</td>

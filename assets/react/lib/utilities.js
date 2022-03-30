@@ -25,7 +25,10 @@ window.jQuery(document).ready(function($) {
 	// Ajax action
 	$(document).on('click', '.tutor-list-ajax-action', function (e) {
 		if (!e.detail || e.detail == 1) {
+			e.preventDefault();
+
 			let $that = $(this);
+			let buttonContent = $that.html();
 			let prompt = $(this).data('prompt');
 			let del = $(this).data('delete_element_id');
 			let redirect = $(this).data('redirect_to');
@@ -36,19 +39,12 @@ window.jQuery(document).ready(function($) {
 				return;
 			}
 
-			e.preventDefault();
-
-			const btnInnerHtml = $that.html().trim();
-			const { width: btnWidth, height: btnHeight } = $that.get(0).getBoundingClientRect();
-			const btnStyles = { width: `${btnWidth}px`, height: `${btnHeight}px` };
-
 			$.ajax({
 				url: _tutorobject.ajaxurl,
 				type: 'POST',
 				data: data,
 				beforeSend: function () {
-					$that.css(btnStyles);
-					$that.html(`<div class="tutor-loading-spinner" style="--size: 20px"></div>`);
+					$that.text(__('Deleting...', 'tutor')).attr('disabled', 'disabled').addClass('is-loading');
 				},
 				success: function (data) {
 					if (data.success) {
@@ -71,7 +67,7 @@ window.jQuery(document).ready(function($) {
 					tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
 				},
 				complete: function () {
-					$that.html(btnInnerHtml);
+					$that.html(buttonContent).removeAttr('disabled').removeClass('is-loading');
 				},
 			});
 		}

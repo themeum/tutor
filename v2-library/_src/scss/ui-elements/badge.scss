@@ -45,22 +45,26 @@
 }
 
 .tutor-floating-badge {
-	@extend .d-inline-block;
-	@extend .tutor-bg-danger;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background-color: $danger;
 	position: absolute;
-	left: 100%;
-	top: 0;
-	line-height: 15px;
-	min-width: 16px;
-	font-size: 11px;
-	border-radius: 100px;
-	transform: translateX(-50%) translateY(-50%);
-	padding: 1px 3px 0;
+	right: -4px;
+	top: -4px;
+	line-height: 1;
+	min-width: 20px;
+	min-height: 20px;
+	font-size: 12px;
+	border-radius: 40px;
+	padding: 0px 4px;
 	box-sizing: border-box;
 	color: #ffffff;
 	font-weight: 700;
-	text-align: center;
+	z-index: 1;
 }
+
+// @todo: remove btn-circle
 .tutor-btn-circle {
 	.tutor-floating-badge {
 		transform: translateX(-14px) translateY(-2px);

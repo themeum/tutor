@@ -600,10 +600,10 @@ class Tutor_Setup {
 				$html     .= '</button>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-setup-skip">' . __( 'Skip this step', 'tutor' ) . '</button>';
+				$html     .= '<button class="tutor-setup-skip tutor-btn tutor-btn-ghost">' . __( 'Skip this step', 'tutor' ) . '</button>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-btn tutor-btn-md tutor-setup-next">';
+				$html     .= '<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-setup-next">';
 					$html .= '<span>' . __( 'Next', 'tutor' ) . '</span>&nbsp;<span>&#8594;</span>';
 				$html     .= '</button>';
 			$html         .= '</div>';
@@ -619,10 +619,10 @@ class Tutor_Setup {
 				$html     .= '</button>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-setup-skip">' . __( 'Skip this step', 'tutor' ) . '</button>';
+				$html     .= '<button class="tutor-setup-skip tutor-btn tutor-btn-ghost">' . __( 'Skip this step', 'tutor' ) . '</button>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<button class="tutor-btn tutor-btn-md tutor-redirect tutor-setup-next">';
+				$html     .= '<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-redirect tutor-setup-next">';
 					$html .= '<span>' . __( 'Finish Setup', 'tutor' );
 				$html     .= '</button>';
 			$html         .= '</div>';

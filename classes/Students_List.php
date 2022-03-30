@@ -88,13 +88,14 @@ class Students_List {
 	 */
 	public static function delete_students( string $student_ids, $reassign_id = NULL ): bool {
 		$student_ids = explode( ',', $student_ids );
+		$current_user_id = get_current_user_id();
+
 		foreach ( $student_ids as $id ) {
-			if ( NULL === $reassign_id ) {
-				wp_delete_user( $id );
-			} else {
-				wp_delete_user( $id, $reassign_id );
+			if($id != $current_user_id){
+				NULL === $reassign_id ? wp_delete_user( $id ) : wp_delete_user( $id, $reassign_id );
 			}
 		}
+		
 		return true;
 	}
 

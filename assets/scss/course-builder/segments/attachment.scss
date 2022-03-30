@@ -1,18 +1,7 @@
 // Course attachment styles
 .tutor-course-builder-attachments{
-    display: flex;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-
     &:empty {
         display: none;
-    }
-
-    &, * {
-        &, &:focus, &:active, &:hover {
-            text-decoration: none;
-            outline: none;
-        }
     }
 }
 
