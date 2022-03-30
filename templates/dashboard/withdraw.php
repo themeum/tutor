@@ -98,7 +98,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 			<div>
 				<div class="tutor-withdrawal-pop-up-success">
 					<div>
-						<i class="tutor-icon-line-cross-line tutor-color-black-40" action-close-withdraw-form data-reload="yes"></i>
+						<i class="tutor-icon-times tutor-color-black-40" action-close-withdraw-form data-reload="yes"></i>
 						<br />
 						<br />
 						<div style="text-align:center">
@@ -112,7 +112,7 @@ if ( function_exists( 'get_woocommerce_currency_symbol' ) ) {
 					</div>
 				</div>
 				<div class="tutor-withdrawal-op-up-frorm ">
-					<i class="tutor-icon-line-cross-line tutor-color-black-40" action-close-withdraw-form></i> <!-- @todo: fix the close btn position -->
+					<i class="tutor-icon-times tutor-color-black-40" action-close-withdraw-form></i> <!-- @todo: fix the close btn position -->
 					<div>
 						<div class="tutor-svg tutor-round-icon tutor-fs-2 tutor-p-8">
 							<?php echo tutor_utils()->get_svg_icon('wallet'); ?>

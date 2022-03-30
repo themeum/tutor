@@ -33,7 +33,7 @@ const Search = () => {
 	return (
 		<div className="tutor-addons-list-select-filter tutor-d-flex tutor-justify-end tutor-align-items-center">
 			<div className="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
-				<span className="tutor-icon-search-filled tutor-input-group-icon"></span>
+				<span className="tutor-icon-search tutor-input-group-icon"></span>
 				<input
 					type="search"
 					className="tutor-form-control"

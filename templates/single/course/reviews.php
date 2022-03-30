@@ -75,7 +75,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 							<div class="rating-progress">
 								<div class="tutor-ratings tutor-is-sm">
 									<div class="tutor-rating-stars">
-										<span class="tutor-icon-star-line-filled"></span>
+										<span class="tutor-icon-star-line"></span>
 									</div>
 									<div class="tutor-rating-text  tutor-fs-6 tutor-fw-medium  tutor-color-black">
 										<?php echo $key; ?>
@@ -108,7 +108,7 @@ do_action( 'tutor_course/single/enrolled/before/reviews' );
 		<div class="tutor-col">
 			<?php if($is_enrolled): ?>
 				<button class="tutor-btn tutor-btn-primary write-course-review-link-btn">
-					<i class="tutor-icon-star-line-filled tutor-mr-8"></i>
+					<i class="tutor-icon-star-line tutor-mr-8"></i>
 					<?php
 						$is_new = !$my_rating || empty($my_rating->rating) || empty($my_rating->comment_content);
 						$is_new ? _e('Write a review', 'tutor') : _e('Edit review', 'tutor');

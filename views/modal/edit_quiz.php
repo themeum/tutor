@@ -26,7 +26,7 @@
                 ?>
                 <div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo $question->question_id; ?>">
                     <div class="tutor-quiz-item-label">
-                        <span class="tutor-quiz-item-draggable tutor-icon-drag-line question-sorting"></span>
+                        <span class="tutor-quiz-item-draggable tutor-icon-drag question-sorting"></span>
                         <h6 class="tutor-quiz-item-name">
                             <?php echo stripslashes($question->question_title); ?>
                         </h6>
@@ -45,13 +45,13 @@
                             <ul class="popup-menu" id="<?php echo $id_target; ?>">
                                 <li>
                                     <a href="#" class="tutor-quiz-open-question-form" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="tutor-icon-edit-filled tutor-mr-4 tutor-color-design-white"></span>
+                                        <span class="tutor-icon-edit tutor-mr-4 tutor-color-design-white"></span>
                                         <span class="tutor-fs-6 tutor-color-white"><?php _e('Edit', 'tutor'); ?></span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="tutor-quiz-question-trash" data-question-id="<?php echo $question->question_id; ?>">
-                                        <span class="tutor-icon-delete-fill-filled tutor-mr-4 tutor-color-design-white"></span>
+                                        <span class="tutor-icon-trashcan-bold tutor-mr-4 tutor-color-design-white"></span>
                                         <span class="tutor-fs-6 tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
                                     </a>
                                 </li>
@@ -67,7 +67,7 @@
 
     <div>
         <a href="javascript:;" class="tutor-quiz-open-question-form tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-            <i class="tutor-icon-plus-square-filled tutor-mr-12"></i>
+            <i class="tutor-icon-plus-square tutor-mr-12"></i>
             <?php _e('Add Question', 'tutor'); ?>
         </a>
     </div>
@@ -185,7 +185,7 @@
             <div class="tutor-col">
                 <div class="tutor-row tutor-align-items-center">
                     <div class="tutor-col-auto">
-                        <span><i class="tutor-icon-settings-filled"></i></span>
+                        <span><i class="tutor-icon-gear"></i></span>
                     </div>
                     <div class="tutor-col tutor-p-0 tutor-fs-6 tutor-fw-medium tutor-color-black-70">
                         <?php _e('Advance Settings', 'tutor'); ?>
@@ -193,7 +193,7 @@
                 </div>
             </div>
             <div class="tutor-col-auto">
-                <i class="tutor-icon-angle-down-filled"></i>
+                <i class="tutor-icon-angle-down"></i>
             </div>
         </div>
 

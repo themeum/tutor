@@ -38,7 +38,7 @@ tutor_alert(
 		<div class="tutor-option-field-row tutor-d-block d-block">
 			<div class="tutor-option-field-label">
 				<div class="drag-drop-zone">
-					<span class="tutor-icon-upload-icon-line tutor-icon-80 tutor-color-brand-wordpress"></span>
+					<span class="tutor-icon-upload tutor-fs-1 tutor-color-brand"></span>
 					<div class="title"><?php _e('Drag &amp; Drop your JSON File here','tutor'); ?> </div>
 					<div class="subtitle"><span><?php _e('File Format','tutor'); ?>:</span> .json <br> <?php _e('Or','tutor'); ?></div>
 					<label for="drag-drop-input" class="tutor-btn tutor-btn-primary tutor-btn-sm">
@@ -90,13 +90,13 @@ tutor_alert(
 							<ul id="popup-<?php echo esc_attr( $key ); ?>" class="popup-menu">
 							<li>
 								<a class="export_single_settings" data-id="<?php echo $key; ?>">
-									<span class="icon tutor-icon-msg-archive-filled tutor-color-design-white"></span>
+									<span class="icon tutor-icon-archive tutor-color-design-white"></span>
 									<span class="tutor-fs-6 tutor-color-white"><?php _e('Download','tutor'); ?></span>
 								</a>
 							</li>
 							<li>
 								<a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php _e('Yes, Delete Settings','tutor'); ?>" data-heading="<?php _e('Delete This Settings?','tutor'); ?>" data-message="<?php _e('WARNING! This will remove the settings history data from your system, please proceed with caution.','tutor'); ?>" data-id="<?php echo $key; ?>">
-									<span class="icon tutor-icon-delete-fill-filled tutor-color-design-white"></span>
+									<span class="icon tutor-icon-trashcan-bold tutor-color-design-white"></span>
 									<span class="tutor-fs-6 tutor-color-white"><?php _e('Delete','tutor'); ?></span>
 								</a>
 							</li>

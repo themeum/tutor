@@ -42,7 +42,7 @@
 
 						?>
 					<a class="tutor-btn tutor-btn-ghost tutor-mt-28" href="<?php echo esc_url( $url ); ?>">
-						<i class="tutor-icon-refresh-1-filled tutor-mr-8" area-hidden="true"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
+						<i class="tutor-icon-refresh tutor-mr-8" area-hidden="true"></i> <?php esc_html_e( 'Reset', 'tutor' ); ?>
 					</a>
 				</div>
 				<?php
@@ -122,7 +122,7 @@
 						<?php esc_html_e( 'Search', 'tutor' ); ?>
 						</label>
 						<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-sm">
-							<span class="tutor-icon-search-filled tutor-input-group-icon tutor-color-black-50"></span>
+							<span class="tutor-icon-search tutor-input-group-icon tutor-color-black-50"></span>
 							<input
 								type="search"
 								class="tutor-form-control"

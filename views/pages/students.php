@@ -78,25 +78,25 @@ $filters = array(
 					<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-black-60">
 							<span class="tutor-fs-7 tutor-ml-5"> <?php esc_html_e( 'Students', 'tutor' ); ?></span>
-							<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon"></span>
+							<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-black-60">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Email', 'tutor' ); ?></span>
-							<span class="tutor-icon-order-down-filled up-down-icon"></span>
+							<span class="tutor-icon-order-down up-down-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-black-60">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Registration Date', 'tutor' ); ?></span>
-							<span class="tutor-icon-order-down-filled up-down-icon"></span>
+							<span class="tutor-icon-order-down up-down-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-table-rows-sorting">
 						<div class="tutor-color-black-60">
 							<span class="tutor-fs-7"><?php esc_html_e( 'Course Taken', 'tutor' ); ?></span>
-							<span class="tutor-icon-order-down-filled up-down-icon"></span>
+							<span class="tutor-icon-order-down up-down-icon"></span>
 						</div>
 					</th>
 					<th class="tutor-shrink"></th>
@@ -119,7 +119,7 @@ $filters = array(
 										<?php esc_html_e( $list->display_name ); ?>
 									</span>
 									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, false ) ); ?>" class="tutor-iconic-btn" target="_blank">
-										<span class="tutor-icon-detail-link-filled"></span>
+										<span class="tutor-icon-external-link"></span>
 									</a>
 								</div>
 							</td>

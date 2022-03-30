@@ -193,7 +193,7 @@ jQuery(document).ready(function($) {
               <div class='tutor-col'>
                 <div class="tutor-alert tutor-warning">
                 <div class="tutor-alert-text">
-                    <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
+                    <span class="tutor-alert-icon tutor-icon-circle-info tutor-mr-10"></span>
                     <span>
                       ${v}
                     </span>
@@ -209,7 +209,7 @@ jQuery(document).ready(function($) {
               <div class='tutor-col'>
                 <div class="tutor-alert tutor-warning">
                 <div class="tutor-alert-text">
-                    <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-10"></span>
+                    <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-info tutor-mr-10"></span>
                     <span>
                       ${v}
                     </span>
