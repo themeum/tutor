@@ -62,27 +62,27 @@
 
 	<div class="tutor-qna-single-wrapper">
 		<?php if ( in_array( $context, array( 'backend-dashboard-qna-single', 'frontend-dashboard-qna-single' ) ) ) : ?>
-			<div class="tutor-qa-sticky-bar">
-				<div>
+			<div class="tutor-qa-sticky-bar tutor-d-lg-flex tutor-align-items-center tutor-justify-lg-between">
+				<div class="tutor-mb-lg-0 tutor-mb-8">
 					<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
 						<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
 						<?php _e('Back', 'tutor'); ?>
 					</a>
 				</div>
-				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-end">
+				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-lg-flex tutor-align-items-center tutor-justify-end">
 					<?php if ( ! $is_user_asker ) : ?>
-						<span data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-text-success">
-							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success active' : 'tutor-icon-tick-circle-outline-filled'; ?>"></i>
+						<dutton class="tutor-btn tutor-btn-ghost" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-text-success">
+							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success active' : 'tutor-icon-tick-circle-outline-filled'; ?> tutor-mr-8" area-hidden="true"></i>
 							<span><?php _e( 'Solved', 'tutor' ); ?></span>
-						</span>
-						<span data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
-							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?>"></i>
+						</dutton>
+						<button class="tutor-btn tutor-btn-ghost" data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
+							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?> tutor-mr-8" area-hidden="true"></i>
 							<span><?php _e( 'Important', 'tutor' ); ?></span>
-						</span>
-						<span data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
-							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?>"></i>
+						</button>
+						<button class="tutor-btn tutor-btn-ghost" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
+							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?> tutor-mr-8" area-hidden="true"></i>
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
-						</span>
+						</button>
 					<?php endif; ?>
 					<a href="javascript:;" class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo $modal_id; ?>">
 						<i class="tutor-icon-delete-fill-filled tutor-mr-8" area-hidden="true"></i>
@@ -92,7 +92,7 @@
 			</div>
 		<?php endif; ?>
 
-		<div class="tutor-qa-reply-wrapper">
+		<div class="tutor-qa-reply-wrapper tutor-mt-20">
 			<div class="tutor-qa-chatlist">
 				<?php
 					$current_user_id = get_current_user_id();
@@ -141,7 +141,7 @@
 			<div class="tutor-qa-reply tutor-mt-12 tutor-mb-24" data-context="<?php echo $context; ?>" style="<?php echo $is_single ? $reply_hidden : ''; ?>">
 				<textarea class="tutor-form-control" placeholder="<?php _e( 'Write here...', 'tutor' ); ?>"></textarea>
 				<div class="tutor-d-flex tutor-align-items-center">
-					<button data-back_url="<?php echo $back_url; ?>" type="submit" class="<?php echo is_admin() ? 'tutor-btn-primary' : ''; ?> tutor-btn tutor-btn-sm">
+					<button data-back_url="<?php echo $back_url; ?>" type="subsmit" class="tutor-btn tutor-btn-primary tutor-btn-sm">
 						<?php esc_html_e( 'Reply', 'tutor' ); ?>
 					</button>
 				</div>
