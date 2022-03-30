@@ -63,7 +63,7 @@
 		// Load the pagination now
 		global $wp_query;
 		$pagination_data = array(
-			'total_items' => isset($the_query) ? $the_query->max_num_pages : $wp_query->max_num_pages,
+			'total_page'  => isset($the_query) ? $the_query->max_num_pages : $wp_query->max_num_pages,
 			'per_page'    => $course_per_page,
 			'paged'       => $current_page,
 			'ajax'		  => array_merge($GLOBALS['tutor_course_archive_arg'], array(
