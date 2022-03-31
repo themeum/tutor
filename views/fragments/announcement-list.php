@@ -30,7 +30,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select tutor-form-control" name="tutor_announcement_course" required>
+						<select class="tutor-form-select tutor-form-control no-tutor-dropdown" name="tutor_announcement_course" required>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>
@@ -38,7 +38,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 									</option>
 								<?php endforeach; ?>
 							<?php else : ?>
-								<option><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
+								<option value=""><?php esc_html_e( 'No course found', 'tutor' ); ?></option>
 							<?php endif; ?>
 						</select>
 					</div>
