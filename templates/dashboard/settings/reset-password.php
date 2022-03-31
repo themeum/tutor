@@ -68,7 +68,7 @@
 							placeholder="Type Password"
 							name="confirm_new_password"
 						/>
-						<span class="validation-icon valid-btn tutor-icon-mark-filled" style="display:none"></span>
+						<span class="validation-icon valid-btn tutor-icon-mark" style="display:none"></span>
 					</div>
 				</div>
 			</div>

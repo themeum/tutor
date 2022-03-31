@@ -7,7 +7,7 @@
                     <?php echo $data['modal_title']; ?>
                 </h3>
                 <button data-tutor-modal-close class="tutor-modal-close">
-                    <span class="tutor-icon-line-cross-line"></span>
+                    <span class="tutor-icon-times"></span>
                 </button>
             </div>
             <div class="tutor-modal-body-alt">
@@ -16,7 +16,7 @@
                     <div class="tutor-input-group tutor-mb-16">
                         <input type="text" name="topic_title" class="tutor-form-control tutor-mb-12" value="<?php echo !empty($data['title']) ? $data['title'] : ''; ?>"/>
                         <p class="tutor-input-feedback tutor-has-icon">
-                            <i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                            <i class="tutor-icon-circle-info-o tutor-input-feedback-icon"></i>
                             <?php _e('Topic titles are displayed publicly wherever required. Each topic may contain one or more lessons, quiz and assignments.', 'tutor'); ?>
                         </p>
                     </div>
@@ -26,7 +26,7 @@
                     <div class="tutor-input-group tutor-mb-16">
                         <textarea name="topic_summery" class="tutor-form-control tutor-mb-12"><?php echo !empty($data['summary']) ? $data['summary'] : ''; ?></textarea>
                         <p class="tutor-input-feedback tutor-has-icon">
-                            <i class="tutor-icon-info-circle-outline-filled tutor-input-feedback-icon"></i>
+                            <i class="tutor-icon-circle-info-o tutor-input-feedback-icon"></i>
                             <?php _e('Add a summary of short text to prepare students for the activities for the topic. The text is shown on the course page beside the tooltip beside the topic name.', 'tutor'); ?>
                         </p>
                         <input type="hidden" name="topic_course_id" value="<?php echo $data['course_id']; ?>">

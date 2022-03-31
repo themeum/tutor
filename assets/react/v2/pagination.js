@@ -29,10 +29,10 @@ window.jQuery(document).ready($=>{
             type: 'POST',
             data: data,
             beforeSend: function () {
-                if (innerSpan.hasClass('tutor-icon-angle-right-filled')) {
-                    innerSpan.removeClass('tutor-icon-angle-right-filled').addClass('tutor-icon-spinner-filled');
-                } else if (innerSpan.hasClass('tutor-icon-angle-left-filled')) {
-                    innerSpan.removeClass('tutor-icon-angle-left-filled').addClass('tutor-icon-spinner-filled');
+                if (innerSpan.hasClass('tutor-icon-angle-right')) {
+                    innerSpan.removeClass('tutor-icon-angle-right').addClass('tutor-icon-spinner');
+                } else if (innerSpan.hasClass('tutor-icon-angle-left')) {
+                    innerSpan.removeClass('tutor-icon-angle-left').addClass('tutor-icon-spinner');
                 }
             },
             success: function(resp) {
@@ -69,10 +69,10 @@ window.jQuery(document).ready($=>{
                 tutor_toast(__('Error', 'tutor'), 'Something went wrong', 'error');
             },
             complete: function () {
-                if (innerSpan.hasClass('tutor-icon-angle-right-filled')) {
-                    innerSpan.removeClass('tutor-icon-spinner-filled').addClass('tutor-icon-angle-right-filled');
-                } else if (innerSpan.hasClass('tutor-icon-angle-left-filled')) {
-                    innerSpan.removeClass('tutor-icon-spinner-filled').addClass('tutor-icon-angle-left-filled');
+                if (innerSpan.hasClass('tutor-icon-angle-right')) {
+                    innerSpan.removeClass('tutor-icon-spinner').addClass('tutor-icon-angle-right');
+                } else if (innerSpan.hasClass('tutor-icon-angle-left')) {
+                    innerSpan.removeClass('tutor-icon-spinner').addClass('tutor-icon-angle-left');
                 }
             }
         })

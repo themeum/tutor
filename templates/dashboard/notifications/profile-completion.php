@@ -6,7 +6,7 @@ if ( $profile_completion->progress < 100 ) { ?>
 	<div class="tutor-col-12">
 		<div class="tutor-profile-completion-warning">
 			<div class="profile-completion-warning-icon">
-				<span class="tutor-icon-warning-f"></span>
+				<span class="tutor-icon-warning"></span>
 			</div>
 			<div class="profile-completion-warning-content">
 				<h4><?php _e( 'Complete Your Profile', 'tutor' ); ?></h4>

@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 	?>
 	<li class="tutor-nav-item tutor-nav-more tutor-d-none">
-		<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4">More</span> <span class="icon-seemore tutor-icon-line-cross-line"></span></a>
+		<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4">More</span> <span class="icon-seemore tutor-icon-times"></span></a>
 		<ul class="tutor-nav-more-list"></ul>
 	</li>
 </ul>
