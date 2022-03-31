@@ -79,30 +79,25 @@ function tutor_option_history_load(dataset) {
 					</div>
 					<div class="tutor-option-field-input">
 						<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." data-id="${dataKey}">Apply</button>
-
-          <div class="tutor-popup-opener tutor-ml-16">
-            <button
-            type="button"
-            class="popup-btn"
-            data-tutor-popup-target="popup-${dataKey}"
-            >
-            <span class="toggle-icon"></span>
-            </button>
-            <ul id="popup-${dataKey}" class="popup-menu">
-            <li>
-              <a class="export_single_settings" data-id="${dataKey}">
-                <span class="tutor-icon-archive tutor-color-white"></span>
-                <span class="tutor-fs-6 tutor-color-white">Download</span>
-              </a>
-            </li>
-            <li>
-              <a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
-                <span class="icon tutor-icon-trashcan-bold tutor-color-white"></span>
-                <span class="tutor-fs-6 tutor-color-white">Delete</span>
-              </a>
-            </li>
-            </ul>
-          </div>
+						<div class="tutor-dropdown-parent tutor-ml-16">
+							<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+								<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+							</button>
+							<ul class="tutor-dropdown tutor-dropdown-dark">
+								<li>
+									<a class="export_single_settings" data-id="${dataKey}">
+										<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
+										<span>Download</span>
+									</a>
+								</li>
+								<li>
+									<a class="delete_single_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
+										<span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
+										<span>Delete</span>
+									</a>
+								</li>
+							</ul>
+						</div>
           </div>
         </div>`;
 		});

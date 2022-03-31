@@ -285,21 +285,21 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										</button>
 									</div>
 
-									<div class="tutor-popup-opener">
-										<button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
-											<span class="toggle-icon"></span>
+									<div class="tutor-dropdown-parent">
+										<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+											<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 										</button>
-										<ul class="popup-menu" id="<?php echo $update_modal_id; ?>_action">
+										<ul class="tutor-dropdown tutor-dropdown-dark">
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
-													<i class="tutor-icon-edit tutor-color-design-white"></i>
-													<span class="tutor-fs-6 tutor-color-white"><?php _e( 'Edit', 'tutor' ); ?></span>
+													<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+													<span><?php _e( 'Edit', 'tutor' ); ?></span>
 												</a>
 											</li>
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
-													<i class="tutor-icon-trashcan-bold tutor-color-design-white"></i>
-													<span class="tutor-fs-6 tutor-color-white"><?php _e( 'Delete', 'tutor' ); ?></span>
+													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+													<span><?php _e( 'Delete', 'tutor' ); ?></span>
 												</a>
 											</li>
 										</ul>
