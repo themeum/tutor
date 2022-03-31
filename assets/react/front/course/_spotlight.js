@@ -215,7 +215,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 			this.querySelector('input').remove();
 		}
 		const input = copyElement.querySelector('input');
-		const inputValue = input.value;
 		const inputName = input.dataset.name;
 		const newInput = document.createElement('input');
 		newInput.type = 'text';
