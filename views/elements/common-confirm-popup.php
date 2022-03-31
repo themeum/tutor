@@ -25,7 +25,7 @@
 						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-ml-16">
+						<button class="tutor-btn tutor-btn-primary tutor-ml-16 tutor-btn-loading">
 							<?php esc_html_e( "Yes, I'am Sure", 'tutor' ); ?>
 						</button>
 					</div>
