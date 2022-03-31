@@ -40,10 +40,10 @@ if (tutor_utils()->get_option('enable_course_about', true, true)) {
                         <?php echo nl2br( wp_kses_post( $first_part ) ); ?>
                     </div>
                     <div class='showmore-text'>
-                        <?php echo nl2br( wp_kses_post( $string ) ); ?>
+                        <?php echo apply_filters( 'the_content', $string ); ?>
                     </div>
                 <?php else : ?>
-                    <?php echo nl2br( wp_kses_post( $string ) ); ?>
+                    <?php echo apply_filters( 'the_content', $string ); ?>
                 <?php endif; ?>
 			</div>
 		</div>

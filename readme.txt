@@ -237,6 +237,8 @@ Fix: Self user gets deleted if admin deletes self as student from student page i
 Fix: Zoom meeting field not showing in Gutenberg course editor
 Fix: Zoom meeting throwing error for manual deleted meetings
 Fix: Course archive filters not working properly when using shortcode
+Fix: Shortcode and line breaks not working in course details
+Fix: Instructor details in single course doesn't support text formatting
 
 = 2.0.1 - March 23, 2022
 
