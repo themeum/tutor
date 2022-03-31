@@ -58,7 +58,7 @@
 
         if ( $product && $maximum_students == $total_enrolled && $maximum_students != 0) {
             $price_html = '<div class="tutor-d-flex tutor-align-items-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-items-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">'.$product->get_price_html() . ' </span></div>';
-            $restrict = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-items-center"><div class="booking-progress tutor-d-flex"><span class="btn-icon tutor-color-design-warning tutor-icon-circle-outline-info-filled"></span></div><div class="tutor-fs-7 tutor-fw-medium tutor-color-black">'. __('Fully Booked', 'tutor') .'</div></div></div>';
+            $restrict = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-items-center"><div class="booking-progress tutor-d-flex"><span class="btn-icon tutor-color-design-warning tutor-icon-circle-info"></span></div><div class="tutor-fs-7 tutor-fw-medium tutor-color-black">'. __('Fully Booked', 'tutor') .'</div></div></div>';
             echo tutor_kses_html($price_html);
             echo tutor_kses_html($restrict);
         }

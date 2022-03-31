@@ -33,7 +33,7 @@
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
 				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="tutor-icon-line-cross-line"></span>
+					<span class="tutor-icon-times"></span>
 				</button>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-icon">
@@ -65,29 +65,29 @@
 			<div class="tutor-qa-sticky-bar tutor-fs-6 tutor-mb-24">
 				<div>
 					<a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
-						<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
+						<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
 						<?php _e('Back', 'tutor'); ?>
 					</a>
 				</div>
 				<div class="tutor-qna-badges tutor-qna-badges-wrapper tutor-d-flex tutor-align-items-center tutor-justify-end">
 					<?php if ( ! $is_user_asker ) : ?>
-						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-tick-circle-outline-filled" data-state-class-1="tutor-icon-mark-cricle tutor-color-success" role="button">
-							<i class="<?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-color-success active' : 'tutor-icon-tick-circle-outline-filled'; ?> tutor-mr-8"></i>
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="solved" data-state-class-selector="i" data-state-class-0="tutor-icon-circle-mark-line" data-state-class-1="tutor-icon-circle-mark tutor-color-success" role="button">
+							<i class="<?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success active' : 'tutor-icon-circle-mark-line'; ?> tutor-mr-8"></i>
 							<span><?php _e( 'Solved', 'tutor' ); ?></span>
 						</span>
 						
-						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-important-filled" data-state-class-1="tutor-icon-msg-important-fill-filled">
-							<i class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled active' : 'tutor-icon-msg-important-filled'; ?> tutor-mr-8"></i>
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="important" data-state-class-selector="i" data-state-class-0="tutor-icon-important-line" data-state-class-1="tutor-icon-important-bold">
+							<i class="<?php echo $is_important ? 'tutor-icon-important-bold active' : 'tutor-icon-important-line'; ?> tutor-mr-8"></i>
 							<span><?php _e( 'Important', 'tutor' ); ?></span>
 						</span>
 
-						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-msg-archive-filled" data-state-class-1="tutor-icon-msg-archive-filled">
-							<i class="<?php echo $is_archived ? 'tutor-icon-msg-archive-filled active' : 'tutor-icon-msg-archive-filled'; ?> tutor-mr-8"></i>
+						<span class="tutor-btn tutor-btn-ghost tutor-mr-16" data-action="archived" data-state-text-selector="span" data-state-text-0="<?php _e( 'Archive', 'tutor' ); ?>" data-state-text-1="<?php _e( 'Un-Archive', 'tutor' ); ?>" data-state-class-selector="i" data-state-class-0="tutor-icon-archive" data-state-class-1="tutor-icon-archive">
+							<i class="<?php echo $is_archived ? 'tutor-icon-archive active' : 'tutor-icon-archive'; ?> tutor-mr-8"></i>
 							<span><?php $is_archived ? _e( 'Un-Archive', 'tutor' ) : _e( 'Archive', 'tutor' ); ?></span>
 						</span>
 					<?php endif; ?>
 					<a href="javascript:;" class="tutor-btn tutor-btn-ghost" data-tutor-modal-target="<?php echo $modal_id; ?>">
-						<i class="tutor-icon-delete-fill-filled tutor-mr-8" area-hidden="true"></i>
+						<i class="tutor-icon-trashcan-bold tutor-mr-8" area-hidden="true"></i>
 						<?php _e( 'Delete', 'tutor' ); ?>
 					</a>
 				</div>
@@ -183,7 +183,7 @@
 								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
 									<?php esc_html_e( 'Asked Under', 'tutor' ); ?>
 								</span>
-								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
+								<div class="tutor-icon-angle-down tutor-fs-6 tutor-color-primary has-data-td-target"></div>
 							</div>
 
 						</td>
@@ -206,7 +206,7 @@
 								<span class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-pl-12">
 									<?php esc_html_e( 'Previous Question History', 'tutor' ); ?>
 								</span>
-								<div class="tutor-icon-angle-down-filled tutor-color-brand-wordpress has-data-td-target"></div>
+								<div class="tutor-icon-angle-down tutor-fs-6 tutor-color-primary has-data-td-target"></div>
 							</div>
 
 						</td>

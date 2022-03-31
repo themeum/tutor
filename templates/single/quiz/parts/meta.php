@@ -69,7 +69,7 @@
 <div class="quiz-flash-message">
 	<div id="tutor-quiz-time-expire-wrapper" class="tutor-mt-20 tutor-quiz-warning-box time-remaining-warning tutor-align-items-center tutor-justify-between" data-attempt-allowed="<?php echo esc_attr( $attempts_allowed ); ?>" data-attempt-remaining="<?php echo esc_attr( $attempt_remaining ); ?>">
 		<div class="flash-info tutor-d-flex tutor-align-items-center">
-			<span class="tutor-icon-warning-outline-circle-filled tutor-color-design-warning tutor-mr-8"></span>
+			<span class="tutor-icon-circle-warning-outline tutor-color-design-warning tutor-mr-8"></span>
 			<span class="tutor-fs-7 tutor-color-black-70 tutor-quiz-alert-text">
 			</span>
 		</div>

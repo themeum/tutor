@@ -35,7 +35,7 @@ if ( ! $assignment_submitted_id ) {
 
 	<div class="submitted-assignment-title tutor-mb-16">
 		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
-			<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
+			<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
@@ -105,7 +105,7 @@ if ( ! $assignment_submitted_id ) {
 
 											<div class="tutor-ml-auto">
 												<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-lg" target="_blank" rel="noopener noreferrer">
-													<span class="tutor-icon-download-line"></span>
+													<span class="tutor-icon-download"></span>
 												</a>
 											</div>
 										</div>

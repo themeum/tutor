@@ -3,7 +3,7 @@
 <div class="tutor-modal tutor-bulk-modal-disabled">
   	<span class="tutor-modal-overlay"></span>
   	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="tutor-icon-line-cross-line"></span>
+		<span class="tutor-icon-times"></span>
   	</button>
   	<div class="tutor-modal-root">
 		<div class="tutor-modal-inner">

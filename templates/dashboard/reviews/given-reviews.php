@@ -79,11 +79,11 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							</div>
 							<div class="tutor-given-review-action tutor-d-flex tutor-align-items-center">
 								<span data-tutor-modal-target="<?php echo esc_html( $update_id ); ?>" class="tutor-btn tutor-btn-ghost" role="button">
-									<i class="tutor-icon-edit-filled tutor-mr-8"></i>
+									<i class="tutor-icon-edit tutor-mr-8"></i>
 									<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 								</span>
 								<span data-tutor-modal-target="<?php echo esc_html( $delete_id ); ?>" class="tutor-btn tutor-btn-ghost" role="button">
-									<i class="tutor-icon-delete-stroke-filled tutor-mr-8"></i>
+									<i class="tutor-icon-trashcan-line tutor-mr-8"></i>
 									<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 								</span>
 							</div>
@@ -103,7 +103,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 										<?php esc_html_e( 'Update Review' ); ?>
 									</h3>
 									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="tutor-icon-line-cross-line"></span>
+										<span class="tutor-icon-times"></span>
 									</button>
 								</div>
 								
@@ -145,7 +145,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 							<div class="tutor-modal-root">
 								<div class="tutor-modal-inner">
 									<button data-tutor-modal-close="" class="tutor-modal-close">
-										<span class="tutor-icon-cross-filled"></span>
+										<span class="tutor-icon-times-o"></span>
 									</button>
 									<div class="tutor-modal-body tutor-text-center">
 										<div class="tutor-rating-modal-title tutor-fs-4 tutor-color-black-70 tutor-mb-16">
@@ -190,7 +190,7 @@ $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 						<div class="tutor-modal-root">
 							<div class="tutor-modal-inner">
 								<button data-tutor-modal-close class="tutor-modal-close">
-									<span class="tutor-icon-cross-filled"></span>
+									<span class="tutor-icon-times-o"></span>
 								</button>
 								<div class="tutor-modal-body tutor-text-center">
 									<div class="tutor-modal-icon">

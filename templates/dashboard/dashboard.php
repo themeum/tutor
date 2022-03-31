@@ -41,8 +41,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							</div>
 
 							<div class="tutor-col-auto">
-								<span class="tutor-round-icon">
-									<i class="tutor-icon-award-filled" area-hidden="true"></i> <!-- @todo: fix this icon -->
+								<span class="tutor-round-box">
+									<i class="tutor-icon-trophy" area-hidden="true"></i> <!-- @todo: fix this icon -->
 								</span>
 							</div>
 						</div>
@@ -76,9 +76,9 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							?>
 								<div class="tutor-d-flex tutor-align-items-center<?php echo $i < (count($profile_completion) - 1) ? ' tutor-mb-8' : ''; ?>">
 									<?php if ( $is_set ) : ?>
-										<span class="tutor-icon-tick-circle-outline-filled tutor-color-success tutor-mr-8"></span>
+										<span class="tutor-icon-circle-mark-line tutor-color-success tutor-mr-8"></span>
 									<?php else : ?>
-										<span class="tutor-icon-cross-circle-outline-filled tutor-color-warning tutor-mr-8"></span>
+										<span class="tutor-icon-circle-times-line tutor-color-warning tutor-mr-8"></span>
 									<?php endif; ?>
 
 									<span class="<?php echo $is_set ? 'tutor-color-black-70' : 'tutor-color-muted'; ?>">
@@ -99,7 +99,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			$alert_message = sprintf(
 				'<div class="tutor-alert tutor-primary tutor-mb-20">
 					<div class="tutor-alert-text">
-						<span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
+						<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
 						<span>
 							%s
 						</span>
@@ -144,8 +144,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	<div class="tutor-row tutor-gx-lg-4">
 		<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 			<div class="tutor-card tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
-				<span class="tutor-card-icon tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
-					<i class="tutor-icon-book-open-filled" area-hidden="true"></i>
+				<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
+					<i class="tutor-icon-book-open" area-hidden="true"></i>
 				</span>
 				<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( $enrolled_course_count ); ?></div>
 				<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Enrolled Courses', 'tutor' ); ?></div>
@@ -155,8 +155,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 		<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 			<div class="tutor-card tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
-				<span class="tutor-card-icon tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
-					<i class="tutor-icon-college-graduation-filled" area-hidden="true"></i>
+				<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
+					<i class="tutor-icon-mortarboard-o" area-hidden="true"></i>
 				</span>
 				<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( $active_course_count ); ?></div>
 				<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Active Courses', 'tutor' ); ?></div>
@@ -166,8 +166,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 		<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 			<div class="tutor-card tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
-				<span class="tutor-card-icon tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
-					<i class="tutor-icon-award-filled" area-hidden="true"></i>
+				<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
+					<i class="tutor-icon-trophy" area-hidden="true"></i>
 				</span>
 				<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( $completed_course_count ); ?></div>
 				<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Completed Courses', 'tutor' ); ?></div>
@@ -180,8 +180,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			?>
 			<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 				<div class="tutor-card tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
-					<span class="tutor-card-icon tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
-						<i class="tutor-icon-user-graduate-filled" area-hidden="true"></i>
+					<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
+						<i class="tutor-icon-user-graduate" area-hidden="true"></i>
 					</span>
 					<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( $total_students ); ?></div>
 					<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Total Students', 'tutor' ); ?></div>
@@ -191,8 +191,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 			<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 				<div class="tutor-card tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
-					<span class="tutor-card-icon tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
-						<i class="tutor-icon-box-open-filled" area-hidden="true"></i>
+					<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
+						<i class="tutor-icon-box-open" area-hidden="true"></i>
 					</span>
 					<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo esc_html( count( $my_courses ) ); ?></div>
 					<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Total Courses', 'tutor' ); ?></div>
@@ -202,8 +202,8 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 
 			<div class="tutor-col-lg-6 tutor-col-xl-4 tutor-mb-16 tutor-mb-lg-32">
 				<div class="tutor-card tutor-d-flex tutor-flex-lg-column tutor-align-items-center tutor-text-lg-center tutor-px-12 tutor-px-lg-24 tutor-py-8 tutor-py-lg-32">
-					<span class="tutor-card-icon tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
-						<i class="tutor-icon-coins-filled" area-hidden="true"></i>
+					<span class="tutor-round-box tutor-mr-12 tutor-mr-lg-0 tutor-mb-lg-12">
+						<i class="tutor-icon-coins" area-hidden="true"></i>
 					</span>
 					<div class="tutor-fs-3 tutor-fw-bold tutor-d-none tutor-d-lg-block"><?php echo tutor_utils()->tutor_price( $earning_sum->instructor_amount ); ?></div>
 					<div class="tutor-fs-7 tutor-color-black-60"><?php esc_html_e( 'Total Earnings', 'tutor' ); ?></div>
@@ -326,13 +326,13 @@ if ( count( $instructor_course ) ) {
 						<th class="tutor-table-rows-sorting">
 							<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Enrolled', 'tutor' ); ?></span>
-								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon"></span>
+								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 							</div>
 						</th>
 						<th class="tutor-table-rows-sorting">
 							<div class="tutor-d-inline-flex tutor-align-items-center tutor-color-black-60">
 								<span class="tutor-fs-7"><?php esc_html_e( 'Rating', 'tutor' ); ?></span>
-								<span class="tutor-icon-ordering-a-to-z-filled a-to-z-sort-icon"></span>
+								<span class="tutor-icon-ordering-a-z a-to-z-sort-icon"></span>
 							</div>
 						</th>
 					</tr>
