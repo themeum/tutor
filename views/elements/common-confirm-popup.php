@@ -11,7 +11,7 @@
 <div class="tutor-modal" id="tutor-common-confirmation-modal">
 	<span class="tutor-modal-overlay"></span>
 	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="tutor-icon-line-cross-line"></span>
+		<span class="tutor-icon-times"></span>
 	</button>
 	<div class="tutor-modal-root">
 		<div class="tutor-modal-inner">
@@ -25,7 +25,7 @@
 						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-ml-16">
+						<button class="tutor-btn tutor-btn-primary tutor-ml-16 tutor-btn-loading">
 							<?php esc_html_e( "Yes, I'am Sure", 'tutor' ); ?>
 						</button>
 					</div>

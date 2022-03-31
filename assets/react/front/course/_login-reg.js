@@ -36,7 +36,7 @@ window.jQuery(document).ready(($) => {
 				error_container.html(`
                     <div class="tutor-alert tutor-warning tutor-mt-28">
                         <div class="tutor-alert-text">
-                            <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-outline-info-filled tutor-mr-12"></span>
+                            <span class="tutor-alert-icon tutor-icon-34 tutor-icon-circle-info tutor-mr-12"></span>
                             <span>
                                 ${error_message}
                             </span>

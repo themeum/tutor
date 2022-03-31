@@ -13,7 +13,7 @@
 							echo '<span class="tutor-dragging-text-conent tutor-fs-6 tutor-color-black">' . stripslashes( $rand_answer->answer_title ) . '</span>';
 						}
 						?>
-						<span class="tutor-icon-humnurger-filled tutor-color-black-fill"></span>
+						<span class="tutor-icon-hamburger-menu tutor-color-black-fill"></span>
 						<input type="hidden" data-name="attempt[<?php echo $is_started_quiz->attempt_id; ?>][quiz_question][<?php echo $question->question_id; ?>][answers][]" value="<?php echo $rand_answer->answer_id; ?>" >
 					</div>
 				</div>

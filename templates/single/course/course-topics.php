@@ -64,10 +64,10 @@ do_action( 'tutor_course/single/before/topics' );
 											$is_preview = get_post_meta( $post->ID, '_is_preview', true );
 
 											// Determine topic content icon based on lesson, video, quiz etc.
-											$topic_content_icon                                     = $play_time ? 'tutor-icon-youtube-brand' : 'tutor-icon-document-alt-filled';
-											$post->post_type === 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-question-mark-circle-filled' : 0;
-											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-document-alt-filled' : 0;
-											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-zoom' : 0;
+											$topic_content_icon                                     = $play_time ? 'tutor-icon-brand-youtube-bold' : 'tutor-icon-document-text';
+											$post->post_type === 'tutor_quiz' ? $topic_content_icon = 'tutor-icon-circle-question-mark' : 0;
+											$post->post_type === 'tutor_assignments' ? $topic_content_icon  = 'tutor-icon-document-text' : 0;
+											$post->post_type === 'tutor_zoom_meeting' ? $topic_content_icon = 'tutor-icon-brand-zoom' : 0;
 											$is_locked = !($is_enrolled || $is_preview);
 										?>
 										<li>
@@ -110,7 +110,7 @@ do_action( 'tutor_course/single/before/topics' );
 												<span class="tutor-fs-7 tutor-color-muted">
 													<?php echo $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : ''; ?>
 												</span>
-												<span class="<?php echo $is_locked ? ' tutor-icon-lock-stroke-filled' : 'tutor-icon-eye-filled'; ?> tutor-color-black-20 tutor-ml-20" area-hidden="true"></span>
+												<span class="<?php echo $is_locked ? ' tutor-icon-lock-line' : 'tutor-icon-eye-line'; ?> tutor-color-black-20 tutor-ml-20" area-hidden="true"></span>
 											</div>
 										</li>
 									<?php endwhile; ?>

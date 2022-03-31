@@ -21,7 +21,7 @@ $comment_parent = !empty($assignments_submitted) ? $assignments_submitted[0]->co
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-submits">
 	<div class="tutor-mb-24">
 		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'assignments' ) ); ?>">
-			<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
+			<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
             <?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
