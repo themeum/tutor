@@ -134,7 +134,7 @@
 			<div class="tutor-option-field">
 				<div class="tutor-form-group tutor-reg-form-btn-wrap">
 					<button type="submit" name="tutor_register_instructor_btn" value="register" class="tutor-button tutor-button-primary">
-						<i class="tutor-icon-plus-square-filled"></i>
+						<i class="tutor-icon-plus-square"></i>
 						<?php esc_html_e( 'Add new instructor', 'tutor' ); ?></button>
 				</div>
 			</div>

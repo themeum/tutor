@@ -71,7 +71,7 @@ add_filter( 'edd_purchase_link_defaults', function( $defaults ) {
 
                 $restrict = '<div class="list-item-booking booking-full tutor-d-flex tutor-align-items-center">
                                 <div class="booking-progress tutor-d-flex">
-                                    <span class="btn-icon tutor-color-design-warning tutor-icon-circle-outline-info-filled"></span>
+                                    <span class="btn-icon tutor-color-design-warning tutor-icon-circle-info"></span>
                                 </div>
                                 <div class="tutor-fs-7 tutor-fw-medium tutor-color-black">'.
                                     __('Fully Booked', 'tutor') .'

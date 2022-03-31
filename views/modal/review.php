@@ -9,7 +9,7 @@
     <div class="tutor-modal-root">
         <div class="tutor-modal-inner">
             <button data-tutor-modal-close class="tutor-modal-close">
-                <span class="tutor-icon-line-cross-line"></span>
+                <span class="tutor-icon-times"></span>
             </button>
             <div class="tutor-modal-body tutor-text-center">
                 <input type="hidden" name="course_id" value="<?php echo $course_id; ?>"> 

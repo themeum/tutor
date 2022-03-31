@@ -91,13 +91,13 @@ function tutor_option_history_load(dataset) {
             <ul id="popup-${dataKey}" class="popup-menu">
             <li>
               <a class="export_single_settings" data-id="${dataKey}">
-                <span class="icon tutor-icon-msg-archive-filled tutor-color-design-white"></span>
+                <span class="tutor-icon-archive tutor-color-white"></span>
                 <span class="tutor-fs-6 tutor-color-white">Download</span>
               </a>
             </li>
             <li>
               <a class="delete_single_settings"  data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
-                <span class="icon tutor-icon-delete-fill-filled tutor-color-design-white"></span>
+                <span class="icon tutor-icon-trashcan-bold tutor-color-white"></span>
                 <span class="tutor-fs-6 tutor-color-white">Delete</span>
               </a>
             </li>

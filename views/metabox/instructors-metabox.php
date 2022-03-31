@@ -22,7 +22,7 @@
 					<span class="instructor-name"> <?php echo esc_attr( $instructor->display_name ) . ' ' . $authorTag; ?> </span>
 					<span class="instructor-control">
 						<a href="javascript:;" class="tutor-instructor-delete-btn tutor-action-icon tutor-btn tutor-is-circle tutor-is-outline tutor-btn-ghost">
-							<i class="tutor-icon-line-cross-line tutor-icon-18"></i>
+							<i class="tutor-icon-times "></i>
 						</a>
 					</span>
 				</div>
@@ -52,7 +52,7 @@
 				<h1><?php _e( 'Add instructors', 'tutor' ); ?></h1>
 			</div>
 			<div class="lesson-modal-close-wrap">
-				<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-line-cross-line"></i></a>
+				<a href="javascript:;" class="modal-close-btn"><i class="tutor-icon-times"></i></a>
 			</div>
 		</div>
 		<div class="modal-content-body">

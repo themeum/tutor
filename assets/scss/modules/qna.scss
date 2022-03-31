@@ -73,43 +73,30 @@ $sidebar_width: 360px;
 	}
 
 	// Badges class
-	.tutor-qna-badges {
-		& > span {
-			display: inline-flex;
-			align-items: center;
-			margin-left: 15px;
-			font-style: normal;
-			font-weight: normal;
-			font-size: 16px;
-			color: #5b616f;
-			cursor: pointer;
-			&:hover {
-				color: #393a3d;
-			}
-			> *:first-child {
-				width: 20px;
-				height: 20px;
-				margin-top: -4px;
-			}
-			.tutor-loading-spinner,
-			i {
-				margin-right: 6px;
-			}
-			i {
-				display: inline-block;
-				&[class^='tutor-icon-'],
-				&[class*=' tutor-icon-'] {
-					font-size: 24px;
-				}
-				&:before {
-					width: 18px;
-					height: 18px;
-					left: 1px;
-					top: 2px;
-				}
-			}
-		}
-	}
+	// .tutor-qna-badges {
+	// 	& > span {
+	// 		display: inline-flex;
+	// 		align-items: center;
+	// 		margin-left: 15px;
+	// 		font-style: normal;
+	// 		font-weight: normal;
+	// 		font-size: 16px;
+	// 		color: #5b616f;
+	// 		cursor: pointer;
+	// 		&:hover {
+	// 			color: #393a3d;
+	// 		}
+	// 		> *:first-child {
+	// 			width: 20px;
+	// 			height: 20px;
+	// 			margin-top: -4px;
+	// 		}
+	// 		.tutor-loading-spinner,
+	// 		i {
+	// 			margin-right: 6px;
+	// 		}
+	// 	}
+	// }
 
 	// Top Sticky bar for badges
 	.tutor-qa-sticky-bar {

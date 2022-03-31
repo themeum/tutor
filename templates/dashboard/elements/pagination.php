@@ -49,8 +49,8 @@ if ( isset( $data['total_page'] ) || isset( $data['total_items'] ) && $data['tot
 						'format'    => '?current_page=%#%',
 						'current'   => $paged,
 						'total'     => $total_page,
-						'prev_text' => '<span class="tutor-icon-angle-left-filled"></span>',
-						'next_text' => '<span class="tutor-icon-angle-right-filled"></span>',
+						'prev_text' => '<span class="tutor-icon-angle-left"></span>',
+						'next_text' => '<span class="tutor-icon-angle-right"></span>',
 					)
 				);
 			?>
