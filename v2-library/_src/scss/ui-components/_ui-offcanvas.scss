@@ -18,7 +18,6 @@
 		box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
 		padding: 20px 0;
 		transition: 300ms ease-in-out;
-		// transition-delay: 200ms;
 		opacity: 0;
 		visibility: hidden;
 	}
@@ -90,39 +89,6 @@
 		align-items: center;
 		justify-content: space-between;
 		margin: 10px 0;
-
-		button {
-			margin: 0;
-			padding: 0;
-		}
-
-		.action-buttons {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			gap: 20px;
-
-			.popup-btn {
-				transform: rotate(90deg);
-				font-size: 24px;
-			}
-
-			button {
-				font-size: 32px;
-				@extend .tutor-color-design-grey;
-
-				&:focus-visible {
-					box-shadow: 0 0 0 2px var(--tutor-primary);
-				}
-			}
-		}
-
-		.btn-offcanvas-close {
-			background: transparent;
-			border: none;
-			outline: none;
-			display: flex;
-		}
 	}
 
 	.tutor-offcanvas-main {
