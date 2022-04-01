@@ -20,7 +20,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 ?>
 
 <?php
-if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
+if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 	$args = array(
 		'headline'    => __('Permission Denied', 'tutor'),
 		'message'     => __('You don\'t have the right to edit this course', 'tutor'),
@@ -102,20 +102,20 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 							<?php echo $message; ?>
 						</div>
 					<?php } else { ?>
-						<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active tutor-modal-is-close-inside-header">
+						<!-- @todo: move to toast -->
+						<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active">
 							<span class="tutor-modal-overlay"></span>
-							<div class="tutor-modal-root">
-								<div class="tutor-modal-inner tutor-modal-close-inner">
-									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="tutor-icon-times tutor-fs-5 tutor-color-black-40"></span>
+							<div class="tutor-modal-window tutor-modal-window-md">
+								<div class="tutor-modal-content tutor-modal-content-white">
+									<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+										<span class="tutor-icon-times" area-hidden="true"></span>
 									</button>
-									<div class="tutor-text-center tutor-mt-80 tutor-px-48 tutor-pb-md-80 tutor-pb-48">
-										<div class="tutor-modal-icon tutor-d-flex tutor-align-items-center">
-											<img src="<?php echo tutor()->url; ?>/assets/images/icon-cup.svg" alt="" />
-										</div>
-										<div class="tutor-modal-text-wrap tutor-mt-24">
-											<div class="tutor-modal-title tutor-fs-4 tutor-color-black"><?php _e('Thank You!', 'tutor'); ?></div>
-											<div class="tutor-fs-6 tutor-black-60 tutor-mt-20"><?php echo $message; ?></div>
+
+									<div class="tutor-modal-body tutor-text-center">
+										<div class="tutor-py-48">
+											<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-cup.svg" />
+											<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php _e('Thank You!', 'tutor'); ?></div>
+											<div class="tutor-fs-6 tutor-color-muted"><?php echo $message; ?></div>
 										</div>
 									</div>
 								</div>

@@ -191,30 +191,27 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         </div>
 
                                         <!-- Delete confirmation modal -->
-                                        <div id="<?php echo $id_string_delete; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
-                                            <span class="tutor-modal-overlay"></span>
-                                            <div class="tutor-modal-root">
-                                                <div class="tutor-modal-inner">
-                                                    <button data-tutor-modal-close class="tutor-modal-close">
-                                                        <span class="tutor-icon-times"></span>
+                                        <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
+                                            <div class="tutor-modal-overlay"></div>
+                                            <div class="tutor-modal-window">
+                                                <div class="tutor-modal-content tutor-modal-content-white">
+                                                    <button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+                                                        <span class="tutor-icon-times" area-hidden="true"></span>
                                                     </button>
+
                                                     <div class="tutor-modal-body tutor-text-center">
-                                                        <div class="tutor-modal-icon">
-                                                            <img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+                                                        <div class="tutor-mt-48">
+                                                            <img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
                                                         </div>
-                                                        <div class="tutor-modal-text-wrap">
-                                                            <h3 class="tutor-modal-title">
-                                                                <?php esc_html_e('Delete This Question?', 'tutor'); ?>
-                                                            </h3>
-                                                            <p>
-                                                                <?php esc_html_e('All the replies also will be deleted.', 'tutor'); ?>
-                                                            </p>
-                                                        </div>
-                                                        <div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
+
+                                                        <div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Delete This Question?', 'tutor'); ?></div>
+                                                        <div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('All the replies also will be deleted.', 'tutor'); ?></div>
+                                                        
+                                                        <div class="tutor-d-flex tutor-justify-center tutor-my-48">
                                                             <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
                                                                 <?php esc_html_e('Cancel', 'tutor'); ?>
                                                             </button>
-                                                            <button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $qna->comment_ID; ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo $row_id; ?>">
+                                                            <button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo $qna->comment_ID; ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo $row_id; ?>">
                                                                 <?php esc_html_e('Yes, Delete This', 'tutor'); ?>
                                                             </button>
                                                         </div>
@@ -224,7 +221,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         </div>
                                     </div>
                                 </td>
-                    <?php
+                        <?php
                                 break;
                         }
                     }
