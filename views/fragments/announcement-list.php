@@ -10,8 +10,8 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 	?>
 	<form class="tutor-modal tutor-modal-scrollable tutor-announcements-form" id="<?php echo $id; ?>">
 		<div class="tutor-modal-overlay"></div>
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content">
 				<div class="tutor-modal-header">
 					<div class="tutor-modal-title">
 						<?php echo esc_html( $title ); ?>
@@ -78,8 +78,8 @@ function tutor_announcement_modal_details( $id, $update_modal_id, $delete_modal_
 	<div id="<?php echo $id; ?>" class="tutor-modal modal-view-double-segment">
 		<div class="tutor-modal-overlay"></div>
 
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content">
 				<div class="tutor-modal-header">
 					<button data-tutor-modal-close class="tutor-modal-close tutor-color-muted">
 						<span class="tutor-icon-times"></span>
@@ -154,8 +154,8 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 	?>
 	<div id="<?php echo $id; ?>" class="tutor-modal">
 		<span class="tutor-modal-overlay"></span>
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner tutor-modal-close-inner">
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content tutor-modal-close-inner">
 				<button data-tutor-modal-close class="tutor-modal-close">
 					<span class="tutor-icon-times" area-hidden="true"></span>
 				</button>

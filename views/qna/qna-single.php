@@ -28,31 +28,28 @@
 ?>
 
 <div class="tutor-qna-single-question" data-course_id="<?php echo $question->course_id; ?>" data-question_id="<?php echo $question_id; ?>" data-context="<?php echo $context; ?>">
-	<div id="<?php echo $modal_id; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
-		<span class="tutor-modal-overlay"></span>
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
-				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="tutor-icon-times"></span>
+	<div id="<?php echo $modal_id; ?>" class="tutor-modal">
+	<div class="tutor-modal-overlay"></div>
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content tutor-modal-content-white">
+				<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+					<span class="tutor-icon-times" area-hidden="true"></span>
 				</button>
+
 				<div class="tutor-modal-body tutor-text-center">
-					<div class="tutor-modal-icon">
-						<img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+					<div class="tutor-mt-48">
+						<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
 					</div>
-					<div class="tutor-modal-text-wrap">
-						<h3 class="tutor-modal-title">
-							<?php esc_html_e( 'Delete This Question?', 'tutor' ); ?>
-						</h3>
-						<p>
-							<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
-						</p>
-					</div>
-					<div class="tutor-modal-footer">
+
+					<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Delete This Question?', 'tutor'); ?></div>
+					<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('All the replies also will be deleted.', 'tutor'); ?></div>
+					
+					<div class="tutor-d-flex tutor-justify-center tutor-my-48">
 						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+							<?php esc_html_e('Cancel', 'tutor'); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-16" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
-							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
+						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo $question_id; ?>,"action":"tutor_delete_dashboard_question"}' data-redirect_to="<?php echo $back_url; ?>">
+							<?php esc_html_e('Yes, Delete This', 'tutor'); ?>
 						</button>
 					</div>
 				</div>

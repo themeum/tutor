@@ -225,11 +225,11 @@ $filters = array(
 	</div>
 </div>
 
-<div id="tutor-instructor-add-new" class="tutor-modal modal-sticky-header-footer tutor-modal-is-close-inside-header">
+<div id="tutor-instructor-add-new" class="tutor-modal tutor-modal-scrollable">
   <span class="tutor-modal-overlay"></span>
-  <div class="tutor-modal-root">
-	<div class="tutor-modal-inner">
-	<form action="" method="post" id="tutor-new-instructor-form" autocomplete="off">
+  <div class="tutor-modal-window">
+	<div class="tutor-modal-content">
+	<form method="post" id="tutor-new-instructor-form" autocomplete="off">
 	  <div class="tutor-modal-header">
 		<div class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
 			<?php esc_html_e( 'Add New Instructor', 'tutor' ); ?>
@@ -358,11 +358,11 @@ if ( $instructor_data && ( 'approved' === $prompt_action || 'blocked' === $promp
 	?>
 <div id="tutor-ins-approval-1" class="tutor-modal tutor-modal-is-close-beside tutor-modal-ins-approval tutor-is-active">
 	<span class="tutor-modal-overlay"></span>
-	<div class="tutor-modal-root">
+	<div class="tutor-modal-window">
 		<button data-tutor-modal-close="true" class="tutor-modal-close">
 			<span class="tutor-fs-2 tutor-icon-times"></span>
 		</button>
-		<div class="tutor-modal-inner">
+		<div class="tutor-modal-content">
 		<?php if ( $instructor_data ) : ?>
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-modal-text-wrap">
