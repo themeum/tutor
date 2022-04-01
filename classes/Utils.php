@@ -4331,8 +4331,8 @@ class Utils {
 			}
 		}
 
-
-		if ( !isset($args['tab']) || isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
+		// This block causes error in single question if archived. 
+		/* if ( !isset($args['tab']) || isset( $args['no_archive'] ) && 'all' === $args['tab'] ) {
 			$query_all = $query;
 			$query     = array();
 			foreach ( $query_all as $m_query ) {
@@ -4340,7 +4340,7 @@ class Utils {
 					$query[] = $m_query;
 				}
 			}
-		}
+		} */
 
 		if ( $question_id ) {
 			return isset( $query[0] ) ? $query[0] : null;
