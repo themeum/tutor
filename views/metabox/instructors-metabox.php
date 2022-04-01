@@ -33,7 +33,7 @@
 	</div>
 
 	<div class="tutor-add-instructor-button-wrap">
-		<button type="button" class="tutor-btn tutor-add-instructor-btn bordered-btn"> <i class="tutor-icon-add-group-filled"></i> <?php _e( 'Add More Instructors', 'tutor' ); ?> </button>
+		<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-add-instructor-btn"> <i class="tutor-icon-add-group tutor-mr-8"></i> <?php _e( 'Add More Instructors', 'tutor' ); ?> </button>
 	</div>
 
 	<?php
