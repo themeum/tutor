@@ -5,8 +5,8 @@
   	<button data-tutor-modal-close class="tutor-modal-close">
 		<span class="tutor-icon-times"></span>
   	</button>
-  	<div class="tutor-modal-root">
-		<div class="tutor-modal-inner">
+  	<div class="tutor-modal-window">
+		<div class="tutor-modal-content">
 			<div class="tutor-modal-body tutor-text-center tutor-bulk-confirm-modal">
 				<div class="tutor-modal-icon">
 					<img src="https://i.imgur.com/Nx6U2u7.png" alt="" />
