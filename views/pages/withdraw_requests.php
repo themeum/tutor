@@ -341,8 +341,8 @@ $filters = array(
 		<button data-tutor-modal-close class="tutor-modal-close">
 			<span class="tutor-icon-times"></span>
 		</button>
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content">
 			<div class="tutor-modal-body tutor-text-center " style="padding: 60px 50px;">
 				<form action="" id="tutor-admin-withdraw-approve-form">
 					<input type="hidden" name="action" value="<?php echo esc_html( 'tutor_admin_withdraw_action' ); ?>">
@@ -394,8 +394,8 @@ $filters = array(
 	<!-- withdraw reject modal-->
 	<div id="tutor-admin-withdraw-reject" class="tutor-modal tutor-modal-is-close-inside-inner">
 		<span class="tutor-modal-overlay"></span>
-		<div class="tutor-modal-root">
-			<div class="tutor-modal-inner">
+		<div class="tutor-modal-window">
+			<div class="tutor-modal-content">
 				<button data-tutor-modal-close class="tutor-modal-close">
 					<span class="tutor-icon-times"></span>
 				</button>

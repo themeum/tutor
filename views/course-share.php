@@ -16,12 +16,12 @@
 </a>
 <div id="tutor-course-share-opener" class="tutor-modal">
     <span class="tutor-modal-overlay"></span>
-    <div class="tutor-modal-root">
-        <div class="tutor-modal-inner tutor-modal-close-inner">
-            <div class="tutor-modal-body" style="padding:40px">
-				<button data-tutor-modal-close class="tutor-modal-close">
-					<span class="tutor-icon-times"></span>
-				</button>
+    <div class="tutor-modal-window">
+        <div class="tutor-modal-content tutor-modal-content-white">
+            <button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+                <span class="tutor-icon-times" area-hidden="true"></span>
+            </button>
+            <div class="tutor-modal-body">
                 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16">
                     <?php _e('Share Course', 'tutor'); ?>
                 </div>

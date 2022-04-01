@@ -1,12 +1,9 @@
 .tutor-course-review-popup-form {
-
-    .tutor-star-rating-group {
-        // color: #C0C3CB;
-        
+    .tutor-star-rating-group {        
         i {
-            // margin: 0 6px;
+            margin: 0 4px;
             color: #ED9700;
-            font-size: 60px;
+            font-size: 36px;
             &.tutor-icon-star-full {
                 color: #ED9700;
             }
@@ -16,6 +13,6 @@
     .tutor-stars {
         text-align: center;
         margin-bottom: 20px;
-        font-size: 40px;
+        font-size: 24px;
     }
 }
