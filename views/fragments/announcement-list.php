@@ -9,20 +9,20 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 	// Assign fallback course id
 	( ! $course_id && count( $courses ) ) ? $course_id = $courses[0]->ID : 0;
 	?>
-	<form class="tutor-modal modal-sticky-header-footer tutor-announcements-form" id="<?php echo $id; ?>">
-		<span class="tutor-modal-overlay"></span>
+	<form class="tutor-modal tutor-modal-scrollable tutor-announcements-form" id="<?php echo $id; ?>">
+		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
 				<div class="tutor-modal-header">
-					<div class="tutor-fs-6 tutor-fw-bold tutor-color-black-70 tutor-modal-title">
+					<div class="tutor-modal-title">
 						<?php echo $title; ?>
 					</div>
-					<button data-tutor-modal-close class="tutor-modal-close">
-						<span class="tutor-icon-times"></span>
+					<button class="tutor-modal-close tutor-iconic-btn" data-tutor-modal-close role="button">
+						<span class="tutor-icon-times" area-hidden="true"></span>
 					</button>
 				</div>
 
-				<div class="tutor-modal-body-alt modal-container">
+				<div class="tutor-modal-body">
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="announcement_id" value="<?php echo $announcment_id; ?>">
 					<input type="hidden" name="action" value="tutor_announcement_create"/>
@@ -61,7 +61,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
-				<div class="tutor-modal-footer tutor-d-flex tutor-justify-between">
+				<div class="tutor-modal-footer">
 					<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary">
 						<?php _e( 'Publish', 'tutor' ); ?>
 					</button>
