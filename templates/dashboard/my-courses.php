@@ -102,7 +102,14 @@ $my_courses = tutor_utils()->get_courses_by_instructor(null, $status);
                                     <?php esc_html_e('Price:', 'tutor') ?>
                                 </span>
                                 <span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-                                    <?php echo tutor_utils()->tutor_price(tutor_utils()->get_course_price()); ?>
+                                    <?php
+                                        $price = tutor_utils()->get_course_price();
+                                        if ( null === $price ) {
+                                            esc_html_e( 'Free', 'tutor' );
+                                        } else {
+                                            echo tutor_utils()->get_course_price(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                        }
+                                    ?>
                                 </span>
                             </div>
                             <div class="tutor-iconic-btn-group">
