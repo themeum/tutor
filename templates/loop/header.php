@@ -23,7 +23,7 @@
         }
         
 		echo '<a href="javascript:;" class="'. esc_attr( $action_class ) .' save-bookmark-btn tutor-iconic-btn tutor-iconic-btn-secondary" data-course-id="'. esc_attr( $course_id ) .'">
-            <i class="' . ( $is_wish_listed ? 'tutor-icon-fav-full-filled' : 'tutor-icon-fav-line-filled') . '"></i>
+            <i class="' . ( $is_wish_listed ? 'tutor-icon-bookmark-bold' : 'tutor-icon-bookmark-line') . '"></i>
         </a>';
 	?>
 </div>

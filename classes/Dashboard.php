@@ -30,7 +30,7 @@ class Dashboard {
 		global $wp_query;
 
 		$tutor_dashboard_page = tutor_utils()->array_get( 'query_vars.tutor_dashboard_page', $wp_query );
-		if ( $tutor_dashboard_page === 'create-course' ) {
+		if ( $tutor_dashboard_page === 'create-course' && tutor_utils()->is_instructor(get_current_user_id(), true)) {
 			global $post;
 			wp_reset_query();
 

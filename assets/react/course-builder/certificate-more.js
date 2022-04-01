@@ -45,13 +45,13 @@ const toggleCertificate = () => {
 				console.log(moreLoaded);
 				if (moreLoaded) {
 					templateItemWrap.style.height = primaryHeight + targetHeight + 'px';
-					moreButton.querySelector('i').classList.remove('tutor-icon-plus-filled');
-					moreButton.querySelector('i').classList.add('tutor-icon-minus-filled');
+					moreButton.querySelector('i').classList.remove('tutor-icon-plus');
+					moreButton.querySelector('i').classList.add('tutor-icon-minus');
 					moreButton.querySelector('span').innerText = 'Show Less';
 				} else {
 					templateItemWrap.style.height = primaryHeight + 'px';
-					moreButton.querySelector('i').classList.remove('tutor-icon-minus-filled');
-					moreButton.querySelector('i').classList.add('tutor-icon-plus-filled');
+					moreButton.querySelector('i').classList.remove('tutor-icon-minus');
+					moreButton.querySelector('i').classList.add('tutor-icon-plus');
 					moreButton.querySelector('span').innerText = 'Show More';
 				}
 			};

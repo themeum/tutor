@@ -61,19 +61,19 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                     <div class="td-avatar">
                                         <div class="tooltip-wrap tooltip-icon-custom tutor-qna-badges-wrapper tutor-mt-4">
                                             <span
-                                                data-state-class-0="tutor-icon-msg-important-filled"
-                                                data-state-class-1="tutor-icon-msg-important-fill-filled"
+                                                data-state-class-0="tutor-icon-important-line"
+                                                data-state-class-1="tutor-icon-important-bold"
                                                 data-action="important"
                                                 data-state-class-selector="i"
                                             >
                                                 <i
-                                                    class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled' : 'tutor-icon-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer"
+                                                    class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer"
                                                 >
                                                 </i>
                                             </span>
-                                            <!-- <i data-state-class-0="tutor-icon-msg-important-filled"
-                                            data-state-class-1="tutor-icon-msg-important-fill-filled"
-                                            class="<?php echo $is_important ? 'tutor-icon-msg-important-fill-filled' : 'tutor-icon-msg-important-filled'; ?> tutor-icon-20 tutor-cursor-pointer" data-action="important"></i>
+                                            <!-- <i data-state-class-0="tutor-icon-important-line"
+                                            data-state-class-1="tutor-icon-important-bold"
+                                            class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer" data-action="important"></i>
                                              -->
                                             <span class="tooltip-txt tooltip-bottom">
                                                 <?php $is_important ? _e('This conversation is important', 'tutor') : _e('Mark this conversation as important', 'tutor'); ?>
@@ -99,7 +99,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                 <td data-th="<?php echo $column; ?>">
                                     <a href="<?php echo add_query_arg(array('question_id' => $qna->comment_ID), tutor()->current_url); ?>">
                                         <div class="tutor-input-feedback tutor-has-icon tutor-qna-question-col <?php echo $is_read ? 'is-read' : ''; ?>">
-                                            <i class="tutor-icon-bullet-point-filled tutor-input-feedback-icon"></i>
+                                            <i class="tutor-icon-bullet-point tutor-input-feedback-icon"></i>
                                             <div class="tutor-qna-desc">
                                                 <div class="tutor-qna-content tutor-fs-6 tutor-fw-bold tutor-color-black">
                                                     <?php
@@ -141,7 +141,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                             ?>
                                 <td data-th="<?php echo $column; ?>" class="v-align-top">
                                     <div class="tooltip-wrap tooltip-icon-custom" >
-                                        <i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-mark-cricle tutor-text-success' : 'tutor-icon-tick-circle-outline-filled tutor-color-black-40'; ?>"></i>
+                                        <i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-text-success' : 'tutor-icon-circle-mark-line tutor-color-black-40'; ?>"></i>
                                         <span class="tooltip-txt tooltip-bottom">
                                             <?php $is_solved ? _e('Solved', 'tutor') : _e('Unresolved Yet', 'tutor'); ?>
                                         </span>
@@ -158,17 +158,16 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                             <?php _e('Reply', 'tutor-pro'); ?>
                                         </a>
 
-                                        <!-- ToolTip Action -->
-                                        <div class="tutor-popup-opener">
-                                            <button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $menu_id; ?>">
-                                                <span class="toggle-icon tutor-color-black-30"></span>
+                                        <div class="tutor-dropdown-parent">
+                                            <button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+                                                <span class="tutor-icon-kebab-menu" area-hidden="true"></span>
                                             </button>
-                                            <ul id="<?php echo $menu_id; ?>" class="popup-menu">
+                                            <ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
                                                 <?php if ($context != 'frontend-dashboard-qna-table-student') : ?>
                                                     <li class="tutor-qna-badges tutor-qna-badges-wrapper">
                                                         <a href="#" data-action="archived" data-state-text-selector="[data-state-text]" data-state-class-selector="[data-state-class]" data-state-text-0="<?php _e('Archvie', 'tutor'); ?>" data-state-text-1="<?php _e('Un-archive', 'tutor'); ?>">
-                                                            <span class="tutor-icon-msg-archive-filled tutor-color-white tutor-fs-4 tutor-mr-4" data-state-class></span>
-                                                            <span class="tutor-fs-6 tutor-color-white" data-state-text>
+                                                            <span class="tutor-icon-archive tutor-mr-8" data-state-class></span>
+                                                            <span data-state-text>
                                                                 <?php $is_archived ?  _e('Un-archive', 'tutor') : _e('Archive', 'tutor'); ?>
                                                             </span>
                                                         </a>
@@ -176,46 +175,43 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                                 <?php endif; ?>
                                                 <li class="tutor-qna-badges tutor-qna-badges-wrapper">
                                                     <a href="#" data-action="read" data-state-text-selector="[data-state-text]" data-state-class-selector="[data-state-class]" data-state-text-0="<?php _e('Mark as Read', 'tutor'); ?>" data-state-text-1="<?php _e('Mark as Unread', 'tutor'); ?>">
-                                                        <span class="tutor-icon-envelope-filled tutor-color-white tutor-fs-4 tutor-mr-4" data-state-class></span>
-                                                        <span class="tutor-fs-6 tutor-color-white tutor-text-left" data-state-text>
+                                                        <span class="tutor-icon-envelope tutor-mr-8" data-state-class></span>
+                                                        <span data-state-text>
                                                             <?php $is_read ? _e('Mark as Unread', 'tutor') :  _e('Mark as read', 'tutor'); ?>
                                                         </span>
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="#" data-tutor-modal-target="<?php echo $id_string_delete; ?>">
-                                                        <span class="tutor-icon-delete-fill-filled tutor-color-white tutor-fs-4 tutor-mr-4"></span>
-                                                        <span class="tutor-fs-6 tutor-color-white"><?php _e('Delete', 'tutor'); ?></span>
+                                                        <span class="tutor-icon-trash-can-bold tutor-mr-8"></span>
+                                                        <span><?php _e('Delete', 'tutor'); ?></span>
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
 
                                         <!-- Delete confirmation modal -->
-                                        <div id="<?php echo $id_string_delete; ?>" class="tutor-modal tutor-modal-is-close-inside-inner">
-                                            <span class="tutor-modal-overlay"></span>
-                                            <div class="tutor-modal-root">
-                                                <div class="tutor-modal-inner">
-                                                    <button data-tutor-modal-close class="tutor-modal-close">
-                                                        <span class="tutor-icon-line-cross-line"></span>
+                                        <div id="<?php echo $id_string_delete; ?>" class="tutor-modal">
+                                            <div class="tutor-modal-overlay"></div>
+                                            <div class="tutor-modal-window">
+                                                <div class="tutor-modal-content tutor-modal-content-white">
+                                                    <button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+                                                        <span class="tutor-icon-times" area-hidden="true"></span>
                                                     </button>
+
                                                     <div class="tutor-modal-body tutor-text-center">
-                                                        <div class="tutor-modal-icon">
-                                                            <img src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
+                                                        <div class="tutor-mt-48">
+                                                            <img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-trash.svg" />
                                                         </div>
-                                                        <div class="tutor-modal-text-wrap">
-                                                            <h3 class="tutor-modal-title">
-                                                                <?php esc_html_e('Delete This Question?', 'tutor'); ?>
-                                                            </h3>
-                                                            <p>
-                                                                <?php esc_html_e('All the replies also will be deleted.', 'tutor'); ?>
-                                                            </p>
-                                                        </div>
-                                                        <div class="tutor-modal-footer tutor-modal-btns tutor-btn-group">
+
+                                                        <div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Delete This Question?', 'tutor'); ?></div>
+                                                        <div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('All the replies also will be deleted.', 'tutor'); ?></div>
+                                                        
+                                                        <div class="tutor-d-flex tutor-justify-center tutor-my-48">
                                                             <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
                                                                 <?php esc_html_e('Cancel', 'tutor'); ?>
                                                             </button>
-                                                            <button class="tutor-btn tutor-btn-primary tutor-list-ajax-action" data-request_data='{"question_id":<?php echo $qna->comment_ID; ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo $row_id; ?>">
+                                                            <button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"question_id":<?php echo $qna->comment_ID; ?>,"action":"tutor_delete_dashboard_question"}' data-delete_element_id="<?php echo $row_id; ?>">
                                                                 <?php esc_html_e('Yes, Delete This', 'tutor'); ?>
                                                             </button>
                                                         </div>
@@ -225,7 +221,7 @@ $view_as = isset($view_as) ? $view_as : (is_admin() ? 'instructor' : 'student');
                                         </div>
                                     </div>
                                 </td>
-                    <?php
+                        <?php
                                 break;
                         }
                     }

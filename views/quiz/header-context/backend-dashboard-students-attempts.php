@@ -7,7 +7,7 @@
 <header class="tutor-wp-dashboard-header tutor-justify-between tutor-align-items-center tutor-px-32 tutor-py-20 tutor-mb-24 tutor-pt-16 tutor-pb-16" style="margin-left:-20px; height:auto;">
     <div class="tutor-mb-24">
         <a class="tutor-btn tutor-btn-ghost" href="<?php echo $back_url; ?>">
-            <span class="tutor-icon-previous-line" area-hidden="true"></span>
+            <span class="tutor-icon-previous" area-hidden="true"></span>
             <?php _e('Back', 'tutor'); ?>
         </a>
     </div>
