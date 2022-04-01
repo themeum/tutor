@@ -30,6 +30,12 @@ $disabled-color: #E9E9EA !default;
 		width: 100%;
 	}
 
+	&-fw {
+		display: inline-flex;
+		justify-content: center;
+		min-width: 120px;
+	}
+
 	&-primary {
 		border-color: var(--tutor-primary-color);
 		background-color: var(--tutor-primary-color);
