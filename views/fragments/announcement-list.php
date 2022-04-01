@@ -8,20 +8,20 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 	// Assign fallback course id
 	( ! $course_id && count( $courses ) ) ? $course_id = $courses[0]->ID : 0;
 	?>
-	<form class="tutor-modal modal-sticky-header-footer tutor-announcements-form" id="<?php echo $id; ?>">
-		<span class="tutor-modal-overlay"></span>
+	<form class="tutor-modal tutor-modal-scrollable tutor-announcements-form" id="<?php echo $id; ?>">
+		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-root">
 			<div class="tutor-modal-inner">
 				<div class="tutor-modal-header">
-					<div class="tutor-fs-6 tutor-fw-bold tutor-color-black-70 tutor-modal-title">
+					<div class="tutor-modal-title">
 						<?php echo esc_html( $title ); ?>
 					</div>
-					<button data-tutor-modal-close class="tutor-modal-close">
-						<span class="tutor-icon-times"></span>
+					<button class="tutor-modal-close tutor-iconic-btn" data-tutor-modal-close role="button">
+						<span class="tutor-icon-times" area-hidden="true"></span>
 					</button>
 				</div>
 
-				<div class="tutor-modal-body-alt modal-container">
+				<div class="tutor-modal-body">
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="announcement_id" value="<?php echo esc_attr( $announcment_id ); ?>">
 					<input type="hidden" name="action" value="tutor_announcement_create"/>
@@ -58,7 +58,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 					<?php do_action( 'tutor_announcement_editor/after' ); ?>
 				</div>
 
-				<div class="tutor-modal-footer tutor-d-flex tutor-justify-between">
+				<div class="tutor-modal-footer">
 					<button type="submit" data-action="next" class="tutor-btn tutor-btn-primary">
 						<?php esc_html_e( 'Publish', 'tutor' ); ?>
 					</button>
@@ -282,21 +282,21 @@ $courses = ( current_user_can( 'administrator' ) ) ? tutor_utils()->get_courses(
 										</button>
 									</div>
 
-									<div class="tutor-popup-opener">
-										<button type="button" class="popup-btn" data-tutor-popup-target="<?php echo $update_modal_id; ?>_action">
-											<span class="toggle-icon"></span>
+									<div class="tutor-dropdown-parent">
+										<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+											<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 										</button>
-										<ul class="popup-menu" id="<?php echo $update_modal_id; ?>_action">
+										<ul class="tutor-dropdown tutor-dropdown-dark">
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $update_modal_id; ?>">
-													<i class="tutor-icon-edit tutor-color-design-white"></i>
-													<span class="tutor-fs-6 tutor-color-white"><?php _e( 'Edit', 'tutor' ); ?></span>
+													<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+													<span><?php _e( 'Edit', 'tutor' ); ?></span>
 												</a>
 											</li>
 											<li>
 												<a href="#" data-tutor-modal-target="<?php echo $delete_modal_id; ?>">
-													<i class="tutor-icon-trashcan-bold tutor-color-design-white"></i>
-													<span class="tutor-fs-6 tutor-color-white"><?php _e( 'Delete', 'tutor' ); ?></span>
+													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+													<span><?php _e( 'Delete', 'tutor' ); ?></span>
 												</a>
 											</li>
 										</ul>

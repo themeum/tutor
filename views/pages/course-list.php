@@ -322,35 +322,27 @@ $available_status = array(
 											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</a>
-											<div class="tutor-popup-opener">
-											<button
-												type="button"
-												class="popup-btn"
-												data-tutor-popup-target="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>"
-											>
-												<span class="toggle-icon"></span>
-											</button>
-											<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="popup-menu" style="width: 220px;">
-											<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
-												<li>
-													<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
-														<i class="tutor-icon-eye-bold"></i>
-														<span class="tutor-fs-6 tutor-color-white">
-															<?php esc_html_e( 'View Course', 'tutor' ); ?>
-														</span>
-													</a>
-												</li>
-												<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
-												<li>
-													<a href="javascript:void(0)" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
-														<i class="tutor-icon-trashcan-bold tutor-color-design-white"></i>
-														<span class="tutor-fs-6 tutor-color-white">
-															<?php esc_html_e( 'Delete Permanently', 'tutor' ); ?>
-														</span>
-													</a>
-												</li>
-												<?php do_action( 'tutor_admin_after_course_list_action', $post->ID ); ?>
-											</ul>
+											<div class="tutor-dropdown-parent">
+												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+												</button>
+												<ul id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+													<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
+													<li>
+														<a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
+															<i class="tutor-icon-eye-bold tutor-mr-8" area-hidden="true"></i>
+															<span><?php esc_html_e( 'View Course', 'tutor' ); ?></span>
+														</a>
+													</li>
+													<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
+													<li>
+														<a href="javascript:void(0)" class="tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
+															<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+															<span><?php esc_html_e( 'Delete Permanently', 'tutor' ); ?></span>
+														</a>
+													</li>
+													<?php do_action( 'tutor_admin_after_course_list_action', $post->ID ); ?>
+												</ul>
 											</div>
 										</div>
 									</td>
