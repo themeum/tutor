@@ -23,7 +23,7 @@
 				<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e('Do You Want to Delete This?', 'tutor'); ?></div>
 				<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e('Are you sure you want to delete this permanently from the site? Please confirm your choice.', 'tutor'); ?></div>
 
-				<form id="tutor-common-confirmation-form" class="tutor-m-0">
+				<form id="tutor-common-confirmation-form" class="tutor-m-0" method="POST">
 					<?php tutor_nonce_field(); ?>
 					<input type="hidden" name="id">
 					<input type="hidden" name="action">
@@ -32,7 +32,7 @@
 						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button id="tutor-confirmation-btn" class="tutor-btn tutor-btn-primary tutor-ml-16">
+						<button type="submit" class="tutor-btn tutor-btn-primary tutor-ml-16" data-tutor-modal-submit>
 							<?php esc_html_e( "Yes, I'am Sure", 'tutor' ); ?>
 						</button>
 					</div>
