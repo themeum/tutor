@@ -39,7 +39,7 @@
 		z-index: -1;
 	}
 
-	&-root {
+	&-window {
 		position: relative;
 		width: auto;
 		pointer-events: none;
@@ -48,19 +48,31 @@
 		max-width: 640px;
     	margin: 48px auto;
 		min-height: calc(100% - 96px);
+
+		&-md {
+			max-width: 520px;
+		}
+
+		&-sm {
+			max-width: 430px;
+		}
 	}
 
-	&-inner {
+	&-content {
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
 		pointer-events: auto;
-		background-color: #fff;
+		background-color: #E3E5EB;
 		background-clip: padding-box;
 		border: 1px solid $stroke-light-30;
 		border-radius: 16px;
 		outline: 0;
+
+		&-white {
+			background-color: #FFFFFF;
+		}
 	}
 
 	&-header,
@@ -70,6 +82,7 @@
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: space-between;
+		background-color: #FFFFFF;
 	}
 
 	&-header {
@@ -92,6 +105,7 @@
 	&-title {
 		margin: 0;
 		font-size: 20px;
+		color: $black-main;
 		font-weight: 700;
 		line-height: 1.2;
 	}
@@ -104,23 +118,17 @@
 
 	&-body {
 		position: relative;
-		background-color: #E3E5EB;
 		padding: 24px 32px;
 		flex: 1 1 auto;
-		border-radius: 16px;
-
-		&-is-white {
-			background-color: #FFFFFF;
-		}
 	}
 
 	// scrollable
 	&-scrollable {
-		.tutor-modal-root {
+		.tutor-modal-window {
 			height: calc(100% - 96px);
 		}
 
-		.tutor-modal-inner {
+		.tutor-modal-content {
 			max-height: 100%;
     		overflow: hidden;
 		}
@@ -133,8 +141,6 @@
 
 // modal steps
 .tutor-modal-steps {
-	padding: 20px 27px;
-	border-bottom: 1px solid #cdcfd5;
 	ul {
 		list-style: none;
 		display: flex;
@@ -235,13 +241,6 @@
 				left: 100%;
 			}
 		}
-	}
-}
-
-// @todo: fix this
-.tutor-quiz-builder-modal-wrap {
-	.tutor-modal-header {
-		border: unset !important;
 	}
 }
 

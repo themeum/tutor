@@ -9,12 +9,12 @@
 
 ?>
 <div class="tutor-modal" id="tutor-common-confirmation-modal">
-	<span class="tutor-modal-overlay"></span>
-	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="tutor-icon-times"></span>
-	</button>
-	<div class="tutor-modal-root">
-		<div class="tutor-modal-inner">
+	<div class="tutor-modal-overlay"></div>
+	<div class="tutor-modal-window">
+		<div class="tutor-modal-content">
+			<button class="tutor-modal-close-o" data-tutor-modal-close>
+				<span class="tutor-icon-times" area-hidden="true"></span>
+			</button>
 			<div class="tutor-modal-body tutor-text-center tutor-bulk-confirm-modal">
 				<form id="tutor-common-confirmation-form">
 					<?php tutor_nonce_field(); ?>
