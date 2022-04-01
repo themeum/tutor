@@ -24,7 +24,6 @@
 @import './sidebar';
 
 .tutor-course-single-content-wraper {
-
 	a {
 		text-decoration: none;
 	}
@@ -33,7 +32,7 @@
 	position: relative;
 	width: 100%;
 	align-items: flex-start;
-	
+
 	input.tutor-form-check-input.tutor-form-check-circle {
 		width: 20px;
 		height: 20px;
@@ -82,7 +81,7 @@
 			.tutor-topbar-sidebar-toggle {
 				background: var(--tutor-primary-color);
 				span[class^='tutor-icon'] {
-					font-size: 30px;
+					// font-size: 30px;
 					font-weight: 800;
 				}
 			}
@@ -99,7 +98,7 @@
 					background: var(--tutor-primary-hover-color);
 				}
 				span[class^='tutor-icon'] {
-					font-size: 30px;
+					// font-size: 30px;
 				}
 			}
 			.tutor-topbar-right-item {
