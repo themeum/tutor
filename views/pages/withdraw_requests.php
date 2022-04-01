@@ -348,7 +348,6 @@ $filters = array(
 					<input type="hidden" name="action" value="<?php echo esc_html( 'tutor_admin_withdraw_action' ); ?>">
 					<input type="hidden" name="action-type" value="<?php echo esc_html( 'approved' ); ?>">
 					<div class="tutor-modal-icon">
-						<!-- <img src="https://i.imgur.com/Nx6U2u7.png" alt="" /> -->
 						<svg width="100" height="93" viewBox="0 0 100 93" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M79.0555 32.8059L72.9167 29.5281H27.0833L20.9444 32.8059C19.6111 33.5281 18.75 34.9447 18.75 36.4725V70.0836C18.75 72.3892 20.6111 74.2503 22.9167 74.2503H77.0833C79.3889 74.2503 81.25 72.3892 81.25 70.0836V36.4725C81.25 34.9447 80.3889 33.5281 79.0555 32.8059Z" fill="#F3F3F1"/>
 							<path d="M25 70.0836V36.4725C25 34.9447 25.8611 33.5281 27.1944 32.8059L33.3333 29.5281H27.0833L20.9444 32.8059C19.6111 33.5281 18.75 34.9447 18.75 36.4725V70.0836C18.75 72.3892 20.6111 74.2503 22.9167 74.2503H29.1667C26.8611 74.2503 25 72.3892 25 70.0836Z" fill="#D5DBE1"/>
@@ -404,7 +403,6 @@ $filters = array(
 						<input type="hidden" name="action" value="<?php echo esc_html( 'tutor_admin_withdraw_action' ); ?>">
 						<input type="hidden" name="action-type" value="<?php echo esc_html( 'rejected' ); ?>">
 						<div class="tutor-modal-icon">
-							<!-- <img src="https://i.imgur.com/Nx6U2u7.png" alt="" /> -->
 							<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<path d="M63.6328 89.2495L68.0532 85.8843L69.7341 88.0922L65.3137 91.4575L63.6328 89.2495Z" fill="#A4AFC1"/>
 								<path d="M76.3477 79.5718L80.768 76.2066L82.4489 78.4145L78.0286 81.7797L76.3477 79.5718Z" fill="#A4AFC1"/>
