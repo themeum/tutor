@@ -20,7 +20,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 ?>
 
 <?php
-if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
+if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 	$args = array(
 		'headline'    => __('Permission Denied', 'tutor'),
 		'message'     => __('You don\'t have the right to edit this course', 'tutor'),
@@ -52,7 +52,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 						</div>
 						<button type="submit" class="tutor-dashboard-builder-draft-btn" name="course_submit_btn" value="save_course_as_draft">
 							<!-- @TODO: Icon must be chenged -->
-							<i class="tutor-icon-save-line tutor-icon-28"></i>
+							<i class="tutor-icon-save-line tutor-fs-5"></i>
 							<span class="tutor-color-black-60"><?php _e('Save', 'tutor'); ?></span>
 						</button>
 					</div>
@@ -71,7 +71,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 								<?php _e('Submit', 'tutor'); ?>
 							</button>
 						<?php endif; ?>
-						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="tutor-icon-line-cross-line tutor-ml-16" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;color: #9CA0AC;"></a>
+						<a href="<?php echo tutor_utils()->tutor_dashboard_url(); ?>" class="tutor-icon-times tutor-ml-16" title="<?php _e('Exit', 'tutor'); ?>" style="font-size: 32px;color: #9CA0AC;"></a>
 					</div>
 				</div>
 			</div>
@@ -102,20 +102,20 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 							<?php echo $message; ?>
 						</div>
 					<?php } else { ?>
-						<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active tutor-modal-is-close-inside-header">
+						<!-- @todo: move to toast -->
+						<div id="modal-course-save-feedback" class="tutor-modal tutor-is-active">
 							<span class="tutor-modal-overlay"></span>
-							<div class="tutor-modal-root">
-								<div class="tutor-modal-inner tutor-modal-close-inner">
-									<button data-tutor-modal-close class="tutor-modal-close">
-										<span class="tutor-icon-line-cross-line tutor-fs-5 tutor-color-black-40"></span>
+							<div class="tutor-modal-window tutor-modal-window-md">
+								<div class="tutor-modal-content tutor-modal-content-white">
+									<button class="tutor-iconic-btn tutor-modal-close-o" data-tutor-modal-close>
+										<span class="tutor-icon-times" area-hidden="true"></span>
 									</button>
-									<div class="tutor-text-center tutor-mt-80 tutor-px-48 tutor-pb-md-80 tutor-pb-48">
-										<div class="tutor-modal-icon tutor-d-flex tutor-align-items-center">
-											<img src="<?php echo tutor()->url; ?>/assets/images/icon-cup.svg" alt="" />
-										</div>
-										<div class="tutor-modal-text-wrap tutor-mt-24">
-											<div class="tutor-modal-title tutor-fs-4 tutor-color-black"><?php _e('Thank You!', 'tutor'); ?></div>
-											<div class="tutor-fs-6 tutor-black-60 tutor-mt-20"><?php echo $message; ?></div>
+
+									<div class="tutor-modal-body tutor-text-center">
+										<div class="tutor-py-48">
+											<img class="tutor-d-inline-block" src="<?php echo tutor()->url; ?>assets/images/icon-cup.svg" />
+											<div class="tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mb-12"><?php _e('Thank You!', 'tutor'); ?></div>
+											<div class="tutor-fs-6 tutor-color-muted"><?php echo $message; ?></div>
 										</div>
 									</div>
 								</div>
@@ -142,7 +142,7 @@ if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 				<div class="tutor-course-builder-section tutor-course-builder-info">
 					<div class="tutor-course-builder-section-title">
 						<span class="tutor-fs-5 tutor-fw-bold tutor-color-black-70">
-							<i class="color-text-brand tutor-icon-angle-up-filled tutor-icon-26" area-hidden="true"></i>
+							<i class="color-text-brand tutor-icon-angle-up tutor-fs-5" area-hidden="true"></i>
 							<span><?php esc_html_e('Course Info', 'tutor'); ?></span>
 						</span>
 					</div>

@@ -48,8 +48,8 @@ $tutor_pages = tutor_utils()->tutor_pages();
 
 				// if ( $page['page_exists'] ) {
 				// 	$edit_url = admin_url( "post.php?post={$page_id}&action=edit" );
-				// 	echo "<a class='tutor-btn tutor-btn-ghost' href='{$edit_url}' target='_blank' class='tutor-iconic-btn tutor-ml-8'><span class='tutor-icon-detail-link-filled'></span></a>";
-				// 	// echo "<a class='tutor-btn tutor-btn-ghost' href='{$edit_url}' target='_blank' class='tutor-iconic-btn tutor-ml-8'><span class='tutor-icon-detail-link-filled'></span></a>";
+				// 	echo "<a class='tutor-btn tutor-btn-ghost' href='{$edit_url}' target='_blank' class='tutor-iconic-btn tutor-ml-8'><span class='tutor-icon-external-link'></span></a>";
+				// 	// echo "<a class='tutor-btn tutor-btn-ghost' href='{$edit_url}' target='_blank' class='tutor-iconic-btn tutor-ml-8'><span class='tutor-icon-external-link'></span></a>";
 				// }
 
 				// // tutor-d-flex tutor-align-items-center
@@ -60,13 +60,13 @@ $tutor_pages = tutor_utils()->tutor_pages();
 				<?php if($page['page_exists'] && $page['page_visible']) : ?>
 					<?php $page = get_post( $page_id ); ?>
 					<div class="tutor-d-flex tutor-align-items-center">
-						<span class='icon-check tutor-icon-mark-cricle tutor-color-success'></span>
+						<span class='tutor-icon-circle-mark tutor-color-success'></span>
 						<span class='tutor-mx-4'>/</span>
 						<span><?php echo $page->post_name; ?></span>
-						<span class="tutor-ml-8"><a href="<?php echo get_permalink( $page ); ?>" class="tutor-iconic-btn" target="_blank"><i class="tutor-icon-detail-link-filled"></i></a></span>
+						<span class="tutor-ml-8"><a href="<?php echo get_permalink( $page ); ?>" class="tutor-iconic-btn" target="_blank"><i class="tutor-icon-external-link"></i></a></span>
 					</div>
 				<?php else : ?>
-					<span class='tutor-icon-cross-circle-outline-filled tutor-color-warning'></span>
+					<span class='tutor-icon-circle-times-line tutor-color-warning'></span>
 				<?php endif; ?>
 			</div>
 		</div>

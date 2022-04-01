@@ -3,6 +3,12 @@ window.jQuery(document).ready(($) => {
 
 	$(document).on('click', '.tutor-course-wishlist-btn', function(e) {
 		e.preventDefault();
+		const userId = Number(e.currentTarget.dataset.userId);
+		if (userId > 0) {
+		} else {
+			$('.tutor-login-modal').addClass('tutor-is-active');
+			return;
+		}
 
 		var $that = $(this);
 		var course_id = $that.attr('data-course-id');
@@ -22,13 +28,13 @@ window.jQuery(document).ready(($) => {
 					if (data.data.status === 'added') {
 						$that
 							.find('i')
-							.addClass('tutor-icon-fav-full-filled')
-							.removeClass('tutor-icon-fav-line-filled');
+							.addClass('tutor-icon-bookmark-bold')
+							.removeClass('tutor-icon-bookmark-line');
 					} else {
 						$that
 							.find('i')
-							.addClass('tutor-icon-fav-line-filled')
-							.removeClass('tutor-icon-fav-full-filled');
+							.addClass('tutor-icon-bookmark-line')
+							.removeClass('tutor-icon-bookmark-bold');
 					}
 				} else {
 					window.location = data.data.redirect_to;

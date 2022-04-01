@@ -136,13 +136,13 @@
                     </div>
                     <div class="addon-jumbotron-content">
                         <h3 class="title tutor-mt-0 tutor-mb-20"><?php esc_html_e( 'Get All of Our Addons for a Single Price', 'tutor' ); ?></h3>
-                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark"></span>
                         <?php esc_html_e( 'Enjoy all popular add-ons under a single price', 'tutor' ); ?>
                         </p>
-                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="tutor-icon-mark"></span>
                         <?php esc_html_e( 'Easy enable options for the features you need', 'tutor' ); ?>
                         </p>
-                        <p class="tutor-d-flex tutor-py-4"><span class="icon tutor-icon-mark-filled"></span>
+                        <p class="tutor-d-flex tutor-py-4"><span class="icon tutor-icon-mark"></span>
                         <?php esc_html_e( 'Advanced customization options for each add-on', 'tutor' ); ?>
                         </p>
                         <a class="tutor-btn tutor-btn-primary tutor-mt-20" href="<?php echo esc_url( 'https://www.themeum.com/product/tutor-lms/?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists' ); ?>">
@@ -160,7 +160,7 @@
         <h3 class="title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12"><?php esc_html_e( 'Add-ons', 'tutor' ); ?></h3>
         <div class="tutor-addons-list-select-filter tutor-d-flex tutor-justify-end tutor-align-items-center">
 			<div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-has-icon-right-">
-				<span class="tutor-icon-search-filled tutor-input-group-icon"></span>
+				<span class="tutor-icon-search tutor-input-group-icon"></span>
 				<input
                     id="free-addons-search"
 					type="search"

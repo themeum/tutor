@@ -3,12 +3,6 @@
 	overflow-x: auto;
 }
 
-@include breakpoint-minmax(1200, 1400) {
-	.tutor-ui-table-wrapper {
-		// overflow-x: auto;
-	}
-}
-
 @include breakpoint-min(desktop-lg) {
 	.tutor-ui-table-wrapper {
 		background: #fff;
@@ -31,7 +25,7 @@ table.tutor-ui-table {
 		box-sizing: border-box;
 	}
 
-	ul {
+	ul:not(.tutor-dropdown) {
 		margin: 0;
 		padding: 0;
 	}

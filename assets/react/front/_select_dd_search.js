@@ -159,7 +159,7 @@ window.selectSearchField = (selectElement) => {
             <div class="tutor-dropdown-select-options-container">
                 <div class="tutor-input-search">
                     <div class="tutor-input-group tutor-form-control-has-icon tutor-form-control-lg">
-                        <span class="tutor-icon-search-filled tutor-input-group-icon"></span>
+                        <span class="tutor-icon-search tutor-input-group-icon"></span>
                         <input
                         type="search"
                         class="tutor-form-control"

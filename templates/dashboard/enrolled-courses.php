@@ -63,8 +63,8 @@ $paginated_courses_list =  $full_courses_list_array[$active_tab];
 			<?php endforeach; ?>
 
 			<li class="tutor-nav-item tutor-nav-more tutor-d-none">
-				<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-line-cross-line"></span></a>
-				<ul class="tutor-nav-more-list"></ul>
+				<a class="tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php _e("More", "tutor-pro"); ?></span> <span class="icon-seemore tutor-icon-times"></span></a>
+				<ul class="tutor-nav-more-list tutor-dropdown"></ul>
 			</li>
 		</ul>
 	</div>

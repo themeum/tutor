@@ -9,12 +9,12 @@
 
 ?>
 <div class="tutor-modal" id="tutor-common-confirmation-modal">
-	<span class="tutor-modal-overlay"></span>
-	<button data-tutor-modal-close class="tutor-modal-close">
-		<span class="tutor-icon-line-cross-line"></span>
-	</button>
-	<div class="tutor-modal-root">
-		<div class="tutor-modal-inner">
+	<div class="tutor-modal-overlay"></div>
+	<div class="tutor-modal-window">
+		<div class="tutor-modal-content">
+			<button class="tutor-modal-close-o" data-tutor-modal-close>
+				<span class="tutor-icon-times" area-hidden="true"></span>
+			</button>
 			<div class="tutor-modal-body tutor-text-center tutor-bulk-confirm-modal">
 				<form id="tutor-common-confirmation-form">
 					<?php tutor_nonce_field(); ?>
@@ -25,7 +25,7 @@
 						<button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-ml-16">
+						<button id="tutor-confirmation-btn" class="tutor-btn tutor-btn-primary tutor-ml-16">
 							<?php esc_html_e( "Yes, I'am Sure", 'tutor' ); ?>
 						</button>
 					</div>

@@ -35,7 +35,7 @@ if ( ! $assignment_submitted_id ) {
 
 	<div class="submitted-assignment-title tutor-mb-16">
 		<a class="tutor-btn tutor-btn-ghost" href="<?php echo esc_url( $submitted_url . '?assignment=' . $assignment_id ); ?>">
-			<span class="tutor-icon-previous-line tutor-mr-8" area-hidden="true"></span>
+			<span class="tutor-icon-previous tutor-mr-8" area-hidden="true"></span>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
@@ -105,7 +105,7 @@ if ( ! $assignment_submitted_id ) {
 
 											<div class="tutor-ml-auto">
 												<a href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-lg" target="_blank" rel="noopener noreferrer">
-													<span class="tutor-icon-download-line"></span>
+													<span class="tutor-icon-download"></span>
 												</a>
 											</div>
 										</div>
@@ -131,7 +131,7 @@ if ( ! $assignment_submitted_id ) {
 				<label for=""><?php esc_html_e( 'Your Points', 'tutor' ); ?></label>
 			</div>
 			<div class="tutor-col-12 tutor-col-sm-8 tutor-col-md-12 tutor-col-lg-9 tutor-mb-32">
-				<input class="tutor-form-control" type="number" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0">
+				<input type="number"  class="tutor-form-control" name="evaluate_assignment[assignment_mark]" value="<?php echo $given_mark ? $given_mark : 0; ?>" min="0" max="<?php echo esc_attr( $max_mark ); ?>" title="<?php esc_attr_e( 'Evaluate mark can not be greater than total mark', 'tutor' )?>">
 				<p class="desc"><?php echo sprintf( __( 'Evaluate this assignment out of %s', 'tutor' ), "<code>{$max_mark}</code>" ); ?></p>
 			</div>
 

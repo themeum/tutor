@@ -16,7 +16,7 @@
 			</div>
 			<div class="tutor-col-md-5 tutor-col-xl-6 tutor-mb-24 tutor-mb-md-0">
 				<div class="tutor-options-search tutor-input-group tutor-form-control-has-icon">
-					<span class="tutor-icon-search-filled tutor-input-group-icon tutor-color-black-50" area-hidden="true"></span>
+					<span class="tutor-icon-search tutor-input-group-icon tutor-color-black-50" area-hidden="true"></span>
 					<input type="search" accesskey="s" autofocus autocomplete="off" id="search_settings" class="tutor-form-control" placeholder="<?php esc_html_e( 'Search ...⌃⌥ + S or Alt+S for shortcut', 'tutor' ); ?>" />
 					<div class="search-popup-opener search_result"></div>
 				</div>

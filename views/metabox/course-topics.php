@@ -8,7 +8,7 @@
 
     <div class="new-topic-btn-wrap">
         <button data-tutor-modal-target="tutor-modal-add-topic" class="create_new_topic_btn tutor-btn tutor-btn-primary tutor-btn-md tutor-mt-16"> 
-            <i class="tutor-icon-plus-square-filled tutor-mr-12"></i> <?php _e('Add new topic', 'tutor'); ?>
+            <i class="tutor-icon-plus-square tutor-mr-12"></i> <?php _e('Add new topic', 'tutor'); ?>
         </button>
     </div>
 
@@ -25,128 +25,115 @@
         ), false); 
     ?>
 
-    <div class="tutor-modal modal-sticky-header-footer tutor-quiz-builder-modal-wrap" data-target="quiz-builder-tab-quiz-info">
-        <span class="tutor-modal-overlay"></span>
-        <div class="tutor-modal-root">
-            <div class="tutor-modal-inner">
-                <div class="tutor-modal-header">
-                    <h3 class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
-                        <?php _e('Quiz', 'tutor'); ?>
-                    </h3>
-                    <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="tutor-icon-line-cross-line"></span>
-                    </button>
-                </div>
-                
-                <div class="tutor-modal-steps">
-                    <ul>
-                        <li class="tutor-is-completed" data-tab="quiz-builder-tab-quiz-info">
-                            <span><?php _e('Quiz Info', 'tutor'); ?></span>
-                            <span class="tutor-modal-step-btn">1</span>
-                        </li>
-                        <li data-tab="quiz-builder-tab-questions">
-                            <span><?php _e('Question', 'tutor'); ?></span>
-                            <span class="tutor-modal-step-btn">2</span>
-                        </li>
-                        <li data-tab="quiz-builder-tab-settings">
-                            <span><?php _e('Settings', 'tutor'); ?></span>
-                            <span class="tutor-modal-step-btn">3</span>
-                        </li>
-                    </ul>
+    <div class="tutor-modal tutor-modal-scrollable tutor-quiz-builder-modal-wrap" data-target="quiz-builder-tab-quiz-info">
+        <div class="tutor-modal-overlay"></div>
+        <div class="tutor-modal-window">
+            <div class="tutor-modal-content">
+                <div class="tutor-px-32 tutor-py-24">
+                    <div class="tutor-d-flex tutor-align-items-center tutor-justify-between">
+                        <div class="tutor-modal-title">
+                            <?php _e('Quiz', 'tutor'); ?>
+                        </div>
+                        <button class="tutor-modal-close tutor-iconic-btn" data-tutor-modal-close>
+                            <span class="tutor-icon-times" area-hidden="true"></span>
+                        </button>
+                    </div>
+
+                    <div class="tutor-mt-32">
+                        <div class="tutor-modal-steps">
+                            <ul>
+                                <li class="tutor-is-completed" data-tab="quiz-builder-tab-quiz-info">
+                                    <span><?php _e('Quiz Info', 'tutor'); ?></span>
+                                    <span class="tutor-modal-step-btn">1</span>
+                                </li>
+                                <li data-tab="quiz-builder-tab-questions">
+                                    <span><?php _e('Question', 'tutor'); ?></span>
+                                    <span class="tutor-modal-step-btn">2</span>
+                                </li>
+                                <li data-tab="quiz-builder-tab-settings">
+                                    <span><?php _e('Settings', 'tutor'); ?></span>
+                                    <span class="tutor-modal-step-btn">3</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
-
-                </div>
+                <div class="tutor-modal-body modal-container"></div>
 
                 <div class="tutor-modal-footer">
-                    <div class="tutor-row">
-                        <div class="tutor-col">
-                            <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-                                <?php _e('Cancel', 'tutor'); ?>
-                            </button>
-                        </div>
-                        <div class="tutor-col-auto">
-                            <button type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary tutor-mr-12">
-                                <?php _e('Back', 'tutor'); ?>
-                            </button>
-                            <button type="button" data-action="next" class="tutor-btn tutor-btn-primary">
-                                <?php _e('Save & Next', 'tutor'); ?>
-                            </button>
-                        </div>
-                        <div class="tutor-col">
-                            <button class="tutor-btn tutor-btn-primary quiz-modal-question-save-btn">
-                                <?php _e('Add To Questions', 'tutor'); ?>
-                            </button>
-                        </div>
+                    <div>
+                        <button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+                            <?php _e('Cancel', 'tutor'); ?>
+                        </button>
+                    </div>
+
+                    <div>
+                        <button type="button" data-action="back" class="tutor-btn tutor-btn-outline-primary tutor-mr-12">
+                            <?php _e('Back', 'tutor'); ?>
+                        </button>
+                        <button type="button" data-action="next" class="tutor-btn tutor-btn-primary">
+                            <?php _e('Save & Next', 'tutor'); ?>
+                        </button>
+                        <button class="tutor-btn tutor-btn-primary quiz-modal-question-save-btn">
+                            <?php _e('Add To Questions', 'tutor'); ?>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="tutor-modal modal-sticky-header-footer tutor-lesson-modal-wrap">
-        <span class="tutor-modal-overlay"></span>
-        <div class="tutor-modal-root">
-            <div class="tutor-modal-inner">
+    <div class="tutor-modal tutor-modal-scrollable tutor-lesson-modal-wrap">
+        <div class="tutor-modal-overlay"></div>
+        <div class="tutor-modal-window">
+            <div class="tutor-modal-content">
                 <div class="tutor-modal-header">
-                    <h3 class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
+                    <div class="tutor-modal-title">
                         <?php _e('Lesson', 'tutor'); ?>
-                    </h3>
-                    <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="tutor-icon-line-cross-line"></span>
+                    </div>
+                    <button data-tutor-modal-close class="tutor-iconic-btn tutor-modal-close">
+                        <span class="tutor-icon-times" area-hidden="true"></span>
                     </button>
                 </div>
 
-                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
-
-                </div>
+                <div class="tutor-modal-body modal-container"></div>
                 
                 <div class="tutor-modal-footer">
-                    <div class="tutor-row">
-                        <div class="tutor-col">
-                            <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-                                <?php _e('Cancel', 'tutor'); ?>
-                            </button>
-                        </div>
-                        <div class="tutor-col-auto">
-                            <button type="button" class="tutor-btn tutor-btn-primary update_lesson_modal_btn">
-                                <?php _e('Update Lesson', 'tutor'); ?>
-                            </button>
-                        </div>
-                    </div>
+                    <button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+                        <?php _e('Cancel', 'tutor'); ?>
+                    </button>
+
+                    <button type="button" class="tutor-btn tutor-btn-primary update_lesson_modal_btn">
+                        <?php _e('Update Lesson', 'tutor'); ?>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="tutor-modal modal-sticky-header-footer tutor-assignment-modal-wrap">
-        <span class="tutor-modal-overlay"></span>
-        <div class="tutor-modal-root">
-            <div class="tutor-modal-inner">
+    <div class="tutor-modal tutor-modal-scrollable tutor-assignment-modal-wrap">
+        <div class="tutor-modal-overlay"></div>
+        <div class="tutor-modal-window">
+            <div class="tutor-modal-content">
                 <div class="tutor-modal-header">
-                    <h3 class="tutor-modal-title tutor-fs-6 tutor-fw-bold tutor-color-black-70">
+                    <div class="tutor-modal-title">
                         <?php _e('Assignment', 'tutor'); ?>
-                    </h3>
-                    <button data-tutor-modal-close class="tutor-modal-close">
-                        <span class="tutor-icon-line-cross-line"></span>
+                    </div>
+                    <button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
+                        <span class="tutor-icon-times" area-hidden="true"></span>
                     </button>
                 </div>
-                <div class="tutor-modal-body-alt modal-container tutor-bg-gray-10">
-                </div>
+                
+                <div class="tutor-modal-body modal-container"></div>
+
                 <div class="tutor-modal-footer">
-                    <div class="tutor-row">
-                        <div class="tutor-col">
-                            <button data-tutor-modal-close class="tutor-btn tutor-btn-outline-primary">
-                                <?php _e('Cancel', 'tutor'); ?>
-                            </button>
-                        </div>
-                        <div class="tutor-col-auto">
-                            <button type="button" class="tutor-btn tutor-btn-primary update_assignment_modal_btn">
-                                <?php _e('Update Assignment', 'tutor'); ?>
-                            </button>
-                        </div>
-                    </div>
+                    <button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
+                        <?php _e('Cancel', 'tutor'); ?>
+                    </button>
+                    <button type="button" class="tutor-btn tutor-btn-primary update_assignment_modal_btn">
+                        <?php _e('Update Assignment', 'tutor'); ?>
+                    </button>
                 </div>
             </div>
         </div>

@@ -69,6 +69,10 @@ class Course_Filter {
 			$type_array = tutils()->array_get( 'tutor-course-filter-' . $type, $_post, array() );
 			$type_array = array_map( 'sanitize_text_field', ( is_array( $type_array ) ? $type_array : array( $type_array ) ) );
 
+			if($type=='level' && in_array('all_levels', $type_array)) {
+				continue;
+			}
+
 			if ( count( $type_array ) > 0 ) {
 				$level_price[] = array(
 					'key'     => 'level' === $type ? '_tutor_course_level' : '_tutor_course_price_type',
