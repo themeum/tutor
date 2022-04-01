@@ -20,7 +20,7 @@ $can_publish_course = (bool) tutor_utils()->get_option('instructor_can_publish_c
 ?>
 
 <?php
-if (!tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
+if (!tutor_utils()->is_instructor(get_current_user_id(), true) || !tutor_utils()->can_user_edit_course(get_current_user_id(), $course_id)) {
 	$args = array(
 		'headline'    => __('Permission Denied', 'tutor'),
 		'message'     => __('You don\'t have the right to edit this course', 'tutor'),
