@@ -106,10 +106,6 @@
 
 .tutor-text-nowrap {
 	white-space: nowrap;
-	&:not(.tutor-nowrap-nocut) {
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
 }
 
 .tutor-nowrap-ellipsis {
@@ -313,26 +309,30 @@ $border: (
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	font-size: 28px;
 	width: 60px;
 	height: 60px;
-	border-radius: 60px;
+	border-radius: 80px;
 	overflow: hidden;
 	color: var(--tutor-primary-color);
 	background: var(--tutor-primary-lighter);
 
 	[class^="tutor-icon-"],
-	[class*=" tutor-icon-"] {
+	[class*=" tutor-icon-"],
+	.tutor-svg {
 		display: inline-block;
-		font-size: 28px;
 	}
 
 	@include media-breakpoint-down(lg) {
 		width: 44px;
 		height: 44px;
-		[class^="tutor-icon-"],
-		[class*=" tutor-icon-"] {
-			font-size: 20px;
-		}
+		font-size: 20px;
+	}
+
+	&-lg {
+		width: 76px;
+		height: 76px;
+		font-size: 36px;
 	}
 }
 
